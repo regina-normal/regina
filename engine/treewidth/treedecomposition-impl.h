@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,7 +34,7 @@
  *  \brief Contains implementations of template member functions in the
  *  TreeDecomposition class.
  *
- *  This file is \e not included automatically by treedecomposition.h.
+ *  This file is _not_ included automatically by treedecomposition.h.
  *  However, most end users should never need to include it, since
  *  Regina's calculation engine provides full explicit instantiations
  *  of these routines for \ref stddim "standard dimensions" and for

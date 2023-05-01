@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -134,13 +134,17 @@ bool HomGroupPresentation::smallCancellation() {
     }
 
     map_ = std::move(newMap);
+    /*
     for (GroupExpression& e : map_)
-        retval |= codomain_.simplifyWord(e);
+        retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+    */
 
     if (inv_) {
         *inv_ = std::move(newInvMap);
+        /*
         for (GroupExpression& e : *inv_)
-            retval |= domain_.simplifyWord(e);
+            retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+        */
     }
 
     return retval;
@@ -177,78 +181,85 @@ HomGroupPresentation HomGroupPresentation::operator * (
     }
 }
 
-bool HomGroupPresentation::intelligentNielsen()
-{ // modelled on intelligentSimplify
- auto codomainMap = codomain_.intelligentNielsen();
- auto domainMap = domain_.intelligentNielsen();
- bool retval = codomainMap || domainMap;
- if (! domainMap)
-    domainMap = HomGroupPresentation(domain_);
- if (! codomainMap)
-    codomainMap = HomGroupPresentation(codomain_);
- std::vector< GroupExpression > newMap( domain_.countGenerators() );
- for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i] = codomainMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
- std::vector< GroupExpression > newInvMap;
- if (inv_) {
-     newInvMap.resize( codomain_.countGenerators() );
-     for (unsigned long i=0; i<newInvMap.size(); i++)
-       newInvMap[i] = domainMap->evaluate( invEvaluate(
-          codomainMap->invEvaluate(i) ) );
- }
+bool HomGroupPresentation::intelligentNielsen() {
+    // modelled on intelligentSimplify
+    auto codomainMap = codomain_.intelligentNielsen();
+    auto domainMap = domain_.intelligentNielsen();
+    bool retval = codomainMap || domainMap;
+    if (! domainMap)
+        domainMap = HomGroupPresentation(domain_);
+    if (! codomainMap)
+        codomainMap = HomGroupPresentation(codomain_);
+    std::vector< GroupExpression > newMap( domain_.countGenerators() );
+    for (unsigned long i=0; i<newMap.size(); i++)
+        newMap[i] = codomainMap->evaluate(evaluate(domainMap->invEvaluate(i)));
+    std::vector< GroupExpression > newInvMap;
+    if (inv_) {
+        newInvMap.resize( codomain_.countGenerators() );
+        for (unsigned long i=0; i<newInvMap.size(); i++)
+            newInvMap[i] = domainMap->evaluate( invEvaluate(
+                codomainMap->invEvaluate(i) ) );
+    }
 
- map_ = std::move(newMap);
- for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyWord(e);
+    map_ = std::move(newMap);
+    /*
+    for (GroupExpression& e : map_)
+        retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+    */
 
- if (inv_) {
-     *inv_ = std::move(newInvMap);
-     for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyWord(e);
- }
+    if (inv_) {
+        *inv_ = std::move(newInvMap);
+        /*
+        for (GroupExpression& e : *inv_)
+            retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+        */
+    }
 
- return retval;
+    return retval;
 }
 
-bool HomGroupPresentation::intelligentSimplify()
-{
- // step 1: simplify presentation of domain and codomain
- auto codomainMap = codomain_.intelligentSimplify();
- auto domainMap = domain_.intelligentSimplify();
- bool retval = codomainMap || domainMap;
+bool HomGroupPresentation::intelligentSimplify() {
+    // step 1: simplify presentation of domain and codomain
+    auto codomainMap = codomain_.intelligentSimplify();
+    auto domainMap = domain_.intelligentSimplify();
+    bool retval = codomainMap || domainMap;
 
- // build identity maps if either of the above is null.
- if (! domainMap)
-    domainMap = HomGroupPresentation(domain_);
- if (! codomainMap)
-    codomainMap = HomGroupPresentation(codomain_);
+    // build identity maps if either of the above is null.
+    if (! domainMap)
+        domainMap = HomGroupPresentation(domain_);
+    if (! codomainMap)
+        codomainMap = HomGroupPresentation(codomain_);
 
- // step 2: compute codomainMap*(*oldthis)*domainMap.inverse()
- //         and replace "map" appropriately.  Simplify the words in the codomain.
- //         Do the same for the inverse map if we have one.
- std::vector< GroupExpression > newMap( domain_.countGenerators() );
- for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i] = codomainMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
- std::vector< GroupExpression > newInvMap;
- if (inv_) {
-     newInvMap.resize( codomain_.countGenerators() );
-     for (unsigned long i=0; i<newInvMap.size(); i++)
-       newInvMap[i] = domainMap->evaluate(
-          invEvaluate( codomainMap->invEvaluate(i) ) );
- }
+    // step 2: compute codomainMap*(*oldthis)*domainMap.inverse() and replace
+    //         "map" appropriately.  Simplify the words in the codomain.
+    //         Do the same for the inverse map if we have one.
+    std::vector< GroupExpression > newMap( domain_.countGenerators() );
+    for (unsigned long i=0; i<newMap.size(); i++)
+        newMap[i] = codomainMap->evaluate(evaluate(domainMap->invEvaluate(i)));
+    std::vector< GroupExpression > newInvMap;
+    if (inv_) {
+        newInvMap.resize( codomain_.countGenerators() );
+        for (unsigned long i=0; i<newInvMap.size(); i++)
+            newInvMap[i] = domainMap->evaluate(
+                invEvaluate( codomainMap->invEvaluate(i) ) );
+    }
 
- // step 3: rewrite this map, and simplify
- map_ = std::move(newMap);
- for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyWord(e);
+    // step 3: rewrite this map, and simplify
+    map_ = std::move(newMap);
+    /*
+    for (GroupExpression& e : map_)
+        retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+    */
 
- if (inv_) {
-     *inv_ = std::move(newInvMap);
-     for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyWord(e);
- }
+    if (inv_) {
+        *inv_ = std::move(newInvMap);
+        /*
+        for (GroupExpression& e : *inv_)
+            retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+        */
+    }
 
- return retval;
+    return retval;
 }
 
 bool HomGroupPresentation::invert() {
@@ -263,38 +274,37 @@ bool HomGroupPresentation::invert() {
 bool HomGroupPresentation::verify() const {
     for (const auto& r : domain_.relations()) {
         GroupExpression imgRel( evaluate(r) );
-        codomain_.simplifyWord(imgRel);
+        codomain_.simplifyAndConjugate(imgRel);
         if (!imgRel.isTrivial())
             return false;
     }
     return true;
 }
 
-bool HomGroupPresentation::verifyIsomorphism() const
-{
- if (! inv_) return false;
+bool HomGroupPresentation::verifyIsomorphism() const {
+    if (! inv_)
+        return false;
 
- if (inv_->size() != codomain_.countGenerators()) return false;
- // for every generator in the domain compute f^-1(f(x))x^-1 and reduce
- for (unsigned long i=0; i<domain_.countGenerators(); i++)
-  {
-   GroupExpression tempW( invEvaluate(evaluate(i)) );
-   tempW.addTermLast( i, -1 );
-   domain_.simplifyWord(tempW);
-   if (tempW.countTerms()>0) return false;
-  }
- // for every generator in the codomain compute f(f^-1(x))x^-1 and reduce
- for (unsigned long i=0; i<codomain_.countGenerators(); i++)
-  {
-   GroupExpression tempW( evaluate(invEvaluate(i)) );
-   tempW.addTermLast( i, -1 );
-   codomain_.simplifyWord(tempW);
-   if (tempW.countTerms()>0) return false;
-  }
- return true;
+    if (inv_->size() != codomain_.countGenerators())
+        return false;
+    // for every generator in the domain compute f^-1(f(x))x^-1 and reduce
+    for (unsigned long i=0; i<domain_.countGenerators(); i++) {
+        GroupExpression tempW( invEvaluate(evaluate(i)) );
+        tempW.addTermLast( i, -1 );
+        domain_.simplifyAndConjugate(tempW);
+        if (! tempW.isTrivial())
+            return false;
+    }
+    // for every generator in the codomain compute f(f^-1(x))x^-1 and reduce
+    for (unsigned long i=0; i<codomain_.countGenerators(); i++) {
+        GroupExpression tempW( evaluate(invEvaluate(i)) );
+        tempW.addTermLast( i, -1 );
+        codomain_.simplifyAndConjugate(tempW);
+        if (! tempW.isTrivial())
+            return false;
+    }
+    return true;
 }
-
-
 
 } // namespace regina
 

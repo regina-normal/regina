@@ -49,6 +49,7 @@ Usage: tricensus <output-file>
   -P, --usepairs                    Only use face pairings read from standard
                                     input.
       --threads=<threads>           Number of parallel threads (default = 1).
+  -v, --version                     Show which version of Regina is being used.
 
 Help options:
   -?, --help                        Show this help message
@@ -106,6 +107,7 @@ Usage: tricensus <output-file>
   -P, --usepairs                    Only use face pairings read from standard
                                     input.
       --threads=<threads>           Number of parallel threads (default = 1).
+  -v, --version                     Show which version of Regina is being used.
 
 Help options:
   -?, --help                        Show this help message
@@ -163,6 +165,7 @@ Usage: tricensus <output-file>
   -P, --usepairs                    Only use face pairings read from standard
                                     input.
       --threads=<threads>           Number of parallel threads (default = 1).
+  -v, --version                     Show which version of Regina is being used.
 
 Help options:
   -?, --help                        Show this help message

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -94,7 +94,7 @@ namespace regina {
  * In the following lists we describe the canonical ordering of both the
  * cells and the dual cells of the given triangulation.
  *
- * First we list the cell orderings for the <i>standard CW decomposition</i>,
+ * First we list the cell orderings for the _standard CW decomposition_,
  * which most closely resembles the ideal triangulation.
  *
  * - \b 0-cells: The non-ideal vertices given in the order vertices.begin()
@@ -110,7 +110,7 @@ namespace regina {
  *
  * - \b 3-cells: tetrahedra.begin() through tetrahedra.end().
  *
- * Next we list the cell orderings for the <i>dual CW decomposition</i>:
+ * Next we list the cell orderings for the _dual CW decomposition_:
  * if the standard CW decomposition came from a morse function \a f, this
  * would be the one for -\a f.
  *
@@ -132,7 +132,7 @@ namespace regina {
  *
  * This class will eventually be removed in a future release of Regina.
  *
- * @author Ryan Budney
+ * \author Ryan Budney
  *
  * \ingroup triangulation
  */
@@ -189,7 +189,7 @@ private:
             /**
              * Return the number of elements in this array.
              *
-             * @return the number of elements.
+             * \return the number of elements.
              */
             inline size_t size() const {
                 return data_.size();
@@ -197,9 +197,9 @@ private:
             /**
              * Return the integer at the given index in this array.
              *
-             * @param index the requested array index; this must be
+             * \param index the requested array index; this must be
              * between 0 and size()-1 inclusive.
-             * @return the corresponding element of this array.
+             * \return the corresponding element of this array.
              */
             inline unsigned long operator [] (size_t index) const {
                 return data_[index];
@@ -210,8 +210,8 @@ private:
              * This routine runs in logarithmic time (it uses a
              * binary search).
              *
-             * @param value the integer to search for.
-             * @return the array index that holds the given integer,
+             * \param value the integer to search for.
+             * \return the array index that holds the given integer,
              * or -1 if the given integer is not stored in this array.
              */
             inline ssize_t index(unsigned long value) const {
@@ -228,7 +228,7 @@ private:
              * \pre The given integer is at least as large as every
              * integer currently stored in the array.
              *
-             * @param value the integer to insert into this array.
+             * \param value the integer to insert into this array.
              */
             inline void push_back(unsigned long value) {
                 data_.push_back(value);
@@ -243,81 +243,81 @@ private:
 
     /**
      * The 0-th homology group in standard cellular coordinates,
-     * or no value if it has not yet been computed.
+     * or \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology0_;
     /**
      * The 1st homology group in standard cellular coordinates,
-     * or no value if it has not yet been computed.
+     * or \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology1_;
     /**
      * The 2nd homology group in standard cellular coordinates,
-     * or no value if it has not yet been computed.
+     * or \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology2_;
     /**
      * The 3rd homology group in standard cellular coordinates,
-     * or no value if it has not yet been computed.
+     * or \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology3_;
 
     /**
      * The 0-th boundary homology group in standard cellular
-     * coordinates, or no value if it has not yet been computed.
+     * coordinates, or \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology0_;
     /**
      * The 1st boundary homology group in standard cellular
-     * coordinates, or no value if it has not yet been computed.
+     * coordinates, or \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology1_;
     /**
      * The 2nd boundary homology group in standard cellular
-     * coordinates, or no value if it has not yet been computed.
+     * coordinates, or \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology2_;
 
     /**
      * The boundary inclusion on 0-th homology, standard
-     * cellular coordinates, or no value if it has not yet been computed.
+     * cellular coordinates, or \nullopt if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap0_;
     /**
      * The boundary inclusion on 1st homology, standard
-     * cellular coordinates, or no value if it has not yet been computed.
+     * cellular coordinates, or \nullopt if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap1_;
     /**
      * The boundary inclusion on 2nd homology, standard
-     * cellular coordinates, or no value if it has not yet been computed.
+     * cellular coordinates, or \nullopt if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap2_;
 
     /**
      * The 0-th homology group in dual cellular coordinates, or
-     * no value if it has not yet been computed.
+     * \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology0_;
     /**
      * The 1st homology group in dual cellular coordinates, or
-     * no value if it has not yet been computed.
+     * \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology1_;
     /**
      * The 2nd homology group in dual cellular coordinates, or
-     * no value if it has not yet been computed.
+     * \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology2_;
     /**
      * The 3rd homology group in dual cellular coordinates, or
-     * no value if it has not yet been computed.
+     * \nullopt if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology3_;
 
     /**
      * The cellular approx of the identity H1(M) --> H1(M)
-     * from dual to standard cellular coordinates, or no value if it has
+     * from dual to standard cellular coordinates, or \nullopt if it has
      * not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> dmTomMap1_;
@@ -359,65 +359,65 @@ private:
     SortedArray sBNIF;
 
     /** True if the chain complexes A0,A1,A2,A3,A4, B0,B1,B2,B3,B4,
-     ** Bd0,Bd1,Bd2,Bd3, B0Incl,B1Incl,B2Incl are computed */
+        Bd0,Bd1,Bd2,Bd3, B0Incl,B1Incl,B2Incl are computed */
     bool chainComplexesComputed;
 
     /** 0th term in chain complex for cellular homology, using standard
-        CW-complex struc, or no value if not yet computed */
+        CW-complex struc, or \nullopt if not yet computed */
     std::optional<MatrixInt> A0_;
     /** 1st term in chain complex for cellular homology, using standard
-        CW-complex struc, or no value if not yet computed */
+        CW-complex struc, or \nullopt if not yet computed */
     std::optional<MatrixInt> A1_;
     /** 2nd term in chain complex for cellular homology, using standard
-        CW-complex struc, or no value if not yet computed */
+        CW-complex struc, or \nullopt if not yet computed */
     std::optional<MatrixInt> A2_;
     /** 3rd term in chain complex for cellular homology, using standard
-        CW-complex struc, or no value if not yet computed */
+        CW-complex struc, or \nullopt if not yet computed */
     std::optional<MatrixInt> A3_;
     /** 4th term in chain complex for cellular homology, using standard
-        CW-complex struc, or no value if not yet computed */
+        CW-complex struc, or \nullopt if not yet computed */
     std::optional<MatrixInt> A4_;
 
     /** 0-th term in chain complex for dual cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B0_; // B0 is #defined in some system headers :/
     /** 1st term in chain complex for dual cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B1_;
     /** 2nd term in chain complex for dual cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B2_;
     /** 3rd term in chain complex for dual cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B3_;
     /** 4th term in chain complex for dual cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B4_;
 
     /** 0th term in chain complex for boundary cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> Bd0_;
     /** 1st term in chain complex for boundary cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> Bd1_;
     /** 2nd term in chain complex for boundary cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> Bd2_;
     /** 3rd term in chain complex for boundary cellular homology, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> Bd3_;
 
     /** Chain map from C_0 boundary to C_0 manifold, standard coords, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B0Incl_;
     /** Chain map from C_1 boundary to C_1 manifold, standard coords, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B1Incl_;
     /** Chain map from C_2 boundary to C_2 manifold, standard coords, or
-        no value if not yet computed */
+        \nullopt if not yet computed */
     std::optional<MatrixInt> B2Incl_;
 
-    /** Isomorphism from C_1 dual to C_1 standard, or no value if not yet
+    /** Isomorphism from C_1 dual to C_1 standard, or \nullopt if not yet
         computed */
     std::optional<MatrixInt> H1map_;
 
@@ -432,8 +432,8 @@ private:
         cells. */
     void computeBHomology();
     /** Computes all the homology groups of the manifold using dual cells. This
-     ** routine is the faster than computeHomology() but it's likely a bit
-     ** slower than Triangulation<3>'s homology routines. */
+        routine is the faster than computeHomology() but it's likely a bit
+        slower than Triangulation<3>'s homology routines. */
     void computeDHomology();
     /** The induced map on homology corresponding to inclusion of the
         boundary. */
@@ -460,7 +460,7 @@ private:
      */
     void computeTorsionLinkingForm();
     /**
-     * Unlike computeTorsionLinkingForm(), this routine \e can be called
+     * Unlike computeTorsionLinkingForm(), this routine _can_ be called
      * for non-orientable manifolds (in which case we look at the
      * orientable double cover).
      *
@@ -479,12 +479,12 @@ private:
     void computeEmbeddabilityString();
 
     /** the prime power decomposition of the torsion subgroup of H1
-     ** So if the invariant factors were 2,2,4,3,9,9,27,5,5, this would
-     ** be the list: (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1)) */
+        So if the invariant factors were 2,2,4,3,9,9,27,5,5, this would
+        be the list: (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1)) */
     std::vector< std::pair< Integer, std::vector<unsigned long> > >
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
-     ** construct the Kawauchi-Kojima invariants. */
+        construct the Kawauchi-Kojima invariants. */
     std::vector<Matrix<Rational>> linkingFormPD;
 
     /** True if torsion linking form is `hyperbolic'.   */
@@ -492,17 +492,17 @@ private:
     /** True if torsion linking form is `split' */
     bool torsionLinkingFormIsSplit;
     /** True if torsion linking form satisfies the Kawauchi-Kojima 2-torsion
-     ** condition */
+        condition */
     bool torsionLinkingFormSatisfiesKKtwoTorCondition;
 
     /** 1 of 3 Kawauchi-Kojima invariants: this describes the rank of the
-     ** torsion subgroup of H1 */
+        torsion subgroup of H1 */
     std::vector< std::pair< Integer, std::vector< unsigned long > > > torRankV;
     /** 2 of 3 Kawauchi-Kojima invariants: this is the sigma-invariant
-     ** of 2-torsion. */
+        of 2-torsion. */
     std::vector< LargeInteger > twoTorSigmaV;
     /** 3 of 3 Kawauchi-Kojima invariants: this is the Legendre symbol
-     ** invariant of odd torsion. */
+        invariant of odd torsion. */
     std::vector< std::pair< Integer, std::vector< int > > > oddTorLegSymV;
 
     /** string representing torRankV */
@@ -512,7 +512,7 @@ private:
     /** string representing oddTorLegSymV */
     std::string torsionLegendreString;
     /** comment on what kind of homology spheres the manifold may or may
-     ** not embed in. */
+        not embed in. */
     std::string embeddabilityString;
 
 public:
@@ -526,21 +526,21 @@ public:
      * object will automatically take its own deep copy of the original and
      * continue to use that for its own internal reference.
      *
-     * @param input the triangulation to use.
+     * \param input the triangulation to use.
      */
     HomologicalData(const Triangulation<3>& input);
     /**
      * Creates a new copy of the given object.
      *
      * This constructor induces a deep copy of the given object; moreover,
-     * this is expensive since HomologicalData objects are \e very large.
+     * this is expensive since HomologicalData objects are _very_ large.
      */
     HomologicalData(const HomologicalData&) = default;
     /**
      * Moves the contents of the given object into this new object.
      *
      * This operation is constant time, but it is still expensive
-     * constant time because HomologicalData objects are \e very large.
+     * constant time because HomologicalData objects are _very_ large.
      *
      * The object that was passed will no longer be usable.
      */
@@ -550,20 +550,20 @@ public:
      * Sets this to be a copy of the given object.
      *
      * This operator induces a deep copy of the given object; moreover,
-     * this is expensive since HomologicalData objects are \e very large.
+     * this is expensive since HomologicalData objects are _very_ large.
      *
-     * @return a reference to this normal surface.
+     * \return a reference to this normal surface.
      */
     HomologicalData& operator = (const HomologicalData&) = default;
     /**
      * Moves the contents of the given object into this object.
      *
      * This operation is constant time, but it is still expensive
-     * constant time because HomologicalData objects are \e very large.
+     * constant time because HomologicalData objects are _very_ large.
      *
      * The object that was passed will no longer be usable.
      *
-     * @return a reference to this object.
+     * \return a reference to this object.
      */
     HomologicalData& operator = (HomologicalData&&) noexcept = default;
 
@@ -576,7 +576,7 @@ public:
      * constant time".  You should still work to avoid swapping (or moving,
      * and certainly copying) HomologicalData objects where possible.
      *
-     * @param other the object whose contents should be swapped with this.
+     * \param other the object whose contents should be swapped with this.
      */
     void swap(HomologicalData& other) noexcept;
 
@@ -588,9 +588,9 @@ public:
      * not yet asked HomologicalData to compute anything about this
      * triangulation, writeTextShort may be empty.
      *
-     * \ifacespython Not present; use str() instead.
+     * \nopython Use str() instead.
      *
-     * @param out the output stream to which to write.
+     * \param out the output stream to which to write.
      */
     void writeTextShort(std::ostream& out) const;
 
@@ -606,8 +606,8 @@ public:
      * are isomorphic, though they are generally described by different
      * presentations.
      *
-     * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
-     * @return the q-th homology group, computed in the standard
+     * \param q the dimension of the homology group: can be 0, 1, 2 or 3.
+     * \return the q-th homology group, computed in the standard
      * CW-decomposition.
      */
     const MarkedAbelianGroup& homology(unsigned q);
@@ -615,8 +615,8 @@ public:
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
      *
-     * @param q the dimension of the homology group: can be 0, 1 or 2.
-     * @return the q-th boundary homology group, in standard cellular
+     * \param q the dimension of the homology group: can be 0, 1 or 2.
+     * \return the q-th boundary homology group, in standard cellular
      * homology coordinates
      */
     const MarkedAbelianGroup& bdryHomology(unsigned q);
@@ -625,8 +625,8 @@ public:
      * This routine gives access to the homomorphism from the
      * homology of the boundary to the homology of the manifold.
      *
-     * @param q the dimension of the map: can be 0, 1 or 2.
-     * @return the map from H_q of the boundary to H_q of the manifold,
+     * \param q the dimension of the map: can be 0, 1 or 2.
+     * \return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
     const HomMarkedAbelianGroup& bdryHomologyMap(unsigned q);
@@ -642,8 +642,8 @@ public:
      * are isomorphic, though they are generally described by different
      * presentations.
      *
-     * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
-     * @return the q-th homology group, computed in the dual CW-decomposition.
+     * \param q the dimension of the homology group: can be 0, 1, 2 or 3.
+     * \return the q-th homology group, computed in the dual CW-decomposition.
      */
     const MarkedAbelianGroup& dualHomology(unsigned q);
 
@@ -651,7 +651,7 @@ public:
      * Returns the isomorphism from dualHomology(1) to homology(1)
      * given by a cellular approximation to the identity map on the manifold.
      *
-     * @return The isomorphism from dualHomology(1) to homology(1)
+     * \return The isomorphism from dualHomology(1) to homology(1)
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
      */
@@ -670,9 +670,9 @@ public:
      * returns the details of the corresponding compact manifold with
      * boundary a union of closed surfaces.
      *
-     * @param dimension the dimension of the cells in question; this must
+     * \param dimension the dimension of the cells in question; this must
      * be 0, 1, 2 or 3.
-     * @return the number of cells of the given dimension in the standard
+     * \return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
      */
     unsigned long countStandardCells(unsigned dimension);
@@ -681,9 +681,9 @@ public:
      * in the dual CW-decomposition of the manifold. This is typically
      * much smaller than countStandardCells().
      *
-     * @param dimension the dimension of the cells in question; this must
+     * \param dimension the dimension of the cells in question; this must
      * be 0, 1, 2 or 3.
-     * @return the number of cells of the given dimension in the dual
+     * \return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
      */
     unsigned long countDualCells(unsigned dimension);
@@ -692,9 +692,9 @@ public:
      * standard CW-decomposition of the boundary of the manifold.
      * This is a subcomplex of the complex used in countStandardCells().
      *
-     * @param dimension the dimension of the cells in question; this must
+     * \param dimension the dimension of the cells in question; this must
      * be 0, 1 or 2.
-     * @return the number of cells of the given dimension in the standard
+     * \return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
      */
     unsigned long countBdryCells(unsigned dimension);
@@ -715,7 +715,7 @@ public:
      * in a non-standard way (treating each ideal vertex as just a single
      * vertex).
      *
-     * @return the Euler characteristic of the corresponding compact
+     * \return the Euler characteristic of the corresponding compact
      * triangulated 3-manifold.
      */
     long eulerChar();
@@ -745,7 +745,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the torsion form rank vector.
+     * \return the torsion form rank vector.
      */
     const std::vector< std::pair< Integer,
         std::vector< unsigned long > > >& torsionRankVector();
@@ -764,7 +764,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return human-readable prime power factorization of the order of
+     * \return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
      */
     const std::string& torsionRankVectorString();
@@ -788,7 +788,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Kawauchi-Kojima sigma-vector.
+     * \return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<LargeInteger>& torsionSigmaVector();
     /**
@@ -807,7 +807,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Kawauchi-Kojima sigma-vector in human readable form.
+     * \return the Kawauchi-Kojima sigma-vector in human readable form.
      */
     const std::string& torsionSigmaVectorString();
 
@@ -831,7 +831,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Legendre symbol vector associated to the torsion
+     * \return the Legendre symbol vector associated to the torsion
      * linking form.
      */
     const std::vector< std::pair< Integer, std::vector< int > > >&
@@ -852,7 +852,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Legendre symbol vector in human-readable form.
+     * \return the Legendre symbol vector in human-readable form.
      */
     const std::string& torsionLegendreSymbolVectorString();
 
@@ -880,7 +880,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return \c true iff the torsion linking form is hyperbolic.
+     * \return \c true iff the torsion linking form is hyperbolic.
      */
     bool formIsHyperbolic();
     /**
@@ -898,7 +898,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return \c true iff the linking form is split.
+     * \return \c true iff the linking form is split.
      */
     bool formIsSplit();
     /**
@@ -922,7 +922,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return \c true iff the form satisfies the 2-torsion
+     * \return \c true iff the form satisfies the 2-torsion
      * condition of Kawauchi-Kojima.
      */
     bool formSatKK();
@@ -953,7 +953,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return a string giving a one-line description of what
+     * \return a string giving a one-line description of what
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
      */
@@ -972,8 +972,8 @@ public:
  * constant time".  You should still work to avoid swapping (or moving,
  * and certainly copying) HomologicalData objects where possible.
  *
- * @param a the first object whose contents should be swapped.
- * @param b the second object whose contents should be swapped.
+ * \param a the first object whose contents should be swapped.
+ * \param b the second object whose contents should be swapped.
  *
  * \ingroup triangulation
  */

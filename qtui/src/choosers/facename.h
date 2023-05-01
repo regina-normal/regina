@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,7 @@ struct FaceName {
     /**
      * The name of a subdim-face, with the first letter capitalised.
      *
-     * This function is specialised for dimensions <= 4, and (for the
+     * This function is specialised for dimensions ≤ 4, and (for the
      * time being) is left undefined for dimensions > 5.
      */
     static constexpr const char* upper();

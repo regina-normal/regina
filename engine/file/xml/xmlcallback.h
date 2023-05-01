@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,7 +52,7 @@ namespace regina {
  * See the XMLElementReader class notes for details of precisely how
  * processing will take place.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLCallback : public regina::xml::XMLParserCallback {
     public:
@@ -71,16 +71,16 @@ class XMLCallback : public regina::xml::XMLParserCallback {
         };
 
     private:
-        XMLElementReader& topReader;
+        XMLElementReader& topReader_;
             /**< The top-level element reader. */
-        std::stack<XMLElementReader*> readers;
+        std::stack<XMLElementReader*> readers_;
             /**< A stack of all currently active element readers. */
-        std::ostream& errStream;
+        std::ostream& errStream_;
             /**< The output stream to use for warning or error messages. */
-        std::string currChars;
+        std::string currChars_;
             /**< The initial characters that have currently been received
                  for the current deepest-level XML element. */
-        bool charsAreInitial;
+        bool charsAreInitial_;
             /**< \c true if and only if we have not yet finished
                  receiving initial characters for the current deepest-level
                  XML element. */
@@ -92,10 +92,10 @@ class XMLCallback : public regina::xml::XMLParserCallback {
         /**
          * Creates a new callback object.
          *
-         * @param newTopReader the element reader to use for the
+         * \param newTopReader the element reader to use for the
          * top-level XML element.  This is the only element reader that
          * will not be destroyed once parsing has finished.
-         * @param newErrStream the output stream to which any warning or
+         * \param newErrStream the output stream to which any warning or
          * error messages should be sent.
          */
         XMLCallback(XMLElementReader& newTopReader,
@@ -112,7 +112,7 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          * The returned value will be one of the state constants defined
          * in this class.
          *
-         * @return the current state of this callback object.
+         * \return the current state of this callback object.
          */
         State state() const;
 
@@ -146,7 +146,7 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          * Returns the element reader processing the deepest-level
          * XML element that is currently being parsed.
          *
-         * @return the current deepest element reader.
+         * \return the current deepest element reader.
          */
         XMLElementReader* currentReader();
 };
@@ -154,12 +154,12 @@ class XMLCallback : public regina::xml::XMLParserCallback {
 // Inline functions for XMLCallback
 
 inline XMLCallback::XMLCallback(XMLElementReader& newTopReader,
-        std::ostream& newErrStream) : topReader(newTopReader),
-        errStream(newErrStream), charsAreInitial(true), state_(WAITING) {
+        std::ostream& newErrStream) : topReader_(newTopReader),
+        errStream_(newErrStream), charsAreInitial_(true), state_(WAITING) {
 }
 
 inline XMLElementReader* XMLCallback::currentReader() {
-    return (readers.empty() ? &topReader : readers.top());
+    return (readers_.empty() ? std::addressof(topReader_) : readers_.top());
 }
 
 inline XMLCallback::State XMLCallback::state() const {

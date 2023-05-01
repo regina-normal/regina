@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -71,21 +71,21 @@ class SnappedBall : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         SnappedBall(const SnappedBall&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         SnappedBall& operator = (const SnappedBall&) = default;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(SnappedBall& other) noexcept;
@@ -93,7 +93,7 @@ class SnappedBall : public StandardTriangulation {
         /**
          * Returns the tetrahedron that forms this snapped ball.
          *
-         * @return the tetrahedron.
+         * \return the tetrahedron.
          */
         Tetrahedron<3>* tetrahedron() const;
 
@@ -104,9 +104,9 @@ class SnappedBall : public StandardTriangulation {
          * You are guaranteed that index 0 will return a smaller face
          * number than index 1.
          *
-         * @param index specifies which of the two boundary faces to return;
+         * \param index specifies which of the two boundary faces to return;
          * this must be either 0 or 1.
-         * @return the corresponding face number in the tetrahedron.
+         * \return the corresponding face number in the tetrahedron.
          */
         int boundaryFace(int index) const;
         /**
@@ -116,22 +116,22 @@ class SnappedBall : public StandardTriangulation {
          * You are guaranteed that index 0 will return a smaller face
          * number than index 1.
          *
-         * @param index specifies which of the two internal faces to return;
+         * \param index specifies which of the two internal faces to return;
          * this must be either 0 or 1.
-         * @return the corresponding face number in the tetrahedron.
+         * \return the corresponding face number in the tetrahedron.
          */
         int internalFace(int index) const;
         /**
          * Returns the edge that forms the equator of the boundary sphere
          * of this ball.
          *
-         * @return the corresponding edge number in the tetrahedron.
+         * \return the corresponding edge number in the tetrahedron.
          */
         int equatorEdge() const;
         /**
          * Returns the edge internal to this snapped ball.
          *
-         * @return the corresponding edge number in the tetrahedron.
+         * \return the corresponding edge number in the tetrahedron.
          */
         int internalEdge() const;
 
@@ -141,8 +141,8 @@ class SnappedBall : public StandardTriangulation {
          *
          * Unlike the parameterised subclasses of StandardTriangulation,
          * this SnappedBall subclass represents a fixed structure, and
-         * so its comparisons test not for the \e structure but the precise
-         * \e location of this structure within the enclosing triangulation.
+         * so its comparisons test not for the _structure_ but the precise
+         * _location_ of this structure within the enclosing triangulation.
          *
          * Specifically, two snapped 3-balls will compare as equal if and only
          * if each uses the same numbered tetrahedron, and has the same
@@ -152,8 +152,8 @@ class SnappedBall : public StandardTriangulation {
          * must be equal.  In particular, it is still meaningful to compare
          * snapped 3-balls within different triangulations.
          *
-         * @param other the snapped 3-ball to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the snapped 3-ball to compare with this.
+         * \return \c true if and only if this and the given object represent
          * the same specific presentation of a snapped 3-ball.
          */
         bool operator == (const SnappedBall& other) const;
@@ -163,8 +163,8 @@ class SnappedBall : public StandardTriangulation {
          *
          * Unlike the parameterised subclasses of StandardTriangulation,
          * this SnappedBall subclass represents a fixed structure, and
-         * so its comparisons test not for the \e structure but the precise
-         * \e location of this structure within the enclosing triangulation.
+         * so its comparisons test not for the _structure_ but the precise
+         * _location_ of this structure within the enclosing triangulation.
          *
          * Specifically, two snapped 3-balls will compare as equal if and only
          * if each uses the same numbered tetrahedron, and has the same
@@ -174,8 +174,8 @@ class SnappedBall : public StandardTriangulation {
          * must be equal.  In particular, it is still meaningful to compare
          * snapped 3-balls within different triangulations.
          *
-         * @param other the snapped 3-ball to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the snapped 3-ball to compare with this.
+         * \return \c true if and only if this and the given object represent
          * different specific presentations of a snapped 3-ball.
          */
         bool operator != (const SnappedBall& other) const;
@@ -195,8 +195,8 @@ class SnappedBall : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tet the tetrahedron to examine as a potential 3-ball.
-         * @return a structure containing details of the snapped 3-ball, or
+         * \param tet the tetrahedron to examine as a potential 3-ball.
+         * \return a structure containing details of the snapped 3-ball, or
          * \c null if the given tetrahedron is not a snapped 3-ball.
          */
         static std::unique_ptr<SnappedBall> recognise(Tetrahedron<3>* tet);
@@ -220,8 +220,8 @@ class SnappedBall : public StandardTriangulation {
  * This global routine simply calls SnappedBall::swap(); it is provided
  * so that SnappedBall meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

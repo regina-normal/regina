@@ -811,6 +811,28 @@ std::vector<std::array<vertex3, 4>> find_component_quadris(graph<4> G) {
     return ans;
 }
 
+void usage(const char* progName, const std::string& error = std::string()) {
+    if (! error.empty())
+        std::cerr << error << "\n\n";
+
+    std::cerr << "Usage:" << std::endl;
+    std::cerr << "    " << progName << " { -3, --dim3 | -4, --dim4 } "
+        "[ -g, --graph ] [ -r, --real ]\n"
+        "    " << progName << " [ -v, --version | -?, --help ]\n\n";
+    std::cerr << "    -3, --dim3 : Build a 3-manifold via integer "
+        "Dehn surgery\n";
+    std::cerr << "    -4, --dim4 : Build a 4-manifold by attaching "
+        "2-handles along a framed link\n\n";
+    std::cerr << "    -g, --graph : Output an edge-coloured graph, "
+        "not an isomorphism signature\n";
+    std::cerr << "    -r, --real  : Build a triangulation with real boundary "
+        "(not ideal or closed)\n\n";
+    std::cerr << "    -v, --version : Show which version of Regina "
+        "is being used\n";
+    std::cerr << "    -?, --help    : Display this help\n";
+    exit(1);
+}
+
 int main(int argc, char* argv[]) {
 
     vertex v1={1,0},v2={2,0},v3={3,0},v4={4,0},v5={5,0},v6={6,0},v7={7,0},v8={8,0};
@@ -876,6 +898,20 @@ int main(int argc, char* argv[]) {
     negCurlA.from_simple_edges(negCurlA_el);
     negCurlB.from_simple_edges(negCurlB_el);
 
+    // Check for standard arguments:
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "-?") == 0 || strcmp(argv[i], "--help") == 0)
+            usage(argv[0]);
+        if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
+            if (argc != 2)
+                usage(argv[0],
+                    "Option --version cannot be used with "
+                        "any other arguments.");
+            std::cout << PACKAGE_BUILD_STRING << std::endl;
+            exit(0);
+        }
+    }
+
     int dim_flag_int = 4; // Default to build a 4-manifold.
     bool output_type = false;
     bool bdy_type = false;
@@ -895,8 +931,7 @@ int main(int argc, char* argv[]) {
      */
     
     if (argc < 2) {
-        std::cerr << "Please provide at least a single dimension flag: -3, --dim3, -4, or --dim4.\nOptional:\nOutput type: -g or --graph for graph edge list (default is isomorphism signature).\nBoundary type: -r or --real to build triangulation with real boundary (default is with ideal boundary, or closed depending on manifold).\n";
-        exit(1);
+        usage(argv[0], "Please provide a dimension flag (-3 or -4).");
     }
     else if (2 <= argc && argc < 5) {
         for (int i=1; i<argc; ++i) {
@@ -913,8 +948,7 @@ int main(int argc, char* argv[]) {
                 dim_flag_int = 4;
             }
             else {
-                std::cerr << "Invalid dimension or option: " << argv[i] <<".\n";
-                exit(1);
+                usage(argv[0], std::string("Invalid option: ") + argv[i]);
             }
         }
     }

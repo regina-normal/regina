@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,8 +33,14 @@
 #include "../pybind11/pybind11.h"
 #include "foreign/orb.h"
 #include "triangulation/dim3.h"
+#include "../helpers.h"
+#include "../docstrings/foreign/orb.h"
 
 void addForeignOrb(pybind11::module_& m) {
-    m.def("readOrb", regina::readOrb);
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("readOrb", regina::readOrb, rdoc::readOrb);
+
+    RDOC_SCOPE_END
 }
 

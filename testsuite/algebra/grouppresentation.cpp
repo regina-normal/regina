@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "algebra/grouppresentation.h"
+#include "algebra/homgrouppresentation.h"
 #include "algebra/markedabeliangroup.h"
 #include "utilities/stringutils.h"
 
@@ -52,14 +52,11 @@ using regina::HomGroupPresentation;
 class GroupPresentationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(GroupPresentationTest);
 
-    CPPUNIT_TEST(RS_test); // Reidemeister-Schreir
-    CPPUNIT_TEST(word_reduction_test); // inversion, multiplication,
-                                       // word reduction.
-    CPPUNIT_TEST(presValid_test); // validity of presentation.
-    // CPPUNIT_TEST(simplify_word_test); // TODO: word simplification in pres.
-    // CPPUNIT_TEST(ab_test); // TODO: abelianization tests.
-    // CPPUNIT_TEST(nielsen_test); // TODO: nielsen moves
-    CPPUNIT_TEST(homalign_test); // homological alignment.
+    CPPUNIT_TEST(reidemeisterSchreir);
+    CPPUNIT_TEST(wordReduction); // inversion, multiplication, word reduction.
+    CPPUNIT_TEST(validity);
+    CPPUNIT_TEST(homologicalAlignment);
+    CPPUNIT_TEST(simplifyHomomorphism);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -134,7 +131,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         // so far nothing.
     }
 
-    void RS_test() {
+    void reidemeisterSchreir() {
         for (GroupPresentation* g : presList) {
             g->intelligentSimplify();
             // Currently identifyExtensionOverZ() is private, so we
@@ -155,9 +152,9 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL("Reidemeister-Schreir failure.");
             }
         }
-    }; // end RS_test
+    }; // end reidemeisterSchreir
 
-    void word_reduction_test() { // pure GroupExpression tests here.
+    void wordReduction() { // pure GroupExpression tests here.
         GroupExpression word1("abcABC");
         GroupExpression word2("cbaCBA");
         GroupExpression word3("abccbaBCCBA");
@@ -171,21 +168,22 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         word2.simplify();
         if (word1.countTerms() != 6)
             CPPUNIT_FAIL("GroupExpression::number of terms (1). "+word1.str());
-        if (word1.countTerms() != 6)
-            CPPUNIT_FAIL("GroupExpression::number of terms (2). "+word1.str());
+        if (word2.countTerms() != 6)
+            CPPUNIT_FAIL("GroupExpression::number of terms (2). "+word2.str());
         word1.simplify(true);
         word2.simplify(true);
         if (word1.countTerms() != 6)
             CPPUNIT_FAIL("GroupExpression::number of terms (3). "+word1.str());
-        if (word1.countTerms() != 6)
-            CPPUNIT_FAIL("GroupExpression::number of terms (4). "+word1.str());
+        if (word2.countTerms() != 6)
+            CPPUNIT_FAIL("GroupExpression::number of terms (4). "+word2.str());
 
         word1.addTermsLast(word2);
         word1.simplify();
         if (word1.countTerms() != 0)
             CPPUNIT_FAIL("GroupExpression::inverse (2). "+word1.str());
 
-        if (word3.countTerms() != 11)
+        // The constructor will automatically merge cc, CC -> c^2, C^-2.
+        if (word3.countTerms() != 9)
             CPPUNIT_FAIL("GroupExpression::number of terms (5). "+word3.str());
         word3.simplify();
         if (word3.countTerms() != 9)
@@ -194,7 +192,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         if (word3.countTerms() != 1)
             CPPUNIT_FAIL("GroupExpression::number of terms (7). "+word3.str());
     }
-    void presValid_test() {
+    void validity() {
         for (GroupPresentation* g : presList)
             if (! g->isValid())
                 CPPUNIT_FAIL("Invalid presentation.");
@@ -205,18 +203,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL("DPRES: invalid presentation.");
     }
 
-    /*
-    void simplify_word_test() { // this is with respect to a presentation.
-        // TODO
-    }
-    void ab_test() { // abelianize, marked abelianize, and isAbelian
-        // TODO
-    }
-    void nielsen_test() {
-        // TODO
-    }
-    */
-    void homalign_test() {
+    void homologicalAlignment() {
         // ensure homological alignment does what we claim
         for (GroupPresentation* g : presList) {
             GroupPresentation tPres( *g );
@@ -278,7 +265,32 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                 } // end k loop
             } // end j loop
         } // end presList loop
-    } // end homalign_test()
+    } // end homologicalAlignment()
+
+    void simplifyHomomorphism() {
+        // This test was added in regina 7.3 to address an issue where
+        // the high-level HomGroupPresentation simplification routines
+        // were incorrectly conjugating images/preimages of generators.
+
+        GroupPresentation D(2);
+        GroupPresentation G(4, { "aaaaacBCB" });
+
+        HomGroupPresentation H(D, G,
+            { GroupExpression("daaaaaD"), GroupExpression("dbcbCD") });
+        HomGroupPresentation H2(H);
+
+        // In regina 7.2 and earlier, this incorrectly conjugated the image of
+        // the first generator, resulting in the incorrectly simplified image
+        // bcbC instead of the correct image daaaaaD.
+        H2.intelligentSimplify();
+
+        if (H != H2) {
+            std::ostringstream msg;
+            msg << "HomGroupPresentation was incorrectly simplified: "
+                << H << " != " << H2;
+            CPPUNIT_FAIL(msg.str());
+        }
+    }
 };
 
 void addGroupPresentation(CppUnit::TextUi::TestRunner& runner) {

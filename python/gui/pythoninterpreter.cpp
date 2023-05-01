@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,7 +47,6 @@
 #include "../python/pybind11/pybind11.h"
 #include "../python/pybind11/embed.h"
 #include <compile.h>
-#include <eval.h>
 #include <sysmodule.h>
 
 #ifdef PYTHON_STATIC_LINK
@@ -56,12 +55,7 @@
     // import mechanism).
 
     // Declare the entry point for Regina's python module:
-    #if PY_MAJOR_VERSION >= 3
-        #define REGINA_PYTHON_INIT PyInit_regina
-    #else
-        #define REGINA_PYTHON_INIT initregina
-    #endif
-    PyMODINIT_FUNC REGINA_PYTHON_INIT();
+    PyMODINIT_FUNC PyInit_regina();
 #endif
 
 // Convert the Python version x.y into the form "x" "y":
@@ -86,7 +80,18 @@
 
 namespace regina::python {
 
+#if PY_VERSION_HEX >= 0x030a0300
+// Unfortunately python versions 3.10.[0-2] are broken: they reject incomplete
+// code (e.g., bracketed lists that span multiple lines) as a syntax error.
+// This is fixed with the PyCF_DONT_IMPLY_DEDENT flag that was introduced
+// in python 3.10.3.
+static PyCompilerFlags pyCompFlags =
+    { PyCF_DONT_IMPLY_DEDENT | PyCF_ALLOW_INCOMPLETE_INPUT };
+#else
+// Python 3.9 and earlier used a different method for compilation, which
+// does not have such problems.
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
+#endif
 
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
@@ -95,7 +100,8 @@ pybind11::scoped_interpreter* mainInterpreter;
 
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
-        regina::python::PythonOutputStream& pyStdErr) :
+        regina::python::PythonOutputStream& pyStdErr,
+        bool fixPythonPath) :
         caughtSystemExit(false),
         output(pyStdOut), errors(pyStdErr),
         completer(nullptr), completerFunc(nullptr) {
@@ -106,39 +112,42 @@ PythonInterpreter::PythonInterpreter(
         PyEval_AcquireThread(mainState);
     else {
 #ifdef PYTHON_CORE_IN_ZIP
-        // Regina is shipping its own copy of python, which means the
-        // core python libraries are bundled as a zip file.
-        //
-        // We need to manually include the python zip and the path to zlib.pyd
-        // on the python path, *before* the first interpreter is initialised.
-        //
-        // Here we assume that pythonXY.zip and zlib.pyd are installed
-        // in the same directory as the regina python module.
+        if (fixPythonPath) {
+            // Regina is shipping its own copy of python, which means the
+            // core python libraries are bundled as a zip file.
+            //
+            // We need to manually include the python zip and the path to
+            // zlib.pyd on the python path, *before* the first interpreter
+            // is initialised.
+            //
+            // Here we assume that pythonXY.zip and zlib.pyd are installed
+            // in the same directory as the regina python module.
 
-        const char* oldPath = getenv("PYTHONPATH");
-        std::string newPath("PYTHONPATH=");
-        newPath += regina::GlobalDirs::pythonModule();
-        #if defined(REGINA_INSTALL_WINDOWS)
-            newPath += ";";
+            const char* oldPath = getenv("PYTHONPATH");
+            std::string newPath("PYTHONPATH=");
             newPath += regina::GlobalDirs::pythonModule();
-            newPath += "/python" REGINA_PY_VERSION ".zip;";
-        #else
-            newPath += ":";
-            newPath += regina::GlobalDirs::pythonModule();
-            newPath += "/python" REGINA_PY_VERSION ".zip:";
-        #endif
+            #if defined(REGINA_INSTALL_WINDOWS)
+                newPath += ";";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip;";
+            #else
+                newPath += ":";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip:";
+            #endif
 
-        if (oldPath)
-            newPath += oldPath;
+            if (oldPath)
+                newPath += oldPath;
 
-        putenv(strdup(newPath.c_str()));
+            putenv(strdup(newPath.c_str()));
+        }
 #endif
 
 #ifdef PYTHON_STATIC_LINK
         // Regina's python module is statically linked into the GUI; it
         // is not shipped as a separate module on the filesystem.
         // Tell python how to find it.
-        if (PyImport_AppendInittab("regina", &REGINA_PYTHON_INIT) == -1) {
+        if (PyImport_AppendInittab("regina", &PyInit_regina) == -1) {
             errors.write("ERROR: PyImport_AppendInittab(\"regina\", ...) "
                 "failed.\n");
             errors.flush();
@@ -163,7 +172,7 @@ PythonInterpreter::PythonInterpreter(
         // If this fails, do so silently; we'll see the same error again
         // immediately in the first subinterpreter.
         importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
-            "__main__")));
+            "__main__")), fixPythonPath);
 
         // With pybind11, it seems that we need to *use* regina's bindings in
         // the first interpreter that imports them; otherwise subsequent
@@ -176,8 +185,10 @@ PythonInterpreter::PythonInterpreter(
         mainState = PyThreadState_Get();
     }
 
-    // Create the new interpreter.
+    // Create the new interpreter and note the thread that it should be used
+    // with.
     state = Py_NewInterpreter();
+    thread = std::this_thread::get_id();
 
     // Record the main module.
     mainModule = PyImport_AddModule("__main__"); // Borrowed ref.
@@ -245,7 +256,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     strcpy(cmdBuffer, fullCommand.c_str());
 
     // Acquire the global interpreter lock.
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     // Attempt to compile the command with no additional newlines.
     PyObject* code = Py_CompileStringFlags(
@@ -274,7 +285,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 
         // Clean up.
         Py_DECREF(code);
-        state = PyEval_SaveThread();
 
         delete[] cmdBuffer;
         currentCode.clear();
@@ -295,7 +305,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
-        state = PyEval_SaveThread();
 
         delete[] cmdBuffer;
         currentCode = currentCode + command + '\n';
@@ -322,7 +331,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         Py_XDECREF(errValue);
         Py_XDECREF(errTrace);
         Py_XDECREF(errStr1);
-        state = PyEval_SaveThread();
 
         delete[] cmdBuffer;
         currentCode = currentCode + command + '\n';
@@ -342,7 +350,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
             Py_XDECREF(errTrace);
             Py_DECREF(errStr1);
             Py_DECREF(errStr2);
-            state = PyEval_SaveThread();
 
             delete[] cmdBuffer;
             currentCode = currentCode + command + '\n';
@@ -355,7 +362,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 
             Py_DECREF(errStr1);
             Py_DECREF(errStr2);
-            state = PyEval_SaveThread();
 
             delete[] cmdBuffer;
             currentCode.clear();
@@ -368,7 +374,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         Py_XDECREF(errTrace);
         Py_XDECREF(errStr1);
         Py_XDECREF(errStr2);
-        state = PyEval_SaveThread();
 
         errors.write("ERROR: Python compile error details "
             "are not available.\n");
@@ -394,23 +399,18 @@ void PythonInterpreter::prependReginaToSysPath() {
 
             // Since this is a filesystem path, we assume it comes direct from
             // the filesystem, and is not necessary encoded using UTF-8.
-#if PY_MAJOR_VERSION >= 3
             PyObject* regModuleDirPy =
                 PyUnicode_DecodeFSDefault(regModuleDir.c_str());
-#else
-            PyObject* regModuleDirPy =
-                PyString_FromString(regModuleDir.c_str());
-#endif
             PyList_Insert(path, 0, regModuleDirPy);
             Py_DECREF(regModuleDirPy);
         }
     }
 }
 
-bool PythonInterpreter::importRegina() {
-    PyEval_RestoreThread(state);
+bool PythonInterpreter::importRegina(bool fixPythonPath) {
+    ScopedThreadRestore thread(*this);
 
-    bool ok = importReginaIntoNamespace(mainNamespace);
+    bool ok = importReginaIntoNamespace(mainNamespace, fixPythonPath);
 
     // Also set up a completer if we can, but if not then just fail silently.
     if (ok) {
@@ -431,15 +431,17 @@ bool PythonInterpreter::importRegina() {
         PyErr_Clear();
     }
 
-    state = PyEval_SaveThread();
     return ok;
 }
 
-bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
+bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
+        bool fixPythonPath) {
+    if (fixPythonPath) {
 #ifndef PYTHON_STATIC_LINK
-    // Adjust the python path if we need to.
-    prependReginaToSysPath();
+        // Adjust the python path if we need to.
+        prependReginaToSysPath();
 #endif
+    }
 
     // Import the module.
     PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
@@ -454,18 +456,14 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
 
 bool PythonInterpreter::setVar(const char* name,
         std::shared_ptr<Packet> value) {
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     bool ok = false;
     try {
         pybind11::object obj = pybind11::cast(value);
         if (obj.ptr()) {
-#if PY_MAJOR_VERSION >= 3
             // PyUnicode_FromString assumes UTF-8 encoding.
             PyObject* nameStr = PyUnicode_FromString(name); // New ref.
-#else
-            PyObject* nameStr = PyString_FromString(name); // New ref.
-#endif
             if (PyDict_SetItem(mainNamespace, nameStr, obj.ptr())) {
                 PyErr_Print();
                 PyErr_Clear();
@@ -483,18 +481,16 @@ bool PythonInterpreter::setVar(const char* name,
         errors.flush();
     }
 
-    state = PyEval_SaveThread();
     return ok;
 }
 
 bool PythonInterpreter::runCode(const char* code) {
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     PyObject* ans = PyRun_String(const_cast<char*>(code), Py_file_input,
         mainNamespace, mainNamespace);
     if (ans) {
         Py_DECREF(ans);
-        state = PyEval_SaveThread();
         return true;
     } else {
         // If the user called exit(), this will have thrown a SystemExit
@@ -506,7 +502,6 @@ bool PythonInterpreter::runCode(const char* code) {
             PyErr_Print();
         }
         PyErr_Clear();
-        state = PyEval_SaveThread();
         return false;
     }
 }
@@ -559,7 +554,7 @@ int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
     if (! completerFunc)
         return -1;
 
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     try {
         pybind11::handle func(completerFunc);
@@ -568,18 +563,15 @@ int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
             pybind11::object ans = func(text, which);
             if (ans.is_none()) {
                 // No more completions available.
-                state = PyEval_SaveThread();
                 return which;
             }
             ++which;
             if (! c.addCompletion(pybind11::cast<std::string>(ans))) {
                 // The PythonCompleter object does not want more completions.
-                state = PyEval_SaveThread();
                 return which;
             }
         }
     } catch (std::runtime_error& e) {
-        state = PyEval_SaveThread();
         return -1;
     }
 }

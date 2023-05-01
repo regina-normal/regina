@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -71,7 +71,7 @@ namespace regina {
  * you run the same code in a new process (but on the same machine), you
  * should receive the same sequence of random bits.  However, the generation
  * algorithm may be specific to your machine, so running the same code on
- * different machines might well \e not generate the same random bits.
+ * different machines might well _not_ generate the same random bits.
  *
  * If you need to re-seed the random engine with a value that is
  * unpredictable (e.g., using hardware entropy), you can call
@@ -83,11 +83,11 @@ namespace regina {
  * Regina does not offer any way for a RandomEngine to transfer its duty
  * (i.e., unlocking the internal mutex upon destruction) to another object.
  *
- * \warning Locks are \e not recursive.  If the same thread attempts to
+ * \warning Locks are _not_ recursive.  If the same thread attempts to
  * create a second RandomEngine object before the previous one is destroyed,
  * the resulting behaviour is undefined.
  *
- * \ifacespython Python users only have access to the static member
+ * \python Python users only have access to the static member
  * functions in this class (which still supports basic random number
  * generation as well as reseeding).
  *
@@ -105,7 +105,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * Constructor that locks the internal mutex.
          * The mutex will be unlocked when this object is destroyed.
          *
-         * \ifacespython Not present.
+         * \nopython
          */
         RandomEngine();
 
@@ -117,9 +117,9 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * directly to other random number generation functions as you
          * use them, and not store a reference to it for later use.
          *
-         * \ifacespython Not present.
+         * \nopython
          *
-         * @return a reference to the global URBG.
+         * \return a reference to the global URBG.
          */
         std::default_random_engine& engine();
 
@@ -134,15 +134,15 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * consider creating a single RandomEngine object and accessing
          * engine() directly using the standard C++ randomness functions.
          *
-         * \ifacespython The integer type \a Int will be treated as \c long.
+         * \python The integer type \a Int will be treated as \c long.
          *
          * \tparam Int a native integer type (e.g., \c int, \c long,
-         * \c size_t, <tt>long long</tt>, etc.); this may be either
+         * \c size_t, `long long`, etc.); this may be either
          * signed or unsigned.
          *
-         * @param range the size of the range of possible results;
+         * \param range the size of the range of possible results;
          * this must be strictly positive.
-         * @return a random integer between 0 and (\a range - 1) inclusive.
+         * \return a random integer between 0 and (\a range - 1) inclusive.
          */
         template <typename Int>
         static Int rand(Int range);
@@ -153,7 +153,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * bits unpredictable (and, in particular, different between
          * runs of your program).
          *
-         * Regina does \e not do this by default.
+         * Regina does _not_ do this by default.
          *
          * This routine is thread-safe, and it locks the internal mutex
          * while it runs.

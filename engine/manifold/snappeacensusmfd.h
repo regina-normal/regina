@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -118,16 +118,16 @@ class SnapPeaCensusManifold : public Manifold {
         /**
          * Creates a new SnapPea census manifold with the given parameters.
          *
-         * @param newSection the section of the SnapPea census to which
+         * \param section the section of the SnapPea census to which
          * this manifold belongs.  This must be one of the section
          * constants defined in this class.
-         * @param newIndex specifies which particular manifold within the
+         * \param index specifies which particular manifold within the
          * given section is represented.  The indices for each section
          * begin counting at zero, and so this index
-         * must be between 0 and <i>k</i>-1, where <i>k</i> is the total
+         * must be between 0 and <i>k</i>-1, where \a k is the total
          * number of manifolds in the given section.
          */
-        SnapPeaCensusManifold(char newSection, unsigned long newIndex);
+        SnapPeaCensusManifold(char section, unsigned long index);
         /**
          * Creates a new copy of the given SnapPea census manifold.
          */
@@ -137,7 +137,7 @@ class SnapPeaCensusManifold : public Manifold {
          * manifold belongs.  This will be one of the section constants
          * defined in this class.
          *
-         * @return the section of the SnapPea census.
+         * \return the section of the SnapPea census.
          */
         char section() const;
         /**
@@ -145,7 +145,7 @@ class SnapPeaCensusManifold : public Manifold {
          * section of the SnapPea census.  Note that indices for each
          * section begin counting at zero.
          *
-         * @return the index of this manifold within its section.
+         * \return the index of this manifold within its section.
          */
         unsigned long index() const;
         /**
@@ -154,11 +154,11 @@ class SnapPeaCensusManifold : public Manifold {
          *
          * As of Regina 5.0, this test respects the recent discovery that
          * the manifolds \c x101 and \c x103 are homeomorphic.
-         * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
+         * For details, see B.B., _A duplicate pair in the SnapPea census_,
          * Experimental Mathematics, 23:170-173, 2014.
          *
-         * @param compare the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param compare the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same SnapPea census manifold.
          */
         bool operator == (const SnapPeaCensusManifold& compare) const;
@@ -168,11 +168,11 @@ class SnapPeaCensusManifold : public Manifold {
          *
          * As of Regina 5.0, this test respects the recent discovery that
          * the manifolds \c x101 and \c x103 are homeomorphic.
-         * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
+         * For details, see B.B., _A duplicate pair in the SnapPea census_,
          * Experimental Mathematics, 23:170-173, 2014.
          *
-         * @param compare the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param compare the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent different SnapPea census manifolds.
          */
         bool operator != (const SnapPeaCensusManifold& compare) const;
@@ -180,7 +180,7 @@ class SnapPeaCensusManifold : public Manifold {
         /**
          * Sets this to be a copy of the given SnapPea census manifold.
          *
-         * @return a reference to this SnapPea census manifold.
+         * \return a reference to this SnapPea census manifold.
          */
         SnapPeaCensusManifold& operator = (const SnapPeaCensusManifold&) =
             default;
@@ -188,7 +188,7 @@ class SnapPeaCensusManifold : public Manifold {
         /**
          * Swaps the contents of this and the given SnapPea census manifold.
          *
-         * @param other the census manifold whose contents should be swapped
+         * \param other the census manifold whose contents should be swapped
          * with this.
          */
         void swap(SnapPeaCensusManifold& other) noexcept;
@@ -207,8 +207,8 @@ class SnapPeaCensusManifold : public Manifold {
  * This global routine simply calls SnapPeaCensusManifold::swap(); it is
  * provided so that SnapPeaCensusManifold meets the C++ Swappable requirements.
  *
- * @param a the first census manifold whose contents should be swapped.
- * @param b the second census manifold whose contents should be swapped.
+ * \param a the first census manifold whose contents should be swapped.
+ * \param b the second census manifold whose contents should be swapped.
  *
  * \ingroup manifold
  */
@@ -216,9 +216,8 @@ void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept;
 
 // Inline functions for SnapPeaCensusManifold
 
-inline SnapPeaCensusManifold::SnapPeaCensusManifold(char newSection,
-        unsigned long newIndex) :
-        section_(newSection), index_(newIndex) {
+inline SnapPeaCensusManifold::SnapPeaCensusManifold(char section,
+        unsigned long index) : section_(section), index_(index) {
 }
 inline char SnapPeaCensusManifold::section() const {
     return section_;

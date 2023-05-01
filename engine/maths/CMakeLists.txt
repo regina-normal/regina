@@ -9,6 +9,8 @@ SET ( FILES
   matrix2.cpp
   matrixops.cpp
   numbertheory.cpp
+  perm.cpp
+  permgroup.cpp
   primes.cpp
   rational.cpp
   seedprimes.cpp
@@ -32,7 +34,7 @@ if (${REGINA_INSTALL_DEV})
     matrixops.h
     numbertheory.h
     perm.h
-    perm-impl.h
+    permgroup.h
     polynomial.h
     primes.h
     rational.h

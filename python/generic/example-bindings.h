@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,22 +34,35 @@
 #include "triangulation/example.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/example.h"
+#include "../docstrings/triangulation/detail/example.h"
 
 using regina::Example;
 
 template <int dim>
 void addExample(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<Example<dim>>(m, name)
-        .def_static("sphere", &Example<dim>::sphere)
-        .def_static("simplicialSphere", &Example<dim>::simplicialSphere)
-        .def_static("sphereBundle", &Example<dim>::sphereBundle)
-        .def_static("twistedSphereBundle", &Example<dim>::twistedSphereBundle)
-        .def_static("ball", &Example<dim>::ball)
-        .def_static("ballBundle", &Example<dim>::ballBundle)
-        .def_static("twistedBallBundle", &Example<dim>::twistedBallBundle)
-        .def_static("doubleCone", &Example<dim>::doubleCone)
-        .def_static("singleCone", &Example<dim>::singleCone)
+    // We use the global scope here because all of Example's members are
+    // inherited, and so Example's own docstring namespace does not exist.
+    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BASE_2(detail::ExampleBase, detail::ExampleFromLowDim)
+
+    auto c = pybind11::class_<Example<dim>>(m, name, rdoc::Example)
+        .def_static("sphere", &Example<dim>::sphere, rbase::sphere)
+        .def_static("simplicialSphere", &Example<dim>::simplicialSphere,
+            rbase::simplicialSphere)
+        .def_static("sphereBundle", &Example<dim>::sphereBundle,
+            rbase::sphereBundle)
+        .def_static("twistedSphereBundle", &Example<dim>::twistedSphereBundle,
+            rbase::twistedSphereBundle)
+        .def_static("ball", &Example<dim>::ball, rbase::ball)
+        .def_static("ballBundle", &Example<dim>::ballBundle, rbase::ballBundle)
+        .def_static("twistedBallBundle", &Example<dim>::twistedBallBundle,
+            rbase::twistedBallBundle)
+        .def_static("doubleCone", &Example<dim>::doubleCone, rbase2::doubleCone)
+        .def_static("singleCone", &Example<dim>::singleCone, rbase2::singleCone)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 

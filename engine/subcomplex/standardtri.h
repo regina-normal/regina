@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -101,7 +101,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Returns the name of this specific triangulation as a
          * human-readable string.
          *
-         * @return the name of this triangulation.
+         * \return the name of this triangulation.
          */
         std::string name() const;
         /**
@@ -112,7 +112,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * @return the name of this triangulation in TeX format.
+         * \return the name of this triangulation in TeX format.
          */
         std::string texName() const;
         /**
@@ -129,7 +129,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * underlying 3-manifolds can be recognised will grow between
          * releases.
          *
-         * @return the underlying 3-manifold.
+         * \return the underlying 3-manifold.
          */
         virtual std::unique_ptr<Manifold> manifold() const;
         /**
@@ -151,7 +151,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Most users will not need this routine, since presumably you
          * already have an explicit Triangulation<3> available and so
          * you can just call Triangulation<3>::homology() instead
-         * (which, unlike this routine, \e is always implemented).
+         * (which, unlike this routine, _is_ always implemented).
          * This StandardTriangulation::homology() routine should be seen
          * as more of a verification/validation tool for the Regina developers.
          *
@@ -160,16 +160,16 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * should be identical to the homology group obtained by calling
          * Triangulation<3>::homology() upon the associated real triangulation.
          *
-         * \exception NotImplemented homology calculation has not yet
+         * \exception NotImplemented Homology calculation has not yet
          * been implemented for this particular type of standard triangulation.
          *
-         * \exception FileError the homology needs to be read from file (as
+         * \exception FileError The homology needs to be read from file (as
          * opposed to computed), but the file is inaccessible or its contents
          * cannot be read and parsed correctly.  Currently this can only happen
          * for the subclass SnapPeaCensusTri, which reads its results from
          * the SnapPea census databases that are installed with Regina.
          *
-         * @return the first homology group of this triangulation, if this
+         * \return the first homology group of this triangulation, if this
          * functionality has been implemented.
          */
         virtual AbelianGroup homology() const;
@@ -178,11 +178,11 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Writes the name of this triangulation as a human-readable
          * string to the given output stream.
          *
-         * \ifacespython Not present; instead use the variant name() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant name() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
@@ -194,11 +194,11 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython Not present; instead use the variant texName() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant texName() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
@@ -210,9 +210,9 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         virtual void writeTextShort(std::ostream& out) const;
 
@@ -224,9 +224,9 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeTextShort().
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         virtual void writeTextLong(std::ostream& out) const;
 
@@ -246,8 +246,8 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * triangulations than this routine, since passing an entire
          * triangulation allows access to more information.
          *
-         * @param component the triangulation component under examination.
-         * @return the details of the standard triangulation if the
+         * \param component the triangulation component under examination.
+         * \return the details of the standard triangulation if the
          * given component is recognised, or \c null otherwise.
          */
         static std::unique_ptr<StandardTriangulation> recognise(
@@ -267,8 +267,8 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * component-based recognise(Component<3>*), since passing an entire
          * triangulation allows access to more information.
          *
-         * @param tri the triangulation under examination.
-         * @return the details of the standard triangualation if the
+         * \param tri the triangulation under examination.
+         * \return the details of the standard triangualation if the
          * given triangulation is recognised, or \c null otherwise.
          */
         static std::unique_ptr<StandardTriangulation> recognise(

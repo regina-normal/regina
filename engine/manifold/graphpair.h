@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -116,16 +116,16 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param mat00 the (0,0) element of the matching matrix.
-         * @param mat01 the (0,1) element of the matching matrix.
-         * @param mat10 the (1,0) element of the matching matrix.
-         * @param mat11 the (1,1) element of the matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param mat00 the (0,0) element of the matching matrix.
+         * \param mat01 the (0,1) element of the matching matrix.
+         * \param mat10 the (1,0) element of the matching matrix.
+         * \param mat11 the (1,1) element of the matching matrix.
          */
         GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
             long mat00, long mat01, long mat10, long mat11);
@@ -139,16 +139,16 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param mat00 the (0,0) element of the matching matrix.
-         * @param mat01 the (0,1) element of the matching matrix.
-         * @param mat10 the (1,0) element of the matching matrix.
-         * @param mat11 the (1,1) element of the matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param mat00 the (0,0) element of the matching matrix.
+         * \param mat01 the (0,1) element of the matching matrix.
+         * \param mat10 the (1,0) element of the matching matrix.
+         * \param mat11 the (1,1) element of the matching matrix.
          */
         GraphPair(SFSpace&& sfs0, SFSpace&& sfs1,
             long mat00, long mat01, long mat10, long mat11);
@@ -159,13 +159,13 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param matchingReln the 2-by-2 matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param matchingReln the 2-by-2 matching matrix.
          */
         GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
             const Matrix2& matchingReln);
@@ -179,13 +179,13 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param matchingReln the 2-by-2 matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param matchingReln the 2-by-2 matching matrix.
          */
         GraphPair(SFSpace&& sfs0, SFSpace&& sfs1, const Matrix2& matchingReln);
         /**
@@ -204,9 +204,9 @@ class GraphPair : public Manifold {
          * Returns a reference to one of the two bounded Seifert fibred
          * spaces that are joined together.
          *
-         * @param which 0 if the first Seifert fibred space is to be
+         * \param which 0 if the first Seifert fibred space is to be
          * returned, or 1 if the second space is to be returned.
-         * @return a reference to the requested Seifert fibred space.
+         * \return a reference to the requested Seifert fibred space.
          */
         const SFSpace& sfs(unsigned which) const;
         /**
@@ -214,7 +214,7 @@ class GraphPair : public Manifold {
          * two Seifert fibred spaces are joined together.  See the class
          * notes for details on precisely how this matrix is represented.
          *
-         * @return a reference to the matching matrix.
+         * \return a reference to the matching matrix.
          */
         const Matrix2& matchingReln() const;
 
@@ -232,8 +232,8 @@ class GraphPair : public Manifold {
          * All that this routine really offers is a well-defined way of
          * ordering graph manifold representations.
          *
-         * @param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \param compare the representation with which this will be compared.
+         * \return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
         bool operator < (const GraphPair& compare) const;
@@ -241,7 +241,7 @@ class GraphPair : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphPair& operator = (const GraphPair&) = default;
         /**
@@ -250,14 +250,14 @@ class GraphPair : public Manifold {
          *
          * The graph manifold that was passed will no longer be usable.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphPair& operator = (GraphPair&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given graph manifold.
          *
-         * @param other the graph manifold whose contents should be swapped
+         * \param other the graph manifold whose contents should be swapped
          * with this.
          */
         void swap(GraphPair& other) noexcept;
@@ -266,15 +266,15 @@ class GraphPair : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrix
          * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
         bool operator == (const GraphPair& compare) const;
@@ -283,15 +283,15 @@ class GraphPair : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrix
          * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
         bool operator != (const GraphPair& compare) const;
@@ -308,7 +308,7 @@ class GraphPair : public Manifold {
          *
          * This should be called from every class constructor.
          *
-         * \exception InvalidArgument the preconditions were not met.
+         * \exception InvalidArgument The preconditions were not met.
          */
         void verifySFS();
 
@@ -324,7 +324,7 @@ class GraphPair : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln the matching matrix to simplify.
+         * \param reln the matching matrix to simplify.
          */
         static void reduceSign(Matrix2& reln);
 };
@@ -335,8 +335,8 @@ class GraphPair : public Manifold {
  * This global routine simply calls GraphPair::swap(); it is provided so
  * that GraphPair meets the C++ Swappable requirements.
  *
- * @param a the first graph manifold whose contents should be swapped.
- * @param b the second graph manifold whose contents should be swapped.
+ * \param a the first graph manifold whose contents should be swapped.
+ * \param b the second graph manifold whose contents should be swapped.
  *
  * \ingroup manifold
  */

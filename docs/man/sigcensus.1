@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "SIGCENSUS" "1" "30 May 2022" "" "The Regina Handbook"
+.TH "SIGCENSUS" "1" "24 April 2023" "" "The Regina Handbook"
 
 .SH NAME
 sigcensus \- Form a census of splitting surface signatures
 .SH SYNOPSIS
 
 \fBsigcensus\fR \fB\fIorder\fB\fR
+
+
+\fBsigcensus\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -43,6 +46,14 @@ program will only output signatures whose symbols are all lower-case.
 .PP
 For more information on splitting surface signatures, see
 Burton's PhD thesis at \fBhttp://www.maths.uq.edu.au/~bab/papers/\fR\&.
+.SH "OPTIONS"
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "MACOS USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is
@@ -56,7 +67,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\sigcensus.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.4\\bin\\sigcensus.exe\&.
 .SH "SEE ALSO"
 .PP
 censuslookup,

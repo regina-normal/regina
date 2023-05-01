@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,50 +36,63 @@
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/satannulus.h"
 
 using regina::Perm;
 using regina::SatAnnulus;
 using regina::Tetrahedron;
 
 void addSatAnnulus(pybind11::module_& m) {
-    auto c = pybind11::class_<SatAnnulus>(m, "SatAnnulus")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const SatAnnulus&>())
+    RDOC_SCOPE_BEGIN(SatAnnulus)
+
+    auto c = pybind11::class_<SatAnnulus>(m, "SatAnnulus", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const SatAnnulus&>(), rdoc::__copy)
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
-            Tetrahedron<3>*, Perm<4>>())
+            Tetrahedron<3>*, Perm<4>>(), rdoc::__init)
         .def("tet", [](SatAnnulus& a, int which) {
             return a.tet[which];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::reference_internal, rdoc::tet)
         .def("roles", [](SatAnnulus& a, int which) {
             return a.roles[which];
-        })
+        }, rdoc::roles)
         .def("setTet", [](SatAnnulus& a, int which, Tetrahedron<3>* value) {
             a.tet[which] = value;
-        })
+        }, rdoc::setTet)
         .def("setRoles", [](SatAnnulus& a, int which, Perm<4> value) {
             a.roles[which] = value;
-        })
-        .def("meetsBoundary", &SatAnnulus::meetsBoundary)
-        .def("switchSides", &SatAnnulus::switchSides)
-        .def("otherSide", &SatAnnulus::otherSide)
-        .def("reflectVertical", &SatAnnulus::reflectVertical)
-        .def("verticalReflection", &SatAnnulus::verticalReflection)
-        .def("reflectHorizontal", &SatAnnulus::reflectHorizontal)
-        .def("horizontalReflection", &SatAnnulus::horizontalReflection)
-        .def("rotateHalfTurn", &SatAnnulus::rotateHalfTurn)
-        .def("halfTurnRotation", &SatAnnulus::halfTurnRotation)
-        .def("isAdjacent", &SatAnnulus::isAdjacent)
-        .def("isJoined", &SatAnnulus::isJoined)
-        .def("isTwoSidedTorus", &SatAnnulus::isTwoSidedTorus)
-        .def("transform", &SatAnnulus::transform)
-        .def("image", &SatAnnulus::image)
-        .def("attachLST", &SatAnnulus::attachLST)
+        }, rdoc::setRoles)
+        .def("meetsBoundary", &SatAnnulus::meetsBoundary,
+            rdoc::meetsBoundary)
+        .def("switchSides", &SatAnnulus::switchSides, rdoc::switchSides)
+        .def("otherSide", &SatAnnulus::otherSide, rdoc::otherSide)
+        .def("reflectVertical", &SatAnnulus::reflectVertical,
+            rdoc::reflectVertical)
+        .def("verticalReflection", &SatAnnulus::verticalReflection,
+            rdoc::verticalReflection)
+        .def("reflectHorizontal", &SatAnnulus::reflectHorizontal,
+            rdoc::reflectHorizontal)
+        .def("horizontalReflection", &SatAnnulus::horizontalReflection,
+            rdoc::horizontalReflection)
+        .def("rotateHalfTurn", &SatAnnulus::rotateHalfTurn,
+            rdoc::rotateHalfTurn)
+        .def("halfTurnRotation", &SatAnnulus::halfTurnRotation,
+            rdoc::halfTurnRotation)
+        .def("isAdjacent", &SatAnnulus::isAdjacent, rdoc::isAdjacent)
+        .def("isJoined", &SatAnnulus::isJoined, rdoc::isJoined)
+        .def("isTwoSidedTorus", &SatAnnulus::isTwoSidedTorus,
+            rdoc::isTwoSidedTorus)
+        .def("transform", &SatAnnulus::transform, rdoc::transform)
+        .def("image", &SatAnnulus::image, rdoc::image)
+        .def("attachLST", &SatAnnulus::attachLST, rdoc::attachLST)
     ;
     regina::python::add_output_custom(c,
             [](const SatAnnulus& a, std::ostream& s) {
         s << a.tet[0]->index() << " (" << a.roles[0].trunc(3) << "), "
             << a.tet[1]->index() << " (" << a.roles[1].trunc(3) << ')';
     });
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 

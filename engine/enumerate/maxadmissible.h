@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -85,16 +85,15 @@ class MaxAdmissible {
          * The return value is a vector containing all maximal admissible
          * faces.  Each face \a F is described by a bitmask.  Specifically:
          * if we are working in R^n, then each face is described by a bitmask
-         * \a b of length n, where <tt>b[i]</tt> is \c false if every point
-         * \a x in \a F has <tt>x[i]=0</tt>, and <tt>b[i]</tt> is \c true if
-         * every point \a x in the relative interior of \a F has
-         * <tt>x[i] &gt; 0</tt>.
+         * \a b of length n, where `b[i]` is \c false if every point
+         * \a x in \a F has `x[i]=0`, and `b[i]` is \c true if
+         * every point \a x in the relative interior of \a F has `x[i] > 0`.
          *
          * \pre The template argument RayIterator should be an iterator type
          * that, when dereferenced, can be treated as a vector of integers.
          * The exact vector and integer types are unimportant; all that matters
          * is that, for any such iterator \a it and any integer index \a i,
-         * we can test <tt>(*it)[i] == 0</tt> and <tt>(*it)[i] != 0</tt>.
+         * we can test `(*it)[i] == 0` and `(*it)[i] != 0`.
          *
          * \pre The template argument BitmaskType is one of the bitmask
          * types Bitmask, Bitmask1 or Bitmask2.
@@ -106,20 +105,20 @@ class MaxAdmissible {
          * you must be careful when using one of the fast but size-limited
          * types Bitmask1 or Bitmask2.
          *
-         * \ifacespython The extremal rays should be passed as a Python list
+         * \python The extremal rays should be passed as a Python list
          * of VectorInt objects, not a pair of iterators.  The bitmasks
          * that are returned will be of type regina::Bitmask.
          *
-         * @param beginExtremalRays an iterator that begins the set of
+         * \param beginExtremalRays an iterator that begins the set of
          * admissible extremal rays, as described above.  Typically this would
          * be rays.begin() if \a rays is a standard container type.
-         * @param endExtremalRays an iterator that is past-the-end of the set
+         * \param endExtremalRays an iterator that is past-the-end of the set
          * of admissible extremal rays.  Typically this would be rays.end()
          * if \a rays is a standard container type.
-         * @param constraints a set of validity constraints as described above.
+         * \param constraints a set of validity constraints as described above.
          * This may be ValidityConstraints::none to indicate no constraints
          * (in which case there will be just one maximal admissible face).
-         * @return a vector containing one bitmask representing each
+         * \return a vector containing one bitmask representing each
          * maximal admissible face, as described above.
          */
         template <class BitmaskType, class RayIterator>

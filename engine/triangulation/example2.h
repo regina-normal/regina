@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,9 +50,10 @@ namespace regina {
  * Offers routines for constructing a variety of sample 2-dimensional
  * triangulations.
  *
- * This is a specialisation of the generic Example class template; see
- * the Example template documentation for a general overview of how the example
- * triangulation classes work.
+ * This is a specialisation of the generic Example class template; see the
+ * generic Example template documentation for a general overview of how the
+ * example triangulation classes work.  In Python, you can read this generic
+ * documentation by looking at a higher dimension: try `help(Example5)`.
  *
  * This 2-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded constructions.
@@ -65,11 +66,15 @@ class Example<2> : public detail::ExampleBase<2> {
         /**
          * Returns a triangulation of the given orientable surface.
          *
-         * @param genus the genus of the surface; this must be greater
+         * If the number of punctures is 0, then the resulting triangulation
+         * will be minimal (which, for positive genus, means there is exactly
+         * one vertex).
+         *
+         * \param genus the genus of the surface; this must be greater
          * than or equal to zero.
-         * @param punctures the number of punctures in the surface;
+         * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
-         * @return the requested orientable surface.
+         * \return the requested orientable surface.
          */
         static Triangulation<2> orientable(
             unsigned genus, unsigned punctures);
@@ -77,12 +82,18 @@ class Example<2> : public detail::ExampleBase<2> {
         /**
          * Returns a triangulation of the given non-orientable surface.
          *
-         * @param genus the non-orientable genus of the surface, i.e.,
+         * If the number of punctures is 0 or 1, then the resulting
+         * triangulation will be minimal (which, with the exception of
+         * the projective plane, means there is exactly one vertex).
+         *
+         * \param genus the non-orientable genus of the surface, i.e.,
          * the number of crosscaps that it contains; this must be greater
          * than or equal to one.
-         * @param punctures the number of punctures in the surface;
+         * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
-         * @return the requested non-orientable surface.
+         * \return the requested non-orientable surface.
+         *
+         * \author Alex He, B.B.
          */
         static Triangulation<2> nonOrientable(
             unsigned genus, unsigned punctures);
@@ -92,7 +103,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * of a tetrahedron.  This is isomorphic to the triangulation
          * returned by the generic routine simplicialSphere().
          *
-         * @return the tetrahedral sphere.
+         * \return the tetrahedral sphere.
          */
         static Triangulation<2> sphereTetrahedron();
 
@@ -100,7 +111,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * Returns the eight-triangle 2-sphere formed from the boundary
          * of an octahedron.
          *
-         * @return the octahedral sphere.
+         * \return the octahedral sphere.
          */
         static Triangulation<2> sphereOctahedron();
 
@@ -109,7 +120,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * This is isomorphic to the triangulation returned by the generic
          * routine ball().
          *
-         * @return the disc.
+         * \return the disc.
          */
         static Triangulation<2> disc();
 
@@ -118,7 +129,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * This is isomorphic to the triangulation returned by the generic
          * routine ballBundle().
          *
-         * @return the annulus.
+         * \return the annulus.
          */
         static Triangulation<2> annulus();
 
@@ -126,7 +137,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * Returns a one-triangle Mobius band.  This is isomorphic to the
          * triangulation returned by the generic routine twistedBallBundle().
          *
-         * @return the Mobius band.
+         * \return the Mobius band.
          */
         static Triangulation<2> mobius();
 
@@ -135,14 +146,14 @@ class Example<2> : public detail::ExampleBase<2> {
          * This is isomorphic to the triangulation returned by the generic
          * routine sphereBundle().
          *
-         * @return the torus.
+         * \return the torus.
          */
         static Triangulation<2> torus();
 
         /**
          * Returns a two-triangle projective plane.
          *
-         * @return the projective plane.
+         * \return the projective plane.
          */
         static Triangulation<2> rp2();
 
@@ -150,7 +161,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * Returns a two-triangle Klein bottle.  This is isomorphic to the
          * triangulation returned by the generic routine twistedSphereBundle().
          *
-         * @return the Klein bottle.
+         * \return the Klein bottle.
          */
         static Triangulation<2> kb();
 };

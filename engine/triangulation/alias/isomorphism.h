@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,10 +55,10 @@ namespace regina::alias {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt>,
- * <tt>int simpImage(size_t) const</tt>,
- * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
- * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
+ * `int& simpImage(size_t)`,
+ * `int simpImage(size_t) const`,
+ * `Perm<dim+1>& facetPerm(size_t)` and
+ * `Perm<dim+1> facetPerm(size_t) const`.
  *
  * The names of the aliases are determined by the dimension \a dim,
  * and these aliases are only provided for sufficiently small \a dim.
@@ -75,10 +75,10 @@ class IsomorphismImage {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt>,
- * <tt>int simpImage(size_t) const</tt>,
- * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
- * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
+ * `int& simpImage(size_t)`,
+ * `int simpImage(size_t) const`,
+ * `Perm<dim+1>& facetPerm(size_t)` and
+ * `Perm<dim+1> facetPerm(size_t) const`.
  *
  * \ingroup alias
  */
@@ -89,6 +89,10 @@ class IsomorphismImage<Derived, 2> {
          * A dimension-specific alias for simpImage().
          *
          * See simpImage() for further information.
+         *
+         * \nopython For Python users, triImage() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setTriImage() instead.
          */
         ssize_t& triImage(size_t sourceSimp) {
             return static_cast<Derived*>(this)->simpImage(sourceSimp);
@@ -101,10 +105,25 @@ class IsomorphismImage<Derived, 2> {
         ssize_t triImage(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->simpImage(sourceSimp);
         }
+#ifdef __APIDOCS
+        /**
+         * A dimension-specific alias for setSimpImage().
+         *
+         * See setSimpImage() for further information.
+         *
+         * \nocpp For C++ users, triImage() is used for both reading and
+         * writing: just write `triImage(sourceSimp) = image`.
+         */
+        void setTriImage(size_t sourceSimp, ssize_t image);
+#endif
         /**
          * A dimension-specific alias for facetPerm().
          *
          * See facetPerm() for further information.
+         *
+         * \nopython For Python users, edgePerm() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setEdgePerm() instead.
          */
         Perm<3>& edgePerm(size_t sourceSimp) {
             return static_cast<Derived*>(this)->facetPerm(sourceSimp);
@@ -117,6 +136,17 @@ class IsomorphismImage<Derived, 2> {
         Perm<3> edgePerm(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->facetPerm(sourceSimp);
         }
+#ifdef __APIDOCS
+        /**
+         * A dimension-specific alias for setFacetPerm().
+         *
+         * See setFacetPerm() for further information.
+         *
+         * \nocpp For C++ users, edgePerm() is used for both reading and
+         * writing: just write `edgePerm(sourceSimp) = perm`.
+         */
+        void setEdgePerm(size_t sourceSimp, Perm<3> perm);
+#endif
 };
 
 /**
@@ -125,10 +155,10 @@ class IsomorphismImage<Derived, 2> {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt>,
- * <tt>int simpImage(size_t) const</tt>,
- * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
- * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
+ * `int& simpImage(size_t)`,
+ * `int simpImage(size_t) const`,
+ * `Perm<dim+1>& facetPerm(size_t)` and
+ * `Perm<dim+1> facetPerm(size_t) const`.
  *
  * \ingroup alias
  */
@@ -139,6 +169,10 @@ class IsomorphismImage<Derived, 3> {
          * A dimension-specific alias for simpImage().
          *
          * See simpImage() for further information.
+         *
+         * \nopython For Python users, tetImage() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setTetImage() instead.
          */
         ssize_t& tetImage(size_t sourceSimp) {
             return static_cast<Derived*>(this)->simpImage(sourceSimp);
@@ -151,10 +185,25 @@ class IsomorphismImage<Derived, 3> {
         ssize_t tetImage(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->simpImage(sourceSimp);
         }
+#ifdef __APIDOCS
+        /**
+         * A dimension-specific alias for setSimpImage().
+         *
+         * See setSimpImage() for further information.
+         *
+         * \nocpp For C++ users, tetImage() is used for both reading and
+         * writing: just write `tetImage(sourceSimp) = image`.
+         */
+        void setTetImage(size_t sourceSimp, ssize_t image);
+#endif
         /**
          * A dimension-specific alias for facetPerm().
          *
          * See facetPerm() for further information.
+         *
+         * \nopython For Python users, facePerm() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setFacePerm() instead.
          */
         Perm<4>& facePerm(size_t sourceSimp) {
             return static_cast<Derived*>(this)->facetPerm(sourceSimp);
@@ -167,6 +216,17 @@ class IsomorphismImage<Derived, 3> {
         Perm<4> facePerm(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->facetPerm(sourceSimp);
         }
+#ifdef __APIDOCS
+        /**
+         * A dimension-specific alias for setFacetPerm().
+         *
+         * See setFacetPerm() for further information.
+         *
+         * \nocpp For C++ users, facePerm() is used for both reading and
+         * writing: just write `facePerm(sourceSimp) = perm`.
+         */
+        void setFacePerm(size_t sourceSimp, Perm<4> perm);
+#endif
 };
 
 /**
@@ -175,8 +235,8 @@ class IsomorphismImage<Derived, 3> {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt> and
- * <tt>int simpImage(size_t) const</tt>.
+ * `int& simpImage(size_t)` and
+ * `int simpImage(size_t) const`.
  *
  * \ingroup alias
  */
@@ -187,6 +247,10 @@ class IsomorphismImage<Derived, 4> {
          * A dimension-specific alias for simpImage().
          *
          * See simpImage() for further information.
+         *
+         * \nopython For Python users, pentImage() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setPentImage() instead.
          */
         ssize_t& pentImage(size_t sourceSimp) {
             return static_cast<Derived*>(this)->simpImage(sourceSimp);
@@ -199,6 +263,17 @@ class IsomorphismImage<Derived, 4> {
         ssize_t pentImage(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->simpImage(sourceSimp);
         }
+#ifdef __APIDOCS
+        /**
+         * A dimension-specific alias for setSimpImage().
+         *
+         * See setSimpImage() for further information.
+         *
+         * \nocpp For C++ users, pentImage() is used for both reading and
+         * writing: just write `pentImage(sourceSimp) = image`.
+         */
+        void setPentImage(size_t sourceSimp, ssize_t image);
+#endif
 };
 
 } // namespace regina::alias

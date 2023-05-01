@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2015-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for the wrapping of Packet subclasses through shared_ptr
@@ -56,12 +56,13 @@ p = Attachment()
 t = Text()
 
 c = Container()
-c.insertChildFirst(t1)
+c.prepend(t1)
 
 print(c.countChildren())
 
 print(t1.isoSig())
-t1.newTetrahedron()
+dummy = t1.newTetrahedron()
+dummy = None
 
 print(c.firstChild())
 print(c.firstChild().isoSig())
@@ -72,7 +73,8 @@ print(c.firstChild().isoSig())
 
 temp = c.lastChild()
 
-temp.newTetrahedron()
+dummy = temp.newTetrahedron()
+dummy = None
 
 print(temp.isoSig())
 
@@ -93,9 +95,9 @@ print("-----------------------------------------------------------")
 print("Nested tests:")
 print()
 
-t2.insertChildFirst(t3)
-t2.insertChildFirst(p)
-p.insertChildLast(t)
+t2.prepend(t3)
+t2.prepend(p)
+p.append(t)
 t.setText("Hello World")
 
 print(t.text())
@@ -106,7 +108,7 @@ l = p.firstChild()
 
 print(l.text())
 
-t2.insertChildAfter(Text("New"), t3)
+t2.insert(Text("New"), t3)
 
 print(t2.countChildren())
 print(t2.countDescendants())
@@ -151,14 +153,14 @@ print("Make orphan:")
 print("-----------------------------------------------------------")
 print()
 
-d1 = Triangulation3(); d1.newTetrahedron()
-d2 = Triangulation3(); d2.newTetrahedra(2)
-d3 = Triangulation3(); d3.newTetrahedra(3)
+d1 = Triangulation3(); dummy = d1.newTetrahedron(); dummy = None
+d2 = Triangulation3(); dummy = d2.newTetrahedra(2); dummy = None
+d3 = Triangulation3(); dummy = d3.newTetrahedra(3); dummy = None
 p1 = PacketOfTriangulation3(d1)
 p2 = PacketOfTriangulation3(d2)
 p3 = PacketOfTriangulation3(d3)
-p1.insertChildLast(p2)
-p2.insertChildLast(p3)
+p1.append(p2)
+p2.append(p3)
 
 print(p1)
 print(p2)

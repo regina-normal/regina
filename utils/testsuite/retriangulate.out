@@ -10,6 +10,7 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
+  -v, --version               Show which version of Regina is being used.
 
 Help options:
   -?, --help                  Show this help message
@@ -28,6 +29,7 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
+  -v, --version               Show which version of Regina is being used.
 
 Help options:
   -?, --help                  Show this help message
@@ -46,6 +48,7 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
+  -v, --version               Show which version of Regina is being used.
 
 Help options:
   -?, --help                  Show this help message
@@ -64,6 +67,7 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
+  -v, --version               Show which version of Regina is being used.
 
 Help options:
   -?, --help                  Show this help message
@@ -82,6 +86,7 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
+  -v, --version               Show which version of Regina is being used.
 
 Help options:
   -?, --help                  Show this help message
@@ -100,6 +105,7 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
+  -v, --version               Show which version of Regina is being used.
 
 Help options:
   -?, --help                  Show this help message

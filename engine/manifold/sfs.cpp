@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -267,7 +267,7 @@ void SFSpace::reduce(bool mayReflect) {
         // (p,q) == (p,-q), and so (1,2) == (1,0).
         b_ = b_ % 2;
         if (b_ && nFibres_) {
-            // We have b == +/-1.
+            // We have b == ±1.
             // Merge this into the first exceptional fibre instead.
             // Instead of modifying the fibre directly, delete and reinsert
             // so that sorted order is maintained.

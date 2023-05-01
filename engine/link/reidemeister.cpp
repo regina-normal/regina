@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         if (! perform)
             return true;
 
-        ChangeEventSpan span(*this);
+        ChangeAndClearSpan span(*this);
 
         if (crossing->prev(1).crossing() == crossing) {
             // This is a 1-crossing component, and we will convert it to a
@@ -76,7 +76,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         }
 
         // Destroy the crossing entirely.
-        // This has to happen before the ChangeEventSpan goes out of scope.
+        // This has to happen before the ChangeAndClearSpan goes out of scope.
         crossings_.erase(crossings_.begin() + crossing->index());
         delete crossing;
     } else if (crossing->prev(1).crossing() == crossing) {
@@ -84,7 +84,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         if (! perform)
             return true;
 
-        ChangeEventSpan span(*this);
+        ChangeAndClearSpan span(*this);
 
         // The twist runs from the lower strand to the upper.
         StrandRef from = crossing->prev_[0];
@@ -100,7 +100,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
             }
 
         // Destroy the crossing entirely.
-        // This has to happen before the ChangeEventSpan goes out of scope.
+        // This has to happen before the ChangeAndClearSpan goes out of scope.
         crossings_.erase(crossings_.begin() + crossing->index());
         delete crossing;
     } else {
@@ -109,7 +109,6 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
     }
 
     // The move was successfully performed.
-    clearAllProperties();
     return true;
 }
 
@@ -120,7 +119,7 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
             if (! comp) {
                 // Found it!
                 if (perform) {
-                    ChangeEventSpan span(*this);
+                    ChangeAndClearSpan span(*this);
 
                     auto* c = new Crossing(sign);
                     c->next_[0] = c->prev_[0] = StrandRef(c, 1);
@@ -136,8 +135,6 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
                         comp = StrandRef(c, 1);
                     else
                         comp = StrandRef(c, 0);
-
-                    clearAllProperties();
                 }
 
                 return true;
@@ -153,7 +150,7 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeEventSpan span(*this);
+    ChangeAndClearSpan span(*this);
 
     // Insert the twist.
     auto* c = new Crossing(sign);
@@ -173,7 +170,6 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     }
     crossings_.push_back(c);
 
-    clearAllProperties();
     return true;
 }
 
@@ -210,7 +206,7 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeEventSpan span(*this);
+    ChangeAndClearSpan span(*this);
 
     // The situation: (arc, arc2) represent opposite strands of one crossing,
     // and (to, to2) represent opposite strands of another crossing.
@@ -372,7 +368,6 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     delete arc.crossing();
     delete to.crossing();
 
-    clearAllProperties();
     return true;
 }
 
@@ -506,7 +501,7 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     if (! perform)
         return true;
 
-    ChangeEventSpan span(*this);
+    ChangeAndClearSpan span(*this);
 
     auto* pos = new Crossing(1);
     auto* neg = new Crossing(-1);
@@ -591,7 +586,6 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     crossings_.push_back(pos);
     crossings_.push_back(neg);
 
-    clearAllProperties();
     return true;
 }
 
@@ -656,7 +650,7 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeEventSpan span(*this);
+    ChangeAndClearSpan span(*this);
 
     // Reorder the two crossings on each of the three edges.
     StrandRef x, first, second, y;
@@ -689,7 +683,6 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
         second.crossing()->prev_[second.strand()] = x;
     }
 
-    clearAllProperties();
     return true;
 }
 

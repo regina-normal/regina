@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -108,8 +108,8 @@ class LayeredChain : public StandardTriangulation {
          * may be extended using extendAbove(), extendBelow() or
          * extendMaximal().
          *
-         * @param tet the tetrahedron that will make up this layered chain.
-         * @param vertexRoles a permutation describing the role each
+         * \param tet the tetrahedron that will make up this layered chain.
+         * \param vertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the layered chain; this must be
          * in the same format as the permutation returned by
          * bottomVertexRoles() and topVertexRoles().
@@ -117,21 +117,21 @@ class LayeredChain : public StandardTriangulation {
         LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles);
 
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         LayeredChain(const LayeredChain&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredChain& operator = (const LayeredChain&) = default;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredChain& other) noexcept;
@@ -139,36 +139,36 @@ class LayeredChain : public StandardTriangulation {
         /**
          * Returns the bottom tetrahedron of this layered chain.
          *
-         * @return the bottom tetrahedron.
+         * \return the bottom tetrahedron.
          */
         Tetrahedron<3>* bottom() const;
         /**
          * Returns the top tetrahedron of this layered chain.
          *
-         * @return the top tetrahedron.
+         * \return the top tetrahedron.
          */
         Tetrahedron<3>* top() const;
         /**
          * Returns the number of tetrahedra in this layered chain.
          *
-         * @return the number of tetrahedra.
+         * \return the number of tetrahedra.
          */
         size_t index() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
          * of the bottom tetrahedron plays in the layered chain.
-         * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
+         * The permutation returned (call this `p`) maps 0, 1, 2 and
          * 3 to the four vertices of the bottom tetrahedron so that the
-         * edge from <tt>p[0]</tt> to <tt>p[1]</tt> is the top hinge,
-         * the edge from <tt>p[2]</tt> to <tt>p[3]</tt> is the bottom
-         * hinge, faces <tt>p[1]</tt> and <tt>p[2]</tt> are the (boundary)
-         * bottom faces and faces <tt>p[0]</tt> and <tt>p[3]</tt> are the top
+         * edge from `p[0]` to `p[1]` is the top hinge,
+         * the edge from `p[2]` to `p[3]` is the bottom
+         * hinge, faces `p[1]` and `p[2]` are the (boundary)
+         * bottom faces and faces `p[0]` and `p[3]` are the top
          * faces.
          *
          * See the general class notes for further details.
          *
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the bottom tetrahedron.
          */
         Perm<4> bottomVertexRoles() const;
@@ -176,17 +176,17 @@ class LayeredChain : public StandardTriangulation {
         /**
          * Returns a permutation represeting the role that each vertex
          * of the top tetrahedron plays in the layered chain.
-         * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
+         * The permutation returned (call this `p`) maps 0, 1, 2 and
          * 3 to the four vertices of the top tetrahedron so that the
-         * edge from <tt>p[0]</tt> to <tt>p[1]</tt> is the top hinge,
-         * the edge from <tt>p[2]</tt> to <tt>p[3]</tt> is the bottom
-         * hinge, faces <tt>p[1]</tt> and <tt>p[2]</tt> are the bottom
-         * faces and faces <tt>p[0]</tt> and <tt>p[3]</tt> are the
+         * edge from `p[0]` to `p[1]` is the top hinge,
+         * the edge from `p[2]` to `p[3]` is the bottom
+         * hinge, faces `p[1]` and `p[2]` are the bottom
+         * faces and faces `p[0]` and `p[3]` are the
          * (boundary) top faces.
          *
          * See the general class notes for further details.
          *
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the top tetrahedron.
          */
         Perm<4> topVertexRoles() const;
@@ -198,7 +198,7 @@ class LayeredChain : public StandardTriangulation {
          * modified accordingly (note that its index will be increased
          * by one and its top tetrahedron will change).
          *
-         * @return \c true if and only if this layered chain was
+         * \return \c true if and only if this layered chain was
          * extended.
          */
         bool extendAbove();
@@ -210,7 +210,7 @@ class LayeredChain : public StandardTriangulation {
          * modified accordingly (note that its index will be increased
          * by one and its bottom tetrahedron will change).
          *
-         * @return \c true if and only if this layered chain was
+         * \return \c true if and only if this layered chain was
          * extended.
          */
         bool extendBelow();
@@ -220,7 +220,7 @@ class LayeredChain : public StandardTriangulation {
          * Both extendAbove() and extendBelow() will be used until this
          * layered chain can be extended no further.
          *
-         * @return \c true if and only if this layered chain was
+         * \return \c true if and only if this layered chain was
          * extended.
          */
         bool extendMaximal();
@@ -267,8 +267,8 @@ class LayeredChain : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of layered chain.
          */
         bool operator == (const LayeredChain& other) const;
@@ -287,8 +287,8 @@ class LayeredChain : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent different types of layered chain.
          */
         bool operator != (const LayeredChain& other) const;
@@ -306,8 +306,8 @@ class LayeredChain : public StandardTriangulation {
  * This global routine simply calls LayeredChain::swap(); it is provided
  * so that LayeredChain meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,7 +51,7 @@ namespace regina {
  * The filter type will be determined by this class and an appropriate
  * subclassed filter reader will be used to process the type-specific details.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyFilterReader : public XMLPacketReader {
     private:
@@ -81,7 +81,7 @@ class XMLLegacyFilterReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a plain (non-subclassed) SurfaceFilter.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPlainFilterReader : public XMLPacketReader {
     private:
@@ -104,7 +104,7 @@ class XMLPlainFilterReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single SurfaceFilterCombination filter.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLCombinationFilterReader : public XMLPacketReader {
     private:
@@ -118,7 +118,7 @@ class XMLCombinationFilterReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c surfaces XML element.
+         * \param props the attributes of the \c surfaces XML element.
          */
         XMLCombinationFilterReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -131,7 +131,7 @@ class XMLCombinationFilterReader : public XMLPacketReader {
  * An XML packet reader that reads a single SurfaceFilterCombination filter
  * using the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyCombinationFilterReader : public XMLPacketReader {
     private:
@@ -156,7 +156,7 @@ class XMLLegacyCombinationFilterReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single SurfaceFilterProperties filter.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPropertiesFilterReader : public XMLPacketReader {
     private:
@@ -170,7 +170,7 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c surfaces XML element.
+         * \param props the attributes of the \c surfaces XML element.
          */
         XMLPropertiesFilterReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -183,7 +183,7 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
  * An XML packet reader that reads a single SurfaceFilterProperties filter
  * using the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyPropertiesFilterReader : public XMLPacketReader {
     private:

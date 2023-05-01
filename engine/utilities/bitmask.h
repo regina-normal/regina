@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -128,7 +128,7 @@ class Bitmask {
          * Creates a new bitmask of the given length with all bits set to
          * \c false.
          *
-         * @param length the number of bits stored in this bitmask; this must
+         * \param length the number of bits stored in this bitmask; this must
          * be at least one.
          */
         Bitmask(size_t length);
@@ -140,7 +140,7 @@ class Bitmask {
          * the new bitmask will be invalid also).  Invalid bitmasks must be
          * assigned a length using reset(size_t) or the assignment operator.
          *
-         * @param src the bitmask to clone.
+         * \param src the bitmask to clone.
          */
         Bitmask(const Bitmask& src);
 
@@ -153,7 +153,7 @@ class Bitmask {
          *
          * The bitmask that was passed (\a src) will no longer be usable.
          *
-         * @param src the bitmask whose contents should be moved.
+         * \param src the bitmask whose contents should be moved.
          */
         Bitmask(Bitmask&& src) noexcept;
 
@@ -165,18 +165,18 @@ class Bitmask {
         /**
          * Returns the value of the given bit of this bitmask.
          *
-         * @param index indicates which bit to query; this must be at least
+         * \param index indicates which bit to query; this must be at least
          * zero and strictly less than the length of this bitmask.
-         * @return the value of the (\a index)th bit.
+         * \return the value of the (\a index)th bit.
          */
         bool get(size_t index) const;
 
         /**
          * Sets the given bit of this bitmask to the given value.
          *
-         * @param index indicates which bit to set; this must be at least zero
+         * \param index indicates which bit to set; this must be at least zero
          * and strictly less than the length of this bitmask.
-         * @param value the value that will be assigned to the (\a index)th bit.
+         * \param value the value that will be assigned to the (\a index)th bit.
          */
         void set(size_t index, bool value);
 
@@ -209,20 +209,20 @@ class Bitmask {
          * \pre \a ForwardIterator is a forward iterator type that iterates
          * over integer values.
          * \pre The list of indices described by these iterators is
-         * in \e sorted order.  This is to allow optimisations for
+         * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are at least zero and
          * strictly less than the length of this bitmask.
          *
-         * \ifacespython Instead of a pair of iterators, you should pass
+         * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
          * list of indices).
          *
-         * @param indexBegin the beginning of the iterator range
+         * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
-         * @param indexEnd the end of the iterator range containing the
+         * \param indexEnd the end of the iterator range containing the
          * sorted indices of the bits to set.
-         * @param value the value that will be assigned to each of the
+         * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
         template <typename ForwardIterator>
@@ -264,7 +264,7 @@ class Bitmask {
          * This routine can be used to change the length (number of
          * bits) of the bitmask if desired.
          *
-         * @param length the number of bits to store in this bitmask; this
+         * \param length the number of bits to store in this bitmask; this
          * must be at least one.
          */
         void reset(size_t length);
@@ -283,8 +283,8 @@ class Bitmask {
          * invalid also.  Invalid bitmasks must be assigned a length using
          * reset(size_t) or this assignment operator.
          *
-         * @param other the bitmask to clone.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to clone.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator = (const Bitmask& other);
 
@@ -297,15 +297,15 @@ class Bitmask {
          *
          * The bitmask that was passed (\a src) will no longer be usable.
          *
-         * @param src the bitmask whose contents should be moved.
-         * @return a reference to this bitmask.
+         * \param src the bitmask whose contents should be moved.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator = (Bitmask&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given bitmask.
          *
-         * @param other the bitmask whose contents should be swapped with this.
+         * \param other the bitmask whose contents should be swapped with this.
          */
         void swap(Bitmask& other) noexcept;
 
@@ -314,12 +314,12 @@ class Bitmask {
          * sets all subsequent bits to \c false.  In other words, this
          * routine "truncates" this bitmask to the given number of bits.
          *
-         * This routine does not change the \e length of this bitmask
+         * This routine does not change the _length_ of this bitmask
          * (as passed to the contructor or to reset()).
          *
          * \pre \a numBits is at most the length of this bitmask.
          *
-         * @param numBits the number of bits that will \e not be cleared.
+         * \param numBits the number of bits that will _not_ be cleared.
          */
         void truncate(size_t numBits);
 
@@ -329,8 +329,8 @@ class Bitmask {
          *
          * \pre This and the given bitmask have the same length.
          *
-         * @param other the bitmask to intersect with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to intersect with this.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator &= (const Bitmask& other);
 
@@ -340,8 +340,8 @@ class Bitmask {
          *
          * \pre This and the given bitmask have the same length.
          *
-         * @param other the bitmask to union with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to union with this.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator |= (const Bitmask& other);
 
@@ -352,8 +352,8 @@ class Bitmask {
          *
          * \pre This and the given bitmask have the same length.
          *
-         * @param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to XOR with this.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator ^= (const Bitmask& other);
 
@@ -363,8 +363,8 @@ class Bitmask {
          *
          * \pre This and the given bitmask have the same length.
          *
-         * @param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to XOR with this.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator -= (const Bitmask& other);
 
@@ -389,10 +389,10 @@ class Bitmask {
          * next "raw unit of storage".  This means that two bitmasks
          * that were initialised with different lengths may still be
          * considered equal if the two lengths round up to the same value
-         * \e and the extra bits in the longer bitmask are all \c false.
+         * _and_ the extra bits in the longer bitmask are all \c false.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this and the given bitmask are
          * identical.
          */
         bool operator == (const Bitmask& other) const;
@@ -405,10 +405,10 @@ class Bitmask {
          * next "raw unit of storage".  This means that two bitmasks
          * that were initialised with different lengths may still be
          * considered equal if the two lengths round up to the same value
-         * \e and the extra bits in the longer bitmask are all \c false.
+         * _and_ the extra bits in the longer bitmask are all \c false.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this and the given bitmask are
          * different.
          */
         bool operator != (const Bitmask& other) const;
@@ -421,11 +421,11 @@ class Bitmask {
          *
          * \pre This and the given bitmask have the same length.
          *
-         * \warning We do not use &lt; for this operation, since &lt;=
+         * \warning We do not use \< for this operation, since ≤
          * represents the subset operation.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this is lexicographically
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
         bool lessThan(const Bitmask& other) const;
@@ -444,8 +444,8 @@ class Bitmask {
          * order, not a total order.  To compare bitmasks
          * lexicographically, use lessThan() instead.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
         bool operator <= (const Bitmask& other) const;
@@ -459,9 +459,9 @@ class Bitmask {
          *
          * \pre Both \a x and \a y are the same length as this bitmask.
          *
-         * @param x the first bitmask used to form the union.
-         * @param y the first bitmask used to form the union.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \param x the first bitmask used to form the union.
+         * \param y the first bitmask used to form the union.
+         * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
         bool inUnion(const Bitmask& x, const Bitmask& y) const;
@@ -471,13 +471,13 @@ class Bitmask {
          * the two given bitmasks.
          *
          * For this routine to return \c true, every bit that is set in
-         * \e both \a x and \a y must be set in this bitmask also.
+         * _both_ \a x and \a y must be set in this bitmask also.
          *
          * \pre Both \a x and \a y are the same length as this bitmask.
          *
-         * @param x the first bitmask used to form the intersection.
-         * @param y the first bitmask used to form the intersection.
-         * @return \c true if and only if this bitmask entirely contains
+         * \param x the first bitmask used to form the intersection.
+         * \param y the first bitmask used to form the intersection.
+         * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
         bool containsIntn(const Bitmask& x, const Bitmask& y) const;
@@ -486,7 +486,7 @@ class Bitmask {
          * Returns the number of bits currently set to \c true in this
          * bitmask.
          *
-         * @return the number of \c true bits.
+         * \return the number of \c true bits.
          */
         size_t bits() const;
 
@@ -494,7 +494,7 @@ class Bitmask {
          * Returns the index of the first \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the first \c true bit.
+         * \return the index of the first \c true bit.
          */
         ssize_t firstBit() const;
 
@@ -502,7 +502,7 @@ class Bitmask {
          * Returns the index of the last \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the last \c true bit.
+         * \return the index of the last \c true bit.
          */
         ssize_t lastBit() const;
 
@@ -514,7 +514,7 @@ class Bitmask {
          * to \c true, then this routine will return \c true.  Otherwise
          * this routine will return \c false.
          *
-         * @return \c true if and only if at most one bit is set to \c true.
+         * \return \c true if and only if at most one bit is set to \c true.
          */
         bool atMostOneBit() const;
 
@@ -527,8 +527,8 @@ class Bitmask {
  * This global routine simply calls Bitmask::swap(); it is provided
  * so that Bitmask meets the C++ Swappable requirements.
  *
- * @param a the first bitmask whose contents should be swapped.
- * @param b the second bitmask whose contents should be swapped.
+ * \param a the first bitmask whose contents should be swapped.
+ * \param b the second bitmask whose contents should be swapped.
  *
  * \ingroup utilities
  */
@@ -543,9 +543,9 @@ void swap(Bitmask& a, Bitmask& b) noexcept;
  * bitmask (specifically, the length will be rounded up to the next "raw
  * unit of storage").
  *
- * @param out the output stream to which to write.
- * @param mask the bitmask to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param mask the bitmask to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -561,9 +561,9 @@ class Bitmask1;
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T).
  *
- * @param out the output stream to which to write.
- * @param mask the bitmask to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param mask the bitmask to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -596,7 +596,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Python does not support templates, and so instead Regina's
+ * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
@@ -635,7 +635,7 @@ class Bitmask1 {
          * The integer argument is merely for compatibility with
          * the Bitmask constructor, and will be ignored.
          *
-         * \warning This is \e not a constructor that initialises the
+         * \warning This is _not_ a constructor that initialises the
          * bitmask to a given pattern.
          */
         inline Bitmask1(size_t) : mask(0) {
@@ -644,7 +644,7 @@ class Bitmask1 {
         /**
          * Creates a clone of the given bitmask.
          *
-         * @param src the bitmask to clone.
+         * \param src the bitmask to clone.
          */
         inline Bitmask1(const Bitmask1<T>& src) = default;
 
@@ -668,8 +668,8 @@ class Bitmask1 {
         /**
          * Sets this bitmask to a copy of the given bitmask.
          *
-         * @param other the bitmask to clone.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to clone.
+         * \return a reference to this bitmask.
          */
         Bitmask1<T>& operator = (const Bitmask1<T>& other) = default;
 
@@ -678,10 +678,10 @@ class Bitmask1 {
          * sets all subsequent bits to \c false.  In other words, this
          * routine "truncates" this bitmask to the given number of bits.
          *
-         * This routine does not change the \e length of this bitmask
+         * This routine does not change the _length_ of this bitmask
          * (as passed to the contructor or to reset()).
          *
-         * @param numBits the number of bits that will \e not be cleared.
+         * \param numBits the number of bits that will _not_ be cleared.
          */
         inline void truncate(size_t numBits) {
             if (numBits < 8 * sizeof(T))
@@ -691,9 +691,9 @@ class Bitmask1 {
         /**
          * Returns the value of the given bit of this bitmask.
          *
-         * @param index indicates which bit to query; this must be between
+         * \param index indicates which bit to query; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @return the value of the (\a index)th bit.
+         * \return the value of the (\a index)th bit.
          */
         inline bool get(size_t index) const {
             return (mask & (T(1) << index));
@@ -702,9 +702,9 @@ class Bitmask1 {
         /**
          * Sets the given bit of this bitmask to the given value.
          *
-         * @param index indicates which bit to set; this must be between
+         * \param index indicates which bit to set; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th bit.
+         * \param value the value that will be assigned to the (\a index)th bit.
          */
         inline void set(size_t index, bool value) {
             mask |= (T(1) << index);
@@ -742,20 +742,20 @@ class Bitmask1 {
          * \pre \a ForwardIterator is a forward iterator type that iterates
          * over integer values.
          * \pre The list of indices described by these iterators is
-         * in \e sorted order.  This is to allow optimisations for
+         * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
          *
-         * \ifacespython Instead of a pair of iterators, you should pass
+         * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
          * list of indices).
          *
-         * @param indexBegin the beginning of the iterator range
+         * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
-         * @param indexEnd the end of the iterator range containing the
+         * \param indexEnd the end of the iterator range containing the
          * sorted indices of the bits to set.
-         * @param value the value that will be assigned to each of the
+         * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
         template <typename ForwardIterator>
@@ -772,8 +772,8 @@ class Bitmask1 {
          * Sets this to the intersection of this and the given bitmask.
          * Every bit that is unset in \a other will be unset in this bitmask.
          *
-         * @param other the bitmask to intersect with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to intersect with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator &= (const Bitmask1<T>& other) {
             mask &= other.mask;
@@ -784,8 +784,8 @@ class Bitmask1 {
          * Sets this to the union of this and the given bitmask.
          * Every bit that is set in \a other will be set in this bitmask.
          *
-         * @param other the bitmask to union with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to union with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator |= (const Bitmask1<T>& other) {
             mask |= other.mask;
@@ -797,8 +797,8 @@ class Bitmask1 {
          * given bitmask.  Every bit that is set in \a other will be
          * flipped in this bitmask.
          *
-         * @param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to XOR with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator ^= (const Bitmask1<T>& other) {
             mask ^= other.mask;
@@ -809,8 +809,8 @@ class Bitmask1 {
          * Sets this to the set difference of this and the given bitmask.
          * Every bit that is set in \a other will be cleared in this bitmask.
          *
-         * @param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to XOR with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator -= (const Bitmask1<T>& other) {
             mask |= other.mask;
@@ -833,8 +833,8 @@ class Bitmask1 {
         /**
          * Determines whether this and the given bitmask are identical.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this and the given bitmask are
          * identical.
          */
         inline bool operator == (const Bitmask1<T>& other) const {
@@ -844,8 +844,8 @@ class Bitmask1 {
         /**
          * Determines whether this and the given bitmask are different.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this and the given bitmask are
          * different.
          */
         inline bool operator != (const Bitmask1<T>& other) const {
@@ -858,11 +858,11 @@ class Bitmask1 {
          * Here the bit at index 0 is least significant, and the bit at
          * index \a length-1 is most significant.
          *
-         * \warning We do not use &lt; for this operation, since &lt;=
+         * \warning We do not use \< for this operation, since ≤
          * represents the subset operation.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this is lexicographically
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
         inline bool lessThan(const Bitmask1<T>& other) const {
@@ -881,8 +881,8 @@ class Bitmask1 {
          * order, not a total order.  To compare bitmasks
          * lexicographically, use lessThan() instead.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
         inline bool operator <= (const Bitmask1<T>& other) const {
@@ -896,9 +896,9 @@ class Bitmask1 {
          * For this routine to return \c true, every bit that is set
          * in this bitmask must also be set in either \a x or \a y.
          *
-         * @param x the first bitmask used to form the union.
-         * @param y the first bitmask used to form the union.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \param x the first bitmask used to form the union.
+         * \param y the first bitmask used to form the union.
+         * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
         inline bool inUnion(const Bitmask1<T>& x, const Bitmask1<T>& y)
@@ -911,11 +911,11 @@ class Bitmask1 {
          * the two given bitmasks.
          *
          * For this routine to return \c true, every bit that is set in
-         * \e both \a x and \a y must be set in this bitmask also.
+         * _both_ \a x and \a y must be set in this bitmask also.
          *
-         * @param x the first bitmask used to form the intersection.
-         * @param y the first bitmask used to form the intersection.
-         * @return \c true if and only if this bitmask entirely contains
+         * \param x the first bitmask used to form the intersection.
+         * \param y the first bitmask used to form the intersection.
+         * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
         inline bool containsIntn(const Bitmask1<T>& x, const Bitmask1<T>& y)
@@ -927,7 +927,7 @@ class Bitmask1 {
          * Returns the number of bits currently set to \c true in this
          * bitmask.
          *
-         * @return the number of \c true bits.
+         * \return the number of \c true bits.
          */
         inline size_t bits() const {
             return BitManipulator<T>::bits(mask);
@@ -937,7 +937,7 @@ class Bitmask1 {
          * Returns the index of the first \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the first \c true bit.
+         * \return the index of the first \c true bit.
          */
         inline ssize_t firstBit() const {
             return BitManipulator<T>::firstBit(mask);
@@ -947,7 +947,7 @@ class Bitmask1 {
          * Returns the index of the last \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the last \c true bit.
+         * \return the index of the last \c true bit.
          */
         inline ssize_t lastBit() const {
             return BitManipulator<T>::lastBit(mask);
@@ -961,14 +961,17 @@ class Bitmask1 {
          * to \c true, then this routine will return \c true.  Otherwise
          * this routine will return \c false.
          *
-         * @return \c true if and only if at most one bit is set to \c true.
+         * \return \c true if and only if at most one bit is set to \c true.
          */
         inline bool atMostOneBit() const {
             return BitManipulator<T>::bits(mask) <= 1;
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T>(std::ostream& out,
         const Bitmask1<T>& mask);
+#endif
 };
 
 template <typename T, typename U>
@@ -981,9 +984,9 @@ class Bitmask2;
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
- * @param out the output stream to which to write.
- * @param mask the bitmask to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param mask the bitmask to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -1019,7 +1022,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Python does not support templates, and so instead Regina's
+ * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
@@ -1060,7 +1063,7 @@ class Bitmask2 {
          * The integer argument is merely for compatibility with
          * the Bitmask constructor, and will be ignored.
          *
-         * \warning This is \e not a constructor that initialises the
+         * \warning This is _not_ a constructor that initialises the
          * bitmask to a given pattern.
          */
         inline Bitmask2(size_t) : low(0), high(0) {
@@ -1069,7 +1072,7 @@ class Bitmask2 {
         /**
          * Creates a clone of the given bitmask.
          *
-         * @param src the bitmask to clone.
+         * \param src the bitmask to clone.
          */
         inline Bitmask2(const Bitmask2<T, U>& src) = default;
 
@@ -1095,8 +1098,8 @@ class Bitmask2 {
         /**
          * Sets this bitmask to a copy of the given bitmask.
          *
-         * @param other the bitmask to clone.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to clone.
+         * \return a reference to this bitmask.
          */
         Bitmask2<T, U>& operator = (const Bitmask2<T, U>& other) = default;
 
@@ -1105,10 +1108,10 @@ class Bitmask2 {
          * sets all subsequent bits to \c false.  In other words, this
          * routine "truncates" this bitmask to the given number of bits.
          *
-         * This routine does not change the \e length of this bitmask
+         * This routine does not change the _length_ of this bitmask
          * (as passed to the contructor or to reset()).
          *
-         * @param numBits the number of bits that will \e not be cleared.
+         * \param numBits the number of bits that will _not_ be cleared.
          */
         inline void truncate(size_t numBits) {
             if (numBits < 8 * sizeof(T)) {
@@ -1124,9 +1127,9 @@ class Bitmask2 {
         /**
          * Returns the value of the given bit of this bitmask.
          *
-         * @param index indicates which bit to query; this must be between
+         * \param index indicates which bit to query; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @return the value of the (\a index)th bit.
+         * \return the value of the (\a index)th bit.
          */
         inline bool get(size_t index) const {
             if (index < 8 * sizeof(T))
@@ -1138,9 +1141,9 @@ class Bitmask2 {
         /**
          * Sets the given bit of this bitmask to the given value.
          *
-         * @param index indicates which bit to set; this must be between
+         * \param index indicates which bit to set; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th bit.
+         * \param value the value that will be assigned to the (\a index)th bit.
          */
         inline void set(size_t index, bool value) {
             if (index < 8 * sizeof(T)) {
@@ -1184,20 +1187,20 @@ class Bitmask2 {
          * \pre \a ForwardIterator is a forward iterator type that iterates
          * over integer values.
          * \pre The list of indices described by these iterators is
-         * in \e sorted order.  This is to allow optimisations for
+         * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
          *
-         * \ifacespython Instead of a pair of iterators, you should pass
+         * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
          * list of indices).
          *
-         * @param indexBegin the beginning of the iterator range
+         * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
-         * @param indexEnd the end of the iterator range containing the
+         * \param indexEnd the end of the iterator range containing the
          * sorted indices of the bits to set.
-         * @param value the value that will be assigned to each of the
+         * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
         template <typename ForwardIterator>
@@ -1223,8 +1226,8 @@ class Bitmask2 {
          * Sets this to the intersection of this and the given bitmask.
          * Every bit that is unset in \a other will be unset in this bitmask.
          *
-         * @param other the bitmask to intersect with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to intersect with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator &= (const Bitmask2<T, U>& other) {
             low &= other.low;
@@ -1236,8 +1239,8 @@ class Bitmask2 {
          * Sets this to the union of this and the given bitmask.
          * Every bit that is set in \a other will be set in this bitmask.
          *
-         * @param other the bitmask to union with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to union with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator |= (const Bitmask2<T, U>& other) {
             low |= other.low;
@@ -1250,8 +1253,8 @@ class Bitmask2 {
          * given bitmask.  Every bit that is set in \a other will be
          * flipped in this bitmask.
          *
-         * @param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to XOR with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator ^= (const Bitmask2<T, U>& other) {
             low ^= other.low;
@@ -1263,8 +1266,8 @@ class Bitmask2 {
          * Sets this to the set difference of this and the given bitmask.
          * Every bit that is set in \a other will be cleared in this bitmask.
          *
-         * @param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \param other the bitmask to XOR with this.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator -= (const Bitmask2<T, U>& other) {
             low |= other.low;
@@ -1290,8 +1293,8 @@ class Bitmask2 {
         /**
          * Determines whether this and the given bitmask are identical.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this and the given bitmask are
          * identical.
          */
         inline bool operator == (const Bitmask2<T, U>& other) const {
@@ -1301,8 +1304,8 @@ class Bitmask2 {
         /**
          * Determines whether this and the given bitmask are different.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this and the given bitmask are
          * different.
          */
         inline bool operator != (const Bitmask2<T, U>& other) const {
@@ -1315,11 +1318,11 @@ class Bitmask2 {
          * Here the bit at index 0 is least significant, and the bit at
          * index \a length-1 is most significant.
          *
-         * \warning We do not use &lt; for this operation, since &lt;=
+         * \warning We do not use \< for this operation, since ≤
          * represents the subset operation.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this is lexicographically
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
         inline bool lessThan(const Bitmask2<T, U>& other) const {
@@ -1339,8 +1342,8 @@ class Bitmask2 {
          * order, not a total order.  To compare bitmasks
          * lexicographically, use lessThan() instead.
          *
-         * @param other the bitmask to compare against this.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
         inline bool operator <= (const Bitmask2<T, U>& other) const {
@@ -1355,9 +1358,9 @@ class Bitmask2 {
          * For this routine to return \c true, every bit that is set
          * in this bitmask must also be set in either \a x or \a y.
          *
-         * @param x the first bitmask used to form the union.
-         * @param y the first bitmask used to form the union.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \param x the first bitmask used to form the union.
+         * \param y the first bitmask used to form the union.
+         * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
         inline bool inUnion(const Bitmask2<T, U>& x, const Bitmask2<T, U>& y)
@@ -1371,11 +1374,11 @@ class Bitmask2 {
          * the two given bitmasks.
          *
          * For this routine to return \c true, every bit that is set in
-         * \e both \a x and \a y must be set in this bitmask also.
+         * _both_ \a x and \a y must be set in this bitmask also.
          *
-         * @param x the first bitmask used to form the intersection.
-         * @param y the first bitmask used to form the intersection.
-         * @return \c true if and only if this bitmask entirely contains
+         * \param x the first bitmask used to form the intersection.
+         * \param y the first bitmask used to form the intersection.
+         * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
         inline bool containsIntn(const Bitmask2<T, U>& x,
@@ -1388,7 +1391,7 @@ class Bitmask2 {
          * Returns the number of bits currently set to \c true in this
          * bitmask.
          *
-         * @return the number of \c true bits.
+         * \return the number of \c true bits.
          */
         inline size_t bits() const {
             return BitManipulator<T>::bits(low) + BitManipulator<U>::bits(high);
@@ -1398,7 +1401,7 @@ class Bitmask2 {
          * Returns the index of the first \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the first \c true bit.
+         * \return the index of the first \c true bit.
          */
         inline ssize_t firstBit() const {
             // -1 case does not work out of the box in the second IF branch
@@ -1415,7 +1418,7 @@ class Bitmask2 {
          * Returns the index of the last \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the last \c true bit.
+         * \return the index of the last \c true bit.
          */
         inline ssize_t lastBit() const {
             // -1 case works out of the box in the second IF branch.
@@ -1433,15 +1436,18 @@ class Bitmask2 {
          * to \c true, then this routine will return \c true.  Otherwise
          * this routine will return \c false.
          *
-         * @return \c true if and only if at most one bit is set to \c true.
+         * \return \c true if and only if at most one bit is set to \c true.
          */
         inline bool atMostOneBit() const {
             return (BitManipulator<T>::bits(low) +
                 BitManipulator<U>::bits(high)) <= 1;
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T, U>(std::ostream& out,
         const Bitmask2<T, U>& mask);
+#endif
 };
 
 // Inline functions for Bitmask

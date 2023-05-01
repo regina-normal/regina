@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,6 +37,19 @@
 #include "utilities/xmlutils.h"
 
 namespace regina {
+
+NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri) :
+        enc_(HyperEncoding::empty()),
+        vector_(tri.size() * enc_.block()),
+        triangulation_(tri) {
+}
+
+NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri) :
+        enc_(HyperEncoding::empty()),
+        vector_(tri->size() * enc_.block()),
+        triangulation_(tri) {
+}
 
 LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
     // Find a pentachoron next to the edge in question.
@@ -302,10 +315,12 @@ NormalHypersurface NormalHypersurface::operator * (const LargeInteger& coeff)
         ans.realBoundary_ = false;
         ans.compact_ = true;
         ans.H1_ = {};
+        ans.linkOf_ = 0; /* need to recompute */
     } else {
         // Deduce some basic properties.
         ans.realBoundary_ = realBoundary_;
         ans.compact_ = compact_;
+        ans.linkOf_ = linkOf_;
 
         // And some other properties are best left recalculated.
     }
@@ -325,6 +340,7 @@ NormalHypersurface& NormalHypersurface::operator *= (
         realBoundary_ = false;
         compact_ = true;
         H1_ = {};
+        linkOf_ = 0; /* need to recompute */
     } else {
         // Some properties might change, and we will leave them to be
         // recomputed:
@@ -334,7 +350,7 @@ NormalHypersurface& NormalHypersurface::operator *= (
         H1_.reset();
 
         // All other properties are preserved:
-        // - realBoundary_, compact_
+        // - realBoundary_, compact_, linkOf_
     }
 
     return *this;
@@ -351,7 +367,7 @@ LargeInteger NormalHypersurface::scaleDown() {
     H1_.reset();
 
     // All other properties are preserved:
-    // - realBoundary_, compact_
+    // - realBoundary_, compact_, linkOf_
 
     return ans;
 }

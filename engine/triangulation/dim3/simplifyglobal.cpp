@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,15 +49,12 @@ namespace regina {
 
 bool Triangulation<3>::minimiseBoundary() {
     // Regina doesn't usually check preconditions, but this one is trivial.
-    if (! isValid()) {
-        std::cerr << "ERROR: Calling minimiseBoundary() on an "
-            "invalid triangulation." << std::endl;
-        return false;
-    }
+    if (! isValid())
+        throw FailedPrecondition("minimiseBoundary() requires a "
+            "valid triangulation");
 
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     bool changed = false;
 
@@ -143,15 +140,60 @@ startAgain:
     return changed;
 }
 
+bool Triangulation<3>::minimiseVertices() {
+    // Start by minimising the boundary.
+    // This also checks the validity precondition.
+    bool result = minimiseBoundary();
+
+    // All that remains now is to remove internal vertices.
+    // For this, we use collapseEdge() if we can, and pinchEdge() if we must.
+
+    // For now, we do a lot of looping through components, since each time we
+    // do a move the skeleton will be recomputed entirely.  Ideally we would
+    // try to remember what we have already looked at by using the more
+    // persistent tetrahedron pointers instead of edge pointers.
+
+    while (true) {
+startLoop:
+        for (auto* e : edges()) {
+            Vertex<3>* u = e->vertex(0);
+            Vertex<3>* v = e->vertex(1);
+            if (u != v && ! (u->isBoundary() && v->isBoundary())) {
+                // This edge needs to be pinched or collapsed.
+                if (! collapseEdge(e, true, true))
+                    pinchEdge(e);
+                result = true;
+                goto startLoop;
+            }
+        }
+
+        // No edges needed to be pinched or collapsed.
+        return result;
+    }
+}
+
 bool Triangulation<3>::intelligentSimplify() {
     bool changed;
 
     { // Begin scope for change event block.
-        // Ensure only one event pair is fired in this sequence of changes.
-        ChangeEventSpan span(*this);
+        ChangeEventGroup span(*this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
+
+        // If we still haven't minimised vertices, try to do this now.
+        // We will throw this away if it increases the number of tetrahedra,
+        // but even if the size stays the same we will keep it since
+        // fewer vertices is generally better.
+        if (isValid() && ! hasMinimalVertices()) {
+            Triangulation<3> tmp(*this, false);
+            tmp.minimiseVertices();
+            tmp.simplifyToLocalMinimum(true);
+            if (tmp.size() <= size()) {
+                swap(tmp);
+                changed = true;
+            }
+        }
 
         // Clone to work with when we might want to roll back changes.
         Triangulation<3>* use;
@@ -309,8 +351,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
-        // Ensure only one event pair is fired in this sequence of changes.
-        ChangeEventSpan span(*this);
+        ChangeEventGroup span(*this);
 
         while (changedNow) {
             changedNow = false;

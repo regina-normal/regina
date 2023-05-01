@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -77,7 +77,7 @@ namespace regina {
  * a result of direct user interaction.
  *
  * Regardless of whatever else happens: the root of the subtree that was
- * originally passed to the constructor will \e not be destroyed, because
+ * originally passed to the constructor will _not_ be destroyed, because
  * we hold a shared_ptr to it here.
  */
 class PacketChooser : public QComboBox, public regina::PacketListener {
@@ -165,7 +165,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * in the packet chooser will be selected (which is the "None"
          * entry if "None" was enabled).
          *
-         * The activated() signal will \e not be emitted.
+         * The activated() signal will _not_ be emitted.
          */
         void selectPacket(std::shared_ptr<regina::Packet> packet);
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,122 +34,139 @@
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "maths/perm.h"
-#include "../constarray.h"
+#include "utilities/typeutils.h"
 #include "../helpers.h"
+#include "../helpers/arraylike.h"
+#include "../docstrings/maths/perm.h"
 
+using pybind11::overload_cast;
 using regina::Perm;
-using regina::python::ConstArray;
-
-namespace {
-    template <int n, int k>
-    struct Perm_extend {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("extend", &Perm<n>::template extend<k>);
-            Perm_extend<n, k-1>::add_bindings(c);
-        }
-    };
-
-    template <int n>
-    struct Perm_extend<n, 2> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("extend", &Perm<n>::template extend<2>);
-        }
-    };
-
-    template <int n, int k>
-    struct Perm_contract {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<n>::template contract<k>);
-            Perm_contract<n, k+1>::add_bindings(c);
-        }
-    };
-
-    template <int n>
-    struct Perm_contract<n, 16> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<n>::template contract<16>);
-        }
-    };
-
-    template <int n>
-    struct Perm_contract<n, 17> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            // Only called for Perm16, which has no contract() methods at all.
-        }
-    };
-
-    template <int n>
-    ConstArray<decltype(Perm<n>::Sn), typename Perm<n>::Index> Perm_Sn_arr(
-        Perm<n>::Sn, Perm<n>::nPerms);
-
-    template <int n>
-    ConstArray<decltype(Perm<n>::orderedSn), typename Perm<n>::Index>
-        Perm_orderedSn_arr(Perm<n>::orderedSn, Perm<n>::nPerms);
-}
+using regina::PermClass;
 
 template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
-    decltype(Perm_Sn_arr<n>)::wrapClass(m,
-        (std::string("ConstArray_") + name + "_Sn").c_str());
-    decltype(Perm_orderedSn_arr<n>)::wrapClass(m,
-        (std::string("ConstArray_") + name + "_orderedSn").c_str());;
+    RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<n>>(m, name)
-        .def(pybind11::init<>())
-        .def(pybind11::init<int, int>())
-        .def(pybind11::init<const Perm<n>&>())
-        .def(pybind11::init<const std::array<int, n>&>())
-        .def("permCode", &Perm<n>::permCode)
-        .def("setPermCode", &Perm<n>::setPermCode)
-        .def_static("fromPermCode", &Perm<n>::fromPermCode)
-        .def_static("isPermCode", &Perm<n>::isPermCode)
-        .def("imagePack", &Perm<n>::imagePack)
-        .def_static("fromImagePack", &Perm<n>::fromImagePack)
-        .def_static("isImagePack", &Perm<n>::isImagePack)
-        .def(pybind11::self * pybind11::self)
-        .def("inverse", &Perm<n>::inverse)
-        .def("reverse", &Perm<n>::reverse)
-        .def("sign", &Perm<n>::sign)
-        .def("__getitem__", &Perm<n>::operator[])
-        .def("pre", &Perm<n>::pre)
-        .def("compareWith", &Perm<n>::compareWith)
-        .def("isIdentity", &Perm<n>::isIdentity)
-        .def_static("rot", &Perm<n>::rot)
-        .def_static("rand", (Perm<n> (*)(bool))(&Perm<n>::rand),
-            pybind11::arg("even") = false)
-        .def("trunc", &Perm<n>::trunc)
-        .def("clear", &Perm<n>::clear)
-        .def("SnIndex", &Perm<n>::SnIndex)
-        .def("orderedSnIndex", &Perm<n>::orderedSnIndex)
+    auto c = pybind11::class_<Perm<n>>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<int, int>(), rdoc::__init)
+        .def(pybind11::init<const Perm<n>&>(), rdoc::__copy)
+        // The std::array constructor must come last.  Otherwise an attempt to
+        // use the copy constructor throws an exception: Perm has no len()
+        .def(pybind11::init<const std::array<int, n>&>(), rdoc::__init_2)
+        .def_static("precompute", &Perm<n>::precompute, rdoc::precompute)
+        .def("permCode", &Perm<n>::permCode, rdoc::permCode)
+        .def("setPermCode", &Perm<n>::setPermCode, rdoc::setPermCode)
+        .def_static("fromPermCode", &Perm<n>::fromPermCode, rdoc::fromPermCode)
+        .def_static("isPermCode", &Perm<n>::isPermCode, rdoc::isPermCode)
+        .def("imagePack", &Perm<n>::imagePack, rdoc::imagePack)
+        .def_static("fromImagePack", &Perm<n>::fromImagePack,
+            rdoc::fromImagePack)
+        .def_static("isImagePack", &Perm<n>::isImagePack, rdoc::isImagePack)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def("cachedComp", overload_cast<const Perm<n>&>(
+            &Perm<n>::cachedComp, pybind11::const_), rdoc::cachedComp)
+        .def("cachedComp", [](Perm<n> p, Perm<n> q, Perm<n> r) { // deprecated
+            return p.cachedComp(q).cachedComp(r);
+        }, rdoc::cachedComp_2)
+        .def("inverse", &Perm<n>::inverse, rdoc::inverse)
+        .def("cachedInverse", &Perm<n>::cachedInverse, rdoc::cachedInverse)
+        .def("conjugate", &Perm<n>::conjugate, rdoc::conjugate)
+        .def("cachedConjugate", &Perm<n>::cachedConjugate,
+            rdoc::cachedConjugate)
+        .def("pow", &Perm<n>::pow, rdoc::pow)
+        .def("cachedPow", &Perm<n>::cachedPow, rdoc::cachedPow)
+        .def("order", &Perm<n>::order, rdoc::order)
+        .def("cachedOrder", &Perm<n>::cachedOrder, rdoc::cachedOrder)
+        .def("reverse", &Perm<n>::reverse, rdoc::reverse)
+        .def("sign", &Perm<n>::sign, rdoc::sign)
+        .def("__getitem__", &Perm<n>::operator[], rdoc::__array)
+        .def("pre", &Perm<n>::pre, rdoc::pre)
+        .def("compareWith", &Perm<n>::compareWith, rdoc::compareWith)
+        .def("isIdentity", &Perm<n>::isIdentity, rdoc::isIdentity)
+        .def("inc", [](Perm<n>& p) {
+            return p++;
+        }, rdoc::__inc)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def_static("rot", &Perm<n>::rot, rdoc::rot)
+        .def_static("rand", static_cast<Perm<n>(&)(bool)>(Perm<n>::rand),
+            pybind11::arg("even") = false, rdoc::rand)
+        .def("trunc", &Perm<n>::trunc, rdoc::trunc)
+        .def("clear", &Perm<n>::clear, rdoc::clear)
+        .def("SnIndex", &Perm<n>::SnIndex, rdoc::SnIndex)
+        .def("orderedSnIndex", &Perm<n>::orderedSnIndex,
+            rdoc::orderedSnIndex)
+        .def("isConjugacyMinimal", &Perm<n>::isConjugacyMinimal,
+            rdoc::isConjugacyMinimal)
         .def_readonly_static("codeType", &Perm<n>::codeType)
         .def_readonly_static("imageBits", &Perm<n>::imageBits)
         .def_readonly_static("imageMask", &Perm<n>::imageMask)
         .def_readonly_static("nPerms", &Perm<n>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<n>::nPerms_1)
-        .def_readonly_static("Sn", &Perm_Sn_arr<n>)
-        .def_readonly_static("orderedSn", &Perm_orderedSn_arr<n>)
+        .def_readonly_static("Sn", &Perm<n>::Sn)
+        .def_readonly_static("orderedSn", &Perm<n>::orderedSn)
     ;
-    Perm_extend<n, n-1>::add_bindings(c);
-    Perm_contract<n, n+1>::add_bindings(c);
-    regina::python::add_output_basic(c);
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::for_constexpr<2, n>([&c](auto i) {
+        c.def_static("extend", &Perm<n>::template extend<i.value>,
+            rdoc::extend);
+    });
+    regina::for_constexpr<n+1, 17>([&c](auto i) {
+        c.def_static("contract", &Perm<n>::template contract<i.value>,
+            rdoc::contract);
+    });
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding, rdoc::hash);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    regina::python::add_lightweight_array<decltype(Perm<n>::Sn)>(c,
+        "_Sn", rdoc::SnLookup);
+    regina::python::add_lightweight_array<decltype(Perm<n>::orderedSn)>(c,
+        "_OrderedSn", rdoc::OrderedSnLookup);
+
+    RDOC_SCOPE_END
+}
+
+template <int n>
+void addPermClass(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(PermClass)
+
+    auto c = pybind11::class_<PermClass<n>>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const PermClass<n>&>(), rdoc::__copy)
+        .def("isIdentity", &PermClass<n>::isIdentity, rdoc::isIdentity)
+        .def("cycle", &PermClass<n>::cycle, rdoc::cycle)
+        .def("countCycles", &PermClass<n>::countCycles, rdoc::countCycles)
+        .def("rep", &PermClass<n>::rep, rdoc::rep)
+        .def("inc", [](PermClass<n>& p) {
+            return p++;
+        }, rdoc::__inc)
+        .def("__bool__", &PermClass<n>::operator bool, rdoc::__as_bool)
+        .def_readonly_static("count", &PermClass<n>::count)
+    ;
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 
 void addPerm(pybind11::module_& m) {
-    m.def("digit", regina::digit);
-    m.def("factorial", regina::factorial);
+    RDOC_SCOPE_BEGIN_MAIN
 
-    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType")
-        .value("PERM_CODE_IMAGES", regina::PERM_CODE_IMAGES)
-        .value("PERM_CODE_INDEX", regina::PERM_CODE_INDEX)
+    m.def("digit", regina::digit, rdoc::digit);
+    m.def("factorial", regina::factorial, rdoc::factorial);
+
+    RDOC_SCOPE_SWITCH(PermCodeType)
+
+    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType", rdoc_scope)
+        .value("PERM_CODE_IMAGES", regina::PERM_CODE_IMAGES,
+            rdoc::PERM_CODE_IMAGES)
+        .value("PERM_CODE_INDEX", regina::PERM_CODE_INDEX,
+            rdoc::PERM_CODE_INDEX)
         .export_values()
         ;
+
+    RDOC_SCOPE_END
 
     addPerm<8>(m, "Perm8");
     addPerm<9>(m, "Perm9");
@@ -160,5 +177,21 @@ void addPerm(pybind11::module_& m) {
     addPerm<14>(m, "Perm14");
     addPerm<15>(m, "Perm15");
     addPerm<16>(m, "Perm16");
+
+    addPermClass<2>(m, "PermClass2");
+    addPermClass<3>(m, "PermClass3");
+    addPermClass<4>(m, "PermClass4");
+    addPermClass<5>(m, "PermClass5");
+    addPermClass<6>(m, "PermClass6");
+    addPermClass<7>(m, "PermClass7");
+    addPermClass<8>(m, "PermClass8");
+    addPermClass<9>(m, "PermClass9");
+    addPermClass<10>(m, "PermClass10");
+    addPermClass<11>(m, "PermClass11");
+    addPermClass<12>(m, "PermClass12");
+    addPermClass<13>(m, "PermClass13");
+    addPermClass<14>(m, "PermClass14");
+    addPermClass<15>(m, "PermClass15");
+    addPermClass<16>(m, "PermClass16");
 }
 

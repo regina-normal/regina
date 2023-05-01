@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,29 +34,61 @@
 #include "triangulation/dim3.h"
 #include <set>
 
+// When indicating that a surface is *not* a link of a k-face,
+// we use |= to set the "known" bit but ignore the "is a link" bit.
+// This is fine, since if the surface is not the link of a k-face then
+// there is no way in which the "is a link" bit could have been already set.
+#define NO_3D_VERTEX_LINK        0x01 // bits 00000001
+#define NO_3D_EDGE_LINK          0x04 // bits 00000100
+#define NO_3D_TRIANGLE_LINK      0x10 // bits 00010000
+#define NO_3D_POSITIVE_FACE_LINK 0x14 // bits 00010100
+#define NO_3D_FACE_LINK          0x15 // bits 00010101
+
+#define IS_3D_VERTEX_LINK        0x03 // bits 00000011
+#define IS_3D_EDGE_LINK          0x0c // bits 00001100
+#define IS_3D_TRIANGLE_LINK      0x30 // bits 00110000
+
 namespace regina {
 
 bool NormalSurface::isVertexLinking() const {
-    if (! enc_.couldBeVertexLink())
+    // The relevant bits of linkOf_ could be any of 00, 01 or 11.
+
+    if (! enc_.couldBeVertexLink()) {
+        linkOf_ |= NO_3D_VERTEX_LINK;
         return false;
+    }
 
     size_t nTets = triangulation_->size();
     for (size_t tet = 0; tet < nTets; tet++) {
         for (int type = 0; type < 3; type++)
-            if (quads(tet, type) != 0)
+            if (quads(tet, type) != 0) {
+                linkOf_ |= NO_3D_VERTEX_LINK;
                 return false;
+            }
     }
     if (enc_.storesOctagons())
         for (size_t tet = 0; tet < nTets; tet++)
             for (int type = 0; type < 3; type++)
-                if (octs(tet, type) != 0)
+                if (octs(tet, type) != 0) {
+                    linkOf_ = NO_3D_FACE_LINK;
                     return false;
+                }
+
+    // Might or might not be a *single* vertex link, so leave linkOf_ untouched.
     return true;
 }
 
 const Vertex<3>* NormalSurface::isVertexLink() const {
-    if (! enc_.couldBeVertexLink())
+    if ((linkOf_ & IS_3D_VERTEX_LINK) == NO_3D_VERTEX_LINK)
+        return nullptr; // already known this is not a vertex link
+
+    // At this point, the relevant bits of linkOf_ are 00 (not computed),
+    // or 11 (it's a vertex link, but we don't know which).
+
+    if (! enc_.couldBeVertexLink()) {
+        linkOf_ |= NO_3D_VERTEX_LINK;
         return nullptr;
+    }
 
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
@@ -66,20 +98,23 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
     // Check that there are no quad/oct discs.
     for (size_t tet = 0; tet < nTets; tet++) {
         for (int type = 0; type < 3; type++)
-            if (quads(tet, type) != 0)
+            if (quads(tet, type) != 0) {
+                linkOf_ |= NO_3D_VERTEX_LINK;
                 return nullptr;
+            }
     }
     if (enc_.storesOctagons())
         for (size_t tet = 0; tet < nTets; tet++)
             for (int type = 0; type < 3; type++)
-                if (octs(tet, type) != 0)
+                if (octs(tet, type) != 0) {
+                    linkOf_ = NO_3D_FACE_LINK;
                     return nullptr;
+                }
 
     // It follows from the matching equations that what we have is a
     // union of vertex links.  Make sure we are linking just the one vertex.
 
     Vertex<3>* ans = nullptr;
-    LargeInteger ansMult;
 
     for (size_t tet = 0; tet < nTets; tet++) {
         const Tetrahedron<3>* t = tri.tetrahedron(tet);
@@ -91,9 +126,9 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
                 if (! ans) {
                     // We've found our first and only possible candidate.
                     ans = t->vertex(type);
-                    ansMult = coord;
                 } else if (ans != t->vertex(type)) {
                     // We seem to be linking more than one vertex.
+                    linkOf_ |= NO_3D_VERTEX_LINK;
                     return nullptr;
                 }
             }
@@ -102,10 +137,14 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
 
     // Either we are linking exactly one vertex (ans != null), or we
     // have the empty vector (ans == null).
+    linkOf_ |= (ans ? IS_3D_VERTEX_LINK : NO_3D_VERTEX_LINK);
     return ans;
 }
 
 std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const {
+    if ((linkOf_ & IS_3D_EDGE_LINK) == NO_3D_EDGE_LINK)
+        return { nullptr, nullptr }; // already known this is not an edge link
+
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
     const Triangulation<3>& tri(*triangulation_);
@@ -115,8 +154,10 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
     if (enc_.storesOctagons())
         for (size_t tet = 0; tet < nTets; tet++)
             for (int type = 0; type < 3; type++)
-                if (octs(tet, type) != 0)
+                if (octs(tet, type) != 0) {
+                    linkOf_ = NO_3D_FACE_LINK;
                     return { nullptr, nullptr };
+                }
 
     // Run through the quadrilateral discs and work out if there are any
     // valid candidates.
@@ -175,27 +216,39 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
                         else if (e[0] == ans[1]) {
                             ans[0] = ans[1];
                             ans[1] = nullptr;
-                        } else
+                        } else {
+                            // This might still be a *normalised* edge link,
+                            // so do not touch linkOf_.
                             return { nullptr, nullptr };
+                        }
 
                         // The only possible candidate is ans[0].
-                        if (ans[0] == nullptr || ansMultDouble != coord)
+                        if (ans[0] == nullptr || ansMultDouble != coord) {
+                            // This might still be a *normalised* edge link,
+                            // so do not touch linkOf_.
                             return { nullptr, nullptr };
+                        }
                     } else {
                         // Different edges on both sides of the quad.
                         // Check each candidate in turn.
                         for (i = 0; i < 2; i++)
                             if (ans[i] != e[0] && ans[i] != e[1])
                                 ans[i] = nullptr;
-                        if (ansMultDouble != coord * 2)
+                        if (ansMultDouble != coord * 2) {
+                            // This might still be a *normalised* edge link,
+                            // so do not touch linkOf_.
                             return { nullptr, nullptr };
+                        }
                     }
                 } else {
                     // We've found our first and only possible candidates.
                     if (e[0] == e[1]) {
                         // Same edge on both sides of the quad.
-                        if (notAns.find(e[0]) != notAns.end())
+                        if (notAns.find(e[0]) != notAns.end()) {
+                            // This might still be a *normalised* edge link,
+                            // so do not touch linkOf_.
                             return { nullptr, nullptr };
+                        }
                         ans[0] = e[0];
                         ans[1] = nullptr;
                         ansMultDouble = coord;
@@ -226,16 +279,25 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
             }
 
             // Have we ruled out all the candidates we ever had?
-            if (foundQuads && (! ans[0]) && (! ans[1]))
+            if (foundQuads && (! ans[0]) && (! ans[1])) {
+                // This might still be a *normalised* edge link,
+                // so do not touch linkOf_.
                 return { nullptr, nullptr };
+            }
         }
     }
 
     // So did we actually find anything?
-    if (! foundQuads)
+    if (! foundQuads) {
+        // This might still be a *normalised* edge link,
+        // so do not touch linkOf_.
         return { nullptr, nullptr };
-    if ((! ans[0]) && (! ans[1]))
+    }
+    if ((! ans[0]) && (! ans[1])) {
+        // This might still be a *normalised* edge link,
+        // so do not touch linkOf_.
         return { nullptr, nullptr };
+    }
 
     // Finally check the triangular discs.
     Vertex<3>* v;
@@ -278,50 +340,206 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
             }
 
             // Have we ruled out all possibilities?
-            if ((! ans[0]) && (! ans[1]))
+            if ((! ans[0]) && (! ans[1])) {
+                // This might still be a *normalised* edge link,
+                // so do not touch linkOf_.
                 return { nullptr, nullptr };
+            }
         }
     }
 
-    // Return whatever candidates have survived.
+    // One or more candidates have survived: return them.
+    linkOf_ |= IS_3D_EDGE_LINK;
     if (ans[0])
         return { ans[0], ans[1] };
     else
         return { ans[1], ans[0] };
 }
 
-std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
-    // Get a local reference to the triangulation so we do not have to
-    // repeatedly bounce through the snapshot.
-    const Triangulation<3>& tri(*triangulation_);
+std::pair<std::vector<const Edge<3>*>, unsigned>
+        NormalSurface::isNormalEdgeLink() const {
+    std::pair<std::vector<const Edge<3>*>, unsigned> ans;
+    ans.second = 0;
+
+    if ((linkOf_ & IS_3D_EDGE_LINK) == NO_3D_EDGE_LINK)
+        return ans; // already known this is not an edge link
 
     if (isEmpty()) {
         // Treat the empty surface separately.
-        std::vector<const Edge<3>*> ans;
-        for (auto e : tri.edges())
-            if (e->linkingSurface().isEmpty())
-                ans.push_back(e);
+        // Note: none of these edge links will be thin.
+        for (auto e : triangulation_->edges())
+            if (e->linkingSurface().first.isEmpty())
+                ans.first.push_back(e);
+        linkOf_ |= (ans.first.empty() ? NO_3D_EDGE_LINK : IS_3D_EDGE_LINK);
         return ans;
     }
 
-    if (! normal())
-        return {};
+    std::optional<NormalSurface> mult = couldLinkFace();
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_3D_POSITIVE_FACE_LINK;
+        return ans; // empty
+    }
 
-    // All edge weights should be in { 0, k, 2k } for some k, and the
-    // weight of an edge that we are linking should be zero.
-    std::vector<const Edge<3>*> weightZero;
+    for (auto e : triangulation_->edges()) {
+        if (edgeWeight(e->index()) != 0)
+            continue;
+
+        auto link = e->linkingSurface();
+        if (link.first == mult) {
+            if (link.second) {
+                // Thin link.
+                // Note: this vector insertion is costly, but it only happens
+                // at most twice.
+                if (ans.second == 0) {
+                    ans.first.insert(ans.first.begin(), e);
+                } else {
+                    // We only have at most two thin edge links, so we
+                    // must be inserting at position 1.
+                    auto pos = ans.first.begin();
+                    ++pos;
+                    ans.first.insert(pos, e);
+                }
+                ++ans.second;
+            } else {
+                // Not a thin link.
+                ans.first.push_back(e);
+            }
+        }
+    }
+    linkOf_ |= (ans.first.empty() ? NO_3D_EDGE_LINK : IS_3D_EDGE_LINK);
+    return ans;
+}
+
+std::pair<const Triangle<3>*, const Triangle<3>*>
+        NormalSurface::isThinTriangleLink() const {
+    if ((linkOf_ & IS_3D_TRIANGLE_LINK) == NO_3D_TRIANGLE_LINK)
+        return { nullptr, nullptr }; // already known it's not a triangle link
+
+    // This is essentially the same implementation as isNormalTriangleLink(),
+    // just slimmed down slightly to account for some extra facts that
+    // we know about thin links.
+
+    std::pair<const Triangle<3>*, const Triangle<3>*> ans { nullptr, nullptr };
+
+    // Thin links are never empty.
+    if (isEmpty()) {
+        // This might still be a *normalised* triangle link,
+        // so do not touch linkOf_.
+        return ans;
+    }
+
+    std::optional<NormalSurface> mult = couldLinkFace();
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_3D_POSITIVE_FACE_LINK;
+        return ans;
+    }
+
+    for (auto t : triangulation_->triangles()) {
+        for (int i = 0; i < 3; ++i)
+            if (edgeWeight(t->edge(i)->index()) != 0)
+                continue;
+
+        auto link = t->linkingSurface();
+        if (link.second /* thin */ && link.first == mult) {
+            if (! ans.first)
+                ans.first = t;
+            else {
+                // There can be at most two thin triangle links, and we
+                // have found them both.
+                ans.second = t;
+                linkOf_ |= IS_3D_TRIANGLE_LINK;
+                return ans;
+            }
+        }
+    }
+
+    linkOf_ |= (ans.first ? IS_3D_TRIANGLE_LINK : NO_3D_TRIANGLE_LINK);
+    return ans;
+}
+
+std::pair<std::vector<const Triangle<3>*>, unsigned>
+        NormalSurface::isNormalTriangleLink() const {
+    std::pair<std::vector<const Triangle<3>*>, unsigned> ans;
+    ans.second = 0;
+
+    if ((linkOf_ & IS_3D_TRIANGLE_LINK) == NO_3D_TRIANGLE_LINK)
+        return ans; // already known this is not a triangle link
+
+    if (isEmpty()) {
+        // Treat the empty surface separately.
+        // Note: none of these triangle links will be thin.
+        for (auto t : triangulation_->triangles())
+            if (t->linkingSurface().first.isEmpty())
+                ans.first.push_back(t);
+        linkOf_ |= (ans.first.empty() ?
+            NO_3D_TRIANGLE_LINK : IS_3D_TRIANGLE_LINK);
+        return ans;
+    }
+
+    std::optional<NormalSurface> mult = couldLinkFace();
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_3D_POSITIVE_FACE_LINK;
+        return ans; // empty
+    }
+
+    for (auto t : triangulation_->triangles()) {
+        for (int i = 0; i < 3; ++i)
+            if (edgeWeight(t->edge(i)->index()) != 0)
+                continue;
+
+        auto link = t->linkingSurface();
+        if (link.first == mult) {
+            if (link.second) {
+                // Thin link.
+                // Note: this vector insertion is costly, but it only happens
+                // at most twice.
+                if (ans.second == 0) {
+                    ans.first.insert(ans.first.begin(), t);
+                } else {
+                    // We only have at most two thin triangle links, so we
+                    // must be inserting at position 1.
+                    auto pos = ans.first.begin();
+                    ++pos;
+                    ans.first.insert(pos, t);
+                }
+                ++ans.second;
+            } else {
+                // Not a thin link.
+                ans.first.push_back(t);
+            }
+        }
+    }
+
+    linkOf_ |= (ans.first.empty() ? NO_3D_TRIANGLE_LINK : IS_3D_TRIANGLE_LINK);
+    return ans;
+}
+
+std::optional<NormalSurface> NormalSurface::couldLinkFace() const {
+    if (! normal()) {
+        return std::nullopt;
+    }
+
+    // All edge weights should be in { 0, k, 2k } for some k.
 
     // We store the values k and 2k as we find them; these are initialised to
     // zero.  If only one value has been seen so far, we store it as k.
     LargeInteger k, kk;
 
-    for (auto e : tri.edges()) {
+    bool foundWeightZero = false;
+    for (auto e : triangulation_->edges()) {
         LargeInteger w = edgeWeight(e->index());
 
         if (w == 0) {
-            weightZero.push_back(e);
+            foundWeightZero = true;
+            continue;
         } else if (w.isInfinite()) {
-            return {};
+            return std::nullopt;
         } else if (k == 0) {
             // First non-zero weight we've seen.
             k = w;
@@ -335,28 +553,30 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
                     kk = k;
                     k = w;
                 } else {
-                    // This cannot be an edge link.
-                    return {};
+                    // This cannot be a subcomplex link.
+                    return std::nullopt;
                 }
             }
         } else {
             // Both k and 2k have already been seen.
-            if (w != k && w != kk)
-                return {};
+            if (w != k && w != kk) {
+                return std::nullopt;
+            }
         }
     }
 
-    if (weightZero.empty())
-        return {};
+    if (! foundWeightZero) {
+        // This cannot link a face of positive dimension.
+        return std::nullopt;
+    }
 
-    // We have one or more candidate edges that we could be linking
-    // (since they have weight zero), and the edge weights are
-    // consistent with a multiple of a normalised edge link.
-
-    // Now we construct the exact multiple of this surface that should be a
-    // single edge link.
+    // The edge weights are consistent with a multiple of a normalised
+    // non-vertex face link.
     //
-    // In any normalised edge link, all disc coordinates are 0, 1 or 2, and
+    // Now we construct the exact multiple of this surface that should
+    // be such a link.
+    //
+    // In any normalised face link, all disc coordinates are 0, 1 or 2, and
     // all edge weights are 0, 1 or 2.  It follows that the multiple we are
     // looking for is either the scaled-down surface (i.e., divide the
     // underlying vector by its gcd), or the double of the scaled-down surface.
@@ -364,12 +584,12 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
     // We will therefore call scaleDown(), and then double the surface
     // if necessary.  To identify when doubling is necessary, we observe:
     //
-    // - Any (non-empty) normalised edge link must be 2-sided and separating,
+    // - Any (non-empty) normalised face link must be 2-sided and separating,
     //   and even though the surface could be disconnected, the portion
     //   of the 3-manifold on the side of the surface containing the original
-    //   edge must still be connected (call this portion X).
+    //   face must still be connected (call this portion X).
     //
-    // - Doubling is only required for normalised edge links where all
+    // - Doubling is only required for normalised face links where all
     //   non-zero normal coordinates are 2 (and therefore, using what else we
     //   know, all edge weights are 2 also).  In such a scenario where doubling
     //   is required, the scaled-down surface (where all non-zero coordinates
@@ -388,7 +608,7 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
         if (scale != k) {
             // The edge weights were {0,k,2k}, but the normal coordinates were
             // not.
-            return {};
+            return std::nullopt;
         }
     } else {
         // All non-zero edge weights were equal to k.
@@ -409,11 +629,11 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
             // is cubic in the number of *vertices*, which in typical scenarios
             // is very small.  So let's not fuss too much about this for now.
 
-            size_t v = tri.countVertices();
+            size_t v = triangulation_->countVertices();
             int* join = new int[v * v]; // 0,1,-1: no path, even path, odd path
             std::fill(join, join + v * v, 0);
 
-            for (auto e : tri.edges()) {
+            for (auto e : triangulation_->edges()) {
                 LargeInteger w = mult.edgeWeight(e->index());
                 size_t a = e->vertex(0)->index();
                 size_t b = e->vertex(1)->index();
@@ -442,12 +662,12 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
                         }
                     }
                 } else if (w == 2) {
-                    // This could be an edge link, but it is not a case
+                    // This could be a face link, but it is not a case
                     // where we need to double.
                     goto noMoreScaling;
                 } else {
-                    // This can never be an edge link.
-                    return {};
+                    // This can never be a face link.
+                    return std::nullopt;
                 }
             }
 
@@ -479,16 +699,13 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
             // was not k.  In this case the edge weights should have been
             // scaled down to 2; otherwise we cannot have a normalised
             // edge link at all.
-            if (scale + scale != k)
-                return {};
+            if (scale + scale != k) {
+                return std::nullopt;
+            }
         }
     }
 
-    std::vector<const Edge<3>*> ans;
-    for (auto e : weightZero)
-        if (e->linkingSurface() == mult)
-            ans.push_back(e);
-    return ans;
+    return mult;
 }
 
 } // namespace regina

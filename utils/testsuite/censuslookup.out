@@ -5,6 +5,10 @@ Please specify one or more isomorphism signatures.
 
 Usage:
     censuslookup <isosig> ...
+    censuslookup [ -v, --version | -?, --help ]
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================

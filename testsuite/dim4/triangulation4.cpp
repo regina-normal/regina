@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -70,6 +70,8 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
+    CPPUNIT_TEST(skeleton);
+    CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryFaces);
@@ -358,6 +360,14 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void orient() {
             testManualAll(verifyOrient);
+        }
+
+        void skeleton() {
+            testManualAll(verifySkeleton);
+        }
+
+        void reordering() {
+            testManualAll(verifyReordering);
         }
 
         void doubleCover() {
@@ -1502,7 +1512,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
             Triangulation<3> t = tri.vertex(whichVertex)->buildLink();
-            t.barycentricSubdivision();
+            t.subdivide();
             t.intelligentSimplify();
 
             std::string ans = t.homology().str();
@@ -1526,7 +1536,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinksSpheres(cp2, 4, "CP^2");
             verifyLinksSpheres(s2xs2, 5, "S^2 x S^2");
             verifyLinksSpheres(s2xs2Twisted, 5, "S^2 x~ S^2");
-            verifyLinksSpheres(k3, 22, "K3");
+            verifyLinksSpheres(k3, 24, "K3");
             verifyLinksSpheres(rp4, 3, "RP^4");
             verifyLinksSpheres(twistedSphereBundle, 1, "Twisted sphere bundle");
             verifyLinksBalls(ball, 5, "Ball");
@@ -1776,12 +1786,12 @@ class Triangulation4Test : public TriangulationTest<4> {
                 std::ostringstream msg;
                 msg << "Triangulation " << name << " gives "
                     "intersection form with determinant " << det
-                    << " instead of the expected +/-1.";
+                    << " instead of the expected ±1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             // Tests for simply connected manifolds:
-            if (tri.fundamentalGroup().countGenerators() == 0) {
+            if (tri.group().countGenerators() == 0) {
                 if (f.even()) {
                     // Verify Rohlin's theorem:
                     if (f.signature() % 16 != 0) {
@@ -1806,7 +1816,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 std::ostringstream msg;
                 msg << "Triangulation " << name << " gives "
                     "intersection form with determinant " << det
-                    << " instead of the expected +/-1.";
+                    << " instead of the expected ±1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -1949,7 +1959,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             if (b.isOrientable())
                 b.orient();
 
-            b.barycentricSubdivision();
+            b.subdivide();
             clearProperties(b);
 
             // Note that subdivisions can turn invalid into valid, but
@@ -2076,7 +2086,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            use.barycentricSubdivision();
+            use.subdivide();
 
             if (! use.isValid()) {
                 std::ostringstream msg;

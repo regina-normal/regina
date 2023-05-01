@@ -3,6 +3,7 @@ if (${REGINA_INSTALL_DEV})
     boundarycomponent.h
     component.h
     face.h
+    faceembedding.h
     facetpairing.h
     isomorphism.h
     simplex.h

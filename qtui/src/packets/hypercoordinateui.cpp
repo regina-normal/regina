@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -85,8 +85,7 @@ int HyperModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant HyperModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NormalHypersurface& s =
-            surfaces_->hypersurface(index.row());
+        const regina::NormalHypersurface& s = (*surfaces_)[index.row()];
 
         if (index.column() == 0)
             return tr("%1.").arg(index.row());
@@ -126,16 +125,75 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
                 return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
-            const regina::Vertex<4>* v;
-            const regina::Edge<4>* e;
+            const regina::Vertex<4>* v = s.isVertexLink();
+            auto [ eLinks, eThin ] = s.isNormalEdgeLink();
+            auto [ fLinks, fThin ] = s.isNormalTriangleLink();
+            auto [ tLinks, tThin ] = s.isNormalTetrahedronLink();
+            auto ePos = eLinks.begin();
+            auto fPos = fLinks.begin();
+            auto tPos = tLinks.begin();
 
-            if ((v = s.isVertexLink()))
-                return tr("Vertex %1").arg(v->index());
-            else if ((e = s.isThinEdgeLink())) {
-                return tr("Edge %1").
-                    arg(e->index());
-            } else
+            bool hasThin = (v || eThin || fThin || tThin);
+            bool hasNormal = (eLinks.size() > eThin || fLinks.size() > fThin ||
+                tLinks.size() > tThin);
+
+            QString ans;
+
+            if (hasThin) {
+                ans = tr("Thin: ");
+                if (v)
+                    ans += tr("vtx %1").arg(v->index());
+                if (eThin) {
+                    // A hypersurface can be the thin link of at most one edge.
+                    if (v)
+                        ans += tr(", ");
+                    ans += tr("edge %1").arg((*ePos++)->index());
+                }
+                if (fThin) {
+                    if (v || eThin)
+                        ans += tr(", ");
+                    ans += tr("tri %1").arg((*fPos++)->index());
+                    if (fThin == 2)
+                        ans += tr(",%1").arg((*fPos++)->index());
+                }
+                if (tThin) {
+                    if (v || eThin || fThin)
+                        ans += tr(", ");
+                    ans += tr("tet %1").arg((*tPos++)->index());
+                    if (tThin == 2)
+                        ans += tr(",%1").arg((*tPos++)->index());
+                }
+            }
+
+            if (hasNormal) {
+                if (hasThin)
+                    ans += tr("; ");
+                ans += tr("Normal: ");
+                if (eLinks.size() > eThin) {
+                    ans += tr("edge %1").arg((*ePos++)->index());
+                    while (ePos != eLinks.end())
+                        ans += tr(",%1").arg((*ePos++)->index());
+                }
+                if (fLinks.size() > fThin) {
+                    if (eLinks.size() > eThin)
+                        ans += tr(", ");
+                    ans += tr("tri %1").arg((*fPos++)->index());
+                    while (fPos != fLinks.end())
+                        ans += tr(",%1").arg((*fPos++)->index());
+                }
+                if (tLinks.size() > tThin) {
+                    if (eLinks.size() > eThin || fLinks.size() > fThin)
+                        ans += tr(", ");
+                    ans += tr("tet %1").arg((*tPos++)->index());
+                    while (tPos != tLinks.end())
+                        ans += tr(",%1").arg((*tPos++)->index());
+                }
+            }
+
+            if (ans.isEmpty())
                 return QVariant();
+            else
+                return ans;
         } else {
             // The default case:
             regina::LargeInteger ans = Coordinates::getCoordinate(coordSystem_,
@@ -149,7 +207,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->hypersurface(index.row()).name().c_str();
+            return (*surfaces_)[index.row()].name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -161,8 +219,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NormalHypersurface& s =
-            surfaces_->hypersurface(index.row());
+        const regina::NormalHypersurface& s = (*surfaces_)[index.row()];
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s.isCompact())
@@ -257,8 +314,7 @@ bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
         regina::NormalHypersurfaces::ChangeEventSpan span(*surfaces_);
-        const_cast<regina::NormalHypersurface&>(
-            surfaces_->hypersurface(index.row())).
+        const_cast<regina::NormalHypersurface&>((*surfaces_)[index.row()]).
             setName(value.toString().toUtf8().constData());
         return true;
     } else
@@ -459,8 +515,7 @@ void HyperCoordinateUI::triangulate() {
 
     size_t whichSurface =
         table->selectionModel()->selectedIndexes().front().row();
-    const regina::NormalHypersurface& use = model->surfaces()->hypersurface(
-        whichSurface);
+    const regina::NormalHypersurface& use = model->surfaces()[whichSurface];
     if (! use.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only triangulate compact hypersurfaces."),
@@ -472,7 +527,7 @@ void HyperCoordinateUI::triangulate() {
     // Go ahead and triangulate it.
     auto ans = make_packet(use.triangulate(),
         "Hypersurface #" + std::to_string(whichSurface));
-    surfaces->insertChildLast(ans);
+    surfaces->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -113,7 +113,7 @@ namespace {
      * the case where that ordering was wrong.
      *
      * The permutation \a err maps the real vertices (A,B,C,D) to what
-     * where we \e thought those vertices were.  Specifically, if
+     * where we _thought_ those vertices were.  Specifically, if
      * err[x] == y, this means that the real vertex x has been glued
      * into the position that really belongs to vertex y.
      */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,7 @@ namespace regina {
  * lists of normal surfaces in 3-manifold triangulations.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own filter class, you should choose an ID >= 10000.
+ * Regina to include your own filter class, you should choose an ID ≥ 10000.
  *
  * \ingroup surfaces
  */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -123,7 +123,7 @@ class Rational {
         /**
          * Initialises to the given rational value.
          *
-         * @param value the new rational value of this rational.
+         * \param value the new rational value of this rational.
          */
         Rational(const Rational& value);
         /**
@@ -132,49 +132,49 @@ class Rational {
          *
          * The rational that is passed (\a src) will no longer be usable.
          *
-         * @param src the rational to move.
+         * \param src the rational to move.
          */
         Rational(Rational&& src) noexcept;
         /**
          * Initialises to the given integer value.
          * The given integer may be infinite.
          *
-         * @param value the new integer value of this rational.
+         * \param value the new integer value of this rational.
          */
         template <bool supportInfinity>
         Rational(const IntegerBase<supportInfinity>& value);
         /**
          * Initialises to the given integer value.
          *
-         * @param value the new integer value of this rational.
+         * \param value the new integer value of this rational.
          */
         Rational(long value);
         /**
-         * Initialises to <i>newNum</i>/<i>newDen</i>.
+         * Initialises to <i>num</i>/<i>den</i>.
          *
-         * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
-         * \pre \a newDen is non-negative.
-         *
-         * \warning Failing to meet the preconditions above can result
-         * in misleading or even undefined behaviour.  As an example,
-         * Rational(4,4) (which breaks the gcd requirement) is
-         * considered different from Rational(1,1) (a valid rational),
-         * which is different again from Rational(-1,-1) (which breaks
-         * the non-negativity requirement).
+         * \pre gcd(<i>num</i>, <i>den</i>) = 1 or <i>den</i> = 0.
+         * \pre \a den is non-negative.
          *
          * \pre Neither of the given integers is infinite.
          *
-         * @param newNum the new numerator.
-         * @param newDen the new denominator.
+         * \warning Failing to meet the preconditions above can result
+         * in misleading or even undefined behaviour.  As an example,
+         * Rational(4,4) (which breaks the gcd requirement) is
+         * considered different from Rational(1,1) (a valid rational),
+         * which is different again from Rational(-1,-1) (which breaks
+         * the non-negativity requirement).
+         *
+         * \param num the new numerator.
+         * \param den the new denominator.
          */
         template <bool supportInfinity>
-        Rational(const IntegerBase<supportInfinity>& newNum,
-                  const IntegerBase<supportInfinity>& newDen);
+        Rational(const IntegerBase<supportInfinity>& num,
+                  const IntegerBase<supportInfinity>& den);
         /**
-         * Initialises to <i>newNum</i>/<i>newDen</i>.
+         * Initialises to <i>num</i>/<i>den</i>.
          *
-         * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
-         * \pre \a newDen is non-negative.
+         * \pre gcd(<i>num</i>, <i>den</i>) = 1 or <i>den</i> = 0.
+         * \pre \a den is non-negative.
          *
          * \warning Failing to meet the preconditions above can result
          * in misleading or even undefined behaviour.  As an example,
@@ -183,10 +183,10 @@ class Rational {
          * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
-         * @param newNum the new numerator.
-         * @param newDen the new denominator.
+         * \param num the new numerator.
+         * \param den the new denominator.
          */
-        Rational(long newNum, unsigned long newDen);
+        Rational(long num, unsigned long den);
         /**
          * Destroys this rational.
          */
@@ -195,24 +195,24 @@ class Rational {
         /**
          * Sets this rational to the given rational value.
          *
-         * @param value the new value of this rational.
-         * @return a reference to this rational with its new value.
+         * \param value the new value of this rational.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator = (const Rational& value);
         /**
          * Sets this rational to the given integer value.
          * The given integer may be infinite.
          *
-         * @param value the new value of this rational.
-         * @return a reference to this rational with its new value.
+         * \param value the new value of this rational.
+         * \return a reference to this rational with its new value.
          */
         template <bool supportInfinity>
         Rational& operator = (const IntegerBase<supportInfinity>& value);
         /**
          * Sets this rational to the given integer value.
          *
-         * @param value the new value of this rational.
-         * @return a reference to this rational with its new value.
+         * \param value the new value of this rational.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator = (long value);
         /**
@@ -221,14 +221,14 @@ class Rational {
          *
          * The rational that is passed (\a src) will no longer be usable.
          *
-         * @param src the rational to move.
-         * @return a reference to this rational.
+         * \param src the rational to move.
+         * \return a reference to this rational.
          */
         Rational& operator = (Rational&& src) noexcept;
         /**
          * Swaps the values of this and the given rational.
          *
-         * @param other the rational whose value will be swapped with this.
+         * \param other the rational whose value will be swapped with this.
          */
         void swap(Rational& other) noexcept;
 
@@ -237,7 +237,7 @@ class Rational {
          * Note that rationals are always stored in lowest terms with
          * non-negative denominator.  Infinity will be stored as 1/0.
          *
-         * @return the numerator.
+         * \return the numerator.
          */
         Integer numerator() const;
         /**
@@ -245,7 +245,7 @@ class Rational {
          * Note that rationals are always stored in lowest terms with
          * non-negative denominator.  Infinity will be stored as 1/0.
          *
-         * @return the denominator.
+         * \return the denominator.
          */
         Integer denominator() const;
 
@@ -253,53 +253,53 @@ class Rational {
          * Calculates the product of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational with which to multiply this.
-         * @return the product \a this * \a r.
+         * \param r the rational with which to multiply this.
+         * \return the product \a this * \a r.
          */
         Rational operator *(const Rational& r) const;
         /**
          * Calculates the ratio of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational to divide this by.
-         * @return the ratio \a this / \a r.
+         * \param r the rational to divide this by.
+         * \return the ratio \a this / \a r.
          */
         Rational operator /(const Rational& r) const;
         /**
          * Calculates the sum of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational to add to this.
-         * @return the sum \a this + \a r.
+         * \param r the rational to add to this.
+         * \return the sum \a this + \a r.
          */
         Rational operator +(const Rational& r) const;
         /**
          * Calculates the difference of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational to subtract from this.
-         * @return the difference \a this - \a r.
+         * \param r the rational to subtract from this.
+         * \return the difference \a this - \a r.
          */
         Rational operator -(const Rational& r) const;
         /**
          * Determines the negative of this rational.
          * This rational is not changed.
          *
-         * @return the negative of this rational.
+         * \return the negative of this rational.
          */
         Rational operator - () const;
         /**
          * Calculates the inverse of this rational.
          * This rational is not changed.
          *
-         * @return the inverse 1 / \a this.
+         * \return the inverse 1 / \a this.
          */
         Rational inverse() const;
         /**
          * Determines the absolute value of this rational.
          * This rational is not changed.
          *
-         * @return the absolute value of this rational.
+         * \return the absolute value of this rational.
          */
         Rational abs() const;
 
@@ -307,32 +307,32 @@ class Rational {
          * Adds the given rational to this.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to add to this.
-         * @return a reference to this rational with its new value.
+         * \param other the rational to add to this.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator += (const Rational& other);
         /**
          * Subtracts the given rational from this.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to subtract from this.
-         * @return a reference to this rational with its new value.
+         * \param other the rational to subtract from this.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator -= (const Rational& other);
         /**
          * Multiplies the given rational by this.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to multiply by this.
-         * @return a reference to this rational with its new value.
+         * \param other the rational to multiply by this.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator *= (const Rational& other);
         /**
          * Divides this by the given rational.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to divide this by.
-         * @return a reference to this rational with its new value.
+         * \param other the rational to divide this by.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator /= (const Rational& other);
         /**
@@ -349,48 +349,48 @@ class Rational {
         /**
          * Determines if this is equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is equal to
+         * \param compare the rational with which this will be compared.
+         * \return \c true if and only if this rational is equal to
          * \a compare.
          */
         bool operator == (const Rational& compare) const;
         /**
          * Determines if this is not equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is not equal to
+         * \param compare the rational with which this will be compared.
+         * \return \c true if and only if this rational is not equal to
          * \a compare.
          */
         bool operator != (const Rational& compare) const;
         /**
          * Determines if this is less than the given rational.
          *
-         * @param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is less than
+         * \param compare the rational with which this will be compared.
+         * \return \c true if and only if this rational is less than
          * \a compare.
          */
         bool operator < (const Rational& compare) const;
         /**
          * Determines if this is greater than the given rational.
          *
-         * @param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is greater than
+         * \param compare the rational with which this will be compared.
+         * \return \c true if and only if this rational is greater than
          * \a compare.
          */
         bool operator > (const Rational& compare) const;
         /**
          * Determines if this is less than or equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is less than or
+         * \param compare the rational with which this will be compared.
+         * \return \c true if and only if this rational is less than or
          * equal to \a compare.
          */
         bool operator <= (const Rational& compare) const;
         /**
          * Determines if this is greater than or equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is greater than
+         * \param compare the rational with which this will be compared.
+         * \return \c true if and only if this rational is greater than
          * or equal to \a compare.
          */
         bool operator >= (const Rational& compare) const;
@@ -413,9 +413,9 @@ class Rational {
          * \exception UnsolvedCase This rational lies outside double's
          * allowable range.
          *
-         * @return the double approximation to this rational.
+         * \return the double approximation to this rational.
          *
-         * @author Ryan Budney, B.B.
+         * \author Ryan Budney, B.B.
          */
         double doubleApprox() const;
 
@@ -423,9 +423,9 @@ class Rational {
          * Returns this rational as written using TeX formatting.
          * No leading or trailing dollar signs will be included.
          *
-         * @return this rational as written using TeX formatting.
+         * \return this rational as written using TeX formatting.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         std::string tex() const;
 
@@ -433,13 +433,13 @@ class Rational {
          * Writes this rational in TeX format to the given output stream.
          * No leading or trailing dollar signs will be included.
          *
-         * \ifacespython Not present; instead use the variant tex()
+         * \nopython Instead use the variant tex()
          * that takes no arguments and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         std::ostream& writeTeX(std::ostream& out) const;
 
@@ -460,8 +460,8 @@ class Rational {
  * This global routine simply calls Rational::swap(); it is provided
  * so that Rational meets the C++ Swappable requirements.
  *
- * @param a the first rational whose contents should be swapped.
- * @param b the second rational whose contents should be swapped.
+ * \param a the first rational whose contents should be swapped.
+ * \param b the second rational whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -469,14 +469,14 @@ void swap(Rational& a, Rational& b) noexcept;
 
 /**
  * Writes the given rational to the given output stream.
- * Infinity will be written as <tt>Inf</tt>.  Undefined will be written
- * as <tt>Undef</tt>.  A rational with denominator one will be written
+ * Infinity will be written as `Inf`.  Undefined will be written
+ * as `Undef`.  A rational with denominator one will be written
  * as a single integer.  All other rationals will be written in the form
- * <tt>r/s</tt>.
+ * `r/s`.
  *
- * @param out the output stream to which to write.
- * @param rat the rational to write.
- * @return a reference to \a out.
+ * \param out the output stream to which to write.
+ * \param rat the rational to write.
+ * \return a reference to \a out.
  *
  * \ingroup maths
  */
@@ -512,31 +512,31 @@ inline Rational::Rational(long value) : flavour(f_normal) {
     mpq_set_si(data, value, 1);
 }
 template <bool supportInfinity>
-Rational::Rational(const IntegerBase<supportInfinity>& newNum,
-                     const IntegerBase<supportInfinity>& newDen) {
+Rational::Rational(const IntegerBase<supportInfinity>& num,
+                     const IntegerBase<supportInfinity>& den) {
     mpq_init(data);
-    if (newDen.isZero()) {
-        if (newNum.isZero())
+    if (den.isZero()) {
+        if (num.isZero())
             flavour = f_undefined;
         else
             flavour = f_infinity;
     } else {
         flavour = f_normal;
-        if (newNum.isNative() && newDen.isNative())
-            mpq_set_si(data, newNum.longValue(), newDen.longValue());
-        else if (newNum.isNative()) {
-            // Avoid bloating newNum with a GMP representation.
-            IntegerBase<supportInfinity> tmp(newNum);
+        if (num.isNative() && den.isNative())
+            mpq_set_si(data, num.longValue(), den.longValue());
+        else if (num.isNative()) {
+            // Avoid bloating num with a GMP representation.
+            IntegerBase<supportInfinity> tmp(num);
             mpz_set(mpq_numref(data), tmp.rawData());
-            mpz_set(mpq_denref(data), newDen.rawData());
-        } else if (newDen.isNative()) {
-            // Avoid bloating newDen with a GMP representation.
-            IntegerBase<supportInfinity> tmp(newDen);
-            mpz_set(mpq_numref(data), newNum.rawData());
+            mpz_set(mpq_denref(data), den.rawData());
+        } else if (den.isNative()) {
+            // Avoid bloating den with a GMP representation.
+            IntegerBase<supportInfinity> tmp(den);
+            mpz_set(mpq_numref(data), num.rawData());
             mpz_set(mpq_denref(data), tmp.rawData());
         } else {
-            mpz_set(mpq_numref(data), newNum.rawData());
-            mpz_set(mpq_denref(data), newDen.rawData());
+            mpz_set(mpq_numref(data), num.rawData());
+            mpz_set(mpq_denref(data), den.rawData());
         }
     }
 }

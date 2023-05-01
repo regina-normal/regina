@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,23 +35,32 @@
 #include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/txicore.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredtorusbundle.h"
 
 using regina::LayeredTorusBundle;
 
 void addLayeredTorusBundle(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredTorusBundle)
+
     auto c = pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
-            (m, "LayeredTorusBundle")
-        .def(pybind11::init<const LayeredTorusBundle&>())
-        .def("swap", &LayeredTorusBundle::swap)
+            (m, "LayeredTorusBundle", rdoc_scope)
+        .def(pybind11::init<const LayeredTorusBundle&>(), rdoc::__copy)
+        .def("swap", &LayeredTorusBundle::swap, rdoc::swap)
         .def("core", &LayeredTorusBundle::core,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rdoc::core)
         .def("coreIso", &LayeredTorusBundle::coreIso,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::coreIso)
         .def("layeringReln", &LayeredTorusBundle::layeringReln,
-            pybind11::return_value_policy::reference_internal)
-        .def_static("recognise", &LayeredTorusBundle::recognise)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::layeringReln)
+        .def_static("recognise", &LayeredTorusBundle::recognise,
+            rdoc::recognise)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
+
+    regina::python::add_global_swap<LayeredTorusBundle>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

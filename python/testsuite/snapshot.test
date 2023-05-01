@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2015-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests Regina's mechanism for snapshotting triangulations.
@@ -49,7 +49,7 @@ a = AngleStructures(t)
 print(a)
 print(a.triangulation().isoSig())
 
-a.triangulation().pachner(t.tetrahedron(0))
+dummy = a.triangulation().pachner(t.tetrahedron(0))
 print(t.isoSig(), t.isReadOnlySnapshot())
 print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
 
@@ -72,7 +72,7 @@ a = AngleStructures(t)
 print(a)
 print(a.triangulation().isoSig())
 
-a.triangulation().pachner(t.tetrahedron(0))
+dummy = a.triangulation().pachner(t.tetrahedron(0))
 print(t.isoSig(), t.isReadOnlySnapshot()) # should be an empty triangulation
 print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
 

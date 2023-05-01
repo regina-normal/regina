@@ -1,0 +1,38 @@
+>>> help(Crossing)
+Help on class Crossing in module regina.engine:
+
+class Crossing(pybind11_builtins.pybind11_object)
+ |  Represents a single crossing in a link diagram. The two strands of the
+ |  link that run over and under the crossing respectively can be accessed
+ |  through routines such as over(), under(), upper(), lower(), and
+ |  strand().
+ |  
+ |  Each crossing has a sign, which is either positive (denoted by +1) or
+ |  negative (denoted by -1):
+ |  
+ |  * In a positive crossing, the upper strand passes over the lower
+ |    strand from left to right:
+ |  
+ |  ```
+ |    -----\ /----->
+ |          \
+ |    -----/ \----->
+ |  ```
+ |  
+ |  * In a negative crossing, the upper strand passes over the lower
+ |    strand from right to left:
+ |  
+ |  ```
+ |    -----\ /----->
+ |          /
+ |    -----/ \----->
+ |  ```
+ |  
+ |  If a link has *n* crossings, then these are numbered 0,...,*n*-1. The
+ |  number assigned to this crossing can be accessed by calling index().
+ |  Note that crossings in a link may be reindexed when other crossings
+ |  are added or removed - if you wish to track a particular crossing
+ |  through such operations then you should use a pointer to the relevant
+ |  Crossing object instead.
+ |  
+ |  ... (documentation continues) ...

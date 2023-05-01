@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,7 @@ void addExample12(pybind11::module_& m);
 void addExample13(pybind11::module_& m);
 void addExample14(pybind11::module_& m);
 void addExample15(pybind11::module_& m);
+void addFaceNumbering(pybind11::module_& m);
 void addFacetPairing2(pybind11::module_& m);
 void addFacetPairing4(pybind11::module_& m);
 void addFacetPairing5(pybind11::module_& m);
@@ -95,38 +96,32 @@ void addTriangulations14(pybind11::module_& m);
 void addTriangulations15(pybind11::module_& m);
 
 void addGenericClasses(pybind11::module_& m) {
-    addCut(m);
     addFacetSpec(m);
     addFacetPairing2(m);
     addFacetPairing4(m);
-    addExample5(m);
-    addExample6(m);
-    addExample7(m);
-    addExample8(m);
     addFacetPairing5(m);
     addFacetPairing6(m);
     addFacetPairing7(m);
     addFacetPairing8(m);
-    addIsomorphism5(m);
-    addIsomorphism6(m);
-    addIsomorphism7(m);
-    addIsomorphism8(m);
     addFace5(m);
     addFace6(m);
     addFace7(m);
     addFace8(m);
+    addIsomorphism5(m);
+    addIsomorphism6(m);
+    addIsomorphism7(m);
+    addIsomorphism8(m);
     addTriangulations5(m);
     addTriangulations6(m);
     addTriangulations7(m);
     addTriangulations8(m);
+    addExample5(m);
+    addExample6(m);
+    addExample7(m);
+    addExample8(m);
+    addCut(m);
+    addFaceNumbering(m);
 #ifdef REGINA_HIGHDIM
-    addExample9(m);
-    addExample10(m);
-    addExample11(m);
-    addExample12(m);
-    addExample13(m);
-    addExample14(m);
-    addExample15(m);
     addFacetPairing9(m);
     addFacetPairing10(m);
     addFacetPairing11(m);
@@ -134,13 +129,6 @@ void addGenericClasses(pybind11::module_& m) {
     addFacetPairing13(m);
     addFacetPairing14(m);
     addFacetPairing15(m);
-    addIsomorphism9(m);
-    addIsomorphism10(m);
-    addIsomorphism11(m);
-    addIsomorphism12(m);
-    addIsomorphism13(m);
-    addIsomorphism14(m);
-    addIsomorphism15(m);
     addFace9(m);
     addFace10(m);
     addFace11(m);
@@ -148,6 +136,13 @@ void addGenericClasses(pybind11::module_& m) {
     addFace13(m);
     addFace14(m);
     addFace15(m);
+    addIsomorphism9(m);
+    addIsomorphism10(m);
+    addIsomorphism11(m);
+    addIsomorphism12(m);
+    addIsomorphism13(m);
+    addIsomorphism14(m);
+    addIsomorphism15(m);
     addTriangulations9(m);
     addTriangulations10(m);
     addTriangulations11(m);
@@ -155,6 +150,13 @@ void addGenericClasses(pybind11::module_& m) {
     addTriangulations13(m);
     addTriangulations14(m);
     addTriangulations15(m);
+    addExample9(m);
+    addExample10(m);
+    addExample11(m);
+    addExample12(m);
+    addExample13(m);
+    addExample14(m);
+    addExample15(m);
 #endif /* REGINA_HIGHDIM */
 }
 

@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Distribution Verification
 #
-# Copyright (c) 2003-2021, Ben Burton
+# Copyright (c) 2003-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: distcheck <dist-tarball>
@@ -119,6 +119,7 @@ case "$1" in
 esac
 
 if ! tar "$taropts" "$1" | sed -e 's%^[^/]*/%%' -e 's%/$%%' | \
+    grep -v '\(^\|/\)\.clang-tidy$' | \
     sort > "$distlist"; then
   echo "The contents of the distribution tarball $1 could not be listed."
   exit 1
@@ -132,6 +133,7 @@ if ! find "$gittree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^\.' | \
     grep -v '/\.' | \
     grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
+    grep -v '^python/docstrings/clang-support\(/\|$\)' | \
     grep -v '^regina-[0-9.]\+\.tar\.gz$' | \
     grep -v '^sfdist\(/\|$\)' | \
     grep -v '^utils/local\(/\|$\)' | \

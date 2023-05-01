@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -95,9 +95,9 @@ class Matrix2;
  * establishes an orientation on the vertical fibres, as well as a
  * left-to-right direction across the annulus.
  *
- * For convenience we refer to edges \a roles[][0-1] as \e vertical,
- * edges \a roles[][0-2] as \e horizontal, and edge \a roles[][1-2] as
- * \e diagonal.  This is illustrated in the following diagrams.
+ * For convenience we refer to edges \a roles[][0-1] as _vertical_,
+ * edges \a roles[][0-2] as _horizontal_, and edge \a roles[][1-2] as
+ * _diagonal_.  This is illustrated in the following diagrams.
  *
  * <pre>
  *         V  Horizontal       V   Diagonal
@@ -113,13 +113,13 @@ class Matrix2;
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython The member arrays \a tet and \a roles are accessed for
+ * \python The member arrays \a tet and \a roles are accessed for
  * reading through functions \a tet() and \a roles() respectively.  For
  * instance, the first triangle tetrahedron for the saturated annulus \a a can
- * be accessed as <tt>a.tet(0)</tt>.  These same member arrays are
+ * be accessed as `a.tet(0)`.  These same member arrays are
  * accessed for writing through functions \a setTet() and \a setRoles(),
  * so for instance the second triangle vertex roles for the saturated annulus
- * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
+ * \a a can be modified by calling `a.setRoles(1, newRoles)`.
  *
  * \ingroup subcomplex
  */
@@ -145,19 +145,86 @@ struct SatAnnulus {
      * Creates a new structure initialised to the given values.  See the
      * class notes for what the various tetrahedra and permutations mean.
      *
-     * @param t0 the tetrahedron to assign to \a tet[0].
-     * @param r0 the permutation to assign to \a roles[0].
-     * @param t1 the tetrahedron to assign to \a tet[1].
-     * @param r1 the permutation to assign to \a roles[1].
+     * \param t0 the tetrahedron to assign to \a tet[0].
+     * \param r0 the permutation to assign to \a roles[0].
+     * \param t1 the tetrahedron to assign to \a tet[1].
+     * \param r1 the permutation to assign to \a roles[1].
      */
     SatAnnulus(const Tetrahedron<3>* t0, Perm<4> r0,
         const Tetrahedron<3>* t1, Perm<4> r1);
     /**
      * Sets this to be a copy of the given structure.
      *
-     * @return a reference to this structure.
+     * \return a reference to this structure.
      */
     SatAnnulus& operator = (const SatAnnulus&) = default;
+
+#ifdef __APIDOCS
+    /**
+     * A Python-only routine that allows you to query the \a tet field.
+     *
+     * The \a tet field describes which two tetrahedra provide the two
+     * triangles that make up this annulus.  See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * \param which identifies whether we are querying information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * \return the tetrahedron that provides the given triangle.
+     */
+    const Tetrahedron<3>* tet(int which) const;
+    /**
+     * A Python-only routine that allows you to query the \a roles field.
+     *
+     * The \a roles field describes how the two triangles that make up this
+     * match up with the individual vertices of their corresponding tetrahedra.
+     * See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * \param which identifies whether we are querying information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * \return the permutation that describes how the given triangle matches
+     * up with the individual vertices of its corresponding tetrahedron.
+     */
+    Perm<4> roles(int which) const;
+    /**
+     * A Python-only routine that allows you to set the \a tet field.
+     *
+     * The \a tet field describes which two tetrahedra provide the two
+     * triangles that make up this annulus.  See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * \param which identifies whether we are setting information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * \param value the tetrahedron that provides the given triangle.
+     */
+    void setTet(int which, const Tetrahedron<3>* value);
+    /**
+     * A Python-only routine that allows you to set the \a roles field.
+     *
+     * The \a roles field describes how the two triangles that make up this
+     * match up with the individual vertices of their corresponding tetrahedra.
+     * See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * \param which identifies whether we are setting information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * \param value the permutation that describes how the given triangle
+     * matches up with the individual vertices of its corresponding tetrahedron.
+     */
+    void setRoles(int which, Perm<4> value);
+#endif // __APIDOCS
 
     /**
      * Determines whether or not this and the given structure describe
@@ -167,12 +234,12 @@ struct SatAnnulus {
      * must use the same two numbered tetrahedra, presented in the same
      * order, and with the same \a roles permutations.
      *
-     * Because this operation compares tetrahedron \e numbers and not
+     * Because this operation compares tetrahedron _numbers_ and not
      * the underlying Tetrahedron objects, it is meaningful to compare
      * saturated annuli from different triangulations.
      *
-     * @param other the structure to compare with this.
-     * @return \c true if and only if both structures describe the same
+     * \param other the structure to compare with this.
+     * \return \c true if and only if both structures describe the same
      * specific presentation of a saturated annulus.
      */
     bool operator == (const SatAnnulus& other) const;
@@ -184,12 +251,12 @@ struct SatAnnulus {
      * must use the same two numbered tetrahedra, presented in the same
      * order, and with the same \a roles permutations.
      *
-     * Because this operation compares tetrahedron \e numbers and not
+     * Because this operation compares tetrahedron _numbers_ and not
      * the underlying Tetrahedron objects, it is meaningful to compare
      * saturated annuli from different triangulations.
      *
-     * @param other the structure to compare with this.
-     * @return \c true if and only if both structures describe different
+     * \param other the structure to compare with this.
+     * \return \c true if and only if both structures describe different
      * specific presentations of a saturated annulus.
      */
     bool operator != (const SatAnnulus& other) const;
@@ -202,7 +269,7 @@ struct SatAnnulus {
      * to determine whether any triangles of the annulus lie on the
      * triangulation boundary.
      *
-     * @return the number of triangles of this annulus that lie on the boundary
+     * \return the number of triangles of this annulus that lie on the boundary
      * of the triangulation; this will be 0, 1 or 2.
      */
     int meetsBoundary() const;
@@ -228,7 +295,7 @@ struct SatAnnulus {
      * \pre Neither triangle of this annulus is a boundary triangle of the
      * triangulation.
      *
-     * @return a new representation of this annulus from the other side.
+     * \return a new representation of this annulus from the other side.
      */
     SatAnnulus otherSide() const;
 
@@ -244,7 +311,7 @@ struct SatAnnulus {
      * direction of the fibres has been reversed.  This structure will
      * not be changed.  See reflectVertical() for further details.
      *
-     * @return a new representation of this annulus in which fibres have
+     * \return a new representation of this annulus in which fibres have
      * been reversed.
      */
     SatAnnulus verticalReflection() const;
@@ -261,7 +328,7 @@ struct SatAnnulus {
      * This structure will not be changed.  See reflectHorizontal() for
      * further details.
      *
-     * @return a new left-to-right reflection of this annulus.
+     * \return a new left-to-right reflection of this annulus.
      */
     SatAnnulus horizontalReflection() const;
 
@@ -279,7 +346,7 @@ struct SatAnnulus {
      * This structure will not be changed.  See rotateHalfTurn() for
      * further details.
      *
-     * @return a new 180 degree rotation of this annulus.
+     * \return a new 180 degree rotation of this annulus.
      */
     SatAnnulus halfTurnRotation() const;
 
@@ -307,8 +374,8 @@ struct SatAnnulus {
      * between different sections of the same Seifert fibred space,
      * for example.
      *
-     * @param other the annulus to compare with this.
-     * @return a tuple of booleans (\a adj, \a refVert, \a refHoriz), where:
+     * \param other the annulus to compare with this.
+     * \return a tuple of booleans (\a adj, \a refVert, \a refHoriz), where:
      * \a adj is \c true iff some adjacency was found (either with or
      * without reflections); \a refVert is \c true iff a vertical reflection
      * is required; and \a refHoriz is \c true iff a horizontal reflection is
@@ -352,11 +419,11 @@ struct SatAnnulus {
      *     [y ]                [y']
      * </pre>
      *
-     * @param other the annulus to compare with this.
-     * @param matching returns details on how the curves on each annulus
+     * \param other the annulus to compare with this.
+     * \param matching returns details on how the curves on each annulus
      * are related.  If the this and the given annulus are not joined,
      * then this matrix is not touched.
-     * @return \c true if this and the given annulus are found to be
+     * \return \c true if this and the given annulus are found to be
      * joined, or \c false if they are not.
      */
     bool isJoined(const SatAnnulus& other, Matrix2& matching) const;
@@ -372,7 +439,7 @@ struct SatAnnulus {
      *   of the torus do not become identified within the larger triangulation);
      * - this torus is two-sided within the surrounding triangulation.
      *
-     * @return \c true if this annulus forms an embedded two-sided torus as
+     * \return \c true if this annulus forms an embedded two-sided torus as
      * described above, or \c false if it does not.
      */
     bool isTwoSidedTorus() const;
@@ -391,10 +458,10 @@ struct SatAnnulus {
      * \pre This annulus refers to tetrahedra in \a originalTri, and
      * \a iso describes a mapping from \a originalTri to \a newTri.
      *
-     * @param originalTri the triangulation currently used by this
+     * \param originalTri the triangulation currently used by this
      * annulus representation.
-     * @param iso the mapping from \a originalTri to \a newTri.
-     * @param newTri the triangulation to be used by the updated annulus
+     * \param iso the mapping from \a originalTri to \a newTri.
+     * \param newTri the triangulation to be used by the updated annulus
      * representation.
      */
     void transform(const Triangulation<3>& originalTri,
@@ -404,10 +471,10 @@ struct SatAnnulus {
      * isomorphism between triangulations.  This annulus representation
      * will not be changed.  See transform() for further details.
      *
-     * @param originalTri the triangulation currently used by this
+     * \param originalTri the triangulation currently used by this
      * annulus representation.
-     * @param iso the mapping from \a originalTri to \a newTri.
-     * @param newTri the triangulation to be used by the new annulus
+     * \param iso the mapping from \a originalTri to \a newTri.
+     * \param newTri the triangulation to be used by the new annulus
      * representation.
      */
     SatAnnulus image(const Triangulation<3>& originalTri,
@@ -437,14 +504,32 @@ struct SatAnnulus {
      *
      * \pre The given value \a alpha is not zero.
      * \pre The given values \a alpha and \a beta are coprime.
+     * \pre The two faces of the given saturated annulus (i.e., face
+     * `r0[3]` of \a t0 and face `r1[3]` of \a t1) are boundary faces.
      *
-     * @param t0 the tetrahedron corresponding to SatAnnulus::tet[0].
-     * @param r0 the permutation corresponding to SatAnnulus::roles[0].
-     * @param t1 the tetrahedron corresponding to SatAnnulus::tet[1].
-     * @param r1 the permutation corresponding to SatAnnulus::roles[1].
-     * @param alpha describes how the meridinal disc of the torus should
+     * \exception InvalidArgument At least one of the conditions above fails;
+     * that is, either \a alpha is zero, or \a alpha and \a beta are not
+     * coprime, or at least one of the two faces of the saturated annulus is
+     * already joined to something.  Note that the operation may already be
+     * partially complete by the time the exception is thrown (i.e., the
+     * layered solid torus might be partially constructed and/or might be
+     * already attached to one face of the annulus that was indeed boundary).
+     *
+     * \exception LockViolation At least one face of the given saturated
+     * annulus (i.e., face `r0[3]` of \a t0 and/or face `r1[3]` of \a t1) is
+     * locked.  See Simplex<3>::lockFacet() for further details on how facet
+     * locks work and what their implications are.  Note that the operation
+     * may already be partially complete by the time the exception is thrown
+     * (i.e., the layered solid torus might be already constructed and/or
+     * might be attached to one face of the annulus that was indeed unlocked).
+     *
+     * \param t0 the tetrahedron corresponding to SatAnnulus::tet[0].
+     * \param r0 the permutation corresponding to SatAnnulus::roles[0].
+     * \param t1 the tetrahedron corresponding to SatAnnulus::tet[1].
+     * \param r1 the permutation corresponding to SatAnnulus::roles[1].
+     * \param alpha describes how the meridinal disc of the torus should
      * cut the vertical edges.  This may be positive or negative.
-     * @param beta describes how the meridinal disc of the torus should
+     * \param beta describes how the meridinal disc of the torus should
      * cut the horizontal edges.  Again this may be positive or negative.
      */
     static void attachLST(Tetrahedron<3>* t0, Perm<4> r0,

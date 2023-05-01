@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -88,8 +88,8 @@ class FacePair {
          * \pre The two given face numbers must be distinct integers
          * between 0 and 3 inclusive.
          *
-         * @param first the first face number in the new pair.
-         * @param second the second face number in the new pair.
+         * \param first the first face number in the new pair.
+         * \param second the second face number in the new pair.
          */
         FacePair(int first, int second);
         /**
@@ -103,7 +103,7 @@ class FacePair {
          * \pre This face pair is neither before-the-start or
          * past-the-end.
          *
-         * @return the lower face number.
+         * \return the lower face number.
          */
         int lower() const;
         /**
@@ -112,7 +112,7 @@ class FacePair {
          * \pre This face pair is neither before-the-start or
          * past-the-end.
          *
-         * @return the upper face number.
+         * \return the upper face number.
          */
         int upper() const;
 
@@ -120,7 +120,7 @@ class FacePair {
          * Determines if this face pair represents a before-the-start
          * value.
          *
-         * @return \c true if and only if this face pair is
+         * \return \c true if and only if this face pair is
          * before-the-start.
          */
         bool isBeforeStart() const;
@@ -128,7 +128,7 @@ class FacePair {
          * Determines if this face pair represents a past-the-end
          * value.
          *
-         * @return \c true if and only if this face pair is
+         * \return \c true if and only if this face pair is
          * past-the-end.
          */
         bool isPastEnd() const;
@@ -141,58 +141,58 @@ class FacePair {
          * \pre This face pair is neither before-the-start nor
          * past-the-end.
          *
-         * @return the complement of this face pair.
+         * \return the complement of this face pair.
          */
         FacePair complement() const;
 
         /**
          * Sets this face pair to be a copy of the given pair.
          *
-         * @param cloneMe the face pair to clone.
-         * @return a reference to this face pair.
+         * \param cloneMe the face pair to clone.
+         * \return a reference to this face pair.
          */
         FacePair& operator = (const FacePair& cloneMe) = default;
         /**
          * Determines if this and the given face pair are equal.
          *
-         * @param other the pair to compare with this.
-         * @return \c true if and only if this and the given pair are equal.
+         * \param other the pair to compare with this.
+         * \return \c true if and only if this and the given pair are equal.
          */
         bool operator == (const FacePair& other) const;
         /**
          * Determines if this and the given face pair are not equal.
          *
-         * @param other the pair to compare with this.
-         * @return \c true if and only if this and the given pair are not equal.
+         * \param other the pair to compare with this.
+         * \return \c true if and only if this and the given pair are not equal.
          */
         bool operator != (const FacePair& other) const;
         /**
          * Determines if this is less than the given face pair.
          *
-         * @param other the pair to compare with this.
-         * @return \c true if and only if this is less than \a other.
+         * \param other the pair to compare with this.
+         * \return \c true if and only if this is less than \a other.
          */
         bool operator < (const FacePair& other) const;
         /**
          * Determines if this is greater than the given face pair.
          *
-         * @param other the pair to compare with this.
-         * @return \c true if and only if this is greater than \a other.
+         * \param other the pair to compare with this.
+         * \return \c true if and only if this is greater than \a other.
          */
         bool operator > (const FacePair& other) const;
         /**
          * Determines if this is less than or equal to the given face pair.
          *
-         * @param other the pair to compare with this.
-         * @return \c true if and only if this is less than or
+         * \param other the pair to compare with this.
+         * \return \c true if and only if this is less than or
          * equal to \a other.
          */
         bool operator <= (const FacePair& other) const;
         /**
          * Determines if this is greater than or equal to the given face pair.
          *
-         * @param other the pair to compare with this.
-         * @return \c true if and only if this is greater than or
+         * \param other the pair to compare with this.
+         * \return \c true if and only if this is greater than or
          * equal to \a other.
          */
         bool operator >= (const FacePair& other) const;
@@ -206,10 +206,10 @@ class FacePair {
          *
          * \pre This face pair is not currently past-the-end.
          *
-         * \ifacespython This routine is not available; however, the
-         * postincrement operator is available under the name inc().
+         * \nopython The postincrement operator is available in Python
+         * under the name inc().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         FacePair& operator ++ ();
         /**
@@ -222,9 +222,9 @@ class FacePair {
          *
          * \pre This face pair is not currently past-the-end.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \python This routine is available under the name inc().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         FacePair operator ++ (int);
         /**
@@ -237,10 +237,10 @@ class FacePair {
          *
          * \pre This face pair is not currently before-the-start.
          *
-         * \ifacespython This routine is not available; however, the
-         * postdecrement operator is available under the name dec().
+         * \nopython The postdecrement operator is available in Python
+         * under the name dec().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         FacePair& operator -- ();
         /**
@@ -253,9 +253,9 @@ class FacePair {
          *
          * \pre This face pair is not currently before-the-start.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \python This routine is available under the name dec().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         FacePair operator -- (int);
 
@@ -270,7 +270,7 @@ class FacePair {
          * \pre This face pair is neither before-the-start nor
          * past-the-end.
          *
-         * @return the edge that belongs to both faces in this pair.
+         * \return the edge that belongs to both faces in this pair.
          */
         int commonEdge() const;
         /**
@@ -284,7 +284,7 @@ class FacePair {
          * \pre This face pair is neither before-the-start nor
          * past-the-end.
          *
-         * @return the edge that does not belong to either of these two faces.
+         * \return the edge that does not belong to either of these two faces.
          */
         int oppositeEdge() const;
 
@@ -298,9 +298,9 @@ class FacePair {
 /**
  * Writes the given face pair to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param pair the face pair to write.
- * @return a reference to \a out.
+ * \param out the output stream to which to write.
+ * \param pair the face pair to write.
+ * \return a reference to \a out.
  *
  * \ingroup triangulation
  */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,7 +63,7 @@ using MatrixInt = Matrix<Integer, true>;
  * Z_6, and Z_2+Z_2+Z_3 will appear as Z_2+Z_6.
  *
  * In general the factors will appear as Z_<i>d0</i>+...+Z_<i>dn</i>,
- * where the invariant factors <i>di</i> are all greater than 1 and satisfy
+ * where the invariant factors \a di are all greater than 1 and satisfy
  * <i>d0</i>|<i>d1</i>|...|<i>dn</i>.  Note that this representation is
  * unique.
  *
@@ -83,7 +83,7 @@ class AbelianGroup :
         size_t rank_ { 0 };
             /**< The rank of the group (the number of Z components). */
         std::vector<Integer> revInvFactors_;
-            /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
+            /**< The invariant factors \a d0,...,\a dn as
                  described in the AbelianGroup notes.
                  These are stored in reverse order, since addTorsion()
                  always extends the vector on the \a d0 end.
@@ -110,25 +110,26 @@ class AbelianGroup :
         /**
          * Creates a free abelian group of the given rank.
          *
-         * @param rank the rank of the new group.
+         * \param rank the rank of the new group.
          */
         AbelianGroup(size_t rank);
         /**
          * Creates a new group with the given rank and invariant factors.
          *
-         * \exception The invariant factors were not all greater than 1,
-         * and/or they did not satisfy the divisibily requirement (where
-         * each invariant factor must divide the one after it).
+         * \exception InvalidArgument The invariant factors were not all
+         * greater than 1, and/or they did not satisfy the divisibily
+         * requirement (where each invariant factor must divide the one
+         * after it).
          *
-         * \ifacespython Not available, but there is a constructor that
-         * takes the invariant factors as a Python list.
+         * \nopython Instead, use the constructor that takes the invariant
+         * factors as a Python list.
          *
          * \tparam T an integer type, which may be a native C++ integer
          * type or one of Regina's own integer types.
          *
-         * @param rank the rank of the new group (i.e., the number of
+         * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
-         * @param invFac the list of invariant factors \a d0, \a d1, ...,
+         * \param invFac the list of invariant factors \a d0, \a d1, ...,
          * as described in the class notes, where each invariant factor
          * is greater than 1 and divides the invariant factor after it.
          */
@@ -137,9 +138,10 @@ class AbelianGroup :
         /**
          * Creates a new group with the given rank and invariant factors.
          *
-         * \exception The invariant factors were not all greater than 1,
-         * and/or they did not satisfy the divisibily requirement (where
-         * each invariant factor must divide the one after it).
+         * \exception InvalidArgument The invariant factors were not all
+         * greater than 1, and/or they did not satisfy the divisibily
+         * requirement (where each invariant factor must divide the one
+         * after it).
          *
          * \tparam Container a container or view that supports reverse
          * iteration via rbegin(), rend(), that has an empty() function,
@@ -147,9 +149,9 @@ class AbelianGroup :
          * Regina's own integer types.  A suitable example might be
          * std::vector<int>.
          *
-         * @param rank the rank of the new group (i.e., the number of
+         * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
-         * @param invFac the list of invariant factors \a d0, \a d1, ...,
+         * \param invFac the list of invariant factors \a d0, \a d1, ...,
          * as described in the class notes, where each invariant factor
          * is greater than 1 and divides the invariant factor after it.
          */
@@ -161,7 +163,7 @@ class AbelianGroup :
          * Each column of the matrix represents a generator, and each
          * row of the matrix represents a relation.
          *
-         * @param presentation a presentation matrix for the new group.
+         * \param presentation a presentation matrix for the new group.
          */
         AbelianGroup(MatrixInt presentation);
         /**
@@ -169,7 +171,7 @@ class AbelianGroup :
          * The abelian group is the kernel of \a M modulo the image of \a N.
          *
          * The matrices should be thought of as acting on column vectors:
-         * this means that the product <tt>B*A</tt> applies the linear
+         * this means that the product `B×A` applies the linear
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
@@ -177,16 +179,16 @@ class AbelianGroup :
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M*N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will _not_ be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
          * \exception InvalidArgument The number of columns in \a M does
          * not match the number of rows in \a N.
          *
-         * @param M the `right' matrix in the chain complex; that is,
+         * \param M the `right' matrix in the chain complex; that is,
          * the matrix that one takes the kernel of when computing homology.
-         * @param N the `left' matrix in the chain complex; that is, the
+         * \param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
          */
         AbelianGroup(MatrixInt M, MatrixInt N);
@@ -196,7 +198,7 @@ class AbelianGroup :
          * The abelian group is the kernel of \a M modulo the image of \a N.
          *
          * The matrices should be thought of as acting on column vectors:
-         * this means that the product <tt>B*A</tt> applies the linear
+         * this means that the product `B×A` applies the linear
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
@@ -204,23 +206,23 @@ class AbelianGroup :
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M*N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will _not_ be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
          * \exception InvalidArgument The number of columns in \a M does
          * not match the number of rows in \a N.
          *
-         * @param M the `right' matrix in the chain complex; that is,
+         * \param M the `right' matrix in the chain complex; that is,
          * the matrix that one takes the kernel of when computing homology.
-         * @param N the `left' matrix in the chain complex; that is, the
+         * \param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
-         * @param p the modulus, which may be any Integer.
+         * \param p the modulus, which may be any Integer.
          * Zero is interpreted as a request for integer coefficents,
          * which will give the same result as the
          * AbelianGroup(MatrixInt, MatrixInt) constructor.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p);
         /**
@@ -231,7 +233,7 @@ class AbelianGroup :
          * In other words, if we are subtracting rank then we are not
          * trying to subtract more rank than the group actually has.
          *
-         * @param extraRank the extra rank to add; this defaults to 1.
+         * \param extraRank the extra rank to add; this defaults to 1.
          */
         void addRank(long extraRank = 1);
         /**
@@ -245,7 +247,7 @@ class AbelianGroup :
          * In this routine we add a single copy of Z_<i>d</i>, where \a d is
          * the given degree.
          *
-         * @param degree the degree of the new torsion element; this
+         * \param degree the degree of the new torsion element; this
          * must be strictly positive.
          */
         void addTorsion(Integer degree);
@@ -254,7 +256,7 @@ class AbelianGroup :
          * group.  Note that this routine might be slow since calculating the
          * new invariant factors is not trivial.
          *
-         * @param presentation a presentation matrix for the group to be
+         * \param presentation a presentation matrix for the group to be
          * added to this group, where each column represents a generator
          * and each row a relation.
          */
@@ -262,13 +264,13 @@ class AbelianGroup :
         /**
          * Adds the given abelian group to this group.
          *
-         * @param group the group to add to this one.
+         * \param group the group to add to this one.
          */
         void addGroup(const AbelianGroup& group);
 
         /**
          * Returns the rank of the group.
-         * This is the number of included copies of <i>Z</i>.
+         * This is the number of included copies of \a Z.
          *
          * Equivalently, the rank is the maximum number of linearly independent
          * elements, and it indicates the size of the largest free abelian
@@ -278,13 +280,13 @@ class AbelianGroup :
          * rank differently. Specifically, SnapPy's AbelianGroup.rank()
          * computation includes torsion factors also.
          *
-         * @return the number of included copies of \e Z.
+         * \return the number of included copies of \a Z.
          */
         size_t rank() const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
-         * If the given degree is <i>d</i>, this routine will return the
-         * largest <i>m</i> for which <i>m</i>Z_<i>d</i> is a subgroup
+         * If the given degree is \a d, this routine will return the
+         * largest \a m for which <i>m</i>Z_<i>d</i> is a subgroup
          * of this group.
          *
          * For instance, if this group is Z_6+Z_12, the torsion term of
@@ -294,14 +296,14 @@ class AbelianGroup :
          *
          * \pre The given degree is at least 2.
          *
-         * @param degree the degree of the torsion term to query.
-         * @return the rank in the group of the given torsion term.
+         * \param degree the degree of the torsion term to query.
+         * \return the rank in the group of the given torsion term.
          */
         size_t torsionRank(const Integer& degree) const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
-         * If the given degree is <i>d</i>, this routine will return the
-         * largest <i>m</i> for which <i>m</i>Z_<i>d</i> is a subgroup
+         * If the given degree is \a d, this routine will return the
+         * largest \a m for which <i>m</i>Z_<i>d</i> is a subgroup
          * of this group.
          *
          * For instance, if this group is Z_6+Z_12, the torsion term of
@@ -311,8 +313,8 @@ class AbelianGroup :
          *
          * \pre The given degree is at least 2.
          *
-         * @param degree the degree of the torsion term to query.
-         * @return the rank in the group of the given torsion term.
+         * \param degree the degree of the torsion term to query.
+         * \return the rank in the group of the given torsion term.
          */
         size_t torsionRank(unsigned long degree) const;
         /**
@@ -320,7 +322,7 @@ class AbelianGroup :
          * torsion elements of this group.
          * See the AbelianGroup class notes for further details.
          *
-         * @return the number of invariant factors.
+         * \return the number of invariant factors.
          */
         size_t countInvariantFactors() const;
         /**
@@ -329,32 +331,32 @@ class AbelianGroup :
          * See the AbelianGroup class notes for further details.
          *
          * If the invariant factors are <i>d0</i>|<i>d1</i>|...|<i>dn</i>,
-         * this routine will return <i>di</i> where <i>i</i> is the
+         * this routine will return \a di where \a i is the
          * value of parameter \a index.
          *
-         * @param index the index of the invariant factor to return;
+         * \param index the index of the invariant factor to return;
          * this must be between 0 and countInvariantFactors()-1 inclusive.
-         * @return the requested invariant factor.
+         * \return the requested invariant factor.
          */
         const Integer& invariantFactor(size_t index) const;
 
         /**
          * Determines whether this is the trivial (zero) group.
          *
-         * @return \c true if and only if this is the trivial group.
+         * \return \c true if and only if this is the trivial group.
          */
         bool isTrivial() const;
         /**
          * Determines whether this is the infinite cyclic group (Z).
          *
-         * @return \c true if and only if this is the infinite cyclic group.
+         * \return \c true if and only if this is the infinite cyclic group.
          */
         bool isZ() const;
         /**
          * Determines whether this is the free abelian group of the given rank.
          *
-         * @param r the rank of the free abelian group that we are testing for.
-         * @return \c true if and only if this is the free abelian group
+         * \param r the rank of the free abelian group that we are testing for.
+         * \return \c true if and only if this is the free abelian group
          * of rank \a r.
          */
         bool isFree(size_t r) const;
@@ -367,23 +369,23 @@ class AbelianGroup :
          * If \a n = 1, then this routine will test for the trivial group
          * (i.e., it will behave the same as isTrivial()).
          *
-         * @param n the number of elements of the cyclic group in question.
-         * @return \c true if and only if this is the cyclic group Z_n.
+         * \param n the number of elements of the cyclic group in question.
+         * \return \c true if and only if this is the cyclic group Z_n.
          */
         bool isZn(size_t n) const;
         /**
          * Determines whether this and the given abelian group have
          * identical presentations (which means they are isomorphic).
          *
-         * Since the AbelianGroup class stores \e only the invariants required
+         * Since the AbelianGroup class stores _only_ the invariants required
          * to identify the isomorphism type, two groups will compare as equal
          * if and only if they are isomorphic.  This is in contrast to the
          * comparisons for GroupPresentation (which tests for identical
          * generators and relations), or for MarkedAbelianGroup (which tests
          * for identical chain complex presentations).
          *
-         * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups have identical
+         * \param other the group with which this should be compared.
+         * \return \c true if and only if the two groups have identical
          * presentations (i.e., they are isomorphic).
          */
         bool operator == (const AbelianGroup& other) const;
@@ -391,15 +393,15 @@ class AbelianGroup :
          * Determines whether this and the given abelian group have
          * different presentations (which means they are non-isomorphic).
          *
-         * Since the AbelianGroup class stores \e only the invariants required
+         * Since the AbelianGroup class stores _only_ the invariants required
          * to identify the isomorphism type, two groups will compare as equal
          * if and only if they are isomorphic.  This is in contrast to the
          * comparisons for GroupPresentation (which tests for identical
          * generators and relations), or for MarkedAbelianGroup (which tests
          * for identical chain complex presentations).
          *
-         * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups have different
+         * \param other the group with which this should be compared.
+         * \return \c true if and only if the two groups have different
          * presentations (i.e., they are non-isomorphic).
          */
         bool operator != (const AbelianGroup& other) const;
@@ -407,7 +409,7 @@ class AbelianGroup :
         /**
          * Sets this to be a clone of the given group.
          *
-         * @return a reference to this group.
+         * \return a reference to this group.
          */
         AbelianGroup& operator = (const AbelianGroup&) = default;
 
@@ -417,14 +419,14 @@ class AbelianGroup :
          *
          * The group that was passed will no longer be usable.
          *
-         * @return a reference to this group.
+         * \return a reference to this group.
          */
         AbelianGroup& operator = (AbelianGroup&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given abelian group.
          *
-         * @param other the group whose contents should be swapped with this.
+         * \param other the group whose contents should be swapped with this.
          */
         void swap(AbelianGroup& other) noexcept;
 
@@ -432,10 +434,9 @@ class AbelianGroup :
          * Writes the tight encoding of this abelian group to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -447,30 +448,30 @@ class AbelianGroup :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input stream _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an abelian group.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for an abelian group.
-         * @return the abelian group represented by the given tight encoding.
+         * \return the abelian group represented by the given tight encoding.
          */
         static AbelianGroup tightDecode(std::istream& input);
 
         /**
          * Writes a chunk of XML containing this abelian group.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
+         * \param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
 
@@ -478,16 +479,15 @@ class AbelianGroup :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * The text representation will be of the form
-         * <tt>3 Z + 4 Z_2 + Z_120</tt>.
+         * The text representation will be of the form `3 Z + 4 Z_2 + Z_120`.
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
          * AbelianGroup notes.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
-         * @param out the output stream to which to write.
-         * @param utf8 if \c true, then richer unicode characters will
+         * \param out the output stream to which to write.
+         * \param utf8 if \c true, then richer unicode characters will
          * be used to make the output more pleasant to read.  In particular,
          * the output will use subscript digits and the blackboard bold Z.
          */
@@ -500,8 +500,8 @@ class AbelianGroup :
  * This global routine simply calls AbelianGroup::swap(); it is provided
  * so that AbelianGroup meets the C++ Swappable requirements.
  *
- * @param lhs the group whose contents should be swapped with \a rhs.
- * @param rhs the group whose contents should be swapped with \a lhs.
+ * \param lhs the group whose contents should be swapped with \a rhs.
+ * \param rhs the group whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */

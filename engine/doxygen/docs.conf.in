@@ -33,9 +33,12 @@ VERBATIM_HEADERS     = NO
 
 # Aliases:
 ALIASES = \
-    "ifaces=\par Interfaces^^" \
-    "ifacescpp=\par C++^^" \
-    "ifacespython=\par Python^^" \
+    "nullopt=no value" \
+    "cpp=\par C++^^" \
+    "python=\par Python^^" \
+    "nocpp=\par C++^^Not present." \
+    "nopython=\par Python^^Not present." \
+    "nodocstrings=" \
     "snappy=\par SnapPy^^" \
     "i18n=\par Internationalisation^^" \
     "proburgent=<i><b>Bug (urgent):</b></i>" \
@@ -51,7 +54,7 @@ ALIASES = \
     "tidy=<i>Tidy:</i>" \
     "tidylong=<i>Tidy (long-term):</i>" \
     "headers=\par Headers^^" \
-    "apinotfinal=\warning The API for this class has not yet been finalised.  This means that the class interface may change in new versions of Regina, without maintaining backward compatibility.  If you use this class directly in your own code, please watch the detailed changelogs upon new releases to see if you need to make changes to your code."
+    "apinotfinal=\warning The API for this class or function has not yet been finalised.  This means that the interface may change in new versions of Regina, without maintaining backward compatibility.  If you use this class directly in your own code, please check the detailed changelog with each new release to see if you need to make changes to your code."
 
 # Warning and progress related options:
 
@@ -61,10 +64,7 @@ WARN_IF_UNDOCUMENTED = YES
 
 # Input related options:
 
-INPUT = \
-    "@PROJECT_SOURCE_DIR@/engine" \
-    "@PROJECT_SOURCE_DIR@/python/constarray.h" \
-    "@PROJECT_SOURCE_DIR@/python/globalarray.h"
+INPUT = "@PROJECT_SOURCE_DIR@/engine"
 FILE_PATTERNS        = *.h
 RECURSIVE            = YES
 EXCLUDE = \
@@ -113,6 +113,7 @@ MACRO_EXPANSION      = YES
 EXPAND_ONLY_PREDEF   = YES
 PREDEFINED           = \
     __DOXYGEN \
+    __APIDOCS \
     REGINA_ENABLE_FOR_RING(returnType)=returnType \
     REGINA_ENABLE_FOR_REGINA_INTEGER(returnType)=returnType \
     ENABLE_MEMBER_FOR_REGINA_INTEGER(T,returnType)=returnType \

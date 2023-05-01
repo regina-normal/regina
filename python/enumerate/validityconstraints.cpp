@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,35 +35,43 @@
 #include "enumerate/validityconstraints.h"
 #include "utilities/bitmask.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/validityconstraints.h"
 
 using regina::ValidityConstraints;
 
 void addValidityConstraints(pybind11::module_& m) {
-    auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints")
+    RDOC_SCOPE_BEGIN(ValidityConstraints)
+
+    auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints",
+            rdoc_scope)
         .def(pybind11::init<int, size_t, size_t, size_t>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("reserveLocal") = 0,
-            pybind11::arg("reserveGlobal") = 0)
-        .def(pybind11::init<const ValidityConstraints&>())
+            pybind11::arg("reserveGlobal") = 0,
+            rdoc::__init)
+        .def(pybind11::init<const ValidityConstraints&>(), rdoc::__copy)
         .def("addLocal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addLocal(pos.begin(), pos.end());
-        })
+        }, pybind11::arg("coordinates"), rdoc::addLocal)
         .def("addGlobal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addGlobal(pos.begin(), pos.end());
-        })
-        .def("swap", &ValidityConstraints::swap)
+        }, pybind11::arg("coordinates"), rdoc::addGlobal)
+        .def("swap", &ValidityConstraints::swap, rdoc::swap)
         .def("bitmasks", pybind11::overload_cast<size_t>(
-            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_))
+            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_),
+            rdoc::bitmasks)
         .def("bitmasks", pybind11::overload_cast<>(
-            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_))
+            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_),
+            rdoc::bitmasks_2)
         .def_readonly_static("none", &ValidityConstraints::none)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    m.def("swap",
-        (void(*)(ValidityConstraints&, ValidityConstraints&))(regina::swap));
+    regina::python::add_global_swap<ValidityConstraints>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

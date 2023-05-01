@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -123,7 +123,7 @@ void XMLParser::_warning(void* parser, const char* fmt, ...) {
     va_list arg;
     char buff[ERROR_BUFF_SIZE];
     va_start(arg, fmt);
-    vsprintf(buff, fmt, arg);
+    vsnprintf(buff, ERROR_BUFF_SIZE, fmt, arg);
     va_end(arg);
 
     static_cast<XMLParser*>(parser)->_parser_callback.warning(buff);
@@ -132,7 +132,7 @@ void XMLParser::_error(void* parser, const char* fmt, ...) {
     va_list arg;
     char buff[ERROR_BUFF_SIZE];
     va_start(arg, fmt);
-    vsprintf(buff, fmt, arg);
+    vsnprintf(buff, ERROR_BUFF_SIZE, fmt, arg);
     va_end(arg);
 
     static_cast<XMLParser*>(parser)->_parser_callback.error(buff);
@@ -141,7 +141,7 @@ void XMLParser::_fatal_error(void* parser, const char* fmt, ...) {
     va_list arg;
     char buff[ERROR_BUFF_SIZE];
     va_start(arg, fmt);
-    vsprintf(buff, fmt, arg);
+    vsnprintf(buff, ERROR_BUFF_SIZE, fmt, arg);
     va_end(arg);
 
     static_cast<XMLParser*>(parser)->_parser_callback.fatal_error(buff);

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,11 +84,11 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Creates a new surface bundle of the given type.
          *
-         * @param newType the specific type of surface bundle to
+         * \param bundleType the specific type of surface bundle to
          * represent.  This must be one of the 3-manifold constants
          * defined in this class.
          */
-        SimpleSurfaceBundle(int newType);
+        SimpleSurfaceBundle(int bundleType);
         /**
          * Creates a new copy of the given surface bundle.
          */
@@ -96,7 +96,7 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Returns the specific type of surface bundle being represented.
          *
-         * @return the type of surface bundle.  This will be one of the
+         * \return the type of surface bundle.  This will be one of the
          * 3-manifold constants defined in this class.
          */
         int type() const;
@@ -104,8 +104,8 @@ class SimpleSurfaceBundle : public Manifold {
          * Determines whether this and the given surface bundle are of
          * the same type (i.e., they represent the same 3-manifold).
          *
-         * @param compare the surface bundle with which this will be compared.
-         * @return \c true if and only if this and the given surface bundle
+         * \param compare the surface bundle with which this will be compared.
+         * \return \c true if and only if this and the given surface bundle
          * are of the same type.
          */
         bool operator == (const SimpleSurfaceBundle& compare) const;
@@ -113,8 +113,8 @@ class SimpleSurfaceBundle : public Manifold {
          * Determines whether this and the given surface bundle are of
          * different types (i.e., they represent different 3-manifolds).
          *
-         * @param compare the surface bundle with which this will be compared.
-         * @return \c true if and only if this and the given surface bundle
+         * \param compare the surface bundle with which this will be compared.
+         * \return \c true if and only if this and the given surface bundle
          * are of different types.
          */
         bool operator != (const SimpleSurfaceBundle& compare) const;
@@ -122,14 +122,14 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Sets this to be a copy of the given surface bundle.
          *
-         * @return a reference to this surface bundle.
+         * \return a reference to this surface bundle.
          */
         SimpleSurfaceBundle& operator = (const SimpleSurfaceBundle&) = default;
 
         /**
          * Swaps the contents of this and the given surface bundle.
          *
-         * @param other the surface bundle whose contents should be swapped
+         * \param other the surface bundle whose contents should be swapped
          * with this.
          */
         void swap(SimpleSurfaceBundle& other) noexcept;
@@ -147,8 +147,8 @@ class SimpleSurfaceBundle : public Manifold {
  * This global routine simply calls SimpleSurfaceBundle::swap(); it is
  * provided so that SimpleSurfaceBundle meets the C++ Swappable requirements.
  *
- * @param a the first surface bundle whose contents should be swapped.
- * @param b the second surface bundle whose contents should be swapped.
+ * \param a the first surface bundle whose contents should be swapped.
+ * \param b the second surface bundle whose contents should be swapped.
  *
  * \ingroup manifold
  */
@@ -156,8 +156,8 @@ void swap(SimpleSurfaceBundle& a, SimpleSurfaceBundle& b) noexcept;
 
 // Inline functions for SimpleSurfaceBundle
 
-inline SimpleSurfaceBundle::SimpleSurfaceBundle(
-        int newType) : type_(newType) {
+inline SimpleSurfaceBundle::SimpleSurfaceBundle(int bundleType) :
+        type_(bundleType) {
 }
 inline int SimpleSurfaceBundle::type() const {
     return type_;

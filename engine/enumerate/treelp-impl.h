@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2021, Ben Burton                                   *
+ *  Copyright (c) 2011-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,7 +34,7 @@
  *  \brief Contains implementation details for the various linear programming
  *  class templates.
  *
- *  This file is \e not included automatically by treelp.h.
+ *  This file is _not_ included automatically by treelp.h.
  *  However, most end users should not need to include it, since
  *  Regina's calculation engine provides full explicit instantiations
  *  of these classes for common combinations of template arguments.
@@ -47,7 +47,7 @@
 
 /**
  * Optimisation flags:
- * Define any combination of the following flags to switch \e off
+ * Define any combination of the following flags to switch _off_
  * various optimisations.
  * This is for diagnostic purposes only.
  */

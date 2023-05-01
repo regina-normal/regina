@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,16 +58,16 @@ class SigPartialIsomorphism;
  * Represents a signature of a splitting surface in a closed 3-manifold
  * triangulation.
  *
- * A <i>splitting surface</i> is (for these purposes) a compact normal surface
+ * A _splitting surface_ is (for these purposes) a compact normal surface
  * consisting of precisely one quad per tetrahedron and no other normal
  * (or almost normal) discs.
  *
- * A <i>signature</i> of order <i>n</i> is a string consisting of 2<i>n</i>
- * letters arranged into cycles, where <i>n</i> is the number of quads in the
+ * A _signature_ of order \a n is a string consisting of 2<i>n</i>
+ * letters arranged into cycles, where \a n is the number of quads in the
  * splitting surface.  From a signature, the corresponding splitting
  * surface and then the entire 3-manifold triangulation can be recreated.
  *
- * A signature of order <i>n</i> uses the first <i>n</i> letters of the
+ * A signature of order \a n uses the first \a n letters of the
  * alphabet, each precisely twice.  Case is important; the meaning of a
  * letter changes according to whether it appears in upper-case or
  * lower-case.
@@ -78,18 +78,18 @@ class SigPartialIsomorphism;
  * splitting surface.  The case of a letter represents in which direction
  * a quadrilateral is traversed within a cycle.
  *
- * Cycles are arranged into <i>cycle groups</i>, where a cycle group
+ * Cycles are arranged into _cycle groups_, where a cycle group
  * consists of a series of consecutive cycles all of the same length.
  *
- * An example of a signature is <tt>(abc)(a)(b)(c)</tt>.  This signature
+ * An example of a signature is `(abc)(a)(b)(c)`.  This signature
  * is of order 3 and contains two cycle groups, the first being
- * <tt>(abc)</tt> and the second being <tt>(a)(b)(c)</tt>.
+ * `(abc)` and the second being `(a)(b)(c)`.
  *
  * A signature cannot represent a splitting surface with more than 26
  * quadrilaterals.
  *
  * For further details on splitting surfaces and their signatures, consult
- * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
+ * _Minimal triangulations and normal surfaces_, Burton, PhD thesis,
  * available from the Regina website.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -107,8 +107,8 @@ class Signature : public ShortOutput<Signature> {
                  start to finish; letters A,B,... are represented by
                  integers 0,1,... . */
         bool* labelInv;
-            /**< <tt>labelInv[i]</tt> stores the case of the letter
-                 corresponding to <tt>label[i]</tt>.  In this case
+            /**< `labelInv[i]` stores the case of the letter
+                 corresponding to `label[i]`.  In this case
                  \c false represents lower-case and \c true represents
                  upper-case. */
         unsigned nCycles;
@@ -131,21 +131,21 @@ class Signature : public ShortOutput<Signature> {
          * Punctuation characters in the given string will be interpreted
          * as separating cycles.  All whitespace will be ignored.
          * 
-         * Examples of valid signatures are <tt>"(ab)(bC)(Ca)"</tt> and
-         * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
+         * Examples of valid signatures are `"(ab)(bC)(Ca)"` and
+         * `"AAb-bc-C"`.  See the class notes for further details
          * on what constitutes a valid signature.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * signature with a positive number of letters.
          *
-         * @param str a string representation of a splitting surface signature.
+         * \param str a string representation of a splitting surface signature.
          */
         Signature(const std::string& str);
 
         /**
          * Creates a new copy of the given signature.
          *
-         * @param sig the signature to copy.
+         * \param sig the signature to copy.
          */
         Signature(const Signature& sig);
 
@@ -155,7 +155,7 @@ class Signature : public ShortOutput<Signature> {
          *
          * The signature that is passed (\a src) will no longer be usable.
          *
-         * @param src the signature to move.
+         * \param src the signature to move.
          */
         Signature(Signature&& src) noexcept;
 
@@ -173,8 +173,8 @@ class Signature : public ShortOutput<Signature> {
          *
          * This operator induces a deep copy of \a sig.
          *
-         * @param sig the signature to copy.
-         * @return a reference to this signature.
+         * \param sig the signature to copy.
+         * \return a reference to this signature.
          */
         Signature& operator = (const Signature& sig);
 
@@ -188,8 +188,8 @@ class Signature : public ShortOutput<Signature> {
          *
          * The signature that is passed (\a src) will no longer be usable.
          *
-         * @param src the signature to move.
-         * @return a reference to this signature.
+         * \param src the signature to move.
+         * \return a reference to this signature.
          */
         Signature& operator = (Signature&& src) noexcept;
 
@@ -200,7 +200,7 @@ class Signature : public ShortOutput<Signature> {
          * number of symbols, cycles and/or cycle groups; if so then
          * both signatures will be adjusted accordingly.
          *
-         * @param other the signature whose contents are to be swapped
+         * \param other the signature whose contents are to be swapped
          * with this.
          */
         void swap(Signature& other) noexcept;
@@ -209,7 +209,7 @@ class Signature : public ShortOutput<Signature> {
          * Returns the order of this signature.  The order is the number
          * of quads in the corresponding splitting surface.
          *
-         * @return the order of this signature.
+         * \return the order of this signature.
          */
         unsigned order() const;
 
@@ -225,8 +225,8 @@ class Signature : public ShortOutput<Signature> {
          * formatting (e.g., punctuation and/or whitespace) is irrelevant;
          * only the mathematical content of the signatures is important here.
          *
-         * @param other the signature to compare with this.
-         * @return \c true if and only if this and \a other are identical.
+         * \param other the signature to compare with this.
+         * \return \c true if and only if this and \a other are identical.
          */
         bool operator == (const Signature& other) const;
 
@@ -242,8 +242,8 @@ class Signature : public ShortOutput<Signature> {
          * formatting (e.g., punctuation and/or whitespace) is irrelevant;
          * only the mathematical content of the signatures is important here.
          *
-         * @param other the signature to compare with this.
-         * @return \c true if and only if this and \a other are not identical.
+         * \param other the signature to compare with this.
+         * \return \c true if and only if this and \a other are not identical.
          */
         bool operator != (const Signature& other) const;
 
@@ -251,7 +251,7 @@ class Signature : public ShortOutput<Signature> {
          * Returns the 3-manifold triangulation corresponding to
          * this splitting surface signature.
          *
-         * @return the corresponding triangulation.
+         * \return the corresponding triangulation.
          */
         Triangulation<3> triangulate() const;
 
@@ -264,11 +264,11 @@ class Signature : public ShortOutput<Signature> {
          * through the ShortOutput base class.  This zero-argument str()
          * make sensible default choices for the three arguments required here.
          *
-         * @param cycleOpen the text to write at the beginning of each cycle
-         * (such as <tt>"("</tt>).
-         * @param cycleClose the text to write at the end of each cycle
-         * (such as <tt>")"</tt>).
-         * @param cycleJoin the text to write between each pair of consecutive
+         * \param cycleOpen the text to write at the beginning of each cycle
+         * (such as `"("`).
+         * \param cycleClose the text to write at the end of each cycle
+         * (such as `")"`).
+         * \param cycleJoin the text to write between each pair of consecutive
          * cycles.
          */
         std::string str(const std::string& cycleOpen,
@@ -278,15 +278,15 @@ class Signature : public ShortOutput<Signature> {
          * Writes a customised string representation of this signature to the
          * given output stream.
          *
-         * \ifacespython Not present; instead use the variant of str() that
-         * takes the same three string arguments and returns a string.
+         * \nopython Instead use the variant of str() that takes the same
+         * three string arguments and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @param cycleOpen the text to write at the beginning of a cycle
-         * (such as <tt>"("</tt>).
-         * @param cycleClose the text to write at the end of a cycle
-         * (such as <tt>")"</tt>).
-         * @param cycleJoin the text to write between two cycles.
+         * \param out the output stream to which to write.
+         * \param cycleOpen the text to write at the beginning of a cycle
+         * (such as `"("`).
+         * \param cycleClose the text to write at the end of a cycle
+         * (such as `")"`).
+         * \param cycleJoin the text to write between two cycles.
          */
         void writeCycles(std::ostream& out, const std::string& cycleOpen,
             const std::string& cycleClose, const std::string& cycleJoin) const;
@@ -295,9 +295,9 @@ class Signature : public ShortOutput<Signature> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -305,7 +305,7 @@ class Signature : public ShortOutput<Signature> {
         /**
          * Creates a new completely uninitialised signature.
          *
-         * \warning The internal arrays \e must be created before this
+         * \warning The internal arrays _must_ be created before this
          * signature is destroyed!
          */
         Signature();
@@ -319,7 +319,7 @@ class Signature : public ShortOutput<Signature> {
          * The newly created signature can be used as a partial
          * signature containing no cycles.
          *
-         * @param newOrder the order of the new signature; this must be
+         * \param newOrder the order of the new signature; this must be
          * strictly positive.
          */
         Signature(unsigned newOrder);
@@ -328,41 +328,41 @@ class Signature : public ShortOutput<Signature> {
          * Lexicographically compares the results of transformations upon
          * two given cycles within this signature.
          *
-         * This comparison is \e not case-sensitive.
+         * This comparison is _not_ case-sensitive.
          *
          * \pre The two specified cycles have the same length.
          *
-         * @param cycle1 specifies the first cycle to examine.
+         * \param cycle1 specifies the first cycle to examine.
          * This must be less than the total number of cycles in this signature.
-         * @param start1 allows the first cycle to be transformed by
+         * \param start1 allows the first cycle to be transformed by
          * rotation; this parameter is the new starting position of the first
-         * cycle.  This must be between 0 and <tt>getCycleLength(cycle1)-1</tt>
+         * cycle.  This must be between 0 and `getCycleLength(cycle1)-1`
          * inclusive.
-         * @param dir1 allows the first cycle to be transformed by
+         * \param dir1 allows the first cycle to be transformed by
          * reversal; this parameter must be positive to use an unreversed
          * cycle or negative to use a reversed cycle.
-         * @param relabel1 allows the first cycle to be transformed by
+         * \param relabel1 allows the first cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
          * order(), mapping old labels 0,1,...  (representing letters A,B,...)
          * to new labels (which must also be 0,1,..., possibly in a different
          * order).  This may be \c null if no relabelling is to be used.
          *
-         * @param cycle2 specifies the second cycle to examine.
+         * \param cycle2 specifies the second cycle to examine.
          * This must be less than the total number of cycles in this signature.
-         * @param start2 allows the second cycle to be transformed by
+         * \param start2 allows the second cycle to be transformed by
          * rotation; this parameter is the new starting position of the second
-         * cycle.  This must be between 0 and <tt>getCycleLength(cycle2)-1</tt>
+         * cycle.  This must be between 0 and `getCycleLength(cycle2)-1`
          * inclusive.
-         * @param dir2 allows the second cycle to be transformed by
+         * \param dir2 allows the second cycle to be transformed by
          * reversal; this parameter must be positive to use an unreversed
          * cycle or negative to use a reversed cycle.
-         * @param relabel2 allows the second cycle to be transformed by
+         * \param relabel2 allows the second cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
          * order(), mapping old labels 0,1,...  (representing letters A,B,...)
          * to new labels (which must also be 0,1,..., possibly in a different
          * order).  This may be \c null if no relabelling is to be used.
          *
-         * @return -1, 1 or 0 if the transformed first cycle is
+         * \return -1, 1 or 0 if the transformed first cycle is
          * lexicographically less than, greater than or equal to the
          * transformed second cycle respectively.
          */
@@ -381,8 +381,8 @@ class Signature : public ShortOutput<Signature> {
  * This global routine simply calls Signature::swap(); it is provided
  * so that Signature meets the C++ Swappable requirements.
  *
- * @param a the first signature whose contents should be swapped.
- * @param b the second signature whose contents should be swapped.
+ * \param a the first signature whose contents should be swapped.
+ * \param b the second signature whose contents should be swapped.
  *
  * \ingroup split
  */

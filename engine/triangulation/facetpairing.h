@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 /*! \file triangulation/facetpairing.h
  *  \brief Includes headers for working with facet pairings in all dimensions
  *  except for dimension 3.  Specifically, this includes headers for the
- *  class FacetPairing<dim> for all \a dim &ne; 3.
+ *  class FacetPairing<dim> for all \a dim ≠ 3.
  */
 
 #ifndef __REGINA_FACETPAIRING_H

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -90,7 +90,7 @@ class SatRegion;
  * case, the matrix \a M shows how the layering relates the curves on
  * each boundary.
  *
- * Note that the routines writeName() and writeTeXName() do \e not
+ * Note that the routines writeName() and writeTeXName() do _not_
  * offer enough information to uniquely identify the triangulation,
  * since this essentially requires 2-dimensional assemblings of
  * saturated blocks.  For full details, writeTextLong() may be used instead.
@@ -116,10 +116,10 @@ class BlockedSFSLoop : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          */
         BlockedSFSLoop(const BlockedSFSLoop& src) = default;
         /**
@@ -128,15 +128,15 @@ class BlockedSFSLoop : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          */
         BlockedSFSLoop(BlockedSFSLoop&& src) noexcept = default;
         /**
          * Sets this to be a copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
-         * @return a reference to this structure.
+         * \param src the structure to copy.
+         * \return a reference to this structure.
          */
         BlockedSFSLoop& operator = (const BlockedSFSLoop& src) = default;
         /**
@@ -145,14 +145,14 @@ class BlockedSFSLoop : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
-         * @return a reference to this structure.
+         * \param src the structure to move from.
+         * \return a reference to this structure.
          */
         BlockedSFSLoop& operator = (BlockedSFSLoop&& src) noexcept = default;
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(BlockedSFSLoop& other) noexcept;
@@ -162,7 +162,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * triangulation is formed.  See the class notes above for
          * further information.
          *
-         * @return details of the saturated region.
+         * \return details of the saturated region.
          */
         const SatRegion& region() const;
         /**
@@ -175,7 +175,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * See the class notes above for precise information on how this
          * matrix is presented.
          *
-         * @return the matrix describing how the boundaries of the
+         * \return the matrix describing how the boundaries of the
          * region are joined.
          */
         const Matrix2& matchingReln() const;
@@ -198,8 +198,8 @@ class BlockedSFSLoop : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of self-identified blocked Seifert fibred
          * space.
          */
@@ -223,8 +223,8 @@ class BlockedSFSLoop : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of self-identified blocked Seifert
          * fibred space.
          */
@@ -244,8 +244,8 @@ class BlockedSFSLoop : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tri the triangulation to examine.
-         * @return a structure containing details of the blocked
+         * \param tri the triangulation to examine.
+         * \return a structure containing details of the blocked
          * self-identified Seifert fibred space, or \c null if the given
          * triangulation is not of this form.
          */
@@ -259,9 +259,9 @@ class BlockedSFSLoop : public StandardTriangulation {
          *
          * Note that the new object must describe an existing triangulation.
          *
-         * @param region the saturated region from which the structure
+         * \param region the saturated region from which the structure
          * is formed.
-         * @param matchingReln describes how the two boundaries of the
+         * \param matchingReln describes how the two boundaries of the
          * region are joined, as described in the class notes above.
          */
         BlockedSFSLoop(SatRegion&& region, const Matrix2& matchingReln);
@@ -273,8 +273,8 @@ class BlockedSFSLoop : public StandardTriangulation {
  * This global routine simply calls BlockedSFSLoop::swap(); it is provided
  * so that BlockedSFSLoop meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

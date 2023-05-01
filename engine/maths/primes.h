@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -78,7 +78,7 @@ namespace regina {
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
  *
- * @author Ryan Budney, B.B.
+ * \author Ryan Budney, B.B.
  *
  * \ingroup maths
  */
@@ -110,7 +110,7 @@ class Primes {
          * whether larger primes are requested), but it will never
          * decrease.
          *
-         * @return the number of primes or suspected primes currently stored.
+         * \return the number of primes or suspected primes currently stored.
          */
         static unsigned long size();
 
@@ -135,10 +135,10 @@ class Primes {
          * which might take some time.  If \a autoGrow is \c false then
          * this routine returns zero.
          *
-         * @param which indicates which prime is requested.
-         * @param autoGrow specifies what to do if the requested
+         * \param which indicates which prime is requested.
+         * \param autoGrow specifies what to do if the requested
          * prime lies beyond the list currently stored (see above).
-         * @return the requested prime (or suspected prime), or zero if
+         * \return the requested prime (or suspected prime), or zero if
          * \a which was too large and \a autoGrow was \c false.
          */
         static Integer prime(unsigned long which, bool autoGrow = true);
@@ -177,15 +177,15 @@ class Primes {
          *
          * \todo \opt Add a version that does not return the factors by value.
          *
-         * \ifacespython In addition to this routine, the routine
+         * \python In addition to this routine, the routine
          * primeDecompInt() is also available.  The routine
          * primeDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not
          * Integer; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
-         * @param n the integer to factorise.
-         * @return the list of prime factors as described above.
+         * \param n the integer to factorise.
+         * \return the list of prime factors as described above.
          */
         static std::vector<Integer> primeDecomp(const Integer& n);
 
@@ -230,15 +230,15 @@ class Primes {
          *
          * \todo \opt Add a version that does not return the factors by value.
          *
-         * \ifacespython In addition to this routine, the routine
+         * \python In addition to this routine, the routine
          * primePowerDecompInt() is also available.  The routine
          * primePowerDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not
          * Integer; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
-         * @param n the integer to factorise.
-         * @return the list of prime power factors as described above.
+         * \param n the integer to factorise.
+         * \return the list of prime power factors as described above.
          */
         static std::vector<std::pair<Integer, unsigned long> >
             primePowerDecomp(const Integer& n);
@@ -251,10 +251,10 @@ class Primes {
          * Adds the given number of primes (or suspected primes) to the
          * list already stored.
          *
-         * This routine is \e not thread-safe.  It should only be called
+         * This routine is _not_ thread-safe.  It should only be called
          * when \a largeMutex is locked.
          *
-         * @param extras the number of additional suspected primes to
+         * \param extras the number of additional suspected primes to
          * calculate.
          */
         static void growPrimeList(unsigned long extras = 1);

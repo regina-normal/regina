@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -222,7 +222,7 @@ void Tri3SnapPeaUI::toSnapPea() {
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
     ans->setLabel(reginaTri->label());
-    reginaTri->insertChildLast(ans);
+    reginaTri->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 

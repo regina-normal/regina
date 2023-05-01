@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,6 +72,15 @@ class SnapPeaTriangulation;
 
 template <int> class XMLTriangulationReader;
 
+#ifdef __DOCSTRINGS
+// Declare SnapPy types that appear in the Python-only functions below,
+// so that the docstring generator does not complain.
+namespace snappy {
+    class Manifold;
+    class Triangulation;
+}
+#endif
+
 /**
  * \defgroup dim3 3-Manifold Triangulations
  * Details for implementing triangulations of 3-manifolds.
@@ -81,8 +90,9 @@ template <int> class XMLTriangulationReader;
  * Represents a 3-dimensional triangulation, typically of a 3-manifold.
  *
  * This is a specialisation of the generic Triangulation class template;
- * see the Triangulation documentation for a general overview of how
- * the triangulation classes work.
+ * see the generic Triangulation documentation for a general overview of how
+ * the triangulation classes work.  In Python, you can read this generic
+ * documentation by looking at a higher dimension: try `help(Triangulation5)`.
  *
  * This 3-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 3-manifolds.
@@ -90,15 +100,6 @@ template <int> class XMLTriangulationReader;
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
- *
- * \todo \feature Is the boundary incompressible?
- * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
- * if there is nothing left).  Am I obviously not a handlebody?
- * (Compare homology with boundary homology).
- * \todo \featurelong Is the triangulation Haken?
- * \todo \featurelong What is the Heegaard genus?
- * \todo \featurelong Have a subcomplex as a new type.  Include routines to
- * crush a subcomplex or to expand a subcomplex to a normal surface.
  *
  * \headerfile triangulation/dim3.h
  *
@@ -150,10 +151,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
 
             std::optional<bool> threeSphere_;
                 /**< Is this a triangulation of a 3-sphere? */
-            std::optional<bool> threeBall_;
-                /**< Is this a triangulation of a 3-dimensional ball? */
-            std::optional<bool> solidTorus_;
-                /**< Is this a triangulation of the solid torus? */
+            std::optional<ssize_t> handlebody_;
+                /**< Is this a triangulation of an orientable handlebody?
+                     If so, this stores the genus; if not, this stores -1. */
             std::optional<bool> TxI_;
                 /**< Is this a triangulation of the product TxI? */
             std::optional<bool> irreducible_;
@@ -212,25 +212,50 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Creates a new copy of the given triangulation.
          *
-         * This will clone any computed properties (such as homology,
-         * fundamental group, and so on) of the given triangulation also.
-         * If you want a "clean" copy that resets all properties to unknown,
-         * you can use the two-argument copy constructor instead.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
          *
-         * @param copy the triangulation to copy.
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * If you want a "clean" copy that resets all properties to unknown
+         * and leaves the skeleton uncomputed, you can use the two-argument
+         * copy constructor instead.
+         *
+         * \param src the triangulation to copy.
          */
-        Triangulation(const Triangulation<3>& copy);
+        Triangulation(const Triangulation& src);
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
-         * properties of the given triangulation (such as homology,
-         * fundamental group, and so on), or \c false if the new triangulation
-         * should have all properties marked as unknown.
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on), as well as the skeleton (vertices, edges, components, etc.).
+         * In particular, the same numbering and labelling will be used for
+         * all skeletal objects in both triangulations.
+         *
+         * If \a cloneProps is \c false, then these properties and skeletal
+         * objects will be marked as unknown in the new triangulation, and
+         * will be recomputed on demand if/when they are required.  Note
+         * in particular that, when the skeleton is recomputed, there is
+         * no guarantee that the numbering and labelling for skeletal objects
+         * will be the same as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will be copied across _only_ if \a cloneProps
+         * is \c true.  If \a cloneProps is \c false then the new triangulation
+         * will have no locks at all.
+         *
+         * \param src the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
+         * properties as well as the skeleton of the given triangulation,
+         * or \c false if the new triangulation should have such properties
+         * and skeletal data marked as unknown.
          */
-        Triangulation(const Triangulation& copy, bool cloneProps);
+        Triangulation(const Triangulation& src, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -245,15 +270,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * BoundaryComponent<3> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
          * \note This operator is marked \c noexcept, and in particular
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -276,8 +304,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This is the same triangulation that is produced by
          * Link::complement().
          *
-         * @param link the link whose complement we should build.
-         * @param simplify \c true if and only if the triangulation
+         * \param link the link whose complement we should build.
+         * \param simplify \c true if and only if the triangulation
          * should be simplified to use as few tetrahedra as possible.
          */
         Triangulation(const Link& link, bool simplify = true);
@@ -304,37 +332,33 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * string as representing a triangulation using any of the supported
          * string types.
          *
-         * @param description a string that describes a 3-manifold
+         * \param description a string that describes a 3-manifold
          * triangulation.
          */
         Triangulation(const std::string& description);
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
         /**
          * Python-only constructor that copies the given SnapPy manifold.
          *
-         * \warning Only the tetrahedron gluings will be copied; all other
-         * SnapPy-specific information (such as peripheral curves) will
-         * be lost.  See fromSnapPea() for details, and for other
-         * alternatives that preserve SnapPy-specific data.
-         *
-         * \ifacescpp Not present.
-         *
-         * @param m a SnapPy object of type snappy.Manifold.
-         */
-        Triangulation(snappy.Manifold m);
-        /**
-         * Python-only constructor that copies the given SnapPy triangulation.
+         * Although the argument \a m would typically be a `SnapPy.Manifold`,
+         * it could in fact be anything with a `_to_string()` method (so
+         * you could instead pass a `SnapPy.Triangulation`, for example).
+         * Regina will then call `m._to_string()` and pass the result to
+         * the "magic" string constructor for Regina's Triangulation3 class.
+         * Typically, if \a m is a SnapPy object, this means that
+         * `m._to_string()` would need to return the contents of a
+         * SnapPy/SnapPea data file.
          *
          * \warning Only the tetrahedron gluings will be copied; all other
          * SnapPy-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
          * alternatives that preserve SnapPy-specific data.
          *
-         * \ifacescpp Not present.
+         * \nocpp
          *
-         * @param t a SnapPy object of type snappy.Triangulation.
+         * \param m a SnapPy object of type snappy.Manifold.
          */
-        Triangulation(snappy.Triangulation t);
+        Triangulation(snappy::Manifold m);
 #endif
         /**
          * Destroys this triangulation.
@@ -343,8 +367,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * properties will also be destroyed.
          */
         ~Triangulation();
-
-        using Snapshottable<Triangulation<3>>::isReadOnlySnapshot;
 
         /**
          * Returns the packet that holds this data, even if it is held
@@ -363,7 +385,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * but inAnyPacket() will return \a q (since the triangulation is
          * still "indirectly" held by a different type of packet).
          *
-         * @return the packet that holds this data (directly or indirectly),
+         * \return the packet that holds this data (directly or indirectly),
          * or \c null if this data is not held by either a 3-dimensional
          * triangulation packet or a SnapPea triangulation packet.
          */
@@ -385,7 +407,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * but inAnyPacket() will return \a q (since the triangulation is
          * still "indirectly" held by a different type of packet).
          *
-         * @return the packet that holds this data (directly or indirectly),
+         * \return the packet that holds this data (directly or indirectly),
          * or \c null if this data is not held by either a 3-dimensional
          * triangulation packet or a SnapPea triangulation packet.
          */
@@ -402,7 +424,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (through its inherited Triangulation<3> interface), then this
          * routine will return \a t.  Otherwise it will return \c null.
          *
-         * @return the SnapPea triangulation that holds this data, or
+         * \return the SnapPea triangulation that holds this data, or
          * \c null if this data is not part of a SnapPea triangulation.
          */
         SnapPeaTriangulation* isSnapPea();
@@ -417,7 +439,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (through its inherited Triangulation<3> interface), then this
          * routine will return \a t.  Otherwise it will return \c null.
          *
-         * @return the SnapPea triangulation that holds this data, or
+         * \return the SnapPea triangulation that holds this data, or
          * \c null if this data is not part of a SnapPea triangulation.
          */
         const SnapPeaTriangulation* isSnapPea() const;
@@ -457,26 +479,58 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
+         *
+         * \exception LockViolation The given tetrahedron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param tet the tetrahedron to remove.
          */
         void removeTetrahedron(Tetrahedron<3>* tet);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
          * See removeSimplexAt() for further information.
+         *
+         * \exception LockViolation The requested tetrahedron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param index specifies which tetrahedron to remove; this
+         * must be between 0 and size()-1 inclusive.
          */
         void removeTetrahedronAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
          * See removeAllSimplices() for further information.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked tetrahedron and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          */
         void removeAllTetrahedra();
 
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @param src the triangulation to copy.
-         * @return a reference to this triangulation.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * \param src the triangulation to copy.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation& src);
 
@@ -495,16 +549,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * BoundaryComponent<3> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \param src the triangulation to move.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src);
 
@@ -524,11 +581,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<3>& other);
@@ -557,7 +614,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Determines if this triangulation contains any two-sphere
          * boundary components.
          *
-         * @return \c true if and only if there is at least one
+         * \return \c true if and only if there is at least one
          * two-sphere boundary component.
          */
         bool hasTwoSphereBoundaryComponents() const;
@@ -565,10 +622,56 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Determines if this triangulation contains any ideal boundary
          * components with negative Euler characteristic.
          *
-         * @return \c true if and only if there is at least one such
+         * \return \c true if and only if there is at least one such
          * boundary component.
          */
         bool hasNegativeIdealBoundaryComponents() const;
+
+        /**
+         * Determines whether the boundary of this triangulation contains
+         * the smallest possible number of triangles.
+         *
+         * This is true if and only if, amongst all real boundary components,
+         * every sphere or projective plane boundary component has precisely
+         * two triangles, and every other boundary component has precisely
+         * one vertex.
+         *
+         * For the purposes of this routine, ideal boundary components
+         * are ignored.
+         *
+         * If this routine returns \c false, you can call minimiseBoundary()
+         * to make the number of boundary triangles minimal.
+         *
+         * \pre This triangulation is valid.
+         *
+         * \return \c true if and only if the boundary contains the
+         * smallest possible number of triangles.
+         */
+        bool hasMinimalBoundary() const;
+
+        /**
+         * Determines whether this triangulation contains the smallest possible
+         * number of vertices for the 3-manifold that it represents.
+         *
+         * This is true if and only if:
+         *
+         * - amongst all real boundary components, every sphere or projective
+         *   plane boundary component has precisely two triangles, and every
+         *   other boundary component has precisely one vertex;
+         *
+         * - amongst all connected components, every closed component
+         *   has precisely one vertex, and every component with real or
+         *   ideal boundary has no internal vertices at all.
+         *
+         * If this routine returns \c false, you can call minimiseVertices()
+         * to make the number of vertices minimal.
+         *
+         * \pre This triangulation is valid.
+         *
+         * \return \c true if and only if this triangulation contains
+         * the smallest possible number of vertices.
+         */
+        bool hasMinimalVertices() const;
 
         /*@}*/
         /**
@@ -580,7 +683,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Returns the Euler characteristic of the corresponding compact
          * 3-manifold.
          *
-         * Instead of simply calculating \a V-E+F-T, this routine also:
+         * Instead of simply calculating `V-E+F-T`, this routine also:
          *
          * - treats ideal vertices as surface boundary components
          *   (i.e., effectively truncates them);
@@ -596,7 +699,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * For triangulations whose vertex links are all spheres or discs,
          * this routine and eulerCharTri() give identical results.
          *
-         * @return the Euler characteristic of the corresponding compact
+         * \return the Euler characteristic of the corresponding compact
          * manifold.
          */
         long eulerCharManifold() const;
@@ -607,7 +710,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is closed and not a 2-sphere.
          * Note that the triangulation is not required to be valid.
          *
-         * @return \c true if and only if this triangulation is ideal.
+         * \return \c true if and only if this triangulation is ideal.
          */
         bool isIdeal() const;
         /**
@@ -615,7 +718,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This is the case if and only if every vertex is standard.
          * See Vertex<3>::isStandard() for further details.
          *
-         * @return \c true if and only if this triangulation is
+         * \return \c true if and only if this triangulation is
          * standard.
          */
         bool isStandard() const;
@@ -624,7 +727,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This is the case if and only if it has no boundary.
          * Note that ideal triangulations are not closed.
          *
-         * @return \c true if and only if this triangulation is closed.
+         * \return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
 
@@ -640,10 +743,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * cannot be ordered at all.  The routine order() will attempt
          * to relabel tetrahedron vertices to give an ordered triangulation.
          *
-         * @return \c true if and only if all gluing permutations are
+         * \return \c true if and only if all gluing permutations are
          * order preserving on the tetrahedron faces.
          *
-         * @author Matthias Goerner
+         * \author Matthias Goerner
          */
         bool isOrdered() const;
 
@@ -668,7 +771,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is invalid.
          *
-         * @return the relative first homology group with respect to the
+         * \return the relative first homology group with respect to the
          * boundary.
          */
         const AbelianGroup& homologyRel() const;
@@ -691,7 +794,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is invalid.
          *
-         * @return the first homology group of the boundary.
+         * \return the first homology group of the boundary.
          */
         const AbelianGroup& homologyBdry() const;
         /**
@@ -711,7 +814,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is invalid.
          *
-         * @return the number of Z_2 terms in the second homology group
+         * \return the number of Z_2 terms in the second homology group
          * with coefficients in Z_2.
          */
         unsigned long homologyH2Z2() const;
@@ -723,20 +826,20 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
          * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
          * In particular, Section 7 of this paper describes the initial data
-         * as determined by an integer r >= 3, and a root of unity q0 of
-         * degree 2r for which q0^2 is a primitive root of unity of
+         * as determined by an integer r ≥ 3, and a root of unity q₀ of
+         * degree 2r for which q₀² is a primitive root of unity of
          * degree r.  There are several cases to consider:
          *
-         * - \a r may be even.  In this case \a q0 must be a primitive
+         * - \a r may be even.  In this case \a q₀ must be a primitive
          *   (<i>2r</i>)th root of unity, and the invariant is computed as an
          *   element of the cyclotomic field of order \a 2r.  There is no need
-         *   to specify \e which root of unity is used, since switching between
+         *   to specify _which_ root of unity is used, since switching between
          *   different roots of unity corresponds to an automorphism of
          *   the underlying cyclotomic field (i.e., it does not yield
          *   any new information).  Therefore, if \a r is even, the
          *   additional argument \a parity is ignored.
          *
-         * - \a r may be odd, and \a q0 may be a primitive (<i>2r</i>)th
+         * - \a r may be odd, and \a q₀ may be a primitive (2\a r)th
          *   root of unity.  This case corresponds to passing the argument
          *   \a parity as \c true.  Here the invariant is again computed
          *   as an element of the cyclotomic field of order \a 2r.  As before,
@@ -744,7 +847,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   root of unity is used, since switching between roots of unity
          *   does not yield new information.
          *
-         * - \a r may be odd, and \a q0 may be a primitive (<i>r</i>)th
+         * - \a r may be odd, and \a q₀ may be a primitive (\a r)th
          *   root of unity.  This case corresponds to passing the argument
          *   \a parity as \c false.  In this case the invariant is computed
          *   as an element of the cyclotomic field of order \a r.  Again,
@@ -760,9 +863,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * specification of which root of unity is used (since it
          * returns a numerical real value).  The numerical value
          * obtained by calling
-         * <tt>turaevViroApprox(r, whichRoot)</tt>
+         * `turaevViroApprox(r, whichRoot)`
          * should be the same as
-         * <tt>turaevViro(r, parity).evaluate(whichRoot)</tt>,
+         * `turaevViro(r, parity).evaluate(whichRoot)`,
          * where \a parity is \c true or \c false according to whether
          * \a whichRoot is odd or even respectively.  Of course in practice the
          * numerical values might be very different, since turaevViroApprox()
@@ -783,26 +886,26 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed and non-empty.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param r the integer \a r as described above; this must be at
+         * \param r the integer \a r as described above; this must be at
          * least 3.
-         * @param parity determines for odd \a r whether \a q0 is a primitive
+         * \param parity determines for odd \a r whether \a q₀ is a primitive
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
-         * @param alg the algorithm with which to compute the invariant.  If
+         * \param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * This should be treated as a hint only: if the algorithm you choose
          * is not supported for the given parameters (\a r and \a parity),
          * then Regina will use another algorithm instead.
-         * @param tracker a progress tracker through will progress will
+         * \param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
-         * @return the requested Turaev-Viro invariant, or an uninitialised
+         * \return the requested Turaev-Viro invariant, or an uninitialised
          * field element if the calculation was cancelled via the given
          * progress tracker.
          *
-         * @see allCalculatedTuraevViro
+         * \see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
             Algorithm alg = ALG_DEFAULT,
@@ -815,18 +918,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
          * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
          * In particular, Section 7 describes the initial data as
-         * determined by an integer \a r >= 3 and a root of unity \a q0 of
-         * degree \a 2r for which \a q0^2 is a primitive root of unity of
+         * determined by an integer \a r ≥ 3 and a root of unity \a q₀ of
+         * degree \a 2r for which \a q₀² is a primitive root of unity of
          * degree \a r.
          *
          * The argument \a whichRoot specifies which root of unity is
-         * used for \a q0.  Specifically, \a q0 will be the root of unity
-         * <tt>e^(2i * Pi * whichRoot / 2r)</tt>.  There are additional
-         * preconditions on \a whichRoot to ensure that \a q0^2 is a
-         * \e primitive root of unity of degree \a r; see below for details.
+         * used for \a q₀.  Specifically, \a q₀ will be the root of unity
+         * `e^(2πi * whichRoot / 2r)`.  There are additional
+         * preconditions on \a whichRoot to ensure that \a q₀² is a
+         * _primitive_ root of unity of degree \a r; see below for details.
          *
          * This same invariant can be computed by calling
-         * <tt>turaevViro(r, parity).evaluate(whichRoot)</tt>,
+         * `turaevViro(r, parity).evaluate(whichRoot)`,
          * where \a parity is \c true or \c false according to whether
          * \a whichRoot is odd or even respectively.
          * Calling turaevViroApprox() is significantly faster (since it avoids
@@ -844,18 +947,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The argument \a whichRoot is strictly between 0 and <i>2r</i>,
          * and has no common factors with \a r.
          *
-         * @param r the integer \a r as described above; this must be at
+         * \param r the integer \a r as described above; this must be at
          * least 3.
-         * @param whichRoot specifies which root of unity is used for \a q0,
+         * \param whichRoot specifies which root of unity is used for \a q₀,
          * as described above.
-         * @param alg the algorithm with which to compute the invariant.  If
+         * \param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * This should be treated as a hint only: if the algorithm you choose
          * is not supported for the given parameters (\a r and \a whichRoot),
          * then Regina will use another algorithm instead.
-         * @return the requested Turaev-Viro invariant.
+         * \return the requested Turaev-Viro invariant.
          *
-         * @see allCalculatedTuraevViro
+         * \see allCalculatedTuraevViro
          */
         double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
             Algorithm alg = ALG_DEFAULT) const;
@@ -881,17 +984,63 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * change from Regina 4.96 and earlier, which computed
          * floating-point approximations instead.
          *
-         * \ifacespython This routine returns a Python dictionary.
+         * \python This routine returns a Python dictionary.
          * It also returns by value, not by reference (i.e., if more
          * Turaev-Viro invariants are computed later on, the dictionary
          * that was originally returned will not change as a result).
          *
-         * @return the cache of all Turaev-Viro invariants that have
+         * \return the cache of all Turaev-Viro invariants that have
          * already been calculated.
          *
-         * @see turaevViro
+         * \see turaevViro
          */
         const TuraevViroSet& allCalculatedTuraevViro() const;
+
+        /**
+         * Identifies the algebraic longitude as a curve on the boundary of a
+         * triangulated knot complement.
+         *
+         * Specifically, assuming that this triangulation represents the
+         * complement of a knot in the 3-sphere, this routine identifies the
+         * non-trivial simple closed curve on the boundary whose homology in
+         * the 3-manifold is trivial.
+         *
+         * The curve will be returned as a triple of integers, indicating how
+         * many times the longitude intersects each of the three boundary edges.
+         * It is always true that the largest of these three integers will be
+         * the sum of the other two.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
+         * \return a triple of non-negative integers indicating how many
+         * times the longitude intersects each of the three boundary edges.
+         * Specifically, if the returned tuple is \a t and the unique boundary
+         * component is \a bc, then for each \a k = 0,1,2, the element
+         * `t[k]` indicates the (absolute) number of times that the
+         * longitude intersects the edge `bc->edge(k)`.
+         */
+        std::array<long, 3> longitudeCuts() const;
 
         /**
          * Modifies a triangulated knot complement so that the algebraic
@@ -923,7 +1072,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the algebraic longitude is already represented by a single
          * boundary edge, then it is guaranteed that this routine will
-         * \e not modify the triangulation, and will simply return this
+         * _not_ modify the triangulation, and will simply return this
          * boundary edge.
          *
          * \pre The underlying 3-manifold is known to be the complement
@@ -935,16 +1084,96 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *
-         * \warning If you have an \e ideal triangulation of a knot
-         * complement, you \e must first run idealToFinite() and then simplify
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
-         * @return the boundary edge representing the algebraic
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
+         * \exception LockViolation At least one of the two boundary triangles
+         * is currently locked.  This exception will be thrown before any
+         * changes are made.  See Simplex<3>::lockFacet() for further details
+         * on how such locks work and what their implications are.
+         *
+         * \return the boundary edge representing the algebraic
          * longitude of the knot (after this triangulation has
-         * been modified if necessary), or \c null if an error (such as
-         * an integer overflow) occurred during the computation.
+         * been modified if necessary).
          */
         Edge<3>* longitude();
+
+        /**
+         * Modifies a triangulated knot complement so that the meridian
+         * follows a single boundary edge, and returns this edge.
+         *
+         * Assuming that this triangulation represents the complement of
+         * a knot in the 3-sphere, this routine:
+         *
+         * - identifies the meridian of the knot complement;
+         *
+         * - layers additional tetrahedra on the boundary if necessary
+         *   so that this curve is represented by a single boundary edge;
+         *
+         * - returns that (possibly new) boundary edge.
+         *
+         * This routine uses fast heuristics to locate the meridian; as a
+         * result, **it does not guarantee to terminate** (but if you find
+         * a case where it does not, please let the Regina developers know!).
+         * If it does return then it guarantees that the result is correct.
+         *
+         * This routine uses a similar algorithm to meridianLongitude(),
+         * with the same problem that it could be slow and might not terminate.
+         * However, meridian() has the advantage that it might produce a
+         * smaller triangulation, since there is no need to arrange for the
+         * longitude to be a boundary edge also.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * If the meridian is already represented by a single boundary edge,
+         * then it is guaranteed that, if this routine does terminate,
+         * it will _not_ modify the triangulation, and will simply return
+         * this boundary edge.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning This routine may modify the triangluation, as
+         * explained above, which will have the side-effect of
+         * invalidating any existing Vertex, Edge or Triangle references.
+         *
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
+         * \exception LockViolation At least one of the two boundary triangles
+         * is currently locked.  This exception will be thrown before any
+         * changes are made.  See Simplex<3>::lockFacet() for further details
+         * on how such locks work and what their implications are.
+         *
+         * \return the boundary edge representing the meridian (after this
+         * triangulation has been modified if necessary).
+         */
+        Edge<3>* meridian();
 
         /**
          * Modifies a triangulated knot complement so that the meridian and
@@ -964,7 +1193,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - returns these two (possibly new) boundary edges.
          *
          * This routine uses fast heuristics to locate the meridian; as a
-         * result, <b>it does not guarantee to terminate</b> (but if you find
+         * result, **it does not guarantee to terminate** (but if you find
          * a case where it does not, please let the Regina developers know!).
          * If it does return then it guarantees that the result is correct.
          *
@@ -978,9 +1207,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * These restrictions may be eased in future versions of Regina.
          *
          * If the meridian and algebraic longitude are already both represented
-         * by single boundary edges, then it is guaranteed that this routine
-         * will \e not modify the triangulation, and will simply return
-         * these two boundary edges.
+         * by single boundary edges, then it is guaranteed that, if this
+         * routine does terminate, it will _not_ modify the triangulation,
+         * and will simply return these two boundary edges.
          *
          * \pre The underlying 3-manifold is known to be the complement
          * of a knot in the 3-sphere.
@@ -991,16 +1220,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *
-         * \warning If you have an \e ideal triangulation of a knot
-         * complement, you \e must first run idealToFinite() and then simplify
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
-         * @return a pair (\a m, \a l), where \a m is the boundary edge
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
+         * \exception LockViolation At least one of the two boundary triangles
+         * is currently locked.  This exception will be thrown before any
+         * changes are made.  See Simplex<3>::lockFacet() for further details
+         * on how such locks work and what their implications are.
+         *
+         * \return a pair (\a m, \a l), where \a m is the boundary edge
          * representing the meridian and \a l is the boundary edge representing
          * the algebraic longitude of the knot complement (after this
-         * triangulation has been modified if necessary).  If an error (such as
-         * an integer overflow) occurs during the computation, then this
-         * routine will return (\c null, \c null).
+         * triangulation has been modified if necessary).
          */
         std::pair<Edge<3>*, Edge<3>*> meridianLongitude();
 
@@ -1011,12 +1252,36 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
+         * Returns the link of the given face as a normal surface.
+         *
+         * Constructing the link of a face begins with building the frontier
+         * of a regular neighbourhood of the face.  If this is already a
+         * normal surface, then then link is called _thin_.  Otherwise
+         * the usual normalisation steps are performed until the surface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the surface, and in some pathological
+         * cases could even reduce it to the empty surface.
+         *
+         * \tparam subdim the dimension of the face to link; this must be
+         * between 0 and 2 inclusive.
+         *
+         * \pre The given face is a face of this triangulation.
+         *
+         * \return a pair (\a s, \a thin), where \a s is the face linking
+         * normal surface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
+         */
+        template <int subdim>
+        std::pair<NormalSurface, bool> linkingSurface(
+            const Face<3, subdim>& face) const;
+
+        /**
          * Determines if this triangulation is 0-efficient.
          * A triangulation is 0-efficient if its only normal spheres and
          * discs are vertex linking, and if it has no 2-sphere boundary
          * components.
          *
-         * @return \c true if and only if this triangulation is
+         * \return \c true if and only if this triangulation is
          * 0-efficient.
          */
         bool isZeroEfficient() const;
@@ -1029,11 +1294,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isZeroEfficient() will be very fast (simply returning the
          * precalculated value).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation is 0-efficient; it merely tells you whether
          * the answer has already been computed.
          *
-         * @return \c true if and only if this property is already known.
+         * \return \c true if and only if this property is already known.
          */
         bool knowsZeroEfficient() const;
         /**
@@ -1048,7 +1313,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * time), and works even for triangulations with more than one
          * connected component.  Thanks to Robert Haraway.
          *
-         * @return \c true if and only if this triangulation has a
+         * \return \c true if and only if this triangulation has a
          * normal splitting surface.
          */
         bool hasSplittingSurface() const;
@@ -1057,7 +1322,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * within this triangulation.  If such a surface exists within
          * this triangulation, this routine is guaranteed to find one.
          *
-         * @return a non-vertex-linking normal sphere or disc, or no value if
+         * \return a non-vertex-linking normal sphere or disc, or \nullopt if
          * none exists.
          */
         std::optional<NormalSurface> nonTrivialSphereOrDisc() const;
@@ -1070,14 +1335,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and 0-efficient.  These preconditions are almost certainly more
          * restrictive than they need to be, but we stay safe for now.
          *
-         * @return an octagonal almost normal 2-sphere, or no value if
+         * \return an octagonal almost normal 2-sphere, or \nullopt if
          * none exists.
          */
         std::optional<NormalSurface> octagonalAlmostNormalSphere() const;
         /**
          * Returns a strict angle structure on this triangulation, if one
-         * exists.  Recall that a \e strict angle structure is one in which
-         * every angle is strictly between 0 and &pi;.  If a strict angle
+         * exists.  Recall that a _strict_ angle structure is one in which
+         * every angle is strictly between 0 and π.  If a strict angle
          * structure does exist, then this routine is guaranteed to return one.
          *
          * This routine is designed for scenarios where you already know
@@ -1086,7 +1351,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - If no strict angle structure exists, this routine will throw an
          *   exception, which will incur a significant overhead.
          *
-         * - If you do \e not know in advance whether a strict angle structure
+         * - If you do _not_ know in advance whether a strict angle structure
          *   exists, you should call hasStrictAngleStructure() first.  If the
          *   answer is no, this will avoid the overhead of throwing and catching
          *   exceptions.  If the answer is yes, this will have the side-effect
@@ -1094,7 +1359,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   call to strictAngleStructure() will be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
-         * \e not enumerate all vertex angle structures).  This means
+         * _not_ enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
          * The result of this routine is cached internally: as long as
@@ -1106,35 +1371,35 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * structure will be deleted, and any reference that was returned
          * before will become invalid.
          *
-         * \exception NoSolution no strict angle structure exists on
+         * \exception NoSolution No strict angle structure exists on
          * this triangulation.
          *
-         * @return a strict angle structure on this triangulation, if
+         * \return a strict angle structure on this triangulation, if
          * one exists.
          */
         const AngleStructure& strictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
-         * structure.  Recall that a \e strict angle structure is one
-         * in which every angle is strictly between 0 and &pi;.
+         * structure.  Recall that a _strict_ angle structure is one
+         * in which every angle is strictly between 0 and π.
          *
          * This routine returns \c false if and only if strictAngleStructure()
-         * throws an exception.  However, if you do not \e know whether a
+         * throws an exception.  However, if you do not _know_ whether a
          * strict angle structure exists, then this routine is faster:
          *
-         * - If there is \e no strict angle structure, this routine will
+         * - If there is _no_ strict angle structure, this routine will
          *   avoid the overhead of throwing and catching exceptions.
          *
-         * - If there \e is a strict angle structure, this routine will find
+         * - If there _is_ a strict angle structure, this routine will find
          *   and cache this angle structure, which means that any subsequent
          *   call to strictAngleStructure() to retrieve its details will
          *   be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
-         * \e not enumerate all vertex angle structures).  This means
+         * _not_ enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
-         * @return \c true if and only if a strict angle structure exists on
+         * \return \c true if and only if a strict angle structure exists on
          * this triangulation.
          */
         bool hasStrictAngleStructure() const;
@@ -1147,18 +1412,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * strictAngleStructure() and hasStrictAngleStructure() will be
          * very fast (simply returning the precalculated solution).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the triangulation supports a strict angle structure; it merely
          * tells you whether the answer has already been computed (or is
          * very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsStrictAngleStructure() const;
         /**
          * Returns a generalised angle structure on this triangulation,
-         * if one exists.  A \e generalised angle structure must satisfy the
+         * if one exists.  A _generalised_ angle structure must satisfy the
          * same matching equations as all angle structures do, but there is no
          * constraint on the signs of the angles; in particular, negative
          * angles are allowed.  If a generalised angle structure does exist,
@@ -1198,28 +1463,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * "Angle structures and normal surfaces", Feng Luo and Stephan
          * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
          *
-         * \exception NoSolution no generalised angle structure exists on
+         * \exception NoSolution No generalised angle structure exists on
          * this triangulation.
          *
-         * @return a generalised angle structure on this triangulation, if
+         * \return a generalised angle structure on this triangulation, if
          * one exists.
          */
         const AngleStructure& generalAngleStructure() const;
         /**
          * Determines whether this triangulation supports a generalised angle
-         * structure.  A \e generalised angle structure must satisfy the
+         * structure.  A _generalised_ angle structure must satisfy the
          * same matching equations as all angle structures do, but there is no
          * constraint on the signs of the angles; in particular, negative
          * angles are allowed.
          *
          * This routine returns \c false if and only if generalAngleStructure()
-         * throws an exception.  However, if you do not \e know whether a
+         * throws an exception.  However, if you do not _know_ whether a
          * generalised angle structure exists, then this routine is faster:
          *
-         * - If there is \e no generalised angle structure, this routine will
+         * - If there is _no_ generalised angle structure, this routine will
          *   avoid the overhead of throwing and catching exceptions.
          *
-         * - If there \e is a generalised angle structure, this routine will
+         * - If there _is_ a generalised angle structure, this routine will
          *   find and cache this angle structure, which means that any
          *   subsequent call to generalAngleStructure() to retrieve its
          *   details will be essentially instantaneous.
@@ -1239,7 +1504,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the extra work to compute an explicit solution (in order to fulfil
          * the promise made in the generalAngleStructure() documentation).
          *
-         * @return \c true if and only if a generalised angle structure exists
+         * \return \c true if and only if a generalised angle structure exists
          * on this triangulation.
          */
         bool hasGeneralAngleStructure() const;
@@ -1257,7 +1522,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Note that the edge pointers returned will become invalid once the
          * triangulation has changed.
          *
-         * @return a set containing the edges of the maximal forest.
+         * \return a set containing the edges of the maximal forest.
          */
         std::set<Edge<3>*> maximalForestInBoundary() const;
         /**
@@ -1274,22 +1539,22 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Note that the edge pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * @param canJoinBoundaries \c true if and only if different
+         * \param canJoinBoundaries \c true if and only if different
          * boundary components are allowed to be joined by the maximal forest.
-         * @return a set containing the edges of the maximal forest.
+         * \return a set containing the edges of the maximal forest.
          */
         std::set<Edge<3>*> maximalForestInSkeleton(
                 bool canJoinBoundaries = true) const;
 
         /**
          * Attempts to simplify the triangulation using fast and greedy
-         * heuristics.  This routine will attempt to reduce both the number
-         * of tetrahedra and the number of boundary triangles (with the
-         * number of tetrahedra as its priority).
+         * heuristics.  This routine will attempt to reduce the number
+         * of tetrahedra, the number of vertices and the number of
+         * boundary triangles (with the number of tetrahedra as its priority).
          *
-         * Currently this routine uses simplifyToLocalMinimum() in
-         * combination with random 4-4 moves, book opening moves and
-         * book closing moves.
+         * Currently this routine uses simplifyToLocalMinimum() and
+         * minimiseVertices() in combination with random 4-4 moves,
+         * book opening moves and book closing moves.
          *
          * Although intelligentSimplify() works very well most of the time,
          * it can occasionally get stuck; in such cases you may wish to try
@@ -1306,7 +1571,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \todo \opt Include random 2-3 moves to get out of wells.
          *
-         * @return \c true if and only if the triangulation was successfully
+         * \return \c true if and only if the triangulation was successfully
          * simplified.  Otherwise this triangulation will not be changed.
          */
         bool intelligentSimplify();
@@ -1333,10 +1598,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
          *
-         * @param perform \c true if we are to perform the
+         * \param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
-         * @return if \a perform is \c true, this routine returns
+         * \return if \a perform is \c true, this routine returns
          * \c true if and only if the triangulation was changed to
          * reduce the number of tetrahedra; if \a perform is \c false,
          * this routine returns \c true if and only if it determines
@@ -1354,7 +1619,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * via 2-3 and 3-2 Pachner moves, without ever exceeding
          * \a height additional tetrahedra beyond the original number.
          *
-         * If at any stage it finds a triangulation with \e fewer
+         * If at any stage it finds a triangulation with _fewer_
          * tetrahedra than the original, then this routine will call
          * intelligentSimplify() to shrink the triangulation further if
          * possible and will then return \c true.  If it cannot find a
@@ -1370,14 +1635,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional tetrahedra.  This means that the
          * routine will not terminate until a simpler triangulation is found.
          * If no simpler diagram exists then the only way to terminate this
          * function is to cancel the operation via a progress tracker
          * (read on for details).
          *
-         * If you want a \e fast simplification routine, you should call
+         * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn triangulations where intelligentSimplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
@@ -1392,7 +1657,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * in the argument \a threads.  Even in multithreaded mode, this
          * routine will not return until processing has finished (i.e., either
          * the triangulation was simplified or the search was exhausted).
          *
@@ -1401,25 +1666,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param height the maximum number of \e additional tetrahedra to
+         * \param height the maximum number of _additional_ tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c nullptr if no progress reporting is required.
-         * @return \c true if and only if the triangulation was successfully
+         * \return \c true if and only if the triangulation was successfully
          * simplified to fewer tetrahedra.
          */
-        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+        bool simplifyExhaustive(int height = 1, unsigned threads = 1,
             ProgressTrackerOpen* tracker = nullptr);
 
         /**
@@ -1441,7 +1706,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   type is discussed below), representing the triangluation that has
          *   been found; or else (b) the first two arguments must be of types
          *   const std::string& followed by a triangulation, representing both
-         *   the triangulation and \e an isomorphism signature.
+         *   the triangulation and _an_ isomorphism signature.
          *   The second form is offered in order to avoid unnecessary
          *   recomputation within the \a action function; however, note that
          *   the signature might not be of the IsoSigClassic type (i.e., it
@@ -1478,9 +1743,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional tetrahedra.  This means that the
-         * routine will <i>never terminate</i>, unless \a action returns
+         * routine will _never terminate_, unless \a action returns
          * \c true for some triangulation that is passed to it.
          *
          * Since Regina 7.0, this routine will not return until the exploration
@@ -1491,7 +1756,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads in
-         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * the argument \a threads.  Even in multithreaded mode, this routine
          * will not return until processing has finished (i.e., either \a action
          * returned \c true, or the search was exhausted).  All calls to
          * \a action will be protected by a mutex (i.e., different threads will
@@ -1501,13 +1766,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
+         * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.  However, its
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you call it as retriangulate(height, threads, action).
@@ -1515,23 +1780,23 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (const std::string&, Triangulation<3>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
-         * @param height the maximum number of \e additional tetrahedra to
+         * \param height the maximum number of _additional_ tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each triangulation that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
-         * @return \c true if some call to \a action returned \c true (thereby
+         * \return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
          * completion.
          */
         template <typename Action, typename... Args>
-        bool retriangulate(int height, unsigned nThreads,
+        bool retriangulate(int height, unsigned threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
@@ -1558,31 +1823,105 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Although this routine only modifies real boundary components,
          * it is fine if the triangulation also contains ideal boundary
-         * components (and these simply will be left alone).
+         * components (and these simply will be left alone).  If the
+         * triangulation contains internal vertices, these will likewise
+         * be left untouched.  If you wish to remove internal vertices
+         * also, then you should call minimiseVertices() instead.
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
          * \pre This triangulation is valid.
          *
-         * @return \c true if the triangulation was changed, or \c false if
+         * \exception FailedPrecondition This triangulation is not valid.
+         *
+         * \return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
          */
         bool minimiseBoundary();
 
         /**
-         * A synonym for minimiseBoundary().
+         * A deprecated synonym for minimiseBoundary().
          * This ensures that the boundary contains the smallest possible
          * number of triangles, potentially adding tetrahedra to do this.
          *
          * See minimiseBoundary() for further details.
          *
+         * \deprecated Regina uses British English throughout its API.
+         * This synonym was a special case where Regina used to offer both
+         * British and American alternatives, but this will be removed in a
+         * future release.  See the page on
+         * \ref spelling "spelling throughout Regina" for further details.
+         *
          * \pre This triangulation is valid.
          *
-         * @return \c true if the triangulation was changed, or \c false if
+         * \return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
          */
-        bool minimizeBoundary();
+        [[deprecated]] bool minimizeBoundary();
+
+        /**
+         * Ensures that this triangulation contains the smallest possible
+         * number of vertices for the 3-manifold that it represents,
+         * potentially adding tetrahedra to do this.
+         *
+         * This routine is for use with algorithms that require a minimal
+         * number of vertices (e.g., one-vertex triangulations of closed
+         * manifolds, or <i>k</i>-vertex triangulations of the complements
+         * of <i>k</i>-component links).  As noted above, this routine may
+         * in fact increase the total number of tetrahedra in the triangulation
+         * (though the implementation does make efforts not to do this).
+         *
+         * Once this routine is finished:
+         *
+         * - every real boundary component will have exactly one vertex, except
+         *   for sphere and projective plane boundaries which will have three
+         *   and two vertices respectively (i.e., the minimum possible);
+         *
+         * - for each component of the triangulation that contains one or more
+         *   boundary components (either real and/or ideal), there will be
+         *   no internal vertices at all;
+         *
+         * - for each component of the triangulation that has no boundary
+         *   components (i.e., that represents a closed 3-manifold), there
+         *   will be precisely one vertex.
+         *
+         * The changes that this routine performs can always be expressed
+         * using only close book moves, layerings, collapse edge moves,
+         * and/or pinch edge moves.  In particular, this routine never
+         * creates new vertices.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition This triangulation is not valid.
+         *
+         * \return \c true if the triangulation was changed, or \c false if
+         * the number of vertices was already minimal to begin with.
+         */
+        bool minimiseVertices();
+
+        /**
+         * A deprecated synonym for minimiseVertices().
+         * This ensures that the triangulation contains the smallest possible
+         * number of vertices, potentially adding tetrahedra to do this.
+         *
+         * See minimiseVertices() for further details.
+         *
+         * \deprecated Regina uses British English throughout its API.
+         * This synonym was a special case where Regina used to offer both
+         * British and American alternatives, but this will be removed in a
+         * future release.  See the page on
+         * \ref spelling "spelling throughout Regina" for further details.
+         *
+         * \pre This triangulation is valid.
+         *
+         * \return \c true if the triangulation was changed, or \c false if
+         * the number of vertices was already minimal to begin with.
+         */
+        [[deprecated]] bool minimizeVertices();
 
         /**
          * Checks the eligibility of and/or performs a 4-4 move
@@ -1597,7 +1936,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and (ii) the four tetrahedra are distinct.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this 4-4 move
          * will label the new tetrahedra in a way that preserves the
@@ -1608,41 +1949,46 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param newAxis Specifies which axis of the octahedron the new
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param e the edge about which to perform the move.
+         * \param newAxis Specifies which axis of the octahedron the new
          * tetrahedra should meet along; this should be 0 or 1.
          * Consider the four original tetrahedra in the order described
          * by Edge<3>::embedding(0,...,3); call these tetrahedra 0, 1, 2 and
          * 3.  If \a newAxis is 0, the new axis will separate tetrahedra
          * 0 and 1 from 2 and 3.  If \a newAxis is 1, the new axis will
          * separate tetrahedra 1 and 2 from 3 and 0.
-         * @param check \c true if we are to check whether the move is
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check is
+         * \c false, the function simply returns \c true.
          */
         bool fourFourMove(Edge<3>* e, int newAxis, bool check = true,
                 bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-0 move
-         * about the given edge of degree 2.
-         * This involves taking the two tetrahedra joined at that edge
-         * and squashing them flat.  This can be done if:
+         * Checks the eligibility of and/or performs a 2-0 move about the
+         * given edge of degree 2.  This involves taking the two tetrahedra
+         * joined at that edge and squashing them flat.  This can be done if:
          *
          * - the edge is valid and non-boundary;
          *
          * - the two tetrahedra are distinct;
          *
-         * - the edges opposite \c e in each tetrahedron are distinct and
+         * - the edges opposite \a e in each tetrahedron are distinct and
          *   not both boundary;
          *
          * - if triangles \a f1 and \a f2 from one tetrahedron are to be
@@ -1656,7 +2002,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   two identified.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -1666,34 +2014,38 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Edge<3>* e, bool check = true, bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-0 move
-         * about the given vertex of degree 2.
-         * This involves taking the two tetrahedra joined at that vertex
-         * and squashing them flat.
-         * This can be done if:
+         * Checks the eligibility of and/or performs a 2-0 move about the
+         * given vertex of degree 2.  This involves taking the two tetrahedra
+         * joined at that vertex and squashing them flat.  This can be done if:
          *
          * - the vertex is non-boundary and has a 2-sphere vertex link;
          *
          * - the two tetrahedra are distinct;
          *
-         * - the triangles opposite \c v in each tetrahedron are distinct and
+         * - the triangles opposite \a v in each tetrahedron are distinct and
          *   not both boundary;
          *
          * - the two tetrahedra meet each other on all three faces touching
@@ -1701,7 +2053,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   being glued to themselves along the other two).
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -1711,19 +2065,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a v)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given vertex is a vertex of this triangulation.
          *
-         * @param v the vertex about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param v the vertex about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Vertex<3>* v, bool check = true, bool perform = true);
@@ -1746,7 +2106,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   joined along the face opposite the given endpoint of the edge).
          *   Moreover, consider the two edges of this second tetrahedron
          *   that run from the (identical) vertices of the original
-         *   tetrahedron not touching \c e to the vertex of the second
+         *   tetrahedron not touching \a e to the vertex of the second
          *   tetrahedron not touching the original tetrahedron.  These edges
          *   must be distinct and may not both be in the boundary.
          *
@@ -1755,7 +2115,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * from the final condition above.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this 2-1 move
          * will label the new tetrahedra in a way that preserves the
@@ -1766,24 +2128,30 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param edgeEnd the end of the edge \e opposite that at
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param e the edge about which to perform the move.
+         * \param edgeEnd the end of the edge _opposite_ that at
          * which the second tetrahedron (to be merged) is joined.
          * The end is 0 or 1, corresponding to the labelling (0,1) of
          * the vertices of the edge as described in
          * EdgeEmbedding<3>::vertices().
-         * @param check \c true if we are to check whether the move is
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoOneMove(Edge<3>* e, int edgeEnd,
@@ -1791,8 +2159,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles
-         * <tt>e0.tetrahedron()->triangle( e0.vertices()[t0] )</tt> and
-         * <tt>e1.tetrahedron()->triangle( e1.vertices()[t1] )</tt>.
+         * `e0.tetrahedron()->triangle(e0.vertices()[t0])` and
+         * `e1.tetrahedron()->triangle(e1.vertices()[t1])`.
          *
          * This involves fattening up these two triangles into a new pair of
          * tetrahedra around a new degree-two edge \a d; this is the inverse
@@ -1808,7 +2176,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - The edge \a e is valid.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on facet locks).  In particular, since this move pries open
+         * a _pair_ of adjacent triangles and not just a single triangle, a
+         * lock on either of the two requested triangles will prevent this move
+         * from taking place.
          *
          * If this triangulation is currently oriented, then this 0-2 move
          * will label the new tetrahedra in a way that preserves the
@@ -1820,30 +2193,36 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and \a e1) can no longer be used.
          *
          * \pre If the move is being performed and no check is being run, it
-         * must by known in advance that the move is legal.
+         * must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The edge \a e is an edge of this triangulation.
          *
-         * @param e0 an embedding of the common edge \a e of the two
-         * triangles about which to perform the move.
-         * @param t0 one of the two triangles about which to perform the
-         * move (associated to the edge embedding \a e0).
-         * @param e1 another embedding of the edge \a e.
-         * @param t1 the other triangle about which to perform move
-         * (associated to the edge embedding \a e1).
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
-         * \c true).
-         * @return If \a check is \c true, the function returns \c true if
-         * and only if the requested move may be performed without changing
-         * the topology of the manifold. If \a check is false, the function
-         * simply returns \c true.
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
-         * @author Alex He
+         * \param e0 an embedding of the common edge \a e of the two
+         * triangles about which to perform the move.
+         * \param t0 one of the two triangles about which to perform the
+         * move (associated to the edge embedding \a e0).
+         * \param e1 another embedding of the edge \a e.
+         * \param t1 the other triangle about which to perform move
+         * (associated to the edge embedding \a e1).
+         * \param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * \param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * \return If \a check is \c true, the function returns \c true if
+         * and only if the requested move may be performed without changing
+         * the topology of the manifold or violating any locks. If \a check
+         * is false, the function simply returns \c true.
+         *
+         * \author Alex He
          */
-        bool zeroTwoMove(
-                EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1,
-                bool check = true, bool perform = true );
+        bool zeroTwoMove(EdgeEmbedding<3> e0, int t0,
+            EdgeEmbedding<3> e1, int t1,
+            bool check = true, bool perform = true );
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles incident to \a e that are
@@ -1857,26 +2236,37 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - The edge \a e is valid.
          *
          * - The numbers \a t0 and \a t1 are both less than or equal to
-         *   <tt>e->degree()</tt>, and strictly less than <tt>e->degree()</tt>
+         *   `e->degree()`, and strictly less than `e->degree()`
          *   if \a e is non-boundary. This ensures that \a t0 and \a t1
          *   correspond to sensible triangle numbers (as described below).
          *
          * The triangles incident to \a e are numbered as follows:
          *
-         * - For each \a i from 0 up to <tt>e->degree()</tt>, we assign the
+         * - For each \a i from 0 up to `e->degree()`, we assign the
          *   number \a i to the triangle
-         *   <tt>e->embedding(i).tetrahedron()->triangle( e->embedding(i).vertices()[3] )</tt>
+         *   `emb.tetrahedron()->triangle(emb.vertices()[3])`,
+         *   where \a emb denotes `e->embedding(i)`.
          *
          * - If \a e is a boundary edge, then we additionally assign the
-         *   number <tt>e->degree()</tt> to the boundary triangle
-         *   <tt>e->back().tetrahedron()->triangle( e->back().vertices()[2] )</tt>
+         *   number `e->degree()` to the boundary triangle
+         *   `emb.tetrahedron()->triangle(emb.vertices()[2])`,
+         *   where this time \a emb denotes `e->back()`.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on facet locks).  In particular, since this move pries open
+         * a _pair_ of adjacent triangles and not just a single triangle, a
+         * lock on either of the two requested triangles will prevent this move
+         * from taking place.
          *
          * If this triangulation is currently oriented, then this 0-2 move
          * will label the new tetrahedra in a way that preserves the
          * orientation.
+         *
+         * The implementation of this routine simply translates the given
+         * arguments to call the variant of zeroTwoMove() that takes a pair of
+         * edge embeddings (and other associated arguments).
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -1884,29 +2274,34 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run, it
-         * must by known in advance that the move is legal.
+         * must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given edge \a e is an edge of this triangulation.
          *
-         * @param e the common edge of the two triangles about which to
-         * perform the move.
-         * @param t0 the number assigned to one of two triangles about which
-         * to perform the move.
-         * @param t1 the number assigned to the other triangle about which
-         * to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
-         * \c true).
-         * @return If \a check is \c true, the function returns \c true if
-         * and only if the requested move may be performed without changing
-         * the topology of the manifold. If \a check is false, the function
-         * simply returns \c true.
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
-         * @author Alex He
+         * \param e the common edge of the two triangles about which to
+         * perform the move.
+         * \param t0 the number assigned to one of two triangles about which
+         * to perform the move.
+         * \param t1 the number assigned to the other triangle about which
+         * to perform the move.
+         * \param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * \param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * \return If \a check is \c true, the function returns \c true if
+         * and only if the requested move may be performed without changing
+         * the topology of the manifold or violating any locks. If \a check
+         * is false, the function simply returns \c true.
+         *
+         * \author Alex He
          */
-        bool zeroTwoMove(
-                Edge<3>* e, size_t t0, size_t t1,
-                bool check = true, bool perform = true );
+        bool zeroTwoMove(Edge<3>* e, size_t t0, size_t t1,
+            bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles \a t0 and \a t1.
@@ -1916,17 +2311,26 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * of performing a 2-0 move about the edge \a d. This can be done if
          * and only if the following conditions are satisfied:
          *
-         * - The edges <tt>t0->edge(e0)</tt> and <tt>t1->edge(e1)</tt> are
+         * - The edges `t0->edge(e0)` and `t1->edge(e1)` are
          *   the same edge \a e of this triangulation.
          *
          * - The edge \a e is valid.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on facet locks).  In particular, since this move pries open
+         * a _pair_ of adjacent triangles and not just a single triangle, a
+         * lock on either of the two given triangles will prevent this move
+         * from taking place.
          *
          * If this triangulation is currently oriented, then this 0-2 move
          * will label the new tetrahedra in a way that preserves the
          * orientation.
+         *
+         * The implementation of this routine simply translates the given
+         * arguments to call the variant of zeroTwoMove() that takes a pair of
+         * edge embeddings (and other associated arguments).
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -1934,30 +2338,35 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \a t0 and \a t1) can no longer be used.
          *
          * \pre If the move is being performed and no check is being run, it
-         * must by known in advance that the move is legal.
+         * must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given triangles \a t0 and \a t1 are triangles of this
          * triangulation.
          * \pre The numbers \a e0 and \a e1 are both 0, 1 or 2.
          *
-         * @param t0 one of the two triangles about which to perform the move.
-         * @param e0 the edge at which \a t0 meets the other triangle about
-         * which to perform the move.
-         * @param t1 the other triangle about which to perform the move.
-         * @param e1 the edge at which \a t1 meets \a t0.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
-         * \c true).
-         * @return If \a check is \c true, the function returns \c true if
-         * and only if the requested move may be performed without changing
-         * the topology of the manifold. If \a check is false, the function
-         * simply returns \c true.
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
-         * @author Alex He
+         * \param t0 one of the two triangles about which to perform the move.
+         * \param e0 the edge at which \a t0 meets the other triangle about
+         * which to perform the move.
+         * \param t1 the other triangle about which to perform the move.
+         * \param e1 the edge at which \a t1 meets \a t0.
+         * \param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * \param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * \return If \a check is \c true, the function returns \c true if
+         * and only if the requested move may be performed without changing
+         * the topology of the manifold or violating any locks. If \a check
+         * is false, the function simply returns \c true.
+         *
+         * \author Alex He
          */
-        bool zeroTwoMove(
-                Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
-                bool check = true, bool perform = true );
+        bool zeroTwoMove(Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
+            bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given triangle.
@@ -1979,7 +2388,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   triangulation) is valid.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -1989,19 +2400,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param t the triangle about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
+         *
+         * \param t the triangle about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool openBook(Triangle<3>* t, bool check = true, bool perform = true);
@@ -2027,7 +2443,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * from the conditions above.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -2037,19 +2455,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
+         *
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool closeBook(Edge<3>* e, bool check = true, bool perform = true);
@@ -2074,7 +2497,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   tetrahedron are not identified.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -2083,19 +2508,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * @param t the tetrahedron upon which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param t the tetrahedron upon which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool shellBoundary(Tetrahedron<3>* t,
@@ -2108,12 +2539,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * tetrahedra.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If you are trying to reduce the number of vertices without changing
          * the topology, and if \a e is an edge connecting an internal vertex
          * with some different vertex, then either collapseEdge() or pinchEdge()
-         * may be more appropriate for your situation.
+         * may be more appropriate for your situation (though you may find it
+         * easier just to call minimiseVertices() instead).
          *
          * - The advantage of collapseEdge() is that it decreases the
          *   number of tetrahedra, whereas pinchEdge() increases this
@@ -2136,44 +2570,41 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * involved, and are discussed in detail in the collapseEdge()
          * source code for those who are interested.
          *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge to collapse.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param e the edge to collapse.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the given edge may be collapsed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the given edge may be collapsed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool collapseEdge(Edge<3>* e, bool check = true, bool perform = true);
 
         /**
-         * Reorders the tetrahedra of this triangulation using a
-         * breadth-first search, so that small-numbered tetrahedra are
-         * adjacent to other small-numbered tetrahedra.
+         * Deprecated alias for reorderBFS(), which reorders the tetrahedra
+         * of this triangulation using a breadth-first search.
          *
-         * Specifically, the reordering will operate as follows.
-         * Tetrahedron 0 will remain tetrahedron 0.  Its immediate
-         * neighbours will be numbered 1, 2, 3 and 4 (though if these
-         * neighbours are not distinct then of course fewer labels will
-         * be required).  Their immediate neighbours will in turn be
-         * numbered 5, 6, and so on, ultimately following a breadth-first
-         * search throughout the entire triangulation.
+         * \deprecated This routine has been renamed reorderBFS() (and is now
+         * available for triangulations in all dimension).  See reorderBFS()
+         * for further details.
          *
-         * If the optional argument \a reverse is \c true, then tetrahedron
-         * numbers will be assigned in reverse order.  That is, tetrahedron 0
-         * will become tetrahedron \a n-1, its neighbours will become
-         * tetrahedra \a n-2 down to \a n-5, and so on.
-         *
-         * @param reverse \c true if the new tetrahedron numbers should
+         * \param reverse \c true if the new tetrahedron numbers should
          * be assigned in reverse order, as described above.
          */
-        void reorderTetrahedraBFS(bool reverse = false);
+        [[deprecated]] void reorderTetrahedraBFS(bool reverse = false);
 
         /**
          * Relabels tetrahedron vertices in this triangulation to give
@@ -2190,18 +2621,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * routine will return \c true.  Otherwise, this routine will
          * return \c false and the triangulation will not be changed.
          *
+         * If this triangulation has locks on any tetrahedra and/or their
+         * facets, these will not prevent the ordering from taking place.
+         * Instead, any locks will be transformed accordingly (i.e., the
+         * facets of each tetrahedron will exchange their lock states according
+         * to how the vertices of that tetrahedron have been relabelled).
+         *
          * \warning This routine may be slow, since it backtracks
          * through all possible edge orientations until a consistent one
          * has been found.
          *
-         * @param forceOriented \c true if the triangulation must be
-         * both ordered and \e oriented, in which case this routine will
+         * \param forceOriented \c true if the triangulation must be
+         * both ordered and _oriented_, in which case this routine will
          * return \c false if the triangulation cannot be oriented and
          * ordered at the same time.  See orient() for further details.
-         * @return \c true if the triangulation has been successfully ordered
+         * \return \c true if the triangulation has been successfully ordered
          * as described above, or \c false if not.
          *
-         * @author Matthias Goerner
+         * \author Matthias Goerner
          */
         bool order(bool forceOriented = false);
 
@@ -2232,7 +2669,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * For non-orientable triangulations, this routine is only guaranteed
          * to succeed if the original manifold contains no embedded two-sided
-         * projective planes.  If the manifold \e does contain embedded
+         * projective planes.  If the manifold _does_ contain embedded
          * two-sided projective planes, then this routine might still succeed
          * but it might fail; however, such a failure will always be detected,
          * and in such a case this routine will throw an exception (as
@@ -2274,11 +2711,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed and connected.
          *
-         * \exception UnsolvedCase the original manifold is non-orientable
+         * \exception UnsolvedCase The original manifold is non-orientable
          * and contains one or more embedded two-sided projective planes,
          * and this routine was not able to recover from this situation.
          *
-         * @return a list of triangulations of prime summands.
+         * \return a list of triangulations of prime summands.
          */
         std::vector<Triangulation<3>> summands() const;
 
@@ -2296,7 +2733,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
-         * @return \c true if and only if this is a 3-sphere triangulation.
+         * \return \c true if and only if this is a 3-sphere triangulation.
          */
         bool isSphere() const;
         /**
@@ -2316,11 +2753,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isSphere() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms a 3-sphere; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsSphere() const;
@@ -2338,7 +2775,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
-         * @return \c true if and only if this is a triangulation of a
+         * \return \c true if and only if this is a triangulation of a
          * 3-dimensional ball.
          */
         bool isBall() const;
@@ -2359,11 +2796,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isBall() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms a ball; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsBall() const;
@@ -2381,7 +2818,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
-         * @return \c true if and only if this is either a real (compact)
+         * \return \c true if and only if this is either a real (compact)
          * or ideal (non-compact) triangulation of the solid torus.
          */
         bool isSolidTorus() const;
@@ -2403,14 +2840,65 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isSolidTorus() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms a solid torus; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsSolidTorus() const;
+
+        /**
+         * Determines whether this is a triangulation of an orientable
+         * handlebody, and if so, which genus.  Specifically, this routine
+         * returns the genus if this is indeed a handlebody, and returns
+         * -1 otherwise. This routine can be used on a triangulation with
+         * real boundary triangles, or on an ideal triangulation (in which
+         * case all ideal vertices will be assumed to be truncated).
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and so might be very slow for larger triangulations
+         * (although faster tests are used where possible). The routine
+         * knowsHandlebody() can be called to see if this property is already
+         * known or if it happens to be very fast to calculate for this
+         * triangulation.
+         *
+         * \return the genus if this is a triangulation of an orientable
+         * handlebody, or -1 otherwise.
+         *
+         * \author Alex He
+         */
+        ssize_t recogniseHandlebody() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not this
+         * is a triangulation of an orientable handlebody? See
+         * recogniseHandlebody() for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * recogniseHandlebody() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no. If so, it will store \c false as the
+         * precalculated value for recogniseHandlebody() and this routine will
+         * return \c true.
+         *
+         * Otherwise a call to recogniseHandlebody() may potentially require
+         * more significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you _whether_ this
+         * triangulation forms an orientable handlebody; it merely tells you
+         * whether the answer has already been computed (or is very easily
+         * computed).
+         *
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate.
+         *
+         * \author Alex He
+         */
+        bool knowsHandlebody() const;
 
         /**
          * Determines whether or not the underlying 3-manifold is
@@ -2428,7 +2916,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning This algorithm ultimately relies on isSolidTorus(),
          * which might run slowly for large triangulations.
          *
-         * @return \c true if and only if this is a triangulation (either
+         * \return \c true if and only if this is a triangulation (either
          * real, ideal or a combination) of the product of the torus with an
          * interval.
          */
@@ -2450,12 +2938,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isTxI() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms the product of the torus with an interval;
          * it merely tells you whether the answer has already been computed
          * (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsTxI() const;
@@ -2476,7 +2964,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed, orientable and connected.
          *
-         * @return \c true if and only if the underlying 3-manifold is
+         * \return \c true if and only if the underlying 3-manifold is
          * irreducible.
          */
         bool isIrreducible() const;
@@ -2489,13 +2977,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isIrreducible() will be very fast (simply returning the
          * precalculated value).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold is irreducible; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
          * \pre This triangulation is valid, closed, orientable and connected.
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsIrreducible() const;
@@ -2505,7 +2993,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * 3-manifold.
          *
          * Let \a M be the underlying 3-manifold and let \a B be its
-         * boundary.  By a <i>compressing disc</i>, we mean a disc \a D
+         * boundary.  By a _compressing disc_, we mean a disc \a D
          * properly embedded in \a M, where the boundary of \a D
          * lies in \a B but does not bound a disc in \a B.
          *
@@ -2546,7 +3034,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * them.  See hasSimpleCompressingDisc() for a "heuristic shortcut"
          * that is faster but might not give a definitive answer.
          *
-         * @return \c true if the underlying 3-manifold contains a
+         * \return \c true if the underlying 3-manifold contains a
          * compressing disc, or \c false if it does not.
          */
         bool hasCompressingDisc() const;
@@ -2568,7 +3056,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to hasCompressingDisc() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold has a compressing disc; it merely tells
          * you whether the answer has already been computed (or is very
          * easily computed).
@@ -2576,7 +3064,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation is valid and is not ideal.
          * \pre The underlying 3-manifold is irreducible.
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsCompressingDisc() const;
@@ -2595,7 +3083,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \warning This routine could be very slow for larger triangulations.
          *
-         * @return \c true if and only if the underlying 3-manifold is
+         * \return \c true if and only if the underlying 3-manifold is
          * irreducible and Haken.
          */
         bool isHaken() const;
@@ -2607,13 +3095,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isHaken() will be very fast (simply returning the
          * precalculated value).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold is Haken; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
          * \pre This triangulation is valid, closed, orientable and connected.
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsHaken() const;
@@ -2623,7 +3111,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * triangulation.
          *
          * Let \a M be the underlying 3-manifold and let \a B be its
-         * boundary.  By a <i>compressing disc</i>, we mean a disc \a D
+         * boundary.  By a _compressing disc_, we mean a disc \a D
          * properly embedded in \a M, where the boundary of \a D
          * lies in \a B but does not bound a disc in \a B.
          *
@@ -2662,7 +3150,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid and is not ideal.
          *
-         * @return \c true if a simple compressing disc was found,
+         * \return \c true if a simple compressing disc was found,
          * or \c false if not.  Note that even with a return value of
          * \c false, there might still be a compressing disc (just not
          * one with a simple combinatorial structure).
@@ -2677,7 +3165,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * See TreeDecomposition for further details on tree
          * decompositions, and see TreeDecomposition::makeNice() for
-         * details on what it means to be a \e nice tree decomposition.
+         * details on what it means to be a _nice_ tree decomposition.
          *
          * This routine is fast: it will use a greedy algorithm to find a
          * tree decomposition with (hopefully) small width, but with
@@ -2689,7 +3177,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * been changed) then the same tree decomposition will be returned
          * immediately.
          *
-         * @return a nice tree decomposition of the face pairing graph
+         * \return a nice tree decomposition of the face pairing graph
          * of this triangulation.
          */
         const TreeDecomposition& niceTreeDecomposition() const;
@@ -2713,16 +3201,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This may lead to more tetrahedra than are necessary.
          *
          * \warning Currently, the presence of an invalid edge will force
-         * the triangulation to be subdivided regardless of the value of
-         * parameter \a forceDivision.  The final triangulation will
-         * still have the projective plane cusp caused by the invalid
-         * edge.
+         * the triangulation to be subdivided even if there are no ideal
+         * vertices.  The final triangulation will still have the
+         * projective plane cusp caused by the invalid edge.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks work
+         * and what their implications are.
          *
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
          *
-         * @return \c true if and only if the triangulation was changed.
-         * @author David Letscher
+         * \return \c true if and only if the triangulation was changed.
+         * \author David Letscher
          */
         bool idealToFinite();
 
@@ -2731,7 +3224,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the edge to a point with no further side-effects, and it increases
          * the number of tetrahedra by two.
          *
-         * This operation can be performed on \e any internal edge,
+         * This operation can be performed on _any_ internal edge,
          * without further constraints.  Two particularly useful settings are:
          *
          * - If the edge joins an internal vertex with some different vertex
@@ -2739,7 +3232,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   this move does not change the topology of the manifold at all,
          *   and it reduces the total number of vertices by one.  In
          *   this sense, it acts as an alternative to collapseEdge(),
-         *   and unlike collapseEdge() it can \e always be performed.
+         *   and unlike collapseEdge() it can _always_ be performed.
          *
          * - If the edge runs from an internal vertex back to itself,
          *   then this move effectively drills out the edge, leaving
@@ -2747,7 +3240,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * We do not allow \a e to lie entirely on the triangulation boundary,
          * because the implementation actually collapses an internal curve
-         * \e parallel to \a e, not the edge \a e itself (and so if \a e is a
+         * _parallel_ to \a e, not the edge \a e itself (and so if \a e is a
          * boundary edge then the topological effect would not be as intended).
          * We do allow \a e to be an internal edge with both endpoints on the
          * boundary, but note that in this case the resulting topological
@@ -2756,7 +3249,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If you are trying to reduce the number of vertices without changing
          * the topology, and if \a e is an edge connecting an internal vertex
          * with some different vertex, then either collapseEdge() or pinchEdge()
-         * may be more appropriate for your situation.
+         * may be more appropriate for your situation (though you may find it
+         * easier just to call minimiseVertices() instead).
          *
          * - The advantage of collapseEdge() is that it decreases the
          *   number of tetrahedra, whereas pinchEdge() increases this
@@ -2766,6 +3260,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   performed, and its validity tests are expensive; pinchEdge() on
          *   the other hand can always be used for edges \a e of the
          *   type described above.
+         *
+         * This operation works by prying open a triangle \a t and inserting a
+         * two-tetrahedron gadget \a g within the resulting triangular pillow.
+         * In particular, this means that simplex and/or facet locks will
+         * never prevent this operation from taking place: if the triangle \a t
+         * happens to be locked, then this lock will simply move across to one
+         * of the two triangles bounding the gadget \a g.
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -2778,30 +3279,30 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given edge is an internal edge of this triangulation
          * (that is, \a e does not lie entirely within the boundary).
          *
-         * @param e the edge to collapse.
+         * \exception InvalidArgument The given edge lies entirely within the
+         * boundary of the triangulation.
+         *
+         * \param e the edge to collapse.
          */
         void pinchEdge(Edge<3>* e);
 
         /**
-         * Punctures this manifold by removing a 3-ball from the interior of
-         * the given tetrahedron.  If no tetrahedron is specified (i.e.,
-         * the tetrahedron pointer is \c null), then the puncture will be
-         * taken from the interior of tetrahedron 0.
+         * Punctures this manifold by thickening the given triangle into a
+         * triangular pillow and then removing a 3-ball from its interior.
+         * If no triangle is specified (i.e., the triangle pointer is \c null),
+         * then the triangle used will be facet 0 of tetrahedron 0.
          *
-         * The puncture will not meet the boundary of the tetrahedron,
-         * so nothing will go wrong if the tetrahedron has boundary facets
-         * and/or ideal vertices.  A side-effect of this, however, is
-         * that the resulting triangulation will contain additional vertices,
-         * and will almost certainly be far from minimal.
-         * It is highly recommended that you run intelligentSimplify()
-         * if you do not need to preserve the combinatorial structure of
-         * the new triangulation.
+         * The puncture will not meet the boundary of the pillow, and so
+         * nothing will go wrong if the given triangle is boundary or has
+         * ideal vertices.  A side-effect of this, however, is that the
+         * resulting triangulation will contain additional vertices, and will
+         * almost certainly be far from minimal.  It is highly recommended
+         * that you run intelligentSimplify() if you do not need to preserve
+         * the combinatorial structure of the new triangulation.
          *
-         * The puncturing is done by subdividing the original tetrahedron.
-         * The new tetrahedra will have orientations consistent with the
-         * original tetrahedra, so if the triangulation was originally oriented
-         * then it will also be oriented after this routine has been called.
-         * See isOriented() for further details on oriented triangulations.
+         * If this triangulation was originally oriented, then it will also be
+         * oriented after this routine has been called.  See isOriented() for
+         * further details on oriented triangulations.
          *
          * The new sphere boundary will be formed from two triangles;
          * specifically, face 0 of the last and second-last tetrahedra
@@ -2809,14 +3310,49 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * that vertex 1 of each tetrahedron coincides, and vertices 2,3
          * of one map to vertices 3,2 of the other.
          *
+         * Tetrahedron and/or facet locks will not prevent the puncture
+         * from taking place.  If the given triangle was locked, then
+         * this lock will be moved to one of the two triangles surrounding
+         * the triangular pillow.  In particular, if the given triangle
+         * is boundary, then the lock will be moved to the corresponding
+         * boundary triangle.
+         *
+         * \pre This triangulation is non-empty, and if \c location is non-null
+         * then it is in fact a triangle belonging to this triangulation.
+         *
+         * \exception InvalidArgument The given triangle is non-null but
+         * not a triangle of this triangulation, or the given triangle
+         * is null but this triangulation is empty.
+         *
+         * \param location the triangle indicating where the puncture
+         * should be taken.  This may be \c null (the default), in which case
+         * facet 0 of tetrahedron 0 will be used.
+         */
+        void puncture(Triangle<3>* location = nullptr);
+
+        /**
+         * Deprecated routine that punctures this manifold by removing a
+         * 3-ball from the interior of the given tetrahedron.
+         *
+         * \deprecated Since the operation in fact involves prying open a
+         * triangle, puncture() now takes a triangle instead of a tetrahedron
+         * to indicate the location for the operation.  If \a tet is null,
+         * then this function is equivalent to calling `puncture()`; otherwise
+         * it is equivalent to calling `puncture(tet->triangle(0))`.  See
+         * puncture(Triangle<3>*) for further details.
+         *
          * \pre This triangulation is non-empty, and if \c tet is non-null
          * then it is in fact a tetrahedron of this triangulation.
          *
-         * @param tet the tetrahedron inside which the puncture will be
-         * taken.  This may be \c null (the default), in which case the
-         * first tetrahedron will be used.
+         * \exception InvalidArgument The given tetrahedron is non-null but
+         * not a tetrahedron of this triangulation, or the given tetrahedron
+         * is null but this triangulation is empty.
+         *
+         * \param tet the tetrahedron indicating where the puncture will be
+         * taken.  This may be \c null, in which case tetrahedron 0 will be
+         * used.
          */
-        void puncture(Tetrahedron<3>* tet = nullptr);
+        [[deprecated]] void puncture(Tetrahedron<3>* tet);
 
         /*@}*/
         /**
@@ -2836,8 +3372,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given edge is a boundary edge of this triangulation,
          * and the two boundary triangles on either side of it are distinct.
          *
-         * @param edge the boundary edge upon which to layer.
-         * @return the new tetrahedron provided by the layering.
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, either the given edge is non-boundary, or the same
+         * boundary triangles lie on both sides of it.
+         *
+         * \exception LockViolation At least one of the two boundary triangles
+         * on either side of the given edge is currently locked.  This
+         * exception will be thrown before any changes are made.  See
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param edge the boundary edge upon which to layer.
+         * \return the new tetrahedron provided by the layering.
          */
         Tetrahedron<3>* layerOn(Edge<3>* edge);
 
@@ -2856,7 +3402,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Otherwise the given boundary component will be filled with a
          * solid torus whose meridional curve cuts the edges
-         * <tt>bc->edge(0)</tt>, <tt>bc->edge(1)</tt> and <tt>bc->edge(2)</tt>
+         * `bc->edge(0)`, `bc->edge(1)` and `bc->edge(2)`
          * a total of \a cuts0, \a cuts1 and \a cuts2 times respectively.
          *
          * For the filling to be performed successfully, the integers
@@ -2872,20 +3418,20 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * each boundary edge but you do not know how these edges are
          * indexed in the boundary component.
          *
-         * @param cuts0 the number of times that the meridional curve of
-         * the new solid torus should cut the edge <tt>bc->edge(0)</tt>.
-         * @param cuts1 the number of times that the meridional curve of
-         * the new solid torus should cut the edge <tt>bc->edge(1)</tt>.
-         * @param cuts2 the number of times that the meridional curve of
-         * the new solid torus should cut the edge <tt>bc->edge(2)</tt>.
-         * @param bc the boundary component to fill.  If the triangulation
+         * \param cuts0 the number of times that the meridional curve of
+         * the new solid torus should cut the edge `bc->edge(0)`.
+         * \param cuts1 the number of times that the meridional curve of
+         * the new solid torus should cut the edge `bc->edge(1)`.
+         * \param cuts2 the number of times that the meridional curve of
+         * the new solid torus should cut the edge `bc->edge(2)`.
+         * \param bc the boundary component to fill.  If the triangulation
          * has precisely one boundary component then this may be \c null.
-         * @return \c true if the boundary component was filled successfully,
+         * \return \c true if the boundary component was filled successfully,
          * or \c false if one of the required conditions as described
          * above is not satisfied.
          */
-        bool fillTorus(unsigned long cuts0, unsigned long cuts1,
-            unsigned long cuts2, BoundaryComponent<3>* bc = nullptr);
+        bool fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
+            BoundaryComponent<3>* bc = nullptr);
 
         /**
          * Fills a two-triangle torus boundary component by attaching a
@@ -2913,23 +3459,23 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * filling curve cuts each boundary edge but you do not know how these
          * edges are indexed in the corresponding boundary component.
          *
-         * @param e0 one of the three edges of the boundary component to fill.
-         * @param e1 the second of the three edges of the boundary component
+         * \param e0 one of the three edges of the boundary component to fill.
+         * \param e1 the second of the three edges of the boundary component
          * to fill.
-         * @param e2 the second of the three edges of the boundary component
+         * \param e2 the second of the three edges of the boundary component
          * to fill.
-         * @param cuts0 the number of times that the meridional curve of
+         * \param cuts0 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a e0.
-         * @param cuts1 the number of times that the meridional curve of
+         * \param cuts1 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a e1.
-         * @param cuts2 the number of times that the meridional curve of
+         * \param cuts2 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a e2.
-         * @return \c true if the boundary component was filled successfully,
+         * \return \c true if the boundary component was filled successfully,
          * or \c false if one of the required conditions as described
          * above is not satisfied.
          */
         bool fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
-            unsigned long cuts0, unsigned long cuts1, unsigned long cuts2);
+            size_t cuts0, size_t cuts1, size_t cuts2);
 
         /**
          * Inserts a new layered solid torus into the triangulation.
@@ -2948,18 +3494,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
          *
-         * \pre 0 \<= \a cuts0 \<= \a cuts1;
+         * \pre 0 ≤ \a cuts0 ≤ \a cuts1;
          * \pre gcd(\a cuts0, \a cuts1) = 1.
          *
-         * @param cuts0 the smallest of the three desired intersection numbers.
-         * @param cuts1 the second smallest of the three desired intersection
-         * numbers.
-         * @return the tetrahedron containing the boundary torus.
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, either \a cuts0 > \a cuts1, and/or \a cuts0 and \a cuts1
+         * are not coprime.
          *
-         * @see LayeredSolidTorus
+         * \param cuts0 the smallest of the three desired intersection numbers.
+         * \param cuts1 the second smallest of the three desired intersection
+         * numbers.
+         * \return the tetrahedron containing the boundary torus.
+         *
+         * \see LayeredSolidTorus
          */
-        Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
-            unsigned long cuts1);
+        Tetrahedron<3>* insertLayeredSolidTorus(size_t cuts0, size_t cuts1);
         /**
          * Forms the connected sum of this triangulation with the given
          * triangulation.  This triangulation will be altered directly.
@@ -2982,9 +3531,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * contain internal vertices (even if the original triangulations
          * do not).
          *
+         * Tetrahedron and/or facet locks will not prevent the connected sum
+         * from taking place.  The operation essentially involves prying open
+         * two triangles (one from each triangulation) and joining them with a
+         * connector gadget; if some original triangle \a t is locked then the
+         * lock will be pushed across to one of two triangles that results
+         * when \a t is pried open.  In particular, if \a t is a boundary
+         * triangle then the lock will be kept on the boundary (as expected).
+         *
          * It is allowed to pass this triangulation as \a other.
          *
-         * @param other the triangulation to sum with this.
+         * \param other the triangulation to sum with this.
          */
         void connectedSumWith(const Triangulation& other);
 
@@ -2997,7 +3554,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Dehydrates this triangulation into an alphabetical string.
          *
-         * A <i>dehydration string</i> is a compact text representation
+         * A _dehydration string_ is a compact text representation
          * of a triangulation, introduced by Callahan, Hildebrand and Weeks
          * for their cusped hyperbolic census (see below).  The dehydration
          * string of an <i>n</i>-tetrahedron triangulation consists of
@@ -3017,18 +3574,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * The routine rehydrate() can be used to recover a
          * triangulation from a dehydration string.  Note that the
-         * triangulation recovered <b>might not be identical</b> to the
+         * triangulation recovered might not be identical to the
          * original, but it is guaranteed to be an isomorphic copy.
          *
          * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * format, see _A Census of Cusped Hyperbolic 3-Manifolds_,
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *
          * \exception NotImplemented Either this triangulation is disconnected,
          * it has boundary triangles, or it contains more than 25 tetrahedra.
          *
-         * @return a dehydrated representation of this triangulation
+         * \return a dehydrated representation of this triangulation
          * (or an isomorphic variant of this triangulation).
          */
         std::string dehydrate() const;
@@ -3057,7 +3614,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   (since Triangulation<3> is not a polymorphic class, and in
          *   particular this function is not virtual).
          *
-         * If you wish to export a triangulation to a SnapPea \e file, you
+         * If you wish to export a triangulation to a SnapPea _file_, you
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
@@ -3068,7 +3625,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either empty,
          * invalid, or has boundary triangles.
          *
-         * @return a string containing the contents of the corresponding
+         * \return a string containing the contents of the corresponding
          * SnapPea data file.
          */
         std::string snapPea() const;
@@ -3107,10 +3664,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either empty,
          * invalid, or has boundary triangles.
          *
-         * \ifacespython Not present, but you can call snapPea() with
-         * no arguments which returns this data as a string.
+         * \nopython Instead call snapPea() with no arguments, which returns
+         * this data as a string.
          *
-         * @param out the output stream to which the SnapPea data file
+         * \param out the output stream to which the SnapPea data file
          * will be written.
          */
         void snapPea(std::ostream& out) const;
@@ -3143,12 +3700,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * return \c false.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
-         * @param filename the name of the SnapPea file to which to write.
-         * @return \c true if and only if the file was successfully written.
+         * \param filename the name of the SnapPea file to which to write.
+         * \return \c true if and only if the file was successfully written.
          */
         bool saveSnapPea(const char* filename) const;
 
@@ -3163,7 +3720,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * @return a string containing the 3-manifold recogniser data.
+         * \return a string containing the 3-manifold recogniser data.
          */
         std::string recogniser() const;
 
@@ -3179,7 +3736,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * @return a string containing the 3-manifold recogniser data.
+         * \return a string containing the 3-manifold recogniser data.
          */
         std::string recognizer() const;
 
@@ -3194,10 +3751,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * \ifacespython Not present, but you can call recogniser() with
-         * no arguments which returns this data as a string.
+         * \nopython Instead call recogniser() with no arguments, which
+         * returns this data as a string.
          *
-         * @param out the output stream to which the recogniser data file
+         * \param out the output stream to which the recogniser data file
          * will be written.
          */
         void recogniser(std::ostream& out) const;
@@ -3214,10 +3771,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * \ifacespython Not present, but you can call recognizer() with
-         * no arguments which returns this data as a string.
+         * \nopython Instead call recognizer() with no arguments, which
+         * returns this data as a string.
          *
-         * @param out the output stream to which the recogniser data file
+         * \param out the output stream to which the recogniser data file
          * will be written.
          */
         void recognizer(std::ostream& out) const;
@@ -3232,12 +3789,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this routine will return \c false.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
-         * @param filename the name of the Recogniser file to which to write.
-         * @return \c true if and only if the file was successfully written.
+         * \param filename the name of the Recogniser file to which to write.
+         * \return \c true if and only if the file was successfully written.
          */
         bool saveRecogniser(const char* filename) const;
 
@@ -3249,12 +3806,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any boundary triangles.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
-         * @param filename the name of the Recogniser file to which to write.
-         * @return \c true if and only if the file was successfully written.
+         * \param filename the name of the Recogniser file to which to write.
+         * \return \c true if and only if the file was successfully written.
          */
         bool saveRecognizer(const char* filename) const;
 
@@ -3269,7 +3826,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * triangulation.
          *
          * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * format, see _A Census of Cusped Hyperbolic 3-Manifolds_,
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *
@@ -3279,12 +3836,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * to the original, but it is guaranteed to produce an isomorphic
          * copy.  See dehydrate() for the reasons behind this.
          *
-         * \exception InvalidArgument the given string could not be rehydrated.
+         * \exception InvalidArgument The given string could not be rehydrated.
          *
-         * @param dehydration a dehydrated representation of the
+         * \param dehydration a dehydrated representation of the
          * triangulation to construct.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
-         * @return the rehydrated triangulation.
+         * \return the rehydrated triangulation.
          */
         static Triangulation<3> rehydrate(const std::string& dehydration);
 
@@ -3300,7 +3857,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * instead (which uses the SnapPea kernel directly, and can therefore
          * store anything that SnapPea can).
          *
-         * If you wish to read a triangulation from a SnapPea \e file, you
+         * If you wish to read a triangulation from a SnapPea _file_, you
          * should likewise call the SnapPeaTriangulation constructor, giving
          * the filename as argument.  This will read all SnapPea-specific
          * information (as described above), and also avoids constructing an
@@ -3314,12 +3871,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
-         * \exception InvalidArgument the given SnapPea data was not in
+         * \exception InvalidArgument The given SnapPea data was not in
          * the correct format.
          *
-         * @param snapPeaData a string containing the full contents of a
+         * \param snapPeaData a string containing the full contents of a
          * SnapPea data file.
-         * @return a native Regina triangulation extracted from the given
+         * \return a native Regina triangulation extracted from the given
          * SnapPea data.
          */
         static Triangulation<3> fromSnapPea(const std::string& snapPeaData);
@@ -3334,6 +3891,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 
@@ -3350,11 +3911,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * adjacent face gluings should always match if the Tetrahedron<3>
          * gluing routines have been used correctly.
          *
-         * @author Matthias Goerner
+         * \author Matthias Goerner
          */
         void checkPermutations();
 
         void calculateSkeleton();
+        void cloneSkeleton(const Triangulation& src);
 
         /**
          * Internal to calculateSkeleton().  See the comments within
@@ -3425,10 +3987,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
  * regina::static_triangulation3_cast on such a packet is allowed and
  * will return the expected Triangulation<3> reference.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \param p a reference, presented as a packet.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup dim3
  */
@@ -3452,10 +4014,10 @@ Triangulation<3>& static_triangulation3_cast(Packet& p);
  * regina::static_triangulation3_cast on such a packet is allowed and
  * will return the expected Triangulation<3> reference.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \param p a reference, presented as a packet.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup dim3
  */
@@ -3507,6 +4069,28 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
 // that use them (this fixes DLL-related warnings in the windows port)
 
 inline Triangulation<3>::~Triangulation() {
+    // There is some difficulty over what to do with properties that
+    // hold normal surfaces and/or angle structures, since such properties
+    // will hold a snapshot reference to this triangulation.
+    //
+    // If these are the *only* snapshot references to the triangulation,
+    // then we should clear the properties now, so that takeSnapshot()
+    // does not trigger a deep copy of the triangulation which is then
+    // immediately destroyed.
+    //
+    // However, if there are *other* snapshot references to the triangulation,
+    // then clearing the properties now will mean they do not get cloned
+    // with the deep copy, losing the benefit of having cached them.
+    //
+    // For now, we take the following approach: currently the only cached
+    // properties of this type are polynomial-time to compute, and so we clear
+    // them now and let the deep copy recompute them again later if needed.
+
+    if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
+        strictAngleStructure_ = false;
+    if (std::holds_alternative<AngleStructure>(generalAngleStructure_))
+        generalAngleStructure_ = false;
+
     Snapshottable<Triangulation<3>>::takeSnapshot();
     clearAllProperties();
 }
@@ -3522,8 +4106,8 @@ namespace regina {
 
 // Inline functions for Triangulation<3>
 
-inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
-        Triangulation<3>(copy, true) {
+inline Triangulation<3>::Triangulation(const Triangulation& src) :
+        Triangulation<3>(src, true) {
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
@@ -3561,7 +4145,9 @@ inline Triangulation<3>& Triangulation<3>::operator = (
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
     // properties specific to dimension 3.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to clone computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     TriangulationBase<3>::operator = (src);
@@ -3588,7 +4174,9 @@ inline Triangulation<3>& Triangulation<3>::operator = (
 inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to move computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     // The parent class assignment goes last, since its move invalidates src.
@@ -3640,6 +4228,10 @@ inline bool Triangulation<3>::isClosed() const {
     return boundaryComponents().empty();
 }
 
+inline void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
+    reorderBFS(reverse);
+}
+
 inline bool Triangulation<3>::knowsZeroEfficient() const {
     return prop_.zeroEfficient_.has_value();
 }
@@ -3676,7 +4268,7 @@ inline const Triangulation<3>::TuraevViroSet&
 }
 
 template <typename Action, typename... Args>
-inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
+inline bool Triangulation<3>::retriangulate(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() != 1) {
         if (tracker)
@@ -3694,13 +4286,13 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
         return regina::detail::retriangulateInternal<Triangulation<3>, true>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](const std::string& sig, Triangulation<3>&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
         return regina::detail::retriangulateInternal<Triangulation<3>, false>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](Triangulation<3>&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
@@ -3709,6 +4301,17 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
 
 inline bool Triangulation<3>::minimizeBoundary() {
     return minimiseBoundary();
+}
+
+inline bool Triangulation<3>::minimizeVertices() {
+    return minimiseVertices();
+}
+
+inline void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
+    if (tet)
+        puncture(tet->triangle(0));
+    else
+        puncture(); // use the default location
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

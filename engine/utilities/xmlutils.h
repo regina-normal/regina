@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,13 +59,11 @@
 namespace regina::xml {
 
 /**
- * Returns the given string with special characters converted to XML
- * entities.  For instance, the string <tt>"a \< b"</tt> would be
- * converted to <tt>"a \&lt; b"</tt>.
+ * Returns the given string with special characters converted to XML entities.
+ * For instance, the string `"a < b"` would be converted to `"a &lt; b"`.
  *
- * @param original the string to convert; this string will not be
- * changed.
- * @return the converted string with special characters replaced by
+ * \param original the string to convert; this string will not be changed.
+ * \return the converted string with special characters replaced by
  * XML entities.
  *
  * \ingroup utilities
@@ -78,9 +76,9 @@ std::string xmlEncodeSpecialChars(const std::string& original);
  * entities, this routine will replace dashes with underscores to avoid
  * double-hyphens (which are illegal in XML comments).
  *
- * @param comment the string to convert; this string will not be
+ * \param comment the string to convert; this string will not be
  * changed.
- * @return the string converted to be usable inside an XML comment.
+ * \return the string converted to be usable inside an XML comment.
  *
  * \ingroup utilities
  */
@@ -88,20 +86,20 @@ std::string xmlEncodeComment(const std::string& comment);
 
 /**
  * Returns an XML tag with a single property containing the given value.
- * The tag will be of the form <tt>\<tagName value="..."/\></tt>.
+ * The tag will be of the form `<tagName value="..."/>`.
  *
  * The value itself will be written to the tag string using the standard
- * output stream operator \<\<.
+ * output stream operator `<<`.
  *
  * \pre The property value when written to an output stream does not
- * contain any special characters (such as <tt>\<</tt> or <tt>\&</tt>)
+ * contain any special characters (such as `<` or `&`)
  * that need to be encoded as XML entities.
  *
- * \ifacespython Not present.
+ * \nopython
  *
- * @param tagName the name of the XML tag to create.
- * @param value the value to assign to the <i>value</i> property of the tag.
- * @return the corresponding XML tag.
+ * \param tagName the name of the XML tag to create.
+ * \param value the value to assign to the \a value property of the tag.
+ * \return the corresponding XML tag.
  *
  * \ingroup utilities
  */
@@ -112,7 +110,7 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     return out.str();
 }
 
-#ifndef __DOXYGEN
+#ifndef __APIDOCS
     /**
      * Specialisations of xmlValueTag():
      */

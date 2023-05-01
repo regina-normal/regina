@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -373,8 +373,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &(lhs.structure(i).vector());
-                rhsRaw[i] = &(rhs.structure(i).vector());
+                lhsRaw[i] = &(lhs[i].vector());
+                rhsRaw[i] = &(rhs[i].vector());
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -659,7 +659,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         void copyMove() {
             testCopyMove(triGieseking, "Gieseking");
             testCopyMove(triFigure8, "Figure Eight");
-            testCopyMove(Example<3>::whiteheadLink(), "Whitehead");
+            testCopyMove(Example<3>::whitehead(), "Whitehead");
         }
 };
 

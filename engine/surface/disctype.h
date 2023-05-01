@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -60,7 +60,7 @@ namespace regina {
  * It is however assumed that \a type will always be non-negative for
  * "meaningful" disc types.
  *
- * This class can also store a \e null disc type; this is obtained by calling
+ * This class can also store a _null_ disc type; this is obtained by calling
  * the default constructor, and it will have a type of -1 and a tetrahedron
  * index of 0.  You can test for a null disc type by casting to \c bool.
  *
@@ -90,16 +90,16 @@ struct DiscType {
     /**
      * Creates a new disc type initialised with the given values.
      *
-     * @param newTetIndex the index within the triangulation of the
+     * \param newTetIndex the index within the triangulation of the
      * tetrahedron containing this disc type.
-     * @param newType the specific disc type within the given
+     * \param newType the specific disc type within the given
      * tetrahedron; see the class notes for the meaning of this field.
      */
     constexpr DiscType(size_t newTetIndex, int newType);
     /**
      * Creates a copy of the given disc type.
      *
-     * @param cloneMe the disc type to clone.
+     * \param cloneMe the disc type to clone.
      */
     constexpr DiscType(const DiscType& cloneMe) = default;
 
@@ -109,15 +109,15 @@ struct DiscType {
      * The implementation will assume that a non-null disc type
      * has non-negative \a type (as explained in the class notes).
      *
-     * @return \c true if and only if this is not a null disc type.
+     * \return \c true if and only if this is not a null disc type.
      */
     constexpr operator bool() const;
 
     /**
      * Sets this to a copy of the given disc type.
      *
-     * @param cloneMe the disc type to clone.
-     * @return a reference to this disc type.
+     * \param cloneMe the disc type to clone.
+     * \return a reference to this disc type.
      */
     DiscType& operator = (const DiscType& cloneMe) = default;
     /**
@@ -128,7 +128,7 @@ struct DiscType {
      * each other, and will not be equal to any "meaningful" disc type
      * (where \a type is non-negative).
      *
-     * @return \c true if this and the given disc type are identical, or
+     * \return \c true if this and the given disc type are identical, or
      * \c false if they are different.
      */
     constexpr bool operator == (const DiscType& compare) const;
@@ -138,7 +138,7 @@ struct DiscType {
      * This is the negation of the equality test; see operator == for
      * further details.
      *
-     * @return \c true if this and the given disc type are different, or
+     * \return \c true if this and the given disc type are different, or
      * \c false if they are identical.
      */
     constexpr bool operator != (const DiscType& compare) const;
@@ -147,7 +147,7 @@ struct DiscType {
      * \a tetrahedron and then by \a type.  The null disc type is considered
      * less than all "meaningful" disc types.
      *
-     * @return \c true if this disc type appears before the given disc type
+     * \return \c true if this disc type appears before the given disc type
      * in the ordering, or \c false if not.
      */
     constexpr bool operator < (const DiscType& compare) const;
@@ -155,11 +155,11 @@ struct DiscType {
 
 /**
  * Writes the given disc type to the given output stream.
- * The disc type will be written as a pair <tt>(tetIndex, type)</tt>.
+ * The disc type will be written as a pair `(tetIndex, type)`.
  *
- * @param out the output stream to which to write.
- * @param type the disc type to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param type the disc type to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup surfaces
  */

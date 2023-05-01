@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,7 @@
 #include "census/gluingpermsearcher4.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../docstrings/census/gluingpermsearcher4.h"
 
 using regina::FacetPairing;
 using regina::GluingPermSearcher;
@@ -43,23 +44,36 @@ using regina::GluingPermSearcher;
 void addGluingPermSearcher4(pybind11::module_& m) {
     using Action = const std::function<void(const regina::GluingPerms<4>&)>&;
 
-    auto c = pybind11::class_<GluingPermSearcher<4>>(m, "GluingPermSearcher4")
+    RDOC_SCOPE_BEGIN(GluingPermSearcher)
+
+    auto c = pybind11::class_<GluingPermSearcher<4>>(m, "GluingPermSearcher4",
+            rdoc_scope)
         .def(pybind11::init<FacetPairing<4>, FacetPairing<4>::IsoList,
-            bool, bool>())
-        .def("runSearch", &GluingPermSearcher<4>::runSearch<Action>)
-        .def("partialSearch", &GluingPermSearcher<4>::partialSearch<Action>)
-        .def("isComplete", &GluingPermSearcher<4>::isComplete)
-        .def("taggedData", &GluingPermSearcher<4>::taggedData)
-        .def("data", &GluingPermSearcher<4>::data)
+            bool, bool>(), rdoc::__init)
+        .def("runSearch", &GluingPermSearcher<4>::runSearch<Action>,
+            pybind11::arg("action"), rdoc::runSearch)
+        .def("partialSearch", &GluingPermSearcher<4>::partialSearch<Action>,
+            pybind11::arg("maxDepth"), pybind11::arg("action"),
+            rdoc::partialSearch)
+        .def("isComplete", &GluingPermSearcher<4>::isComplete, rdoc::isComplete)
+        .def("taggedData", &GluingPermSearcher<4>::taggedData, rdoc::taggedData)
+        .def("data", &GluingPermSearcher<4>::data, rdoc::data)
         .def_static("findAllPerms",
-            &GluingPermSearcher<4>::findAllPerms<Action>)
-        .def_static("bestSearcher", &GluingPermSearcher<4>::bestSearcher)
+            &GluingPermSearcher<4>::findAllPerms<Action>,
+            pybind11::arg("pairing"), pybind11::arg("autos"),
+            pybind11::arg("orientableOnly"), pybind11::arg("finiteOnly"),
+            pybind11::arg("action"),
+            rdoc::findAllPerms)
+        .def_static("bestSearcher", &GluingPermSearcher<4>::bestSearcher,
+            rdoc::bestSearcher)
         .def_static("fromTaggedData",
             pybind11::overload_cast<const std::string&>(
-                &GluingPermSearcher<4>::fromTaggedData))
+                &GluingPermSearcher<4>::fromTaggedData), rdoc::fromTaggedData)
         .def_readonly_static("dataTag", &GluingPermSearcher<4>::dataTag)
         ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

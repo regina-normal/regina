@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -57,9 +57,9 @@ class Qitmask1;
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T).
  *
- * @param out the output stream to which to write.
- * @param mask the qitmask to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param mask the qitmask to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -93,7 +93,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Python does not support templates, and so instead Regina's
+ * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
  * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
  * Qitmask256.  Each of these will be an optimised qitmask class that
@@ -123,7 +123,7 @@ class Qitmask1 {
         /**
          * Creates a clone of the given qitmask.
          *
-         * @param cloneMe the qitmask to clone.
+         * \param cloneMe the qitmask to clone.
          */
         inline Qitmask1(const Qitmask1<T>& cloneMe) = default;
 
@@ -137,17 +137,17 @@ class Qitmask1 {
         /**
          * Sets this qitmask to a copy of the given qitmask.
          *
-         * @param other the qitmask to clone.
-         * @return a reference to this qitmask.
+         * \param other the qitmask to clone.
+         * \return a reference to this qitmask.
          */
         Qitmask1<T>& operator = (const Qitmask1<T>& other) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.
          *
-         * @param index indicates which qit to query; this must be between
+         * \param index indicates which qit to query; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @return the value of the (\a index)th qit; this will be
+         * \return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
         inline uint8_t get(size_t index) const {
@@ -160,9 +160,9 @@ class Qitmask1 {
         /**
          * Sets the given qit of this qitmask to the given value.
          *
-         * @param index indicates which qit to set; this must be between
+         * \param index indicates which qit to set; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th
+         * \param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
         inline void set(size_t index, uint8_t value) {
@@ -177,7 +177,7 @@ class Qitmask1 {
         /**
          * Determines whether this qitmask contains all zeroes.
          *
-         * @return \c true if every qit is zero, or \c false otherwise.
+         * \return \c true if every qit is zero, or \c false otherwise.
          */
         inline bool empty() const {
             return ! (mask1 || mask2);
@@ -187,7 +187,7 @@ class Qitmask1 {
          * Determines whether this qitmask contains at least one
          * non-zero qit.
          *
-         * @return \c true if at least one qit is non-zero, or
+         * \return \c true if at least one qit is non-zero, or
          * \c false otherwise.
          */
         inline bool nonEmpty() const {
@@ -198,7 +198,7 @@ class Qitmask1 {
          * Determines whether this qitmask contains at least one qit
          * with value 3.
          *
-         * @return \c true if at least one qit is 3, or \c false otherwise.
+         * \return \c true if at least one qit is 3, or \c false otherwise.
          */
         inline bool has3() const {
             return (mask1 & mask2);
@@ -208,8 +208,8 @@ class Qitmask1 {
          * Sets this to the sum of this and the given qitmask.
          * Each pair of qits is added modulo 4 (so, for instance, 2 + 3 = 1).
          *
-         * @param rhs the qitmask to add to this.
-         * @return a reference to this qitmask.
+         * \param rhs the qitmask to add to this.
+         * \return a reference to this qitmask.
          */
         inline Qitmask1<T>& operator += (const Qitmask1<T>& rhs) {
             mask2 = mask2 ^ rhs.mask2 ^ (mask1 & rhs.mask1);
@@ -222,8 +222,8 @@ class Qitmask1 {
          * Each pair of qits is subtracted modulo 4 (so, for instance,
          * 1 - 3 = 2).
          *
-         * @param rhs the qitmask to subtract from this.
-         * @return a reference to this qitmask.
+         * \param rhs the qitmask to subtract from this.
+         * \return a reference to this qitmask.
          */
         inline Qitmask1<T>& operator -= (const Qitmask1<T>& rhs) {
             mask2 = mask2 ^ rhs.mask2 ^ (rhs.mask1 & ~ mask1);
@@ -234,8 +234,8 @@ class Qitmask1 {
         /**
          * Determines whether this and the given qitmask are identical.
          *
-         * @param other the qitmask to compare against this.
-         * @return \c true if and only if this and the given qitmask are
+         * \param other the qitmask to compare against this.
+         * \return \c true if and only if this and the given qitmask are
          * identical.
          */
         inline bool operator == (const Qitmask1<T>& other) const {
@@ -245,8 +245,8 @@ class Qitmask1 {
         /**
          * Determines whether this and the given qitmask are different.
          *
-         * @param other the qitmask to compare against this.
-         * @return \c true if and only if this and the given qitmask are
+         * \param other the qitmask to compare against this.
+         * \return \c true if and only if this and the given qitmask are
          * different.
          */
         inline bool operator != (const Qitmask1<T>& other) const {
@@ -256,24 +256,27 @@ class Qitmask1 {
         /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
-         * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
+         * index \a i for which `get(i)` and `other.get(i)`
          * are both non-zero.
          *
          * Note that these two qits do not need to be equal; they
          * just both need to be non-zero.  Note also that this only
-         * needs to happen at one index; there may be \e other indices at
+         * needs to happen at one index; there may be _other_ indices at
          * which the qit is zero in one qitmask but not the other.
          *
-         * @param other the qitmask to compare with this.
-         * @return \c true if there is some index at which this and \a other
+         * \param other the qitmask to compare with this.
+         * \return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */
         inline bool hasNonZeroMatch(const Qitmask1<T>& other) const {
             return ((mask1 | mask2) & (other.mask1 | other.mask2));
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T>(std::ostream& out,
         const Qitmask1<T>& mask);
+#endif
 };
 
 template <typename T, typename U>
@@ -286,9 +289,9 @@ class Qitmask2;
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
- * @param out the output stream to which to write.
- * @param mask the qitmask to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param mask the qitmask to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -324,7 +327,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Python does not support templates, and so instead Regina's
+ * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
  * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
  * Qitmask256.  Each of these will be an optimised qitmask class that
@@ -360,7 +363,7 @@ class Qitmask2 {
         /**
          * Creates a clone of the given qitmask.
          *
-         * @param cloneMe the qitmask to clone.
+         * \param cloneMe the qitmask to clone.
          */
         inline Qitmask2(const Qitmask2<T, U>& cloneMe) = default;
 
@@ -375,17 +378,17 @@ class Qitmask2 {
         /**
          * Sets this qitmask to a copy of the given qitmask.
          *
-         * @param other the qitmask to clone.
-         * @return a reference to this qitmask.
+         * \param other the qitmask to clone.
+         * \return a reference to this qitmask.
          */
         Qitmask2<T, U>& operator = (const Qitmask2<T, U>& other) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.
          *
-         * @param index indicates which qit to query; this must be between
+         * \param index indicates which qit to query; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @return the value of the (\a index)th qit; this will be
+         * \return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
         inline uint8_t get(size_t index) const {
@@ -401,9 +404,9 @@ class Qitmask2 {
         /**
          * Sets the given qit of this qitmask to the given value.
          *
-         * @param index indicates which qit to set; this must be between
+         * \param index indicates which qit to set; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th
+         * \param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
         inline void set(size_t index, uint8_t value) {
@@ -427,7 +430,7 @@ class Qitmask2 {
         /**
          * Determines whether this qitmask contains all zeroes.
          *
-         * @return \c true if every qit is zero, or \c false otherwise.
+         * \return \c true if every qit is zero, or \c false otherwise.
          */
         inline bool empty() const {
             return ! (low1 || high1 || low2 || high2);
@@ -437,7 +440,7 @@ class Qitmask2 {
          * Determines whether this qitmask contains at least one
          * non-zero qit.
          *
-         * @return \c true if at least one qit is non-zero, or
+         * \return \c true if at least one qit is non-zero, or
          * \c false otherwise.
          */
         inline bool nonEmpty() const {
@@ -448,7 +451,7 @@ class Qitmask2 {
          * Determines whether this qitmask contains at least one qit
          * with value 3.
          *
-         * @return \c true if at least one qit is 3, or \c false otherwise.
+         * \return \c true if at least one qit is 3, or \c false otherwise.
          */
         inline bool has3() const {
             return (low1 & low2) || (high1 & high2);
@@ -458,8 +461,8 @@ class Qitmask2 {
          * Sets this to the sum of this and the given qitmask.
          * Each pair of qits is added modulo 4 (so, for instance, 2 + 3 = 1).
          *
-         * @param rhs the qitmask to add to this.
-         * @return a reference to this qitmask.
+         * \param rhs the qitmask to add to this.
+         * \return a reference to this qitmask.
          */
         inline Qitmask2<T, U>& operator += (const Qitmask2<T, U>& rhs) {
             low2 = low2 ^ rhs.low2 ^ (low1 & rhs.low1);
@@ -474,8 +477,8 @@ class Qitmask2 {
          * Each pair of qits is subtracted modulo 4 (so, for instance,
          * 1 - 3 = 2).
          *
-         * @param rhs the qitmask to subtract from this.
-         * @return a reference to this qitmask.
+         * \param rhs the qitmask to subtract from this.
+         * \return a reference to this qitmask.
          */
         inline Qitmask2<T, U>& operator -= (const Qitmask2<T, U>& rhs) {
             low2 = low2 ^ rhs.low2 ^ (rhs.low1 & ~ low1);
@@ -488,8 +491,8 @@ class Qitmask2 {
         /**
          * Determines whether this and the given qitmask are identical.
          *
-         * @param other the qitmask to compare against this.
-         * @return \c true if and only if this and the given qitmask are
+         * \param other the qitmask to compare against this.
+         * \return \c true if and only if this and the given qitmask are
          * identical.
          */
         inline bool operator == (const Qitmask2<T, U>& other) const {
@@ -500,8 +503,8 @@ class Qitmask2 {
         /**
          * Determines whether this and the given qitmask are different.
          *
-         * @param other the qitmask to compare against this.
-         * @return \c true if and only if this and the given qitmask are
+         * \param other the qitmask to compare against this.
+         * \return \c true if and only if this and the given qitmask are
          * different.
          */
         inline bool operator != (const Qitmask2<T, U>& other) const {
@@ -512,16 +515,16 @@ class Qitmask2 {
         /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
-         * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
+         * index \a i for which `get(i)` and `other.get(i)`
          * are both non-zero.
          *
          * Note that these two qits do not need to be equal; they
          * just both need to be non-zero.  Note also that this only
-         * needs to happen at one index; there may be \e other indices at
+         * needs to happen at one index; there may be _other_ indices at
          * which the qit is zero in one qitmask but not the other.
          *
-         * @param other the qitmask to compare with this.
-         * @return \c true if there is some index at which this and \a other
+         * \param other the qitmask to compare with this.
+         * \return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */
         inline bool hasNonZeroMatch(const Qitmask2<T, U>& other) const {
@@ -529,8 +532,11 @@ class Qitmask2 {
                 ((high1 | high2) & (other.high1 | other.high2));
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T, U>(std::ostream& out,
         const Qitmask2<T, U>& mask);
+#endif
 };
 
 } // namespace regina

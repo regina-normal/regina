@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,30 +34,38 @@
 #include "subcomplex/layering.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layering.h"
 
 using regina::Layering;
 using regina::Perm;
 using regina::Tetrahedron;
 
 void addLayering(pybind11::module_& m) {
-    auto c = pybind11::class_<Layering>(m, "Layering")
+    RDOC_SCOPE_BEGIN(Layering)
+
+    auto c = pybind11::class_<Layering>(m, "Layering", rdoc_scope)
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
-            Tetrahedron<3>*, Perm<4>>())
-        .def(pybind11::init<const Layering&>())
-        .def("size", &Layering::size)
+            Tetrahedron<3>*, Perm<4>>(), rdoc::__init)
+        .def(pybind11::init<const Layering&>(), rdoc::__copy)
+        .def("size", &Layering::size, rdoc::size)
         .def("oldBoundaryTet", &Layering::oldBoundaryTet,
-            pybind11::return_value_policy::reference)
-        .def("oldBoundaryRoles", &Layering::oldBoundaryRoles)
+            pybind11::return_value_policy::reference, rdoc::oldBoundaryTet)
+        .def("oldBoundaryRoles", &Layering::oldBoundaryRoles,
+            rdoc::oldBoundaryRoles)
         .def("newBoundaryTet", &Layering::newBoundaryTet,
-            pybind11::return_value_policy::reference)
-        .def("newBoundaryRoles", &Layering::newBoundaryRoles)
+            pybind11::return_value_policy::reference, rdoc::newBoundaryTet)
+        .def("newBoundaryRoles", &Layering::newBoundaryRoles,
+            rdoc::newBoundaryRoles)
         .def("boundaryReln", &Layering::boundaryReln,
-            pybind11::return_value_policy::reference_internal)
-        .def("extendOne", &Layering::extendOne)
-        .def("extend", &Layering::extend)
-        .def("matchesTop", &Layering::matchesTop)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::boundaryReln)
+        .def("extendOne", &Layering::extendOne, rdoc::extendOne)
+        .def("extend", &Layering::extend, rdoc::extend)
+        .def("matchesTop", &Layering::matchesTop, rdoc::matchesTop)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 

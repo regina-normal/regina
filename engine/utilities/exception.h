@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,7 +52,7 @@ namespace regina {
  * A base class for all of the exceptions that are thrown by Regina's
  * native mathematical code.
  *
- * This does \e not include SnapPeaFatalError and SnapPeaMemoryFull,
+ * This does _not_ include SnapPeaFatalError and SnapPeaMemoryFull,
  * which represent critical errors thrown from within the SnapPea kernel;
  * it also does not include SnapshotWriteError, which is part of the generic
  * (non-mathematical) snapshotting machinery.
@@ -69,7 +69,7 @@ class ReginaException : public std::runtime_error {
          *
          * This constructor may throw std::bad_alloc.
          *
-         * @param msg a human-readable description of the error.
+         * \param msg a human-readable description of the error.
          */
         ReginaException(const std::string& msg) : std::runtime_error(msg) {
         }
@@ -79,7 +79,7 @@ class ReginaException : public std::runtime_error {
          *
          * This constructor may throw std::bad_alloc.
          *
-         * @param msg a human-readable description of the error.
+         * \param msg a human-readable description of the error.
          */
         ReginaException(const char* msg) : std::runtime_error(msg) {
         }
@@ -92,7 +92,7 @@ class ReginaException : public std::runtime_error {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         ReginaException& operator = (const ReginaException&) noexcept = default;
 };
@@ -216,7 +216,7 @@ class NoSolution : public ReginaException {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         NoSolution& operator = (const NoSolution&) noexcept = default;
 };
@@ -236,6 +236,24 @@ class UnsolvedCase : public ReginaException {
         UnsolvedCase(const char* msg) : ReginaException(msg) {}
         UnsolvedCase(const UnsolvedCase&) noexcept = default;
         UnsolvedCase& operator = (const UnsolvedCase&) noexcept = default;
+};
+
+/**
+ * An exception thrown when an attempt is made to violate a simplex or facet
+ * lock.  See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+ * details on simplex/facet locks and what restrictions they impose.
+ *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup utilities
+ */
+class LockViolation : public ReginaException {
+    public:
+        LockViolation(const std::string& msg) : ReginaException(msg) {}
+        LockViolation(const char* msg) : ReginaException(msg) {}
+        LockViolation(const LockViolation&) noexcept = default;
+        LockViolation& operator = (const LockViolation&) noexcept = default;
 };
 
 /**
@@ -286,7 +304,7 @@ class SnapPeaIsNull : public ReginaException {
          * Creates a new exception, and marks it as having occurred
          * within the given Regina function.
          *
-         * @param fromFunction the name of the Regina function that the user
+         * \param fromFunction the name of the Regina function that the user
          * called (in particular, this is not the name of the SnapPea kernel
          * function that would have been called as a result).  An example
          * might be "SnapPeaTriangulation::homologyFilled".
@@ -301,7 +319,7 @@ class SnapPeaIsNull : public ReginaException {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         SnapPeaIsNull& operator = (const SnapPeaIsNull&) noexcept = default;
 };

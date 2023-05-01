@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,7 +55,7 @@ using regina::StrandRef;
 
 // Isomorphism signatures for various knot/link complements that regina's
 // simplification heuristics are found to reduce to in practice.
-#define TREFOIL_SIGS { "cPcbbbadh", "cPcbbbadu", "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "eLAkbbcddainqv" }
+#define TREFOIL_SIGS { "cPcbbbadh", "cPcbbbadu", "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "dLQabccbrwn", "eLAkbbcddainqv", "eLAkbcbddducqn", "eLAkbcbdddmcxj" }
 #define FIG8_SIGS { "cPcbbbiht" }
 
 class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
@@ -971,8 +971,7 @@ class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
 
         void testComplementFree(const Link& l, unsigned nGen,
                 const char* name) {
-            const regina::GroupPresentation fg =
-                l.complement().fundamentalGroup();
+            const regina::GroupPresentation fg = l.complement().group();
             if (fg.countGenerators() != nGen || fg.countRelations() != 0) {
                 std::ostringstream msg;
                 msg << name << " complement: fundamental group is "
@@ -987,8 +986,7 @@ class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
             std::ostringstream expected;
             expected << nGen << " Z";
 
-            const regina::GroupPresentation fg =
-                l.complement().fundamentalGroup();
+            const regina::GroupPresentation fg = l.complement().group();
             if (fg.recogniseGroup() != expected.str()) {
                 std::ostringstream msg;
                 msg << name << " complement: fundamental group is "
@@ -3030,8 +3028,7 @@ class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
 
         void verifyGroup(const Link& link, const char* name) {
             regina::GroupPresentation fromLink = link.group();
-            regina::GroupPresentation fromComp =
-                link.complement().fundamentalGroup();
+            regina::GroupPresentation fromComp = link.complement().group();
 
             if (! lookIsomorphic(fromLink, fromComp)) {
                 std::ostringstream msg;

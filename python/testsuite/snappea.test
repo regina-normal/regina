@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2019-2021, Ben Burton
+# Copyright (c) 2019-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests involving SnapPea triangulations.
@@ -54,11 +54,11 @@ w = Watcher()
 t = SnapPeaTriangulation(Example3.whiteheadLink())
 
 print(t.homologyFilled())
-t.fill(3, 4, 0)
+dummy = t.fill(3, 4, 0)
 print(t.homologyFilled())
 t.unfill()
 print(t.homologyFilled())
-t.pachner(t.triangle(0))
+dummy = t.pachner(t.triangle(0))
 print(t.isNull())
 
 print()
@@ -68,11 +68,11 @@ print()
 t = PacketOfSnapPeaTriangulation(Example3.whiteheadLink())
 
 print(t.homologyFilled())
-t.fill(3, 4, 0)
+dummy = t.fill(3, 4, 0)
 print(t.homologyFilled())
 t.unfill()
 print(t.homologyFilled())
-t.pachner(t.triangle(0))
+dummy = t.pachner(t.triangle(0))
 print(t.isNull())
 
 print()
@@ -80,14 +80,14 @@ print()
 # With a packet and a listener:
 
 t = PacketOfSnapPeaTriangulation(Example3.whiteheadLink())
-t.listen(w)
+dummy = t.listen(w)
 
 print(t.homologyFilled())
-t.fill(3, 4, 0)
+dummy = t.fill(3, 4, 0)
 print(t.homologyFilled())
 t.unfill()
 print(t.homologyFilled())
-t.pachner(t.triangle(0))
+dummy = t.pachner(t.triangle(0))
 # The watcher should have given incorrect output at this point, since
 # packetToBeChanged is currently called too late (after the Regina
 # changes but before the SnapPea triangulation is nullified).
@@ -101,7 +101,7 @@ print()
 # inherited ones from Triangulation3.
 
 t = SnapPeaTriangulation(ExampleLink.whitehead())
-t.fill(-3,7)
+dummy = t.fill(-3,7)
 print(t.str())
 print()
 print(t.detail())

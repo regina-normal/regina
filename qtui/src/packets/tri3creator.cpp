@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,7 @@
 #include "examplecreator.h"
 #include "tri3creator.h"
 #include "reginasupport.h"
+#include "reginaprefset.h"
 
 #include <numeric> // for std::gcd()
 #include <QCheckBox>
@@ -67,6 +68,7 @@ namespace {
         TRI_LAYERED_LENS_SPACE,
         TRI_SFS_SPHERE,
         TRI_LAYERED_SOLID_TORUS,
+        TRI_HANDLEBODY,
         TRI_ISOSIG,
         TRI_DEHYDRATION,
         TRI_SPLITTING_SURFACE,
@@ -95,7 +97,7 @@ namespace {
         ExampleCreator<3>(QObject::tr("Twisted product S² ×~ S¹"), &regina::Example<3>::twistedSphereBundle),
         ExampleCreator<3>(QObject::tr("Weeks manifold"), &regina::Example<3>::weeks),
         ExampleCreator<3>(QObject::tr("Weber-Seifert dodecahedral space"), &regina::Example<3>::weberSeifert),
-        ExampleCreator<3>(QObject::tr("Whitehead link complement"), &regina::Example<3>::whiteheadLink),
+        ExampleCreator<3>(QObject::tr("Whitehead link complement"), &regina::Example<3>::whitehead),
     };
 
     /**
@@ -218,6 +220,24 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     hLayout->addWidget(lstParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_SOLID_TORUS);
 
+    type->addItem(QObject::tr("Orientable handlebody"));
+    hArea = new QWidget();
+    hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(hLayout);
+    expln = QObject::tr("<qt>The genus of the new orientable handlebody.  "
+        "This must be a non-negative integer.</qt>");
+    label = new QLabel(QObject::tr("Genus:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    handlebodyGenus = new QLineEdit();
+    auto* val = new QIntValidator(hArea);
+    val->setBottom(0);
+    handlebodyGenus->setValidator(val);
+    handlebodyGenus->setWhatsThis(expln);
+    hLayout->addWidget(handlebodyGenus, 1);
+    details->addWidget(hArea);//, TRI_HANDLEBODY);
+
     type->addItem(QObject::tr("From isomorphism signature"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
@@ -304,8 +324,16 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     details->addWidget(hArea);//, TRI_EXAMPLE);
 
     // Tidy up.
-    type->setCurrentIndex(0);
-    details->setCurrentIndex((int)0);
+    {
+        int typeId = ReginaPrefSet::global().triDim3CreationType;
+        if (typeId >= 0 && typeId < type->count()) {
+            type->setCurrentIndex(typeId);
+            details->setCurrentIndex(typeId);
+        } else {
+            type->setCurrentIndex(0);
+            details->setCurrentIndex((int)0);
+        }
+    }
 
     QObject::connect(type, SIGNAL(activated(int)), details,
         SLOT(setCurrentIndex(int)));
@@ -318,6 +346,9 @@ QWidget* Tri3Creator::getInterface() {
 std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
+    // Remember our selection for next time.
+    ReginaPrefSet::global().triDim3CreationType = typeId;
+
     if (typeId == TRI_EMPTY) {
         auto ans = regina::make_packet<Triangulation<3>>();
         ans->setLabel("3-D triangulation");
@@ -406,6 +437,19 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
         return regina::make_packet(Example<3>::lst(param[0], param[1]),
             s.str());
+    } else if (typeId == TRI_HANDLEBODY) {
+        if (handlebodyGenus->text().isEmpty()) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("Please enter a genus for the handlebody.  "
+                "This should be a non-negative integer."));
+            return nullptr;
+        }
+        unsigned long genus = handlebodyGenus->text().toULong();
+
+        std::ostringstream s;
+        s << "Handlebody of genus " << genus;
+
+        return regina::make_packet(Example<3>::handlebody(genus), s.str());
     } else if (typeId == TRI_SFS_SPHERE) {
         if (! reSFSAllParams.match(sfsParams->text()).hasMatch()) {
             ReginaSupport::sorry(parentWidget,

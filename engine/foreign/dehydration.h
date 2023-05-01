@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -77,19 +77,19 @@ class Container;
  * whitespace and are numbered beginning at 0.
  *
  * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
+ * \ref i18n "character encoding" used in the given file _name_, and
  * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
+ * It assumes however that the _contents_ of the file are in UTF-8.
  *
- * @param filename the name of the text file from which to read.
- * @param colDehydrations the column of the text file containing the
+ * \param filename the name of the text file from which to read.
+ * \param colDehydrations the column of the text file containing the
  * dehydration strings.
- * @param colLabels the column of the text file containing the
+ * \param colLabels the column of the text file containing the
  * triangulation packet labels.  If this is negative then the dehydration
  * strings themselves will be used as packet labels.
- * @param ignoreLines the number of lines at the beginning of the text
+ * \param ignoreLines the number of lines at the beginning of the text
  * file that should be ignored completely.
- * @return a new container as described above, or \c null if an I/O error
+ * \return a new container as described above, or \c null if an I/O error
  * occurred whilst reading the given file.
  *
  * \ingroup foreign

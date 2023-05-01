@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,10 +84,10 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * \pre The given matrix is square and symmetric.
          *
-         * \exception InvalidArgument the given matrix is not both symmetric
+         * \exception InvalidArgument The given matrix is not both symmetric
          * and square.
          *
-         * @param form a symmetric square integer matrix that describes
+         * \param form a symmetric square integer matrix that describes
          * this bilinear form.
          */
         IntersectionForm(MatrixInt form);
@@ -108,7 +108,7 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Sets this to be a clone of the given intersection form.
          *
-         * @return a reference to this intersection form.
+         * \return a reference to this intersection form.
          */
         IntersectionForm& operator = (const IntersectionForm&) = default;
 
@@ -118,14 +118,14 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * The intersection form that was passed will no longer be usable.
          *
-         * @return a reference to this intersection form.
+         * \return a reference to this intersection form.
          */
         IntersectionForm& operator = (IntersectionForm&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given intersection form.
          *
-         * @param other the intersection form whose contents should be swapped
+         * \param other the intersection form whose contents should be swapped
          * with this.
          */
         void swap(IntersectionForm& other) noexcept;
@@ -137,7 +137,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * This will be an exact copy of the matrix that was passed to
          * the class constructor.
          *
-         * @return a matrix describing this bilinear form.
+         * \return a matrix describing this bilinear form.
          */
         const MatrixInt& matrix() const;
 
@@ -145,7 +145,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Returns the rank of this bilinear form.  This is the rank of
          * the underlying symmetric square matrix.
          *
-         * @return the rank of this bilinear form.
+         * \return the rank of this bilinear form.
          */
         size_t rank() const;
 
@@ -154,17 +154,16 @@ class IntersectionForm : public Output<IntersectionForm> {
          * number of positive eigenvalues minus the number of negative
          * eigenvalues of the underlying symmetric square matrix.
          *
-         * @return the signature of this bilinear form.
+         * \return the signature of this bilinear form.
          */
         long signature() const;
 
         /**
          * Returns \c true if and only if this bilinear form is of even type.
          *
-         * A form \a Q is \e even if and only if <tt>Q(x,x)</tt> is even
-         * for all \a x.
+         * A form \a Q is _even_ if and only if `Q(x,x)` is even for all \a x.
          *
-         * @return \c true if this bilinear form is of even type, or \c false
+         * \return \c true if this bilinear form is of even type, or \c false
          * if it is of odd type.
          */
         bool even() const;
@@ -172,10 +171,9 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Returns \c true if and only if this bilinear form is of odd type.
          *
-         * A form \a Q is \e odd if and only if <tt>Q(x,x)</tt> is odd
-         * for some \a x.
+         * A form \a Q is _odd_ if and only if `Q(x,x)` is odd for some \a x.
          *
-         * @return \c true if this bilinear form is of odd type, or \c false
+         * \return \c true if this bilinear form is of odd type, or \c false
          * if it is of even type.
          */
         bool odd() const;
@@ -184,13 +182,13 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Determines if this and the given bilinear form are represented by
          * the same symmetric square integer matrices.
          *
-         * This does \e not test whether this and the given form are
+         * This does _not_ test whether this and the given form are
          * congruent (i.e., related by a change basis in the underlying
          * free abelian group).  Instead it is equivalent to testing
-         * whether <tt>matrix() == other.matrix()</tt>.
+         * whether `matrix() == other.matrix()`.
          *
-         * @param other the bilinear form to compare with this.
-         * @return \c true if and only if this and the given bilinear form
+         * \param other the bilinear form to compare with this.
+         * \return \c true if and only if this and the given bilinear form
          * are represented by identical matrices.
          */
         bool operator == (const IntersectionForm& other) const;
@@ -199,13 +197,13 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Determines if this and the given bilinear form are not represented
          * by the same symmetric square integer matrices.
          *
-         * This does \e not test whether this and the given form are
+         * This does _not_ test whether this and the given form are
          * congruent (i.e., related by a change basis in the underlying
          * free abelian group).  Instead it is equivalent to testing
-         * whether <tt>matrix() != other.matrix()</tt>.
+         * whether `matrix() != other.matrix()`.
          *
-         * @param other the bilinear form to compare with this.
-         * @return \c true if and only if this and the given bilinear form
+         * \param other the bilinear form to compare with this.
+         * \return \c true if and only if this and the given bilinear form
          * are not represented by identical matrices.
          */
         bool operator != (const IntersectionForm& other) const;
@@ -214,9 +212,9 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to write to.
+         * \param out the output stream to write to.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -224,9 +222,9 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to write to.
+         * \param out the output stream to write to.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -237,9 +235,9 @@ class IntersectionForm : public Output<IntersectionForm> {
  * This global routine simply calls IntersectionForm::swap(); it is provided
  * so that IntersectionForm meets the C++ Swappable requirements.
  *
- * @param lhs the intersection form whose contents should be swapped with
+ * \param lhs the intersection form whose contents should be swapped with
  * \a rhs.
- * @param rhs the intersection form whose contents should be swapped with
+ * \param rhs the intersection form whose contents should be swapped with
  * \a lhs.
  *
  * \ingroup algebra

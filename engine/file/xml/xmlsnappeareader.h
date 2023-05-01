@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,7 @@ namespace regina {
 /**
  * An XML packet reader that reads a single SnapPea triangulation.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLSnapPeaReader : public XMLPacketReader {
     private:
@@ -73,7 +73,7 @@ class XMLSnapPeaReader : public XMLPacketReader {
  * An XML packet reader that reads a single SnapPea triangulation using the
  * older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacySnapPeaReader : public XMLPacketReader {
     private:

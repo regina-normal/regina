@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,8 +45,9 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QHeaderView>
-#include <QMessageBox>
 #include <QLabel>
+#include <QMessageBox>
+#include <QMenu>
 #include <QProgressDialog>
 #include <QRegularExpression>
 #include <QTextDocument>
@@ -106,9 +107,7 @@ QVariant GluingsModel2::data(const QModelIndex& index, int role) const {
         // Edge gluing?
         int edge = 3 - index.column();
         if (edge >= 0)
-            return destString(edge,
-                t->adjacentSimplex(edge),
-                t->adjacentGluing(edge));
+            return destString(t, edge);
         return QVariant();
     } else if (role == Qt::EditRole) {
         // Triangle name?
@@ -118,9 +117,25 @@ QVariant GluingsModel2::data(const QModelIndex& index, int role) const {
         // Edge gluing?
         int edge = 3 - index.column();
         if (edge >= 0)
-            return destString(edge,
-                t->adjacentSimplex(edge),
-                t->adjacentGluing(edge));
+            return destString(t, edge);
+        return QVariant();
+    } else if (role == Qt::BackgroundRole) {
+        if (index.column() == 0) {
+            if (t->isLocked())
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        } else {
+            if (t->isFacetLocked(3 - index.column()))
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        }
+        return QVariant();
+    } else if (role == Qt::ForegroundRole) {
+        if (index.column() == 0) {
+            if (t->isLocked())
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        } else {
+            if (t->isFacetLocked(3 - index.column()))
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        }
         return QVariant();
     } else
         return QVariant();
@@ -142,8 +157,13 @@ QVariant GluingsModel2::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags GluingsModel2::flags(const QModelIndex& /* unused index*/) const {
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+Qt::ItemFlags GluingsModel2::flags(const QModelIndex& index) const {
+    // Do not allow locked facets to be edited.
+    if (index.column() == 0 ||
+            ! tri_->simplex(index.row())->isFacetLocked(3 - index.column()))
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
@@ -210,8 +230,15 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
             newAdjPerm == t->adjacentGluing(edge))
         return false;
 
+    // There is a change.  Will it violate a lock?
+    if (t->isFacetLocked(edge)) {
+        showError(tr("This edge is currently locked. "
+            "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+
     // Yes!  Go ahead and make the change.
-    regina::Triangulation<2>::ChangeEventSpan span(*tri_);
+    regina::Triangulation<2>::ChangeEventGroup span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(edge))
@@ -269,12 +296,13 @@ void GluingsModel2::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString GluingsModel2::destString(int srcEdge, regina::Triangle<2>* destTri,
-        const regina::Perm<3>& gluing) {
+QString GluingsModel2::destString(regina::Simplex<2>* srcTri, int srcEdge) {
+    regina::Simplex<2>* destTri = srcTri->adjacentSimplex(srcEdge);
     if (! destTri)
         return "";
     else
-        return QString::number(destTri->markedIndex()) + " (" + (gluing *
+        return QString::number(destTri->markedIndex()) + " (" +
+            (srcTri->adjacentGluing(srcEdge) *
             regina::Edge<2>::ordering(srcEdge)).trunc2().c_str() + ')';
 }
 
@@ -329,6 +357,10 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     //edgeTable->setColumnStretchable(1, true);
     //edgeTable->setColumnStretchable(2, true);
     //edgeTable->setColumnStretchable(3, true);
+
+    edgeTable->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(edgeTable, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(lockMenu(const QPoint&)));
 
     ui = edgeTable;
 
@@ -499,6 +531,19 @@ void Tri2GluingsUI::removeSelectedTris() {
             last = row;
     }
 
+    // Look for any potential lock violations.
+    for (i = first; i <= last; ++i)
+        if (tri->simplex(i)->lockMask()) {
+            ReginaSupport::sorry(ui,
+                tr("The selection includes locks."),
+                tr("The selection includes one or more locked "
+                "triangles and/or edges, and so I cannot remove "
+                "the selected triangles.\n\n"
+                "You can unlock triangles and edges by right-clicking "
+                "within the corresponding table cells."));
+            return;
+        }
+
     // Notify the user that triangles will be removed.
     QMessageBox msgBox(ui);
     msgBox.setWindowTitle(tr("Question"));
@@ -521,10 +566,74 @@ void Tri2GluingsUI::removeSelectedTris() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
+        regina::Packet::ChangeEventGroup span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
+}
+
+void Tri2GluingsUI::lockMenu(const QPoint& pos) {
+    QModelIndex index = edgeTable->indexAt(pos);
+    if ((! index.isValid()) ||
+            static_cast<size_t>(index.row()) >= tri->size()) {
+        lockSimplex = -1;
+        return;
+    }
+
+    lockSimplex = index.row();
+    auto s = tri->simplex(lockSimplex);
+
+    QMenu m(tr("Context menu"), ui);
+    QAction lock(this);
+    if (index.column() == 0) {
+        lockFacet = -1;
+        lockAdd = ! s->isLocked();
+
+        if (lockAdd)
+            lock.setText(tr("Lock triangle %1").arg(index.row()));
+        else
+            lock.setText(tr("Unlock triangle %1").arg(index.row()));
+    } else {
+        lockFacet = 3 - index.column();
+        auto f = s->edge(lockFacet);
+        lockAdd = ! f->isLocked();
+
+        QString action = lockAdd ? tr("Lock") : tr("Unlock");
+        QString edgeDesc;
+        switch (lockFacet) {
+            case 2: edgeDesc = tr("01"); break;
+            case 1: edgeDesc = tr("02"); break;
+            case 0: edgeDesc = tr("12"); break;
+        }
+
+        if (f->isBoundary())
+            lock.setText(tr("%1 boundary edge %2 (%3)")
+                .arg(action).arg(index.row()).arg(edgeDesc));
+        else
+            lock.setText(tr("%1 edge %2 (%3) = %4")
+                .arg(action).arg(index.row()).arg(edgeDesc)
+                .arg(GluingsModel2::destString(s, lockFacet)));
+    }
+    connect(&lock, SIGNAL(triggered()), this, SLOT(changeLock()));
+    m.addAction(&lock);
+    m.exec(edgeTable->viewport()->mapToGlobal(pos));
+}
+
+void Tri2GluingsUI::changeLock() {
+    if (lockSimplex < 0 || lockSimplex >= tri->size())
+        return;
+    if (lockFacet < 0) {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lock();
+        else
+            tri->simplex(lockSimplex)->unlock();
+    } else {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lockFacet(lockFacet);
+        else
+            tri->simplex(lockSimplex)->unlockFacet(lockFacet);
+    }
+    lockSimplex = -1;
 }
 
 void Tri2GluingsUI::orient() {
@@ -560,7 +669,13 @@ void Tri2GluingsUI::reflect() {
 void Tri2GluingsUI::barycentricSubdivide() {
     endEdit();
 
-    tri->barycentricSubdivision();
+    if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "triangles or edges, and so cannot be subdivided."));
+    else
+        tri->subdivide();
 }
 
 void Tri2GluingsUI::doubleCover() {
@@ -586,7 +701,7 @@ void Tri2GluingsUI::splitIntoComponents() {
         std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
             base = std::make_shared<regina::Container>();
-            tri->insertChildLast(base);
+            tri->append(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
             base = tri->shared_from_this();
@@ -596,8 +711,7 @@ void Tri2GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::make_packet(std::move(c),
-                label.str()));
+            base->append(regina::make_packet(std::move(c), label.str()));
         }
 
         // Make sure the new components are visible.

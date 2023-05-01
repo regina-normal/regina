@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -89,7 +89,7 @@ class CoversTest : public CppUnit::TestFixture {
         template <int degree>
         std::vector<std::string> viaRegina(const Triangulation<3>& tri) {
             std::vector<std::string> covers;
-            tri.fundamentalGroup().enumerateCovers<degree>([&](
+            tri.group().enumerateCovers<degree>([&](
                     GroupPresentation&& g) {
                 AbelianGroup ab = g.abelianisation();
                 covers.push_back(ab.str());
@@ -167,19 +167,19 @@ class CoversTest : public CppUnit::TestFixture {
 
         void trivial() {
             // No covers:
-            compareResults<7>(regina::Example<3>::sphere(), "Sphere");
+            compareResults<11>(regina::Example<3>::sphere(), "Sphere");
         }
 
         void manifolds() {
-            // No covers until we hit degree 5 and beyond:
-            compareResults<7>(regina::Example<3>::poincare(),
+            // No covers for degrees 2..4 or 7..9:
+            compareResults<9>(regina::Example<3>::poincare(),
                 "Poincare homology sphere");
 
             // Cover (which is trivial) only for degree 3:
-            compareResults<7>(regina::Example<3>::lens(3, 1), "L(3,1)");
+            compareResults<10>(regina::Example<3>::lens(3, 1), "L(3,1)");
 
-            // Several covers for degree 5 and a few for degree 7:
-            compareResults<7>(regina::Example<3>::weeks(), "Weeks");
+            // Several covers for degree 5 and a few for degrees ≥ 7:
+            compareResults<9>(regina::Example<3>::weeks(), "Weeks");
 
             // Many, many covers for degree 5 (and a bit too slow to put
             // degree 6 in the test suite: takes half a second on my machine):
@@ -208,7 +208,7 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         void knots() {
-            compareResults<7>(regina::ExampleLink::trefoilRight(), "Trefoil");
+            compareResults<9>(regina::ExampleLink::trefoilRight(), "Trefoil");
 
             // Each of the following invariants have been verified with SnapPea
             // and/or GAP.  However, SnapPea is slow to compute them for large
@@ -377,7 +377,7 @@ class CoversTest : public CppUnit::TestFixture {
             if (ans != expectedCount) {
                 std::ostringstream msg;
                 msg << "Free abelian(" << rank << ") yielded " << ans
-                    << "subgroups for index " << index
+                    << " subgroups for index " << index
                     << " instead of the expected "
                     << expectedCount << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -399,6 +399,12 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyFreeAbelian<6>(rank);
             for (int rank = 1; rank <= 4; ++rank)
                 verifyFreeAbelian<7>(rank);
+            for (int rank = 1; rank <= 3; ++rank)
+                verifyFreeAbelian<8>(rank);
+            for (int rank = 1; rank <= 2; ++rank)
+                verifyFreeAbelian<9>(rank);
+            for (int rank = 1; rank <= 2; ++rank)
+                verifyFreeAbelian<10>(rank);
         }
 
         template <int index>
@@ -430,7 +436,7 @@ class CoversTest : public CppUnit::TestFixture {
             // which is indexed as expected[index - 2][rank - 1].
             // An array value of 0 means the result is beyond the end of
             // our hard-coded list of results for that particular index.
-            static constexpr size_t maxIndex = 7;
+            static constexpr size_t maxIndex = 8;
             static constexpr size_t maxRank = 9;
             static constexpr size_t expected[maxIndex - 1][maxRank] = {
                 { 1, 3, 7, 15, 31, 63, 127, 255, 511 },
@@ -438,7 +444,8 @@ class CoversTest : public CppUnit::TestFixture {
                 { 1, 26, 604, 14120, 334576, 7987616, 191318464, 0, 0 },
                 { 1, 97, 13753, 1712845, 207009649, 0, 0, 0, 0 },
                 { 1, 624, 504243, 371515454, 0, 0, 0, 0, 0 },
-                { 1, 4163, 24824785, 0, 0, 0, 0, 0, 0 }
+                { 1, 4163, 24824785, 0, 0, 0, 0, 0, 0 },
+                { 1, 34470, 0, 0, 0, 0, 0, 0, 0 }
             };
 
             if (index < 2 || index > maxIndex) {
@@ -494,7 +501,7 @@ class CoversTest : public CppUnit::TestFixture {
             if (ans != expectedCount) {
                 std::ostringstream msg;
                 msg << "Free(" << rank << ") yielded " << ans
-                    << "subgroups for index " << index
+                    << " subgroups for index " << index
                     << " instead of the expected "
                     << expectedCount << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -516,6 +523,8 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyFree<6>(rank);
             for (int rank = 0; rank <= 2; ++rank)
                 verifyFree<7>(rank);
+            for (int rank = 0; rank <= 1; ++rank)
+                verifyFree<8>(rank);
         }
 
         template <int index>
@@ -568,7 +577,7 @@ class CoversTest : public CppUnit::TestFixture {
                 if (ans != 1) {
                     std::ostringstream msg;
                     msg << "Z_" << order << " yielded " << ans
-                        << "subgroups for index " << index
+                        << " subgroups for index " << index
                         << " instead of the expected 1.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -595,6 +604,14 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyCyclic<6>(order);
             for (int order = 1; order <= 15; ++order)
                 verifyCyclic<7>(order);
+            for (int order = 1; order <= 15; ++order)
+                verifyCyclic<8>(order);
+            for (int order = 1; order <= 15; ++order)
+                verifyCyclic<9>(order);
+            for (int order = 1; order <= 15; ++order)
+                verifyCyclic<10>(order);
+            for (int order = 1; order <= 15; ++order)
+                verifyCyclic<11>(order);
         }
 };
 

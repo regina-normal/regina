@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,14 +55,14 @@ namespace regina::i18n {
 /**
  * Identifies the longest prefix of the given string that is valid UTF-8.
  *
- * The substring from <tt>s.begin()</tt> to the iterator that is
+ * The substring from `s.begin()` to the iterator that is
  * returned is guaranteed to be valid UTF-8.  If the entire string is
- * valid UTF-8, then this routine will return <tt>s.end()</tt>.
+ * valid UTF-8, then this routine will return `s.end()`.
  *
- * \ifacespython This routine returns the \e length of the longest valid
+ * \python This routine returns the _length_ of the longest valid
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
- * @return an iterator marking the end of the longest valid UTF-8 prefix.
+ * \return an iterator marking the end of the longest valid UTF-8 prefix.
  *
  * \ingroup utilities
  */
@@ -75,10 +75,10 @@ std::string::const_iterator utf8ValidTo(const std::string& s);
  * is guaranteed to be valid UTF-8.  If the entire string is valid UTF-8,
  * then this routine will return a pointer to the null terminator of \a s.
  *
- * \ifacespython This routine returns the \e length of the longest valid
+ * \python This routine returns the _length_ of the longest valid
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
- * @return a pointer marking the end of the longest valid UTF-8 prefix.
+ * \return a pointer marking the end of the longest valid UTF-8 prefix.
  *
  * \ingroup utilities
  */
@@ -104,7 +104,7 @@ class Locale {
          * Returns the character encoding used in the current locale.
          * This is a plain string, such as "UTF-8" or "ISO-8859-1".
          *
-         * @return the character encoding for the current locale.
+         * \return the character encoding for the current locale.
          */
         static const char* codeset();
 
@@ -123,12 +123,11 @@ class Locale {
  * machine, though in this case it will simply pass data through without
  * performing any translations.
  *
- * \ifacespython Not included.
+ * \nopython
  *
- * @author Parts of this code are modified from the cxxtools library
- * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
- * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
- * General Public License.
+ * \author Parts of this code are modified from the cxxtools library
+ * (http://www.tntnet.org/cxxutils.html), which is copyright (c) 2003 by
+ * Tommi Maekitalo, and covered by the GNU Lesser General Public License.
  *
  * \ingroup utilities
  */
@@ -177,23 +176,23 @@ class IConvStreamBuffer : public std::streambuf {
          *
          * See the \e iconv documentation for information on what
          * encodings are supported.  For the GNU C library implementation,
-         * valid encodings can be found by running <tt>iconv --list</tt>.
+         * valid encodings can be found by running `iconv --list`.
          *
          * \pre The destination output stream is already open.
          *
-         * @param dest the destination output stream.
-         * @param srcCode the character encoding for data that is to be
+         * \param dest the destination output stream.
+         * \param srcCode the character encoding for data that is to be
          * written into this stream buffer.
-         * @param destCode the character encoding for the translated data
+         * \param destCode the character encoding for the translated data
          * that will subsequently be written to the destination output stream.
-         * @return this stream buffer on success, or \c null on error.
+         * \return this stream buffer on success, or \c null on error.
          */
         IConvStreamBuffer* open(std::ostream& dest,
             const char* srcCode, const char* destCode);
         /**
          * Closes this stream buffer.
          *
-         * @return this stream buffer on success, or \c null on error.
+         * \return this stream buffer on success, or \c null on error.
          */
         IConvStreamBuffer* close() noexcept;
 
@@ -207,22 +206,22 @@ class IConvStreamBuffer : public std::streambuf {
          * this incomplete character will be held back (since it presumably
          * needs to be combined with later input).
          *
-         * @param c an extra character to send that did not fit in the
+         * \param c an extra character to send that did not fit in the
          * internal buffer, or EOF if we simply wish to flush the buffer.
-         * @return 0 on success, or EOF on error.
+         * \return 0 on success, or EOF on error.
          */
         int_type overflow(int_type c) override;
         /**
          * Simply returns EOF (since this is not an input stream).
          *
-         * @return EOF.
+         * \return EOF.
          */
         int_type underflow() override;
         /**
          * Flushes all output buffers.  The buffers for both this stream
          * and the destination output stream will be flushed.
          *
-         * @return 0 on success, or -1 on error.
+         * \return 0 on success, or -1 on error.
          */
         int sync() override;
 
@@ -251,12 +250,11 @@ class IConvStreamBuffer : public std::streambuf {
  * machine, though in this case it will simply pass data straight through
  * to the destination output stream without any conversion.
  *
- * \ifacespython Not present.
+ * \nopython
  *
- * @author Parts of this code are modified from the cxxtools library
- * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
- * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
- * General Public License.
+ * \author Parts of this code are modified from the cxxtools library
+ * (http://www.tntnet.org/cxxutils.html), which is copyright (c) 2003 by
+ * Tommi Maekitalo, and covered by the GNU Lesser General Public License.
  *
  * \ingroup utilities
  */
@@ -275,14 +273,14 @@ class IConvStream : public std::ostream {
          *
          * See the \e iconv documentation for information on what
          * encodings are supported.  For the GNU C library implementation,
-         * valid encodings can be found by running <tt>iconv --list</tt>.
+         * valid encodings can be found by running `iconv --list`.
          *
          * \pre The destination output stream is already open.
          *
-         * @param dest the destination output stream.
-         * @param srcCode the character encoding for data that is to be
+         * \param dest the destination output stream.
+         * \param srcCode the character encoding for data that is to be
          * written into this IConvStream.
-         * @param destCode the character encoding for the translated data
+         * \param destCode the character encoding for the translated data
          * that will subsequently be written to the destination output stream.
          */
         IConvStream(std::ostream& dest,

@@ -27,6 +27,10 @@
     <command>censuslookup</command>
     <arg rep="repeat" choice="req"><replaceable>isosig</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>censuslookup</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -55,6 +59,13 @@
    <para>
     All database matches (if any) will be written to standard output.
    </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    &versionhelpdesc;
+   </variablelist>
   </refsect1>
 
   <refsect1>
@@ -166,6 +177,10 @@
     <arg><option>-g, --graph</option></arg>
     <arg><option>-r, --real</option></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>dgt</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -267,6 +282,7 @@
       </para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
@@ -384,6 +400,10 @@
     <arg><option>-o</option> <replaceable>output-file</replaceable></arg>
     <arg rep="repeat" choice="req"><replaceable>input-file</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regconcat</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -414,6 +434,7 @@
       </para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
@@ -482,6 +503,10 @@
     </group>
     <arg choice="req"><replaceable>old-file</replaceable></arg>
     <arg><replaceable>new-file</replaceable></arg>
+   </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regconvert</command>
+    &versionhelpopts;
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -568,6 +593,7 @@
       <para>Write the output as uncompressed (plain text) &xml;.</para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
@@ -636,6 +662,10 @@
     <arg choice="req"><replaceable>file</replaceable></arg>
     <arg rep="repeat"><replaceable>packet-label</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regfiledump</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -688,6 +718,7 @@
        file.</para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
@@ -750,6 +781,10 @@
     <command>regfiletype</command>
     <arg choice="req" rep="repeat"><replaceable>file</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regfiletype</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -770,6 +805,13 @@
     If you still need to recognise and/or read files in this ancient binary
     format, you will need to download &regina;&nbsp;4.93.
    </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    &versionhelpdesc;
+   </variablelist>
   </refsect1>
 
   <refsect1>
@@ -841,7 +883,7 @@
    </cmdsynopsis>
    <cmdsynopsis>
     <command>retriangulate</command>
-    <arg choice="req"><option>--help</option></arg>
+    &versionhelpopts;
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -1098,6 +1140,7 @@
       </para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
@@ -1208,6 +1251,10 @@
     <command>sigcensus</command>
     <arg choice="req"><replaceable>order</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>sigcensus</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1250,6 +1297,13 @@
     For more information on splitting surface signatures, see
     Burton's PhD thesis at &regmanburtonthesisurl;.
    </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    &versionhelpdesc;
+   </variablelist>
   </refsect1>
 
   <refsect1>
@@ -1349,7 +1403,7 @@
    </cmdsynopsis>
    <cmdsynopsis>
     <command>tricensus</command>
-    <arg choice="req"><option>--help</option></arg>
+    &versionhelpopts;
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -1935,6 +1989,7 @@
       </para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
@@ -2086,6 +2141,10 @@
     <arg choice="req"><replaceable>file1</replaceable></arg>
     <arg choice="req"><replaceable>file2</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>trisetcmp</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2167,6 +2226,7 @@
       </para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 

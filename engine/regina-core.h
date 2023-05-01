@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,8 @@
 #define __REGINA_CORE_H
 #endif
 
+#include "regina-config.h" // for REGINA_HIGHDIM
+
 namespace regina {
 
 /**
@@ -47,8 +49,8 @@ namespace regina {
  * Standard dimensions offer significantly richer functionality for
  * triangulations than generic dimensions.
  *
- * @param dim the dimension in question.
- * @return \c true if and only if \a dim is one of Regina's standard dimensions.
+ * \param dim the dimension in question.
+ * \return \c true if and only if \a dim is one of Regina's standard dimensions.
  *
  * \ingroup engine
  */
@@ -57,12 +59,30 @@ constexpr bool standardDim(int dim) {
 }
 
 /**
+ * Indicates that largest dimension of triangulation that Regina can work with.
+ *
+ * If Regina was built with the \c REGINA_HIGHDIM option, then this will be 15;
+ * otherwise it will be 8 (the default for ordinary builds).
+ *
+ * \return Regina's maximum dimension of triangulation.
+ *
+ * \ingroup engine
+ */
+constexpr int maxDim() {
+#ifdef REGINA_HIGHDIM
+    return 15;
+#else
+    return 8;
+#endif
+}
+
+/**
  * Represents various classes of algorithms that Regina can use for
  * computations.  A function that takes an Algorithm argument need not
  * support all types of algorithm - if an unsupported algorithm is
  * passed then Regina will fall back to ALG_DEFAULT.
  *
- * This enumeration type does \e not allow constants to be combined using
+ * This enumeration type does _not_ allow constants to be combined using
  * the OR operator.
  *
  * For some computations where the user can exert more fine-grained control

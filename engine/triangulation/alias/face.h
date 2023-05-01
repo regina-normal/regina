@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -69,7 +69,7 @@ namespace regina::alias {
  * where reasonable.
  *
  * This is inherited by the class \a Derived, which must provide a
- * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ * routine of the form `Simplex<dim>* simplex() const`.
  *
  * The name of the alias is determined by the dimension \a dim, and
  * the alias is only provided for those dimensions \a dim that are
@@ -85,7 +85,7 @@ class SimplexVoid {
  * Helper class that provides a dimension-specific alias for simplex().
  *
  * This is inherited by the class \a Derived, which must provide a
- * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ * routine of the form `Simplex<dim>* simplex() const`.
  *
  * \ingroup alias
  */
@@ -106,7 +106,7 @@ class SimplexVoid<Derived, 2> {
  * Helper class that provides a dimension-specific alias for simplex().
  *
  * This is inherited by the class \a Derived, which must provide a
- * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ * routine of the form `Simplex<dim>* simplex() const`.
  *
  * \ingroup alias
  */
@@ -127,7 +127,7 @@ class SimplexVoid<Derived, 3> {
  * Helper class that provides a dimension-specific alias for simplex().
  *
  * This is inherited by the class \a Derived, which must provide a
- * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ * routine of the form `Simplex<dim>* simplex() const`.
  *
  * \ingroup alias
  */

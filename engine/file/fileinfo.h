@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -104,7 +104,7 @@ class FileInfo : public Output<FileInfo> {
          * might not be UTF-8, since it needs to be understood by the
          * low-level C/C++ file I/O routines.
          *
-         * @return the pathname.
+         * \return the pathname.
          */
         const std::string& pathname() const;
         /**
@@ -113,7 +113,7 @@ class FileInfo : public Output<FileInfo> {
          * In particular, this encodes which generation of XML the file
          * uses, but does not encode whether the XML is compressed.
          *
-         * @return the file format.
+         * \return the file format.
          */
         FileFormat format() const;
         /**
@@ -123,26 +123,26 @@ class FileInfo : public Output<FileInfo> {
          * Like format(), this indicates which generation of XML the file
          * uses, but not whether the XML is compressed.
          *
-         * @return a description of the file format.
+         * \return a description of the file format.
          */
         std::string formatDescription() const;
         /**
          * Returns the version of the calculation engine that wrote this file.
          *
-         * @return the engine version for this file.
+         * \return the engine version for this file.
          */
         const std::string& engine() const;
         /**
          * Returns whether this file is stored in compressed format.
          * Currently this option only applies to XML data files.
          *
-         * @return \c true if this file is compressed or \c false otherwise.
+         * \return \c true if this file is compressed or \c false otherwise.
          */
         bool isCompressed() const;
         /**
          * Returns whether the file metadata could not be read.
          *
-         * @return \c true if the metadata could not be read, \c false
+         * \return \c true if the metadata could not be read, \c false
          * otherwise.
          */
         bool isInvalid() const;
@@ -156,13 +156,13 @@ class FileInfo : public Output<FileInfo> {
          *
          * The object that was passed will no longer be usable.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         FileInfo& operator = (FileInfo&&) noexcept = default;
         /**
          * Swaps the contents of this and the given file information.
          *
-         * @param other the object whose contents should be swapped with this.
+         * \param other the object whose contents should be swapped with this.
          */
         void swap(FileInfo& other) noexcept;
 
@@ -178,8 +178,8 @@ class FileInfo : public Output<FileInfo> {
          * It is safe to compare FileInfo objects even if one or both is
          * invalid.  Two invalid FileInfo objects will compare as equal.
          *
-         * @param other the file information to compare with this.
-         * @return \c true if and only if this and the given file information
+         * \param other the file information to compare with this.
+         * \return \c true if and only if this and the given file information
          * describe the same format and version, as described above.
          */
         bool operator == (const FileInfo& other) const;
@@ -196,8 +196,8 @@ class FileInfo : public Output<FileInfo> {
          * It is safe to compare FileInfo objects even if one or both is
          * invalid.  Two invalid FileInfo objects will compare as equal.
          *
-         * @param other the file information to compare with this.
-         * @return \c true if and only if this and the given file information
+         * \param other the file information to compare with this.
+         * \return \c true if and only if this and the given file information
          * do not describe the same format and version, as described above.
          */
         bool operator != (const FileInfo& other) const;
@@ -206,14 +206,14 @@ class FileInfo : public Output<FileInfo> {
          * Return information about the given Regina data file.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given path \e name,
+         * \ref i18n "character encoding" used in the given path _name_,
          * and simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  If a FileInfo structure is returned, its pathname()
          * routine will use the same encoding that is passed here.
          *
-         * @param idPathname the pathname of the data file to be examined.
-         * @return a FileInfo structure containing information about the
-         * given file, or no value if the file type could not be identified.
+         * \param idPathname the pathname of the data file to be examined.
+         * \return a FileInfo structure containing information about the
+         * given file, or \nullopt if the file type could not be identified.
          */
         static std::optional<FileInfo> identify(std::string idPathname);
 
@@ -221,18 +221,18 @@ class FileInfo : public Output<FileInfo> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -249,8 +249,8 @@ class FileInfo : public Output<FileInfo> {
  * This global routine simply calls FileInfo::swap(); it is provided
  * so that FileInfo meets the C++ Swappable requirements.
  *
- * @param a the object whose contents should be swapped with \a b.
- * @param b the object whose contents should be swapped with \a a.
+ * \param a the object whose contents should be swapped with \a b.
+ * \param b the object whose contents should be swapped with \a a.
  *
  * \ingroup file
  */

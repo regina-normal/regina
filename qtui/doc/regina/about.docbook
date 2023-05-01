@@ -64,7 +64,7 @@
   <title>Important Changes in &regina;&nbsp;7.0</title>
 
   <para>
-   &regina;&nbsp;7.0 brings an enormous overhaul across the entire
+   &regina;&nbsp;7.0 brought an enormous overhaul across the entire
    codebase&mdash;possibly the largest overhaul in almost two decades.
    There has been signficant work to insulate users from these changes:
    the bulk of these changes should only be visible to &cpp; programmers, but
@@ -88,8 +88,8 @@
    <title>A new, more flexible file format</title>
 
    <para>
-    &regina;'s data file format has changed.  &regina;&nbsp;7.0 can read
-    your old data files, but &regina;&nbsp;6.0.1 and earlier will not be
+    &regina;'s data file format has changed.  &regina;&nbsp;7.0 and above can
+    read your old data files, but &regina;&nbsp;6.0.1 and earlier will not be
     able to read files from newer versions of &regina;.
    </para>
    <para>
@@ -127,7 +127,7 @@
     for &python; users.
    </para>
    <para>
-    For this reason, &regina;&nbsp;7.0 now only includes dimensions
+    For this reason, &regina;&nbsp;7.0 and above now only includes dimensions
     2&ndash;8 by default.  In particular, if you open a data file
     containing triangulations of dimension 9&ndash;15 and then save the
     file again, <emphasis>these triangulations will be lost</emphasis>.
@@ -249,7 +249,7 @@ True
     performance of the old pointer-based code.
    </para>
    <para>
-    In &regina;&nbsp;7.0, the &cpp; &api; has undergone a complete overhaul
+    In &regina;&nbsp;7.0, the &cpp; &api; underwent a complete overhaul
     from head to toe.  The &api; now uses the &cpp17; standard.
     Widespread changes include:
     <itemizedlist>
@@ -314,7 +314,7 @@ True
     </itemizedlist>
    </para>
    <para>
-    Since &regina;&nbsp;7.0 is a &ldquo;big release&rdquo; that breaks backward
+    Since &regina;&nbsp;7.0 was a &ldquo;big release&rdquo; that broke backward
     compatibility, this was a good time to clean up and simplify many other
     unwieldy parts of the &api;.  These changes range from simple renamings
     (e.g., <literal>StandardTriangulation::isStandardTriangulation</literal>
@@ -430,7 +430,7 @@ True
    Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
    <emphasis>Regina: Software for low-dimensional topology,</emphasis>
    <literal>http://regina-normal.github.io/</literal>,
-   1999&ndash;2021.
+   1999&ndash;2023.
   </para></blockquote>
   <para>
    A &bibtex; entry for this reference is included below.
@@ -441,7 +441,7 @@ True
     title = {Regina: Software for low-dimensional topology},
     howpublished = {{\tt http://\allowbreak regina-normal.\allowbreak
         github.\allowbreak io/}},
-    year = {1999--2021}
+    year = {1999--2023}
 }
 </programlisting>
  </sect1>

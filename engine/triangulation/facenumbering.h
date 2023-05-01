@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,13 +50,13 @@ namespace regina {
  *
  * Regina uses the following general scheme for numbering faces:
  *
- * - For low-dimensional faces (\a subdim &lt; \a dim / 2), faces are
+ * - For low-dimensional faces (\a subdim \< \a dim / 2), faces are
  *   numbered in lexicographical order according to their vertices.
  *   For example, in a 3-dimensional triangulation, edges 0,...,5 contain
  *   vertices 01, 02, 03, 12, 13, 23 respectively.
  *
- * - For high-dimensional faces (\a subdim &ge; \a dim / 2), faces are
- *   numbered in \e reverse lexicographical order according to their vertices.
+ * - For high-dimensional faces (\a subdim ≥ \a dim / 2), faces are
+ *   numbered in _reverse_ lexicographical order according to their vertices.
  *   For example, in a 3-dimensional triangulation, triangles 0,...,3 contain
  *   vertices 123, 023, 013, 012 respectively.
  *
@@ -78,7 +78,7 @@ namespace regina {
  * This class is specialised (and optimised) in Regina's
  * \ref stddim "standard dimensions".
  *
- * \ifacespython This class is not available in Python.  However, all of
+ * \python This class is not available in Python.  However, all of
  * its routines can be accessed through Face<dim, subdim> (which in Python
  * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases such as
  * Vertex3, Edge2 and so on).
@@ -103,11 +103,19 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  *
  * The arguments \a i and \a j do not need to appear in ascending order.
  *
- * @param i the first vertex of an edge in a <i>dim</i>-dimensional simplex.
+ * \python Python does not support templates.  Instead, Python users
+ * should call this function in the form `faceOppositeEdge(dim, i, j)`;
+ * that is, the template parameter \a dim becomes the first argument of
+ * the function.
+ *
+ * \tparam dim the dimension of simplex that we are working with.
+ * This must be between 2 and 15 inclusive.
+ *
+ * \param i the first vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive.
- * @param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.
+ * \param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive, and must be different from \a i.
- * @return the number of the (<i>dim</i>-2)-face opposite the given edge.
+ * \return the number of the (<i>dim</i>-2)-face opposite the given edge.
  *
  * \ingroup triangulation
  */

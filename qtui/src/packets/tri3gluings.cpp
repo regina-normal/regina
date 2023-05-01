@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -61,6 +61,7 @@
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QMessageBox>
+#include <QMenu>
 #include <QLabel>
 #include <QPushButton>
 #include <QRegularExpression>
@@ -122,9 +123,7 @@ QVariant GluingsModel3::data(const QModelIndex& index, int role) const {
         // Face gluing?
         int face = 4 - index.column();
         if (face >= 0)
-            return destString(face,
-                t->adjacentSimplex(face),
-                t->adjacentGluing(face));
+            return destString(t, face);
         return QVariant();
     } else if (role == Qt::EditRole) {
         // Tetrahedron name?
@@ -134,9 +133,25 @@ QVariant GluingsModel3::data(const QModelIndex& index, int role) const {
         // Face gluing?
         int face = 4 - index.column();
         if (face >= 0)
-            return destString(face,
-                t->adjacentSimplex(face),
-                t->adjacentGluing(face));
+            return destString(t, face);
+        return QVariant();
+    } else if (role == Qt::BackgroundRole) {
+        if (index.column() == 0) {
+            if (t->isLocked())
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        } else {
+            if (t->isFacetLocked(4 - index.column()))
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        }
+        return QVariant();
+    } else if (role == Qt::ForegroundRole) {
+        if (index.column() == 0) {
+            if (t->isLocked())
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        } else {
+            if (t->isFacetLocked(4 - index.column()))
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        }
         return QVariant();
     } else
         return QVariant();
@@ -159,8 +174,10 @@ QVariant GluingsModel3::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags GluingsModel3::flags(const QModelIndex& /* unused index*/) const {
-    if (isReadWrite_)
+Qt::ItemFlags GluingsModel3::flags(const QModelIndex& index) const {
+    // Do not allow locked facets to be edited.
+    if (isReadWrite_ && (index.column() == 0 ||
+            ! tri_->simplex(index.row())->isFacetLocked(4 - index.column())))
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -231,8 +248,15 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
             newAdjPerm == t->adjacentGluing(face))
         return false;
 
+    // There is a change.  Will it violate a lock?
+    if (t->isFacetLocked(face)) {
+        showError(tr("This face is currently locked. "
+            "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+
     // Yes!  Go ahead and make the change.
-    regina::Triangulation<3>::ChangeEventSpan span(*tri_);
+    regina::Triangulation<3>::ChangeEventGroup span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(face))
@@ -291,14 +315,14 @@ void GluingsModel3::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString GluingsModel3::destString(int srcFace, regina::Tetrahedron<3>* destTet,
-        const regina::Perm<4>& gluing) {
+QString GluingsModel3::destString(regina::Simplex<3>* srcTet, int srcFace) {
+    regina::Simplex<3>* destTet = srcTet->adjacentSimplex(srcFace);
     if (! destTet)
         return "";
     else
         return QString::number(destTet->markedIndex()) + " (" +
-            (gluing * regina::Triangle<3>::ordering(srcFace)).trunc3().c_str() +
-            ')';
+            (srcTet->adjacentGluing(srcFace) *
+            regina::Triangle<3>::ordering(srcFace)).trunc3().c_str() + ')';
 }
 
 regina::Perm<4> GluingsModel3::faceStringToPerm(int srcFace, const QString& str) {
@@ -351,6 +375,10 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     //faceTable->setColumnStretchable(2, true);
     //faceTable->setColumnStretchable(3, true);
     //faceTable->setColumnStretchable(4, true);
+
+    faceTable->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(faceTable, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(lockMenu(const QPoint&)));
 
     ui = faceTable;
 
@@ -702,6 +730,19 @@ void Tri3GluingsUI::removeSelectedTets() {
             last = row;
     }
 
+    // Look for any potential lock violations.
+    for (i = first; i <= last; ++i)
+        if (tri->simplex(i)->lockMask()) {
+            ReginaSupport::sorry(ui,
+                tr("The selection includes locks."),
+                tr("The selection includes one or more locked "
+                "tetrahedra and/or triangles, and so I cannot remove "
+                "the selected tetrahedra.\n\n"
+                "You can unlock tetrahedra and triangles by right-clicking "
+                "within the corresponding table cells."));
+            return;
+        }
+
     // Notify the user that tetrahedra will be removed.
     QMessageBox msgBox(ui);
     msgBox.setWindowTitle(tr("Question"));
@@ -724,10 +765,75 @@ void Tri3GluingsUI::removeSelectedTets() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
+        regina::Packet::ChangeEventGroup span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
+}
+
+void Tri3GluingsUI::lockMenu(const QPoint& pos) {
+    QModelIndex index = faceTable->indexAt(pos);
+    if ((! index.isValid()) ||
+            static_cast<size_t>(index.row()) >= tri->size()) {
+        lockSimplex = -1;
+        return;
+    }
+
+    lockSimplex = index.row();
+    auto s = tri->simplex(lockSimplex);
+
+    QMenu m(tr("Context menu"), ui);
+    QAction lock(this);
+    if (index.column() == 0) {
+        lockFacet = -1;
+        lockAdd = ! s->isLocked();
+
+        if (lockAdd)
+            lock.setText(tr("Lock tetrahedron %1").arg(index.row()));
+        else
+            lock.setText(tr("Unlock tetrahedron %1").arg(index.row()));
+    } else {
+        lockFacet = 4 - index.column();
+        auto f = s->triangle(lockFacet);
+        lockAdd = ! f->isLocked();
+
+        QString action = lockAdd ? tr("Lock") : tr("Unlock");
+        QString faceDesc;
+        switch (lockFacet) {
+            case 3: faceDesc = tr("012"); break;
+            case 2: faceDesc = tr("013"); break;
+            case 1: faceDesc = tr("023"); break;
+            case 0: faceDesc = tr("123"); break;
+        }
+
+        if (f->isBoundary())
+            lock.setText(tr("%1 boundary face %2 (%3)")
+                .arg(action).arg(index.row()).arg(faceDesc));
+        else
+            lock.setText(tr("%1 face %2 (%3) = %4")
+                .arg(action).arg(index.row()).arg(faceDesc)
+                .arg(GluingsModel3::destString(s, lockFacet)));
+    }
+    connect(&lock, SIGNAL(triggered()), this, SLOT(changeLock()));
+    m.addAction(&lock);
+    m.exec(faceTable->viewport()->mapToGlobal(pos));
+}
+
+void Tri3GluingsUI::changeLock() {
+    if (lockSimplex < 0 || lockSimplex >= tri->size())
+        return;
+    if (lockFacet < 0) {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lock();
+        else
+            tri->simplex(lockSimplex)->unlock();
+    } else {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lockFacet(lockFacet);
+        else
+            tri->simplex(lockSimplex)->unlockFacet(lockFacet);
+    }
+    lockSimplex = -1;
 }
 
 void Tri3GluingsUI::simplify() {
@@ -776,7 +882,7 @@ void Tri3GluingsUI::simplifyExhaustive(int height) {
         tr("Tried %1 triangulations"), ui);
 
     std::thread(&Triangulation<3>::simplifyExhaustive, tri, height,
-        regina::politeThreads(), &tracker).detach();
+        ReginaPrefSet::threads(), &tracker).detach();
 
     if (dlg.run() && tri->size() == initSize) {
         dlg.hide();
@@ -832,7 +938,13 @@ void Tri3GluingsUI::reflect() {
 void Tri3GluingsUI::barycentricSubdivide() {
     endEdit();
 
-    tri->barycentricSubdivision();
+    if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "tetrahedra or triangles, and so cannot be subdivided."));
+    else
+        tri->subdivide();
 }
 
 void Tri3GluingsUI::idealToFinite() {
@@ -842,8 +954,14 @@ void Tri3GluingsUI::idealToFinite() {
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices can be truncated."));
+    else if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "tetrahedra or triangles, and so cannot be subdivided "
+            "to truncate ideal vertices."));
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
+        regina::Packet::ChangeEventGroup span(*tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -858,8 +976,19 @@ void Tri3GluingsUI::finiteToIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
-        tri->finiteToIdeal();
+        // We could check for locks explicitly here, but finiteToIdeal()
+        // will do it again - so just catch the exception that it would throw.
+        regina::Packet::ChangeEventGroup span(*tri);
+        try {
+            tri->finiteToIdeal();
+        } catch (const regina::LockViolation&) {
+            ReginaSupport::sorry(ui,
+                tr("This triangulation has boundary locks."),
+                tr("This triangulation has one or more locked "
+                "boundary triangles, and so cannot be converted to "
+                "have ideal boundary."));
+            return;
+        }
         tri->intelligentSimplify();
     }
 }
@@ -883,7 +1012,7 @@ void Tri3GluingsUI::puncture() {
         ReginaSupport::info(ui,
             tr("I cannot puncture an empty triangulation."));
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
+        regina::Packet::ChangeEventGroup span(*tri);
         tri->puncture();
         tri->intelligentSimplify();
     }
@@ -965,8 +1094,8 @@ void Tri3GluingsUI::drillEdge() {
                     // belongs to the correct connected component.
                     ans = regina::make_packet<Triangulation<3>>(
                         std::in_place, *tri);
-                    ans->puncture(ans->tetrahedron(
-                        e->front().tetrahedron()->index()));
+                    size_t tet = e->front().tetrahedron()->index();
+                    ans->puncture(ans->tetrahedron(tet)->triangle(0));
                 } else if (e->vertex(0) != e->vertex(1) &&
                         (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
                          e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE)) {
@@ -991,7 +1120,7 @@ void Tri3GluingsUI::drillEdge() {
             }
             if (ans) {
                 ans->setLabel(tri->adornedLabel("Drilled"));
-                tri->insertChildLast(ans);
+                tri->append(ans);
                 enclosingPane->getMainWindow()->packetView(*ans, true, true);
             }
         }
@@ -1036,7 +1165,7 @@ void Tri3GluingsUI::boundaryComponents() {
                 chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -1066,7 +1195,7 @@ void Tri3GluingsUI::vertexLinks() {
                 chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -1089,7 +1218,7 @@ void Tri3GluingsUI::splitIntoComponents() {
         std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
             base = std::make_shared<regina::Container>();
-            tri->insertChildLast(base);
+            tri->append(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
             base = tri->shared_from_this();
@@ -1099,8 +1228,7 @@ void Tri3GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::make_packet(std::move(c),
-                label.str()));
+            base->append(regina::make_packet(std::move(c), label.str()));
         }
 
         // Make sure the new components are visible.
@@ -1161,7 +1289,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             std::shared_ptr<Packet> base;
             if (tri->firstChild()) {
                 base = std::make_shared<regina::Container>();
-                tri->insertChildLast(base);
+                tri->append(base);
                 base->setLabel(tri->adornedLabel("Summands"));
             } else
                 base = tri->shared_from_this();
@@ -1170,8 +1298,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             for (auto& s : ans) {
                 std::ostringstream label;
                 label << "Summand #" << ++which;
-                base->insertChildLast(regina::make_packet(std::move(s),
-                    label.str()));
+                base->append(regina::make_packet(std::move(s), label.str()));
             }
 
             // Make sure the new summands are visible.
@@ -1279,11 +1406,10 @@ void Tri3GluingsUI::makeZeroEfficient() {
         for (auto& s : summands) {
             std::ostringstream label;
             label << "Summand #" << ++which;
-            decomp->insertChildLast(regina::make_packet(std::move(s),
-                label.str()));
+            decomp->append(regina::make_packet(std::move(s), label.str()));
         }
 
-        tri->insertChildLast(decomp);
+        tri->append(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
             *decomp->lastChild());
 
@@ -1415,7 +1541,7 @@ void Tri3GluingsUI::toSnapPea() {
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
     ans->setLabel(tri->label());
-    tri->insertChildLast(ans);
+    tri->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,18 +35,24 @@
 #include "subcomplex/pillowtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/pillowtwosphere.h"
 
 using regina::PillowTwoSphere;
 
 void addPillowTwoSphere(pybind11::module_& m) {
-    auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere")
-        .def(pybind11::init<const PillowTwoSphere&>())
+    RDOC_SCOPE_BEGIN(PillowTwoSphere)
+
+    auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere", rdoc_scope)
+        .def(pybind11::init<const PillowTwoSphere&>(), rdoc::__copy)
         .def("triangle", &PillowTwoSphere::triangle,
-            pybind11::return_value_policy::reference)
-        .def("triangleMapping", &PillowTwoSphere::triangleMapping)
-        .def_static("recognise", &PillowTwoSphere::recognise)
+            pybind11::return_value_policy::reference, rdoc::triangle)
+        .def("triangleMapping", &PillowTwoSphere::triangleMapping,
+            rdoc::triangleMapping)
+        .def_static("recognise", &PillowTwoSphere::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 

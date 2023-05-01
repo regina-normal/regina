@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,33 +34,38 @@
 #include "../pybind11/operators.h"
 #include "triangulation/facepair.h"
 #include "../helpers.h"
+#include "../python/docstrings/triangulation/facepair.h"
 
 using regina::FacePair;
 
 void addFacePair(pybind11::module_& m) {
-    auto c = pybind11::class_<FacePair>(m, "FacePair")
-        .def(pybind11::init<>())
-        .def(pybind11::init<int, int>())
-        .def(pybind11::init<const FacePair&>())
-        .def("lower", &FacePair::lower)
-        .def("upper", &FacePair::upper)
-        .def("isBeforeStart", &FacePair::isBeforeStart)
-        .def("isPastEnd", &FacePair::isPastEnd)
-        .def("complement", &FacePair::complement)
-        .def(pybind11::self < pybind11::self)
-        .def(pybind11::self > pybind11::self)
-        .def(pybind11::self <= pybind11::self)
-        .def(pybind11::self >= pybind11::self)
+    RDOC_SCOPE_BEGIN(FacePair)
+
+    auto c = pybind11::class_<FacePair>(m, "FacePair", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<int, int>(), rdoc::__init)
+        .def(pybind11::init<const FacePair&>(), rdoc::__copy)
+        .def("lower", &FacePair::lower, rdoc::lower)
+        .def("upper", &FacePair::upper, rdoc::upper)
+        .def("isBeforeStart", &FacePair::isBeforeStart, rdoc::isBeforeStart)
+        .def("isPastEnd", &FacePair::isPastEnd, rdoc::isPastEnd)
+        .def("complement", &FacePair::complement, rdoc::complement)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def(pybind11::self > pybind11::self, rdoc::__gt)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
+        .def(pybind11::self >= pybind11::self, rdoc::__ge)
         .def("inc", [](FacePair& p) {
             return p++;
-        })
+        }, rdoc::__inc)
         .def("dec", [](FacePair& p) {
             return p--;
-        })
-        .def("commonEdge", &FacePair::commonEdge)
-        .def("oppositeEdge", &FacePair::oppositeEdge)
+        }, rdoc::__dec)
+        .def("commonEdge", &FacePair::commonEdge, rdoc::commonEdge)
+        .def("oppositeEdge", &FacePair::oppositeEdge, rdoc::oppositeEdge)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 

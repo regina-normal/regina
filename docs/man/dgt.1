@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "DGT" "1" "30 May 2022" "" "The Regina Handbook"
+.TH "DGT" "1" "24 April 2023" "" "The Regina Handbook"
 
 .SH NAME
 dgt \- Triangulate a 3-manifold or 4-manifold from a framed link
 .SH SYNOPSIS
 
 \fBdgt\fR { \fB-3, --dim3\fR | \fB-4, --dim4\fR } [ \fB-g, --graph\fR ] [ \fB-r, --real\fR ]
+
+
+\fBdgt\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -76,6 +79,13 @@ produce a closed manifold.
 
 This option will be ignored for 3-manifolds, as all 3-manifolds
 built from this construction are closed.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "EXAMPLES"
 .PP
 The following builds the Poincare homology 3-sphere obtained by
@@ -147,7 +157,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\dgt.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.4\\bin\\dgt.exe\&.
 .SH "AUTHOR"
 .PP
 This utility was written by Rhuaidi Burke

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -60,15 +60,15 @@ class XMLTreeResolver;
  * its documentation for further notes on how the packet should be
  * constructed.
  *
- * Routines startSubElement() and endSubElement() should \e not be
+ * Routines startSubElement() and endSubElement() should _not_ be
  * overridden by derived classes.  They determine whether the subelement
  * is another packet element or a packet tag; if so then they deal with
  * the subelement themselves (packet elements will be read using a new
  * XMLPacketReader of the correct type), and if not then they call
- * startContentSubElement() and endContentSubElement() which \e should
+ * startContentSubElement() and endContentSubElement() which _should_
  * be overridden for processing of non-packet XML subelements.
  *
- * If routine abort() is overridden, it \e must at some point call
+ * If routine abort() is overridden, it _must_ at some point call
  * XMLPacketReader::abort().
  *
  * The XML packet reader should read everything that
@@ -88,7 +88,7 @@ class XMLTreeResolver;
  * file has been read, XMLTreeResolver::resolve() will run all of its queued
  * tasks, at which point the new packet can resolve any dangling references.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPacketReader : public XMLElementReader {
     private:
@@ -128,18 +128,18 @@ class XMLPacketReader : public XMLElementReader {
         /**
          * Creates a new packet element reader.
          *
-         * @param resolver the master resolver that will be used to fix
+         * \param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
-         * @param parent the location in the packet tree beneath which this
-         * packet will be inserted, once it has been constructed.  This \e must
+         * \param parent the location in the packet tree beneath which this
+         * packet will be inserted, once it has been constructed.  This _must_
          * be non-null unless (i) \a anon is \c true, or (ii) this packet
          * reader represents the root \<regina\> or \<reginadata\> element.
-         * @param anon \c true if this packet appears within an \<anon\> block.
-         * @param label the label that will be assigned to this packet,
+         * \param anon \c true if this packet appears within an \<anon\> block.
+         * \param label the label that will be assigned to this packet,
          * once it has been constructed.  If this is the empty string,
          * the packet label will not be set (which typically means the packet
          * will have the default empty label).
-         * @param id the string ID that identifies this packet in the packet
+         * \param id the string ID that identifies this packet in the packet
          * tree, as used for cross-referencing between packets in the XML
          * data file, or the empty string if this packet has no ID.
          */
@@ -175,7 +175,7 @@ class XMLPacketReader : public XMLElementReader {
          *
          * The default implementation returns \c null.
          *
-         * @return the packet that has been constructed, or \c null if
+         * \return the packet that has been constructed, or \c null if
          * this is not possible given the data that has been read.
          */
         virtual std::shared_ptr<Packet> packetToCommit();
@@ -187,11 +187,11 @@ class XMLPacketReader : public XMLElementReader {
          * The default implementation returns a new XMLElementReader
          * which can be used to ignore the subelement completely.
          *
-         * @param subTagName the name of the subelement opening tag.
-         * @param subTagProps the properties associated with the
+         * \param subTagName the name of the subelement opening tag.
+         * \param subTagProps the properties associated with the
          * subelement opening tag.
-         * @return a newly created element reader that will be used to
-         * parse the subelement.  This class should \e not take care of
+         * \return a newly created element reader that will be used to
+         * parse the subelement.  This class should _not_ take care of
          * the new reader's destruction; that will be done by the parser.
          */
         virtual XMLElementReader* startContentSubElement(
@@ -203,8 +203,8 @@ class XMLPacketReader : public XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param subTagName the name of the subelement closing tag.
-         * @param subReader the child reader that was used to parse the
+         * \param subTagName the name of the subelement closing tag.
+         * \param subReader the child reader that was used to parse the
          * subelement (this is the reader that was returned by the
          * corresponding startContentSubElement() call).  It is guaranteed
          * that endElement() has already been called upon this child reader
@@ -225,7 +225,7 @@ class XMLPacketReader : public XMLElementReader {
          * Finishes off the packet under construction and inserts it
          * into the packet tree.
          *
-         * This routine will \e always be called for each packet reader:
+         * This routine will _always_ be called for each packet reader:
          * either when the first tag/packet child is seen, or (if there are
          * no tags or child packets) from endElement(), or (if necessary)
          * from abort().

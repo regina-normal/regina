@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ namespace regina {
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
  * Regina to include your own coordinate system, you should choose
- * an ID >= 10000.
+ * an ID ≥ 10000.
  *
  * \ingroup hypersurface
  */
@@ -88,7 +88,7 @@ enum HyperCoords {
  *
  * Normal hypersurfaces do not always store their internal vectors in the same
  * coordinate system that was used to enumerate the surfaces, and indeed
- * an isolated hypersurface does not know \e how it was originally created.
+ * an isolated hypersurface does not know _how_ it was originally created.
  *
  * Therefore each normal hypersurface keeps a small amount of data,
  * represented by this class, so that it knows how to interpret its
@@ -175,7 +175,7 @@ class HyperEncoding {
          * can use to enumerate normal hypersurfaces, then the resulting
          * encoding will be invalid, and valid() will return \c false.
          *
-         * @param coords one of Regina's normal hypersurface coordinate systems.
+         * \param coords one of Regina's normal hypersurface coordinate systems.
          */
         constexpr HyperEncoding(HyperCoords coords) : flags_(INVALID) {
             switch (coords) {
@@ -198,15 +198,15 @@ class HyperEncoding {
         /**
          * Sets this to be a copy of the given encoding.
          *
-         * @return a reference to this encoding.
+         * \return a reference to this encoding.
          */
         HyperEncoding& operator = (const HyperEncoding&) = default;
 
         /**
          * Determines whether this and the given encoding are identical.
          *
-         * @param other the encoding to compare with this.
-         * @return \c true if and only if both encodings are identical.
+         * \param other the encoding to compare with this.
+         * \return \c true if and only if both encodings are identical.
          */
         constexpr bool operator == (const HyperEncoding& other) const {
             return flags_ == other.flags_;
@@ -214,8 +214,8 @@ class HyperEncoding {
         /**
          * Determines whether this and the given encoding are different.
          *
-         * @param other the encoding to compare with this.
-         * @return \c true if and only if both encodings are different.
+         * \param other the encoding to compare with this.
+         * \return \c true if and only if both encodings are different.
          */
         constexpr bool operator != (const HyperEncoding& other) const {
             return flags_ != other.flags_;
@@ -229,7 +229,7 @@ class HyperEncoding {
          * an encoding using either (1) a coordinate system that Regina
          * does not use for enumeration; or (2) another invalid encoding.
          *
-         * @return \c true if and only if this is a valid encoding.
+         * \return \c true if and only if this is a valid encoding.
          */
         constexpr bool valid() const {
             return ! (flags_ & INVALID);
@@ -237,7 +237,7 @@ class HyperEncoding {
         /**
          * Returns the number of coordinates stored for each pentachoron.
          *
-         * @return The number of coordinates per pentachoron.
+         * \return The number of coordinates per pentachoron.
          */
         constexpr int block() const {
             return flags_ & SIZE_MASK;
@@ -246,7 +246,7 @@ class HyperEncoding {
          * Returns whether this encoding explicitly stores tetrahedron
          * coordinates.
          *
-         * @return \c true if tetrahedron coordinates are stored.
+         * \return \c true if tetrahedron coordinates are stored.
          */
         constexpr bool storesTetrahedra() const {
             return flags_ & STORES_TETRAHEDRA;
@@ -262,10 +262,10 @@ class HyperEncoding {
          * does actually contain vertex linking components; it simply
          * means that the user will need to test this themselves.
          * If this returns \c false, however, it is guaranteed that the
-         * hypersurface does \e not contain any vertex linking components,
+         * hypersurface does _not_ contain any vertex linking components,
          * with no further testing required.
          *
-         * @return \c true if it is possible that the hypersurface might
+         * \return \c true if it is possible that the hypersurface might
          * contain one or more vertex linking components.
          */
         constexpr bool couldBeVertexLink() const {
@@ -286,7 +286,7 @@ class HyperEncoding {
          * If this returns \c false, however, it is guaranteed that the
          * hypersurface is compact, with no further testing required.
          *
-         * @return \c true if it is possible that the hypersurface might
+         * \return \c true if it is possible that the hypersurface might
          * be non-compact.
          */
         constexpr bool couldBeNonCompact() const {
@@ -304,7 +304,7 @@ class HyperEncoding {
          * If this encoding already stores tetrahedron coordinates, then
          * the result will be identical to this.
          *
-         * @return an extension of this encoding that stores tetrahedron
+         * \return an extension of this encoding that stores tetrahedron
          * coordinates.
          */
         constexpr HyperEncoding withTetrahedra() const {
@@ -321,13 +321,22 @@ class HyperEncoding {
          * possible encoding that is capable of holding the sum of two normal
          * hypersurfaces that use this and the given encoding respectively.
          *
-         * @param rhs the encoding to combine with this.
-         * @return the "sum" of this and the given encoding, as defined above.
+         * \param rhs the encoding to combine with this.
+         * \return the "sum" of this and the given encoding, as defined above.
          */
         constexpr HyperEncoding operator + (HyperEncoding rhs) const {
             int propFlags = ((flags_ | rhs.flags_) & PROPERTY_MASK);
             int blockSize = ((propFlags & STORES_TETRAHEDRA) ? 15 : 10);
             return HyperEncoding(propFlags | blockSize);
+        }
+        /**
+         * Returns an encoding that is suitable for representing the empty
+         * hypersurface, whose normal coordinates are all zero.
+         *
+         * \return a suitable encoding for the empty hypersurface.
+         */
+        static constexpr HyperEncoding empty() {
+            return { 15 | STORES_TETRAHEDRA };
         }
         /**
          * Exports this encoding as an integer.
@@ -343,7 +352,7 @@ class HyperEncoding {
          * It is guaranteed that 0 will never be the integer value of
          * a (correctly constructed) encoding.
          *
-         * @return an integer that represents this encoding.
+         * \return an integer that represents this encoding.
          */
         constexpr int intValue() const {
             return flags_;
@@ -352,15 +361,15 @@ class HyperEncoding {
          * Reconstructs an encoding from an integer value.
          *
          * This is a partner routine to intValue(): for any encoding \a enc,
-         * the encoding <tt>fromIntValue(enc.intValue())</tt> is always equal
+         * the encoding `fromIntValue(enc.intValue())` is always equal
          * to \a enc.
          *
          * The main purpose of intValue() and fromIntValue() is to support
          * reading and writing hypersurfaces to/from Regina's XML file format.
          *
-         * @param value an integer that represents an encoding, typically
+         * \param value an integer that represents an encoding, typically
          * obtained by calling intValue().
-         * @return the corresponding encoding.
+         * \return the corresponding encoding.
          */
         constexpr static HyperEncoding fromIntValue(int value) {
             return HyperEncoding(value);
@@ -388,9 +397,9 @@ class HyperInfo {
          * This routine is guaranteed to return a non-null string, even
          * if \a coordSystem is not one of the HyperCoords enum values.
          *
-         * @param coordSystem the coordinate system being queried; this
+         * \param coordSystem the coordinate system being queried; this
          * may be any of the HyperCoords enumeration values.
-         * @return the name of the given coordinate system.
+         * \return the name of the given coordinate system.
          */
         constexpr static const char* name(HyperCoords coordSystem) {
             switch (coordSystem) {

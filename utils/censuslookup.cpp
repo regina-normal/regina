@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Look up an isomorphism signature in Regina's census databases         *
  *                                                                        *
- *  Copyright (c) 2014-2021, Ben Burton                                   *
+ *  Copyright (c) 2014-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <cstring>
 #include <iostream>
 #include "regina-config.h"
 #include "census/census.h"
@@ -42,6 +43,12 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
     std::cerr << "Usage:" << std::endl;
     std::cerr << "    " << progName << " <isosig> ..." << std::endl;
+    std::cerr << "    " << progName
+        << " [ -v, --version | -?, --help ]" << std::endl;
+    std::cerr << std::endl;
+    std::cerr << "    -v, --version : Show which version of Regina "
+        "is being used" << std::endl;
+    std::cerr << "    -?, --help    : Display this help" << std::endl;
     exit(1);
 }
 
@@ -49,6 +56,20 @@ int main(int argc, char* argv[]) {
     // Parse the command line.
     if (argc < 2)
         usage(argv[0], "Please specify one or more isomorphism signatures.");
+
+    // Check for standard arguments:
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "-?") == 0 || strcmp(argv[i], "--help") == 0)
+            usage(argv[0]);
+        if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
+            if (argc != 2)
+                usage(argv[0],
+                    "Option --version cannot be used with "
+                        "any other arguments.");
+            std::cout << PACKAGE_BUILD_STRING << std::endl;
+            exit(0);
+        }
+    }
 
     // Locate the census data files.
     regina::GlobalDirs::deduceDirs(argv[0]);

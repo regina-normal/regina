@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,27 +34,32 @@
 #include "../pybind11/stl.h"
 #include "manifold/snappeacensusmfd.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/snappeacensusmfd.h"
 
 using regina::SnapPeaCensusManifold;
 
 void addSnapPeaCensusManifold(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SnapPeaCensusManifold)
+
     auto c = pybind11::class_<SnapPeaCensusManifold, regina::Manifold>
-            (m, "SnapPeaCensusManifold")
-        .def(pybind11::init<char, unsigned long>())
-        .def(pybind11::init<const SnapPeaCensusManifold&>())
-        .def("swap", &SnapPeaCensusManifold::swap)
-        .def("section", &SnapPeaCensusManifold::section)
-        .def("index", &SnapPeaCensusManifold::index)
+            (m, "SnapPeaCensusManifold", rdoc_scope)
+        .def(pybind11::init<char, unsigned long>(), rdoc::__init)
+        .def(pybind11::init<const SnapPeaCensusManifold&>(), rdoc::__copy)
+        .def("swap", &SnapPeaCensusManifold::swap, rdoc::swap)
+        .def("section", &SnapPeaCensusManifold::section, rdoc::section)
+        .def("index", &SnapPeaCensusManifold::index, rdoc::index)
         .def_readonly_static("SEC_5", &SnapPeaCensusManifold::SEC_5)
         .def_readonly_static("SEC_6_OR", &SnapPeaCensusManifold::SEC_6_OR)
         .def_readonly_static("SEC_6_NOR", &SnapPeaCensusManifold::SEC_6_NOR)
         .def_readonly_static("SEC_7_OR", &SnapPeaCensusManifold::SEC_7_OR)
         .def_readonly_static("SEC_7_NOR", &SnapPeaCensusManifold::SEC_7_NOR)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    m.def("swap",
-        (void(*)(SnapPeaCensusManifold&, SnapPeaCensusManifold&))(regina::swap));
+    regina::python::add_global_swap<SnapPeaCensusManifold>(m,
+        rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

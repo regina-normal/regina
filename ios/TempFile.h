@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,14 +50,14 @@
 /**
  * Initialises this to a new temporary filename, which is unique for the life of this process.
  *
- * @param ext The extension of the new filename, which should not begin with a period.
+ * \param ext The extension of the new filename, which should not begin with a period.
  * An example might be @"pdf".
  */
 - (id)initWithExtension:(NSString*)ext;
 /**
  * Creates a new temporary filename, which is unique for the life of this process.
  *
- * @param ext The extension of the new filename, which should not begin with a period.
+ * \param ext The extension of the new filename, which should not begin with a period.
  * An example might be @"pdf".
  */
 + (id)tempFileWithExtension:(NSString*)ext;
@@ -67,13 +67,13 @@
  *
  * There is typically no need to call removeFile, unless you urgently need the space.
  * This is because removeFile will be called automatically when this TempFile is
- * deallocated.  As an exception, it will \e not be called upon deallocation if it
+ * deallocated.  As an exception, it will _not_ be called upon deallocation if it
  * has been called before and it returned \c true.
  *
  * You may call this removeFile multiple times (though of course this only makes sense if you
  * have created the file multiple times).
  *
- * @return \c true if and only if the file was removed from the filesystem, or
+ * \return \c true if and only if the file was removed from the filesystem, or
  * \c false if an error occured (e.g., if the file was never created in the first place).
  */
 - (BOOL)removeFile;

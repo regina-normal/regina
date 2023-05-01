@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,7 +54,7 @@ class QTreeView;
  * for triangulations of a particular dimension.  Each type of skeletal
  * data for each type of triangulation requires its own separate subclass.
  *
- * \pre Subclasses may use at most \e four columns.  This number is
+ * \pre Subclasses may use at most _four_ columns.  This number is
  * currently hard-coded into the SkeletalModel code.
  *
  * See SkeletonWindow for further details.

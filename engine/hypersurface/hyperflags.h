@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,8 +48,8 @@ namespace regina {
  * Represents different lists of normal hypersurfaces that might be constructed
  * for a given 4-manifold triangulation.
  *
- * The HyperList enumeration refers to the \e contents of the list,
- * whereas the HyperAlgFlags enumeration refers to the \e algorithm
+ * The HyperList enumeration refers to the _contents_ of the list,
+ * whereas the HyperAlgFlags enumeration refers to the _algorithm_
  * used to build it.
  *
  * These flags can be combined using the bitwise OR operator, and then
@@ -78,7 +78,7 @@ enum HyperListFlags {
      * Indicates that the scope of this list includes not just properly
      * embedded hypersurfaces, but also immersed and/or branched hypersurfaces.
      *
-     * This is no guarantee that the list \e contains immersed and/or
+     * This is no guarantee that the list _contains_ immersed and/or
      * branched hypersurfaces; it merely states that such hypersurfaces
      * have not been explicitly excluded (in particular, the prism
      * constraints have not been enforced).
@@ -139,9 +139,9 @@ using HyperList = regina::Flags<HyperListFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
+ * \return the combination of both flags.
  *
  * \ingroup hypersurface
  */
@@ -267,9 +267,9 @@ using HyperAlg = regina::Flags<HyperAlgFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
+ * \return the combination of both flags.
  *
  * \ingroup hypersurface
  */

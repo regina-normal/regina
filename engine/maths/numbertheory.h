@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,14 +53,14 @@ namespace regina {
 
 /**
  * Reduces \a k modulo \a modBase to give the smallest possible
- * absolute value.  For instance, <tt>reducedMod(4,10) = 4</tt> but
- * <tt>reducedMod(6,10) = -4</tt>.  In the case of a tie, the positive
+ * absolute value.  For instance, `reducedMod(4,10) = 4` but
+ * `reducedMod(6,10) = -4`.  In the case of a tie, the positive
  * solution is taken.
  *
  * \pre \a modBase is strictly positive.
  *
- * @param k the number to reduce modulo \a modBase.
- * @param modBase the modular base in which to work.
+ * \param k the number to reduce modulo \a modBase.
+ * \param modBase the modular base in which to work.
  *
  * \ingroup maths
  */
@@ -75,9 +75,9 @@ long reducedMod(long k, long modBase);
  *
  * \deprecated Simply use std::gcd(), which was introduced with C++17.
  *
- * @param a one of the two integers to work with.
- * @param b the other integer with which to work.
- * @return the greatest common divisor of \a a and \a b.
+ * \param a one of the two integers to work with.
+ * \param b the other integer with which to work.
+ * \return the greatest common divisor of \a a and \a b.
  *
  * \ingroup maths
  */
@@ -95,18 +95,18 @@ long reducedMod(long k, long modBase);
  * If \a d is the gcd of \a a and \a b, then this routine returns the
  * tuple (\a d, \a u, \a v), where \a u and \a v are coefficients for which:
  *
- * - <tt>u*a + v*b = d</tt>;
- * - <tt>-abs(a)/d < v*sign(b) <= 0</tt>; and
- * - <tt>1 <= u*sign(a) <= abs(b)/d</tt>.
+ * - `u⋅a + v⋅b = d`;
+ * - `-abs(a)/d < v⋅sign(b) ≤ 0`; and
+ * - `1 ≤ u⋅sign(a) ≤ abs(b)/d`.
  *
  * In the special case where one of the given integers is zero, the
  * corresponding coefficient will also be zero and the other coefficient
- * will be 1 or -1 so that <tt>u*a + v*b = d</tt> still holds.  If both
+ * will be 1 or -1 so that `u⋅a + v⋅b = d` still holds.  If both
  * given integers are zero, both of the coefficients will be set to zero.
  *
- * @param a the first integer to compute the gcd of.
- * @param b the second integer to compute the gcd of.
- * @return a tuple containing: the greatest common divisor of \a a and \a b;
+ * \param a the first integer to compute the gcd of.
+ * \param b the second integer to compute the gcd of.
+ * \return a tuple containing: the greatest common divisor of \a a and \a b;
  * the final coefficient of \a a; and the final coefficient of \a b.
  *
  * \ingroup maths
@@ -125,9 +125,9 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
  *
  * \deprecated Simply use std::lcm(), which was introduced with C++17.
  *
- * @param a one of the two integers to work with.
- * @param b the other integer with which to work.
- * @return the lowest common multiple of \a a and \a b.
+ * \param a one of the two integers to work with.
+ * \param b the other integer with which to work.
+ * \return the lowest common multiple of \a a and \a b.
  *
  * \ingroup maths
  */
@@ -140,9 +140,9 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
  * \pre \a n and \a k are both strictly positive;
  * \pre \a n and \a k have no common factors.
  *
- * @param n the modular base in which to work.
- * @param k the number whose multiplicative inverse should be found.
- * @return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
+ * \param n the modular base in which to work.
+ * \param k the number whose multiplicative inverse should be found.
+ * \return the inverse \a v for which `k * v == 1 (mod n)`.
  *
  * \ingroup maths
  */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -80,8 +80,8 @@ template <typename Held> class XMLWriter;
  * - declarations and implementations of the virtual functions
  *   Packet::type() and Packet::typeName().
  *
- * @param id the corresponding PacketType constant.
- * @param name the human-readable name of this packet type.
+ * \param id the corresponding PacketType constant.
+ * \param name the human-readable name of this packet type.
  *
  * \ingroup packet
  */
@@ -101,32 +101,32 @@ template <typename Held> class XMLWriter;
  * child/parent relationships; the root of the tree represents a
  * complete Regina data file.
  *
- * There are two types of packets: \e innate packets, and \e wrapped packets.
+ * There are two types of packets: _innate_ packets, and _wrapped_ packets.
  *
- * - \e Innate packets are only relevant within the context of a data file.
+ * - _Innate_ packets are only relevant within the context of a data file.
  *   Examples include containers (which are used to organise the packet tree),
  *   or scripts (which stores Python code with variables bound to other packets
  *   in the tree).  Each innate packet type is represented by its own
  *   customised subclass of Packet (e.g., Container or Script).
  *
- * - \e Wrapped packets hold some other type, which can also act as a
+ * - _Wrapped_ packets hold some other type, which can also act as a
  *   standalone mathematical object.  Examples include packets that hold
  *   triangulations, links, and normal surface lists.  Each wrapped packet type
  *   is represented by a class of the form PacketOf<Held>, where \a Held
  *   is the underlying mathematical type (e.g., Triangulation<3>, Link,
  *   or NormalSurfaces).
  *
- * Since Regina 7.0, packets are \e always managed by std::shared_ptr.
- * There are \e no exceptions to this rule.  The implication of this are:
+ * Since Regina 7.0, packets are _always_ managed by std::shared_ptr.
+ * There are _no_ exceptions to this rule.  The implication of this are:
  *
- * - Every new packet \e must be wrapped in a std::shared_ptr immediately
+ * - Every new packet _must_ be wrapped in a std::shared_ptr immediately
  *   after construction.  It is recommended that you create new packets using
  *   std::make_shared, not \c new, so you do not forget this.  Many of
  *   Regina's operations on packets will assume that such a std::shared_ptr
  *   exists, and will throw std::bad_weak_ptr exceptions if it does not.
  *
  * - When given an existing raw packet pointer (e.g., as a function argument),
- *   you must \e not wrap it in a new std::shared_ptr.  This would lead to two
+ *   you must _not_ wrap it in a new std::shared_ptr.  This would lead to two
  *   shared pointers "independently" claiming ownership of the packet (which
  *   means the packet would be destroyed earlier than expected).  If you need
  *   to convert a raw Packet* into a std::shared_ptr, you can use the member
@@ -143,7 +143,7 @@ template <typename Held> class XMLWriter;
  *   the child once your last shared pointer to it goes out of scope.
  *
  * - If you destroy a parent but you are also holding another shared pointer to
- *   one of its children, then that child will \e not be destroyed.  It will
+ *   one of its children, then that child will _not_ be destroyed.  It will
  *   instead become orphaned, and will become the root of its own (smaller)
  *   packet tree.
  *
@@ -197,7 +197,7 @@ template <typename Held> class XMLWriter;
  *   Held::ChangeEventSpan on the stack while the modification takes place.
  *   This is again lightweight (if an object does not belong to a packet
  *   then the cost is just two integer comparisions), and it will ensure that
- *   if the object \e does belong to a packet then listeners are notified.
+ *   if the object _does_ belong to a packet then listeners are notified.
  *
  * External objects can listen for events on packets, such as when packets
  * are changed or about to be destroyed.  This is useful (for example)
@@ -269,7 +269,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Returns the unique integer ID representing this type of packet.
          * This is the same for all packets of this class.
          *
-         * @return the packet type ID.
+         * \return the packet type ID.
          */
         virtual PacketType type() const = 0;
 
@@ -278,7 +278,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * An example is \c Triangulation3.
          * This is the same for all packets of this class.
          *
-         * @return the packet type name.
+         * \return the packet type name.
          */
         virtual std::string typeName() const = 0;
 
@@ -286,7 +286,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Returns the label associated with this individual packet.
          * An example is \c MyTriangulation.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         const std::string& label() const;
 
@@ -300,7 +300,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \warning The method by which this routine adjusts packet labels
          * is subject to change in future versions of Regina.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         std::string humanLabel() const;
 
@@ -320,20 +320,20 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Note that, whilst this routine returns a modified version of the
          * packet label, the label itself will not be permamently changed.
          *
-         * @param adornment the string that will be used to adorn this
+         * \param adornment the string that will be used to adorn this
          * packet label.  The adornment should just be a piece of
          * English, ideally beginning with an upper-case letter.
          * It should not contain any surrounding punctuation such as
          * brackets or a dash (this will be added automatically by
          * this routine as required).
-         * @return a copy of the packet label with the given adornment.
+         * \return a copy of the packet label with the given adornment.
          */
         std::string adornedLabel(const std::string& adornment) const;
 
         /**
          * Sets the label associated with this individual packet.
          *
-         * @param label the new label to give this packet.
+         * \param label the new label to give this packet.
          */
         void setLabel(const std::string& label);
 
@@ -344,7 +344,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The packet label will be adjusted for human-readable output
          * according to the behaviour of humanLabel().
          *
-         * @return the descriptive text string.
+         * \return the descriptive text string.
          */
         std::string fullName() const;
 
@@ -366,8 +366,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * @param tag the tag to search for.
-         * @return \c true if the given tag is found, \c false otherwise.
+         * \param tag the tag to search for.
+         * \return \c true if the given tag is found, \c false otherwise.
          */
         bool hasTag(const std::string& tag) const;
 
@@ -383,7 +383,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * @return \c true if this packet has any tags, \c false otherwise.
+         * \return \c true if this packet has any tags, \c false otherwise.
          */
         bool hasTags() const;
 
@@ -401,8 +401,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given tag is not the empty string.
          *
-         * @param tag the tag to add.
-         * @return \c true if the given tag was successfully added,
+         * \param tag the tag to add.
+         * \return \c true if the given tag was successfully added,
          * or \c false if the given tag was already present beforehand.
          */
         bool addTag(const std::string& tag);
@@ -419,8 +419,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * @param tag the tag to remove.
-         * @return \c true if the given tag was removed, or \c false if the
+         * \param tag the tag to remove.
+         * \return \c true if the given tag was removed, or \c false if the
          * given tag was not actually associated with this packet.
          */
         bool removeTag(const std::string& tag);
@@ -451,9 +451,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * \ifacespython This routine returns a python set.
+         * \python This routine returns a python set.
          *
-         * @return the set of all tags associated with this packet.
+         * \return the set of all tags associated with this packet.
          */
         const std::set<std::string>& tags() const;
 
@@ -468,8 +468,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * this packet.  See the PacketListener class notes for
          * details.
          *
-         * @param listener the listener to register.
-         * @return \c true if the given listener was successfully registered,
+         * \param listener the listener to register.
+         * \return \c true if the given listener was successfully registered,
          * or \c false if the given listener was already registered
          * beforehand.
          */
@@ -479,8 +479,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * listening for events on this packet.  See the PacketListener
          * class notes for details.
          *
-         * @param listener the listener to search for.
-         * @return \c true if the given listener is currently registered
+         * \param listener the listener to search for.
+         * \return \c true if the given listener is currently registered
          * with this packet, or \c false otherwise.
          */
         bool isListening(PacketListener* listener);
@@ -489,8 +489,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * listens for events on this packet.  See the PacketListener
          * class notes for details.
          *
-         * @param listener the listener to unregister.
-         * @return \c true if the given listener was successfully unregistered,
+         * \param listener the listener to unregister.
+         * \return \c true if the given listener was successfully unregistered,
          * or \c false if the given listener was not registered in the
          * first place.
          */
@@ -523,8 +523,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * through a packet tree and identifying when a particular
          * known packet has been found.
          *
-         * @param other the packet to compare with this.
-         * @return \c true if and only if this and the given object refer to
+         * \param other the packet to compare with this.
+         * \return \c true if and only if this and the given object refer to
          * the same underlying packet.
          */
         bool samePacket(const Packet& other) const;
@@ -535,7 +535,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This is equivalent to, but slightly faster than, testing
          * whether parent() returns a null pointer.
          *
-         * @return \c if and only if this packet has a parent.
+         * \return \c if and only if this packet has a parent.
          */
         bool hasParent() const;
 
@@ -544,7 +544,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the parent packet, or \c null if there is none.
+         * \return the parent packet, or \c null if there is none.
          */
         std::shared_ptr<Packet> parent() const;
 
@@ -554,7 +554,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the first child packet, or \c null if there is none.
+         * \return the first child packet, or \c null if there is none.
          */
         std::shared_ptr<Packet> firstChild() const;
 
@@ -564,7 +564,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the last child packet, or \c null if there is none.
+         * \return the last child packet, or \c null if there is none.
          */
         std::shared_ptr<Packet> lastChild() const;
 
@@ -575,7 +575,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the next sibling of this packet, or \c null if there is
+         * \return the next sibling of this packet, or \c null if there is
          * none.
          */
         std::shared_ptr<Packet> nextSibling() const;
@@ -587,7 +587,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the previous sibling of this packet, or \c null if there is
+         * \return the previous sibling of this packet, or \c null if there is
          * none.
          */
         std::shared_ptr<Packet> prevSibling() const;
@@ -595,7 +595,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /**
          * Determines the root of the tree to which this packet belongs.
          *
-         * @return the matriarch of the packet tree.
+         * \return the matriarch of the packet tree.
          */
         std::shared_ptr<Packet> root() const;
 
@@ -610,9 +610,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \exception FailedPrecondition The argument \a descendant is
          * not equal to or a descendant of this packet.
          *
-         * @param descendant the packet whose relationship with this
+         * \param descendant the packet whose relationship with this
          * packet we are examining.
-         * @return the number of levels difference.
+         * \return the number of levels difference.
          */
         unsigned levelsDownTo(const Packet& descendant) const;
 
@@ -627,9 +627,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \exception FailedPrecondition This packet is not equal to or a
          * descendant of the argument \a descendant.
          *
-         * @param ancestor the packet whose relationship with this
+         * \param ancestor the packet whose relationship with this
          * packet we are examining.
-         * @return the number of levels difference.
+         * \return the number of levels difference.
          */
         unsigned levelsUpTo(const Packet& ancestor) const;
 
@@ -637,9 +637,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Determines if this packet is equal to or an ancestor of
          * the given packet in the tree structure.
          *
-         * @param descendant the other packet whose relationships we are
+         * \param descendant the other packet whose relationships we are
          * examining.
-         * @return \c true if and only if this packet is equal to or an
+         * \return \c true if and only if this packet is equal to or an
          * ancestor of \c descendant.
          */
         bool isAncestorOf(const Packet& descendant) const;
@@ -648,7 +648,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Returns the number of immediate children of this packet.
          * Grandchildren and so on are not counted.
          *
-         * @return the number of immediate children.
+         * \return the number of immediate children.
          */
         size_t countChildren() const;
         /**
@@ -656,7 +656,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This includes children, grandchildren and so on.  This packet is
          * not included in the count.
          *
-         * @return the total number of strict descendants.
+         * \return the total number of strict descendants.
          */
         size_t countDescendants() const;
         /**
@@ -664,7 +664,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * for which this packet is matriarch.  This packet is included
          * in the count.
          *
-         * @return the total tree or subtree size.
+         * \return the total tree or subtree size.
          */
         size_t totalTreeSize() const;
 
@@ -681,14 +681,41 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * every parent packet stores (either directly or indirectly) a
          * shared_ptr to every one of its descendants in the packet tree.
          *
+         * In Regina 7.0 and earlier, this routine was called
+         * insertChildFirst().
+         *
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
          *
-         * @param child the child to insert.
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
+         * tested, and for which no exceptions are thrown.
+         *
+         * \param child the child to insert.
          */
-        void insertChildFirst(std::shared_ptr<Packet> child);
+        void prepend(std::shared_ptr<Packet> child);
+
+        /**
+         * Deprecated routine that inserts the given packet as the
+         * first child of this packet.
+         *
+         * \deprecated This routine has been renamed to prepend().
+         * See prepend() for further details.
+         *
+         * \pre The given child has no parent packet.
+         * \pre This packet is not a descendant of the given child.
+         *
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
+         * tested, and for which no exceptions are thrown.
+         *
+         * \param child the child to insert.
+         */
+        [[deprecated]] void insertChildFirst(std::shared_ptr<Packet> child);
 
         /**
          * Inserts the given packet as the last child of this packet.
@@ -697,14 +724,40 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * every parent packet stores (either directly or indirectly) a
          * shared_ptr to every one of its descendants in the packet tree.
          *
+         * In Regina 7.0 and earlier, this routine was called insertChildLast().
+         *
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
          *
-         * @param child the child to insert.
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
+         * tested, and for which no exceptions are thrown.
+         *
+         * \param child the child to insert.
          */
-        void insertChildLast(std::shared_ptr<Packet> child);
+        void append(std::shared_ptr<Packet> child);
+
+        /**
+         * Deprecated routine that inserts the given packet as the
+         * last child of this packet.
+         *
+         * \deprecated This routine has been renamed to append().
+         * See append() for further details.
+         *
+         * \pre The given child has no parent packet.
+         * \pre This packet is not a descendant of the given child.
+         *
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
+         * tested, and for which no exceptions are thrown.
+         *
+         * \param child the child to insert.
+         */
+        [[deprecated]] void insertChildLast(std::shared_ptr<Packet> child);
 
         /**
          * Inserts the given packet as a child of this packet at the
@@ -714,18 +767,52 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * every parent packet stores (either directly or indirectly) a
          * shared_ptr to every one of its descendants in the packet tree.
          *
+         * In Regina 7.0 and earlier, this routine was called
+         * insertChildAfter().
+         *
          * This routine takes small constant time.
          *
          * \pre Parameter \a newChild has no parent packet.
          * \pre This packet is already the parent of \a prevChild.
          * \pre This packet is not a descendant of \a newChild.
          *
-         * @param newChild the child to insert.
-         * @param prevChild the preexisting child of this packet after
+         * \exception InvalidArgument The argument \a newChild already has a
+         * parent packet, and/or the argument \a prevChild is non-null and
+         * does not have this packet as its parent.  Note that, although this
+         * tests _some_ of our preconditions, there are other preconditions
+         * that are _not_ tested, and for which no exceptions are thrown.
+         *
+         * \param newChild the child to insert.
+         * \param prevChild the preexisting child of this packet after
          * which \a newChild will be inserted, or \c null if \a newChild
          * is to be the first child of this packet.
          */
-        void insertChildAfter(std::shared_ptr<Packet> newChild,
+        void insert(std::shared_ptr<Packet> newChild,
+            std::shared_ptr<Packet> prevChild);
+
+        /**
+         * Deprecated routine that inserts the given packet as a child of
+         * this packet at the given location in this packet's child list.
+         *
+         * \deprecated This routine has been renamed to insert().
+         * See insert() for further details.
+         *
+         * \pre Parameter \a newChild has no parent packet.
+         * \pre This packet is already the parent of \a prevChild.
+         * \pre This packet is not a descendant of \a newChild.
+         *
+         * \exception InvalidArgument The argument \a newChild already has a
+         * parent packet, and/or the argument \a prevChild is non-null and
+         * does not have this packet as its parent.  Note that, although this
+         * tests _some_ of our preconditions, there are other preconditions
+         * that are _not_ tested, and for which no exceptions are thrown.
+         *
+         * \param newChild the child to insert.
+         * \param prevChild the preexisting child of this packet after
+         * which \a newChild will be inserted, or \c null if \a newChild
+         * is to be the first child of this packet.
+         */
+        [[deprecated]] void insertChildAfter(std::shared_ptr<Packet> newChild,
             std::shared_ptr<Packet> prevChild);
 
         /**
@@ -758,7 +845,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and inserts it as a child of the given packet instead.
          *
          * This routine is essentially a combination of makeOrphan()
-         * followed by either insertChildFirst() or insertChildLast().
+         * followed by either prepend() or append().
          *
          * Even if you are not holding a shared_ptr to this packet yourself,
          * this routine is still safe to use: it will maintain a shared_ptr
@@ -772,14 +859,14 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes small constant time.  It is safe to use
          * regardless of whether this packet currently has a parent or not.
          *
-         * If you wish to reparent \e all of the children of a given
+         * If you wish to reparent _all_ of the children of a given
          * packet, see transferChildren() instead.
          *
          * \pre The given parent is not a descendant of this packet.
          *
-         * @param newParent the new parent of this packet, i.e., the
+         * \param newParent the new parent of this packet, i.e., the
          * packet beneath which this packet will be inserted.
-         * @param first \c true if this packet should be inserted as the
+         * \param first \c true if this packet should be inserted as the
          * first child of the given parent, or \c false (the default) if
          * it should be inserted as the last child.
          */
@@ -809,7 +896,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given parent is not a descendant of this packet.
          *
-         * @param newParent the new parent beneath which the children
+         * \param newParent the new parent beneath which the children
          * will be inserted.
          */
         void transferChildren(const std::shared_ptr<Packet>& newParent);
@@ -835,6 +922,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes time proportional to the number of steps.
          *
          * \pre The given number of steps is strictly positive.
+         *
+         * \param steps the number of steps up to move.
          */
         void moveUp(unsigned steps = 1);
 
@@ -847,6 +936,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes time proportional to the number of steps.
          *
          * \pre The given number of steps is strictly positive.
+         *
+         * \param steps the number of steps down to move.
          */
         void moveDown(unsigned steps = 1);
 
@@ -882,28 +973,19 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /*@{*/
 
         /**
-         * Returns a non-const iterator at the beginning of the range of
+         * Returns a C++ non-const iterator at the beginning of the range of
          * packets in the subtree rooted at this packet.
          *
          * Subtree iteration is depth-first, where a parent packet is always
-         * processed before its descendants.  Therefore the iterator returned
-         * by begin() will always point to this packet itself.
+         * processed before its descendants.  In particular, the iterator
+         * returned by begin() will always point to this packet itself.
          *
-         * The begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops:
+         * In C++, these begin() and end() routines allow you to iterate through
+         * an entire packet subtree using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> subtree = ...;
          * for (Packet& p : *subtree) { ... }
-         * \endcode
-         *
-         * In Python, each packet can be treated as an iterable object, again
-         * iterating through the corresponding subtree:
-         *
-         * \code{.py}
-         * subtree = ...
-         * for p in subtree:
-         *     ...
          * \endcode
          *
          * Since Regina 7.0, the return type is templated in order to support
@@ -916,43 +998,43 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and children() for iterating just through the immediate children
          * of this packet (not the full subtree).
          *
-         * \ifacespython As well as treating each packet as an iterable
-         * object, Regina supplies a member function <tt>Packet.subtree()</tt>
-         * which returns an iterable object.  Iterating over a packet directly
-         * is exactly the same as iterating over <tt>Packet.subtree()</tt>;
-         * the latter is offered because it may be clearer for readers.
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
          *
-         * @return an iterator at the beginning of this subtree.
+         * \return an iterator at the beginning of this subtree.
          */
         SubtreeIterator<false> begin();
 
         /**
-         * Returns a non-const iterator beyond the end of the range of packets
-         * in the subtree rooted at this packet.
+         * Returns a C++ non-const iterator beyond the end of the range of
+         * packets in the subtree rooted at this packet.
          *
-         * In C++, the begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops.
-         * In Python, each packet can be treated as an iterable object.
+         * In C++, these begin() and end() routines allow you to iterate through
+         * an entire packet subtree using range-based \c for loops.
          *
          * See the begin() documentation for further details.
          *
-         * \ifacespython Again, see the begin() documentation for the iterable
-         * objects that Regina provides for Python users.
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
          *
-         * @return an iterator beyond the end of this subtree.
+         * \return an iterator beyond the end of this subtree.
          */
         SubtreeIterator<false> end();
 
         /**
-         * Returns a const iterator at the beginning of the range of packets
+         * Returns a C++ const iterator at the beginning of the range of packets
          * in the subtree rooted at this packet.
          *
          * Subtree iteration is depth-first, where a parent packet is always
-         * processed before its descendants.  Therefore the iterator returned
-         * by begin() will always point to this packet itself.
+         * processed before its descendants.  In particular, the iterator
+         * returned by begin() will always point to this packet itself.
          *
-         * The begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops:
+         * In C++, these begin() and end() routines allow you to iterate through
+         * an entire packet subtree using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> subtree = ...;
@@ -969,22 +1051,70 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and children() for iterating just through the immediate children
          * of this packet (not the full subtree).
          *
-         * @return an iterator at the beginning of this subtree.
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
+         *
+         * \return an iterator at the beginning of this subtree.
          */
         SubtreeIterator<true> begin() const;
 
         /**
-         * Returns a const iterator beyond the end of the range of packets
+         * Returns a C++ const iterator beyond the end of the range of packets
          * in the subtree rooted at this packet.
          *
-         * In C++, the begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops.
+         * In C++, these begin() and end() routines allow you to iterate through
+         * an entire packet subtree using range-based \c for loops.
          *
          * See the begin() documentation for further details.
          *
-         * @return an iterator beyond the end of this subtree.
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
+         *
+         * \return an iterator beyond the end of this subtree.
          */
         SubtreeIterator<true> end() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the packets in the subtree rooted
+         * at this packet.
+         *
+         * Subtree iteration is depth-first, where a parent packet is always
+         * processed before its descendants.  In particular, this packet
+         * (as the root of the subtree) will be processed first.
+         *
+         * In Python, each packet can be treated as an iterable object, with
+         * the effect of iterating through the corresponding subtree:
+         *
+         * \code{.py}
+         * subtree = ...
+         * for p in subtree:
+         *     ...
+         * \endcode
+         *
+         * Regina also supplies Python users with a member function
+         * `Packet.subtree()`, which returns an iterable object.
+         * Iterating over `Packet.subtree()` is exactly the same as
+         * iterating the packet itself; the `subtree()` function is
+         * offered because the intention may be clearer for readers.
+         *
+         * See also descendants() for iterating through just the strict
+         * descendants in the subtree (i.e., excluding this packet itself),
+         * and children() for iterating just through the immediate children
+         * of this packet (not the full subtree).
+         *
+         * \nocpp For C++ users, Packet provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over a packet
+         * subtree in the usual C++ way using a range-based \c for loop.
+         *
+         * \return an iterator over the subtree rooted at this packet.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Returns a lightweight object for iterating through all
@@ -993,12 +1123,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of iteration is exactly the same as when iterating
          * over the full subtree rooted at this packet (as offered by
          * Packet::begin() and Packet::end()), except that the iteration
-         * \e excludes this packet itself.  In particular, the iteration is
+         * _excludes_ this packet itself.  In particular, the iteration is
          * depth-first, and each packet in the subtree is processed
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1024,10 +1154,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * object.
          *
          * See also begin() and end() for iterating through the entire
-         * subtree \e including this packet, and children() for iterating
+         * subtree _including_ this packet, and children() for iterating
          * over just this packet's immediate children.
          *
-         * @return an object for iterating through the strict descendants
+         * \return an object for iterating through the strict descendants
          * of this packet.
          */
         PacketDescendants<false> descendants();
@@ -1039,12 +1169,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of iteration is exactly the same as when iterating
          * over the full subtree rooted at this packet (as offered by
          * Packet::begin() and Packet::end()), except that the iteration
-         * \e excludes this packet itself.  In particular, the iteration is
+         * _excludes_ this packet itself.  In particular, the iteration is
          * depth-first, and each packet in the subtree is processed
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -1062,10 +1192,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * object.
          *
          * See also begin() and end() for iterating through the entire
-         * subtree \e including this packet, and children() for iterating
+         * subtree _including_ this packet, and children() for iterating
          * over just this packet's immediate children.
          *
-         * @return an object for iterating through the strict descendants
+         * \return an object for iterating through the strict descendants
          * of this packet.
          */
         PacketDescendants<true> descendants() const;
@@ -1075,7 +1205,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1104,7 +1234,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * through the subtree rooted at this packet (not just the immediate
          * children).
          *
-         * @return an object for iterating through the children of this packet.
+         * \return an object for iterating through the children of this packet.
          */
         PacketChildren<false> children();
 
@@ -1113,7 +1243,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -1134,7 +1264,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * through the subtree rooted at this packet (not just the immediate
          * children).
          *
-         * @return an object for iterating through the children of this packet.
+         * \return an object for iterating through the children of this packet.
          */
         PacketChildren<true> children() const;
 
@@ -1148,7 +1278,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @return the next packet, or \c null if this is the last packet in
+         * \return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
         std::shared_ptr<Packet> nextTreePacket();
@@ -1163,7 +1293,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @return the next packet, or \c null if this is the last packet in
+         * \return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
         std::shared_ptr<const Packet> nextTreePacket() const;
@@ -1171,15 +1301,14 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /**
          * Finds the first packet of the requested type in a complete
          * depth-first iteration of the tree structure.
-         * Note that this packet <b>must</b> be the matriarch of the
-         * entire tree.
+         * Note that this packet **must** be the matriarch of the entire tree.
          *
          * A parent packet is always reached before its children.  The
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @param type the type of packet to search for.
-         * @return the first such packet, or \c null if there are no packets of
+         * \param type the type of packet to search for.
+         * \return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
         std::shared_ptr<Packet> firstTreePacket(PacketType type);
@@ -1187,15 +1316,14 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /**
          * Finds the first packet of the requested type in a complete
          * depth-first iteration of the tree structure.
-         * Note that this packet <b>must</b> be the matriarch of the
-         * entire tree.
+         * Note that this packet **must** be the matriarch of the entire tree.
          *
          * A parent packet is always reached before its children.  The
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @param type the type of packet to search for.
-         * @return the first such packet, or \c null if there are no packets of
+         * \param type the type of packet to search for.
+         * \return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
         std::shared_ptr<const Packet> firstTreePacket(PacketType type) const;
@@ -1207,8 +1335,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of tree searching is described in
          * firstTreePacket().
          *
-         * @param type the type of packet to search for.
-         * @return the next such packet, or \c null if this is the last packet
+         * \param type the type of packet to search for.
+         * \return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
         std::shared_ptr<Packet> nextTreePacket(PacketType type);
@@ -1220,8 +1348,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of tree searching is described in
          * firstTreePacket().
          *
-         * @param type the type of packet to search for.
-         * @return the next such packet, or \c null if this is the last packet
+         * \param type the type of packet to search for.
+         * \return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
         std::shared_ptr<const Packet> nextTreePacket(PacketType type) const;
@@ -1231,8 +1359,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * subtree for which this packet is matriarch.  Note that label
          * comparisons are case sensitive.
          *
-         * @param label the label to search for.
-         * @return the packet with the requested label, or \c null if there is
+         * \param label the label to search for.
+         * \return the packet with the requested label, or \c null if there is
          * no such packet.
          */
         std::shared_ptr<Packet> findPacketLabel(const std::string& label);
@@ -1242,8 +1370,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * subtree for which this packet is matriarch.  Note that label
          * comparisons are case sensitive.
          *
-         * @param label the label to search for.
-         * @return the packet with the requested label, or \c null if there is
+         * \param label the label to search for.
+         * \return the packet with the requested label, or \c null if there is
          * no such packet.
          */
         std::shared_ptr<const Packet> findPacketLabel(const std::string& label)
@@ -1267,7 +1395,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * sibling of this packet.
          *
          * Note that any string tags associated with this packet will
-         * \e not be cloned.
+         * _not_ be cloned.
          *
          * If this packet has no parent in the tree structure, no clone
          * will be created and \c null will be returned.
@@ -1278,20 +1406,20 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \note Since Regina 7.0, if a normal surface/hypersurface or
          * angle structure list is cloned, then the new clone will refer
-         * back to the \e original triangulation, even if we are cloning
+         * back to the _original_ triangulation, even if we are cloning
          * an entire packet tree.  This is because there is no guarantee that
          * the original triangulation was cloned also (it could live outside
          * the cloned subtree, or might not be part of a packet tree at all).
          *
-         * @param cloneDescendants \c true if the descendants of this
+         * \param cloneDescendants \c true if the descendants of this
          * packet should also be cloned and inserted as descendants of
          * the new packet.  If this is passed as \c false (the default),
          * only this packet will be cloned.
-         * @param end \c true if the new packet should be inserted at
+         * \param end \c true if the new packet should be inserted at
          * the end of the parent's list of children (the default), or
          * \c false if the new packet should be inserted as the sibling
          * immediately after this packet.
-         * @return the newly inserted packet, or \c null if this packet has no
+         * \return the newly inserted packet, or \c null if this packet has no
          * parent.
          */
         std::shared_ptr<Packet> cloneAsSibling(bool cloneDescendants = false,
@@ -1316,18 +1444,18 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given packet does not depend on its parent.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name,
+         * \ref i18n "character encoding" used in the given file _name_,
          * and simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
-         * @param filename the pathname of the file to write to.
-         * @param compressed \c true if the XML data should be compressed,
+         * \param filename the pathname of the file to write to.
+         * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
-         * @return \c true if and only if the file was successfully written.
+         * \return \c true if and only if the file was successfully written.
          */
         bool save(const char* filename, bool compressed = true,
             FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
@@ -1345,19 +1473,19 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given stream is open for writing.
          * \pre The given packet does not depend on its parent.
          *
-         * \ifacespython Not present, to avoid confusion with the
-         * filename-based save().  However, if you wish to write a Regina
+         * \nopython This is not available in Python to avoid confusion with
+         * the filename-based save().  However, if you wish to write a Regina
          * XML data file directly to an open Python file, you can still use
          * writeXMLFile() for this.
          *
-         * @param s the output stream to which to write.
-         * @param compressed \c true if the XML data should be compressed,
+         * \param s the output stream to which to write.
+         * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
-         * @return \c true if and only if the data was successfully written.
+         * \return \c true if and only if the data was successfully written.
          */
         bool save(std::ostream& s, bool compressed = true,
             FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
@@ -1375,12 +1503,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet tree,
          * which will write the entire packet tree to the output stream.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML data file should
+         * \param out the output stream to which the XML data file should
          * be written.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
@@ -1407,7 +1535,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The ID is implemented as an encoding of the underlying C++ pointer.
          * This encoding is subject to change in later versions of Regina.
          *
-         * @return a unique ID that identifies this packet.
+         * \return a unique ID that identifies this packet.
          */
         std::string internalID() const;
 
@@ -1434,17 +1562,23 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * "inner" ChangeEventSpan objects earlier represent smaller events
          * that are part of a larger suite of changes.
          *
-         * If you are writing code that makes a large number of changes
-         * to a packet, it is highly recommended that you declare a
-         * ChangeEventSpan at the beginning of your code.  This will ensure
+         * If you are writing a block of code that makes a large number of
+         * changes to a packet, it is highly recommended that you declare a
+         * ChangeEventSpan at the beginning of this block.  This will ensure
          * that listeners only receive one pair of events for the
          * entire change set, instead of many events representing each
-         * individual modification.
+         * individual modification.  If a ChangeEventSpan \a s is _only_ for
+         * this purpose (i.e., the necessary events would have been fired
+         * without it, but \a s serves to merge many event pairs into just one
+         * event pair), then consider declaring \a s using the equivalent type
+         * ChangeEventGroup (which makes its purpose clearer to the reader).
          *
          * ChangeEventSpan objects are not copyable, movable or swappable.
          * In particular, Regina does not offer any way for a ChangeEventSpan
          * to transfer its duty (i.e., firing events upon destruction) to
          * another object.
+         *
+         * \nopython
          */
         class ChangeEventSpan {
             private:
@@ -1461,7 +1595,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
                  * PacketListener::packetToBeChanged() for all
                  * registered listeners for the given packet.
                  *
-                 * @param packet the packet whose data is about to change.
+                 * \param packet the packet whose data is about to change.
                  */
                 ChangeEventSpan(Packet& packet);
 
@@ -1479,6 +1613,39 @@ class Packet : public std::enable_shared_from_this<Packet>,
                 ChangeEventSpan(const ChangeEventSpan&) = delete;
                 ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
         };
+
+        /**
+         * A type alias for ChangeEventSpan, used when a span is being used
+         * purely for optimisation purposes.
+         *
+         * Suppose you have a block of code that makes many changes to a
+         * packet, and each such change fires a pair of packet change events
+         * using its own internal ChangeEventSpan.  (An example of this
+         * could be a high-level function that modifies a triangulation by
+         * calling Simplex::join() many times.)  Then it is desirable to
+         * wrap the entire block in an outer ChangeEventSpan, so that this
+         * larger sequence of event pairs will be merged into just a single
+         * pair of change events.
+         *
+         * In this scenario, the outer span is _only_ for optimisation:
+         * the code would be correct without it (i.e., the necessary
+         * initial PacketListener::packetToBeChanged() and final
+         * PacketListener::packetWasChanged() events would still have been
+         * fired), but it does serve to make the code faster (since it removes
+         * the unnecessary intermediate events).
+         *
+         * For this outer span, it is recommended that you use the equivalent
+         * type ChangeEventGroup instead.  This is for the benefit of the
+         * human reader, so that they know that the outer span is purely for
+         * optimisation (and in particular, that the code would still be
+         * correct without it).
+         *
+         * Since this is just a type alias, it is purely for readability:
+         * using ChangeEventGroup instead of ChangeEventSpan makes no
+         * changes to the compiled code, and the conventions around when
+         * it should be used are not enforced at compile time or runtime.
+         */
+        using ChangeEventGroup = ChangeEventSpan;
 
     protected:
         using PacketRefs = std::map<const Packet*, bool>;
@@ -1511,13 +1678,13 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This is provided so that derived classes can use it implicitly
          * in their own assignment operators.
          *
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         Packet& operator = (const Packet&) { return *this; }
 
         /**
-         * Makes a new copy of this packet.  This routine should \e not
+         * Makes a new copy of this packet.  This routine should _not_
          * insert the new packet into the tree structure, clone the packet's
          * associated tags or give the packet a label.  It should also not
          * clone any descendants of this packet.
@@ -1526,7 +1693,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * inserted into the tree beneath either the same parent as this
          * packet or a clone of that parent.
          *
-         * @return the newly created packet.
+         * \return the newly created packet.
          */
         virtual std::shared_ptr<Packet> internalClonePacket() const = 0;
 
@@ -1545,24 +1712,24 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * If this packet appears as a key in the \a refs map, or if the
          * \a anon argument indicates that we are in an anonymous block,
-         * then this routine will set <tt>refs[this]</tt> as \c true
+         * then this routine will set `refs[this]` as \c true
          * to record that this packet is now being written to XML.
          *
-         * @param out the output stream to which the opening XML tag
+         * \param out the output stream to which the opening XML tag
          * should be written.
-         * @param element the name of the XML tag.  If we are writing to
+         * \param element the name of the XML tag.  If we are writing to
          * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param anon \c true if this packet is being written within an
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param anon \c true if this packet is being written within an
          * anonymous block.  If so, then the packet ID will always be written.
-         * @param refs manages the necessary references between packets
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
-         * @param newline indicates whether the opening XML tag should be
+         * \param newline indicates whether the opening XML tag should be
          * followed by a newline.  Normally this would be \c true, but
          * if you need to avoid whitespace between the opening XML tag
          * and the packet contents then you should pass \c false instead.
-         * @param attr any additional attributes to write to the XML tag;
+         * \param attr any additional attributes to write to the XML tag;
          * each attribute should a pair of the form (\a attribute, \a value).
          * When writing to the REGINA_XML_GEN_2 format, this will be ignored.
          */
@@ -1585,10 +1752,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre This packet is not contained within an anonymous block.
          *
-         * @param out the output stream to which the closing XML tag
+         * \param out the output stream to which the closing XML tag
          * should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param refs manages the necessary references between packets
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
         void writeXMLTreeData(std::ostream& out, FileFormat format,
@@ -1601,12 +1768,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * There will be no whitespace before the closing XML tag.
          * The tag will be followed by a newline.
          *
-         * @param out the output stream to which the closing XML tag
+         * \param out the output stream to which the closing XML tag
          * should be written.
-         * @param element the name of the XML tag.  If we are writing to
+         * \param element the name of the XML tag.  If we are writing to
          * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          */
         void writeXMLFooter(std::ostream& out, const char* element,
             FileFormat format) const;
@@ -1620,15 +1787,15 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * done yet.
          *
          * This function simply creates an \c anon XML block, and within
-         * it calls <tt>p.writeXMLPacketData()</tt> with the \a anon
+         * it calls `p.writeXMLPacketData()` with the \a anon
          * argument set to \c true.
          *
-         * @param out the output stream to which the anonymous block
+         * \param out the output stream to which the anonymous block
          * should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param refs manages the necessary references between packets
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
-         * @param p the packet to write inside the anonymous block.
+         * \param p the packet to write inside the anonymous block.
          */
         void writeXMLAnon(std::ostream& out, FileFormat format,
             PacketRefs& refs, const Packet& p) const;
@@ -1673,12 +1840,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * should not be used as a complete XML file.  For a complete
          * XML file, see routine writeXMLFile() instead.
          *
-         * @param out the output stream to which the XML should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param anon \c true if this packet is being written within an
+         * \param out the output stream to which the XML should be written.
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param anon \c true if this packet is being written within an
          * anonymous block.  If so, then the packet ID must be included,
          * and any packet tags and/or child packets must be excluded.
-         * @param refs manages the necessary references between packets
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
         virtual void writeXMLPacketData(std::ostream& out,
@@ -1695,16 +1862,16 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * this will ensure that the XML header for \a p will include an
          * explicit ID that this packet can then refer to.
          *
-         * Later on, as the XML is written, the value <tt>refs[p]</tt> will be
+         * Later on, as the XML is written, the value `refs[p]` will be
          * changed from \c false to \c true once \a p has been written.
          *
-         * If your packet requires that the \e contents of \a p appear
+         * If your packet requires that the _contents_ of \a p appear
          * before this packet it the XML data file, then writeXMLPacketData()
          * should check \a refs to see if \a p has already been written,
          * and if not, it should write \a p in a new anonymous block.
          *
          * It is fine if \a p does not actually belong to this packet tree.
-         * However, in this case writeXMLPacketData() \e must take
+         * However, in this case writeXMLPacketData() _must_ take
          * responsibility to ensure that \a p is written to file.
          * This would need to be done via writeXMLAnon(); moreover, as
          * before, it should only be done only after checking \a refs to
@@ -1712,7 +1879,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * The default implementation of this routine does nothing.
          *
-         * @param refs the map in which any dependencies should be recorded.
+         * \param refs the map in which any dependencies should be recorded.
          */
         virtual void addPacketRefs(PacketRefs& refs) const;
 
@@ -1725,7 +1892,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given parent is a clone of this packet.
          *
-         * @param parent the parent beneath which the descendant clones
+         * \param parent the parent beneath which the descendant clones
          * will be inserted.
          */
         void internalCloneDescendants(Packet& parent) const;
@@ -1739,7 +1906,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
          *
-         * @param event the member function of PacketListener to be called
+         * \param event the member function of PacketListener to be called
          * for each listener.
          */
         void fireEvent(void (PacketListener::*event)(Packet&));
@@ -1753,9 +1920,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
          *
-         * @param event the member function of PacketListener to be called
+         * \param event the member function of PacketListener to be called
          * for each listener.
-         * @param arg2 the second argument to pass to the event function.
+         * \param arg2 the second argument to pass to the event function.
          */
         void fireEvent(void (PacketListener::*event)(Packet&, Packet&),
             Packet& arg2);
@@ -1787,13 +1954,13 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * If this packet appears as a key in the \a refs map, or if the
          * \a anon argument indicates that we are in an anonymous block,
-         * then this routine will set <tt>refs[this]</tt> as \c true
+         * then this routine will set `refs[this]` as \c true
          * to record that this packet is now being written to XML.
          *
-         * @param out the output stream to which to write.
-         * @param anon \c true if this packet is being written within an
+         * \param out the output stream to which to write.
+         * \param anon \c true if this packet is being written within an
          * anonymous block.  If so, then the packet ID will always be written.
-         * @param refs manages the necessary references between packets
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
         void writeXMLPacketAttributes(std::ostream& out, bool anon,
@@ -1806,9 +1973,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This must be reimplemented by subclasses.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
          virtual void writeTextShort(std::ostream& out) const = 0;
         /**
@@ -1818,9 +1985,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This may be reimplemented by subclasses, but the parent
          * Packet class offers a reasonable default implementation.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
          virtual void writeTextLong(std::ostream& out) const;
 
@@ -1848,6 +2015,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
  * which is then held by a PacketOf<SnapPeaTriangulation>.  In this case
  * the inherited PacketData<Triangulation<3>> will store HELD_BY_SNAPPEA, and
  * the inherited PacketData<SnapPeaTriangulation> will store HELD_BY_PACKET.
+ *
+ * \nopython
  */
 enum PacketHeldBy {
     /**
@@ -1870,9 +2039,9 @@ enum PacketHeldBy {
 /**
  * A packet that stores a mathematical object of type \a Held.
  *
- * This is the class used for all of Regina's <i>wrapped packet types</i>.
+ * This is the class used for all of Regina's _wrapped packet types_.
  * See the Packet class notes for general information about packets, and
- * about the differences between \e wrapped and \e innate packet types.
+ * about the differences between _wrapped_ and _innate_ packet types.
  *
  * You can use a PacketOf<Held> in much the same way as you can use a "raw"
  * object of type \a Held.  This class inherits the full interface from
@@ -1889,7 +2058,7 @@ enum PacketHeldBy {
  *   copies and swaps do not touch the tree structure, and moves are not
  *   supported at all.
  *
- * - The \a Held class will typically \e not be polymorphic.  In contrast,
+ * - The \a Held class will typically _not_ be polymorphic.  In contrast,
  *   PacketOf<Held> aquires polymorphism through its inherited Packet
  *   interface.
  *
@@ -1900,7 +2069,7 @@ enum PacketHeldBy {
  * infrastructure (e.g., they do not touch packet labels, or the packet
  * tree, or event listeners).
  *
- * \ifacespython Since Python does not support templates, this class
+ * \python Since Python does not support templates, this class
  * will have a name of the form PacketOfHeld.  For example, the C++ class
  * Link is wrapped by the Python class \c PacketOfLink, and the C++ class
  * Triangulation<3> is wrapped by the Python class \c PacketOfTriangulation3.
@@ -1928,7 +2097,7 @@ class PacketOf : public Packet, public Held {
          * The packet will not be inserted into any packet tree, and
          * will have an empty packet label.
          *
-         * @param data the object to copy.
+         * \param data the object to copy.
          */
         PacketOf(const Held& data) : Held(data) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
@@ -1943,7 +2112,7 @@ class PacketOf : public Packet, public Held {
          *
          * The object that is passed (\a data) will no longer be usable.
          *
-         * @param data the object to move.
+         * \param data the object to move.
          */
         PacketOf(Held&& data) : Held(std::move(data)) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
@@ -1961,10 +2130,10 @@ class PacketOf : public Packet, public Held {
          * The new packet will not be inserted into any packet tree, and
          * will have an empty packet label.
          *
-         * \ifacespython The initial \c std::in_place argument is not present.
+         * \python The initial \c std::in_place argument is not present.
          * Just use PacketOf(args...).
          *
-         * @param args the arguments to be forwarded to the appropriate
+         * \param args the arguments to be forwarded to the appropriate
          * \a Held constructor.
          */
         template <typename... Args>
@@ -1980,7 +2149,7 @@ class PacketOf : public Packet, public Held {
          * it will not clone the given packet's children, and it will not
          * insert the new packet into any packet tree).
          *
-         * @param src the packet whose contents should be copied.
+         * \param src the packet whose contents should be copied.
          */
         PacketOf(const PacketOf<Held>& src) : Held(src) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
@@ -1988,8 +2157,8 @@ class PacketOf : public Packet, public Held {
         /**
          * Sets the content of this packet to be a copy of the given data.
          *
-         * @param data the object to copy.
-         * @return a reference to this packet.
+         * \param data the object to copy.
+         * \return a reference to this packet.
          */
         PacketOf<Held>& operator = (const Held& data) {
             // We assume that Held takes care of the necessary change events.
@@ -2004,8 +2173,8 @@ class PacketOf : public Packet, public Held {
          *
          * The object that is passed (\a data) will no longer be usable.
          *
-         * @param data the object to move.
-         * @return a reference to this packet.
+         * \param data the object to move.
+         * \return a reference to this packet.
          */
         PacketOf<Held>& operator = (Held&& data) {
             // We assume that Held takes care of the necessary change events.
@@ -2019,8 +2188,8 @@ class PacketOf : public Packet, public Held {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @param src the packet whose contents should be copied.
-         * @return a reference to this packet.
+         * \param src the packet whose contents should be copied.
+         * \return a reference to this packet.
          */
         PacketOf<Held>& operator = (const PacketOf<Held>& src) {
             // We assume that Held takes care of the necessary change events.
@@ -2058,6 +2227,9 @@ class PacketOf : public Packet, public Held {
  * is a single PacketHeldBy enumeration value.  All of the class constructors
  * set this value to HELD_BY_NONE; it is the responsibility of subclasses
  * (e.g., PacketOf<Held>) to change this where necessary.
+ *
+ * \python Not present, but the routines anonID() and packet() will be
+ * provided directly through the various subclasses.
  */
 template <typename Held>
 class PacketData {
@@ -2078,7 +2250,7 @@ class PacketData {
         /**
          * Copy constructor that ignores its argument, and instead sets
          * \a heldBy_ to HELD_BY_NONE.  This is because \a heldBy_ stores
-         * information about the C++ type of \e this object, not the object
+         * information about the C++ type of _this_ object, not the object
          * being copied.
          *
          * This constructor is provided so that \a Held can (if it wants) use
@@ -2088,12 +2260,12 @@ class PacketData {
         /**
          * Assignment operator that ignores its argument and does nothing.
          * This is because \a heldBy_ stores information about the C++ type
-         * of \e this object, not the object being copied.
+         * of _this_ object, not the object being copied.
          *
          * This operator is provided so that \a Held can (if it wants) use an
          * implicitly-declared copy or move assignment operator.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         PacketData& operator = (const PacketData&) { return *this; }
 
@@ -2124,7 +2296,7 @@ class PacketData {
          * The function inAnyPacket() is specific to Triangulation<3>, and is
          * not offered for other \a Held types.
          *
-         * @return the packet that holds this data, or \c null if this
+         * \return the packet that holds this data, or \c null if this
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<PacketOf<Held>> packet() {
@@ -2140,7 +2312,7 @@ class PacketData {
          * and in particular for how this functions operations in the
          * special case of a packet that holds a SnapPea triangulation.
          *
-         * @return the packet that holds this data, or \c null if this
+         * \return the packet that holds this data, or \c null if this
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<const PacketOf<Held>> packet() const {
@@ -2167,16 +2339,16 @@ class PacketData {
          * - not clash with the anonID() returned from any other object,
          *   or with the internalID() returned from any packet of any type;
          *
-         * These IDs are \e not preserved when copying or moving one
+         * These IDs are _not_ preserved when copying or moving one
          * object to another, and are not preserved when writing to a
          * Regina data file and then reloading the file contents.
          *
-         * \warning If this object \e is wrapped in a PacketOf<Held>, then
-         * anonID() and Packet::internalID() may return \e different values.
+         * \warning If this object _is_ wrapped in a PacketOf<Held>, then
+         * anonID() and Packet::internalID() may return _different_ values.
          *
          * See Packet::internalID() for further details.
          *
-         * @return a unique ID that identifies this object.
+         * \return a unique ID that identifies this object.
          */
         std::string anonID() const;
 
@@ -2194,7 +2366,7 @@ class PacketData {
          *   destructor are both extremely cheap (each will make just a
          *   single integer comparison).
          *
-         * - If the underlying \a Held object \e is part of a PacketOf<Held>,
+         * - If the underlying \a Held object _is_ part of a PacketOf<Held>,
          *   then this ChangeEventSpan will ensure that the appropriate
          *   packet events are fired (just like Packet::ChangeEventSpan).
          *
@@ -2202,6 +2374,11 @@ class PacketData {
          * so that only the outermost object will fire change events;
          * furthermore, PacketData<Held>::ChangeEventSpan objects and
          * Packet::ChangeEventSpan objects can be nested within each other.
+         *
+         * Also, just like Packet::ChangeEventSpan and Packet::ChangeEventGroup,
+         * there is an equivalent type PacketData::ChangeEventGroup whose
+         * purpose is to indicate to the reader that the an object is being
+         * used _only_ to merge many event pairs into a single event pair.
          *
          * When working with PacketData<Triangulation<3>>, this class
          * includes special code that nullifies a SnapPea triangulation
@@ -2212,9 +2389,11 @@ class PacketData {
          * In particular, Regina does not offer any way for a ChangeEventSpan
          * to transfer its duty (i.e., firing events upon destruction) to
          * another object.
+         *
+         * \nopython
          */
         class ChangeEventSpan {
-            private:
+            protected:
                 PacketData& data_;
                     /**< The object for which - if it belongs to a
                          PacketOf<Held> - change events will be fired. */
@@ -2230,7 +2409,7 @@ class PacketData {
                  * PacketListener::packetToBeChanged() for all
                  * registered listeners for the packet.
                  *
-                 * @param data the object whose data is about to change;
+                 * \param data the object whose data is about to change;
                  * this may or may not be of the subclass PacketOf<Held>.
                  */
                 ChangeEventSpan(PacketData& data);
@@ -2246,10 +2425,31 @@ class PacketData {
                  */
                 ~ChangeEventSpan();
 
+                /**
+                 * Returns the underlying \a Held object.
+                 *
+                 * \return the \a Held object that was originally passed
+                 * to the ChangeEventSpan constructor.
+                 */
+                Held& held() const;
+
                 // Make this class non-copyable.
                 ChangeEventSpan(const ChangeEventSpan&) = delete;
                 ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
         };
+
+        /**
+         * A type alias for ChangeEventSpan, used when a span is being used
+         * purely for optimisation purposes.
+         *
+         * This type alias is used in the same way as Packet::ChangeEventGroup:
+         * it is purely for the benefit of the human reader, used to indicate
+         * that an event span is present purely for optimisation (and in
+         * particular, that the code would still be correct without it).
+         *
+         * See Packet::ChangeEventGroup for further details.
+         */
+        using ChangeEventGroup = ChangeEventSpan;
 
     friend class PacketOf<Held>;
 };
@@ -2267,13 +2467,13 @@ class PacketData {
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython The \a src argument is a const reference, and this routine
+ * \python The \a src argument is a const reference, and this routine
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
  *
- * @param src the \a Held object that will be moved into the new packet;
+ * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
- * @return the new wrapped packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2298,14 +2498,14 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  * wrapping the new packet in a std::shared_ptr, as is required for all
  * packets in Regina.
  *
- * \ifacespython The \a src argument is a const reference, and this routine
+ * \python The \a src argument is a const reference, and this routine
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
  *
- * @param src the \a Held object that will be moved into the new packet;
+ * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
- * @param label the label to assign to the new packet.
- * @return the new wrapped packet.
+ * \param label the label to assign to the new packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2338,13 +2538,12 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present, since this routine is too heavily templated
- * for Python.  Instead you can just directly call the constructor
- * <tt>PacketOfHeld(args...)</tt>.
+ * \nopython This routine is too heavily templated for Python.  Instead you
+ * can just directly call the constructor `PacketOfHeld(args...)`.
  *
- * @param args the arguments to be forwarded to the appropriate
+ * \param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
- * @return the new wrapped packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2367,11 +2566,10 @@ std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present, since this routine is too heavily templated
- * for Python.  Instead you can just directly call the constructor
- * <tt>PacketOfHeld()</tt>.
+ * \nopython This routine is too heavily templated for Python.  Instead you
+ * can just directly call the constructor `PacketOfHeld()`.
  *
- * @return the new wrapped packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2391,15 +2589,15 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
  * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will \e not work,
- * since PacketOf<SnapPeaTriangulation> is \e not a subclass of
+ * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
+ * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \param p a reference, presented as a packet.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup packet
  */
@@ -2419,15 +2617,15 @@ Held& static_packet_cast(Packet& p) {
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
  * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will \e not work,
- * since PacketOf<SnapPeaTriangulation> is \e not a subclass of
+ * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
+ * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \param p a reference, presented as a packet.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup packet
  */
@@ -2447,18 +2645,18 @@ const Held& static_packet_cast(const Packet& p) {
  * its descendants, if any) will simply be ignored.
  *
  * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and simply
+ * \ref i18n "character encoding" used in the given file _name_, and simply
  * passes it through unchanged to low-level C/C++ file I/O routines.
  *
- * \ifacespython This function is not automatically imported into the
+ * \python This function is not automatically imported into the
  * global namespace when running regina-python, or when opening a Python
  * console in the graphical user interface, or even when typing
- * <tt>from regina import *</tt>.  This is to avoid overriding
+ * `from regina import *`.  This is to avoid overriding
  * Python's own built-in open() function.  You can access Regina's open()
- * function by calling <tt>regina.open()</tt>.
+ * function by calling `regina.open()`.
  *
- * @param filename the pathname of the file to read from.
- * @return the packet tree read from file, or \c null on error.
+ * \param filename the pathname of the file to read from.
+ * \return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
  */
@@ -2477,11 +2675,10 @@ std::shared_ptr<Packet> open(const char* filename);
  *
  * \pre The given stream is open for reading.
  *
- * \ifacespython Not present; instead you can use the variant of open() that
- * takes a filename.
+ * \nopython Instead you can use the variant of open() that takes a filename.
  *
- * @param in the input stream to read from.
- * @return the packet tree read from file, or \c null on error.
+ * \param in the input stream to read from.
+ * \return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
  */
@@ -2499,13 +2696,13 @@ std::shared_ptr<Packet> open(std::istream& in);
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the child packets.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
- * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
- * then ChildIterator implements <tt>next()</tt>, which either returns
+ * the single function `__iter__()`, which returns a ChildIterator;
+ * then ChildIterator implements `__next__()`, which either returns
  * the next child packet in the iteration or else throws a
- * <tt>StopException</tt> if there are no more children to return.
+ * `StopException` if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
  *
@@ -2516,7 +2713,7 @@ class ChildIterator {
     public:
         using value_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
-                 This is either <tt>Packet</tt> or <tt>const Packet</tt>,
+                 This is either `Packet` or `const Packet`,
                  according to the template argument \a const_. */
         using iterator_category = std::forward_iterator_tag;
             /**< Declares this to be a forward iterator type. */
@@ -2536,90 +2733,106 @@ class ChildIterator {
         /**
          * Creates a past-the-end iterator.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          */
         ChildIterator() = default;
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given iterator.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          */
         ChildIterator(const ChildIterator&) = default;
         /**
          * Creates a new iterator pointing to the given child packet.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          *
-         * @param current the child packet that the new iterator should
+         * \param current the child packet that the new iterator should
          * point to, or \c null if the new iterator should be past-the-end.
          */
         ChildIterator(std::shared_ptr<value_type> current);
 
         /**
-         * Default copy assignment operator.
+         * Sets this to be a copy of the given iterator.
+         *
+         * \return a reference to this iterator.
          */
         ChildIterator& operator = (const ChildIterator&) = default;
 
         /**
          * Tests whether this and the given iterator are equal.
          *
-         * @return true if and only if the two iterators are equal.
+         * \return true if and only if the two iterators are equal.
          */
         bool operator == (const ChildIterator& rhs) const;
         /**
          * Tests whether this and the given iterator are different.
          *
-         * @return true if and only if the two iterators are different.
+         * \return true if and only if the two iterators are different.
          */
         bool operator != (const ChildIterator& rhs) const;
 
         /**
          * Preincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is past-the-end.
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
-         * @return a reference to this iterator.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
+         *
+         * \return a reference to this iterator.
          */
         ChildIterator& operator ++ ();
         /**
          * Postincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is past-the-end.
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
-         * @return a a copy of this iterator before it was incremented.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
+         *
+         * \return a a copy of this iterator before it was incremented.
          */
         ChildIterator operator ++ (int);
+#ifdef __APIDOCS
+        /**
+         * Returns the current child packet and increments this iterator.
+         *
+         * \nocpp For C++ users, ChildIterator provides the usual iterator
+         * preincrement, postincrement and dereferencing operators (++ and *)
+         * instead.
+         *
+         * \exception StopIteration The iterator is already past-the-end
+         * when this function is called.
+         *
+         * \return the child packet that this iterator is pointing to, before
+         * the increment takes place.
+         */
+        auto __next__();
+#endif
 
         /**
          * Returns the packet that this iterator is currently pointing to.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is past-the-end.
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
-         * @return the current packet.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
+         *
+         * \return the current packet.
          */
         value_type& operator * () const;
 
         /**
          * Identifies whether this iterator is dereferencable.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is not dereferencable.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
-         * @return \c true if and only if this is dereferencable (i.e.,
+         * \return \c true if and only if this is dereferencable (i.e.,
          * not past-the-end).
          */
         operator bool() const;
@@ -2640,11 +2853,11 @@ class ChildIterator {
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the packet tree.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * this class implements the Python iterable/iterator interface.  It implements
- * the function <tt>__iter__()</tt>, which returns the iterator object itself;
- * it also implements <tt>next()</tt>, which either returns the next packet
- * in the subtree iteration or else throws a <tt>StopException</tt> if there
+ * the function `__iter__()`, which returns the iterator object itself;
+ * it also implements `__next__()`, which either returns the next packet
+ * in the subtree iteration or else throws a `StopException` if there
  * are no more packets to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
@@ -2656,7 +2869,7 @@ class SubtreeIterator {
     public:
         using value_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
-                 This is either <tt>Packet</tt> or <tt>const Packet</tt>,
+                 This is either `Packet` or `const Packet`,
                  according to the template argument \a const_. */
         using iterator_category = std::forward_iterator_tag;
             /**< Declares this to be a forward iterator type. */
@@ -2678,16 +2891,16 @@ class SubtreeIterator {
         /**
          * Creates a past-the-end iterator.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          */
         SubtreeIterator() = default;
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given iterator.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          */
         SubtreeIterator(const SubtreeIterator&) = default;
@@ -2696,11 +2909,11 @@ class SubtreeIterator {
          * the given subtree.  Dereferencing this iterator will return
          * \a subtree itself.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
-         * @param subtree the packet subtree that we are iterating through.
+         * \param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
          */
@@ -2709,14 +2922,14 @@ class SubtreeIterator {
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
-         * @param subtree the packet subtree that we are iterating through.
+         * \param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
-         * @param current the packet within the subtree that the new iterator
+         * \param current the packet within the subtree that the new iterator
          * should point to, or \c null if the new iterator should be
          * past-the-end.
          * If \a current is not null, then it must be equal to or a
@@ -2726,75 +2939,109 @@ class SubtreeIterator {
             std::shared_ptr<value_type> current);
 
         /**
-         * Default copy assignment operator.
+         * Sets this to be a copy of the given iterator.
+         *
+         * \return a reference to this iterator.
          */
         SubtreeIterator& operator = (const SubtreeIterator&) = default;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all members of the relevant
+         * packet subtree.
+         *
+         * \nocpp For C++ users, you can access such iterators by calling
+         * begin() and end() on either (i) the packet at the root of the
+         * subtree, or (ii) the PacketDescendant object returned by
+         * Packet::descendants().  In particular, this allows you to iterate
+         * through a packet subtree (including or excluding the subtree root
+         * respectively) using a range-based \c for loop.
+         *
+         * \return an iterator over all members of the relevant packet subtree.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Tests whether this and the given iterator are equal.
          *
-         * \note This routine only compares the packets that each iterator
+         * This routine only compares the packets that each iterator
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
-         * @return true if and only if the two iterators are equal.
+         * \return true if and only if the two iterators are equal.
          */
         bool operator == (const SubtreeIterator& rhs) const;
         /**
          * Tests whether this and the given iterator are different.
          *
-         * \note This routine only compares the packets that each iterator
+         * This routine only compares the packets that each iterator
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
-         * @return true if and only if the two iterators are different.
+         * \return true if and only if the two iterators are different.
          */
         bool operator != (const SubtreeIterator& rhs) const;
 
         /**
          * Preincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
-         * @return a reference to this iterator.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
+         *
+         * \return a reference to this iterator.
          */
         SubtreeIterator& operator ++ ();
         /**
          * Postincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
-         * @return a copy of this iterator before it was incremented.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
+         *
+         * \return a copy of this iterator before it was incremented.
          */
         SubtreeIterator operator ++ (int);
+#ifdef __APIDOCS
+        /**
+         * Returns the current packet in the subtree and increments this
+         * iterator.
+         *
+         * \nocpp For C++ users, SubtreeIterator provides the usual iterator
+         * preincrement, postincrement and dereferencing operators (++ and *)
+         * instead.
+         *
+         * \exception StopIteration The iterator is already past-the-end
+         * when this function is called.
+         *
+         * \return the packet that this iterator is pointing to, before
+         * the increment takes place.
+         */
+        auto __next__();
+#endif
 
         /**
          * Returns the packet that this iterator is currently pointing to.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
-         * @return the current packet.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
+         *
+         * \return the current packet.
          */
         value_type& operator * () const;
 
         /**
          * Identifies whether this iterator is dereferencable.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is not dereferencable.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
-         * @return \c true if and only if this is dereferencable (i.e.,
+         * \return \c true if and only if this is dereferencable (i.e.,
          * not past-the-end).
          */
         operator bool() const;
@@ -2805,7 +3052,7 @@ class SubtreeIterator {
  * given packet.
  *
  * The purpose of this class is to support iteration through all children of a
- * packet \a p using C++11 range-based \c for loops:
+ * packet \a p using range-based \c for loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
@@ -2833,13 +3080,13 @@ class SubtreeIterator {
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the child packets.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
- * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
- * then ChildIterator implements <tt>next()</tt>, which either returns
+ * the single function `__iter__()`, which returns a ChildIterator;
+ * then ChildIterator implements `__next__()`, which either returns
  * the next child packet in the iteration or else throws a
- * <tt>StopException</tt> if there are no more children to return.
+ * `StopException` if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
  *
@@ -2849,7 +3096,7 @@ template <bool const_>
 class PacketChildren {
     public:
         using packet_type = std::conditional_t<const_, const Packet, Packet>;
-            /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
+            /**< Either `Packet` or `const Packet`, according to
                  the template argument \a const_. */
 
     private:
@@ -2858,52 +3105,80 @@ class PacketChildren {
 
     public:
         /**
-         * Default copy constructor.
+         * Creates a new object for iterating through the children
+         * of the same packet as the given object.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketChildren object is via
+         * Packet::children().
          */
         PacketChildren(const PacketChildren&) = default;
         /**
          * Creates a new object for iterating through the immediate
          * children of the given packet.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketChildren object is via
+         * Packet::children().
          *
-         * @param parent the packet whose children we will iterate through.
+         * \param parent the packet whose children we will iterate through.
          */
         PacketChildren(std::shared_ptr<packet_type> parent);
 
         /**
-         * Default copy assignment operator.
+         * Sets this object to iterate over the children of the same packet
+         * as the given object.
          *
-         * \ifacespython Not present.
+         * \return a reference to this object.
          */
         PacketChildren& operator = (const PacketChildren&) = default;
 
         /**
-         * Returns an iterator at the beginning of the range of children.
+         * Returns a C++ iterator pointing to the first immediate child packet.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * The iterator range from begin() to end() runs through all
+         * immediate children in order from first to last.
          *
-         * @return the beginning iterator.
+         * \nopython For Python users, PacketChildren implements the Python
+         * iterable interface.  You can iterate over all immediate child
+         * packets in the usual Python way, by treating this PacketChildren
+         * object as you would any native Python container.
+         *
+         * \return the beginning iterator.
          */
         ChildIterator<const_> begin() const;
         /**
-         * Returns an iterator at the end of the range of children.
+         * Returns a C++ iterator pointing beyond the last immediate
+         * child packet.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * The iterator range from begin() to end() runs through all
+         * immediate children in order from first to last.
          *
-         * @return the past-the-end iterator.
+         * \nopython For Python users, PacketChildren implements the Python
+         * iterable interface.  You can iterate over all immediate child
+         * packets in the usual Python way, by treating this PacketChildren
+         * object as you would any native Python container.
+         *
+         * \return the past-the-end iterator.
          */
         ChildIterator<const_> end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all immediate child packets.
+         *
+         * \nocpp For C++ users, PacketChildren provides the usual
+         * begin() and end() functions instead.  In particular, this
+         * allows you to iterate through all immediate child packets
+         * in the usual way using a range-based \c for loop.
+         *
+         * \return an iterator over all immediate child packets.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Determines whether this and the given object are designed to
          * iterate over children of the same parent packet.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over children of the same packet.
          */
         bool operator == (const PacketChildren& rhs) const;
@@ -2912,7 +3187,7 @@ class PacketChildren {
          * Determines whether this and the given object are designed to
          * iterate over children of different parent packets.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over children of different packets.
          */
         bool operator != (const PacketChildren& rhs) const;
@@ -2923,7 +3198,7 @@ class PacketChildren {
  * given packet.
  *
  * The purpose of this class is to support iteration through all strict
- * descendants of a packet \a p using C++11 range-based \c for loops:
+ * descendants of a packet \a p using range-based \c for loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
@@ -2951,13 +3226,13 @@ class PacketChildren {
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the packet tree.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * the classes PacketDescendants and SubtreeIterator together implement the
  * Python iterable/iterator interface.  The class PacketDescendants has just
- * the single function <tt>__iter__()</tt>, which returns a SubtreeIterator;
- * then SubtreeIterator implements <tt>next()</tt>, which either returns
+ * the single function `__iter__()`, which returns a SubtreeIterator;
+ * then SubtreeIterator implements `__next__()`, which either returns
  * the next descendant packet in the iteration or else throws a
- * <tt>StopException</tt> if there are no more children to return.
+ * `StopException` if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
  *
@@ -2967,7 +3242,7 @@ template <bool const_>
 class PacketDescendants {
     public:
         using packet_type = std::conditional_t<const_, const Packet, Packet>;
-            /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
+            /**< Either `Packet` or `const Packet`, according to
                  the template argument \a const_. */
 
     private:
@@ -2976,55 +3251,77 @@ class PacketDescendants {
 
     public:
         /**
-         * Default copy constructor.
+         * Creates a new object for iterating through the strict descendants
+         * of the same packet as the given object.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketDescendants object is via
+         * Packet::descendants().
          */
         PacketDescendants(const PacketDescendants&) = default;
         /**
          * Creates a new object for iterating through the strict descendants
          * of the given packet.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketDescendants object is via
+         * Packet::descendants().
          *
-         * @param subtree the packet whose strict descendants we will iterate
+         * \param subtree the packet whose strict descendants we will iterate
          * through.
          */
         PacketDescendants(std::shared_ptr<packet_type> subtree);
 
         /**
-         * Default copy assignment operator.
+         * Sets this object to iterate over the strict descendants of the
+         * same packet as the given object.
          *
-         * \ifacespython Not present.
+         * \return a reference to this object.
          */
         PacketDescendants& operator = (const PacketDescendants&) = default;
 
         /**
-         * Returns an iterator at the beginning of the range of strict
-         * descendants.  This will point to the first child packet (if
+         * Returns a C++ iterator at the beginning of the range of strict
+         * descendant packets.  This will point to the first child packet (if
          * one exists) of the packet whose descendants we are iterating over.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * \nopython For Python users, PacketDescendants implements the Python
+         * iterable interface.  You can iterate over the strict descendant
+         * packets in the usual Python way, by treating this PacketDescendants
+         * object as you would any native Python container.
          *
-         * @return the beginning iterator.
+         * \return the beginning iterator.
          */
         SubtreeIterator<const_> begin() const;
         /**
-         * Returns an iterator at the end of the range of strict descendants.
+         * Returns a C++ iterator at the end of the range of strict descendant
+         * packets.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * \nopython For Python users, PacketDescendants implements the Python
+         * iterable interface.  You can iterate over the strict descendant
+         * packets in the usual Python way, by treating this PacketDescendants
+         * object as you would any native Python container.
          *
-         * @return the past-the-end iterator.
+         * \return the past-the-end iterator.
          */
         SubtreeIterator<const_> end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all strict descendant packets.
+         *
+         * \nocpp For C++ users, PacketDescendants provides the usual
+         * begin() and end() functions instead.  In particular, this
+         * allows you to iterate through all strict descendant packets
+         * in the usual way using a range-based \c for loop.
+         *
+         * \return an iterator over all strict descendant packets.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Determines whether this and the given object are designed to
          * iterate over strict descendants of the same packet.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over descendants of the same packet.
          */
         bool operator == (const PacketDescendants& rhs) const;
@@ -3033,7 +3330,7 @@ class PacketDescendants {
          * Determines whether this and the given object are designed to
          * iterate over strict descendants of different packets.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over descendants of different packets.
          */
         bool operator != (const PacketDescendants& rhs) const;
@@ -3068,7 +3365,7 @@ class PacketShell {
         /**
          * Creates a new shell referring to the given packet.
          *
-         * @param packet the packet to refer to.
+         * \param packet the packet to refer to.
          */
         PacketShell(const Packet* packet);
 
@@ -3076,7 +3373,7 @@ class PacketShell {
          * Creates a copy of the given shell.  Both shells will refer to
          * the same underlying packet.
          *
-         * @param shell the shell to clone.
+         * \param shell the shell to clone.
          */
         PacketShell(const PacketShell& shell) = default;
 
@@ -3084,7 +3381,7 @@ class PacketShell {
          * Sets this to be a copy of the given shell.  Both shells will refer
          * to the same underlying packet.
          *
-         * @param shell the shell to clone.
+         * \param shell the shell to clone.
          */
         PacketShell& operator = (const PacketShell& shell) = default;
 
@@ -3092,8 +3389,8 @@ class PacketShell {
          * Identifies if this and the given shell refer to the same
          * underlying packet.
          *
-         * @param shell the shell to compare with this.
-         * @return \c true if and only if both shells refer to the same packet.
+         * \param shell the shell to compare with this.
+         * \return \c true if and only if both shells refer to the same packet.
          */
         bool operator == (const PacketShell& shell) const;
 
@@ -3103,8 +3400,8 @@ class PacketShell {
          * This test is also available the other way around (with PacketShell
          * on the right); this reversed test is defined as a global function.
          *
-         * @param packet the packet to test against; this may be \c null.
-         * @return \c true if and only if this shell refers to the given packet.
+         * \param packet the packet to test against; this may be \c null.
+         * \return \c true if and only if this shell refers to the given packet.
          */
         bool operator == (const Packet* packet) const;
 
@@ -3112,8 +3409,8 @@ class PacketShell {
          * Identifies if this and the given shell refer to different
          * underlying packets.
          *
-         * @param shell the shell to compare with this.
-         * @return \c true if and only if both shells refer to different
+         * \param shell the shell to compare with this.
+         * \return \c true if and only if both shells refer to different
          * packets.
          */
         bool operator != (const PacketShell& shell) const;
@@ -3124,8 +3421,8 @@ class PacketShell {
          * This test is also available the other way around (with PacketShell
          * on the right); this reversed test is defined as a global function.
          *
-         * @param packet the packet to test against; this may be \c null.
-         * @return \c true if and only if this shell does not refer to the
+         * \param packet the packet to test against; this may be \c null.
+         * \return \c true if and only if this shell does not refer to the
          * given packet.
          */
         bool operator != (const Packet* packet) const;
@@ -3140,7 +3437,7 @@ class PacketShell {
          * temporary, since the underlying packet (and therefore the
          * string that is referenced) is in the process of being destroyed.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         const std::string& label() const;
 
@@ -3151,7 +3448,7 @@ class PacketShell {
          * See Packet::label() and Packet::humanLabel() for further details
          * on packet labels.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         std::string humanLabel() const;
 
@@ -3160,8 +3457,8 @@ class PacketShell {
          *
          * See Packet::tags() for further details on packet tags.
          *
-         * @param tag the tag to search for.
-         * @return \c true if the given tag is found, \c false otherwise.
+         * \param tag the tag to search for.
+         * \return \c true if the given tag is found, \c false otherwise.
          */
         bool hasTag(const std::string& tag) const;
 
@@ -3170,7 +3467,7 @@ class PacketShell {
          *
          * See Packet::tags() for further details on packet tags.
          *
-         * @return \c true if this packet has any tags, \c false otherwise.
+         * \return \c true if this packet has any tags, \c false otherwise.
          */
         bool hasTags() const;
 
@@ -3183,9 +3480,9 @@ class PacketShell {
          * temporary, since the underlying packet (and therefore the
          * set that is referenced) is in the process of being destroyed.
          *
-         * \ifacespython This routine returns a python set.
+         * \python This routine returns a python set.
          *
-         * @return the set of all tags associated with this packet.
+         * \return the set of all tags associated with this packet.
          */
         const std::set<std::string>& tags() const;
 
@@ -3198,7 +3495,7 @@ class PacketShell {
          *
          * See Packet::internalID() for further details.
          *
-         * @return a unique ID that identifies this packet.
+         * \return a unique ID that identifies this packet.
          */
         std::string internalID() const;
 };
@@ -3209,9 +3506,9 @@ class PacketShell {
  * This test is also available the other way around (with PacketShell on
  * the left); this reversed test is defined as a member function of PacketShell.
  *
- * @param packet the packet to test against; this may be \c null.
- * @param shell the packet shell to test against.
- * @return \c true if and only if the given shell refers to the given packet.
+ * \param packet the packet to test against; this may be \c null.
+ * \param shell the packet shell to test against.
+ * \return \c true if and only if the given shell refers to the given packet.
  *
  * \ingroup packet
  */
@@ -3223,9 +3520,9 @@ bool operator == (const Packet* packet, PacketShell shell);
  * This test is also available the other way around (with PacketShell on
  * the left); this reversed test is defined as a member function of PacketShell.
  *
- * @param packet the packet to test against; this may be \c null.
- * @param shell the packet shell to test against.
- * @return \c true if and only if the given shell does not refer to the
+ * \param packet the packet to test against; this may be \c null.
+ * \param shell the packet shell to test against.
+ * \return \c true if and only if the given shell does not refer to the
  * given packet.
  *
  * \ingroup packet
@@ -3250,7 +3547,7 @@ bool operator != (const Packet* packet, PacketShell shell);
  * packetToBeChanged() and packetWasChanged() will not.
  *
  * As a special case, when a packet is destroyed there is only the one
- * event packetBeingDestroyed(), since this is called \e during the packet
+ * event packetBeingDestroyed(), since this is called _during_ the packet
  * destructor (at a time when the set of listeners is still available, but
  * some of the other packet data may have already been destroyed).
  *
@@ -3272,10 +3569,10 @@ bool operator != (const Packet* packet, PacketShell shell);
  *   as to whether or not the new listeners will be notified of the
  *   specific event currently being processed.
  *
- * - Callbacks can safely remove other listeners, but they must \e not
+ * - Callbacks can safely remove other listeners, but they must _not_
  *   remove the listener whose callback is currently being called.
  *   The one exception to this is packetBeingDestroyed(), which will
- *   explicitly remove each listener \e before its callback is called
+ *   explicitly remove each listener _before_ its callback is called
  *   (which means, for example, the listener can safely delete itself).
  *
  * \warning Subclass authors should be aware of the default copy semantics
@@ -3288,7 +3585,7 @@ bool operator != (const Packet* packet, PacketShell shell);
  *
  * \warning At the time of writing (admittedly long ago now), Qt has only
  * limited support for multithreading.  When working with an existing packet
- * tree in a new thread (not the main thread), the \e only modification that
+ * tree in a new thread (not the main thread), the _only_ modification that
  * you may make is to insert new packets.  Modifications of any other type
  * (such as changing, renaming, deleting or reordering existing packets)
  * could lead to a crash within Qt or Xlib when running the GUI.
@@ -3299,7 +3596,7 @@ bool operator != (const Packet* packet, PacketShell shell);
  * that no routines other than childWasAdded() will be called from a non-main
  * thread.
  *
- * \ifacespython You can happily make a pure Python subclass of PacketListener,
+ * \python You can happily make a pure Python subclass of PacketListener,
  * and packets will call whichever functions you override when events occur,
  * just as they would for a native C++ subclass.
  *
@@ -3333,7 +3630,7 @@ class PacketListener {
          * Determines whether this object is listening for events on any
          * packets at all.
          *
-         * @return \c true if and only if this object is listening on at
+         * \return \c true if and only if this object is listening on at
          * least one packet.
          */
         bool isListening() const;
@@ -3351,7 +3648,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void packetToBeChanged(Packet& packet) {};
         /**
@@ -3361,7 +3658,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void packetWasChanged(Packet& packet) {};
         /**
@@ -3371,8 +3668,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @see childToBeRenamed()
+         * \param packet the packet being listened to.
+         * \see childToBeRenamed()
          */
         virtual void packetToBeRenamed(Packet& packet) {};
         /**
@@ -3382,8 +3679,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @see childWasRenamed()
+         * \param packet the packet being listened to.
+         * \see childWasRenamed()
          */
         virtual void packetWasRenamed(Packet& packet) {};
         /**
@@ -3399,7 +3696,7 @@ class PacketListener {
          * destroyed.
          *
          * When a packet is destroyed, it will automatically unregister each
-         * listener \e before calling packetBeingDestroyed() on that listener.
+         * listener _before_ calling packetBeingDestroyed() on that listener.
          * Therefore, for this (and only this) callback, it is safe for a
          * listener to unregister itself (since this will be a harmless
          * operation that does nothing).  In particular, this makes it safe
@@ -3411,7 +3708,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet gives access to the packet being listened to.
+         * \param packet gives access to the packet being listened to.
          */
         virtual void packetBeingDestroyed(PacketShell packet) {};
         /**
@@ -3422,8 +3719,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet to be added.
+         * \param packet the packet being listened to.
+         * \param child the child packet to be added.
          */
         virtual void childToBeAdded(Packet& packet, Packet& child) {};
         /**
@@ -3434,8 +3731,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet that was added.
+         * \param packet the packet being listened to.
+         * \param child the child packet that was added.
          */
         virtual void childWasAdded(Packet& packet, Packet& child) {};
         /**
@@ -3451,9 +3748,9 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to, or \c null if
+         * \param packet the packet being listened to, or \c null if
          * this routine is being called from within this packet's destructor.
-         * @param child the child packet to be removed.
+         * \param child the child packet to be removed.
          */
         virtual void childToBeRemoved(Packet& packet, Packet& child) {};
         /**
@@ -3469,9 +3766,9 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to, or \c null if
+         * \param packet the packet being listened to, or \c null if
          * this routine is being called from within this packet's destructor.
-         * @param child the child packet that was removed.
+         * \param child the child packet that was removed.
          */
         virtual void childWasRemoved(Packet& packet, Packet& child) {};
         /**
@@ -3482,7 +3779,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void childrenToBeReordered(Packet& packet) {};
 
@@ -3494,7 +3791,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void childrenWereReordered(Packet& packet) {};
         /**
@@ -3504,9 +3801,9 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet to be renamed.
-         * @see packetToBeRenamed()
+         * \param packet the packet being listened to.
+         * \param child the child packet to be renamed.
+         * \see packetToBeRenamed()
          */
         virtual void childToBeRenamed(Packet& packet, Packet& child) {};
         /**
@@ -3516,9 +3813,9 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet that was renamed.
-         * @see packetWasRenamed()
+         * \param packet the packet being listened to.
+         * \param child the child packet that was renamed.
+         * \see packetWasRenamed()
          */
         virtual void childWasRenamed(Packet& packet, Packet& child) {};
 
@@ -3530,7 +3827,7 @@ class PacketListener {
          * The new form of the packetToBeChanged() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetToBeChanged() refers to the new
+         * \nopython In Python, packetToBeChanged() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetToBeChanged(Packet*) final {};
@@ -3542,7 +3839,7 @@ class PacketListener {
          * The new form of the packetWasChanged() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetWasChanged() refers to the new
+         * \nopython In Python, packetWasChanged() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetWasChanged(Packet*) final {};
@@ -3554,7 +3851,7 @@ class PacketListener {
          * The new form of the packetToBeRenamed() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetToBeRenamed() refers to the new
+         * \nopython In Python, packetToBeRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetToBeRenamed(Packet*) final {};
@@ -3566,7 +3863,7 @@ class PacketListener {
          * The new form of the packetWasRenamed() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetWasRenamed() refers to the new
+         * \nopython In Python, packetWasRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetWasRenamed(Packet*) final {};
@@ -3579,7 +3876,7 @@ class PacketListener {
          * emphasise the fact that we are already well inside the packet
          * destructor when this is called.
          *
-         * \ifacespython Not present, since Python does not provide a mechanism
+         * \nopython This is because Python does not provide a mechanism
          * such as \c final to prevent subclasses from overriding a function.
          */
         virtual void packetToBeDestroyed(PacketShell) final {};
@@ -3591,7 +3888,7 @@ class PacketListener {
          * The new form of the childToBeAdded() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childToBeAdded() refers to the new
+         * \nopython In Python, childToBeAdded() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childToBeAdded(Packet*, Packet*) final {};
@@ -3603,7 +3900,7 @@ class PacketListener {
          * The new form of the childWasAdded() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childWasAdded() refers to the new
+         * \nopython In Python, childWasAdded() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childWasAdded(Packet*, Packet*) final {};
@@ -3616,7 +3913,7 @@ class PacketListener {
          * arguments by reference, not by pointer, and is no longer
          * called from within either the child or parent destructor.
          *
-         * \ifacespython In Python, childToBeRemoved() refers to the new
+         * \nopython In Python, childToBeRemoved() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childToBeRemoved(Packet*, Packet*) final {};
@@ -3629,7 +3926,7 @@ class PacketListener {
          * arguments by reference, not by pointer, and is no longer
          * called from within either the child or parent destructor.
          *
-         * \ifacespython In Python, childWasRemoved() refers to the new
+         * \nopython In Python, childWasRemoved() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childWasRemoved(Packet*, Packet*) final {};
@@ -3641,7 +3938,7 @@ class PacketListener {
          * The new form of the childrenToBeReordered() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, childrenToBeReordered() refers to the new
+         * \nopython In Python, childrenToBeReordered() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childrenToBeReordered(Packet*) final {};
@@ -3653,7 +3950,7 @@ class PacketListener {
          * The new form of the childrenWereReordered() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, childrenWereReordered() refers to the new
+         * \nopython In Python, childrenWereReordered() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childrenWereReordered(Packet*) final {};
@@ -3665,7 +3962,7 @@ class PacketListener {
          * The new form of the childToBeRenamed() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childToBeRenamed() refers to the new
+         * \nopython In Python, childToBeRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childToBeRenamed(Packet*, Packet*) final {};
@@ -3677,7 +3974,7 @@ class PacketListener {
          * The new form of the childWasRenamed() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childWasRenamed() refers to the new
+         * \nopython In Python, childWasRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childWasRenamed(Packet*, Packet*) final {};
@@ -3698,7 +3995,7 @@ class PacketListener {
          * The new listener will be registered as listening to the same
          * packets as \a src.
          *
-         * @param src the listener to copy.
+         * \param src the listener to copy.
          */
         PacketListener(const PacketListener& src);
 
@@ -3709,8 +4006,8 @@ class PacketListener {
          * currently listening to, and instead will be registered as listening
          * to the same packets as \a src.
          *
-         * @param src the listener to copy.
-         * @return a reference to this packet listener.
+         * \param src the listener to copy.
+         * \return a reference to this packet listener.
          */
         PacketListener& operator = (const PacketListener& src);
 
@@ -3722,10 +4019,10 @@ class PacketListener {
          * to the same packets that \a src was originally listening to,
          * and vice versa.
          *
-         * This operation is \e not constant time, since it needs to
+         * This operation is _not_ constant time, since it needs to
          * perform an internal adjustment for each packet that is affected.
          *
-         * @param other the listener to swap with this.
+         * \param other the listener to swap with this.
          */
         void swapListeners(PacketListener& other);
 
@@ -3888,6 +4185,24 @@ inline PacketData<Held>::ChangeEventSpan::~ChangeEventSpan() {
         if (! p.changeEventSpans_)
             p.fireEvent(&PacketListener::packetWasChanged);
     }
+}
+
+template <typename Held>
+inline Held& PacketData<Held>::ChangeEventSpan::held() const {
+    return static_cast<Held&>(data_);
+}
+
+inline void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
+    prepend(std::move(child));
+}
+
+inline void Packet::insertChildLast(std::shared_ptr<Packet> child) {
+    append(std::move(child));
+}
+
+inline void Packet::insertChildAfter(std::shared_ptr<Packet> newChild,
+        std::shared_ptr<Packet> prevChild) {
+    insert(std::move(newChild), std::move(prevChild));
 }
 
 inline SubtreeIterator<false> Packet::begin() {

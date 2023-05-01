@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,16 +55,16 @@ namespace regina {
  * fixed at the top-left, top-right, bottom-left and bottom-right
  * corners of the diagram.
  *
- * Each tangles has a \e type, indicating how the four endpoints are
+ * Each tangles has a _type_, indicating how the four endpoints are
  * connected.  The three possible types are:
  *
- * - \e horizontal, indicating that the two top endpoints are connected,
+ * - _horizontal_, indicating that the two top endpoints are connected,
  *   and the two bottom endpoints are connected;
  *
- * - \e vertical, indicating that the two left endpoints are connected,
+ * - _vertical_, indicating that the two left endpoints are connected,
  *   and the two right endpoints are connected;
  *
- * - \e diagonal, indicating that the top-left and bottom-right endpoints
+ * - _diagonal_, indicating that the top-left and bottom-right endpoints
  *   are connected, and the bottom-left and top-right endpoints are connected.
  *
  * Internally, Regina numbers the two strings 0 and 1: string 0 will
@@ -87,13 +87,13 @@ class Tangle : public Output<Tangle> {
     private:
         char type_;
             /**< Indicates how the four endpoints connect; this will be
-                 one of the symbols \c -, \c | or \c x, representing a
-                 horizontal, vertical or diagonal type as described in
-                 the class notes. */
+                 one of the symbols `-`, `|` or `x`,
+                 representing a horizontal, vertical or diagonal type as
+                 described in the class notes. */
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this tangle. */
         StrandRef end_[2][2];
-            /**< The member <tt>end_[s][i]</tt> store the crossings
+            /**< The member `end_[s][i]` store the crossings
                  closest to the two endpoints of string \a s, where
                  endpoint <i>i</i>=0 is at the beginning of the string
                  (following its orientation), and the endpoint <i>i</i>=1
@@ -126,14 +126,14 @@ class Tangle : public Output<Tangle> {
          * In all cases, this is equivalent to calling the rational
          * tangle constructor Tangle(\a twists, 1).
          *
-         * @param twists the number of twists to perform; this may be
+         * \param twists the number of twists to perform; this may be
          * positive, negative or zero.
          */
         Tangle(int twists);
         /**
          * Constructs a rational tangle with the given parameters.
          * Here we use the following convention (following the
-         * description that Adams gives in <i>The Knot Book</i>):
+         * description that Adams gives in _The Knot Book_):
          *
          * - the zero tangle is horizontal with no crossings;
          * - the infinity tangle is vertical with no crossings;
@@ -142,9 +142,9 @@ class Tangle : public Output<Tangle> {
          *
          * \pre The given arguments are coprime.
          *
-         * @param num the numerator of the rational number that
+         * \param num the numerator of the rational number that
          * describes this tangle.
-         * @param den the denominator of the rational number that
+         * \param den the denominator of the rational number that
          * describes this tangle; this may be 0 (representing the
          * infinity tangle).
          */
@@ -154,27 +154,27 @@ class Tangle : public Output<Tangle> {
          *
          * Specifically, the tangle will consist of two parallel copies
          * of the given knot diagram, which will be broken just before
-         * the starting strand as returned by <tt>knot.component(0)</tt>.
+         * the starting strand as returned by `knot.component(0)`.
          *
          * The two resulting endpoints that appear just before the
          * starting strand will form the top-left and bottom-left
          * endpoints of this tangle, and the endpoints on the other side
          * of the break (which will be just after the parallel copies of the
-         * final strand <tt>knot.component(0).prev()</tt>) will form the
+         * final strand `knot.component(0).prev()`) will form the
          * top-right and bottom-right endpoints of this tangle.
          *
-         * The tangle will contain <tt>4 * knot.size()</tt> crossings in total.
+         * The tangle will contain `4 * knot.size()` crossings in total.
          *
          * \pre The argument contains exactly one component (i.e., it
          * is actually a knot, and not empty or a multiple-component link).
          *
-         * @param knot the knot to break and duplicate to form this tangle.
+         * \param knot the knot to break and duplicate to form this tangle.
          */
         Tangle(const Link& knot);
         /**
          * Constructs a new copy of the given tangle.
          *
-         * @param copy the tangle to copy.
+         * \param copy the tangle to copy.
          */
         Tangle(const Tangle& copy);
         /**
@@ -187,7 +187,7 @@ class Tangle : public Output<Tangle> {
          *
          * The tangle that is passed (\a src) will no longer be usable.
          *
-         * @param src the tangle to move.
+         * \param src the tangle to move.
          */
         Tangle(Tangle&& src) noexcept;
 
@@ -207,18 +207,18 @@ class Tangle : public Output<Tangle> {
         /**
          * Returns the type of this tangle.
          *
-         * This will be one of the characters \c -, \c | or \c x,
-         * indicating a horizontal, vertical or diagonal type as
+         * This will be one of the characters `-`, `|` or
+         * `x`, indicating a horizontal, vertical or diagonal type as
          * described in the class notes.
          *
-         * @return the type of this crossing.
+         * \return the type of this crossing.
          */
         char type() const;
 
         /**
          * Returns the number of crossings in this tangle.
          *
-         * @return the number of crossings.
+         * \return the number of crossings.
          */
         size_t size() const;
 
@@ -234,9 +234,9 @@ class Tangle : public Output<Tangle> {
          * crossing through such operations then you should use the pointer
          * to the relevant Crossing object instead.
          *
-         * @param index the index of the requested crossing.  This must
+         * \param index the index of the requested crossing.  This must
          * be between 0 and size()-1 inclusive.
-         * @return the crossing at the given index.
+         * \return the crossing at the given index.
          */
         Crossing* crossing(size_t index) const;
 
@@ -250,7 +250,7 @@ class Tangle : public Output<Tangle> {
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -263,7 +263,7 @@ class Tangle : public Output<Tangle> {
          * the tangle.  Nevertheless, it is recommended to treat this object as
          * temporary only, and to call crossings() again each time you need it.
          *
-         * @return access to the list of all crossings.
+         * \return access to the list of all crossings.
          */
         auto crossings() const;
 
@@ -275,9 +275,9 @@ class Tangle : public Output<Tangle> {
          * oriented from left-to-right for a horizontal or diagonal tangle,
          * and from top-to-bottom for a vertical tangle.
          *
-         * @param string indicates which of the two strings in this
+         * \param string indicates which of the two strings in this
          * tangle to query; this must be either 0 or 1.
-         * @return the crossing closest to the beginning of the given string,
+         * \return the crossing closest to the beginning of the given string,
          * or a null reference if the given string contains no crossings.
          */
         StrandRef begin(int string) const;
@@ -290,9 +290,9 @@ class Tangle : public Output<Tangle> {
          * oriented from left-to-right for a horizontal or diagonal tangle,
          * and from top-to-bottom for a vertical tangle.
          *
-         * @param string indicates which of the two strings in this
+         * \param string indicates which of the two strings in this
          * tangle to query; this must be either 0 or 1.
-         * @return the crossing closest to the end of the given string,
+         * \return the crossing closest to the end of the given string,
          * or a null reference if the given string contains no crossings.
          */
         StrandRef end(int string) const;
@@ -313,8 +313,8 @@ class Tangle : public Output<Tangle> {
          *   under/over-strands of the same numbered crossings in the same
          *   order.
          *
-         * @param other the tangle to compare with this.
-         * @return \c true if and only if the two tangles are
+         * \param other the tangle to compare with this.
+         * \return \c true if and only if the two tangles are
          * combinatorially identical.
          */
         bool operator == (const Tangle& other) const;
@@ -335,15 +335,19 @@ class Tangle : public Output<Tangle> {
          *   under/over-strands of the same numbered crossings in the same
          *   order.
          *
-         * @param other the tangle to compare with this.
-         * @return \c true if and only if the two tangles are
+         * \param other the tangle to compare with this.
+         * \return \c true if and only if the two tangles are
          * not combinatorially identical.
          */
         bool operator != (const Tangle& other) const;
 
         /**
-         * Translates a strand reference for some other tangle into the
-         * corresponding strand reference for this tangle.
+         * Translates a strand reference from some other tangle into the
+         * corresponding strand reference from this tangle.
+         *
+         * Typically this routine would be used when the given strand comes
+         * from a tangle that is combinatorially identical to this, and you wish
+         * to obtain the corresponding strand in this tangle.
          *
          * Specifically: if \a other refers to some strand (upper or lower)
          * of crossing number \a k of some other tangle, then the return
@@ -352,8 +356,12 @@ class Tangle : public Output<Tangle> {
          *
          * This routine behaves correctly even if \a other is a null reference.
          *
-         * @param other the strand reference to translate.
-         * @return the corresponding strand reference for this tangle.
+         * \pre This tangle contains at least as many crossings as the tangle
+         * containing \a other (though, as noted above, in typical scenarios
+         * both tangles would actually be combinatorially identical).
+         *
+         * \param other the strand reference to translate.
+         * \return the corresponding strand reference for this tangle.
          */
         StrandRef translate(const StrandRef& other) const;
 
@@ -366,8 +374,8 @@ class Tangle : public Output<Tangle> {
         /**
          * Sets this to be a (deep) copy of the given tangle.
          *
-         * @param src the tangle to copy.
-         * @return a reference to this tangle.
+         * \param src the tangle to copy.
+         * \return a reference to this tangle.
          */
         Tangle& operator = (const Tangle& src);
 
@@ -381,8 +389,8 @@ class Tangle : public Output<Tangle> {
          *
          * The tangle that is passed (\a src) will no longer be usable.
          *
-         * @param src the tangle to move.
-         * @return a reference to this tangle.
+         * \param src the tangle to move.
+         * \return a reference to this tangle.
          */
         Tangle& operator = (Tangle&& src) noexcept;
 
@@ -399,14 +407,14 @@ class Tangle : public Output<Tangle> {
          * This routine will behave correctly if \a other is in fact
          * this tangle.
          *
-         * @param other the tangle whose contents should be swapped with this.
+         * \param other the tangle whose contents should be swapped with this.
          */
         void swap(Tangle& other) noexcept;
 
         /**
          * Adds a twist to the right-hand end of this tangle.
          *
-         * @param sign either 1 if we should perform a positive twist
+         * \param sign either 1 if we should perform a positive twist
          * (dragging the bottom-right endpoint up over the top-right endpoint),
          * or -1 if we should perform a negative twist (dragging the
          * bottom-right endpoint up beneath the top-right endpoint).
@@ -416,7 +424,7 @@ class Tangle : public Output<Tangle> {
         /**
          * Rotates this tangle by 90 degrees.
          *
-         * @param direction either 1 if the tangle should be rotated
+         * \param direction either 1 if the tangle should be rotated
          * clockwise, or -1 if the tangle should be rotated anticlockwise.
          */
         void turn(int direction = 1);
@@ -447,11 +455,11 @@ class Tangle : public Output<Tangle> {
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this tangle.
          *
-         * @param crossing identifies the crossing to be removed.
-         * @param check \c true if we are to check whether the move can
+         * \param crossing identifies the crossing to be removed.
+         * \param check \c true if we are to check whether the move can
          * be performed at the given location.
-         * @param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \param perform \c true if we should actually perform the move.
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -473,11 +481,11 @@ class Tangle : public Output<Tangle> {
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this tangle.
          *
-         * @param arc identifies one of the arcs of the bigon about
+         * \param arc identifies one of the arcs of the bigon about
          * which the move will be performed.
-         * @param check \c true if we are to check whether the move is legal.
-         * @param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \param check \c true if we are to check whether the move is legal.
+         * \param perform \c true if we should actually perform the move.
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -499,11 +507,11 @@ class Tangle : public Output<Tangle> {
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this tangle.
          *
-         * @param crossing identifies the crossing at the beginning of
+         * \param crossing identifies the crossing at the beginning of
          * the "upper" arc that features in this move.
-         * @param check \c true if we are to check whether the move is legal.
-         * @param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \param check \c true if we are to check whether the move is legal.
+         * \param perform \c true if we should actually perform the move.
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -522,10 +530,10 @@ class Tangle : public Output<Tangle> {
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
          *
-         * @param perform \c true if we are to perform the
+         * \param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
-         * @return if \a perform is \c true, this routine returns
+         * \return if \a perform is \c true, this routine returns
          * \c true if and only if the link was changed to
          * reduce the number of crossings; if \a perform is \c false,
          * this routine returns \c true if and only if it determines
@@ -554,11 +562,11 @@ class Tangle : public Output<Tangle> {
          *
          * It is allowed to pass this tangle as \a other.
          *
-         * \pre It is not the case that both this and \e other are
+         * \pre It is not the case that both this and _other_ are
          * vertical tangles (which would cause the addition to create a
          * closed link component).
          *
-         * @param other the tangle to add to this.
+         * \param other the tangle to add to this.
          */
         void add(const Tangle& other);
 
@@ -602,12 +610,12 @@ class Tangle : public Output<Tangle> {
          * have types that would result in a closed link component after
          * this operation is performed.
          *
-         * @param topLeft the tangle to connect to the top-left corner of this.
-         * @param topRight the tangle to connect to the top-right corner of
+         * \param topLeft the tangle to connect to the top-left corner of this.
+         * \param topRight the tangle to connect to the top-right corner of
          * this.
-         * @param bottomLeft the tangle to connect to the bottom-left corner
+         * \param bottomLeft the tangle to connect to the bottom-left corner
          * of this.
-         * @param bottomRight the tangle to connect to the bottom-right corner
+         * \param bottomRight the tangle to connect to the bottom-right corner
          * of this.
          */
         void box(const Tangle& topLeft, const Tangle& topRight,
@@ -619,7 +627,7 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two top endpoints of
          * this tangle, and also joining the two bottom endpoints.
          *
-         * @return the numerator closure of this tangle.
+         * \return the numerator closure of this tangle.
          */
         Link numClosure() const;
 
@@ -629,7 +637,7 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two left endpoints of
          * this tangle, and also joining the two right endpoints.
          *
-         * @return the denominator closure of this tangle.
+         * \return the denominator closure of this tangle.
          */
         Link denClosure() const;
 
@@ -643,18 +651,18 @@ class Tangle : public Output<Tangle> {
          * Writes a short text representation of this tangle to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this tangle to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -679,21 +687,21 @@ class Tangle : public Output<Tangle> {
          * The output will contain the following elements, separated by
          * single spaces:
          *
-         * - one of the symbols \c -, \c | or \c x, indicating that the
-         *   tangle is of horizontal, vertical or diagonal type respectively
-         *   (as described in the class notes);
+         * - one of the symbols `-`, `|` or `x`,
+         *   indicating that the tangle is of horizontal, vertical or
+         *   diagonal type respectively (as described in the class notes);
          *
-         * - a sequence of signs (<tt>+</tt> or <tt>-</tt>), concatenated
+         * - a sequence of signs (`+` or `-`), concatenated
          *   together, giving the signs of the crossings in order from
          *   crossing 0 to crossing size()-1;
          *
          * - a description of string 0 and then string 1.  Each string
-         *   will be written in the form <tt>( a b c ... )</tt>, indicating
+         *   will be written in the form `( a b c ... )`, indicating
          *   the crossings that are encountered as we follow the string
          *   in the forward direction from its starting endpoint.  Each element
          *   \a a, \a b, \a c and so on will be written in the format used by
-         *   the StrandRef class: either <tt>^n</tt> when passing over
-         *   crossing \a n, or <tt>_n</tt> when passing under crossing \a n.
+         *   the StrandRef class: either `^n` when passing over
+         *   crossing \a n, or `_n` when passing under crossing \a n.
          *
          * For example, the rational tangle 3/2 as returned by
          * Tangle(3,2) will give the following brief output:
@@ -713,7 +721,7 @@ class Tangle : public Output<Tangle> {
          * There is also a variant of brief() that writes directly to an
          * output stream.
          *
-         * @return a description of this tangle in Regina's brief format.
+         * \return a description of this tangle in Regina's brief format.
          */
         std::string brief() const;
 
@@ -730,10 +738,10 @@ class Tangle : public Output<Tangle> {
          *
          * See also brief(), which returns the brief format as a string.
          *
-         * \ifacespython Not present; instead use the variant
-         * brief() that takes no arguments and returns a string.
+         * \nopython Instead use the variant brief(), which takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void brief(std::ostream& out) const;
 
@@ -755,7 +763,7 @@ class Tangle : public Output<Tangle> {
          * \note There is another variant of this routine that, instead
          * of returning a string, writes directly to an output stream.
          *
-         * @return an oriented Gauss code for this tangle.
+         * \return an oriented Gauss code for this tangle.
          */
         std::string orientedGauss() const;
 
@@ -778,11 +786,10 @@ class Tangle : public Output<Tangle> {
          * \note There is another variant of this routine that, instead
          * of using an output stream, simply returns a string.
          *
-         * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant orientedGauss(), which takes no
-         * arguments and returns the output as a string.
+         * \nopython Instead use the variant orientedGauss(), which takes no
+         * arguments and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void orientedGauss(std::ostream& out) const;
 
@@ -805,31 +812,31 @@ class Tangle : public Output<Tangle> {
          *
          * - Label the crossings arbitrarily as 1, 2, ..., \a n.
          *
-         * - Write one of the tokens \c -, \c | or \c x to represent a
-         *   horizontal, vertical or diagonal tangle respectively.
+         * - Write one of the tokens `-`, `|` or `x` to
+         *   represent a horizontal, vertical or diagonal tangle respectively.
          *
          * - Start at the top-left endpoint and follow this string to
          *   its other endpoint.  At every crossing that you pass, write a
-         *   token of the form <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
-         *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt>, where:
+         *   token of the form `+<k`, `-<k`, `+>k` or `->k`, where:
          *
-         *     * the symbol <tt>+</tt> indicates that you are passing over the
-         *       crossing labelled \a k, and the symbol <tt>-</tt> indicates
+         *     * the symbol `+` indicates that you are passing over the
+         *       crossing labelled \a k, and the symbol `-` indicates
          *       that you are passing under the crossing labelled \a k;
          *
-         *     * the symbol <tt>&lt;</tt> indicates that the other strand of
-         *       the crossing passes from right to left, and <tt>&gt;</tt>
-         *       indicates that the other strand passes from left to right.
+         *     * the symbol `<` indicates that the other strand of
+         *       the crossing passes from right to left, and `>`
+         *       indicates that the other strand passes from left to right;
          *
-         * - Write the token \c _ to indicate that the first string has
+         *     * \a k is replaced with the integer crossing label.
+         *
+         * - Write the token `_` to indicate that the first string has
          *   finished.
          *
          * - Start at the beginning of the other string (for horizontal
          *   or diagonal tangles, this is the bottom-left endpoint, and
-         *   for vertical tangles this is the top-right endpoint).  As
-         *   before, follow this string to its other endpoint, writing a
-         *   token of the form <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
-         *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt> at every
+         *   for vertical tangles this is the top-right endpoint).  As before,
+         *   follow this string to its other endpoint, writing a token of
+         *   the form `+<k`, `-<k`, `+>k` or `->k` at every
          *   crossing that you pass.
          *
          * Be aware that, once the tangle has been constructed, the crossings
@@ -852,18 +859,18 @@ class Tangle : public Output<Tangle> {
          * contain additional leading or trailing whitespace.
          *
          * \warning While this routine does some error checking on the input,
-         * these checks are not exhaustive.  In particular, it does \e not test
+         * these checks are not exhaustive.  In particular, it does _not_ test
          * for the viability of the diagram (i.e., whether the given crossings
          * with the given signs actually produce a tangle of the given type
          * with the correct endpoints).  Of course non-viable inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the input was not a valid oriented
+         * \exception InvalidArgument The input was not a valid oriented
          * Gauss code.  As noted above, the checks performed here are
          * not exhaustive.
          *
-         * @param str an oriented Gauss code for a tangle, as described above.
-         * @return the resulting tangle.
+         * \param str an oriented Gauss code for a tangle, as described above.
+         * \return the resulting tangle.
          */
         static Tangle fromOrientedGauss(const std::string& str);
 
@@ -888,30 +895,30 @@ class Tangle : public Output<Tangle> {
          * \pre \a Iterator is a random access iterator type.
          *
          * \pre Dereferencing such an iterator produces either a
-         * C-style string (which can be cast to <tt>const char*</tt>) or a
-         * C++-style string (which can be cast to <tt>const std::string&</tt>).
+         * C-style string (which can be cast to `const char*`) or a
+         * C++-style string (which can be cast to `const std::string&`).
          *
          * \pre The tokens in the input sequence do not contain any whitespace.
          *
          * \warning While this routine does some error checking on the input,
-         * these checks are not exhaustive.  In particular, it does \e not test
+         * these checks are not exhaustive.  In particular, it does _not_ test
          * for the viability of the diagram (i.e., whether the given crossings
          * with the given signs actually produce a tangle of the given type
          * with the correct endpoints).  Of course non-viable inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the input did not describe a valid
+         * \exception InvalidArgument The input did not describe a valid
          * oriented Gauss code.  As noted above, the checks performed here
          * are not exhaustive.
          *
-         * \ifacespython Instead of a pair of begin and past-the-end
+         * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
          *
-         * @param begin an iterator that points to the beginning of the
+         * \param begin an iterator that points to the beginning of the
          * sequence of tokens for an oriented Gauss code.
-         * @param end an iterator that points past the end of the
+         * \param end an iterator that points past the end of the
          * sequence of tokens for an oriented Gauss code.
-         * @return the resulting tangle.
+         * \return the resulting tangle.
          */
         template <typename Iterator>
         static Tangle fromOrientedGauss(Iterator begin, Iterator end);
@@ -997,8 +1004,8 @@ class Tangle : public Output<Tangle> {
  *
  * See Tangle::swap() for more details.
  *
- * @param lhs the tangle whose contents should be swapped with \a rhs.
- * @param rhs the tangle whose contents should be swapped with \a lhs.
+ * \param lhs the tangle whose contents should be swapped with \a rhs.
+ * \param rhs the tangle whose contents should be swapped with \a lhs.
  *
  * \ingroup link
  */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -99,6 +99,19 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // Read the current preferences from the main window.
     // generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->cbUnicode->setChecked(prefSet.displayUnicode);
+    switch (prefSet.threadCount) {
+        // These indices must be kept in sync with the combo box
+        // construction in the ReginaPrefGeneral class constructor.
+        case ReginaPrefSet::ThreadSingle:
+            generalPrefs->chooserThreadCount->setCurrentIndex(0);
+            break;
+        case ReginaPrefSet::ThreadAll:
+            generalPrefs->chooserThreadCount->setCurrentIndex(2);
+            break;
+        default: /* ThreadPolite */
+            generalPrefs->chooserThreadCount->setCurrentIndex(1);
+            break;
+    }
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
     generalPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
@@ -111,9 +124,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     generalPrefs->cbWarnOnNonEmbedded->setChecked(prefSet.warnOnNonEmbedded);
 
-    generalPrefs->cbSupportOriented->setChecked(
-        prefSet.surfacesSupportOriented);
-
     pythonPrefs->cbAutoIndent->setChecked(prefSet.pythonAutoIndent);
     pythonPrefs->editSpacesPerTab->setText(
         QString::number(prefSet.pythonSpacesPerTab));
@@ -124,8 +134,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
 
     // Finish off.
-    connect(generalPrefs->cbSupportOriented, SIGNAL(stateChanged(int)),
-        generalPrefs, SLOT(orientedChecked(int)));
     connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
 }
 
@@ -156,6 +164,20 @@ void ReginaPreferences::slotApply() {
     prefSet.displayUnicode = generalPrefs->cbUnicode->isChecked();
     //KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
     prefSet.helpIntroOnStartup = generalPrefs->cbIntroOnStartup->isChecked();
+
+    switch (generalPrefs->chooserThreadCount->currentIndex()) {
+        // These indices must be kept in sync with the combo box
+        // construction in the ReginaPrefGeneral class constructor.
+        case 0:
+            prefSet.threadCount = ReginaPrefSet::ThreadSingle;
+            break;
+        case 2:
+            prefSet.threadCount = ReginaPrefSet::ThreadAll;
+            break;
+        default:
+            prefSet.threadCount = ReginaPrefSet::ThreadPolite;
+            break;
+    }
 
     uintVal = generalPrefs->editTreeJumpSize->text().toUInt(&ok);
     if (ok && uintVal > 0)
@@ -192,9 +214,6 @@ void ReginaPreferences::slotApply() {
         prefSet.warnOnNonEmbedded = true;
     else
         prefSet.warnOnNonEmbedded = false;
-
-    prefSet.surfacesSupportOriented =
-        generalPrefs->cbSupportOriented->isChecked();
 
     prefSet.pythonAutoIndent = pythonPrefs->cbAutoIndent->isChecked();
     uintVal = pythonPrefs->editSpacesPerTab->text().toUInt(&ok);
@@ -246,7 +265,7 @@ void ReginaPreferences::slotApply() {
         // Search on the system path.
         // Leave their setting alone, whatever it is, since they're
         // being vague about it.  Maybe they don't have GAP installed.
-        
+
         bool found = false;
         for (const auto& p : pathList) {
             QDir dir(p);
@@ -303,24 +322,31 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "is not checked in the dialog for a new normal surface list.</qt>"));
     layout->addWidget(cbWarnOnNonEmbedded);
 
-    cbSupportOriented = new QCheckBox(tr("Support transversely oriented "
-        "normal surfaces (highly experimental)"));
-    cbSupportOriented->setWhatsThis(tr("<qt>Allow the enumeration of "
-        "normal surfaces using transversely oriented coordinates.  "
-        "This feature is <b>highly experimental</b>, and some features "
-        "<b>will break</b>.</qt>"));
-    layout->addWidget(cbSupportOriented);
-
     // Set up Graphviz options.
     cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
     cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
         "face pairing graph with the corresponding tetrahedron number."));
     layout->addWidget(cbGraphvizLabels);
 
-    // Set up the tree jump size.
-    QBoxLayout* box = new QHBoxLayout();
+    // The combo box indices must be kept in sync with the switch statements
+    // in the ReginaPreferences constructor and slotApply().
+    auto* box = new QHBoxLayout();
+    auto* label = new QLabel(tr("Multithreading:"));
+    box->addWidget(label);
+    chooserThreadCount = new QComboBox();
+    chooserThreadCount->addItem(tr("None (single-threaded)"));
+    chooserThreadCount->addItem(tr("Polite (50% of cores)"));
+    chooserThreadCount->addItem(tr("Aggressive (all cores)"));
+    box->addWidget(chooserThreadCount, 1);
+    QString msg = tr("Indicates what level of multithreading should be "
+        "used for long computations that support it.");
+    label->setWhatsThis(msg);
+    chooserThreadCount->setWhatsThis(msg);
+    layout->addLayout(box);
 
-    auto* label = new QLabel(tr("Packet tree jump size:"));
+    // Set up the tree jump size.
+    box = new QHBoxLayout();
+    label = new QLabel(tr("Packet tree jump size:"));
     box->addWidget(label);
     editTreeJumpSize = new QLineEdit();
     editTreeJumpSize->setMaxLength(10 /* ridiculously high number of digits */);
@@ -328,7 +354,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     auto* val = new QIntValidator(this);
     val->setBottom(1);
     editTreeJumpSize->setValidator(val);
-    QString msg = tr("The number of steps that a packet moves when Jump Up "
+    msg = tr("The number of steps that a packet moves when Jump Up "
         "or Jump Down is selected.");
     label->setWhatsThis(msg);
     editTreeJumpSize->setWhatsThis(msg);
@@ -336,7 +362,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
 
     // Set up the import/export codec.
     box = new QHBoxLayout();
-
     label = new QLabel(tr("Text encoding for imports/exports:"));
     box->addWidget(label);
     chooserImportExportCodec = new CodecChooser();
@@ -368,22 +393,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     // Add some space at the end.
     layout->addStretch(1);
     setLayout(layout);
-}
-
-void ReginaPrefGeneral::orientedChecked(int state) {
-    if (state == Qt::Checked) {
-        QMessageBox box(QMessageBox::Warning,
-            tr("Warning"),
-            tr("Transversely oriented normal surfaces are "
-                "still highly experimental."),
-            QMessageBox::Yes | QMessageBox::No, this);
-        box.setInformativeText(
-                tr("<qt>Some things <b>will break</b>.  "
-                "Are you sure you wish to enable this feature?</qt>"));
-        box.setDefaultButton(QMessageBox::No);
-        if (box.exec() != QMessageBox::Yes)
-            cbSupportOriented->setChecked(false);
-    }
 }
 
 ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {

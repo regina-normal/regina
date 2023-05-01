@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,8 +52,12 @@ namespace regina {
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython Present only for some particular enumeration types \a T,
+ * \python Present only for some particular enumeration types \a T,
  * when explicitly noted in the corresponding enum documentation.
+ * The enumeration type is typically the flag class name with the suffix
+ * \c Flags or \c Fields; for instance, the flags classes NormalAlg
+ * and SurfaceExport work with the enum types NormalAlgFlags and
+ * SurfaceExportFields respectively.
  *
  * \ingroup utilities
  */
@@ -81,7 +85,7 @@ class Flags {
         /**
          * Creates a flag set initialised to the given value.
          *
-         * @param init the initial value of this flag set.
+         * \param init the initial value of this flag set.
          */
         inline Flags(T init) : value_(init) {
         }
@@ -89,7 +93,7 @@ class Flags {
         /**
          * Creates a clone of the given flag set.
          *
-         * @param init the flag set to clone.
+         * \param init the flag set to clone.
          */
         inline Flags(const Flags<T>& init) = default;
 
@@ -100,7 +104,7 @@ class Flags {
          * \warning This function should not be used widely, since it
          * effectively works around inbuilt type safety mechanisms.
          *
-         * @return the integer value of this set.
+         * \return the integer value of this set.
          */
         int intValue() const {
             return static_cast<int>(value_);
@@ -113,7 +117,7 @@ class Flags {
          * \warning This function should not be used widely, since it
          * effectively works around inbuilt type safety mechanisms.
          *
-         * @return the set corresponding to the given integer value.
+         * \return the set corresponding to the given integer value.
          */
         inline static Flags<T> fromInt(int value) {
             return Flags<T>(value);
@@ -122,11 +126,11 @@ class Flags {
         /**
          * Returns whether the given flag is set.
          *
-         * This requires \e all of the bits of the given flag to be set.
-         * The test is equivalent to <tt>(*this & flag) == flag</tt>.
+         * This requires _all_ of the bits of the given flag to be set.
+         * The test is equivalent to `(*this & flag) == flag`.
          *
-         * @param flag the flag whose presence will be tested.
-         * @return \c true if and only if all of the bits of the given
+         * \param flag the flag whose presence will be tested.
+         * \return \c true if and only if all of the bits of the given
          * flag are set.
          */
         bool has(T flag) const {
@@ -136,12 +140,12 @@ class Flags {
         /**
          * Returns whether all of the flags in the given set are set.
          *
-         * This requires \e all of the bits of all of the flags in the
+         * This requires _all_ of the bits of all of the flags in the
          * given set to be present in this set.
-         * The test is equivalent to <tt>(*this & rhs) == rhs</tt>.
+         * The test is equivalent to `(*this & rhs) == rhs`.
          *
-         * @param rhs the set whose presence will be tested.
-         * @return \c true if and only if all of the bits of the given
+         * \param rhs the set whose presence will be tested.
+         * \return \c true if and only if all of the bits of the given
          * set are present in this set.
          */
         bool has(const Flags<T>& rhs) const {
@@ -151,8 +155,8 @@ class Flags {
         /**
          * Determines whether this set is precisely equal to the given flag.
          *
-         * @param rhs the flag to test this against.
-         * @return \c true if and only if this and the given flag are identical.
+         * \param rhs the flag to test this against.
+         * \return \c true if and only if this and the given flag are identical.
          */
         inline bool operator == (T rhs) const {
             return (value_ == rhs);
@@ -162,8 +166,8 @@ class Flags {
          * Determines whether this set is precisely equal to the given
          * flag set.
          *
-         * @param rhs the flag set to test this against.
-         * @return \c true if and only if this and the given flag set are
+         * \param rhs the flag set to test this against.
+         * \return \c true if and only if this and the given flag set are
          * identical.
          */
         inline bool operator == (const Flags<T>& rhs) const {
@@ -173,8 +177,8 @@ class Flags {
         /**
          * Determines whether this set is not equal to the given flag.
          *
-         * @param rhs the flag to test this against.
-         * @return \c true if and only if this and the given flag are not
+         * \param rhs the flag to test this against.
+         * \return \c true if and only if this and the given flag are not
          * identical.
          */
         inline bool operator != (T rhs) const {
@@ -184,8 +188,8 @@ class Flags {
         /**
          * Determines whether this set is not equal to the given flag set.
          *
-         * @param rhs the flag to test this against.
-         * @return \c true if and only if this and the given flag set are not
+         * \param rhs the flag to test this against.
+         * \return \c true if and only if this and the given flag set are not
          * identical.
          */
         inline bool operator != (const Flags<T>& rhs) const {
@@ -195,8 +199,8 @@ class Flags {
         /**
          * Sets this flag set to contain precisely the given flag only.
          *
-         * @param rhs the new value of this flag set.
-         * @return a reference to this flag set.
+         * \param rhs the new value of this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator = (T rhs) {
             value_ = rhs;
@@ -206,8 +210,8 @@ class Flags {
         /**
          * Sets this flag set to contain a copy of the given flag set.
          *
-         * @param rhs the new value of this flag set.
-         * @return a reference to this flag set.
+         * \param rhs the new value of this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator = (const Flags<T>& rhs) = default;
 
@@ -215,8 +219,8 @@ class Flags {
          * Changes this flag set by taking a bitwise OR with the given
          * flag.
          *
-         * @param rhs the flag to combine with this set.
-         * @return a reference to this flag set.
+         * \param rhs the flag to combine with this set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator |= (T rhs) {
             value_ |= rhs;
@@ -227,8 +231,8 @@ class Flags {
          * Changes this flag set by taking a bitwise OR with the given
          * flag set.
          *
-         * @param rhs the flag set to combine with this set.
-         * @return a reference to this flag set.
+         * \param rhs the flag set to combine with this set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator |= (const Flags<T>& rhs) {
             value_ |= rhs.value_;
@@ -239,8 +243,8 @@ class Flags {
          * Changes this flag set by taking a bitwise AND with the given
          * flag.
          *
-         * @param rhs the flag to combine with this set.
-         * @return a reference to this flag set.
+         * \param rhs the flag to combine with this set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator &= (T rhs) {
             value_ &= rhs;
@@ -251,8 +255,8 @@ class Flags {
          * Changes this flag set by taking a bitwise AND with the given
          * flag set.
          *
-         * @param rhs the flag set to combine with this set.
-         * @return a reference to this flag set.
+         * \param rhs the flag set to combine with this set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator &= (const Flags<T>& rhs) {
             value_ &= rhs.value_;
@@ -263,8 +267,8 @@ class Flags {
          * Changes this flag set by taking a bitwise XOR with the given
          * flag.
          *
-         * @param rhs the flag to combine with this set.
-         * @return a reference to this flag set.
+         * \param rhs the flag to combine with this set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator ^= (T rhs) {
             value_ ^= rhs;
@@ -275,8 +279,8 @@ class Flags {
          * Changes this flag set by taking a bitwise XOR with the given
          * flag set.
          *
-         * @param rhs the flag set to combine with this set.
-         * @return a reference to this flag set.
+         * \param rhs the flag set to combine with this set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator ^= (const Flags<T>& rhs) {
             value_ ^= rhs.value_;
@@ -287,8 +291,8 @@ class Flags {
          * Returns the bitwise OR of this set and the given flag.
          * This flag set is not changed.
          *
-         * @param rhs the flag to combine with this set.
-         * @return the combination of this set and the given flag.
+         * \param rhs the flag to combine with this set.
+         * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator | (T rhs) const {
             return Flags(value_ | rhs);
@@ -298,8 +302,8 @@ class Flags {
          * Returns the bitwise OR of this and the given flag set.
          * This flag set is not changed.
          *
-         * @param rhs the flag set to combine with this set.
-         * @return the combination of this and the given flag set.
+         * \param rhs the flag set to combine with this set.
+         * \return the combination of this and the given flag set.
          */
         inline Flags<T> operator | (const Flags<T>& rhs) const {
             return Flags(value_ | rhs.value_);
@@ -309,8 +313,8 @@ class Flags {
          * Returns the bitwise AND of this set and the given flag.
          * This flag set is not changed.
          *
-         * @param rhs the flag to combine with this set.
-         * @return the combination of this set and the given flag.
+         * \param rhs the flag to combine with this set.
+         * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator & (T rhs) const {
             return Flags(value_ & rhs);
@@ -320,8 +324,8 @@ class Flags {
          * Returns the bitwise AND of this and the given flag set.
          * This flag set is not changed.
          *
-         * @param rhs the flag set to combine with this set.
-         * @return the combination of this and the given flag set.
+         * \param rhs the flag set to combine with this set.
+         * \return the combination of this and the given flag set.
          */
         inline Flags<T> operator & (const Flags<T>& rhs) const {
             return Flags(value_ & rhs.value_);
@@ -331,8 +335,8 @@ class Flags {
          * Returns the bitwise XOR of this set and the given flag.
          * This flag set is not changed.
          *
-         * @param rhs the flag to combine with this set.
-         * @return the combination of this set and the given flag.
+         * \param rhs the flag to combine with this set.
+         * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator ^ (T rhs) const {
             return Flags(value_ ^ rhs);
@@ -342,8 +346,8 @@ class Flags {
          * Returns the bitwise XOR of this and the given flag set.
          * This flag set is not changed.
          *
-         * @param rhs the flag set to combine with this set.
-         * @return the combination of this and the given flag set.
+         * \param rhs the flag set to combine with this set.
+         * \return the combination of this and the given flag set.
          */
         inline Flags<T> operator ^ (const Flags<T>& rhs) const {
             return Flags(value_ ^ rhs.value_);
@@ -352,7 +356,7 @@ class Flags {
         /**
          * Clears all bits from this set that appear in the given flag.
          *
-         * @param rhs the flag to clear from this set.
+         * \param rhs the flag to clear from this set.
          */
         inline void clear(T rhs) {
             value_ |= rhs;
@@ -362,7 +366,7 @@ class Flags {
         /**
          * Clears all bits from this set that appear in the given set.
          *
-         * @param rhs identifies the bits to clear from this set.
+         * \param rhs identifies the bits to clear from this set.
          */
         inline void clear(const Flags<T>& rhs) {
             value_ |= rhs.value_;
@@ -379,9 +383,9 @@ class Flags {
          *
          * \pre Both \a default_ and \a other are each single-bit flags.
          *
-         * @param default_ the flag that will be set if any adjustments
+         * \param default_ the flag that will be set if any adjustments
          * need to be made.
-         * @param other the flag that will be cleared if any adjustments
+         * \param other the flag that will be cleared if any adjustments
          * need to be made.
          */
         inline void ensureOne(T default_, T other) {
@@ -397,13 +401,13 @@ class Flags {
          *
          * If neither flag is present, then \a default_ will be used.
          * If multiple flags are present, then the flag that appears
-         * \e earlier in the argument list for this routine will be used.
+         * _earlier_ in the argument list for this routine will be used.
          *
          * \pre Each of the given flags is single-bit.
          *
-         * @param default_ the highest-priority flag.
-         * @param second the second-highest-priority flag.
-         * @param last the lowest-priority flag.
+         * \param default_ the highest-priority flag.
+         * \param second the second-highest-priority flag.
+         * \param last the lowest-priority flag.
          */
         inline void ensureOne(T default_, T second, T last) {
             // Cast to int, because (T | T) is overloaded to return Flags<T>.
@@ -421,14 +425,14 @@ class Flags {
          *
          * If neither flag is present, then \a default_ will be used.
          * If multiple flags are present, then the flag that appears
-         * \e earlier in the argument list for this routine will be used.
+         * _earlier_ in the argument list for this routine will be used.
          *
          * \pre Each of the given flags is single-bit.
          *
-         * @param default_ the highest-priority flag.
-         * @param second the second-highest-priority flag.
-         * @param third the third-highest-priority flag.
-         * @param last the lowest-priority flag.
+         * \param default_ the highest-priority flag.
+         * \param second the second-highest-priority flag.
+         * \param third the third-highest-priority flag.
+         * \param last the lowest-priority flag.
          */
         inline void ensureOne(T default_, T second, T third, T last) {
             // Cast to int, because (T | T) is overloaded to return Flags<T>.
@@ -446,7 +450,7 @@ class Flags {
         /**
          * Constructs a new flag set with the given internal value.
          *
-         * @param init the new internal value.
+         * \param init the new internal value.
          */
         inline Flags(int init) : value_(init) {
         }

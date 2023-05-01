@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -94,7 +94,7 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
         if (! dehydration.empty()) {
             // Process this dehydration string.
             try {
-                ans->insertChildLast(make_packet(
+                ans->append(make_packet(
                     Triangulation<3>::rehydrate(dehydration),
                     (label.empty() ? dehydration : label)));
             } catch (const InvalidArgument&) {
@@ -110,7 +110,7 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
             "The following dehydration string(s) could not be rehydrated:\n") +
             errStrings);
         errPkt->setLabel("Errors");
-        ans->insertChildLast(errPkt);
+        ans->append(errPkt);
     }
 
     return ans;

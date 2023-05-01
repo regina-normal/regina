@@ -11,8 +11,8 @@ INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/engine")
 # The key-value store is only used internally by the engine (i.e., it
 # never appears in the engine headers, only the .cpp sources).
 # Therefore we include it only here within engine/, not globally.
-INCLUDE_DIRECTORIES(${KVSTORE_INCLUDE_DIRS})
-LINK_DIRECTORIES(${KVSTORE_LIBRARY_DIRS})
+INCLUDE_DIRECTORIES(${KVStore_INCLUDE_DIRS})
+LINK_DIRECTORIES(${KVStore_LIBRARY_DIRS})
 
 SET ( SOURCES )
 # Each of these subdirectories modifies the SOURCE variable,
@@ -41,10 +41,6 @@ ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 
-# Some C files need to be compiled using the C++ compiler (e.g., snappea,
-# where we have added C++ namespaces).
-SET_SOURCE_FILES_PROPERTIES( ${SOURCES_C_AS_CPP} PROPERTIES LANGUAGE CXX )
-
 # Ensure that, when building under Windows, the linker is given the full list
 # of symbols to export in the DLL.  This avoids the need to manage attributes
 # such as __declspec(dllexport) and __declspec(dllimport) within the C++ code.
@@ -59,7 +55,7 @@ ADD_LIBRARY("regina-engine" SHARED ${SOURCES} )
 SET(ENGINE_LINK_LIBRARIES ${LIBXML2_LIBRARIES} ${GMP_LIBRARIES} ${GMPXX_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 TARGET_LINK_LIBRARIES(regina-engine
   LINK_PUBLIC ${ENGINE_LINK_LIBRARIES}
-  LINK_PRIVATE ${STDFS_LIBRARY} "${ICONV_LIBRARY}" ${ZLIB_LIBRARIES} ${JANSSON_LIBRARIES} ${KVSTORE_LIBRARIES})
+  LINK_PRIVATE ${STDFS_LIBRARY} "${ICONV_LIBRARY}" ${ZLIB_LIBRARIES} ${Jansson_LIBRARIES} ${KVStore_LIBRARIES})
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES VERSION ${PACKAGE_VERSION})
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES SOVERSION ${PACKAGE_VERSION})
 

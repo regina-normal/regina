@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -440,7 +440,7 @@ void SnapPeaShapesUI::vertexLinks() {
                 std::in_place, chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -457,7 +457,7 @@ void SnapPeaShapesUI::toRegina() {
         auto ans = regina::make_packet<regina::Triangulation<3>>(
             std::in_place, *tri);
         ans->setLabel(tri->label());
-        tri->insertChildLast(ans);
+        tri->append(ans);
         enclosingPane->getMainWindow()->packetView(*ans, true, true);
     }
 }
@@ -505,7 +505,7 @@ void SnapPeaShapesUI::fill() {
                 tr("Please report this to the Regina developers."));
         } else {
             ans->setLabel(tri->adornedLabel("Filled"));
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -527,7 +527,7 @@ void SnapPeaShapesUI::canonise() {
     else {
         try {
             auto ans = make_packet(tri->canonise(), "Canonical retriangulation");
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         } catch (const regina::UnsolvedCase&) {
             ReginaSupport::sorry(ui,

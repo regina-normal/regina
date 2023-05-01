@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ namespace python {
  *
  * Specifically, suppose we have two python objects \a x and \a y that
  * wrap instances of some underlying C++ class \a C.  Then, if we
- * test <tt>x == y</tt> or <tt>x != y</tt> under python, the possible
+ * test `x == y` or `x != y` under python, the possible
  * behaviours are:
  */
 enum EqualityType {
@@ -63,7 +63,7 @@ enum EqualityType {
      * The objects are compared by reference.  This means that the
      * python operators == and != simply test whether \a x and \a y refer to
      * the same instance of the C++ class \a C.  In other words, they test
-     * whether the underlying C++ \e pointers to \a x and \a y are the same.
+     * whether the underlying C++ _pointers_ to \a x and \a y are the same.
      */
     BY_REFERENCE = 2,
     /**
@@ -80,8 +80,11 @@ enum EqualityType {
     DISABLED = 4
 };
 
+#ifndef __DOCSTRINGS
+
 /**
- * Adds appropriate == and != operators to the python bindings for a C++ class.
+ * Adds appropriate == and != operators to the python bindings for a C++ class,
+ * with custom docstrings.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::add_eq_operators(c)</t>, where \a c is the
@@ -89,13 +92,51 @@ enum EqualityType {
  *
  * - If \a T provides both == and != operators (either as member
  *   functions or as global functions), then the python operators == and !=
- *   will compare by value.
+ *   will compare by value.  The \a docEq and \a docNeq arguments will be
+ *   used as the respective Python docstrings.
  *
- * - If \a T provides neither == nor != operators, then the python
- *   operators == and != will compare by reference.
+ * - If \a T provides neither == nor != operators, then this will generate
+ *   a compile error.  Instead you should be calling the variant of
+ *   add_eq_operators() _without_ docstrings.
  *
  * - If \a T provides one of == or != but not the other, then this will
- *   generate a compile error.
+ *   generate a compile error.  You should fix the C++ class \a T to make its
+ *   comparison operators consistent.
+ *
+ * Furthermore, this will add an attribute \a equalityType to the python
+ * wrapper class, which will be the corresponding constant from the
+ * EqualityType enum (which for this variant of add_eq_operators() must
+ * always be \a BY_VALUE).
+ *
+ * If \a C is a packet type (such as regina::Text) or is inherited by a packet
+ * type (such as regina::Link), then you should use packet_eq_operators()
+ * instead.
+ */
+template <class C, typename... options>
+void add_eq_operators(pybind11::class_<C, options...>& c,
+    const char* docEq, const char* docNeq);
+
+/**
+ * Adds appropriate == and != operators to the python bindings for a C++ class,
+ * without custom docstrings.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_eq_operators(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.  The effect will be as follows:
+ *
+ * - If \a T provides both == and != operators (either as member
+ *   functions or as global functions), then this will generate a
+ *   compile error.  Instead you should be calling the variant of
+ *   add_eq_operators() that takes docstrings, and you should pass
+ *   custom docstrings that explain exactly what == and != are testing.
+ *
+ * - If \a T provides neither == nor != operators, then the python
+ *   operators == and != will compare by reference.  Sensible docstrings
+ *   for comparison-by-reference will be provided.
+ *
+ * - If \a T provides one of == or != but not the other, then this will
+ *   generate a compile error.  You should fix the C++ class \a T to make its
+ *   comparison operators consistent.
  *
  * Furthermore, this will add an attribute \a equalityType to the python
  * wrapper class, which will be the corresponding constant from the
@@ -109,9 +150,25 @@ template <class C, typename... options>
 void add_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
- * Adds appropriate == and != operators to the python bindings for a C++ class
- * that is either equal to a packet type (such as regina::Text), or inherited
- * by a packet type (such as regina::Link).
+ * Adds appropriate == and != operators to the python bindings,
+ * with docstrings, for a C++ class that is either equal to a packet type
+ * (such as regina::Text), or inherited by a packet type (such as regina::Link).
+ *
+ * This routine performs the same task as add_eq_operators, and in addition
+ * it adds fallback == and != operators that throw exceptions if an object of
+ * the given type is compared against a packet of some different type.
+ * The intent is for these exceptions to be informative, so that users are
+ * aware that they should use samePacket() and not the comparison operators
+ * to test whether two Python objects wrap the same packet.
+ */
+template <class C, typename... options>
+void packet_eq_operators(pybind11::class_<C, options...>& c,
+    const char* docEq, const char* docNeq);
+
+/**
+ * Adds appropriate == and != operators to the python bindings,
+ * without docstrings, for a C++ class that is either equal to a packet type
+ * (such as regina::Text), or inherited by a packet type (such as regina::Link).
  *
  * This routine performs the same task as add_eq_operators, and in addition
  * it adds fallback == and != operators that throw exceptions if an object of
@@ -140,24 +197,56 @@ void packet_disasble_eq_operators(pybind11::class_<C, options...>& c);
  * Indicates that a C++ class is never instantiated, and that its python
  * wrapper class should not support the operators == or !=.
  *
- * This should only be used with C++ classes that are never instantiated (such
- * as Example<dim>, which consists entirely of static methods, or Manifold,
- * which is an abstract base class).  As such, it should be impossible to
- * even call the == and != operators under python.
+ * This should only be used with C++ classes that are never instantiated,
+ * and (at least from the user's point of view) are only ever accessed
+ * through static methods (e.g., Example<dim> or Primes).  As such, it should
+ * be impossible to even call the == and != operators under python.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::no_eq_operators(c)</t>, where \a c is the
+ * <t>regina::python::no_eq_static(c)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.  The effect will be as follows:
  *
  * - Placeholder operators == and != will be added to the python wrapper class
  *   (thus overriding any default provided by pybind11).  These operators will
- *   throw python exceptions if they are ever called.
+ *   throw python exceptions if they are ever called.  Sensible docstrings
+ *   for these operators will be provided.
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
  *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
+ *
+ * This is similar in effect to no_eq_abstract(); the main difference here
+ * is that different docstrings will be supplied.
  */
 template <class C, typename... options>
-void no_eq_operators(pybind11::class_<C, options...>& c);
+void no_eq_static(pybind11::class_<C, options...>& c);
+
+/**
+ * Indicates that a C++ class is an abstract base class, and that its
+ * subclasses are responsible for providing operators == and != in Python.
+ *
+ * This should only be used with C++ abstract base classes whose subclasses
+ * provide their own equality tests (e.g., Manifold or StandardTriangulation).
+ * Under normal circumstances (i.e., unless the user is deliberately trying
+ * to do this), it would be impossible for Python users to call the == or !=
+ * operators from the base class.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::no_eq_abstract(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.  The effect will be as follows:
+ *
+ * - Placeholder operators == and != will be added to the python wrapper class
+ *   (thus overriding any default provided by pybind11).  These operators will
+ *   throw python exceptions if they are ever called.  Sensible docstrings
+ *   for these operators will be provided.
+ *
+ * - The attribute \a equalityType will be added to the python wrapper class.
+ *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
+ *
+ * This is similar in effect to no_eq_static(); the main difference here
+ * is that different docstrings will be supplied.
+ */
+template <class C, typename... options>
+void no_eq_abstract(pybind11::class_<C, options...>& c);
 
 /**
  * Explicitly disables the == and != operators for a C++ class.
@@ -175,7 +264,8 @@ void no_eq_operators(pybind11::class_<C, options...>& c);
  *
  * - Operators == and != will be added to the python wrapper class (thus
  *   overriding any default provided by pybind11), and these operators will
- *   throw python exceptions that contain useful explanations.
+ *   throw python exceptions that contain useful explanations.  Sensible
+ *   docstrings for these operators will be provided.
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
  *   Its value will be the EqualityType enum constant \a DISABLED.
@@ -305,30 +395,80 @@ namespace add_eq_operators_detail {
 // See the top of this header for their documentation.
 
 template <class C, typename... options>
-inline void add_eq_operators(pybind11::class_<C, options...>& c) {
-    c.def("__eq__",
-        &add_eq_operators_detail::EqualityOperators<C>::are_equal);
-    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
-    c.def("__ne__",
-        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
-    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
-    c.attr("equalityType") =
+inline void add_eq_operators(pybind11::class_<C, options...>& c,
+        const char* docEq, const char* docNeq) {
+    constexpr EqualityType equalityType =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
+
+    static_assert(equalityType == BY_VALUE,
+        "The variant of add_eq_operators() that takes docstrings "
+        "should only be used for classes that compare by value.");
+
+    c.def("__eq__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_equal, docEq);
+    c.def("__ne__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal, docNeq);
+
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
+
+    c.attr("equalityType") = equalityType;
 }
 
 template <class C, typename... options>
-inline void no_eq_operators(pybind11::class_<C, options...>& c) {
-    c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>);
-    c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>);
+inline void add_eq_operators(pybind11::class_<C, options...>& c) {
+    constexpr EqualityType equalityType =
+        add_eq_operators_detail::EqualityOperators<C>::equalityType();
+
+    static_assert(equalityType == BY_REFERENCE,
+        "The variant of add_eq_operators() that takes docstrings "
+        "should only be used for classes that compare by reference.");
+
+    c.def("__eq__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_equal,
+        python::doc::common::eq_reference);
+    c.def("__ne__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
+        python::doc::common::neq_reference);
+
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
+
+    c.attr("equalityType") = equalityType;
+}
+
+template <class C, typename... options>
+inline void no_eq_static(pybind11::class_<C, options...>& c) {
+    c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_none_static);
+    c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_none_static);
+    c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
+}
+
+template <class C, typename... options>
+inline void no_eq_abstract(pybind11::class_<C, options...>& c) {
+    c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_none_abstract);
+    c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_none_abstract);
     c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
 }
 
 template <class C, typename... options>
 inline void disable_eq_operators(pybind11::class_<C, options...>& c) {
-    c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>);
-    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
-    c.def("__ne__", &add_eq_operators_detail::disable_equality_operators<C>);
-    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
+    c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>,
+        doc::common::eq_disabled);
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", &add_eq_operators_detail::disable_equality_operators<C>,
+        doc::common::eq_disabled);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
     c.attr("equalityType") = EqualityType::DISABLED;
 }
 
@@ -341,10 +481,18 @@ inline bool invalidPacketComparison(const regina::Packet&,
 }
 
 template <class C, typename... options>
+inline void packet_eq_operators(pybind11::class_<C, options...>& c,
+        const char* docEq, const char* docNeq) {
+    add_eq_operators(c, docEq, docNeq);
+    c.def("__eq__", &invalidPacketComparison, doc::common::eq_packet_invalid);
+    c.def("__ne__", &invalidPacketComparison, doc::common::eq_packet_invalid);
+}
+
+template <class C, typename... options>
 inline void packet_eq_operators(pybind11::class_<C, options...>& c) {
     add_eq_operators(c);
-    c.def("__eq__", &invalidPacketComparison);
-    c.def("__ne__", &invalidPacketComparison);
+    c.def("__eq__", &invalidPacketComparison, doc::common::eq_packet_invalid);
+    c.def("__ne__", &invalidPacketComparison, doc::common::eq_packet_invalid);
 }
 
 template <class C, typename... options>
@@ -360,13 +508,16 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
         throw std::runtime_error(s.str());
     };
 
-    c.def("__eq__", func);
-    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
-    c.def("__ne__", func);
-    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
+    c.def("__eq__", func, doc::common::eq_packet_disabled);
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", func, doc::common::eq_packet_disabled);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
     c.attr("equalityType") = EqualityType::DISABLED;
 }
 
 #endif // __DOXYGEN
+#endif // __DOCSTRINGS
 
 } } // namespace regina::python

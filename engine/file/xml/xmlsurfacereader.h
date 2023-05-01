@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ namespace regina {
 /**
  * An XML element reader that reads a single normal surface.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalSurfaceReader : public XMLElementReader {
     private:
@@ -72,8 +72,8 @@ class XMLNormalSurfaceReader : public XMLElementReader {
         /**
          * Creates a new normal surface reader.
          *
-         * @param tri the triangulation in which this normal surface lives.
-         * @param coords the coordinate system used by this normal surface.
+         * \param tri the triangulation in which this normal surface lives.
+         * \param coords the coordinate system used by this normal surface.
          */
         XMLNormalSurfaceReader(const SnapshotRef<Triangulation<3>>& tri,
             NormalCoords coords);
@@ -81,7 +81,7 @@ class XMLNormalSurfaceReader : public XMLElementReader {
         /**
          * Returns a reference to the normal surface that has been read.
          *
-         * @return the normal surface, or no value if an error occurred.
+         * \return the normal surface, or \nullopt if an error occurred.
          */
         std::optional<NormalSurface>& surface();
 
@@ -96,7 +96,7 @@ class XMLNormalSurfaceReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single normal surface list.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
@@ -112,7 +112,7 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c surfaces XML element.
+         * \param props the attributes of the \c surfaces XML element.
          */
         XMLNormalSurfacesReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -129,7 +129,7 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
  * An XML packet reader that reads a single normal surface list using
  * the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
     private:
@@ -145,7 +145,7 @@ class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param tri the triangulation in which these normal surfaces live.
+         * \param tri the triangulation in which these normal surfaces live.
          */
         XMLLegacyNormalSurfacesReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,

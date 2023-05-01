@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -69,7 +69,7 @@ namespace regina {
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g., FacetSpec2
  * and FacetSpec3 for dimensions 2 and 3).
  *
@@ -96,9 +96,9 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Creates a new specifier referring to the given facet of the given
      * simplex.
      *
-     * @param newSimp the given simplex; see the class notes for
+     * \param newSimp the given simplex; see the class notes for
      * allowable values of this parameter.
-     * @param newFacet the given facet; this should be between 0 and
+     * \param newFacet the given facet; this should be between 0 and
      * \a dim inclusive.
      */
     FacetSpec(ssize_t newSimp, int newFacet);
@@ -106,24 +106,24 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Creates a new specifier referring to the same simplex facet as
      * the given specifier.
      *
-     * @param cloneMe the specifier to clone.
+     * \param cloneMe the specifier to clone.
      */
     FacetSpec(const FacetSpec<dim>& cloneMe) = default;
 
     /**
      * Determines if this specifier represents the overall boundary.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that the boundary is represented in this specifier as
      * simplex \a nSimplices, facet 0.
-     * @return \c true if and only if this specifier represents the
+     * \return \c true if and only if this specifier represents the
      * overall boundary.
      */
     bool isBoundary(size_t nSimplices) const;
     /**
      * Determines if this specifier represents a before-the-start value.
      *
-     * @return \c true if and only if this specifier is before-the-start.
+     * \return \c true if and only if this specifier is before-the-start.
      */
     bool isBeforeStart() const;
     /**
@@ -131,13 +131,13 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * You can optionally declare the overall boundary to be
      * past-the-end as well as the already predefined past-the-end value.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that past-the-end is represented in this specifier as
      * simplex \a nSimplices, facet 1.
-     * @param boundaryAlso \c true if the overall boundary should be
+     * \param boundaryAlso \c true if the overall boundary should be
      * considered past-the-end in addition to the predefined past-the-end
      * value.
-     * @return \c true if and only if this specifier is past-the-end.
+     * \return \c true if and only if this specifier is past-the-end.
      */
     bool isPastEnd(size_t nSimplices, bool boundaryAlso) const;
 
@@ -148,7 +148,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Sets this specifier to the overall boundary.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that the boundary is represented in this specifier as
      * simplex \a nSimplices, facet 0.
      */
@@ -160,7 +160,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Sets this specifier to past-the-end.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that past-the-end is represented in this specifier as
      * simplex \a nSimplices, facet 1.
      */
@@ -169,8 +169,8 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Sets this specifier to the value of the given specifier.
      *
-     * @param other the given specifier.
-     * @return a reference to this specifier.
+     * \param other the given specifier.
+     * \return a reference to this specifier.
      */
     FacetSpec& operator = (const FacetSpec<dim>& other) = default;
     /**
@@ -182,10 +182,10 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not past-the-end.
      *
-     * \ifacespython Not present, although the postincrement operator is
-     * present in python as the member function inc().
+     * \nopython The postincrement operator is present in Python as the
+     * member function inc().
      *
-     * @return A reference to this specifier.
+     * \return A reference to this specifier.
      */
     FacetSpec& operator ++ ();
     /**
@@ -197,10 +197,10 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not past-the-end.
      *
-     * \ifacespython This routine is named inc() since python does not
+     * \python This routine is named inc() since python does not
      * support the increment operator.
      *
-     * @return A copy of this specifier before it was incremented.
+     * \return A copy of this specifier before it was incremented.
      */
     FacetSpec operator ++ (int);
     /**
@@ -212,10 +212,10 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not before-the-start.
      *
-     * \ifacespython Not present, although the postdecrement operator is
-     * present in python as the member function dec().
+     * \nopython The postdecrement operator is present in Python as the
+     * member function dec().
      *
-     * @return A reference to this specifier.
+     * \return A reference to this specifier.
      */
     FacetSpec& operator -- ();
     /**
@@ -227,42 +227,42 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not before-the-start.
      *
-     * \ifacespython This routine is named dec() since python does not
+     * \python This routine is named dec() since python does not
      * support the decrement operator.
      *
-     * @return A copy of this specifier before it was decremented.
+     * \return A copy of this specifier before it was decremented.
      */
     FacetSpec operator -- (int);
 
     /**
      * Determines if this and the given specifier are identical.
      *
-     * @param other the specifier to compare with this.
-     * @return \c true if and only if this and the given specifier are
+     * \param other the specifier to compare with this.
+     * \return \c true if and only if this and the given specifier are
      * equal.
      */
     bool operator == (const FacetSpec<dim>& other) const;
     /**
      * Determines if this and the given specifier are not identical.
      *
-     * @param other the specifier to compare with this.
-     * @return \c true if and only if this and the given specifier are
+     * \param other the specifier to compare with this.
+     * \return \c true if and only if this and the given specifier are
      * not equal.
      */
     bool operator != (const FacetSpec<dim>& other) const;
     /**
      * Determines if this is less than the given specifier.
      *
-     * @param other the specifier to compare with this.
-     * @return \c true if and only if this is less than the given
+     * \param other the specifier to compare with this.
+     * \return \c true if and only if this is less than the given
      * specifier.
      */
     bool operator < (const FacetSpec<dim>& other) const;
     /**
      * Determines if this is less than or equal to the given specifier.
      *
-     * @param other the specifier to compare with this.
-     * @return \c true if and only if this is less than or equal to
+     * \param other the specifier to compare with this.
+     * \return \c true if and only if this is less than or equal to
      * the given specifier.
      */
     bool operator <= (const FacetSpec<dim>& other) const;
@@ -274,10 +274,9 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Before-the-start, past-the-end and boundary specifiers can all be
      * safely encoded.
      *
-     * \ifacespython Not present; use tightEncoding() instead, which
-     * returns a string.
+     * \nopython Use tightEncoding() instead, which returns a string.
      *
-     * @param out the output stream to which the encoded string will be written.
+     * \param out the output stream to which the encoded string will be written.
      */
     void tightEncode(std::ostream& out) const;
 
@@ -288,7 +287,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * The tight encoding will be read from the given input stream.
      * If the input stream contains leading whitespace then it will be
      * treated as an invalid encoding (i.e., this routine will throw an
-     * exception).  The input routine \e may contain further data: if this
+     * exception).  The input stream _may_ contain further data: if this
      * routine is successful then the input stream will be left positioned
      * immediately after the encoding, without skipping any trailing
      * whitespace.
@@ -296,15 +295,15 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Before-the-start, past-the-end and boundary specifiers can all be
      * safely reconstructed.
      *
-     * \exception InvalidInput the given input stream does not begin with
+     * \exception InvalidInput The given input stream does not begin with
      * a tight encoding of a <i>dim</i>-dimensional facet specifier.
      *
-     * \ifacespython Not present; use tightDecoding() instead, which takes
-     * a string as its argument.
+     * \nopython Use tightDecoding() instead, which takes a string as
+     * its argument.
      *
-     * @param input an input stream that begins with the tight encoding
+     * \param input an input stream that begins with the tight encoding
      * for a <i>dim</i>-dimensional facet specifier.
-     * @return the specifier represented by the given tight encoding.
+     * \return the specifier represented by the given tight encoding.
      */
     static FacetSpec<dim> tightDecode(std::istream& input);
 };
@@ -312,9 +311,9 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
 /**
  * Writes the given facet specifier to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param spec the specifier to write.
- * @return a reference to \a out.
+ * \param out the output stream to which to write.
+ * \param spec the specifier to write.
+ * \return a reference to \a out.
  *
  * \ingroup triangulation
  */

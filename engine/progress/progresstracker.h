@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,11 +55,11 @@ namespace regina {
  *
  * These classes manage progress tracking and cancellation polling for long
  * operations.  A typical progress tracker is simultaneously used by a
- * \e writing thread, which is performing the long calculations, and a
- * \e reading thread, which displays progress updates to the user and/or
+ * _writing_ thread, which is performing the long calculations, and a
+ * _reading_ thread, which displays progress updates to the user and/or
  * takes cancellation requests from the user.
  *
- * Progress works through a series of \e stages.  Each stage has a text
+ * Progress works through a series of _stages_.  Each stage has a text
  * description, as well as a numerical progress indicator.  For the
  * class ProgressTracker, this is a percentage that rises from 0 to 100
  * as the stage progresses; for ProgressTrackerOpen, this is an integer
@@ -147,7 +147,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the writing thread has
+         * \return \c true if and only if the writing thread has
          * finished all processing.
          */
         bool isFinished() const;
@@ -158,7 +158,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the stage description has changed.
+         * \return \c true if and only if the stage description has changed.
          */
         bool descriptionChanged() const;
         /**
@@ -166,7 +166,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the reading thread.
          *
-         * @return \c the current stage description.
+         * \return \c the current stage description.
          */
         std::string description() const;
         /**
@@ -188,7 +188,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the writing thread.
          *
-         * @return \c true if and only if a cancellation request has
+         * \return \c true if and only if a cancellation request has
          * been made.
          */
         bool isCancelled() const;
@@ -274,7 +274,7 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the percentage progress has changed.
+         * \return \c true if and only if the percentage progress has changed.
          */
         bool percentChanged() const;
         /**
@@ -285,7 +285,7 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return the current percentage progress.
+         * \return the current percentage progress.
          */
         double percent() const;
 
@@ -296,12 +296,12 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param desc a human-readable description of the new stage.
+         * \param desc a human-readable description of the new stage.
          * Typically this begins with a capital and does not include a
          * final period (full stop).
-         * @param weight the relative weight of this stage as a fraction
+         * \param weight the relative weight of this stage as a fraction
          * of the entire operation.  This weight must be between 0 and 1
-         * inclusive, and the weights of \e all stages must sum to 1
+         * inclusive, and the weights of _all_ stages must sum to 1
          * in total.
          */
         void newStage(std::string desc, double weight = 1);
@@ -324,9 +324,9 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param percent the percentage progress through this stage, as
+         * \param percent the percentage progress through this stage, as
          * a number between 0 and 100 inclusive.
-         * @return \c true if there has been no cancellation request, or
+         * \return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
          * thread).
          */
@@ -349,9 +349,9 @@ class ProgressTracker : public ProgressTrackerBase,
          * Subclasses must not override this routine.  They should
          * override writeName() instead.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };
@@ -399,7 +399,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the number of steps completed
+         * \return \c true if and only if the number of steps completed
          * has changed.
          */
         bool stepsChanged() const;
@@ -410,7 +410,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return the current number of steps completed.
+         * \return the current number of steps completed.
          */
         unsigned long steps() const;
 
@@ -421,7 +421,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param desc a human-readable description of the new stage.
+         * \param desc a human-readable description of the new stage.
          * Typically this begins with a capital and does not include a
          * final period (full stop).
          */
@@ -432,7 +432,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @return \c true if there has been no cancellation request, or
+         * \return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
          * thread).
          */
@@ -443,9 +443,9 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param add the number of additional steps that have been completed.
+         * \param add the number of additional steps that have been completed.
          * The value returned by steps() will increase by this amount.
-         * @return \c true if there has been no cancellation request, or
+         * \return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
          * thread).
          */
@@ -467,9 +467,9 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          * Subclasses must not override this routine.  They should
          * override writeName() instead.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,6 +55,69 @@ template <int bytes>
 class NativeInteger;
 
 /**
+ * A compile-time boolean constant that indicates whether the type \a T is a
+ * native C++ integer type, allowing for 128-bit integers also.
+ *
+ * This is true precisely when either `std::is_integral_v<T>` is true and/or
+ * \a T is a native 128-bit integer.
+ *
+ * The only reason for using this constant (as opposed to
+ * `std::is_integral_v<T>`) is because the C++ standard constants treat
+ * 128-bit integers differently under different compilers.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+#if defined(INTERNAL___INT128_FOUND)
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
+        std::is_same_v<T, __int128> || std::is_same_v<T, __uint128>;
+#elif defined(INTERNAL___INT128_T_FOUND)
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
+        std::is_same_v<T, __int128_t> || std::is_same_v<T, __uint128_t>;
+#elif defined(INTERNAL_INT128_T_FOUND)
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
+        std::is_same_v<T, int128_t> || std::is_same_v<T, uint128_t>;
+#else
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T>;
+#endif
+
+/**
+ * A compile-time boolean constant that indicates whether the type \a T is an
+ * unsigned native C++ integer type, allowing for 128-bit integers also.
+ *
+ * This is true precisely when (i) either `std::is_integral_v<T>` is true
+ * and/or \a T is a native 128-bit integer, and (ii) \a T is an unsigned type.
+ *
+ * The only reason for using this constant (as opposed to
+ * `std::is_integral_v<T>` and `std::is_unsigned_v<T>`)
+ * is because the C++ standard constants treat 128-bit integers differently
+ * under different compilers.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+#if defined(INTERNAL___INT128_FOUND)
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, __uint128>;
+#elif defined(INTERNAL___INT128_T_FOUND)
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, __uint128_t>;
+#elif defined(INTERNAL_INT128_T_FOUND)
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, uint128_t>;
+#else
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>);
+#endif
+
+/**
  * Determines if the type \a T is one of Regina's own integer types
  * (either arbitrary precision or fixed size).
  *
@@ -64,7 +127,7 @@ class NativeInteger;
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -88,7 +151,7 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -100,6 +163,7 @@ template <bool supportInfinity>
 struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public std::true_type {};
 #endif // __DOXYGEN
 
+#ifndef __DOCSTRINGS
 /**
  * Conditionally enables a member function for a template class only
  * when the type \a T is one of Regina's own integer classes.
@@ -113,11 +177,11 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  *
  * The implementation uses SFINAE to remove the member function without
  * compile errors.  A side-effect of this is that the member function will
- * now be a \e template member function.  The user should never specify their
+ * now be a _template_ member function.  The user should never specify their
  * own template arguments, and indeed the template parameter pack \a Args in
  * the implementation is there precisely to stop users from doing this.
  *
- * \pre The member function this macro is applied to is \e not a
+ * \pre The member function this macro is applied to is _not_ a
  * template member function (though, as noted above, this macro will
  * silently make it one).
  *
@@ -128,6 +192,10 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
     template <typename... Args, typename Return = returnType> \
     std::enable_if_t<IsReginaInteger<T>::value, Return>
+#else
+// When generating docstrings, we want docs for all member functions.
+#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) returnType
+#endif
 
 /**
  * Returns the number of bits required to store integers in the range
@@ -136,13 +204,13 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  *
  * If \a n is non-positive then this function will return 0.
  *
- * \ifacespython In Python, this routine fixes the integer type
+ * \python In Python, this routine fixes the integer type
  * \a IntType to be \c long.
+ *
+ * \tparam IntType any integer type, such as \c int, \c long, and so on.
  *
  * \param n any integer.
  * \return the number of bits required to store 0,...,<i>n</i>-1.
- *
- * \tparam IntType any integer type, such as \c int, \c long, and so on.
  *
  * \ingroup utilities
  */
@@ -157,7 +225,7 @@ constexpr int bitsRequired(IntType n) {
  *
  * If \a n is non-positive then this function will return 1.
  *
- * \ifacespython In Python, this routine fixes the integer type
+ * \python In Python, this routine fixes the integer type
  * \a IntType to be \c long.
  *
  * \warning Even though the return value is the same type as the
@@ -166,10 +234,10 @@ constexpr int bitsRequired(IntType n) {
  * if \a IntType is an unsigned char then nextPowerOfTwo(255) will return 0.
  * Be sure that \a IntType is large enough for your requirements.
  *
- * \param n any integer.
- * \return the smallest integer power of two that is &ge; \a n.
- *
  * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ *
+ * \param n any integer.
+ * \return the smallest integer power of two that is ≥ \a n.
  *
  * \ingroup utilities
  */
@@ -188,7 +256,7 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  *
  * The template parameter \a coeff can be any positive integer.
  *
- * \ifacespython Not present, since Python does not support templates.
+ * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
@@ -206,7 +274,7 @@ inline constexpr IntType maxSafeFactor =
  *
  * The template parameter \a coeff can be any positive integer.
  *
- * \ifacespython Not present, since Python does not support templates.
+ * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
@@ -215,15 +283,15 @@ inline constexpr IntType minSafeFactor =
     std::numeric_limits<IntType>::min() / coeff;
 
 /**
- * Gives access to native integer types that hold \e exactly \a k bytes,
+ * Gives access to native integer types that hold _exactly_ \a k bytes,
  * where \a k may be any compile-time constant.
  *
  * \tparam bytes the exact number of bytes in the native integer types
  * (i.e., the integer \a k described above).
  *
- * \ifacespython Not present.
+ * \nopython
  *
- * @see IntOfMinSize
+ * \see IntOfMinSize
  *
  * \ingroup utilities
  */
@@ -249,15 +317,15 @@ struct IntOfSize {
 };
 
 /**
- * Gives access to native integer types that hold <em>at least</em> \a k bytes,
+ * Gives access to native integer types that hold _at least_ \a k bytes,
  * where \a k may be any compile-time constant.
  *
  * \tparam bytes the minimum number of bytes in the native integer types
  * (i.e., the integer \a k described above).
  *
- * \ifacespython Not present.
+ * \nopython
  *
- * @see IntOfSize
+ * \see IntOfSize
  *
  * \ingroup utilities
  */
@@ -281,6 +349,22 @@ struct IntOfMinSize {
      */
     using utype = typename IntOfSize<nextPowerOfTwo(bytes)>::utype;
 };
+
+/**
+ * Gives access to native integer types that hold _at least_ \a k bits,
+ * where \a k may be any compile-time constant.
+ *
+ * \tparam bytes the minimum number of bits in the native integer types
+ * (i.e., the integer \a k described above).
+ *
+ * \nopython
+ *
+ * \see IntOfSize
+ *
+ * \ingroup utilities
+ */
+template <int bits>
+using IntOfMinBits = IntOfMinSize<(bits + 7) / 8>;
 
 #ifdef __DOXYGEN
     /**
@@ -363,7 +447,7 @@ struct IntOfSize<8> {
  * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
  * with other types (e.g., int or long), this struct will be undefined.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */

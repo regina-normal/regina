@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -188,20 +188,27 @@ void addPermConv(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(PermConvTest<2, 6>::suite());
     runner.addTest(PermConvTest<2, 7>::suite());
     runner.addTest(PermConvTest<2, 8>::suite());
+    runner.addTest(PermConvTest<2, 9>::suite());
     runner.addTest(PermConvTest<3, 4>::suite());
     runner.addTest(PermConvTest<3, 5>::suite());
     runner.addTest(PermConvTest<3, 6>::suite());
     runner.addTest(PermConvTest<3, 7>::suite());
     runner.addTest(PermConvTest<3, 8>::suite());
+    runner.addTest(PermConvTest<3, 9>::suite());
     runner.addTest(PermConvTest<4, 5>::suite());
     runner.addTest(PermConvTest<4, 6>::suite());
     runner.addTest(PermConvTest<4, 7>::suite());
     runner.addTest(PermConvTest<4, 8>::suite());
+    runner.addTest(PermConvTest<4, 9>::suite());
     runner.addTest(PermConvTest<5, 6>::suite());
     runner.addTest(PermConvTest<5, 7>::suite());
     runner.addTest(PermConvTest<5, 8>::suite());
+    runner.addTest(PermConvTest<5, 9>::suite());
     runner.addTest(PermConvTest<6, 7>::suite());
     runner.addTest(PermConvTest<6, 8>::suite());
+    runner.addTest(PermConvTest<6, 9>::suite());
     runner.addTest(PermConvTest<7, 8>::suite());
+    runner.addTest(PermConvTest<7, 9>::suite());
+    runner.addTest(PermConvTest<8, 9>::suite());
 }
 

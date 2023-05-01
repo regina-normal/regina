@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,7 +65,7 @@ class AbelianGroup;
  * - may optionally override construct(), homology() and/or writeStructure(),
  *   if they are able to provide this functionality;
  *
- * - must \e not override writeTextShort() or writeTextLong(), since these
+ * - must _not_ override writeTextShort() or writeTextLong(), since these
  *   routines are not virtual, and are provided directly by the Manifold base
  *   class;
  *
@@ -90,7 +90,7 @@ class Manifold : public Output<Manifold> {
          * Returns the common name of this 3-manifold as a
          * human-readable string.
          *
-         * @return the common name of this 3-manifold.
+         * \return the common name of this 3-manifold.
          */
         std::string name() const;
         /**
@@ -101,19 +101,19 @@ class Manifold : public Output<Manifold> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * @return the common name of this 3-manifold in TeX format.
+         * \return the common name of this 3-manifold in TeX format.
          */
         std::string texName() const;
         /**
          * Returns details of the structure of this 3-manifold that
          * might not be evident from its common name.  For instance, for
-         * an orbit space S^3/G this routine might return the full
+         * an orbit space S³/G this routine might return the full
          * Seifert structure.
          *
          * This routine may return the empty string if no additional
          * details are deemed necessary.
          *
-         * @return a string describing additional structural details.
+         * \return a string describing additional structural details.
          */
         std::string structure() const;
         /**
@@ -125,17 +125,17 @@ class Manifold : public Output<Manifold> {
          * The default implemention of this routine just throws a
          * NotImplemented exception.
          *
-         * \exception NotImplemented explicit construction has not yet been
+         * \exception NotImplemented Explicit construction has not yet been
          * implemented for this particular 3-manifold.
          *
-         * \exception FileError the construction needs to be read from file (as
+         * \exception FileError The construction needs to be read from file (as
          * opposed to computed on the fly), but the file is inaccessible or its
          * contents cannot be read and parsed correctly.  Currently this can
          * only happen for the subclass SnapPeaCensusManifold, which reads its
          * triangulations from the SnapPea census databases that are installed
          * with Regina.
          *
-         * @return a triangulation of this 3-manifold, if this
+         * \return a triangulation of this 3-manifold, if this
          * construction has been implemented.
          */
         virtual Triangulation<3> construct() const;
@@ -148,16 +148,16 @@ class Manifold : public Output<Manifold> {
          * The default implemention of this routine just throws a
          * NotImplemented exception.
          *
-         * \exception NotImplemented homology calculation has not yet been
+         * \exception NotImplemented Homology calculation has not yet been
          * implemented for this particular 3-manifold.
          *
-         * \exception FileError the homology needs to be read from file (as
+         * \exception FileError The homology needs to be read from file (as
          * opposed to computed), but the file is inaccessible or its contents
          * cannot be read and parsed correctly.  Currently this can only happen
          * for the subclass SnapPeaCensusManifold, which reads its results from
          * the SnapPea census databases that are installed with Regina.
          *
-         * @return the first homology group of this 3-manifold, if this
+         * \return the first homology group of this 3-manifold, if this
          * functionality has been implemented.
          */
         virtual AbelianGroup homology() const;
@@ -165,7 +165,7 @@ class Manifold : public Output<Manifold> {
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
          *
-         * @return \c true if this is a finite-volume hyperbolic
+         * \return \c true if this is a finite-volume hyperbolic
          * manifold, or \c false if not.
          */
         virtual bool isHyperbolic() const = 0;
@@ -191,9 +191,9 @@ class Manifold : public Output<Manifold> {
          * closed 3-manifolds.  For most classes of bounded 3-manifolds,
          * this routine simply compares the strings returned by name().
          *
-         * @param compare the 3-manifold representation with which this
+         * \param compare the 3-manifold representation with which this
          * will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \return \c true if and only if this is "smaller" than the
          * given 3-manifold representation.
          */
         bool operator < (const Manifold& compare) const;
@@ -202,11 +202,11 @@ class Manifold : public Output<Manifold> {
          * Writes the common name of this 3-manifold as a
          * human-readable string to the given output stream.
          *
-         * \ifacespython Not present; instead use the variant name()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant name() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
@@ -218,28 +218,28 @@ class Manifold : public Output<Manifold> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython Not present; instead use the variant texName()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant texName() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
         /**
          * Writes details of the structure of this 3-manifold that
          * might not be evident from its common name to the given output
-         * stream.  For instance, for an orbit space S^3/G this routine
+         * stream.  For instance, for an orbit space S³/G this routine
          * might write the full Seifert structure.
          *
          * This routine may write nothing if no additional
          * details are deemed necessary.  The default implementation of
          * this routine behaves in this way.
          *
-         * \ifacespython Not present; instead use the variant structure()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant structure() that takes no
+         * arguments and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeStructure(std::ostream& out) const;
 
@@ -250,9 +250,9 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() instead.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -262,9 +262,9 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() and writeStructure() instead.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 

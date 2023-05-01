@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,20 +34,26 @@
 #include "../pybind11/stl.h"
 #include "manifold/lensspace.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/lensspace.h"
 
 using regina::LensSpace;
 
 void addLensSpace(pybind11::module_& m) {
-    auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace")
-        .def(pybind11::init<unsigned long, unsigned long>())
-        .def(pybind11::init<const LensSpace&>())
-        .def("swap", &LensSpace::swap)
-        .def("p", &LensSpace::p)
-        .def("q", &LensSpace::q)
+    RDOC_SCOPE_BEGIN(LensSpace)
+
+    auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace",
+            rdoc_scope)
+        .def(pybind11::init<unsigned long, unsigned long>(), rdoc::__init)
+        .def(pybind11::init<const LensSpace&>(), rdoc::__copy)
+        .def("swap", &LensSpace::swap, rdoc::swap)
+        .def("p", &LensSpace::p, rdoc::p)
+        .def("q", &LensSpace::q, rdoc::q)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    m.def("swap", (void(*)(LensSpace&, LensSpace&))(regina::swap));
+    regina::python::add_global_swap<LensSpace>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

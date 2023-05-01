@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,7 +82,7 @@ class XMLTreeResolutionTask {
          * perform whatever "fleshing out" is necessary for a packet
          * whose internal data is not yet complete.
          *
-         * @param resolver the master resolver managing the resolution
+         * \param resolver the master resolver managing the resolution
          * process, as outlined in the XMLTreeResolver class notes.
          */
         virtual void resolve(const XMLTreeResolver& resolver) = 0;
@@ -167,7 +167,7 @@ class XMLTreeResolver {
          * destroy it after resolve() has been called (or, if resolve()
          * is never called, when this XMLTreeResolver is destroyed).
          *
-         * @param task the task to be queued.
+         * \param task the task to be queued.
          */
         void queueTask(XMLTreeResolutionTask* task);
         /**
@@ -181,9 +181,9 @@ class XMLTreeResolver {
          * processes packet elements in the data file.  Users and/or subclasses
          * of XMLPacketReader do not need to call this function themselves.
          *
-         * @param id the internal ID of the given packet, as stored in
+         * \param id the internal ID of the given packet, as stored in
          * the data file.
-         * @param packet the corresponding packet.
+         * \param packet the corresponding packet.
          */
         void storeID(const std::string& id, std::shared_ptr<Packet> packet);
         /**
@@ -193,7 +193,7 @@ class XMLTreeResolver {
          * Packets in a data file may have individual string IDs stored
          * alongside them, in the \a id attribute of the corresponding XML tag.
          * These strings are optional, and do not need to be human-readable.
-         * Although packets are not required to have IDs, any IDs that \e are
+         * Although packets are not required to have IDs, any IDs that _are_
          * stored must be unique (i.e., two different packets cannot
          * share the same ID).
          *
@@ -208,8 +208,8 @@ class XMLTreeResolver {
          * to the IDs that are returned from Packet::internalID(), although
          * this is typically how they are constructed when a file is saved.
          *
-         * @param id the string ID to query.
-         * @return the packet with the given ID, or \c null is no such
+         * \param id the string ID to query.
+         * \return the packet with the given ID, or \c null is no such
          * packet has been registered so far.
          */
         std::shared_ptr<Packet> resolve(const std::string& id) const;
@@ -230,8 +230,8 @@ class XMLTreeResolver {
          * \tparam PacketType the type of packet that is required; this
          * must be a subclass of Packet.
          *
-         * @param id the string ID to query.
-         * @return the packet with the given ID, or \c null if either there is
+         * \param id the string ID to query.
+         * \return the packet with the given ID, or \c null if either there is
          * no such packet registered so far or if there is such a packet but
          * its type is not equal to or derived from \a packetType.
          */
@@ -253,8 +253,8 @@ class XMLTreeResolver {
          * \tparam Held the data type that is required; this must be a
          * type that can be stored in a PacketOf<Held>.
          *
-         * @param id the string ID to query.
-         * @return the data held by the packet with the given ID, or \c null
+         * \param id the string ID to query.
+         * \return the data held by the packet with the given ID, or \c null
          * if either there is no such packet registered so far, or if there
          * is such a packet but its type is not equal to or derived from
          * PacketOf<Held>.
@@ -272,8 +272,8 @@ class XMLTreeResolver {
          * objects (i.e., it is not restricted to a single packet type).
          * See resolvePacketData() for further details.
          *
-         * @param id the string ID to query.
-         * @return the triangulation held by the packet with the given ID,
+         * \param id the string ID to query.
+         * \return the triangulation held by the packet with the given ID,
          * or \c null if either there is no such packet registered so far,
          * or if there is such a packet but it does not hold one of Regina's
          * 3-dimensional triangulation types.

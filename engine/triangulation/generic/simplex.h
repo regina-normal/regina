@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -85,7 +85,7 @@ namespace regina {
  * responsible for their memory management; this is all taken care of by
  * the Triangulation to which they belong.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).
  *
@@ -107,15 +107,23 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
          * Creates a new simplex with no description and no facets joined
          * to anything.
          *
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         Face(Triangulation<dim>* tri);
         /**
-         * Creates a new simplex with the given description and no facets
-         * joined to anything.
+         * Creates a new simplex whose description and locks are cloned
+         * from the given simplex, and with no faces joined to anything.
          *
-         * @param desc the description to give the new simplex.
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param clone the simplex whose details should be cloned.
+         * \param tri the triangulation to which the new tetrahedron belongs.
+         */
+        Face(const Face& clone, Triangulation<dim>* tri);
+        /**
+         * Creates a new simplex with the given description, no locks, and
+         * no facets joined to anything.
+         *
+         * \param desc the description to give the new simplex.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         Face(const std::string& desc, Triangulation<dim>* tri);
 
@@ -123,7 +131,7 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
     friend class detail::TriangulationBase<dim>;
 };
 
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
 // This type alias is already defined in trianguation/forward.h.
 /**
  * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional
@@ -146,6 +154,11 @@ using Simplex = Face<dim, dim>;
 template <int dim>
 inline Face<dim, dim>::Face(Triangulation<dim>* tri) :
         detail::SimplexBase<dim>(tri) {
+}
+
+template <int dim>
+inline Face<dim, dim>::Face(const Face& clone, Triangulation<dim>* tri) :
+        detail::SimplexBase<dim>(clone, tri) {
 }
 
 template <int dim>

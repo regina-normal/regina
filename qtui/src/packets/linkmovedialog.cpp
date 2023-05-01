@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -315,7 +315,8 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent,
         SLOT(changedR2UpOver(int)));
     connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
         SLOT(clicked(QAbstractButton*)));
-    connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
+    connect(moveTypes, SIGNAL(buttonClicked(QAbstractButton*)), this,
+        SLOT(updateApply()));
 
     packetWasRenamed(*link);
     packetWasChanged(*link);

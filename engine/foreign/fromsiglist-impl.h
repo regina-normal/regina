@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -110,7 +110,7 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
         if (! sig.empty()) {
             // Process this isomorphism signature.
             try {
-                ans->insertChildLast(make_packet(ObjectType::fromSig(sig),
+                ans->append(make_packet(ObjectType::fromSig(sig),
                     (label.empty() ? sig : label)));
             } catch (const InvalidArgument&) {
                 errStrings += '\n';
@@ -131,7 +131,7 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
 
         auto errPkt = std::make_shared<Text>(msg.str());
         errPkt->setLabel("Errors");
-        ans->insertChildLast(errPkt);
+        ans->append(errPkt);
     }
 
     return ans;

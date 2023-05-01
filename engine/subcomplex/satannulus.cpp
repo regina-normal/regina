@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -209,10 +209,14 @@ void SatAnnulus::transform(const Triangulation<3>& /* originalTri */,
 
 void SatAnnulus::attachLST(Tetrahedron<3>* t0, Perm<4> r0,
         Tetrahedron<3>* t1, Perm<4> r1, long alpha, long beta) {
-    // Save ourselves headaches later.  Though this should never happen;
-    // see the preconditions.
+    // Save ourselves headaches later.
     if (alpha == 0)
-        return;
+        throw InvalidArgument("SatAnnulus::attachLST() requires alpha "
+            "to be non-zero");
+
+    // The coprimality condition is checked by insertLayeredSolidTorus().
+    // The conditions on the two boundary faces (being unglued and unlocked)
+    // are checked within Simplex::join().
 
     // Normalise to alpha positive.
     if (alpha < 0) {

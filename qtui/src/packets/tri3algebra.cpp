@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -261,7 +261,7 @@ void Tri3HomologyFundUI::refresh() {
 
     if (tri->countComponents() <= 1) {
         fgMsg->hide();
-        fgGroup->setGroup(tri->fundamentalGroup());
+        fgGroup->setGroup(tri->group());
         fgGroup->show();
     } else {
         fgGroup->hide();
@@ -272,7 +272,7 @@ void Tri3HomologyFundUI::refresh() {
 }
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
-    tri->simplifiedFundamentalGroup(fgGroup->group());
+    tri->setGroupPresentation(fgGroup->group());
 }
 
 void Tri3HomologyFundUI::refreshLabels() {

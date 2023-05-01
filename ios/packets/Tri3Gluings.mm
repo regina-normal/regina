@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -441,7 +441,7 @@
     if (! [self checkEditable])
         return;
 
-    self.packet->barycentricSubdivision();
+    self.packet->subdivide();
 }
 
 - (IBAction)idealToFinite:(id)sender
@@ -460,7 +460,7 @@
         return;
     }
     
-    regina::Packet::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventGroup span(self.packet);
     self.packet->idealToFinite();
     self.packet->intelligentSimplify();
 }
@@ -481,7 +481,7 @@
         return;
     }
 
-    regina::Packet::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventGroup span(self.packet);
     self.packet->finiteToIdeal();
     self.packet->intelligentSimplify();
 }
@@ -520,7 +520,7 @@
         return;
     }
 
-    regina::Packet::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventGroup span(self.packet);
     self.packet->puncture();
     self.packet->intelligentSimplify();
 }
@@ -669,7 +669,7 @@
                 // Do it.
                 myEdit = YES;
                 {
-                    regina::Packet::ChangeEventSpan span(self.packet);
+                    regina::Packet::ChangeEventGroup span(self.packet);
                     
                     // First unglue from the old partner if it exists.
                     if (t->adjacentSimplex(editFacet)) {

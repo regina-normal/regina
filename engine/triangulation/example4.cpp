@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,7 +103,11 @@ Triangulation<4> Example<4>::k3() {
     // This is (with much work by multiple authors) derived from Spreer's
     // 17-vertex standard K3 simplicial complex.
     // Rhuaidi Burke has managed to get this down to 60 pentachora thus far.
-    Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
+    //Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
+    
+    // This triangulation is derived from a Kirby diagram of the standard K3 surface, 
+    // constructed and simplified by Rhuaidi Burke using DGT and the "Up-Down-Simplify" heuristic.
+    Triangulation<4> ans = Triangulation<4>::fromIsoSig("2ALAMMvAwvPLQwvPwLQPMvPQQQQLQPAwwALQQAAQPPzQPPaaddceffggikqpmllsorsquxwuttvxxFyyzzAABBCCDDJKIIGGHHMKLLNNOOPPQQSSUUTTVVWWXZZZ0011TbgaiaiakaqaaaMbaawaUbjbabPa5ayaGauara3bmagaNaUbybNa2aRa2aibbawboaraPbJa2aKaya1aqbub2afbPaZaUbcayaGawaca-aLb+aoatbfaNabagajaya1axbybrbebubgaubFbtbfaFbFbFbqbzaoaPboa");
     ans.reflect(); // so sig = -16, not 16
     return ans;
 }
@@ -268,8 +272,6 @@ namespace {
 
 Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
     Triangulation<4> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<4>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
@@ -320,8 +322,6 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
 
 Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
     Triangulation<4> ans = iBundle(base);
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<4>::ChangeEventSpan span(ans);
 
     Perm<5> id;
     size_t n = base.size();
@@ -334,8 +334,6 @@ Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
 Triangulation<4> Example<4>::bundleWithMonodromy(
         const Triangulation<3>& base, const Isomorphism<3>& monodromy) {
     Triangulation<4> ans = iBundle(base);
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<4>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     for (size_t i = 0; i < n; ++i)

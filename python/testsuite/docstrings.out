@@ -1,0 +1,810 @@
+Help on instancemethod in module regina.engine:
+
+boundaryComponents(...)
+    boundaryComponents(self: regina.Triangulation6) -> <internal>.ListView[regina.BoundaryComponent6]
+    
+    Returns an object that allows iteration through and random access to
+    all boundary components of this triangulation.
+    
+    Note that, in Regina's standard dimensions, each ideal vertex forms
+    its own boundary component, and some invalid vertices do also. See the
+    BoundaryComponent class notes for full details on what constitutes a
+    boundary component in standard and non-standard dimensions.
+    
+    The object that is returned is lightweight, and can be happily copied
+    by value. The C++ type of the object is subject to change, so C++
+    users should use ``auto`` (just like this declaration does).
+    
+    The returned object is guaranteed to be an instance of ListView, which
+    means it offers basic container-like functions and supports range-
+    based ``for`` loops. Note that the elements of the list will be
+    pointers, so your code might look like:
+    
+    ```
+    for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
+    ```
+    
+    The object that is returned will remain up-to-date and valid for as
+    long as the triangulation exists. In contrast, however, remember that
+    the individual boundary components _within_ this list will be deleted
+    and replaced each time the triangulation changes. Therefore it is best
+    to treat this object as temporary only, and to call
+    boundaryComponents() again each time you need it.
+    
+    Returns:
+        access to the list of all boundary components.
+
+Help on instancemethod in module regina.engine:
+
+components(...)
+    components(self: regina.Triangulation6) -> <internal>.ListView[regina.Component6]
+    
+    Returns an object that allows iteration through and random access to
+    all components of this triangulation.
+    
+    The object that is returned is lightweight, and can be happily copied
+    by value. The C++ type of the object is subject to change, so C++
+    users should use ``auto`` (just like this declaration does).
+    
+    The returned object is guaranteed to be an instance of ListView, which
+    means it offers basic container-like functions and supports range-
+    based ``for`` loops. Note that the elements of the list will be
+    pointers, so your code might look like:
+    
+    ```
+    for (Component<dim>* c : tri.components()) { ... }
+    ```
+    
+    The object that is returned will remain up-to-date and valid for as
+    long as the triangulation exists. In contrast, however, remember that
+    the individual component objects _within_ this list will be deleted
+    and replaced each time the triangulation changes. Therefore it is best
+    to treat this object as temporary only, and to call components() again
+    each time you need it.
+    
+    Returns:
+        access to the list of all components.
+
+Help on instancemethod in module regina.engine:
+
+faces(...)
+    faces(self: regina.Triangulation6, arg0: int) -> Union[<internal>.ListView[regina.Vertex6], <internal>.ListView[regina.Edge6], <internal>.ListView[regina.Triangle6], <internal>.ListView[regina.Tetrahedron6], <internal>.ListView[regina.Pentachoron6], <internal>.ListView[regina.Face6_5]]
+    
+    Returns an object that allows iteration through and random access to
+    all *subdim*-faces of this triangulation, in a way that is optimised
+    for Python programmers.
+    
+    C++ users should not use this routine. The return type must be fixed
+    at compile time, and so it is a std::variant that can hold any of the
+    lightweight return types from the templated faces<subdim>() function.
+    This means that the return value will still need compile-time
+    knowledge of *subdim* to extract and use the appropriate face objects.
+    However, once you know *subdim* at compile time, you are much better
+    off using the (simpler and faster) routine faces<subdim>() instead.
+    
+    For Python users, this routine is much more useful: the return type
+    can be chosen at runtime, and so this routine returns a Python list of
+    Face<dim, subdim> objects (holding all the *subdim*-faces of the
+    triangulation), which you can use immediately.
+    
+    Exception ``InvalidArgument``:
+        The face dimension *subdim* is outside the supported range (i.e.,
+        negative, or greater than or equal to *dim*).
+    
+    Parameter ``subdim``:
+        the face dimension; this must be between 0 and *dim*-1 inclusive.
+    
+    Returns:
+        access to the list of all *subdim*-faces.
+
+Help on instancemethod in module regina.engine:
+
+face(...)
+    face(self: regina.Triangulation6, arg0: int, arg1: int) -> Union[regina.Vertex6, regina.Edge6, regina.Triangle6, regina.Tetrahedron6, regina.Pentachoron6, regina.Face6_5]
+    
+    Returns the requested *subdim*-face of this triangulation, in a way
+    that is optimised for Python programmers.
+    
+    For C++ users, this routine is not very useful: since precise types
+    must be know at compile time, this routine returns a std::variant *v*
+    that could store a pointer to any class Face<dim, ...>. This means you
+    cannot access the face directly: you will still need some kind of
+    compile-time knowledge of *subdim* before you can extract and use an
+    appropriate Face<dim, subdim> object from *v*. However, once you know
+    *subdim* at compile time, you are better off using the (simpler and
+    faster) routine face<subdim>() instead.
+    
+    For Python users, this routine is much more useful: the return type
+    can be chosen at runtime, and so this routine simply returns a
+    Face<dim, subdim> object of the appropriate face dimension that you
+    can use immediately.
+    
+    The specific return type for C++ programmers will be
+    std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
+    
+    Exception ``InvalidArgument``:
+        The face dimension *subdim* is outside the supported range (i.e.,
+        negative, or greater than or equal to *dim*).
+    
+    Parameter ``subdim``:
+        the face dimension; this must be between 0 and *dim*-1 inclusive.
+    
+    Parameter ``index``:
+        the index of the desired face, ranging from 0 to
+        countFaces<subdim>()-1 inclusive.
+    
+    Returns:
+        the requested face.
+
+Help on instancemethod in module regina.engine:
+
+simplices(...)
+    simplices(self: regina.Triangulation6) -> <internal>.ListView[regina.Simplex6]
+    
+    Returns an object that allows iteration through and random access to
+    all top-dimensional simplices in this triangulation.
+    
+    The object that is returned is lightweight, and can be happily copied
+    by value. The C++ type of the object is subject to change, so C++
+    users should use ``auto`` (just like this declaration does).
+    
+    The returned object is guaranteed to be an instance of ListView, which
+    means it offers basic container-like functions and supports range-
+    based ``for`` loops. Note that the elements of the list will be
+    pointers, so your code might look like:
+    
+    ```
+    for (Simplex<dim>* s : tri.simplices()) { ... }
+    ```
+    
+    The object that is returned will remain up-to-date and valid for as
+    long as the triangulation exists: even as simplices are added and/or
+    removed, it will always reflect the simplices that are currently in
+    the triangulation. Nevertheless, it is recommended to treat this
+    object as temporary only, and to call simplices() again each time you
+    need it.
+    
+    Returns:
+        access to the list of all top-dimensional simplices.
+
+Help on instancemethod in module regina.engine:
+
+faces(...)
+    faces(self: regina.Triangulation4, arg0: int) -> Union[<internal>.ListView[regina.Vertex4], <internal>.ListView[regina.Edge4], <internal>.ListView[regina.Triangle4], <internal>.ListView[regina.Tetrahedron4]]
+    
+    Returns an object that allows iteration through and random access to
+    all *subdim*-faces of this triangulation, in a way that is optimised
+    for Python programmers.
+    
+    C++ users should not use this routine. The return type must be fixed
+    at compile time, and so it is a std::variant that can hold any of the
+    lightweight return types from the templated faces<subdim>() function.
+    This means that the return value will still need compile-time
+    knowledge of *subdim* to extract and use the appropriate face objects.
+    However, once you know *subdim* at compile time, you are much better
+    off using the (simpler and faster) routine faces<subdim>() instead.
+    
+    For Python users, this routine is much more useful: the return type
+    can be chosen at runtime, and so this routine returns a Python list of
+    Face<dim, subdim> objects (holding all the *subdim*-faces of the
+    triangulation), which you can use immediately.
+    
+    Exception ``InvalidArgument``:
+        The face dimension *subdim* is outside the supported range (i.e.,
+        negative, or greater than or equal to *dim*).
+    
+    Parameter ``subdim``:
+        the face dimension; this must be between 0 and *dim*-1 inclusive.
+    
+    Returns:
+        access to the list of all *subdim*-faces.
+
+Help on instancemethod in module regina.engine:
+
+face(...)
+    face(self: regina.Triangulation4, arg0: int, arg1: int) -> Union[regina.Vertex4, regina.Edge4, regina.Triangle4, regina.Tetrahedron4]
+    
+    Returns the requested *subdim*-face of this triangulation, in a way
+    that is optimised for Python programmers.
+    
+    For C++ users, this routine is not very useful: since precise types
+    must be know at compile time, this routine returns a std::variant *v*
+    that could store a pointer to any class Face<dim, ...>. This means you
+    cannot access the face directly: you will still need some kind of
+    compile-time knowledge of *subdim* before you can extract and use an
+    appropriate Face<dim, subdim> object from *v*. However, once you know
+    *subdim* at compile time, you are better off using the (simpler and
+    faster) routine face<subdim>() instead.
+    
+    For Python users, this routine is much more useful: the return type
+    can be chosen at runtime, and so this routine simply returns a
+    Face<dim, subdim> object of the appropriate face dimension that you
+    can use immediately.
+    
+    The specific return type for C++ programmers will be
+    std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
+    
+    Exception ``InvalidArgument``:
+        The face dimension *subdim* is outside the supported range (i.e.,
+        negative, or greater than or equal to *dim*).
+    
+    Parameter ``subdim``:
+        the face dimension; this must be between 0 and *dim*-1 inclusive.
+    
+    Parameter ``index``:
+        the index of the desired face, ranging from 0 to
+        countFaces<subdim>()-1 inclusive.
+    
+    Returns:
+        the requested face.
+
+Help on instancemethod in module regina.engine:
+
+embeddings(...)
+    embeddings(self: regina.Vertex6) -> <internal>.ListView[regina.VertexEmbedding6]
+    
+    Returns an object that allows iteration through and random access to
+    all of the ways in which this face appears within a top-dimensional
+    simplex of the underlying triangluation.
+    
+    The object that is returned is lightweight, and can be happily copied
+    by value. The C++ type of the object is subject to change, so C++
+    users should use ``auto`` (just like this declaration does).
+    
+    The returned object is guaranteed to be an instance of ListView, which
+    means it offers basic container-like functions and supports range-
+    based ``for`` loops. The elements of the list will be read-only
+    objects of type FaceEmbedding<dim, subdim>. For example, your code
+    might look like:
+    
+    ```
+    Face<dim, subdim>* face = ...;
+    for (const auto& emb : face->embeddings()) { ... }
+    ```
+    
+    In most cases, the ordering of appearances is arbitrary. The exception
+    is for codimension 2, where these appearances are ordered in a way
+    that follows the link around the face (which in codimension 2 is
+    always a path or a cycle).
+    
+    Using embeddings() is equivalent to iterating over the face itself. It
+    generates a tiny amount of extra overhead, but also may be considered
+    more readable. In particular, the code above is equivalent to both of
+    the following alternatives:
+    
+    ```
+    Face<dim, subdim>* face = ...;
+    for (const auto& emb : *face) { ... }
+    ```
+    
+    ```
+    Face<dim, subdim>* face = ...;
+    for (size_t i = 0; i < face->degree(); ++i) {
+        const auto& emb = face->embedding(i);
+        ...
+    }
+    ```
+    
+    Returns:
+        access to the list of all appearances of this face within a top-
+        dimensional simplex of the underlying triangulation.
+
+Help on instancemethod in module regina.engine:
+
+embeddings(...)
+    embeddings(self: regina.Vertex3) -> <internal>.ListView[regina.VertexEmbedding3]
+    
+    Returns an object that allows iteration through and random access to
+    all of the ways in which this face appears within a top-dimensional
+    simplex of the underlying triangluation.
+    
+    The object that is returned is lightweight, and can be happily copied
+    by value. The C++ type of the object is subject to change, so C++
+    users should use ``auto`` (just like this declaration does).
+    
+    The returned object is guaranteed to be an instance of ListView, which
+    means it offers basic container-like functions and supports range-
+    based ``for`` loops. The elements of the list will be read-only
+    objects of type FaceEmbedding<dim, subdim>. For example, your code
+    might look like:
+    
+    ```
+    Face<dim, subdim>* face = ...;
+    for (const auto& emb : face->embeddings()) { ... }
+    ```
+    
+    In most cases, the ordering of appearances is arbitrary. The exception
+    is for codimension 2, where these appearances are ordered in a way
+    that follows the link around the face (which in codimension 2 is
+    always a path or a cycle).
+    
+    Using embeddings() is equivalent to iterating over the face itself. It
+    generates a tiny amount of extra overhead, but also may be considered
+    more readable. In particular, the code above is equivalent to both of
+    the following alternatives:
+    
+    ```
+    Face<dim, subdim>* face = ...;
+    for (const auto& emb : *face) { ... }
+    ```
+    
+    ```
+    Face<dim, subdim>* face = ...;
+    for (size_t i = 0; i < face->degree(); ++i) {
+        const auto& emb = face->embedding(i);
+        ...
+    }
+    ```
+    
+    Returns:
+        access to the list of all appearances of this face within a top-
+        dimensional simplex of the underlying triangulation.
+
+Help on instancemethod in module regina.engine:
+
+vertex(...)
+    vertex(self: regina.Edge6, arg0: int) -> regina.Vertex6
+    
+    A dimension-specific alias for face<0>().
+    
+    This alias is available for all facial dimensions *subdim*.
+    
+    See face() for further information.
+
+Help on instancemethod in module regina.engine:
+
+triangulation(...)
+    triangulation(self: regina.BoundaryComponent3) -> regina.Triangulation3
+    
+    Returns the triangulation to which this boundary component belongs.
+    
+    Returns:
+        a reference to the triangulation containing this boundary
+        component.
+
+Help on instancemethod in module regina.engine:
+
+packet(...)
+    packet(self: regina.Link) -> regina.PacketOfLink
+    
+    Returns the packet that holds this data, if there is one.
+    
+    If this object is being held by a packet *p* of type PacketOf<Held>,
+    then that packet *p* will be returned. Otherwise, if this is a
+    "standalone" object of type Held, then this routine will return
+    ``None``.
+    
+    There is a special case when dealing with a packet *q* that holds a
+    SnapPea triangulation. Here *q* is of type
+    PacketOf<SnapPeaTriangulation>, and it holds a Triangulation<3>
+    "indirectly" in the sense that Packetof<SnapPeaTriangulation> derives
+    from SnapPeaTriangulation, which in turn derives from
+    Triangulation<3>. In this scenario:
+    
+    * calling Triangulation<3>::packet() will return ``None``, since there
+      is no "direct" PacketOf<Triangulation<3>>;
+    
+    * calling SnapPeaTriangulation::packet() will return the enclosing
+      packet *q*, since there is a PacketOf<SnapPeaTriangulation>;
+    
+    * calling the special routine Triangulation<3>::inAnyPacket() will
+      also return the "indirect" enclosing packet *q*.
+    
+    The function inAnyPacket() is specific to Triangulation<3>, and is not
+    offered for other *Held* types.
+    
+    Returns:
+        the packet that holds this data, or ``None`` if this data is not
+        (directly) held by a packet.
+
+Help on instancemethod in module regina.engine:
+
+__init__(...)
+    __init__(*args, **kwargs)
+    Overloaded function.
+    
+    1. __init__(self: regina.Integer) -> None
+    
+    Initialises this integer to zero.
+    
+    2. __init__(self: regina.Integer, arg0: int) -> None
+    
+    Initialises this integer to the given value.
+    
+    Python:
+        In Python, this is the only native-integer constructor available.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    3. __init__(self: regina.Integer, arg0: regina.Integer) -> None
+    
+    Initialises this integer to the given value.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    4. __init__(self: regina.Integer, arg0: regina.LargeInteger) -> None
+    
+    Initialises this integer to the given value.
+    
+    Precondition:
+        The given integer is not infinite.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    5. __init__(self: regina.Integer, arg0: int) -> None
+    
+    Initialises this to the given native Python integer.
+    
+    The argument is of the Python ``int`` type, which Python uses to store
+    integers of arbitrary magnitude (much like Regina does with its
+    Integer and LargeInteger classes).
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    6. __init__(self: regina.Integer, arg0: float) -> None
+    
+    Initialises this integer to the truncation of the given real number.
+    
+    Parameter ``value``:
+        the real number to be truncated.
+    
+    7. __init__(self: regina.Integer, arg0: str, base: int = 10) -> None
+    
+    Initialises this integer to the given value which is represented as a
+    string of digits in a given base.
+    
+    If not specified, the base defaults to 10. If the given base is zero,
+    the base will be automatically determined. If the given string begins
+    with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
+    if the string begins with ``0``, the base will be assumed to be 8.
+    Otherwise it will be taken as base 10.
+    
+    If the template argument *supportInfinity* is ``True``, then any
+    string beginning with "inf" (after any initial whitesapce) will be
+    interpreted as infinity.
+    
+    Whitespace may be present at the beginning or the end of the given
+    string, and will simply be ignored.
+    
+    For finer details on how the string parsing works, see strtol() from
+    the standard C library (on which this method is based).
+    
+    Precondition:
+        The given base is zero, or is between 2 and 36 inclusive.
+    
+    Precondition:
+        The given string represents an integer in the given base, with
+        optional whitespace beforehand.
+    
+    Exception ``InvalidArgument``:
+        The given string was not a valid large integer representation.
+    
+    Parameter ``value``:
+        the new value of this integer, represented as a string of digits
+        in base *base*.
+    
+    Parameter ``base``:
+        the base in which *value* is given.
+
+Help on instancemethod in module regina.engine:
+
+__init__(...)
+    __init__(*args, **kwargs)
+    Overloaded function.
+    
+    1. __init__(self: regina.LargeInteger) -> None
+    
+    Initialises this integer to zero.
+    
+    2. __init__(self: regina.LargeInteger, arg0: int) -> None
+    
+    Initialises this integer to the given value.
+    
+    Python:
+        In Python, this is the only native-integer constructor available.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    3. __init__(self: regina.LargeInteger, arg0: regina.LargeInteger) -> None
+    
+    Initialises this integer to the given value.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    4. __init__(self: regina.LargeInteger, arg0: regina.Integer) -> None
+    
+    Initialises this integer to the given value.
+    
+    Precondition:
+        The given integer is not infinite.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    5. __init__(self: regina.LargeInteger, arg0: int) -> None
+    
+    Initialises this to the given native Python integer.
+    
+    The argument is of the Python ``int`` type, which Python uses to store
+    integers of arbitrary magnitude (much like Regina does with its
+    Integer and LargeInteger classes).
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    6. __init__(self: regina.LargeInteger, arg0: float) -> None
+    
+    Initialises this integer to the truncation of the given real number.
+    
+    Parameter ``value``:
+        the real number to be truncated.
+    
+    7. __init__(self: regina.LargeInteger, arg0: str, base: int = 10) -> None
+    
+    Initialises this integer to the given value which is represented as a
+    string of digits in a given base.
+    
+    If not specified, the base defaults to 10. If the given base is zero,
+    the base will be automatically determined. If the given string begins
+    with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
+    if the string begins with ``0``, the base will be assumed to be 8.
+    Otherwise it will be taken as base 10.
+    
+    If the template argument *supportInfinity* is ``True``, then any
+    string beginning with "inf" (after any initial whitesapce) will be
+    interpreted as infinity.
+    
+    Whitespace may be present at the beginning or the end of the given
+    string, and will simply be ignored.
+    
+    For finer details on how the string parsing works, see strtol() from
+    the standard C library (on which this method is based).
+    
+    Precondition:
+        The given base is zero, or is between 2 and 36 inclusive.
+    
+    Precondition:
+        The given string represents an integer in the given base, with
+        optional whitespace beforehand.
+    
+    Exception ``InvalidArgument``:
+        The given string was not a valid large integer representation.
+    
+    Parameter ``value``:
+        the new value of this integer, represented as a string of digits
+        in base *base*.
+    
+    Parameter ``base``:
+        the base in which *value* is given.
+
+Help on ListView object:
+
+class ListView(pybind11_object)
+ |  A lightweight object that can be used for iteration and random access
+ |  to all elements of a given list.
+ |  
+ |  This access is read-only, in the sense that both the list itself and
+ |  the list elements are read-only. (Of course, if the list elements are
+ |  non-const pointers then this means that the _pointers_ cannot be
+ |  reassigned to point to different objects, but the objects they _point_
+ |  to can still be modified.)
+ |  
+ |  Typically a ListView would be returned from a class member function to
+ |  grant the user some basic read-only access to a much richer private
+ |  data structure, in a way that allows the internal data structure to
+ |  change at some later date without affecting the public API.
+ |  
+ |  The ListView class supports several different ways of representing a
+ |  list:
+ |  
+ |  * If your list is stored using a container class (e.g., std::vector or
+ |    regina::MarkedVector), then you can create a ListView directly from
+ |    the container using the syntax ``ListView(container)``. This uses
+ |    the generic ListView<Container> class template. There is no need to
+ |    explicitly specify the ListView template arguments.
+ |  
+ |  * If your list is stored using a C-style array whose size is not known
+ |    at compile-time, you can create a ListView using either the syntax
+ |    ``ListView(array, size)`` or ``ListView(begin, end)``. Here *array*
+ |    is a pointer to the beginning of the array, and *begin* and *end*
+ |    behave as an iterator pair (so ``begin == array`` and ``end == array
+ |    + size``). This syntax uses the specialised ListView<Element*> class
+ |    template. Again, there is no need to explicitly specify the ListView
+ |    template arguments.
+ |  
+ |  * If your list is stored using a C-style array whose size is fixed at
+ |    compile-time (i.e., the type is ``Element[n]`` for some constant
+ |    *n*), you can create a ListView using the syntax
+ |    ``ListView(array)``. Once again, there is no need to explicitly
+ |    specify the ListView template arguments.
+ |  
+ |  End users should always store ListView objects using ``auto``, not by
+ |  explicitly writing out the full ListView type. One reason for this is
+ |  that, if/when Regina moves to C++20, the ListView class will most
+ |  likely be removed completely (in favour of the new C++20 ranges
+ |  library).
+ |  
+ |  ListView objects are small enough to pass by value and swap with
+ |  std::swap(), with no need for any specialised move operations or swap
+ |  functions.
+ |  
+ |  Python:
+ |      The ListView classes are deliberately difficult to access: they
+ |      live within their own private Python namespaces, and are all give
+ |      the same class name (*ListView*). You would typically only
+ |      interact with a ListView when it is returned from a function
+ |      (e.g., ``Link.crossings()``), and in most cases you would simply
+ |      iterate over this resulting ListView without ever knowing its
+ |      exact type.
+ |  
+ |  Template parameter ``Container``:
+ |      the internal type of the list that this object grants access to.
+ |      This type must support at least the same operations as this class
+ |      itself, except for the copy semantics. In particular, both
+ |      std::vector and regina::MarkedVector types (as well as many other
+ |      standard container types) are suitable.
+ |  
+ |  Method resolution order:
+ |      ListView
+ |      pybind11_object
+ |      builtins.object
+ |  
+ |  Methods defined here:
+ |  
+ |  __eq__(...)
+ |      __eq__(*args, **kwargs)
+ |      Overloaded function.
+ |      
+ |      1. __eq__(self: <internal>.ListView[regina.Vertex3], arg0: <internal>.ListView[regina.Vertex3]) -> bool
+ |      
+ |      Determines whether this and the given list view are accessing the same
+ |      underlying container.
+ |      
+ |      Here the containers are compared by _reference_ (i.e., they must be
+ |      the same container object at the same location in memory; it is not
+ |      enough to be two containers with identical contents).
+ |      
+ |      Parameter ``other``:
+ |          the list view to compare with this.
+ |      
+ |      Returns:
+ |          ``True`` if and only if this and the given list use the same
+ |          underlying container.
+ |      
+ |      2. __eq__(self: <internal>.ListView[regina.Vertex3], arg0: None) -> bool
+ |      
+ |      Always returns ``False``, since an object of this type is never equal
+ |      to ``None``.
+ |  
+ |  __getitem__(...)
+ |      __getitem__(self: <internal>.ListView[regina.Vertex3], arg0: int) -> regina.Vertex3
+ |      
+ |      Returns the requested element of this list.
+ |      
+ |      Parameter ``index``:
+ |          indicates which element to return; this must be between 0 and
+ |          size()-1 inclusive.
+ |      
+ |      Returns:
+ |          the (*index*)th element in this list.
+ |  
+ |  __init__(...)
+ |      __init__(self: pybind11_builtins.ListView, arg0: <internal>.ListView[regina.Vertex3]) -> None
+ |      
+ |      Creates a new copy of the given list view.
+ |  
+ |  __iter__(...)
+ |      __iter__(self: <internal>.ListView[regina.Vertex3]) -> Iterator
+ |      
+ |      Returns a Python iterator over the elements of this list.
+ |      
+ |      Returns:
+ |          an iterator over the elements of this list.
+ |  
+ |  __len__(...)
+ |      __len__(self: <internal>.ListView[regina.Vertex3]) -> int
+ |      
+ |      Returns the number of elements in this list.
+ |      
+ |      Python:
+ |          This is also used to implement the Python special method
+ |          __len__().
+ |      
+ |      Returns:
+ |          the number of elements.
+ |  
+ |  __ne__(...)
+ |      __ne__(*args, **kwargs)
+ |      Overloaded function.
+ |      
+ |      1. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: <internal>.ListView[regina.Vertex3]) -> bool
+ |      
+ |      Determines whether this and the given list view are accessing
+ |      different underlying containers.
+ |      
+ |      Here the containers are compared by _reference_ (i.e., to be
+ |      considered equal they must be the same container object at the same
+ |      location in memory; it is not enough to be two containers with
+ |      identical contents).
+ |      
+ |      Parameter ``other``:
+ |          the list view to compare with this.
+ |      
+ |      Returns:
+ |          ``True`` if and only if this and the given list use different
+ |          underlying containers.
+ |      
+ |      2. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: None) -> bool
+ |      
+ |      Always returns ``True``, since an object of this type is never equal
+ |      to ``None``.
+ |  
+ |  __repr__(...)
+ |      __repr__(self: <internal>.ListView[regina.Vertex3]) -> str
+ |  
+ |  __str__(...)
+ |      __str__(self: <internal>.ListView[regina.Vertex3]) -> str
+ |  
+ |  back(...)
+ |      back(self: <internal>.ListView[regina.Vertex3]) -> regina.Vertex3
+ |      
+ |      Returns the last element of this list.
+ |      
+ |      Precondition:
+ |          This list is not empty.
+ |      
+ |      Returns:
+ |          the last element in this list.
+ |  
+ |  empty(...)
+ |      empty(self: <internal>.ListView[regina.Vertex3]) -> bool
+ |      
+ |      Determines if this list is empty.
+ |      
+ |      Returns:
+ |          ``True`` if and only if this list is empty.
+ |  
+ |  front(...)
+ |      front(self: <internal>.ListView[regina.Vertex3]) -> regina.Vertex3
+ |      
+ |      Returns the first element of this list.
+ |      
+ |      Precondition:
+ |          This list is not empty.
+ |      
+ |      Returns:
+ |          the first element in this list.
+ |  
+ |  size(...)
+ |      size(self: <internal>.ListView[regina.Vertex3]) -> int
+ |      
+ |      Returns the number of elements in this list.
+ |      
+ |      Python:
+ |          This is also used to implement the Python special method
+ |          __len__().
+ |      
+ |      Returns:
+ |          the number of elements.
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data and other attributes defined here:
+ |  
+ |  __hash__ = None
+ |  
+ |  __pybind11_module_local__ = ...
+ |  
+ |  equalityType = <EqualityType.BY_VALUE: 1>
+ |  
+ |  ----------------------------------------------------------------------
+ |  Static methods inherited from pybind11_object:
+ |  
+ |  __new__(*args, **kwargs) from pybind11_builtins.pybind11_type
+ |      Create and return a new object.  See help(type) for accurate signature.
+

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -81,23 +81,23 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         PillowTwoSphere(const PillowTwoSphere&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         PillowTwoSphere& operator = (const PillowTwoSphere&) = default;
 
         /**
          * Returns one of the two triangles whose boundaries are joined.
          *
-         * @param index specifies which of the two triangles to return;
+         * \param index specifies which of the two triangles to return;
          * this must be either 0 or 1.
-         * @return the corresponding triangle.
+         * \return the corresponding triangle.
          */
         Triangle<3>* triangle(int index) const;
         /**
@@ -105,11 +105,11 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * triangles are joined.
          *
          * The permutation will map vertices (0,1,2) of
-         * <tt>triangle(0)</tt> to vertices (0,1,2) of
-         * <tt>triangle(1)</tt>.  The map will represent how the vertices
+         * `triangle(0)` to vertices (0,1,2) of
+         * `triangle(1)`.  The map will represent how the vertices
          * of the triangles are identified by the three edge gluings.
          *
-         * @return a permutation describing how the triangle boundaries are
+         * \return a permutation describing how the triangle boundaries are
          * joined.
          */
         Perm<4> triangleMapping() const;
@@ -126,8 +126,8 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * Triangle objects, it is meaningful to compare pillow 2-spheres
          * within different triangulations.
          *
-         * @param other the pillow 2-sphere to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the pillow 2-sphere to compare with this.
+         * \return \c true if and only if this and the given object represent
          * the same specific presentation of a pillow 2-sphere.
          */
         bool operator == (const PillowTwoSphere& other) const;
@@ -144,8 +144,8 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * Triangle objects, it is meaningful to compare pillow 2-spheres
          * within different triangulations.
          *
-         * @param other the pillow 2-sphere to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the pillow 2-sphere to compare with this.
+         * \return \c true if and only if this and the given object represent
          * different specific presentations of a pillow 2-sphere.
          */
         bool operator != (const PillowTwoSphere& other) const;
@@ -162,9 +162,9 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          *
          * \pre The two given triangles are distinct.
          *
-         * @param tri1 the first triangle to examine.
-         * @param tri2 the second triangle to examine.
-         * @return a structure containing details of the pillow 2-sphere, or
+         * \param tri1 the first triangle to examine.
+         * \param tri2 the second triangle to examine.
+         * \return a structure containing details of the pillow 2-sphere, or
          * \c null if the given triangles do not form a pillow 2-sphere.
          */
         static std::unique_ptr<PillowTwoSphere> recognise(
@@ -174,9 +174,9 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 

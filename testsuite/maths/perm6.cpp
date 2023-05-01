@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,8 +44,11 @@ class Perm6Test : public SmallPermTest<6> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(swaps);
+    CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(cachedProducts);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(clear);
@@ -53,7 +56,7 @@ class Perm6Test : public SmallPermTest<6> {
     CPPUNIT_TEST(pow);
     CPPUNIT_TEST(cachedPow);
     CPPUNIT_TEST(rot);
-    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(tightEncoding);
 

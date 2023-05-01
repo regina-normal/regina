@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -85,7 +85,7 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     else {
         realIndex = new unsigned[surfaces_->size()];
         for (unsigned i = 0; i < surfaces_->size(); ++i)
-            if ((! filter) || filter->accept(surfaces_->surface(i)))
+            if ((! filter) || filter->accept((*surfaces_)[i]))
                 realIndex[nFiltered++] = i;
     }
 
@@ -119,7 +119,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
     unsigned surfaceIndex = realIndex[index.row()];
 
     if (role == Qt::DisplayRole) {
-        const regina::NormalSurface& s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface& s = (*surfaces_)[surfaceIndex];
 
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
@@ -171,57 +171,59 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 4)) {
-            const regina::Vertex<3>* v;
+            const regina::Vertex<3>* v = s.isVertexLink();
+            auto [ eLinks, eThin ] = s.isNormalEdgeLink();
+            auto [ fLinks, fThin ] = s.isNormalTriangleLink();
+            auto ePos = eLinks.begin();
+            auto fPos = fLinks.begin();
 
-            if ((v = s.isVertexLink()))
-                return tr("Vertex %1").arg(v->index());
-            else {
-                auto edgeLinks = s.isNormalEdgeLink();
-                if (edgeLinks.empty())
-                    return QVariant();
-                auto thin = s.isThinEdgeLink();
-                if (! thin.first) {
-                    auto it = edgeLinks.begin();
-                    if (edgeLinks.size() == 1) {
-                        return tr("Normal edge %1").
-                            arg((*it)->index());
-                    } else {
-                        QString ans = tr("Normal edges %1").
-                            arg((*it)->index());
-                        for (++it; it != edgeLinks.end(); ++it)
-                            ans.append(tr(", %1").arg((*it)->index()));
-                        return ans;
-                    }
-                } else if (! thin.second) {
-                    QString ans = tr("Thin edge %1").
-                        arg(thin.first->index());
-                    if (edgeLinks.size() > 1) {
-                        if (edgeLinks.size() == 2)
-                            ans.append(tr("; normal edge "));
-                        else
-                            ans.append(tr("; normal edges "));
+            bool hasThin = (v || eThin || fThin);
+            bool hasNormal = (eLinks.size() > eThin || fLinks.size() > fThin);
 
-                        bool first = true;
-                        for (auto e : edgeLinks) {
-                            if (e == thin.first)
-                                continue;
-                            if (first)
-                                first = false;
-                            else
-                                ans.append(", ");
-                            ans.append(QString::number(e->index()));
-                        }
-                        return ans;
-                    }
-                    return ans;
-                } else {
-                    // A thin edge link of two distinct edges cannot be
-                    // a normalised edge link of any others.
-                    return tr("Thin edges %1, %2").
-                        arg(thin.first->index()).
-                        arg(thin.second->index());
+            QString ans;
+
+            if (hasThin) {
+                ans = tr("Thin: ");
+                if (v)
+                    ans += tr("vtx %1").arg(v->index());
+                if (eThin) {
+                    if (v)
+                        ans += tr(", ");
+                    ans += tr("edge %1").arg((*ePos++)->index());
+                    if (eThin == 2)
+                        ans += tr(",%1").arg((*ePos++)->index());
+                }
+                if (fThin) {
+                    if (v || eThin)
+                        ans += tr(", ");
+                    ans += tr("tri %1").arg((*fPos++)->index());
+                    if (fThin == 2)
+                        ans += tr(",%1").arg((*fPos++)->index());
                 }
             }
+
+            if (hasNormal) {
+                if (hasThin)
+                    ans += tr("; ");
+                ans += tr("Normal: ");
+                if (eLinks.size() > eThin) {
+                    ans += tr("edge %1").arg((*ePos++)->index());
+                    while (ePos != eLinks.end())
+                        ans += tr(",%1").arg((*ePos++)->index());
+                }
+                if (fLinks.size() > fThin) {
+                    if (eLinks.size() > eThin)
+                        ans += tr(", ");
+                    ans += tr("tri %1").arg((*fPos++)->index());
+                    while (fPos != fLinks.end())
+                        ans += tr(",%1").arg((*fPos++)->index());
+                }
+            }
+
+            if (ans.isEmpty())
+                return QVariant();
+            else
+                return ans;
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
             if (s.isSplitting())
@@ -262,7 +264,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->surface(surfaceIndex).name().c_str();
+            return (*surfaces_)[surfaceIndex].name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -274,7 +276,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NormalSurface& s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface& s = (*surfaces_)[surfaceIndex];
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s.isCompact())
@@ -390,7 +392,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // belongs to).  Fire it here instead.
         regina::NormalSurfaces::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalSurface&>(
-            surfaces_->surface(realIndex[index.row()])).
+            (*surfaces_)[realIndex[index.row()]]).
             setName(value.toString().toUtf8().constData());
         return true;
     } else
@@ -663,8 +665,7 @@ void SurfacesCoordinateUI::cutAlong() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NormalSurface& toCutAlong =
-        model->surfaces()->surface(whichSurface);
+    const regina::NormalSurface& toCutAlong = model->surfaces()[whichSurface];
     if (! toCutAlong.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only cut along compact surfaces."),
@@ -678,7 +679,7 @@ void SurfacesCoordinateUI::cutAlong() {
     auto ans = regina::make_packet(toCutAlong.cutAlong(),
         "Cut #" + std::to_string(whichSurface));
     ans->intelligentSimplify();
-    surfaces->insertChildLast(ans);
+    surfaces->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
@@ -691,8 +692,7 @@ void SurfacesCoordinateUI::crush() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NormalSurface& toCrush =
-        model->surfaces()->surface(whichSurface);
+    const regina::NormalSurface& toCrush = model->surfaces()[whichSurface];
     if (! toCrush.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only crush compact surfaces."),
@@ -704,16 +704,17 @@ void SurfacesCoordinateUI::crush() {
     // Go ahead and crush it.
     auto ans = regina::make_packet(toCrush.crush(),
         "Crushed #" + std::to_string(whichSurface));
-    surfaces->insertChildLast(ans);
+    surfaces->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
 void SurfacesCoordinateUI::updateActionStates() {
-    bool canCrushOrCut = table->selectionModel()->hasSelection() &&
-        (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
+    bool canCut = table->selectionModel()->hasSelection() &&
+        surfaces->isEmbeddedOnly();
+    bool canCrush = canCut && (! surfaces->allowsAlmostNormal());
 
-    actCutAlong->setEnabled(canCrushOrCut);
-    actCrush->setEnabled(canCrushOrCut);
+    actCutAlong->setEnabled(canCut);
+    actCrush->setEnabled(canCrush);
 }
 
 void SurfacesCoordinateUI::columnResized(int section, int, int newSize) {

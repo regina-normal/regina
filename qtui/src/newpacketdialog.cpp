@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -131,7 +131,7 @@ void NewPacketDialog::slotOk() {
     if (newPacket->label().empty())
         newPacket->setLabel(newPacket->typeName());
     if (! newPacket->parent())
-        parentPacket->insertChildLast(newPacket);
+        parentPacket->append(newPacket);
 
     accept();
 }

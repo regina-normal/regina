@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2021, Ben Burton                                        *
+ *  Copyright (c) 2021-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -73,7 +73,7 @@ namespace regina {
  * since this cannot be done any faster than a linear-time copy operation.
  * For the same reason, it does not implement its own custom swap functions.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -124,14 +124,14 @@ class ShortArray {
         /**
          * Sets this to be a copy of the given array.
          *
-         * @return a reference to this array.
+         * \return a reference to this array.
          */
         ShortArray& operator = (const ShortArray&) = default;
 
         /**
          * Determines if this array is currently empty.
          *
-         * @return \c true if and only if the array contains no elements.
+         * \return \c true if and only if the array contains no elements.
          */
         constexpr bool empty() const {
             return (size_ == 0);
@@ -140,7 +140,7 @@ class ShortArray {
         /**
          * Returns the number of elements currently in this array.
          *
-         * @return the array size.
+         * \return the array size.
          */
         constexpr size_t size() const {
             return size_;
@@ -150,7 +150,7 @@ class ShortArray {
          * Returns the maximum number of elements that can be held by
          * this array.
          *
-         * @return the maximum allowable number of elements.
+         * \return the maximum allowable number of elements.
          */
         constexpr size_t max_size() const {
             return maxSize;
@@ -159,9 +159,9 @@ class ShortArray {
         /**
          * Gives write access to the array element at the given index.
          *
-         * @param index the index of the element to access; this must be
+         * \param index the index of the element to access; this must be
          * between 0 and size()-1 inclusive.
-         * @return a reference to the array element at the given index.
+         * \return a reference to the array element at the given index.
          */
         T& operator [] (size_t index) {
             return data_[index];
@@ -170,9 +170,9 @@ class ShortArray {
         /**
          * Gives read-only access to the array element at the given index.
          *
-         * @param index the index of the element to access; this must be
+         * \param index the index of the element to access; this must be
          * between 0 and size()-1 inclusive.
-         * @return a const reference to the array element at the given index.
+         * \return a const reference to the array element at the given index.
          */
         constexpr const T& operator [] (size_t index) const {
             return data_[index];
@@ -183,7 +183,7 @@ class ShortArray {
          *
          * \pre The array is non-empty.
          *
-         * @return a const reference to the first element.
+         * \return a const reference to the first element.
          */
         constexpr const T& front() const {
             return *data_;
@@ -194,7 +194,7 @@ class ShortArray {
          *
          * \pre The array is non-empty.
          *
-         * @return a const reference to the last element.
+         * \return a const reference to the last element.
          */
         constexpr const T& back() const {
             return data_[size_ - 1];
@@ -204,7 +204,7 @@ class ShortArray {
          * Returns a read-write iterator pointing to the beginning of this
          * array.
          *
-         * @return an iterator pointing to the first element.
+         * \return an iterator pointing to the first element.
          */
         iterator begin() {
             return data_;
@@ -214,7 +214,7 @@ class ShortArray {
          * Returns a read-only iterator pointing to the beginning of this
          * array.
          *
-         * @return an iterator pointing to the first element.
+         * \return an iterator pointing to the first element.
          */
         const_iterator begin() const {
             return data_;
@@ -223,7 +223,7 @@ class ShortArray {
         /**
          * Returns a read-write iterator pointing past the end of this array.
          *
-         * @return an iterator after the last element.
+         * \return an iterator after the last element.
          */
         iterator end() {
             return data_ + size_;
@@ -232,7 +232,7 @@ class ShortArray {
         /**
          * Returns a read-only iterator pointing past the end of this array.
          *
-         * @return an iterator after the last element.
+         * \return an iterator after the last element.
          */
         const_iterator end() const {
             return data_ + size_;
@@ -243,7 +243,7 @@ class ShortArray {
          *
          * \pre The array has size strictly less than \a maxSize.
          *
-         * @param item the item to add to this array.
+         * \param item the item to add to this array.
          */
         void push_back(const T& item) {
             data_[size_++] = item;
@@ -254,7 +254,7 @@ class ShortArray {
          *
          * \pre The array has size strictly less than \a maxSize.
          *
-         * @param item the item to add to this array.
+         * \param item the item to add to this array.
          */
         void push_back(T&& item) {
             data_[size_++] = std::move(item);

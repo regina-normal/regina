@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,14 +51,14 @@ namespace regina {
  * Represents a Laurent polynomial in the two variables \e x, \e y with
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
  * polynomial in that it allows negative exponents (so, for example, you can
- * represent a polynomial such as <tt>2 + 3x^2 + y/x - 1/y^3</tt>).
+ * represent a polynomial such as `2 + 3x² + y/x - 1/y³`).
  *
  * The type \a T must represent a ring with no zero divisors.
  * In particular, it must:
  *
  * - support basic arithmetic operations;
- * - support assignments of the form <tt>x = int</tt> and
- *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
+ * - support assignments of the form `x = int` and
+ *   tests of the form `x == int` and `x < int`;
  * - have a default constructor that assigns an explicit value of zero.
  *
  * This means that Regina's numerical types such as Integer and Rational
@@ -75,7 +75,7 @@ namespace regina {
  * See also the class Laurent, which describes Laurent polynomials in
  * just one variable.
  *
- * \ifacespython In Python, the class Laurent2 refers to the specific
+ * \python In Python, the class Laurent2 refers to the specific
  * template class Laurent2<Integer>.
  *
  * \ingroup maths
@@ -103,7 +103,7 @@ class Laurent2 :
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.
                  Specifically, coeff_[(i,j)] stores the coefficient of
-                 <tt>x^i y^j</tt>. */
+                 `x^i y^j`. */
 
         static const T zero_;
             /**< A zero coefficient that we can safely make references to. */
@@ -115,11 +115,11 @@ class Laurent2 :
         Laurent2() = default;
 
         /**
-         * Creates the polynomial <tt>x^d y^e</tt> for the given exponents
+         * Creates the polynomial `x^d y^e` for the given exponents
          * \a d and \a e.
          *
-         * @param xExp the exponent \a d, which is attached to \a x.
-         * @param yExp the exponent \a e, which is attached to \a y.
+         * \param xExp the exponent \a d, which is attached to \a x.
+         * \param yExp the exponent \a e, which is attached to \a y.
          */
         explicit Laurent2(long xExp, long yExp);
 
@@ -133,7 +133,7 @@ class Laurent2 :
          * implemented separately.  Otherwise the compiler might create
          * its own (incorrect) copy constructor automatically.
          *
-         * @param value the polynomial to clone.
+         * \param value the polynomial to clone.
          */
         Laurent2(const Laurent2<T>& value);
 
@@ -143,20 +143,20 @@ class Laurent2 :
          *
          * The polynomial that was passed (\a value) will no longer be usable.
          *
-         * @param value the polynomial to move.
+         * \param value the polynomial to move.
          */
         Laurent2(Laurent2<T>&& value) noexcept = default;
 
         /**
          * Creates a copy of the given polynomial with all terms
-         * multiplied by <tt>x^d y^e</tt> for some integers \a d and \a e.
+         * multiplied by `x^d y^e` for some integers \a d and \a e.
          *
          * This constructor induces a deep (and modified) copy of \a value.
          *
-         * @param toShift the polynomial to clone and shift.
-         * @param xShift the integer \a d, which will be added to all
+         * \param toShift the polynomial to clone and shift.
+         * \param xShift the integer \a d, which will be added to all
          * exponents for \a x.
-         * @param yShift the integer \a e, which will be added to all
+         * \param yShift the integer \a e, which will be added to all
          * exponents for \a y.
          */
         Laurent2(const Laurent2<T>& toShift, long xShift, long yShift);
@@ -168,7 +168,11 @@ class Laurent2 :
          *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
-         * @param value the polynomial to clone.
+         * \nopython Python only supports Laurent polynomials with one type of
+         * coefficient (the case where \a T is Integer).  Therefore
+         * Python users can use the non-templated copy constructor.
+         *
+         * \param value the polynomial to clone.
          */
         template <typename U>
         Laurent2(const Laurent2<U>& value);
@@ -178,7 +182,7 @@ class Laurent2 :
          *
          * The coefficients should be presented as a collection of tuples of
          * the form (\a d, \a e, \a v), each representing a term of the form
-         * <tt>v x^d y^e</tt>.
+         * `v x^d y^e`.
          *
          * The tuples may be given in any order.
          * An empty sequence will be treated as the zero polynomial.
@@ -188,7 +192,7 @@ class Laurent2 :
          * with the same exponents are also allowed (these will be aggregated
          * using the += operator).
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of tuples.
          *
          * \tparam iterator an iterator type which, when dereferenced, gives a
@@ -201,9 +205,9 @@ class Laurent2 :
          * a call such as Laurent2(int, int) falls through to the (long, long)
          * constructor, and not this iterator-based constructor instead.
          *
-         * @param begin the beginning of the set of coefficients, as outlined
+         * \param begin the beginning of the set of coefficients, as outlined
          * above.
-         * @param end a past-the-end iterator indicating the end of the set of
+         * \param end a past-the-end iterator indicating the end of the set of
          * coefficients.
          */
         template <typename iterator, typename deref = decltype(*iterator())>
@@ -215,7 +219,7 @@ class Laurent2 :
          *
          * The coefficients should be presented as a collection of tuples of
          * the form (\a d, \a e, \a v) each representing a term of the form
-         * <tt>v x^d y^e</tt>.
+         * `v x^d y^e`.
          *
          * The tuples may be given in any order.
          * An empty sequence will be treated as the zero polynomial.
@@ -230,10 +234,10 @@ class Laurent2 :
          * \pre Each tuple has a non-zero value \a v, and no two tuples
          * share the same pair of exponents (\a d, \a e).
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a list
+         * of coefficients (which need not be constant).
          *
-         * @param coefficients the set of all non-zero coefficients, as
+         * \param coefficients the set of all non-zero coefficients, as
          * outlined above.
          */
         Laurent2(std::initializer_list<std::tuple<long, long, T>> coefficients);
@@ -244,18 +248,18 @@ class Laurent2 :
         void init();
 
         /**
-         * Sets this to become the polynomial <tt>x^d y^e</tt> for the
+         * Sets this to become the polynomial `x^d y^e` for the
          * given exponents \a d and \a e.
          *
-         * @param xExp the new exponent \a d, which is attached to \a x.
-         * @param yExp the new exponent \a e, which is attached to \a y.
+         * \param xExp the new exponent \a d, which is attached to \a x.
+         * \param yExp the new exponent \a e, which is attached to \a y.
          */
         void init(long xExp, long yExp);
 
         /**
          * Returns whether this is the zero polynomial.
          *
-         * @return \c true if and only if this is the zero polynomial.
+         * \return \c true if and only if this is the zero polynomial.
          */
         bool isZero() const;
 
@@ -263,21 +267,21 @@ class Laurent2 :
          * Returns the given coefficient of this polynomial.
          * There are no restrictions on the exponents \a xExp and \a yExp.
          *
-         * \ifacespython In Python, this is the square bracket operator,
+         * \python In Python, this is the square bracket operator,
          * not the round bracket operator; that is, Python users can access
-         * coefficients through the syntax <tt>poly[xExp, yExp]</tt>.
-         * Moreover, this operator can also \e set cofficients; that is,
-         * you can write <tt>poly[xExp, yExp] = value</tt>.
-         * However, when \e getting a coefficient this operator will return
+         * coefficients through the syntax `poly[xExp, yExp]`.
+         * Moreover, this operator can also _set_ cofficients; that is,
+         * you can write `poly[xExp, yExp] = value`.
+         * However, when _getting_ a coefficient this operator will return
          * by value (to enforce constness), which means for example you
-         * cannot write something like <tt>poly[xExp, yExp].negate()</tt>.
+         * cannot write something like `poly[xExp, yExp].negate()`.
          *
-         * \ifacescpp C++ users must always set coefficients using the
-         * separate routine set(), since this bracket operator is const.
+         * \cpp For C++ users, this operator is read-only.  To _set_
+         * coefficients, you must use the separate routine set().
          *
-         * @param xExp the exponent attached to \a x.
-         * @param yExp the exponent attached to \a y.
-         * @return the coefficient of the term with the given exponents.
+         * \param xExp the exponent attached to \a x.
+         * \param yExp the exponent attached to \a y.
+         * \return the coefficient of the term with the given exponents.
          */
         const T& operator () (long xExp, long yExp) const;
 
@@ -290,21 +294,21 @@ class Laurent2 :
          * Moreover, the underlying data structures ensure that this
          * operation is cheap regardless of the exponents involved.
          *
-         * \ifacespython This set() routine is available, but you can
+         * \python This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
-         * <tt>p[xExp, yExp] = value</tt>.
+         * `p[xExp, yExp] = value`.
          *
-         * @param xExp the exponent attached to \a x.
-         * @param yExp the exponent attached to \a y.
-         * @param value the new value of the corresponding coefficient.
+         * \param xExp the exponent attached to \a x.
+         * \param yExp the exponent attached to \a y.
+         * \param value the new value of the corresponding coefficient.
          */
         void set(long xExp, long yExp, const T& value);
 
         /**
          * Tests whether this and the given polynomial are equal.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this and the given polynomial
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this and the given polynomial
          * are equal.
          */
         bool operator == (const Laurent2<T>& rhs) const;
@@ -312,8 +316,8 @@ class Laurent2 :
         /**
          * Tests whether this and the given polynomial are not equal.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this and the given polynomial
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this and the given polynomial
          * are not equal.
          */
         bool operator != (const Laurent2<T>& rhs) const;
@@ -328,8 +332,8 @@ class Laurent2 :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this is less than the given
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this is less than the given
          * polynomial under the total order that Regina uses.
          */
         bool operator < (const Laurent2<T>& rhs) const;
@@ -344,8 +348,8 @@ class Laurent2 :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this is greater than the given
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this is greater than the given
          * polynomial under the total order that Regina uses.
          */
         bool operator > (const Laurent2<T>& rhs) const;
@@ -360,8 +364,8 @@ class Laurent2 :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this is less than or equal to the
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this is less than or equal to the
          * given polynomial under the total order that Regina uses.
          */
         bool operator <= (const Laurent2<T>& rhs) const;
@@ -376,8 +380,8 @@ class Laurent2 :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this is greater than or equal to
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this is greater than or equal to
          * the given polynomial under the total order that Regina uses.
          */
         bool operator >= (const Laurent2<T>& rhs) const;
@@ -394,8 +398,8 @@ class Laurent2 :
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
          *
-         * @param value the polynomial to copy.
-         * @return a reference to this polynomial.
+         * \param value the polynomial to copy.
+         * \return a reference to this polynomial.
          */
         Laurent2& operator = (const Laurent2<T>& value);
 
@@ -407,8 +411,8 @@ class Laurent2 :
          *
          * This operator induces a deep copy of \a value.
          *
-         * @param value the polynomial to copy.
-         * @return a reference to this polynomial.
+         * \param value the polynomial to copy.
+         * \return a reference to this polynomial.
          */
         template <typename U>
         Laurent2& operator = (const Laurent2<U>& value);
@@ -422,8 +426,8 @@ class Laurent2 :
          *
          * The polynomial that was passed (\a value) will no longer be usable.
          *
-         * @param value the polynomial to move.
-         * @return a reference to this polynomial.
+         * \param value the polynomial to move.
+         * \return a reference to this polynomial.
          */
         Laurent2& operator = (Laurent2<T>&& value) noexcept = default;
 
@@ -434,7 +438,7 @@ class Laurent2 :
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
-         * @param other the polynomial whose contents should be swapped
+         * \param other the polynomial whose contents should be swapped
          * with this.
          */
         void swap(Laurent2<T>& other) noexcept;
@@ -446,13 +450,13 @@ class Laurent2 :
         void negate();
 
         /**
-         * Replaces <tt>x</tt> with <tt>x^-1</tt> in this polynomial.
+         * Replaces `x` with `x^-1` in this polynomial.
          * This polynomial is changed directly.
          */
         void invertX();
 
         /**
-         * Replaces <tt>y</tt> with <tt>y^-1</tt> in this polynomial.
+         * Replaces `y` with `y^-1` in this polynomial.
          * This polynomial is changed directly.
          */
         void invertY();
@@ -460,8 +464,8 @@ class Laurent2 :
         /**
          * Multiplies this polynomial by the given constant.
          *
-         * @param scalar the scalar factor to multiply by.
-         * @return a reference to this polynomial.
+         * \param scalar the scalar factor to multiply by.
+         * \return a reference to this polynomial.
          */
         Laurent2& operator *= (const T& scalar);
 
@@ -472,8 +476,8 @@ class Laurent2 :
          *
          * \pre The argument \a scalar is non-zero.
          *
-         * @param scalar the scalar factor to divide by.
-         * @return a reference to this polynomial.
+         * \param scalar the scalar factor to divide by.
+         * \return a reference to this polynomial.
          */
         Laurent2& operator /= (const T& scalar);
 
@@ -483,8 +487,8 @@ class Laurent2 :
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
-         * @param other the polynomial to add to this.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to add to this.
+         * \return a reference to this polynomial.
          */
         Laurent2& operator += (const Laurent2<T>& other);
 
@@ -494,8 +498,8 @@ class Laurent2 :
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
-         * @param other the polynomial to subtract from this.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to subtract from this.
+         * \return a reference to this polynomial.
          */
         Laurent2& operator -= (const Laurent2<T>& other);
 
@@ -505,8 +509,8 @@ class Laurent2 :
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
-         * @param other the polynomial to multiply this by.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to multiply this by.
+         * \return a reference to this polynomial.
          */
         Laurent2& operator *= (const Laurent2<T>& other);
 
@@ -519,14 +523,14 @@ class Laurent2 :
          * using UTF-8.  This will make the output nicer, but will require more
          * complex fonts to be available on the user's machine.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
-         * @param out the output stream to which to write.
-         * @param utf8 \c true if unicode characters may be used.
-         * @param varX the symbol to use for the variable \a x.  This may be
-         * \c null, in which case the default symbol <tt>'x'</tt> will be used.
-         * @param varY the symbol to use for the variable \a y.  This may be
-         * \c null, in which case the default symbol <tt>'y'</tt> will be used.
+         * \param out the output stream to which to write.
+         * \param utf8 \c true if unicode characters may be used.
+         * \param varX the symbol to use for the variable \a x.  This may be
+         * \c null, in which case the default symbol `x` will be used.
+         * \param varY the symbol to use for the variable \a y.  This may be
+         * \c null, in which case the default symbol `y` will be used.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
             const char* varX = nullptr, const char* varY = nullptr) const;
@@ -538,11 +542,11 @@ class Laurent2 :
          * \note There is also the usual variant of str() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param varX the symbol to use for the variable \a x.  This may be
-         * \c null, in which case the default symbol <tt>'x'</tt> will be used.
-         * @param varY the symbol to use for the variable \a y.  This may be
-         * \c null, in which case the default symbol <tt>'y'</tt> will be used.
-         * @return this polynomial as a human-readable string.
+         * \param varX the symbol to use for the variable \a x.  This may be
+         * \c null, in which case the default symbol `x` will be used.
+         * \param varY the symbol to use for the variable \a y.  This may be
+         * \c null, in which case the default symbol `y` will be used.
+         * \return this polynomial as a human-readable string.
          */
         std::string str(const char* varX, const char* varY = nullptr) const;
 
@@ -560,11 +564,11 @@ class Laurent2 :
          * \note There is also the usual variant of utf8() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param varX the symbol to use for the variable \a x.  This may be
-         * \c null, in which case the default symbol <tt>'x'</tt> will be used.
-         * @param varY the symbol to use for the variable \a y.  This may be
-         * \c null, in which case the default symbol <tt>'y'</tt> will be used.
-         * @return this polynomial as a unicode-enabled human-readable string.
+         * \param varX the symbol to use for the variable \a x.  This may be
+         * \c null, in which case the default symbol `x` will be used.
+         * \param varY the symbol to use for the variable \a y.  This may be
+         * \c null, in which case the default symbol `y` will be used.
+         * \return this polynomial as a unicode-enabled human-readable string.
          */
         std::string utf8(const char* varX, const char* varY = nullptr) const;
 
@@ -576,10 +580,9 @@ class Laurent2 :
          * tightEncode() function.  This is true for Regina's arbitrary
          * precision integer types (Integer and LargeInteger).
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -591,7 +594,7 @@ class Laurent2 :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input stream _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -600,15 +603,15 @@ class Laurent2 :
          * tightDecode() function.  This is true for Regina's arbitrary
          * precision integer types (Integer and LargeInteger).
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a two-variable Laurent polynomial.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a two-variable Laurent polynomial.
-         * @return the polynomial represented by the given tight encoding.
+         * \return the polynomial represented by the given tight encoding.
          */
         static Laurent2 tightDecode(std::istream& input);
 
@@ -632,8 +635,8 @@ class Laurent2 :
  * This global routine simply calls Laurent2<T>::swap(); it is provided
  * so that Laurent2<T> meets the C++ Swappable requirements.
  *
- * @param a the first polynomial whose contents should be swapped.
- * @param b the second polynomial whose contents should be swapped.
+ * \param a the first polynomial whose contents should be swapped.
+ * \param b the second polynomial whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -646,9 +649,9 @@ void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
  * The scalar is simply of type \a T; we use the identical type
  * Laurent2<T>::Coefficient here to assist with C++ template type matching.
  *
- * @param poly the polynomial to multiply by.
- * @param scalar the scalar to multiply by.
- * @return the product of the given polynomial and scalar.
+ * \param poly the polynomial to multiply by.
+ * \param scalar the scalar to multiply by.
+ * \return the product of the given polynomial and scalar.
  *
  * \ingroup maths
  */
@@ -662,9 +665,9 @@ Laurent2<T> operator * (Laurent2<T> poly,
  * The scalar is simply of type \a T; we use the identical type
  * Laurent2<T>::Coefficient here to assist with C++ template type matching.
  *
- * @param scalar the scalar to multiply by.
- * @param poly the polynomial to multiply by.
- * @return the product of the given polynomial and scalar.
+ * \param scalar the scalar to multiply by.
+ * \param poly the polynomial to multiply by.
+ * \return the product of the given polynomial and scalar.
  *
  * \ingroup maths
  */
@@ -682,9 +685,9 @@ Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
  *
  * \pre The argument \a scalar is non-zero.
  *
- * @param poly the polynomial to divide by the given scalar.
- * @param scalar the scalar factor to divide by.
- * @return the quotient of the given polynomial by the given scalar.
+ * \param poly the polynomial to divide by the given scalar.
+ * \param scalar the scalar factor to divide by.
+ * \return the quotient of the given polynomial by the given scalar.
  *
  * \ingroup maths
  */
@@ -697,9 +700,9 @@ Laurent2<T> operator / (Laurent2<T> poly,
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -711,9 +714,9 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -725,9 +728,9 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -739,9 +742,9 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -751,8 +754,8 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
 /**
  * Returns the negative of the given polynomial.
  *
- * @param arg the polynomial to negate.
- * @return the negative of \a arg.
+ * \param arg the polynomial to negate.
+ * \return the negative of \a arg.
  *
  * \ingroup maths
  */
@@ -764,9 +767,9 @@ Laurent2<T> operator - (Laurent2<T> arg);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the polynomial to subtract from.
- * @param rhs the polynomial to subtract.
- * @return the first polynomial minus the second.
+ * \param lhs the polynomial to subtract from.
+ * \param rhs the polynomial to subtract.
+ * \return the first polynomial minus the second.
  *
  * \ingroup maths
  */
@@ -778,9 +781,9 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the polynomial to subtract from.
- * @param rhs the polynomial to subtract.
- * @return the first polynomial minus the second.
+ * \param lhs the polynomial to subtract from.
+ * \param rhs the polynomial to subtract.
+ * \return the first polynomial minus the second.
  *
  * \ingroup maths
  */
@@ -792,9 +795,9 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the polynomial to subtract from.
- * @param rhs the polynomial to subtract.
- * @return the first polynomial minus the second.
+ * \param lhs the polynomial to subtract from.
+ * \param rhs the polynomial to subtract.
+ * \return the first polynomial minus the second.
  *
  * \ingroup maths
  */
@@ -806,9 +809,9 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the polynomial to subtract from.
- * @param rhs the polynomial to subtract.
- * @return the first polynomial minus the second.
+ * \param lhs the polynomial to subtract from.
+ * \param rhs the polynomial to subtract.
+ * \return the first polynomial minus the second.
  *
  * \ingroup maths
  */
@@ -820,9 +823,9 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
- * @param lhs the first polynomial to multiply.
- * @param rhs the second polynomial to multiply.
- * @return the product of both polynomials.
+ * \param lhs the first polynomial to multiply.
+ * \param rhs the second polynomial to multiply.
+ * \return the product of both polynomials.
  *
  * \ingroup maths
  */
@@ -959,6 +962,9 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
     return *this;
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <typename T>
 template <typename U>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
@@ -966,6 +972,7 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
     coeff_ = other.coeff_;
     return *this;
 }
+#endif // __DOXYGEN
 
 template <typename T>
 inline void Laurent2<T>::swap(Laurent2<T>& other) noexcept {

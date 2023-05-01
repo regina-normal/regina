@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,7 +103,7 @@ std::unique_ptr<LayeredLensSpace> LayeredLensSpace::recognise(
             }
 
             // Find the nicest possible value for q.
-            // Choices are +/- q, +/- 1/q.
+            // Choices are ±q, ±1/q.
             if (ans->p_ > 0) {
                 if (2 * ans->q_ > ans->p_)
                     ans->q_ = ans->p_ - ans->q_;

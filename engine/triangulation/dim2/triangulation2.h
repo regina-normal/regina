@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,8 +62,9 @@ namespace regina {
  * Represents a 2-manifold triangulation.
  *
  * This is a specialisation of the generic Triangulation class template;
- * see the Triangulation documentation for a general overview of how
- * the triangulation classes work.
+ * see the generic Triangulation documentation for a general overview of how
+ * the triangulation classes work.  In Python, you can read this generic
+ * documentation by looking at a higher dimension: try `help(Triangulation5)`.
  *
  * This 2-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 2-manifolds.
@@ -93,25 +94,50 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /**
          * Creates a new copy of the given triangulation.
          *
-         * This will clone any computed properties (such as homology,
-         * fundamental group, and so on) of the given triangulation also.
-         * If you want a "clean" copy that resets all properties to unknown,
-         * you can use the two-argument copy constructor instead.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
          *
-         * @param copy the triangulation to copy.
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * If you want a "clean" copy that resets all properties to unknown
+         * and leaves the skeleton uncomputed, you can use the two-argument
+         * copy constructor instead.
+         *
+         * \param src the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy) = default;
+        Triangulation(const Triangulation& src) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
-         * properties of the given triangulation (such as homology,
-         * fundamental group, and so on), or \c false if the new triangulation
-         * should have all properties marked as unknown.
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on), as well as the skeleton (vertices, edges, components, etc.).
+         * In particular, the same numbering and labelling will be used for
+         * all skeletal objects in both triangulations.
+         *
+         * If \a cloneProps is \c false, then these properties and skeletal
+         * objects will be marked as unknown in the new triangulation, and
+         * will be recomputed on demand if/when they are required.  Note
+         * in particular that, when the skeleton is recomputed, there is
+         * no guarantee that the numbering and labelling for skeletal objects
+         * will be the same as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will be copied across _only_ if \a cloneProps
+         * is \c true.  If \a cloneProps is \c false then the new triangulation
+         * will have no locks at all.
+         *
+         * \param src the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
+         * properties as well as the skeleton of the given triangulation,
+         * or \c false if the new triangulation should have such properties
+         * and skeletal data marked as unknown.
          */
-        Triangulation(const Triangulation& copy, bool cloneProps);
+        Triangulation(const Triangulation& src, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -126,15 +152,18 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * BoundaryComponent<2> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
          * \note This operator is marked \c noexcept, and in particular
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -152,7 +181,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * string as representing a triangulation using any of the supported
          * string types.
          *
-         * @param description a string that describes a 2-manifold
+         * \param description a string that describes a 2-manifold
          * triangulation.
          */
         Triangulation(const std::string& description);
@@ -163,8 +192,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * properties will also be destroyed.
          */
         ~Triangulation();
-
-        using Snapshottable<Triangulation<2>>::isReadOnlySnapshot;
 
         /*@}*/
         /**
@@ -201,25 +228,57 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
+         *
+         * \exception LockViolation The given triangle and/or one of its
+         * edges is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param tri the triangle to remove.
          */
         void removeTriangle(Triangle<2>* tri);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
          * See removeSimplexAt() for further information.
+         *
+         * \exception LockViolation The requested triangle and/or one of its
+         * edges is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param index specifies which triangle to remove; this
+         * must be between 0 and size()-1 inclusive.
          */
         void removeTriangleAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
          * See removeAllSimplices() for further information.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked triangle and/or edge.  This exception will be
+         * thrown before any changes are made.  See Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          */
         void removeAllTriangles();
 
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @return a reference to this triangulation.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation&) = default;
 
@@ -238,16 +297,19 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * BoundaryComponent<2> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \param src the triangulation to move.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src) = default;
 
@@ -267,11 +329,11 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<2>& other);
@@ -303,33 +365,19 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /*@{*/
 
         /**
-         * Always returns \c true.
-         *
-         * This routine determines if this triangulation is valid; however,
-         * there is nothing that can go wrong with vertex links in 2-manifold
-         * triangulations, and so this routine always returns \c true.
-         *
-         * This no-op routine is provided for consistency with higher
-         * dimensional triangulations, and to assist with writing
-         * dimension-agnostic code.
-         *
-         * @return \c true.
-         */
-        bool isValid() const;
-        /**
          * Returns the Euler characteristic of this triangulation.
-         * This will be evaluated as \a V-E+F.
+         * This will be evaluated as `V-E+F`.
          *
          * This returns the same result as eulerCharTri().
          *
-         * @return the Euler characteristic of this triangulation.
+         * \return the Euler characteristic of this triangulation.
          */
         long eulerChar() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.
          *
-         * @return \c true if and only if this triangulation is closed.
+         * \return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
         /**
@@ -345,7 +393,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * dimensional triangulations, and to assist with writing
          * dimension-agnostic code.
          *
-         * @return \c false.
+         * \return \c false.
          */
         bool isIdeal() const;
 
@@ -363,15 +411,34 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * it has one vertex per boundary component and no internal vertices.
          *
          * The proof is based on a simple Euler characteristic calculation,
-         * whereby the number of triangles <tt>T</tt> is
-         * <tt>T = 2Vi + Vb - 2C</tt>, where <tt>Vi</tt> and <tt>Vb</tt>
-         * are the number of internal and boundary vertices respectively,
-         * and where <tt>C</tt> is the Euler characteristic of the
+         * whereby the number of triangles `T` is `T = 2I + B - 2C`, where
+         * `I` and `B` are the number of internal and boundary vertices
+         * respectively, and where `C` is the Euler characteristic of the
          * underlying manifold.
          *
-         * @return \c true if and only if this is a minimal triangulation.
+         * \return \c true if and only if this is a minimal triangulation.
          */
         bool isMinimal() const;
+
+        /**
+         * Determines whether this is a triangulation of a 2-sphere.
+         *
+         * Unlike the 3-dimensional version of this routine, isSphere()
+         * for 2-manifolds is fast and simple.
+         *
+         * \return \c true if and only if this is a 2-sphere triangulation.
+         */
+        bool isSphere() const;
+
+        /**
+         * Determines whether this is a triangulation of a 2-ball.
+         *
+         * Unlike the 3-dimensional version of this routine, isBall()
+         * for 2-manifolds is fast and simple.
+         *
+         * \return \c true if and only if this is a 2-ball triangulation.
+         */
+        bool isBall() const;
 
         /*@}*/
 
@@ -383,10 +450,15 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 
         void calculateSkeleton();
+        void cloneSkeleton(const Triangulation& src);
 
     friend class regina::Face<2, 2>;
     friend class regina::detail::SimplexBase<2>;
@@ -408,9 +480,9 @@ namespace regina {
 
 // Inline functions for Triangulation<2>
 
-inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
+inline Triangulation<2>::Triangulation(const Triangulation& src,
         bool cloneProps) :
-        TriangulationBase<2>(cloneMe, cloneProps) {
+        TriangulationBase<2>(src, cloneProps) {
     // No properties yet to clone.
 }
 
@@ -448,10 +520,6 @@ inline void Triangulation<2>::removeAllTriangles() {
     removeAllSimplices();
 }
 
-inline bool Triangulation<2>::isValid() const {
-    return true;
-}
-
 inline long Triangulation<2>::eulerChar() const {
     ensureSkeleton();
 
@@ -476,6 +544,14 @@ inline bool Triangulation<2>::isClosed() const {
 
 inline bool Triangulation<2>::isIdeal() const {
     return false;
+}
+
+inline bool Triangulation<2>::isSphere() const {
+    return (eulerChar() == 2 && components_.size() == 1);
+}
+
+inline bool Triangulation<2>::isBall() const {
+    return (eulerChar() == 1 && isOrientable() && components_.size() == 1);
 }
 
 } // namespace regina

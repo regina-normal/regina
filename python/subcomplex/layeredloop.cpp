@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,21 +35,28 @@
 #include "subcomplex/layeredloop.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredloop.h"
 
 using regina::LayeredLoop;
 
 void addLayeredLoop(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredLoop)
+
     auto c = pybind11::class_<LayeredLoop, regina::StandardTriangulation>
-            (m, "LayeredLoop")
-        .def(pybind11::init<const LayeredLoop&>())
-        .def("swap", &LayeredLoop::swap)
-        .def("length", &LayeredLoop::length)
-        .def("isTwisted", &LayeredLoop::isTwisted)
+            (m, "LayeredLoop", rdoc_scope)
+        .def(pybind11::init<const LayeredLoop&>(), rdoc::__copy)
+        .def("swap", &LayeredLoop::swap, rdoc::swap)
+        .def("length", &LayeredLoop::length, rdoc::length)
+        .def("isTwisted", &LayeredLoop::isTwisted, rdoc::isTwisted)
         .def("hinge", &LayeredLoop::hinge,
-            pybind11::return_value_policy::reference)
-        .def_static("recognise", &LayeredLoop::recognise)
+            pybind11::return_value_policy::reference, rdoc::hinge)
+        .def_static("recognise", &LayeredLoop::recognise, rdoc::recognise)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
+
+    regina::python::add_global_swap<LayeredLoop>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

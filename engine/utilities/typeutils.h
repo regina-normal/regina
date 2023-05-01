@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file utilities/typeutils.h
- *  \brief Provides helper template classes for use with template
- *  metaprogramming.  The need for these will likely diminish as
+ *  \brief Provides helper classes for use with template metaprogramming
+ *  and type analysis.  The need for these will likely diminish as
  *  Regina switches to use more modern C++ standards.
  */
 
@@ -42,6 +42,7 @@
 #endif
 
 #include <functional>
+#include <typeinfo>
 #include <variant>
 #include "regina-core.h"
 
@@ -86,12 +87,12 @@ struct EnableIf<false, T, defaultValue> {
  * The action should be a templated callable object (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
- * be of type <tt>std::integral_constant<int, i></tt>, which means that \a i
+ * be of type `std::integral_constant<int, i>`, which means that \a i
  * is accessible as a compile-time constant.
  *
  * If \a from is not less than \a to, then this routine safely does nothing.
  *
- * @param action the body of the \c for loop; that is, the action to
+ * \param action the body of the \c for loop; that is, the action to
  * perform for each integer \a i.  See above for the interface that
  * \a action should adhere to.
  *
@@ -113,12 +114,12 @@ constexpr void for_constexpr(Action&& action) {
  * The action should be a templated callable object (e.g., a generic lambda)
  * that takes a single argument.  If \a value is equal to the integer \a i,
  * for some \a i in the range <i>from</i>, ..., (<i>to</i>-1) inclusive,
- * then this function will return <tt>action(i)</tt>.  The argument \a i
- * will be passed using the type <tt>std::integral_constant<int, i></tt>,
+ * then this function will return `action(i)`.  The argument \a i
+ * will be passed using the type `std::integral_constant<int, i>`,
  * which means that the value of \a i will be accessible to \a action as a
  * compile-time constant.
  *
- * \exception std::runtime_error the given runtime value is not within the
+ * \exception std::runtime_error The given runtime value is not within the
  * range <i>from</i>, ..., (<i>to</i>-1).
  *
  * \tparam Return the type to be returned from this function.
@@ -126,10 +127,12 @@ constexpr void for_constexpr(Action&& action) {
  * but it may differ (particuarly if the return type of \a action
  * depends upon its integer argument).
  *
- * @param action the action to perform for whichever integer \a i matches
+ * \param value the runtime value that determines the selection; that is, the
+ * argument that will be passed to the given action as a compile-time constant.
+ * \param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
- * @return the value returned from \a action.
+ * \return the value returned from \a action.
  *
  * \ingroup utilities
  */
@@ -175,30 +178,32 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * selection function works.  This routine behaves exactly the same as
  * select_constexpr(), except that you do not need to explicitly give
  * the return type.  Instead, the return type will be
- * <tt>std::variant<R(from), R(from+1), ..., R(to-1)></tt>, where each
- * <tt>R(i)</tt> denotes the type returned by the corresponding call to
- * <tt>action(i)</tt>.
+ * `std::variant<R(from), R(from+1), ..., R(to-1)>`, where each
+ * `R(i)` denotes the type returned by the corresponding call to
+ * `action(i)`.
  *
- * This is useful when the return \e type from \a action (not just the
+ * This is useful when the return _type_ from \a action (not just the
  * return value) depends on \a i.  An example of this is
- * <tt>Triangulation::face(subdim, index)</tt>, whose return type
- * would normally be <tt>Face<subdim>*</tt>, except for the fact that
+ * `Triangulation::face(subdim, index)`, whose return type
+ * would normally be `Face<subdim>*`, except for the fact that
  * \a subdim is not known until runtime.  Therefore this function needs
  * to return a std::variant, and so select_constexpr_as_variant()
  * can be used for its internal implementation.
  *
  * See select_constexpr() for further details.
  *
- * \pre All of the possible return types <tt>R(from)</tt>,
- * <tt>R(from+1)</tt>, ..., <tt>R(to-1)</tt> are different.
+ * \pre All of the possible return types `R(from)`,
+ * `R(from+1)`, ..., `R(to-1)` are different.
  *
- * \exception std::runtime_error the given runtime value is not within the
+ * \exception std::runtime_error The given runtime value is not within the
  * range <i>from</i>, ..., (<i>to</i>-1).
  *
- * @param action the action to perform for whichever integer \a i matches
+ * \param value the runtime value that determines the selection; that is, the
+ * argument that will be passed to the given action as a compile-time constant.
+ * \param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
- * @return the value returned from \a action, given as a variant that
+ * \return the value returned from \a action, given as a variant that
  * encapsulates all (\a to - \a from) possible return types.
  *
  * \ingroup utilities
@@ -247,7 +252,7 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
  * type alias is identical to std::tuple_element<pos, tuple>::type.  Otherwise
  * this type alias is identical to the argument \a out_of_range.
  *
- * Note that you should not append ::type when using safe_tuple_element
+ * Note that you should not append `::type` when using safe_tuple_element
  * (i.e., this is really a drop-in replacement for the C++17 type alias
  * std::tuple_element_t, and not the C++11 structure std::tuple_element).
  *
@@ -329,6 +334,35 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
 };
 
 #endif // __DOXYGEN
+
+/**
+ * Returns the preferred Python display name for the given C++ type.
+ *
+ * The Python bindings have an internal mechanism for converting _any_
+ * C++ type into a suitable display name.  However, for some of Regina's
+ * classes the results are not ideal.
+ *
+ * For example, the 3-D triangulation class may be displayed as
+ * `regina::Triangulation<3>` instead of its "real" Python name
+ * `regina.Triangulation3`.  (This kind of problem most commonly
+ * appears in docstrings, where function signatures are generated as each
+ * function is bound, which may happen before all of the types in the
+ * argument/return list have been bound.)
+ *
+ * The purpose of this function is to override this default typename
+ * conversion mechanism.  If the C++ type referred to by \a t has a
+ * known Python name that should always be used, this function will
+ * return it.  Otherwise this function returns \c nullptr, indicating
+ * that the default conversion mechanism should be used.
+ *
+ * \nopython
+ *
+ * \param t an object that references the C++ type whose display name we
+ * wish to obtain.
+ * \return the preferred display name for this type in Python, or \c nullptr
+ * if the default C++-to-Python name conversion mechanism should be used.
+ */
+const char* pythonTypename(const std::type_info* t);
 
 } // namespace regina
 

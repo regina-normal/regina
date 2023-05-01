@@ -1,9 +1,9 @@
 # Modified from FindGMP.cmake. - Ben Burton, 24 November 2016.
 
 # Try to find the Jansson librairies
-#  JANSSON_FOUND - system has jansson lib
-#  JANSSON_INCLUDE_DIR - the jansson include directory
-#  JANSSON_LIBRARIES - Libraries needed to use jansson
+#  Jansson_FOUND - system has jansson lib
+#  Jansson_INCLUDE_DIR - the jansson include directory
+#  Jansson_LIBRARIES - Libraries needed to use jansson
 
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
@@ -11,15 +11,15 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (JANSSON_INCLUDE_DIR AND JANSSON_LIBRARIES)
+if (Jansson_INCLUDE_DIR AND Jansson_LIBRARIES)
   # Already in cache, be silent
-  set(JANSSON_FIND_QUIETLY TRUE)
-endif (JANSSON_INCLUDE_DIR AND JANSSON_LIBRARIES)
+  set(Jansson_FIND_QUIETLY TRUE)
+endif (Jansson_INCLUDE_DIR AND Jansson_LIBRARIES)
 
-find_path(JANSSON_INCLUDE_DIR NAMES jansson.h )
-find_library(JANSSON_LIBRARIES NAMES jansson libjansson)
+find_path(Jansson_INCLUDE_DIR NAMES jansson.h )
+find_library(Jansson_LIBRARIES NAMES jansson libjansson)
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(JANSSON DEFAULT_MSG JANSSON_INCLUDE_DIR JANSSON_LIBRARIES)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Jansson DEFAULT_MSG Jansson_INCLUDE_DIR Jansson_LIBRARIES)
 
-mark_as_advanced(JANSSON_INCLUDE_DIR JANSSON_LIBRARIES)
+mark_as_advanced(Jansson_INCLUDE_DIR Jansson_LIBRARIES)

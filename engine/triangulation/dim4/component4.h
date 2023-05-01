@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,8 +53,10 @@ namespace regina {
 /**
  * Represents a connected component of a 4-manifold triangulation.
  *
- * This is a specialisation of the generic Component class template; see
- * the Component documentation for an overview of how this class works.
+ * This is a specialisation of the generic Component class template; see the
+ * generic Component documentation for an overview of how the component
+ * classes work.  In Python, you can read this generic documentation by
+ * looking at a higher dimension: try `help(Component5)`.
  *
  * This 4-dimensional specialisation contains some extra functionality.
  * In particular, each 4-dimensional component also stores details on
@@ -90,20 +92,20 @@ class Component<4> : public detail::ComponentBase<4> {
          * Returns the number of <i>subdim</i>-faces in this component.
          *
          * For convenience, this routine explicitly supports the case
-         * \a subdim = 4.  This is \e not the case for the routines
+         * \a subdim = 4.  This is _not_ the case for the routines
          * face() and faces(), which give access to individual faces
          * (the reason relates to the fact that pentachora are built manually,
          * whereas lower-dimensional faces are deduced properties).
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * `countFaces(subdim)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the face dimension; this must be between 0 and 4
          * inclusive.
          *
-         * @return the number of <i>subdim</i>-faces.
+         * \return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countFaces() const;
@@ -118,7 +120,7 @@ class Component<4> : public detail::ComponentBase<4> {
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -133,14 +135,14 @@ class Component<4> : public detail::ComponentBase<4> {
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faces(subdim)</tt>.
+         * `faces(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 0 and 3
          * inclusive.
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * \return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
         auto faces() const;
@@ -151,17 +153,17 @@ class Component<4> : public detail::ComponentBase<4> {
          * Note that the index of a face in the component need
          * not be the index of the same face in the overall triangulation.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * `face(subdim, index)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the face dimension; this must be between 0 and 3
          * inclusive.
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         template <int subdim>
         Face<4, subdim>* face(size_t index) const;
@@ -185,7 +187,7 @@ class Component<4> : public detail::ComponentBase<4> {
          * This is the case if and only if it contains an ideal vertex
          * as described by Vertex<4>::isIdeal().
          *
-         * @return \c true if and only if this component is ideal.
+         * \return \c true if and only if this component is ideal.
          */
         bool isIdeal() const;
 
@@ -197,7 +199,7 @@ class Component<4> : public detail::ComponentBase<4> {
          * components with invalid vertices are not closed.
          * See Vertex<4>::isBoundary() for details.
          *
-         * @return \c true if and only if this component is closed.
+         * \return \c true if and only if this component is closed.
          */
         bool isClosed() const;
 

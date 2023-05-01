@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@
  *  <center><b>
  *  Regina<br>
  *  Software for low-dimensional topology<br>
- *  Copyright &copy; 1999-2021, The Regina development team
+ *  Copyright &copy; 1999-2023, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
@@ -65,17 +65,16 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina-normal.github.io/ , 1999-2021.
+ *  http://regina-normal.github.io/ , 1999-2023.
  *
  *  <h3>Authors</h3>
  *
  *  The primary developers of Regina are:
- *  <ul>
- *    <li>Benjamin Burton &lt;bab@maths.uq.edu.au&gt;</li>
- *    <li>Ryan Budney &lt;rybu@uvic.ca&gt;</li>
- *    <li>William Pettersson &lt;william.pettersson@gmail.com&gt;</li>
- *  </ul>
- *  <p>
+ *
+ *  - Benjamin Burton &lt;bab@maths.uq.edu.au&gt;
+ *  - Ryan Budney &lt;rybu@uvic.ca&gt;
+ *  - William Pettersson &lt;william.pettersson@gmail.com&gt;
+ *
  *  Many others have been of assistance with this project, be it through
  *  time, knowledge, testing or code.  Please see the full list of
  *  acknowledgements in the users' handbook.
@@ -164,8 +163,8 @@
  *
  *  Regina's calculation engine uses UTF-8 for all strings (except possibly
  *  for filenames; see below).  This means that programmers who pass
- *  strings \e into routines must ensure that they use UTF-8, and
- *  programmers who receive strings \e from routines may assume that
+ *  strings _into_ routines must ensure that they use UTF-8, and
+ *  programmers who receive strings _from_ routines may assume that
  *  they are returned in UTF-8.  Note that plain ASCII is a subset of
  *  UTF-8, so plain ASCII text is always fine to use.
  *
@@ -178,14 +177,14 @@
  *  useful for programmers who need to work with older data files at a
  *  low level.
  *
- *  File \e names are a special case, since here Regina must interact with
+ *  File _names_ are a special case, since here Regina must interact with
  *  the underlying operating system.  All filenames that are passed into
  *  routines must be presented in whatever encoding the operating system
  *  expects; Regina will simply pass them through to the standard C/C++ file
  *  I/O routines (such as fopen() or std::ifstream::open()) without modifying
  *  them in any way.
  *
- *  \ifacespython The translation of international strings between Python and
+ *  \python The translation of international strings between Python and
  *  C++ should be seamless: all unicode strings passed from Python to C++ will
  *  be encoded using UTF-8, and all strings passed from C++ to Python will be
  *  assumed to be encoded in UTF-8.
@@ -197,21 +196,42 @@
  *  it now offers varying levels of support for manifolds and triangulations
  *  in other dimensions.
  *
- *  Regina's <i>standard dimensions</i> are those for which it offers
- *  rich support (as opposed to basic support).
- *  <b>The standard dimensions are 2, 3 and 4.</b>
+ *  Regina's _standard dimensions_ are those for which it offers rich support
+ *  (as opposed to basic support).  **The standard dimensions are 2, 3 and 4.**
  *
  *  The interface in higher dimensions is much more basic.  Partly this
  *  is due to inefficiencies that grow with dimension (e.g., the exponential
  *  growth in the size of the face lattice).  Partly this is due to the
  *  intrinsic difficulty of solving even simple problems in higher dimensions
- *  (for instance, in dimension&nbsp;5 it is not known how to reliably test
+ *  (for instance, in dimension 5 it is not known how to reliably test
  *  whether a given triangulation represents a closed 5-manifold, and
- *  in dimensions &ge;&nbsp;6 this is provably undecidable).
+ *  in dimensions ≥ 6 this is provably undecidable).
  */
 
 // Put ourselves in the regina namespace so that automatic links work.
 namespace regina {
+
+/*! \page spelling Spelling throughout Regina
+ *
+ *  Regina has always offered British English spelling throughout its API.
+ *  See for example Triangulation<3>::minimiseVertices(), or
+ *  GroupPresentation::recogniseGroup().
+ *
+ *  There are some cases where Regina will continue to offer both British and
+ *  American English spellings for the same functions:
+ *
+ *  - when referring to the name of another software package that uses
+ *    American English, such as in Triangulation<3>::recognizer();
+ *
+ *  - when mirroring functions in another software package that uses
+ *    American English, such as in SnapPeaTriangulation::randomize().
+ *
+ *  In all other cases, Regina will offer the British English spelling only
+ *  (since one consistent convention is easier for the developers to maintain).
+ *  Any legacy aliases that used to offer American alternatives (such as
+ *  Triangulation<3>::minimizeVertices()) are now deprecated, and will
+ *  eventually be removed.
+ */
 
 /*! \page bgl Boost Graph Library interface
  *
@@ -221,8 +241,8 @@ namespace regina {
  * <h3>Triangulations</h3>
  *
  * After including the header triangulation/graph.h, any object of type
- * <tt>regina::Triangulation<dim></tt> can be used directly as a graph with
- * the BGL.  Here the graph will be the <i>dual graph</i> of the triangulation:
+ * `regina::Triangulation<dim>` can be used directly as a graph with
+ * the BGL.  Here the graph will be the _dual graph_ of the triangulation:
  * this is an undirected multigraph in which each node represents a
  * <i>dim</i>-simplex of the triangulation, and each arc represents a gluing
  * between two adjacent <i>dim</i>-simplices.
@@ -235,12 +255,12 @@ namespace regina {
  * - bidirectional graph;
  * - the read-only portions of property graph.
  *
- * Triangulations are \e not mutable graphs - for the purposes of the BGL,
+ * Triangulations are _not_ mutable graphs - for the purposes of the BGL,
  * they are considered read-only.
  *
  * Dual vertices of the graph represent <i>dim</i>-dimensional simplices
  * of the underlying triangulation, and so are represented directly by a
- * pointer of type <tt>regina::Simplex<dim>*</tt>.  Dual edges (when
+ * pointer of type `regina::Simplex<dim>*`.  Dual edges (when
  * accessed through the BGL) must come with an orientation, and so are
  * represented by lightweight objects of type regina::graph::DualEdge<dim>.
  *
@@ -261,12 +281,12 @@ namespace regina {
  * - bidirectional graph;
  * - the read-only portions of property graph.
  *
- * Knots and links are \e not mutable graphs - for the purposes of the BGL,
+ * Knots and links are _not_ mutable graphs - for the purposes of the BGL,
  * they are considered read-only.
  *
  * Vertices of the graph are represented directly by a pointer of type
- * <tt>regina::Crossing*</tt>.  Directed edges are represented by lightweight
- * <tt>regina::StrandRef</tt> objects; see the regina::StrandRef documentation
+ * `regina::Crossing*`.  Directed edges are represented by lightweight
+ * `regina::StrandRef` objects; see the regina::StrandRef documentation
  * for how a StrandRef object is used to identify a directed arc of the link.
  */
 
@@ -301,7 +321,7 @@ namespace regina {
  *
  *  <h3>Python vs C++ APIs</h3>
  *
- *  - Since Regina 7.0, almost \e all of Regina's C++ classes and functions
+ *  - Since Regina 7.0, almost _all_ of Regina's C++ classes and functions
  *    are wrapped in Python - even the low-level and/or highly specialised
  *    classes - wherever it is meaningful to do so.  However, sometimes there
  *    is reason why a class or function cannot or should not be wrapped.
@@ -318,24 +338,24 @@ namespace regina {
  *  <h3>Testing equality</h3>
  *
  *  It is important to understand how the comparisons
- *  <tt>x == y</tt> and <tt>x is y</tt> operate under Python.
+ *  `x == y` and `x is y` operate under Python.
  *  As of Regina 7.0, this behaviour has changed significantly: many
  *  more classes now compare by value, and a few now have their comparisons
  *  disabled.
  *
- *  In general, you do \e not want to use the Python test <tt>x is y</tt>.
+ *  In general, you do _not_ want to use the Python test `x is y`.
  *  This is because each of Regina's Python objects is typically a "wrapper"
  *  that points to one of Regina's native C++ objects.  Importantly, the
  *  same native C++ object could have many Python wrappers, and so
- *  <tt>x is y</tt> could return \c False even if both \a x and \a y wrap
+ *  `x is y` could return \c False even if both \a x and \a y wrap
  *  the same native C++ object.
  *
- *  Instead, you should always use the tests <tt>x == y</tt> and/or
- *  <tt>x != y</tt>.  Regina implements this in different ways, depending
+ *  Instead, you should always use the tests `x == y` and/or
+ *  `x != y`.  Regina implements this in different ways, depending
  *  on the type of class:
  *
- *  - Most of Regina's classes use <i>comparison by value</i>.  Here
- *    <tt>x == y</tt> tests whether the \e contents of \a x and \a y are
+ *  - Most of Regina's classes use _comparison by value_.  Here
+ *    `x == y` tests whether the _contents_ of \a x and \a y are
  *    the same.  What "the same " means will depend on the particular class;
  *    for example, GroupPresentation tests for identical presentations (not
  *    group isomorphism), Triangulation<3> tests for the same tetrahedron and
@@ -348,9 +368,9 @@ namespace regina {
  *    the documentation for the C++ class operators == and !=.
  *    See for example Link::operator==().
  *
- *  - Some selected classes use <i>comparison by reference</i>.  Here
- *    <tt>x == y</tt> tests whether \a x and \a y refer to the same underlying
- *    C++ object (analogous to how <tt>x is y</tt> would normally behave in a
+ *  - Some selected classes use _comparison by reference_.  Here
+ *    `x == y` tests whether \a x and \a y refer to the same underlying
+ *    C++ object (analogous to how `x is y` would normally behave in a
  *    native Python application).  This is typically used for the few classes
  *    that are passed around by pointer in C++, and whose location in memory
  *    is what defines them; the most common examples you will see are
@@ -377,7 +397,7 @@ namespace regina {
  *    such classes are Example<3> and \ref regina::i18n::Locale "Locale".
  *
  *  If you wish to find out how a particular class \a C behaves, you can
- *  examine the attribute <tt>C.equalityType</tt>.  This will return one of
+ *  examine the attribute `C.equalityType`.  This will return one of
  *  the values \c BY_VALUE, \c BY_REFERENCE, \c DISABLED or
  *  \c NEVER_INSTANTIATED respctively:
  *
@@ -391,8 +411,8 @@ namespace regina {
  *  combinatorially identical), but it is also useful to know whether
  *  two Python wrappers identify the same underlying C++ packet (e.g., when
  *  traversing the packet tree).  To resolve this, you can compare two
- *  packets of the same type by value using the operators <tt>x == y</tt> and
- *  <tt>x != y</tt>, and you can test whether two packets of any types
+ *  packets of the same type by value using the operators `x == y` and
+ *  `x != y`, and you can test whether two packets of any types
  *  reference the same underlying object by calling Packet::samePacket().
  *
  *  <h3>International and special characters</h3>

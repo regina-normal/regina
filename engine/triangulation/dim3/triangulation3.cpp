@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,8 +84,7 @@ void Triangulation<3>::clearAllProperties() {
         prop_.twoSphereBoundaryComponents_.reset();
         prop_.negativeIdealBoundaryComponents_.reset();
         prop_.threeSphere_.reset();
-        prop_.threeBall_.reset();
-        prop_.solidTorus_.reset();
+        prop_.handlebody_.reset();
         prop_.TxI_.reset();
         prop_.irreducible_.reset();
         prop_.compressingDisc_.reset();
@@ -101,6 +100,8 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     if (&other == this)
         return;
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to swap computed properties (not clear them).
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 
@@ -125,8 +126,7 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     prop_.splittingSurface_.swap(other.prop_.splittingSurface_);
 
     prop_.threeSphere_.swap(other.prop_.threeSphere_);
-    prop_.threeBall_.swap(other.prop_.threeBall_);
-    prop_.solidTorus_.swap(other.prop_.solidTorus_);
+    prop_.handlebody_.swap(other.prop_.handlebody_);
     prop_.TxI_.swap(other.prop_.TxI_);
     prop_.irreducible_.swap(other.prop_.irreducible_);
     prop_.compressingDisc_.swap(other.prop_.compressingDisc_);
@@ -166,25 +166,50 @@ long Triangulation<3>::eulerCharManifold() const {
     return ans;
 }
 
-Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
-        TriangulationBase<3>(X, cloneProps) {
+bool Triangulation<3>::hasMinimalBoundary() const {
+    for (auto b : boundaryComponents())
+        if (b->countTriangles() > 2 && b->countVertices() > 1)
+            return false;
+    return true;
+}
+
+bool Triangulation<3>::hasMinimalVertices() const {
+    for (auto c : components())
+        if (c->isClosed()) {
+            if (c->countVertices() != 1)
+                return false;
+        } else {
+            size_t expect = 0;
+            for (auto b : c->boundaryComponents()) {
+                if (b->countTriangles() > 2 && b->countVertices() > 1)
+                    return false;
+                expect += b->countVertices();
+            }
+            if (c->countVertices() != expect)
+                return false;
+        }
+    return true;
+}
+
+Triangulation<3>::Triangulation(const Triangulation<3>& src, bool cloneProps) :
+        TriangulationBase<3>(src, cloneProps) {
     if (! cloneProps)
         return;
 
     // Clone properties:
-    prop_ = X.prop_;
+    prop_ = src.prop_;
 
     // Any cached angle structures must be remade to live in this triangulation.
-    if (std::holds_alternative<AngleStructure>(X.strictAngleStructure_))
+    if (std::holds_alternative<AngleStructure>(src.strictAngleStructure_))
         strictAngleStructure_ = AngleStructure(
-            std::get<AngleStructure>(X.strictAngleStructure_), *this);
+            std::get<AngleStructure>(src.strictAngleStructure_), *this);
     else
-        strictAngleStructure_ = std::get<bool>(X.strictAngleStructure_);
-    if (std::holds_alternative<AngleStructure>(X.generalAngleStructure_))
+        strictAngleStructure_ = std::get<bool>(src.strictAngleStructure_);
+    if (std::holds_alternative<AngleStructure>(src.generalAngleStructure_))
         generalAngleStructure_ = AngleStructure(
-            std::get<AngleStructure>(X.generalAngleStructure_), *this);
+            std::get<AngleStructure>(src.generalAngleStructure_), *this);
     else
-        generalAngleStructure_ = std::get<bool>(X.generalAngleStructure_);
+        generalAngleStructure_ = std::get<bool>(src.generalAngleStructure_);
 
     // We do not need to copy skeletal properties (e.g., ideal_ or standard_),
     // since this is computed on demand with the rest of the skeleton.

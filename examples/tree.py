@@ -16,7 +16,7 @@
 census = Container()
 for i in range(415):
     mfd = SnapPeaCensusManifold(SnapPeaCensusManifold.SEC_5, i)
-    census.insertChildLast(make_packet(mfd.construct(), mfd.name()))
+    census.append(make_packet(mfd.construct(), mfd.name()))
 
 # The triangulations are now all children of the "census" container.
 # Remove all triangulations with more than two tetrahedra.

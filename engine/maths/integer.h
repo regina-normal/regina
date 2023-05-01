@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,6 +76,10 @@ namespace regina {
 template <int bytes>
 class NativeInteger;
 
+#ifdef __DOCSTRINGS
+class python_int; // Represents a Python arbitrary-precision integer.
+#endif
+
 /**
  * Internal base classes for use with IntegerBase, templated on whether we
  * should support infinity as an allowed value.
@@ -117,16 +121,20 @@ namespace detail {
     /**
      * Returns a raw GMP integer holding the given value.
      *
-     * @param value the value to assign to the new GMP integer.
-     * @return a corresponding newly created and initialised GMP integer.
+     * \nopython
+     *
+     * \param value the value to assign to the new GMP integer.
+     * \return a corresponding newly created and initialised GMP integer.
      */
     mpz_ptr mpz_from_ll(long long value);
 
     /**
      * Returns a raw GMP integer holding the given value.
      *
-     * @param value the value to assign to the new GMP integer.
-     * @return a corresponding newly created and initialised GMP integer.
+     * \nopython
+     *
+     * \param value the value to assign to the new GMP integer.
+     * \return a corresponding newly created and initialised GMP integer.
      */
     mpz_ptr mpz_from_ull(unsigned long long value);
 }
@@ -168,7 +176,7 @@ namespace detail {
  * not affect users since the calculation engine includes explicit
  * instantiations for all possible template parameters.
  *
- * \ifacespython Both variants of this template are available through Python.
+ * \python Both variants of this template are available through Python.
  * For \a supportInfinity = \c false, use the name Integer.
  * For \a supportInfinity = \c true, use the name LargeInteger.
  *
@@ -209,61 +217,61 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(int value);
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(unsigned value);
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, this is the only native-integer
+         * \python In Python, this is the only native-integer
          * constructor available.
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(long value);
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(unsigned long value);
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(long long value);
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(unsigned long long value);
         /**
          * Initialises this integer to the given value.
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(const IntegerBase<supportInfinity>& value);
         /**
@@ -271,7 +279,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given integer is not infinite.
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         IntegerBase(const IntegerBase<! supportInfinity>& value);
         /**
@@ -280,7 +288,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * The integer that is passed (\a src) will no longer be usable.
          *
-         * @param src the integer to move.
+         * \param src the integer to move.
          */
         IntegerBase(IntegerBase<supportInfinity>&& src) noexcept;
         /**
@@ -291,46 +299,46 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given integer is not infinite.
          *
-         * @param src the integer to move.
+         * \param src the integer to move.
          */
         IntegerBase(IntegerBase<! supportInfinity>&& src) noexcept;
         /**
          * Initialises this integer to the given value.
          *
          * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * \a bytes is a strict _multiple_ of sizeof(long).  For
          * instance, if longs are 8 bytes then you can use \a bytes=16
          * but not \a bytes=12.  This restriction is enforced through a
          * compile-time assertion, but may be lifted in future versions
          * of Regina.
          *
-         * \ifacespython Not present, since NativeInteger is not available to
-         * Python users.
+         * \nopython This is because the NativeInteger classes are not
+         * available to Python users.
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         template <int bytes>
         IntegerBase(const NativeInteger<bytes>& value);
+#ifdef __APIDOCS
         /**
-         * Initialises this to the given Python arbitrary-precision integer.
+         * Initialises this to the given native Python integer.
          *
-         * The argument is of the Python type \c long, which Python uses
+         * The argument is of the Python \c int type, which Python uses
          * to store integers of arbitrary magnitude (much like Regina does
          * with its Integer and LargeInteger classes).
          *
-         * \ifacescpp Not available: this constructor is for Python only.
+         * \nocpp
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
-        #ifdef __DOXYGEN
-        IntegerBase(Long value);
-        #endif
+        IntegerBase(python_int value);
+#endif
 
         /**
          * Initialises this integer to the truncation of the given
          * real number.
          *
-         * @param value the real number to be truncated.
+         * \param value the real number to be truncated.
          */
         IntegerBase(double value);
         /**
@@ -359,12 +367,12 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
-         * @param value the new value of this integer, represented as a string
+         * \param value the new value of this integer, represented as a string
          * of digits in base \a base.
-         * @param base the base in which \a value is given.
+         * \param base the base in which \a value is given.
          */
         IntegerBase(const char* value, int base = 10);
         /**
@@ -393,12 +401,12 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
-         * @param value the new value of this integer, represented as a string
+         * \param value the new value of this integer, represented as a string
          * of digits in base \a base.
-         * @param base the base in which \a value is given.
+         * \param base the base in which \a value is given.
          */
         IntegerBase(const std::string& value, int base = 10);
         /**
@@ -413,7 +421,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * If this integer is infinite, this routine will return \c false.
          *
-         * @return \c true if and only if we are still using a native
+         * \return \c true if and only if we are still using a native
          * C/C++ long.
          */
         bool isNative() const;
@@ -424,7 +432,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This is micro-optimised to be faster than simply testing
          * whether (*this) == 0.
          *
-         * @return \c true if and only if this integer is zero.
+         * \return \c true if and only if this integer is zero.
          */
         bool isZero() const;
 
@@ -433,7 +441,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * In this routine, infinity is considered to have sign +1.
          *
-         * @return +1, -1 or 0 according to whether this integer is
+         * \return +1, -1 or 0 according to whether this integer is
          * positive, negative or zero.
          */
         int sign() const;
@@ -441,7 +449,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Returns whether this integer is infinity.
          *
-         * @return \c true if and only if this integer is infinity.
+         * \return \c true if and only if this integer is infinity.
          */
         bool isInfinite() const;
 
@@ -466,7 +474,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinity.
          *
-         * @return the value of this integer.
+         * \return the value of this integer.
          */
         long longValue() const;
         /**
@@ -480,7 +488,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \exception NoSolution This integer is too large or small to fit
          * into a long.
          *
-         * @return the value of this integer.
+         * \return the value of this integer.
          */
         long safeLongValue() const;
         /**
@@ -496,7 +504,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * underlying representation is a native or large integer.
          *
          * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * \a bytes is a strict _multiple_ of sizeof(long).  For
          * instance, if longs are 8 bytes then you can use this routine
          * with \a bytes=4 or \a bytes=16 but not \a bytes=12.
          * This restriction is enforced through a compile-time assertion,
@@ -504,10 +512,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinity.
          *
-         * \ifacespython Not present, but you can use the non-templated
-         * longValue() instead.
+         * \nopython Python users can use the non-templated longValue()
+         * function instead.
          *
-         * @return the value of this integer.
+         * \return the value of this integer.
          */
         template <int bytes>
         typename IntOfSize<bytes>::type nativeValue() const;
@@ -520,15 +528,31 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given base is between 2 and 36 inclusive.
          *
-         * @return the value of this integer as a string.
+         * \return the value of this integer as a string.
          */
         std::string stringValue(int base = 10) const;
+#ifdef __APIDOCS
+        /**
+         * Returns the value of this integer as a native Python integer.
+         *
+         * The return value will be of the Python \c int type, which Python
+         * uses to store integers of arbitrary magnitude (much like Regina
+         * does with its Integer and LargeInteger classes).
+         *
+         * \pre This integer is not infinity.
+         *
+         * \nocpp
+         *
+         * \return the value of this integer as a Python integer.
+         */
+        python_int pythonValue() const;
+#endif
 
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(const IntegerBase& value);
         /**
@@ -536,8 +560,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given integer is not infinite.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator = (const IntegerBase<! supportInfinity>& value);
         /**
@@ -546,8 +570,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * The integer that is passed (\a src) will no longer be usable.
          *
-         * @param src the integer to move.
-         * @return a reference to this integer.
+         * \param src the integer to move.
+         * \return a reference to this integer.
          */
         IntegerBase& operator = (IntegerBase&& src) noexcept;
         /**
@@ -558,50 +582,50 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given integer is not infinite.
          *
-         * @param src the integer to move.
-         * @return a reference to this integer.
+         * \param src the integer to move.
+         * \return a reference to this integer.
          */
         IntegerBase& operator = (IntegerBase<! supportInfinity>&& src) noexcept;
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(int value);
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(unsigned value);
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(long value);
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(unsigned long value);
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(long long value);
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(unsigned long long value);
         /**
@@ -618,12 +642,12 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
-         * @param value the new value of this integer, represented as a string
+         * \param value the new value of this integer, represented as a string
          * of digits in base 10.
-         * @return a reference to this integer with its new value.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(const char* value);
         /**
@@ -640,130 +664,130 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
-         * @param value the new value of this integer, represented as a string
+         * \param value the new value of this integer, represented as a string
          * of digits in base 10.
-         * @return a reference to this integer with its new value.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator =(const std::string& value);
         /**
          * Swaps the values of this and the given integer.
          *
-         * @param other the integer whose value will be swapped with this.
+         * \param other the integer whose value will be swapped with this.
          */
         void swap(IntegerBase& other) noexcept;
 
         /**
          * Determines if this is equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * equal.
          */
         bool operator ==(const IntegerBase& rhs) const;
         /**
          * Determines if this is equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * equal.
          */
         bool operator ==(const IntegerBase<! supportInfinity>& rhs) const;
         /**
          * Determines if this is equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * equal.
          */
         bool operator ==(long rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * not equal.
          */
         bool operator !=(const IntegerBase& rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * not equal.
          */
         bool operator !=(const IntegerBase<! supportInfinity>& rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * not equal.
          */
         bool operator !=(long rhs) const;
         /**
          * Determines if this is less than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than the given
          * integer.
          */
         bool operator <(const IntegerBase& rhs) const;
         /**
          * Determines if this is less than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than the given
          * integer.
          */
         bool operator <(long rhs) const;
         /**
          * Determines if this is greater than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than the given
          * integer.
          */
         bool operator >(const IntegerBase& rhs) const;
         /**
          * Determines if this is greater than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than the given
          * integer.
          */
         bool operator >(long rhs) const;
         /**
          * Determines if this is less than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than or equal to
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than or equal to
          * the given integer.
          */
         bool operator <=(const IntegerBase& rhs) const;
         /**
          * Determines if this is less than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than or equal to
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than or equal to
          * the given integer.
          */
         bool operator <=(long rhs) const;
         /**
          * Determines if this is greater than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than or equal
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than or equal
          * to the given integer.
          */
         bool operator >=(const IntegerBase& rhs) const;
         /**
          * Determines if this is greater than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than or equal
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than or equal
          * to the given integer.
          */
         bool operator >=(long rhs) const;
@@ -771,48 +795,48 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * The preincrement operator.
          * This operator increments this integer by one, and returns a
-         * reference to the integer \e after the increment.
+         * reference to the integer _after_ the increment.
          *
-         * \ifacespython Not present, although the postincrement operator is
-         * present in python as the member function inc().
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
          *
-         * @return a reference to this integer after the increment.
+         * \return a reference to this integer after the increment.
          */
         IntegerBase& operator ++();
 
         /**
          * The postincrement operator.
          * This operator increments this integer by one, and returns a
-         * copy of the integer \e before the increment.
+         * copy of the integer _before_ the increment.
          *
-         * \ifacespython This routine is named inc() since python does not
+         * \python This routine is named inc() since python does not
          * support the increment operator.
          *
-         * @return a copy of this integer before the increment took place.
+         * \return a copy of this integer before the increment took place.
          */
         IntegerBase operator ++(int);
 
         /**
          * The predecrement operator.
          * This operator decrements this integer by one, and returns a
-         * reference to the integer \e after the decrement.
+         * reference to the integer _after_ the decrement.
          *
-         * \ifacespython Not present, although the postdecrement operator is
-         * present in python as the member function dec().
+         * \nopython The postdecrement operator is present in python as the
+         * member function dec().
          *
-         * @return a reference to this integer after the decrement.
+         * \return a reference to this integer after the decrement.
          */
         IntegerBase& operator --();
 
         /**
          * The postdecrement operator.
          * This operator decrements this integer by one, and returns a
-         * copy of the integer \e before the decrement.
+         * copy of the integer _before_ the decrement.
          *
-         * \ifacespython This routine is named dec() since python does not
+         * \python This routine is named dec() since python does not
          * support the decrement operator.
          *
-         * @return a copy of this integer before the decrement took place.
+         * \return a copy of this integer before the decrement took place.
          */
         IntegerBase operator --(int);
 
@@ -823,8 +847,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to add to this integer.
-         * @return the sum \a this plus \a other.
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
          */
         IntegerBase operator +(const IntegerBase& other) const;
         /**
@@ -834,8 +858,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to add to this integer.
-         * @return the sum \a this plus \a other.
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
          */
         IntegerBase operator +(long other) const;
         /**
@@ -845,8 +869,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to subtract from this integer.
-         * @return the difference \a this minus \a other.
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
          */
         IntegerBase operator -(const IntegerBase& other) const;
         /**
@@ -856,8 +880,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to subtract from this integer.
-         * @return the difference \a this minus \a other.
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
          */
         IntegerBase operator -(long other) const;
         /**
@@ -868,8 +892,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to multiply by this integer.
-         * @return the product \a this times \a other.
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
          */
         IntegerBase operator *(const IntegerBase& other) const;
         /**
@@ -880,8 +904,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to multiply by this integer.
-         * @return the product \a this times \a other.
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
          */
         IntegerBase operator *(long other) const;
         /**
@@ -902,14 +926,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         IntegerBase operator /(const IntegerBase& other) const;
         /**
@@ -929,14 +947,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         IntegerBase operator /(long other) const;
         /**
@@ -950,8 +962,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         IntegerBase divExact(const IntegerBase& other) const;
         /**
@@ -965,8 +977,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         IntegerBase divExact(long other) const;
         /**
@@ -981,15 +993,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the remainder \a this modulo \a other.
+         * \param other the integer to divide this by.
+         * \return the remainder \a this modulo \a other.
          */
         IntegerBase operator %(const IntegerBase& other) const;
         /**
@@ -1004,15 +1009,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the remainder \a this modulo \a other.
+         * \param other the integer to divide this by.
+         * \return the remainder \a this modulo \a other.
          */
         IntegerBase operator %(long other) const;
 
@@ -1021,14 +1019,14 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * remainder when dividing by the given integer.
          *
          * Suppose this integer is \a n and we pass the divisor \a d.
-         * The <em>division algorithm</em> describes the result of
+         * The _division algorithm_ describes the result of
          * dividing \a n by \a d; in particular, it expresses
-         * <tt>n = qd + r</tt>, where \a q is the quotient and
+         * `n = qd + r`, where \a q is the quotient and
          * \a r is the remainder.
          *
          * The division algorithm is precise about which values of \a q
          * and \a r are chosen; in particular it chooses the unique \a r
-         * in the range <tt>0 <= r < |d|</tt>.
+         * in the range `0 ≤ r < |d|`.
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
@@ -1041,8 +1039,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre Neither this nor the divisor are infinite.
          *
-         * @param divisor the divisor \a d.
-         * @return the pair (\a q, \a r), where \a q is the quotient and
+         * \param divisor the divisor \a d.
+         * \return the pair (\a q, \a r), where \a q is the quotient and
          * \a r is the remainder, as described above.
          */
         std::pair<IntegerBase, IntegerBase> divisionAlg(
@@ -1054,7 +1052,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * Negative infinity will return infinity.
          *
-         * @return the negative of this integer.
+         * \return the negative of this integer.
          */
         IntegerBase operator -() const;
 
@@ -1065,8 +1063,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to add to this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to add to this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator +=(const IntegerBase& other);
         /**
@@ -1076,8 +1074,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to add to this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to add to this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator +=(long other);
         /**
@@ -1087,8 +1085,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to subtract from this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to subtract from this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator -=(const IntegerBase& other);
         /**
@@ -1098,8 +1096,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to subtract from this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to subtract from this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator -=(long other);
         /**
@@ -1109,8 +1107,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to multiply with this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to multiply with this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator *=(const IntegerBase& other);
         /**
@@ -1120,8 +1118,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
-         * @param other the integer to multiply with this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to multiply with this integer.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator *=(long other);
         /**
@@ -1142,14 +1140,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator /=(const IntegerBase& other);
         /**
@@ -1169,14 +1161,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator /=(long other);
         /**
@@ -1190,8 +1176,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& divByExact(const IntegerBase& other);
         /**
@@ -1205,8 +1191,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& divByExact(long other);
         /**
@@ -1221,16 +1207,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer modulo which this integer will be
+         * \param other the integer modulo which this integer will be
          * reduced.
-         * @return a reference to this integer with its new value.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator %=(const IntegerBase& other);
         /**
@@ -1245,16 +1224,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer modulo which this integer will be
+         * \param other the integer modulo which this integer will be
          * reduced.
-         * @return a reference to this integer with its new value.
+         * \return a reference to this integer with its new value.
          */
         IntegerBase& operator %=(long other);
         /**
@@ -1274,7 +1246,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given exponent is non-negative.
          *
-         * @param exp the power to which this integer will be raised.
+         * \param exp the power to which this integer will be raised.
          */
         void raiseToPower(unsigned long exp);
 
@@ -1282,7 +1254,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Determines the absolute value of this integer.
          * This integer is not changed.
          *
-         * @return the absolute value of this integer.
+         * \return the absolute value of this integer.
          */
         IntegerBase abs() const;
         /**
@@ -1294,7 +1266,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre Neither this integer nor \a other is infinite.
          *
-         * @param other the integer whose greatest common divisor with
+         * \param other the integer whose greatest common divisor with
          * this will be found.
          */
         void gcdWith(const IntegerBase& other);
@@ -1307,9 +1279,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre Neither this integer nor \a other is infinite.
          *
-         * @param other the integer whose greatest common divisor with
+         * \param other the integer whose greatest common divisor with
          * this will be found.
-         * @return the greatest common divisor of this and the given
+         * \return the greatest common divisor of this and the given
          * integer.
          */
         IntegerBase gcd(const IntegerBase& other) const;
@@ -1321,7 +1293,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre Neither this integer nor \a other is infinite.
          *
-         * @param other the integer whose lowest common multiple with
+         * \param other the integer whose lowest common multiple with
          * this will be found.
          */
         void lcmWith(const IntegerBase& other);
@@ -1333,9 +1305,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre Neither this integer nor \a other is infinite.
          *
-         * @param other the integer whose lowest common multiple with
+         * \param other the integer whose lowest common multiple with
          * this will be found.
-         * @return the lowest common multiple of this and the given
+         * \return the lowest common multiple of this and the given
          * integer.
          */
         IntegerBase lcm(const IntegerBase& other) const;
@@ -1352,9 +1324,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * returns the tuple (\a d, \a u, \a v), where \a u and \a v are
          * coefficients for which:
          *
-         * - <tt>u*this + v*other = d</tt>;
-         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
-         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         * - `u⋅this + v⋅other = d`;
+         * - `-abs(this)/d < v⋅sign(other) ≤ 0`; and
+         * - `1 ≤ u⋅sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be
@@ -1368,9 +1340,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * supported, but there is a long-term plan to eventually phase out
          * the reference argument variant (i.e., not this variant).
          *
-         * @param other the integer whose greatest common divisor with
+         * \param other the integer whose greatest common divisor with
          * this will be found.
-         * @return a tuple containing: the greatest common divisor of
+         * \return a tuple containing: the greatest common divisor of
          * \a this and \a other; the final coefficient of \a this; and
          * the final coefficient of \a other.
          */
@@ -1388,9 +1360,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If \a d is the gcd of \a this and \a other, the values placed
          * into \a u and \a v will be coefficients for which:
          *
-         * - <tt>u*this + v*other = d</tt>;
-         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
-         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         * - `u⋅this + v⋅other = d`;
+         * - `-abs(this)/d < v⋅sign(other) ≤ 0`; and
+         * - `1 ≤ u⋅sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be
@@ -1404,13 +1376,13 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * supported, but there is a long-term plan to eventually phase out
          * the reference argument variant (i.e., this variant).
          *
-         * @param other the integer whose greatest common divisor with
+         * \param other the integer whose greatest common divisor with
          * this will be found.
-         * @param u a variable into which the final coefficient of \a this
+         * \param u a variable into which the final coefficient of \a this
          * will be placed.  Any existing contents of \a u will be overwritten.
-         * @param v a variable into which the final coefficient of \a other
+         * \param v a variable into which the final coefficient of \a other
          * will be placed.  Any existing contents of \a v will be overwritten.
-         * @return the greatest common divisor of \a this and \a other.
+         * \return the greatest common divisor of \a this and \a other.
          */
         IntegerBase<supportInfinity> gcdWithCoeffs(
             const IntegerBase<supportInfinity>& other,
@@ -1429,10 +1401,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given integer \a p is an odd positive prime.
          * \pre This integer is not infinite.
          *
-         * @param p the given odd prime.
-         * @return The Legendre symbol (0, 1 or -1) as described above.
+         * \param p the given odd prime.
+         * \return The Legendre symbol (0, 1 or -1) as described above.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         int legendre(const IntegerBase<supportInfinity>& p) const;
 
@@ -1440,7 +1412,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,*this).
          *
-         * The random number generation here does \e not use Regina's
+         * The random number generation here does _not_ use Regina's
          * own RandomEngine class, but instead uses a separate random
          * number generator provided by GMP.
          *
@@ -1452,7 +1424,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If you need a fast random number generator and this integer
          * is small, consider using the standard rand() function instead.
          *
-         * @return a pseudo-random integer.
+         * \return a pseudo-random integer.
          */
         IntegerBase<supportInfinity> randomBoundedByThis() const;
 
@@ -1460,13 +1432,13 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,2^n).
          *
-         * The random number generation here does \e not use Regina's
+         * The random number generation here does _not_ use Regina's
          * own RandomEngine class, but instead uses a separate random
          * number generator provided by GMP.
          *
-         * @param n the maximum number of bits in the pseudo-random
+         * \param n the maximum number of bits in the pseudo-random
          * integer.
-         * @return a pseudo-random integer.
+         * \return a pseudo-random integer.
          */
         static IntegerBase<supportInfinity> randomBinary(unsigned long n);
 
@@ -1475,12 +1447,12 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * interval [0,2^n), with a tendency to have long strings of 0s
          * and 1s in its binary expansion.
          *
-         * The random number generation here does \e not use Regina's
+         * The random number generation here does _not_ use Regina's
          * own RandomEngine class, but instead uses a separate random
          * number generator provided by GMP.
          *
-         * @param n the maximum number of bits in the pseudo-random integer.
-         * @return a pseudo-random integer.
+         * \param n the maximum number of bits in the pseudo-random integer.
+         * \return a pseudo-random integer.
          */
         static IntegerBase<supportInfinity> randomCornerBinary(
             unsigned long n);
@@ -1491,9 +1463,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This routine allows IntegerBase to interact directly with
          * libgmp and libgmpxx if necessary.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
-         * @param fromData the raw GMP integer to clone.
+         * \param fromData the raw GMP integer to clone.
          */
         void setRaw(mpz_srcptr fromData);
 
@@ -1512,9 +1484,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinite.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
-         * @return the raw GMP data.
+         * \return the raw GMP data.
          */
         mpz_srcptr rawData() const;
 
@@ -1533,9 +1505,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinite.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
-         * @return the raw GMP data.
+         * \return the raw GMP data.
          */
         mpz_ptr rawData();
 
@@ -1575,10 +1547,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * rvalue reference (since this const member function induces an extra
          * deep copy).
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -1593,7 +1564,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * rvalue reference (since this const member function induces an extra
          * deep copy).
          *
-         * @return the resulting encoded string.
+         * \return the resulting encoded string.
          */
         std::string tightEncoding() const;
 
@@ -1612,11 +1583,11 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This routine is identical to calling the global template routine
          * regina::tightDecoding() with this type as the template argument.
          *
-         * \exception InvalidArgument the given string is not a tight encoding
+         * \exception InvalidArgument The given string is not a tight encoding
          * of an integer of this type.
          *
-         * @param enc the tight encoding for an integer.
-         * @return the integer represented by the given tight encoding.
+         * \param enc the tight encoding for an integer.
+         * \return the integer represented by the given tight encoding.
          */
         static IntegerBase tightDecoding(const std::string& enc);
 
@@ -1627,7 +1598,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * The tight encoding will be read from the given input stream.  If the
          * input stream contains leading whitespace then it will be treated as
          * an invalid encoding (i.e., this routine will throw an exception).
-         * The input routine \e may contain further data: if this routine is
+         * The input stream _may_ contain further data: if this routine is
          * successful then the input stream will be left positioned immediately
          * after the encoding, without skipping any trailing whitespace.
          *
@@ -1637,17 +1608,34 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This routine is identical to calling the global template routine
          * regina::tightDecode() with this type as the template argument.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an integer of this type.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for an integer.
-         * @return the integer represented by the given tight encoding.
+         * \return the integer represented by the given tight encoding.
          */
         static IntegerBase tightDecode(std::istream& input);
+
+        /**
+         * Hashes this arbitrary-precision integer to a \c size_t, allowing
+         * it to be used for keys in hash tables.
+         *
+         * The implementation here is fairly simple (but it is a little more
+         * intelligent than just casting the integer down to a \c size_t).
+         * The specific implementation (and therefore the hash values
+         * obtained) is subject to change in future versions of Regina.
+         *
+         * \python For Python users, this function uses the standard Python
+         * name __hash__().  This allows Regina's arbitrary-precision integers
+         * to be used as keys in Python dictionaries and sets.
+         *
+         * \return The hash of this arbitrary-precision integer.
+         */
+        size_t hash() const;
 
     private:
         /**
@@ -1741,8 +1729,8 @@ using Integer = IntegerBase<false>;
  * it is provided so that IntegerBase<supportInfinity> meets the C++ Swappable
  * requirements.
  *
- * @param a the first integer whose contents should be swapped.
- * @param b the second integer whose contents should be swapped.
+ * \param a the first integer whose contents should be swapped.
+ * \param b the second integer whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -1753,9 +1741,9 @@ void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
 /**
  * Writes the given integer to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param i the integer to write.
- * @return a reference to \a out.
+ * \param out the output stream to which to write.
+ * \param i the integer to write.
+ * \return a reference to \a out.
  *
  * \ingroup maths
  */
@@ -1767,9 +1755,9 @@ std::ostream& operator << (std::ostream& out,
  * Adds the given native integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
- * @param lhs the native integer to add.
- * @param rhs the large integer to add.
- * @return the sum \a lhs plus \a rhs.
+ * \param lhs the native integer to add.
+ * \param rhs the large integer to add.
+ * \return the sum \a lhs plus \a rhs.
  *
  * \ingroup maths
  */
@@ -1781,9 +1769,9 @@ IntegerBase<supportInfinity> operator + (long lhs,
  * Multiplies the given native integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
- * @param lhs the native integer to multiply.
- * @param rhs the large integer to multiply.
- * @return the product \a lhs times \a rhs.
+ * \param lhs the native integer to multiply.
+ * \param rhs the large integer to multiply.
+ * \return the product \a lhs times \a rhs.
  *
  * \ingroup maths
  */
@@ -1801,10 +1789,10 @@ IntegerBase<supportInfinity> operator * (long lhs,
  * if the integer argument is an rvalue reference (since the const member
  * function induces an extra deep copy).
  *
- * \ifacespython Not present; use tightEncoding() instead.
+ * \nopython Use tightEncoding() instead.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the integer to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the integer to encode.
  *
  * \ingroup maths
  */
@@ -1820,8 +1808,8 @@ void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
  * efficient if the integer argument is an rvalue reference (since the const
  * member function induces an extra deep copy).
  *
- * @param value the integer to encode.
- * @return the resulting encoded string.
+ * \param value the integer to encode.
+ * \return the resulting encoded string.
  *
  * \ingroup maths
  */
@@ -1856,8 +1844,8 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
  * \pre The system must support integers of the given size; in particular,
  * there must be an appropriate specialisation IntOfSize<bytes>.
  *
- * \ifacespython Not present, since the purpose of NativeInteger is to be a
- * highly optimised drop-in replacement for Integer as a C++ template parameter.
+ * \nopython The purpose of NativeInteger is to be a highly optimised
+ * drop-in replacement for Integer as a C++ template parameter.
  * Python users should just use regina.Integer if you need Regina's integer
  * interface, or Python's own integer type if you do not.
  *
@@ -1881,13 +1869,13 @@ class NativeInteger {
         /**
          * Initialises this integer to the given value.
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         NativeInteger(Native value);
         /**
          * Initialises this integer to the given value.
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         NativeInteger(const NativeInteger<bytes>& value);
         /**
@@ -1902,7 +1890,7 @@ class NativeInteger {
          * will have an undefined initial value.
          *
          * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * \a bytes is a strict _multiple_ of sizeof(long).  For
          * instance, if longs are 8 bytes then you can use this
          * routine with \a bytes=16 but not \a bytes=12.
          * This restriction is enforced through a compile-time assertion,
@@ -1910,7 +1898,7 @@ class NativeInteger {
          *
          * \pre The given integer is not infinity.
          *
-         * @param value the new value of this integer.
+         * \param value the new value of this integer.
          */
         template <bool supportInfinity>
         explicit NativeInteger(const IntegerBase<supportInfinity>& value);
@@ -1918,138 +1906,138 @@ class NativeInteger {
         /**
          * Returns whether or not this integer is zero.
          *
-         * @return \c true if and only if this integer is zero.
+         * \return \c true if and only if this integer is zero.
          */
         bool isZero() const;
 
         /**
          * Returns the sign of this integer.
          *
-         * @return +1, -1 or 0 according to whether this integer is
+         * \return +1, -1 or 0 according to whether this integer is
          * positive, negative or zero.
          */
         int sign() const;
         /**
          * Returns the value of this integer in its native type.
          *
-         * @return the value of this integer.
+         * \return the value of this integer.
          */
         Native nativeValue() const;
 
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator =(const NativeInteger& value);
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator =(Native value);
         /**
          * Swaps the values of this and the given integer.
          *
-         * @param other the integer whose value will be swapped with this.
+         * \param other the integer whose value will be swapped with this.
          */
         void swap(NativeInteger& other) noexcept;
 
         /**
          * Determines if this is equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * equal.
          */
         bool operator ==(const NativeInteger& rhs) const;
         /**
          * Determines if this is equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * equal.
          */
         bool operator ==(Native rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * not equal.
          */
         bool operator !=(const NativeInteger& rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this and the given integer are
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
          * not equal.
          */
         bool operator !=(Native rhs) const;
         /**
          * Determines if this is less than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than the given
          * integer.
          */
         bool operator <(const NativeInteger& rhs) const;
         /**
          * Determines if this is less than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than the given
          * integer.
          */
         bool operator <(Native rhs) const;
         /**
          * Determines if this is greater than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than the given
          * integer.
          */
         bool operator >(const NativeInteger& rhs) const;
         /**
          * Determines if this is greater than the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than the given
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than the given
          * integer.
          */
         bool operator >(Native rhs) const;
         /**
          * Determines if this is less than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than or equal to
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than or equal to
          * the given integer.
          */
         bool operator <=(const NativeInteger& rhs) const;
         /**
          * Determines if this is less than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is less than or equal to
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is less than or equal to
          * the given integer.
          */
         bool operator <=(Native rhs) const;
         /**
          * Determines if this is greater than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than or equal
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than or equal
          * to the given integer.
          */
         bool operator >=(const NativeInteger& rhs) const;
         /**
          * Determines if this is greater than or equal to the given integer.
          *
-         * @param rhs the integer with which this will be compared.
-         * @return \c true if and only if this is greater than or equal
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this is greater than or equal
          * to the given integer.
          */
         bool operator >=(Native rhs) const;
@@ -2057,18 +2045,18 @@ class NativeInteger {
         /**
          * The preincrement operator.
          * This operator increments this integer by one, and returns a
-         * reference to the integer \e after the increment.
+         * reference to the integer _after_ the increment.
          *
-         * @return a reference to this integer after the increment.
+         * \return a reference to this integer after the increment.
          */
         NativeInteger& operator ++();
 
         /**
          * The postincrement operator.
          * This operator increments this integer by one, and returns a
-         * copy of the integer \e before the increment.
+         * copy of the integer _before_ the increment.
          *
-         * @return a copy of this integer before the
+         * \return a copy of this integer before the
          * increment took place.
          */
         NativeInteger operator ++(int);
@@ -2076,18 +2064,18 @@ class NativeInteger {
         /**
          * The predecrement operator.
          * This operator decrements this integer by one, and returns a
-         * reference to the integer \e after the decrement.
+         * reference to the integer _after_ the decrement.
          *
-         * @return a reference to this integer after the decrement.
+         * \return a reference to this integer after the decrement.
          */
         NativeInteger& operator --();
 
         /**
          * The postdecrement operator.
          * This operator decrements this integer by one, and returns a
-         * copy of the integer \e before the decrement.
+         * copy of the integer _before_ the decrement.
          *
-         * @return a copy of this integer before the
+         * \return a copy of this integer before the
          * decrement took place.
          */
         NativeInteger operator --(int);
@@ -2096,32 +2084,32 @@ class NativeInteger {
          * Adds this to the given integer and returns the result.
          * This integer is not changed.
          *
-         * @param other the integer to add to this integer.
-         * @return the sum \a this plus \a other.
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
          */
         NativeInteger operator +(const NativeInteger& other) const;
         /**
          * Adds this to the given integer and returns the result.
          * This integer is not changed.
          *
-         * @param other the integer to add to this integer.
-         * @return the sum \a this plus \a other.
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
          */
         NativeInteger operator +(Native other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
          *
-         * @param other the integer to subtract from this integer.
-         * @return the difference \a this minus \a other.
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
          */
         NativeInteger operator -(const NativeInteger& other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
          *
-         * @param other the integer to subtract from this integer.
-         * @return the difference \a this minus \a other.
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
          */
         NativeInteger operator -(Native other) const;
         /**
@@ -2129,8 +2117,8 @@ class NativeInteger {
          * result.
          * This integer is not changed.
          *
-         * @param other the integer to multiply by this integer.
-         * @return the product \a this times \a other.
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
          */
         NativeInteger operator *(const NativeInteger& other) const;
         /**
@@ -2138,8 +2126,8 @@ class NativeInteger {
          * result.
          * This integer is not changed.
          *
-         * @param other the integer to multiply by this integer.
-         * @return the product \a this times \a other.
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
          */
         NativeInteger operator *(Native other) const;
         /**
@@ -2152,14 +2140,8 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         NativeInteger operator /(const NativeInteger& other) const;
         /**
@@ -2172,14 +2154,8 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         NativeInteger operator /(Native other) const;
         /**
@@ -2188,8 +2164,8 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         NativeInteger divExact(const NativeInteger& other) const;
         /**
@@ -2198,8 +2174,8 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * @param other the integer to divide this by.
-         * @return the quotient \a this divided by \a other.
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
          */
         NativeInteger divExact(Native other) const;
         /**
@@ -2213,15 +2189,8 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the remainder \a this modulo \a other.
+         * \param other the integer to divide this by.
+         * \return the remainder \a this modulo \a other.
          */
         NativeInteger operator %(const NativeInteger& other) const;
         /**
@@ -2235,15 +2204,8 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return the remainder \a this modulo \a other.
+         * \param other the integer to divide this by.
+         * \return the remainder \a this modulo \a other.
          */
         NativeInteger operator %(Native other) const;
 
@@ -2252,14 +2214,14 @@ class NativeInteger {
          * remainder when dividing by the given integer.
          *
          * Suppose this integer is \a n and we pass the divisor \a d.
-         * The <em>division algorithm</em> describes the result of
+         * The _division algorithm_ describes the result of
          * dividing \a n by \a d; in particular, it expresses
-         * <tt>n = qd + r</tt>, where \a q is the quotient and
+         * `n = qd + r`, where \a q is the quotient and
          * \a r is the remainder.
          *
          * The division algorithm is precise about which values of \a q
          * and \a r are chosen; in particular it chooses the unique \a r
-         * in the range <tt>0 <= r < |d|</tt>.
+         * in the range `0 ≤ r < |d|`.
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
@@ -2270,8 +2232,8 @@ class NativeInteger {
          * allowed by the usual division algorithm), this routine selects
          * quotient 0 and remainder \a n.
          *
-         * @param divisor the divisor \a d.
-         * @return the pair (\a q, \a r), where \a q is the quotient and
+         * \param divisor the divisor \a d.
+         * \return the pair (\a q, \a r), where \a q is the quotient and
          * \a r is the remainder, as described above.
          */
         std::pair<NativeInteger, NativeInteger> divisionAlg(
@@ -2281,7 +2243,7 @@ class NativeInteger {
          * Determines the negative of this integer.
          * This integer is not changed.
          *
-         * @return the negative of this integer.
+         * \return the negative of this integer.
          */
         NativeInteger operator -() const;
 
@@ -2289,48 +2251,48 @@ class NativeInteger {
          * Adds the given integer to this.
          * This integer is changed to reflect the result.
          *
-         * @param other the integer to add to this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to add to this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator +=(const NativeInteger& other);
         /**
          * Adds the given integer to this.
          * This integer is changed to reflect the result.
          *
-         * @param other the integer to add to this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to add to this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator +=(Native other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
          *
-         * @param other the integer to subtract from this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to subtract from this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator -=(const NativeInteger& other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
          *
-         * @param other the integer to subtract from this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to subtract from this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator -=(Native other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
          *
-         * @param other the integer to multiply with this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to multiply with this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator *=(const NativeInteger& other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
          *
-         * @param other the integer to multiply with this integer.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to multiply with this integer.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator *=(Native other);
         /**
@@ -2343,14 +2305,8 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator /=(const NativeInteger& other);
         /**
@@ -2363,14 +2319,8 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator /=(Native other);
         /**
@@ -2379,8 +2329,8 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& divByExact(const NativeInteger& other);
         /**
@@ -2389,8 +2339,8 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * @param other the integer to divide this by.
-         * @return a reference to this integer with its new value.
+         * \param other the integer to divide this by.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& divByExact(Native other);
         /**
@@ -2404,16 +2354,9 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer modulo which this integer will be
+         * \param other the integer modulo which this integer will be
          * reduced.
-         * @return a reference to this integer with its new value.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator %=(const NativeInteger& other);
         /**
@@ -2427,16 +2370,9 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
-         * @param other the integer modulo which this integer will be
+         * \param other the integer modulo which this integer will be
          * reduced.
-         * @return a reference to this integer with its new value.
+         * \return a reference to this integer with its new value.
          */
         NativeInteger& operator %=(Native other);
         /**
@@ -2451,7 +2387,7 @@ class NativeInteger {
          * The result is guaranteed to be non-negative.  As a
          * special case, gcd(0,0) is considered to be zero.
          *
-         * @param other the integer whose greatest common divisor with
+         * \param other the integer whose greatest common divisor with
          * this will be found.
          */
         void gcdWith(const NativeInteger& other);
@@ -2462,9 +2398,9 @@ class NativeInteger {
          * The result is guaranteed to be non-negative.  As a
          * special case, gcd(0,0) is considered to be zero.
          *
-         * @param other the integer whose greatest common divisor with
+         * \param other the integer whose greatest common divisor with
          * this will be found.
-         * @return the greatest common divisor of this and the given
+         * \return the greatest common divisor of this and the given
          * integer.
          */
         NativeInteger gcd(const NativeInteger& other) const;
@@ -2476,7 +2412,7 @@ class NativeInteger {
          * always return \c false.  This routine is simply provided for
          * compatibility with LargeInteger (where infinity is allowed).
          *
-         * @return \c false, since a NativeInteger can never be infinity.
+         * \return \c false, since a NativeInteger can never be infinity.
          */
         bool isInfinite() const;
         /**
@@ -2490,9 +2426,12 @@ class NativeInteger {
          */
         void tryReduce();
 
+#ifndef __DOXYGEN
+    // Doxygen is not able to match this up to the documented version below.
     template <int bytes_>
     friend std::ostream& operator << (std::ostream& out,
         const NativeInteger<bytes_>& large);
+#endif
 };
 
 /**
@@ -2501,8 +2440,10 @@ class NativeInteger {
  * This global routine simply calls NativeInteger<bytes>::swap(); it is
  * provided so that NativeInteger<bytes> meets the C++ Swappable requirements.
  *
- * @param a the first integer whose contents should be swapped.
- * @param b the second integer whose contents should be swapped.
+ * \nopython The NativeInteger classes are not available to Python users.
+ *
+ * \param a the first integer whose contents should be swapped.
+ * \param b the second integer whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -2512,9 +2453,9 @@ void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
 /**
  * Writes the given integer to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param i the integer to write.
- * @return a reference to \a out.
+ * \param out the output stream to which to write.
+ * \param i the integer to write.
+ * \return a reference to \a out.
  *
  * \ingroup maths
  */
@@ -2525,8 +2466,7 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  * NativeLong is a type alias for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
- * \ifacespython Not present, since NativeInteger is not available to
- * Python users.
+ * \nopython The NativeInteger classes are not available to Python users.
  *
  * \ingroup maths
  */
@@ -3636,6 +3576,29 @@ inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
         // For input streams we use a different exception type.
         throw InvalidInput(exc.what());
     }
+}
+
+template <bool supportInfinity>
+inline size_t IntegerBase<supportInfinity>::hash() const {
+    if constexpr (supportInfinity) {
+        // For infinity, just return an arbitrary hard-coded constant.
+        if (isInfinite())
+            return 33651164;
+    }
+
+    // We should ensure that hash(k) != hash(-k).
+    //
+    // By casting a GMP int to a signed long (if we are using GMP) and then
+    // casting a signed long directly to size_t, we get for k > 0:
+    //
+    // - hash(k) = k;
+    // - hash(-k) = 2^n - k (where n is the bitsize of size_t).
+    //
+    // This is enough distinguishing power for the time being.
+    if (large_)
+        return static_cast<size_t>(mpz_get_si(large_));
+    else
+        return static_cast<size_t>(small_);
 }
 
 template <bool supportInfinity>

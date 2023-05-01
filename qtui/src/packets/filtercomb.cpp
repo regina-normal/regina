@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -142,7 +142,7 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
     // Final tidying up.
     // Connect to the button group, so that we only get notified when a
     // user-initiated change occurs (i.e., not when refresh() changes things).
-    connect(boolType, SIGNAL(buttonClicked(int)),
+    connect(boolType, SIGNAL(buttonClicked(QAbstractButton*)),
         this, SLOT(notifyBoolTypeChanged()));
     filter->listen(this);
 }

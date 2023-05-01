@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,23 +35,28 @@
 #include "split/signature.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/split/signature.h"
 
 using regina::Signature;
 
 void addSignature(pybind11::module_& m) {
-    auto c = pybind11::class_<Signature>(m, "Signature")
-        .def(pybind11::init<const std::string&>())
-        .def(pybind11::init<const Signature&>())
-        .def("swap", &Signature::swap)
-        .def("order", &Signature::order)
-        .def("triangulate", &Signature::triangulate)
+    RDOC_SCOPE_BEGIN(Signature)
+
+    auto c = pybind11::class_<Signature>(m, "Signature", rdoc_scope)
+        .def(pybind11::init<const std::string&>(), rdoc::__init)
+        .def(pybind11::init<const Signature&>(), rdoc::__copy)
+        .def("swap", &Signature::swap, rdoc::swap)
+        .def("order", &Signature::order, rdoc::order)
+        .def("triangulate", &Signature::triangulate, rdoc::triangulate)
         .def("str", pybind11::overload_cast<
             const std::string&, const std::string&, const std::string&>(
-            &Signature::str, pybind11::const_))
+            &Signature::str, pybind11::const_), rdoc::str)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    m.def("swap", (void(*)(Signature&, Signature&))(regina::swap));
+    regina::python::add_global_swap<Signature>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

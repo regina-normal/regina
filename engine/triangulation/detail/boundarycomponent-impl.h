@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,14 +34,14 @@
  *  \brief Contains some of the implementation details for the generic
  *  BoundaryComponent class template.
  *
- *  This file is \e not included from boundarycomponent.h, and it is not
+ *  This file is _not_ included from boundarycomponent.h, and it is not
  *  shipped with Regina's development headers.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *
  *  The reason for "quarantining" this file is that the routines it defines
  *  require a definition of the lower-dimensional class Triangulation<dim-1>.
  *  By keeping their implementations safely out of the main headers, we avoid
- *  having Triangulation<dim> recursively instantiate \e all triangulation
+ *  having Triangulation<dim> recursively instantiate _all_ triangulation
  *  classes Triangulation<dim-1>, Triangulation<dim-2>, ..., Triangulation<2>.
  *  This quarantining also helps us to keep the helper class ReorderIterator
  *  out of the main API.
@@ -66,10 +66,10 @@ namespace {
      * them to the corresponding faces from some other triangulation \a tri.
      *
      * The iterator relies on an array \a map, where for each face \a f
-     * of the boundary component, <tt>map[f->index()]</tt> is the
-     * corresponding face of \a tri.  Note that <tt>f->index()</tt> is the
+     * of the boundary component, `map[f->index()]` is the
+     * corresponding face of \a tri.  Note that `f->index()` is the
      * index of \a f in the underlying <i>dim</i>-dimensional triangulation,
-     * \e not the index of \a f in the boundary component's facet list.
+     * _not_ the index of \a f in the boundary component's facet list.
      */
     template <int dim, int subdim>
     class ReorderIterator {
@@ -135,9 +135,6 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     // this function to capture by reference, not by value.
     auto* ans = new Triangulation<dim-1>();
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim-1>::ChangeEventSpan span(*ans);
-
     for (auto s : allFacets)
         bdrySimplex[s->index()] = ans->newSimplex();
 
@@ -192,7 +189,7 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
          * (dim-1)-dimensional facets.
          *
          * Now the triangulation is built, we need to reorder these lower-
-         * dimensional (<= dim-2)-faces to appear in the same order and with the
+         * dimensional (≤ dim-2)-faces to appear in the same order and with the
          * same vertex numbers as they do in the boundary component face lists.
          *
          * A problem: this relabelling does happen immediately after ans is

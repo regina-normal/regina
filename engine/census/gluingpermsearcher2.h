@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,7 @@
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
+#include "triangulation/generic/isomorphism.h"
 #include "utilities/exception.h"
 
 namespace regina {
@@ -105,7 +106,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
                  underlying triangulation.  Orientation is positive/negative,
                  or 0 if unknown.
                  Note that in some algorithms the orientation is simply
-                 +/-1, and in some algorithms the orientation counts
+                 ±1, and in some algorithms the orientation counts
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
 
@@ -149,15 +150,15 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * @param pairing the specific pairing of triangle edges
+         * \param pairing the specific pairing of triangle edges
          * that the generated permutation sets will complement.
-         * @param autos the collection of isomorphisms that define equivalence
+         * \param autos the collection of isomorphisms that define equivalence
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given edge pairing,
          * and will generally be the set of all such automorphisms (which
-         * you can generate via <tt>pairing.findAutomorphisms()</tt>).
-         * @param orientableOnly \c true if only gluing permutations
+         * you can generate via `pairing.findAutomorphisms()`).
+         * \param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
          */
@@ -177,17 +178,16 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present, since this constructor is fundamentally
-         * designed around working through a single input stream as we make
-         * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and fromTaggedData() instead,
-         * which incorporate this same text data as part of their richer text
-         * format.
+         * \nopython This constructor is fundamentally designed around working
+         * through a single input stream as we make our way from base class
+         * constructors down to subclass constructors.  Python users should
+         * use taggedData() and fromTaggedData() instead, which incorporate
+         * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         GluingPermSearcher(std::istream& in);
 
@@ -226,14 +226,14 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          *
          * \todo \feature Allow cancellation of permutation set generation.
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
          *
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -270,11 +270,16 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * large enough), it is possible that this routine will produce
          * complete gluing permutation sets.
          *
-         * @param maxDepth the depth of the partial search to run.
+         * \python This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
+         * \param maxDepth the depth of the partial search to run.
          * A negative number indicates that a full search should be run.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set (partial or complete) that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -288,7 +293,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * This may assist the \a action routine when running partial
          * depth-based searches.  See partialSearch() for further details.
          *
-         * @return \c true if a complete gluing permutation set is held,
+         * \return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
         bool isComplete() const;
@@ -310,10 +315,10 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython Not present; instead use taggedData(), which
-         * returns this same information as a string.
+         * \nopython Instead use taggedData(), which returns this same
+         * information as a string.
          *
-         * @param out the output stream to which the data should be
+         * \param out the output stream to which the data should be
          * written.
          */
         void dumpTaggedData(std::ostream& out) const;
@@ -336,7 +341,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string taggedData() const;
 
@@ -364,12 +369,12 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython Not present; instead use data(), which returns this
-         * same information as a string.  However, the matching input stream
+         * \nopython You can instead use data(), which returns this same
+         * information as a string.  However, the matching input stream
          * constructor is not available in Python either, so it is recommended
          * that Python users use taggedData() and fromTaggedData() instead.
          *
-         * @param out the output stream to which the data should be written.
+         * \param out the output stream to which the data should be written.
          */
         virtual void dumpData(std::ostream& out) const;
 
@@ -397,11 +402,11 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython This routine is available, but the matching
+         * \python This routine is available, but the matching
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -409,9 +414,9 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -436,7 +441,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
@@ -468,7 +473,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * @return the new search manager.
+         * \return the new search manager.
          */
         static std::unique_ptr<GluingPermSearcher<2>> bestSearcher(
                 FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
@@ -490,14 +495,14 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the given input stream
+         * \exception InvalidInput The data found in the given input stream
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present; instead you can use the variant of
-         * fromTaggedData() that takes its input as a string.
+         * \nopython Instead use the variant of fromTaggedData() that takes
+         * its input as a string.
          *
-         * @param in the input stream from which to read.
-         * @return the new search manager, or \c null if the data in the
+         * \param in the input stream from which to read.
+         * \return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
@@ -519,12 +524,12 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidArgument the data found in the given string
+         * \exception InvalidArgument The data found in the given string
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * @param data the tagged data from which to reconstruct a
+         * \param data the tagged data from which to reconstruct a
          * search manager.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
@@ -555,7 +560,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * in order to see whether the current set is in canonical form
          * (i.e., is lexicographically smallest).
          *
-         * @return \c true if the current set is in canonical form,
+         * \return \c true if the current set is in canonical form,
          * or \c false otherwise.
          */
         bool isCanonical() const;
@@ -564,7 +569,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * Returns the character used to identify this class when
          * storing tagged data in text format.
          *
-         * @return the class tag.
+         * \return the class tag.
          */
         virtual char dataTagInternal() const;
 };

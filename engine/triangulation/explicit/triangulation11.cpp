@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,6 +34,7 @@
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
+#include "triangulation/detail/triangulation-impl.h"
 #include "triangulation/generic.h"
 
 namespace regina::detail {
@@ -92,9 +93,11 @@ template MatrixInt TriangulationBase<11>::dualToPrimal<8>() const;
 template MatrixInt TriangulationBase<11>::dualToPrimal<9>() const;
 template MatrixInt TriangulationBase<11>::dualToPrimal<10>() const;
 
-template const GroupPresentation& TriangulationBase<11>::fundamentalGroup() const;
+template const GroupPresentation& TriangulationBase<11>::group() const;
 
 template void TriangulationBase<11>::calculateSkeleton();
+template void TriangulationBase<11>::cloneSkeleton(
+    const TriangulationBase<11>&);
 template void TriangulationBase<11>::clearBaseProperties();
 template void TriangulationBase<11>::swapBaseData(TriangulationBase<11>&);
 
@@ -110,5 +113,14 @@ template bool TriangulationBase<11>::pachner(Face<11, 8>*, bool, bool);
 template bool TriangulationBase<11>::pachner(Face<11, 9>*, bool, bool);
 template bool TriangulationBase<11>::pachner(Face<11, 10>*, bool, bool);
 template bool TriangulationBase<11>::pachner(Face<11, 11>*, bool, bool);
+
+template void TriangulationBase<11>::writeTextShort(std::ostream&) const;
+template void TriangulationBase<11>::writeTextLong(std::ostream&) const;
+
+template void TriangulationBase<11>::reorderBFS(bool);
+template void TriangulationBase<11>::makeDoubleCover();
+template bool TriangulationBase<11>::finiteToIdeal();
+
+template void TriangulationBase<11>::writeDot(std::ostream&, bool) const;
 
 } // namespace regina::detail

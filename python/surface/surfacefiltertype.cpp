@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,12 +33,21 @@
 #include "../pybind11/pybind11.h"
 #include "surface/surfacefiltertype.h"
 #include "../helpers.h"
+#include "../docstrings/surface/surfacefiltertype.h"
 
 void addSurfaceFilterType(pybind11::module_& m) {
-    pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType")
-        .value("NS_FILTER_LEGACY_DEFAULT", regina::NS_FILTER_LEGACY_DEFAULT)
-        .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES)
-        .value("NS_FILTER_COMBINATION", regina::NS_FILTER_COMBINATION)
+    RDOC_SCOPE_BEGIN(SurfaceFilterType)
+
+    pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType",
+            rdoc_scope)
+        .value("NS_FILTER_LEGACY_DEFAULT", regina::NS_FILTER_LEGACY_DEFAULT,
+            rdoc::NS_FILTER_LEGACY_DEFAULT)
+        .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES,
+            rdoc::NS_FILTER_PROPERTIES)
+        .value("NS_FILTER_COMBINATION", regina::NS_FILTER_COMBINATION,
+            rdoc::NS_FILTER_COMBINATION)
         .export_values();
+
+    RDOC_SCOPE_END
 }
 

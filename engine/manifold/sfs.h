@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ class AbelianGroup;
 class LensSpace;
 
 /**
- * Represents an exceptional (<i>alpha</i>, <i>beta</i>) fibre in a Seifert
+ * Represents an exceptional (\a alpha, \a beta) fibre in a Seifert
  * fibred space.
  *
  * The first parameter \a alpha must be strictly positive, and
@@ -76,11 +76,11 @@ class LensSpace;
  */
 struct SFSFibre {
     long alpha;
-        /**< The first parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
+        /**< The first parameter of this (\a alpha, \a beta) fibre.
              Note that this is the index of the exceptional fibre.
              This parameter must always be strictly positive. */
     long beta;
-        /**< The second parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
+        /**< The second parameter of this (\a alpha, \a beta) fibre.
              This parameter must have no common factors with \a alpha. */
 
     /**
@@ -90,9 +90,9 @@ struct SFSFibre {
     /**
      * Creates a new exceptional fibre with the given parameters.
      *
-     * @param newAlpha the first parameter (the index) of this
+     * \param newAlpha the first parameter (the index) of this
      * exceptional fibre; this must be strictly positive.
-     * @param newBeta the second parameter of this exceptional fibre;
+     * \param newBeta the second parameter of this exceptional fibre;
      * this must have no common factors with the first parameter \a newAlpha.
      */
     SFSFibre(long newAlpha, long newBeta);
@@ -100,14 +100,14 @@ struct SFSFibre {
      * Creates a new exceptional fibre that is a clone of the given
      * fibre.
      *
-     * @param cloneMe the exceptional fibre to clone.
+     * \param cloneMe the exceptional fibre to clone.
      */
     SFSFibre(const SFSFibre& cloneMe) = default;
 
     /**
      * Makes this exceptional fibre a clone of the given fibre.
      *
-     * @param cloneMe the exceptional fibre to clone.
+     * \param cloneMe the exceptional fibre to clone.
      */
     SFSFibre& operator = (const SFSFibre& cloneMe) = default;
     /**
@@ -115,8 +115,8 @@ struct SFSFibre {
      * This requires both fibres to have the same values for \a alpha
      * and the same values for \a beta.
      *
-     * @param compare the fibre with which this will be compared.
-     * @return \c true if and only if this and the given fibre are
+     * \param compare the fibre with which this will be compared.
+     * \return \c true if and only if this and the given fibre are
      * identical.
      */
     bool operator == (const SFSFibre& compare) const;
@@ -125,8 +125,8 @@ struct SFSFibre {
      * This requires the fibres to have different values for \a alpha and/or
      * to have different values for \a beta.
      *
-     * @param compare the fibre with which this will be compared.
-     * @return \c true if and only if this and the given fibre are
+     * \param compare the fibre with which this will be compared.
+     * \return \c true if and only if this and the given fibre are
      * different.
      */
     bool operator != (const SFSFibre& compare) const;
@@ -134,20 +134,19 @@ struct SFSFibre {
      * Determines if this exceptional fibre is smaller than the given
      * fibre.  Fibres are sorted by \a alpha and then by \a beta.
      *
-     * @param compare the fibre with which this will be compared.
-     * @return \c true if and only if this is smaller than the given fibre.
+     * \param compare the fibre with which this will be compared.
+     * \return \c true if and only if this is smaller than the given fibre.
      */
     bool operator < (const SFSFibre& compare) const;
 };
 
 /**
- * Writes the given fibre in human-readable format to the given output
- * stream.  The fibre will be written in the format
- * <tt>(alpha,beta)</tt> with no newline appended.
+ * Writes the given fibre in human-readable format to the given output stream.
+ * The fibre will be written in the format `(alpha,beta)` with no newline.
  *
- * @param out the output stream to which to write.
- * @param f the fibre to write.
- * @return the output stream \a out.
+ * \param out the output stream to which to write.
+ * \param f the fibre to write.
+ * \return the output stream \a out.
  *
  * \ingroup manifold
  */
@@ -173,8 +172,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * however identify whether or not the base orbifold is orientable,
  * and whether or not it contains any fibre-reversing paths.
  *
- * When describing punctures and reflector boundaries, a \e twisted
- * boundary is one that gives a fibre-reversing path, and an \e untwisted
+ * When describing punctures and reflector boundaries, a _twisted_
+ * boundary is one that gives a fibre-reversing path, and an _untwisted_
  * boundary is one around which the direction of fibres is preserved.
  *
  * Exceptional fibres are sorted first by \a alpha (the index) and then
@@ -182,7 +181,7 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * though in output routines such as name() and structure() it is
  * merged in with the exceptional fibres.  Specifically, it is merged in
  * with the \a beta of the final exceptional fibre (replacing it with
- * <tt>beta + b.alpha</tt>), or if there are no exceptional fibres then
+ * `beta + b.alpha`), or if there are no exceptional fibres then
  * it is presented as a single (1,b) fibre.
  *
  * The Manifold routines homology() and construct() are only
@@ -220,56 +219,78 @@ class SFSpace : public Manifold {
          * with boundaries.
          */
         enum ClassType {
+            /**
+             * Indicates that the base orbifold is orientable with
+             * no punctures or reflector boundaries, and that none
+             * of its generators give fibre-reversing paths.
+             */
             o1 = 101,
-                /**< Indicates that the base orbifold is orientable with
-                     no punctures or reflector boundaries, and that none
-                     of its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is orientable with
+             * no punctures or reflector boundaries, and that all
+             * of its generators give fibre-reversing paths.
+             */
             o2 = 102,
-                /**< Indicates that the base orbifold is orientable with
-                     no punctures or reflector boundaries, and that all
-                     of its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, and that none
+             * of its generators give fibre-reversing paths.
+             */
             n1 = 201,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, and that none
-                     of its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, and that all of
+             * its generators give fibre-reversing paths.
+             */
             n2 = 202,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, and that all of
-                     its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, that it has
+             * non-orientable genus at least two, and that precisely
+             * one of its generators gives a fibre-reversing path.
+             */
             n3 = 203,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, that it has
-                     non-orientable genus at least two, and that precisely
-                     one of its generators gives a fibre-reversing path. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, that it has
+             * non-orientable genus at least three, and that precisely
+             * two of its generators give fibre-reversing paths.
+             */
             n4 = 204,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, that it has
-                     non-orientable genus at least three, and that precisely
-                     two of its generators give fibre-reversing paths. */
 
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is orientable,
+             * and that it contains no fibre-reversing paths.
+             */
             bo1 = 301,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is orientable,
-                     and that it contains no fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is orientable,
+             * and that it contains at least one fibre-reversing path.
+             */
             bo2 = 302,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is orientable,
-                     and that it contains at least one fibre-reversing path. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is non-orientable,
+             * and that it contains no fibre-reversing paths.
+             */
             bn1 = 401,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is non-orientable,
-                     and that it contains no fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is non-orientable,
+             * and that its fibre-reversing paths correspond precisely
+             * to its orientation-reversing paths.
+             */
             bn2 = 402,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is non-orientable,
-                     and that its fibre-reversing paths correspond precisely
-                     to its orientation-reversing paths. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is non-orientable,
+             * that it contains at least one fibre-reversing path,
+             * and that its fibre-reversing paths do not correspond
+             * precisely to its orientation-reversing paths.
+             */
             bn3 = 403
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is non-orientable,
-                     that it contains at least one fibre-reversing path,
-                     and that its fibre-reversing paths do not correspond
-                     precisely to its orientation-reversing paths. */
         };
 
     private:
@@ -302,7 +323,7 @@ class SFSpace : public Manifold {
         std::list<SFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
-                 coprime and <tt>0 <= beta < alpha > 1</tt>. */
+                 coprime and 0 ≤ \a beta < \a alpha > 1. */
         unsigned long nFibres_;
             /**< The size of the \a fibres_ list, used to avoid calling
                  the linear time fibres_.size(). */
@@ -328,26 +349,26 @@ class SFSpace : public Manifold {
          * \pre If there are any twisted punctures or reflector boundary
          * components, then \a useClass is either \c bo2 or \c bn3.
          *
-         * @param useClass indicates whether the base orbifold is closed
+         * \param useClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
          * paths in the 3-manifold.  See the SFSpace class notes and the
          * ClassType enumeration notes for details.
-         * @param genus the genus of the base orbifold (the
+         * \param genus the genus of the base orbifold (the
          * number of tori or projective planes that it contains).
          * Note that for non-orientable base surfaces, this is the
          * non-orientable genus.
-         * @param punctures the number of untwisted ordinary boundary
+         * \param punctures the number of untwisted ordinary boundary
          * components of the base orbifold.  Here "ordinary" means that
          * the puncture gives rise to a real 3-manifold boundary (i.e.,
          * this is not a reflector boundary of the base orbifold).
-         * @param puncturesTwisted the number of twisted ordinary boundary
+         * \param puncturesTwisted the number of twisted ordinary boundary
          * components of the base orbifold.  Here "ordinary" means that
          * the puncture gives rise to a real 3-manifold boundary (i.e.,
          * this is not a reflector boundary of the base orbifold).
-         * @param reflectors the number of untwisted reflector boundary
+         * \param reflectors the number of untwisted reflector boundary
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a punctures.
-         * @param reflectorsTwisted the number of twisted reflector boundary
+         * \param reflectorsTwisted the number of twisted reflector boundary
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
@@ -376,13 +397,13 @@ class SFSpace : public Manifold {
          *
          * The space that was passed will no longer be usable.
          *
-         * @return a reference to this space.
+         * \return a reference to this space.
          */
         SFSpace& operator = (SFSpace&&) noexcept = default;
         /**
          * Swaps the contents of this and the given Seifert fibred space.
          *
-         * @param other the space whose contents should be swapped with this.
+         * \param other the space whose contents should be swapped with this.
          */
         void swap(SFSpace& other) noexcept;
 
@@ -399,7 +420,7 @@ class SFSpace : public Manifold {
          * For more information on the eleven predefined classes, see the
          * SFSpace class notes or the ClassType enumeration notes.
          *
-         * @return the particular class to which this space belongs.
+         * \return the particular class to which this space belongs.
          */
         ClassType baseClass() const;
         /**
@@ -412,7 +433,7 @@ class SFSpace : public Manifold {
          * base surface is formed from.  In particular, if the base
          * surface is non-orientable then this is the non-orientable genus.
          *
-         * @return the genus of the base orbifold.
+         * \return the genus of the base orbifold.
          */
         unsigned long baseGenus() const;
         /**
@@ -423,14 +444,14 @@ class SFSpace : public Manifold {
          * The orientability of the base surface can be (indirectly)
          * modified by calling addCrosscap().
          *
-         * @return \c true if and only if the base surface is orientable.
+         * \return \c true if and only if the base surface is orientable.
          */
         bool baseOrientable() const;
         /**
          * Returns whether or not this space contains any fibre-reversing
          * paths.
          *
-         * @return \c true if and only if a fibre-reversing path exists.
+         * \return \c true if and only if a fibre-reversing path exists.
          */
         bool fibreReversing() const;
         /**
@@ -450,7 +471,7 @@ class SFSpace : public Manifold {
          * overall 3-manifold non-orientable, have no bearing on the
          * outcome of this routine.
          *
-         * @return \c true if and only an exceptional fibre can be
+         * \return \c true if and only an exceptional fibre can be
          * reflected as described above.
          */
         bool fibreNegating() const;
@@ -460,7 +481,7 @@ class SFSpace : public Manifold {
          * torus or Klein bottle boundary components in the overall
          * 3-manifold.
          *
-         * Note that reflector boundaries on the base orbifold are \e not
+         * Note that reflector boundaries on the base orbifold are _not_
          * counted here; only the ordinary boundary components that give rise
          * to real 3-manifold boundaries are included.
          *
@@ -468,7 +489,7 @@ class SFSpace : public Manifold {
          * and Klein bottle boundaries respectively in the 3-manifold)
          * are counted by this routine.
          *
-         * @return the total number of punctures.
+         * \return the total number of punctures.
          */
         unsigned long punctures() const;
         /**
@@ -482,15 +503,15 @@ class SFSpace : public Manifold {
          * (which give rise to torus boundaries).
          *
          * Either way, reflector boundaries on the base orbifold are
-         * \e not counted here; only ordinary boundary components that
+         * _not_ counted here; only ordinary boundary components that
          * give rise to real 3-manifold boundaries are considered.
          *
-         * @param twisted \c true if only twisted punctures should be
+         * \param twisted \c true if only twisted punctures should be
          * counted (those that give fibre-reversing paths and Klein
          * bottle boundaries), or \c false if only untwisted punctures
          * should be counted (those that are fibre-preserving and give
          * torus boundaries).
-         * @return the number of punctures of the given type.
+         * \return the number of punctures of the given type.
          */
         unsigned long punctures(bool twisted) const;
         /**
@@ -498,7 +519,7 @@ class SFSpace : public Manifold {
          * base orbifold.  This includes both twisted and untwisted
          * reflector boundaries.
          *
-         * @return the total number of reflector boundary components.
+         * \return the total number of reflector boundary components.
          */
         unsigned long reflectors() const;
         /**
@@ -506,10 +527,10 @@ class SFSpace : public Manifold {
          * given type in the base orbifold.  This either counts only twisted
          * reflector boundaries, or only untwisted reflector boundaries.
          *
-         * @param twisted \c true if only twisted reflector boundaries
+         * \param twisted \c true if only twisted reflector boundaries
          * should be counted (those that give fibre-reversing paths), or
          * \c false if only untwisted reflector boundaries should be counted.
-         * @return the number of reflector boundaries of the given type.
+         * \return the number of reflector boundaries of the given type.
          */
         unsigned long reflectors(bool twisted) const;
 
@@ -520,7 +541,7 @@ class SFSpace : public Manifold {
          * Note that the obstruction parameter \a b is not included in
          * this count.  That is, any (1,k) fibres are ignored.
          *
-         * @return the number of exceptional fibres.
+         * \return the number of exceptional fibres.
          */
         unsigned long fibreCount() const;
         /**
@@ -531,9 +552,9 @@ class SFSpace : public Manifold {
          * \warning This routine takes linear time (specifically,
          * linear in the argument \a which).
          *
-         * @param which determines which fibre to return; this must be between
+         * \param which determines which fibre to return; this must be between
          * 0 and getFibreCount()-1 inclusive.
-         * @return the requested fibre.
+         * \return the requested fibre.
          */
         SFSFibre fibre(unsigned long which) const;
 
@@ -545,10 +566,10 @@ class SFSpace : public Manifold {
          * additional (1,\a b) fibre.  It can be modified by calling
          * insertFibre() with a value of \a alpha = 1.  It will also be
          * modified whenever insertFibre() is called with \a beta out of
-         * range (\a beta < 0 or \a beta >= \a alpha), since each exceptional
-         * fibre must be stored in standard form (0 <= \a beta < \a alpha).
+         * range (\a beta < 0 or \a beta ≥ \a alpha), since each exceptional
+         * fibre must be stored in standard form (0 ≤ \a beta < \a alpha).
          *
-         * @return the obstruction constant \a b.
+         * \return the obstruction constant \a b.
          */
         long obstruction() const;
 
@@ -566,7 +587,7 @@ class SFSpace : public Manifold {
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
-         * @param fibreReversing \c true if one or both generators of
+         * \param fibreReversing \c true if one or both generators of
          * the new handle should give fibre-reversing curves in the
          * overall 3-manifold, or \c false (the default) if both
          * generators should preserve the directions of the fibres.
@@ -586,7 +607,7 @@ class SFSpace : public Manifold {
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
-         * @param fibreReversing \c true if the generator of the new
+         * \param fibreReversing \c true if the generator of the new
          * crosscap should give a fibre-reversing curve in the
          * overall 3-manifold, or \c false (the default) if it should
          * preserve the directions of the fibres.
@@ -604,10 +625,10 @@ class SFSpace : public Manifold {
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
-         * @param twisted \c true if the new punctures should be twisted
+         * \param twisted \c true if the new punctures should be twisted
          * (i.e., their boundaries should be fibre-reversing), or \c false
          * if the new punctures should be untwisted.
-         * @param nPunctures the number of new punctures to insert.
+         * \param nPunctures the number of new punctures to insert.
          */
         void addPuncture(bool twisted = false, unsigned long nPunctures = 1);
         /**
@@ -626,10 +647,10 @@ class SFSpace : public Manifold {
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
-         * @param twisted \c true if the new reflector boundaries should be
+         * \param twisted \c true if the new reflector boundaries should be
          * twisted (i.e., the boundaries should be fibre-reversing), or
          * \c false if the new reflector boundaries should be untwisted.
-         * @param nReflectors the number of new reflector boundaries to add.
+         * \param nReflectors the number of new reflector boundaries to add.
          */
         void addReflector(bool twisted = false, unsigned long nReflectors = 1);
 
@@ -643,13 +664,13 @@ class SFSpace : public Manifold {
          *
          * Note that there is no restriction on the range of the second
          * parameter \a beta.  If it is out of the usual range
-         * 0 <= \a beta < \a alpha, it will be pulled back into this
+         * 0 ≤ \a beta < \a alpha, it will be pulled back into this
          * range and the excess will be pushed into the obstruction
          * constant \a b.
          *
          * \exception InvalidArgument \a alpha is zero.
          *
-         * @param fibre the fibre to insert.  The first parameter of
+         * \param fibre the fibre to insert.  The first parameter of
          * this fibre (i.e., its index) must be strictly positive, and
          * the two parameters of this fibre must be coprime.
          */
@@ -665,15 +686,15 @@ class SFSpace : public Manifold {
          *
          * Note that there is no restriction on the range of the second
          * parameter \a beta.  If it is out of the usual range
-         * 0 <= \a beta < \a alpha, it will be pulled back into this
+         * 0 ≤ \a beta < \a alpha, it will be pulled back into this
          * range and the excess will be pushed into the obstruction
          * constant \a b.
          *
          * \exception InvalidArgument \a alpha is zero.
          *
-         * @param alpha the first parameter (i.e., the index) of the
+         * \param alpha the first parameter (i.e., the index) of the
          * fibre to insert; this must be strictly positive.
-         * @param beta the second parameter of the fibre to insert; this
+         * \param beta the second parameter of the fibre to insert; this
          * must have no common factors with the first parameter \a alpha.
          */
         void insertFibre(long alpha, long beta);
@@ -683,14 +704,14 @@ class SFSpace : public Manifold {
          * exceptional fibres and the obstruction constant \a b will be
          * negated.  Note that the obstruction constant will generally
          * undergo further change as the exceptional fibres are
-         * standardised into the usual 0 <= \a beta < \a alpha form.
+         * standardised into the usual 0 ≤ \a beta < \a alpha form.
          *
          * This routine will not change the curves made by the fibres
          * and the base orbifold on any boundary components (i.e.,
          * boundaries caused by punctures in the base orbifold), with
          * the exception that each base curve will be reflected.
          *
-         * \warning The space is \e not reduced after reflecting.
+         * \warning The space is _not_ reduced after reflecting.
          * It may be that the space can be further simplified
          * (especially in the case of non-orientable manifolds).
          */
@@ -721,7 +742,7 @@ class SFSpace : public Manifold {
          * subsequent modifications (such as inserting additional fibres
          * or altering the base orbifold) may give unexpected results.
          *
-         * @param mayReflect \c true if we are allowed to take a mirror
+         * \param mayReflect \c true if we are allowed to take a mirror
          * image of the entire 3-manifold, or \c false if we are not.
          */
         void reduce(bool mayReflect = true);
@@ -729,8 +750,8 @@ class SFSpace : public Manifold {
         /**
          * Determines if this Seifert fibred space is a Lens space.
          *
-         * @return a structure containing the details of this Lens
-         * space, or no value if this is not a Lens space.
+         * \return a structure containing the details of this Lens
+         * space, or \nullopt if this is not a Lens space.
          */
         std::optional<LensSpace> isLensSpace() const;
 
@@ -738,15 +759,15 @@ class SFSpace : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same Seifert fibred space.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the precise details of
          * the base orbifold and the exact parameters of the exceptional fibres,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same Seifert fibred
          * space, they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same Seifert fibred space.
          */
         bool operator == (const SFSpace& compare) const;
@@ -755,15 +776,15 @@ class SFSpace : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same Seifert fibred space.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the precise details of
          * the base orbifold and the exact parameters of the exceptional fibres,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same Seifert fibred
          * space, they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same Seifert fibred space.
          */
         bool operator != (const SFSpace& compare) const;
@@ -782,8 +803,8 @@ class SFSpace : public Manifold {
          * All that this routine really offers is a well-defined way of
          * ordering Seifert fibred space representations.
          *
-         * @param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the given
+         * \param compare the representation with which this will be compared.
+         * \return \c true if and only if this is "smaller" than the given
          * Seifert fibred space representation.
          */
         bool operator < (const SFSpace& compare) const;
@@ -808,7 +829,7 @@ class SFSpace : public Manifold {
          * \pre The fibre at the given iterator satisfies
          * \a beta * 2 > \a alpha.
          *
-         * @return the iterator that was immediately after the given
+         * \return the iterator that was immediately after the given
          * iterator before this routine was called.  Note that the given
          * iterator will be invalidated.
          */
@@ -827,10 +848,10 @@ class SFSpace : public Manifold {
          * Writes the base orbifold to the given output stream in either
          * TeX or plain format.
          *
-         * @param out the output stream to which to write.
-         * @param tex \c true if we are writing in TeX format, or
+         * \param out the output stream to which to write.
+         * \param tex \c true if we are writing in TeX format, or
          * \c false if we are writing in plain text format.
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonBase(std::ostream& out, bool tex) const;
 
@@ -839,10 +860,10 @@ class SFSpace : public Manifold {
          * and plain formats.  This is so that both writeName() and
          * writeTeXName() can call upon it if required.
          *
-         * @param out the output stream to which to write.
-         * @param tex \c true if we are writing in TeX format, or
+         * \param out the output stream to which to write.
+         * \param tex \c true if we are writing in TeX format, or
          * \c false if we are writing in plain text format.
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonStructure(std::ostream& out, bool tex) const;
 
@@ -851,10 +872,10 @@ class SFSpace : public Manifold {
          * writeTeXName().  These routines are implemented together in
          * writeCommonName() since they share a common internal structure.
          *
-         * @param out the output stream to which to write.
-         * @param tex \c true if we are handling writeTeXName(), or
+         * \param out the output stream to which to write.
+         * \param tex \c true if we are handling writeTeXName(), or
          * \c false if we are handling writeName().
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
@@ -865,8 +886,8 @@ class SFSpace : public Manifold {
  * This global routine simply calls SFSpace::swap(); it is provided so
  * that SFSpace meets the C++ Swappable requirements.
  *
- * @param a the first space whose contents should be swapped.
- * @param b the second space whose contents should be swapped.
+ * \param a the first space whose contents should be swapped.
+ * \param b the second space whose contents should be swapped.
  *
  * \ingroup manifold
  */

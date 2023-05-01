@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,6 +37,7 @@
 #include <type_traits>
 #include <sstream>
 #include "core/output.h"
+#include "../docstrings/core/output.h"
 
 namespace regina::python {
 
@@ -89,7 +90,7 @@ enum ReprStyle {
  * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output(c, style)</t>, where \a c is the
+ * `regina::python::add_output(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  *
  * The wrapped class \a T should either derive from regina::Output, or
@@ -106,11 +107,14 @@ void add_output(pybind11::class_<C, options...>& c,
         typename regina::OutputBase<C>::type>;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str));
-    c.def("utf8", OutputFunctionType(&BaseType::utf8));
-    c.def("detail", OutputFunctionType(&BaseType::detail));
+    c.def("str", static_cast<OutputFunctionType>(&BaseType::str),
+        doc::Output_::str);
+    c.def("utf8", static_cast<OutputFunctionType>(&BaseType::utf8),
+        doc::Output_::utf8);
+    c.def("detail", static_cast<OutputFunctionType>(&BaseType::detail),
+        doc::Output_::detail);
 
-    c.def("__str__", OutputFunctionType(&BaseType::str));
+    c.def("__str__", static_cast<OutputFunctionType>(&BaseType::str));
 
     switch (style) {
         case PYTHON_REPR_DETAILED:
@@ -118,7 +122,7 @@ void add_output(pybind11::class_<C, options...>& c,
                 std::ostringstream s;
                 s << "<regina.";
                 s << pybind11::str(pybind11::type::handle_of<C>().attr(
-                        "__name__")).cast<std::string_view>() << ": ";
+                        "__qualname__")).cast<std::string_view>() << ": ";
                 c.writeTextShort(s);
                 s << '>';
                 return s.str();
@@ -126,7 +130,7 @@ void add_output(pybind11::class_<C, options...>& c,
             break;
 
         case PYTHON_REPR_SLIM:
-            c.def("__repr__", OutputFunctionType(&BaseType::str));
+            c.def("__repr__", static_cast<OutputFunctionType>(&BaseType::str));
             break;
 
         case PYTHON_REPR_NONE:
@@ -143,22 +147,23 @@ void add_output(pybind11::class_<C, options...>& c,
  * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_basic(c, style)</t>, where \a c is the
- * pybind11::class_ object that wraps \a T.
+ * `regina::python::add_output_basic(c, doc, style)`, where \a c is the
+ * pybind11::class_ object that wraps \a T and \a doc is the Python docstring
+ * for str().
  *
  * It is assumed that the wrapped class \a T does not derive from
  * regina::Output (otherwise you should use add_output, not add_output_basic).
  * Instead we simply assume that \a T provides a function of the form
- * <tt>std::string T::str() const</tt>.
+ * `std::string T::str() const`.
  */
 template <class C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
-        ReprStyle style = PYTHON_REPR_DETAILED) {
+        const char* doc, ReprStyle style = PYTHON_REPR_DETAILED) {
     using BaseType = typename regina::OutputBase<C>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str));
-    c.def("__str__", OutputFunctionType(&BaseType::str));
+    c.def("str", static_cast<OutputFunctionType>(&BaseType::str), doc);
+    c.def("__str__", static_cast<OutputFunctionType>(&BaseType::str));
 
     switch (style) {
         case PYTHON_REPR_DETAILED:
@@ -166,14 +171,14 @@ void add_output_basic(pybind11::class_<C, options...>& c,
                 std::ostringstream s;
                 s << "<regina."
                     << pybind11::str(pybind11::type::handle_of<C>().attr(
-                        "__name__")).cast<std::string_view>()
+                        "__qualname__")).cast<std::string_view>()
                     << ": " << c.str() << '>';
                 return s.str();
             });
             break;
 
         case PYTHON_REPR_SLIM:
-            c.def("__repr__", OutputFunctionType(&BaseType::str));
+            c.def("__repr__", static_cast<OutputFunctionType>(&BaseType::str));
             break;
 
         case PYTHON_REPR_NONE:
@@ -190,7 +195,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  * a \a __repr__ function, using the given output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_ostream(c, style)</t>, where \a c is the
+ * `regina::python::add_output_ostream(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  *
  * It is assumed that the wrapped class \a T does not derive from regina::Output
@@ -215,7 +220,7 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
                 std::ostringstream s;
                 s << "<regina."
                     << pybind11::str(pybind11::type::handle_of<C>().attr(
-                        "__name__")).cast<std::string_view>()
+                        "__qualname__")).cast<std::string_view>()
                     << ": " << c << '>';
                 return s.str();
             });
@@ -236,14 +241,14 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
  * This will add a function \a __str__ to the python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
  * which must be a callable object (typically a lambda) that can be called
- * with arguments of the form <tt>outputFunction(const C&, std::ostream&)</tt>.
+ * with arguments of the form `outputFunction(const C&, std::ostream&)`.
  *
  * This will also add a \a __repr__ function.  There is no choice of output
  * style: if you use add_output_custom() then the output style will always be
  * PYTHON_REPR_DETAILED.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_custom(c, style)</t>, where \a c is the
+ * `regina::python::add_output_custom(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
 template <class C, typename Function, typename... options>
@@ -262,11 +267,42 @@ void add_output_custom(pybind11::class_<C, options...>& c,
         std::ostringstream s;
         s << "<regina."
             << pybind11::str(pybind11::type::handle_of<C>().attr(
-                "__name__")).cast<std::string_view>() << ": ";
+                "__qualname__")).cast<std::string_view>() << ": ";
         outputFunction(c, s);
         s << '>';
         return s.str();
     });
+}
+
+/**
+ * Casts the given C++ object to Python and writes its __repr__ to
+ * the given C++ output stream.
+ *
+ * It is assumed that this process will succeed.  That is, we assume that
+ * type \a T either maps to one of the standard Python types (e.g., is
+ * \c int or std::string), or else is wrapped (or will be wrapped) in Python,
+ * with an appropriate __repr__ function.  If this assumption fails,
+ * then this routine will almost certainly throw an exception.
+ */
+template <typename T>
+void writeRepr(std::ostream& out, const T& obj) {
+    out << static_cast<std::string>(pybind11::str(
+        pybind11::cast(obj).attr("__repr__")()));
+}
+
+/**
+ * Casts the given C++ object to Python and writes its __str__ to
+ * the given C++ output stream.
+ *
+ * It is assumed that this process will succeed.  That is, we assume that
+ * type \a T either maps to one of the standard Python types (e.g., is
+ * \c int or std::string), or else is wrapped (or will be wrapped) in Python,
+ * with an appropriate __str__ function.  If this assumption fails,
+ * then this routine will almost certainly throw an exception.
+ */
+template <typename T>
+void writeStr(std::ostream& out, const T& obj) {
+    out << static_cast<std::string>(pybind11::str(pybind11::cast(obj)));
 }
 
 } // namespace regina::python

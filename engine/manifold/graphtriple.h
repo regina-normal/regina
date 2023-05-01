@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,8 +76,8 @@ namespace regina {
  * 2-by-2 matrix.  This matrix expresses the locations of the fibres and
  * base orbifold of the corresponding end space in terms of the central
  * space.
- * <b>Note that these are not the same matrices that appear in the
- * manifold name in the census data files!</b>  See the warning below.
+ * **Note that these are not the same matrices that appear in the
+ * manifold name in the census data files!**  See the warning below.
  *
  * More specifically, consider the matrix \a M that describes the
  * joining of the central space and the first end space (marked above as
@@ -121,7 +121,7 @@ namespace regina {
  * GraphTriple still requires a non-trivial (but constant sized) amount of data
  * to be copied even in a move operation.
  *
- * \warning The 2-by-2 matrices used in this class are \e not the same
+ * \warning The 2-by-2 matrices used in this class are _not_ the same
  * matrices that appear in the manifold name returned by name()
  * and texName() and seen in the census data files.  The matrices
  * used in this class work from the inside out, describing the boundary torus
@@ -130,7 +130,7 @@ namespace regina {
  * diagram above, describing a boundary torus on the central space or
  * rightmost end space in terms of a boundary torus on the leftmost end
  * space or central space respectively.  The upshot of all this is that
- * <b>the first matrix becomes inverted</b> (and the second matrix
+ * **the first matrix becomes inverted** (and the second matrix
  * remains unchanged).  It is likely that future versions of Regina will
  * replace this class with a more general class that (amongst other
  * things) removes this inconsistency.
@@ -164,18 +164,18 @@ class GraphTriple : public Manifold {
          *
          * \pre Each of the given matrices has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the spaces \a end0 and \a end1
+         * \exception InvalidArgument One of the spaces \a end0 and \a end1
          * does not have precisely one torus boundary corresponding to a
          * single untwisted puncture in its base orbifold, and/or the space
          * \a centre does not have precisely two disjoint torus boundaries
          * corresponding to two untwisted punctures in its base orbifold.
          *
-         * @param end0 the first end space, as described in the class notes.
-         * @param centre the central space, as described in the class notes.
-         * @param end1 the second end space, as described in the class notes.
-         * @param matchingReln0 the 2-by-2 matching matrix that
+         * \param end0 the first end space, as described in the class notes.
+         * \param centre the central space, as described in the class notes.
+         * \param end1 the second end space, as described in the class notes.
+         * \param matchingReln0 the 2-by-2 matching matrix that
          * specifies how spaces \a end0 and \a centre are joined.
-         * @param matchingReln1 the 2-by-2 matching matrix that
+         * \param matchingReln1 the 2-by-2 matching matrix that
          * specifies how spaces \a end1 and \a centre are joined.
          */
         GraphTriple(const SFSpace& end0, const SFSpace& centre,
@@ -191,18 +191,18 @@ class GraphTriple : public Manifold {
          *
          * \pre Each of the given matrices has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the spaces \a end0 and \a end1
+         * \exception InvalidArgument One of the spaces \a end0 and \a end1
          * does not have precisely one torus boundary corresponding to a
          * single untwisted puncture in its base orbifold, and/or the space
          * \a centre does not have precisely two disjoint torus boundaries
          * corresponding to two untwisted punctures in its base orbifold.
          *
-         * @param end0 the first end space, as described in the class notes.
-         * @param centre the central space, as described in the class notes.
-         * @param end1 the second end space, as described in the class notes.
-         * @param matchingReln0 the 2-by-2 matching matrix that
+         * \param end0 the first end space, as described in the class notes.
+         * \param centre the central space, as described in the class notes.
+         * \param end1 the second end space, as described in the class notes.
+         * \param matchingReln0 the 2-by-2 matching matrix that
          * specifies how spaces \a end0 and \a centre are joined.
-         * @param matchingReln1 the 2-by-2 matching matrix that
+         * \param matchingReln1 the 2-by-2 matching matrix that
          * specifies how spaces \a end1 and \a centre are joined.
          */
         GraphTriple(SFSpace&& end0, SFSpace&& centre, SFSpace&& end1,
@@ -225,9 +225,9 @@ class GraphTriple : public Manifold {
          * component, to be joined to the central space.  See the class
          * notes for further discussion.
          *
-         * @param which 0 if the first end space is to be returned, or
+         * \param which 0 if the first end space is to be returned, or
          * 1 if the second end space is to be returned.
-         * @return a reference to the requested Seifert fibred space.
+         * \return a reference to the requested Seifert fibred space.
          */
         const SFSpace& end(unsigned which) const;
         /**
@@ -236,7 +236,7 @@ class GraphTriple : public Manifold {
          * to which the two end spaces are joined.  See the class notes
          * for further discussion.
          *
-         * @return a reference to the requested Seifert fibred space.
+         * \return a reference to the requested Seifert fibred space.
          */
         const SFSpace& centre() const;
         /**
@@ -252,9 +252,9 @@ class GraphTriple : public Manifold {
          * between the central space and the second end space
          * (corresponding to matrix \a M' in the class notes).
          *
-         * @param which indicates which particular join should be
+         * \param which indicates which particular join should be
          * examined; this should be 0 or 1 as described above.
-         * @return a reference to the requested matching matrix.
+         * \return a reference to the requested matching matrix.
          */
         const Matrix2& matchingReln(unsigned which) const;
 
@@ -272,8 +272,8 @@ class GraphTriple : public Manifold {
          * All that this routine really offers is a well-defined way of
          * ordering graph manifold representations.
          *
-         * @param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \param compare the representation with which this will be compared.
+         * \return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
         bool operator < (const GraphTriple& compare) const;
@@ -281,7 +281,7 @@ class GraphTriple : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphTriple& operator = (const GraphTriple&) = default;
         /**
@@ -290,14 +290,14 @@ class GraphTriple : public Manifold {
          *
          * The graph manifold that was passed will no longer be usable.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphTriple& operator = (GraphTriple&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given graph manifold.
          *
-         * @param other the graph manifold whose contents should be swapped
+         * \param other the graph manifold whose contents should be swapped
          * with this.
          */
         void swap(GraphTriple& other) noexcept;
@@ -306,15 +306,15 @@ class GraphTriple : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrices
          * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
         bool operator == (const GraphTriple& compare) const;
@@ -323,15 +323,15 @@ class GraphTriple : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrices
          * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
         bool operator != (const GraphTriple& compare) const;
@@ -348,7 +348,7 @@ class GraphTriple : public Manifold {
          *
          * This should be called from every class constructor.
          *
-         * \exception InvalidArgument the preconditions were not met.
+         * \exception InvalidArgument The preconditions were not met.
          */
         void verifySFS();
 
@@ -364,8 +364,8 @@ class GraphTriple : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln0 the first matching matrix in the pair to simplify.
-         * @param reln1 the second matching matrix in the pair to simplify.
+         * \param reln0 the first matching matrix in the pair to simplify.
+         * \param reln1 the second matching matrix in the pair to simplify.
          */
         static void reduceBasis(Matrix2& reln0, Matrix2& reln1);
 
@@ -375,7 +375,7 @@ class GraphTriple : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln the matching matrix to simplify.
+         * \param reln the matching matrix to simplify.
          */
         static void reduceSign(Matrix2& reln);
 };
@@ -386,8 +386,8 @@ class GraphTriple : public Manifold {
  * This global routine simply calls GraphTriple::swap(); it is provided so
  * that GraphTriple meets the C++ Swappable requirements.
  *
- * @param a the first graph manifold whose contents should be swapped.
- * @param b the second graph manifold whose contents should be swapped.
+ * \param a the first graph manifold whose contents should be swapped.
+ * \param b the second graph manifold whose contents should be swapped.
  *
  * \ingroup manifold
  */

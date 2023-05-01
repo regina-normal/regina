@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,7 +72,7 @@ class HyperModel : public QAbstractItemModel {
         /**
          * Data retrieval.
          */
-        regina::NormalHypersurfaces* surfaces() const;
+        regina::NormalHypersurfaces& surfaces() const;
         regina::HyperCoords coordSystem() const;
 
         /**
@@ -182,8 +182,8 @@ inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces) :
         surfaces_(surfaces), coordSystem_(surfaces->coords()) {
 }
 
-inline regina::NormalHypersurfaces* HyperModel::surfaces() const {
-    return surfaces_;
+inline regina::NormalHypersurfaces& HyperModel::surfaces() const {
+    return *surfaces_;
 }
 
 inline regina::HyperCoords HyperModel::coordSystem() const {

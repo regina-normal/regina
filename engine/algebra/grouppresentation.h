@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,10 +82,10 @@ struct GroupExpressionTerm {
     /**
      * Creates a new term initialised to the given value.
      *
-     * @param newGen the number that identifies the generator in the new term.
-     * @param newExp the exponent to which this generator is raised.
+     * \param gen the number that identifies the generator in the new term.
+     * \param exp the exponent to which this generator is raised.
      */
-    GroupExpressionTerm(unsigned long newGen, long newExp);
+    GroupExpressionTerm(unsigned long gen, long exp);
     /**
      * Creates a new term initialised to the given value.
      */
@@ -94,22 +94,22 @@ struct GroupExpressionTerm {
     /**
      * Makes this term identical to the given term.
      *
-     * @return a reference to this term.
+     * \return a reference to this term.
      */
     GroupExpressionTerm& operator = (const GroupExpressionTerm&) = default;
     /**
      * Determines whether this and the given term contain identical data.
      *
-     * @param other the term with which this term will be compared.
-     * @return \c true if and only if this and the given term have both the
+     * \param other the term with which this term will be compared.
+     * \return \c true if and only if this and the given term have both the
      * same generator and exponent.
      */
     bool operator == (const GroupExpressionTerm& other) const;
     /**
      * Determines whether this and the given term do not contain identical data.
      *
-     * @param other the term with which this term will be compared.
-     * @return \c true if and only if this and the given term do not have
+     * \param other the term with which this term will be compared.
+     * \return \c true if and only if this and the given term do not have
      * both the same generator and exponent.
      */
     bool operator != (const GroupExpressionTerm& other) const;
@@ -118,8 +118,8 @@ struct GroupExpressionTerm {
      * Imposes an ordering on terms.
      * Terms are ordered lexigraphically as (generator, exponent) pairs.
      *
-     * @param other the term to compare with this.
-     * @return true if and only if this term is lexicographically
+     * \param other the term to compare with this.
+     * \return true if and only if this term is lexicographically
      * smaller than \a other.
      */
     bool operator < (const GroupExpressionTerm& other) const;
@@ -130,7 +130,7 @@ struct GroupExpressionTerm {
      *
      * Note that this term will remain unchanged.
      *
-     * @return the inverse of this term.
+     * \return the inverse of this term.
      */
     GroupExpressionTerm inverse() const;
 
@@ -143,8 +143,8 @@ struct GroupExpressionTerm {
      * Note that this term might be changed but the given term will remain
      * unchanged.
      *
-     * @param other the term to merge with this term.
-     * @return \c true if the two terms were merged into this term, or
+     * \param other the term to merge with this term.
+     * \return \c true if the two terms were merged into this term, or
      * \c false if the two terms have different generators.
      */
     bool operator += (const GroupExpressionTerm& other);
@@ -152,15 +152,18 @@ struct GroupExpressionTerm {
 
 /**
  * Writes the given term to the given output stream.
- * The term will be written in the format <tt>g3^-7</tt>, where in this
+ * The term will be written in the format `g3^-7`, where in this
  * example the term represents generator number 3 raised to the -7th power.
+ *
+ * Note that generators are indexed start from 0 (so `g3` is in fact the
+ * _fourth_ generator in the group presentation, not the third).
  *
  * If the term has exponent 0 or 1, the output format will be
  * appropriately simplified.
  *
- * @param out the output stream to which to write.
- * @param term the term to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param term the term to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup algebra
  */
@@ -172,8 +175,11 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  * of powers of generators all of which are multiplied in order.  Each power
  * of a generator corresponds to an individual GroupExpressionTerm.
  *
- * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains the
- * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that order.
+ * For instance, the expression `g1^2 g3^-1 g6` contains the
+ * three terms `g1^2`, `g3^-1` and `g6^1` in that order.
+ *
+ * Note that generators are indexed starting from 0 (so, for example, `g3`
+ * represents the _fourth_ generator in the group presentation, not the third).
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -194,14 +200,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Creates a new expression containing a single term.
          *
-         * @param term the term to use as the new expression.
+         * \param term the term to use as the new expression.
          */
         GroupExpression(const GroupExpressionTerm& term);
         /**
          * Creates a new expression containing a single term.
          *
-         * @param generator the number of the generator to use in the term.
-         * @param exponent the exponent to which the given generator is
+         * \param generator the number of the generator to use in the term.
+         * \param exponent the exponent to which the given generator is
          * raised in the term.
          */
         GroupExpression(unsigned long generator, long exponent);
@@ -220,41 +226,67 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         *  - \c a^7b^-2
-         *  - \c aaaaaaaBB
-         *  - \c a^7B^2
-         *  - \c g0^7g1^-2
+         * - `a^7b^-2`
+         * - `aaaaaaaBB`
+         * - `a^7B^2`
+         * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
+         * The empty string will be treated as an expression with no terms.
          *
-         * \exception InvalidArgument the given string could not be
-         * interpreted as a group expression.
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
          *
-         * @param input the input string that is to be interpreted.
+         * If the optional argument \a nGens is passed and is positive, then
+         * this constructor will explicitly check that the given string only
+         * uses generators 0,...,(\a nGens-1).
+         *
+         * \exception InvalidArgument The given string could not be
+         * interpreted as a group expression, or else \a nGens was positive
+         * and the given string contains an out-of-range generator.
+         *
+         * \param input the input string that is to be interpreted.
+         * \param nGens the number of generators in the group presentation.
+         * If this is 0 (the default), then this argument will be ignored and
+         * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const char* input);
+        GroupExpression(const char* input, unsigned long nGens = 0);
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         *  - \c a^7b^-2
-         *  - \c aaaaaaaBB
-         *  - \c a^7B^2
-         *  - \c g0^7g1^-2
+         * - `a^7b^-2`
+         * - `aaaaaaaBB`
+         * - `a^7B^2`
+         * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
+         * The empty string will be treated as an expression with no terms.
          *
-         * \exception InvalidArgument the given string could not be
-         * interpreted as a group expression.
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
          *
-         * @param input the input string that is to be interpreted.
+         * If the optional argument \a nGens is passed and is positive, then
+         * this constructor will explicitly check that the given string only
+         * uses generators 0,...,(\a nGens-1).
+         *
+         * \exception InvalidArgument The given string could not be
+         * interpreted as a group expression, or else \a nGens was positive
+         * and the given string contains an out-of-range generator.
+         *
+         * \param input the input string that is to be interpreted.
+         * \param nGens the number of generators in the group presentation.
+         * If this is 0 (the default), then this argument will be ignored and
+         * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const std::string &input);
+        GroupExpression(const std::string &input, unsigned long nGens = 0);
 
         /**
          * Makes this expression a clone of the given expression.
          *
-         * @return a reference to this expression.
+         * \return a reference to this expression.
          */
         GroupExpression& operator = (const GroupExpression&) = default;
         /**
@@ -263,14 +295,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * The expression that was passed will no longer be usable.
          *
-         * @return a reference to this expression.
+         * \return a reference to this expression.
          */
         GroupExpression& operator = (GroupExpression&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given expression.
          *
-         * @param other the expression whose contents should be swapped with
+         * \param other the expression whose contents should be swapped with
          * this.
          */
         void swap(GroupExpression& other) noexcept;
@@ -279,8 +311,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Equality operator. Checks to see whether or not these two words
          * represent the same literal string.
          *
-         * @param comp the expression to compare against this.
-         * @return \c true if this and the given string literal are identical.
+         * \param comp the expression to compare against this.
+         * \return \c true if this and the given string literal are identical.
          */
         bool operator == (const GroupExpression& comp) const;
 
@@ -288,8 +320,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Inequality operator. Checks to see whether or not these two words
          * represent different literal strings.
          *
-         * @param comp the expression to compare against this.
-         * @return \c true if this and the given string literal are not
+         * \param comp the expression to compare against this.
+         * \return \c true if this and the given string literal are not
          * identical.
          */
         bool operator != (const GroupExpression& comp) const;
@@ -300,41 +332,41 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * modifications made to this list will show up in the
          * expression itself.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list
-         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
-         * <tt>g6^1</tt> in that order.
+         * For instance, the expression `g1^2 g3^-1 g6` has list
+         * consisting of three terms `g1^2`, `g3^-1` and
+         * `g6^1` in that order.
          *
-         * \ifacespython The list itself is not returned by reference
+         * \python The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
          * the terms within this list are still returned by reference
          * (i.e., you can use the elements of this list to modify each
          * term individually).
          *
-         * @return the list of terms.
+         * \return the list of terms.
          */
         std::list<GroupExpressionTerm>& terms();
         /**
          * Returns a constant reference to the list of terms in this
          * expression.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list
-         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
-         * <tt>g6^1</tt> in that order.
+         * For instance, the expression `g1^2 g3^-1 g6` has list
+         * consisting of three terms `g1^2`, `g3^-1` and
+         * `g6^1` in that order.
          *
-         * \ifacespython The list itself is not returned by reference
+         * \python The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
          * the terms within this list are still returned by reference.
          *
-         * @return the list of terms.
+         * \return the list of terms.
          */
         const std::list<GroupExpressionTerm>& terms() const;
         /**
          * Returns the number of terms in this expression.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three
+         * For instance, the expression `g1^2 g3^-1 g6` contains three
          * terms.  See also wordLength().
          *
-         * @return the number of terms.
+         * \return the number of terms.
          */
         size_t countTerms() const;
         /**
@@ -342,22 +374,22 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * with exponent +1 or -1 for which this word is expressable as a
          * product.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of
+         * For instance, the expression `g1^2 g3^-1 g6` is a word of
          * length four.  See also countTerms().
          *
          * No attempt is made to remove redundant terms (so the word
-         * <tt>g g^-1</tt> will count as length two).
+         * `g g^-1` will count as length two).
          *
-         * @return the length of the word.
+         * \return the length of the word.
          */
         size_t wordLength() const;
         /**
          * Tests whether this is the trivial (unit) word.
          *
          * No attempt is made to remove redundant terms (so the word
-         * <tt>g g^-1</tt> will be treated as non-trivial).
+         * `g g^-1` will be treated as non-trivial).
          *
-         * @return \c true if and only if this is the trivial word.
+         * \return \c true if and only if this is the trivial word.
          */
         bool isTrivial() const;
 
@@ -372,12 +404,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
-         * @return the requested term.
+         * \return the requested term.
          */
         GroupExpressionTerm& term(size_t index);
         /**
@@ -386,12 +418,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
-         * @return the requested term.
+         * \return the requested term.
          */
         const GroupExpressionTerm& term(size_t index) const;
         /**
@@ -400,12 +432,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
-         * @return the number of the requested generator.
+         * \return the number of the requested generator.
          */
         unsigned long generator(size_t index) const;
         /**
@@ -414,42 +446,42 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
-         * @return the requested exponent.
+         * \return the requested exponent.
          */
         long exponent(size_t index) const;
 
         /**
          * Adds the given term to the beginning of this expression.
          *
-         * @param term the term to add.
+         * \param term the term to add.
          */
         void addTermFirst(const GroupExpressionTerm& term);
         /**
          * Adds the given term to the beginning of this expression.
          *
-         * @param generator the number of the generator corresponding to
+         * \param generator the number of the generator corresponding to
          * the new term.
-         * @param exponent the exponent to which the given generator is
+         * \param exponent the exponent to which the given generator is
          * raised.
          */
         void addTermFirst(unsigned long generator, long exponent);
         /**
          * Adds the given term to the end of this expression.
          *
-         * @param term the term to add.
+         * \param term the term to add.
          */
         void addTermLast(const GroupExpressionTerm& term);
         /**
          * Adds the given term to the end of this expression.
          *
-         * @param generator the number of the generator corresponding to
+         * \param generator the number of the generator corresponding to
          * the new term.
-         * @param exponent the exponent to which the given generator is
+         * \param exponent the exponent to which the given generator is
          * raised.
          */
         void addTermLast(unsigned long generator, long exponent);
@@ -458,14 +490,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Multiplies this expression on the left by the given word.
          * This expression will be modified directly.
          *
-         * @param word the word to multiply with this expression.
+         * \param word the word to multiply with this expression.
          */
         void addTermsFirst(GroupExpression word);
         /**
          * Multiplies this expression on the right by the given word.
          * This expression will be modified directly.
          *
-         * @param word the word to multiply with this expression.
+         * \param word the word to multiply with this expression.
          */
         void addTermsLast(GroupExpression word);
 
@@ -474,9 +506,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * All other terms shift one step to the left.
          *
          * If the word is of the form
-         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * `g_i1^j1 g_i2^j2 ... g_in^jn`,
          * this converts it into the word
-         * <tt>g_i2^j2 ... g_in^jn g_i1^j1</tt>.
+         * `g_i2^j2 ... g_in^jn g_i1^j1`.
          */
         void cycleRight();
 
@@ -485,9 +517,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * All other terms shift one step to the right.
          *
          * If the word is of the form
-         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * `g_i1^j1 g_i2^j2 ... g_in^jn`,
          * this converts it into the word
-         * <tt>g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1</tt>.
+         * `g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1`.
          */
         void cycleLeft();
 
@@ -495,7 +527,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Returns the inverse of this expression.
          * The terms will be reversed and the exponents negated.
          *
-         * @return the inverse of this expression.
+         * \return the inverse of this expression.
          */
         GroupExpression inverse() const;
 
@@ -508,26 +540,26 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Returns this expression raised to the given power.
          * The given exponent may be positive, zero or negative.
          *
-         * @param exponent the power to which this expression should be raised.
-         * @return this expression raised to the given power.
+         * \param exponent the power to which this expression should be raised.
+         * \return this expression raised to the given power.
          */
         GroupExpression power(long exponent) const;
         /**
          * Simplifies this expression.
          * Adjacent powers of the same generator will be combined, and
          * terms with an exponent of zero will be removed.
-         * Note that it is \e not assumed that the underlying group is
+         * Note that it is _not_ assumed that the underlying group is
          * abelian.
          *
          * You may declare that the expression is cyclic, in which case
          * it is assumed that terms may be moved from the back to the
-         * front and vice versa.  Thus expression <tt>g1 g2 g1 g2 g1</tt>
-         * simplifies to <tt>g1^2 g2 g1 g2</tt> if it is cyclic, but does not
+         * front and vice versa.  Thus expression `g1 g2 g1 g2 g1`
+         * simplifies to `g1^2 g2 g1 g2` if it is cyclic, but does not
          * simplify at all if it is not cyclic.
          *
-         * @param cyclic \c true if and only if the expression may be
+         * \param cyclic \c true if and only if the expression may be
          * assumed to be cyclic.
-         * @return \c true if and only if this expression was changed.
+         * \return \c true if and only if this expression was changed.
          */
         bool simplify(bool cyclic = false);
         /**
@@ -539,12 +571,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \pre The given expansion is not the same GroupExpression
          * object as this.
          *
-         * @param generator the generator to be replaced.
-         * @param expansion the substitute expression that will replace
+         * \param generator the generator to be replaced.
+         * \param expansion the substitute expression that will replace
          * every occurrence of the given generator.
-         * @param cyclic \c true if and only if the expression may be
+         * \param cyclic \c true if and only if the expression may be
          * assumed to be cyclic; see simplify() for further details.
-         * @return \c true if and only if any substitutions were made.
+         * \return \c true if and only if any substitutions were made.
          */
         bool substitute(unsigned long generator,
             const GroupExpression& expansion, bool cyclic = false);
@@ -553,7 +585,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * corresponding substitute expression from the given map.
          *
          * Specifically, each generator \a i will be replaced with the
-         * expression <tt>expansions[i]</tt>.
+         * expression `expansions[i]`.
          *
          * The expression will be simplified once all substitutions are
          * complete.
@@ -565,12 +597,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * \pre The length of \a expansions is at least <i>g</i>+1,
          * where \a g is the largest generator that appears in this expression.
-         * In other words, <tt>expansions[i]</tt> exists for every generator
+         * In other words, `expansions[i]` exists for every generator
          * \a i that appears in this expression.
          *
-         * @param expansions the list of substitutes for all generators in
+         * \param expansions the list of substitutes for all generators in
          * this expression.
-         * @param cyclic \c true if and only if the expression may be
+         * \param cyclic \c true if and only if the expression may be
          * assumed to be cyclic; see simplify() for further details.
          */
         void substitute(const std::vector<GroupExpression>& expansions,
@@ -593,13 +625,13 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \pre If \a cyclic is \c true, then both this word and \a other
          * have been cyclically reduced.
          *
-         * \ifacespython Not present.
+         * \nopython
          *
-         * @param other the word to compare against this.
-         * @param cyclic if \c false we get a list of exact relabellings from
+         * \param other the word to compare against this.
+         * \param cyclic if \c false we get a list of exact relabellings from
          * this word to \a other.  If \c true, it can be up to cyclic
          * permutation and inversion.
-         * @return a list of permutations, implemented as maps from
+         * \return a list of permutations, implemented as maps from
          * generator indices of this word to generator indices of \a other.
          */
         std::list< std::map< unsigned long, GroupExpressionTerm > >
@@ -609,18 +641,19 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Writes a chunk of XML containing this expression.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
+         * \param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
 
         /**
          * Returns a TeX representation of this expression.
-         * See writeTeX() for details on how this is formed.
          *
-         * @return a TeX representation of this expression.
+         * The text representation will be of the form `g_2^4 g_{13}^{-5} g_4`.
+         *
+         * \return a TeX representation of this expression.
          */
         std::string tex() const;
 
@@ -628,13 +661,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Writes a TeX represesentation of this expression to the given
          * output stream.
          *
-         * The text representation will be of the form
-         * <tt>g_2^4 g_{13}^{-5} g_4</tt>.
+         * The text representation will be of the form `g_2^4 g_{13}^{-5} g_4`.
          *
-         * \ifacespython Not present; instead use the variant tex() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant tex() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTeX(std::ostream& out) const;
 
@@ -646,21 +678,25 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * a choice of either numbered generators or alphabetic generators.
          *
          * If \a alphaGen is \c false, the text representation will be of
-         * the form <tt>g2^4 g13^-5 g4</tt>.  If \a alphaGen is \c true,
+         * the form `g2^4 g13^-5 g4`.  If \a alphaGen is \c true,
          * this routine will assume your word is in an alphabet of no more
          * than 26 letters, and will format the word using lower-case ASCII,
-         * i.e., <tt>c^4 n^-5 e</tt>.
+         * i.e., `c^4 n^-5 e`.
          *
          * Note that there is also a zero-argument version of str(), inherited
          * through the ShortOutput base class.  This zero-argument str()
-         * gives the same output as <tt>str(false)</tt>.
+         * gives the same output as `str(false)`.
+         *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * @param alphaGen indicates whether to use numbered or
+         * \param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
-         * @return a short text representation of this group expression.
+         * \return a short text representation of this group expression.
          */
         std::string str(bool alphaGen) const;
 
@@ -675,14 +711,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * Note that there is also a zero-argument version of utf8(), inherited
          * through the ShortOutput base class.  This zero-argument utf8()
-         * gives the same output as <tt>utf8(false)</tt>.
+         * gives the same output as `utf8(false)`.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * @param alphaGen indicates whether to use numbered or
+         * \param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
-         * @return a short text representation of this group expression.
+         * \return a short text representation of this group expression.
          */
         std::string utf8(bool alphaGen) const;
 
@@ -692,22 +728,26 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * alphabetic generators.
          *
          * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>. If the \a alphaGen flag is \c true, it
+         * `g2^4 g13^-5 g4`. If the \a alphaGen flag is \c true, it
          * will assume your word is in an alphabet of no more than 26 letters,
          * and will write the word using lower-case ASCII, i.e.,
-         * <tt>c^4 n^-5 e</tt>.  If the \a utf8 flag is \c true, all exponents
+         * `c^4 n^-5 e`.  If the \a utf8 flag is \c true, all exponents
          * will be written using superscript characters encoded in UTF-8.
+         *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
-         * @param out the output stream to which to write.
-         * @param utf8 \c true if exponents should be written using
+         * \param out the output stream to which to write.
+         * \param utf8 \c true if exponents should be written using
          * unicode superscript characters, or \c false if they should be
          * written using a caret (^) symbol.
-         * @param alphaGen indicates whether to use numbered or
+         * \param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
@@ -720,8 +760,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
  * This global routine simply calls GroupExpression::swap(); it is provided
  * so that GroupExpression meets the C++ Swappable requirements.
  *
- * @param lhs the expression whose contents should be swapped with \a rhs.
- * @param rhs the expression whose contents should be swapped with \a lhs.
+ * \param lhs the expression whose contents should be swapped with \a rhs.
+ * \param rhs the expression whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */
@@ -764,7 +804,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Creates a clone of the given group presentation.
          *
-         * @param src the group presentation to clone.
+         * \param src the group presentation to clone.
          */
         GroupPresentation(const GroupPresentation& src) = default;
         /**
@@ -774,13 +814,13 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The group presentation that was passed (\a src) will no longer be
          * usable.
          *
-         * @param src the group presentation to move.
+         * \param src the group presentation to move.
          */
         GroupPresentation(GroupPresentation&& src) noexcept = default;
         /**
          * Creates the free group on the given number of generators.
          *
-         * @param nGenerators the number of generators.
+         * \param nGenerators the number of generators.
          */
         GroupPresentation(unsigned long nGenerators);
         /**
@@ -797,13 +837,14 @@ class GroupPresentation : public Output<GroupPresentation> {
          * If you wish to create a group presentation from a hard-coded list
          * of relations, you can use this constructor with an initialiser list,
          * via syntax of the form
-         * <tt>GroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
+         * `GroupPresentation(nGens, { "rel1", "rel2", ... })`.
          *
-         * \exception InvalidArgument one or more of the given strings
-         * could not be interpreted as a group expression.
+         * \exception InvalidArgument One or more of the given strings
+         * could not be interpreted as a group expression, and/or contains
+         * an out-of-range generator.
          *
-         * @param nGens the number of generators.
-         * @param rels a vector of relations each given in string form,
+         * \param nGens the number of generators.
+         * \param rels a vector of relations each given in string form,
          * as outlined above.
          */
         GroupPresentation(unsigned long nGens,
@@ -812,8 +853,8 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Sets this to be a clone of the given group presentation.
          *
-         * @param src the group presentation to copy.
-         * @return a reference to this group presentation.
+         * \param src the group presentation to copy.
+         * \return a reference to this group presentation.
          */
         GroupPresentation& operator = (const GroupPresentation& src) = default;
         /**
@@ -823,8 +864,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The group presentation that was passed (\a src) will no longer be
          * usable.
          *
-         * @param src the group presentation to move.
-         * @return a reference to this group presentation.
+         * \param src the group presentation to move.
+         * \return a reference to this group presentation.
          */
         GroupPresentation& operator = (GroupPresentation&& src) noexcept =
             default;
@@ -832,7 +873,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Swaps the contents of this and the given group presentation.
          *
-         * @param other the group presentation whose contents should be
+         * \param other the group presentation whose contents should be
          * swapped with this.
          */
         void swap(GroupPresentation& other) noexcept;
@@ -842,63 +883,62 @@ class GroupPresentation : public Output<GroupPresentation> {
          * If the new presentation has \a g generators, the new
          * generators will be numbered <i>g</i>-1, <i>g</i>-2 and so on.
          *
-         * @param numToAdd the number of generators to add.
-         * @return the number of generators in the new presentation.
+         * \param numToAdd the number of generators to add.
+         * \return the number of generators in the new presentation.
          */
         unsigned long addGenerator(unsigned long numToAdd = 1);
         /**
          * Adds the given relation to the group presentation.
-         * The relation must be of the form <tt>expression = 1</tt>.
+         * The relation must be of the form `expression = 1`.
          *
          * \warning This routine does not check whether or not your relation
          * is a word only in the generators of this group.  In other
          * words, it does not stop you from using generators beyond the
          * countGenerators() bound.
          *
-         * @param rel the expression that the relation sets to 1; for
-         * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
-         * parameter should be the expression <tt>g1^2 g2</tt>.
+         * \param rel the expression that the relation sets to 1; for
+         * instance, if the relation is `g1^2 g2 = 1` then this
+         * parameter should be the expression `g1^2 g2`.
          */
         void addRelation(GroupExpression rel);
 
         /**
          * Returns the number of generators in this group presentation.
          *
-         * @return the number of generators.
+         * \return the number of generators.
          */
         unsigned long countGenerators() const;
         /**
          * Returns the number of relations in this group presentation.
          *
-         * @return the number of relations.
+         * \return the number of relations.
          */
         size_t countRelations() const;
         /**
          * Returns the relation at the given index in this group
-         * presentation.  The relation will be of the form <tt>expresson
-         * = 1</tt>.
+         * presentation.  The relation will be of the form `expresson = 1`.
          *
-         * @param index the index of the desired relation; this must be
+         * \param index the index of the desired relation; this must be
          * between 0 and countRelations()-1 inclusive.
          *
-         * @return the expression that the requested relation sets to 1;
-         * for instance, if the relation is <tt>g1^2 g2 = 1</tt> then
-         * this will be the expression <tt>g1^2 g2</tt>.
+         * \return the expression that the requested relation sets to 1;
+         * for instance, if the relation is `g1^2 g2 = 1` then
+         * this will be the expression `g1^2 g2`.
          */
         const GroupExpression& relation(size_t index) const;
         /**
          * Returns the list of all relations in this group presentation.
          *
-         * \ifacespython This routine returns a python list of copied
+         * \python This routine returns a python list of copied
          * GroupExpression objects.  In particular, modifying this
          * list or the relations within it will not modify the group
          * presentation from which they came.
          *
-         * \ifacespython The list itself is not returned by reference
+         * \python The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
          * the relations within this list are still returned by reference.
          *
-         * @return the list of relations.
+         * \return the list of relations.
          */
         const std::vector<GroupExpression>& relations() const;
 
@@ -910,7 +950,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * This routine is intended only for sanity checking: you should
          * never have an invalid group presentation in the first place.
          *
-         * @return \c true if and only if all of the relations are words
+         * \return \c true if and only if all of the relations are words
          * in the generators.
          */
         bool isValid() const;
@@ -927,13 +967,18 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
+         *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
          * then mirror the behaviour of intelligentSimplify() from Regina 6.0
          * and earlier, when the return type was simply \c bool.
          *
-         * @return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
+         * \return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> intelligentSimplify();
@@ -953,6 +998,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
+         *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
          * then mirror the behaviour of smallCancellation() from Regina 6.0
@@ -962,34 +1012,44 @@ class GroupPresentation : public Output<GroupPresentation> {
          * recognition of utility of some score==0 moves, such as
          * commutators, for example.
          *
-         * @return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
+         * \return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> smallCancellation();
 
         /**
          * Uses small cancellation theory to reduce the input word,
-         * using the current presentation of the group.  The input word
-         * will be modified directly.
+         * modulo conjugation, using the current presentation of the group.
+         * The input word will be modified directly.
+         *
+         * By "modulo conjugation", we mean: if \a w represents the input word,
+         * then this routine might (as part of the reduction process) transform
+         * \a w into a different group element of the form `g w g^-1`.
+         *
+         * In Regina 7.2 and earlier, this routine was called simplifyWord().
+         * It was renamed to simplifyAndConjugate() in Regina 7.3 to make it
+         * clear to the user that conjugation might take place.  Note that,
+         * even in older versions of Regina, this routine could always
+         * potentially conjugate.
          *
          * \warning This routine is only as good as the relator table for the
          * group.  You might want to consider running intelligentSimplify(),
          * possibly in concert with proliferateRelators(), before using this
          * routine for any significant tasks.
          *
-         * @param input is the word you would like to simplify.
+         * \param word the word you would like to simplify (modulo conjugation).
          * This must be a word in the generators of this group.
-         * @return \c true if and only if the input word was modified.
+         * \return \c true if and only if the input word was modified.
          */
-        bool simplifyWord(GroupExpression &input) const;
+        bool simplifyAndConjugate(GroupExpression &word) const;
 
         /**
          * A routine to help escape local wells when simplifying
          * presentations, which may be useful when small cancellation theory
          * can't find the simplest relators.
          *
-         * Given a presentation &lt;g_i | r_i&gt;, this routine appends
+         * Given a presentation `<g_i | r_i>`, this routine appends
          * consequences of the relators {r_i} to the presentation that
          * are of the form ab, where both a and b are cyclic permutations
          * of relators from the collection {r_i}.
@@ -1007,7 +1067,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * exponential amount of memory (exponential in your presentation
          * size times n).  So do be careful when using it.
          *
-         * @param depth controls the depth of the proliferation, as
+         * \param depth controls the depth of the proliferation, as
          * described above; this must be strictly positive.
          */
         void proliferateRelators(unsigned long depth=1);
@@ -1031,14 +1091,14 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * Examples of the format of the returned string are:
          *
-         * - <tt>0</tt> for the trivial group;
-         * - <tt>Z_n</tt> for cyclic groups with \a n > 1;
-         * - <tt>Free(n)</tt> for free groups with \a n > 1 generators - see
+         * - `0` for the trivial group;
+         * - `Z_n` for cyclic groups with \a n > 1;
+         * - `Free(n)` for free groups with \a n > 1 generators - see
          *   AbelianGroup::str() for how abelian groups are presented;
-         * - <tt>FreeProduct(G1, G2, ... , Gk)</tt> for free products, where
+         * - `FreeProduct(G1, G2, ... , Gk)` for free products, where
          *   one replaces \a G1 through \a Gk by text strings representing the
          *   free summands;
-         * - <tt>Z~G w/ monodromy H</tt> for extensions over Z,
+         * - `Z~G w/ monodromy H` for extensions over Z,
          *   where \a G is a description of the kernel of the homomorphism
          *   to the integers, and \a H is a text string representing the
          *   monodromy - see HomMarkedAbelianGroup.str() for details on
@@ -1046,7 +1106,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \todo \featurelong Make this recognition more effective.
          *
-         * @return a simple string representation of the group if it is
+         * \return a simple string representation of the group if it is
          * recognised, or an empty string if the group is not
          * recognised.
          */
@@ -1055,10 +1115,10 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Writes a chunk of XML containing this group presentation.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
+         * \param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
 
@@ -1067,14 +1127,14 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Word lengths are computing using GroupExpression::wordLength().
          * Used as a coarse measure of the complexity of the presentation.
          *
-         * @return the sum of word lengths.
+         * \return the sum of word lengths.
          */
         size_t relatorLength() const;
 
         /**
          * Computes the abelianisation of this group.
          *
-         * @return the abelianisation of this group.
+         * \return the abelianisation of this group.
          */
         AbelianGroup abelianisation() const;
 
@@ -1089,9 +1149,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Smith normal form).
          *
          * The result of this routine should be the same as the output
-         * of <tt>abelianisation().rank()</tt>.
+         * of `abelianisation().rank()`.
          *
-         * @return the rank of the abelianisation of this group.
+         * \return the rank of the abelianisation of this group.
          */
         unsigned long abelianRank() const;
 
@@ -1100,7 +1160,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The coordinates in the chain complex correspond
          * to the generators and relators for this group.
          *
-         * @return the abelianisation of this group.
+         * \return the abelianisation of this group.
          */
         MarkedAbelianGroup markedAbelianisation() const;
 
@@ -1127,7 +1187,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * intelligentSimplify, possibly in concert with proliferateRelators(),
          * in order to discover adequately many commutators.
          *
-         * @return \c true if the group is shown to be abelian, or
+         * \return \c true if the group is shown to be abelian, or
          * \c false if the result is inconclusive.
          */
         bool identifyAbelian() const;
@@ -1141,9 +1201,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \pre Both \a i and \a j are strictly less than
          * countGenerators().
          *
-         * @param i indicates the first of the two generators to switch.
-         * @param j indicates the second of the two generators to switch.
-         * @return \c true if and only if the Nielsen automorphism had an
+         * \param i indicates the first of the two generators to switch.
+         * \param j indicates the second of the two generators to switch.
+         * \return \c true if and only if the Nielsen automorphism had an
          * effect on at least one relation.
          */
         bool nielsenTransposition(unsigned long i, unsigned long j);
@@ -1155,33 +1215,33 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \pre \a i is strictly less than countGenerators().
          *
-         * @param i indicates the generator to invert.
-         * @return \c true if and only if the Nielsen automorphism had an
+         * \param i indicates the generator to invert.
+         * \return \c true if and only if the Nielsen automorphism had an
          * effect on at least one relation.
          */
         bool nielsenInvert(unsigned long i);
 
         /**
          * Replaces a generator \c gi by either
-         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt> in the presentation. It
+         * `(gi)(gj)^k` or `(gj)^k(gi)` in the presentation. It
          * it is the third type of Nielsen move one can apply to a presentation.
          *
          * This means that, if the new generator \c Gi is the old
-         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt>, then we can construct
+         * `(gi)(gj)^k` or `(gj)^k(gi)`, then we can construct
          * the new presentation from the old by replacing occurrences of \c Gi
-         * by <tt>(Gi)(gj)^(-k)</tt> or <tt>(gj)^(-k)(Gi)</tt> respectively.
+         * by `(Gi)(gj)^(-k)` or `(gj)^(-k)(Gi)` respectively.
          *
          * \pre Both \a i and \a j are strictly less than countGenerators().
          *
-         * @param i indicates the generator to replace.
-         * @param j indicates the generator to combine with \c gi.
-         * @param k indicates the power to which we raise \c gj when
+         * \param i indicates the generator to replace.
+         * \param j indicates the generator to combine with \c gi.
+         * \param k indicates the power to which we raise \c gj when
          * performing the replacement; this may be positive or negative
          * (or zero, but this will have no effect).
-         * @param rightMult \c true if we should replace \c gi by
-         * <tt>(gi)(gj)^k</tt>, or \c false if we should replace \c gi by
-         * <tt>(gj)^k(gi)</tt>.
-         * @return \c true if and only if the nielsen automorphism had an
+         * \param rightMult \c true if we should replace \c gi by
+         * `(gi)(gj)^k`, or \c false if we should replace \c gi by
+         * `(gj)^k(gi)`.
+         * \return \c true if and only if the nielsen automorphism had an
          * effect on at least one relation.
          */
         bool nielsenCombine(unsigned long i, unsigned long j,
@@ -1196,13 +1256,18 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
+         *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
          * then mirror the behaviour of intelligentNielsen() from Regina 6.0
          * and earlier, when the return type was simply \c bool.
          *
-         * @return an isomorphism describing the map from the
-         * original presentation to the new presentation, or no value if
+         * \return an isomorphism describing the map from the
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> intelligentNielsen();
@@ -1211,15 +1276,15 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Rewrites the presentation so that generators
          * of the group map to generators of the abelianisation, with any
          * left-over generators mapping to zero (if possible).  Consider this a
-         * \e homological-alignment of the presentation.
+         * _homological-alignment_ of the presentation.
          *
          * If the abelianisation of this group has rank \a N and \a M invariant
-         * factors <tt>d0 | d2 | ... | d(M-1)</tt>,
+         * factors `d0 | d2 | ... | d(M-1)`,
          * this routine applies Nielsen moves
          * to the presentation to ensure that under the markedAbelianisation()
          * routine, generators 0 through \a M-1 are mapped to generators of the
          * relevant \c Z_di group.  Similarly, generators \a M through
-         * <i>M</i>+<i>N</i>-1 are mapped to +/-1 in the appropriate factor.
+         * <i>M</i>+<i>N</i>-1 are mapped to ±1 in the appropriate factor.
          * All further generators will be mapped to zero.
          *
          * If this routine does return a homomorphism (because the
@@ -1232,31 +1297,37 @@ class GroupPresentation : public Output<GroupPresentation> {
          * then mirror the behaviour of homologicalAlignment() from Regina 6.0
          * and earlier, when the return type was simply \c bool.
          *
-         * @return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
+         * \return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> homologicalAlignment();
 
         /**
-         * An entirely cosmetic re-writing of the presentation, which is
+         * An entirely cosmetic rewriting of the presentation, which is
          * fast and superficial.
          *
-         *  1. If there are any length 1 relators, those generators are
-         *     deleted, and the remaining relators simplified.
-         *  2. It sorts the relators by number of generator indices that
-         *     appear, followed by relator numbers (lexico) followed by
-         *     relator length.
-         *  3. inverts relators if net sign of the generators is negative.
-         *  4. Given each generator, it looks for the smallest word where that
-         *     generator appears with non-zero weight.  If negative weight,
-         *     it inverts that generator.
-         *  5. It cyclically permutes relators to start with smallest gen.
+         * -# If there are any length 1 relators, those generators are
+         *    deleted, and the remaining relators simplified.
+         * -# It sorts the relators by number of generator indices that
+         *    appear, followed by relator numbers (lexico) followed by
+         *    relator length.
+         * -# It inverts relators if the net sign of the generators is
+         *    negative.
+         * -# Given each generator, it looks for the smallest word where that
+         *    generator appears with non-zero weight.  If negative weight,
+         *    it inverts that generator.
+         * -# It cyclically permutes relators to start with smallest gen.
          *
          * If this routine does return a homomorphism (because the choice of
          * generators was changed), then this homomorphsm will in fact be
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
+         *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
          *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
@@ -1266,8 +1337,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \todo As a final step, make elementary simplifications to aid in
          * seeing standard relators like commutators.
          *
-         * @return an isomorphism describing the map from the
-         * original presentation to the new presentation, or no value if
+         * \return an isomorphism describing the map from the
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> prettyRewriting();
@@ -1276,13 +1347,13 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Determines whether this and the given group presentation are
          * identical.
          *
-         * This routine does \e not test for isomorphism (which in
+         * This routine does _not_ test for isomorphism (which in
          * general is an undecidable problem).  Instead it tests whether
          * this and the given presentation use exactly the same generators
          * and exactly the same relations, presented in exactly the same order.
          *
-         * @param other the group presentation to compare with this.
-         * @return \c true if and only if this and the given group presentation
+         * \param other the group presentation to compare with this.
+         * \return \c true if and only if this and the given group presentation
          * are identical.
          */
         bool operator == (const GroupPresentation& other) const;
@@ -1291,24 +1362,24 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Determines whether this and the given group presentation are
          * not identical.
          *
-         * This routine does \e not test for isomorphism (which in
+         * This routine does _not_ test for isomorphism (which in
          * general is an undecidable problem).  Instead it tests whether
          * this and the given presentation use exactly the same generators
          * and exactly the same relations, presented in exactly the same order.
          *
-         * @param other the group presentation to compare with this.
-         * @return \c true if and only if this and the given group presentation
+         * \param other the group presentation to compare with this.
+         * \return \c true if and only if this and the given group presentation
          * are not identical.
          */
         bool operator != (const GroupPresentation& other) const;
 
         /**
          * Attempts to prove that this and the given group presentation are
-         * <i>simply isomorphic</i>.
+         * _simply isomorphic_.
          *
-         * A <i>simple isomorphism</i> is an isomorphism where each generator
+         * A _simple isomorphism_ is an isomorphism where each generator
          * <i>g<sub>i</sub></i> of this presentation is sent to
-         * some generator <i>g<sub>j</sub></i><sup>+/-1</sup> of the
+         * some generator <i>g<sub>j</sub></i><sup>±1</sup> of the
          * other presentation.  Moreover, at present this routine only
          * looks for maps where both presentations have the same number
          * of generators, and where distinct generators <i>g<sub>i</sub></i>
@@ -1327,8 +1398,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * - The groups are simply isomorphic but this routine could not
          *   prove it, due to difficulties with the word problem.
          *
-         * @param other the group presentation to compare with this.
-         * @return \c true if this routine could certify that the two group
+         * \param other the group presentation to compare with this.
+         * \return \c true if this routine could certify that the two group
          * presentations are simply isomorphic, or \c false if it could not.
          */
         bool identifySimplyIsomorphicTo(const GroupPresentation& other) const;
@@ -1370,12 +1441,16 @@ class GroupPresentation : public Output<GroupPresentation> {
          * This routine produces a constant stream of output (i.e., it
          * calls \a action as soon as each representation is found).
          *
-         * \warning The running time is <tt>(k!)^g</tt>, where \a k is the
-         * subgroup index described above, and \a g is the number of
-         * generators of this group presentation.  In particular, the
-         * running time grows \e extremely quickly with \a k.
+         * \warning The running time is `(k!)^g`, where \a k is the subgroup
+         * index described above, and \a g is the number of generators of this
+         * group presentation.  In particular, the running time grows
+         * _extremely_ quickly with \a k.  Moreover, for larger indices this
+         * routine may precompute some tables that will never be released
+         * (but which only need to be computed the first time that index is
+         * used); for index 10 these tables will consume roughly 30MB, and
+         * for index 11 they will consume around 320MB.
          *
-         * \warning This routine does \e not simplify the group presentation
+         * \warning This routine does _not_ simplify the group presentation
          * before it runs.  You should make sure that you have simplified
          * the presentation, either using Regina or some other tool, before
          * running this routine, since (as noted above) the running time
@@ -1384,31 +1459,42 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \warning Likewise, this routine does not simplify the subgroup
          * presentations before passing them to \a action.  These presentations
          * can be quite large, and (for example) if all you care about is their
-         * abelianisations then you are better off using the \e abelian group
+         * abelianisations then you are better off using the _abelian_ group
          * simplification / computation instead (which is much faster).
+         *
+         * \pre Arrays on this system can be large enough to store `2⋅(n-2)!`
+         * objects.  This is a technical condition on the bit-size of \c size_t
+         * that will be explicitly checked (with an exception thrown if it
+         * fails).  On a 64-bit system this condition will be true for all
+         * supported \a n, but on a 32-bit system or smaller it will mean that
+         * enumerateCovers() cannot be used for larger values of \a n.
+         *
+         * \exception FailedPrecondition A signed integer of the same bit-size
+         * as \c size_t cannot hold `2⋅(n-2)!`.  See the precondition above
+         * for further discussion on this constraint.
          *
          * \apinotfinal
          *
-         * \ifacespython There are two versions of this function available in
-         * Python.  The first form is <tt>enumerateCovers(index, action)</tt>,
+         * \python There are two versions of this function available in
+         * Python.  The first form is `enumerateCovers(index, action)`,
          * which mirrors the C++ function: it takes \a action which may
          * be a pure Python function, it returns the number of representations
-         * found, but it does \e not take an addition argument list (\a args).
-         * The second form is <tt>enumerateCovers(index)</tt>, which returns
+         * found, but it does _not_ take an addition argument list (\a args).
+         * The second form is `enumerateCovers(index)`, which returns
          * a Python list containing all of the corresponding subgroups, each
          * given as a GroupPresentation.  In both forms, the template
          * parameter \a index becomes the first argument to the Python function.
          *
          * \tparam index the number \a k in the description above; in other
          * words, the index of the resulting subgroups.  Currently this
-         * must be between 2 and 7 inclusive; this range is chosen because
-         * those are the \a k for which Regina's permutation class Perm<k>
-         * is highly optimised.
-         * @param action a function (or other callable object) to call
+         * must be between 2 and 11 inclusive; this range is limited because
+         * some of the cached precomputations can consume a _lot_ of space for
+         * larger indices.
+         * \param action a function (or other callable object) to call
          * for each representation that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial subgroup presentation argument.
-         * @return the total number of representations found.
+         * \return the total number of representations found.
          */
         template <int index, typename Action, typename... Args>
         size_t enumerateCovers(Action&& action, Args&&... args) const;
@@ -1424,60 +1510,58 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \pre The numbers of generators and relations are both non-zero.
          *
-         * @return the incidence matrix between relators and generators.
+         * \return the incidence matrix between relators and generators.
          */
         Matrix<bool> incidence() const;
 
         /**
          * Returns a TeX representation of this group presentation.
-         * See writeTeX() for details on how this is formed.
          *
-         * @return a TeX representation of this group presentation.
+         * The output will be of the form `< generators | relators >`.
+         * There will be no final newline.
+         *
+         * \return a TeX representation of this group presentation.
          */
         std::string tex() const;
 
         /**
-         * Writes a TeX represesentation of this group presentation
-         * to the given output stream.
+         * Writes a TeX represesentation of this group presentation to the
+         * given output stream.  See tex() for details on how this is formed.
          *
-         * The output will be of the form &lt; generators | relators &gt;.
-         * There will be no final newline.
+         * \nopython Instead use the variant tex() that takes no arguments
+         * and returns a string.
          *
-         * \ifacespython Not present; instead use the variant tex() that
-         * takes no arguments and returns a string.
-         *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTeX(std::ostream& out) const;
 
         /**
          * Returns a compact one-line representation of this group presentation,
          * including details of all generators and relations.
-         * See writeTextCompact() for details on how this is formed.
+         *
+         * The output will be of the form `< generators | relators >`.
+         * The full relations will be included, and the entire output
+         * will be written on a single line.  There will be no final newline.
          *
          * Currently str() and compact() are identical functions, though the
          * output from str() may change in future versions of Regina.
          *
-         * @return a compact representation of this group presentation.
+         * \return a compact representation of this group presentation.
          */
         std::string compact() const;
 
         /**
-         * Writes a compact represesentation of this group to the given
-         * output stream.
-         *
-         * The output will be of the form &lt; generators | relators &gt;.
-         * The full relations will be included, and the entire output
-         * will be written on a single line.  There will be no final newline.
+         * Writes a compact one-line represesentation of this group to the given
+         * output stream.  See compact() for details on how this is formed.
          *
          * Currently writeTextShort() and writeTextCompact() are identical
          * functions, though the output from writeTextShort() may change in
          * future versions of Regina.
          *
-         * \ifacespython Not present; instead use the variant compact() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant compact() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextCompact(std::ostream& out) const;
 
@@ -1489,18 +1573,18 @@ class GroupPresentation : public Output<GroupPresentation> {
          * functions, though the output from writeTextShort() may change in
          * future versions of Regina.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1518,9 +1602,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * (possibly very long) GAP function call, and will not contain
          * any newlines.
          *
-         * @param groupVariable the name of the GAP variable to which
+         * \param groupVariable the name of the GAP variable to which
          * this group will be assigned.
-         * @return a sequence of commands to create this group in GAP.
+         * \return a sequence of commands to create this group in GAP.
          */
         std::string gap(const std::string& groupVariable = "g") const;
 
@@ -1529,10 +1613,10 @@ class GroupPresentation : public Output<GroupPresentation> {
          * A SageMath-only routine that returns a copy of this group
          * presentation in a format native to SageMath.
          *
-         * \ifacescpp Not present.
-         * \ifacespython Only present when run within SageMath.
+         * \nocpp
+         * \python Only present when run within SageMath.
          *
-         * @return a copy of this group as a mathematical object native to
+         * \return a copy of this group as a mathematical object native to
          * SageMath.
          */
         FinitelyPresentedGroup sage() const;
@@ -1559,7 +1643,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * in future versions of this software, perhaps incorporated into a
          * bigger-and-better future algorithm.
          *
-         * @return a homomorphism if the algorithm was successful, or no value
+         * \return a homomorphism if the algorithm was successful, or \nullopt
          * if it was not.  If a homomorphism is returned, it will be an
          * automorphism of a presentation of the kernel of the map this to the
          * integers.
@@ -1580,7 +1664,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \apinotfinal Reconsider how the end-user should see this routine.
          *
-         * @return a list of group presentations giving the factors of this
+         * \return a list of group presentations giving the factors of this
          * free product, or an empty list if this routine fails (i.e., the
          * result is inconclusive).
          */
@@ -1606,39 +1690,43 @@ class GroupPresentation : public Output<GroupPresentation> {
          *   on the above substitution, so the score is also 4.
          */
         struct WordSubstitutionData {
-                unsigned long start_sub_at;
-                    /**< Where in A do we start? */
-                unsigned long start_from;
-                    /**< Where in B do we start? */
-                unsigned long sub_length;
-                    /**< The number of letters from B to use. */
-                bool invertB;
-                    /**< Invert B before making the substitution? */
-                long int score;
-                    /**< The score, i.e., the decrease in the word letter count
-                         provided this substitution is made. */
-                bool operator<( const WordSubstitutionData &other ) const {
-                        if (score < other.score) return false;
-                        if (score > other.score) return true;
-                        if (sub_length < other.sub_length) return false;
-                        if (sub_length > other.sub_length) return true;
-                        if ( (invertB == true)  && (other.invertB == false) )
-                                return false;
-                        if ( (invertB == false) && (other.invertB == true)  )
-                                return true;
-                        if (start_from < other.start_from) return false;
-                        if (start_from > other.start_from) return true;
-                        if (start_sub_at < other.start_sub_at) return false;
-                        if (start_sub_at > other.start_sub_at) return true;
+            unsigned long start_sub_at;
+                /**< Where in A do we start? */
+            unsigned long start_from;
+                /**< Where in B do we start? */
+            unsigned long sub_length;
+                /**< The number of letters from B to use. */
+            bool invertB;
+                /**< Invert B before making the substitution? */
+            long int score;
+                /**< The score, i.e., the decrease in the word letter count
+                     provided this substitution is made. */
+
+            bool operator<( const WordSubstitutionData &other ) const {
+                if (score < other.score) return false;
+                if (score > other.score) return true;
+                if (sub_length < other.sub_length) return false;
+                if (sub_length > other.sub_length) return true;
+                if ( (invertB == true)  && (other.invertB == false) )
                         return false;
-                }
-                void writeTextShort(std::ostream& out) const
-                {
-                        out<<"Target position "<<start_sub_at<<
-                        " length of substitution "<<sub_length<<(invertB ?
-                         " inverse reducer position " : " reducer position ")
-                        <<start_from<<" score "<<score;
-                }
+                if ( (invertB == false) && (other.invertB == true)  )
+                        return true;
+                if (start_from < other.start_from) return false;
+                if (start_from > other.start_from) return true;
+                if (start_sub_at < other.start_sub_at) return false;
+                if (start_sub_at > other.start_sub_at) return true;
+                return false;
+            }
+            void writeTextShort(std::ostream& out) const {
+                out<<"Target position "<<start_sub_at<<
+                    " length of substitution "<<sub_length<<(invertB ?
+                     " inverse reducer position " : " reducer position ")
+                    <<start_from<<" score "<<score;
+            }
+            /**
+             * Gives a string that describes the substitution.
+             */
+            std::string substitutionString(const GroupExpression &word) const;
         };
         /**
          *  A routine internal to the small cancellation simplification
@@ -1739,8 +1827,8 @@ class GroupPresentation : public Output<GroupPresentation> {
  * This global routine simply calls GroupPresentation::swap(); it is provided
  * so that GroupPresentation meets the C++ Swappable requirements.
  *
- * @param lhs the presentation whose contents should be swapped with \a rhs.
- * @param rhs the presentation whose contents should be swapped with \a lhs.
+ * \param lhs the presentation whose contents should be swapped with \a rhs.
+ * \param rhs the presentation whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */
@@ -1748,8 +1836,8 @@ void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept;
 
 // Inline functions for GroupExpressionTerm
 
-inline GroupExpressionTerm::GroupExpressionTerm(unsigned long newGen,
-        long newExp) : generator(newGen), exponent(newExp) {
+inline GroupExpressionTerm::GroupExpressionTerm(unsigned long gen, long exp) :
+        generator(gen), exponent(exp) {
 }
 
 inline bool GroupExpressionTerm::operator == (
@@ -1793,8 +1881,8 @@ inline GroupExpression::GroupExpression(unsigned long generator,
     terms_.emplace_back(generator, exponent);
 }
 
-inline GroupExpression::GroupExpression(const std::string &input) :
-        GroupExpression(input.c_str()) {
+inline GroupExpression::GroupExpression(const std::string &input,
+        unsigned long nGens) : GroupExpression(input.c_str(), nGens) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {

@@ -1,4 +1,4 @@
-SET ( SOURCES globalarray.cpp modulemain.cpp )
+SET ( SOURCES modulemain.cpp )
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")

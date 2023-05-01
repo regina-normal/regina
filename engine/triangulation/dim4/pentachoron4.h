@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,8 +62,9 @@ namespace regina {
  * This class Face<4, 4> specialises it further to add dimension-specific
  * aliases for dimension 4.
  *
- * See the documentation for the partial specialisation Face<dim, dim> for an
- * overview of how a top-dimensional simplex class works.
+ * See the generic documentation for Face<dim, dim> for an overview of how the
+ * top-dimensional simplex classes work.  In Python, you can read this
+ * generic documentation by looking at a higher dimension: try `help(Simplex5)`.
  *
  * Pentachora do not support value semantics: they cannot be copied, swapped,
  * or manually constructed.  Their location in memory defines them, and
@@ -90,15 +91,23 @@ class Face<4, 4> : public detail::SimplexBase<4> {
          * Creates a new pentachoron with empty description and no
          * facets joined to anything.
          *
-         * @param tri the triangulation to which the new pentachoron belongs.
+         * \param tri the triangulation to which the new pentachoron belongs.
          */
         Face(Triangulation<4>* tri);
         /**
-         * Creates a new pentachoron with the given description and
+         * Creates a new pentachoron whose description and locks are cloned
+         * from the given pentachoron, and with no facets joined to anything.
+         *
+         * \param clone the pentachoron whose details should be cloned.
+         * \param tri the triangulation to which the new tetrahedron belongs.
+         */
+        Face(const Face& clone, Triangulation<4>* tri);
+        /**
+         * Creates a new pentachoron with the given description, no locks, and
          * no facets joined to anything.
          *
-         * @param desc the description to give the new pentachoron.
-         * @param tri the triangulation to which the new pentachoron belongs.
+         * \param desc the description to give the new pentachoron.
+         * \param tri the triangulation to which the new pentachoron belongs.
          */
         Face(const std::string& desc, Triangulation<4>* tri);
 
@@ -125,6 +134,10 @@ inline Simplex<4>* Face<4, 4>::adjacentPentachoron(int facet) const {
 
 inline Face<4, 4>::Face(Triangulation<4>* tri) :
         detail::SimplexBase<4>(tri) {
+}
+
+inline Face<4, 4>::Face(const Face& clone, Triangulation<4>* tri) :
+        detail::SimplexBase<4>(clone, tri) {
 }
 
 inline Face<4, 4>::Face(const std::string& desc, Triangulation<4>* tri) :

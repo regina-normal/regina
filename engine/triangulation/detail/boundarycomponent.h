@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,7 +68,7 @@ template <int> class TriangulationBase;
  * Their memory is managed by the Triangulation class, and their locations
  * in memory define them.  See BoundaryComponent<dim> for further details.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class BoundaryComponent<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -186,7 +186,7 @@ class BoundaryComponentBase :
          * Returns the index of this boundary component in the underlying
          * triangulation.
          *
-         * @return the index of this boundary component.
+         * \return the index of this boundary component.
          */
         size_t index() const {
             return markedIndex();
@@ -200,7 +200,7 @@ class BoundaryComponentBase :
          * If this is an ideal or invalid vertex boundary component,
          * then this routine will return 0.
          *
-         * @return the number of (<i>dim</i>-1)-faces in this boundary
+         * \return the number of (<i>dim</i>-1)-faces in this boundary
          * component.
          */
         size_t size() const {
@@ -214,7 +214,7 @@ class BoundaryComponentBase :
          * If this is an ideal or invalid vertex boundary component,
          * then this routine will return 0.
          *
-         * @return the number of (<i>dim</i>-2)-faces in this boundary
+         * \return the number of (<i>dim</i>-2)-faces in this boundary
          * component.
          */
         size_t countRidges() const {
@@ -227,9 +227,9 @@ class BoundaryComponentBase :
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * `countFaces(subdim)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
@@ -238,7 +238,7 @@ class BoundaryComponentBase :
          * allowable values of \a subdim are the facet dimension (<i>dim</i>-1)
          * and the ridge dimension (<i>dim</i>-2).
          *
-         * @return the number of <i>subdim</i>-faces.
+         * \return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countFaces() const {
@@ -291,7 +291,7 @@ class BoundaryComponentBase :
          * A dimension-specific alias for countFaces<2>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See countFaces() for further information.
          */
@@ -340,7 +340,7 @@ class BoundaryComponentBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -355,7 +355,7 @@ class BoundaryComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call facets() again each time you need it.
          *
-         * @return access to the list of all (<i>dim</i>-1)-faces.
+         * \return access to the list of all (<i>dim</i>-1)-faces.
          */
         auto facets() const {
             return ListView(std::get<tupleIndex(dim-1)>(faces_));
@@ -371,7 +371,7 @@ class BoundaryComponentBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -386,16 +386,16 @@ class BoundaryComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faces(subdim)</tt>.
+         * `faces(subdim)`.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
          * must be between 0 and <i>dim</i>-1 inclusive.  Otherwise, the only
          * allowable value of \a subdim is the facet dimension (<i>dim</i>-1).
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * \return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
         auto faces() const {
@@ -437,7 +437,7 @@ class BoundaryComponentBase :
          * A dimension-specific alias for faces<2>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See faces() for further information.
          */
@@ -487,9 +487,9 @@ class BoundaryComponentBase :
          * index of the corresponding top-dimensional simplex in the
          * (<i>dim</i>-1)-manifold triangulation returned by build().
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * size()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         Face<dim, dim-1>* facet(size_t index) const {
             return std::get<tupleIndex(dim-1)>(faces_)[index];
@@ -506,9 +506,9 @@ class BoundaryComponentBase :
          * index of the corresponding <i>subdim</i>-face in the
          * (<i>dim</i>-1)-manifold triangulation returned by build().
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * `face(subdim, index)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
@@ -516,9 +516,9 @@ class BoundaryComponentBase :
          * must be between 0 and <i>dim</i>-1 inclusive.  Otherwise, the only
          * allowable value of \a subdim is the facet dimension (<i>dim</i>-1).
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         template <int subdim>
         Face<dim, subdim>* face(size_t index) const {
@@ -560,7 +560,7 @@ class BoundaryComponentBase :
          * A dimension-specific alias for face<2>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See face() for further information.
          */
@@ -601,7 +601,7 @@ class BoundaryComponentBase :
         /**
          * Returns the triangulation to which this boundary component belongs.
          *
-         * @return a reference to the triangulation containing this boundary
+         * \return a reference to the triangulation containing this boundary
          * component.
          */
         Triangulation<dim>& triangulation() const {
@@ -617,7 +617,7 @@ class BoundaryComponentBase :
          * Returns the connected component of the triangulation to which this
          * boundary component belongs.
          *
-         * @return the component containing this boundary component.
+         * \return the component containing this boundary component.
          */
         Component<dim>* component() const {
             // If allFaces is true, then there may be no (dim-1)-simplices,
@@ -636,7 +636,7 @@ class BoundaryComponentBase :
          * This routine is fast; in particular, it is pre-computed and
          * does not build a full triangulation of the boundary component.
          *
-         * @return \c true if and only if this boundary component is orientable.
+         * \return \c true if and only if this boundary component is orientable.
          */
         bool isOrientable() const {
             return orientable_;
@@ -676,7 +676,7 @@ class BoundaryComponentBase :
          * <i>dim</i>-manifold, and so if you have such boundary components
          * then you almost certainly have bigger problems than this.
          *
-         * @return the Euler characteristic of this boundary component.
+         * \return the Euler characteristic of this boundary component.
          */
         long eulerChar() const {
             static_assert(allFaces,
@@ -723,7 +723,7 @@ class BoundaryComponentBase :
          * are the only types of boundary component that Regina will recognise,
          * which means that this routine will always return \c true.
          *
-         * @return \c true if and only if this boundary component is real.
+         * \return \c true if and only if this boundary component is real.
          */
         bool isReal() const {
             if constexpr (allFaces)
@@ -738,12 +738,12 @@ class BoundaryComponentBase :
          * ideal vertex and no faces of any other dimensions.
          *
          * See the BoundaryComponent class notes for an overview of ideal
-         * boundary components, which can only occur in dimensions &ge; 3,
+         * boundary components, which can only occur in dimensions ≥ 3,
          * and which are only recognised where \a dim is one of Regina's
          * \ref stddim "standard dimensions".
          *
-         * Note that a boundary component formed from a single \e invalid
-         * vertex is \e not considered to be ideal.  This means that, if a
+         * Note that a boundary component formed from a single _invalid_
+         * vertex is _not_ considered to be ideal.  This means that, if a
          * boundary component contains no faces of positive dimension,
          * then one and only one of isIdeal() and isInvalidVertex() will
          * return \c true.
@@ -753,7 +753,7 @@ class BoundaryComponentBase :
          * are the only types of boundary component that Regina will recognise,
          * which means that this routine will always return \c false.
          *
-         * @return \c true if and only if this boundary component is ideal.
+         * \return \c true if and only if this boundary component is ideal.
          */
         bool isIdeal() const {
             if constexpr (allFaces) {
@@ -772,7 +772,7 @@ class BoundaryComponentBase :
          *
          * See the BoundaryComponent class notes for an overview of
          * invalid vertex boundary components, which can only occur in
-         * dimensions &ge; 4, and which are only recognised where \a dim is
+         * dimensions ≥ 4, and which are only recognised where \a dim is
          * one of Regina's \ref stddim "standard dimensions".
          *
          * An invalid vertex is only placed in its own boundary component if
@@ -792,7 +792,7 @@ class BoundaryComponentBase :
          * are the only types of boundary component that Regina will recognise,
          * which means that this routine will always return \c false.
          *
-         * @return \c true if and only if this boundary component consists of a
+         * \return \c true if and only if this boundary component consists of a
          * single invalid vertex and nothing else.
          */
         bool isInvalidVertex() const {
@@ -815,7 +815,7 @@ class BoundaryComponentBase :
          *
          * - Let \a i lie between 0 and size()-1 inclusive.  Then simplex \a i
          *   of the returned (<i>dim</i>-1)-dimensional triangulation is
-         *   a copy of <tt>facet(i)</tt> of this boundary component,
+         *   a copy of `facet(i)` of this boundary component,
          *   and its vertices 0,...,<i>dim</i>-1 are numbered in the
          *   same way.  To relate these (<i>dim</i>-1)-face vertex numbers to
          *   the vertex numbers of top-dimensional simplices in the overall
@@ -826,10 +826,10 @@ class BoundaryComponentBase :
          *   if the class constant \a allFaces is \c true), then a similar
          *   correspondence holds for these lower-dimensional faces also:
          *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
-         *   a copy of <tt>face<k>(i)</tt> of this boundary component,
+         *   a copy of `face<k>(i)` of this boundary component,
          *   and its vertices are numbered in the same way.  As an exception,
          *   this correspondence will not hold for dimensions \a k where
-         *   there exist \e pinched <i>k</i>-faces on the boundary (i.e.,
+         *   there exist _pinched_ <i>k</i>-faces on the boundary (i.e.,
          *   faces where different sections of the boundary are pinched
          *   together, meaning that these faces must be duplicated when the
          *   boundary is triangulated).
@@ -846,7 +846,7 @@ class BoundaryComponentBase :
          *
          * \pre The dimension \a dim is greater than 2.
          *
-         * @return the triangulation of this boundary component.
+         * \return the triangulation of this boundary component.
          */
         const Triangulation<dim-1>& build() const {
             // Make sure we do not try to instantiate Triangulation<1>.
@@ -871,9 +871,9 @@ class BoundaryComponentBase :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
             out << "Boundary component " << index();
@@ -931,7 +931,7 @@ class BoundaryComponentBase :
          * <i>subdim</i>-faces of this boundary component.
          * This class does not take ownership of the given face.
          *
-         * @param face the face to append to the list.
+         * \param face the face to append to the list.
          */
         template <int subdim>
         void push_back(Face<dim, subdim>* face) {
@@ -953,7 +953,7 @@ class BoundaryComponentBase :
          * \pre The dimension \a dim is greater than 2.
          * \pre The number of (dim-1)-faces is strictly positive.
          *
-         * @return the newly created boundary triangulation.
+         * \return the newly created boundary triangulation.
          */
         Triangulation<dim-1>* buildRealBoundary() const;
 
@@ -963,7 +963,7 @@ class BoundaryComponentBase :
          * corresponding faces of this boundary component, and so that their
          * vertices are numbered in a corresponding way.
          *
-         * If there are any \e pinched <i>subdim</i>-faces in this
+         * If there are any _pinched_ <i>subdim</i>-faces in this
          * boundary component (so they appear multiple times when the
          * boundary is triangulated), then this routine will do nothing.
          *
@@ -979,9 +979,9 @@ class BoundaryComponentBase :
          * (since the (<i>dim</i>-1)-faces are already in perfect
          * correspondence).
          *
-         * @param tri a triangulation of this boundary component, as
+         * \param tri a triangulation of this boundary component, as
          * described above.
-         * @param reference the internal list of all <i>subdim</i>-faces
+         * \param reference the internal list of all <i>subdim</i>-faces
          * of this boundary component.  While this can of course be deduced,
          * it is passed as a separate argument so that the template parameter
          * \a subdim can be deduced automatically from inside std::apply().

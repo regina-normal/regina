@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -201,6 +201,47 @@ void Triangulation<3>::calculateBoundaryProperties() const {
     prop_.twoSphereBoundaryComponents_ = localTwoSphereBoundaryComponents;
     prop_.negativeIdealBoundaryComponents_ =
         localNegativeIdealBoundaryComponents;
+}
+
+void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
+    TriangulationBase<3>::cloneSkeleton(src);
+
+    ideal_ = src.ideal_;
+    standard_ = src.standard_;
+
+    {
+        auto me = vertices().begin();
+        auto you = src.vertices().begin();
+        for ( ; me != vertices().end(); ++me, ++you) {
+            (*me)->link_ = (*you)->link_;
+            (*me)->linkEulerChar_ = (*you)->linkEulerChar_;
+            // Leave linkTri_ as built-on-demand for now.
+        }
+    }
+
+    {
+        auto me = triangles().begin();
+        auto you = src.triangles().begin();
+        for ( ; me != triangles().end(); ++me, ++you) {
+            (*me)->type_ = (*you)->type_;
+            (*me)->subtype_ = (*you)->subtype_;
+        }
+    }
+
+    {
+        auto me = components_.begin();
+        auto you = src.components_.begin();
+        for ( ; me != components_.end(); ++me, ++you) {
+            (*me)->ideal_ = (*you)->ideal_;
+
+            for (auto f : (*you)->vertices_)
+                (*me)->vertices_.push_back(vertex(f->index()));
+            for (auto f : (*you)->edges_)
+                (*me)->edges_.push_back(edge(f->index()));
+            for (auto f : (*you)->triangles_)
+                (*me)->triangles_.push_back(triangle(f->index()));
+        }
+    }
 }
 
 } // namespace regina

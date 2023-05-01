@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,15 +54,15 @@
 
 namespace regina {
 
-/**
- * \defgroup hypersurface Normal Hypersurfaces
- * Normal hypersurfaces in 4-manifold triangulations.
- */
-
 class NormalHypersurfaces;
 
 template <typename, bool> class Matrix;
 using MatrixInt = Matrix<Integer, true>;
+
+/**
+ * \defgroup hypersurface Normal Hypersurfaces
+ * Normal hypersurfaces in 4-manifold triangulations.
+ */
 
 /**
  * Represents a single normal hypersurface in a 4-manifold triangulation.
@@ -145,6 +145,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         mutable std::optional<AbelianGroup> H1_;
             /**< First homology group of the hypersurface.
                  This is std::nullopt if it has not yet been computed. */
+        mutable uint8_t linkOf_ { 0 };
+            /**< Indicates which dimensions of face a positive rational multiple
+                 of this hypersurface is a thin or normalised link of.  This is
+                 treated as a bitmask: for each i=0,1,2,3, the (2i+1)th bit
+                 indicates whether this hypersurface scales to the link of an
+                 i-face, and the (2i)th bit indicates whether this information
+                 has actually been computed yet; if it has not been computed,
+                 then the (2i+1)th bit will be zero. */
 
     public:
         /**
@@ -165,8 +173,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * @param src the normal hypersurface to copy.
-         * @param triangulation the triangulation in which this new
+         * \param src the normal hypersurface to copy.
+         * \param triangulation the triangulation in which this new
          * hypersurface will reside.
          */
         NormalHypersurface(const NormalHypersurface& src,
@@ -180,11 +188,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param src the normal hypersurface to copy.
-         * @param triangulation a snapshot, frozen in time, of the
+         * \param src the normal hypersurface to copy.
+         * \param triangulation a snapshot, frozen in time, of the
          * triangulation in which this new hypersurface will reside.
          */
         NormalHypersurface(const NormalHypersurface& src,
@@ -197,6 +204,28 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * The hypersurface that is passed will no longer be usable.
          */
         NormalHypersurface(NormalHypersurface&&) noexcept = default;
+
+        /**
+         * Create the empty hypersurface within the given triangulation.
+         *
+         * All normal coordinates will be zero.
+         *
+         * \param triang the triangulation in which this normal hypersurface
+         * resides.
+         */
+        NormalHypersurface(const Triangulation<4>& triang);
+
+        /**
+         * Create the empty hypersurface within the given triangulation.
+         *
+         * All normal coordinates will be zero.
+         *
+         * \nopython Instead use the version that takes a "pure" triangulation.
+         *
+         * \param triang a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang);
 
         /**
          * Creates a new normal hypersurface inside the given triangulation
@@ -219,14 +248,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * \python Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
@@ -253,14 +282,13 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
@@ -282,14 +310,13 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -311,14 +338,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -329,12 +356,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -347,16 +374,16 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * \python Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
@@ -367,12 +394,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -385,16 +412,15 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
@@ -405,12 +431,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -418,16 +444,15 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -438,12 +463,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -451,16 +476,16 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -477,7 +502,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * This operator induces a deep copy of the given normal hypersurface.
          *
-         * @return a reference to this normal hypersurface.
+         * \return a reference to this normal hypersurface.
          */
         NormalHypersurface& operator = (const NormalHypersurface&) = default;
 
@@ -493,7 +518,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * The hypersurface that was passed will no longer be usable.
          *
-         * @return a reference to this normal hypersurface.
+         * \return a reference to this normal hypersurface.
          */
         NormalHypersurface& operator = (NormalHypersurface&&) noexcept =
             default;
@@ -508,7 +533,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * these properties differs then the two hypersurfaces will be adjusted
          * accordingly.
          *
-         * @param other the normal hypersurface whose contents should be swapped
+         * \param other the normal hypersurface whose contents should be swapped
          * with this.
          */
         void swap(NormalHypersurface& other) noexcept;
@@ -520,7 +545,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * constants.  In particular, this routine has exactly the same
          * effect as multiplying the hypersurface by 2.
          *
-         * @return the double of this normal hypersurface.
+         * \return the double of this normal hypersurface.
          */
         [[deprecated]] NormalHypersurface doubleHypersurface() const;
 
@@ -537,8 +562,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \pre Both this and the given normal hypersurface use the same
          * underlying triangulation.
          *
-         * @param rhs the hypersurface to sum with this.
-         * @return the sum of both normal hypersurfaces.
+         * \param rhs the hypersurface to sum with this.
+         * \return the sum of both normal hypersurfaces.
          */
         NormalHypersurface operator + (const NormalHypersurface& rhs) const;
 
@@ -548,9 +573,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * The resulting hypersurface will use the same internal vector
          * encoding as this hypersurface.
          *
-         * @param coeff the coefficient to multiply this hypersurface by;
+         * \param coeff the coefficient to multiply this hypersurface by;
          * this must be non-negative.
-         * @return the resulting multiple of this hypersurface.
+         * \return the resulting multiple of this hypersurface.
          */
         NormalHypersurface operator * (const LargeInteger& coeff) const;
 
@@ -560,9 +585,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * The internal vector encoding used by this hypersurface will not
          * change.
          *
-         * @param coeff the coefficient to multiply this hypersurface by;
+         * \param coeff the coefficient to multiply this hypersurface by;
          * this must be non-negative.
-         * @return a reference to this hypersurface.
+         * \return a reference to this hypersurface.
          */
         NormalHypersurface& operator *= (const LargeInteger& coeff);
 
@@ -576,7 +601,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * are enough to guarantee integer tetrahedron coordinates (which
          * might or might not be stored).
          *
-         * @return the integer by which the original hypersurface was divided
+         * \return the integer by which the original hypersurface was divided
          * (i.e., the gcd of all normal coordinates in the original
          * hypersurface).  This will always be strictly positive.
          */
@@ -589,13 +614,13 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * pentachoron and a vertex of that pentachoron that the
          * tetrahedron surrounds.
          *
-         * @param pentIndex the index in the triangulation of the
+         * \param pentIndex the index in the triangulation of the
          * pentachoron in which the requested pieces reside;
          * this should be between 0 and Triangulation<4>::size()-1 inclusive.
-         * @param vertex the vertex of the given pentachoron around
+         * \param vertex the vertex of the given pentachoron around
          * which the requested pieces lie; this should be between 0
          * and 4 inclusive.
-         * @return the number of tetrahedron pieces of the given type.
+         * \return the number of tetrahedron pieces of the given type.
          */
         LargeInteger tetrahedra(size_t pentIndex, int vertex) const;
         /**
@@ -606,23 +631,23 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * type will then separate edge \a i of the pentachoron from
          * triangle \a i of the pentachoron.
          *
-         * @param pentIndex the index in the triangulation of the
+         * \param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prisms reside;
          * this should be between 0 and Triangulation<4>::size()-1 inclusive.
-         * @param prismType specifies the edge of the given pentachoron that
+         * \param prismType specifies the edge of the given pentachoron that
          * this prism separates from the opposite triangle;
          * this should be between 0 and 9 inclusive.
-         * @return the number of prism pieces of the given type.
+         * \return the number of prism pieces of the given type.
          */
         LargeInteger prisms(size_t pentIndex, int prismType) const;
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
          *
-         * @param edgeIndex the index in the triangulation of the edge
+         * \param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
          * Triangulation<4>::countEdges()-1 inclusive.
-         * @return the number of times this normal hypersurface crosses the
+         * \return the number of times this normal hypersurface crosses the
          * given edge.
          */
         LargeInteger edgeWeight(size_t edgeIndex) const;
@@ -649,7 +674,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<4>& triangulation() const;
 
@@ -658,7 +683,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Names are optional and need not be unique.
          * The default name for a hypersurface is the empty string.
          *
-         * @return the name of associated with this hypersurface.
+         * \return the name of associated with this hypersurface.
          */
         const std::string& name() const;
         /**
@@ -666,7 +691,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Names are optional and need not be unique.
          * The default name for a hypersurface is the empty string.
          *
-         * @param name the new name to associate with this hypersurface.
+         * \param name the new name to associate with this hypersurface.
          */
         void setName(const std::string& name);
 
@@ -674,9 +699,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Writes this hypersurface to the given output stream, using
          * standard tetrahedron-prism coordinates.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -685,12 +710,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * of its properties.  This routine will be called from within
          * NormalHypersurfaces::writeXMLPacketData().
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param list the enclosing normal hypersurface list.  Currently this
+         * \param out the output stream to which the XML should be written.
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param list the enclosing normal hypersurface list.  Currently this
          * is only relevant when writing to the older REGINA_XML_GEN_2 format;
          * it will be ignored (and may be \c null) for newer file formats.
          */
@@ -710,7 +735,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * @return \c true if and only if this normal hypersurface is compact.
+         * \return \c true if and only if this normal hypersurface is compact.
          */
         bool isCompact() const;
         /**
@@ -729,7 +754,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this hypersurface is orientable, or \c false if
+         * \return \c true if this hypersurface is orientable, or \c false if
          * this hypersurface is non-orientable.
          */
         bool isOrientable() const;
@@ -749,7 +774,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this hypersurface is two-sided, or \c false if
+         * \return \c true if this hypersurface is two-sided, or \c false if
          * this hypersurface is one-sided.
          */
         bool isTwoSided() const;
@@ -769,7 +794,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this hypersurface is connected, or \c false if
+         * \return \c true if this hypersurface is connected, or \c false if
          * this hypersurface is disconnected.
          */
         bool isConnected() const;
@@ -781,50 +806,287 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * @return \c true if and only if this hypersurface has real boundary.
+         * \return \c true if and only if this hypersurface has real boundary.
          */
         bool hasRealBoundary() const;
         /**
          * Determines whether or not this hypersurface is vertex linking.
-         * A <i>vertex linking</i> hypersurface contains only tetrahedra.
+         * A _vertex linking_ hypersurface contains only tetrahedra.
+         *
+         * This behaves differently from isVertexLink(), which only detects
+         * the link of a single vertex (or a multiple of such a link).
+         * In contrast, this routine will also detect the union of
+         * several _different_ vertex links.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \todo \opt Cache results.
-         *
-         * @return \c true if and only if this hypersurface is vertex linking.
+         * \return \c true if and only if this hypersurface is vertex linking.
          */
         bool isVertexLinking() const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the link of a single vertex.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the link of a single vertex.
+         *
+         * This behaves differently from isVertexLinking(), which will also
+         * detect a union of several different vertex links.  In contrast,
+         * this routine will only identify the link of a _single_ vertex
+         * (or a multiple of such a link).
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \todo \opt Cache results.
-         *
-         * @return the vertex linked by this hypersurface, or \c null if this
-         * hypersurface is not the link of a single vertex.
+         * \return the vertex linked by a positive rational multiple of this
+         * hypersurface, or \c null if this hypersurface is not a multiple of
+         * a single vertex link.
          */
         const Vertex<4>* isVertexLink() const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the thin link of a single edge.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the thin link of a single edge.
+         *
+         * Here a _thin_ edge link is a normal hypersurface which appears
+         * naturally as the frontier of a regular neighbourhood of an edge,
+         * with no need for any further normalisation.
+         *
+         * This behaves differently from isNormalEdgeLink(), which tests for a
+         * _normalised_ edge link (which could end up far away from the
+         * edge, or could be normalised into a hypersurface with different
+         * topology, or could even be normalised away to nothing).
+         * Although isNormalEdgeLink() will also indicate thin edge links,
+         * this test has significantly less overhead (and so should be faster).
+         *
+         * A hypersurface (or its positive rational multiple) can be the thin
+         * edge link of at most one edge.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \todo \opt Cache results.
-         *
-         * @return the edge linked by this hypersurface, or \c null if this
-         * hypersurface is not a thin edge link.
+         * \return the edge linked by a positive rational multiple of this
+         * hypersurface, or \c null if this hypersurface is not a multiple
+         * of a single thin edge link.
          */
         const Edge<4>* isThinEdgeLink() const;
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the normalised link of a single edge.
+         *
+         * Here the phrase _normalised_ link of an edge \a e means the
+         * frontier of a regular neighbourhood of \a e, converted into a
+         * normal hypersurface by expanding away from the edge using some basic
+         * normalisation moves.  It could be that there is no normalisation
+         * required at all (in which case it is also a _thin_ edge link).
+         * However, it could be that the normalisation process expands
+         * the hypersurface far away from the edge itself, or changes its
+         * topology, or disconnects the hypersurface, or even normalises it
+         * away to an empty hypersurface.
+         *
+         * In particular, this test behaves differently from isThinEdgeLink(),
+         * which tests for thin edge links only (where no additional
+         * normalisation is required).  If you are only interested in thin
+         * edge links, then you should call isThinEdgeLink(), which has much
+         * less overhead.
+         *
+         * A hypersurface (or its positive rational multiple) could be the
+         * normalised link of many edges.  The return value will be a pair
+         * (\a v, \a thin), where:
+         *
+         * - \a v is a vector containing all such edges.  This will begin with
+         *   the edges for which this hypersurface is a thin link, followed by
+         *   the edges where normalisation was required; within each category
+         *   the edges will be ordered by their index within the triangulation.
+         *
+         * - \a thin is either 0 or 1, indicating how many edges this
+         *   hypersurface is a thin link for.  This uses an unsigned type,
+         *   since it will often be compared to `v.size()`.
+         *
+         * If no positive rational multiple of this hypersurface is the
+         * normalised link of any edge, then \a link will be 0 and \a v will be
+         * the empty vector.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \return a vector containing the edge(s) linked by a positive rational
+         * multiple of this hypersurface and an integer indicating how many
+         * of these links are thin, as described above.
+         */
+        std::pair<std::vector<const Edge<4>*>, unsigned> isNormalEdgeLink()
+            const;
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the thin link of a single triangle.
+         *
+         * Here a _thin_ triangle link is a normal hypersurface which appears
+         * naturally as the frontier of a regular neighbourhood of a triangle,
+         * with no need for any further normalisation.
+         *
+         * This behaves differently from isNormalTriangleLink(), which tests
+         * for a _normalised_ triangle link (which could end up far away from
+         * the triangle, or could be normalised into a hypersurface with
+         * different topology, or could even be normalised away to nothing).
+         * Unlike the tests for edge links, the routines isThinTriangleLink()
+         * and isNormalTriangleLink() use essentially the same implementation
+         * (so testing for only thin links may be a little faster, but not by
+         * much).
+         *
+         * A hypersurface (or its positive rational multiple) can be the thin
+         * triangle link of at most two triangles.  If there are indeed two
+         * different triangles \a t1 and \a t2 for which a multiple of this
+         * hypersurface can be expressed as the thin triangle link, then
+         * the pair (\a t1, \a t2) will be returned.  If there is only one
+         * such triangle \a t, then the pair (\a t, \c null) will be returned.
+         * If no positive rational multiple of this hypersurface is the thin
+         * link of any triangle, then the pair (\c null, \c null) will be
+         * returned.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \return a pair containing the triangle(s) linked by a positive
+         * rational multiple of this hypersurface, as described above.
+         */
+        std::pair<const Triangle<4>*, const Triangle<4>*> isThinTriangleLink()
+            const;
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the normalised link of a single triangle.
+         *
+         * Here the phrase _normalised_ link of a triangle \a t means the
+         * frontier of a regular neighbourhood of \a t, converted into a normal
+         * hypersurface by expanding away from the triangle using some basic
+         * normalisation moves.  It could be that there is no normalisation
+         * required at all (in which case it is also a _thin_ triangle link).
+         * However, it could be that the normalisation process expands
+         * the hypersurface far away from the triangle itself, or changes its
+         * topology, or disconnects the hypersurface, or even normalises it
+         * away to an empty hypersurface.
+         *
+         * In particular, this test behaves differently from
+         * isThinTriangleLink(), which tests for thin triangle links only
+         * (where no additional normalisation is required).  Unlike the
+         * tests for edge links, the routines isThinTriangleLink() and
+         * isNormalTriangleLink() use essentially the same implementation (so
+         * testing for only thin links may be a little faster, but not by much).
+         *
+         * A hypersurface (or its positive rational multiple) could be the
+         * normalised link of many triangles.  The return value will be a pair
+         * (\a v, \a thin), where:
+         *
+         * - \a v is a vector containing all such triangles.  This will begin
+         *   with the triangles for which this hypersurface is a thin link,
+         *   followed by the triangles where normalisation was required;
+         *   within each category the triangles will be ordered by their
+         *   index within the triangulation.
+         *
+         * - \a thin is either 0, 1 or 2, indicating how many triangles this
+         *   hypersurface is a thin link for.  This uses an unsigned type,
+         *   since it will often be compared to `v.size()`.
+         *
+         * If no positive rational multiple of this hypersurface is the
+         * normalised link of any triangle, then \a link will be 0 and \a v
+         * will be the empty vector.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \return a vector containing the triangle(s) linked by a positive
+         * rational multiple of this hypersurface and an integer indicating
+         * how many of these links are thin, as described above.
+         */
+        std::pair<std::vector<const Triangle<4>*>, unsigned>
+            isNormalTriangleLink() const;
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the thin link of a single tetrahedron.
+         *
+         * Here a _thin_ tetrahedron link is a normal hypersurface which
+         * appears naturally as the frontier of a regular neighbourhood of a
+         * tetrahedron, with no need for any further normalisation.
+         *
+         * This behaves differently from isNormalTetrahedronLink(), which tests
+         * for a _normalised_ tetrahedron link (which could end up far away
+         * from the tetrahedron, or could be normalised into a hypersurface with
+         * different topology, or could even be normalised away to nothing).
+         * Unlike the tests for edge links, the routines isThinTetrahedronLink()
+         * and isNormalTetrahedronLink() use essentially the same implementation
+         * (so testing for only thin links may be a little faster, but not by
+         * much).
+         *
+         * A hypersurface (or its positive rational multiple) can be the thin
+         * link of at most two tetrahedra.  If there are indeed two different
+         * tetrahedra \a t1 and \a t2 for which a multiple of this
+         * hypersurface can be expressed as the thin tetrahedron link, then
+         * the pair (\a t1, \a t2) will be returned.  If there is only one such
+         * tetrahedron \a t, then the pair (\a t, \c null) will be returned.
+         * If no positive rational multiple of this hypersurface is the thin
+         * link of any tetrahedron, then the pair (\c null, \c null) will be
+         * returned.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \return a pair containing the tetrahedra linked by a positive
+         * rational multiple of this hypersurface, as described above.
+         */
+        std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
+            isThinTetrahedronLink() const;
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the normalised link of a single tetrahedron.
+         *
+         * Here the phrase _normalised_ link of a tetrahedron \a t means the
+         * frontier of a regular neighbourhood of \a t, converted into a normal
+         * hypersurface by expanding away from the tetrahedron using some basic
+         * normalisation moves.  It could be that there is no normalisation
+         * required at all (in which case it is also a _thin_ tetrahedron
+         * link).  However, it could be that the normalisation process expands
+         * the hypersurface far away from the tetrahedron itself, or changes its
+         * topology, or disconnects the hypersurface, or even normalises it
+         * away to an empty hypersurface.
+         *
+         * In particular, this test behaves differently from
+         * isThinTetrahedronLink(), which tests for thin tetrahedron links only
+         * (where no additional normalisation is required).  Unlike the
+         * tests for edge links, the routines isThinTetrahedronLink() and
+         * isNormalTetrahedronLink() use essentially the same implementation (so
+         * testing for only thin links may be a little faster, but not by much).
+         *
+         * A hypersurface (or its positive rational multiple) could be the
+         * normalised link of many tetrahedra.  The return value will be a
+         * pair (\a v, \a thin), where:
+         *
+         * - \a v is a vector containing all such tetrahedra.  This will begin
+         *   with the tetrahedra for which this hypersurface is a thin link,
+         *   followed by the tetrahedra where normalisation was required;
+         *   within each category the tetrahedra will be ordered by their
+         *   index within the triangulation.
+         *
+         * - \a thin is either 0, 1 or 2, indicating how many tetrahedra this
+         *   hypersurface is a thin link for.  This uses an unsigned type,
+         *   since it will often be compared to `v.size()`.
+         *
+         * If no positive rational multiple of this hypersurface is the
+         * normalised link of any tetrahedron, then \a link will be 0 and \a v
+         * will be the empty vector.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \return a vector containing the tetrahedra linked by a positive
+         * rational multiple of this hypersurface and an integer indicating
+         * how many of these links are thin, as described above.
+         */
+        std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
+            isNormalTetrahedronLink() const;
 
         /**
          * Returns the first homology group of this hypersurface.
@@ -848,7 +1110,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return the first homology group.
+         * \return the first homology group.
          */
         const AbelianGroup& homology() const;
 
@@ -867,7 +1129,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre This normal hypersurface is compact and embedded.
          *
-         * @return a triangulation of this normal hypersurface.
+         * \return a triangulation of this normal hypersurface.
          */
         Triangulation<3> triangulate() const;
 
@@ -895,8 +1157,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c false.
          *
-         * @param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if both hypersurfaces represent the same normal
+         * \param other the hypersurface to be compared with this hypersurface.
+         * \return \c true if both hypersurfaces represent the same normal
          * hypersurface, or \c false if not.
          */
         bool operator == (const NormalHypersurface& other) const;
@@ -925,8 +1187,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c true.
          *
-         * @param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if both hypersurfaces represent different normal
+         * \param other the hypersurface to be compared with this hypersurface.
+         * \return \c true if both hypersurfaces represent different normal
          * hypersurface, or \c false if not.
          */
         bool operator != (const NormalHypersurface& other) const;
@@ -938,7 +1200,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * provided for scenarios where you need to be able to sort
          * hypersurfaces (e.g., when using them as keys in a map).
          *
-         * The order \e is well-defined, and will be preserved across
+         * The order _is_ well-defined, and will be preserved across
          * copy/move operations, different program executions, and different
          * platforms (since it is defined purely in terms of the normal
          * coordinates, and does not use transient properties such as
@@ -950,8 +1212,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * or if one but not the other supports non-compact hypersurfaces.
          * See the equality test operator==() for further details.
          *
-         * @param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if and only if this appears before the given
+         * \param other the hypersurface to be compared with this hypersurface.
+         * \return \c true if and only if this appears before the given
          * hypersurface in the total order.
          */
         bool operator < (const NormalHypersurface& other) const;
@@ -960,7 +1222,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Determines whether this hypersurface is embedded.  This is true if
          * and only if the surface contains no conflicting prism types.
          *
-         * @return \c true if and only if this hypersurface is embedded.
+         * \return \c true if and only if this hypersurface is embedded.
          */
         bool embedded() const;
 
@@ -972,12 +1234,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * This is a local constraint, not a global constraint.  That is,
          * we do not insist that we can avoid intersections within all
-         * pentachora \e simultaneously.
+         * pentachora _simultaneously_.
          *
          * Local compatibility can be formulated in terms of normal piece
          * types.  Two normal hypersurfaces are locally compatible if
          * and only if they together use at most two prism piece types per
-         * pentachoron; moreover, if there \e are two prism piece types within
+         * pentachoron; moreover, if there _are_ two prism piece types within
          * a single pentachoron then these prism types are non-intersecting.
          *
          * If one of the two hypersurfaces breaks the local compatibility
@@ -989,9 +1251,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \pre Both this and the given normal hypersurface live within the
          * same 4-manifold triangulation.
          *
-         * @param other the other hypersurface to test for local compatibility
+         * \param other the other hypersurface to test for local compatibility
          * with this hypersurface.
-         * @return \c true if the two hypersurfaces are locally compatible, or
+         * \return \c true if the two hypersurfaces are locally compatible, or
          * \c false if they are not.
          */
         bool locallyCompatible(const NormalHypersurface& other) const;
@@ -1015,7 +1277,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * which do not require any knowledge of the internal vector
          * encoding that this hypersurface uses.
          *
-         * @return the underlying integer vector.
+         * \return the underlying integer vector.
          */
         const Vector<LargeInteger>& vector() const;
 
@@ -1027,7 +1289,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Note that this might differ from the encoding originally
          * passed to the class constructor.
          *
-         * @return the internal vector encoding.
+         * \return the internal vector encoding.
          */
         HyperEncoding encoding() const;
 
@@ -1044,11 +1306,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * - If the given encoding does already store tetrahedra, then
          *   this routine will do nothing and immediately return \a enc.
          *
-         * @param tri the triangulation in which the normal hypersurface lives.
-         * @param vector an integer vector that encodes a normal hypersurface
+         * \param tri the triangulation in which the normal hypersurface lives.
+         * \param vector an integer vector that encodes a normal hypersurface
          * within \a tri; this will be modified directly.
-         * @param enc the encoding used by the given integer vector.
-         * @return the new encoding used by the modified \a vector.
+         * \param enc the encoding used by the given integer vector.
+         * \return the new encoding used by the modified \a vector.
          */
         static HyperEncoding reconstructTetrahedra(const Triangulation<4>& tri,
             Vector<LargeInteger>& vector, HyperEncoding enc);
@@ -1065,6 +1327,27 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          */
         void calculateFromTriangulation() const;
 
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface _could_ be the normalised link of a face of positive
+         * dimension.
+         *
+         * A non-null return value is _not_ a guarantee that this hypersurface
+         * _is_ such a link; however, if this routine returns \nullopt then
+         * this _is_ a guarantee that the hypersurface is not such a link.
+         *
+         * The precise tests that this routine carries out involve a trade-off
+         * between speed and mathematical power, and so are subject to change
+         * in future versions of Regina.
+         *
+         * \pre This hypersurface is non-empty.
+         *
+         * \return the precise multiple of this hypersurface that _could_ be a
+         * normalised non-vertex face link, or \nullopt if we can prove
+         * that this hypersurface is not such a link.
+         */
+        std::optional<NormalHypersurface> couldLinkFace() const;
+
     friend class XMLNormalHypersurfaceReader;
 };
 
@@ -1075,8 +1358,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
  * This global routine simply calls NormalHypersurface::swap(); it is provided
  * so that NormalHypersurface meets the C++ Swappable requirements.
  *
- * @param a the first normal hypersurface whose contents should be swapped.
- * @param b the second normal hypersurface whose contents should be swapped.
+ * \param a the first normal hypersurface whose contents should be swapped.
+ * \param b the second normal hypersurface whose contents should be swapped.
  *
  * \ingroup hypersurface
  */
@@ -1179,6 +1462,7 @@ inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {
     realBoundary_.swap(other.realBoundary_);
     compact_.swap(other.compact_);
     H1_.swap(other.H1_);
+    std::swap(linkOf_, other.linkOf_);
 }
 
 inline LargeInteger NormalHypersurface::tetrahedra(size_t pentIndex, int vertex)
@@ -1267,6 +1551,10 @@ inline void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept {
 }
 
 } // namespace regina
+
+// If we haven't yet seen the full definition of Triangulation<4>, include it
+// now - the SnapshotRef constructor (used inline above) needs it.
+#include "triangulation/dim4.h"
 
 #endif
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,41 +34,50 @@
 #include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packettype.h"
 #include "../helpers.h"
+#include "../docstrings/packet/packettype.h"
+
+#define WRAP_PACKET_TYPE(val) .value(#val, regina::val, rdoc::val)
 
 void addPacketType(pybind11::module_& m) {
-    pybind11::enum_<regina::PacketType>(m, "PacketType")
-        .value("PACKET_NONE", regina::PACKET_NONE)
-        .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
-        .value("PACKET_TEXT", regina::PACKET_TEXT)
-        .value("PACKET_SCRIPT", regina::PACKET_SCRIPT)
-        .value("PACKET_ATTACHMENT", regina::PACKET_ATTACHMENT)
-        .value("PACKET_ANGLESTRUCTURES", regina::PACKET_ANGLESTRUCTURES)
-        .value("PACKET_NORMALSURFACES", regina::PACKET_NORMALSURFACES)
-        .value("PACKET_SURFACEFILTER", regina::PACKET_SURFACEFILTER)
-        .value("PACKET_NORMALHYPERSURFACES", regina::PACKET_NORMALHYPERSURFACES)
-        .value("PACKET_SNAPPEATRIANGULATION", regina::PACKET_SNAPPEATRIANGULATION)
-        .value("PACKET_LINK", regina::PACKET_LINK)
-        .value("PACKET_TRIANGULATION2", regina::PACKET_TRIANGULATION2)
-        .value("PACKET_TRIANGULATION3", regina::PACKET_TRIANGULATION3)
-        .value("PACKET_TRIANGULATION4", regina::PACKET_TRIANGULATION4)
-        .value("PACKET_TRIANGULATION5", regina::PACKET_TRIANGULATION5)
-        .value("PACKET_TRIANGULATION6", regina::PACKET_TRIANGULATION6)
-        .value("PACKET_TRIANGULATION7", regina::PACKET_TRIANGULATION7)
-        .value("PACKET_TRIANGULATION8", regina::PACKET_TRIANGULATION8)
+    RDOC_SCOPE_BEGIN(PacketType)
+
+    pybind11::enum_<regina::PacketType>(m, "PacketType", rdoc_scope)
+        WRAP_PACKET_TYPE(PACKET_NONE)
+        WRAP_PACKET_TYPE(PACKET_CONTAINER)
+        WRAP_PACKET_TYPE(PACKET_TEXT)
+        WRAP_PACKET_TYPE(PACKET_SCRIPT)
+        WRAP_PACKET_TYPE(PACKET_ATTACHMENT)
+        WRAP_PACKET_TYPE(PACKET_ANGLESTRUCTURES)
+        WRAP_PACKET_TYPE(PACKET_NORMALSURFACES)
+        WRAP_PACKET_TYPE(PACKET_SURFACEFILTER)
+        WRAP_PACKET_TYPE(PACKET_NORMALHYPERSURFACES)
+        WRAP_PACKET_TYPE(PACKET_SNAPPEATRIANGULATION)
+        WRAP_PACKET_TYPE(PACKET_LINK)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION2)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION3)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION4)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION5)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION6)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION7)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION8)
 #ifdef REGINA_HIGHDIM
-        .value("PACKET_TRIANGULATION9", regina::PACKET_TRIANGULATION9)
-        .value("PACKET_TRIANGULATION10", regina::PACKET_TRIANGULATION10)
-        .value("PACKET_TRIANGULATION11", regina::PACKET_TRIANGULATION11)
-        .value("PACKET_TRIANGULATION12", regina::PACKET_TRIANGULATION12)
-        .value("PACKET_TRIANGULATION13", regina::PACKET_TRIANGULATION13)
-        .value("PACKET_TRIANGULATION14", regina::PACKET_TRIANGULATION14)
-        .value("PACKET_TRIANGULATION15", regina::PACKET_TRIANGULATION15)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION9)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION10)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION11)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION12)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION13)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION14)
+        WRAP_PACKET_TYPE(PACKET_TRIANGULATION15)
 #endif
         .export_values();
 
-    auto i = pybind11::class_<regina::PacketInfo>(m, "PacketInfo")
-        .def_static("name", &regina::PacketInfo::name)
+    RDOC_SCOPE_SWITCH(PacketInfo)
+
+    auto i = pybind11::class_<regina::PacketInfo>(m, "PacketInfo", rdoc_scope)
+        .def_static("name", &regina::PacketInfo::name, rdoc::name)
         ;
-    regina::python::no_eq_operators(i);
+    regina::python::no_eq_static(i);
+
+    RDOC_SCOPE_END
 }
 

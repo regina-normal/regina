@@ -7,7 +7,7 @@ Program version:
     CMakeLists.txt (PACKAGE_VERSION)
     docs/man/*.1 (windows executable path)
     engine/regina-engine-config.1 (date)
-    qtui/src/reginaabout.cpp (regReleased)
+    qtui/src/regina.metainfo.xml (version, date in <release>)
     qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;, copyrightyears)
     qtui/doc/regina/manonly.docbook (&regversion;)
@@ -23,6 +23,8 @@ Program version:
 Plus copyright years in:
     engine/doxygen/doc-footer.html
     python/modulemain.cpp
+    qtui/src/regina.plist
+    qtui/src/reginaabout.cpp (several places)
     ... and the copyright statement in the license (see below)
 
 Full license details:
@@ -55,9 +57,14 @@ Don't forget:
     check for docbook warnings/errors
     run valgrind over the test suite and GUI
     python bindings for new routines
+    rebuild python docstrings and sanity check them
     rebuild manpages
+    check for new Xcode sources
+    ------------------------------------------------------------------------
+    build source tarball, check for unwanted xattrs, and run admin/distcheck
+    ------------------------------------------------------------------------
     website, including updated news, what's new and deprecation guide
-    build binary packages
+    build binary packages, with appropriate BUILD_INFO settings
     update tips for building on different platforms
     update census download file sizes if there have been changes
     tag the git repository

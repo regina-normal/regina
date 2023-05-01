@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -228,8 +228,16 @@ LinkCreator::LinkCreator(ReginaMain*) {
     details->addWidget(area);//, LINK_EXAMPLE);
 
     // Tidy up.
-    type->setCurrentIndex(0);
-    details->setCurrentIndex((int)0);
+    {
+        int typeId = ReginaPrefSet::global().linkCreationType;
+        if (typeId >= 0 && typeId < type->count()) {
+            type->setCurrentIndex(typeId);
+            details->setCurrentIndex(typeId);
+        } else {
+            type->setCurrentIndex(0);
+            details->setCurrentIndex((int)0);
+        }
+    }
 
     QObject::connect(type, SIGNAL(activated(int)), details,
         SLOT(setCurrentIndex(int)));
@@ -242,6 +250,9 @@ QWidget* LinkCreator::getInterface() {
 std::shared_ptr<regina::Packet> LinkCreator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
+    // Remember our selection for next time.
+    ReginaPrefSet::global().linkCreationType = typeId;
+
     if (typeId == LINK_CODE) {
         std::string use = regina::stripWhitespace(
             code->text().toUtf8().constData());

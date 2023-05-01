@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,15 +62,15 @@ namespace regina {
  * closed up by placing the bottommost tetrahedron above the topmost
  * tetrahedron in a similar fashion), forming a solid torus overall.
  *
- * In each tetrahedron, directed edges AB, BC and CD are <i>major edges</i>,
- * directed edges AC and BD are <i>minor edges</i> and directed edge AD
- * is an <i>axis edge</i>.
+ * In each tetrahedron, directed edges AB, BC and CD are _major edges_,
+ * directed edges AC and BD are _minor edges_ and directed edge AD
+ * is an _axis edge_.
  *
  * The major edges all combined form a single longitude of the solid
  * torus.  Using this directed longitude, using the directed meridinal curve
  * ACBA and assuming the spiralled solid torus contains \a n tetrahedra,
- * the minor edges all combined form a (2, <i>n</i>) curve and
- * the axis edges all combined form a (3, <i>n</i>) curve on the torus
+ * the minor edges all combined form a (2, \a n) curve and
+ * the axis edges all combined form a (3, \a n) curve on the torus
  * boundary.
  *
  * Note that all tetrahedra in the spiralled solid torus must be distinct
@@ -98,16 +98,16 @@ class SpiralSolidTorus : public StandardTriangulation {
         Tetrahedron<3>** tet_;
             /**< The tetrahedra that make up this spiralled solid torus. */
         Perm<4>* vertexRoles_;
-            /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
+            /**< For tetrahedron \a i, `vertexRoles[i]` is a
                  permutation p chosen so that vertices A, B, C and D above
                  correspond to vertices p[0], p[1], p[2] and p[3]. */
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          */
         SpiralSolidTorus(const SpiralSolidTorus& src);
 
@@ -117,7 +117,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          */
         SpiralSolidTorus(SpiralSolidTorus&& src) noexcept;
 
@@ -130,8 +130,8 @@ class SpiralSolidTorus : public StandardTriangulation {
          * Sets this to be a copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
-         * @return a reference to this structure.
+         * \param src the structure to copy.
+         * \return a reference to this structure.
          */
         SpiralSolidTorus& operator = (const SpiralSolidTorus& src);
 
@@ -141,15 +141,15 @@ class SpiralSolidTorus : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
-         * @return a reference to this structure.
+         * \param src the structure to move from.
+         * \return a reference to this structure.
          */
         SpiralSolidTorus& operator = (SpiralSolidTorus&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(SpiralSolidTorus& other) noexcept;
@@ -157,7 +157,7 @@ class SpiralSolidTorus : public StandardTriangulation {
         /**
          * Returns the number of tetrahedra in this spiralled solid torus.
          *
-         * @return the number of tetrahedra.
+         * \return the number of tetrahedra.
          */
         size_t size() const;
 
@@ -165,36 +165,36 @@ class SpiralSolidTorus : public StandardTriangulation {
          * Returns the requested tetrahedron in this spiralled solid torus.
          * Tetrahedra are numbered from 0 to size()-1
          * inclusive, with tetrahedron <i>i</i>+1 being placed above
-         * tetrahedron <i>i</i>.
+         * tetrahedron \a i.
          *
-         * @param index specifies which tetrahedron to return; this must
+         * \param index specifies which tetrahedron to return; this must
          * be between 0 and size()-1 inclusive.
-         * @return the requested tetrahedron.
+         * \return the requested tetrahedron.
          */
         Tetrahedron<3>* tetrahedron(size_t index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
          * of the requested tetrahedron plays in the solid torus.
-         * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
+         * The permutation returned (call this `p`) maps 0, 1, 2 and
          * 3 to the four vertices of tetrahedron \a index so that
-         * vertices <tt>p[0]</tt>, <tt>p[1]</tt>, <tt>p[2]</tt> and
-         * <tt>p[3]</tt> correspond to vertices A, B, C and D
+         * vertices `p[0]`, `p[1]`, `p[2]` and
+         * `p[3]` correspond to vertices A, B, C and D
          * respectively as described in the general class notes.
          *
          * In particular, the directed edge from vertex
-         * <tt>p[0]</tt> to <tt>p[3]</tt> is an axis edge,
-         * directed edges <tt>p[0]</tt> to <tt>p[2]</tt> and
-         * <tt>p[1]</tt> to <tt>p[3]</tt> are minor edges and
-         * the directed path from vertices <tt>p[0]</tt> to <tt>p[1]</tt>
-         * to <tt>p[2]</tt> to <tt>p[3]</tt> follows the three
+         * `p[0]` to `p[3]` is an axis edge,
+         * directed edges `p[0]` to `p[2]` and
+         * `p[1]` to `p[3]` are minor edges and
+         * the directed path from vertices `p[0]` to `p[1]`
+         * to `p[2]` to `p[3]` follows the three
          * major edges.
          *
          * See the general class notes for further details.
          *
-         * @param index specifies which tetrahedron in the solid torus
+         * \param index specifies which tetrahedron in the solid torus
          * to examine; this must be between 0 and size()-1 inclusive.
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
         Perm<4> vertexRoles(size_t index) const;
@@ -213,8 +213,8 @@ class SpiralSolidTorus : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of spiralled solid torus.
          */
         bool operator == (const SpiralSolidTorus& other) const;
@@ -233,8 +233,8 @@ class SpiralSolidTorus : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent different types of spiralled solid torus.
          */
         bool operator != (const SpiralSolidTorus& other) const;
@@ -260,7 +260,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * The underlying triangulation is not changed; all that changes
          * is how this spiralled solid torus is represented.
          *
-         * @param k the number of tetrahedra through which we should cycle.
+         * \param k the number of tetrahedra through which we should cycle.
          */
         void cycle(size_t k);
 
@@ -271,10 +271,10 @@ class SpiralSolidTorus : public StandardTriangulation {
          *
          * Tetrahedron 0 in the spiralled solid torus will be the
          * tetrahedron with the lowest index in the triangulation, and
-         * under permutation <tt>vertexRoles(0)</tt> the image of 0
+         * under permutation `vertexRoles(0)` the image of 0
          * will be less than the image of 3.
          *
-         * @return \c true if and only if the representation of this
+         * \return \c true if and only if the representation of this
          * spiralled solid torus was actually changed.
          */
         bool makeCanonical();
@@ -284,7 +284,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * form.  Canonical form is described in detail in the
          * description for makeCanonical().
          *
-         * @return \c true if and only if this spiralled solid torus is
+         * \return \c true if and only if this spiralled solid torus is
          * in canonical form.
          */
         bool isCanonical() const;
@@ -303,11 +303,11 @@ class SpiralSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tet the tetrahedron to examine.
-         * @param useVertexRoles a permutation describing the role each
+         * \param tet the tetrahedron to examine.
+         * \param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by vertexRoles().
-         * @return a structure containing details of the solid torus with the
+         * \return a structure containing details of the solid torus with the
          * given tetrahedron as tetrahedron 0, or \c null if the given
          * tetrahedron is not part of a spiralled solid torus with the given
          * vertex roles.
@@ -327,7 +327,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * Member \a nTet_ will be initialised and dynamic arrays
          * \a tet_ and \a vertexRoles_ will be created.
          *
-         * @param nTet the number of tetrahedra in this spiralled
+         * \param nTet the number of tetrahedra in this spiralled
          * solid torus; this must be strictly positive.
          */
         SpiralSolidTorus(size_t nTet);
@@ -339,8 +339,8 @@ class SpiralSolidTorus : public StandardTriangulation {
  * This global routine simply calls SpiralSolidTorus::swap(); it is provided
  * so that SpiralSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

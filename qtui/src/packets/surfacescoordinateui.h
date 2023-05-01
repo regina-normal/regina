@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,8 +82,7 @@ class SurfaceModel : public QAbstractItemModel {
         /**
          * Data retrieval.
          */
-        regina::NormalSurfaces* surfaces() const;
-        const regina::NormalSurface* surface(const QModelIndex& index) const;
+        regina::NormalSurfaces& surfaces() const;
         size_t surfaceIndex(const QModelIndex& index) const;
         regina::NormalCoords coordSystem() const;
 
@@ -206,13 +205,8 @@ inline SurfaceModel::~SurfaceModel() {
     delete[] realIndex;
 }
 
-inline regina::NormalSurfaces* SurfaceModel::surfaces() const {
-    return surfaces_;
-}
-
-inline const regina::NormalSurface* SurfaceModel::surface(
-        const QModelIndex& index) const {
-    return &surfaces_->surface(realIndex[index.row()]);
+inline regina::NormalSurfaces& SurfaceModel::surfaces() const {
+    return *surfaces_;
 }
 
 inline size_t SurfaceModel::surfaceIndex(const QModelIndex& index) const {

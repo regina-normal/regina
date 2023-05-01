@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -92,12 +92,12 @@ class HilbertPrimal {
          * no duplicates or redundancies.
          *
          * The parameter \a constraints may contain a set of validity
-         * constraints, in which case this routine will only return \e valid
+         * constraints, in which case this routine will only return _valid_
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
          * ValidityConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
-         * addition, \e invalidity is.
+         * addition, _invalidity_ is.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -115,7 +115,7 @@ class HilbertPrimal {
          * contents into some other more permanent storage.
          *
          * \pre If \a constraints is passed, then the given list of
-         * extremal rays contains \e only those extremal rays that satisfy
+         * extremal rays contains _only_ those extremal rays that satisfy
          * all of the given constraints.
          * \pre The template argument RayClass is derived from (or equal to)
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
@@ -137,12 +137,12 @@ class HilbertPrimal {
          * \exception UnsolvedCase Normaliz was unable to compute the
          * Hilbert basis for one or more maximal admissible faces.
          *
-         * \ifacespython There are two versions of this function available
+         * \python There are two versions of this function available
          * in Python.  The first version is
-         * <tt>enumerate(action, rays, constraints, tracker)</tt>, which
+         * `enumerate(action, rays, constraints, tracker)`, which
          * mirrors the C++ function; here \a action may be a pure Python
          * function.  The second version does not have an \a action argument;
-         * instead you call <tt>enumerate(rays, constraints, tracker)</tt>,
+         * instead you call `enumerate(rays, constraints, tracker)`,
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the extremal rays must be passed as a Python list
          * of VectorInt objects, and the output type \a RayClass is likewise
@@ -150,16 +150,16 @@ class HilbertPrimal {
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
-         * @param action a function (or other callable object) that will be
+         * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type RayClass.
-         * @param raysBegin an iterator pointing to the beginning of the
+         * \param raysBegin an iterator pointing to the beginning of the
          * list of extremal rays.
-         * @param raysEnd an iterator pointing past the end of the
+         * \param raysEnd an iterator pointing past the end of the
          * list of extremal rays.
-         * @param constraints a set of validity constraints as described above,
+         * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
-         * @param tracker a progress tracker through which progress
+         * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          */
         template <class RayClass, class RayIterator, typename Action>
@@ -212,10 +212,10 @@ class HilbertPrimal {
          * \exception UnsolvedCase Normaliz was unable to compute the
          * requested Hilbert basis.
          *
-         * @param input the extreme rays of a single maximal admissible face,
+         * \param input the extreme rays of a single maximal admissible face,
          * presented in a form that Normaliz can understand (i.e., as vectors
          * of GMP integers).
-         * @return the Hilbert basis for the given maximal admissible face.
+         * \return the Hilbert basis for the given maximal admissible face.
          */
         static std::vector<std::vector<mpz_class>> normaliz(
             const std::vector<std::vector<mpz_class>>& input);
@@ -230,9 +230,9 @@ class HilbertPrimal {
          * face, and \c false represents a coordinate that is always
          * zero throughout the face.
          *
-         * @param ray the ray to test, given as a vector of integers.
-         * @param face the face to test, given as a bitmask.
-         * @return \c true if the given ray lies within the given face,
+         * \param ray the ray to test, given as a vector of integers.
+         * \param face the face to test, given as a bitmask.
+         * \return \c true if the given ray lies within the given face,
          * or \c false otherwise.
          */
         template <class VectorClass, class BitmaskType>

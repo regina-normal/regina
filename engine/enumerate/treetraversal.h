@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2021, Ben Burton                                   *
+ *  Copyright (c) 2011-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,8 +72,8 @@ class ProgressTracker;
  * class LPData.
  *
  * This class holds the particular state of the tree traversal
- * at any point in time, as described by the current \e level (indicating
- * our current depth in the search tree) and <i>type vector</i>
+ * at any point in time, as described by the current _level_ (indicating
+ * our current depth in the search tree) and _type vector_
  * (indicating which branches of the search tree we have followed).
  * For details on these concepts, see the Algorithmica paper cited above.
  * The key details are summarised below; throughout this discussion
@@ -93,7 +93,7 @@ class ProgressTracker;
  * - In angle structure coordinates, this class identifies taut angle
  *   structures only.  Here the type vector is a sequence of \a n integers,
  *   each equal to 1, 2 or 3, where the <i>i</i>th integer describes the
- *   location of the two &pi; angles in the <i>i</i>th tetrahedron.
+ *   location of the two π angles in the <i>i</i>th tetrahedron.
  *
  * In the original Algorithmica paper, we choose types in the order
  * type_[0], type_[1] and so on, working from the root of the tree down
@@ -153,7 +153,7 @@ class ProgressTracker;
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; moreover, it only serves
+ * \python This is a heavily templated class; moreover, it only serves
  * as a base class, and you will most likely not need to access this class
  * directly.  Instead see the subclasses TreeEnumeration, TautEnumeration
  * and TreeSingleSoln, each of which offers a more useful interface for
@@ -181,7 +181,7 @@ class TreeTraversal : public ShortOutput<
         const NormalEncoding enc_;
             /**< The normal surface or angle structure vector encoding
                  that we are using for our enumeration task.
-                 Note that the tableaux will \e not necessarily use this
+                 Note that the tableaux will _not_ necessarily use this
                  same encoding; see LPInitialTableaux for details. */
         const BanConstraint ban_;
             /**< Details of any banning/marking constraints that are in use. */
@@ -288,9 +288,9 @@ class TreeTraversal : public ShortOutput<
          * mean that the underlying tableaux will use the same encoding
          * internally.  See LPInitialTableaux for more details on this.
          *
-         * @param enc the vector encoding being queried.  In particular,
+         * \param enc the vector encoding being queried.  In particular,
          * this may be the special angle structure encoding.
-         * @return \c true if and only if the given vector encoding is
+         * \return \c true if and only if the given vector encoding is
          * supported.
          */
         static bool supported(NormalEncoding enc);
@@ -315,7 +315,7 @@ class TreeTraversal : public ShortOutput<
          * at time), then this will be the partial count of how many nodes
          * have been visited so far.
          *
-         * @return the number of nodes visited so far.
+         * \return the number of nodes visited so far.
          */
         size_t visited() const;
 
@@ -326,10 +326,10 @@ class TreeTraversal : public ShortOutput<
          *
          * This routine outputs the same information that typeString() returns.
          *
-         * \ifacespython Not rpesent; instead use typeString(), which
-         * returns this same information as a string.
+         * \nopython Instead use typeString(), which returns this same
+         * information as a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void dumpTypes(std::ostream& out) const;
 
@@ -339,7 +339,7 @@ class TreeTraversal : public ShortOutput<
          *
          * This routine returns the same information that dumpTypes() writes.
          *
-         * @param the type vector in string form.
+         * \param the type vector in string form.
          */
         std::string typeString() const;
 
@@ -347,9 +347,9 @@ class TreeTraversal : public ShortOutput<
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -359,11 +359,11 @@ class TreeTraversal : public ShortOutput<
          * This routine is for use only with normal (or almost normal)
          * surfaces, not taut angle structures.
          *
-         * If the current type vector does not represent a \e vertex
+         * If the current type vector does not represent a _vertex_
          * normal surface (which may be the case when calling
          * TreeSingleSoln::find()), then there may be many normal surfaces
          * all represented by the same type vector; in this case there are
-         * no further guarantees about \e which of these normal surfaces
+         * no further guarantees about _which_ of these normal surfaces
          * you will get.
          *
          * The surface that is returned will use the same vector encoding
@@ -379,11 +379,11 @@ class TreeTraversal : public ShortOutput<
          * \pre We are working with normal or almost normal surfaces.
          * This will be checked (see the exception details below).
          *
-         * \throw FailedPrecondition we are not working with normal or
+         * \exception FailedPrecondition We are not working with normal or
          * almost normal surfaces (i.e., the coordinate system passed to the
          * TreeTraversal constructor was NS_ANGLE).
          *
-         * @return a normal surface that has been found at the current stage
+         * \return a normal surface that has been found at the current stage
          * of the search.
          */
         NormalSurface buildSurface() const;
@@ -406,11 +406,11 @@ class TreeTraversal : public ShortOutput<
          * \pre We are working with angle structure coordinates.
          * This will be checked (see the exception details below).
          *
-         * \throw FailedPrecondition we are not working with angle structure
-         * coordinates (i.e., the coordinate system passed to the TreeTraversal
-         * constructor was not NS_ANGLE).
+         * \exception FailedPrecondition We are not working with angle
+         * structure coordinates (i.e., the coordinate system passed to the
+         * TreeTraversal constructor was not NS_ANGLE).
          *
-         * @return the taut angle structure that has been found at the
+         * \return the taut angle structure that has been found at the
          * current stage of the search.
          */
         AngleStructure buildStructure() const;
@@ -429,7 +429,7 @@ class TreeTraversal : public ShortOutput<
          *
          * \pre The given triangulation is non-empty.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error which should have been preventable with the right checks
          * in advance.  Such exceptions are generated by the \a LPConstraint
@@ -437,33 +437,38 @@ class TreeTraversal : public ShortOutput<
          * chosen \a LPConstraint template argument to see if this is a
          * possibility.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error that was "genuinely" unforseeable.  Again, such exceptions
          * are generated by your chosen \a LPConstraint class, and you should
          * consult its documentation to see if this is a possibility.
          *
-         * @param tri the triangulation in which we wish to search for
+         * \param tri the triangulation in which we wish to search for
          * normal surfaces or taut angle structures.
-         * @param enc the normal surface or angle structure vector encoding
+         * \param enc the normal surface or angle structure vector encoding
          * that we are working with; in particular, this may be the special
          * angle structure encoding.
-         * @param branchesPerQuad the maximum number of branches we
+         * \param branchesPerQuad the maximum number of branches we
          * spawn in the search tree for each quadrilateral or angle type
          * (e.g., 4 for a vanilla normal surface tree traversal algorithm,
          * or 3 for enumerating taut angle structures).
-         * @param branchesPerTri the maximum number of branches we
+         * \param branchesPerTri the maximum number of branches we
          * spawn in the search tree for each triangle type
          * (e.g., 2 for a vanilla normal surface tree traversal algorithm).
          * If the underlying coordinate system does not support triangles
          * then this argument will be ignored.
-         * @param enumeration \c true if we should optimise the tableaux
+         * \param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
+         * \param enumeration \c true if we should optimise the tableaux
          * for a full enumeration of vertex surfaces or taut angle structures,
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere).
          */
+        template <typename... BanArgs>
         TreeTraversal(const Triangulation<3>& tri, NormalEncoding enc,
-                int branchesPerQuad, int branchesPerTri, bool enumeration);
+                int branchesPerQuad, int branchesPerTri, bool enumeration,
+                BanArgs&&... banArgs);
 
         /**
          * Rearranges the search tree so that \a nextType becomes the next
@@ -478,7 +483,7 @@ class TreeTraversal : public ShortOutput<
          * \a nextType does not appear in the list
          * typeOrder_[0,...,level_].
          *
-         * @param nextType the next type to process.
+         * \param nextType the next type to process.
          */
         void setNext(size_t nextType);
 
@@ -490,7 +495,7 @@ class TreeTraversal : public ShortOutput<
          * BanConstraintBase class notes.
          *
          * This routine simply searches through types by increasing index
-         * into the type vector; in particular, it does \e not make any use
+         * into the type vector; in particular, it does _not_ make any use
          * of the reordering defined by the \a typeOrder_ array.
          *
          * \pre We are working in standard normal or almost normal
@@ -501,9 +506,9 @@ class TreeTraversal : public ShortOutput<
          * \pre The argument \a startFrom is at least \a nTets_ (i.e.,
          * it is at least as large as the index of the first triangle type).
          *
-         * @param startFrom the index into the type vector of the triangle type
+         * \param startFrom the index into the type vector of the triangle type
          * from which we begin searching.
-         * @return the index into the type vector of the next unmarked
+         * \return the index into the type vector of the next unmarked
          * triangle type from \a startFrom onwards, or -1 if there are no
          * more remaining.
          */
@@ -530,8 +535,8 @@ class TreeTraversal : public ShortOutput<
          * (This is because, for angle structures, this routine does
          * nothing to eliminate the zero solution.)
          *
-         * @param quadType the quadrilateral or angle type to examine.
-         * @return the number of type values 0, 1, 2 or 3 that yield a
+         * \param quadType the quadrilateral or angle type to examine.
+         * \return the number of type values 0, 1, 2 or 3 that yield a
          * feasible system; this will be between 0 and 4 inclusive for
          * quadrilateral types, or between 0 and 3 inclusive for angle types.
          */
@@ -547,7 +552,7 @@ class TreeTraversal : public ShortOutput<
          * This allows it to be more efficient (in particular, by only
          * examining the branches closest to the root of the search tree).
          *
-         * @return the percentage, as a number between 0 and 100 inclusive.
+         * \return the percentage, as a number between 0 and 100 inclusive.
          */
         double percent() const;
 };
@@ -579,7 +584,7 @@ class TreeTraversal : public ShortOutput<
  * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
  * standard almost normal coordinates (NS_AN_STANDARD).  For almost
  * normal surfaces, we allow any number of octagons (including zero),
- * but we only allow at most one octagon \e type in the entire triangulation.
+ * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
  * By using appropriate template parameters \a LPConstraint and/or
@@ -616,10 +621,10 @@ class TreeTraversal : public ShortOutput<
  *
  * \warning Although the tree traversal algorithm can run in standard normal
  * or almost normal coordinates, this is not recommended: it is likely to be
- * \e much slower than in quadrilateral or quadrilateral-octagon coordinates
+ * _much_ slower than in quadrilateral or quadrilateral-octagon coordinates
  * respectively.  Instead you should enumerate vertex solutions using
  * quadrilateral or quadrilateral-octagon coordinates, and then use the
- * "transform constructor" <tt>NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)</tt>.
+ * "transform constructor" `NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)`.
  *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.
@@ -627,7 +632,7 @@ class TreeTraversal : public ShortOutput<
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * TreeEnumeration_<i>LPConstraint</i>_<i>BanConstraint</i>, where the suffixes
  * \a LPConstraint and \a BanConstraint are abbreviated versions of the
@@ -704,7 +709,7 @@ class TreeEnumeration :
          *   surface each time you call it.
          *
          * \warning Although it is supported, it is highly recommended that you
-         * do \e not run a full vertex enumeration in standard normal
+         * do _not_ run a full vertex enumeration in standard normal
          * or almost normal coordinates (this is for performance reasons).
          * See the class notes for further discussion and better alternatives.
          * In normal circumstances you should run a full vertex enumeration
@@ -716,7 +721,7 @@ class TreeEnumeration :
          * adhere to any preconditions required by the template
          * parameters LPConstraint and BanConstraint.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error which should have been preventable with the right checks
          * in advance.  Such exceptions are generated by the \a LPConstraint
@@ -724,18 +729,23 @@ class TreeEnumeration :
          * chosen \a LPConstraint template argument to see if this is a
          * possibility.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error that was "genuinely" unforseeable.  Again, such exceptions
          * are generated by your chosen \a LPConstraint class, and you should
          * consult its documentation to see if this is a possibility.
          *
-         * @param tri the triangulation in which we wish to enumerate
+         * \param tri the triangulation in which we wish to enumerate
          * vertex surfaces.
-         * @param enc the normal (or almost normal) surface vector encoding
+         * \param enc the normal (or almost normal) surface vector encoding
          * that we are working with.
+         * \param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
          */
-        TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc);
+        template <typename... BanArgs>
+        TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc,
+            BanArgs&&... banArgs);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -746,7 +756,7 @@ class TreeEnumeration :
          * surface at time, this will be the partial count of how many
          * vertex surfaces have been found until now.
          *
-         * @return the number of solutions found so far.
+         * \return the number of solutions found so far.
          */
         size_t solutions() const;
 
@@ -790,16 +800,16 @@ class TreeEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial TreeEnumeration object
          * (and therefore the additional \a args list is omitted here).
          *
-         * @param action a function (or some other callable object) to
+         * \param action a function (or some other callable object) to
          * call for each vertex surface that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial tree enumeration argument.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -845,13 +855,13 @@ class TreeEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param tracker a progress tracker through which progress
+         * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
-         * @return \c true if we found another vertex surface, or
+         * \return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
@@ -873,9 +883,9 @@ class TreeEnumeration :
          * normal surface.  This is always the case any time after next()
          * returns \c true, or any time that run() calls its callback function.
          *
-         * @param tree the tree traversal object from which we are
+         * \param tree the tree traversal object from which we are
          * extracting the current type vector.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeTypes(const TreeEnumeration& tree);
@@ -898,16 +908,16 @@ class TreeEnumeration :
          * normal surface.  This is always the case any time after next()
          * returns \c true, or any time that run() calls its callback function.
          *
-         * \ifacespython This function is available and can be used directly,
+         * \python This function is available and can be used directly,
          * but you should not use it as a callback with run().  Currently this
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
          * Instead you can use a pure python function \a f as a callback,
-         * where <tt>f(tree)</tt> just calls <tt>tree.writeSurface()</tt>.
+         * where `f(tree)` just calls `tree.writeSurface()`.
          *
-         * @param tree the tree traversal object from which we are
+         * \param tree the tree traversal object from which we are
          * extracting the current vertex normal or almost normal surface.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeSurface(const TreeEnumeration& tree);
@@ -971,7 +981,7 @@ class TreeEnumeration :
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; however, the only
+ * \python This is a heavily templated class; however, the only
  * \a LPConstraint and \a BanConstraint options currently offered for
  * angle structures are the default LPConstraintNone and BanNone.
  * Therefore Python offers just one instance of this class (with all template
@@ -1033,7 +1043,7 @@ class TautEnumeration :
          * \pre The trianglation adheres to any preconditions required by the
          * template parameters LPConstraint and BanConstraint.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error which should have been preventable with the right checks
          * in advance.  Such exceptions are generated by the \a LPConstraint
@@ -1041,16 +1051,20 @@ class TautEnumeration :
          * chosen \a LPConstraint template argument to see if this is a
          * possibility.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error that was "genuinely" unforseeable.  Again, such exceptions
          * are generated by your chosen \a LPConstraint class, and you should
          * consult its documentation to see if this is a possibility.
          *
-         * @param tri the triangulation in which we wish to enumerate
+         * \param tri the triangulation in which we wish to enumerate
          * taut angle structures.
+         * \param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
          */
-        TautEnumeration(const Triangulation<3>& tri);
+        template <typename... BanArgs>
+        TautEnumeration(const Triangulation<3>& tri, BanArgs&&... banArgs);
 
         /**
          * Returns the total number of taut angle structures
@@ -1061,7 +1075,7 @@ class TautEnumeration :
          * one surface at time, this will be the partial count of how many
          * taut angle structures have been found until now.
          *
-         * @return the number of solutions found so far.
+         * \return the number of solutions found so far.
          */
         size_t solutions() const;
 
@@ -1105,16 +1119,16 @@ class TautEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial TautEnumeration object
          * (and therefore the additional \a args list is omitted here).
          *
-         * @param action a function (or some other callable object) to
+         * \param action a function (or some other callable object) to
          * call for each taut angle structure that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial tree enumeration argument.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -1160,13 +1174,13 @@ class TautEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param tracker a progress tracker through which progress
+         * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
-         * @return \c true if we found another vertex surface, or
+         * \return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more taut angle
          * strutures were found.
          */
@@ -1188,9 +1202,9 @@ class TautEnumeration :
          * This is always the case any time after next()
          * returns \c true, or any time that run() calls its callback function.
          *
-         * @param tree the tree traversal object from which we are
+         * \param tree the tree traversal object from which we are
          * extracting the current type vector.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeTypes(const TautEnumeration& tree);
@@ -1214,16 +1228,16 @@ class TautEnumeration :
          * This is always the case any time after next() returns \c true,
          * or any time that run() calls its callback function.
          *
-         * \ifacespython This function is available and can be used directly,
+         * \python This function is available and can be used directly,
          * but you should not use it as a callback with run().  Currently this
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
          * Instead you can use a pure python function \a f as a callback,
-         * where <tt>f(tree)</tt> just calls <tt>tree.writeStructure()</tt>.
+         * where `f(tree)` just calls `tree.writeStructure()`.
          *
-         * @param tree the tree traversal object from which we are
+         * \param tree the tree traversal object from which we are
          * extracting the current taut angle structure.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeStructure(const TautEnumeration& tree);
@@ -1265,7 +1279,7 @@ class TautEnumeration :
  * that coordinate to zero before it tries setting it to non-zero.  In
  * other words, if it does find a surface satisfying the given constraints,
  * then it is guaranteed that the set of non-zero coordinate positions
- * will be minimal (though not necessary a global \e minimum).  In many
+ * will be minimal (though not necessary a global _minimum_).  In many
  * settings (such as when using LPConstraintEulerPositive), this guarantees
  * that the final surface (if it exists) will be a vertex normal or
  * almost normal surface.
@@ -1283,7 +1297,7 @@ class TautEnumeration :
  * then call buildSurface() to extract the details of the surface that was
  * found.
  *
- * If you wish to enumerate \e all vertex surfaces in a 3-manifold
+ * If you wish to enumerate _all_ vertex surfaces in a 3-manifold
  * triangulation (instead of finding just one), you should use the class
  * TreeEnumeration instead.
  *
@@ -1292,7 +1306,7 @@ class TautEnumeration :
  * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
  * standard almost normal coordinates (NS_AN_STANDARD).  For almost
  * normal surfaces, we allow any number of octagons (including zero),
- * but we only allow at most one octagon \e type in the entire triangulation.
+ * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
  * The template argument \a IntType indicates the integer type that
@@ -1304,7 +1318,7 @@ class TautEnumeration :
  * This class is designed to manage the execution of a significant search
  * operation, and so it does not support copying, moving or swapping.
  *
- * \warning Typically one should only use this class with \e one-vertex
+ * \warning Typically one should only use this class with _one-vertex_
  * triangulations (since otherwise, setting at least one triangle coordinate
  * to zero is not enough to rule out trivial vertex linking surfaces).
  * Of course there may be settings in which multiple vertices make sense
@@ -1315,7 +1329,7 @@ class TautEnumeration :
  * \warning If you examine the type vector (e.g., by calling typeString()
  * or dumpTypes()), be aware that this class merges the old types 0 and 1
  * together into a single branch of the search tree.  This means that
- * type 0 never appears, and that type 1 could indicate \e either positive
+ * type 0 never appears, and that type 1 could indicate _either_ positive
  * quadrilaterals in the first position, or else no quadrilaterals at all.
  *
  * \pre The parameter LPConstraint must be a subclass of LPConstraintBase, and
@@ -1332,7 +1346,7 @@ class TautEnumeration :
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * TreeSingleSoln_<i>LPConstraint</i>_<i>BanConstraint</i>, where the suffixes
  * \a LPConstraint and \a BanConstraint are abbreviated versions of the
@@ -1412,7 +1426,7 @@ class TreeSingleSoln :
          * adhere to any preconditions required by the template
          * parameters LPConstraint and BanConstraint.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error which should have been preventable with the right checks
          * in advance.  Such exceptions are generated by the \a LPConstraint
@@ -1420,18 +1434,23 @@ class TreeSingleSoln :
          * chosen \a LPConstraint template argument to see if this is a
          * possibility.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error that was "genuinely" unforseeable.  Again, such exceptions
          * are generated by your chosen \a LPConstraint class, and you should
          * consult its documentation to see if this is a possibility.
          *
-         * @param tri the triangulation in which we wish to search for a
+         * \param tri the triangulation in which we wish to search for a
          * non-trivial surface.
-         * @param enc the normal (or almost normal) surface vector encoding
+         * \param enc the normal (or almost normal) surface vector encoding
          * that we are working with.
+         * \param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
          */
-        TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc);
+        template <typename... BanArgs>
+        TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc,
+            BanArgs&&... banArgs);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1454,7 +1473,7 @@ class TreeSingleSoln :
          * \pre The algorithm has not yet been run, i.e., you have not called
          * find() before.
          *
-         * @return \c true if we found a non-trivial solution as described
+         * \return \c true if we found a non-trivial solution as described
          * in the class notes, or \c false if no such solution exists.
          */
         bool find();
@@ -1479,7 +1498,7 @@ class TreeSingleSoln :
          *
          * See cancel() for details on how cancellation works.
          *
-         * @return \c true if some thread has called cancel() on this object.
+         * \return \c true if some thread has called cancel() on this object.
          */
         bool cancelled();
 };
@@ -1533,6 +1552,54 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
+TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
+        const Triangulation<3>& tri, NormalEncoding enc,
+        int branchesPerQuad, int branchesPerTri, bool enumeration,
+        BanArgs&&... banArgs) :
+        origTableaux_(tri, enc, enumeration),
+        enc_(enc),
+        ban_(origTableaux_, std::forward<BanArgs>(banArgs)...),
+        nTets_(tri.size()),
+        nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
+        /* Each time we branch, one LP can be solved in-place:
+           therefore we use branchesPerQuad-1 and branchesPerTri-1.
+           The final +1 is for the root node. */
+        nTableaux_(enc_.storesTriangles() ?
+            (branchesPerQuad - 1) * nTets_ +
+                (branchesPerTri - 1) * nTets_ * 4 + 1 :
+            (branchesPerQuad - 1) * nTets_ + 1),
+        type_(new char[nTypes_ + 1]),
+        typeOrder_(new size_t[nTypes_]),
+        level_(0),
+        octLevel_(enc_.storesOctagons() ? -1 : static_cast<ssize_t>(nTypes_)),
+        lp_(new LPData<LPConstraint, IntType>[nTableaux_]),
+        lpSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
+        nextSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
+        nVisited_(0) {
+    // Initialise the type vector to the zero vector.
+    std::fill(type_, type_ + nTypes_ + 1, 0);
+
+    // Set a default type order.
+    for (size_t i = 0; i < nTypes_; ++i)
+        typeOrder_[i] = i;
+
+    // Reserve space for all the tableaux that we will ever need.
+    for (size_t i = 0; i < nTableaux_; ++i)
+        lp_[i].reserve(origTableaux_);
+
+    // Mark the location of the initial tableaux at the root node.
+    lpSlot_[0] = lp_;
+    nextSlot_[0] = lp_ + 1;
+
+    // Reserve space for our additional temporary tableaux.
+    tmpLP_[0].reserve(origTableaux_);
+    tmpLP_[1].reserve(origTableaux_);
+    tmpLP_[2].reserve(origTableaux_);
+    tmpLP_[3].reserve(origTableaux_);
+}
+
+template <class LPConstraint, typename BanConstraint, typename IntType>
 inline ssize_t TreeTraversal<LPConstraint, BanConstraint, IntType>::
         nextUnmarkedTriangleType(size_t startFrom) {
     while (startFrom < nTypes_ && ban_.marked(2 * nTets_ + startFrom))
@@ -1545,12 +1612,14 @@ inline ssize_t TreeTraversal<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
 inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
-        const Triangulation<3>& tri, NormalEncoding enc) :
+        const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, enc,
             (enc.storesOctagons() ? 7 : 4) /* branches per quad */,
             2 /* branches per triangle */,
-            true /* enumeration */),
+            true /* enumeration */,
+            std::forward<BanArgs>(banArgs)...),
         nSolns_(0),
         lastNonZero_(-1) {
 }
@@ -1589,12 +1658,14 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
 inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
-        const Triangulation<3>& tri) :
+        const Triangulation<3>& tri, BanArgs&&... banArgs) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, NS_ANGLE,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
-            true /* enumeration */),
+            true /* enumeration */,
+            std::forward<BanArgs>(banArgs)...),
         nSolns_(0) {
 }
 
@@ -1632,12 +1703,14 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
 inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
-        const Triangulation<3>& tri, NormalEncoding enc) :
+        const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, enc,
             (enc.storesOctagons() ? 6 : 3) /* branches per quad */,
             2 /* branches per triangle */,
-            false /* enumeration */),
+            false /* enumeration */,
+            std::forward<BanArgs>(banArgs)...),
         nextZeroLevel_(0),
         cancelled_(false) {
 }

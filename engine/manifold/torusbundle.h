@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -95,10 +95,13 @@ class TorusBundle : public Manifold {
          *
          * \pre The given matrix has determinant +1 or -1.
          *
-         * @param newMonodromy describes precisely how the upper and lower
+         * \exception InvalidArgument The given monodromy does not have
+         * determinant ±1.
+         *
+         * \param monodromy describes precisely how the upper and lower
          * torus boundaries are identified.  See the class notes for details.
          */
-        TorusBundle(const Matrix2& newMonodromy);
+        TorusBundle(const Matrix2& monodromy);
         /**
          * Creates a new torus bundle over the circle using the given
          * monodromy.  The four elements of the monodromy matrix are
@@ -114,10 +117,13 @@ class TorusBundle : public Manifold {
          * \pre The monodromy matrix formed from the given parameters
          * has determinant +1 or -1.
          *
-         * @param mon00 the (0,0) element of the monodromy matrix.
-         * @param mon01 the (0,1) element of the monodromy matrix.
-         * @param mon10 the (1,0) element of the monodromy matrix.
-         * @param mon11 the (1,1) element of the monodromy matrix.
+         * \exception InvalidArgument The given monodromy does not have
+         * determinant ±1.
+         *
+         * \param mon00 the (0,0) element of the monodromy matrix.
+         * \param mon01 the (0,1) element of the monodromy matrix.
+         * \param mon10 the (1,0) element of the monodromy matrix.
+         * \param mon11 the (1,1) element of the monodromy matrix.
          */
         TorusBundle(long mon00, long mon01, long mon10, long mon11);
         /**
@@ -129,21 +135,21 @@ class TorusBundle : public Manifold {
          * torus boundaries are identified.  See the class notes for
          * details.
          *
-         * @return the monodromy for this torus bundle.
+         * \return the monodromy for this torus bundle.
          */
         const Matrix2& monodromy() const;
 
         /**
          * Sets this to be a copy of the given torus bundle.
          *
-         * @return a reference to this torus bundle.
+         * \return a reference to this torus bundle.
          */
         TorusBundle& operator = (const TorusBundle&) = default;
 
         /**
          * Swaps the contents of this and the given torus bundle.
          *
-         * @param other the torus bundle whose contents should be swapped
+         * \param other the torus bundle whose contents should be swapped
          * with this.
          */
         void swap(TorusBundle& other) noexcept;
@@ -152,13 +158,13 @@ class TorusBundle : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same torus bundle.
          *
-         * This routine does \e not test for homeomorphism; instead it compares
+         * This routine does _not_ test for homeomorphism; instead it compares
          * the specific monodromies.  If you have two objects that represent
          * same torus bundle using two different monodromies, they will
          * be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same torus bundle.
          */
         bool operator == (const TorusBundle& compare) const;
@@ -167,13 +173,13 @@ class TorusBundle : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same torus bundle.
          *
-         * This routine does \e not test for homeomorphism; instead it compares
+         * This routine does _not_ test for homeomorphism; instead it compares
          * the specific monodromies.  If you have two objects that represent
          * same torus bundle using two different monodromies, they will
          * be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same torus bundle.
          */
         bool operator != (const TorusBundle& compare) const;
@@ -187,6 +193,11 @@ class TorusBundle : public Manifold {
         /**
          * Uses change of basis and/or inversion to reduces the monodromy
          * representation to something more aesthetically pleasing.
+         *
+         * \exception InvalidArgument The current monodromy does not have
+         * determinant ±1.  This is thrown as an InvalidArgument because
+         * reduce() is typically used to reduce a monodromy that the user
+         * passes to the class constructor.
          */
         void reduce();
 
@@ -247,9 +258,9 @@ class TorusBundle : public Manifold {
          *
          * \pre Both matrices consist entirely of non-negative elements.
          *
-         * @param m1 the first monodromy matrix to examine.
-         * @param m2 the second monodromy matrix to examine.
-         * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
+         * \param m1 the first monodromy matrix to examine.
+         * \param m2 the second monodromy matrix to examine.
+         * \return \c true if \a m1 is deemed to be more pleasing than \a m2,
          * or \c false if either the matrices are equal or \a m2 is more
          * pleasing than \a m1.
          */
@@ -262,8 +273,8 @@ class TorusBundle : public Manifold {
  * This global routine simply calls TorusBundle::swap(); it is provided so
  * that TorusBundle meets the C++ Swappable requirements.
  *
- * @param a the first torus bundle whose contents should be swapped.
- * @param b the second torus bundle whose contents should be swapped.
+ * \param a the first torus bundle whose contents should be swapped.
+ * \param b the second torus bundle whose contents should be swapped.
  *
  * \ingroup manifold
  */
@@ -275,8 +286,8 @@ inline TorusBundle::TorusBundle() :
         monodromy_(1, 0, 0, 1) {
 }
 
-inline TorusBundle::TorusBundle(const Matrix2& newMonodromy) :
-        monodromy_(newMonodromy) {
+inline TorusBundle::TorusBundle(const Matrix2& monodromy) :
+        monodromy_(monodromy) {
     reduce();
 }
 

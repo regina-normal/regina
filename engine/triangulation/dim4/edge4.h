@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,9 @@ namespace regina {
  * Represents an edge in the skeleton of a 4-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
- * documentation for Face for a general overview of how this class works.
+ * generic documentation for Face for a general overview of how the face
+ * classes work.  In Python, you can read this generic documentation by
+ * looking at faces in a higher dimension: try `help(Edge5)`.
  *
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
@@ -95,22 +97,22 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          *
          * - The triangles of the edge link are numbered as follows.
          *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a pent represent <tt>embedding(i).pentachoron()</tt>,
-         *   and let \a e represent <tt>embedding(i).edge()</tt>.
-         *   Then <tt>buildLink()->triangle(i)</tt> is the triangle
+         *   \a pent represent `embedding(i).pentachoron()`,
+         *   and let \a e represent `embedding(i).edge()`.
+         *   Then `buildLink()->triangle(i)` is the triangle
          *   in the edge link that links edge \a e of pentachoron \a pent.
-         *   In other words, <tt>buildLink()->triangle(i)</tt> in the edge link
-         *   is parallel to triangle <tt>pent->triangle(e)</tt> in the
+         *   In other words, `buildLink()->triangle(i)` in the edge link
+         *   is parallel to triangle `pent->triangle(e)` in the
          *   surrounding 4-manifold triangulation.
          *
          * - The vertices of each triangle in the edge link are
          *   numbered as follows.  Following the discussion above,
-         *   suppose that <tt>buildLink()->triangle(i)</tt>
+         *   suppose that `buildLink()->triangle(i)`
          *   sits within \c pent and is parallel to
-         *   <tt>pent->triangle(e)</tt>.
+         *   `pent->triangle(e)`.
          *   Then vertices 0,1,2 of the triangle in the link will be
          *   parallel to vertices 0,1,2 of the corresponding Triangle<4>.
-         *   The permutation <tt>pent->triangleMapping(e)</tt> will map
+         *   The permutation `pent->triangleMapping(e)` will map
          *   vertices 0,1,2 of the triangle in the link to the
          *   corresponding vertices of \c pent (those opposite \c e),
          *   and will map 3 and 4 to the vertices of \c e itself.
@@ -119,12 +121,12 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          *   compute with, you can call buildLinkInclusion() to retrieve
          *   this information as an isomorphism.
          *
-         * \ifacespython Since Python does not distinguish between const and
+         * \python Since Python does not distinguish between const and
          * non-const, this routine will return by value (thus making a
          * deep copy of the edge link).  You are free to modify the
          * triangulation that is returned.
          *
-         * @return the read-only triangulated link of this edge.
+         * \return the read-only triangulated link of this edge.
          */
         const Triangulation<2>& buildLink() const;
 
@@ -140,9 +142,9 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          * Specifically, this function returns an Isomorphism<4> that describes
          * how the individual triangles of the link sit within the pentachora
          * of the original triangulation.  If \a p is the isomorphism returned,
-         * then <tt>p.pentImage(i)</tt> will indicate which pentachoron
+         * then `p.pentImage(i)` will indicate which pentachoron
          * \a pent of the 4-manifold triangulation contains the <i>i</i>th
-         * triangle of the link.  Moreover, <tt>p.facetPerm(i)</tt> will
+         * triangle of the link.  Moreover, `p.facetPerm(i)` will
          * indicate exactly where the <i>i</i>th triangle sits within
          * \a pent: (i) it will send 3,4 to the vertices of \a pent that lie
          * on the edge that the triangle links, with 3 and 4 mapping to
@@ -159,17 +161,40 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          * This is the same isomorphism that was accessible through the
          * old buildLinkDetail() function in Regina 6.0.1 and earlier.
          *
-         * @return details of how buildLink() labels the triangles of
+         * \return details of how buildLink() labels the triangles of
          * the edge link.
          */
         Isomorphism<4> buildLinkInclusion() const;
+
+        /**
+         * Returns the link of this edge as a normal hypersurface.
+         *
+         * Constructing the link of a edge begins with building the frontier
+         * of a regular neighbourhood of the edge.  If this is already a
+         * normal hypersurface, then then link is called _thin_.  Otherwise
+         * some basic normalisation steps are performed until the hypersurface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the hypersurface, and in some pathological
+         * cases could even reduce it to the empty hypersurface.
+         *
+         * Although normalisation of arbitrary embedded 3-manifolds is messy,
+         * for edge links the process is thankfully simpler.  Essentially,
+         * any changes will be limited to operations analagous to compressions
+         * and boundary compressions along discs and 3-balls, as well as
+         * removing trivial 4-sphere components.
+         *
+         * \return a pair (\a s, \a thin), where \a s is the edge linking
+         * normal hypersurface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
+         */
+        std::pair<NormalHypersurface, bool> linkingSurface() const;
 
     private:
         /**
          * Creates a new edge and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * edge belongs.
          */
         Face(Component<4>* component);
@@ -182,6 +207,10 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
 
 inline Face<4, 1>::Face(Component<4>* component) :
         detail::FaceBase<4, 1>(component), link_(nullptr) {
+}
+
+inline std::pair<NormalHypersurface, bool> Face<4, 1>::linkingSurface() const {
+    return triangulation().linkingSurface(*this);
 }
 
 } // namespace regina

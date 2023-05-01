@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2021, Ben Burton
+# Copyright (c) 2007-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the Python repr() output for some of Regina's classes.
@@ -48,7 +48,7 @@ def dump(x):
 		else:
 			print('empty list')
 	else:
-		print(x.__class__.__name__)
+		print(x.__class__.__qualname__)
 		print(str(x))
 	print(repr(x))
 	print()
@@ -488,14 +488,14 @@ dump(p)
 c = Container()
 t = Text('Hello world!')
 t.setLabel('Welcome')
-c.insertChildLast(t)
+c.append(t)
 a = Attachment(b'foo', 'test.txt')
-t.insertChildLast(a)
+t.append(a)
 s = Script()
 s.setText('print("Hello world!")\nprint(0)')
 s.addVariable('text', t)
 s.addVariable('dummy', None)
-t.insertChildLast(s)
+t.append(s)
 dump(c)
 dump(t)
 dump(a)
@@ -542,4 +542,6 @@ tree.run(dump)
 t = Example3.trefoil()
 tree = TreeEnumeration_NonSpun(t, NS_QUAD)
 tree.run(dump)
+
+dump(Perm8.Sn)
 

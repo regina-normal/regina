@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,8 +39,7 @@
 
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
-// This specialisation header will be re-included at the beginning of
-// perm-impl.h.
+// This specialisation header will be re-included within perm.h.
 #include "maths/perm.h"
 
 #ifndef __REGINA_PERM2_H
@@ -73,40 +72,23 @@ namespace regina {
  * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \warning Every permutation class Perm<n> provides a transposition
- * (i.e., pair swap) constructor <tt>Perm<n>(a,b).</tt>  In addition, the
+ * (i.e., pair swap) constructor `Perm<n>(a,b).`  In addition, the
  * specialised classes Perm<3>, Perm<4> and Perm<5> provide "list of images"
- * constructors <tt>Perm<3>(a,b,c)</tt>, <tt>Perm<4>(a,b,c,d)</tt> and
- * <tt>Perm<5>(a,b,c,d,e)</tt>.  For Perm<2>, these two constructors would
+ * constructors `Perm<3>(a,b,c)`, `Perm<4>(a,b,c,d)` and
+ * `Perm<5>(a,b,c,d,e)`.  For Perm<2>, these two constructors would
  * be indistinguishable (since both would take two integer arguments).
  * Here Perm<2> takes an approach that is consistent with the generic Perm<n>
- * class: <tt>Perm<2>(a,b)</tt> is interpreted as the \e transposition of
- * \a a and \a b.  In particular, <tt>Perm(0,1)</tt> is \e not the
+ * class: `Perm<2>(a,b)` is interpreted as the _transposition_ of
+ * \a a and \a b.  In particular, `Perm(0,1)` is _not_ the
  * identity permutation.
  *
- * \ifacespython Since Python does not support templates, this class is
+ * \python Since Python does not support templates, this class is
  * made available under the name Perm2.
  *
  * \ingroup maths
  */
 template <>
 class Perm<2> {
-    private:
-        /**
-         * An array-like object used to implement Perm<2>::S2.
-         */
-        struct S2Lookup {
-            /**
-             * Returns the permutation at the given index in the array S2.
-             * See Perm<2>::S2 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 1 inclusive.
-             * @return the corresponding permutation in S2.
-             */
-            constexpr Perm<2> operator[] (int index) const;
-        };
-
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -139,34 +121,84 @@ class Perm<2> {
          */
         using Code = uint8_t;
 
+    private:
         /**
-         * Gives array-like access to all possible permutations of
+         * A lightweight array-like object used to implement Perm<2>::S2.
+         */
+        struct S2Lookup {
+            /**
+             * Returns the permutation at the given index in the array S2.
+             * See Perm<2>::S2 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * \param index an index between 0 and 1 inclusive.
+             * \return the corresponding permutation in S2.
+             */
+            constexpr Perm<2> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S2.
+             *
+             * \return the size of this array.
+             */
+            static constexpr Index size() { return 2; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<2>::S1.
+         */
+        struct S1Lookup {
+            /**
+             * Returns the permutation at the given index in the array S1.
+             * See Perm<2>::S1 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * \param index an index; the only allowed value is 0.
+             * \return the corresponding permutation in S1.
+             */
+            constexpr Perm<2> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S1.
+             *
+             * \return the size of this array.
+             */
+            static constexpr Index size() { return 1; }
+        };
+
+    public:
+        /**
+         * Gives fast array-like access to all possible permutations of
          * two elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
-         *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
          * The identity permutation has index 0, and the non-identity
          * permutation has index 1.  As a result, Sn[\a i] is an even
          * permutation if and only if \a i is even.
          *
          * This ordered array is identical to Perm<2>::orderedSn.
-         * Note however that for \a n &ge; 3, the arrays Perm<n>::Sn and
+         * Note however that for \a n ≥ 3, the arrays Perm<n>::Sn and
          * Perm<n>::orderedSn are different: \a Sn alternates between even
          * and odd permutations, whereas \a orderedSn stores permutations in
          * lexicographical order.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S2Lookup Sn {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * two elements.
          *
          * This is a dimension-specific alias for Perm<2>::Sn; see that member
@@ -181,34 +213,36 @@ class Perm<2> {
         static constexpr S2Lookup S2 {};
 
         /**
-         * Gives array-like access to all possible permutations of two
+         * Gives fast array-like access to all possible permutations of two
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 1 inclusive.
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], \a p[1]).
          * Therefore the identity permutation has index 0, and the
          * (unique) non-identity permutation has index 1.
          *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
-         *
          * This ordered array is identical to Perm<2>::Sn.
-         * Note however that for \a n &ge; 3, the arrays Perm<n>::Sn and
+         * Note however that for \a n ≥ 3, the arrays Perm<n>::Sn and
          * Perm<n>::orderedSn are different: \a Sn alternates between even
          * and odd permutations, whereas \a orderedSn stores permutations in
          * lexicographical order.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S2Lookup orderedSn {};
 
         /**
-         * Gives array-like access to all possible permutations of two
+         * Gives fast array-like access to all possible permutations of two
          * elements in lexicographical order.
          *
          * This is a dimension-specific alias for Perm<2>::orderedSn; see that
@@ -220,36 +254,60 @@ class Perm<2> {
         static constexpr S2Lookup orderedS2 {};
 
         /**
-         * Gives array-like access to all possible permutations of one element.
+         * Gives fast array-like access to all possible permutations of
+         * one element.
          *
          * Of course, this array is trivial: it contains just the identity
          * permutation.  This array is provided for consistency with
          * larger permutation classes Perm<n>.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be 0.
+         * square bracket operator: `Sn_1[i]`.  The index \a i must be 0.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S2Lookup Sn_1 {};
+        static constexpr S1Lookup Sn_1 {};
 
         /**
-         * Gives array-like access to all possible permutations of one element.
+         * Gives fast array-like access to all possible permutations of
+         * one element.
          *
          * This is a dimension-specific alias for Perm<2>::Sn_1; see that
          * member for further information.
          */
-        static constexpr S2Lookup S1 {};
+        static constexpr S1Lookup S1 {};
 
     protected:
         Code code_;
             /**< The internal code representing this permutation. */
 
     public:
+        /**
+         * A do-nothing routine that assists with writing generic code.
+         *
+         * This specialised Perm<2> class does not use precomputation for its
+         * optimisations, and so this precompute() function does nothing.
+         * The only point of having precompute() in Perm<2> is to make it
+         * easier to write generic code that works with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with Perm<2>, you do not need to
+         *   call this function at all.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using any of the optimised `cachedXXX()` functions,
+         *   such as cachedComp(), cachedInverse(), and so on.
+         *
+         * All Perm<n>::precompute() routines are thread-safe, and are
+         * harmless if called multiple times (since any call after the
+         * first will do nothing).
+         */
+        static constexpr void precompute();
+
         /**
          * Creates the identity permutation.
          */
@@ -261,8 +319,8 @@ class Perm<2> {
          *
          * \pre \a a and \a b are in {0,1}.
          *
-         * @param a the element to switch with \a b.
-         * @param b the element to switch with \a a.
+         * \param a the element to switch with \a b.
+         * \param b the element to switch with \a a.
          */
         constexpr Perm(int a, int b);
 
@@ -272,7 +330,7 @@ class Perm<2> {
          *
          * \pre The elements of \a image are 0 and 1 in some order.
          *
-         * @param image the array of images.
+         * \param image the array of images.
          */
         constexpr Perm(const std::array<int, 2>& image);
 
@@ -280,7 +338,7 @@ class Perm<2> {
          * Creates a permutation that is a clone of the given
          * permutation.
          *
-         * @param cloneMe the permutation to clone.
+         * \param cloneMe the permutation to clone.
          */
         constexpr Perm(const Perm<2>& cloneMe) = default;
 
@@ -292,7 +350,7 @@ class Perm<2> {
          * The code returned will be a valid permutation code as
          * determined by isPermCode().
          *
-         * @return the internal code.
+         * \return the internal code.
          */
         constexpr Code permCode() const;
 
@@ -303,7 +361,7 @@ class Perm<2> {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code that will determine the
+         * \param code the internal code that will determine the
          * new value of this permutation.
          */
         void setPermCode(Code code);
@@ -314,8 +372,8 @@ class Perm<2> {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code for the new permutation.
-         * @return the permutation represented by the given internal code.
+         * \param code the internal code for the new permutation.
+         * \return the permutation represented by the given internal code.
          */
         static constexpr Perm<2> fromPermCode(Code code);
 
@@ -324,7 +382,8 @@ class Perm<2> {
          * permutation code.  Valid permutation codes can be passed to
          * setPermCode() or fromPermCode(), and are returned by permCode().
          *
-         * @return \c true if and only if the given code is a valid
+         * \param code the permutation code to test.
+         * \return \c true if and only if the given code is a valid
          * internal permutation code.
          */
         static constexpr bool isPermCode(Code code);
@@ -332,39 +391,188 @@ class Perm<2> {
         /**
          * Sets this permutation to be equal to the given permutation.
          *
-         * @param cloneMe the permutation whose value will be assigned
+         * \param cloneMe the permutation whose value will be assigned
          * to this permutation.
-         * @return a reference to this permutation.
+         * \return a reference to this permutation.
          */
         Perm<2>& operator = (const Perm<2>& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
-         * permutation.  If this permutation is <i>p</i>, the
-         * resulting permutation will be <i>p o q</i>, satisfying
-         * <tt>(p*q)[x] == p[q[x]]</tt>.
+         * permutation.  If this permutation is \a p, the
+         * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
+         * `(p*q)[x] == p[q[x]]`.
          *
-         * @param q the permutation with which to compose this.
-         * @return the composition of both permutations.
+         * \param q the permutation with which to compose this.
+         * \return the composition of both permutations.
          */
         constexpr Perm<2> operator * (const Perm<2>& q) const;
 
         /**
+         * An alias for the composition operator, provided to assist with
+         * writing generic code.
+         *
+         * This specialised Perm<2> class does not use precomputation for its
+         * optimisations.  The only point of having cachedComp() in Perm<2>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<2>, you should just
+         *   use the composition operator instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedComp().  (For Perm<2>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q`.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For Perm<2>,
+         * precompute() does nothing; however, for other Perm<n> classes
+         * a failure to do this will almost certainly crash your program.
+         *
+         * \param q the permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        Perm<2> cachedComp(const Perm<2>& q) const;
+
+        /**
+         * Deprecated alias for using the composition operator twice, provided
+         * to assist with writing generic code.
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q * r`.
+         *
+         * \deprecated The three-way cachedComp() was originally written to
+         * support conjugation.  If you are indeed conjugating, then call
+         * cachedConjugate() instead; otherwise just call the two-way
+         * cachedComp() twice.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For Perm<2>,
+         * precompute() does nothing; however, for other Perm<n> classes
+         * a failure to do this will almost certainly crash your program.
+         *
+         * \param q the first permutation to compose this with.
+         * \param r the second permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        [[deprecated]] Perm<2> cachedComp(const Perm<2>& q, const Perm<2>& r)
+            const;
+
+        /**
+         * Computes the conjugate of this permutation by \a q.
+         *
+         * Specifically, calling `p.conjugate(q)` is equivalent to computing
+         * `q * p * q.inverse()`.  The resulting permutation will have the
+         * same cycle structure as \a p, but with the cycle elements
+         * translated according to \a q.
+         *
+         * \param q the permutation to conjugate this by.
+         * \return the conjugate of this permutation by \a q.
+         */
+        constexpr Perm<2> conjugate(const Perm<2>& q) const;
+
+        /**
+         * An alias for conjugate(), provided to assist with writing generic
+         * code.
+         *
+         * This specialised Perm<2> class does not use precomputation for its
+         * optimisations.  The only point of having cachedConjugate() in
+         * Perm<2> is to make it easier to write generic code that works with
+         * Perm<n> for any \a n.
+         *
+         * - If you know you are only working with Perm<2>, you should just
+         *   call conjugate() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedConjugate().  (For Perm<2>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedConjugate().  For
+         * Perm<6>, precompute() does nothing; however, for other Perm<n>
+         * classes a failure to do this will almost certainly crash your
+         * program.
+         *
+         * \param q the permutation to conjugate this by.
+         * \return the conjugate of this permutation by \a q.
+         */
+        Perm<2> cachedConjugate(const Perm<2>& q) const;
+
+        /**
          * Finds the inverse of this permutation.
          *
-         * @return the inverse of this permutation.
+         * \return the inverse of this permutation.
          */
         constexpr Perm<2> inverse() const;
+
+        /**
+         * An alias for inverse(), provided to assist with writing
+         * generic code.
+         *
+         * This specialised Perm<2> class does not use precomputation for its
+         * optimisations.  The only point of having cachedInverse() in Perm<2>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<2>, you should just
+         *   call inverse() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedInverse().  (For Perm<2>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedInverse().  For
+         * Perm<2>, precompute() does nothing; however, for other Perm<n>
+         * classes a failure to do this will almost certainly crash your
+         * program.
+         *
+         * \return the inverse of this permutation.
+         */
+        Perm<2> cachedInverse() const;
 
         /**
          * Computes the given power of this permutation.
          *
          * This routine runs in constant time.
          *
-         * @param exp the exponent; this may be positive, zero or negative.
-         * @return this permutation raised to the power of \a exp.
+         * \param exp the exponent; this may be positive, zero or negative.
+         * \return this permutation raised to the power of \a exp.
          */
         constexpr Perm<2> pow(long exp) const;
+
+        /**
+         * An alias for pow(), provided to assist with writing generic code.
+         *
+         * This specialised Perm<2> class does not use precomputation for its
+         * optimisations.  The only point of having cachedPow() in Perm<2>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<2>, you should just
+         *   call pow() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedPow().  (For Perm<2>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedPow().  For
+         * Perm<2>, precompute() does nothing; however, for other Perm<n>
+         * classes a failure to do this will almost certainly crash your
+         * program.
+         *
+         * \param exp the exponent; this may be positive, zero or negative.
+         * \return this permutation raised to the power of \a exp.
+         */
+        Perm<2> cachedPow(long exp) const;
 
         /**
          * Returns the order of this permutation.
@@ -373,23 +581,49 @@ class Perm<2> {
          * integer \a k for which the <i>k</i>th power of this
          * permutation is the identity.
          *
-         * @return the order of this permutation.
+         * \return the order of this permutation.
          */
         constexpr int order() const;
 
         /**
+         * An alias for order(), provided to assist with writing generic code.
+         *
+         * This specialised Perm<2> class does not use precomputation for its
+         * optimisations.  The only point of having cachedOrder() in Perm<2>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<2>, you should just
+         *   call order() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedOrder().  (For Perm<2>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedOrder().  For
+         * Perm<2>, precompute() does nothing; however, for other Perm<n>
+         * classes a failure to do this will almost certainly crash your
+         * program.
+         *
+         * \return the order of this permutation.
+         */
+        int cachedOrder() const;
+
+        /**
          * Finds the reverse of this permutation.
          *
-         * Here \e reverse means that we reverse the images of 0 and 1.
+         * Here _reverse_ means that we reverse the images of 0 and 1.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[1 - i]</tt> for all \a i.
+         * reverse of \a p, then `p[i] == q[1 - i]` for all \a i.
          */
         constexpr Perm<2> reverse() const;
 
         /**
          * Determines the sign of this permutation.
          *
-         * @return 1 if this permutation is even, or -1 if this
+         * \return 1 if this permutation is even, or -1 if this
          * permutation is odd.
          */
         constexpr int sign() const;
@@ -397,18 +631,18 @@ class Perm<2> {
         /**
          * Determines the image of the given integer under this permutation.
          *
-         * @param source the integer whose image we wish to find.  This
+         * \param source the integer whose image we wish to find.  This
          * should be 0 or 1.
-         * @return the image of \a source.
+         * \return the image of \a source.
          */
         constexpr int operator[](int source) const;
 
         /**
          * Determines the preimage of the given integer under this permutation.
          *
-         * @param image the integer whose preimage we wish to find.  This
+         * \param image the integer whose preimage we wish to find.  This
          * should be 0 or 1.
-         * @return the preimage of \a image.
+         * \return the preimage of \a image.
          */
         constexpr int pre(int image) const;
 
@@ -417,8 +651,8 @@ class Perm<2> {
          * This is true if and only if both permutations have the same
          * images for 0 and 1.
          *
-         * @param other the permutation with which to compare this.
-         * @return \c true if and only if this and the given permutation
+         * \param other the permutation with which to compare this.
+         * \return \c true if and only if this and the given permutation
          * are equal.
          */
         constexpr bool operator == (const Perm<2>& other) const;
@@ -428,8 +662,8 @@ class Perm<2> {
          * This is true if and only if the two permutations have
          * different images for at least one of 0 or 1.
          *
-         * @param other the permutation with which to compare this.
-         * @return \c true if and only if this and the given permutation
+         * \param other the permutation with which to compare this.
+         * \return \c true if and only if this and the given permutation
          * differ.
          */
         constexpr bool operator != (const Perm<2>& other) const;
@@ -438,8 +672,8 @@ class Perm<2> {
          * Lexicographically compares the images of (0,1) under this
          * and the given permutation.
          *
-         * @param other the permutation with which to compare this.
-         * @return -1 if this permutation produces a smaller image, 0 if
+         * \param other the permutation with which to compare this.
+         * \return -1 if this permutation produces a smaller image, 0 if
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
@@ -449,7 +683,7 @@ class Perm<2> {
          * Determines if this is the identity permutation.
          * This is true if and only if each of 0 and 1 is mapped to itself.
          *
-         * @return \c true if and only if this is the identity permutation.
+         * \return \c true if and only if this is the identity permutation.
          */
         constexpr bool isIdentity() const;
 
@@ -459,10 +693,10 @@ class Perm<2> {
          * then this will wrap around to become the first permutation in
          * Perm<2>::Sn, which is the identity.
          *
-         * \ifacespython Not present, although the postincrement operator is
-         * present in python as the member function inc().
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
          *
-         * @return a reference to this permutation after the increment.
+         * \return a reference to this permutation after the increment.
          */
         Perm<2>& operator ++();
 
@@ -472,10 +706,10 @@ class Perm<2> {
          * then this will wrap around to become the first permutation in
          * Perm<2>::Sn, which is the identity.
          *
-         * \ifacespython This routine is named inc() since python does
+         * \python This routine is named inc() since python does
          * not support the increment operator.
          *
-         * @return a copy of this permutation before the increment took place.
+         * \return a copy of this permutation before the increment took place.
          */
         constexpr Perm<2> operator ++(int);
 
@@ -489,18 +723,17 @@ class Perm<2> {
          * Also, like all permutation classes, this ordering is consistent
          * with the ordering implied by the ++ operators.
          *
-         * @param rhs the permutation to compare this against.
-         * @return \c true if and only if this appears before \a rhs in \a Sn.
+         * \param rhs the permutation to compare this against.
+         * \return \c true if and only if this appears before \a rhs in \a Sn.
          */
         constexpr bool operator < (const Perm<2>& rhs) const;
 
         /**
          * Returns the <i>i</i>th rotation.
-         * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod 2)
-         * for all \a k.
+         * This maps \a k to \a k + \a i (mod 2) for all \a k.
          *
-         * @param i the image of 0; this must be 0 or 1.
-         * @return the <i>i</i>th rotation.
+         * \param i the image of 0; this must be 0 or 1.
+         * \return the <i>i</i>th rotation.
          */
         static constexpr Perm rot(int i);
 
@@ -515,12 +748,12 @@ class Perm<2> {
          * the mutex protecting Regina's global uniform random bit generator.
          * If you are calling this many times in quick succession, consider
          * creating a single RandomEngine object yourself and then calling
-         * <tt>rand(randomEngine.engine(), even)</tt>.
+         * `rand(randomEngine.engine(), even)`.
          *
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (which means, for a permutation on two
          * elements, the resulting permutation must be the identity).
-         * @return a random permutation.
+         * \return a random permutation.
          */
         static Perm rand(bool even = false);
 
@@ -535,15 +768,15 @@ class Perm<2> {
          * \tparam URBG A type which, once any references are removed, must
          * adhere to the C++ \a UniformRandomBitGenerator concept.
          *
-         * \ifacespython Not present, though the non-thread-safe variant
-         * without the \a gen argument is available.
+         * \nopython Python users are still able to use the non-thread-safe
+         * variant without the \a gen argument.
          *
-         * @param gen the source of randomness to use (e.g., one of the
+         * \param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (which means, for a permutation on two
          * elements, the resulting permutation must be the identity).
-         * @return a random permutation.
+         * \return a random permutation.
          */
         template <class URBG>
         static Perm rand(URBG&& gen, bool even = false);
@@ -552,9 +785,9 @@ class Perm<2> {
          * Returns a string representation of this permutation.
          * The representation will consist of two adjacent digits
          * representing the images of 0 and 1 respectively.  An
-         * example of a string representation is <tt>10</tt>.
+         * example of a string representation is `10`.
          *
-         * @return a string representation of this permutation.
+         * \return a string representation of this permutation.
          */
         std::string str() const;
 
@@ -562,9 +795,9 @@ class Perm<2> {
          * Returns a prefix of the string representation of this permutation,
          * containing only the images of the first \a len integers.
          *
-         * @param len the length of the prefix required; this must be
+         * \param len the length of the prefix required; this must be
          * between 0 and 2 inclusive.
-         * @return the corresponding prefix of the string representation
+         * \return the corresponding prefix of the string representation
          * of this permutation.
          */
         std::string trunc(int len) const;
@@ -575,15 +808,14 @@ class Perm<2> {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * permutation classes (\a n ≤ 7), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -594,12 +826,12 @@ class Perm<2> {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * permutation classes (\a n ≤ 7), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * @return the resulting encoded string.
+         * \return the resulting encoded string.
          */
         std::string tightEncoding() const;
 
@@ -613,14 +845,14 @@ class Perm<2> {
          * an invalid encoding (i.e., this routine will throw an exception).
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n &le; 7), but slower for larger permutation classes
-         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         * (\a n ≤ 7), but slower for larger permutation classes
+         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
          *
-         * \exception InvalidArgument the given string is not a tight encoding
+         * \exception InvalidArgument The given string is not a tight encoding
          * of a 2-element permutation.
          *
-         * @param enc the tight encoding for a 2-element permutation.
-         * @return the permutation represented by the given tight encoding.
+         * \param enc the tight encoding for a 2-element permutation.
+         * \return the permutation represented by the given tight encoding.
          */
         static Perm tightDecoding(const std::string& enc);
 
@@ -631,39 +863,56 @@ class Perm<2> {
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input stream _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n &le; 7), but slower for larger permutation classes
-         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         * (\a n ≤ 7), but slower for larger permutation classes
+         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a 2-element permutation.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a 2-element permutation.
-         * @return the permutation represented by the given tight encoding.
+         * \return the permutation represented by the given tight encoding.
          */
         static Perm tightDecode(std::istream& input);
+
+        /**
+         * Hashes this permutation to a non-negative integer, allowing it
+         * to be used for keys in hash tables.
+         *
+         * The implementation currently returns the internal permutation code
+         * (which for Perm<2> will always fit within a \c size_t).  This
+         * implementation (and therefore the specific hash values obtained)
+         * is subject to change in future versions of Regina.
+         *
+         * \python For Python users, this function uses the standard Python
+         * name __hash__().  This allows permutations to be used as keys in
+         * Python dictionaries and sets.
+         *
+         * \return The integer hash of this permutation.
+         */
+        constexpr size_t hash() const;
 
         /**
          * Resets the images of all integers from \a from onwards to the
          * identity map.
          *
          * Specifically, for each \a i in the range <i>from</i>,...,1,
-         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * this routine will ensure that `image[i] == i`.  The images of
          * 0,1,...,<i>from</i>-1 will not be altered.
          *
          * \pre The images of <i>from</i>,...,1 are exactly
          * <i>from</i>,...,1, but possibly in a different order.
          *
-         * @param from the first integer whose image should be reset.
+         * \param from the first integer whose image should be reset.
          * This must be between 0 and 2 inclusive.
          */
         void clear(unsigned from);
@@ -673,7 +922,7 @@ class Perm<2> {
          *
          * See Sn for further information on how these permutations are indexed.
          *
-         * @return the index \a i for which this permutation is equal to
+         * \return the index \a i for which this permutation is equal to
          * Perm<2>::Sn[i].  This will be 0 or 1.
          */
         constexpr Index SnIndex() const;
@@ -681,11 +930,14 @@ class Perm<2> {
         /**
          * Returns the index of this permutation in the Perm<2>::S2 array.
          *
-         * This is a dimension-specific alias for SnIndex().
+         * This is a dimension-specific alias for SnIndex().  In general,
+         * for every \a n there will be a member function Perm<n>::SnIndex();
+         * however, these numerical aliases Perm<2>::S2Index(), ...,
+         * Perm<7>::S7Index() are only available for small \a n.
          *
          * See Sn for further information on how these permutations are indexed.
          *
-         * @return the index \a i for which this permutation is equal to
+         * \return the index \a i for which this permutation is equal to
          * Perm<2>::S2[i].  This will be 0 or 1.
          */
         constexpr Index S2Index() const;
@@ -696,7 +948,7 @@ class Perm<2> {
          *
          * See orderedSn for further information on lexicographical ordering.
          *
-         * @return the lexicographical index of this permutation.
+         * \return the lexicographical index of this permutation.
          * This will be 0 or 1.
          */
         constexpr Index orderedSnIndex() const;
@@ -706,17 +958,21 @@ class Perm<2> {
          * be the index of this permutation in the Perm<2>::orderedSn array.
          *
          * This is a dimension-specific alias for orderedSnIndex().
+         * In general, for every \a n there will be a member function
+         * Perm<n>::orderedSnIndex(); however, these numerical aliases
+         * Perm<2>::orderedS2Index(), ..., Perm<7>::orderedS7Index() are
+         * only available for small \a n.
          *
          * See orderedSn for further information on lexicographical ordering.
          *
-         * @return the lexicographical index of this permutation.
+         * \return the lexicographical index of this permutation.
          * This will be 0 or 1.
          */
         constexpr Index orderedS2Index() const;
 
         /**
          * Restricts a <i>k</i>-element permutation to an 2-element
-         * permutation, where \a k &gt; 2.
+         * permutation, where \a k > 2.
          *
          * The resulting permutation will map 0,1 to their
          * respective images under \a p, and will ignore the "unused" images
@@ -727,8 +983,8 @@ class Perm<2> {
          * \tparam k the number of elements for the input permutation;
          * this must be strictly greater than 2.
          *
-         * @param p a permutation on \a k elements.
-         * @return the same permutation restricted to a permutation on
+         * \param p a permutation on \a k elements.
+         * \return the same permutation restricted to a permutation on
          * 2 elements.
          */
         template <int k>
@@ -745,7 +1001,7 @@ class Perm<2> {
          * This routine is extremely fast for Perm<2>, since the answer
          * is always \c true.
          *
-         * @return \c true if and only if this permutation is minimal in its
+         * \return \c true if and only if this permutation is minimal in its
          * conjugacy class.
          */
         constexpr bool isConjugacyMinimal() const;
@@ -757,7 +1013,7 @@ class Perm<2> {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code from which the new
+         * \param code the internal code from which the new
          * permutation will be created.
          */
         constexpr Perm<2>(Code code);
@@ -773,23 +1029,23 @@ class Perm<2> {
          * treated as invalid (i.e., this routine will throw an exception).
          *
          * If \a noTrailingData is \c true then the iterator is required to
-         * \e finish at \a limit, or else the encoding will be considered
+         * _finish_ at \a limit, or else the encoding will be considered
          * invalid also; if \a noTrailingData is \c false then there is no
          * constraint on the final state of the iterator.
          *
-         * \exception InvalidInput the given iterator does not point to
+         * \exception InvalidInput The given iterator does not point to
          * a tight encoding of a 2-element permutation.
          *
          * \tparam iterator an input iterator type.
          *
-         * @param start an iterator that points to the beginning of a
+         * \param start an iterator that points to the beginning of a
          * tight encoding.
-         * @param limit an iterator that, if reached, indicates that no more
+         * \param limit an iterator that, if reached, indicates that no more
          * characters are available.
-         * @param noTrailingData \c true if iteration should reach \a limit
+         * \param noTrailingData \c true if iteration should reach \a limit
          * immediately after the encoding is read, or \c false if there is
          * allowed to be additional unread data.
-         * @return the permutation represented by the given tight encoding.
+         * \return the permutation represented by the given tight encoding.
          */
         template <typename iterator>
         static Perm tightDecode(iterator start, iterator limit,
@@ -800,6 +1056,13 @@ class Perm<2> {
 
 inline constexpr Perm<2> Perm<2>::S2Lookup::operator[] (int index) const {
     return Perm<2>(static_cast<Code>(index));
+}
+
+inline constexpr Perm<2> Perm<2>::S1Lookup::operator[] (int) const {
+    return Perm<2>();
+}
+
+inline constexpr void Perm<2>::precompute() {
 }
 
 inline constexpr Perm<2>::Perm() : code_(0) {
@@ -836,7 +1099,29 @@ inline constexpr Perm<2> Perm<2>::operator * (const Perm<2>& q) const {
     return Perm<2>(code_ ^ q.code_);
 }
 
+inline Perm<2> Perm<2>::cachedComp(const Perm<2>& q) const {
+    return Perm<2>(code_ ^ q.code_);
+}
+
+inline Perm<2> Perm<2>::cachedComp(const Perm<2>& q, const Perm<2>& r) const {
+    return Perm<2>(code_ ^ q.code_ ^ r.code_);
+}
+
+inline constexpr Perm<2> Perm<2>::conjugate(const Perm<2>& q) const {
+    // In S2, conjugation does nothing.
+    return *this;
+}
+
+inline Perm<2> Perm<2>::cachedConjugate(const Perm<2>& q) const {
+    // In S2, conjugation does nothing.
+    return *this;
+}
+
 inline constexpr Perm<2> Perm<2>::inverse() const {
+    return *this;
+}
+
+inline Perm<2> Perm<2>::cachedInverse() const {
     return *this;
 }
 
@@ -844,7 +1129,15 @@ inline constexpr Perm<2> Perm<2>::pow(long exp) const {
     return (exp & 1 ? *this : Perm<2>());
 }
 
+inline Perm<2> Perm<2>::cachedPow(long exp) const {
+    return (exp & 1 ? *this : Perm<2>());
+}
+
 inline constexpr int Perm<2>::order() const {
+    return (code_ + 1);
+}
+
+inline int Perm<2>::cachedOrder() const {
     return (code_ + 1);
 }
 
@@ -905,6 +1198,9 @@ inline Perm<2> Perm<2>::rand(bool even) {
     return rand(engine.engine(), even);
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <class URBG>
 inline Perm<2> Perm<2>::rand(URBG&& gen, bool even) {
     if (even)
@@ -914,6 +1210,7 @@ inline Perm<2> Perm<2>::rand(URBG&& gen, bool even) {
         return Perm<2>(static_cast<Code>(d(gen)));
     }
 }
+#endif // __DOXYGEN
 
 inline std::string Perm<2>::str() const {
     return (code_ == 0 ? "01" : "10");
@@ -950,6 +1247,9 @@ inline Perm<2> Perm<2>::tightDecode(std::istream& input) {
         std::istreambuf_iterator<char>(), false);
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <typename iterator>
 Perm<2> Perm<2>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
@@ -964,6 +1264,11 @@ Perm<2> Perm<2>::tightDecode(iterator start, iterator limit,
         throw InvalidInput("The tight encoding has trailing characters");
 
     return Perm<2>(code);
+}
+#endif // __DOXYGEN
+
+inline constexpr size_t Perm<2>::hash() const {
+    return code_;
 }
 
 inline constexpr Perm<2>::Index Perm<2>::S2Index() const {

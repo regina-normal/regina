@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,28 +37,34 @@
 #include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/standardtri.h"
 
 using pybind11::overload_cast;
 using regina::StandardTriangulation;
 
 void addStandardTriangulation(pybind11::module_& m) {
-    auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation")
-        .def("name", &StandardTriangulation::name)
-        .def("texName", &StandardTriangulation::texName)
-        .def("manifold", &StandardTriangulation::manifold)
-        .def("homology", &StandardTriangulation::homology)
+    RDOC_SCOPE_BEGIN(StandardTriangulation)
+
+    auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation",
+            rdoc_scope)
+        .def("name", &StandardTriangulation::name, rdoc::name)
+        .def("texName", &StandardTriangulation::texName, rdoc::texName)
+        .def("manifold", &StandardTriangulation::manifold, rdoc::manifold)
+        .def("homology", &StandardTriangulation::homology, rdoc::homology)
         .def_static("recognise",
             overload_cast<regina::Component<3>*>(
-            &StandardTriangulation::recognise))
+            &StandardTriangulation::recognise), rdoc::recognise)
         .def_static("recognise",
             overload_cast<const regina::Triangulation<3>&>(
-            &StandardTriangulation::recognise))
+            &StandardTriangulation::recognise), rdoc::recognise_2)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
     // Also leave the equality operators for subclasses to wrap, since
     // each subclass of StandardTriangulation provides its own custom
     // == and != operators.
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_abstract(c);
+
+    RDOC_SCOPE_END
 }
 

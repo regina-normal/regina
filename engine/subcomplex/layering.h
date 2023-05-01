@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ namespace regina {
  * Represents a layering of zero or more tetrahedra upon a torus
  * boundary.
  *
- * A \e layering involves laying a new tetrahedron flat upon two
+ * A _layering_ involves laying a new tetrahedron flat upon two
  * adjacent boundary triangles in order to change the boundary curves.  Many
  * tetrahedra may be layered upon a boundary in succession in order to
  * change the boundary curves more dramatically.
@@ -88,15 +88,15 @@ namespace regina {
  * often be the cause of these edge identifications).  This allows the
  * Layering class a little more versatility in degenerate and boundary cases.
  *
- * This class keeps track of an \e old boundary, which is the original
+ * This class keeps track of an _old_ boundary, which is the original
  * pair of triangles upon which the first tetrahedron is layered, and a
- * \e new boundary, which is formed by the last layered tetrahedron and
+ * _new_ boundary, which is formed by the last layered tetrahedron and
  * contains the modified boundary curves.  If no tetrahedra are layered
  * at all then the old and new boundaries will be identical.
  *
  * This class is used to search for layerings as follows.  The
  * constructor is called with a particular pair of triangles that will form
- * the old boundary (note that these are generally \e not boundary triangles
+ * the old boundary (note that these are generally _not_ boundary triangles
  * in the triangulation, since we are searching for layerings that have
  * been placed upon them).  This forms a trivial (zero-tetrahedron)
  * layering.  The routines extend() or extendOne() are then called to see
@@ -148,14 +148,14 @@ class Layering : public ShortOutput<Layering> {
          * (and if search routines such as extend() are called then they
          * almost certainly should not be).
          *
-         * @param bdry0 the tetrahedron providing the first triangle of the
+         * \param bdry0 the tetrahedron providing the first triangle of the
          * boundary.
-         * @param roles0 the permutation describing how this first triangle is
+         * \param roles0 the permutation describing how this first triangle is
          * formed from three vertices of tetrahedron \a bdry0, as
          * described in the class notes.
-         * @param bdry1 the tetrahedron providing the second triangle of the
+         * \param bdry1 the tetrahedron providing the second triangle of the
          * boundary.
-         * @param roles1 the permutation describing how this second triangle is
+         * \param roles1 the permutation describing how this second triangle is
          * formed from three vertices of tetrahedron \a bdry1.
          */
         Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
@@ -180,8 +180,8 @@ class Layering : public ShortOutput<Layering> {
          * Tetrahedron objects, it is meaningful to compare layerings
          * within different triangulations.
          *
-         * @param other the layering to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the layering to compare with this.
+         * \return \c true if and only if this and the given object represent
          * the same layering, as described above.
          */
         bool operator == (const Layering& other) const;
@@ -205,14 +205,14 @@ class Layering : public ShortOutput<Layering> {
          * Tetrahedron objects, it is meaningful to compare layerings
          * within different triangulations.
          *
-         * @param other the layering to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the layering to compare with this.
+         * \return \c true if and only if this and the given object represent
          * different layerings, as described above.
          */
         bool operator != (const Layering& other) const;
 
         /**
-         * Creates a new copy of this layering structure.
+         * Creates a new copy of the given layering structure.
          *
          * The new structure will describe the same layering within the same
          * underlying triangulation.
@@ -225,7 +225,7 @@ class Layering : public ShortOutput<Layering> {
          * The copied structure will describe the same layering within the
          * same underlying triangulation.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         Layering& operator = (const Layering&) = default;
 
@@ -238,7 +238,7 @@ class Layering : public ShortOutput<Layering> {
          * it increases if the routines extend() or extendOne() find that
          * additional layerings have taken place.
          *
-         * @return the number of layered tetrahedra.
+         * \return the number of layered tetrahedra.
          */
         unsigned long size() const;
 
@@ -250,9 +250,9 @@ class Layering : public ShortOutput<Layering> {
          * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
-         * @param which specifies which tetrahedron to return; this must
+         * \param which specifies which tetrahedron to return; this must
          * be either 0 or 1.
-         * @return the requested tetrahedron of the old boundary.
+         * \return the requested tetrahedron of the old boundary.
          */
         const Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
         /**
@@ -263,9 +263,9 @@ class Layering : public ShortOutput<Layering> {
          * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
-         * @param which specifies which permutation to return; this must
+         * \param which specifies which permutation to return; this must
          * be either 0 or 1.
-         * @return the requested permutation describing the old boundary.
+         * \return the requested permutation describing the old boundary.
          */
         Perm<4> oldBoundaryRoles(unsigned which) const;
         /**
@@ -276,9 +276,9 @@ class Layering : public ShortOutput<Layering> {
          * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
-         * @param which specifies which tetrahedron to return; this must
+         * \param which specifies which tetrahedron to return; this must
          * be either 0 or 1.
-         * @return the requested tetrahedron of the new boundary.
+         * \return the requested tetrahedron of the new boundary.
          */
         const Tetrahedron<3>* newBoundaryTet(unsigned which) const;
         /**
@@ -289,9 +289,9 @@ class Layering : public ShortOutput<Layering> {
          * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
-         * @param which specifies which permutation to return; this must
+         * \param which specifies which permutation to return; this must
          * be either 0 or 1.
-         * @return the requested permutation describing the new boundary.
+         * \return the requested permutation describing the new boundary.
          */
         Perm<4> newBoundaryRoles(unsigned which) const;
 
@@ -341,7 +341,7 @@ class Layering : public ShortOutput<Layering> {
          *
          * Note that the determinant of this matrix will always be 1.
          *
-         * @return the matrix relating the old and new boundary curves.
+         * \return the matrix relating the old and new boundary curves.
          */
         const Matrix2& boundaryReln() const;
 
@@ -362,7 +362,7 @@ class Layering : public ShortOutput<Layering> {
          * new boundary will become the remaining two faces of this
          * additional tetrahedron.
          * 
-         * @return \c true if a tetrahedron was found as described above
+         * \return \c true if a tetrahedron was found as described above
          * and this structure was extended accordingly, or \c false otherwise.
          */
         bool extendOne();
@@ -381,7 +381,7 @@ class Layering : public ShortOutput<Layering> {
          * upon it.  That is, if extendOne() were called again then it
          * would return \c false.
          *
-         * @return the number of additional layered tetrahedra that were
+         * \return the number of additional layered tetrahedra that were
          * discovered.
          */
         unsigned long extend();
@@ -451,19 +451,19 @@ class Layering : public ShortOutput<Layering> {
          *
          * If no match is found, the matrix \a upperReln is not touched.
          *
-         * @param upperBdry0 the tetrahedron providing the first triangle of
+         * \param upperBdry0 the tetrahedron providing the first triangle of
          * the given boundary.
-         * @param upperRoles0 the permutation describing how this
+         * \param upperRoles0 the permutation describing how this
          * first triangle is formed from three vertices of tetrahedron
          * upperBdry0, as described in the class notes.
-         * @param upperBdry1 the tetrahedron providing the second triangle of
+         * \param upperBdry1 the tetrahedron providing the second triangle of
          * the given boundary.
-         * @param upperRoles1 the permutation describing how this second
+         * \param upperRoles1 the permutation describing how this second
          * triangle is formed from three vertices of tetrahedron upperBdry1.
-         * @param upperReln the matrix that is changed to reflect the
+         * \param upperReln the matrix that is changed to reflect the
          * relationship between the old boundary of this structure and
          * the given boundary.
-         * @return \c true if the given boundary is found to matche the
+         * \return \c true if the given boundary is found to matche the
          * new boundary of this structure, or \c false otherwise.
          */
         bool matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
@@ -474,9 +474,9 @@ class Layering : public ShortOutput<Layering> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };

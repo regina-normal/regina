@@ -3,9 +3,9 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "7.1">
-  <!ENTITY regdate "2021-12-19">
-  <!ENTITY copyrightyears "1999&ndash;2021">
+  <!ENTITY regversion "7.4">
+  <!ENTITY regdate "2023-03-18">
+  <!ENTITY copyrightyears "1999&ndash;2023">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">
@@ -32,9 +32,9 @@
   <!ENTITY regenginedocs
    "<link linkend='python-docs'>calculation engine documentation</link>">
   <!ENTITY regenginedocsurlbase
-   "<ulink url='http://regina-normal.github.io/&regversion;/engine-docs/'>regina-normal.github.io</ulink>">
+   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanapiurl
-   "<ulink url='http://regina-normal.github.io/&regversion;/engine-docs/'>regina-normal.github.io</ulink>">
+   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanhandbookurl
    "<ulink url='http://regina-normal.github.io/docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanburtonthesisurl
@@ -42,6 +42,26 @@
   <!ENTITY manpageack "Many people have been involved in the development
    of &regina;; see the <link linkend='acknowledgements'>acknowledgements
    page</link> for a full list of credits.">
+
+  <!ENTITY versionhelpopts
+   "<group choice='req'>
+     <arg choice='req'><option>-v, --version</option></arg>
+     <arg choice='req'><option>-?, --help</option></arg>
+    </group>">
+  <!ENTITY versionhelpdesc
+   "<varlistentry>
+     <term><option>-v, --version</option></term>
+     <listitem>
+      <para>Show which version of &regina; is being used, and exit
+      immediately.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-?, --help</option></term>
+     <listitem>
+      <para>Display brief usage information, and exit immediately.</para>
+     </listitem>
+    </varlistentry>">
 
   <!-- Menu items are formatted differently between index.docbook and
        manonly.docbook. -->
@@ -77,6 +97,7 @@
   <!ENTITY debian "<application>Debian</application>">
   <!ENTITY dgt "<application><acronym>DGT</acronym></application>">
   <!ENTITY dmanifold "<replaceable>d</replaceable>-manifold">
+  <!ENTITY doxygen "<application>Doxygen</application>">
   <!ENTITY dsimplex "<replaceable>d</replaceable>-simplex">
   <!ENTITY dsimplices "<replaceable>d</replaceable>-simplices">
   <!ENTITY evince "<application>Evince</application>">
@@ -182,6 +203,7 @@
   <!ENTITY reginapython SYSTEM "python.docbook">
   <!ENTITY reginaoptions SYSTEM "options.docbook">
   <!ENTITY reginacompiling SYSTEM "compiling.docbook">
+  <!ENTITY reginacontributing SYSTEM "contributing.docbook">
   <!ENTITY reginatrouble SYSTEM "trouble.docbook">
   <!ENTITY reginaservices SYSTEM "services.docbook">
   <!ENTITY reginacredits SYSTEM "credits.docbook">
@@ -193,6 +215,8 @@
   <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
   <!ENTITY sessiontree SYSTEM "tree.session">
   <!ENTITY sessionprogress SYSTEM "progress.session">
+  <!ENTITY docstring1 SYSTEM "docstring1.txt">
+  <!ENTITY docstring2 SYSTEM "docstring2.txt">
 
   <!ENTITY submani18n SYSTEM "submani18n.docbook">
 
@@ -261,6 +285,7 @@
  &reginapython;
  &reginaoptions;
  &reginacompiling;
+ &reginacontributing;
  &reginatrouble;
  &reginaservices;
 

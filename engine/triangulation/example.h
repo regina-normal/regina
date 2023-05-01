@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -66,7 +66,7 @@ namespace regina {
  * headers (e.g., triangulation/example2.h for \a dim = 2, or
  * triangulation/example3.h for \a dim = 3).
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g., Example2
  * and Example3 for dimensions 2 and 3).
  *

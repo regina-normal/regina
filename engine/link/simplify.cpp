@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,8 +41,8 @@ namespace regina {
 bool Link::intelligentSimplify() {
     bool changed;
 
-    { // Begin scope for change event block.
-        ChangeEventSpan span(*this);
+    { // Begin scope for change event group.
+        ChangeEventGroup span(*this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
@@ -121,7 +121,7 @@ bool Link::simplifyToLocalMinimum(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
-        ChangeEventSpan span(*this);
+        ChangeEventGroup span(*this);
 
         while (changedNow) {
             changedNow = false;

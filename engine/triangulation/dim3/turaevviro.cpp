@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -108,7 +108,7 @@ namespace {
             /**
              * Precalculate all values [0]!, ..., [r-1]!.
              *
-             * Requires r >= 3.
+             * Requires r ≥ 3.
              */
             BracketFactorial(unsigned long r, unsigned long whichRoot);
 
@@ -238,7 +238,7 @@ namespace {
 
         /**
          * Multiplies ans by the triangle-based contribution to the Turaev-Viro
-         * invariant.  This corresponds to +/- Delta(i/2, j/2, k/2)^2.
+         * invariant.  This corresponds to ± Delta(i/2, j/2, k/2)^2.
          */
         void triContrib(unsigned long i, unsigned long j, unsigned long k,
                 TVType& ans) const {
@@ -463,7 +463,9 @@ namespace {
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
         std::sort(sortedEdges, sortedEdges + nEdges,
-            DegreeGreaterThan<3, 1>(tri));
+            [&tri](size_t a, size_t b) {
+                return (tri.edge(a)->degree() > tri.edge(b)->degree());
+            });
         for (i = 0; i < nEdges; ++i)
             edgePos[sortedEdges[i]] = i;
 
@@ -689,7 +691,9 @@ namespace {
         for (size_t i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
         std::sort(sortedEdges, sortedEdges + nEdges,
-            DegreeGreaterThan<3, 1>(tri));
+            [&tri](size_t a, size_t b) {
+                return (tri.edge(a)->degree() > tri.edge(b)->degree());
+            });
         for (size_t i = 0; i < nEdges; ++i)
             edgePos[sortedEdges[i]] = i;
 

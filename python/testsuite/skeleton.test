@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2021, Ben Burton
+# Copyright (c) 2007-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides detailed tests for the skeleta of triangulations.
@@ -33,17 +33,22 @@
 
 t = Example3.weberSeifert()
 print(t.detail())
+
 for v in t.vertices():
 	print(v.detail())
+
 for e in t.edges():
 	print(e.detail())
+
 for f in t.triangles():
 	print(f.detail())
 
 t = Example2.nonOrientable(3, 1)
 print(t.detail())
+
 for v in t.vertices():
 	print(v.detail())
+
 for e in t.edges():
 	print(e.detail())
 

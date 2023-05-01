@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,12 +55,12 @@
 
 namespace regina {
 
+class NormalSurfaces;
+
 /**
  * \defgroup surfaces Normal Surfaces
  * Normal surfaces in 3-manifold triangulations.
  */
-
-class NormalSurfaces;
 
 /**
  * Lists which quadrilateral types separate which pairs of vertices in a
@@ -68,8 +68,8 @@ class NormalSurfaces;
  * As outlined in NormalSurface::quads(), there are three quadrilateral types
  * in a tetrahedron, numbered 0, 1 and 2.  Each quadrilateral type separates
  * the four tetrahedron vertices 0,1,2,3 into two pairs.
- * <tt>quadSeparating[i][j]</tt> is the number of the quadrilateral type that
- * keeps vertices <tt>i</tt> and <tt>j</tt> together.
+ * `quadSeparating[i][j]` is the number of the quadrilateral type that
+ * keeps vertices `i` and `j` together.
  *
  * It is guaranteed that quadrilateral type \a i will keep the vertices of
  * edge \a i together (and will therefore also keep the vertices of edge
@@ -86,9 +86,9 @@ inline constexpr int quadSeparating[4][4] = {
  * See regina::quadSeparating and NormalSurface::quads() for more
  * information on quadrilateral types.
  *
- * <tt>quadMeeting[i][j][0,1]</tt> are the numbers of the two
+ * `quadMeeting[i][j][0,1]` are the numbers of the two
  * quadrilateral types that meet the edge joining tetrahedron vertices
- * <tt>i</tt> and <tt>j</tt>.
+ * `i` and `j`.
  *
  * \ingroup surfaces
  */
@@ -105,14 +105,14 @@ inline constexpr int quadMeeting[4][4][2] = {
  * information on quadrilateral types.
  *
  * Quadrilateral type \c i splits the vertex pairs
- * <tt>quadDefn[i][0,1]</tt> and
- * <tt>quadDefn[i][2,3]</tt>.
+ * `quadDefn[i][0,1]` and
+ * `quadDefn[i][2,3]`.
  *
  * It is guaranteed that:
  *
- * - <tt>quadDefn[i][0] < quadDefn[i][1]</tt>;
- * - <tt>quadDefn[i][2] < quadDefn[i][3]</tt>;
- * - <tt>quadDefn[i][0] < quadDefn[i][2]</tt>.
+ * - `quadDefn[i][0] < quadDefn[i][1]`;
+ * - `quadDefn[i][2] < quadDefn[i][3]`;
+ * - `quadDefn[i][0] < quadDefn[i][2]`.
  *
  * This array contains similar information to the function Edge<3>::ordering().
  * Instead of quadDefn[\a i][\a j], you can call Edge<3>::ordering(\a i)[\a j];
@@ -132,7 +132,7 @@ inline constexpr int quadDefn[3][4] = {
  * information on quadrilateral types.
  *
  * Quadrilateral type \c i pairs vertex \c v with
- * vertex <tt>quadPartner[i][v]</tt>.
+ * vertex `quadPartner[i][v]`.
  *
  * \ingroup surfaces
  */
@@ -146,8 +146,8 @@ inline constexpr int quadPartner[3][4] = {
  * See regina::quadSeparating and NormalSurface::quads() for more
  * information on quadrilateral types.
  *
- * The string describing quadrilateral type \c i is <tt>quadString[i]</tt> and
- * is of the form <tt>02/13</tt>, which in this case is the quadrilateral type
+ * The string describing quadrilateral type \c i is `quadString[i]` and
+ * is of the form `02/13`, which in this case is the quadrilateral type
  * that splits vertices 0,2 from vertices 1,3.
  *
  * \ingroup surfaces
@@ -157,11 +157,11 @@ inline constexpr char quadString[3][6] = { "01/23", "02/13", "03/12" };
 /**
  * Lists in consecutive order the directed normal arcs that form the
  * boundary of each type of triangular normal disc.  Each permutation \a p
- * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
- * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ * represents an arc about vertex `p[0]` parallel to the directed
+ * edge from `p[1]` to `p[2]`.
  *
- * Array <tt>triDiscArcs[i]</tt> lists the boundary arcs of the
- * triangular disc of type <i>i</i>.  See NormalSurface::triangles()
+ * Array `triDiscArcs[i]` lists the boundary arcs of the
+ * triangular disc of type \a i.  See NormalSurface::triangles()
  * for further details.
  *
  * Note that every permutation in this array is even.
@@ -178,15 +178,15 @@ inline constexpr Perm<4> triDiscArcs[4][3] = {
 /**
  * Lists in consecutive order the directed normal arcs that form the
  * boundary of each type of quadrilateral normal disc.  Each permutation \a p
- * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
- * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ * represents an arc about vertex `p[0]` parallel to the directed
+ * edge from `p[1]` to `p[2]`.
  *
- * Array <tt>quadDiscArcs[i]</tt> lists the boundary arcs of the
- * quadrilateral disc of type <i>i</i>.  See NormalSurface::quads()
+ * Array `quadDiscArcs[i]` lists the boundary arcs of the
+ * quadrilateral disc of type \a i.  See NormalSurface::quads()
  * for further details.
  *
- * Note that permutation <tt>quadDiscArcs[i][j]</tt> will be even
- * precisely when <tt>j</tt> is even.
+ * Note that permutation `quadDiscArcs[i][j]` will be even
+ * precisely when `j` is even.
  *
  * \ingroup surfaces
  */
@@ -199,15 +199,15 @@ inline constexpr Perm<4> quadDiscArcs[3][4] = {
 /**
  * Lists in consecutive order the directed normal arcs that form the
  * boundary of each type of octagonal normal disc.  Each permutation \a p
- * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
- * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ * represents an arc about vertex `p[0]` parallel to the directed
+ * edge from `p[1]` to `p[2]`.
  *
- * Array <tt>octDiscArcs[i]</tt> lists the boundary arcs of the
- * octagonal disc of type <i>i</i>.  See NormalSurface::octs()
+ * Array `octDiscArcs[i]` lists the boundary arcs of the
+ * octagonal disc of type \a i.  See NormalSurface::octs()
  * for further details.
  *
- * Note that permutation <tt>octDiscArcs[i][j]</tt> will be even
- * precisely when <tt>j</tt> is 0, 1, 4 or 5.
+ * Note that permutation `octDiscArcs[i][j]` will be even
+ * precisely when `j` is 0, 1, 4 or 5.
  *
  * \ingroup surfaces
  */
@@ -318,6 +318,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
             /**< Is this surface compact (i.e. does it only contain
                  finitely many discs)?
                  This is std::nullopt if it has not yet been computed. */
+        mutable uint8_t linkOf_ { 0 };
+            /**< Indicates which dimensions of face a positive rational multiple
+                 of this surface is a thin or normalised link of.  This is
+                 treated as a bitmask: for each i=0,1,2, the (2i+1)th bit
+                 indicates whether this surface scales to the link of an
+                 i-face, and the (2i)th bit indicates whether this information
+                 has actually been computed yet; if it has not been computed,
+                 then the (2i+1)th bit will be zero. */
 
     public:
         /**
@@ -338,8 +346,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * @param src the normal surface to copy.
-         * @param triangulation the triangulation in which this new surface
+         * \param src the normal surface to copy.
+         * \param triangulation the triangulation in which this new surface
          * will reside.
          */
         NormalSurface(const NormalSurface& src,
@@ -353,11 +361,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param src the normal surface to copy.
-         * @param triangulation a snapshot, frozen in time, of the
+         * \param src the normal surface to copy.
+         * \param triangulation a snapshot, frozen in time, of the
          * triangulation in which this new surface will reside.
          */
         NormalSurface(const NormalSurface& src,
@@ -370,6 +377,27 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * The surface that is passed will no longer be usable.
          */
         NormalSurface(NormalSurface&&) noexcept = default;
+
+        /**
+         * Create the empty surface within the given triangulation.
+         *
+         * All normal coordinates will be zero.
+         *
+         * \param triang the triangulation in which this normal surface resides.
+         */
+        NormalSurface(const Triangulation<3>& triang);
+
+        /**
+         * Create the empty surface within the given triangulation.
+         *
+         * All normal coordinates will be zero.
+         *
+         * \nopython Instead use the version that takes a "pure" triangulation.
+         *
+         * \param triang a snapshot, frozen in time, of the
+         * triangulation in which this normal surface resides.
+         */
+        NormalSurface(const SnapshotRef<Triangulation<3>>& triang);
 
         /**
          * Creates a new normal surface inside the given triangulation with the
@@ -392,13 +420,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * \python Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param triang the triangulation in which this normal surface resides.
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalEncoding enc,
@@ -425,13 +453,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param triang the triangulation in which this normal surface resides.
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalEncoding enc,
@@ -453,14 +480,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -482,14 +508,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -500,12 +526,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -518,15 +544,15 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * \python Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param triang the triangulation in which this normal surface resides.
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalCoords coords,
@@ -537,12 +563,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -555,15 +581,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param triang the triangulation in which this normal surface resides.
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalCoords coords,
@@ -574,12 +599,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -587,16 +612,15 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -607,12 +631,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -620,16 +644,16 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -646,7 +670,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * This operator induces a deep copy of the given normal surface.
          *
-         * @return a reference to this normal surface.
+         * \return a reference to this normal surface.
          */
         NormalSurface& operator = (const NormalSurface&) = default;
 
@@ -662,7 +686,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * The surface that was passed will no longer be usable.
          *
-         * @return a reference to this normal surface.
+         * \return a reference to this normal surface.
          */
         NormalSurface& operator = (NormalSurface&&) noexcept = default;
 
@@ -676,7 +700,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * these properties differs then the two surfaces will be adjusted
          * accordingly.
          *
-         * @param other the normal surface whose contents should be swapped
+         * \param other the normal surface whose contents should be swapped
          * with this.
          */
         void swap(NormalSurface& other) noexcept;
@@ -688,7 +712,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * constants.  In particular, this routine has exactly the same
          * effect as multiplying the surface by 2.
          *
-         * @return the double of this normal surface.
+         * \return the double of this normal surface.
          */
         [[deprecated]] NormalSurface doubleSurface() const;
 
@@ -705,8 +729,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre Both this and the given normal surface use the same
          * underlying triangulation.
          *
-         * @param rhs the surface to sum with this.
-         * @return the sum of both normal surfaces.
+         * \param rhs the surface to sum with this.
+         * \return the sum of both normal surfaces.
          */
         NormalSurface operator + (const NormalSurface& rhs) const;
 
@@ -716,9 +740,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * The resulting surface will use the same internal vector encoding
          * as this surface.
          *
-         * @param coeff the coefficient to multiply this surface by;
+         * \param coeff the coefficient to multiply this surface by;
          * this must be non-negative.
-         * @return the resulting multiple of this surface.
+         * \return the resulting multiple of this surface.
          */
         NormalSurface operator * (const LargeInteger& coeff) const;
 
@@ -727,9 +751,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * The internal vector encoding used by this surface will not change.
          *
-         * @param coeff the coefficient to multiply this surface by;
+         * \param coeff the coefficient to multiply this surface by;
          * this must be non-negative.
-         * @return a reference to this surface.
+         * \return a reference to this surface.
          */
         NormalSurface& operator *= (const LargeInteger& coeff);
 
@@ -744,7 +768,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * almost normal encoding) are enough to guarantee integer triangle
          * coordinates (which might or might not be stored).
          *
-         * @return the integer by which the original surface was divided
+         * \return the integer by which the original surface was divided
          * (i.e., the gcd of all normal coordinates in the original surface).
          * This will always be strictly positive.
          */
@@ -757,13 +781,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * tetrahedron and a vertex of that tetrahedron that the
          * triangle surrounds.
          *
-         * @param tetIndex the index in the triangulation of the
+         * \param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and Triangulation<3>::size()-1 inclusive.
-         * @param vertex the vertex of the given tetrahedron around
+         * \param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
-         * @return the number of triangular discs of the given type.
+         * \return the number of triangular discs of the given type.
          */
         LargeInteger triangles(size_t tetIndex, int vertex) const;
 
@@ -781,12 +805,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
          * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
          *
-         * @param tetIndex the index in the triangulation of the
+         * \param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and Triangulation<3>::size()-1 inclusive.
-         * @param quadType the type of this quadrilateral in the given
+         * \param quadType the type of this quadrilateral in the given
          * tetrahedron; this should be 0, 1 or 2, as described above.
-         * @return the number of quadrilateral discs of the given type.
+         * \return the number of quadrilateral discs of the given type.
          */
         LargeInteger quads(size_t tetIndex, int quadType) const;
         /**
@@ -803,22 +827,22 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
          * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
          *
-         * @param tetIndex the index in the triangulation of the
+         * \param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and Triangulation<3>::size()-1 inclusive.
-         * @param octType the type of this octagon in the given tetrahedron;
+         * \param octType the type of this octagon in the given tetrahedron;
          * this should be 0, 1 or 2, as described above.
-         * @return the number of octagonal discs of the given type.
+         * \return the number of octagonal discs of the given type.
          */
         LargeInteger octs(size_t tetIndex, int octType) const;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
          *
-         * @param edgeIndex the index in the triangulation of the edge
+         * \param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
          * Triangulation<3>::countEdges()-1 inclusive.
-         * @return the number of times this normal surface crosses the
+         * \return the number of times this normal surface crosses the
          * given edge.
          */
         LargeInteger edgeWeight(size_t edgeIndex) const;
@@ -826,13 +850,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
          *
-         * @param triIndex the index in the triangulation of the triangle
+         * \param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
          * Triangulation<3>::countTriangles()-1 inclusive.
-         * @param triVertex the vertex of the triangle (0, 1 or 2) around
+         * \param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
-         * @return the number of times this normal surface intersect the
+         * \return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
         LargeInteger arcs(size_t triIndex, int triVertex) const;
@@ -854,7 +878,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * system does not support almost normal surfaces, then even the
          * first call is fast (it returns a null disc type immediately).
          *
-         * @return the position of the first non-zero octagonal coordinate,
+         * \return the position of the first non-zero octagonal coordinate,
          * or a null disc type if there is no such coordinate.
          */
         DiscType octPosition() const;
@@ -881,7 +905,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
 
@@ -890,7 +914,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Names are optional and need not be unique.
          * The default name for a surface is the empty string.
          *
-         * @return the name of associated with this surface.
+         * \return the name of associated with this surface.
          */
         const std::string& name() const;
         /**
@@ -898,7 +922,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Names are optional and need not be unique.
          * The default name for a surface is the empty string.
          *
-         * @param name the new name to associate with this surface.
+         * \param name the new name to associate with this surface.
          */
         void setName(const std::string& name);
 
@@ -908,9 +932,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * will only be written if the surface is stored using an encoding
          * that supports almost normal surfaces.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -919,12 +943,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * of its properties.  This routine will be called from within
          * NormalSurfaces::writeXMLPacketData().
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param list the enclosing normal hypersurface list.  Currently this
+         * \param out the output stream to which the XML should be written.
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param list the enclosing normal surface list.  Currently this
          * is only relevant when writing to the older REGINA_XML_GEN_2 format;
          * it will be ignored (and may be \c null) for newer file formats.
          */
@@ -938,13 +962,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         bool isEmpty() const;
         /**
          * Determines if this normal surface has more than one octagonal disc.
-         * It may be assumed that at most one octagonal disc \e type exists in
+         * It may be assumed that at most one octagonal disc _type_ exists in
          * this surface.  This routine will return \c true if an octagonal
          * type does exist and its coordinate is greater than one.
          *
-         * \pre At most one octagonal disc \e type exists in this surface.
+         * \pre At most one octagonal disc _type_ exists in this surface.
          *
-         * @return \c true if and only if there is an octagonal disc type
+         * \return \c true if and only if there is an octagonal disc type
          * present and its coordinate is greater than one.
          */
         bool hasMultipleOctDiscs() const;
@@ -956,7 +980,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * @return \c true if and only if this normal surface is compact.
+         * \return \c true if and only if this normal surface is compact.
          */
         bool isCompact() const;
         /**
@@ -968,7 +992,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * @return the Euler characteristic.
+         * \return the Euler characteristic.
          */
         LargeInteger eulerChar() const;
         /**
@@ -987,7 +1011,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this surface is orientable, or \c false if
+         * \return \c true if this surface is orientable, or \c false if
          * this surface is non-orientable.
          */
         bool isOrientable() const;
@@ -1007,7 +1031,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this surface is two-sided, or \c false if
+         * \return \c true if this surface is two-sided, or \c false if
          * this surface is one-sided.
          */
         bool isTwoSided() const;
@@ -1027,7 +1051,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this surface is connected, or \c false if
+         * \return \c true if this surface is connected, or \c false if
          * this surface is disconnected.
          */
         bool isConnected() const;
@@ -1039,7 +1063,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * @return \c true if and only if this surface has real boundary.
+         * \return \c true if and only if this surface has real boundary.
          */
         bool hasRealBoundary() const;
 
@@ -1058,82 +1082,85 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return the list of connected components.
+         * \return the list of connected components.
          */
         std::vector<NormalSurface> components() const;
 
         /**
          * Determines whether or not this surface is vertex linking.
-         * A <i>vertex linking</i> surface contains only triangles.
+         * A _vertex linking_ surface contains only triangles.
          *
          * This behaves differently from isVertexLink(), which only detects
          * the link of a single vertex (or a multiple of such a link).
          * In contrast, this routine will also detect the union of
-         * several \e different vertex links.
+         * several _different_ vertex links.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return \c true if and only if this surface is vertex linking.
+         * \return \c true if and only if this surface is vertex linking.
          */
         bool isVertexLinking() const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the link of a single vertex.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the link of a single vertex.
          *
          * This behaves differently from isVertexLinking(), which will also
          * detect a union of several different vertex links.  In contrast,
-         * this routine will only identify the link of a \e single vertex
+         * this routine will only identify the link of a _single_ vertex
          * (or a multiple of such a link).
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return the vertex linked by a rational multiple of this surface,
+         * \return the vertex linked by a positive rational multiple of this
+         * surface,
          * or \c null if this surface is not a multiple of a single vertex link.
          */
         const Vertex<3>* isVertexLink() const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the thin link of a single edge.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the thin link of a single edge.
          *
-         * Here a \e thin edge link is a normal surface which appears naturally
+         * Here a _thin_ edge link is a normal surface which appears naturally
          * as the frontier of a regular neighbourhood of an edge, with no need
          * for any further normalisation.
          *
          * This behaves differently from isNormalEdgeLink(), which tests for a
-         * \e normalised edge link (which could end up far away from the
+         * _normalised_ edge link (which could end up far away from the
          * edge, or could be normalised into a surface with different
          * topology, or could even be normalised away to nothing).
+         * Although isNormalEdgeLink() will also indicate thin edge links,
+         * this test has significantly less overhead (and so should be faster).
          *
-         * A surface (or its rational multiple) can be the \e thin edge link
-         * of at most two edges.  If there are indeed two different edges
-         * \a e1 and \a e2 for which a rational multiple of this surface can
-         * be expressed as the thin edge link, then the pair (\a e1, \a e2)
-         * will be returned.  If there is only one such edge \a e, then the
-         * pair (\a e, \c null) will be returned.  If no rational multiple of
-         * this surface is the thin link of any edge, then the pair
-         * (\c null, \c null) will be returned.
+         * A surface (or its positive rational multiple) can be the _thin_ edge
+         * link of at most two edges.  If there are indeed two different edges
+         * \a e1 and \a e2 for which a multiple of this surface can be expressed
+         * as the thin edge link, then the pair (\a e1, \a e2) will be returned.
+         * If there is only one such edge \a e, then the pair (\a e, \c null)
+         * will be returned.  If no positive rational multiple of this surface
+         * is the thin link of any edge, then the pair (\c null, \c null) will
+         * be returned.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a pair containing the edge(s) linked by a rational
+         * \return a pair containing the edge(s) linked by a positive rational
          * multiple of this surface, as described above.
          */
         std::pair<const Edge<3>*, const Edge<3>*> isThinEdgeLink() const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the normalised link of a single edge.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the normalised link of a single edge.
          *
-         * Here the phrase \e normalised link of an edge \a e means the
+         * Here the phrase _normalised_ link of an edge \a e means the
          * frontier of a regular neighbourhood of \a e, converted into a
          * normal surface by expanding away from the edge using the
          * normalisation process.  It could be that there is no normalisation
-         * required at all (in which case it is also a \e thin edge link).
+         * required at all (in which case it is also a _thin_ edge link).
          * However, it could be that the normalisation process expands
          * the surface far away from the edge itself, or changes its
          * topology, or disconnects the surface, or even normalises it
@@ -1141,22 +1168,120 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * In particular, this test behaves differently from isThinEdgeLink(),
          * which tests for thin edge links only (where no additional
-         * normalisation is required).
+         * normalisation is required).  If you are only interested in thin
+         * edge links, then you should call isThinEdgeLink(), which has much
+         * less overhead.
          *
-         * A surface (or its rational multiple) could be the normalised link
-         * of many edges.  The return value will be a vector containing all
-         * such edges, ordered by the index of each edge in the triangulation.
-         * If no rational multiple of this surface is the normalised link of
-         * any edge, then the empty vector will be returned.
+         * A surface (or its positive rational multiple) could be the
+         * normalised link of many edges.  The return value will be a pair
+         * (\a v, \a thin), where:
+         *
+         * - \a v is a vector containing all such edges.  This will begin
+         *   with the edges for which this surface is a thin link, followed by
+         *   the edges where normalisation was required; within each category
+         *   the edges will be ordered by their index within the triangulation.
+         *
+         * - \a thin is either 0, 1 or 2, indicating how many edges this
+         *   surface is a thin link for.  This uses an unsigned type, since
+         *   it will often be compared to `v.size()`.
+         *
+         * If no positive rational multiple of this surface is the normalised
+         * link of any edge, then \a link will be 0 and \a v will be the
+         * empty vector.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the edge(s) linked by a rational
-         * multiple of this surface, as described above.
+         * \return a vector containing the edge(s) linked by a positive rational
+         * multiple of this surface and an integer indicating how many
+         * of these links are thin, as described above.
          */
-        std::vector<const Edge<3>*> isNormalEdgeLink() const;
+        std::pair<std::vector<const Edge<3>*>, unsigned> isNormalEdgeLink()
+            const;
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * surface is the thin link of a single triangle.
+         *
+         * Here a _thin_ triangle link is a normal surface which appears
+         * naturally as the frontier of a regular neighbourhood of a
+         * triangle, with no need for any further normalisation.
+         *
+         * This behaves differently from isNormalTriangleLink(), which tests
+         * for a _normalised_ triangle link (which could end up far away from
+         * the triangle, or could be normalised into a surface with different
+         * topology, or could even be normalised away to nothing).  Unlike the
+         * tests for edge links, the routines isThinTriangleLink() and
+         * isNormalTriangleLink() use essentially the same implementation (so
+         * testing for only thin links may be a little faster, but not by much).
+         *
+         * A surface (or its positive rational multiple) can be the _thin_ link
+         * of at most two triangles.  If there are indeed two different
+         * triangles \a t1 and \a t2 for which a multiple of this surface can
+         * be expressed as the thin triangle link, then the pair (\a t1, \a t2)
+         * will be returned.  If there is only one such triangle \a t, then the
+         * pair (\a t, \c null) will be returned.  If no positive rational
+         * multiple of this surface is the thin link of any triangle, then the
+         * pair (\c null, \c null) will be returned.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \return a pair containing the triangle(s) linked by a positive
+         * rational multiple of this surface, as described above.
+         */
+        std::pair<const Triangle<3>*, const Triangle<3>*> isThinTriangleLink()
+            const;
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * surface is the normalised link of a single triangle.
+         *
+         * Here the phrase _normalised_ link of a triangle \a t means the
+         * frontier of a regular neighbourhood of \a t, converted into a
+         * normal surface by expanding away from the triangle using the
+         * normalisation process.  It could be that there is no normalisation
+         * required at all (in which case it is also a _thin_ triangle link).
+         * However, it could be that the normalisation process expands
+         * the surface far away from the triangle itself, or changes its
+         * topology, or disconnects the surface, or even normalises it
+         * away to an empty surface.
+         *
+         * In particular, this test behaves differently from
+         * isThinTriangleLink(), which tests for thin triangle links only
+         * (where no additional normalisation is required).  Unlike the
+         * tests for edge links, the routines isThinTriangleLink() and
+         * isNormalTriangleLink() use essentially the same implementation (so
+         * testing for only thin links may be a little faster, but not by much).
+         *
+         * A surface (or its positive rational multiple) could be the
+         * normalised link of many triangles.  The return value will be a pair
+         * (\a v, \a thin), where:
+         *
+         * - \a v is a vector containing all such triangles.  This will begin
+         *   with the triangles for which this surface is a thin link, followed
+         *   by the triangles where normalisation was required; within each
+         *   category the triangles will be ordered by their index within the
+         *   triangulation.
+         *
+         * - \a thin is either 0, 1 or 2, indicating how many triangles this
+         *   surface is a thin link for.  This uses an unsigned type, since
+         *   it will often be compared to `v.size()`.
+         *
+         * If no positive rational multiple of this surface is the normalised
+         * link of any triangle, then \a link will be 0 and \a v will be the
+         * empty vector.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \return a vector containing the triangle(s) linked by a positive
+         * rational multiple of this surface and an integer indicating how many
+         * of these links are thin, as described above.
+         */
+        std::pair<std::vector<const Triangle<3>*>, unsigned>
+            isNormalTriangleLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing
@@ -1167,7 +1292,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return \c true if and only if this is a splitting surface.
+         * \return \c true if and only if this is a splitting surface.
          */
         bool isSplitting() const;
         /**
@@ -1181,7 +1306,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return the number of tetrahedra that this surface meets if it
+         * \return the number of tetrahedra that this surface meets if it
          * is a central surface, or 0 if it is not a central surface.
          */
         size_t isCentral() const;
@@ -1202,9 +1327,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * largest possible long integer), then the behaviour of this
          * routine is undefined.
          *
-         * @author Alex He
+         * \author Alex He
          *
-         * @return the number of disjoint boundary curves.
+         * \return the number of disjoint boundary curves.
          */
         size_t countBoundaries() const;
 
@@ -1232,11 +1357,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * retriangulate, and so may run out of memory if the normal
          * coordinates are extremely large.
          *
-         * @param knownConnected \c true if this normal surface is
+         * \param knownConnected \c true if this normal surface is
          * already known to be connected (for instance, if it came from
          * an enumeration of vertex normal surfaces), or \c false if
          * we should not assume any such information about this surface.
-         * @return \c true if this surface is a compressing disc, or \c false if
+         * \return \c true if this surface is a compressing disc, or \c false if
          * this surface is not a compressing disc.
          */
         bool isCompressingDisc(bool knownConnected = false) const;
@@ -1244,17 +1369,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Determines whether this is an incompressible surface within
          * the surrounding 3-manifold.  At present, this routine is only
-         * implemented for surfaces embedded within \e closed and
-         * \e irreducible 3-manifold triangulations.
+         * implemented for surfaces embedded within _closed_ and
+         * _irreducible_ 3-manifold triangulations.
          *
          * Let \a D be some disc embedded in the underlying 3-manifold,
          * and let \a B be the boundary of \a D.  We call \a D a
-         * <i>compressing disc</i> for this surface if (i) the intersection
+         * _compressing disc_ for this surface if (i) the intersection
          * of \a D with this surface is the boundary \a B, and
          * (ii) although \a B bounds a disc within the 3-manifold, it
          * does not bound a disc within this surface.
          *
-         * We declare this surface to be \e incompressible if there are
+         * We declare this surface to be _incompressible_ if there are
          * no such compressing discs.  For our purposes, spheres are never
          * considered incompressible (so if this surface is a sphere then
          * this routine will always return \c false).
@@ -1274,7 +1399,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is compact, embedded and connected,
          * and contains no octagonal discs.
          *
-         * @return \c true if this surface is incompressible, or \c false if
+         * \return \c true if this surface is incompressible, or \c false if
          * this surface is not incompressible (or if it is a sphere).
          */
         bool isIncompressible() const;
@@ -1288,13 +1413,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * operation will not change the topology of the underlying
          * 3-manifold beyond simply slicing along this surface.
          *
+         * As of Regina 7.1, this routine can happily cut along _almost_
+         * normal surfaces as well as normal surfaces.  That is, it can
+         * now handle octagons, including cases with multiple octagons in the
+         * same tetrahedron and/or octagons in multiple tetrahedra.
+         *
          * \warning The number of tetrahedra in the new triangulation
-         * can be <i>very</i> large.
+         * can be _very_ large.
          *
          * \pre This normal surface is compact and embedded.
-         * \pre This normal surface contains no octagonal discs.
          *
-         * @return the resulting cut-open triangulation.
+         * \return the resulting cut-open triangulation.
          */
         Triangulation<3> cutAlong() const;
 
@@ -1325,6 +1454,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \warning This routine can have unintended topological
          * side-effects, as described above.
+         *
          * \warning In exceptional cases with non-orientable
          * 3-manifolds, these side-effects might lead to invalid edges
          * (edges whose midpoints are projective plane cusps).
@@ -1332,9 +1462,45 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
          *
-         * @return the resulting crushed triangulation.
+         * \return the resulting crushed triangulation.
          */
         Triangulation<3> crush() const;
+
+        /**
+         * Returns an isotopic normal surface that contains no octagons,
+         * placed within a homeomorphic (but possibly different) triangulation.
+         *
+         * Specifically: this routine returns a surface \a s within a
+         * triangulation \a t, where \a t is homeomorphic to the triangulation
+         * containing this surface, and where \a s is a normal (not
+         * almost normal) surface isotopic to this.  Only the surface \a s is
+         * returned; you can access \a t by calling `s.triangulation()`.
+         *
+         * If this surface is already normal (i.e., it does not contain
+         * any octagons), then the surface returned will simply be a copy
+         * of this surface (but possibly using a different vector encoding),
+         * living within the same triangulation.
+         *
+         * If this surface does contain octagons, then the triangulation \a t
+         * will be obtained from the original by replacing each tetrahedron
+         * containing octagons with _three_ tetrahedra (essentially
+         * performing a 0-2 move).  Each octagon can then be subdivided
+         * into a quadrilateral and four triangles.  If the original
+         * triangulation is oriented, then the new triangulation \a t will
+         * preserve this orientation.
+         *
+         * In all cases, the surface that is returned will use a vector
+         * encoding that does not store octagons.
+         *
+         * Note: this routine can happily cope with multiple octagons in the
+         * same tetrahedron, and/or multiple tetrahedra containing octagons.
+         *
+         * \pre This surface is embedded.
+         *
+         * \return an isotopic normal (not almost normal) surface \a s,
+         * as described above.
+         */
+        NormalSurface removeOcts() const;
 
         /**
          * Determines whether this and the given surface in fact
@@ -1360,8 +1526,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c false.
          *
-         * @param other the surface to be compared with this surface.
-         * @return \c true if both surfaces represent the same normal or
+         * \param other the surface to be compared with this surface.
+         * \return \c true if both surfaces represent the same normal or
          * almost normal surface, or \c false if not.
          */
         bool operator == (const NormalSurface& other) const;
@@ -1390,8 +1556,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c true.
          *
-         * @param other the surface to be compared with this surface.
-         * @return \c true if both surfaces represent different normal or
+         * \param other the surface to be compared with this surface.
+         * \return \c true if both surfaces represent different normal or
          * almost normal surface, or \c false if not.
          */
         bool operator != (const NormalSurface& other) const;
@@ -1403,7 +1569,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * provided for scenarios where you need to be able to sort
          * surfaces (e.g., when using them as keys in a map).
          *
-         * The order \e is well-defined, and will be preserved across
+         * The order _is_ well-defined, and will be preserved across
          * copy/move operations, different program executions, and different
          * platforms (since it is defined purely in terms of the normal
          * coordinates, and does not use transient properties such as
@@ -1415,8 +1581,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * other supports non-compact or almost normal surfaces.
          * See the equality test operator==() for further details.
          *
-         * @param other the surface to be compared with this surface.
-         * @return \c true if and only if this appears before the given
+         * \param other the surface to be compared with this surface.
+         * \return \c true if and only if this appears before the given
          * surface in the total order.
          */
         bool operator < (const NormalSurface& other) const;
@@ -1433,7 +1599,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * routine NormalSurfaces::allowsAlmostNormal(), which only examines
          * the underlying coordinate system.
          *
-         * @return \c true if and only if this surface contains only
+         * \return \c true if and only if this surface contains only
          * triangles and/or quadrilaterals.
          */
         bool normal() const;
@@ -1443,7 +1609,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and only if the surface contains no conflicting quadrilateral
          * and/or octagon types.
          *
-         * @return \c true if and only if this surface is embedded.
+         * \return \c true if and only if this surface is embedded.
          */
         bool embedded() const;
 
@@ -1455,7 +1621,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * This is a local constraint, not a global constraint.  That is,
          * we do not insist that we can avoid intersections within all
-         * tetrahedra \e simultaneously.  To test the global constraint,
+         * tetrahedra _simultaneously_.  To test the global constraint,
          * see the (much slower) routine disjoint() instead.
          *
          * Local compatibility can be formulated in terms of normal disc types.
@@ -1464,7 +1630,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * octagonal disc type per tetrahedron.
          *
          * Note again that this is a local constraint only.  In particular,
-         * for almost normal surfaces, it does \e not insist that there is
+         * for almost normal surfaces, it does _not_ insist that there is
          * at most one octagonal disc type anywhere within the triangulation.
          *
          * If one of the two surfaces breaks the local compatibility
@@ -1476,9 +1642,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre Both this and the given normal surface live within the
          * same 3-manifold triangulation.
          *
-         * @param other the other surface to test for local compatibility with
+         * \param other the other surface to test for local compatibility with
          * this surface.
-         * @return \c true if the two surfaces are locally compatible, or
+         * \return \c true if the two surfaces are locally compatible, or
          * \c false if they are not.
          */
         bool locallyCompatible(const NormalSurface& other) const;
@@ -1501,9 +1667,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \warning This routine is slow, since it performs a depth-first
          * search over the entire set of normal discs.
          *
-         * @param other the other surface to test alongside this surface
+         * \param other the other surface to test alongside this surface
          * for potential intersections.
-         * @return \c true if both surfaces can be embedded without
+         * \return \c true if both surfaces can be embedded without
          * intersecting anywhere, or \c false if this and the given
          * surface are forced to intersect at some point.
          */
@@ -1516,7 +1682,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * This routine is only available for use with SnapPea triangulations,
          * since it needs to know the specific meridian and longitude on each
-         * cusp.  These meridians and longitudes are \e only available through
+         * cusp.  These meridians and longitudes are _only_ available through
          * the SnapPea kernel, since Regina does not use or store peripheral
          * curves for its own Triangulation<3> class.  Therefore:
          *
@@ -1524,7 +1690,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   is not of the subclass SnapPeaTriangulation, this routine will
          *   throw an exception (see below).
          *
-         * - In particular, this \e will happen if you have edited or deleted
+         * - In particular, this _will_ happen if you have edited or deleted
          *   the original triangulation that was used to construct this normal
          *   surface.  This is because such a modification will trigger an
          *   internal deep copy of the original, and this will only copy
@@ -1541,11 +1707,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * with the meridian and \a L with the longitude.  Equivalently,
          * the boundary curves pass \a L times around the meridian and
          * <i>-M</i> times around the longitude.
-         * The rational boundary slope is therefore <tt>-L/M</tt>, and
-         * there are <tt>gcd(L,M)</tt> boundary curves with this slope.
+         * The rational boundary slope is therefore `-L/M`, and
+         * there are `gcd(L,M)` boundary curves with this slope.
          *
          * The orientations of the boundary curves of a
-         * spun-normal surface are chosen so that \e if meridian and
+         * spun-normal surface are chosen so that _if_ meridian and
          * longitude are a positive basis as vieved from the cusp, then
          * as one travels along an oriented boundary curve, the
          * spun-normal surface spirals into the cusp to one's right and
@@ -1567,14 +1733,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * These conditions will likewise be checked, and this routine
          * will throw an exception if they are not met.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception FailedPrecondition one or more of the preconditions
+         * \exception FailedPrecondition One or more of the preconditions
          * listed above was not met.
          *
-         * @author William Pettersson and Stephan Tillmann
+         * \author William Pettersson and Stephan Tillmann
          *
-         * @return a matrix with \a number_of_vertices rows and two columns
+         * \return a matrix with \a number_of_vertices rows and two columns
          * as described above.
          */
         MatrixInt boundaryIntersections() const;
@@ -1598,7 +1764,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * which do not require any knowledge of the internal vector
          * encoding that this surface uses.
          *
-         * @return the underlying integer vector.
+         * \return the underlying integer vector.
          */
         const Vector<LargeInteger>& vector() const;
 
@@ -1610,7 +1776,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Note that this might differ from the encoding originally
          * passed to the class constructor.
          *
-         * @return the internal vector encoding.
+         * \return the internal vector encoding.
          */
         NormalEncoding encoding() const;
 
@@ -1619,7 +1785,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface supports almost normal surfaces.
          *
          * If this routine returns \c true, it does not mean that the surface
-         * actually \e contains one or more octagons; you should use normal()
+         * actually _contains_ one or more octagons; you should use normal()
          * to test for that.  This routine simply queries a basic property
          * of the vector encoding that is being used, and this property is
          * often inherited from whatever coordinate system was used to
@@ -1628,7 +1794,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * On the other hand, if this routine returns \c false, it is a
          * guarantee that this surface is normal.
          *
-         * @return \c true if the internal encoding supports almost
+         * \return \c true if the internal encoding supports almost
          * normal surfaces.
          */
         bool couldBeAlmostNormal() const;
@@ -1640,7 +1806,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * (i.e., spun-normal surfaces).
          *
          * If this routine returns \c true, it does not mean that the surface
-         * actually \e is non-compact; you should use isCompact() to test for
+         * actually _is_ non-compact; you should use isCompact() to test for
          * that.  This routine simply queries a basic property of the vector
          * encoding that is being used, and this property is often inherited
          * from whatever coordinate system was used to perform the normal
@@ -1649,7 +1815,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * On the other hand, if this routine returns \c false, it is a
          * guarantee that this surface is compact.
          *
-         * @return \c true if the internal encoding supports almost
+         * \return \c true if the internal encoding supports almost
          * normal surfaces.
          */
         bool couldBeNonCompact() const;
@@ -1667,11 +1833,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - If the given encoding does already store triangles, then
          *   this routine will do nothing and immediately return \a enc.
          *
-         * @param tri the triangulation in which the normal surface lives.
-         * @param vector an integer vector that encodes a normal (or almost
+         * \param tri the triangulation in which the normal surface lives.
+         * \param vector an integer vector that encodes a normal (or almost
          * normal) surface within \a tri; this will be modified directly.
-         * @param enc the encoding used by the given integer vector.
-         * @return the new encoding used by the modified \a vector.
+         * \param enc the encoding used by the given integer vector.
+         * \return the new encoding used by the modified \a vector.
          */
         static NormalEncoding reconstructTriangles(const Triangulation<3>& tri,
             Vector<LargeInteger>& vector, NormalEncoding enc);
@@ -1709,6 +1875,27 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         void calculateBoundaries() const;
 
+        /**
+         * Determines whether or not a positive rational multiple of this
+         * surface _could_ be the normalised link of a face of positive
+         * dimension.
+         *
+         * A non-null return value is _not_ a guarantee that this surface
+         * _is_ such a link; however, if this routine returns \nullopt then
+         * this _is_ a guarantee that the surface is not such a link.
+         *
+         * The precise tests that this routine carries out involve a trade-off
+         * between speed and mathematical power, and so are subject to change
+         * in future versions of Regina.
+         *
+         * \pre This surface is non-empty.
+         *
+         * \return the precise multiple of this surface that _could_ be a
+         * normalised non-vertex face link, or \nullopt if we can prove
+         * that this surface is not such a link.
+         */
+        std::optional<NormalSurface> couldLinkFace() const;
+
     friend class XMLNormalSurfaceReader;
 };
 
@@ -1719,8 +1906,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
  * This global routine simply calls NormalSurface::swap(); it is provided
  * so that NormalSurface meets the C++ Swappable requirements.
  *
- * @param a the first normal surface whose contents should be swapped.
- * @param b the second normal surface whose contents should be swapped.
+ * \param a the first normal surface whose contents should be swapped.
+ * \param b the second normal surface whose contents should be swapped.
  *
  * \ingroup surfaces
  */
@@ -1825,6 +2012,7 @@ inline void NormalSurface::swap(NormalSurface& other) noexcept {
     connected_.swap(other.connected_);
     realBoundary_.swap(other.realBoundary_);
     compact_.swap(other.compact_);
+    std::swap(linkOf_, other.linkOf_);
 }
 
 inline LargeInteger NormalSurface::triangles(size_t tetIndex, int vertex)
@@ -1932,6 +2120,10 @@ inline void swap(NormalSurface& a, NormalSurface& b) noexcept {
 }
 
 } // namespace regina
+
+// If we haven't yet seen the full definition of Triangulation<3>, include it
+// now - the SnapshotRef constructor (used inline above) needs it.
+#include "triangulation/dim3.h"
 
 #endif
 

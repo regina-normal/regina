@@ -1,6 +1,6 @@
 # CMake macros specific to Regina.
 #
-# Copyright (c) Ben Burton, 2012-2021
+# Copyright (c) Ben Burton, 2012-2023
 # Licensed under the GNU General Public License, version 2 or later
 #
 # As an exception, when this program is distributed through (i) the
@@ -105,6 +105,24 @@ macro (REGINA_ESCAPE_PERL _input)
   string(REPLACE "\\" "\\\\" PERL_${_input} "${${_input}}")
   string(REPLACE "'" "\\'" PERL_${_input} "${PERL_${_input}}")
 endmacro (REGINA_ESCAPE_PERL)
+
+
+# Macro: REGINA_ESCAPE_C(input)
+#
+# Sets the variable C_${input} to be a variant of the variable ${input}
+# that is properly escaped for use in a C string between double quotes.
+#
+# Also sets the variable C_QQ_${input} to be the same, but without escaping
+# double-quote characters.  This is intended for scenarios where double-quotes
+# (but only double-quotes) have already been escaped (such as headers created
+# via cmake's CONFIGURE_FILE(... ESCAPE_QUOTES).
+#
+# The input argument must be a variable name (not its value).
+#
+macro (REGINA_ESCAPE_C _input)
+  string(REPLACE "\\" "\\\\" C_QQ_${_input} "${${_input}}")
+  string(REPLACE "\"" "\\\"" C_${_input} "${C_QQ_${_input}}")
+endmacro (REGINA_ESCAPE_C)
 
 
 # Macro: REGINA_ESCAPE_URI_PATH(input)

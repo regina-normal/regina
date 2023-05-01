@@ -8,10 +8,8 @@ SET ( FILES
   matrixops.cpp
   cyclotomic.cpp
   integer.cpp
-  largeinteger.cpp
   matrix2.cpp
-  matrixbool.cpp
-  matrixint.cpp
+  matrix.cpp
   numbertheory.cpp
   perm.cpp
   perm2.cpp
@@ -20,12 +18,12 @@ SET ( FILES
   perm5.cpp
   perm6.cpp
   perm7.cpp
+  permgroup.cpp
   polynomial.cpp
   primes.cpp
   pymaths.cpp
   rational.cpp
-  vectorint.cpp
-  vectorlarge.cpp
+  vector.cpp
   )
 
 # Prepend folder name

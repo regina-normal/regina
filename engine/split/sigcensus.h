@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,7 +72,7 @@ class SigCensus {
         unsigned* used;
             /**< The number of times each symbol has been used so far. */
         IsoList* automorph;
-            /**< List <tt>automorph[k]</tt> represents all automorphisms
+            /**< List `automorph[k]` represents all automorphisms
                  of the first \a k cycle groups of the partially formed
                  signature. */
 
@@ -127,18 +127,18 @@ class SigCensus {
          *
          * \todo \feature Add support for symbols of differing case.
          *
-         * \ifacespython This function is available, and \a action may be a
+         * \python This function is available, and \a action may be a
          * pure Python function.  However, \a action cannot take any additional
          * arguments beyond the signature and its automorphisms (and
          * therefore the additional \a args list is omitted here).
          *
-         * @param order the order of signatures to generate.
-         * @param action a function (or other callable object) to call for each
+         * \param order the order of signatures to generate.
+         * \param action a function (or other callable object) to call for each
          * signature that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial signature and automorphism
          * arguments.
-         * @return the total number of non-equivalent signatures that were
+         * \return the total number of non-equivalent signatures that were
          * found.
          */
         template <typename Action, typename... Args>
@@ -169,23 +169,23 @@ class SigCensus {
          * copy of this routine should be running at any given time for
          * a particular SigCensus.
          *
-         * @return the total number of non-equivalent signatures that were
+         * \return the total number of non-equivalent signatures that were
          * found.
          */
         size_t run();
 
         /**
          * Extend the automorphisms in list
-         * <tt>automorph[sig.nCycleGroups - 1]</tt> to form the
-         * automorphisms in list <tt>automorph[sig.nCycleGroups]</tt>.
+         * `automorph[sig.nCycleGroups - 1]` to form the
+         * automorphisms in list `automorph[sig.nCycleGroups]`.
          *
          * If in the processing of extending these automorphisms it is
-         * discovered that the partial signature <tt>sig</tt> is not in
+         * discovered that the partial signature `sig` is not in
          * canonical form, \c false will be returned and the contents of
-         * list <tt>automorph[sig.nCycleGroups]</tt> will be undefined.
+         * list `automorph[sig.nCycleGroups]` will be undefined.
          *
-         * @return \c true if and only if it was confirmed during
-         * processing that the partial signature <tt>sig</tt> is in
+         * \return \c true if and only if it was confirmed during
+         * processing that the partial signature `sig` is in
          * canonical form.
          */
         bool extendAutomorphisms();
@@ -194,10 +194,10 @@ class SigCensus {
          * Extends the partial signature created so far to add a new
          * cycle.
          *
-         * @param cycleLen the length of the new cycle to add.
-         * @param newCycleGroup \c true if and only if the new cycle
+         * \param cycleLen the length of the new cycle to add.
+         * \param newCycleGroup \c true if and only if the new cycle
          * begins a new cycle group.
-         * @param startPos the position within the list of symbols
+         * \param startPos the position within the list of symbols
          * that make up the signature at which the new cycle will begin.
          */
         void tryCycle(unsigned cycleLen, bool newCycleGroup, unsigned startPos);

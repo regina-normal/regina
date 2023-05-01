@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -71,7 +71,7 @@ int AngleModel::columnCount(const QModelIndex& /* unused parent */) const {
 
 QVariant AngleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::AngleStructure& s = structures_->structure(index.row());
+        const regina::AngleStructure& s = (*structures_)[index.row()];
         if (index.column() == 0) {
             if (s.isStrict())
                 return tr("Strict");
@@ -154,9 +154,9 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
     stats->setWhatsThis(tr("<qt>Displays various statistics about this "
         "angle structure list, including whether the underlying triangulation "
         "supports any strict and/or taut angle structures.  A <i>strict</i> "
-        "angle structure has all of its angles strictly between 0 and &pi;, "
+        "angle structure has all of its angles strictly between 0 and π, "
         "whereas a <i>taut</i> angle structure has all of its angles equal "
-        "to either 0 or &pi;.<p>"
+        "to either 0 or π.<p>"
         "Note that this header might incidate that the triangulation supports "
         "a strict angle structure even if none appear in the list below "
         "&ndash; the strict angle structure might only be found as a "
@@ -326,7 +326,7 @@ void AngleStructureUI::viewTriangulation() {
         auto copy = regina::make_packet<regina::Triangulation<3>>(
             std::in_place, tri);
         copy->setLabel(structures_->adornedLabel("Triangulation"));
-        structures_->insertChildLast(copy);
+        structures_->append(copy);
 
         enclosingPane->getMainWindow()->packetView(*copy, true, true);
     } else {

@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGFILETYPE" "1" "30 May 2022" "" "The Regina Handbook"
+.TH "REGFILETYPE" "1" "24 April 2023" "" "The Regina Handbook"
 
 .SH NAME
 regfiletype \- Identify the formats of Regina data files
 .SH SYNOPSIS
 
 \fBregfiletype\fR \fB\fIfile\fB\fR\fI ...\fR
+
+
+\fBregfiletype\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -26,6 +29,14 @@ and support for this format was removed completely in 2013
 (Regina\~4.94).
 If you still need to recognise and/or read files in this ancient binary
 format, you will need to download Regina\~4.93.
+.SH "OPTIONS"
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "MACOS USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is
@@ -39,7 +50,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\regfiletype.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.4\\bin\\regfiletype.exe\&.
 .SH "SEE ALSO"
 .PP
 regconvert,

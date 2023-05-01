@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,12 +40,6 @@
 
 using regina::Perm;
 
-template <int n> unsigned long identityImagePack;
-template <> inline unsigned long identityImagePack<4> = 228;
-template <> inline unsigned long identityImagePack<5> = 18056;
-template <> inline unsigned long identityImagePack<6> = 181896;
-template <> inline unsigned long identityImagePack<7> = 1754760;
-
 template <int n> const char* identityString;
 template <> inline const char* identityString<2> = "01";
 template <> inline const char* identityString<3> = "012";
@@ -53,6 +47,30 @@ template <> inline const char* identityString<4> = "0123";
 template <> inline const char* identityString<5> = "01234";
 template <> inline const char* identityString<6> = "012345";
 template <> inline const char* identityString<7> = "0123456";
+template <> inline const char* identityString<8> = "01234567";
+template <> inline const char* identityString<9> = "012345678";
+template <> inline const char* identityString<10> = "0123456789";
+template <> inline const char* identityString<11> = "0123456789a";
+template <> inline const char* identityString<12> = "0123456789ab";
+template <> inline const char* identityString<13> = "0123456789abc";
+template <> inline const char* identityString<14> = "0123456789abcd";
+template <> inline const char* identityString<15> = "0123456789abcde";
+template <> inline const char* identityString<16> = "0123456789abcdef";
+
+template <int n> uint64_t identityImagePack;
+template <> inline uint64_t identityImagePack<4> = 228;
+template <> inline uint64_t identityImagePack<5> = 18056;
+template <> inline uint64_t identityImagePack<6> = 181896;
+template <> inline uint64_t identityImagePack<7> = 1754760;
+template <> inline uint64_t identityImagePack<8> = 16434824;
+template <> inline uint64_t identityImagePack<9> = 36344967696;
+template <> inline uint64_t identityImagePack<10> = 654820258320;
+template <> inline uint64_t identityImagePack<11> = 11649936536080;
+template <> inline uint64_t identityImagePack<12> = 205163983024656;
+template <> inline uint64_t identityImagePack<13> = 3582863703552528;
+template <> inline uint64_t identityImagePack<14> = 62129658859368976;
+template <> inline uint64_t identityImagePack<15> = 1070935975390360080;
+template <> inline uint64_t identityImagePack<16> = 18364758544493064720u;
 
 template <int n> Perm<n> lastPerm;
 template <> inline Perm<2> lastPerm<2> { 1, 0 };
@@ -71,33 +89,191 @@ template <> inline std::array<int, 6> miscPermImg<6> { 4, 2, 3, 0, 5, 1 };
 template <> inline std::array<int, 7> miscPermImg<7> { 4, 6, 2, 3, 0, 5, 1 };
 
 /**
- * Inherited by the "small" permutation test classes, corresponding to
- * classes Perm<n> whose codes are indices into S_n.
+ * Inherited by all permutation test classes.
  */
 template <int n>
-class SmallPermTest :
-        public CppUnit::TestFixture, public TightEncodingTest<Perm<n>> {
-    static_assert(Perm<n>::codeType == regina::PERM_CODE_INDEX);
-
+class GeneralPermTest : public CppUnit::TestFixture,
+        public TightEncodingTest<Perm<n>> {
     public:
-        using TightEncodingTest<Perm<n>>::verifyTightEncoding;
-
-    private:
-        static constexpr bool requiresPrecompute = (n == 6 || n == 7);
-        static constexpr bool usesCode2 = (n >= 4 && n <= 7);
         using Index = typename Perm<n>::Index;
         static constexpr Index nPerms = Perm<n>::nPerms;
+        static constexpr bool usesCode2 = (n >= 4 && n <= 7);
+        static constexpr bool iterationFeasible = (n <= 11);
 
-    public:
         void setUp() override {
-            if constexpr (requiresPrecompute) {
+            if constexpr (iterationFeasible)
                 Perm<n>::precompute();
-            }
         }
 
         void tearDown() override {
         }
 
+        bool looksLikeIdentity(const Perm<n>& p) {
+            if ((! p.isIdentity()) || (! (p == Perm<n>())))
+                return false;
+            if (p.str() != identityString<n>)
+                return false;
+            if constexpr (usesCode2) {
+                return (p.permCode1() == identityImagePack<n> &&
+                    p.permCode2() == 0);
+            } else if constexpr (Perm<n>::codeType ==
+                    regina::PERM_CODE_IMAGES) {
+                return p.permCode() == identityImagePack<n>;
+            } else {
+                return p.permCode() == 0;
+            }
+        }
+
+        bool looksEqual(const Perm<n>& p, const Perm<n>& q) {
+            if (p != q || (! (p == q)) || p.str() != q.str())
+                return false;
+            if constexpr (usesCode2) {
+                return p.permCode1() == q.permCode1() &&
+                    p.permCode2() == q.permCode2();
+            } else {
+                return p.permCode() == q.permCode();
+            }
+        }
+
+        bool looksEqual(const Perm<n>& p, const Perm<n>& q,
+                const std::string& qStr) {
+            if (p != q || (! (p == q)) || p.str() != q.str() || p.str() != qStr)
+                return false;
+            if constexpr (usesCode2) {
+                return p.permCode1() == q.permCode1() &&
+                    p.permCode2() == q.permCode2();
+            } else {
+                return p.permCode() == q.permCode();
+            }
+        }
+
+        bool looksDistinct(const Perm<n>& p, const Perm<n>& q) {
+            if (p == q || (! (p != q)) || p.str() == q.str())
+                return false;
+            if constexpr (usesCode2) {
+                return p.permCode1() != q.permCode1() &&
+                    p.permCode2() != q.permCode2();
+            } else {
+                return p.permCode() != q.permCode();
+            }
+        }
+
+        void increment() {
+            static_assert(iterationFeasible,
+                "The increment() test should only be used where n is "
+                "sufficiently small that a full iteration of permutations "
+                "is feasible.");
+
+            Index i = 0;
+            Perm<n> p;
+            Perm<n> q;
+
+            do {
+                if (p != q) {
+                    std::ostringstream msg;
+                    msg << "Preincrement and postincrement do not match for "
+                        "permutation " << i << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p.SnIndex() != i) {
+                    std::ostringstream msg;
+                    msg << "Increment gives wrong index for permutation "
+                        << i << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                ++i; ++p; q++; // test both pre- and post-increments
+            } while (! p.isIdentity());
+
+            if (i != nPerms) {
+                std::ostringstream msg;
+                msg << "Increment does not wrap around after "
+                    << nPerms << " steps.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! q.isIdentity()) {
+                CPPUNIT_FAIL("Preincrement and postincrement do not "
+                    "wrap around together.");
+            }
+        }
+
+        void cachedInverse() {
+            static_assert(iterationFeasible,
+                "The cachedInverse() test should only be used where n is "
+                "sufficiently small that a full iteration of permutations "
+                "is feasible.");
+
+            Perm<n> p;
+            do {
+                if (p.inverse() != p.cachedInverse()) {
+                    std::ostringstream msg;
+                    msg << "Inverse of " << p.str() << " does not "
+                        "match its cached inverse.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                ++p;
+            } while (! p.isIdentity());
+        }
+
+        void conjugacyMinimal() {
+            static_assert(iterationFeasible,
+                "The conjugacyMinimal() test should only be used where n is "
+                "sufficiently small that a full iteration of permutations "
+                "is feasible.");
+
+            Perm<n> p;
+            do {
+                // Manually decide if p is conjugacy minimal.
+                bool min = true;
+                int prevCycle = 0;
+                int currCycle = 0;
+                for (int j = 0; j < n; ++j) {
+                    if (p[j] > j + 1) {
+                        min = false;
+                        break;
+                    } else if (p[j] == j + 1) {
+                        ++currCycle;
+                    } else {
+                        // We have closed off a cycle.
+                        ++currCycle;
+                        if (currCycle < prevCycle) {
+                            min = false;
+                            break;
+                        }
+                        prevCycle = currCycle;
+                        currCycle = 0;
+                    }
+                }
+
+                if (p.isConjugacyMinimal() != min) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << p << " gives wrong result "
+                        "for isConjugacyMinimal().";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                ++p;
+            } while (! p.isIdentity());
+        }
+};
+
+/**
+ * Inherited by the "small" permutation test classes, corresponding to
+ * classes Perm<n> whose codes are indices into S_n.
+ */
+template <int n>
+class SmallPermTest : public GeneralPermTest<n> {
+    static_assert(Perm<n>::codeType == regina::PERM_CODE_INDEX);
+
+    public:
+        using typename GeneralPermTest<n>::Index;
+        using GeneralPermTest<n>::nPerms;
+        using GeneralPermTest<n>::usesCode2;
+        using GeneralPermTest<n>::looksLikeIdentity;
+        using GeneralPermTest<n>::looksEqual;
+        using GeneralPermTest<n>::looksDistinct;
+        using TightEncodingTest<Perm<n>>::verifyTightEncoding;
+
+    public:
         void permCode() {
             for (Index i = 0; i < nPerms; ++i) {
                 if constexpr (usesCode2) {
@@ -168,53 +344,6 @@ class SmallPermTest :
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
-            }
-        }
-
-        bool looksLikeIdentity(const Perm<n>& p) {
-            if ((! p.isIdentity()) || (! (p == Perm<n>())))
-                return false;
-            if (p.str() != identityString<n>)
-                return false;
-            if constexpr (usesCode2) {
-                return (p.permCode1() == identityImagePack<n> &&
-                    p.permCode2() == 0);
-            } else {
-                return p.permCode() == 0;
-            }
-        }
-
-        bool looksEqual(const Perm<n>& p, const Perm<n>& q) {
-            if (p != q || (! (p == q)) || p.str() != q.str())
-                return false;
-            if constexpr (usesCode2) {
-                return p.permCode1() == q.permCode1() &&
-                    p.permCode2() == q.permCode2();
-            } else {
-                return p.permCode() == q.permCode();
-            }
-        }
-
-        bool looksEqual(const Perm<n>& p, const Perm<n>& q,
-                const std::string& qStr) {
-            if (p != q || (! (p == q)) || p.str() != q.str() || p.str() != qStr)
-                return false;
-            if constexpr (usesCode2) {
-                return p.permCode1() == q.permCode1() &&
-                    p.permCode2() == q.permCode2();
-            } else {
-                return p.permCode() == q.permCode();
-            }
-        }
-
-        bool looksDistinct(const Perm<n>& p, const Perm<n>& q) {
-            if (p == q || (! (p != q)) || p.str() == q.str())
-                return false;
-            if constexpr (usesCode2) {
-                return p.permCode1() != q.permCode1() &&
-                    p.permCode2() != q.permCode2();
-            } else {
-                return p.permCode() != q.permCode();
             }
         }
 
@@ -672,6 +801,39 @@ class SmallPermTest :
             }
         }
 
+        void conjugates() {
+            for (Index i = 0; i < nPerms; ++i) {
+                Perm<n> p = Perm<n>::Sn[i];
+                for (Index j = 0; j < nPerms; ++j) {
+                    Perm<n> q = Perm<n>::Sn[j];
+
+                    if (p.conjugate(q) != q * p * q.inverse()) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void cachedConjugates() {
+            for (Index i = 0; i < nPerms; ++i) {
+                Perm<n> p = Perm<n>::Sn[i];
+                for (Index j = 0; j < nPerms; ++j) {
+                    Perm<n> q = Perm<n>::Sn[j];
+
+                    if (p.cachedConjugate(q) != q.cachedComp(p).cachedComp(
+                            q.cachedInverse())) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
         void compareWith() {
             Perm<n> p, q;
 
@@ -943,62 +1105,6 @@ class SmallPermTest :
                             << " gives the wrong image " << p[j] << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
-            }
-        }
-
-        void conjugacy() {
-            for (Index i = 0; i < nPerms; ++i) {
-                Perm<n> p = Perm<n>::Sn[i];
-
-                // Manually decide if p is conjugacy minimal.
-                bool min = true;
-                for (Index j = 0; j < nPerms; ++j) {
-                    Perm<n> q = Perm<n>::Sn[j];
-                    if ((q * p * q.inverse()).SnIndex() < i) {
-                        min = false;
-                        break;
-                    }
-                }
-
-                if (p.isConjugacyMinimal() != min) {
-                    std::ostringstream msg;
-                    msg << "Permutation " << p << " gives wrong result "
-                        "for isConjugacyMinimal().";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        void increment() {
-            Index i = 0;
-            Perm<n> p;
-            Perm<n> q;
-
-            do {
-                if (p != q) {
-                    std::ostringstream msg;
-                    msg << "Preincrement and postincrement do not match for "
-                        "permutation " << i << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (p.SnIndex() != i) {
-                    std::ostringstream msg;
-                    msg << "Increment gives wrong index for permutation "
-                        << i << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                ++i; ++p; ++q;
-            } while (! p.isIdentity());
-
-            if (i != nPerms) {
-                std::ostringstream msg;
-                msg << "Increment does not wrap around after "
-                    << nPerms << " steps.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! q.isIdentity()) {
-                CPPUNIT_FAIL("Preincrement and postincrement do not "
-                    "wrap around together.");
             }
         }
 

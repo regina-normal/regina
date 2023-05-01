@@ -1,6 +1,7 @@
 # Files to compile
 SET ( FILES
   edge4.cpp
+  hypersurfaces.cpp
   retriangulate.cpp
   simplify.cpp
   simplifyglobal.cpp
@@ -23,6 +24,8 @@ if (${REGINA_INSTALL_DEV})
     component4.h
     edge4.h
     pentachoron4.h
+    tetrahedron4.h
+    triangle4.h
     triangulation4.h
     vertex4.h
     DESTINATION "${INCLUDEDIR}/triangulation/dim4" COMPONENT Development)

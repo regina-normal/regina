@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of splitting surface signatures of given order          *
  *                                                                        *
- *  Copyright (c) 2013-2021, Ben Burton                                   *
+ *  Copyright (c) 2013-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@ using namespace regina;
  * Output information on how to use this program, and then terminate the
  * entire program with return value 1.
  *
- * @param program the name of this program (typically argv[0]).
+ * \param program the name of this program (typically argv[0]).
  */
 void usage(const char* program) {
     std::cerr << "Usage:\n\n"

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -115,15 +115,15 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
-         * @param sfs the bounded Seifert fibred space.
-         * @param mat00 the (0,0) element of the matching matrix.
-         * @param mat01 the (0,1) element of the matching matrix.
-         * @param mat10 the (1,0) element of the matching matrix.
-         * @param mat11 the (1,1) element of the matching matrix.
+         * \param sfs the bounded Seifert fibred space.
+         * \param mat00 the (0,0) element of the matching matrix.
+         * \param mat01 the (0,1) element of the matching matrix.
+         * \param mat10 the (1,0) element of the matching matrix.
+         * \param mat11 the (1,1) element of the matching matrix.
          */
         GraphLoop(const SFSpace& sfs, long mat00, long mat01,
             long mat10, long mat11);
@@ -137,15 +137,15 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
-         * @param sfs the bounded Seifert fibred space.
-         * @param mat00 the (0,0) element of the matching matrix.
-         * @param mat01 the (0,1) element of the matching matrix.
-         * @param mat10 the (1,0) element of the matching matrix.
-         * @param mat11 the (1,1) element of the matching matrix.
+         * \param sfs the bounded Seifert fibred space.
+         * \param mat00 the (0,0) element of the matching matrix.
+         * \param mat01 the (0,1) element of the matching matrix.
+         * \param mat10 the (1,0) element of the matching matrix.
+         * \param mat11 the (1,1) element of the matching matrix.
          */
         GraphLoop(SFSpace&& sfs, long mat00, long mat01,
             long mat10, long mat11);
@@ -156,12 +156,12 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
-         * @param sfs the bounded Seifert fibred space.
-         * @param matchingReln the 2-by-2 matching matrix.
+         * \param sfs the bounded Seifert fibred space.
+         * \param matchingReln the 2-by-2 matching matrix.
          */
         GraphLoop(const SFSpace& sfs, const Matrix2& matchingReln);
         /**
@@ -174,12 +174,12 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
-         * @param sfs the bounded Seifert fibred space.
-         * @param matchingReln the 2-by-2 matching matrix.
+         * \param sfs the bounded Seifert fibred space.
+         * \param matchingReln the 2-by-2 matching matrix.
          */
         GraphLoop(SFSpace&& sfs, const Matrix2& matchingReln);
         /**
@@ -198,7 +198,7 @@ class GraphLoop : public Manifold {
          * Returns a reference to the bounded Seifert fibred space that
          * is joined to itself.
          *
-         * @return a reference to the bounded Seifert fibred space.
+         * \return a reference to the bounded Seifert fibred space.
          */
         const SFSpace& sfs() const;
         /**
@@ -207,7 +207,7 @@ class GraphLoop : public Manifold {
          * See the class notes for details on precisely how this matrix is
          * represented.
          *
-         * @return a reference to the matching matrix.
+         * \return a reference to the matching matrix.
          */
         const Matrix2& matchingReln() const;
 
@@ -225,8 +225,8 @@ class GraphLoop : public Manifold {
          * All that this routine really offers is a well-defined way of
          * ordering graph manifold representations.
          *
-         * @param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \param compare the representation with which this will be compared.
+         * \return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
         bool operator < (const GraphLoop& compare) const;
@@ -234,7 +234,7 @@ class GraphLoop : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphLoop& operator = (const GraphLoop&) = default;
         /**
@@ -243,14 +243,14 @@ class GraphLoop : public Manifold {
          *
          * The graph manifold that was passed will no longer be usable.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphLoop& operator = (GraphLoop&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given graph manifold.
          *
-         * @param other the graph manifold whose contents should be swapped
+         * \param other the graph manifold whose contents should be swapped
          * with this.
          */
         void swap(GraphLoop& other) noexcept;
@@ -259,15 +259,15 @@ class GraphLoop : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrix
          * and the specific presentation of the bounded Seifert fibred space,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
         bool operator == (const GraphLoop& compare) const;
@@ -276,15 +276,15 @@ class GraphLoop : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrix
          * and the specific presentation of the bounded Seifert fibred space,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \param compare the presentation with which this will be compared.
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
         bool operator != (const GraphLoop& compare) const;
@@ -301,7 +301,7 @@ class GraphLoop : public Manifold {
          *
          * This should be called from every class constructor.
          *
-         * \exception InvalidArgument the preconditions were not met.
+         * \exception InvalidArgument The preconditions were not met.
          */
         void verifySFS();
 
@@ -317,7 +317,7 @@ class GraphLoop : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln the matching matrix to simplify.
+         * \param reln the matching matrix to simplify.
          */
         static void reduce(Matrix2& reln);
 
@@ -327,7 +327,7 @@ class GraphLoop : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln the matching matrix to simplify.
+         * \param reln the matching matrix to simplify.
          */
         static void reduceBasis(Matrix2& reln);
 };
@@ -338,8 +338,8 @@ class GraphLoop : public Manifold {
  * This global routine simply calls GraphLoop::swap(); it is provided so
  * that GraphLoop meets the C++ Swappable requirements.
  *
- * @param a the first graph manifold whose contents should be swapped.
- * @param b the second graph manifold whose contents should be swapped.
+ * \param a the first graph manifold whose contents should be swapped.
+ * \param b the second graph manifold whose contents should be swapped.
  *
  * \ingroup manifold
  */

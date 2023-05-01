@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,18 +35,23 @@
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/surface/prism.h"
 
 using regina::PrismSpec;
 
 void addPrism(pybind11::module_& m) {
-    auto c = pybind11::class_<PrismSpec>(m, "PrismSpec")
-        .def(pybind11::init<>())
-        .def(pybind11::init<unsigned long, int>())
-        .def(pybind11::init<const PrismSpec&>())
+    RDOC_SCOPE_BEGIN(PrismSpec)
+
+    auto c = pybind11::class_<PrismSpec>(m, "PrismSpec", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<size_t, int>(), rdoc::__init)
+        .def(pybind11::init<const PrismSpec&>(), rdoc::__copy)
         .def_readwrite("tetIndex", &PrismSpec::tetIndex)
         .def_readwrite("edge", &PrismSpec::edge)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 

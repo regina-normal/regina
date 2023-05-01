@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,22 +36,28 @@
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/blockedsfs.h"
 
 using regina::BlockedSFS;
 
 void addBlockedSFS(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(BlockedSFS)
+
     auto c = pybind11::class_<BlockedSFS, regina::StandardTriangulation>(
-            m, "BlockedSFS")
-        .def(pybind11::init<const BlockedSFS&>())
-        .def("swap", &BlockedSFS::swap)
+            m, "BlockedSFS", rdoc_scope)
+        .def(pybind11::init<const BlockedSFS&>(), rdoc::__copy)
+        .def("swap", &BlockedSFS::swap, rdoc::swap)
         .def("region", &BlockedSFS::region,
-            pybind11::return_value_policy::reference_internal)
-        .def("isPluggedIBundle", &BlockedSFS::isPluggedIBundle)
-        .def_static("recognise", &BlockedSFS::recognise)
+            pybind11::return_value_policy::reference_internal, rdoc::region)
+        .def("isPluggedIBundle", &BlockedSFS::isPluggedIBundle,
+            rdoc::isPluggedIBundle)
+        .def_static("recognise", &BlockedSFS::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    m.def("swap", (void(*)(BlockedSFS&, BlockedSFS&))(regina::swap));
+    regina::python::add_global_swap<BlockedSFS>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

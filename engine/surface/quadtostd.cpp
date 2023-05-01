@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,7 +84,7 @@ namespace {
              * Creates a new ray whose coordinates are a clone of the
              * given vector.
              *
-             * @param v the vector to clone.
+             * \param v the vector to clone.
              */
             RaySpec(const Vector<LargeInteger>& v) :
                     Vector<LargeInteger>(v.size()), facets_(v.size()) {
@@ -96,14 +96,14 @@ namespace {
             }
 
             /**
-             * Creates a new ray that represents the \e negative of
+             * Creates a new ray that represents the _negative_ of
              * the link of the given vertex.
              *
-             * @param tri the underlying triangulation.
-             * @param whichLink the index of the vertex whose link
+             * \param tri the underlying triangulation.
+             * \param whichLink the index of the vertex whose link
              * we should negate; this must be strictly less than
-             * <tt>tri->countVertices()</tt>.
-             * @param coordsPerTet the number of standard coordinate
+             * `tri->countVertices()`.
+             * \param coordsPerTet the number of standard coordinate
              * positions for each tetrahedron (that is, 7 if we are
              * working with normal surfaces, or 10 if we are working
              * with almost normal surfaces).
@@ -138,11 +138,11 @@ namespace {
              * \pre The <i>coord</i>th coordinates of \a pos and \a neg
              * are strictly positive and negative respectively.
              *
-             * @param pos the first of the given rays, in which the given
+             * \param pos the first of the given rays, in which the given
              * coordinate is positive.
-             * @param neg the second of the given rays, in which the given
+             * \param neg the second of the given rays, in which the given
              * coordinate is negative.
-             * @param coord the index of the coordinate that we must set
+             * \param coord the index of the coordinate that we must set
              * to zero to form the intersecting hyperplane.
              */
             RaySpec(const RaySpec& pos, const RaySpec& neg, size_t coord) :
@@ -181,7 +181,7 @@ namespace {
              * The length of this bitmask is the same as the length of the
              * underlying vector for this ray.
              *
-             * @return the bitmask of zero coordinates.
+             * \return the bitmask of zero coordinates.
              */
             inline const BitmaskType& facets() const {
                 return facets_;
@@ -189,18 +189,18 @@ namespace {
 
             /**
              * Determines whether this ray has zero coordinates in every
-             * position where \e both of the given rays simultaneously
+             * position where _both_ of the given rays simultaneously
              * have zero coordinates.
              *
              * The bitmask \a ignoreFacets represents a list of coordinate
              * positions that should be ignored for the purposes of this
              * routine.
              *
-             * @param x the first of the two given rays to examine.
-             * @param y the second of the two given rays to examine.
-             * @param ignoreFacets a bitmask of coordinate positions to
+             * \param x the first of the two given rays to examine.
+             * \param y the second of the two given rays to examine.
+             * \param ignoreFacets a bitmask of coordinate positions to
              * ignore.
-             * @return \c false if there is some coordinate position
+             * \return \c false if there is some coordinate position
              * where (i) both \a x and \a y are zero, (ii) this vector
              * is not zero, and (iii) the corresponding bit in \a ignoreFacets
              * is not set (i.e., is \c false).  Returns \c true otherwise.
@@ -219,7 +219,7 @@ namespace {
              * \pre None of the coordinates in this ray that correspond
              * to discs in the given vertex link are already negative.
              *
-             * @param link the vertex link to subtract copies of.
+             * \param link the vertex link to subtract copies of.
              */
             void reduce(const RaySpec& link) {
                 if (! (facets_ <= link.facets_))
@@ -253,10 +253,10 @@ namespace {
              * so this object will become unsable (as indicated by the
              * rvalue reference qualifier).
              *
-             * @param tri the underlying triangulation.
-             * @param enc the encoding used by this vector to describe a
+             * \param tri the underlying triangulation.
+             * \param enc the encoding used by this vector to describe a
              * normal surface.
-             * @return a normal surface based on this vector.
+             * \return a normal surface based on this vector.
              */
             NormalSurface recover(const SnapshotRef<Triangulation<3>>& tri,
                     NormalEncoding enc) && {
@@ -266,7 +266,7 @@ namespace {
             /**
              * Returns the sign of the given element of this vector.
              *
-             * @return 1, 0 or -1 according to whether the <i>index</i>th
+             * \return 1, 0 or -1 according to whether the <i>index</i>th
              * element of this vector is positive, zero or negative
              * respectively.
              */

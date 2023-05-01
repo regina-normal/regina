@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -69,12 +69,14 @@ template <int, int> class Face;
 template <int dim> class Face<dim, dim>;
 template <> class Face<2, 2>;
 template <> class Face<3, 3>;
-template <> class Face<3, 2>; // test shape
-template <> class Face<3, 1>; // normal links
-template <> class Face<3, 0>; // build links, normal links, output type
+template <> class Face<3, 2>; // test shape, linking surface
+template <> class Face<3, 1>; // linking surface
+template <> class Face<3, 0>; // build links, linking surface, output type
 template <> class Face<4, 4>;
-template <> class Face<4, 1>; // build links
-template <> class Face<4, 0>; // build links, output ideal/etc.
+template <> class Face<4, 3>; // linking surface
+template <> class Face<4, 2>; // linking surface
+template <> class Face<4, 1>; // build links, linking surface
+template <> class Face<4, 0>; // build links, linking surface, output ideal/etc.
 template <int dim> using Vertex = Face<dim, 0>;
 template <int dim> using Edge = Face<dim, 1>;
 template <int dim> using Triangle = Face<dim, 2>;

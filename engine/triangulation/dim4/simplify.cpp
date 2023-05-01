@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,6 +76,8 @@ namespace {
 }
 
 bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
+    using LockMask = Simplex<4>::LockMask;
+
     if (check) {
         if (t->isBoundary() || ! t->isValid())
             return false;
@@ -90,6 +92,25 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
     for (i = 0; i < 2; ++i) {
         pent[i] = t->embedding(i).pentachoron();
         perm[i] = t->embedding(i).vertices();
+
+        if (pent[i]->locks_) {
+            // The only things that can be locked are the three exterior facets.
+            if (pent[i]->isLocked()) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "2-0 move using a locked pentachoron");
+            }
+            for (int v = 3; v < 5; ++v)
+                if (pent[i]->isFacetLocked(perm[i][v])) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "2-0 move around a locked tetrahedron");
+                }
+        }
     }
 
     // Lots of checks required...
@@ -210,41 +231,57 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
         return true;
 
     // Perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][3]);
     for (i = 0; i < 3; ++i) {
+        // Process the facets opposite vertex i of the triangle t.
         Pentachoron<4>* top = pent[0]->adjacentPentachoron(perm[0][i]);
         Pentachoron<4>* bottom = pent[1]->adjacentPentachoron(perm[1][i]);
 
         if (! top) {
             // Bottom facet becomes boundary.
-            pent[1]->unjoin(perm[1][i]);
+            if (pent[0]->isFacetLocked(perm[0][i]))
+                bottom->lockFacetRaw(pent[1]->adjacentFacet(perm[1][i]));
+            pent[1]->unjoinRaw(perm[1][i]);
         } else if (! bottom) {
             // Top facet becomes boundary.
-            pent[0]->unjoin(perm[0][i]);
+            if (pent[1]->isFacetLocked(perm[1][i]))
+                top->lockFacetRaw(pent[0]->adjacentFacet(perm[0][i]));
+            pent[0]->unjoinRaw(perm[0][i]);
         } else {
             // Bottom and top facets join.
             int topFacet = pent[0]->adjacentFacet(perm[0][i]);
+            int bottomFacet = pent[1]->adjacentFacet(perm[1][i]);
+
+            if (pent[0]->isFacetLocked(perm[0][i]))
+                bottom->lockFacetRaw(bottomFacet);
+            if (pent[1]->isFacetLocked(perm[1][i]))
+                top->lockFacetRaw(topFacet);
+
             Perm<5> gluing = pent[1]->adjacentGluing(perm[1][i]) *
                 crossover * top->adjacentGluing(topFacet);
-            pent[0]->unjoin(perm[0][i]);
-            pent[1]->unjoin(perm[1][i]);
-            top->join(topFacet, bottom, gluing);
+            pent[0]->unjoinRaw(perm[0][i]);
+            pent[1]->unjoinRaw(perm[1][i]);
+            top->joinRaw(topFacet, bottom, gluing);
         }
     }
 
     // Finally remove and dispose of the pentachora.
-    removePentachoron(pent[0]);
-    removePentachoron(pent[1]);
+    removeSimplexRaw(pent[0]);
+    removeSimplexRaw(pent[1]);
 
     return true;
 }
 
 bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
+    using LockMask = Simplex<4>::LockMask;
+
     if (check) {
         // The follow test also implicitly ensures that the edge link is
         // a 2-sphere.  See Edge<4>::isValid() for details.
@@ -261,6 +298,25 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
     for (i = 0; i < 2; ++i) {
         pent[i] = e->embedding(i).pentachoron();
         perm[i] = e->embedding(i).vertices();
+
+        if (pent[i]->locks_) {
+            // The only things that can be locked are the two exterior facets.
+            if (pent[i]->isLocked()) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "2-0 move using a locked pentachoron");
+            }
+            for (int v = 2; v < 5; ++v)
+                if (pent[i]->isFacetLocked(perm[i][v])) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "2-0 move around a locked tetrahedron");
+                }
+        }
     }
 
     if (check) {
@@ -307,41 +363,57 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][2]);
     for (i = 0; i < 2; ++i) {
+        // Process the facets opposite vertex i of the edge e.
         Pentachoron<4>* top = pent[0]->adjacentPentachoron(perm[0][i]);
         Pentachoron<4>* bottom = pent[1]->adjacentPentachoron(perm[1][i]);
 
         if (! top) {
             // Bottom facet becomes boundary.
-            pent[1]->unjoin(perm[1][i]);
+            if (pent[0]->isFacetLocked(perm[0][i]))
+                bottom->lockFacetRaw(pent[1]->adjacentFacet(perm[1][i]));
+            pent[1]->unjoinRaw(perm[1][i]);
         } else if (! bottom) {
             // Top facet becomes boundary.
-            pent[0]->unjoin(perm[0][i]);
+            if (pent[1]->isFacetLocked(perm[1][i]))
+                top->lockFacetRaw(pent[0]->adjacentFacet(perm[0][i]));
+            pent[0]->unjoinRaw(perm[0][i]);
         } else {
             // Bottom and top facets join.
             int topFacet = pent[0]->adjacentFacet(perm[0][i]);
+            int bottomFacet = pent[1]->adjacentFacet(perm[1][i]);
+
+            if (pent[0]->isFacetLocked(perm[0][i]))
+                bottom->lockFacetRaw(bottomFacet);
+            if (pent[1]->isFacetLocked(perm[1][i]))
+                top->lockFacetRaw(topFacet);
+
             Perm<5> gluing = pent[1]->adjacentGluing(perm[1][i]) *
                 crossover * top->adjacentGluing(topFacet);
-            pent[0]->unjoin(perm[0][i]);
-            pent[1]->unjoin(perm[1][i]);
-            top->join(topFacet, bottom, gluing);
+            pent[0]->unjoinRaw(perm[0][i]);
+            pent[1]->unjoinRaw(perm[1][i]);
+            top->joinRaw(topFacet, bottom, gluing);
         }
     }
 
     // Finally remove and dispose of the pentachora.
-    removePentachoron(pent[0]);
-    removePentachoron(pent[1]);
+    removeSimplexRaw(pent[0]);
+    removeSimplexRaw(pent[1]);
 
     return true;
 }
 
 bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
+    using LockMask = Simplex<4>::LockMask;
+
     if (check) {
         // For a valid vertex, the link must be a 3-ball or a closed 3-manifold.
         // Moreover: *both* ideal and invalid vertices are considered to
@@ -359,11 +431,27 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
 
     Simplex<4>* pent[2];
     int vertex[2];
+    bool lockExterior = false;
 
     int i = 0;
     for (auto& emb : *v) {
         pent[i] = emb.pentachoron();
         vertex[i] = emb.vertex();
+
+        if (pent[i]->locks_) {
+            // The only thing that can be locked is the exterior facet.
+            if (pent[i]->locks_ != (LockMask(1) << vertex[i])) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "2-0 move using a locked pentachoron and/or facet");
+            }
+            // Remember that, when we perform the move, the two merged
+            // exterior facets need to be locked from both sides.
+            lockExterior = true;
+        }
+
         i++;
     }
 
@@ -392,31 +480,42 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // Unglue faces from the doomed pentachora and glue them to each other.
     Pentachoron<4>* top = pent[0]->adjacentPentachoron(vertex[0]);
     Pentachoron<4>* bottom = pent[1]->adjacentPentachoron(vertex[1]);
 
     if (! top) {
-        pent[1]->unjoin(vertex[1]);
+        if (lockExterior)
+            bottom->lockFacetRaw(pent[1]->adjacentFacet(vertex[1]));
+        pent[1]->unjoinRaw(vertex[1]);
     } else if (! bottom) {
-        pent[0]->unjoin(vertex[0]);
+        if (lockExterior)
+            top->lockFacetRaw(pent[0]->adjacentFacet(vertex[0]));
+        pent[0]->unjoinRaw(vertex[0]);
     } else {
-        Perm<5> crossover = pent[0]->adjacentGluing(vertex[0] == 0 ? 1 : 0);
         int topFacet = pent[0]->adjacentFacet(vertex[0]);
+        int bottomFacet = pent[1]->adjacentFacet(vertex[1]);
+        if (lockExterior) {
+            top->lockFacetRaw(topFacet);
+            bottom->lockFacetRaw(bottomFacet);
+        }
+        Perm<5> crossover = pent[0]->adjacentGluing(vertex[0] == 0 ? 1 : 0);
         Perm<5> gluing = pent[1]->adjacentGluing(vertex[1]) *
             crossover * top->adjacentGluing(topFacet);
-        pent[0]->unjoin(vertex[0]);
-        pent[1]->unjoin(vertex[1]);
-        top->join(topFacet, bottom, gluing);
+        pent[0]->unjoinRaw(vertex[0]);
+        pent[1]->unjoinRaw(vertex[1]);
+        top->joinRaw(topFacet, bottom, gluing);
     }
 
     // Finally remove and dispose of the pentachora.
-    removeSimplex(pent[0]);
-    removeSimplex(pent[1]);
+    removeSimplexRaw(pent[0]);
+    removeSimplexRaw(pent[1]);
 
     return true;
 }
@@ -444,13 +543,29 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
         }
     }
 
-    if ( not perform ) {
-        return true;
+    for (auto& emb : *e) {
+        if (emb.simplex()->locks_) {
+            if (emb.simplex()->isLocked() ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[2]) ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[3]) ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[4])) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "4-4 move using a locked pentachoron and/or facet");
+            }
+        }
     }
+
+    if (! perform)
+        return true;
 
     // Perform the 4-4 move as a 2-4 move followed by a 4-2 move.
     // Note that we use pachner(), which ensures that we preserve orientation
     // (if the triangulation was originally oriented).
+    //
+    // The calls to pachner() will also manage any lock updates.
 
     // Start by working out where the 2-4 and 4-2 moves should take place.
     Vertex<2>* topVert = nullptr;
@@ -460,13 +575,16 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
             break;
         }
     }
-    // Location of the 2-4 move.
+    // Location of the (first) 2-4 move.
     size_t linkFront = topVert->embedding(0).triangle()->index();
     int vertFront = topVert->embedding(0).vertex();
     Pentachoron<4>* frontPent = pentachoron( linkInc.pentImage(linkFront) );
     Tetrahedron<4>* tet24 = frontPent->tetrahedron(
             linkInc.facetPerm( linkFront )[ vertFront ] );
-    // Location of the 4-2 move.
+
+    // Location of the (second) 4-2 move.
+    // We record this as a pentachoron-edge combination, since by the time we
+    // perform this second move the original skeleton will have been destroyed.
     size_t linkBack = topVert->embedding(1).triangle()->index();
     Pentachoron<4>* backPent = pentachoron( linkInc.pentImage(linkBack) );
     int edge42;
@@ -478,8 +596,7 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
     }
 
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     pachner( tet24, false, true );
     pachner( backPent->edge(edge42), false, true );
@@ -489,6 +606,14 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
 }
 
 bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
+    if (t->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform an "
+                "open book move using a locked tetrahedron");
+    }
+
     const TetrahedronEmbedding<4>& emb = t->front();
     Pentachoron<4>* pent = emb.pentachoron();
 
@@ -550,7 +675,8 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event block since this is so simple.
+    // Don't bother with a change event group: this is very simple, and
+    // we will already get a ChangeEventSpan via unjoin().
     TopologyLock lock(*this);
     pent->unjoin(emb.tetrahedron());
 
@@ -559,6 +685,23 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
 
 bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         bool check, bool perform) {
+    if (p->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform a "
+                "boundary shelling move on a locked pentachoron");
+    }
+    for (int i = 0; i < 5; ++i)
+        if ((! p->adjacentSimplex(i)) && p->isFacetLocked(i)) {
+            if (check)
+                return false;
+            if (perform)
+                throw LockViolation("An attempt was made to perform a "
+                    "boundary shelling move that would remove a "
+                    "locked boundary tetrahedron");
+        }
+
     // To perform the move we don't even need a skeleton.
     if (check) {
         ensureSkeleton();
@@ -631,10 +774,15 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event block since this is so simple.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use the "raw" routines removeSimplexRaw() below.  This is
+    // because the facets on the internal side of the shelling _are_ allowed
+    // to be locked, and we do not want to throw an exception because of this.
     TopologyLock lock(*this);
-    removePentachoron(p);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
+    removeSimplexRaw(p);
     return true;
 }
 
@@ -975,73 +1123,94 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         }
     }
 
+    // Finally, we search for potential lock violations:
+    size_t idx = 0;
+    for (auto& emb : *e) {
+        if (emb.simplex()->locks_) {
+            if (emb.simplex()->isLocked()) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform an "
+                        "edge collapse that would remove a locked pentachoron");
+            }
+            for (int i = 2; i <= 4; ++i)
+                if (emb.simplex()->isFacetLocked(emb.vertices()[i])) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform an "
+                            "edge collapse that would remove a locked "
+                            "tetrahedron");
+                }
+        }
+        ++idx;
+    }
+
     if (! perform)
         return true;
 
     // Perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
-    Perm<5> topPerm, botPerm;
-    Pentachoron<4> *top, *bot;
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    size_t nEmbs = e->degree();
-    auto* embPent = new Pentachoron<4>*[nEmbs];
-    auto* embVert = new Perm<5>[nEmbs];
+    auto* embs = new EdgeEmbedding<4>[e->degree()];
+    std::copy(e->begin(), e->end(), embs);
 
-    size_t i = 0;
-    for (auto& emb : *e) {
-        embPent[i] = emb.simplex();
-        embVert[i] = emb.vertices();
-        ++i;
-    }
+    for (size_t i = 0; i < e->degree(); ++i) {
+        const auto& emb = embs[i];
 
-    for (i = 0; i < nEmbs; ++i) {
-        top = embPent[i]->adjacentPentachoron(embVert[i][0]);
-        topPerm = embPent[i]->adjacentGluing(embVert[i][0]);
-        bot = embPent[i]->adjacentPentachoron(embVert[i][1]);
-        botPerm = embPent[i]->adjacentGluing(embVert[i][1]);
+        Simplex<4>* top = emb.simplex()->adjacentPentachoron(emb.vertices()[0]);
+        Perm<5> topPerm = emb.simplex()->adjacentGluing(emb.vertices()[0]);
+        Simplex<4>* bot = emb.simplex()->adjacentPentachoron(emb.vertices()[1]);
+        Perm<5> botPerm = emb.simplex()->adjacentGluing(emb.vertices()[1]);
 
-        embPent[i]->isolate();
+        if (emb.simplex()->locks_) {
+            if (bot && emb.simplex()->isFacetLocked(emb.vertices()[0]))
+                bot->lockFacetRaw(botPerm[emb.vertices()[1]]);
+            if (top && emb.simplex()->isFacetLocked(emb.vertices()[1]))
+                top->lockFacetRaw(topPerm[emb.vertices()[0]]);
+        }
+
+        removeSimplexRaw(emb.simplex());
+
         if (top && bot)
-            top->join(topPerm[embVert[i][0]], bot,
-                botPerm * Perm<5>(embVert[i][0], embVert[i][1]) *
+            top->joinRaw(topPerm[emb.vertices()[0]], bot,
+                botPerm * Perm<5>(emb.vertices()[0], emb.vertices()[1]) *
                 topPerm.inverse());
-
-        removePentachoron(embPent[i]);
     }
 
-    delete[] embPent;
-    delete[] embVert;
-
+    delete[] embs;
     return true;
 }
 
-bool Triangulation<4>::snapEdge(
-        Edge<4>* e, bool check, bool perform ) {
-    if ( check and
-            ( ( e->vertex(0) == e->vertex(1) ) or
-            ( e->vertex(0)->isBoundary() and
-              e->vertex(1)->isBoundary() ) ) ) {
+bool Triangulation<4>::snapEdge(Edge<4>* e, bool check, bool perform) {
+    if (check &&
+            ((e->vertex(0) == e->vertex(1)) ||
+            (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary())))
         return false;
-    }
-    if ( not perform ) {
+    if (! perform)
         return true;
-    }
 
     // Our plan is to find a tetrahedron containing e, and then insert four
     // pentachora in its place.
     Pentachoron<4>* open = e->front().pentachoron();
     Perm<5> vertices = e->front().vertices();
-    Pentachoron<4>* adj = open->adjacentPentachoron( vertices[2] );
-    Perm<5> glue = open->adjacentGluing( vertices[2] );
+    Pentachoron<4>* adj = open->adjacentPentachoron(vertices[2]);
+    Perm<5> glue = open->adjacentGluing(vertices[2]);
+    bool locked = open->isFacetLocked(vertices[2]);
 
     // Actually perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // The four pentachora that we insert together form a "pinched 4-ball".
     // Combinatorially, the boundary of this pinched 4-ball is isomorphic to
@@ -1054,16 +1223,16 @@ bool Triangulation<4>::snapEdge(
     // a and b are adjacent). For our purposes, the most important consequence
     // of this is that the endpoints of e will become snapped together.
 
-    auto p = newPentachora<4>();
-    p[0]->join( 0, p[1], Perm<5>(3, 4) );
-    p[0]->join( 2, p[1], Perm<5>(0, 2, 4, 1, 3) );
-    p[0]->join( 3, p[2], Perm<5>(3, 4) );
-    p[0]->join( 4, p[2], Perm<5>(3, 4) );
-    p[1]->join( 1, p[2], Perm<5>(1, 2) );
-    p[1]->join( 2, p[3], Perm<5>(3, 4) );
-    p[1]->join( 3, p[3], Perm<5>(3, 4) );
-    p[2]->join( 0, p[3], Perm<5>(3, 4) );
-    p[2]->join( 1, p[3], Perm<5>(3, 4) );
+    auto p = newSimplicesRaw<4>();
+    p[0]->joinRaw(0, p[1], {3, 4});
+    p[0]->joinRaw(2, p[1], {0, 2, 4, 1, 3});
+    p[0]->joinRaw(3, p[2], {3, 4});
+    p[0]->joinRaw(4, p[2], {3, 4});
+    p[1]->joinRaw(1, p[2], {1, 2});
+    p[1]->joinRaw(2, p[3], {3, 4});
+    p[1]->joinRaw(3, p[3], {3, 4});
+    p[2]->joinRaw(0, p[3], {3, 4});
+    p[2]->joinRaw(1, p[3], {3, 4});
 
     // The boundary tetrahedra of this auxiliary structure are p[0]: 0234 and
     // p[3]: 0214.
@@ -1077,9 +1246,19 @@ bool Triangulation<4>::snapEdge(
     // Therefore all of the gluings that we make here use odd gluing
     // permutations, and hence the orientation is preserved.
 
-    open->unjoin( vertices[2] );
-    p[0]->join( 1, open, vertices * Perm<5>(3, 2, 0, 1, 4) );
-    p[3]->join( 3, adj, glue * vertices * Perm<5>(3, 1, 0, 2, 4) );
+    open->unjoinRaw(vertices[2]);
+    p[0]->joinRaw(1, open, vertices * Perm<5>(3, 2, 0, 1, 4));
+    p[3]->joinRaw(3, adj, glue * vertices * Perm<5>(3, 1, 0, 2, 4));
+
+    // If the tetrahedron that we popped open was locked, we will (arbitrarily)
+    // choose to move the lock to the tetrahedron that still belongs to open
+    // (as opposed to the ex-partner tetrahedron belonging to adj).
+    if (locked) {
+        // The lock is already present from open's side.
+        // Remove it from adj's side, and put it where it needs to be in p[0].
+        adj->unlockFacetRaw(glue[vertices[2]]);
+        p[0]->lockFacetRaw(1);
+    }
 
     // Done!
     return true;

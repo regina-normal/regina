@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,9 +42,12 @@
 #include <array>
 #include "regina-core.h"
 #include "maths/perm.h"
+#include "triangulation/forward.h"
 #include "utilities/sigutils.h"
 
 namespace regina {
+
+template <int, int> class FaceNumbering;
 
 /**
  * The default signature type to use for isomorphism signatures.
@@ -69,7 +72,7 @@ namespace regina {
  *   this type class produces will be the same set, but modified
  *   according to this reordering/relabelling.  In other words, the
  *   starting simplices and their starting labellings can in theory
- *   be completely deduced from an \e unlabelled triangulation component.
+ *   be completely deduced from an _unlabelled_ triangulation component.
  *
  * An instance of a type class is like an iterator: it holds a
  * single candidate combination (\a s, \a p).  The constructor must
@@ -78,14 +81,14 @@ namespace regina {
  * and you can advance to the next combination by calling next().
  *
  * This classic signature type is trivial, in that it considers \a all
- * possible simplices \a s and all <tt>(dim+1)!</tt> possible permutations \a p.
+ * possible simplices \a s and all `(dim+1)!` possible permutations \a p.
  *
  * This class is designed to be used as a template parameter for
  * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g.,
  * IsoSigClassic2 and IsoSigClassic3 for dimensions 2 and 3).
  *
@@ -114,7 +117,7 @@ class IsoSigClassic {
          * This object will initially be set to hold the first candidate pair
          * (\a s, \a p).
          *
-         * @param comp the triangulation component that we are examining.
+         * \param comp the triangulation component that we are examining.
          */
         IsoSigClassic(const Component<dim>& comp);
 
@@ -126,9 +129,9 @@ class IsoSigClassic {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the index of the current starting simplex with
+         * \return the index of the current starting simplex with
          * respect to the triangulation component under consideration.
-         * Note that, for a disconnected triangulation, this is \e not
+         * Note that, for a disconnected triangulation, this is _not_
          * necessarily the same as Simplex::index() (which gives the
          * index with respect to the overall triangulation).
          */
@@ -143,7 +146,7 @@ class IsoSigClassic {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the starting labelling, given as a permutation that
+         * \return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
          * to the "canonical" labels 0,1,...,\a dim.
          */
@@ -157,7 +160,7 @@ class IsoSigClassic {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return \c true if this was successful, or \c false if there
+         * \return \c true if this was successful, or \c false if there
          * is no next candidate pair (i.e., the current candidate pair
          * is the last).
          */
@@ -189,7 +192,7 @@ class IsoSigClassic {
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \ifacespython Python does not support templates, and there are far
+ * \python Python does not support templates, and there are far
  * too many of these classes to wrap.  Currently Python supports only
  * the cases where \a subdim is 1 or <i>dim</i>-2, using the type aliases
  * IsoSigEdgeDegrees and IsoSigRidgeDegrees respectively (these cover
@@ -274,7 +277,7 @@ class IsoSigDegrees {
          * This object will initially be set to hold the first candidate pair
          * (\a s, \a p).
          *
-         * @param comp the triangulation component that we are examining.
+         * \param comp the triangulation component that we are examining.
          */
         IsoSigDegrees(const Component<dim>& comp);
         /**
@@ -290,9 +293,9 @@ class IsoSigDegrees {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the index of the current starting simplex with
+         * \return the index of the current starting simplex with
          * respect to the triangulation component under consideration.
-         * Note that, for a disconnected triangulation, this is \e not
+         * Note that, for a disconnected triangulation, this is _not_
          * necessarily the same as Simplex::index() (which gives the
          * index with respect to the overall triangulation).
          */
@@ -307,7 +310,7 @@ class IsoSigDegrees {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the starting labelling, given as a permutation that
+         * \return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
          * to the "canonical" labels 0,1,...,\a dim.
          */
@@ -321,7 +324,7 @@ class IsoSigDegrees {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return \c true if this was successful, or \c false if there
+         * \return \c true if this was successful, or \c false if there
          * is no next candidate pair (i.e., the current candidate pair
          * is the last).
          */
@@ -337,7 +340,7 @@ class IsoSigDegrees {
  * Defines an alternate type of isomorphism signature based on edge degree
  * sequences.
  *
- * \ifacespython Python does not support templates.  You can access these
+ * \python Python does not support templates.  You can access these
  * classes by appending the appending the dimension as a suffix (e.g., use
  * IsoSigEdgeDegrees3 to use edge degrees in 3-manifold triangulations).
  *
@@ -350,7 +353,7 @@ using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
  * Defines an alternate type of isomorphism signature based on degree
  * sequences of (<i>dim</i>-2)-faces.
  *
- * \ifacespython Python does not support templates.  You can access these
+ * \python Python does not support templates.  You can access these
  * classes by appending the appending the dimension as a suffix (e.g., use
  * IsoSigRidgeDegrees4 to use triangle degrees in 4-manifold triangulations).
  *
@@ -358,8 +361,6 @@ using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
  */
 template <int dim>
 using IsoSigRidgeDegrees = IsoSigDegrees<dim, dim - 2>;
-
-/*@}*/
 
 // Inline functions for IsoSigClassic
 

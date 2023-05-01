@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,9 @@
 namespace regina {
 
 Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
+    if (! edge->isBoundary())
+        throw InvalidArgument("layerOn() requires a boundary edge");
+
     // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.
@@ -57,20 +60,31 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // roles1 and roles2 match up with vertices (0,1,2,3) of the new
     // tetrahedron.
 
+    if (tet1->triangle(roles1[3]) == tet2->triangle(roles2[2]))
+        throw InvalidArgument("layerOn() requires an edge between two "
+            "distinct boundary triangles");
+    if (tet1->isFacetLocked(roles1[3]) || tet2->isFacetLocked(roles2[2]))
+        throw LockViolation("An attempt was made to layer on a locked facet");
+
+    // Note: we use the "raw" routines (joinRaw, newSimplexRaw), mainly since
+    // we did all our lock checking beforehand (not during the individual
+    // joins).  This means that the takeSnapshot() and ChangeAndClearSpan here
+    // are vital.
+
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
-    Tetrahedron<3>* newTet = newTetrahedron();
+    Tetrahedron<3>* newTet = newSimplexRaw();
 
-    newTet->join(3, tet1, roles1);
-    newTet->join(2, tet2, roles2);
+    newTet->joinRaw(3, tet1, roles1);
+    newTet->joinRaw(2, tet2, roles2);
 
     return newTet;
 }
 
-bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
-        unsigned long cuts2, BoundaryComponent<3>* bc) {
+bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
+        BoundaryComponent<3>* bc) {
     // Check that the cuts arguments are valid.
     int maxCuts;
     if (cuts2 == cuts0 + cuts1)
@@ -260,7 +274,7 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
 }
 
 bool Triangulation<3>::fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
-        unsigned long cuts0, unsigned long cuts1, unsigned long cuts2) {
+        size_t cuts0, size_t cuts1, size_t cuts2) {
     if (e0 == e1 || e0 == e2 || e1 == e2)
         return false;
 
@@ -294,52 +308,96 @@ bool Triangulation<3>::fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
 }
 
 Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
-        unsigned long cuts0, unsigned long cuts1) {
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+        size_t cuts0, size_t cuts1) {
+    if (cuts0 > cuts1)
+        throw InvalidArgument("insertLayeredSolidTorus() requires "
+            "cuts0 ≤ cuts1");
 
-    unsigned long cuts2 = cuts0 + cuts1;
+    // Note: we use the "raw" routines (joinRaw, newSimplexRaw, etc.),
+    // mainly so that deleting tetrahedra is easy in the case where
+    // the arguments were not coprime and we have to unwind the operation.
+    // This means that the takeSnapshot() and ChangeAndClearSpan here are vital.
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
-    Tetrahedron<3>* newTet = newTetrahedron();
+    size_t cuts2 = cuts0 + cuts1;
 
-    // Take care of the case that can be done with a single
-    // tetrahedron.
-    if (cuts2 == 3) {
-        // Must be a 1-2-3 arrangement that can be done with a single
-        // tetrahedron.
-        newTet->join(0, newTet, Perm<4>(1,2,3,0));
-        return newTet;
+    if (cuts2 < 3) {
+        // These are the degenerate cases.
+        // Valid options: 0-1-1, 1-1-2
+        // Invalid options: 0-0-0, 0-2-2
+
+        if (cuts1 != 1)
+            throw InvalidArgument("insertLayeredSolidTorus() requires "
+                "cuts0 and cuts1 to be coprime");
+
+        if (cuts2 == 2) {
+            auto [top, base] = newSimplicesRaw<2>();
+            base->joinRaw(0, base, {1,2,3,0});
+            base->joinRaw(2, top, {2,3,0,1});
+            base->joinRaw(3, top, {2,3,0,1});
+            return top;
+        } else {
+            auto [top, middle, base] = newSimplicesRaw<3>();
+            base->joinRaw(0, base, {1,2,3,0});
+            base->joinRaw(2, middle, {2,3,0,1});
+            base->joinRaw(3, middle, {2,3,0,1});
+            middle->joinRaw(2, top, {0,2,1,3});
+            middle->joinRaw(3, top, {3,1,2,0});
+            return top;
+        }
     }
 
-    // Take care of the special small cases.
-    if (cuts2 == 2) {
-        // Make a 1-2-1 arrangement.
-        Tetrahedron<3>* base = insertLayeredSolidTorus(1, 2);
-        base->join(2, newTet, Perm<4>(2,3,0,1));
-        base->join(3, newTet, Perm<4>(2,3,0,1));
-        return newTet;
-    }
-    if (cuts2 == 1) {
-        // Make a 1-1-0 arrangement.
-        Tetrahedron<3>* base = insertLayeredSolidTorus(1, 1);
-        base->join(2, newTet, Perm<4>(0,2,1,3));
-        base->join(3, newTet, Perm<4>(3,1,2,0));
-        return newTet;
+    // This is a standard case that begins with a 1-2-3 LST and works up.
+
+    Tetrahedron<3>* top = newSimplexRaw();
+    Tetrahedron<3>* curr = top;
+    while (cuts0 > 0 && cuts2 > 3) {
+        // Work our way down to the 1-2-3 case.
+        Tetrahedron<3>* next = newSimplexRaw();
+        if (cuts1 - cuts0 > cuts0) {
+            next->joinRaw(2, curr, Perm<4>(0,2,1,3));
+            next->joinRaw(3, curr, Perm<4>(3,1,2,0));
+
+            // Remaining to build: (cuts0, cuts1 - cuts0, cuts1)
+            cuts2 = cuts1;
+            cuts1 = cuts1 - cuts0;
+        } else {
+            next->joinRaw(2, curr, Perm<4>(3,1,0,2));
+            next->joinRaw(3, curr, Perm<4>(0,2,3,1));
+
+            // Remaining to build: (cuts1 - cuts0, cuts0, cuts1)
+            cuts2 = cuts1;
+            cuts1 = cuts0;
+            cuts0 = cuts2 - cuts1;
+        }
+        curr = next;
     }
 
-    // At this point we know cuts2 > 3.  Recursively build the layered
-    // triangulation.
-    if (cuts1 - cuts0 > cuts0) {
-        Tetrahedron<3>* base = insertLayeredSolidTorus(cuts0, cuts1 - cuts0);
-        base->join(2, newTet, Perm<4>(0,2,1,3));
-        base->join(3, newTet, Perm<4>(3,1,2,0));
-    } else {
-        Tetrahedron<3>* base = insertLayeredSolidTorus(cuts1 - cuts0, cuts0);
-        base->join(2, newTet, Perm<4>(3,1,0,2));
-        base->join(3, newTet, Perm<4>(0,2,3,1));
+    // One of two things happens at this point:
+    // - we successfully worked our way down to 1-2-3; or
+    // - we worked our way down to 0-k-k for some k > 1, which means that
+    //   the arguments were not coprime.
+    // Note that the (valid) 0-1-1 case was already handled earlier, in the
+    // section for degenerate cases.
+
+    if (cuts0 == 0) {
+        // The arguments were not coprime.
+        // Unwind the operation that we performed thus far, and throw.
+        // We don't bother with isolating the tetrahedra before removal,
+        // since we are deleting an entire connected component.
+        auto deleteFrom = simplices_.begin() + top->markedIndex();
+        for (auto it = deleteFrom; it != simplices_.end(); ++it)
+            delete *it;
+        simplices_.erase(deleteFrom, simplices_.end());
+
+        throw InvalidArgument("insertLayeredSolidTorus() requires "
+            "cuts0 and cuts1 to be coprime");
     }
 
-    return newTet;
+    // Finalise the 1-2-3 LST at the base, and return.
+    curr->joinRaw(0, curr, {1,2,3,0});
+    return top;
 }
 
 } // namespace regina

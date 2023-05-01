@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -121,7 +121,7 @@ namespace {
     /**
      * Helper data used by the treewidth-based algorithm to test whether a
      * key is viable.  In other words, this tests whether the data from
-     * a given key \e might survive all the way up to the root of the
+     * a given key _might_ survive all the way up to the root of the
      * tree decomposition.
      *
      * \pre Like homflyTreewidth(), this struct can only be used when the
@@ -208,7 +208,7 @@ namespace {
          * This array is a function of the bag being processed, and is
          * initialised by initForgetBag() and initJoinBag().
          */
-        char* mask;
+        uint8_t* mask;
 
         /**
          * The number of pairs in each key at a join bag (that is, half
@@ -256,7 +256,7 @@ namespace {
 #ifdef IDENTIFY_NONVIABLE_KEYS
         /**
          * Marked as \c true when a key is determined to be viable.
-         * This allows diagnostic code to determine whether \e any of a set
+         * This allows diagnostic code to determine whether _any_ of a set
          * of potential keys was found to be viable.
          *
          * This class never initialises \a foundViable or marks it as \c false;
@@ -271,7 +271,7 @@ namespace {
                 lastCrossing(new int[2 * l->size()]),
                 forgetStrand(new ssize_t[2 * l->size()]),
                 prefix(new int[2 * l->size()]),
-                mask(new char[l->size()]),
+                mask(new uint8_t[l->size()]),
                 local(nullptr) {
             const TreeBag* b;
             for (b = d.first(); b; b = b->next())
@@ -752,8 +752,8 @@ namespace {
          * partialKeyViable(end-2), partialKeyViable(end-4), ...,
          * partialKeyViable(begin), partialKeyViable(begin-2),
          * in that order, where end == key.end() and begin == key.begin().
-         * For each position p >= key.begin(), when calling partialKeyViable(p)
-         * you must have filled in the key elements at all positions >= p.
+         * For each position p ≥ key.begin(), when calling partialKeyViable(p)
+         * you must have filled in the key elements at all positions ≥ p.
          * When calling partialKeyViable(begin-2) the key must be complete.
          *
          * Calling partialKeyViable(p) does not overwrite any internal data
@@ -1429,7 +1429,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             int id[2][2];
             int pos[2][2];
             int i, j;
-            char mask;
+            uint8_t mask;
 
             id[0][0] = static_cast<int>(c->prev(0).id());
             id[0][1] = static_cast<int>(c->lower().id());
@@ -1462,7 +1462,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             size_t keySize = kFirst.size() +
                 (c->next(0).crossing() == c || c->next(1).crossing() == c ?
                     2 : 4) -
-                2 * BitManipulator<char>::bits(mask);
+                2 * BitManipulator<uint8_t>::bits(mask);
 
             for (auto& soln : *(partial[child->index()])) {
                 if (tracker) {

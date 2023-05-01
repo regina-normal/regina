@@ -1,5 +1,5 @@
 <chapter id="compiling">
- <title>Compiling Regina Into Your Projects</title>
+ <title>Compiling Regina Into a &cpp; Project</title>
  <para>
   &regina; offers its mathematical core as a &cpp; shared library.
   This means that your own &cpp; applications can make use of &regina;'s

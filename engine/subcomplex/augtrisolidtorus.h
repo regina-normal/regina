@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,16 +55,16 @@ namespace regina {
  * TriSolidTorus).  Observe that the three axis edges divide the
  * boundary into three annuli.  Then take one of the following actions.
  *
- *   - To each of these annuli, glue a layered solid torus.
- *     Note that the degenerate (2,1,1) layered solid torus
- *     (i.e., a one-triangle mobius strip) is allowed and corresponds to
- *     simply gluing the two triangles of the annulus together.
+ * - To each of these annuli, glue a layered solid torus.
+ *   Note that the degenerate (2,1,1) layered solid torus
+ *   (i.e., a one-triangle mobius strip) is allowed and corresponds to
+ *   simply gluing the two triangles of the annulus together.
  *
- *   - To one of these annuli, glue a layered solid torus as described
- *     above.  Join the other two annuli with a layered chain
- *     in either the manner described by
- *     TriSolidTorus::areAnnuliLinkedMajor() or the manner described by
- *     TriSolidTorus::areAnnuliLinkedAxis().
+ * - To one of these annuli, glue a layered solid torus as described
+ *   above.  Join the other two annuli with a layered chain
+ *   in either the manner described by
+ *   TriSolidTorus::areAnnuliLinkedMajor() or the manner described by
+ *   TriSolidTorus::areAnnuliLinkedAxis().
  *
  * It will be assumed that all layered solid tori other than the
  * degenerate (2,1,1) will have (3,2,1) layered solid tori at their
@@ -111,14 +111,14 @@ class AugTriSolidTorus : public StandardTriangulation {
             /**< The layered solid tori attached to the boundary annuli.
                  If one of the layered solid tori is a degenerate (2,1,1)
                  triangle, the corresponding value will be std::nullopt.
-                 Note that <tt>augTorus[i]</tt> will be attached to
+                 Note that `augTorus[i]` will be attached to
                  annulus \c i of the triangular solid torus. */
         Perm<3> edgeGroupRoles_[3];
-            /**< Permutation <tt>edgeGroupRoles[i]</tt> describes the role
+            /**< Permutation `edgeGroupRoles[i]` describes the role
                  played by each top level edge group of layered solid torus
-                 <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
-                 is glued to an axis edge, group <tt>p[1]</tt> is glued to a
-                 major edge and group <tt>p[2]</tt> is glued to a minor edge. */
+                 `i`.  For permutation `p`, group `p[0]`
+                 is glued to an axis edge, group `p[1]` is glued to a
+                 major edge and group `p[2]` is glued to a minor edge. */
         size_t chainIndex_;
             /**< The number of tetrahedra in the layered chain if
                  present, or 0 if there is no layered chain. */
@@ -132,21 +132,21 @@ class AugTriSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         AugTriSolidTorus(const AugTriSolidTorus&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         AugTriSolidTorus& operator = (const AugTriSolidTorus&) = default;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(AugTriSolidTorus& other) noexcept;
@@ -155,7 +155,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * Returns the triangular solid torus at the core of this
          * triangulation.
          *
-         * @return the core triangular solid torus.
+         * \return the core triangular solid torus.
          */
         const TriSolidTorus& core() const;
         /**
@@ -163,11 +163,11 @@ class AugTriSolidTorus : public StandardTriangulation {
          * annulus on the boundary of the core triangular solid torus.
          * If the layered solid torus is a degenerate (2,1,1) mobius
          * band (i.e., the two triangles of the corresponding annulus have
-         * simply been glued together), then no value will be returned.
+         * simply been glued together), then \nullopt will be returned.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
-         * @return the corresponding layered solid torus.
+         * \return the corresponding layered solid torus.
          */
         const std::optional<LayeredSolidTorus>& augTorus(int annulus) const;
 
@@ -177,9 +177,9 @@ class AugTriSolidTorus : public StandardTriangulation {
          * requested annulus of the core triangular solid torus.  See
          * LayeredSolidTorus::topEdge() for details regarding edge groups.
          *
-         * If the permutation returned is <tt>p</tt>, edge group <tt>p[0]</tt>
-         * will be glued to an axis edge, group <tt>p[1]</tt> will be
-         * glued to a major edge and group <tt>p[2]</tt> will be glued
+         * If the permutation returned is `p`, edge group `p[0]`
+         * will be glued to an axis edge, group `p[1]` will be
+         * glued to a major edge and group `p[2]` will be glued
          * to a minor edge.
          *
          * Even if the corresponding layered solid torus is a degenerate
@@ -187,10 +187,10 @@ class AugTriSolidTorus : public StandardTriangulation {
          * the concept of edge groups is still
          * meaningful and this routine will return correct results.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.  It is the layered solid torus glued to this
          * annulus whose edge groups will be described.
-         * @return a permutation describing the roles of the
+         * \return a permutation describing the roles of the
          * corresponding top level edge groups.
          */
         Perm<3> edgeGroupRoles(int annulus) const;
@@ -201,7 +201,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * Note that this count does not include any of the tetrahedra
          * actually belonging to the triangular solid torus.
          *
-         * @return the number of tetrahedra in the layered chain, or 0
+         * \return the number of tetrahedra in the layered chain, or 0
          * if there is no layered chain linking two boundary annuli.
          */
         size_t chainLength() const;
@@ -212,7 +212,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * This will be one of the chain type constants defined in this
          * class.
          *
-         * @return the type of layered chain, or \a CHAIN_NONE
+         * \return the type of layered chain, or \a CHAIN_NONE
          * if there is no layered chain linking two boundary annuli.
          */
         int chainType() const;
@@ -227,7 +227,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * TriSolidTorus class notes for how the boundary annuli are
          * numbered.
          *
-         * @return the single annulus to which the layered solid torus
+         * \return the single annulus to which the layered solid torus
          * is attached, or -1 if there is no layered chain (and thus all
          * three annuli have layered solid tori attached).
          */
@@ -238,7 +238,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * its boundary annuli linked by a layered chain as described in
          * the general class notes.
          *
-         * @return \c true if and only if the layered chain described in
+         * \return \c true if and only if the layered chain described in
          * the class notes is present.
          */
         bool hasLayeredChain() const;
@@ -266,8 +266,8 @@ class AugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in an
          * augmented triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of augmented triangular solid torus.
          */
         bool operator == (const AugTriSolidTorus& other) const;
@@ -295,8 +295,8 @@ class AugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in an
          * augmented triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent different types of augmented triangular solid torus.
          */
         bool operator != (const AugTriSolidTorus& other) const;
@@ -309,8 +309,8 @@ class AugTriSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
-         * @return a structure containing details of the augmented triangular
+         * \param comp the triangulation component to examine.
+         * \return a structure containing details of the augmented triangular
          * solid torus, or \c null if the given component is not an augmented
          * triangular solid torus.
          */
@@ -333,10 +333,10 @@ class AugTriSolidTorus : public StandardTriangulation {
         /**
          * Contains code common to both writeName() and writeTeXName().
          *
-         * @param out the output stream to which to write.
-         * @param tex \c true if this routine is called from
+         * \param out the output stream to which to write.
+         * \param tex \c true if this routine is called from
          * writeTeXName() or \c false if it is called from writeName().
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
@@ -347,8 +347,8 @@ class AugTriSolidTorus : public StandardTriangulation {
  * This global routine simply calls AugTriSolidTorus::swap(); it is provided
  * so that AugTriSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

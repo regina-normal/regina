@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Combine several data files into a single larger data file             *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,11 +41,15 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName <<
-        " [ -o <output-file> ] <data-file> ...\n";
+        " [ -o <output-file> ] <data-file> ...\n"
+        "    " << progName << " [ -v, --version | -?, --help ]\n";
     std::cerr << std::endl;
     std::cerr << "    -o <output-file> : Write to the given data file "
         "(otherwise standard\n";
-    std::cerr << "                       output is used)\n";
+    std::cerr << "                       output is used)\n\n";
+    std::cerr << "    -v, --version : Show which version of Regina "
+        "is being used\n";
+    std::cerr << "    -?, --help    : Display this help\n";
     exit(1);
 }
 
@@ -56,6 +60,18 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
         if (*argv[i] == '-') {
             // Option.
+
+            // Standard arguments:
+            if (strcmp(argv[i], "-?") == 0 || strcmp(argv[i], "--help") == 0)
+                usage(argv[0]);
+            if (strcmp(argv[i], "-v") == 0 ||
+                    strcmp(argv[i], "--version") == 0) {
+                if (argc != 2)
+                    usage(argv[0], "Option --version cannot be "
+                        "used with any other arguments.");
+                std::cout << PACKAGE_BUILD_STRING << std::endl;
+                exit(0);
+            }
 
             // Is it an argument we don't understand?
             if (strcmp(argv[i], "-o") != 0)
@@ -95,7 +111,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-        ans->insertChildLast(data);
+        ans->append(data);
     }
 
     // Tidy up the final data file and write it.

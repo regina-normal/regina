@@ -1,0 +1,47 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2023, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests special Python functions (__getitem__, __len__, etc.).
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The functions below are chosen because they test the internal translations
+# between C++ types and Python types.
+
+t = Example3.poincare()
+s = NormalSurfaces(t, NS_STANDARD)
+
+print(len(s))
+print(s[1])
+
+c = Cyclotomic()
+print(c, len(c), 'True' if c else 'False')
+
+c = Cyclotomic(3)
+print(c, len(c), 'True' if c else 'False')

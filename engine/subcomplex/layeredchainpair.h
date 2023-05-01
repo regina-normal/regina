@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,7 @@ namespace regina {
  *
  * Orient the hinge edges and diagonals of each chain so they all point
  * in the same direction around the solid tori formed by each layered
- * chain (a \e diagonal is an edge between the two top triangular faces or an
+ * chain (a _diagonal_ is an edge between the two top triangular faces or an
  * edge between the two bottom triangular faces of a layered chain).
  *
  * The two top faces of the first chain are glued to a top and bottom
@@ -88,21 +88,21 @@ class LayeredChainPair : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         LayeredChainPair(const LayeredChainPair&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredChainPair& operator = (const LayeredChainPair&) = default;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredChainPair& other) noexcept;
@@ -112,9 +112,9 @@ class LayeredChainPair : public StandardTriangulation {
          * If the two chains have different lengths, the shorter chain
          * will be chain 0 and the longer chain will be chain 1.
          *
-         * @param which specifies which chain to return; this must be 0
+         * \param which specifies which chain to return; this must be 0
          * or 1.
-         * @return the requested layered chain.
+         * \return the requested layered chain.
          */
         const LayeredChain& chain(int which) const;
 
@@ -124,7 +124,7 @@ class LayeredChainPair : public StandardTriangulation {
          *
          * Specifically, two layered chain pairs will compare as equal if and
          * only if they their constituent layered chains each have the same
-         * respective lengths, \e and appear in the same order.
+         * respective lengths, _and_ appear in the same order.
          *
          * This test follows the general rule for most subclasses of
          * StandardTriangulation (excluding fixed structures such as
@@ -133,8 +133,8 @@ class LayeredChainPair : public StandardTriangulation {
          * subclass is more specific than combinatorial isomorphism, due
          * to the ordering requirement).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of layered chain pair.
          */
         bool operator == (const LayeredChainPair& other) const;
@@ -145,7 +145,7 @@ class LayeredChainPair : public StandardTriangulation {
          *
          * Specifically, two layered chain pairs will compare as equal if and
          * only if they their constituent layered chains each have the same
-         * respective lengths, \e and appear in the same order.
+         * respective lengths, _and_ appear in the same order.
          *
          * This test follows the general rule for most subclasses of
          * StandardTriangulation (excluding fixed structures such as
@@ -154,8 +154,8 @@ class LayeredChainPair : public StandardTriangulation {
          * subclass is more specific than combinatorial isomorphism, due
          * to the ordering requirement).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent different types of layered chain pair.
          */
         bool operator != (const LayeredChainPair& other) const;
@@ -168,8 +168,8 @@ class LayeredChainPair : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
-         * @return a structure containing details of the layered chain pair,
+         * \param comp the triangulation component to examine.
+         * \return a structure containing details of the layered chain pair,
          * or \c null if the given component is not a layered chain pair.
          */
         static std::unique_ptr<LayeredChainPair> recognise(
@@ -193,8 +193,8 @@ class LayeredChainPair : public StandardTriangulation {
  * This global routine simply calls LayeredChainPair::swap(); it is provided
  * so that LayeredChainPair meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

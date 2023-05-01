@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,19 +58,19 @@ template <int n> class Perm;
  * A cut that separates a triangulation or facet pairing into two pieces.
  * This is essentially the same concept as a cut in graph theory.
  *
- * Specifically, a \e cut in a triangulation or facet pairing partitions
- * the top-dimensional simplices into two \e sides.  This effectively splits
+ * Specifically, a _cut_ in a triangulation or facet pairing partitions
+ * the top-dimensional simplices into two _sides_.  This effectively splits
  * the triangulation or facet pairing into two pieces, by removing all
  * gluings between simplices on opposite sides.  The two sides of a cut are
  * numbered 0 and 1.
  *
- * In Regina, a cut has a \e size and a \e weight:
+ * In Regina, a cut has a _size_ and a _weight:_
  *
- * - The \e size refers to the size of the underlying triangulation or
+ * - The _size_ refers to the size of the underlying triangulation or
  *   facet pairing (i.e., it indicates the total number of top-dimensional
  *   simplices).
  *
- * - The \e weight refers to the number of gluings that are undone by the cut.
+ * - The _weight_ refers to the number of gluings that are undone by the cut.
  *   This is the usual concept of weight from graph theory (i.e., the number
  *   of edges in the underlying graph that cross the partition).
  *
@@ -97,7 +97,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * All simplices will be on side 0.
          *
-         * @param size the number of top-dimensional simplices in the
+         * \param size the number of top-dimensional simplices in the
          * underlying triangulation or facet pairing.
          */
         Cut(size_t size);
@@ -110,9 +110,9 @@ class Cut : public ShortOutput<Cut> {
          * be on side 0, and the remaining \a side1 simplices will be on
          * side 1.
          *
-         * @param side0 the number of top-dimensional simplices on side 0
+         * \param side0 the number of top-dimensional simplices on side 0
          * of the partition.
-         * @param side1 the number of top-dimensional simplices on side 1
+         * \param side1 the number of top-dimensional simplices on side 1
          * of the partition.
          */
         Cut(size_t side0, size_t side1);
@@ -120,7 +120,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Creates a new copy of the given cut.
          *
-         * @param src the cut to copy.
+         * \param src the cut to copy.
          */
         Cut(const Cut& src);
 
@@ -130,7 +130,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * The cut that is passed (\a src) will no longer be usable.
          *
-         * @param src the cut to move.
+         * \param src the cut to move.
          */
         Cut(Cut&& src) noexcept;
 
@@ -145,19 +145,19 @@ class Cut : public ShortOutput<Cut> {
          * an \c int.
          *
          * \warning This routine computes the number of top-dimensional
-         * simplices by subtracting <tt>end - begin</tt>, and so ideally
+         * simplices by subtracting `end - begin`, and so ideally
          * \a iterator should be a random access iterator type for which
          * this operation is constant time.
          *
          * \exception InvalidArgument Some element of the given sequence
          * is neither 0 nor 1.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of integers.
          *
-         * @param begin an iterator pointing to the beginning of the
+         * \param begin an iterator pointing to the beginning of the
          * 0-1 sequence of sides.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param end a past-the-end iterator indicating the end of the
          * 0-1 sequence of sides.
          */
         template <typename iterator>
@@ -175,7 +175,7 @@ class Cut : public ShortOutput<Cut> {
          * In other words, this returns the size of the underlying
          * triangulation or facet pairing.
          *
-         * @return the total number of top-dimensional simplices.
+         * \return the total number of top-dimensional simplices.
          */
         size_t size() const;
 
@@ -183,27 +183,27 @@ class Cut : public ShortOutput<Cut> {
          * Returns the number of top-dimensional simplices on the given
          * side of the partition described by this cut.
          *
-         * It will always be true that <tt>size(0) + size(1) == size()</tt>.
+         * It will always be true that `size(0) + size(1) == size()`.
          *
          * \warning This routine runs in linear time, since the sizes of
          * the individual sides are not cached.  This is in contrast to
-         * the overall total size(), which \e is cached, and which runs
+         * the overall total size(), which _is_ cached, and which runs
          * in constant time.
          *
-         * \exception InvalidArgument the given side is not 0 or 1.
+         * \exception InvalidArgument The given side is not 0 or 1.
          *
-         * @param whichSide the side of the partition to query; this
+         * \param whichSide the side of the partition to query; this
          * must be either 0 or 1.
-         * @return the number of top-dimensional simplices on the given side.
+         * \return the number of top-dimensional simplices on the given side.
          */
         size_t size(int whichSide) const;
 
         /**
          * Indicates which side of the partition the given simplex lies on.
          *
-         * @param simplex the simplex being queried; this must be
+         * \param simplex the simplex being queried; this must be
          * between 0 and size()-1 inclusive.
-         * @return the corresponding side of the partition; this will be
+         * \return the corresponding side of the partition; this will be
          * either 0 or 1.
          */
         int side(size_t simplex) const;
@@ -212,11 +212,11 @@ class Cut : public ShortOutput<Cut> {
          * Allows you to set which side of the partition the given simplex
          * lies on.
          *
-         * \exception InvalidArgument the given side is not 0 or 1.
+         * \exception InvalidArgument The given side is not 0 or 1.
          *
-         * @param simplex the simplex being changed; this must be
+         * \param simplex the simplex being changed; this must be
          * between 0 and size()-1 inclusive.
-         * @param newSide the side of the partition that the given simplex
+         * \param newSide the side of the partition that the given simplex
          * should lie on; this must be either 0 or 1.
          */
         void set(size_t simplex, int newSide);
@@ -225,7 +225,7 @@ class Cut : public ShortOutput<Cut> {
          * Determines whether this cut places all top-dimensional simplices
          * on the same side of the partition.
          *
-         * @return \c true if all simplices are on side 0 or all simplices
+         * \return \c true if all simplices are on side 0 or all simplices
          * are on side 1, or \c false if both sides of the partition are
          * non-empty.
          */
@@ -246,8 +246,8 @@ class Cut : public ShortOutput<Cut> {
          * \exception InvalidArgument The given triangulation does not
          * have precisely size() top-dimensional simplices.
          *
-         * @param tri the triangulation under consideration.
-         * @return the weight of this cut with respect to \a tri.
+         * \param tri the triangulation under consideration.
+         * \return the weight of this cut with respect to \a tri.
          */
         template <int dim>
         size_t weight(const Triangulation<dim>& tri) const;
@@ -268,8 +268,8 @@ class Cut : public ShortOutput<Cut> {
          * \exception InvalidArgument The given facet pairing does not
          * have precisely size() top-dimensional simplices.
          *
-         * @param pairing the facet pairing under consideration.
-         * @return the weight of this cut with respect to \a pairing.
+         * \param pairing the facet pairing under consideration.
+         * \return the weight of this cut with respect to \a pairing.
          */
         template <int dim>
         size_t weight(const FacetPairing<dim>& pairing) const;
@@ -281,8 +281,8 @@ class Cut : public ShortOutput<Cut> {
          * sizes (i.e., work with different number of top-dimensional
          * simplices); if they do then this cut will be resized as a result.
          *
-         * @param src the cut to copy.
-         * @return a reference to this cut.
+         * \param src the cut to copy.
+         * \return a reference to this cut.
          */
         Cut& operator = (const Cut& src);
 
@@ -296,15 +296,15 @@ class Cut : public ShortOutput<Cut> {
          *
          * The cut that is passed (\a src) will no longer be usable.
          *
-         * @param src the cut to move.
-         * @return a reference to this cut.
+         * \param src the cut to move.
+         * \return a reference to this cut.
          */
         Cut& operator = (Cut&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given cut.
          *
-         * @param other the cut whose contents are to be swapped with this.
+         * \param other the cut whose contents are to be swapped with this.
          */
         void swap(Cut& other) noexcept;
 
@@ -317,8 +317,8 @@ class Cut : public ShortOutput<Cut> {
          * It does not matter if this and the given cut have different
          * sizes; in this case they will be considered different.
          *
-         * @param rhs the cut to compare with this.
-         * @return \c true if and only if this and the given cut are identical.
+         * \param rhs the cut to compare with this.
+         * \return \c true if and only if this and the given cut are identical.
          */
         bool operator == (const Cut& rhs) const;
 
@@ -331,15 +331,15 @@ class Cut : public ShortOutput<Cut> {
          * It does not matter if this and the given cut have different
          * sizes; in this case they will be considered different.
          *
-         * @param rhs the cut to compare with this.
-         * @return \c true if and only if this and the given cut are different.
+         * \param rhs the cut to compare with this.
+         * \return \c true if and only if this and the given cut are different.
          */
         bool operator != (const Cut& rhs) const;
 
         /**
          * Partitions the given triangulation using this cut.
          *
-         * This routine will return \e two triangulations: the first
+         * This routine will return _two_ triangulations: the first
          * will contain all the top-dimensional simplices on side 0 of
          * this cut, and the second will contain all the top-dimensional
          * simplices on side 1.  All gluings within the same side of the
@@ -351,14 +351,20 @@ class Cut : public ShortOutput<Cut> {
          * numbers of the resulting triangulations correspond to the
          * simplex numbers of the original triangulation.
          *
+         * If any of the facets that cross the partition are locked in the
+         * source triangulation \a tri, this will not prevent the operation
+         * from occurring (since the source triangulation will not be changed).
+         * The two triangulations that are returned will have no simplex
+         * and/or facet locks at all.
+         *
          * \pre The given triangulation has precisely size() top-dimensional
          * simplices.
          *
          * \exception InvalidArgument The given triangulation does not
          * have precisely size() top-dimensional simplices.
          *
-         * @param tri the triangulation to partition.
-         * @return the two resulting triangulations, one for each side
+         * \param tri the triangulation to partition.
+         * \return the two resulting triangulations, one for each side
          * of the partition.
          */
         template <int dim>
@@ -368,7 +374,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Partitions the given facet pairing using this cut.
          *
-         * This routine will return \e two facet pairings: the first
+         * This routine will return _two_ facet pairings: the first
          * will contain all the top-dimensional simplices on side 0 of
          * this cut, and the second will contain all the top-dimensional
          * simplices on side 1.  All matchings between simplex facets within
@@ -391,8 +397,8 @@ class Cut : public ShortOutput<Cut> {
          * \exception FailedPrecondition This cut has all of its
          * top-dimensional simplices on the same side.
          *
-         * @param pairing the facet pairing to partition.
-         * @return the two resulting facet pairings, one for each side
+         * \param pairing the facet pairing to partition.
+         * \return the two resulting facet pairings, one for each side
          * of the partition.
          */
         template <int dim>
@@ -406,7 +412,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * Specifically: let \a from be a trianglation or facet pairing,
          * and let (\a a, \a b) be the result of partitioning \a from
-         * using this cut, so <tt>(a, b) = cut(from)</tt>.
+         * using this cut, so `(a, b) = cut(from)`.
          *
          * Then this routine returns two isomorphisms \a p and \a q,
          * where \a p describes how \a a appears as a subcomplex of \a from,
@@ -419,10 +425,14 @@ class Cut : public ShortOutput<Cut> {
          * all of the facet permutations within each top-dimensional
          * simplex will be identity permutations.
          *
-         * \ifacespython Since Python does not support templates, the
+         * \python Since Python does not support templates, the
          * dimension \a dim should be passed as an argument to this function.
          *
-         * @return the two inclusion maps corresponding to this partition.
+         * \tparam dim indicates which type of isomorphisms to return.
+         * Specifically, this integer parameter indicates the dimension of
+         * triangulation on which these isomorphisms act.
+         *
+         * \return the two inclusion maps corresponding to this partition.
          */
         template <int dim>
         std::pair<Isomorphism<dim>, Isomorphism<dim>> inclusion() const;
@@ -434,7 +444,7 @@ class Cut : public ShortOutput<Cut> {
          * same, but the number on each side of the partition may change.
          *
          * To iterate through all cuts of the given size, you should create
-         * a new <tt>Cut(size)</tt> and then make repeated calls to inc().
+         * a new `Cut(size)` and then make repeated calls to inc().
          *
          * If this is already the last partition in such an iteration
          * (i.e., all top-dimensional simplices are already on side 1),
@@ -444,10 +454,10 @@ class Cut : public ShortOutput<Cut> {
          * The order of iteration using inc() is lexicographical in the
          * sequence of sides.  In particular, if you wish to avoid
          * seeing each cut again with sides 0 and 1 swapped, then you
-         * can use the fact that all cuts with <tt>side(0) == 0</tt>
-         * will be seen before any cuts with <tt>side(0) == 1</tt>.
+         * can use the fact that all cuts with `side(0) == 0`
+         * will be seen before any cuts with `side(0) == 1`.
          *
-         * @return \c true if the partition was successfully incremented, or
+         * \return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.
          */
         bool inc();
@@ -459,20 +469,20 @@ class Cut : public ShortOutput<Cut> {
          * of the partition will remain the same.
          *
          * To iterate through all cuts with the given parititon sizes, you
-         * should create a new <tt>Cut(side0, side1)</tt> and then make
+         * should create a new `Cut(side0, side1)` and then make
          * repeated calls to incFixedSizes().
          *
          * If this is already the last partition in such an iteration,
          * then this routine will return \c false and convert this into
-         * the \e first such permutation.
+         * the _first_ such permutation.
          *
          * The order of iteration using incFixedSizes() is lexicographical in
          * the sequence of sides.  In particular, if you wish to avoid
          * seeing each cut again with sides 0 and 1 swapped, then you
-         * can use the fact that all cuts with <tt>side(0) == 0</tt>
-         * will be seen before any cuts with <tt>side(0) == 1</tt>.
+         * can use the fact that all cuts with `side(0) == 0`
+         * will be seen before any cuts with `side(0) == 1`.
          *
-         * @return \c true if the partition was successfully incremented, or
+         * \return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.
          */
         bool incFixedSizes();
@@ -481,9 +491,9 @@ class Cut : public ShortOutput<Cut> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };
@@ -494,8 +504,8 @@ class Cut : public ShortOutput<Cut> {
  * This global routine simply calls Cut::swap(); it is provided so that
  * Cut meets the C++ Swappable requirements.
  *
- * @param a the first cut whose contents should be swapped.
- * @param b the second cut whose contents should be swapped.
+ * \param a the first cut whose contents should be swapped.
+ * \param b the second cut whose contents should be swapped.
  *
  * \ingroup triangulation
  */

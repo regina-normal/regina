@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,7 @@
 #include "core/output.h"
 #include "maths/integer.h"
 #include "utilities/intutils.h"
+#include "utilities/tightencoding.h"
 
 namespace regina {
 
@@ -82,25 +83,25 @@ class Rational;
  * 
  * \pre Type T has a copy constructor.  That is,
  * if \c a and \c b are of type T, then \c a can be initialised to the value
- * of \c b using <tt>a(b)</tt>.
+ * of \c b using `a(b)`.
  * \pre Type T has a default constructor.  That is,
  * an object of type T can be declared with no arguments.  No specific
  * default value is required.
- * \pre Type T allows for operators <tt>=</tt>, <tt>==</tt>, <tt>+=</tt>,
- * <tt>-=</tt>, <tt>*=</tt>, <tt>+</tt>, <tt>-</tt> and <tt>*</tt>.
+ * \pre Type T allows for operators `=`, `==`, `+=`,
+ * `-=`, `*=`, `+`, `-` and `*`.
  * \pre Type T has an integer constructor.  That is, if \c a is of type T,
- * then \c a can be initialised to an integer \c l using <tt>a(l)</tt>.
+ * then \c a can be initialised to an integer \c l using `a(l)`.
  * \pre An element \c t of type T can be written to an output stream
- * \c out using the standard expression <tt>out << t</tt>.
+ * \c out using the standard expression `out << t`.
  *
- * \ifacespython Not present in general, although the specific types
- * Vector<Integer> and Vector<LargeInteger> are available under the names
- * VectorInt and VectorLarge respectively.
+ * \python Only the specific types Vector<Integer> and
+ * Vector<LargeInteger> are available, under the names VectorInt and
+ * VectorLarge respectively.
  *
  * \ingroup maths
  */
 template <class T>
-class Vector : public ShortOutput<Vector<T>> {
+class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
     public:
         /**
          * The type of element that is stored in this vector.
@@ -152,21 +153,20 @@ class Vector : public ShortOutput<Vector<T>> {
          * or \c long), then the elements will not be initialised
          * to any particular value.
          *
-         * @param newVectorSize the number of elements in the new vector.
+         * \param size the number of elements in the new vector.
          */
-        inline Vector(size_t newVectorSize) :
-                elts_(new T[newVectorSize]), end_(elts_ + newVectorSize) {
+        inline Vector(size_t size) : elts_(new T[size]), end_(elts_ + size) {
         }
         /**
          * Creates a new vector and initialises every element to the
          * given value.
          *
-         * @param newVectorSize the number of elements in the new vector.
-         * @param initValue the value to assign to every element of the
+         * \param size the number of elements in the new vector.
+         * \param initValue the value to assign to every element of the
          * vector.
          */
-        inline Vector(size_t newVectorSize, const T& initValue) :
-                elts_(new T[newVectorSize]), end_(elts_ + newVectorSize) {
+        inline Vector(size_t size, const T& initValue) :
+                elts_(new T[size]), end_(elts_ + size) {
             std::fill(elts_, end_, initValue);
         }
         /**
@@ -178,15 +178,15 @@ class Vector : public ShortOutput<Vector<T>> {
          * dereferenced iterators of type \a iterator.
          *
          * \warning This routine computes the length of the given
-         * sequence by subtracting <tt>end - begin</tt>, and so ideally
+         * sequence by subtracting `end - begin`, and so ideally
          * \a iterator should be a random access iterator type for which
          * this operation is constant time.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
-         * @param begin the beginning of the sequence of elements.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the sequence of elements.
+         * \param end a past-the-end iterator indicating the end of the
          * sequence of elements.
          */
         template <typename iterator>
@@ -199,10 +199,10 @@ class Vector : public ShortOutput<Vector<T>> {
          * This constructor can be used (for example) to create
          * hard-coded examples directly in C++ code.
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a list
+         * of coefficients (which need not be constant).
          *
-         * @param data the elements of the vector.
+         * \param data the elements of the vector.
          */
         inline Vector(std::initializer_list<T> data) :
                 elts_(new T[data.size()]), end_(elts_ + data.size()) {
@@ -211,7 +211,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Creates a new vector that is a clone of the given vector.
          *
-         * @param src the vector to clone.
+         * \param src the vector to clone.
          */
         inline Vector(const Vector<T>& src) :
                 elts_(new T[src.end_ - src.elts_]),
@@ -224,7 +224,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * The vector that is passed (\a src) will no longer be usable.
          *
-         * @param src the vector to move.
+         * \param src the vector to move.
          */
         inline Vector(Vector&& src) noexcept :
                 elts_(src.elts_), end_(src.end_) {
@@ -239,7 +239,10 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Returns the number of elements in the vector.
          *
-         * @return the vector size.
+         * \python This is also used to implement the Python special
+         * method __len__().
+         *
+         * \return the vector size.
          */
         inline size_t size() const {
             return end_ - elts_;
@@ -251,8 +254,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre \c index is between 0 and size()-1 inclusive.
          *
-         * @param index the vector index to examine.
-         * @return the vector element at the given index.
+         * \param index the vector index to examine.
+         * \return the vector element at the given index.
          */
         inline const T& operator[](size_t index) const {
             return elts_[index];
@@ -262,72 +265,100 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre \c index is between 0 and size()-1 inclusive.
          *
-         * @param index the vector index to access.
-         * @return a reference to the vector element at the given index.
+         * \param index the vector index to access.
+         * \return a reference to the vector element at the given index.
          */
         inline T& operator[](size_t index) {
             return elts_[index];
         }
         /**
-         * Returns the beginning of a non-const iterator range that runs
-         * through all elements of this vector.
+         * Returns a C++ non-const iterator pointing to the first element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
-         * @return an iterator pointing to the first element of this vector.
+         * \return an iterator pointing to the first element of this vector.
          */
         inline iterator begin() {
             return elts_;
         }
         /**
-         * Returns the beginning of a const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ const iterator pointing to the first element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
-         * @return an iterator pointing to the first element of this vector.
+         * \return an iterator pointing to the first element of this vector.
          */
         inline const_iterator begin() const {
             return elts_;
         }
         /**
-         * Returns the end of a non-const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ non-const iterator pointing beyond the last element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
-         * @return an iterator beyond the last element of this vector.
+         * \return an iterator beyond the last element of this vector.
          */
         inline iterator end() {
             return end_;
         }
         /**
-         * Returns the end of a const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ const iterator pointing beyond the last element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
-         * @return an iterator beyond the last element of this vector.
+         * \return an iterator beyond the last element of this vector.
          */
         inline const_iterator end() const {
             return end_;
         }
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the elements of this vector.
+         *
+         * \nocpp For C++ users, Vector provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the elements
+         * of this list in the usual way using a range-based \c for loop.
+         *
+         * \return an iterator over the elements of this vector.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Determines if this vector is equal to the given vector.
@@ -335,8 +366,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * It is safe to call this operator if this and the given vector have
          * different sizes (in which case the return value will be \c false).
          *
-         * @param compare the vector with which this will be compared.
-         * @return \c true if and only if the this and the given vector
+         * \param compare the vector with which this will be compared.
+         * \return \c true if and only if the this and the given vector
          * are equal.
          */
         inline bool operator == (const Vector<T>& compare) const {
@@ -348,8 +379,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * It is safe to call this operator if this and the given vector have
          * different sizes (in which case the return value will be \c true).
          *
-         * @param compare the vector with which this will be compared.
-         * @return \c true if and only if the this and the given vector
+         * \param compare the vector with which this will be compared.
+         * \return \c true if and only if the this and the given vector
          * are not equal.
          */
         inline bool operator != (const Vector<T>& compare) const {
@@ -361,7 +392,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * It does not matter if this and the given vector have different
          * sizes; if they do then this vector will be resized as a result.
          *
-         * @param src the vector whose value shall be assigned to this
+         * \param src the vector whose value shall be assigned to this
          * vector.
          */
         inline Vector<T>& operator = (const Vector<T>& src) {
@@ -389,8 +420,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * The vector that is passed (\a src) will no longer be usable.
          *
-         * @param src the vector to move.
-         * @return a reference to this vector.
+         * \param src the vector to move.
+         * \return a reference to this vector.
          */
         inline Vector& operator = (Vector&& src) noexcept {
             std::swap(elts_, src.elts_);
@@ -401,7 +432,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Swaps the contents of this and the given vector.
          *
-         * @param other the vector whose contents are to be swapped with this.
+         * \param other the vector whose contents are to be swapped with this.
          */
         inline void swap(Vector& other) noexcept {
             std::swap(elts_, other.elts_);
@@ -414,8 +445,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to add to this vector.
-         * @return a reference to this vector.
+         * \param other the vector to add to this vector.
+         * \return a reference to this vector.
          */
         inline Vector& operator += (const Vector<T>& other) {
             T* e = elts_;
@@ -431,8 +462,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to subtract from this vector.
-         * @return a reference to this vector.
+         * \param other the vector to subtract from this vector.
+         * \return a reference to this vector.
          */
         inline Vector& operator -= (const Vector<T>& other) {
             T* e = elts_;
@@ -445,8 +476,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * Multiplies this vector by the given scalar.
          * This vector will be changed directly.
          *
-         * @param factor the scalar with which this will be multiplied.
-         * @return a reference to this vector.
+         * \param factor the scalar with which this will be multiplied.
+         * \return a reference to this vector.
          */
         inline Vector& operator *= (const T& factor) {
             if (factor == 1)
@@ -461,8 +492,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to add to this vector.
-         * @return the sum <tt>this + other</tt>.
+         * \param other the vector to add to this vector.
+         * \return the sum `this + other`.
          */
         inline Vector operator + (const Vector<T>& other) const {
             Vector ans(size());
@@ -482,8 +513,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to subtract from this vector.
-         * @return the difference <tt>this - other</tt>.
+         * \param other the vector to subtract from this vector.
+         * \return the difference `this - other`.
          */
         inline Vector operator - (const Vector<T>& other) const {
             Vector ans(size());
@@ -501,8 +532,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * Multiplies this vector by the given scalar, and returns the result.
          * This vector will not be changed.
          *
-         * @param factor the scalar to multiply this vector by.
-         * @return the product <tt>this * factor</tt>.
+         * \param factor the scalar to multiply this vector by.
+         * \return the product `this * factor`.
          */
         inline Vector operator * (const T& factor) const {
             if (factor == 1)
@@ -523,8 +554,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector with which this will be multiplied.
-         * @return the dot product of this and the given vector.
+         * \param other the vector with which this will be multiplied.
+         * \return the dot product of this and the given vector.
          */
         inline T operator * (const Vector<T>& other) const {
             T ans(0);
@@ -553,7 +584,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * Returns the norm of this vector.
          * This is the dot product of the vector with itself.
          *
-         * @return the norm of this vector.
+         * \return the norm of this vector.
          */
         inline T norm() const {
             T ans(0);
@@ -564,7 +595,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Returns the sum of all elements of this vector.
          *
-         * @return the sum of the elements of this vector.
+         * \return the sum of the elements of this vector.
          */
         inline T elementSum() const {
             T ans(0);
@@ -578,9 +609,9 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector a multiple of which will be added to
+         * \param other the vector a multiple of which will be added to
          * this vector.
-         * @param multiple the multiple of \a other to be added to this
+         * \param multiple the multiple of \a other to be added to this
          * vector.
          */
         void addCopies(const Vector<T>& other, const T& multiple) {
@@ -605,9 +636,9 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector a multiple of which will be
+         * \param other the vector a multiple of which will be
          * subtracted from this vector.
-         * @param multiple the multiple of \a other to be subtracted
+         * \param multiple the multiple of \a other to be subtracted
          * from this vector.
          */
         void subtractCopies(const Vector<T>& other, const T& multiple) {
@@ -629,7 +660,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Determines whether this is the zero vector.
          *
-         * @return \c true if and only if all elements of the vector are zero.
+         * \return \c true if and only if all elements of the vector are zero.
          */
         bool isZero() const {
             for (const T* e = elts_; e != end_; ++e)
@@ -641,15 +672,66 @@ class Vector : public ShortOutput<Vector<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
             out << '(';
             for (const T* elt = elts_; elt != end_; ++elt)
                 out << ' ' << *elt;
             out << " )";
+        }
+        /**
+         * Writes the tight encoding of this vector to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * \pre The element type \a T must have a corresponding
+         * tightEncode() function.  This is true for Regina's arbitrary
+         * precision integer types (Integer and LargeInteger).
+         *
+         * \nopython Use tightEncoding() instead, which returns a string.
+         *
+         * \param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const {
+            regina::detail::tightEncodeIndex(out, size());
+            for (const T* elt = elts_; elt != end_; ++elt)
+                elt->tightEncode(out);
+        }
+
+        /**
+         * Reconstructs a vector from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input stream _may_ contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \pre The element type \a T must have a corresponding static
+         * tightDecode() function.  This is true for Regina's arbitrary
+         * precision integer types (Integer and LargeInteger).
+         *
+         * \exception InvalidInput The given input stream does not begin with
+         * a tight encoding of a vector of elements of type \a T.
+         *
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
+         *
+         * \param input an input stream that begins with the tight encoding
+         * for a vector of element of type \a T.
+         * \return the vector represented by the given tight encoding.
+         */
+        static Vector tightDecode(std::istream& input) {
+            Vector ans(regina::detail::tightDecodeIndex<size_t>(input));
+            for (T* elt = ans.elts_; elt != ans.end_; ++elt)
+                *elt = T::tightDecode(input);
+            return ans;
         }
 
         /**
@@ -669,7 +751,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeInteger).
          *
-         * @return the integer by which this vector was divided (i.e.,
+         * \return the integer by which this vector was divided (i.e.,
          * the gcd of its original elements).  This will be strictly positive.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) scaleDown() {
@@ -700,11 +782,11 @@ class Vector : public ShortOutput<Vector<T>> {
          * in position \a coordinate will be set to 1, and all other
          * elements will be set to 0.
          *
-         * @param dimension the number of elements in the vector.
-         * @param coordinate the coordinate position that should hold
+         * \param dimension the number of elements in the vector.
+         * \param coordinate the coordinate position that should hold
          * the value 1; this must be between 0 and (\a dimension - 1)
          * inclusive.
-         * @return the requested unit vector.
+         * \return the requested unit vector.
          */
         static Vector unit(size_t dimension, size_t coordinate) {
             if constexpr (IsReginaInteger<T>::value) {
@@ -726,8 +808,8 @@ class Vector : public ShortOutput<Vector<T>> {
  * This global routine simply calls Vector<T>::swap(); it is provided
  * so that Vector<T> meets the C++ Swappable requirements.
  *
- * @param a the first vector whose contents should be swapped.
- * @param b the second vector whose contents should be swapped.
+ * \param a the first vector whose contents should be swapped.
+ * \param b the second vector whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -741,9 +823,9 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  * The vector will be written on a single line with elements separated
  * by a single space.  No newline will be written.
  *
- * @param out the output stream to which to write.
- * @param vector the vector to write.
- * @return a reference to \a out.
+ * \param out the output stream to which to write.
+ * \param vector the vector to write.
+ * \return a reference to \a out.
  *
  * \ingroup maths
  */
@@ -764,7 +846,7 @@ std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
  * This is the underlying vector class that Regina uses to store
  * angle structures.
  *
- * \ifacespython This instance of the Vector template class is made
+ * \python This instance of the Vector template class is made
  * available to Python.
  *
  * \ingroup maths
@@ -777,7 +859,7 @@ using VectorInt = Vector<Integer>;
  * This is the underlying vector class that Regina uses to store
  * normal surfaces and hypersurfaces.
  *
- * \ifacespython This instance of the Vector template class is made
+ * \python This instance of the Vector template class is made
  * available to Python.
  *
  * \ingroup maths

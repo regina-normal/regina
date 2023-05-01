@@ -1,0 +1,147 @@
+<chapter id="contributing">
+<title>Contributing to &regina;</title>
+ <para>
+  This page serves as a checklist for adding new code to &regina;.
+ </para>
+ <itemizedlist>
+  <listitem><para>
+   &regina; is written in &cpp;, and so any permanent contributions to
+   &regina; will need to be written in &cpp; also.
+  </para></listitem>
+  <listitem><para>
+   New classes should use value semantics, unless there is a good reason not to.
+   Classes with value semantics should provide appropriate comparisions
+   (<literal>==</literal> and <literal>!=</literal>), copy constructors,
+   and copy assignment operators.
+   If they are large objects, they should also provide move constructors,
+   move assignment operators, a member <function>swap()</function>
+   function, and a global <function>swap()</function> function.
+  </para></listitem>
+  <listitem><para>
+   New code should ideally come with corresponding tests for &regina;'s
+   test suite:
+   <itemizedlist>
+    <listitem>For important classes, these tests should be comprehensive,
+     not just a few token cases.  See the <classname>Integer</classname>
+     tests in <filename>testsuite/maths/integer.cpp</filename> for an
+     example of <emphasis>very</emphasis> comprehensive testing.</listitem>
+    <listitem>The tests may be either &cpp; (in <literal>testsuite/</literal>)
+     or &python; (in <literal>python/testsuite/</literal>), or both.
+     &python; tests are simpler to write; however, the &cpp; tests can be far
+     more flexible in what is tested (not just comparing text output), and
+     moreover the &cpp; tests will be run on more systems (including
+     those where &python; development files are not available).</listitem>
+    <listitem>Whilst they should be comprehensive, tests should not
+     be enormously slow.  Watch how fast/slow the other tests are as a guide
+     for what is acceptable (if you test using
+     &ldquo;<userinput>make test ARGS=-V</userinput>&rdquo; then you
+     can see each individual test as it runs).</listitem>
+   </itemizedlist>
+  </para></listitem>
+  <listitem><para>
+   All functions and classes should be fully documented.
+   In particular, for each function:
+   <itemizedlist>
+    <listitem>The first sentence of the documentation should be appropriate
+     to display as a brief synopsis (since this will be extracted and
+     placed into various indices).</listitem>
+    <listitem>The documentation should list all preconditions that the
+     user needs to ensure before calling the function.</listitem>
+    <listitem>Functions should not be correct only for &ldquo;common&rdquo;
+     scenarios, but should be as general as possible within reason.
+     Any limitations should be made clear to the user (e.g., through
+     explicit preconditions)&mdash;users should not be expected to guess
+     which scenarios the function works for.</listitem>
+    <listitem>All parameters should be described in individual
+     <literal>\param</literal> blocks.  Likewise, any non-type template
+     parameters (e.g., integer template parameters) must be described in
+     <literal>\tparam</literal> blocks.
+     Of course, type parameters may be described also if this will be helpful.
+     The return value should be described in a <literal>\return</literal>
+     block.</listitem>
+    <listitem>All preconditions that the user is expected to adhere to
+     should be spelled out in the documentation.  Limits on function
+     arguments (e.g., acceptable integer ranges) can be listed in each
+     <literal>\param</literal> block; other preconditions should be
+     listed in separate <literal>\pre</literal> paragraphs.</listitem>
+    <listitem>If there are differences between the &cpp; and &python;
+     versions of a function or class, these should be listed in a separate
+     <literal>\python</literal> paragraph.  In particular, if function arguments
+     differ (e.g., the &cpp; version takes a pair of iterators but the
+     &python; version takes a single list), then the arguments should be named
+     in the &python; bindings using <literal>pybind11::arg(...)</literal>.
+     If there is no &python; version at all, this should be made clear using a
+     <literal>\nopython</literal> tag (which can take an optional
+     explanation).</listitem>
+   </itemizedlist>
+  </para></listitem>
+  <listitem><para>
+   Documentation needs to be written in a format that
+   is easy for humans to read in the &cpp; headers,
+   will be formatted appropriately when processed by &doxygen;,
+   and will convert sensibly to a &python; docstring.
+   Best practices include:
+   <itemizedlist>
+    <listitem>Avoid &html; tags such as
+     <literal>&lt;i&gt;</literal>,
+     <literal>&lt;b&gt;</literal>, and
+     <literal>&lt;tt&gt;</literal> where possible&mdash;instead use
+     markdown and/or &doxygen; tags.
+     In particular: for italicised English, use
+     <literal>_underscores_</literal>;
+     for italicised variable names use <literal>\a</literal>;
+     for bold English use <literal>**double asterisks**</literal>;
+     for &cpp; keywords use <literal>\c</literal>; and
+     for inline code fragments use <literal>`backticks`</literal>.
+     Note that &doxygen; does not (currently) translate underscores
+     within <literal>\exception</literal> blocks; here you will need to
+     italicise using <literal>\e</literal> (for single words) or
+     <literal>&lt;i&gt;</literal> (for multiple words).</listitem>
+    <listitem>Avoid &xml; entities such as
+     <literal>&amp;lt;</literal>,
+     <literal>&amp;amp;</literal>, and
+     <literal>&amp;ne;</literal>.
+     For less-than, you can use <literal>\&lt;</literal> if there is a risk of
+     &doxygen; misinterpreting a plain <literal>&lt;</literal>
+     as an &html; tag.
+     For mathematical symbols with &ldquo;simple&rdquo; unicode
+     representations (i.e., likely to be supported in fonts
+     across many platforms), just use the unicode instead.
+     Simple unicode symbols include:
+     <literal>≤≥≠</literal>,
+     <literal>×±</literal>,
+     <literal>αβπ</literal>, and
+     <literal>¹²³</literal>.</listitem>
+    <listitem>Use &doxygen;-style backslash tags such as
+    <literal>\param</literal>, not <application>Javadoc</application>-style
+    tags such as <literal>@param</literal>.</listitem>
+   </itemizedlist>
+  </para></listitem>
+  <listitem><para>
+   All &cpp; functions and classes should have corresponding &python;
+   bindings, unless there is a very good reason not to.
+   The &python; bindings are typically easy to write, and Ben can help
+   with this if necessary.
+   <itemizedlist>
+    <listitem>Template classes should be wrapped in &python; using
+     suffixes that describe the template arguments.
+     See for example <classname>Triangulation3</classname>, or
+     <classname>TreeEnumeration_NonSpun</classname>.</listitem>
+    <listitem>All functions and classes wrapped in &python; should have
+     appropriate docstrings, which need to be passed to the corresponding
+     <literal>pybind11::def(...)</literal> statement.
+     These docstrings are extracted automatically from the hand-written
+     documentation in the &cpp; headers, and this extraction is done manually
+     (not as part of the build process).
+     Please ask Ben if you need this extraction to be run for you.</listitem>
+    <listitem>If for some reason you are binding a function in &python;
+     but you do not want to extract a docstring (this should be a rare
+     occurrence), use a <literal>\nodocstring</literal> tag in the
+     &cpp; class or function documentation.
+     (At the time of writing, <literal>\nodocstring</literal> is used
+     in only two places across &regina;'s entire &api;.)</listitem>
+   </itemizedlist>
+  </para></listitem>
+ </itemizedlist>
+</chapter>
+

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -125,9 +125,9 @@ using AngleAlg = regina::Flags<AngleAlgFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
+ * \return the combination of both flags.
  *
  * \ingroup angle
  */

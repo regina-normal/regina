@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,9 @@ namespace regina {
  * Represents a triangle in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
- * documentation for Face for a general overview of how this class works.
+ * generic documentation for Face for a general overview of how the face
+ * classes work.  In Python, you can read this generic documentation by
+ * looking at faces in a higher dimension: try `help(Triangle5)`.
  *
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
@@ -72,40 +74,55 @@ template <>
 class Face<3, 2> : public detail::FaceBase<3, 2> {
     public:
         /**
-         * The \e type of a triangle, which indicates how the vertices and
+         * The _type_ of a triangle, which indicates how the vertices and
          * edges of the triangle are identified together.  Here the vertices
          * of a triangle are considered unlabelled (so a relabelling
          * will not change the triangle type).
          *
-         * @see type
+         * \see type
          */
         enum Type {
+            /**
+             * Indicates that the triangle type has not yet been determined.
+             */
             UNKNOWN_TYPE = 0,
-                /**< Indicates that the triangle type has not yet been
-                     determined. */
+            /**
+             * Specifies a triangle with no identified vertices or edges.
+             */
             TRIANGLE = 1,
-                /**< Specifies a triangle with no identified vertices or
-                     edges. */
+            /**
+             * Specifies a triangle with two identified vertices.
+             */
             SCARF = 2,
-                /**< Specifies a triangle with two identified vertices. */
+            /**
+             * Specifies a triangle with three identified vertices.
+             */
             PARACHUTE = 3,
-                /**< Specifies a triangle with three identified vertices. */
+            /**
+             * Specifies a triangle with two edges identified to form a cone.
+             */
             CONE = 4,
-                /**< Specifies a triangle with two edges identified to form a
-                     cone. */
+            /**
+             * Specifies a triangle with two edges identified to form a
+             * Mobius band.
+             */
             MOBIUS = 5,
-                /**< Specifies a triangle with two edges identified to form a
-                     mobius band. */
+            /**
+             * Specifies a triangle with two edges identified to form a cone
+             * with all three vertices identified.
+             */
             HORN = 6,
-                /**< Specifies a triangle with two edges identified to form a
-                     cone with all three vertices identified. */
+            /**
+             * Specifies a triangle with all three edges identified, some via
+             * orientable and some via non-orientable gluings.
+             */
             DUNCEHAT = 7,
-                /**< Specifies a triangle with all three edges identified, some
-                     via orientable and some via non-orientable gluings. */
+            /**
+             * Specifies a triangle with all three edges identified using
+             * non-orientable gluings.  Note that this forms a spine for the
+             * lens space L(3,1).
+             */
             L31 = 8
-                /**< Specifies a triangle with all three edges identified using
-                     non-orientable gluings.  Note that this forms a spine for
-                     the Lens space L(3,1). */
         };
 
     private:
@@ -124,7 +141,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * enumeration, indicating how the edges and vertices of the
          * triangle are identified.
          *
-         * @return the type of this triangle.  This routine will never
+         * \return the type of this triangle.  This routine will never
          * return UNKNOWN_TYPE.
          */
         Type type();
@@ -135,7 +152,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * only relevant for some triangle types.  The triangle type is
          * returned by type().
          *
-         * @return The vertex or edge that plays a special role (this
+         * \return The vertex or edge that plays a special role (this
          * will be 0, 1 or 2), or -1 if this triangle type has no special
          * vertex or edge.
          */
@@ -148,7 +165,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * type()) can produce this result.
          * Note also that a triangle can be both a Mobius band \a and a cone.
          *
-         * @return \c true if and only if this triangle is a Mobius band.
+         * \return \c true if and only if this triangle is a Mobius band.
          */
         bool isMobiusBand();
 
@@ -159,16 +176,35 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * type()) can produce this result.
          * Note also that a triangle can be both a Mobius band \a and a cone.
          *
-         * @return \c true if and only if this triangle is a cone.
+         * \return \c true if and only if this triangle is a cone.
          */
         bool isCone();
+
+        /**
+         * Returns the link of this triangle as a normal surface.
+         *
+         * Constructing the link of a triangle begins with building the frontier
+         * of a regular neighbourhood of the triangle.  If this is already a
+         * normal surface, then then link is called _thin_.  Otherwise
+         * the usual normalisation steps are performed until the surface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the surface, and in some pathological
+         * cases could even reduce it to the empty surface.
+         *
+         * \return a pair (\a s, \a thin), where \a s is the triangle linking
+         * normal surface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
+         *
+         * \return the corresponding triangle linking normal surface.
+         */
+        std::pair<NormalSurface, bool> linkingSurface() const;
 
     private:
         /**
          * Creates a new triangle and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * triangle belongs.
          */
         Face(Component<3>* component);
@@ -196,6 +232,10 @@ inline bool Face<3, 2>::isMobiusBand() {
 inline bool Face<3, 2>::isCone() {
     type();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
+}
+
+inline std::pair<NormalSurface, bool> Face<3, 2>::linkingSurface() const {
+    return triangulation().linkingSurface(*this);
 }
 
 } // namespace regina

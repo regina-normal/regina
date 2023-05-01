@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,10 +39,7 @@
 #define __REGINA_HOMGROUPPRESENTATION_H
 #endif
 
-#include <optional>
-#include <vector>
-#include "regina-core.h"
-#include "core/output.h"
+#include "algebra/grouppresentation.h"
 
 namespace regina {
 
@@ -52,7 +49,7 @@ class GroupPresentation;
  * Represents a homomorphism between groups which are described via finite
  * presentations.
  *
- * Some homomorphisms may be <i>declared isomorphisms</i>.  This means
+ * Some homomorphisms may be _declared isomorphisms_.  This means
  * that the user (or some other function in Regina) has proven that this
  * is an isomorphism and has explicitly provided the inverse map.
  * To provide the inverse map, you should call the four-argument constructor
@@ -91,12 +88,12 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Creates a new homomorphism from the given data.
          *
-         * @param domain the domain of the homomorphism.
-         * @param codomain the codomain of the homomorphism.
-         * @param map a vector of length \a g, where \a g is the number
+         * \param domain the domain of the homomorphism.
+         * \param codomain the codomain of the homomorphism.
+         * \param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
-         * element <tt>map[i]</tt> of the codomain.
+         * element `map[i]` of the codomain.
          */
         HomGroupPresentation(GroupPresentation domain,
                 GroupPresentation codomain,
@@ -109,16 +106,16 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * \pre The argument \a inv is indeed the inverse of \a map.
          *
-         * @param domain the domain of the homomorphism.
-         * @param codomain the codomain of the homomorphism.
-         * @param map a vector of length \a g, where \a g is the number
+         * \param domain the domain of the homomorphism.
+         * \param codomain the codomain of the homomorphism.
+         * \param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
-         * element <tt>map[i]</tt> of the codomain.
-         * @param inv a vector of length \a k where \a k is the number
+         * element `map[i]` of the codomain.
+         * \param inv a vector of length \a k where \a k is the number
          * of generators of the codomain, and where the inverse homomorphism
          * sends the <i>i</i>th generator of the codomain to the
-         * element <tt>inv[i]</tt> of the domain.
+         * element `inv[i]` of the domain.
          */
         HomGroupPresentation(GroupPresentation domain,
                 GroupPresentation codomain,
@@ -131,7 +128,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * This will be a declared isomorphism (see the
          * HomGroupPresentation class notes for details).
          *
-         * @param groupForIdentity both the domain and codomain of the
+         * \param groupForIdentity both the domain and codomain of the
          * new identity homomorphism.
          */
         HomGroupPresentation(const GroupPresentation& groupForIdentity);
@@ -152,7 +149,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Sets this to be a clone of the given homomorphism.
          *
-         * @return a reference to this homomorphism.
+         * \return a reference to this homomorphism.
          */
         HomGroupPresentation& operator = (const HomGroupPresentation&) =
             default;
@@ -163,7 +160,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * The homomorphism that was passed will no longer be usable.
          *
-         * @return a reference to this homomorphism.
+         * \return a reference to this homomorphism.
          */
         HomGroupPresentation& operator = (HomGroupPresentation&&) noexcept =
             default;
@@ -171,7 +168,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Swaps the contents of this and the given homomorphism.
          *
-         * @param other the homomorphism whose contents should be swapped with
+         * \param other the homomorphism whose contents should be swapped with
          * this.
          */
         void swap(HomGroupPresentation& other) noexcept;
@@ -180,13 +177,13 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Determines whether this and the given homomorphism have
          * identical presentations.
          *
-         * This routine does \e not test whether the two homomorphisms
+         * This routine does _not_ test whether the two homomorphisms
          * are equal in the sense that each element of the domain maps
          * to the same group element of the codomain - in general this
          * is an undecidable problem.
          *
          * Instead, this routine tests whether the two homomorphisms map the
-         * <i>i</i>th generator of the domain to precisely the same \e word
+         * <i>i</i>th generator of the domain to precisely the same _word_
          * in the codomain, for each \a i.
          *
          * This routine will not test whether the domains and codomains
@@ -196,8 +193,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * will compare as not equal (since it will be impossible to compare
          * the words that the corresponding generators map to).
          *
-         * @param other the homomorphism to compare with this.
-         * @return \c true if and only if this and the given homomorphisms
+         * \param other the homomorphism to compare with this.
+         * \return \c true if and only if this and the given homomorphisms
          * have identical presentations.
          */
         bool operator == (const HomGroupPresentation& other) const;
@@ -206,13 +203,13 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Determines whether this and the given homomorphism do not have
          * identical presentations.
          *
-         * This routine does \e not test whether the two homomorphisms
+         * This routine does _not_ test whether the two homomorphisms
          * are equal in the sense that each element of the domain maps
          * to the same group element of the codomain - in general this
          * is an undecidable problem.
          *
          * Instead, this routine tests whether the two homomorphisms map the
-         * <i>i</i>th generator of the domain to precisely the same \e word
+         * <i>i</i>th generator of the domain to precisely the same _word_
          * in the codomain, for each \a i.
          *
          * This routine will not test whether the domains and codomains
@@ -222,8 +219,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * will compare as not equal (since it will be impossible to compare
          * the words that the corresponding generators map to).
          *
-         * @param other the homomorphism to compare with this.
-         * @return \c true if and only if this and the given homomorphisms
+         * \param other the homomorphism to compare with this.
+         * \return \c true if and only if this and the given homomorphisms
          * do not have identical presentations.
          */
         bool operator != (const HomGroupPresentation& other) const;
@@ -231,24 +228,24 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * The domain of the map.
          *
-         * @return a reference to the domain.
+         * \return a reference to the domain.
          */
         const GroupPresentation& domain() const;
         /**
          * The codomain of the map.
          *
-         * @return a reference to the codomain.
+         * \return a reference to the codomain.
          */
         const GroupPresentation& codomain() const;
 
         /**
          * Returns whether or not this is a declared isomorphism.
          *
-         * A <i>declared isomorphism</i> is a isomorphism for which the
+         * A _declared isomorphism_ is a isomorphism for which the
          * user has explicitly provided the inverse map.  See the
          * HomGroupPresentation class notes for details.
          *
-         * @return \c true if and only if this is a declared
+         * \return \c true if and only if this is a declared
          * isomorphism, i.e, the inverse map was explicitly provided.
          */
         bool knowsInverse() const;
@@ -256,16 +253,16 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Evaluate the homomorphism at an element of the domain.
          *
-         * @param arg an element of the domain.
-         * @return the image of this element in the codomain.
+         * \param arg an element of the domain.
+         * \return the image of this element in the codomain.
          */
         GroupExpression evaluate(GroupExpression arg) const;
 
         /**
          * Evaluate the homomorphism at a generator of the domain.
          *
-         * @param i the index of a generator in the domain.
-         * @return the image of the <i>i</i>th generator in the codomain.
+         * \param i the index of a generator in the domain.
+         * \return the image of the <i>i</i>th generator in the codomain.
          */
         GroupExpression evaluate(unsigned long i) const;
 
@@ -276,8 +273,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @param arg an element of the codomain.
-         * @return the image of this element in the domain.
+         * \param arg an element of the codomain.
+         * \return the image of this element in the domain.
          */
         GroupExpression invEvaluate(GroupExpression arg) const;
         /**
@@ -287,8 +284,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @param i the index of a generator in the codomain.
-         * @return the image of this generator in the domain.
+         * \param i the index of a generator in the codomain.
+         * \return the image of this generator in the domain.
          */
         GroupExpression invEvaluate(unsigned long i) const;
 
@@ -302,7 +299,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Uses the underlying GroupPresentation::intelligentSimplify().
          * See that routine for details.
          *
-         * @return \c true if and only if either presentation and/or the
+         * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
         bool intelligentSimplify();
@@ -311,7 +308,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Simplifies the domain and codomain using only Nielsen moves, keeping
          * track of the resulting map in the progress.
          *
-         * @return \c true if and only if either presentation and/or the
+         * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
         bool intelligentNielsen();
@@ -320,7 +317,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Simplifies the domain and codomain using only small cancellation
          * theory.
          *
-         * @return \c true if and only if either presentation and/or the
+         * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
         bool smallCancellation();
@@ -329,7 +326,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Composes this homomorphism with the given homomorphism.
          *
          * Evaluating the composition on some group element \a x is the
-         * same as evaluating <tt>this(rhs(x))</tt>.
+         * same as evaluating `this(rhs(x))`.
          * In other words, in this composition, \a rhs is evaluated first
          * and then the output of that is evaluated by this homomorphism.
          *
@@ -339,8 +336,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \pre the codomain of \a rhs must be the same as the domain of this
          * homomorphism.
          *
-         * @param rhs the homomorphism to compose this with.
-         * @return the composition of both homomorphisms.
+         * \param rhs the homomorphism to compose this with.
+         * \return the composition of both homomorphisms.
          */
         HomGroupPresentation operator * (const HomGroupPresentation& rhs) const;
 
@@ -348,7 +345,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Composes this homomorphism with the given homomorphism.
          *
          * Evaluating the composition on some group element \a x is the
-         * same as evaluating <tt>this(rhs(x))</tt>.
+         * same as evaluating `this(rhs(x))`.
          * In other words, in this composition, \a rhs is evaluated first
          * and then the output of that is evaluated by this homomorphism.
          *
@@ -358,8 +355,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \pre the codomain of \a rhs must be the same as the domain of this
          * homomorphism.
          *
-         * @param rhs the homomorphism to compose this with.
-         * @return the composition of both homomorphisms.
+         * \param rhs the homomorphism to compose this with.
+         * \return the composition of both homomorphisms.
          */
         HomGroupPresentation operator * (HomGroupPresentation&& rhs) const;
 
@@ -376,7 +373,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * This operation is (very) fast constant time.
          *
-         * @return \c true if and only if the inversion operation was
+         * \return \c true if and only if the inversion operation was
          * successful (i.e., if this is a declared isomorphism).
          */
         bool invert();
@@ -397,7 +394,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * This routine is intended for sanity checking only: any homomorphism
          * that you construct in Regina should always be valid in this sense.
          *
-         * @return \c true if Regina is able to verify that this is a
+         * \return \c true if Regina is able to verify that this is a
          * homomorphism, or \c false if the result is inconclusive.
          */
         bool verify() const;
@@ -407,7 +404,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * an isomorphism.
          *
          * This routine works by attempting to verify that
-         * <tt>f^-1(f(x))x^-1</tt> simplifes to 1 for all generators \a x
+         * `f^-1(f(x))x^-1` simplifes to 1 for all generators \a x
          * in the domain, and likewise for the codomain.
          *
          * This routine does not guarantee a conclusive result.  If this
@@ -428,7 +425,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @return \c true if it is verified that this is an
+         * \return \c true if it is verified that this is an
          * isomorphism, or \c false if the result is inconclusive.
          */
         bool verifyIsomorphism() const;
@@ -437,7 +434,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Computes the induced map on the abelianizations of the domain
          * and codomain.
          *
-         * @return the induced map on the abelianizations.
+         * \return the induced map on the abelianizations.
          */
         HomMarkedAbelianGroup markedAbelianisation() const;
 
@@ -445,18 +442,18 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -467,8 +464,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
  * This global routine simply calls HomGroupPresentation::swap(); it is provided
  * so that HomGroupPresentation meets the C++ Swappable requirements.
  *
- * @param lhs the homomorphism whose contents should be swapped with \a rhs.
- * @param rhs the homomorphism whose contents should be swapped with \a lhs.
+ * \param lhs the homomorphism whose contents should be swapped with \a rhs.
+ * \param rhs the homomorphism whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */

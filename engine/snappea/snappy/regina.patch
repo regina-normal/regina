@@ -24,10 +24,10 @@ index f9a7363..e46a619 100644
 +
 +#include "../kernel/end_namespace.h"
 +#endif
-diff --git a/engine/snappea/snappy/snappy_get_gluing_equations.c b/engine/snappea/snappy/snappy_get_gluing_equations.c
+diff --git a/engine/snappea/snappy/snappy_get_gluing_equations.cpp b/engine/snappea/snappy/snappy_get_gluing_equations.cpp
 index c96db95..6403eb6 100644
---- a/engine/snappea/snappy/snappy_get_gluing_equations.c
-+++ b/engine/snappea/snappy/snappy_get_gluing_equations.c
+--- a/engine/snappea/snappy/snappy_get_gluing_equations.cpp
++++ b/engine/snappea/snappy/snappy_get_gluing_equations.cpp
 @@ -1,5 +1,18 @@
 -#include "kernel.h"
 -#include "kernel_namespace.h"

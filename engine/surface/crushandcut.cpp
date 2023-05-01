@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,7 +72,7 @@ namespace regina {
  *     the two choices of which half to keep.
  *
  *   The reason we add the extra vertex links is to keep this list of
- *   block types small; otherwise we must also deal with \e partially
+ *   block types small; otherwise we must also deal with _partially_
  *   truncated tetrahedra and half-tetrahedra.
  *
  * - We triangulate each of the blocks.  There are two types of boundary
@@ -340,15 +340,15 @@ namespace {
      *
      * For each such quadrilateral or hexagon, we number the faces from
      * 0 to 1 (for a quadrilateral) or 0 to 3 (for a hexagon); these are
-     * called the \e inner boundary faces.  The enclosing face of the
-     * outer tetrahedron is called the \e outer boundary face.
+     * called the _inner_ boundary faces.  The enclosing face of the
+     * outer tetrahedron is called the _outer_ boundary face.
      *
      * See boundaries.fig for details of how each quadrilateral or
      * hexagon is triangulated.  The inner boundary faces are numbered
      * T0, T1, ..., the vertices of each inner boundary face are
-     * numbered using plain integers (these are the \e inner vertex
+     * numbered using plain integers (these are the _inner_ vertex
      * numbers), and the vertices of the outer boundary face are numbered
-     * using integers in circles (these are the \e outer vertex numbers).
+     * using integers in circles (these are the _outer_ vertex numbers).
      */
     class Bdry {
         protected:
@@ -499,17 +499,17 @@ namespace {
         private:
             unsigned long triCount_[4];
                 /**< The number of triangular normal discs of each type
-                     within this outer tetrahedron.  This does \e not
+                     within this outer tetrahedron.  This does _not_
                      include the "extra" vertex links that we add to
                      slice off a neighbourhood of each vertex of the
                      original triangulation. */
             unsigned long quadCount_;
                 /**< The number of quadrilateral normal discs (of any type)
-                     within this outer tetrahedron.  The \e type of these
+                     within this outer tetrahedron.  The _type_ of these
                      quadrilaterals is stored in the separate data
                      member \a quadType_. */
             int quadType_;
-                /**< The unique quadrilateral normal disc \e type that appears
+                /**< The unique quadrilateral normal disc _type_ that appears
                      within this outer tetrahedron.  This will be 0, 1 or 2
                      if there are indeed quadrilateral discs (i.e., quadCount_
                      is positive), or -1 if this outer tetrahedron contains no
@@ -522,7 +522,7 @@ namespace {
                      Such blocks exist if and only if the normal surface
                      contains at least one triangular disc of type \a i.
                      If these blocks do exist, they are stored in order moving
-                     \e away from vertex \a i of the outer tetrahedron
+                     _away_ from vertex \a i of the outer tetrahedron
                      (or equivalently, moving in towards the centre of
                      the outer tetrahedron). */
             Block** quadPrism_;
@@ -532,7 +532,7 @@ namespace {
                      These blocks exist if and only if the normal
                      surface contains two or more quadrilateral discs.
                      If these blocks do exist, they are stored in order moving
-                     \e away from vertex 0 of the outer tetrahedron. */
+                     _away_ from vertex 0 of the outer tetrahedron. */
             Block* truncHalfTet_[2];
                 /**< The two truncated half-tetrahedron blocks, or null if
                      there are no such blocks within this outer tetrahedron.
@@ -579,7 +579,7 @@ namespace {
              * tetrahedron.
              *
              * Note that the inner tetrahedra that make up the triangulated
-             * blocks are \e not destroyed (since presumably we are keeping
+             * blocks are _not_ destroyed (since presumably we are keeping
              * these inner tetrahedra for the new sliced-open triangulation
              * that we plan to give back to the user).
              */
@@ -600,7 +600,7 @@ namespace {
              *
              * Ordinarily the face number would be passed; however,
              * it is omitted because it is not actually necessary.
-             * Nevertheless, the choice of face number affects how \e many
+             * Nevertheless, the choice of face number affects how _many_
              * such blocks are available; see numQuadBlocks() for details.
              *
              * Blocks are numbered 0,1,... outwards from the given vertex of
@@ -1147,9 +1147,16 @@ namespace {
 // ------------------------------------------------------------------------
 
 Triangulation<3> NormalSurface::cutAlong() const {
+    if (! normal()) {
+        // The implementation of cutAlong() only knows how to handle
+        // triangles and quadrilaterals.
+        // By calling removeOcts() first, we will be able to use our
+        // triangle-quadrilateral implementation and still end up with
+        // the correct resulting 3-manifold(s).
+        return removeOcts().cutAlong();
+    }
+
     Triangulation<3> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(ans);
 
     size_t nTet = triangulation().size();
     if (nTet == 0)
@@ -1421,10 +1428,12 @@ namespace {
                     // The LP-and-crushing method only works for
                     // 1-vertex triangulations (at present).
                     if (t_[side]->countVertices() > 1) {
-                        // Try harder.
-                        t_[side]->barycentricSubdivision();
-                        t_[side]->intelligentSimplify();
+                        t_[side]->minimiseVertices();
                         if (t_[side]->countVertices() > 1) {
+                            // We could still end up here (for example)
+                            // if the surface was non-separating and so
+                            // we have two boundary components.
+                            //
                             // Fall back to the old (slow and uncancellable)
                             // method.
                             if (t_[side]->hasCompressingDisc())

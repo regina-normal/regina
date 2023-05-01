@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -120,12 +120,12 @@ class HilbertDual {
          * of basis vectors will contain no duplicates or redundancies.
          *
          * Parameter \a constraints may contain a set of validity constraints,
-         * in which case this routine will only return \e valid basis elements.
+         * in which case this routine will only return _valid_ basis elements.
          * Each validity constraint is of the form "a basis element may only
          * lie outside at most one of these facets of the original
          * cone"; see the ValidityConstraints class for details.  These
          * contraints have the important property that, although validity is
-         * not preserved under addition, \e invalidity is.
+         * not preserved under addition, _invalidity_ is.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -146,29 +146,29 @@ class HilbertDual {
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
          * integer classes (Integer or LargeInteger).
          *
-         * \ifacespython There are two versions of this function available
+         * \python There are two versions of this function available
          * in Python.  The first version is the same as the C++ function;
          * here you must pass \a action, which may be a pure Python function.
          * The second form does not have an \a action argument; instead you
-         * call <tt>enumerate(subspace, constraints, tracker, initialRows)</tt>,
+         * call `enumerate(subspace, constraints, tracker, initialRows)`,
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
-         * @param action a function (or other callable object) that will be
+         * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type RayClass.
-         * @param subspace a matrix defining the linear subspace to intersect
+         * \param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described above,
+         * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
-         * @param tracker a progress tracker through which progress
+         * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
-         * @param initialRows specifies how many initial rows of \a subspace
+         * \param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
@@ -224,7 +224,7 @@ class HilbertDual {
                 /**
                  * Creates the zero vector.
                  *
-                 * @param dim the total dimension of the space (and
+                 * \param dim the total dimension of the space (and
                  * therefore the toatl length of this vector).
                  */
                 inline VecSpec(size_t dim);
@@ -234,9 +234,9 @@ class HilbertDual {
                  *
                  * The \a nextHyp_ data member will be left uninitialised.
                  *
-                 * @param pos indicates which coordinate is set to one
+                 * \param pos indicates which coordinate is set to one
                  * in this unit vector.
-                 * @param dim the total dimension of the space (and
+                 * \param dim the total dimension of the space (and
                  * therefore the total length of this vector).
                  */
                 inline VecSpec(size_t pos, size_t dim);
@@ -244,14 +244,14 @@ class HilbertDual {
                 /**
                  * Creates a clone of the given vector.
                  *
-                 * @param other the vector to clone.
+                 * \param other the vector to clone.
                  */
                 inline VecSpec(const VecSpec& other) = default;
 
                 /**
                  * Sets this to be a clone of the given vector.
                  *
-                 * @param other the vector to clone.
+                 * \param other the vector to clone.
                  */
                 inline VecSpec& operator = (const VecSpec& other) = default;
 
@@ -261,9 +261,9 @@ class HilbertDual {
                  *
                  * This routine also sets the member \a srcNextHyp_ to zero.
                  *
-                 * @param subspace the matrix containing the full set of
+                 * \param subspace the matrix containing the full set of
                  * hyperplanes.
-                 * @param row the row of the given matrix that stores
+                 * \param row the row of the given matrix that stores
                  * the specific hyperplane in which we are interested.
                  */
                 inline void initNextHyp(const MatrixInt& subspace,
@@ -272,12 +272,12 @@ class HilbertDual {
                 /**
                  * Sets this to the sum of the two given vectors.
                  *
-                 * \pre <tt>pos.nextHyp() &gt; 0</tt>, and
-                 * <tt>neg.nextHyp() &lt; 0</tt>.
+                 * \pre `pos.nextHyp() > 0`, and
+                 * `neg.nextHyp() < 0`.
                  *
-                 * @param pos the first vector to add, which must lie on
+                 * \param pos the first vector to add, which must lie on
                  * the strictly positive side of the current hyperplane.
-                 * @param neg the second vector to add, which must lie
+                 * \param neg the second vector to add, which must lie
                  * on the strictly negative side of the current hyperplane.
                  */
                 inline void formSum(const VecSpec& pos, const VecSpec& neg);
@@ -299,7 +299,7 @@ class HilbertDual {
                  * with the hyperplane currently being processed.  This
                  * is simply the sign of the data member \a nextHyp_.
                  *
-                 * @return 1, 0 or -1 according to the sign of \a nextHyp_.
+                 * \return 1, 0 or -1 according to the sign of \a nextHyp_.
                  */
                 inline int sign() const;
 
@@ -309,18 +309,18 @@ class HilbertDual {
                  * create this vector.
                  *
                  * Specifically: Suppose this vector was created using
-                 * formSum().  If nextHyp() &ge; 0, then this routine returns
-                 * <tt>pos.nextHyp()</tt> where \a pos was the
+                 * formSum().  If nextHyp() ≥ 0, then this routine returns
+                 * `pos.nextHyp()` where \a pos was the
                  * positive summand passed to formSum().
-                 * If nextHyp() &lt; 0, then this routine returns
-                 * <tt>neg.nextHyp()</tt> where \a neg was the
+                 * If nextHyp() \< 0, then this routine returns
+                 * `neg.nextHyp()` where \a neg was the
                  * negative summand passed to formSum().
                  *
                  * If this vector was not created using formSum(),
                  * or if initNextHyp() has since been called, then this
                  * routine returns zero.
                  *
-                 * @return the summand information as described above.
+                 * \return the summand information as described above.
                  */
                 inline const IntegerType& srcNextHyp() const;
 #endif
@@ -328,8 +328,8 @@ class HilbertDual {
                 /**
                  * Determines if this and the given vector are identical.
                  *
-                 * @param other the vector to compare with this.
-                 * @return \c true if this vector is identical to the
+                 * \param other the vector to compare with this.
+                 * \return \c true if this vector is identical to the
                  * given vector, or \c false if not.
                  */
                 inline bool operator == (const VecSpec& other) const;
@@ -338,8 +338,8 @@ class HilbertDual {
                  * Determines if every element of this vector is less
                  * than or equal to every element of the given vector.
                  *
-                 * @param other the vector to compare with this.
-                 * @return \c true if every element of this vector is
+                 * \param other the vector to compare with this.
+                 * \return \c true if every element of this vector is
                  * less than or equal to every element of \a other, or
                  * \c false otherwise.
                  */
@@ -374,23 +374,23 @@ class HilbertDual {
          * We say that \a vec reduces against a candidate basis vector
          * \a b if and only if:
          *
-         * - the vector <tt>vec-b</tt> is non-negative;
-         * - if \a listSign is 0, then <tt>vec-b</tt> lies on the
+         * - the vector `vec-b` is non-negative;
+         * - if \a listSign is 0, then `vec-b` lies on the
          *   hyperplane currently under investigation;
-         * - if \a listSign is positive, then <tt>vec-b</tt> lies either
+         * - if \a listSign is positive, then `vec-b` lies either
          *   on or to the positive side of the hyperplane under investigation;
-         * - if \a listSign is negative, then <tt>vec-b</tt> lies either
+         * - if \a listSign is negative, then `vec-b` lies either
          *   on or to the negative side of the hyperplane under investigation.
          *
          * This routine uses VecSpec::nextHyp() to determine the
          * relationships between vectors and the current hyperplane.
          *
-         * @param vec the vector to test for reducibility.
-         * @param against the list of candidate basis vectors to reduce
+         * \param vec the vector to test for reducibility.
+         * \param against the list of candidate basis vectors to reduce
          * \a vec against.
-         * @param listSign an integer indicating which sign of the
+         * \param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
-         * @return \c true if the given vector can be reduced, or \c false 
+         * \return \c true if the given vector can be reduced, or \c false 
          * otherwise.
          */
         template <class IntegerType, class BitmaskType>
@@ -408,9 +408,9 @@ class HilbertDual {
          * This routine will work even if \a reduce and \a against are
          * the same list.
          *
-         * @param reduce the list of vectors to test for reducibility.
-         * @param against the list of candidate basis vectors to reduce against.
-         * @param listSign an integer indicating which sign of the
+         * \param reduce the list of vectors to test for reducibility.
+         * \param against the list of candidate basis vectors to reduce against.
+         * \param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
          */
         template <class IntegerType, class BitmaskType>
@@ -441,14 +441,14 @@ class HilbertDual {
          * these coordinates must be set to 1 in the corresponding bitmask,
          * and all other bits must be set to 0.
          *
-         * @param list contains the original Hilbert basis on entry to
+         * \param list contains the original Hilbert basis on entry to
          * this function, and will contain the updated Hilbert basis upon
          * returning.
-         * @param subspace a matrix of hyperplanes.
-         * @param row indicates which row of \a subspace contains the
+         * \param subspace a matrix of hyperplanes.
+         * \param row indicates which row of \a subspace contains the
          * hyperplane that we will intersect with the cone defined by
          * the old Hilbert basis.
-         * @param constraintsBegin the list of additional validity constraints
+         * \param constraintsBegin the list of additional validity constraints
          * to impose.
          */
         template <class IntegerType, class BitmaskType>

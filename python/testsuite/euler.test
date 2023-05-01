@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2021, Ben Burton
+# Copyright (c) 2007-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests different Euler characteristic calculations.
@@ -34,7 +34,7 @@
 def printEuler(t, name):
 	print(t.eulerCharTri(), t.eulerCharManifold(), \
 		'---', name)
-
+	
 	# Consistency check, while we're here.
 	eHom = regina.HomologicalData(t).eulerChar()
 	if eHom != t.eulerCharManifold():
@@ -56,7 +56,7 @@ printEuler(regina.Example3.solidKleinBottle(),
 printEuler(regina.Example3.lst(3,4), "LST(3,4,7)")
 
 tri = regina.Triangulation3()
-tri.newTetrahedron()
+dummy = tri.newTetrahedron()
 printEuler(tri, "Solid ball")
 
 # Ideal:
@@ -77,7 +77,7 @@ t.join(2, t, regina.Perm4(1,0,3,2))
 printEuler(tri, "Invalid edge")
 
 # Subdivide to obtain a valid triangulation:
-tri.barycentricSubdivision()
+tri.subdivide()
 printEuler(tri, "Two projective plane cusps")
 
 # Invalid boundary vertex links:

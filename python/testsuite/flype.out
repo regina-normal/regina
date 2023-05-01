@@ -1,0 +1,37 @@
+0 0 cdbb,dcaa,ddab,ccba
+0 2 bbdc,daac,dbad,cabc
+1 0 cdbb,dcaa,ddab,ccba
+1 2 cbbd,aacd,dbad,cabc
+2 1 bcdb,adca,abdd,accb
+2 3 bbdc,aacd,ddba,abcc
+3 1 bcdb,adca,bdda,bacc
+3 3 bbdc,aacd,badd,ccab
+
+0 0 cebb,aaed,dead,cbec,bacd
+0 2 bbec,adea,ddae,cceb,bdca
+1 0 cbbe,aade,ddae,cceb,bdca
+1 2 cebb,edaa,dead,cbec,bacd
+2 0 becb,eaad,aedd,ebcc,abdc
+2 2 bbce,edaa,ddea,eccb,acdb
+3 0 becb,eaad,aedd,ebcc,abdc
+3 2 bbce,edaa,adde,ccbe,acdb
+4 1 bbec,deaa,daed,cebc,dcab
+4 3 bceb,daae,ddea,ccbe,bacd
+
+3 0 bxVh,cpag,epbf,fHee,ocdd,Mdcg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpen,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwDa,Nzsr,AtyN,BuzG,CvAG,FDwB,xCEE,FRDD,GIEC,ALFB,Mmnd,LJRF,KKQI,LPJJ,GOKI,klHf,SOzy,PLNS,QKOT,JPTR,IQVE,UTON,UQPS,VVTS,aRUU
+3 2 bhVx,cgap,efbp,eeHf,oddc,Mgcd,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wnep,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paDw,Nrsz,ANyt,BGzu,CGAv,FBwD,xEEC,FDDR,GCEI,ABFL,Mdnm,LFRJ,KIQK,LJJP,GIKO,kfHl,SyzO,PSNL,QTOK,JRTP,IEVQ,UNOT,USPQ,VSTV,aUUR
+4 0 bxVh,cpag,epbf,fHee,ocdd,Mdcg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpen,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwDa,Nzsr,AtyN,BuzG,CvAG,FDwB,xCEE,FRDD,GIEC,ALFB,Mmnd,LJRF,KKQI,LPJJ,GOKI,klHf,SOzy,PLNS,QKOT,JPTR,IQVE,UTON,UQPS,VVTS,aRUU
+4 2 bhVx,cgap,efbp,feeH,ddco,Mgcd,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wnep,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paDw,Nrsz,ANyt,BGzu,CGAv,FBwD,xEEC,FDDR,GCEI,ABFL,Mdnm,LFRJ,KIQK,LJJP,GIKO,kfHl,SyzO,PSNL,QTOK,JRTP,IEVQ,UNOT,USPQ,VSTV,aUUR
+29 1 bhVx,cgap,dfbp,eeco,ddHf,Mgce,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wndp,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paEw,Nrsz,ANyt,BGzu,CGAv,FBwE,EERF,DDCx,GCDI,ABFL,Menm,LFRJ,KIQK,LJJP,GIKO,kfHl,SyzO,PSNL,QTOK,JRTP,IDVQ,UNOT,USPQ,VSTV,aUUR
+29 3 bxVh,cpag,dpbf,eoce,dfHd,Mecg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpdn,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwEa,Nzsr,AtyN,BuzG,CvAG,FEwB,FREE,DxCD,GIDC,ALFB,Mmne,LJRF,KKQI,LPJJ,GOKI,klHf,SOzy,PLNS,QKOT,JPTR,IQVD,UTON,UQPS,VVTS,aRUU
+30 1 bhVx,cgap,dfbp,eeco,ddHf,Mgce,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wndp,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paEw,Nrsz,ANyt,BGzu,CGAv,FBwE,EERF,DDCx,GCDI,ABFL,Menm,LFRJ,KIQK,LJJP,GIKO,kfHl,SyzO,PSNL,QTOK,JRTP,IDVQ,UNOT,USPQ,VSTV,aUUR
+30 3 bxVh,cpag,dpbf,eoce,dfHd,Mecg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpdn,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwEa,Nzsr,AtyN,BuzG,CvAG,FEwB,EFRE,xCDD,GIDC,ALFB,Mmne,LJRF,KKQI,LPJJ,GOKI,klHf,SOzy,PLNS,QKOT,JPTR,IQVD,UTON,UQPS,VVTS,aRUU
+35 1 bxVh,cpag,dpbf,eoce,dfHd,Mecg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpdn,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwDa,Nzsr,AtyN,BuzG,CvAG,FDwB,xCEE,FRDD,GIEC,ALFB,Mmne,LKRF,LPKK,JQIJ,GOJI,klHf,SOzy,PLNS,QJOT,KPTR,IQVE,UTON,UQPS,VVTS,aRUU
+35 3 bhVx,cgap,dfbp,eeco,ddHf,Mgce,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wndp,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paDw,Nrsz,ANyt,BGzu,CGAv,FBwD,xEEC,FDDR,GCEI,ABFL,Menm,LFRK,KKPL,JJIQ,GIJO,kfHl,SyzO,PSNL,QTOJ,KRTP,IEVQ,UNOT,USPQ,VSTV,aUUR
+36 1 bhVx,cgap,dfbp,eeco,ddHf,Mgce,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wndp,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paDw,Nrsz,ANyt,BGzu,CGAv,FBwD,xEEC,FDDR,GCEI,ABFL,Menm,LFRK,PLKK,JJIQ,GIJO,kfHl,SyzO,PSNL,QTOJ,KRTP,IEVQ,UNOT,USPQ,VSTV,aUUR
+36 3 bxVh,cpag,dpbf,eoce,dfHd,Mecg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpdn,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwDa,Nzsr,AtyN,BuzG,CvAG,FDwB,xCEE,FRDD,GIEC,ALFB,Mmne,LKRF,PKKL,QIJJ,GOJI,klHf,SOzy,PLNS,QJOT,KPTR,IQVE,UTON,UQPS,VVTS,aRUU
+46 1 bxUh,cpag,dpbf,eoce,dfHd,Mecg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpdn,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwDa,Nzsr,AtyN,BuzG,CvAG,FDwB,xCEE,FRDD,GIEC,ALFB,Mmne,LJRF,KKQI,LPJJ,GOKI,klHf,SOzy,PLNS,QKOT,JPTR,IQUE,VTON,VQPS,aRVV,UTSU
+46 3 bhUx,cgap,dfbp,eeco,ddHf,Mgce,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wndp,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paDw,Nrsz,ANyt,BGzu,CGAv,FBwD,xEEC,FDDR,GCEI,ABFL,Menm,LFRJ,KIQK,LJJP,GIKO,kfHl,SyzO,PSNL,QTOK,JRTP,IEUQ,VNOT,VSPQ,VVRa,UUST
+47 1 bhUx,cgap,dfbp,eeco,ddHf,Mgce,qhbf,qiag,jrhq,kriq,sjMl,mtkM,nulH,ovmH,wndp,cbxo,jihg,syij,yrkt,uzsl,vAtm,wBun,Cvox,paDw,Nrsz,ANyt,BGzu,CGAv,FBwD,xEEC,FDDR,GCEI,ABFL,Menm,LFRJ,KIQK,LJJP,GIKO,kfHl,SyzO,PSNL,QTOK,JRTP,IEUQ,VNOT,VSPQ,RaVV,UUST
+47 3 bxUh,cpag,dpbf,eoce,dfHd,Mecg,qfbh,qgai,jqhr,kqir,slMj,mMkt,nHlu,oHmv,wpdn,coxb,jghi,sjiy,ytkr,ulsz,vmtA,wnuB,Cxov,pwDa,Nzsr,AtyN,BuzG,CvAG,FDwB,xCEE,FRDD,GIEC,ALFB,Mmne,LJRF,KKQI,LPJJ,GOKI,klHf,SOzy,PLNS,QKOT,JPTR,IQUE,VTON,VQPS,RVVa,TSUU
+

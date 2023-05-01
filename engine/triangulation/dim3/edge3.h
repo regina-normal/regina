@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,9 @@ namespace regina {
  * Represents an edge in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
- * documentation for Face for a general overview of how this class works.
+ * generic documentation for Face for a general overview of how the face
+ * classes work.  In Python, you can read this generic documentation by
+ * looking at faces in a higher dimension: try `help(Edge5)`.
  *
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
@@ -74,27 +76,26 @@ class Face<3, 1> : public detail::FaceBase<3, 1> {
         /**
          * Returns the link of this edge as a normal surface.
          *
-         * Be aware that, after constructing the edge link as the frontier of
-         * a regular neighbourhood of the edge, making this \e normal might
-         * require further normalisation steps (this will happen if the edge
-         * appears more than once within the same triangle).
+         * Constructing the link of a edge begins with building the frontier
+         * of a regular neighbourhood of the edge.  If this is already a
+         * normal surface, then then link is called _thin_.  Otherwise
+         * the usual normalisation steps are performed until the surface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the surface, and in some pathological
+         * cases could even reduce it to the empty surface.
          *
-         * Because of this, the resulting surface might not be recognised as a
-         * \e thin edge link (i.e., an edge link where no normalisation is
-         * required).  Indeed, in some pathological cases, the resulting
-         * surface might even be empty (since there are scenarios in which
-         * the edge link normalises away to nothing).
-         *
-         * @return the corresponding edge linking normal surface.
+         * \return a pair (\a s, \a thin), where \a s is the edge linking
+         * normal surface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
          */
-        NormalSurface linkingSurface() const;
+        std::pair<NormalSurface, bool> linkingSurface() const;
 
     protected:
         /**
          * Creates a new edge and marks it as belonging to the given
          * triangulation component.
          *
-         * @param component the component of the underlying triangulation
+         * \param component the component of the underlying triangulation
          * to which the new edge belongs.
          */
         Face(Component<3>* component);
@@ -107,6 +108,10 @@ class Face<3, 1> : public detail::FaceBase<3, 1> {
 
 inline Face<3, 1>::Face(Component<3>* component) :
         detail::FaceBase<3, 1>(component) {
+}
+
+inline std::pair<NormalSurface, bool> Face<3, 1>::linkingSurface() const {
+    return triangulation().linkingSurface(*this);
 }
 
 } // namespace regina

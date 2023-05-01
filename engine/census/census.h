@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -91,8 +91,8 @@ class CensusDB {
          * format).  Note that even if the database does not exist, the
          * lookup() routine will fail gracefully.
          *
-         * @param filename the filename where the database is stored.
-         * @param desc a human-readable description of the database.
+         * \param filename the filename where the database is stored.
+         * \param desc a human-readable description of the database.
          * See the desc() routine for further information on how this
          * description might be used.
          */
@@ -113,7 +113,7 @@ class CensusDB {
         /**
          * Returns the filename where this database is stored.
          *
-         * @return the database filename.
+         * \return the database filename.
          */
         const std::string& filename() const;
 
@@ -124,7 +124,7 @@ class CensusDB {
          * giving a list of all available databases, or when identifying
          * in which particular database a match was found.
          *
-         * @return the database description.
+         * \return the database description.
          */
         const std::string& desc() const;
 
@@ -146,18 +146,18 @@ class CensusDB {
          * with no hits but it will not actually search the database).
          *
          * If you are using this routine yourself, you will need to
-         * include the extra header census/census-impl.h (which is \e not
+         * include the extra header census/census-impl.h (which is _not_
          * automatically included from this file).  Typically, however,
          * end users can simply use the catch-all Census::lookup() routines
          * and will not need to call this more fine-grained routine.
          *
-         * \ifacespython This function is available in Python, and the
+         * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.
          *
-         * @param isoSig the isomorphism signature to search for.
-         * @param action a function (or other callable object) that will
+         * \param isoSig the isomorphism signature to search for.
+         * \param action a function (or other callable object) that will
          * be called for each match in the database.
-         * @return \c true if the lookup was correctly performed, or \c false
+         * \return \c true if the lookup was correctly performed, or \c false
          * if some error occurred (e.g., the database could not be opened).
          * Note in particular that if there were no matches but no errors,
          * then the return value will be \c true.
@@ -180,7 +180,7 @@ class CensusDB {
         /**
          * Swaps the contents of this and the given database reference.
          *
-         * @param other the database reference whose contents are to be
+         * \param other the database reference whose contents are to be
          * swapped with this.
          */
         void swap(CensusDB& other) noexcept;
@@ -192,8 +192,8 @@ class CensusDB {
          * filenames (as returned by the filename() function).  The database
          * descriptions are irrelevant here.
          *
-         * @param rhs the database to compare this against.
-         * @return \c true if and only if this and the given object represent
+         * \param rhs the database to compare this against.
+         * \return \c true if and only if this and the given object represent
          * the same database.
          */
         bool operator == (const CensusDB& rhs) const;
@@ -205,8 +205,8 @@ class CensusDB {
          * filenames (as returned by the filename() function).  The database
          * descriptions are irrelevant here.
          *
-         * @param rhs the database to compare this against.
-         * @return \c true if and only if this and the given object represent
+         * \param rhs the database to compare this against.
+         * \return \c true if and only if this and the given object represent
          * different databases.
          */
         bool operator != (const CensusDB& rhs) const;
@@ -218,8 +218,8 @@ class CensusDB {
  * This global routine simply calls CensusDB::swap(); it is provided
  * so that CensusDB meets the C++ Swappable requirements.
  *
- * @param a the first database reference whose contents should be swapped.
- * @param b the second database reference whose contents should be swapped.
+ * \param a the first database reference whose contents should be swapped.
+ * \param b the second database reference whose contents should be swapped.
  *
  * \ingroup census
  */
@@ -272,7 +272,7 @@ class CensusHit {
         /**
          * Swaps the contents of this and the given census hit.
          *
-         * @param other the census hit whose contents are to be swapped
+         * \param other the census hit whose contents are to be swapped
          * with this.
          */
         void swap(CensusHit& other) noexcept;
@@ -281,14 +281,14 @@ class CensusHit {
          * triangulation in the database.  This typically contains the name of
          * the triangulation and/or the name of the underlying manifold.
          *
-         * @return the human-readable name for this hit.
+         * \return the human-readable name for this hit.
          */
         const std::string& name() const;
         /**
          * Returns details of the census database in which the
          * triangulation was found.
          *
-         * @return the database for this hit.
+         * \return the database for this hit.
          */
         const CensusDB& db() const;
 
@@ -300,8 +300,8 @@ class CensusHit {
          * human-readable name and also come from the same database
          * (as identified by the CensusDB comparison operators).
          *
-         * @param rhs the census hit to compare this against.
-         * @return \c true if and only if this and the given hit are the same.
+         * \param rhs the census hit to compare this against.
+         * \return \c true if and only if this and the given hit are the same.
          */
         bool operator == (const CensusHit& rhs) const;
         /**
@@ -312,8 +312,8 @@ class CensusHit {
          * human-readable name and also come from the same database
          * (as identified by the CensusDB comparison operators).
          *
-         * @param rhs the census hit to compare this against.
-         * @return \c true if and only if this and the given hit are different.
+         * \param rhs the census hit to compare this against.
+         * \return \c true if and only if this and the given hit are different.
          */
         bool operator != (const CensusHit& rhs) const;
 
@@ -336,8 +336,8 @@ class CensusHit {
  * This global routine simply calls CensusHit::swap(); it is provided
  * so that CensusHit meets the C++ Swappable requirements.
  *
- * @param a the first census hit whose contents should be swapped.
- * @param b the second census hit whose contents should be swapped.
+ * \param a the first census hit whose contents should be swapped.
+ * \param b the second census hit whose contents should be swapped.
  *
  * \ingroup census
  */
@@ -366,7 +366,7 @@ class Census {
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
         static CensusDB* closedNor_;
-            /**< The census of closed non-orientable P^2-irreducible 3-manifold
+            /**< The census of closed non-orientable P²-irreducible 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
         static CensusDB* closedHyp_;
@@ -401,7 +401,7 @@ class Census {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * Therefore a \e list of hits will be returned, which you can
+         * Therefore a _list_ of hits will be returned, which you can
          * iterate through the individual matches.  Even if there are no
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.
@@ -411,8 +411,8 @@ class Census {
          * logarithmic-time lookup in each database (here "logarithmic"
          * means logarithmic in the size of the database).
          *
-         * @param tri the triangulation that you wish to search for.
-         * @return a list of all database matches.
+         * \param tri the triangulation that you wish to search for.
+         * \return a list of all database matches.
          */
         static std::list<CensusHit> lookup(const Triangulation<3>& tri);
         /**
@@ -428,7 +428,7 @@ class Census {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * Therefore a \e list of hits will be returned, which you can
+         * Therefore a _list_ of hits will be returned, which you can
          * iterate through the individual matches.  Even if there are no
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.
@@ -438,9 +438,9 @@ class Census {
          * logarithmic-time lookup in each database (here "logarithmic"
          * means logarithmic in the size of the database).
          *
-         * @param isoSig the isomorphism signature of the triangulation
+         * \param isoSig the isomorphism signature of the triangulation
          * that you wish to search for.
-         * @return a list of all database matches.
+         * \return a list of all database matches.
          */
         static std::list<CensusHit> lookup(const std::string& isoSig);
 
@@ -453,11 +453,11 @@ class Census {
          * census databases, stored in the standard census database
          * location on the filesystem.
          *
-         * @param filename the filename for the database, without directory
+         * \param filename the filename for the database, without directory
          * information.  This routine will build the full pathname by joining
          * the given filename with the standard census database directory.
-         * @param desc a human-readable description for the database.
-         * @return the new database specifier.
+         * \param desc a human-readable description for the database.
+         * \return the new database specifier.
          */
         static CensusDB* standardDB(const char* filename, const char* desc);
 };

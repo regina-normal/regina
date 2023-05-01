@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2021, Ben Burton                                   *
+ *  Copyright (c) 2011-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -75,7 +75,7 @@ using MatrixInt = Matrix<Integer, true>;
  * inappropriate for general use.  If you just want a general-use
  * integer matrix class, use MatrixInt instead.
  *
- * It is \e critical that, before using an LPMatrix, you reserve space
+ * It is _critical_ that, before using an LPMatrix, you reserve space
  * for its elements, and then fix a specific size.  A matrix for which
  * both tasks have been done will be called \a initialised.  You can
  * initialise a matrix in one of two ways:
@@ -111,7 +111,7 @@ using MatrixInt = Matrix<Integer, true>;
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython The template argument \a IntType is taken to be
+ * \python The template argument \a IntType is taken to be
  * regina::Integer.
  *
  * \apinotfinal
@@ -136,7 +136,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         /**
          * Creates an uninitialised matrix with no memory storage.
          *
-         * You \e must call reserve() and then either initClone() or
+         * You _must_ call reserve() and then either initClone() or
          * initIdentity() before this matrix will become initialised.
          */
         inline LPMatrix();
@@ -150,9 +150,9 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * to become smaller if you like, but you cannot re-initialise the
          * matrix to become larger.
          *
-         * @param rows the number of rows in the new matrix.  This must
+         * \param rows the number of rows in the new matrix.  This must
          * be strictly positive.
-         * @param cols the number of columns in the new matrix.  This must
+         * \param cols the number of columns in the new matrix.  This must
          * be strictly positive.
          */
         inline LPMatrix(size_t rows, size_t cols);
@@ -166,7 +166,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          *
          * The matrix that is passed (\a src) will no longer be usable.
          *
-         * @param src the matrix to move.
+         * \param src the matrix to move.
          */
         inline LPMatrix(LPMatrix&& src) noexcept;
 
@@ -188,8 +188,8 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          *
          * The matrix that is passed (\a src) will no longer be usable.
          *
-         * @param src the matrix to move.
-         * @return a reference to this matrix.
+         * \param src the matrix to move.
+         * \return a reference to this matrix.
          */
         inline LPMatrix& operator = (LPMatrix&& src) noexcept;
 
@@ -200,7 +200,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * or if one or both is unintialised; if so then these properties
          * will be swapped also.
          *
-         * @param other the matrix whose contents should be swapped with this.
+         * \param other the matrix whose contents should be swapped with this.
          */
         inline void swap(LPMatrix& other) noexcept;
 
@@ -223,9 +223,9 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * LPMatrix constructor then you cannot call it at all.
          * Any additional calls to reserve() will result in a memory leak.
          *
-         * @param maxRows an upper bound on the number of rows that you
+         * \param maxRows an upper bound on the number of rows that you
          * will need for this matrix.  This must be strictly positive.
-         * @param maxCols an upper bound on the number of columns that
+         * \param maxCols an upper bound on the number of columns that
          * you will need for this matrix.  This must be strictly positive.
          */
         inline void reserve(size_t maxRows, size_t maxCols);
@@ -246,7 +246,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * \pre This matrix has enough space reserved for at least
          * clone.rows() * clone.columns() elements.
          *
-         * @param clone the matrix to copy.
+         * \param clone the matrix to copy.
          */
         inline void initClone(const LPMatrix& clone);
 
@@ -266,7 +266,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * \pre This matrix has enough space reserved for at least
          * \a size * \a size elements.
          *
-         * @param size the number of rows, and also the number of
+         * \param size the number of rows, and also the number of
          * columns, that will be assigned to this matrix.
          * This must be strictly positive.
          */
@@ -275,19 +275,17 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         /**
          * Returns a read-write reference to the given element of this matrix.
          *
-         * \ifacespython The entry() routine gives direct read-write access
-         * to matrix elements, but does not allow them to be set using
-         * the assignment operator.  In other words, code such as
-         * <tt>matrix.entry(r, c).negate()</tt> will work, but
-         * <tt>matrix.entry(r, c) = value</tt> will not.
-         * To assign values to matrix elements, you should instead use the
-         * syntax <tt>matrix.set(row, column, value)</tt>.
-         * This set() routine returns nothing, and is provided for python
-         * only (i.e., it is not part of the C++ calculation engine).
+         * \python In general, to assign values to matrix elements you
+         * should use the Python-only set() routine.  This entry() routine does
+         * give read-write access to matrix elements in Python, but it does
+         * not allow them to be set using the assignment operator.
+         * In other words, code such as `matrix.entry(r, c).negate()`
+         * will work, but `matrix.entry(r, c) = value` will not; instead
+         * you will need to call `matrix.set(r, c, value)`.
          *
-         * @param row the row of the requested element.  This must be
+         * \param row the row of the requested element.  This must be
          * between 0 and rows()-1 inclusive.
-         * @param col the column of the requested element.  This must be
+         * \param col the column of the requested element.  This must be
          * between 0 and columns()-1 inclusive.
          */
         inline IntType& entry(size_t row, size_t col);
@@ -295,19 +293,42 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         /**
          * Returns a read-only reference to the given element of this matrix.
          *
-         * @param row the row of the requested element.  This must be
+         * \param row the row of the requested element.  This must be
          * between 0 and rows()-1 inclusive.
-         * @param col the column of the requested element.  This must be
+         * \param col the column of the requested element.  This must be
          * between 0 and columns()-1 inclusive.
          */
         inline const IntType& entry(size_t row, size_t col) const;
+
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the given element of this matrix.
+         *
+         * \nocpp For C++ users, entry() is used for both reading and
+         * writing: just write `entry(row, column) = value`.
+         *
+         * \python In general, to assign values to matrix elements you
+         * should use the syntax `matrix.set(row, column, value)`.  The entry()
+         * routine does give read-write access to matrix elements in Python,
+         * but it does not allow them to be set using the assignment operator.
+         * In other words, code such as `matrix.entry(r, c).negate()`
+         * will work, but `matrix.entry(r, c) = value` will not.
+         *
+         * \param row the row of the entry to set; this must be between
+         * 0 and rows()-1 inclusive.
+         * \param col the column of the entry to set; this must be
+         * between 0 and columns()-1 inclusive.
+         * \param value the new entry to place in the given row and column.
+         */
+        void set(size_t row, size_t col, const IntType& value);
+#endif
 
         /**
          * Returns the number of rows in this matrix.  This relates to
          * the currently assigned matrix size, not the total amount of
          * memory that was originally reserved.
          *
-         * @return the number of rows.
+         * \return the number of rows.
          */
         inline size_t rows() const;
 
@@ -316,7 +337,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * the currently assigned matrix size, not the total amount of
          * memory that was originally reserved.
          *
-         * @return the number of columns.
+         * \return the number of columns.
          */
         inline size_t columns() const;
 
@@ -330,8 +351,8 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * it is safe to compare matrices that might not yet be initialised.
          * Two uninitialised matrices will compare as equal.
          *
-         * @param other the matrix to compare with this.
-         * @return \c true if and only if the two matrices are equal.
+         * \param other the matrix to compare with this.
+         * \return \c true if and only if the two matrices are equal.
          */
         inline bool operator == (const LPMatrix& other) const;
 
@@ -345,8 +366,8 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * it is safe to compare matrices that might not yet be initialised.
          * Two uninitialised matrices will compare as equal.
          *
-         * @param other the matrix to compare with this.
-         * @return \c true if and only if the two matrices are not equal.
+         * \param other the matrix to compare with this.
+         * \return \c true if and only if the two matrices are not equal.
          */
         inline bool operator != (const LPMatrix& other) const;
 
@@ -355,9 +376,9 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * The two arguments \a r1 and \a r2 may be equal (in which case
          * the matrix will be left unchanged).
          *
-         * @param r1 the index of the first row to swap.  This must be
+         * \param r1 the index of the first row to swap.  This must be
          * between 0 and rows()-1 inclusive.
-         * @param r2 the index of the second row to swap.  This must be
+         * \param r2 the index of the second row to swap.  This must be
          * between 0 and rows()-1 inclusive.
          */
         inline void swapRows(size_t r1, size_t r2);
@@ -375,15 +396,15 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * will be divisible by \a div.  In other words, it is known in
          * advance that we can use exact integer division without remainders.
          *
-         * @param destCoeff the coefficient applied to row \a dest in
+         * \param destCoeff the coefficient applied to row \a dest in
          * the linear combination.
-         * @param dest the index of the row to replace.  This must be
+         * \param dest the index of the row to replace.  This must be
          * between 0 and rows()-1 inclusive.
-         * @param srcCoeff the coefficient applied to row \a src in
+         * \param srcCoeff the coefficient applied to row \a src in
          * the linear combination.
-         * @param src the index of the other row used in this linear
+         * \param src the index of the other row used in this linear
          * combination.  This must be between 0 and rows()-1 inclusive.
-         * @param div the integer to divide the final row by.  This must
+         * \param div the integer to divide the final row by.  This must
          * be non-zero.
          */
         void combRow(const IntType& destCoeff, size_t dest,
@@ -404,15 +425,15 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          *
          * \pre \a dest and \a src are not equal.
          *
-         * @param destCoeff the coefficient applied to row \a dest in
+         * \param destCoeff the coefficient applied to row \a dest in
          * the linear combination.
-         * @param dest the index of the row to replace.  This must be
+         * \param dest the index of the row to replace.  This must be
          * between 0 and rows()-1 inclusive.
-         * @param srcCoeff the coefficient applied to row \a src in
+         * \param srcCoeff the coefficient applied to row \a src in
          * the linear combination.
-         * @param src the index of the other row used in this linear
+         * \param src the index of the other row used in this linear
          * combination.  This must be between 0 and rows()-1 inclusive.
-         * @return the positive gcd that row \a dest was scaled down by,
+         * \return the positive gcd that row \a dest was scaled down by,
          * or 0 if row \a dest is entirely zero.
          */
         IntType combRowAndNorm(const IntType& destCoeff,
@@ -421,7 +442,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         /**
          * Negates all elements in the given row of this matrix.
          *
-         * @param row the row whose elements should be negated.
+         * \param row the row whose elements should be negated.
          * This must be between 0 and rows()-1 inclusive.
          */
         inline void negateRow(size_t row);
@@ -430,9 +451,9 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -440,9 +461,9 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -457,8 +478,8 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
  * This global routine simply calls LPMatrix<IntType>::swap(); it is provided
  * so that LPMatrix<IntType> meets the C++ Swappable requirements.
  *
- * @param a the first matrix whose contents should be swapped.
- * @param b the second matrix whose contents should be swapped.
+ * \param a the first matrix whose contents should be swapped.
+ * \param b the second matrix whose contents should be swapped.
  *
  * \ingroup enumerate
  */
@@ -492,8 +513,8 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * for use as internal storage for LPInitialTableaux, and at some point in the
  * future this class will most likely become private to LPInitialTableaux.
  *
- * \ifacespython Not present, since LPCol is only designed to be used
- * as part of the internal data storage for LPInitialTableaux.
+ * \nopython LPCol is only designed to be used as part of the internal
+ * data storage for LPInitialTableaux.
  *
  * \apinotfinal
  *
@@ -542,7 +563,7 @@ struct LPCol {
     /**
      * Sets this to be a copy of the given column.
      *
-     * @return a reference to this column.
+     * \return a reference to this column.
      */
     LPCol& operator = (const LPCol&) = default;
 
@@ -554,7 +575,7 @@ struct LPCol {
      *
      * After this operation, the given column will no longer be usable.
      *
-     * @return a reference to this column.
+     * \return a reference to this column.
      */
     LPCol& operator = (LPCol&&) = default;
 
@@ -567,8 +588,8 @@ struct LPCol {
      * \pre The sum of absolute values of all entries in this
      * column must never exceed 4.
      *
-     * @param row the row containing the given value.
-     * @param val the value at this location in the matrix.
+     * \param row the row containing the given value.
+     * \param val the value at this location in the matrix.
      */
     inline void push(size_t row, int val);
 };
@@ -580,15 +601,15 @@ struct LPCol {
  *
  * By "broad class of vector encodings", we allow only three options:
  *
- * - \e standard encodings, which cover all normal surface encodings
+ * - _standard_ encodings, which cover all normal surface encodings
  *   that include triangle coordinates, and where the tableaux holds
  *   triangle and quadrilateral columns but nothing else;
  *
- * - \e quad encodings, which cover all normal surface encodings that do not
+ * - _quad_ encodings, which cover all normal surface encodings that do not
  *   include triangle coordinates, and where the tableaux holds
  *   quadrilateral columns but nothing else;
  *
- * - \e angle encodings, which cover angle structure encodings, and
+ * - _angle_ encodings, which cover angle structure encodings, and
  *   where the tableaux holds angle columns as well as a single scaling
  *   column.
  *
@@ -619,7 +640,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * Identifies which class of vector encodings the given encoding
          * falls into.
          *
-         * @param enc a normal surface vector encoding; this may be any
+         * \param enc a normal surface vector encoding; this may be any
          * valid NormalEncoding object, including the special angle
          * structure encoding.
          */
@@ -635,15 +656,15 @@ class LPSystem : public ShortOutput<LPSystem> {
         /**
          * Sets this to be a copy of the given class of vector encodings.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         LPSystem& operator = (const LPSystem&) = default;
         /**
          * Determines whether this and the given object represent the
          * same class of vector encodings.
          *
-         * @param other the object to compare with this.
-         * @return \c true if and only if both objects represent the same
+         * \param other the object to compare with this.
+         * \return \c true if and only if both objects represent the same
          * class of encodings.
          */
         constexpr bool operator == (const LPSystem& other) const {
@@ -653,8 +674,8 @@ class LPSystem : public ShortOutput<LPSystem> {
          * Determines whether this and the given object represent
          * different classes of vector encodings.
          *
-         * @param other the object to compare with this.
-         * @return \c true if and only if both objects represent
+         * \param other the object to compare with this.
+         * \return \c true if and only if both objects represent
          * different classes of encodings.
          */
         constexpr bool operator != (const LPSystem& other) const {
@@ -669,7 +690,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of normal() and angle() will return \c true.
          *
-         * @return \c true if this is a class of normal or almost normal
+         * \return \c true if this is a class of normal or almost normal
          * surface encodings.
          */
         constexpr bool normal() const {
@@ -681,7 +702,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of normal() and angle() will return \c true.
          *
-         * @return \c true if this is the class of angle encodings.
+         * \return \c true if this is the class of angle encodings.
          */
         constexpr bool angle() const {
             return (system_ == LP_ANGLE);
@@ -691,7 +712,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of standard(), quad() and angle() will return \c true.
          *
-         * @return \c true if this is the class of standard encodings.
+         * \return \c true if this is the class of standard encodings.
          */
         constexpr bool standard() const {
             return (system_ == LP_STANDARD);
@@ -701,7 +722,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of standard(), quad() and angle() will return \c true.
          *
-         * @return \c true if this is the class of quad encodings.
+         * \return \c true if this is the class of quad encodings.
          */
         constexpr bool quad() const {
             return (system_ == LP_QUAD);
@@ -711,8 +732,8 @@ class LPSystem : public ShortOutput<LPSystem> {
          * for this class of vector encodings, with respect to a particular
          * triangulation.
          *
-         * @param nTet the number of tetrahedra in the triangulation.
-         * @return the corresponding number of coordinate columns in the
+         * \param nTet the number of tetrahedra in the triangulation.
+         * \return the corresponding number of coordinate columns in the
          * tableaux.
          */
         constexpr size_t coords(size_t nTet) const {
@@ -728,9 +749,9 @@ class LPSystem : public ShortOutput<LPSystem> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
             switch (system_) {
@@ -784,15 +805,15 @@ class LPSystem : public ShortOutput<LPSystem> {
  * class constructor will throw an exception, as noted in the constructor
  * documentation below.
  *
- * This class is optimised for working with \e columns of the matrix
+ * This class is optimised for working with _columns_ of the matrix
  * (in particular, multiplying columns of this matrix by rows of some
  * other matrix).
  *
  * This class works with a broad class of vector encodings for normal
  * surfaces or angle structures, as described by the LPSystem class,
- * and within that broad class it does not know \e which particular
+ * and within that broad class it does not know _which_ particular
  * encoding or underlying coordinate system is being used.  In particular,
- * the matching equations it uses will \e always be one of the standard
+ * the matching equations it uses will _always_ be one of the standard
  * tri-quad normal matching equations (if LPSystem::standard() is \c true),
  * the quad normal matching equations (if LPSystem::quad() is \c true),
  * or the homogeneous angle equations (if LPSystem::angles() is true).
@@ -807,7 +828,7 @@ class LPSystem : public ShortOutput<LPSystem> {
  * even when passing or returning objects by value.
  *
  * \warning The implementation of this class relies on the fact that the
- * sum of <i>absolute values</i> of all coefficients in each column is
+ * sum of _absolute values_ of all coefficients in each column is
  * at most four (not counting the rows for any optional extra constraints).
  * If you are extending this class to work with more general matching
  * equation matrices, you may need to change the implementation accordingly.
@@ -821,7 +842,7 @@ class LPSystem : public ShortOutput<LPSystem> {
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * LPInitialTableaux_<i>LPConstraint</i>, where the suffix \a LPConstraint
  * is an abbreviated version of the \a LPConstraint template parameter;
@@ -889,7 +910,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * \pre The given triangulation is non-empty.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error which should have been preventable with the right checks
          * in advance.  Such exceptions are generated by the \a LPConstraint
@@ -897,17 +918,17 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * chosen \a LPConstraint template argument to see if this is a
          * possibility.
          *
-         * \exception InvalidArgument it was not possible to add the extra
+         * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error that was "genuinely" unforseeable.  Again, such exceptions
          * are generated by your chosen \a LPConstraint class, and you should
          * consult its documentation to see if this is a possibility.
          *
-         * @param tri the underlying 3-manifold triangulation.
-         * @param enc the normal surface vector encoding that we are using
+         * \param tri the underlying 3-manifold triangulation.
+         * \param enc the normal surface vector encoding that we are using
          * for our enumeration task.  This may be any valid NormalEncoding
          * object, including the special angle structure encoding.
-         * @param enumeration \c true if we should optimise the tableaux
+         * \param enumeration \c true if we should optimise the tableaux
          * for a full enumeration of vertex surfaces or taut angle structures,
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere, or
@@ -919,7 +940,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
         /**
          * Creates a new copy of the given matrix.
          *
-         * @param src the matrix to copy.
+         * \param src the matrix to copy.
          */
         inline LPInitialTableaux(const LPInitialTableaux& src);
 
@@ -929,7 +950,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * The matrix that is passed (\a src) will no longer be usable.
          *
-         * @param src the matrix to move.
+         * \param src the matrix to move.
          */
         inline LPInitialTableaux(LPInitialTableaux&& src) noexcept;
 
@@ -945,8 +966,8 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * sizes and/or work with different vector encodings; if so then these
          * properties will be copied across also.
          *
-         * @param src the matrix to copy.
-         * @return a reference to this matrix.
+         * \param src the matrix to copy.
+         * \return a reference to this matrix.
          */
         inline LPInitialTableaux& operator = (const LPInitialTableaux& src);
 
@@ -960,8 +981,8 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * The matrix that is passed (\a src) will no longer be usable.
          *
-         * @param src the matrix to move.
-         * @return a reference to this matrix.
+         * \param src the matrix to move.
+         * \return a reference to this matrix.
          */
         inline LPInitialTableaux& operator = (LPInitialTableaux&& src) noexcept;
 
@@ -972,7 +993,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * and/or work with different vector encodings; if so then these
          * properties will be swapped also.
          *
-         * @param other the matrix whose contents should be swapped with this.
+         * \param other the matrix whose contents should be swapped with this.
          */
         inline void swap(LPInitialTableaux& other) noexcept;
 
@@ -980,7 +1001,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Returns the underlying 3-manifold triangulation from which the
          * matching equations were derived.
          *
-         * @return the underlying triangulation.
+         * \return the underlying triangulation.
          */
         inline const Triangulation<3>& tri() const;
 
@@ -993,7 +1014,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * See the LPInitialTableaux class notes for more information on
          * these three broad classes and how they affect the tableaux.
          *
-         * @return the class of vector encodings used by this tableaux.
+         * \return the class of vector encodings used by this tableaux.
          */
         LPSystem system() const;
 
@@ -1005,7 +1026,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * to enforce these, and so the rank will be larger than the rank of
          * the original matching equation matrix.
          *
-         * @return the matrix rank.
+         * \return the matrix rank.
          */
         inline size_t rank() const;
 
@@ -1017,7 +1038,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
-         * @return the number of columns.
+         * \return the number of columns.
          */
         inline size_t columns() const;
 
@@ -1026,7 +1047,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * or angle structure coordinates.  This is precisely the number of
          * columns in the original matrix of matching equations.
          *
-         * @return the number of normal or angle structure coordinate columns.
+         * \return the number of normal or angle structure coordinate columns.
          */
         inline size_t coordinateColumns() const;
 
@@ -1039,7 +1060,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * The permutation is returned as an array of columns() integers,
          * such that column \a i of this adjusted matrix corresponds to
-         * column <tt>columnPerm()[i]</tt> of the original matrix.
+         * column `columnPerm()[i]` of the original matrix.
          *
          * If you are imposing additional constraints through the
          * template parameter LPConstraint, then the corresponding extra
@@ -1082,9 +1103,9 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *   must be grouped by tetrahedron and ordered by angle type,
          *   and the final scaling coordinate must remain last.
          *
-         * \ifacespython This routine returns a Python list.
+         * \python This routine returns a Python list.
          *
-         * @return details of the permutation describing how columns
+         * \return details of the permutation describing how columns
          * were reordered.
          */
         inline const size_t* columnPerm() const;
@@ -1098,10 +1119,10 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * \pre The given matrix \a m has precisely rank() columns.
          *
-         * @param m the matrix whose row we will use in the inner product.
-         * @param mRow the row of the matrix \a m to use in the inner product.
-         * @param thisCol the column of this matrix to use in the inner product.
-         * @return the resulting inner product.
+         * \param m the matrix whose row we will use in the inner product.
+         * \param mRow the row of the matrix \a m to use in the inner product.
+         * \param thisCol the column of this matrix to use in the inner product.
+         * \return the resulting inner product.
          */
         template <typename IntType>
         inline IntType multColByRow(const LPMatrix<IntType>& m, size_t mRow,
@@ -1115,7 +1136,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * The LPData class offers support for octagonal almost normal
          * surfaces, in which exactly one tetrahedron is allowed to have
          * exactly one octagon type.  We represent such an octagon as a
-         * \e pair of incompatible quadrilaterals within the same tetrahedron.
+         * _pair_ of incompatible quadrilaterals within the same tetrahedron.
          * See the LPData class notes for details on how this works.
          *
          * In some settings where we are using additional constraints
@@ -1146,13 +1167,13 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * two quadrilateral coordinates that are being combined to form
          * an octagon type within some tetrahedron.
          *
-         * @param m the matrix whose row we will use in the adjusted
+         * \param m the matrix whose row we will use in the adjusted
          * inner product.
-         * @param mRow the row of the matrix \a m to use in the adjusted
+         * \param mRow the row of the matrix \a m to use in the adjusted
          * inner product.
-         * @param thisCol the column of this matrix to use in the adjusted
+         * \param thisCol the column of this matrix to use in the adjusted
          * inner product.
-         * @return the resulting adjusted inner product.
+         * \return the resulting adjusted inner product.
          */
         template <typename IntType>
         inline IntType multColByRowOct(const LPMatrix<IntType>& m,
@@ -1169,7 +1190,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * set to zero.  Note that this can all be arranged by calling
          * the constructor LPMatrix::LPMatrix(size_t, size_t).
          *
-         * @param m the matrix to fill.
+         * \param m the matrix to fill.
          */
         template <typename IntType>
         void fillInitialTableaux(LPMatrix<IntType>& m) const;
@@ -1178,9 +1199,9 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -1188,9 +1209,9 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1211,7 +1232,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * we do already have the extra placeholder columns for the new
          * variables that correspond to these extra constraint(s).
          *
-         * @param enumeration \c true if we should optimise the ordering
+         * \param enumeration \c true if we should optimise the ordering
          * for a full enumeration of vertex surfaces or taut angle structures,
          * or \c false if we should optimise the ordering for an existence test
          * (such as searching for a non-trivial normal disc or sphere, or
@@ -1227,8 +1248,8 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
  * provided so that LPInitialTableaux<IntType> meets the C++ Swappable
  * requirements.
  *
- * @param a the first matrix whose contents should be swapped.
- * @param b the second matrix whose contents should be swapped.
+ * \param a the first matrix whose contents should be swapped.
+ * \param b the second matrix whose contents should be swapped.
  *
  * \ingroup enumerate
  */
@@ -1260,7 +1281,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  *
  * - Some variables have been constrained to be positive; as described
  *   in Burton and Ozlen, it is safe to do this using the non-strict
- *   inequality x_i >= 1 (instead of the strict inequality x_i > 0, which
+ *   inequality x_i ≥ 1 (instead of the strict inequality x_i > 0, which
  *   is more difficult to enforce).  We enforce this constraing using a
  *   change of variable: we replace the variable x_i with (x_i - 1),
  *   which is then constrained to be non-negative as usual.  The new
@@ -1268,13 +1289,13 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  *   the actual change of variable by editing the tableaux itself using
  *   column operations).  Be warned: as a result, when we arrive at a
  *   final solution and collect the values of the variables, we must
- *   remember to \e increment the values of any such variables by one.
+ *   remember to _increment_ the values of any such variables by one.
  *
  * We do not store the full tableaux (which is dense and slow to work
  * with).  Instead we store the matrix of row operations that were
  * applied to the original starting tableaux (in the notation of Burton
- * and Ozlen, we store the matrix M_beta^{-1}, where M is the original
- * matrix stored in the class LPInitialTableaux, and beta is the current
+ * and Ozlen, we store the matrix M_β^{-1}, where M is the original
+ * matrix stored in the class LPInitialTableaux, and β is the current
  * basis).
  *
  * If the system is infeasible (because the constraints on variables as
@@ -1305,7 +1326,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * In the context of normal surfaces (not angle structures):
  * Although the underlying coordinate system is based on quadrilaterals
  * and (optionally) triangles, this class has elementary support for
- * octagons also, as seen in \e almost normal surface theory.  For the
+ * octagons also, as seen in _almost_ normal surface theory.  For the
  * purposes of this class, an octagon is represented as a pair of
  * quadrilaterals of different types in the same tetrahedron: these meet
  * the boundary of the tetrahedron in the same arcs as a single octagon,
@@ -1358,7 +1379,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * LPData_<i>LPConstraint</i>, where the suffix \a LPConstraint
  * is an abbreviated version of the \a LPConstraint template parameter;
@@ -1444,7 +1465,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
 
     public:
         /**
-         * Constructs a new tableaux.  You \e must call reserve() before
+         * Constructs a new tableaux.  You _must_ call reserve() before
          * doing anything else with this tableaux.
          */
         inline LPData();
@@ -1458,7 +1479,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          *
          * The tableaux that is passed (\a src) will no longer be usable.
          *
-         * @param src the tableaux to move.
+         * \param src the tableaux to move.
          */
         inline LPData(LPData&& src) noexcept;
 
@@ -1477,8 +1498,8 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          *
          * The tableaux that is passed (\a src) will no longer be usable.
          *
-         * @param src the tableaux to move.
-         * @return a reference to this tableaux.
+         * \param src the tableaux to move.
+         * \return a reference to this tableaux.
          */
         inline LPData& operator = (LPData&& src) noexcept;
 
@@ -1489,13 +1510,13 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * or if one or both is unintialised; if so then these properties
          * will be swapped also.
          *
-         * @param other the tableaux whose contents should be swapped with this.
+         * \param other the tableaux whose contents should be swapped with this.
          */
         inline void swap(LPData& other) noexcept;
 
         /**
          * Reserves enough memory for this tableaux to work with.
-         * You \e must call this routine before doing anything else with
+         * You _must_ call this routine before doing anything else with
          * this tableaux.
          *
          * The data in this tableaux will not be initialised, and the
@@ -1503,7 +1524,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * until you call one of the initialisation routines initStart()
          * or initClone().
          *
-         * @param origTableaux the original starting tableaux that holds the
+         * \param origTableaux the original starting tableaux that holds the
          * adjusted matrix of matching equations, before the tree traversal
          * algorithm began.
          */
@@ -1534,7 +1555,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          *
          * \pre reserve() has already been called.
          *
-         * @param parent the tableaux to clone.
+         * \param parent the tableaux to clone.
          */
         void initClone(const LPData& parent);
 
@@ -1546,7 +1567,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
-         * @return the number of columns.
+         * \return the number of columns.
          */
         inline size_t columns() const;
 
@@ -1556,7 +1577,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * precisely the number of columns in the original matrix of
          * matching equations.
          *
-         * @return the number of normal or angle structure coordinate columns.
+         * \return the number of normal or angle structure coordinate columns.
          */
         inline size_t coordinateColumns() const;
 
@@ -1572,7 +1593,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * infeasible then any queries or operations (other than calling
          * isFeasible() itself) are undefined.
          *
-         * @return \c true if this system is feasible, or \c false if it
+         * \return \c true if this system is feasible, or \c false if it
          * is infeasible.
          */
         inline bool isFeasible() const;
@@ -1581,7 +1602,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * Determines whether the given variable is currently active.
          * See the LPData class notes for details.
          *
-         * @param pos the index of the variable to query.
+         * \param pos the index of the variable to query.
          * This must be between 0 and origTableaux_->columns()-1 inclusive.
          * The index should be with respect to this tableaux (i.e., it must
          * take into account any permutation of columns from the original
@@ -1591,7 +1612,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
 
         /**
          * Returns the sign of the given variable under the current
-         * basis.  This does \e not attempt to "undo" any changes of variable
+         * basis.  This does _not_ attempt to "undo" any changes of variable
          * caused by prior calls to constrainPositive() or constrainOct();
          * it simply tests the sign of the variable in the given column
          * of the tableaux in its current form.
@@ -1601,12 +1622,12 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * basis, this routine returns the sign of the corresponding
          * integer on the right-hand side of the tableaux.
          *
-         * @param pos the index of the variable to query.
+         * \param pos the index of the variable to query.
          * This must be between 0 and origTableaux_->columns()-1 inclusive.
          * The index should be with respect to this tableaux (i.e., it must
          * take into account any permutation of columns from the original
          * matching equations).
-         * @return the sign of the variable as described above;
+         * \return the sign of the variable as described above;
          * this will be either 1, 0 or -1.
          */
         inline int sign(size_t pos) const;
@@ -1623,10 +1644,10 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * or constrainOct() on this variable, then these prior routines
          * will have performed a change of variable.  Any new call to
          * constraintZero() on this same variable will constraint the
-         * \e new variable, not the original, and so might not have the
+         * _new_ variable, not the original, and so might not have the
          * intended effect.
          *
-         * @param pos the index of the variable that is to be set to zero.
+         * \param pos the index of the variable that is to be set to zero.
          * This must be between 0 and origTableaux_->columns()-1 inclusive.
          * The index should be with respect to this tableaux (i.e., it must
          * take into account any permutation of columns from the original
@@ -1649,10 +1670,10 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * or constrainOct() on this variable, then these prior routines
          * will have performed a change of variable.  Any new call to
          * constrainPositive() on this same variable will constrain the
-         * \e new variable, not the original, and so might not have the
+         * _new_ variable, not the original, and so might not have the
          * intended effect.
          *
-         * @param pos the index of the variable that is to be constrained as
+         * \param pos the index of the variable that is to be constrained as
          * positive.  This must be between 0 and origTableaux_->columns()-1
          * inclusive.  The index should be with respect to this tableaux
          * (i.e., it must take into account any permutation of columns from
@@ -1690,14 +1711,14 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * constrainOct() on one of the given variables, then these prior
          * routines will have performed a change of variable.  Any new call
          * to constrainOct() involving this same variable will constrain the
-         * \e new variable, not the original, and so might not have the
+         * _new_ variable, not the original, and so might not have the
          * intended effect.
          *
-         * @param quad1 one of the two quadrilateral types that we
+         * \param quad1 one of the two quadrilateral types that we
          * combine to form the new octagon type.  This should be a column index
          * with respect to this tableaux (i.e., it must take into account any
          * permutation of columns from the original matching equations).
-         * @param quad2 the other of the two quadrilateral types that we
+         * \param quad2 the other of the two quadrilateral types that we
          * combine to form the new octagon type.  Again this should be a
          * column index with respect to this tableaux.
          */
@@ -1712,7 +1733,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          *
          * - We extract variables that correspond to the original
          *   matching equations obtained from the underlying
-         *   triangulation, \e not the current tableaux and \e not even
+         *   triangulation, _not_ the current tableaux and _not_ even
          *   the original starting tableaux stored in origTableaux_.
          *   In other words, when we fill the resulting vector, we undo the
          *   column permutation described by LPInitialTableaux::columnPerm(),
@@ -1742,12 +1763,12 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * this ensures that all elements of a newly-created output vector
          * will be automatically initialised to zero.
          *
-         * \ifacespython The type vector should be passed as a Python list of
+         * \python The type vector should be passed as a Python list of
          * integers (for example, in the enumeration of normal surfaces, there
          * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
          * The \a RayClass argument is taken to be Vector<Integer>.
          *
-         * @param type the type vector corresponding to the current state of
+         * \param type the type vector corresponding to the current state of
          * this tableaux, indicating which variables were previously fixed as
          * positive via calls to constrainPositive().  This is necessary
          * because LPData does not keep such historical data on its own.
@@ -1756,8 +1777,8 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * in this tableaux, not the original matching equations).
          * As a special case, when extracting a strict angle structure
          * one may pass \a type = \c null, in which case this routine will
-         * assume that \e every coordinate was constrained as positive.
-         * @return a vector containing the values of all the variables.
+         * assume that _every_ coordinate was constrained as positive.
+         * \return a vector containing the values of all the variables.
          * This vector will have length origTableaux_->coordinateColumns().
          */
         template <class RayClass>
@@ -1767,9 +1788,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -1777,9 +1798,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1798,11 +1819,11 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * There is an alternate version of this function that avoids
          * creating spurious temporaries (which may help with performance).
          *
-         * @param the row of the requested entry; this must be between 0
+         * \param the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * @param the column of the requested entry; this must be between 0
+         * \param the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
-         * @return the requested entry in this tableaux.
+         * \return the requested entry in this tableaux.
          */
         inline IntType entry(size_t row, size_t col) const;
 
@@ -1817,11 +1838,11 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * natural (it returns its answer), but creates an additional
          * temporary variable (which may hinder performance).
          *
-         * @param the row of the requested entry; this must be between 0
+         * \param the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * @param the column of the requested entry; this must be between 0
+         * \param the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
-         * @param ans an integer that will be set to the requested entry
+         * \param ans an integer that will be set to the requested entry
          * in this tableaux.
          */
         inline void entry(size_t row, size_t col, IntType& ans) const;
@@ -1833,11 +1854,11 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * computed on the fly.  However, this computation is fast
          * because the computations use sparse vector multiplication.
          *
-         * @param the row of the requested entry; this must be between 0
+         * \param the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * @param the column of the requested entry; this must be between 0
+         * \param the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
-         * @return +1, -1 or 0 according to whether the requested entry
+         * \return +1, -1 or 0 according to whether the requested entry
          * is positive, negative or zero.
          */
         inline int entrySign(size_t row, size_t col) const;
@@ -1860,8 +1881,8 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * \pre The non-basic variable \a inCol has a non-zero entry in the
          * row of the tableaux that defines the basic variable \a outCol.
          *
-         * @param outCol the index of the variable to pivot out of the basis.
-         * @param inCol the index of the variable to pivot into the basis.
+         * \param outCol the index of the variable to pivot out of the basis.
+         * \param inCol the index of the variable to pivot into the basis.
          */
         void pivot(size_t outCol, size_t inCol);
 
@@ -1955,8 +1976,8 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
  * it is provided so that LPData<LPConstraint, IntType> meets the C++ Swappable
  * requirements.
  *
- * @param a the first tableaux whose contents should be swapped.
- * @param b the second tableaux whose contents should be swapped.
+ * \param a the first tableaux whose contents should be swapped.
+ * \param b the second tableaux whose contents should be swapped.
  *
  * \ingroup enumerate
  */

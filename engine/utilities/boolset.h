@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,47 +72,46 @@ class BoolSet {
          */
         constexpr BoolSet();
         /**
-         * Creates a set containing a single member as given.
+         * Creates a set containing a single boolean, which is passed as
+         * an argument.
          *
-         * @param member the single element to include in this set.
+         * \param member the single element to include in this set.
          */
         constexpr BoolSet(bool member);
         /**
-         * Creates a set equal to the given set.
+         * Creates a clone of the given set.
          *
-         * @param cloneMe the set upon which we will base the new set.
+         * \param src the set to clone.
          */
-        constexpr BoolSet(const BoolSet& cloneMe) = default;
+        constexpr BoolSet(const BoolSet& src) = default;
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
          *
-         * @param insertTrue should the new set include the element
-         * <tt>true</tt>?
-         * @param insertFalse should the new set include the element
-         * <tt>false</tt>?
+         * \param insertTrue should the new set include the element `true`?
+         * \param insertFalse should the new set include the element `false`?
          */
         constexpr BoolSet(bool insertTrue, bool insertFalse);
 
         /**
          * Determines if \c true is a member of this set.
          *
-         * @return \c true if and only if \c true is a member of this
+         * \return \c true if and only if \c true is a member of this
          * set.
          */
         constexpr bool hasTrue() const;
         /**
          * Determines if \c false is a member of this set.
          *
-         * @return \c true if and only if \c false is a member of this
+         * \return \c true if and only if \c false is a member of this
          * set.
          */
         constexpr bool hasFalse() const;
         /**
          * Determines if the given boolean is a member of this set.
          *
-         * @param value the boolean to search for in this set.
-         * @return \c true if and only if the given boolean is a member
+         * \param value the boolean to search for in this set.
+         * \return \c true if and only if the given boolean is a member
          * of this set.
          */
         constexpr bool contains(bool value) const;
@@ -146,32 +145,32 @@ class BoolSet {
         /**
          * Determines if this set is equal to the given set.
          *
-         * @param other the set to compare with this.
-         * @return \c true if and only if this and the given set are
+         * \param other the set to compare with this.
+         * \return \c true if and only if this and the given set are
          * equal.
          */
         constexpr bool operator == (BoolSet other) const;
         /**
          * Determines if this set is not equal to the given set.
          *
-         * @param other the set to compare with this.
-         * @return \c true if and only if this and the given set are
+         * \param other the set to compare with this.
+         * \return \c true if and only if this and the given set are
          * not equal.
          */
         constexpr bool operator != (BoolSet other) const;
         /**
          * Determines if this set is a proper subset of the given set.
          *
-         * @param other the set to compare with this.
-         * @return \c true if and only if this is a proper subset of the
+         * \param other the set to compare with this.
+         * \return \c true if and only if this is a proper subset of the
          * given set.
          */
         constexpr bool operator < (BoolSet other) const;
         /**
          * Determines if this set is a proper superset of the given set.
          *
-         * @param other the set to compare with this.
-         * @return \c true if and only if this is a proper superset of the
+         * \param other the set to compare with this.
+         * \return \c true if and only if this is a proper superset of the
          * given set.
          */
         constexpr bool operator > (BoolSet other) const;
@@ -179,8 +178,8 @@ class BoolSet {
          * Determines if this set is a subset of (possibly equal to)
          * the given set.
          *
-         * @param other the set to compare with this.
-         * @return \c true if and only if this is a subset of the
+         * \param other the set to compare with this.
+         * \return \c true if and only if this is a subset of the
          * given set.
          */
         constexpr bool operator <= (BoolSet other) const;
@@ -188,8 +187,8 @@ class BoolSet {
          * Determines if this set is a superset of (possibly equal to)
          * the given set.
          *
-         * @param other the set to compare with this.
-         * @return \c true if and only if this is a superset of the
+         * \param other the set to compare with this.
+         * \return \c true if and only if this is a superset of the
          * given set.
          */
         constexpr bool operator >= (BoolSet other) const;
@@ -197,16 +196,16 @@ class BoolSet {
         /**
          * Sets this set to be identical to the given set.
          *
-         * @param cloneMe the set whose value this set will take.
-         * @return a reference to this set.
+         * \param cloneMe the set whose value this set will take.
+         * \return a reference to this set.
          */
         BoolSet& operator = (const BoolSet& cloneMe) = default;
         /**
          * Sets this set to the single member set containing the given
          * element.
          *
-         * @param member the single element to include in this set.
-         * @return a reference to this set.
+         * \param member the single element to include in this set.
+         * \return a reference to this set.
          */
         BoolSet& operator = (bool member);
         /**
@@ -215,8 +214,8 @@ class BoolSet {
          * belong to either of the original sets.
          * Note that this set will be modified.
          *
-         * @param other the set to union with this set.
-         * @return a reference to this set.
+         * \param other the set to union with this set.
+         * \return a reference to this set.
          */
         BoolSet& operator |= (BoolSet other);
         /**
@@ -225,8 +224,8 @@ class BoolSet {
          * belong to both original sets.
          * Note that this set will be modified.
          *
-         * @param other the set to intersect with this set.
-         * @return a reference to this set.
+         * \param other the set to intersect with this set.
+         * \return a reference to this set.
          */
         BoolSet& operator &= (BoolSet other);
         /**
@@ -236,9 +235,9 @@ class BoolSet {
          * belong to one but not both of the original sets.
          * Note that this set will be modified.
          *
-         * @param other the set whose symmetric difference with this set
+         * \param other the set whose symmetric difference with this set
          * is to be found.
-         * @return a reference to this set.
+         * \return a reference to this set.
          */
         BoolSet& operator ^= (BoolSet other);
 
@@ -248,8 +247,8 @@ class BoolSet {
          * belong to either of the original sets.
          * This set is not changed.
          *
-         * @param other the set to union with this set.
-         * @return the union of this and the given set.
+         * \param other the set to union with this set.
+         * \return the union of this and the given set.
          */
         constexpr BoolSet operator | (BoolSet other) const;
         /**
@@ -258,8 +257,8 @@ class BoolSet {
          * belong to both original sets.
          * This set is not changed.
          *
-         * @param other the set to intersect with this set.
-         * @return the intersection of this and the given set.
+         * \param other the set to intersect with this set.
+         * \return the intersection of this and the given set.
          */
         constexpr BoolSet operator & (BoolSet other) const;
         /**
@@ -268,9 +267,9 @@ class BoolSet {
          * belong to one but not both of the original sets.
          * This set is not changed.
          *
-         * @param other the set whose symmetric difference with this set
+         * \param other the set whose symmetric difference with this set
          * is to be found.
-         * @return the symmetric difference of this and the given set.
+         * \return the symmetric difference of this and the given set.
          */
         constexpr BoolSet operator ^ (BoolSet other) const;
         /**
@@ -279,7 +278,7 @@ class BoolSet {
          * this set does not contain.
          * This set is not changed.
          *
-         * @return the complement of this set.
+         * \return the complement of this set.
          */
         constexpr BoolSet operator ~ () const;
 
@@ -295,7 +294,7 @@ class BoolSet {
          * Therefore sets {}, {true}, {false} and {true, false} have
          * byte codes 0, 1, 2 and 3 respectively.
          *
-         * @return the byte code representing this set.
+         * \return the byte code representing this set.
          */
         constexpr unsigned char byteCode() const;
         /**
@@ -305,9 +304,9 @@ class BoolSet {
          * If \a code is not a value byte code, then this routine will
          * do nothing and return \c false.
          *
-         * @param code the byte code that will determine the new value
+         * \param code the byte code that will determine the new value
          * of this set.
-         * @return \c true if and only if \c code is a valid byte code.
+         * \return \c true if and only if \c code is a valid byte code.
          */
         bool setByteCode(unsigned char code);
         /**
@@ -316,7 +315,7 @@ class BoolSet {
          *
          * \pre \a code is 0, 1, 2 or 3.
          *
-         * @param code the byte code from which the new set will be
+         * \param code the byte code from which the new set will be
          * created.
          */
         constexpr static BoolSet fromByteCode(unsigned char code);
@@ -328,10 +327,10 @@ class BoolSet {
          *
          * Every string code contains precisely two characters (plus a
          * terminating null).
-         * Sets {}, {true}, {false} and {true, false} have
-         * string codes \c "--", \c "T-", \c "-F" and \c "TF" respectively.
+         * Sets {}, {true}, {false} and {true, false} have string codes
+         * `--`, `T-`, `-F` and `TF` respectively.
          *
-         * @return the two-character string code representing this set.
+         * \return the two-character string code representing this set.
          */
         const char* stringCode() const;
         /**
@@ -341,9 +340,9 @@ class BoolSet {
          * If \a code is not a value string code, then this routine will
          * do nothing and return \c false.
          *
-         * @param code the string code that will determine the new value
+         * \param code the string code that will determine the new value
          * of this set.
-         * @return \c true if and only if \c code is a valid string code.
+         * \return \c true if and only if \c code is a valid string code.
          */
         bool setStringCode(const std::string& code);
 
@@ -353,18 +352,15 @@ class BoolSet {
 /**
  * Writes the given boolean set to the given output stream.
  * The set will be written in the form
- * <tt>{ true, false }</tt>, <tt>{ true }</tt>,
- * <tt>{ false }</tt> or <tt>{ }</tt>.
+ * `{ true, false }`, `{ true }`, `{ false }` or `{ }`.
  *
- * @param out the output stream to which to write.
- * @param set the boolean set to write.
- * @return a reference to \a out.
+ * \param out the output stream to which to write.
+ * \param set the boolean set to write.
+ * \return a reference to \a out.
  *
  * \ingroup utilities
  */
 std::ostream& operator << (std::ostream& out, BoolSet set);
-
-/*@}*/
 
 // Inline functions for BoolSet
 

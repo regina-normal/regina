@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,8 +47,8 @@ namespace regina {
 
 /**
  * A trie-like data structure for storing and retriving sets.
- * This class is useful when the \e elements of these sets are taken from a
- * fairly small universe, but where the \e number of sets being stored
+ * This class is useful when the _elements_ of these sets are taken from a
+ * fairly small universe, but where the _number_ of sets being stored
  * can be extremely large.
  *
  * For simplicity, let the universe consist of the integers 0,...,(<i>n</i>-1).
@@ -101,7 +101,7 @@ class TrieSet : public Output<TrieSet> {
                      corresponding child pointer will be \c null. */
             size_t descendants_;
                 /**< The number of sets stored at or beneath this node in
-                     the tree.  The number of sets stored \e precisely at
+                     the tree.  The number of sets stored _precisely_ at
                      this node can be computed by subtracting the descendant
                      counts for each child node. */
 
@@ -136,7 +136,7 @@ class TrieSet : public Output<TrieSet> {
          * Creates a new copy of the given collection.
          * This will induce a deep copy of \a src.
          *
-         * @param src the collection of sets to copy.
+         * \param src the collection of sets to copy.
          */
         TrieSet(const TrieSet& src);
 
@@ -146,7 +146,7 @@ class TrieSet : public Output<TrieSet> {
          *
          * The collection that was passed (\a src) will no longer be usable.
          *
-         * @param src the collection of sets whose contents should be moved.
+         * \param src the collection of sets whose contents should be moved.
          */
         TrieSet(TrieSet&& src) noexcept;
 
@@ -154,8 +154,8 @@ class TrieSet : public Output<TrieSet> {
          * Sets this to be a copy of the given collection.
          * This will induce a deep copy of \a src.
          *
-         * @param src the collection of sets to copy.
-         * @return a reference to this collection.
+         * \param src the collection of sets to copy.
+         * \return a reference to this collection.
          */
         TrieSet& operator = (const TrieSet& src);
 
@@ -165,15 +165,15 @@ class TrieSet : public Output<TrieSet> {
          *
          * The collection that was passed (\a src) will no longer be usable.
          *
-         * @param src the collection of sets whose contents should be moved.
-         * @return a reference to this collection.
+         * \param src the collection of sets whose contents should be moved.
+         * \return a reference to this collection.
          */
         TrieSet& operator = (TrieSet&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given collection.
          *
-         * @param other the collection whose contents should be swapped
+         * \param other the collection whose contents should be swapped
          * with this.
          */
         void swap(TrieSet& other) noexcept;
@@ -182,8 +182,8 @@ class TrieSet : public Output<TrieSet> {
          * Determines whether this and the given collection store
          * exactly the same sets.
          *
-         * @param other the collection to compare with this.
-         * @return \c true if and only if both collections store the same sets.
+         * \param other the collection to compare with this.
+         * \return \c true if and only if both collections store the same sets.
          */
         bool operator == (const TrieSet& other) const;
 
@@ -191,8 +191,8 @@ class TrieSet : public Output<TrieSet> {
          * Determines whether this and the given collection do not store
          * exactly the same sets.
          *
-         * @param other the collection to compare with this.
-         * @return \c true if and only if both collections do not store the
+         * \param other the collection to compare with this.
+         * \return \c true if and only if both collections do not store the
          * same sets.
          */
         bool operator != (const TrieSet& other) const;
@@ -216,11 +216,11 @@ class TrieSet : public Output<TrieSet> {
         /**
          * Determines whether this collection of sets contains any subset
          * of the argument \a superset.
-         * Subsets need not be \e proper subsets (so if an exact copy of
+         * Subsets need not be _proper_ subsets (so if an exact copy of
          * \a superset is found in the tree then this will suffice).
          *
          * This routine has a slow running time, which in
-         * pathological cases can grow to either <tt>2^n</tt>
+         * pathological cases can grow to either `2^n`
          * (where \a n is the bitmask length) or the number of sets
          * stored in this collection, whichever is smaller.  However,
          * for "typical" searches in the context of normal surface
@@ -246,13 +246,13 @@ class TrieSet : public Output<TrieSet> {
          *
          * This routine asks the following question:  In this collection
          * of sets, is there any superset of the argument \a subset
-         * \e other than \a exc1 or \a exc2?  Here the sets \a exc1 and
+         * _other_ than \a exc1 or \a exc2?  Here the sets \a exc1 and
          * \a exc2 are explicitly excluded from our search.  Supersets
-         * need not be \e proper supersets (so if an exact copy of
+         * need not be _proper_ supersets (so if an exact copy of
          * \a subset is found in the tree then this will suffice).
          *
          * This routine has a slow running time, which in
-         * pathological cases can grow to either <tt>2^n</tt>
+         * pathological cases can grow to either `2^n`
          * (where \a n is the bitmask length) or the number of sets
          * stored in this collection, whichever is smaller.  However,
          * for "typical" searches in the context of normal surface
@@ -285,18 +285,18 @@ class TrieSet : public Output<TrieSet> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -304,8 +304,8 @@ class TrieSet : public Output<TrieSet> {
 /**
  * Swaps the contents of the two given collections.
  *
- * @param a the first collection of sets whose contents should be swapped.
- * @param b the second collection of sets whose contents should be swapped.
+ * \param a the first collection of sets whose contents should be swapped.
+ * \param b the second collection of sets whose contents should be swapped.
  *
  * \ingroup utilities
  */

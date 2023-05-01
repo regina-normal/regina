@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -89,6 +89,14 @@ class GluingsModel3 : public QAbstractItemModel {
         bool setData(const QModelIndex& index, const QVariant& value,
             int role) override;
 
+        /**
+         * Return a short string describing the destination of a
+         * face gluing.  This routine handles both boundary and
+         * non-boundary faces.  The destination is deduced by looking at
+         * whatever the given source face is glued to.
+         */
+        static QString destString(regina::Simplex<3>* srcTet, int srcFace);
+
     private:
         /**
          * Determine whether the given destination tetrahedron and face
@@ -101,14 +109,6 @@ class GluingsModel3 : public QAbstractItemModel {
         QString isFaceStringValid(unsigned long srcTet, int srcFace,
             unsigned long destTet, const QString& destFace,
             regina::Perm<4>* gluing);
-
-        /**
-         * Return a short string describing the destination of a
-         * face gluing.  This routine handles both boundary and
-         * non-boundary faces.
-         */
-        static QString destString(int srcFace, regina::Simplex<3>* destTet,
-            const regina::Perm<4>& gluing);
 
         /**
          * Convert a face string (e.g., "130") to a face permutation.
@@ -142,6 +142,13 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         QWidget* ui;
         EditTableView* faceTable;
         GluingsModel3* model;
+
+        /**
+         * Pop-up menus
+         */
+        ssize_t lockSimplex { -1 };
+        int lockFacet { -1 }; // -1 for simplex, 0..3 for facet
+        bool lockAdd { false }; // true to lock, false to unlock
 
         /**
          * Gluing actions
@@ -185,6 +192,12 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
          */
         void addTet();
         void removeSelectedTets();
+
+        /**
+         * Lock menu actions.
+         */
+        void lockMenu(const QPoint&);
+        void changeLock();
 
         /**
          * Triangulation actions.

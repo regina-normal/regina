@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,25 +33,32 @@
 #include "../pybind11/pybind11.h"
 #include "file/globaldirs.h"
 #include "../helpers.h"
+#include "../docstrings/file/globaldirs.h"
 
 using pybind11::overload_cast;
 using regina::GlobalDirs;
 
 void addGlobalDirs(pybind11::module_& m) {
-    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs")
-        .def_static("home", &GlobalDirs::home)
-        .def_static("pythonModule", &GlobalDirs::pythonModule)
-        .def_static("census", &GlobalDirs::census)
-        .def_static("examples", &GlobalDirs::examples)
-        .def_static("engineDocs", &GlobalDirs::engineDocs)
-        .def_static("data", &GlobalDirs::data)
+    RDOC_SCOPE_BEGIN(GlobalDirs)
+
+    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs", rdoc_scope)
+        .def_static("home", &GlobalDirs::home, rdoc::home)
+        .def_static("pythonModule", &GlobalDirs::pythonModule,
+            rdoc::pythonModule)
+        .def_static("census", &GlobalDirs::census, rdoc::census)
+        .def_static("examples", &GlobalDirs::examples, rdoc::examples)
+        .def_static("engineDocs", &GlobalDirs::engineDocs, rdoc::engineDocs)
+        .def_static("data", &GlobalDirs::data, rdoc::data)
         .def_static("setDirs", overload_cast<const std::string&,
                 const std::string&, const std::string&>(
             &GlobalDirs::setDirs),
             pybind11::arg(), pybind11::arg(),
-            pybind11::arg("censusDir") = std::string())
-        .def_static("deduceDirs", &GlobalDirs::deduceDirs)
+            pybind11::arg("censusDir") = std::string(),
+            rdoc::setDirs)
+        .def_static("deduceDirs", &GlobalDirs::deduceDirs, rdoc::deduceDirs)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 

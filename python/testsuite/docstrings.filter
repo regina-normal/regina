@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+# This filter adjusts the names of pybind11 local moduiles so that
+# they are independent of the C++ compiler that was used.
+#
+# It also makes tweaks to account for differences in help() output between
+# Python 3.6 vs 3.8 and above (I'm not sure which way Python 3.7 goes).
+#
+# Note that BSD sed does not support \+, which is why we use \{1,\} instead.
+# BSD sed also seems to have issues with \s and \S, so we avoid them too.
+
+sed -e 's#\( \)__pybind11_module_local_\([a-zA-Z0-9_-]\{1,\}\) = <capsule.*\.\.\.#\1__pybind11_module_local__ = ...#' \
+    -e 's#\( \)Methods\( inherited from pybind11_object:\)$#\1Static methods\2#'

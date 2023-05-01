@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGCONVERT" "1" "30 May 2022" "" "The Regina Handbook"
+.TH "REGCONVERT" "1" "24 April 2023" "" "The Regina Handbook"
 
 .SH NAME
 regconvert \- Convert between different Regina file formats
 .SH SYNOPSIS
 
 \fBregconvert\fR [ \fB-2\fR | \fB-3\fR ] [ \fB-x\fR | \fB-u\fR ] \fB\fIold-file\fB\fR [ \fB\fInew-file\fB\fR ]
+
+
+\fBregconvert\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -62,6 +65,13 @@ Write the output as compressed XML\&.
 .TP
 \fB-u\fR
 Write the output as uncompressed (plain text) XML\&.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "MACOS USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is
@@ -75,7 +85,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\regconvert.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.4\\bin\\regconvert.exe\&.
 .SH "SEE ALSO"
 .PP
 regfiletype,

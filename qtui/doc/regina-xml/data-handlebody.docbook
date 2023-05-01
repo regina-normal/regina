@@ -1,0 +1,93 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-handlebody">
+ <refmeta>
+  <refentrytitle>handlebody</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>handlebody</refname>
+  <refpurpose>Does a triangulation represent an orientable handlebody?</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+handlebody ::=</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>value</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.1</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-handlebody; element stores whether or not the parent
+   triangulation is in fact a triangulation of an orientable handlebody,
+   and if so, of which genus.
+  </para>
+  <para>
+   This element both replaces and generalises the deprecated
+   &xml-threeball; and &xml-solidtorus; elements from &regina;&nbsp;7.0
+   and earlier (which correspond to orientable handlebodies of
+   genus 0 and 1 respectively).
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>handlebody</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-tri;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>handlebody</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>value</sgmltag></term>
+    <listitem>
+     <para>
+      If the parent triangulation represents an orientable handlebody,
+      then this attribute stores the genus as a non-negative integer.
+      Otherwise this attribute stores the integer -1.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+</refentry>

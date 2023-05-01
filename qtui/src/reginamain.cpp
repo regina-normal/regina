@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -323,7 +323,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
     // If the root packet is not a container, create a new fake root above it.
     if (data->type() != regina::PACKET_CONTAINER) {
         auto newRoot = std::make_shared<regina::Container>();
-        newRoot->insertChildLast(data);
+        newRoot->append(data);
         data = newRoot;
 
         // We will assume the user knows what (s)he is doing here, and so

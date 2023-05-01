@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,9 +46,9 @@
  *   a \a k-face in the boundary of the (\a n+1)-simplex.  This complement
  *   is the star of an (\a n-\a k)-face.
  *
- * We call the \a k-face the \e attaching face; this is the input to
+ * We call the \a k-face the _attaching_ face; this is the input to
  * the Pachner move.  The corresponding (\a n-\a k)-face in the
- * new triangulation is called the \e belt face (in analogy with surgery).
+ * new triangulation is called the _belt_ face (in analogy with surgery).
  *
  * Since the star of a \a k-face in the boundary of an (\a n+1)-simplex has
  * (\a n+1-\a k) top-dimensional simplices, the star of the belt

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,9 +50,9 @@ namespace regina {
 /**
  * An XML element reader that reads a single abelian group.
  * An abelian group is generally contained within an
- * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
+ * `<abeliangroup>` ... `</abeliangroup>` pair.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAbelianGroupReader : public XMLElementReader {
     private:
@@ -69,7 +69,7 @@ class XMLAbelianGroupReader : public XMLElementReader {
          * Returns a reference to the abelian group that has been read by
          * this element reader.
          *
-         * @return the group that has been read, or no value if an error
+         * \return the group that has been read, or \nullopt if an error
          * occurred.
          */
         std::optional<AbelianGroup>& group();
@@ -83,9 +83,9 @@ class XMLAbelianGroupReader : public XMLElementReader {
 /**
  * An XML element reader that reads a single group presentation.
  * A group presentation is generally contained within a
- * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
+ * `<group>` ... `</group>` pair.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLGroupPresentationReader : public XMLElementReader {
     private:
@@ -102,7 +102,7 @@ class XMLGroupPresentationReader : public XMLElementReader {
          * Returns a reference to the group presentation that has been read by
          * this element reader.
          *
-         * @return the group that has been read, or no value if an error
+         * \return the group that has been read, or \nullopt if an error
          * occurred.
          */
         std::optional<GroupPresentation>& group();

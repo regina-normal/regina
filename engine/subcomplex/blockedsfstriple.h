@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -121,7 +121,7 @@ class SatRegion;
  * matrix \a M or \a M' shows how the layering relates the curves on each
  * region boundary.
  *
- * Note that the routines writeName() and writeTeXName() do \e not
+ * Note that the routines writeName() and writeTeXName() do _not_
  * offer enough information to uniquely identify the triangulation,
  * since this essentially requires 2-dimensional assemblings of
  * saturated blocks.  For full details, writeTextLong() may be used instead.
@@ -154,10 +154,10 @@ class BlockedSFSTriple : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          */
         BlockedSFSTriple(const BlockedSFSTriple& src) = default;
         /**
@@ -166,15 +166,15 @@ class BlockedSFSTriple : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          */
         BlockedSFSTriple(BlockedSFSTriple&& src) noexcept = default;
         /**
          * Sets this to be a copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
-         * @return a reference to this structure.
+         * \param src the structure to copy.
+         * \return a reference to this structure.
          */
         BlockedSFSTriple& operator = (const BlockedSFSTriple& src) = default;
         /**
@@ -183,15 +183,15 @@ class BlockedSFSTriple : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
-         * @return a reference to this structure.
+         * \param src the structure to move from.
+         * \return a reference to this structure.
          */
         BlockedSFSTriple& operator = (BlockedSFSTriple&& src) noexcept =
             default;
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(BlockedSFSTriple& other) noexcept;
@@ -202,11 +202,11 @@ class BlockedSFSTriple : public StandardTriangulation {
          * regions with one boundary annulus each, which are both joined
          * to the central region.
          *
-         * @param which 0 if the first end region should be returned
+         * \param which 0 if the first end region should be returned
          * (marked as end region 0 in the class notes), or 1 if the
          * second end region should be returned (marked as end region 1
          * in the class notes).
-         * @return details of the requested end region.
+         * \return details of the requested end region.
          */
         const SatRegion& end(int which) const;
 
@@ -216,7 +216,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * two boundary annuli, each of which is joined to one of the
          * end regions.
          *
-         * @return details of the central region.
+         * \return details of the central region.
          */
         const SatRegion& centre() const;
 
@@ -230,12 +230,12 @@ class BlockedSFSTriple : public StandardTriangulation {
          * See the class notes above for precise information on how each
          * matrix is presented.
          *
-         * @param which 0 if the matrix returned should describe how the
+         * \param which 0 if the matrix returned should describe how the
          * central region is joined to the first end region (marked end
          * region 0 in the class notes), or 1 if the matrix returned
          * should describe how the central region is joined to the
          * second end region (marked end region 1 in the class notes).
-         * @return the matrix describing how the requested region
+         * \return the matrix describing how the requested region
          * boundaries are joined.
          */
         const Matrix2& matchingReln(int which) const;
@@ -258,8 +258,8 @@ class BlockedSFSTriple : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of blocked sequence of three Seifert
          * fibred spaces.
          */
@@ -283,8 +283,8 @@ class BlockedSFSTriple : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of blocked sequence of three
          * Seifert fibred spaces.
          */
@@ -304,8 +304,8 @@ class BlockedSFSTriple : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tri the triangulation to examine.
-         * @return a structure containing details of the blocked triple, or
+         * \param tri the triangulation to examine.
+         * \return a structure containing details of the blocked triple, or
          * \c null if the given triangulation is not of this form.
          */
         static std::unique_ptr<BlockedSFSTriple> recognise(
@@ -320,12 +320,12 @@ class BlockedSFSTriple : public StandardTriangulation {
          *
          * Note that the new object must describe an existing triangulation.
          *
-         * @param end0 the first end region.
-         * @param centre the central region.
-         * @param end1 the second end region.
-         * @param matchingReln0 describes how the first end region is
+         * \param end0 the first end region.
+         * \param centre the central region.
+         * \param end1 the second end region.
+         * \param matchingReln0 describes how the first end region is
          * joined to the central region.
-         * @param matchingReln1 describes how the second end region is
+         * \param matchingReln1 describes how the second end region is
          * joined to the central region.
          */
         BlockedSFSTriple(SatRegion&& end0, SatRegion&& centre,
@@ -339,8 +339,8 @@ class BlockedSFSTriple : public StandardTriangulation {
  * This global routine simply calls BlockedSFSTriple::swap(); it is provided
  * so that BlockedSFSTriple meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

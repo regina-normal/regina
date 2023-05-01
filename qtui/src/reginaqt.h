@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,7 +32,7 @@
 
 /*! \file reginaqt.h
  *  \brief Provides Qt configuration for Regina.  This must be included
- *  in all of Regina's GUI sources, \e before any Qt headers.
+ *  in all of Regina's GUI sources, _before_ any Qt headers.
  */
 
 #ifndef __REGINAQT_H

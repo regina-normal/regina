@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -133,7 +133,7 @@
         self.unfilledFundDetails.hidden = NO;
 
         self.unfilledHomology.text = @(self.packet->homology().utf8().c_str());
-        [Tri3Algebra reloadGroup:self.packet->fundamentalGroup()
+        [Tri3Algebra reloadGroup:self.packet->group()
                            name:self.unfilledFundName
                            gens:self.unfilledFundGens
                            rels:self.unfilledFundRels

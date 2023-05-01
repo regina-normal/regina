@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,12 @@
 #include <cassert>
 #include <tuple>
 
-namespace regina::detail {
+namespace regina {
+
+template <int> class XMLSimplexReader;
+template <int> class XMLTriangulationReader;
+
+namespace detail {
 
 template <int> class TriangulationBase;
 
@@ -69,7 +74,7 @@ template <int> class TriangulationBase;
  * Their memory is managed by the Triangulation class, and their locations
  * in memory define them.  See Simplex<dim> for further details.
  *
- * \ifacespython This base class is not present, but the "end user" class
+ * \python This base class is not present, but the "end user" class
  * Simplex<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -89,10 +94,15 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
             /**< A compile-time constant that gives the dimension of this
                  simplex. */
 
-        using FacetMask = typename IntOfMinSize<(dim / 8) + 1>::utype;
+        using FacetMask = typename IntOfMinBits<dim + 1>::utype;
             /**< An unsigned integer type with at least <i>dim</i>+1 bits.
                  This can be used as a bitmask for the <i>dim</i>+1 facets
                  (or vertices) of a <i>dim</i>-simplex. */
+        using LockMask = typename IntOfMinBits<dim + 2>::utype;
+            /**< An unsigned integer type with at least <i>dim</i>+2 bits.
+                 The <i>i</i>th bit indicates whether facet \a i of the simplex
+                 is locked for 0 ≤ \a i ≤ \a dim, and the (<i>dim</i>+2)th bit
+                 indicates whether the simplex itself is locked. */
 
     private:
         /**
@@ -136,7 +146,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
 
         Simplex<dim>* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
-                 simplex.  Specifically, <tt>adj_[f]</tt> represents the
+                 simplex.  Specifically, `adj_[f]` represents the
                  simplex joined to facet \a f of this simplex, or is 0
                  if facet \a f lies on the triangulation boundary. */
         Perm<dim+1> gluing_[dim + 1];
@@ -166,12 +176,21 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
                  \a i of this simplex belongs to the maximal forest in the
                  dual 1-skeleton.  See facetInMaximalForest() for details.
                  This will only be set if/when the skeleton is computed. */
+        LockMask locks_ { 0 };
+            /**< Indicates whether this simplex and/or any of its facets are
+                 locked.  This is a bitmask; see the LockMask documentation
+                 for how the individual bits of \a locks_ are interpreted.
+                 The locking/unlocking code must always ensure that facets
+                 that are glued together have consistent locks; that is, if a
+                 facet is glued to a facet of some adjacent simplex, then
+                 either both corresponding facets must be locked or both
+                 corresponding facets must be unlocked. */
 
     public:
         /**
          * Returns the description associated with this simplex.
          *
-         * @return the description of this simplex, or the empty string
+         * \return the description of this simplex, or the empty string
          * if no description is stored.
          */
         const std::string& description() const;
@@ -185,7 +204,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * To remove an existing description, you can simply set the
          * description to the empty string.
          *
-         * @param desc the new description to assign to this simplex.
+         * \param desc the new description to assign to this simplex.
          */
         void setDescription(const std::string& desc);
 
@@ -193,12 +212,12 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Returns the index of this simplex in the underlying triangulation.
          *
          * The index will be an integer between 0 and
-         * <tt>triangulation().size()-1</tt> inclusive.
+         * `triangulation().size()-1` inclusive.
          *
          * Note that indexing may change when a simplex is added to or removed
          * from the underlying triangulation.
          *
-         * @return the index of this simplex.
+         * \return the index of this simplex.
          */
         size_t index() const;
 
@@ -208,9 +227,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * given facet lies on the triangulation boundary), then this
          * routine will return \c null.
          *
-         * @param facet the facet of this simplex to examine; this must
+         * \param facet the facet of this simplex to examine; this must
          * be between 0 and \a dim inclusive.
-         * @return the adjacent simplex glued to the given facet, or \c null
+         * \return the adjacent simplex glued to the given facet, or \c null
          * if the given facet lies on the boundary.
          */
         Simplex<dim>* adjacentSimplex(int facet) const;
@@ -224,7 +243,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * the vertices of this simplex to the vertices of \a A.  We can
          * express this mapping in the form of a permutation \a p, where:
          *
-         * - for any \a v &ne; \a facet, the gluing identifies vertex \a v
+         * - for any \a v ≠ \a facet, the gluing identifies vertex \a v
          *   of this simplex with vertex \a p[\a v] of simplex \a A;
          *
          * - \a p[\a facet] indicates the facet of \a A that is on the
@@ -235,9 +254,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * (possibly this one) glued to it.  In other words,
          * adjacentSimplex(\a facet) is not \c null.
          *
-         * @param facet the facet of this simplex that we are examining.
+         * \param facet the facet of this simplex that we are examining.
          * This must be between 0 and \a dim inclusive.
-         * @return a permutation that maps the vertices of this simplex to the
+         * \return a permutation that maps the vertices of this simplex to the
          * vertices of the adjacent simplex, as described above.
          */
         Perm<dim+1> adjacentGluing(int facet) const;
@@ -253,9 +272,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * (possibly this one) glued to it.  In other words,
          * adjacentSimplex(\a facet) is not \c null.
          *
-         * @param facet the facet of this simplex that we are examining.
+         * \param facet the facet of this simplex that we are examining.
          * This must be between 0 and \a dim inclusive.
-         * @return the corresponding facet number of the adjacent simplex
+         * \return the corresponding facet number of the adjacent simplex
          * that is glued to the given facet of this simplex.
          */
         int adjacentFacet(int facet) const;
@@ -265,7 +284,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * determines whether any facet of this simplex is not currently
          * glued to an adjacent simplex.
          *
-         * @return \c true if and only if this simplex has any boundary facets.
+         * \return \c true if and only if this simplex has any boundary facets.
          */
         bool hasBoundary() const;
 
@@ -294,12 +313,17 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * joined is already joined to something, or you are trying to
          * join the same facet of the same simplex to itself.
          *
-         * @param myFacet the facet of this simplex that will be glued
+         * \exception LockViolation The given facet of this simplex is
+         * currently locked.  This exception will be thrown before any
+         * change is made.  See lockFacet() for further details on how
+         * facet locks work and what their implications are.
+         *
+         * \param myFacet the facet of this simplex that will be glued
          * to the given simplex \a you.  This facet number must be between
          * 0 and \a dim inclusive.
-         * @param you the other simplex that will be glued to the given facet
+         * \param you the other simplex that will be glued to the given facet
          * of this simplex.
-         * @param gluing a permutation that describes how the vertices of
+         * \param gluing a permutation that describes how the vertices of
          * this simplex will map to the vertices of \a you across the
          * new gluing.  This permutation should be in the form described
          * by adjacentGluing().
@@ -317,9 +341,14 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * This routine is safe to call even if the given facet is
          * already a boundary facet (in which case it will do nothing).
          *
-         * @param myFacet the facet of this simplex whose gluing we
+         * \exception LockViolation The given facet of this simplex is
+         * currently locked.  This exception will be thrown before any
+         * change is made.  See lockFacet() for further details on how
+         * facet locks work and what their implications are.
+         *
+         * \param myFacet the facet of this simplex whose gluing we
          * will undo.  This should be between 0 and \a dim inclusive.
-         * @return the simplex that was originally glued to the given facet
+         * \return the simplex that was originally glued to the given facet
          * of this simplex, or \c null if this was already a boundary facet.
          */
         Simplex<dim>* unjoin(int myFacet);
@@ -334,13 +363,293 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * This routine is safe to call even if there are no adjacent
          * simplices (in which case it will do nothing).
+         *
+         * \exception LockViolation At least one facet of this simplex is
+         * non-boundary and currently locked.  This exception will be
+         * thrown before any change is made.  See lockFacet() for further
+         * details on how facet locks work and what their implications are.
          */
         void isolate();
 
         /**
+         * Locks this top-dimensional simplex.
+         *
+         * Essentially, locking a simplex means that that simplex must not
+         * change.  Specifically:
+         *
+         * - A locked simplex cannot be removed completely (e.g., via
+         *   Triangulation<dim>::removeSimplex() or via moves such as
+         *   edge collapses or 2-0 moves).
+         *
+         * - A locked simplex cannot be subdivided (e.g., via
+         *   Triangulation<dim>::subdivide(), or via a 1-(<i>dim</i>+1)
+         *   Pachner move).
+         *
+         * - A locked simplex cannot be merged with adjacent simplices
+         *   (e.g., via any of the other Pachner moves).
+         *
+         * Regina's own automatic retriangulation routines (such as
+         * Triangulation<dim>::intelligentSimplify() or
+         * Triangulation<dim>::retriangulate()) will simply avoid changing
+         * any locked simplices.  If the user attempts to manually force a
+         * change (e.g., by calling Triangulation<dim>::subdivide()), then
+         * a FailedPrecondition exception will be thrown.
+         *
+         * It is safe to call this function even if this simplex is
+         * already locked.
+         *
+         * Note that you can also lock the individual facets of a simplex
+         * (that is, its (<i>dim</i>-1)-faces); see lockFacet() for details.
+         * Locking a simplex does _not_ imply that its facets will be
+         * automatically locked also; these are independent concepts.
+         *
+         * The Triangulation copy constructor and assignment operators will
+         * preserve locks (i.e., the simplices/facets of the new triangulation
+         * will be locked in the same way as the simplices/facets of the
+         * source).
+         *
+         * Locks will not interfere with the destruction of a triangulation
+         * (i.e., the Triangulation destructor does not check for locks).
+         *
+         * Changing locks is considered a modification of the triangulation
+         * (in particular, if the triangulation is wrapped in a packet
+         * then the appropriate change events will be fired).
+         */
+        void lock();
+        /**
+         * Locks the given facet of this top-dimensional simplex.
+         *
+         * Essentially, locking a facet means that that facet must not
+         * change.  Specifically:
+         *
+         * - A locked boundary facet cannot be glued to some other
+         *   top-dimensional simplex (e.g., via join()).
+         *
+         * - A locked internal (non-boundary) facet cannot made boundary
+         *   by explicitly ungluing (e.g., via unjoin() or isolate()).
+         *
+         * - A locked facet cannot be removed completely (e.g., a facet
+         *   internal to the region where a Pachner move is performed, or
+         *   a facet internal to the region removed by a 2-0 move or
+         *   edge collapse).
+         *
+         * - A locked facet cannot be subdivided (e.g., via
+         *   Triangulation<dim>::subdivide().
+         *
+         * There are some important exceptions to these rules:
+         *
+         * - We do allow moves on the triangulation that topologically
+         *   "flatten" a region beside a locked facet \a F, as long as \a F
+         *   survives topologically.  For example, we allow 2-0 moves or
+         *   edge collapses that merge \a F with a parallel (\a dim-1)-face,
+         *   even if this changes \a F from internal to boundary (because
+         *   \a F was merged with a boundary facet).  Likewise, we allow
+         *   boundary shellings that expose a internal locked facet to the
+         *   boundary (because this is a "topological flattening", not just
+         *   an arbitrary ungluing).  In all such cases, the lock "moves"
+         *   with \a F to its new (possibly merged, possibly boundary) location.
+         *
+         * - Further to the previous point: we do _not_ allow boundary
+         *   shellings that remove a locked _boundary_ facet G.  This is
+         *   because \a G does not survive topologically (i.e., the resulting
+         *   boundary facets after the shelling are not isotopies of \a G).
+         *
+         * - We also allow moves that "pry open" a (\a dim-1)-face \a F to
+         *   become a pair of parallel faces \a F1, \a F2, between which new
+         *   material is inserted.  For example, this kind of operation happens
+         *   with pinchEdge() and connected sum operations in dimension 3, and
+         *   snapEdge() in dimension 4.  In this case, the lock will move
+         *   across to one of \a F1 or \a F2.  In particular, if \a F was
+         *   originally boundary then the lock will move to whichever of \a F1
+         *   or \a F2 is boundary after the operation is complete; otherwise
+         *   the choice of \a F1 versus \a F2 is arbitrary.
+         *
+         * Regina's own automatic retriangulation routines (such as
+         * Triangulation<dim>::intelligentSimplify() or
+         * Triangulation<dim>::retriangulate()) will simply avoid changing
+         * any locked facets.  If the user attempts to manually force a
+         * change (e.g., by calling Triangulation<dim>::subdivide()), then
+         * a FailedPrecondition exception will be thrown.
+         *
+         * Regina will always ensure that the locks on facets are consistent.
+         * That is, if some facet \a F of some top-dimensional simplex is
+         * glued to some facet \a G of some top-dimensional simplex, then
+         * whenever \a F is locked/unlocked, Regina will automatically
+         * lock/unlock \a G also.
+         *
+         * It is safe to call this function even if the given facet is
+         * already locked.
+         *
+         * Note that you can also lock an entire top-dimensional simplex;
+         * see lock() for details.  Locking a simplex does _not_ imply
+         * that its facets will be automatically locked also, or vice versa;
+         * these are independent concepts.
+         *
+         * The Triangulation copy constructor and assignment operators will
+         * preserve locks (i.e., the simplices/facets of the new triangulation
+         * will be locked in the same way as the simplices/facets of the
+         * source).
+         *
+         * Locks will not interfere with the destruction of a triangulation
+         * (i.e., the Triangulation destructor does not check for locks).
+         *
+         * Changing locks is considered a modification of the triangulation
+         * (in particular, if the triangulation is wrapped in a packet
+         * then the appropriate change events will be fired).
+         *
+         * \param facet indicates which facet of this simplex to lock;
+         * this must be between 0 and \a dim inclusive.
+         */
+        void lockFacet(int facet);
+        /**
+         * Unlocks this top-dimensional simplex.
+         *
+         * Essentially, locking a simplex means that that simplex must not
+         * change.  See lock() for full details on how locks work and
+         * what their implications are.
+         *
+         * It is safe to call this function even if this simplex is
+         * already unlocked.
+         *
+         * Note that you can also lock the individual facets of a simplex
+         * (that is, its (<i>dim</i>-1)-faces); see lockFacet() for details.
+         * Unlocking a simplex does _not_ imply that its facets will be
+         * automatically unlocked also; these are independent concepts.
+         *
+         * See unlockAll() for a convenient way to unlock this simplex and
+         * all of its facets in a single function call.  Also,
+         * Triangulation<dim>::unlockAll() offers a simple way to unlock all
+         * <i>dim</i>-simplices and their facets across an entire triangulation.
+         */
+        void unlock();
+        /**
+         * Unlocks the given facet of this top-dimensional simplex.
+         *
+         * Essentially, locking a facet means that that facet must not
+         * change.  See lockFacet() for full details on how locks work and
+         * what their implications are.
+         *
+         * Regina will always ensure that the locks on facets are consistent.
+         * That is, if some facet \a F of some top-dimensional simplex is
+         * glued to some facet \a G of some top-dimensional simplex, then
+         * whenever \a F is locked/unlocked, Regina will automatically
+         * lock/unlock \a G also.
+         *
+         * It is safe to call this function even if the given facet is
+         * already unlocked.
+         *
+         * Note that you can also lock an entire top-dimensional simplex;
+         * see lock() for details.  Unlocking a simplex does _not_ imply
+         * that its facets will be automatically unlocked also, or vice versa;
+         * these are independent concepts.
+         *
+         * See unlockAll() for a convenient way to unlock this simplex and
+         * all of its facets in a single function call.  Also,
+         * Triangulation<dim>::unlockAll() offers a simple way to unlock all
+         * <i>dim</i>-simplices and their facets across an entire triangulation.
+         *
+         * \param facet indicates which facet of this simplex to unlock;
+         * this must be between 0 and \a dim inclusive.
+         */
+        void unlockFacet(int facet);
+        /**
+         * Unlocks this top-dimensional simplex and all of its facets.
+         *
+         * Essentially, locking a simplex or one of its facets means that that
+         * simplex or facet must not change.  See lock() and lockFacet() for
+         * full details on how locks work and what their implications are.
+         *
+         * Regina will always ensure that the locks on facets are consistent.
+         * That is, if some facet \a F of some top-dimensional simplex is
+         * glued to some facet \a G of some top-dimensional simplex, then
+         * whenever \a F is locked/unlocked, Regina will automatically
+         * lock/unlock \a G also.
+         *
+         * It is safe to call this function even if this simplex and all
+         * of its facets are already unlocked.
+         *
+         * See also Triangulation<dim>::unlockAll() for a simple way to unlock
+         * all <i>dim</i>-simplices and their facets across an entire
+         * triangulation.
+         */
+        void unlockAll();
+        /**
+         * Determines whether this top-dimensional simplex is locked.
+         *
+         * Essentially, locking a simplex means that that simplex must not
+         * change.  See lock() for full details on how locks work and
+         * what their implications are.
+         *
+         * Note that you can also lock the individual facets of a simplex
+         * (that is, its (<i>dim</i>-1)-faces); see lockFacet() for details.
+         * This routine does _not_ test whether any facets of this simplex are
+         * locked; it only tests for a lock on the top-dimensional
+         * simplex itself.
+         *
+         * See lockMask() for a convenient way to test in a single query
+         * whether this simplex and/or any of its facets are locked.  Also,
+         * Triangulation<dim>::hasLocks() offers a simple way to test whether
+         * a triangulation has any locked <i>dim</i>-simplices or facets at all.
+         *
+         * \return \c true if and only if this simplex is locked.
+         */
+        bool isLocked() const;
+        /**
+         * Determines whether the given facet of this top-dimensional simplex
+         * is locked.
+         *
+         * Essentially, locking a facet means that that facet must not
+         * change.  See lockFacet() for full details on how locks work and
+         * what their implications are.
+         *
+         * Note that you can also lock an entire top-dimensional simplex;
+         * see lock() for details.  This routine does _not_ test whether
+         * the top-dimensional simplex is locked; it only tests for a lock
+         * on the given facet.
+         *
+         * See lockMask() for a convenient way to test in a single query
+         * whether this simplex and/or any of its facets are locked.  Also,
+         * Triangulation<dim>::hasLocks() offers a simple way to test whether
+         * a triangulation has any locked <i>dim</i>-simplices or facets at all.
+         *
+         * \param facet indicates which facet of this simplex to examine;
+         * this must be between 0 and \a dim inclusive.
+         * \return \c true if and only if the given facet of this simplex
+         * is locked.
+         */
+        bool isFacetLocked(int facet) const;
+        /**
+         * Returns a bitmask indicating which of this simplex and/or its
+         * individual facets are locked.
+         *
+         * Essentially, locking a top-dimensional simplex or one of its facets
+         * means that that simplex or facet must not change.  See lock() and
+         * lockFacet() for full details on how locks work and what their
+         * implications are.
+         *
+         * This routine returns a bitmask containing `dim+2` bits (here
+         * we number the bits so that the 0th bit is the least significant).
+         * The <i>k</i>th bit is set if and only if the <i>k</i>th facet
+         * of this simplex is locked, for 0 ≤ \a k ≤ \a dim.  Finally,
+         * the (<i>dim</i>+1)th bit is set if and only if this simplex itself
+         * is locked.
+         *
+         * See also isLocked() and isFacetLocked() for a more convenient way
+         * to query the simplex and/or one of its facets individually, and
+         * Triangulation<dim>::hasLocks() for a simple way to query all
+         * top-dimensional simplices and their facets across the entire
+         * triangulation.
+         *
+         * \return a bitmask indicating which of this simplex and/or its
+         * facets are locked.  This bitmask will be returned using a native
+         * C++ unsigned integer type of the appropriate size.
+         */
+        LockMask lockMask() const;
+
+        /**
          * Returns the triangulation to which this simplex belongs.
          *
-         * @return a reference to the triangulation containing this simplex.
+         * \return a reference to the triangulation containing this simplex.
          */
         Triangulation<dim>& triangulation() const;
 
@@ -348,7 +657,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Returns the connected component of the triangulation to
          * which this simplex belongs.
          *
-         * @return the component containing this simplex.
+         * \return the component containing this simplex.
          */
         Component<dim>* component() const;
 
@@ -359,15 +668,18 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * See FaceNumbering<dim, subdim> for the conventions of how
          * <i>subdim</i>-faces are numbered within a <i>dim</i>-simplex.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, face)</tt>; that is, the template parameter
+         * `face(subdim, face)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
-         * @param face the <i>subdim</i>-face of this simplex to examine.
+         * \tparam subdim the dimension of the subface to examine.
+         * This must be between 0 and (\a dim - 1) inclusive.
+         *
+         * \param face the <i>subdim</i>-face of this simplex to examine.
          * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
          * inclusive.
-         * @return the corresponding <i>subdim</i>-face of the triangulation.
+         * \return the corresponding <i>subdim</i>-face of the triangulation.
          */
         template <int subdim>
         Face<dim, subdim>* face(int face) const;
@@ -393,7 +705,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for face<2>().
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          *
          * See face() for further information.
          */
@@ -402,7 +714,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for face<3>().
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          *
          * See face() for further information.
          */
@@ -411,7 +723,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for face<4>().
          *
-         * This alias is available for dimensions \a dim &ge; 5.
+         * This alias is available for dimensions \a dim ≥ 5.
          *
          * See face() for further information.
          */
@@ -424,14 +736,14 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * This is a convenience routine to avoid more cumbersome calls to
          * Edge<dim>::faceNumber().  In dimensions 3 and 4 (where the array
          * Edge<dim>::edgeNumber is defined), this routine is identical to
-         * calling <tt>edge(Edge<dim>::edgeNumber[i][j])</tt>.
+         * calling `edge(Edge<dim>::edgeNumber[i][j])`.
          *
-         * @param i the vertex of this simplex that forms one endpoint
+         * \param i the vertex of this simplex that forms one endpoint
          * of the edge; this must be between 0 and \a dim inclusive.
-         * @param j the vertex of this simplex that forms the other endpoint
+         * \param j the vertex of this simplex that forms the other endpoint
          * of the edge; this must be between 0 and \a dim inclusive, and
          * must also be different from \a i.
-         * @return the edge of this simplex that connects vertices
+         * \return the edge of this simplex that connects vertices
          * \a i and \a j of this simplex.
          */
         Face<dim, 1>* edge(int i, int j) const {
@@ -467,9 +779,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   of the vertices Face<dim, subdim>::ordering[0,...,\a subdim].
          *
          * - If \a F also appears as face number \a k in some other simplex
-         *   \a s, then for each \a i in the range 0 &le; \a i &le; \a subdim,
-         *   vertex <tt>p[i]</tt> of this simplex will be identified with
-         *   vertex <i>s</i>.faceMapping(\a k)[\a i] of simplex \a s.
+         *   \a s, then for each \a i in the range 0 ≤ \a i ≤ \a subdim,
+         *   vertex `p[i]` of this simplex will be identified with
+         *   vertex `s.faceMapping(k)[i]` of simplex \a s.
          *
          * If the link of the underlying <i>subdim</i>-face is orientable,
          * then this permutation maps the remaining numbers
@@ -492,7 +804,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   together these directed edges form a directed path or cycle
          *   that follows the link of the face \a F.  Moreover, an iteration
          *   through the corresponding FaceEmbedding<dim, subdim> objects in
-         *   order from <tt>F.begin()</tt> to <tt>F.end()</tt>, will follow
+         *   order from `F.begin()` to `F.end()`, will follow
          *   this directed path in order from start to end.  (In the case where
          *   the link of \a F is a cycle, the start point in the list of
          *   FaceEmbedding objects will be arbitrary.)
@@ -504,7 +816,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * correct orientation.
          *
          * If this simplex (and therefore the face \a F) belongs to an
-         * \e orientable component of the triangulation, then there will also
+         * _orientable_ component of the triangulation, then there will also
          * be connections between faceMapping() and the orientations of the
          * top-dimensional simplices (as returned by orientation()):
          *
@@ -515,7 +827,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * - If \a subdim is equal to (\a dim - 1), then the face \a F can only
          *   belong to either one or two top-dimensional simplices; let
          *   \a s0 and \a s1 be the simplices corresponding to
-         *   <tt>F.embedding(0)</tt> and (if it exists) <tt>F.embedding(1)</tt>
+         *   `F.embedding(0)` and (if it exists) `F.embedding(1)`
          *   respectively.  Then in the simplex \a s0, the sign of the
          *   faceMapping() permutation will match the orientation of \a s0,
          *   and in \a s1 (if it exists), the sign of the faceMapping()
@@ -526,15 +838,18 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * FaceEmbedding<dim, subdim> object that refers to
          * <i>subdim</i>-face number \a face of this simplex.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faceMapping(subdim, face)</tt>; that is, the template
+         * `faceMapping(subdim, face)`; that is, the template
          * parameter \a subdim becomes the first argument of the function.
          *
-         * @param face the <i>subdim</i>-face of this simplex to examine.
+         * \tparam subdim the dimension of the subface to examine.
+         * This must be between 0 and (\a dim - 1) inclusive.
+         *
+         * \param face the <i>subdim</i>-face of this simplex to examine.
          * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
          * inclusive.
-         * @return a mapping from the vertices of the underlying
+         * \return a mapping from the vertices of the underlying
          * <i>subdim</i>-face of the triangulation to the vertices of
          * this simplex.
          */
@@ -562,7 +877,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<2>().
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          *
          * See faceMapping() for further information.
          */
@@ -571,7 +886,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<3>().
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          *
          * See faceMapping() for further information.
          */
@@ -580,7 +895,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<4>().
          *
-         * This alias is available for dimensions \a dim &ge; 5.
+         * This alias is available for dimensions \a dim ≥ 5.
          *
          * See faceMapping() for further information.
          */
@@ -602,7 +917,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * will always have orientation +1.  In particular, simplex 0 will
          * always have orientation +1.
          *
-         * @return +1 or -1 according to the orientation of this simplex.
+         * \return +1 or -1 according to the orientation of this simplex.
          */
         int orientation() const;
 
@@ -631,9 +946,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * If the skeleton has already been computed, then this routine is
          * very fast (since it just returns a precomputed answer).
          *
-         * @param facet the facet of this simplex that we are examining.
+         * \param facet the facet of this simplex that we are examining.
          * This must be between 0 and \a dim inclusive.
-         * @return \c true if and only if the given facet of this simplex
+         * \return \c true if and only if the given facet of this simplex
          * corresponds to a dual edge in the maximal forest chosen for the
          * dual 1-skeleton.
          */
@@ -643,9 +958,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -653,9 +968,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -668,15 +983,23 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Creates a new simplex with no description and no facets joined
          * to anything.
          *
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         SimplexBase(Triangulation<dim>* tri);
         /**
-         * Creates a new simplex with the given description and no facets
-         * joined to anything.
+         * Creates a new simplex whose description and locks are cloned
+         * from the given simplex, and with no facets joined to anything.
          *
-         * @param desc the description to give the new simplex.
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param clone the simplex whose details should be cloned.
+         * \param tri the triangulation to which the new simplex belongs.
+         */
+        SimplexBase(const SimplexBase& clone, Triangulation<dim>* tri);
+        /**
+         * Creates a new simplex with the given description, no locks,
+         * and no facets joined to anything.
+         *
+         * \param desc the description to give the new simplex.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         SimplexBase(std::string desc, Triangulation<dim>* tri);
 
@@ -684,10 +1007,10 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Tests whether the <i>useDim</i>-face degrees of this and the
          * given simplex are identical, under the given relabelling.
          *
-         * @param other the simplex to compare against this.
-         * @param p a mapping from the vertices of this simplex to the
+         * \param other the simplex to compare against this.
+         * \param p a mapping from the vertices of this simplex to the
          * vertices of \a other.
-         * @return \c true if and only if, for every \a i,
+         * \return \c true if and only if, for every \a i,
          * <i>useDim</i>-face number \a i of this simplex has the same degree
          * as its image in \a other under the relabelling \a p.
          */
@@ -699,10 +1022,10 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * simplex are identical, under the given relabelling, for all
          * faces whose dimensions are contained in the integer pack \a useDim.
          *
-         * @param other the simplex to compare against this.
-         * @param p a mapping from the vertices of this simplex to the
+         * \param other the simplex to compare against this.
+         * \param p a mapping from the vertices of this simplex to the
          * vertices of \a other.
-         * @return \c true if and only if, for every \a i and every
+         * \return \c true if and only if, for every \a i and every
          * facial dimension \a k in the integer pack \a useDim, <i>k</i>-face
          * number \a i of this simplex has the same degree as its image in
          * \a other under the relabelling \a p.
@@ -711,14 +1034,126 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         bool sameDegreesAt(const SimplexBase& other, Perm<dim+1> p,
             std::integer_sequence<int, useDim...>) const;
 
+    private:
+        /**
+         * A variant of join() with no error-checking, no lock management,
+         * and no management of the underlying triangulation.
+         *
+         * This routine adjusts the internal \a adj_ and \a gluing_ arrays
+         * from both sides of the join, just like join() does.  However,
+         * this is _all_ it does.  In particular:
+         *
+         * - it does not check preconditions or throw exceptions;
+         *
+         * - it does not check for facet locks, throw LockViolation exceptions,
+         *   or update any lock flags;
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots, fire change events, or clear
+         *   computed properties.
+         *
+         * This should _only_ be used in settings where you are sure that
+         * all preconditions hold true, and where the other missing tasks such
+         * as locks, snapshots, change events and computed properties are being
+         * taken care of in some other manner (possibly manually).  An example
+         * of such a setting might be the implementation of a local move
+         * (such as a Pachner move).
+         *
+         * Such a "raw" routine would typically be safe to use _without_
+         * any manual error/lock/triangulation management in the following
+         * scenarios:
+         *
+         * - triangulation constructors, but only in settings where no
+         *   properties (including the skeleton) have been computed yet
+         *   (as an example, see the constructor that builds a link complement);
+         *
+         * - routines that create a "staging" triangulation, without computing
+         *   its skeleton or any other properties, and then swap or move this
+         *   staging triangulation into the triangulation actually being
+         *   worked upon (see Triangulation<dim>::subdivide() for an example).
+         *
+         * The preconditions and arguments for this routine are the same as
+         * for join().  See join() for further details.
+         */
+        void joinRaw(int myFacet, Simplex<dim>* you, Perm<dim+1> gluing);
+
+        /**
+         * A variant of unjoin() with no lock management, and no management
+         * of the underlying triangulation.
+         *
+         * See joinRaw() for further details on what these "raw" join routines
+         * do and where they can be used.
+         *
+         * The arguments for this routine are the same as for unjoin().
+         * See unjoin() for further details.
+         */
+        Simplex<dim>* unjoinRaw(int myFacet);
+        /**
+         * A variant of isolate() with no lock management, and no management
+         * of the underlying triangulation.
+         *
+         * See joinRaw() for further details on what these "raw" join routines
+         * do and where they can be used.
+         *
+         * See isolate() for further details.
+         */
+        void isolateRaw();
+        /**
+         * A variant of lockFacet() with no management of the underlying
+         * triangulation, and no enforcement of lock consistency.
+         *
+         * This routine adjusts the \a locks_ member to lock the given facet
+         * of this simplex, just like lockFacet() does.  However, this is
+         * _all_ it does.  In particular:
+         *
+         * - it does not check preconditions or throw exceptions;
+         *
+         * - if the given facet is glued to something, it does not adjust
+         *   the lock on the other side of the join for consistency;
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots or fire change events.
+         *
+         * This should _only_ be used in settings where you are sure that
+         * all preconditions hold true, and where the other missing tasks such
+         * as snapshots, change events and consistency of locks are being
+         * taken care of in some other manner (possibly manually).  An example
+         * of such a setting might be the implementation of a local move
+         * (such as a Pachner move).
+         *
+         * The preconditions and arguments for this routine are the same as
+         * for lockFacet().  See lockFacet() for further details.
+         */
+        void lockFacetRaw(int facet);
+        /**
+         * A variant of unlockFacet() with no management of the underlying
+         * triangulation, and no enforcement of lock consistency.
+         *
+         * See lockFacetRaw() for further details on what these "raw" lock
+         * routines do and where they can be used.
+         *
+         * See unlockFacet() for further details.
+         */
+        void unlockFacetRaw(int facet);
+
     friend class TriangulationBase<dim>;
     friend class Triangulation<dim>;
+    friend class regina::XMLSimplexReader<dim>;
+    friend class regina::XMLTriangulationReader<dim>;
 };
 
 // Inline functions for SimplexBase
 
 template <int dim>
 inline SimplexBase<dim>::SimplexBase(Triangulation<dim>* tri) : tri_(tri) {
+    for (int i = 0; i <= dim; ++i)
+        adj_[i] = nullptr;
+}
+
+template <int dim>
+inline SimplexBase<dim>::SimplexBase(const SimplexBase& clone,
+        Triangulation<dim>* tri) :
+        description_(clone.description_), locks_(clone.locks_), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = nullptr;
 }
@@ -739,6 +1174,8 @@ inline const std::string& SimplexBase<dim>::description() const {
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
     tri_->takeSnapshot();
+    // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+    // computed properties of the triangulation will not change.
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
     description_ = desc;
 }
@@ -777,6 +1214,8 @@ inline Component<dim>* SimplexBase<dim>::component() const {
 template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
+    static_assert(0 <= subdim && subdim < dim,
+        "Simplex<dim>::face<subdim>() requires 0 <= subdim < dim.");
     triangulation().ensureSkeleton();
     return std::get<subdim>(faces_)[face];
 }
@@ -820,6 +1259,8 @@ inline Face<dim, 4>* SimplexBase<dim>::pentachoron(int i) const {
 template <int dim>
 template <int subdim>
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
+    static_assert(0 <= subdim && subdim < dim,
+        "Simplex<dim>::faceMapping<subdim>() requires 0 <= subdim < dim.");
     triangulation().ensureSkeleton();
     return std::get<subdim>(mappings_)[face];
 }
@@ -908,28 +1349,182 @@ bool SimplexBase<dim>::hasBoundary() const {
 }
 
 template <int dim>
-void SimplexBase<dim>::isolate() {
-    for (int i = 0; i <= dim; ++i)
-        if (adj_[i])
-            unjoin(i);
+inline void SimplexBase<dim>::lock() {
+    static constexpr LockMask mask = (LockMask(1) << (dim + 1));
+    if (! (locks_ & mask)) {
+        tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ |= mask;
+    }
+}
+
+template <int dim>
+void SimplexBase<dim>::lockFacet(int facet) {
+    const LockMask mask = (LockMask(1) << facet);
+    if (! (locks_ & mask)) {
+        tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ |= mask;
+
+        if (adj_[facet]) {
+            int adjFacet = gluing_[facet][facet];
+            adj_[facet]->locks_ |= (LockMask(1) << adjFacet);
+        }
+    }
+}
+
+template <int dim>
+inline void SimplexBase<dim>::lockFacetRaw(int facet) {
+    locks_ |= (LockMask(1) << facet);
+}
+
+template <int dim>
+inline void SimplexBase<dim>::unlock() {
+    static constexpr LockMask mask = (LockMask(1) << (dim + 1));
+    if (locks_ & mask) {
+        tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ &= ~mask;
+    }
+}
+
+template <int dim>
+void SimplexBase<dim>::unlockFacet(int facet) {
+    const LockMask mask = (LockMask(1) << facet);
+    if (locks_ & mask) {
+        tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ &= ~mask;
+
+        if (adj_[facet]) {
+            int adjFacet = gluing_[facet][facet];
+            adj_[facet]->locks_ &= ~(LockMask(1) << adjFacet);
+        }
+    }
+}
+
+template <int dim>
+inline void SimplexBase<dim>::unlockFacetRaw(int facet) {
+    locks_ &= ~(LockMask(1) << facet);
+}
+
+template <int dim>
+void SimplexBase<dim>::unlockAll() {
+    if (locks_) {
+        tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ = 0;
+
+        for (int facet = 0; facet <= dim; ++facet)
+            if (adj_[facet] && adj_[facet] != this) {
+                int adjFacet = gluing_[facet][facet];
+                adj_[facet]->locks_ &= ~(LockMask(1) << adjFacet);
+            }
+    }
+}
+
+template <int dim>
+inline bool SimplexBase<dim>::isLocked() const {
+    return (locks_ & (LockMask(1) << (dim + 1)));
+}
+
+template <int dim>
+inline bool SimplexBase<dim>::isFacetLocked(int facet) const {
+    return (locks_ & (LockMask(1) << facet));
+}
+
+template <int dim>
+inline typename SimplexBase<dim>::LockMask SimplexBase<dim>::lockMask() const {
+    return locks_;
 }
 
 template <int dim>
 Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return nullptr;
+    if (isFacetLocked(myFacet))
+        throw LockViolation("An attempt was made to unjoin a locked facet "
+            "from its adjacent simplex");
 
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     Simplex<dim>* you = adj_[myFacet];
-    int yourFacet = gluing_[myFacet][myFacet];
-    assert(you->adj_[yourFacet] == this);
-    you->adj_[yourFacet] = nullptr;
+    you->adj_[gluing_[myFacet][myFacet]] = nullptr;
     adj_[myFacet] = nullptr;
 
-    tri_->clearAllProperties();
     return you;
+}
+
+template <int dim>
+inline Simplex<dim>* SimplexBase<dim>::unjoinRaw(int myFacet) {
+    if (! adj_[myFacet])
+        return nullptr;
+
+    Simplex<dim>* you = adj_[myFacet];
+    you->adj_[gluing_[myFacet][myFacet]] = nullptr;
+    adj_[myFacet] = nullptr;
+
+    return you;
+}
+
+template <int dim>
+void SimplexBase<dim>::isolate() {
+    // We need to check for lock violations before any changes are made,
+    // since we promise to leave things unchanged if we throw a LockViolation.
+    if (locks_) {
+        for (int i = 0; i <= dim; ++i)
+            if (adj_[i] && isFacetLocked(i))
+                throw LockViolation("An attempt was made to isolate a "
+                    "top-dimensional simplex with one or more locked "
+                    "non-boundary facets");
+    }
+
+    // The slightly convoluted logic below ensures that, if this is a no-op
+    // (i.e., the simplex is already isolated), then there are no snapshots /
+    // change events / etc.
+
+    int i = 0;
+    for ( ; i <= dim; ++i)
+        if (adj_[i])
+            goto hasGluings;
+    return;
+
+hasGluings:
+
+    tri_->takeSnapshot();
+    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
+
+    // Currently, i is the first facet that has a gluing.
+    for ( ; i <= dim; ++i)
+        if (auto you = adj_[i]) {
+            you->adj_[gluing_[i][i]] = nullptr;
+            adj_[i] = nullptr;
+        }
+}
+
+template <int dim>
+inline void SimplexBase<dim>::isolateRaw() {
+    for (int i = 0; i <= dim; ++i)
+        if (auto you = adj_[i]) {
+            you->adj_[gluing_[i][i]] = nullptr;
+            adj_[i] = nullptr;
+        }
 }
 
 template <int dim>
@@ -946,16 +1541,28 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
             "are already joined to something");
     if (you == this && yourFacet == myFacet)
         throw InvalidArgument("You cannot join a facet of a simplex to itself");
+    if (isFacetLocked(myFacet) || you->isFacetLocked(yourFacet))
+        throw LockViolation("An attempt was made to join a locked facet "
+            "to another top-dimensional simplex");
 
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     adj_[myFacet] = you;
     gluing_[myFacet] = gluing;
     you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
     you->gluing_[yourFacet] = gluing.inverse();
+}
 
-    tri_->clearAllProperties();
+template <int dim>
+inline void SimplexBase<dim>::joinRaw(int myFacet, Simplex<dim>* you,
+        Perm<dim+1> gluing) {
+    int yourFacet = gluing[myFacet];
+
+    adj_[myFacet] = you;
+    gluing_[myFacet] = gluing;
+    you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
+    you->gluing_[yourFacet] = gluing.inverse();
 }
 
 template <int dim>
@@ -1005,7 +1612,7 @@ inline bool SimplexBase<dim>::sameDegreesAt(const SimplexBase& other,
     return (sameDegreesAt<useDim>(other, p) && ...);
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
 

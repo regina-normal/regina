@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -210,7 +210,7 @@ void AbelianGroup::writeXMLData(std::ostream& out) const {
     out << "</abeliangroup>";
 }
 
-// ---N--> CC --M-->  ie: M*N = 0.
+// ---N--> CC --M-->  ie: M×N = 0.
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) {
     if (M.columns() != N.rows())
         throw InvalidArgument("The chain complex constructor requires "

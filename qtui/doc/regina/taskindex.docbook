@@ -82,8 +82,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-prop3ball">3-ball
-   recognition</link></primaryie>
+  <primaryie>3-ball recognition</primaryie>
+  <seeie>See: handlebody recognition</seeie>
  </indexentry>
 
  <indexentry>
@@ -565,9 +565,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>documentation</primaryie>
-  <secondaryie><link linkend="python-docs">&regina; objects, classes
-   and methods</link></secondaryie>
+  <primaryie>documentation, &regina; objects, classes and methods</primaryie>
+  <secondaryie><link linkend="python-docstrings">accessing inline through
+   &python;</link></secondaryie>
+  <secondaryie><link linkend="python-docs">overview</link></secondaryie>
+  <secondaryie><ulink url='https://regina-normal.github.io/engine-docs/'>read online</ulink></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -892,6 +894,12 @@
  <indexentry>
   <primaryie><link linkend="tri-haken">Hakenness,
    testing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>handlebodies</primaryie>
+  <secondaryie><link linkend="tri-new-handlebody">creation</link></secondaryie>
+  <secondaryie><link linkend="tri-prophandlebody">recognition</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1300,12 +1308,22 @@
    (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-proptype">splitting surfaces,
    recognising</link></secondaryie>
+  <secondaryie><link linkend="surfaces-proplink">tetrahedron links,
+   recognising</link></secondaryie>
+  <secondaryie><link linkend="surfaces-proplink">triangle links,
+   recognising</link></secondaryie>
   <secondaryie><link linkend="regina7-tons">transversely oriented
    normal surfaces, removed</link></secondaryie>
   <secondaryie><link linkend="hypersurfaces-triangulate">triangulating a
    hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">vertex links,
    recognising</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>normalised face links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces</link></secondaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-O'><title>&mdash; O &mdash;</title>
@@ -1753,8 +1771,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-propsolidtorus">solid torus
-   recognition</link></primaryie>
+  <primaryie>solid torus recognition</primaryie>
+  <seeie>See: handlebody recognition</seeie>
  </indexentry>
 
  <indexentry>
@@ -1895,12 +1913,24 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>tetrahedron links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>text encodings</primaryie>
   <seeie>See: character encodings</seeie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="packet-text">text packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>thin face links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1943,6 +1973,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>triangle links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-faces">triangles (2-faces), viewing
    in a triangulation</link></primaryie>
  </indexentry>
@@ -1963,7 +1999,7 @@
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-make0eff">0-efficient triangulation,
    conversion to</link></secondaryie>
-  <secondaryie><link linkend="tri-prop3ball">3-ball
+  <secondaryie><link linkend="tri-prophandlebody">3-ball
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">3-manifold,
    recognising</link></secondaryie>
@@ -2018,6 +2054,8 @@
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fund">fundamental
    group</link></secondaryie>
+  <secondaryie><link linkend="tri-prophandlebody">handlebody
+   recognition</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homiform">homology
    groups</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">hyperbolic solution
@@ -2056,7 +2094,7 @@
    viewing details</link></secondaryie>
   <secondaryie><link linkend="snappea">&snappea;
    triangulations</link></secondaryie>
-  <secondaryie><link linkend="tri-propsolidtorus">solid torus
+  <secondaryie><link linkend="tri-prophandlebody">solid torus
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-new-splitting">splitting surface,
    reconstructing triangulation from</link></secondaryie>
@@ -2072,7 +2110,7 @@
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
-  <secondaryie><link linkend="tri-propsolidtorus">unknot complement
+  <secondaryie><link linkend="tri-prophandlebody">unknot complement
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
@@ -2115,8 +2153,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-propsolidtorus">unknot
-   recognition</link></primaryie>
+  <primaryie>unknot recognition</primaryie>
+  <seeie>See: handlebody recognition</seeie>
  </indexentry>
 
  <indexentry id="idx-user-interface">

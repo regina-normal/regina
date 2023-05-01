@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,6 +54,8 @@ void Triangulation<2>::swap(Triangulation<2>& other) {
     if (&other == this)
         return;
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to swap computed properties (not clear them).
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,22 +52,22 @@ namespace regina {
  *
  * Regina recognises three types of boundary components:
  *
- * - A <i>real boundary component</i> is formed from unglued facets
+ * - A _real boundary component_ is formed from unglued facets
  *   of top-dimensional simplices of the triangulation.  For example,
  *   a real boundary component of a 3-manifold triangulation is formed
  *   from boundary triangles in the 2-skeleton.
  *
- * - An <i>ideal boundary component</i> consists of a single ideal vertex;
+ * - An _ideal boundary component_ consists of a single ideal vertex;
  *   that is, a vertex whose link is a closed (<i>dim</i>-1)-manifold but not
- *   a sphere.  This is only possible for dimensions \a dim &ge; 3.
+ *   a sphere.  This is only possible for dimensions \a dim ≥ 3.
  *
- * - An <i>invalid vertex boundary component</i> consists of a single invalid
+ * - An _invalid vertex boundary component_ consists of a single invalid
  *   invalid vertex that does not belong to a real boundary component.  This
  *   means the vertex link must be an ideal (<i>dim</i>-1)-manifold, or an
  *   invalid (<i>dim</i>-1)-manifold with no real boundary.  Invalid vertex
- *   boundary components are only possible for dimensions \a dim &ge; 4.
+ *   boundary components are only possible for dimensions \a dim ≥ 4.
  *
- * Ideal and invalid vertex boundary components are \e only recognised
+ * Ideal and invalid vertex boundary components are _only_ recognised
  * when \a dim is one of Regina's \ref stddim "standard dimensions".
  * This is because, in higher dimensions, the relevant conditions rely
  * on undecidable problems.
@@ -93,7 +93,7 @@ namespace regina {
  * (<i>dim</i>)-manifold boundary are effectively "pinched" together.
  * If this happens, the different parts of the boundary that are pinched
  * might or might not be listed as part of the same boundary component;
- * if not then the offending face will be included in \e all of these
+ * if not then the offending face will be included in _all_ of these
  * boundary components.  Nevertheless, only one of these can be considered
  * the "official" boundary component of the face as returned by
  * Face::boundaryComponent().  This is all a bit of a mess, but then again the
@@ -110,7 +110,7 @@ namespace regina {
  * responsible for their memory management; this is all taken care of by
  * the Triangulation to which they belong.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., BoundaryComponent2 and BoundaryComponent3 for dimensions 2 and 3).
  *

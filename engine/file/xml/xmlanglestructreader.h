@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ namespace regina {
 /**
  * An XML element reader that reads a single angle structure.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAngleStructureReader : public XMLElementReader {
     private:
@@ -64,14 +64,14 @@ class XMLAngleStructureReader : public XMLElementReader {
         /**
          * Creates a new angle structure reader.
          *
-         * @param newTri the triangulation on which this angle structure lies.
+         * \param tri the triangulation on which this angle structure lies.
          */
         XMLAngleStructureReader(const SnapshotRef<Triangulation<3>>& tri);
 
         /**
          * Returns a reference to the angle structure that has been read.
          *
-         * @return the angle structure, or no value if an error occurred.
+         * \return the angle structure, or \nullopt if an error occurred.
          */
         std::optional<AngleStructure>& structure();
 
@@ -84,7 +84,7 @@ class XMLAngleStructureReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single angle structure list.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAngleStructuresReader : public XMLPacketReader {
     private:
@@ -101,7 +101,7 @@ class XMLAngleStructuresReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c angles XML element.
+         * \param props the attributes of the \c angles XML element.
          */
         XMLAngleStructuresReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -118,7 +118,7 @@ class XMLAngleStructuresReader : public XMLPacketReader {
  * An XML packet reader that reads a single angle structure list using
  * the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyAngleStructuresReader : public XMLPacketReader {
     private:
@@ -135,7 +135,7 @@ class XMLLegacyAngleStructuresReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param tri the triangulation on which these angle
+         * \param tri the triangulation on which these angle
          * structures are placed.
          */
         XMLLegacyAngleStructuresReader(XMLTreeResolver& resolver,

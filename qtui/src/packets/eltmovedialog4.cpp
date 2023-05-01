@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -60,6 +60,10 @@ namespace {
     }
 
     bool has24(regina::Tetrahedron<4>* f) {
+        return f->triangulation().pachner(f, true, false);
+    }
+
+    bool has15(regina::Pentachoron<4>* f) {
         return f->triangulation().pachner(f, true, false);
     }
 
@@ -119,8 +123,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "triangulation.<p>"
         "A <i>5-1 move</i> involves replacing five pentachora joined at "
         "a vertex of degree five with a single pentachoron.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use51, 0, 0);
     use42 = new QRadioButton(tr("&4-2"), this);
     use42->setWhatsThis( tr("<qt>Perform a 4-2 move on this "
@@ -128,8 +132,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "A <i>4-2 move</i> involves replacing four pentachora joined along "
         "an edge of degree four with two pentachora joined along a "
         "single tetrahedron.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use42, 1, 0);
     use33 = new QRadioButton(tr("&3-3"), this);
     use33->setWhatsThis( tr("<qt>Perform a 3-3 move on this "
@@ -137,8 +141,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "A <i>3-3 move</i> involves replacing three pentachora joined along "
         "a triangle of degree three with three pentachora joined along "
         "a transverse triangle.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use33, 2, 0);
     use24 = new QRadioButton(tr("&2-4"), this);
     use24->setWhatsThis( tr("<qt>Perform a 2-4 move on this "
@@ -146,15 +150,16 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "A <i>2-4 move</i> involves replacing two pentachora joined along "
         "a single tetrahedron with four pentachora joined along an edge of "
         "degree four.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use24, 3, 0);
     use15 = new QRadioButton(tr("&1-5"), this);
     use15->setWhatsThis( tr("<qt>Perform a 1-5 move on this "
         "triangulation.<p>"
         "A <i>1-5 move</i> involves replacing one pentachoron "
         "with five pentachora that meet at a new internal vertex.<p>"
-        "This move will never change the underlying 4-manifold.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use15, 4, 0);
     use44 = new QRadioButton(tr("4-4"), this);
     use44->setWhatsThis( tr("<qt>Perform a 4-4 move on this "
@@ -162,31 +167,32 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "A <i>4-4 move</i> involves replacing four pentachoron "
         "joined along an edge of degree four with four different "
         "pentachora joined along a new edge of degree four.<p>"
-        "This move will never change the underlying 4-manifold.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use44, 5, 0);
     use20t = new QRadioButton(tr("2-0 (&triangle)"), this);
     use20t->setWhatsThis(tr("<qt>Perform a 2-0 triangle move on this "
         "triangulation.<p>"
         "A <i>2-0 triangle move</i> involves taking two pentachora joined "
         "along a triangle of degree two and squashing them flat.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use20t, 6, 0);
     use20e = new QRadioButton(tr("2-0 (&edge)"), this);
     use20e->setWhatsThis( tr("<qt>Perform a 2-0 edge move on this "
         "triangulation.<p>"
         "A <i>2-0 edge move</i> involves taking two pentachora meeting at "
         "an edge of degree two and squashing them together.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use20e, 7, 0);
     use20v = new QRadioButton(tr("2-0 (&vertex)"), this);
     use20v->setWhatsThis( tr("<qt>Perform a 2-0 vertex move on this "
         "triangulation.<p>"
         "A <i>2-0 vertex move</i> involves taking two pentachora meeting at "
         "a vertex of degree two and squashing them together.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use20v, 8, 0);
     useOpenBook = new QRadioButton(tr("&Open book"), this);
     useOpenBook->setWhatsThis( tr("<qt>Perform a book opening "
@@ -197,8 +203,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "tetrahedron, thereby &quot;opening "
         "out&quot; that tetrahedron and exposing two more pentachoron facets "
         "to the boundary.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useOpenBook, 9, 0);
     useShellBdry = new QRadioButton(tr("&Shell boundary"), this);
     useShellBdry->setWhatsThis( tr("<qt>Perform a boundary shelling "
@@ -206,8 +212,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "A <i>boundary shelling move</i> simply involves removing a "
         "pentachoron that meets the triangulation boundary along one or "
         "more of its facets.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useShellBdry, 10, 0);
     useCollapseEdge = new QRadioButton(tr("&Collapse edge"), this);
     useCollapseEdge->setWhatsThis( tr("<qt>Collapse an edge in this "
@@ -215,8 +221,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "<i>Collapsing an edge</i> involves taking an edge between two "
         "distinct vertices and collapsing that edge to a point.  Any "
         "pentachora containing that edge will be flattened into tetrahedra.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useCollapseEdge, 11, 0);
     useSnapEdge = new QRadioButton(tr("S&nap edge"), this);
     useSnapEdge->setWhatsThis( tr("<qt>Snap together the endpoints "
@@ -226,8 +232,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "this triangle together, thus identifying the endpoints of <i>e</i>.  "
         "This is done by inserting a special subcomplex (so the total "
         "number of pentachora will increase by four).<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered in the adjacent drop-down list.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useSnapEdge, 12, 0);
 
     box51 = new FaceChooser<4, 0>(tri, &has51, this, false);
@@ -235,101 +241,101 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "the 5-1 move will be performed.  The vertex numbers in this list "
         "correspond to the vertex numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box51, 0, 1);
     box42 = new FaceChooser<4, 1>(tri, &has42, this, false);
     box42->setWhatsThis( tr("<qt>Select the degree four edge about which "
         "the 4-2 move will be performed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box42, 1, 1);
     box33 = new FaceChooser<4, 2>(tri, &has33, this, false);
     box33->setWhatsThis( tr("<qt>Select the degree three triangle about which "
         "the 3-3 move will be performed.  The triangle numbers in this list "
         "correspond to the triangle numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box33, 2, 1);
     box24 = new FaceChooser<4, 3>(tri, &has24, this, false);
     box24->setWhatsThis( tr("<qt>Select the tetrahedron about which "
         "the 2-4 move will be performed.  The tetrahedron numbers in this list "
         "correspond to the tetrahedron numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box24, 3, 1);
-    box15 = new SimplexChooser<4>(tri, nullptr, this, false);
+    box15 = new SimplexChooser<4>(tri, &has15, this, false);
     box15->setWhatsThis( tr("<qt>Select the pentachoron upon which "
         "the 1-5 move will be performed.<p>"
-        "All pentachora are offered here, since "
-        "this move will never change the underlying 4-manifold.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box15, 4, 1);
     box44 = new FaceChooser<4, 1>(tri, &has44, this, false);
     box44->setWhatsThis( tr("<qt>Select the degree four edge about which "
         "the 4-4 move will be performed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box44, 5, 1);
     box20t = new FaceChooser<4, 2>(tri, &has20t, this, false);
     box20t->setWhatsThis( tr("<qt>Select the degree two triangle about "
         "which the 2-0 triangle move will be performed.  The triangle numbers "
         "in this list correspond to the triangle numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box20t, 6, 1);
     box20e = new FaceChooser<4, 1>(tri, &has20e, this, false);
     box20e->setWhatsThis( tr("<qt>Select the degree two edge about which "
         "the 2-0 edge move will be performed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box20e, 7, 1);
     box20v = new FaceChooser<4, 0>(tri, &has20v, this, false);
     box20v->setWhatsThis( tr("<qt>Select the degree two vertex about which "
         "the 2-0 vertex move will be performed.  The vertex numbers in this "
         "list correspond to the vertex numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(box20v, 8, 1);
     boxOpenBook = new FaceChooser<4, 3>(tri, &hasOpenBook, this, false);
     boxOpenBook->setWhatsThis( tr("<qt>Select the internal tetrahedron "
         "that should be opened out.  The tetrahedron numbers in this list "
         "correspond to the tetrahedron numbers seen when viewing the "
         "triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(boxOpenBook, 9, 1);
     boxShellBdry = new SimplexChooser<4>(tri, &hasShellBoundary, this, false);
     boxShellBdry->setWhatsThis( tr("<qt>Select the boundary pentachoron "
         "that should be removed.  The pentachoron numbers in this list "
         "are the usual pentachoron numbers seen in the gluings editor.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(boxShellBdry, 10, 1);
     boxCollapseEdge = new FaceChooser<4, 1>(tri, &hasCollapseEdge, this, false);
     boxCollapseEdge->setWhatsThis( tr("<qt>Select the edge joining "
         "two distinct vertices that should be collapsed.  "
         "The edge numbers in this list correspond to the edge numbers seen "
         "when viewing the triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(boxCollapseEdge, 11, 1);
     boxSnapEdge = new FaceChooser<4, 1>(tri, &hasSnapEdge, this, false);
     boxSnapEdge->setWhatsThis( tr("<qt>Select the edge joining "
         "two distinct vertices that should be snapped together.  "
         "The edge numbers in this list correspond to the edge numbers seen "
         "when viewing the triangulation skeleton.<p>"
-        "Only moves that do not change the underlying 4-manifold are "
-        "offered.</qt>"));
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
     layout->addWidget(boxSnapEdge, 12, 1);
 
     moveTypes = new QButtonGroup();
@@ -353,7 +359,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
 
     connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
         SLOT(clicked(QAbstractButton*)));
-    connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
+    connect(moveTypes, SIGNAL(buttonClicked(QAbstractButton*)), this,
+        SLOT(updateApply()));
 
     packetWasRenamed(*tri);
     packetWasChanged(*tri);

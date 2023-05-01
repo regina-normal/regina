@@ -1,0 +1,86 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2023, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests hashable classes.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+d = { 8: -1, 'foo': -2 }
+counter = 10
+
+def test(obj):
+	global counter
+	try:
+		print(obj)
+		d[obj] = counter
+		counter = counter + 1
+	except:
+		print('Cannot hash and insert:', obj)
+	
+	try:
+		c = type(obj)
+		print(d[c(obj)])
+	except:
+		print('Cannot hash and lookup:', obj)
+
+test('sample string')
+test(Example2.kb())
+test(Example3.poincare())
+test(Example4.k3())
+test(Example5.simplicialSphere())
+test(ExampleLink.trefoil())
+test(Perm2(1,0))
+test(Perm3(1,2,0))
+test(Perm4(3,1,2,0))
+test(Perm5(3,1,2,0,4))
+test(Perm6(3,1,5,2,0,4))
+test(Perm7(3,1,5,2,0,6,4))
+test(Perm8([3,1,8,5,2,0,6,4]))
+test(AbelianGroup(3, [3,6,24]))
+test(Integer(5))
+test(LargeInteger(8))
+test(LargeInteger.infinity)
+test(VectorInt([3,-2,0,6]))
+test(VectorLarge([3,'inf',-2,0,6]))
+test(Laurent(-2, [5,0,-6,1]))
+test(Laurent2([(3,-2,1), (1,0,4)]))
+test(Example2.kb().pairing())
+test(Example3.poincare().pairing())
+test(Example4.cappellShaneson().pairing())
+test(Example5.simplicialSphere().pairing())
+test(FacetSpec2(4,1))
+test(FacetSpec3(8,0))
+test(FacetSpec4(8,3))
+test(FacetSpec5(8,5))
+
+# TODO: Replace these with better (non-trivial but deterministic) examples.
+test(Isomorphism2.identity(3))
+test(Isomorphism3.identity(5))
+test(Isomorphism4.identity(2))
+test(Isomorphism5.identity(4))

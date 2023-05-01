@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,7 @@ namespace regina {
  * triangular prism with its two ends identified.
  *
  * The resulting triangular solid torus will have all edges as boundary
- * edges.  Three of these will be <i>axis edges</i> (parallel to the
+ * edges.  Three of these will be _axis edges_ (parallel to the
  * axis of the solid torus).  Between the axis edges will be three
  * annuli, each with two internal edges.  One of these internal edges will
  * meet all three tetrahedra (the \a major edge) and one of these internal
@@ -94,7 +94,7 @@ class TriSolidTorus : public StandardTriangulation {
         Tetrahedron<3>* tet_[3];
             /**< The tetrahedra that make up this solid torus. */
         Perm<4> vertexRoles_[3];
-            /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
+            /**< For tetrahedron \a i, `vertexRoles[i]` is a
                  permutation p chosen so that the axis edge for that
                  tetrahedron runs from vertex p[0] to p[3] and the
                  major edge opposite that axis edge runs from vertex p[1]
@@ -102,21 +102,21 @@ class TriSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         TriSolidTorus(const TriSolidTorus&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         TriSolidTorus& operator = (const TriSolidTorus&) = default;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(TriSolidTorus& other) noexcept;
@@ -125,38 +125,38 @@ class TriSolidTorus : public StandardTriangulation {
          * Returns the requested tetrahedron in this solid torus.
          * See the general class notes for further details.
          *
-         * @param index specifies which tetrahedron in the solid torus
+         * \param index specifies which tetrahedron in the solid torus
          * to return; this must be 0, 1 or 2.
-         * @return the requested tetrahedron.
+         * \return the requested tetrahedron.
          */
         Tetrahedron<3>* tetrahedron(int index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
          * of the requested tetrahedron plays in the solid torus.
-         * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
+         * The permutation returned (call this `p`) maps 0, 1, 2 and
          * 3 to the four vertices of tetrahedron \a index so that the edge
-         * from <tt>p[0]</tt> to <tt>p[3]</tt> is an oriented axis
-         * edge, and the path from vertices <tt>p[0]</tt> to <tt>p[1]</tt>
-         * to <tt>p[2]</tt> to <tt>p[3]</tt> follows the three oriented
+         * from `p[0]` to `p[3]` is an oriented axis
+         * edge, and the path from vertices `p[0]` to `p[1]`
+         * to `p[2]` to `p[3]` follows the three oriented
          * major edges.  In particular, the major edge for annulus
-         * \a index will run from vertices <tt>p[1]</tt> to <tt>p[2]</tt>.
-         * Edges <tt>p[0]</tt> to <tt>p[2]</tt> and <tt>p[1]</tt> to
-         * <tt>p[3]</tt> will both be oriented minor edges.
+         * \a index will run from vertices `p[1]` to `p[2]`.
+         * Edges `p[0]` to `p[2]` and `p[1]` to
+         * `p[3]` will both be oriented minor edges.
          *
-         * Note that annulus <tt>index+1</tt> uses face <tt>p[1]</tt> of
-         * the requested tetrahedron and annulus <tt>index+2</tt> uses
-         * face <tt>p[2]</tt> of the requested tetrahedron.  Both annuli
-         * use the axis edge <tt>p[0]</tt> to <tt>p[3]</tt>, and each
+         * Note that annulus `index+1` uses face `p[1]` of
+         * the requested tetrahedron and annulus `index+2` uses
+         * face `p[2]` of the requested tetrahedron.  Both annuli
+         * use the axis edge `p[0]` to `p[3]`, and each
          * annulus uses one other major edge and one other minor edge so
          * that (according to homology) the axis edge equals the major
          * edge plus the minor edge.
          *
          * See the general class notes for further details.
          *
-         * @param index specifies which tetrahedron in the solid torus
+         * \param index specifies which tetrahedron in the solid torus
          * to examine; this must be 0, 1 or 2.
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
         Perm<4> vertexRoles(int index) const;
@@ -172,16 +172,14 @@ class TriSolidTorus : public StandardTriangulation {
          * assignment of tetrahedron vertex numbers.  For a discussion of
          * vertex roles, see vertexRoles().
          *
-         * Note that annulus <tt>index</tt> uses faces
-         * from tetrahedra <tt>index+1</tt> and <tt>index+2</tt>.
-         * The gluing permutation that maps vertices
-         * of tetrahedron <tt>index+1</tt> to vertices of tetrahedron
-         * <tt>index+2</tt> will be <tt>vertexRoles(index+2) * roleMap *
-         * vertexRoles(index+1).inverse()</tt>.
+         * Note that annulus `index` uses faces from tetrahedra `index+1` and
+         * `index+2`.  The gluing permutation that maps vertices of tetrahedron
+         * `index+1` to vertices of tetrahedron `index+2` will be
+         * `vertexRoles(index+2) * roleMap * vertexRoles(index+1).inverse()`.
          *
-         * @param index specifies which annulus on the solid torus
+         * \param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
-         * @return a permutation that describes the gluing of vertex roles,
+         * \return a permutation that describes the gluing of vertex roles,
          * or \c nullopt if the two triangles of the requested annulus are
          * not glued together.
          */
@@ -211,9 +209,9 @@ class TriSolidTorus : public StandardTriangulation {
          * torus (this correspondence is determined by the previous
          * identifications).
          *
-         * @param otherAnnulus the annulus on the solid torus boundary
+         * \param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
-         * @return the number of tetrahedra in the layered chain if the
+         * \return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
          */
         size_t areAnnuliLinkedMajor(int otherAnnulus) const;
@@ -228,8 +226,6 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * To be identified by this routine, the layered chain
          * (described by LayeredChain) must be attached as follows.
-         * We shall refer to the two hinge edges of the layered chain as
-         * \e first and \e second.
          *
          * The two diagonals of the layered chain (between the two top
          * faces and between the two bottom faces) should correspond to
@@ -244,9 +240,9 @@ class TriSolidTorus : public StandardTriangulation {
          * the previous identifications; the axis edge between the two
          * annuli will be identified to both of the others in reverse).
          *
-         * @param otherAnnulus the annulus on the solid torus boundary
+         * \param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
-         * @return the number of tetrahedra in the layered chain if the
+         * \return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
          */
         size_t areAnnuliLinkedAxis(int otherAnnulus) const;
@@ -257,8 +253,8 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * Unlike the parameterised subclasses of StandardTriangulation,
          * this TriSolidTorus subclass represents a fixed structure, and
-         * so its comparisons test not for the \e structure but the precise
-         * \e location of this structure within the enclosing triangulation.
+         * so its comparisons test not for the _structure_ but the precise
+         * _location_ of this structure within the enclosing triangulation.
          *
          * Specifically, two triangular solid tori will compare as equal if
          * and only if each uses the same three numbered tetrahedra, in
@@ -269,8 +265,8 @@ class TriSolidTorus : public StandardTriangulation {
          * still meaningful to compare triangular solid tori within different
          * triangulations.
          *
-         * @param other the triangular solid torus to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the triangular solid torus to compare with this.
+         * \return \c true if and only if this and the given object represent
          * the same specific presentation of a triangular solid torus.
          */
         bool operator == (const TriSolidTorus& other) const;
@@ -281,8 +277,8 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * Unlike the parameterised subclasses of StandardTriangulation,
          * this TriSolidTorus subclass represents a fixed structure, and
-         * so its comparisons test not for the \e structure but the precise
-         * \e location of this structure within the enclosing triangulation.
+         * so its comparisons test not for the _structure_ but the precise
+         * _location_ of this structure within the enclosing triangulation.
          *
          * Specifically, two triangular solid tori will compare as equal if
          * and only if each uses the same three numbered tetrahedra, in
@@ -293,8 +289,8 @@ class TriSolidTorus : public StandardTriangulation {
          * still meaningful to compare triangular solid tori within different
          * triangulations.
          *
-         * @param other the triangular solid torus to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the triangular solid torus to compare with this.
+         * \return \c true if and only if this and the given object represent
          * different specific presentations of a triangular solid torus.
          */
         bool operator != (const TriSolidTorus& other) const;
@@ -313,12 +309,12 @@ class TriSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tet the tetrahedron to examine.
-         * @param useVertexRoles a permutation describing the role each
+         * \param tet the tetrahedron to examine.
+         * \param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by
          * vertexRoles().
-         * @return a structure containing details of the solid torus with the
+         * \return a structure containing details of the solid torus with the
          * given tetrahedron as tetrahedron 0, or \c null if the given
          * tetrahedron is not part of a triangular solid torus with the given
          * vertex roles.
@@ -345,8 +341,8 @@ class TriSolidTorus : public StandardTriangulation {
  * This global routine simply calls TriSolidTorus::swap(); it is provided
  * so that TriSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,6 +34,7 @@
 #include "packet/container.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include <stack>
 
 namespace regina {
 
@@ -325,6 +326,229 @@ bool Triangulation<3>::hasSplittingSurface() const {
     delete[] state;
     return *(prop_.splittingSurface_ = false);
 }
+
+template <int subdim>
+std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
+        const Face<3, subdim>& face) const {
+    static_assert(0 <= subdim && subdim < 3,
+        "Triangulation<3>::linkingSurface() requires a face of dimension "
+        "0, 1 or 2.");
+
+    Vector<LargeInteger> coords(7 * size());
+    bool thin = true;
+
+    if constexpr (subdim == 0) {
+        // Vertex links are trivial to construct.
+        for (auto& emb : face)
+            coords[7 * emb.simplex()->index() + emb.vertex()] = 1;
+    } else {
+        // In general, edge and triangle links can require normalisation.
+        //
+        // However, this normalisation always involves expanding the face
+        // into a larger subcomplex using the following rules:
+        // 1) at least two edges of a triangle -> absorb the full triangle;
+        // 2) at least two triangles of a tetrahedron -> absorb the full
+        //    tetrahedron.
+        //
+        // The resulting face link is then the frontier of a regular
+        // neighbourhood of the resulting subcomplex.
+        //
+        // So: our main job is to build the subcomplex.
+        // We track the subcomplex with an array of booleans for each facial
+        // dimension, indicating which of the faces is currently included.
+
+        bool* use0 = new bool[countVertices()];
+        bool* use1 = new bool[countEdges()];
+        bool* use2 = new bool[countTriangles()];
+        bool* use3 = new bool[size()];
+
+        std::fill(use0, use0 + countVertices(), false);
+        std::fill(use1, use1 + countEdges(), false);
+        std::fill(use2, use2 + countTriangles(), false);
+        std::fill(use3, use3 + size(), false);
+
+        if constexpr (subdim == 1) {
+            use1[face.index()] = true;
+            use0[face.vertex(0)->index()] = true;
+            use0[face.vertex(1)->index()] = true;
+        } else {
+            use2[face.index()] = true;
+            for (int i = 0; i < 3; ++i)
+                use1[face.edge(i)->index()] = true;
+            for (int i = 0; i < 3; ++i)
+                use0[face.vertex(i)->index()] = true;
+        }
+
+        // Edges/triangles that were recently incorporated into the subcomplex,
+        // for which we need to now check for any follow-up triangles/tetrahedra
+        // that will need to be incorporated also as a result:
+        std::stack<const Edge<3>*> process1;
+        std::stack<const Triangle<3>*> process2;
+
+        if constexpr (subdim == 1) {
+            process1.push(std::addressof(face));
+        } else {
+            process2.push(std::addressof(face));
+            for (int i = 0; i < 3; ++i)
+                process1.push(face.edge(i));
+        }
+
+        while (true) {
+            if (! process2.empty()) {
+                const Triangle<3>* t = process2.top();
+                process2.pop();
+
+                for (const auto& emb : *t) {
+                    const Tetrahedron<3>* tet = emb.tetrahedron();
+                    if (use3[tet->index()])
+                        continue;
+
+                    int found = 0;
+                    for (int j = 0; j < 4; ++j)
+                        if (use2[tet->triangle(j)->index()]) {
+                            ++found;
+                            if (found == 2)
+                                break;
+                        }
+
+                    if (found == 2) {
+                        // Absorb the entire tetrahedron.
+                        thin = false;
+                        use3[tet->index()] = true;
+
+                        for (int j = 0; j < 4; ++j) {
+                            const Triangle<3>* next = tet->triangle(j);
+                            if (! use2[next->index()]) {
+                                use2[next->index()] = true;
+                                process2.push(next);
+                            }
+                        }
+
+                        for (int j = 0; j < 6; ++j) {
+                            const Edge<3>* next = tet->edge(j);
+                            if (! use1[next->index()]) {
+                                use1[next->index()] = true;
+                                process1.push(next);
+                            }
+                        }
+                    }
+                }
+
+                continue;
+            }
+
+            if (! process1.empty()) {
+                const Edge<3>* e = process1.top();
+                process1.pop();
+
+                bool bothSides = e->isBoundary();
+                for (const auto& emb : *e) {
+                    for (int side = 0; side < 2; ++side) {
+                        if (side == 1) {
+                            if (! bothSides)
+                                continue; // side 0 is enough
+
+                            // We do both sides for this embedding (which is
+                            // the first in the list), but *only* this
+                            // embedding.
+                            bothSides = false;
+                        }
+
+                        const Triangle<3>* triangle = emb.tetrahedron()->
+                            triangle(emb.vertices()[side == 0 ? 2 : 3]);
+                        if (use2[triangle->index()])
+                            continue;
+
+                        int found = 0;
+                        for (int j = 0; j < 3; ++j)
+                            if (use1[triangle->edge(j)->index()]) {
+                                ++found;
+                                if (found == 2)
+                                    break;
+                            }
+
+                        if (found == 2) {
+                            // Absorb the entire triangle.
+                            thin = false;
+                            use2[triangle->index()] = true;
+                            process2.push(triangle);
+
+                            for (int j = 0; j < 3; ++j) {
+                                const Edge<3>* next = triangle->edge(j);
+                                if (! use1[next->index()]) {
+                                    use1[next->index()] = true;
+                                    process1.push(next);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                continue;
+            }
+
+            break;
+        }
+
+        size_t tetIndex = 0;
+        for (const Tetrahedron<3>* tet : tetrahedra()) {
+            if (use3[tetIndex])
+                goto doneTet;
+
+            for (int j = 0; j < 4; ++j)
+                if (use2[tet->triangle(j)->index()]) {
+                    if (use0[tet->vertex(j)->index()])
+                        coords[7 * tetIndex + j] = 2;
+                    else
+                        coords[7 * tetIndex + j] = 1;
+
+                    goto doneTet;
+                }
+
+            for (int j = 0; j < 6; ++j)
+                if (use1[tet->edge(j)->index()]) {
+                    // Note: quad type i does not intersect edge i.
+                    int quad = (j < 3 ? j : 5 - j);
+                    if (use1[tet->edge(5 - j)->index()])
+                        coords[7 * tetIndex + 4 + quad] = 2;
+                    else {
+                        coords[7 * tetIndex + 4 + quad] = 1;
+
+                        for (int k = 0; k < 2; ++k) {
+                            int v = Edge<3>::edgeVertex[5 - j][k];
+                            if (use0[tet->vertex(v)->index()])
+                                coords[7 * tetIndex + v] = 1;
+                        }
+                    }
+
+                    goto doneTet;
+                }
+
+            for (int j = 0; j < 4; ++j)
+                if (use0[tet->vertex(j)->index()])
+                    coords[7 * tetIndex + j] = 1;
+
+doneTet:
+            ++tetIndex;
+        }
+
+        delete[] use0;
+        delete[] use1;
+        delete[] use2;
+        delete[] use3;
+    }
+
+    return { NormalSurface(*this, NS_STANDARD, std::move(coords)), thin };
+}
+
+// Instantiate linkingSurface() for all possible template arguments,
+// so that the implementation can stay out of the headers.
+template std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface<0>(
+    const Face<3, 0>&) const;
+template std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface<1>(
+    const Face<3, 1>&) const;
+template std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface<2>(
+    const Face<3, 2>&) const;
 
 } // namespace regina
 

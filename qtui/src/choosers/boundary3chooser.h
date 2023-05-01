@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -90,7 +90,7 @@ class BoundaryComponent3Chooser :
          * If \a autoUpdate is \c false, then contents of this chooser will
          * only be updated when refresh() is manually called.  Be careful
          * when using this setting, since if the triangulation changes
-         * but the chooser is \e not refreshed, then selected() may end
+         * but the chooser is _not_ refreshed, then selected() may end
          * up returning an invalid pointer.
          *
          * The given filter may be 0, in which case every boundary component
@@ -116,7 +116,7 @@ class BoundaryComponent3Chooser :
          * chooser, or if the given pointer is 0, then the first entry
          * in the chooser will be selected.
          *
-         * The activated() signal will \e not be emitted.
+         * The activated() signal will _not_ be emitted.
          */
         void select(regina::BoundaryComponent<3>* option);
 

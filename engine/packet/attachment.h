@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,7 +52,7 @@ namespace regina {
  * The attachment is stored as a block of data in memory.  If the
  * attachment was originally read from the filesystem, this link is not
  * maintained (i.e., if the source file subsequently changes, the attachment
- * data stored in this packet will \e not change to reflect this).
+ * data stored in this packet will _not_ change to reflect this).
  *
  * This packet may or may not contain an attachment at any given time.
  * This can be tested by calling isNull(), and can be changed by calling
@@ -81,8 +81,8 @@ class Attachment : public Packet {
          * Describes how an attachment packet should claim ownership of a block
          * of binary data.
          *
-         * \ifacespython Not present, since for Python users, blocks are
-         * always copied (i.e., the ownership policy is always DEEP_COPY).
+         * \nopython For Python users, blocks are always copied (i.e., the
+         * ownership policy is always DEEP_COPY).
          */
         enum OwnershipPolicy {
             /**
@@ -132,7 +132,7 @@ class Attachment : public Packet {
          *
          * The file will be read immediately, but no ongoing link will be
          * maintained.  That is, if the given file should later change its
-         * contents on the filesystem, the change will \e not be reflected in
+         * contents on the filesystem, the change will _not_ be reflected in
          * this attachment packet.
          *
          * If the file could not be read or is empty, then no attachment will
@@ -145,11 +145,11 @@ class Attachment : public Packet {
          * to remove directory prefixes, the filename will be the empty string.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.
          *
-         * @param pathname the full pathname of the attachment to read.
+         * \param pathname the full pathname of the attachment to read.
          */
         Attachment(const char* pathname);
 
@@ -158,8 +158,8 @@ class Attachment : public Packet {
          *
          * The \a data array must contain a block of binary data, of
          * \a size bytes.  There is no notion of null termination:
-         * the data block may contain \c null bytes within it, and does
-         * not need to be terminated by a \c null byte at the end.
+         * the data block may contain null bytes within it, and does
+         * not need to be terminated by a null byte at the end.
          *
          * The \a alloc argument shows if/how this packet claims ownership of
          * the data.  In particular, unless \a alloc is \a DEEP_COPY, this
@@ -172,19 +172,19 @@ class Attachment : public Packet {
          * which case the new packet will have no attachment stored
          * (so isNull() will return \c true).
          *
-         * \ifacespython The argument \a data should be a Python \c bytes
+         * \python The argument \a data should be a Python \c bytes
          * object.  The \a size and \a alloc arguments are not present,
          * since a \c bytes object knows its size, and in Python the
          * only available ownership policy is to make a deep copy.
          *
-         * @param data the block of binary data that forms the attachment,
+         * \param data the block of binary data that forms the attachment,
          * or \c null if no attachment is to be stored.
-         * @param size the number of bytes in this block of binary data;
+         * \param size the number of bytes in this block of binary data;
          * if actual data is passed (i.e., \a data is not \c null) then
          * this must be strictly positive.
-         * @param alloc describes if/how this packet should claim ownership
+         * \param alloc describes if/how this packet should claim ownership
          * of the given block of data; see the notes above for details.
-         * @param filename the filename to associated with this attachment;
+         * \param filename the filename to associated with this attachment;
          * typically this would be a filename only, with no directory prefixes.
          * See filename() for details on how this string will be used.
          */
@@ -200,9 +200,9 @@ class Attachment : public Packet {
          * and it will not insert the new packet into any packet tree).
          *
          * This is safe to call even if \a src does not contain a non-empty
-         * attachment (i.e., if <tt>src.isNull()</tt> returns \c true).
+         * attachment (i.e., if `src.isNull()` returns \c true).
          *
-         * @param src the attachment packet whose contents should be copied.
+         * \param src the attachment packet whose contents should be copied.
          */
         Attachment(const Attachment& src);
 
@@ -220,10 +220,10 @@ class Attachment : public Packet {
          * tree).
          *
          * This is safe to call even if \a src does not contain a non-empty
-         * attachment (i.e., if <tt>src.isNull()</tt> returns \c true).
+         * attachment (i.e., if `src.isNull()` returns \c true).
          *
-         * @param src the attachment packet whose contents should be copied.
-         * @return a reference to this packet.
+         * \param src the attachment packet whose contents should be copied.
+         * \return a reference to this packet.
          */
         Attachment& operator = (const Attachment& src);
 
@@ -238,7 +238,7 @@ class Attachment : public Packet {
          * This is safe to call even if this packet and/or \a other does not
          * contain a non-empty attachment (i.e., if isNull() returns \c true).
          *
-         * @param other the attachment packet whose contents should be swapped
+         * \param other the attachment packet whose contents should be swapped
          * with this.
          */
         void swap(Attachment& other);
@@ -247,7 +247,7 @@ class Attachment : public Packet {
          * Determines whether this packet is currently holding a non-empty
          * attachment.
          *
-         * @return \c true if and only if this packet is holding a
+         * \return \c true if and only if this packet is holding a
          * non-empty attachment.
          */
         bool isNull() const;
@@ -261,12 +261,12 @@ class Attachment : public Packet {
          * (i.e., if isNull() returns \c true), then this routine will return
          * \c null.
          *
-         * \ifacespython This routine returns a Python \c bytes object.
+         * \python This routine returns a Python \c bytes object.
          * Unlike the C++ version of this routine, the Python version returns
          * a deep copy of the raw data (so this routine becomes slower, but
          * the resulting byte sequence can be freely modified).
          *
-         * @return the raw attachment data.
+         * \return the raw attachment data.
          */
         const char* data() const;
 
@@ -277,7 +277,7 @@ class Attachment : public Packet {
          * (i.e., if isNull() returns \c true), then this routine will return
          * zero.
          *
-         * @return the number of bytes.
+         * \return the number of bytes.
          */
         size_t size() const;
 
@@ -296,7 +296,7 @@ class Attachment : public Packet {
          * that this could be the empty string, or could be some other string
          * that is not a valid filename on the current platform.
          *
-         * @return the filename associated with this attachment.
+         * \return the filename associated with this attachment.
          */
         const std::string& filename() const;
 
@@ -316,7 +316,7 @@ class Attachment : public Packet {
          * occurred when attempting to deduce it, then this routine will
          * return the empty string.
          *
-         * @return the extension of the filename for this attachment.
+         * \return the extension of the filename for this attachment.
          */
         std::string extension() const;
 
@@ -338,19 +338,19 @@ class Attachment : public Packet {
          * \warning This cannot be used for self-assignment.  If the argument
          * \a data is in fact data() then this routine will most likely crash.
          *
-         * \ifacespython The argument \a data should be a Python \c bytes
+         * \python The argument \a data should be a Python \c bytes
          * object.  The \a size and \a alloc arguments are not present,
          * since a \c bytes object knows its size, and in Python the
          * only available ownership policy is to make a deep copy.
          *
-         * @param data the block of binary data that forms the new attachment,
+         * \param data the block of binary data that forms the new attachment,
          * or \c null if no attachment is to be stored.
-         * @param size the number of bytes in this new block of binary data;
+         * \param size the number of bytes in this new block of binary data;
          * if actual data is passed (i.e., \a data is not \c null) then
          * this must be strictly positive.
-         * @param alloc describes if/how this packet should claim ownership
+         * \param alloc describes if/how this packet should claim ownership
          * of the given block of data; see the notes above for details.
-         * @param filename the new filename to associated with this attachment;
+         * \param filename the new filename to associated with this attachment;
          * this will override the previously stored filename.  Typically
          * this would be a filename only, with no directory prefixes.
          * See filename() for details on how this string will be used.
@@ -366,11 +366,11 @@ class Attachment : public Packet {
          * nothing and simply return \c false.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it unchanged to low-level C/C++ file I/O routines.
          *
-         * @param pathname the full pathname of the file to write.
-         * @return \c true if the file was successfully written, or
+         * \param pathname the full pathname of the file to write.
+         * \return \c true if the file was successfully written, or
          * \c false otherwise.
          */
         bool save(const char* pathname) const;
@@ -384,8 +384,8 @@ class Attachment : public Packet {
          * empty (i.e., isNull() returns \c true), in which case an empty
          * attachment will compare as equal to any other empty attachment.
          *
-         * @param other the attachment to compare with this.
-         * @return \c true if and only if this and the given attachment
+         * \param other the attachment to compare with this.
+         * \return \c true if and only if this and the given attachment
          * contain identical data.
          */
         bool operator == (const Attachment& other) const;
@@ -399,8 +399,8 @@ class Attachment : public Packet {
          * empty (i.e., isNull() returns \c true), in which case an empty
          * attachment will compare as equal to any other empty attachment.
          *
-         * @param other the attachment to compare with this.
-         * @return \c true if and only if this and the given attachment
+         * \param other the attachment to compare with this.
+         * \return \c true if and only if this and the given attachment
          * contain different data.
          */
         bool operator != (const Attachment& other) const;
@@ -419,8 +419,8 @@ class Attachment : public Packet {
  * This global routine simply calls Attachment::swap(); it is provided so that
  * Attachment meets the C++ Swappable requirements.
  *
- * @param a the first attachment packet whose contents should be swapped.
- * @param b the second attachment packet whose contents should be swapped.
+ * \param a the first attachment packet whose contents should be swapped.
+ * \param b the second attachment packet whose contents should be swapped.
  *
  * \ingroup packet
  */

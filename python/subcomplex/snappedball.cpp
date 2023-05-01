@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,25 +35,30 @@
 #include "subcomplex/snappedball.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/snappedball.h"
 
 using regina::SnappedBall;
 
 void addSnappedBall(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SnappedBall)
+
     auto c = pybind11::class_<SnappedBall, regina::StandardTriangulation>
-            (m, "SnappedBall")
-        .def(pybind11::init<const SnappedBall&>())
-        .def("swap", &SnappedBall::swap)
+            (m, "SnappedBall", rdoc_scope)
+        .def(pybind11::init<const SnappedBall&>(), rdoc::__copy)
+        .def("swap", &SnappedBall::swap, rdoc::swap)
         .def("tetrahedron", &SnappedBall::tetrahedron,
-            pybind11::return_value_policy::reference)
-        .def("boundaryFace", &SnappedBall::boundaryFace)
-        .def("internalFace", &SnappedBall::internalFace)
-        .def("equatorEdge", &SnappedBall::equatorEdge)
-        .def("internalEdge", &SnappedBall::internalEdge)
-        .def_static("recognise", &SnappedBall::recognise)
+            pybind11::return_value_policy::reference, rdoc::tetrahedron)
+        .def("boundaryFace", &SnappedBall::boundaryFace, rdoc::boundaryFace)
+        .def("internalFace", &SnappedBall::internalFace, rdoc::internalFace)
+        .def("equatorEdge", &SnappedBall::equatorEdge, rdoc::equatorEdge)
+        .def("internalEdge", &SnappedBall::internalEdge, rdoc::internalEdge)
+        .def_static("recognise", &SnappedBall::recognise, rdoc::recognise)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    m.def("swap", (void(*)(SnappedBall&, SnappedBall&))(regina::swap));
+    regina::python::add_global_swap<SnappedBall>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

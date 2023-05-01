@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,6 +32,12 @@
 
 /*! \file python/helpers.h
  *  \brief Various tools to assist with Python bindings for Regina.
+ *
+ *  This file automatically includes the most commonly-used headers from
+ *  python/helpers/, but not all of the headers in python/helpers/.
+ *  Specifically, it excludes those headers that introduce non-trivial
+ *  complexity to the code and whose use is not widespread across Regina's
+ *  Python bindings.
  */
 
 #ifndef __HELPERS_H
@@ -52,10 +58,16 @@
 #endif
 
 #include "pybind11/pybind11.h"
+// #include "helpers/arraylike.h"
+#include "helpers/docstrings.h"
 #include "helpers/equality.h"
+// #include "helpers/flags.h"
+#include "helpers/gil.h"
+#include "helpers/globals.h"
 #include "helpers/output.h"
 #include "helpers/listview.h"
 #include "helpers/packet.h"
+// #include "helpers/tableview.h"
 #include "helpers/tightencoding.h"
 
 #endif

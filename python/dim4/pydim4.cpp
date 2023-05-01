@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,13 +46,13 @@ void addVertex4(pybind11::module_& m);
 void addDim4Classes(pybind11::module_& m) {
     addBoundaryComponent4(m);
     addComponent4(m);
-    addEdge4(m);
-    addExample4(m);
-    addIsomorphism4(m);
-    addPentachoron4(m);
-    addTetrahedron4(m);
-    addTriangle4(m);
-    addTriangulation4(m);
     addVertex4(m);
+    addEdge4(m);
+    addTriangle4(m);
+    addTetrahedron4(m);
+    addPentachoron4(m);
+    addIsomorphism4(m);
+    addTriangulation4(m);
+    addExample4(m);
 }
 

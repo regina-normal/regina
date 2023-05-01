@@ -7,7 +7,286 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.1  [ TODO ]
+Version 7.4  [ (to be announced) ]
+
+    GENERAL:
+        - Added support for simplex and facet locks throughout the API.  See
+          Simplex<dim>::lock() and Simplex<dim>::lockFacet() for an overview
+          of how locks work.  Many routines throughout the API could now
+          potentially throw a LockViolation (and this is now explicitly noted
+          in their respective docs); other routines now examine locks as part
+          of their validity checks (e.g., local moves on triangulations).
+        - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
+    ENGINE:
+        Class AbelianGroup:
+            - New routine hash(), which uses the tight encoding.
+        Class BitManipulator<T>:
+            - New routine swapBits().
+        Class IntOfBits<k>:
+            - New type alias to simplify arithmetic when using IntOfSize<...>.
+        Class Example<3>:
+            - Routines lst(), lens(), augTriSolidTorus() and sfsOverSphere()
+              now check their preconditions and throw an exception if they fail.
+        Class Face<dim, dim-1>:
+            - New routines lock(), unlock(), and isLocked().
+        Class FacetPairing<dim>:
+            - New routine hash(), which uses the tight encoding.
+        Class FacetSpec<dim>:
+            - New routine hash(), which uses the tight encoding.
+        Class Integer:
+            - New routine hash(), which hashes the integer down to a size_t.
+        Class Isomorphism<dim>:
+            - New routine hash(), which uses the tight encoding.
+        Class LargeInteger:
+            - New routine hash(), which hashes the integer down to a size_t.
+        Class Laurent<T>, Laurent2<T>:
+            - New routine hash(), which uses the tight encoding.
+        Class Link:
+            - New routine hash(), which uses the tight encoding.
+            - Fixed a bug where calling resolve() would not clear out any
+              cached link polynomials that had already been computed.
+        Class LockViolation:
+            - New exception class used when the user attempts to change a
+              locked simplex or facet.
+        Class Packet:
+            - New inner type alias ChangeEventGroup, to assist with readability
+              when using a ChangeEventSpan for optimisation purposes only.
+        Class PacketData<Held>:
+            - New inner type alias ChangeEventGroup, to assist with readability
+              when using a ChangeEventSpan for optimisation purposes only.
+            - The inner ChangeEventSpan class has a new member function held().
+        Class Perm<n>:
+            - New routine hash().
+        Class SatAnnulus:
+            - Routine attachLST() now checks its preconditions, and throws
+              an exception if they fail.
+        Class Simplex<dim>:
+            - New routines lock(), lockFacet(), unlock(), unlockFacet(),
+              unlockAll(), isLocked(), isFacetLocked(), and lockMask().
+        Class TightEncodable<T>:
+            - Now provides a hash() function also, based on the tight encoding.
+        Class Triangulation<dim>:
+            - New routines hasLocks(), lockBoundary(), and unlockAll(), to
+              work with locked top-dimensional simplices and their facets.
+            - New routine reorderBFS(), which essentially makes the old
+              Triangulation<3>::reorderTetrahedraBFS() available in all
+              dimensions.
+            - New routine hash(), which uses the tight encoding.
+            - New routines dot() and writeDot().
+            - Renamed simplifiedFundamentalGroup to setGroupPresentation().
+              The old name is deprecated but kept for backwards compatibility.
+        Class Triangulation<3>:
+            - Routine puncture() now takes an optional triangle, not an
+              optional tetrahedron.  The old version is kept but deprecated.
+            - Routine insertLayeredSolidTorus() is now non-recursive, and
+              throws an exception if its preconditions fail.
+            - Routines layerOn(), pinchEdge() and puncture() now throw an
+              exception if their preconditions fail.
+            - Routine reorderTetrahedraBFS() is now a deprecated alias for
+              reorderBFS() (which is available in all dimensions).
+        Class Vector<T>:
+            - Added support for tight encodings and decodings.
+            - New routine hash(), which uses the tight encoding.
+        Constants is_cpp_integer_v<T>, is_unsigned_cpp_integer_v<T>:
+            - New alternatives to using std::is_integeral_v<T> and
+              std::is_unsigned_v<T> that allow for 128-bit integers also.
+    PYTHON:
+        - Updated the included pybind11 library from 2.10.0 to 2.10.4.
+        - Improved the speed of iteration (specifically, throwing/catching
+          StopIteration exceptions).
+    USER INTERFACE:
+        - Now uses multithreading for those long computations that support it.
+
+Version 7.3  [ 18 March, 2023 ]
+
+    ENGINE:
+        Class BitManipulator<T>:
+            - Routines bits(), firstBit() and lastBit() are now constexpr.
+        Class Component<4>:
+            - Fix a bug where single-vertex boundary components were included
+              in Triangulation<4>::boundaryComponents(), but were omitted from
+              Component<4>::boundaryComponents().
+        Class GroupExpression:
+            - The string constructor now contracts terms like "aaaaBB" to become
+              g0^4 g1^-2 (i.e., exponents will be used even if the input does
+              not supply them).
+            - The string constructor now takes the number of generators as an
+              optional argument, and throws an exception if some generator in
+              the string is out of range.
+        Class GroupPresentation:
+            - Routine enumerateCovers() now accepts indices ≤ 11, not ≤ 7.
+            - The string constructor now contracts terms like "aaaaBB" to become
+              g0^4 g1^-2 (i.e., exponents will be used even if the input does
+              not supply them).
+            - The string constructor now throws an exception if some relation
+              contains a generator that is out of range.
+            - Renamed simplifyWord() to simplifyAndConjugate(), to make it
+              clear to the user that conjugation might take place.  The old
+              name simplifyWord() has been removed completely.
+            - Fixed a bug in the text-based recogniseGroup(), which could have
+              reported the wrong monodromy for a group that was (correctly)
+              recognised as an extension over Z.  This was a side-effect of
+              the simplification bug in HomGroupPresentation (see below).
+        Class HomGroupPresentation:
+            - Fixed a bug in intelligentSimplify(), intelligentNielsen() and
+              smallCancellation() where images/preimages of generators were
+              potentially being conjugated.  See
+              https://regina-normal.github.io/bugs.html for further discussion.
+        Class Integer:
+            - New python-only routine pythonValue().
+        Class Perm<n>:
+            - Extended the generic Perm<n> class to make its API as rich as the
+              specialised classes for smaller n.  This means the generic class
+              now supports ++ and < operators, pow(), order(), and
+              isConjugacyMinimal().
+            - Optimised several algorithms for the generic Perm<n> class
+              that were originally quadratic in n.
+            - The generic Perm<n> now offers the precomptuation-assisted
+              operations cachedInverse().
+            - New routines conjugate() and cachedConjugate(), to replace the
+              three-way cachedComp() (which was designed for conjugation).
+              The three-way cachedComp() is now deprecated; instead call
+              cachedConjugate() if you are conjugating, or else call the
+              two-way cachedComp() twice.
+            - All Perm<n> classes now have precompute(), cachedInverse(),
+              cachedComp(), cachedPow() and cachedOrder(), even for smaller n
+              where these are unnecessary, to assist with writing generic code.
+        Class PermClass<n>:
+            - New class to describe a conjugacy class of permutations.
+        Class PermGroup<n>:
+            - New class to describe groups of permutations.
+        Class SnapPeaTriangulation:
+            - Fixed a buffer overflow in the SnapPea kernel, which was
+              accessible via SnapPeaTriangulation::snapPea().
+        Class Triangulation<dim>, TriangulationBase<dim>:
+            - The copy constructor and copy assignment operator now clones
+              skeletal objects as well, with the guarantee that they will use
+              the same numbering and labelling as in the source triangulation.
+        Class Triangulation<2>:
+            - New routines isSphere() and isBall().
+
+Version 7.2  [ 28 October, 2022 ]
+
+    GENERAL:
+        - Regina now has docstrings throughout its Python module.  These are
+          extracted automatically from the hand-written C++ documentation, so
+          you will still find C++ terminology.  Nevertheless, these are now
+          available in Python for all of Regina's classes and functions.
+        - Began moving to a more readable markdown format for documentation
+          in the C++ headers.  A lot of work is already done here, but this is
+          an ongoing project.  See also the new style guide for API docs in
+          the Regina Handbook (in the new chapter on Contributing to Regina).
+    ENGINE:
+        Class DegreeLessThan, DegreeGreaterThan:
+            - Deprecated, since these are one-liners that can be done using a
+              lambda instead.  These classes will eventually be removed.
+        Class Example<3>:
+            - Renamed whiteheadLink() to whitehead().  The old name is kept
+              as a deprecated alias.
+        Class Example<4>:
+            - Shrunk k3() to 54 pentachora (thanks again to Rhuaidi Burke).
+        Class Face<dim, subdim>
+            - Routines face<lowerdim> and faceMapping<lowerdim> now explicitly
+              require 0 <= lowerdim < subdim (though this was always enforced
+              in Python, and the only meaningful scenario in C++ that this
+              could possibly rule out is the trivial case lowerdim == subdim).
+        Class HyperEncoding:
+            - New static function empty().
+        Class ListView<...>:
+            - Added equality operators (== and !=).
+            - Added a specialisation for fixed-size C-style arrays:
+              ListView<Element[n]>.
+        Class ModelLinkGraph:
+            - Routine flype() now throws an exception if the given arcs
+              are not laid out on the plane in the expected manner.
+            - Routine generateMinimalLinks() now throws an exception if its
+              precondition is not met.
+            - Routines plantri(), canonicalPlantri() and fromPlantri() can
+              now work with graphs with up to 52 nodes (instead of 26).
+              Beyond 26 nodes, Regina's format differs from plantri's own.
+            - Routines plantri() and canonicalPlantri() now throw an
+              exception if the graph has more than 52 nodes.
+            - Routine fromPlantri() has dropped the precondition on the size
+              of the graph, since this is explicitly checked.
+        Class NormalEncoding:
+            - New static function empty().
+        Class NormalHypersurface:
+            - New constructor to build the empty surface.
+        Class NormalSurface:
+            - New constructor to build the empty surface.
+        Class Simplex<dim>:
+            - Routines face<subdim> and faceMapping<subdim> now explicitly
+              require 0 <= subdim < dim (though this was always enforced in
+              Python, and other values of \a subdim would have always failed
+              to compile in C++).
+        Class Snapshottable<T>:
+            - Routine isReadOnlySnapshot() is now public, not protected.
+        Class TableView:
+            - New class to help wrap read-only multi-dimensional arrays.
+        Class TorusBundle:
+            - The class constructors now throw an exception if the given
+              monodromy does not have determinant ±1 (note that this has
+              always a precondition).
+        Class Triangulation<2>:
+            - The trivial isValid() routine is now provided by the common
+              base class TriangulationBase<2>, and is not reimplemented here.
+        Class Triangulation<3>:
+            - Renamed isHandlebody() to recogniseHandlebody().  There is no
+              deprecated alias, since the issue here was users potentially
+              misinterpreting the return type because of the function name.
+            - The synonyms minimizeBoundary() and minimizeVertices() (which
+              were convenience routines that called minimiseBoundary() and
+              minimiseVertices() respectively) are now deprecated.  Going
+              forward we will stick to just one style of spelling (British
+              English, which Regina has always offered).
+        Class Triangulation<dim>:
+            - Renamed barycentricSubdivision() to subdivide().  The old
+              name is kept as a deprecated alias.
+            - Renamed fundamentalGroup() to group().  The old, more expressive
+              name will be kept as a long-term alias (it is *not* deprecated).
+        Function buildInfo():
+            - New function that allows packagers to embed additional
+              version/build-related information in the calculation engine.
+        Function maxDim():
+            - New constexpr function that indicates whether Regina was built
+              with support for higher dimensions 9..15.
+    PYTHON:
+        - Updated the included pybind11 library from 2.8.1 to 2.10.0.
+          This means we can now support Python 3.11, but no longer support
+          Python 3.4 or 3.5.
+        - Several classes that provide array-like access (__getitem__) now
+          implement the special __len__() function also.  Note that this
+          affects how objects are evaluated in a boolean context.  Affected
+          classes: AngleStructures, Cyclotomic, FacetPairing<dim>,
+          Isomorphism<dim>, ListView, Matrix2, NormalHypersurfaces,
+          NormalSurfaces, Vector<T>.
+        - A few omissions in the Python bindings were fixed.  Other than
+          giving Python users access to more functions, two of these fixes
+          mean a change in behaviour for Python users: these are the
+          newly-added bindings for SnapPeaTriangulation::snapPea() and
+          SnapPeaTriangulation::saveSnapPea().  Previously if Python users
+          called these functions they would fall back to the inherited
+          versions from Triangulation<3>, which behave differently.
+        - A couple of errors in the Python bindings were also fixed:
+          + Cyclotomic.negate() in Python was incorrectly bound to
+            Cyclotomic::invert in C++;
+          + regina.swap(BitmaskN, BitmaskN) in Python (for fixed-width
+            bitmask types Bitmask8, Bitmask16, etc.) was incorrectly bound to
+            regina::swap(Bitmask&, Bitmask&) in C++ (i.e., the swap function
+            for the main Bitmask class).  Any attempt to call this function
+            in Python would have resulted in undefined behaviour.
+          See https://regina-normal.github.io/bugs.html for further discussion
+          of how these issues might have affected you.
+    USER INTERFACE:
+        - Fixed a deadlock that occurs in the Windows GUI when opening two
+          Python consoles in quick succession (e.g., by a double-click).
+    UTILITIES:
+        - Most command-line utilities now support -? / --help, as well as
+          a new -v / --version option to show the current verson of Regina.
+        - For regina-engine-config, the --version option now outputs more
+          detailed version/build information, not just "X.Y".
+
+Version 7.1  [ 30 September, 2022 ]
 
     GENERAL:
         - Regina now supports Python 3 only (not Python 2 or 3).
@@ -24,15 +303,25 @@ Version 7.1  [ TODO ]
     ENGINE:
         Class AbelianGroup:
             - New tightDecoding() routines.
+        Class AngleStructures:
+            - New operator [], which is identical to calling structure().
+        Class BanEdge:
+            - New ban constraint for use with the tree traversal classes.
         Class CallableArg<...>:
             - Now a public helper class in the main regina:: namespace.
             - Now behaves gracefully if the given index is out of range.
         Class Cut:
             - New class for describing graph-style cuts on triangulations or
               facet pairings.
-        Class Edge<3>:
+        Class Edge<3>, Edge<4>:
             - Now specialised (instead of using the generic Face template).
             - New routine linkingSurface().
+        Class Example<2>:
+            - Both orientable() and nonOrientable() now promise minimal
+              triangulations for small cases (0 and 0,1 punctures respectively).
+              Thanks to Alex He for the once-punctured non-orientable code.
+        Class Example<3>:
+            - New routine handlebody(), thanks to Alex He.
         Class Example<4>:
             - New routine k3().
             - Reflected the result of cp2() so that it has intersection
@@ -96,15 +385,35 @@ Version 7.1  [ TODO ]
               over type U, where T and U are different types.
         Class ModelLinkGraph:
             - New constructor that takes a link to model.
+        Class NormalEncoding:
+            - New routines withoutTriangles(), withOctagons() and
+              withoutOctagons().
         Class NormalHypersurface:
             - New operators * and *= for taking integer multiples.  The old
               doubleHypersurface() is now deprecated.
             - New routine scaleDown().
+            - New routines isThinTriangleLink(), isThinTetrahedronLink(),
+              isNormalEdgeLink(), isNormalTriangleLink() and
+              isNormalTetrahedronLink().
+        Class NormalHypersurfaces:
+            - New operator [], which is identical to calling hypersurface().
         Class NormalSurface:
             - New operators * and *= for taking integer multiples.  The old
               doubleSurface() is now deprecated.
             - New routine scaleDown().
-            - New routine isNormalEdgeLink().
+            - New routines isThinTriangleLink(), isNormalEdgeLink() and
+              isNormalTriangleLink().
+            - New routine removeOcts().
+            - Routine cutAlong() can now work with almost normal surfaces
+              (i.e., it can now handle octagons).
+        Class NormalSurfaces:
+            - New operator [], which is identical to calling surface().
+        Class Packet:
+            - Renamed insertChildFirst(), insertChildLast() and
+              insertChildAfter() to prepend(), append() and insert().
+              Also, some (but not all) of the preconditions for these functions
+              are now explicitly tested, with exceptions thrown if they fail.
+              The old function names have been kept as deprecated aliases.
         Class Perm<n>:
             - New routines for tight encodings and decodings.
         Type safe_tuple_element<...>:
@@ -113,9 +422,22 @@ Version 7.1  [ TODO ]
         Class SnaPeaTriangulation:
             - The Link constructor now throws an exception if the link is so
               large that SnapPea cannot handle it.
+        Class Tetrahedron<4>:
+            - Now specialised (instead of using the generic Face template).
+            - New routine linkingSurface().
+        Class TreeTraversal<...>, TreeEnumeration<...>, TautEnumeration<...>,
+                TreeSingleSoln<...>:
+            - Now supports ban constraints whose class constructors require
+              additional arguments.  These additional arguments are passed to
+              the TreeEnumeration/TautEnumeration/TreeSingleSoln constructor.
         Struct TightEncodable<T>:
             - New base class for classes that support tight encodings
               and decodings.
+        Class Triangle<3>:
+            - New routine linkingSurface().
+        Class Triangle<4>:
+            - Now specialised (instead of using the generic Face template).
+            - New routine linkingSurface().
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
             - New suite of public routines dualBoundaryMap() (these were
@@ -123,21 +445,36 @@ Version 7.1  [ TODO ]
             - New suite of routines dualToPrimal().
             - New routine pairing().
             - New routines for tight encodings and decodings.
+            - New routine translate().
             - The join() routine now checks all its preconditions, and
               throws an exception if any precondition fails.
         Class Triangulation<3>:
+            - New routines isHandlebody() and knowsHandlebody(), thanks to
+              Alex He.
             - The Turaev-Viro routines now reserve the right to use a
               different algorithm if your chosen algorithm does not
               support the given parameters (r, parity).  Currently this
               only happens if you ask for ALG_TREEWIDTH and your value
               of r is so large that it cannot fit into a native C++ int.
+            - New routines minimiseVertices() and hasMinimalVertices().
+            - New routine hasMimimalBoundary().
+            - Routine minimiseBoundary() now throws an exception if the
+              triangulation is not valid.
+            - Routine intelligentSimplify() now explicitly aims to reduce
+              the number of vertices, as long as this does not increase
+              the number of tetrahedra.
+            - New routines longitudeCuts() and meridian().
+            - Routines longitude() and meridianLongitude() now throw
+              exceptions on error instead of returning null.
+            - New routine linkingSurface().
         Class Triangulation<4>:
             - New routine intersectionForm().
+            - New routine linkingSurface().
             - New optimisations that reduce the need for 3-sphere/3-ball
               recognition when modifying a triangulation.
         Class Vector:
             - Routine scaleDown() now returns the gcd that was used.
-        Class Vertex<3>:
+        Class Vertex<3>, Vertex<4>:
             - New routine linkingSurface().
         Function for_constexpr():
             - New routine to support compile-time for loops.
@@ -158,6 +495,10 @@ Version 7.1  [ TODO ]
         - For classes that have a bool() cast operator, this is now wrapped in
           Python using the special __bool__() function (i.e., Python will now
           cast such objects to bool in the same way).
+        - Fixed a deadlock in the GUI with functions that used callbacks (e.g.,
+          Triangulation3.retriangulate()).  These functions *did* work with
+          command-line regina-python.  The issue in the GUI was due to an
+          incompatibility with pybind11 and multiple Python subinterpreters.
     UTILITIES:
         tricensus:
             - Now supports multithreading via the new --threads option.

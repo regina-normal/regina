@@ -38,6 +38,10 @@ simplex ::= (#PCDATA)</synopsis>
       <entry><sgmltag>desc</sgmltag></entry>
       <entry><type>CDATA</type></entry>
      </row>
+     <row>
+      <entry><sgmltag>lock</sgmltag></entry>
+      <entry><type>NUMBER</type></entry>
+     </row>
     </tbody>
    </tgroup>
   </informaltable>
@@ -176,6 +180,36 @@ simplex ::= (#PCDATA)</synopsis>
      <para>
       A human-readable description of the role that this top-dimensional
       simplex plays in the overall triangulation.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>lock</sgmltag></term>
+    <listitem>
+     <para>
+      A hexidecimal bitmask indicating whether this top-dimensional simplex
+      and/or any of its facets are locked.  Essentially, locking a simplex or
+      facet means that the simplex or facet must not change; see &regina;'s
+      <acronym>API</acronym> documentation for full details.
+     </para>
+     <para>
+      This bitmask must contain
+      <replaceable>dim</replaceable>&nbsp;+&nbsp;2 bits;
+      here we number the bits so that the 0th bit is least significant.
+      Bit <replaceable>k</replaceable> should be set if and only if
+      facet <replaceable>k</replaceable> of this simplex is locked,
+      for 0&nbsp;&le;&nbsp;<replaceable>k</replaceable>&nbsp;&le;&nbsp;<replaceable>dim</replaceable>.
+      Bit <replaceable>dim</replaceable>&nbsp;+&nbsp;1 should be set
+      if and only if this simplex itself is locked.
+     </para>
+     <para>
+      If two top-dimensional simplices are glued together, then the
+      corresponding facet locks must be consistent (i.e., the two facets
+      that are joined must either be both locked or both unlocked).
+     </para>
+     <para>
+      If this attribute is missing, then the bitmask will be treated as 0
+      (i.e., the simplex and all of its facets are unlocked).
      </para>
     </listitem>
    </varlistentry>

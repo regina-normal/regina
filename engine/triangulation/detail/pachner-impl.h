@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,7 +34,7 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is \e not included from triangulate.h, and it is not
+ *  This file is _not_ included from triangulate.h, and it is not
  *  shipped with Regina's development headers.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *
@@ -74,7 +74,7 @@ namespace regina::detail {
      * topological ball.  For the new simplices, this will be the actual
      * labelling of the simplices (since Regina gets to create the
      * new simplices).  For the old simplices, however, this will
-     * \e not be the actual labelling of the simplices (since this is
+     * _not_ be the actual labelling of the simplices (since this is
      * provided by the user, and is out of Regina's control).
      *
      * For the details of Regina's "canonical" labelling of simplices,
@@ -85,10 +85,10 @@ namespace regina::detail {
      * \tparam k the dimension of the face about which we are performing a
      * Pachner move.
      *
-     * @param oldSimp identifies one of the old simplices that will
+     * \param oldSimp identifies one of the old simplices that will
      * be removed by this Pachner move; this must be between
      * 0 and (\a dim - \a k) inclusive.
-     * @param newSimp identifies one of the new simplices that will
+     * \param newSimp identifies one of the new simplices that will
      * be added by this Pachner move; this must be between
      * 0 and \a k inclusive.
      */
@@ -195,8 +195,13 @@ namespace regina::detail {
 
 template <int dim>
 template <int k>
-inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
+bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         bool perform) {
+    static_assert(0 <= k && k <= dim,
+        "pachner() requires a facial dimension between 0 and dim inclusive.");
+
+    using LockMask = typename Simplex<dim>::LockMask;
+
     if constexpr (k == 0) {
         // Pachner move on a vertex:
         if (check) {
@@ -207,39 +212,69 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                 return false;
         }
 
+        // Prepare to record where there are any locks on exterior facets
+        // that must be preserved.
+        LockMask oldLocks = 0;
+
         // f must meet (dim+1) distinct top-dimensional simplices, which must be
         // glued around the vertex in a way that gives a dim-simplex link.
         // Find these simplices.
         Simplex<dim>* oldSimp[dim + 1];
-        Perm<dim + 1> oldVertices[dim + 1]; // 0 -> vertex, 1..dim -> link
+        Perm<dim + 1> oldVertices[dim + 1];
 
-        // We will permute oldVertices so that:
-        // - oldSimp[i] has vertex i = f
+        // Conceptually, we label the vertices of these simplices so:
+        // - oldSimp[i] has vertex i = f (the internal vertex)
         // - oldSimp[i] <-> oldSimp[j] with permutation i <-> j
+        //
         // This is possible iff we have a dim-simplex link.
+        //
+        // Moreover, this induces a labelling of the vertices of the new
+        // simplex that will replace the old ones.
+        //
+        // The permutation oldVertices[i] maps these "conceptual" vertex
+        // labels to the actual vertex labels seen in oldSimp[i].
 
         oldSimp[0] = f->front().simplex();
-        oldVertices[0] = f->front().vertices();
+        oldVertices[0] = f->front().vertices(); // maps 0 -> f
+        if (oldSimp[0]->locks_) {
+            if (oldSimp[0]->locks_ != (LockMask(1) << oldVertices[0][0])) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "Pachner move using a locked simplex and/or facet");
+            }
+            oldLocks |= LockMask(1); // this will be facet 0 of the new simplex
+        }
 
         if (oldVertices[0].sign() < 0) {
             // We need to preserve orientation.
             oldVertices[0] = oldVertices[0] * Perm<dim + 1>(dim - 1, dim);
         }
 
-        int i,j;
-        for (i = 1; i <= dim; ++i) {
+        for (int i = 1; i <= dim; ++i) {
             oldSimp[i] = oldSimp[0]->adjacentSimplex(oldVertices[0][i]);
             if (check)
-                for (j = 0; j < i; ++j)
+                for (int j = 0; j < i; ++j)
                     if (oldSimp[i] == oldSimp[j])
                         return false;
             oldVertices[i] = oldSimp[0]->adjacentGluing(oldVertices[0][i]) *
                 oldVertices[0] * Perm<dim + 1>(0, i);
+            if (oldSimp[i]->locks_) {
+                if (oldSimp[i]->locks_ != (LockMask(1) << oldVertices[i][i])) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "Pachner move using a locked simplex and/or facet");
+                }
+                oldLocks |= (LockMask(1) << i);
+            }
         }
 
         if (check) {
-            for (i = 1; i <= dim; ++i)
-                for (j = 1; j < i; ++j) {
+            for (int i = 1; i <= dim; ++i)
+                for (int j = 1; j < i; ++j) {
                     if (oldSimp[i] != oldSimp[j]->adjacentSimplex(
                             oldVertices[j][i]))
                         return false;
@@ -250,81 +285,91 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                 }
         }
 
+        // The move is legal, and there are no locks that will get in the way.
+
         if (! perform)
             return true;
 
         // Perform the move.
+        // The following takeSnapshot() and ChangeAndClearSpan are essential,
+        // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
         TopologyLock lock(*this);
-        // Ensure only one event pair is fired in this sequence of changes.
-        typename Triangulation<dim>::ChangeEventSpan span(
+        Snapshottable<Triangulation<dim>>::takeSnapshot();
+        typename Triangulation<dim>::ChangeAndClearSpan span(
             static_cast<Triangulation<dim>&>(*this));
 
-        Simplex<dim>* newSimp = newSimplex();
+        Simplex<dim>* newSimp = newSimplexRaw();
 
         // Find where their facets need to be glued.
-        // Old simplex i, facet i <-> New simplex, facet i.
+        // Old simplex i, "conceptual" facet i <-> New simplex, facet i.
         Simplex<dim>* adjSimp[dim + 1];
-        Perm<dim + 1> adjGluing[dim + 1];
-        for (i = 0; i <= dim; ++i) {
-            adjSimp[i] = oldSimp[i]->adjacentSimplex(oldVertices[i][i]);
-            adjGluing[i] = oldSimp[i]->adjacentGluing(oldVertices[i][i]) *
-                oldVertices[i];
+        Perm<dim + 1> adjGlue[dim + 1];
+        for (int i = 0; i <= dim; ++i) {
+            if ((adjSimp[i] = oldSimp[i]->adjacentSimplex(oldVertices[i][i]))) {
+                adjGlue[i] = oldSimp[i]->adjacentGluing(oldVertices[i][i]) *
+                    oldVertices[i];
 
-            // Are we are gluing the new simplex to itself?
-            for (j = 0; j <= dim; ++j) {
-                if (adjSimp[i] == oldSimp[j]) {
-                    // This glues to old simplex j, facet oldVertices[j].
-                    if (i > j) {
-                        // Ensure we make the gluing in just one
-                        // direction, not both directions.
-                        adjSimp[i] = nullptr;
-                    } else {
-                        // Adjust the gluing to point to the new simplex.
-                        adjSimp[i] = newSimp;
-                        adjGluing[i] = oldVertices[j].inverse() * adjGluing[i];
+                // Are we are gluing the new simplex to itself?
+                for (int j = 0; j <= dim; ++j) {
+                    if (adjSimp[i] == oldSimp[j]) {
+                        // This glues to old simplex j, facet oldVertices[j].
+                        // Adjust this to point the new simplex instead, but
+                        // also ensure the gluing happens in one direction only.
+                        if (i < j) {
+                            adjSimp[i] = newSimp;
+                            adjGlue[i] = oldVertices[j].inverse() * adjGlue[i];
+                        } else
+                            adjSimp[i] = nullptr;
+                        break;
                     }
-                    break;
                 }
             }
         }
 
-        // Now go ahead and make the gluings.
-        for (i = 0; i <= dim; ++i)
-            oldSimp[i]->isolate();
-        for (i = 0; i <= dim; ++i)
-            if (adjSimp[i])
-                newSimp->join(i, adjSimp[i], adjGluing[i]);
-
         // Delete the old simplices.
-        for (i = 0; i <= dim; ++i)
-            removeSimplex(oldSimp[i]);
+        for (int i = 0; i <= dim; ++i)
+            removeSimplexRaw(oldSimp[i]);
+
+        // Now go ahead and make the gluings.
+        for (int i = 0; i <= dim; ++i)
+            if (adjSimp[i])
+                newSimp->joinRaw(i, adjSimp[i], adjGlue[i]);
+
+        // Put back any facet locks from the inside.
+        // They should already be in place from the outside.
+        newSimp->locks_ = oldLocks;
 
         // All done!
         return true;
     } else if constexpr (k == dim) {
         // Pachner move on a top-dimensional simplex:
-        if ( !perform )
-            return true; // You can always do this move.
 
-        TopologyLock lock(*this);
-        // Ensure only one event pair is fired in this sequence of changes.
-        typename Triangulation<dim>::ChangeEventSpan span(
-            static_cast<Triangulation<dim>&>(*this));
-
-        // Before we unglue, record how the adjacent simplices are glued to f.
-        Simplex<dim>* adjSimp[dim + 1];
-        Perm<dim + 1> adjGlue[dim + 1];
-        int i, j;
-        for (i = 0; i <= dim; i++) {
-            adjSimp[i] = f->adjacentSimplex(i);
-            if (adjSimp[i])
-                adjGlue[i] = f->adjacentGluing(i);
+        // First check for lock violations.
+        if (f->isLocked()) {
+            if (check)
+                return false;
+            if (perform)
+                throw LockViolation("An attempt was made to perform a "
+                    "Pachner move on a locked top-dimensional simplex");
         }
 
-        // Unglue the old simplex.
-        f->isolate();
+        // Next check the legality of the move.
+        // For a 1-(dim+1) move, this is always legal.
+        if (! perform )
+            return true;
 
-        // The new simplices.
+        // Perform the move.
+        // The following takeSnapshot() and ChangeAndClearSpan are essential,
+        // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+        TopologyLock lock(*this);
+        Snapshottable<Triangulation<dim>>::takeSnapshot();
+        typename Triangulation<dim>::ChangeAndClearSpan span(
+            static_cast<Triangulation<dim>&>(*this));
+
+        // Remember any facet locks on f - we will need to restore these later.
+        LockMask oldLock = f->locks_;
+
+        // Create the new simplices.
         // Facet i of the old simplex will become a facet of newSimp[i].
         // Vertex i of newSimp[i] will become the new internal vertex, and the
         // other dim vertices of newSimp[i] will keep the same vertex numbers
@@ -333,33 +378,50 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // We insert the new simplices in reverse order so that the new
         // vertex becomes vertex 0 of the last simplex of the triangulation.
         Simplex<dim>* newSimp[dim + 1];
-        for (i = dim; i >= 0; --i)
-            newSimp[i] = newSimplex();
+        for (int i = dim; i >= 0; --i)
+            newSimp[i] = newSimplexRaw();
 
-        // Glue the new simplices to each other internally.
-        for (i = 0; i <= dim; ++i)
-            for (j = i + 1; j <= dim; ++j)
-                newSimp[i]->join(j, newSimp[j], Perm<dim + 1>(i, j));
+        // Before we unglue, record how the adjacent simplices are glued to f.
+        Simplex<dim>* adjSimp[dim + 1];
+        Perm<dim + 1> adjGlue[dim + 1];
+        for (int i = 0; i <= dim; i++) {
+            if ((adjSimp[i] = f->adjacentSimplex(i))) {
+                adjGlue[i] = f->adjacentGluing(i);
 
-        // Attach the new simplices to the old triangulation.
-        for (i = 0; i <= dim; ++i) {
-            if (adjSimp[i] == f) {
-                // The old simplex was glued to itself.
-
-                // We might have already made this gluing from the other side:
-                if (newSimp[i]->adjacentSimplex(i))
-                    continue;
-
-                // Nope, do it now.
-                newSimp[i]->join(i, newSimp[adjGlue[i][i]], adjGlue[i]);
-            } else if (adjSimp[i]) {
-                // The old simplex was glued elsewhere.
-                newSimp[i]->join(i, adjSimp[i], adjGlue[i]);
+                // Were we gluing the old simplex to itself?
+                if (adjSimp[i] == f) {
+                    // Adjust this to point to one of the new simplices instead,
+                    // but also ensure the gluing happens in one direction only.
+                    int j = adjGlue[i][i];
+                    if (i < j)
+                        adjSimp[i] = newSimp[j];
+                    else
+                        adjSimp[i] = nullptr;
+                }
             }
         }
 
         // Delete the old simplex.
-        removeSimplex(f);
+        removeSimplexRaw(f);
+
+        // Glue the new simplices to each other internally.
+        for (int i = 0; i <= dim; ++i)
+            for (int j = i + 1; j <= dim; ++j)
+                newSimp[i]->joinRaw(j, newSimp[j], {i, j});
+
+        // Attach the new simplices to the old triangulation.
+        for (int i = 0; i <= dim; ++i)
+            if (adjSimp[i])
+                newSimp[i]->joinRaw(i, adjSimp[i], adjGlue[i]);
+
+        // Put back any facet locks from the inside.
+        // They should already be in place from the outside.
+        if (oldLock)
+            for (int i = 0; i <= dim; ++i) {
+                LockMask lockBit = (LockMask(1) << i);
+                if (oldLock & lockBit)
+                    newSimp[i]->locks_ = lockBit;
+            }
 
         // All done!
         return true;
@@ -411,7 +473,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
          *   would have mapped from (k+i)) is the index of this facet in i'.
          *
          * - Consider the external facet of the overall structure that is
-         *   facet j of old simplex i (i <= d-k; j is one of 0..(k-1),(k+i)).
+         *   facet j of old simplex i (i ≤ d-k; j is one of 0..(k-1),(k+i)).
          *   Then this maps to facet j' of new simplex i', where:
          *
          *   * i' = { j if j < k ; k if j = k+i }
@@ -427,9 +489,17 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
          * original and new orientations will match.
          */
 
-        // Find these original top-dimensional simplices.
+        // Prepare to record whether there are any locks on exterior facets
+        // that must be preserved.  These are indexed with respect to the
+        // *new* top-dimensional simplices and their facets.
+        LockMask locks[k + 1];
+        std::fill(locks, locks + k + 1, 0);
+
+        // Find the original top-dimensional simplices.
         // We will let oldVertices[i] describe our numbering scheme for the
-        // vertices of simplex i, as described in (1) above.
+        // vertices of simplex i, as described in (1) above.  Specifically,
+        // oldVertices[i] maps the "conceptual" labels described above for
+        // old simplex i to the actual vertex labels.
         Simplex<dim>* oldSimp[dim + 1 - k];
         Perm<dim + 1> oldVertices[dim + 1 - k];
 
@@ -457,20 +527,72 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                 oldVertices[0] = oldVertices[0] * Perm<dim + 1>(0, 1);
         }
 
-        int i,j;
-        for (i = 1; i <= dim - k; ++i) {
+        if (oldSimp[0]->locks_) {
+            if (oldSimp[0]->isLocked()) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "Pachner move using a locked top-dimensional simplex");
+            }
+            for (int v = 0; v <= k; ++v)
+                if (oldSimp[0]->isFacetLocked(oldVertices[0][v])) {
+                    // New simplex v, facet 0
+                    locks[v] |= LockMask(1);
+                }
+            for (int v = k + 1; v <= dim; ++v)
+                if (oldSimp[0]->isFacetLocked(oldVertices[0][v])) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "Pachner move using a locked facet");
+                }
+        }
+
+        for (int i = 1; i <= dim - k; ++i) {
             oldSimp[i] = oldSimp[0]->adjacentSimplex(oldVertices[0][i + k]);
             if (check)
-                for (j = 0; j < i; ++j)
+                for (int j = 0; j < i; ++j)
                     if (oldSimp[i] == oldSimp[j])
                         return false;
             oldVertices[i] = oldSimp[0]->adjacentGluing(oldVertices[0][i + k]) *
                 oldVertices[0] * Perm<dim + 1>(k, i + k);
+            if (oldSimp[i]->locks_) {
+                if (oldSimp[i]->isLocked()) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "Pachner move using a locked top-dimensional "
+                            "simplex");
+                }
+                for (int v = 0; v < k; ++v)
+                    if (oldSimp[i]->isFacetLocked(oldVertices[i][v])) {
+                        // New simplex v, facet (i<d-k ? i : d-k+v)
+                        locks[v] |= (LockMask(1) <<
+                            (i < dim - k ? i : dim - k + v));
+                    }
+                if (oldSimp[i]->isFacetLocked(oldVertices[i][k + i])) {
+                    // New simplex k, facet (i<d-k ? i : d)
+                    locks[k] |= (LockMask(1) << (i < dim - k ? i : dim));
+                }
+                for (int v = k; v <= dim; ++v)
+                    if (v != k + i)
+                        if (oldSimp[i]->isFacetLocked(oldVertices[i][v])) {
+                            if (check)
+                                return false;
+                            if (perform)
+                                throw LockViolation("An attempt was made to "
+                                    "perform a Pachner move using a "
+                                    "locked facet");
+                        }
+            }
         }
 
         if (check) {
-            for (i = 1; i <= dim - k; ++i)
-                for (j = 1; j < i; ++j) {
+            for (int i = 1; i <= dim - k; ++i)
+                for (int j = 1; j < i; ++j) {
                     if (oldSimp[i] != oldSimp[j]->adjacentSimplex(
                             oldVertices[j][i + k]))
                         return false;
@@ -481,13 +603,17 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                 }
         }
 
+        // The move is legal, and there are no locks that will get in the way.
+
         if (! perform)
             return true;
 
         // Perform the move.
+        // The following takeSnapshot() and ChangeAndClearSpan are essential,
+        // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
         TopologyLock lock(*this);
-        // Ensure only one event pair is fired in this sequence of changes.
-        typename Triangulation<dim>::ChangeEventSpan span(
+        Snapshottable<Triangulation<dim>>::takeSnapshot();
+        typename Triangulation<dim>::ChangeAndClearSpan span(
             static_cast<Triangulation<dim>&>(*this));
 
         // Create (k + 1) new top-dimensional simplices.
@@ -495,8 +621,8 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // (dim-k)-face is formed from vertices 0,...,(dim-k) of the last
         // simplex in the resulting triangulation.
         Simplex<dim>* newSimp[k + 1];
-        for (i = k; i >= 0; --i)
-            newSimp[i] = newSimplex();
+        for (int i = k; i >= 0; --i)
+            newSimp[i] = newSimplexRaw();
 
         // Find where their facets need to be glued.
         // The following arrays adj*[i][j] store the destination of
@@ -504,12 +630,11 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // should be interpreted to mean facet (i + dim - k) instead.
         Simplex<dim>* adjSimp[k + 1][dim + 1];
         Perm<dim + 1> adjGluing[k + 1][dim + 1];
-        int l, oldFacet, destFacet;
-        for (i = 0; i <= k; ++i) { // new simplices
-            for (j = 0; j <= dim - k; ++j) { // new facets
+        for (int i = 0; i <= k; ++i) { // new simplices
+            for (int j = 0; j <= dim - k; ++j) { // new facets
                 // This facet belongs to old simplex j.
                 // Find the facet of this old simplex, in our numbering scheme.
-                oldFacet = (i < k ? i : k + j);
+                int oldFacet = (i < k ? i : k + j);
                 adjSimp[i][j] = oldSimp[j]->adjacentSimplex(
                     oldVertices[j][oldFacet]);
                 adjGluing[i][j] = oldSimp[j]->adjacentGluing(
@@ -518,7 +643,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
 
                 // Is the destination of the gluing one of the old simplices
                 // that we are about to remove?
-                for (l = 0; l <= dim - k; ++l) { // old simplex
+                for (int l = 0; l <= dim - k; ++l) { // old simplex
                     if (adjSimp[i][j] == oldSimp[l]) {
                         // Yes!  The destination is old simplex l.
                         // We only need to fix the gluing from one side only.
@@ -528,7 +653,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                         }
                         // Which facet of the old simplex is the destination
                         // of the gluing (using our own numbering scheme)?
-                        destFacet = oldVertices[l].pre(
+                        int destFacet = oldVertices[l].pre(
                             adjGluing[i][j][j < dim - k ? j : i + dim - k]);
 
                         if (j == l && oldFacet < destFacet) {
@@ -557,27 +682,32 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             }
         }
 
+        // Delete the old simplices.
+        for (int i = 0; i <= dim - k; ++i)
+            removeSimplexRaw(oldSimp[i]);
+
         // Now go ahead and make the gluings.
-        for (i = 0; i <= dim - k; ++i)
-            oldSimp[i]->isolate();
-        for (i = 0; i <= k; ++i) {
-            for (j = 0; j < dim - k; ++j)
+        for (int i = 0; i <= k; ++i) {
+            int j = 0;
+            for ( ; j < dim - k; ++j)
                 if (adjSimp[i][j])
-                    newSimp[i]->join(j, adjSimp[i][j], adjGluing[i][j]);
+                    newSimp[i]->joinRaw(j, adjSimp[i][j], adjGluing[i][j]);
             // Now j == dim - k.
             if (adjSimp[i][j])
-                newSimp[i]->join(i + dim - k, adjSimp[i][j], adjGluing[i][j]);
+                newSimp[i]->joinRaw(i + dim - k, adjSimp[i][j],
+                    adjGluing[i][j]);
         }
 
         // Make the internal gluings for the new simplices.
-        for (i = 1; i <= k; ++i)
-            for (j = 0; j < i; ++j)
-                newSimp[i]->join(j + dim - k, newSimp[j],
+        for (int i = 1; i <= k; ++i)
+            for (int j = 0; j < i; ++j)
+                newSimp[i]->joinRaw(j + dim - k, newSimp[j],
                     Perm<dim + 1>(i + dim - k, j + dim - k));
 
-        // Delete the old pentachora.
-        for (i = 0; i <= dim - k; ++i)
-            removeSimplex(oldSimp[i]);
+        // Put back any facet locks from the inside.
+        // They should already be in place from the outside.
+        for (int i = 0; i <= k; ++i)
+            newSimp[i]->locks_ = locks[i];
 
         // All done!
         return true;

@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRISETCMP" "1" "30 May 2022" "" "The Regina Handbook"
+.TH "TRISETCMP" "1" "24 April 2023" "" "The Regina Handbook"
 
 .SH NAME
 trisetcmp \- Compare triangulations between two Regina data files
 .SH SYNOPSIS
 
 \fBtrisetcmp\fR [ \fB-m\fR | \fB-n\fR ] [ \fB-s\fR ] \fB\fIfile1\fB\fR \fB\fIfile2\fB\fR
+
+
+\fBtrisetcmp\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -63,6 +66,13 @@ In the case of \fB-n\fR (output non-matches only),
 this program outputs all triangulations from
 \fIfile1\fR that are not isomorphic to a
 subcomplex of any triangulation from \fIfile2\fR\&.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "INTERNATIONALISATION"
 .PP
 If any packets contain international characters,
@@ -98,7 +108,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\trisetcmp.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.4\\bin\\trisetcmp.exe\&.
 .SH "SEE ALSO"
 .PP
 censuslookup,

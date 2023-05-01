@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,7 +36,7 @@
  *
  *  The accompanying source file (pythonoutputstream.cpp) should be built
  *  directly into each user interface that requires it.
- *  It is \e not built into Regina's python module.
+ *  It is _not_ built into Regina's python module.
  */
 
 #ifndef __PYTHONOUTPUTSTREAM_H
@@ -77,23 +77,30 @@ class PythonOutputStream {
         /**
          * Writes data to this output stream.  Note that this data will
          * not be processed until a newline is written or flush() is called.
+         *
+         * This routine may be called with or without the Python global
+         * interpreter lock being held.
          */
         void write(const std::string& data);
 
         /**
          * Forces any data that has not yet been processed to be
          * sent to processOutput().
+         *
+         * This routine may be called with or without the Python global
+         * interpreter lock being held.
          */
         void flush();
 
         /**
          * Uses this object for either standard output or standard error.
          *
-         * This will set <tt>sys.&lt;streamname&gt;</tt> to this object.
+         * This will set `sys.<streamname>` to this object.
          *
          * \pre \a streamName must be either "stdout" or "stderr".
          * \pre The python bindings for PythonOutputStream have already been
          * set up by calling the static routine addBindings().
+         * \pre The Python global interpreter lock is currently held.
          *
          * May throw a std::runtime_error if an error occurs.
          */
@@ -116,6 +123,8 @@ class PythonOutputStream {
          * Process a chunk of data that was sent to this output stream.
          * This routine might for instance display the data to the user
          * or write it to a log file.
+         *
+         * \pre The Python global interpreter lock is _not_ held.
          */
         virtual void processOutput(const std::string& data) = 0;
 };

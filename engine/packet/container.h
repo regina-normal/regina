@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -77,7 +77,7 @@ class Container : public Packet {
          * building a complex packet tree to save to a Regina data file,
          * and you are using containers to organise the data in this tree.
          *
-         * @param label the packet label for this new container.
+         * \param label the packet label for this new container.
          */
         Container(const std::string& label);
 
@@ -100,12 +100,12 @@ class Container : public Packet {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         Container& operator = (const Container&) = default;
 
         /**
-         * Swaps function that does nothing.
+         * Swap function that does nothing.
          *
          * This is only here for consistency with the other packet types.
          * Like all packet types, this operation does not swap any of

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -147,7 +147,7 @@ class PacketUI {
          *
          * - If a QTableView or QListView cell is being edited and an
          *   action is triggered, the table or list may not update
-         *   its model (i.e., commit the edit) until \e after the action
+         *   its model (i.e., commit the edit) until _after_ the action
          *   event has been processed.  This means that the action event
          *   needs to force the commit itself, to avoid operating on the
          *   old version of the packet.

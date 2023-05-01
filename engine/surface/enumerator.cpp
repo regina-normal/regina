@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -125,8 +125,7 @@ void NormalSurfaces::Enumerator::enumerate() {
 
     // Insert the results into the packet tree, but only once they are ready.
     if (treeParent_ && ! (tracker_ && tracker_->isCancelled()))
-        treeParent_->insertChildLast(
-            static_cast<PacketOf<NormalSurfaces>*>(list_)->
+        treeParent_->append(static_cast<PacketOf<NormalSurfaces>*>(list_)->
             shared_from_this());
 
     if (tracker_)

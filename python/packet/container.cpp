@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,21 +32,26 @@
 
 #include "packet/container.h"
 #include "../helpers.h"
+#include "../docstrings/packet/container.h"
 
 using regina::Container;
 
 void addContainer(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Container)
+
     auto c = pybind11::class_<Container, regina::Packet,
-            std::shared_ptr<Container>>(m, "Container")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const std::string&>())
-        .def(pybind11::init<const Container&>())
-        .def("swap", &Container::swap)
+            std::shared_ptr<Container>>(m, "Container", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const std::string&>(), rdoc::__init)
+        .def(pybind11::init<const Container&>(), rdoc::__copy)
+        .def("swap", &Container::swap, rdoc::swap)
         .def_readonly_static("typeID", &Container::typeID)
     ;
     regina::python::add_output(c);
     regina::python::packet_disable_eq_operators(c);
 
-    m.def("swap", (void(*)(Container&, Container&))(regina::swap));
+    regina::python::add_global_swap<Container>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

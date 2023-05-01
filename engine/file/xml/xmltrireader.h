@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -56,7 +56,7 @@ namespace regina {
  * old second-generation file format to describe top-dimensional simplices in a
  * <i>dim</i>-dimensional triangulation.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation in question.
  */
@@ -99,16 +99,16 @@ struct XMLLegacyTriangulationTags<2> {
 /**
  * Helper class that reads the XML element for a single top-dimensional
  * simplex in a <i>dim</i>-dimensional triangulation.
- * In other words, this reads the contents of a single &lt;simplex&gt;
- * element for dimension \a dim &ge; 5, or a single &lt;triangle&gt;,
- * &lt;tet&gt; or &lt;pent&gt; element for dimension \a dim = 2, 3 or 4.
+ * In other words, this reads the contents of a single `<simplex>`
+ * element for dimension \a dim ≥ 5, or a single `<triangle>`,
+ * `<tet>` or `<pent>` element for dimension \a dim = 2, 3 or 4.
  *
  * It is assumed that the underlying triangulation and its simplices
  * have already been created.  The task of this reader is to flesh out
  * the "contents" of a single simplex; that is, the description of the
  * simplex and its gluings to adjacent simplices.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
  */
@@ -130,10 +130,10 @@ class XMLSimplexReader : public XMLElementReader {
          * \pre The given triangulation \a tri already contains at least
          * (\a whichSimplex + 1) top-dimensional simplices.
          *
-         * @param tri the triangulation containing the simplex being read.
-         * @param whichSimplex the index of the simplex being read
+         * \param tri the triangulation containing the simplex being read.
+         * \param whichSimplex the index of the simplex being read
          * within the triangulation \a tri.
-         * @param permIndex \c true if permutations are stored as indices into
+         * \param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
          * This must always be specified, regardless of which XML file format
          * we are reading.
@@ -152,15 +152,15 @@ class XMLSimplexReader : public XMLElementReader {
  * Helper class that reads the XML element in the old second-generation format
  * for the set of all top-dimensional simplices in a <i>dim</i>-dimensional
  * triangulation.
- * In other words, this reads the contents of a single &lt;simplices&gt;
- * element for dimension \a dim &ge; 5, or a single &lt;triangles&gt;,
- * &lt;tetrahedra&gt; or &lt;pentachora&gt; element for dimension
+ * In other words, this reads the contents of a single `<simplices>`
+ * element for dimension \a dim ≥ 5, or a single `<triangles>`,
+ * `<tetrahedra>` or `<pentachora>` element for dimension
  * \a dim = 2, 3 or 4.
  *
  * It is assumed that the underlying triangulation has already been created,
  * but its simplices have not.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
  */
@@ -180,8 +180,8 @@ class XMLLegacySimplicesReader : public XMLElementReader {
          * The given triangulation should be empty; its simplices will
          * be created by this reader.
          *
-         * @param tri the triangulation being read.
-         * @param readSimplices a reference to the counter that needs to
+         * \param tri the triangulation being read.
+         * \param readSimplices a reference to the counter that needs to
          * track the number of top-dimensional simplices read so far.
          */
         XMLLegacySimplicesReader(Triangulation<dim>* tri,
@@ -199,7 +199,18 @@ class XMLLegacySimplicesReader : public XMLElementReader {
  * An XML packet reader that reads a single <i>dim</i>-dimensional
  * triangulation.
  *
- * \ifacespython Not present.
+ * This triangulation will be assembled using the "raw" routines
+ * newSimplexRaw(), joinRaw(), etc., _without_ the usual protections such as
+ * takeSnapshot(), ChangeAndClearSpan, etc.  The reason we use the "raw"
+ * routines is so we can incrementally recreate simplex/facet locks and
+ * assemble top-dimensional simplices without having to worry about how these
+ * operations interact.  The reason we do not need the usual protections
+ * is because this assembly should all take place before the first call to
+ * packetToCommit(), when \a tri_ is a freshly created triangulation with no
+ * event listeners, no snapshot users, and has not yet been inserted into the
+ * packet tree.
+ *
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
  * This must be between 2 and 15 inclusive.
@@ -223,10 +234,10 @@ class XMLTriangulationReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param size the total number of top-dimensional simplices in the
+         * \param size the total number of top-dimensional simplices in the
          * triangulation.  This should be 0 if we are reading the
          * second-generation file format.
-         * @param permIndex \c true if permutations are stored as indices into
+         * \param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
          * This will be ignored when reading the second-generation file format.
          */
@@ -246,10 +257,10 @@ class XMLTriangulationReader : public XMLPacketReader {
          * Otherwise this function should return a new XMLElementReader,
          * which will cause the XML element to be ignored.
          *
-         * @param subTagName the name of the XML subelement opening tag.
-         * @param subTagProps the properties associated with the
+         * \param subTagName the name of the XML subelement opening tag.
+         * \param subTagProps the properties associated with the
          * subelement opening tag.
-         * @return a newly created element reader that will be used to
+         * \return a newly created element reader that will be used to
          * parse the subelement.  This class should not take care of the
          * new reader's destruction; that will be done by the parser.
          */
@@ -282,7 +293,7 @@ class AbelianGroupPropertyReader : public XMLElementReader {
          * Creates a new reader that stores its results in the
          * given triangulation property.
          *
-         * @param prop a reference to the triangulation property
+         * \param prop a reference to the triangulation property
          * in which the data that is read should be stored.
          */
         AbelianGroupPropertyReader(PropType& prop);
@@ -311,7 +322,7 @@ class GroupPresentationPropertyReader : public XMLElementReader {
          * Creates a new reader that stores its results in the
          * given triangulation property.
          *
-         * @param prop a reference to the triangulation property
+         * \param prop a reference to the triangulation property
          * in which the data that is read should be stored.
          */
         GroupPresentationPropertyReader(PropType& prop);
@@ -338,6 +349,19 @@ inline void XMLSimplexReader<dim>::startElement(const std::string&,
     auto desc = props.find("desc");
     if (desc != props.end())
         simplex_->setDescription(desc->second);
+
+    auto lock = props.find("lock");
+    if (lock != props.end() && ! lock->second.empty()) {
+        // Read the lock mask as an unsigned long, since this is guaranteed
+        // to be ≥ 32 bits (which means it is large enough for all of Regina's
+        // supported dimensions).
+        char* endPtr;
+        unsigned long mask = strtoul(lock->second.c_str(), &endPtr, 16);
+        if ((*endPtr == 0) && (mask >> (dim + 2) == 0)) {
+            // This is a valid lock mask.
+            simplex_->locks_ = mask;
+        }
+    }
 }
 
 template <int dim>
@@ -389,7 +413,7 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
         if (adjSimp->adjacentSimplex(adjFacet))
             continue;
 
-        simplex_->join(k, adjSimp, perm);
+        simplex_->joinRaw(k, adjSimp, perm);
     }
 }
 
@@ -408,7 +432,7 @@ void XMLLegacySimplicesReader<dim>::startElement(
     long size;
     if (valueOf(props.lookup(XMLLegacyTriangulationTags<dim>::size), size))
         for ( ; size > 0; --size)
-            tri_->newSimplex();
+            tri_->newSimplexRaw();
 }
 
 template <int dim>
@@ -437,11 +461,31 @@ inline XMLTriangulationReader<dim>::XMLTriangulationReader(
         tri_(make_packet<Triangulation<dim>>()),
         permIndex_(permIndex), readSimplices_(0) {
     for ( ; size > 0; --size)
-        tri_->newSimplex();
+        tri_->newSimplexRaw();
 }
 
 template <int dim>
 inline std::shared_ptr<Packet> XMLTriangulationReader<dim>::packetToCommit() {
+    // Here is a good time to enforce the consistency of the triangulation:
+    // this function would typically only be called once, immediately after
+    // the triangulation has been assembled, and before anything else tries
+    // to reference it or use it.
+    //
+    // This consistency checking is a little work, but again this would
+    // typically only happen once (and if it packetToCommit() does get
+    // called again, the duplicated work is unnecessary but harmless).
+    //
+    // For now, all we will do is enforce the consistency of facet locks.
+    for (auto s : tri_->simplices())
+        if (s->locks_)
+            for (int facet = 0; facet <= dim; ++facet)
+                if (auto adj = s->adjacentSimplex(facet))
+                    if (s->isFacetLocked(facet)) {
+                        auto adjFacet = s->adjacentFacet(facet);
+                        if (! adj->isFacetLocked(adjFacet))
+                            adj->lockFacetRaw(adjFacet);
+                    }
+
     return tri_;
 }
 
@@ -497,14 +541,25 @@ inline XMLElementReader*
             bool b;
             if (valueOf(props.lookup("value"), b))
                 tri_->prop_.threeSphere_ = b;
+        } else if (subTagName == "handlebody") {
+            ssize_t genus;
+            if (valueOf(props.lookup("value"), genus))
+                if (genus >= -1)
+                    tri_->prop_.handlebody_ = genus;
         } else if (subTagName == "threeball") {
             bool b;
+            // If threeball is false, we don't do anything since this
+            // might or might not still be a handelbody of some other genus.
             if (valueOf(props.lookup("value"), b))
-                tri_->prop_.threeBall_ = b;
+                if (b)
+                    tri_->prop_.handlebody_ = 0;
         } else if (subTagName == "solidtorus") {
             bool b;
+            // If solidtorus is false, we don't do anything since this
+            // might or might not still be a handelbody of some other genus.
             if (valueOf(props.lookup("value"), b))
-                tri_->prop_.solidTorus_ = b;
+                if (b)
+                    tri_->prop_.handlebody_ = 1;
         } else if (subTagName == "txi") {
             bool b;
             if (valueOf(props.lookup("value"), b))

@@ -6,17 +6,63 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 7.1  [ TODO ]
+Version 7.4  [ (to be announced) ]
+
+Version 7.3  [ 18 March, 2023 ]
+
+    Overview:
+        - This is primarily a maintenance release.
+    Bugs fixed:
+        - Fixed an algebraic issue where homomorphisms between groups could
+          have been simplified incorrectly, and as a result, group extensions
+          over Z could have been described using incorrect monodromies.  See
+          https://regina-normal.github.io/bugs.html for details.
+        - Fixed a potential buffer overflow in the SnapPea kernel.
+        - Fixed a C++/Python issue where invalid/ideal boundary components of
+          4-manifold triangulations were accessible via the triangulation
+          objects, but not via the individual component objects.
+        - The graphical user interface now compiles under Python 3.11.
+    Other improvements:
+        - Cloned triangulations now also clone the exact numbering/labelling of
+          lower-dimensional faces also (previously these were recomputed).
+          This matters for triangulated boundary components and vertex links,
+          where the numbering/labelling of faces is non-standard.
+        - Other minor mathematical additions and improvements to the
+          C++/Python API; see the full changelog for details.
+
+Version 7.2  [ 28 October, 2022 ]
+
+    Overview:
+        - The main focus of this release is Python.  See the detailed
+          changelog for other minor enhancements across Regina's codebase.
+    Python:
+        - Regina now provides docstrings throughout its Python module, which
+          means you can get comprehensive help directly from within Python.
+          See https://regina-normal.github.io/docs/python-docs.html for
+          some important caveats regarding this inline documentation.
+        - Regina now supports the newly-released Python 3.11, but no longer
+          supports Python 3.4 or 3.5.
+        - Undertook a full audit of Python bindings for the entire calculation
+          engine: a few bindings were missing, and these have now been added.
+        - Added __len__() functions to classes where this is meaningful.
+        - Fixed two errors in the Python bindings (Cyclotomic::negate() and
+          swap(BitmaskN, BitmaskN)).  These are unlikely to have affected users:
+          see https://regina-normal.github.io/bugs.html for details.
+
+Version 7.1  [ 30 September, 2022 ]
 
     Overview:
         - Regina now supports Python 3 only (not Python 2 or 3).
     Features:
         - Computes intersection forms of closed orientable 4-manifolds.
-        - Computes and recognises all normalised edge links (not just
-          thin edge links).
+        - Computes and recognises links of faces of all dimensions as normal
+          (hyper)surfaces; this includes both thin links and normalised links.
+        - Expanded 3-ball and solid torus recognition to more general
+          handlebody recognition (thanks to Alex He).
         - The tricensus utility now supports multithreaded operation, and
           has a new output option that preserves simplex/vertex labelling.
-        - Includes the standard K3 surface as a ready-made example 4-manifold.
+        - Includes the standard K3 surface as a ready-made example 4-manifold
+          (thanks to Rhuaidi Burke for the small triangulation).
         - Greater support for "tight encodings" for several types of objects;
           these use short text tokens, with no loss of information and no
           simplex/vertex/crossing relabelling.  These need Python or C++ to use.
@@ -26,10 +72,16 @@ Version 7.1  [ TODO ]
         - Everything that was deprecated in version 7.0 has now been removed
           entirely.  See https://regina-normal.github.io/api/regina7.html
           for instructions on how to update your scripts.
-        - The join() operation for simplices in triangulations now checks its
-          preconditions, and throws an exception if they fail.  This is because
-          incorrect use of join() is a common source of errors for users.
+        - Some routines now verify some of their easy-to-test preconditions,
+          and throw exceptions if they fail.  Expanding this type of testing
+          will be an ongoing project across future releases, and it will never
+          cover *all* preconditions (since some are too expensive to test
+          automatically).  The initial focus will be on routines that are
+          common sources of user errors (e.g., Simplex::join()).
         - Python now wraps all C++ bool() cast operators.
+        - Fixed a deadlock that occured in GUI python consoles (not in
+          command-line python or regina-python) when working with callbacks
+          (e.g., when passing a pure python function to retriangulate()).
 
 Version 7.0  [ 19 December, 2021 ]
 

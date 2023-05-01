@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -338,8 +338,7 @@ void FacetGraphTab::showError(const QString& msg) {
 }
 
 std::string Dim2EdgeGraphData::dual(bool withLabels) {
-    regina::FacetPairing<2> pairing(*tri_);
-    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
+    return tri_->dot(withLabels);
 }
 
 std::string Dim2EdgeGraphData::treeDecomp(bool nice, size_t& bags,
@@ -377,8 +376,7 @@ regina::Packet* Dim2EdgeGraphData::getPacket() {
 }
 
 std::string Dim3FaceGraphData::dual(bool withLabels) {
-    regina::FacetPairing<3> pairing(*tri_);
-    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
+    return tri_->dot(withLabels);
 }
 
 std::string Dim3FaceGraphData::treeDecomp(bool nice, size_t& bags,
@@ -416,8 +414,7 @@ regina::Packet* Dim3FaceGraphData::getPacket() {
 }
 
 std::string Dim4FacetGraphData::dual(bool withLabels) {
-    regina::FacetPairing<4> pairing(*tri_);
-    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
+    return tri_->dot(withLabels);
 }
 
 std::string Dim4FacetGraphData::treeDecomp(bool nice, size_t& bags,

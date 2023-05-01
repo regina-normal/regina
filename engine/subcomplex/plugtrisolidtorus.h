@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,7 +68,7 @@ namespace regina {
  * triangular solid torus (and possibly also hinge edges of a layered
  * chain).
  *
- * Create a \e plug by gluing two tetrahedra together along a single
+ * Create a _plug_ by gluing two tetrahedra together along a single
  * triangle.  The six edges that do not run along this common triangle split the
  * plug boundary into three squares.  These three squares must be glued
  * to the three boundary annuli previously described.  Each axis edge meets
@@ -81,7 +81,7 @@ namespace regina {
  * If the axis edges are directed so that they all point the
  * same way around the triangular solid torus, these axis edges when
  * drawn on the plug must all point from one common tip of the plug to
- * the other (where the \e tips of the plug are the vertices not meeting the
+ * the other (where the _tips_ of the plug are the vertices not meeting the
  * interior triangle).  The gluings must also be made so that the resulting
  * triangulation component is orientable.
  *
@@ -127,7 +127,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
                  triangulation. */
         std::optional<LayeredChain> chain_[3];
             /**< The layered chains attached to the annuli on the
-                 triangular solid torus, or no value for those annuli without
+                 triangular solid torus, or \nullopt for those annuli without
                  attached layered chains. */
         int chainType_[3];
             /**< The way in which the layered chain is attached to each
@@ -138,21 +138,21 @@ class PlugTriSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         PlugTriSolidTorus(const PlugTriSolidTorus&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         PlugTriSolidTorus& operator = (const PlugTriSolidTorus&) = default;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(PlugTriSolidTorus& other) noexcept;
@@ -161,21 +161,21 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * Returns the triangular solid torus at the core of this
          * triangulation.
          *
-         * @return the core triangular solid torus.
+         * \return the core triangular solid torus.
          */
         const TriSolidTorus& core() const;
 
         /**
          * Returns the layered chain attached to the requested
          * annulus on the boundary of the core triangular solid torus.
-         * If there is no attached layered chain, no value will be returned.
+         * If there is no attached layered chain, \nullopt will be returned.
          *
          * Note that the core triangular solid torus will be attached to
          * the bottom (as opposed to the top) of the layered chain.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
-         * @return the corresponding layered chain.
+         * \return the corresponding layered chain.
          */
         const std::optional<LayeredChain>& chain(int annulus) const;
 
@@ -185,9 +185,9 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * torus.  This will be one of the chain type constants defined
          * in this class.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
-         * @return the type of layered chain, or \a CHAIN_NONE
+         * \return the type of layered chain, or \a CHAIN_NONE
          * if there is no layered chain attached to the requested annulus.
          */
         int chainType(int annulus) const;
@@ -203,7 +203,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * layered chain; the edges filling the corresponding major or
          * minor roles will then form the equator of the plug.
          *
-         * @return the types of edges that form the equator of the plug;
+         * \return the types of edges that form the equator of the plug;
          * this will be one of the equator type constants defined in this
          * class.
          */
@@ -226,8 +226,8 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * plugged triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of plugged triangular solid torus.
          */
         bool operator == (const PlugTriSolidTorus& other) const;
@@ -249,8 +249,8 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * plugged triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent different types of plugged triangular solid torus.
          */
         bool operator != (const PlugTriSolidTorus& other) const;
@@ -263,8 +263,8 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
-         * @return a structure containing details of the plugged triangular
+         * \param comp the triangulation component to examine.
+         * \return a structure containing details of the plugged triangular
          * solid torus, or \c null if the given component is not a plugged
          * triangular solid torus.
          */
@@ -278,7 +278,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
     private:
         /**
          * Creates a new structure with the given core.
-         * All optional data members will be initialsed to no value,
+         * All optional data members will be initialsed to \nullopt,
          * all chain types will be initialised to CHAIN_NONE, and
          * all remaining data members will be left uninitialised.
          */
@@ -291,8 +291,8 @@ class PlugTriSolidTorus : public StandardTriangulation {
  * This global routine simply calls PlugTriSolidTorus::swap(); it is provided
  * so that PlugTriSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

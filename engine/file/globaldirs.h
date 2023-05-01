@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,7 +54,7 @@ namespace regina {
  *
  * If Regina may be running from a different place in the filesystem (e.g.,
  * if you are running an app bundle on macOS or if you are running directly
- * from the source tree), then you \e must call either setDirs() or deduceDirs()
+ * from the source tree), then you _must_ call either setDirs() or deduceDirs()
  * when your application starts.  Otherwise the directories that GlobalDirs
  * returns might be incorrect, and might not even exist.
  *
@@ -68,14 +68,14 @@ class GlobalDirs {
          * \e examples/ and so on.
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina .
+         * `/usr/local/share/regina` .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's primary home directory.
+         * \return Regina's primary home directory.
          */
         static std::string home();
 
@@ -86,10 +86,10 @@ class GlobalDirs {
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's python module directory.
+         * \return Regina's python module directory.
          */
         static std::string pythonModule();
 
@@ -100,14 +100,14 @@ class GlobalDirs {
          * Users can access them by calling Census::lookup().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/data/census .
+         * `/usr/local/share/regina/data/census`.
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's calculation engine data directory.
+         * \return Regina's calculation engine data directory.
          */
         static std::string census();
 
@@ -115,18 +115,18 @@ class GlobalDirs {
          * Returns the directory in which example data files (including
          * the smaller but human-browsable census data files) are installed.
          *
-         * This is computed automatically as the <tt>examples/</tt> subdirectory
+         * This is computed automatically as the `examples/` subdirectory
          * of home().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/examples .
+         * `/usr/local/share/regina/examples` .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's example and census data directory.
+         * \return Regina's example and census data directory.
          */
         static std::string examples();
 
@@ -136,7 +136,7 @@ class GlobalDirs {
          *
          * This is computed automatically:
          *
-         * - in most cases it will be the <tt>engine-docs/</tt> subdirectory
+         * - in most cases it will be the `engine-docs/` subdirectory
          *   of home();
          *
          * - in the special case where deduceDirs() was called and we are
@@ -144,14 +144,14 @@ class GlobalDirs {
          *   build tree where the API docs are built.
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/engine-docs .
+         * `/usr/local/share/regina/engine-docs` .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's calculation engine documentation directory.
+         * \return Regina's calculation engine documentation directory.
          */
         static std::string engineDocs();
 
@@ -159,18 +159,18 @@ class GlobalDirs {
          * Returns the directory containing miscellaneous data files
          * for internal use Regina's calculation engine.
          *
-         * This is computed automatically as the <tt>data/</tt> subdirectory
+         * This is computed automatically as the `data/` subdirectory
          * of home().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/data .
+         * `/usr/local/share/regina/data` .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's calculation engine data directory.
+         * \return Regina's calculation engine data directory.
          */
         static std::string data();
 
@@ -198,13 +198,13 @@ class GlobalDirs {
          *   meaning, namely that the python module has been installed in
          *   python's standard site-packages directory.
          *
-         * @param homeDir Regina's primary home directory; this will be
+         * \param homeDir Regina's primary home directory; this will be
          * returned by homeDir().
-         * @param pythonDir the directory containing Regina's
+         * \param pythonDir the directory containing Regina's
          * python module, or the empty string if the module has been
          * installed in python's standard site-packages directory;
          * this will be returned by pythonModule().
-         * @param censusDir The directory containing the large
+         * \param censusDir The directory containing the large
          * machine-encoded census data files; this will be returned
          * by census().
          */
@@ -228,13 +228,13 @@ class GlobalDirs {
          * running directly from within the source tree.
          *
          * If running from within the source tree, the executable must be
-         * inside the \e build tree (any depth of subdirectory within the
+         * inside the _build_ tree (any depth of subdirectory within the
          * build tree is fine).  Moreover, it is assumed that the build
          * tree is either an immediate subdirectory of the source root,
          * or else is the source root itself.  So, for example, an
-         * executable path of <tt>regina-X.Y/qtui/src/regina-gui</tt>
-         * or <tt>regina-X.Y/build/qtui/src/regina-gui</tt> is fine,
-         * but <tt>regina-X.Y/tmp/build/qtui/src/regina-gui</tt> is not.
+         * executable path of `regina-X.Y/qtui/src/regina-gui`
+         * or `regina-X.Y/build/qtui/src/regina-gui` is fine,
+         * but `regina-X.Y/tmp/build/qtui/src/regina-gui` is not.
          *
          * This routine respects the following environment variables,
          * and these will take precedence over any automatic deductions:
@@ -242,7 +242,7 @@ class GlobalDirs {
          * - REGINA_HOME, if present and non-empty, will determine Regina's
          *   primary home directory as returned by homeDir().  It will also
          *   fix the census data directory as returned by censusDir() to be
-         *   <tt>$REGINA_HOME/data/census</tt>.
+         *   `$REGINA_HOME/data/census`.
          *
          * - REGINA_PYLIBDIR, if present and non-empty, will determine the
          *   directory containing Regina's python module as returned by
@@ -252,7 +252,7 @@ class GlobalDirs {
          * correctly, you can always call setDirs() to set the paths
          * explicitly yourself.
          *
-         * @param executable the path to an executable, which would
+         * \param executable the path to an executable, which would
          * typically be the executable currently being run.
          */
         static void deduceDirs(const char* executable);

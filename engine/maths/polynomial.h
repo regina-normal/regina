@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,14 +49,14 @@ namespace regina {
 /**
  * Represents a single-variable polynomial with coefficients of type \a T.
  * All exponents in the polynomial must be non-negative (so you can
- * represent <tt>2+3x</tt> but not <tt>1+1/x</tt>).
+ * represent `2+3x` but not `1+1/x`).
  *
  * The type \a T must represent a ring with no zero divisors.
  * In particular, it must:
  *
  * - support basic arithmetic operations;
- * - support assignments of the form <tt>x = int</tt> and
- *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
+ * - support assignments of the form `x = int` and
+ *   tests of the form `x == int` and `x < int`;
  * - have a default constructor that assigns an explicit value of zero.
  *
  * This means that Regina's numerical types such as Integer and Rational
@@ -70,7 +70,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython In Python, the class Polynomial refers to the specific
+ * \python In Python, the class Polynomial refers to the specific
  * template class Polynomial<Rational>.
  *
  * \ingroup maths
@@ -88,7 +88,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         T* coeff_;
             /**< An array of length (\a degree_ + 1), storing the
                  coefficients of the polynomial.  Specifically,
-                 coeff_[i] stores the coefficient of <tt>x^i</tt>. */
+                 coeff_[i] stores the coefficient of `x^i`. */
 
     public:
         /**
@@ -97,9 +97,9 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial();
 
         /**
-         * Creates the polynomial <tt>x^d</tt> for the given degree \a d.
+         * Creates the polynomial `x^d` for the given degree \a d.
          *
-         * @param degree the degree of the new polynomial.
+         * \param degree the degree of the new polynomial.
          */
         explicit Polynomial(size_t degree);
 
@@ -113,7 +113,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implemented separately.  Otherwise the compiler might create
          * its own (incorrect) copy constructor automatically.
          *
-         * @param value the polynomial to clone.
+         * \param value the polynomial to clone.
          */
         Polynomial(const Polynomial& value);
 
@@ -124,7 +124,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
-         * @param value the polynomial to clone.
+         * \nopython Python only supports polynomials with one type of
+         * coefficient (the case where \a T is Rational).  Therefore
+         * Python users can use the non-templated copy constructor.
+         *
+         * \param value the polynomial to clone.
          */
         template <typename U>
         Polynomial(const Polynomial<U>& value);
@@ -135,7 +139,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * The polynomial that was passed (\a value) will no longer be usable.
          *
-         * @param value the polynomial to move.
+         * \param value the polynomial to move.
          */
         Polynomial(Polynomial&& value) noexcept;
 
@@ -153,11 +157,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
-         * @param begin the beginning of the sequence of coefficients.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the sequence of coefficients.
+         * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
         template <typename iterator>
@@ -172,10 +176,10 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * last coefficient in the sequence) is zero.
          * An empty sequence will be treated as the zero polynomial.
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a
+         * list of coefficients (which need not be constant).
          *
-         * @param coefficients the full sequence of coefficients.
+         * \param coefficients the full sequence of coefficients.
          */
         Polynomial(std::initializer_list<T> coefficients);
 
@@ -190,10 +194,10 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         void init();
 
         /**
-         * Sets this to become the polynomial <tt>x^d</tt> for the
+         * Sets this to become the polynomial `x^d` for the
          * given degree \a d.
          *
-         * @param degree the new degree of this polynomial.
+         * \param degree the new degree of this polynomial.
          */
         void init(size_t degree);
 
@@ -212,11 +216,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
-         * @param begin the beginning of the sequence of coefficients.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the sequence of coefficients.
+         * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
         template <typename iterator>
@@ -229,23 +233,23 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * For the purposes of this class, the zero polynomial is
          * considered to have degree zero.
          *
-         * @return the degree of this polynomial.
+         * \return the degree of this polynomial.
          */
         size_t degree() const;
 
         /**
          * Returns whether this is the zero polynomial.
          *
-         * @return \c true if and only if this is the zero polynomial.
+         * \return \c true if and only if this is the zero polynomial.
          */
         bool isZero() const;
 
         /**
-         * Returns whether this polynomial is monic.  A \e monic
+         * Returns whether this polynomial is monic.  A _monic_
          * polynomial is a non-zero polynomial whose leading coefficient
          * is one.
          *
-         * @return \c true if and only if this is monic.
+         * \return \c true if and only if this is monic.
          */
         bool isMonic() const;
 
@@ -254,29 +258,29 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * If this is the zero polynomial, then the leading coefficient
          * will be zero.
          *
-         * \ifacespython This routine returns by value, not by reference,
+         * \python This routine returns by value, not by reference,
          * since constness is important here and Python cannot enforce
          * it otherwise.
          *
-         * @return the leading coefficient of this polynomial.
+         * \return the leading coefficient of this polynomial.
          */
         const T& leading() const;
 
         /**
          * Returns the given coefficient of this polynomial.
          *
-         * \ifacespython Python users can also use this operator to \e set
-         * cofficients; that is, you can write <tt>poly[exp] = value</tt>.
-         * However, when \e getting a coefficient this operator will return
+         * \python Python users can also use this operator to _set_
+         * cofficients; that is, you can write `poly[exp] = value`.
+         * However, when _getting_ a coefficient this operator will return
          * by value (to enforce constness), which means for example you
-         * cannot write something like <tt>poly[exp].negate()</tt>.
+         * cannot write something like `poly[exp].negate()`.
          *
-         * \ifacescpp C++ users must always set coefficients using the
-         * separate routine set(), since this square bracket operator is const.
+         * \cpp For C++ users, this operator is read-only.  To _set_
+         * coefficients, you must use the separate routine set().
          *
-         * @param exp the exponent of the term whose coefficient should
+         * \param exp the exponent of the term whose coefficient should
          * be returned.  This must be between 0 and degree() inclusive.
-         * @return the coefficient of the given term.
+         * \return the coefficient of the given term.
          */
         const T& operator [] (size_t exp) const;
 
@@ -292,21 +296,21 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * operation is expensive, however, since it will require
          * deallocating and reallocating the full list of coefficients.
          *
-         * \ifacespython This set() routine is available, but you can
+         * \python This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
-         * <tt>p[exp] = value</tt>.
+         * `p[exp] = value`.
          *
-         * @param exp the exponent of the term whose coefficient should
+         * \param exp the exponent of the term whose coefficient should
          * be changed.
-         * @param value the new value of this coefficient.
+         * \param value the new value of this coefficient.
          */
         void set(size_t exp, const T& value);
 
         /**
          * Tests whether this and the given polynomial are equal.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this and the given polynomial
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this and the given polynomial
          * are equal.
          */
         bool operator == (const Polynomial& rhs) const;
@@ -314,8 +318,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Tests whether this and the given polynomial are not equal.
          *
-         * @param rhs the polynomial to compare with this.
-         * @return \c true if and only if this and the given polynomial
+         * \param rhs the polynomial to compare with this.
+         * \return \c true if and only if this and the given polynomial
          * are not equal.
          */
         bool operator != (const Polynomial& rhs) const;
@@ -333,8 +337,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
          *
-         * @param value the polynomial to copy.
-         * @return a reference to this polynomial.
+         * \param value the polynomial to copy.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator = (const Polynomial& value);
 
@@ -347,8 +351,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * This operator induces a deep copy of the given polynomial.
          *
-         * @param value the polynomial to copy.
-         * @return a reference to this polynomial.
+         * \param value the polynomial to copy.
+         * \return a reference to this polynomial.
          */
         template <typename U>
         Polynomial& operator = (const Polynomial<U>& value);
@@ -363,8 +367,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * The polynomial that was passed (\a value) will no longer be usable.
          *
-         * @param value the polynomial to move.
-         * @return a reference to this polynomial.
+         * \param value the polynomial to move.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator = (Polynomial&& value) noexcept;
 
@@ -374,7 +378,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * This and the given polynomial do not need to have the same degree.
          *
-         * @param other the polynomial whose contents should be swapped
+         * \param other the polynomial whose contents should be swapped
          * with this.
          */
         void swap(Polynomial& other) noexcept;
@@ -388,8 +392,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Multiplies this polynomial by the given constant.
          *
-         * @param scalar the scalar factor to multiply by.
-         * @return a reference to this polynomial.
+         * \param scalar the scalar factor to multiply by.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator *= (const T& scalar);
 
@@ -400,8 +404,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \pre The argument \a scalar is non-zero.
          *
-         * @param scalar the scalar factor to divide by.
-         * @return a reference to this polynomial.
+         * \param scalar the scalar factor to divide by.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator /= (const T& scalar);
 
@@ -414,11 +418,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \warning This routine may trigger a deep copy (currently this
          * happens when \a other has higher degree than this).  Consider using
-         * the binary <tt>+</tt> operator instead, which is better able to
+         * the binary `+` operator instead, which is better able to
          * avoid this deep copy where possible.
          *
-         * @param other the polynomial to add to this.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to add to this.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator += (const Polynomial& other);
 
@@ -429,16 +433,16 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Note that the degree of this polynomial might change as a
          * result of this operation.
          *
-         * @param other the polynomial to subtract from this.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to subtract from this.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator -= (const Polynomial& other);
 
         /**
          * Multiplies this by the given polynomial.
          *
-         * @param other the polynomial to multiply this by.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to multiply this by.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator *= (const Polynomial& other);
 
@@ -446,9 +450,9 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Divides this by the given polynomial.
          *
          * More precisely: suppose there exist polynomials \a q and \a r with
-         * coefficients of type \a T for which <tt>this = q.other + r</tt>,
+         * coefficients of type \a T for which `this = q.other + r`,
          * and where \a r has smaller degree than \a other.  Then we call
-         * \a q the \e quotient, and \a r the \e remainder.
+         * \a q the _quotient_, and \a r the _remainder_.
          *
          * This routine replaces this polynomial with the quotient \a q,
          * and discards the remainder.  If you need to keep the remainder
@@ -468,8 +472,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * If not (e.g., if \a T is Integer) then this requires some
          * prior knowledge about the arguments.
          *
-         * @param other the polynomial to divide this by.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to divide this by.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator /= (const Polynomial& other);
 
@@ -478,10 +482,10 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * quotient and the remainder.
          *
          * More precisely: suppose there exist polynomials \a q and \a r with
-         * coefficients of type \a T for which <tt>this = q.divisor + r</tt>,
+         * coefficients of type \a T for which `this = q.divisor + r`,
          * and where \a r has smaller degree than \a divisor.  Then this
-         * routine returns the pair (\a q, \a r); that is, the \e quotient
-         * and the \e remainder.
+         * routine returns the pair (\a q, \a r); that is, the _quotient_
+         * and the _remainder_.
          *
          * If you do not need the remainder (e.g., if you know in
          * advance that \a divisor divides into this polynomial exactly),
@@ -502,8 +506,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * If not (e.g., if \a T is Integer) then this requires some
          * prior knowledge about the arguments.
          *
-         * @param divisor the polynomial to divide this by.
-         * @return a pair holding the quotient and remainder, as described
+         * \param divisor the polynomial to divide this by.
+         * \return a pair holding the quotient and remainder, as described
          * above.
          */
         std::pair<Polynomial, Polynomial> divisionAlg(
@@ -516,20 +520,20 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * The greatest common divisor will be a monic polynomial.
          * The polynomials returned in \a u and \a v will satisfy
-         * <tt>u*this + v*other = gcd</tt>.
+         * `u⋅this + v⋅other = gcd`.
          *
          * As a special case, gcd(0,0) is considered to be zero.
          *
          * \pre The coefficient type \a T represents a field.  In particular,
          * Rational is supported but Integer is not.
          *
-         * @param other the polynomial whose greatest common divisor with this
+         * \param other the polynomial whose greatest common divisor with this
          * polynomial we should compute.
-         * @param gcd a polynomial whose contents will be destroyed and
+         * \param gcd a polynomial whose contents will be destroyed and
          * replaced with the greatest common divisor \a d, as described above.
-         * @param u a polynomial whose contents will be destroyed and
+         * \param u a polynomial whose contents will be destroyed and
          * replaced with \a u, as described above.
-         * @param v a polynomial whose contents will be destroyed and
+         * \param v a polynomial whose contents will be destroyed and
          * replaced with \a v, as described above.
          */
         template <typename U>
@@ -545,11 +549,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
-         * @param out the output stream to which to write.
-         * @param utf8 \c true if unicode superscript characters may be used.
-         * @param variable the symbol to use for the variable in this
+         * \param out the output stream to which to write.
+         * \param utf8 \c true if unicode superscript characters may be used.
+         * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
          */
@@ -563,10 +567,10 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \note There is also the usual variant of str() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param variable the symbol to use for the variable in this
+         * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @return this polynomial as a human-readable string.
+         * \return this polynomial as a human-readable string.
          */
         std::string str(const char* variable) const;
 
@@ -583,10 +587,10 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \note There is also the usual variant of utf8() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param variable the symbol to use for the variable in this
+         * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @return this polynomial as a unicode-enabled human-readable string.
+         * \return this polynomial as a unicode-enabled human-readable string.
          */
         std::string utf8(const char* variable) const;
 
@@ -616,8 +620,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Note that the degree of this polynomial might change as a
          * result of this operation.
          *
-         * @param other the polynomial to subtract this from.
-         * @return a reference to this polynomial.
+         * \param other the polynomial to subtract this from.
+         * \return a reference to this polynomial.
          */
         Polynomial& subtractFrom(const Polynomial& other);
 
@@ -643,8 +647,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
  * This global routine simply calls Polynomial<T>::swap(); it is provided
  * so that Polynomial<T> meets the C++ Swappable requirements.
  *
- * @param a the first polynomial whose contents should be swapped.
- * @param b the second polynomial whose contents should be swapped.
+ * \param a the first polynomial whose contents should be swapped.
+ * \param b the second polynomial whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -657,9 +661,9 @@ void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept;
  * The scalar is simply of type \a T; we use the identical type
  * Polynomial<T>::Coefficient here to assist with C++ template type matching.
  *
- * @param poly the polynomial to multiply by.
- * @param scalar the scalar to multiply by.
- * @return the product of the given polynomial and scalar.
+ * \param poly the polynomial to multiply by.
+ * \param scalar the scalar to multiply by.
+ * \return the product of the given polynomial and scalar.
  *
  * \ingroup maths
  */
@@ -673,9 +677,9 @@ Polynomial<T> operator * (Polynomial<T> poly,
  * The scalar is simply of type \a T; we use the identical type
  * Polynomial<T>::Coefficient here to assist with C++ template type matching.
  *
- * @param scalar the scalar to multiply by.
- * @param poly the polynomial to multiply by.
- * @return the product of the given polynomial and scalar.
+ * \param scalar the scalar to multiply by.
+ * \param poly the polynomial to multiply by.
+ * \return the product of the given polynomial and scalar.
  *
  * \ingroup maths
  */
@@ -693,9 +697,9 @@ Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
  *
  * \pre The argument \a scalar is non-zero.
  *
- * @param poly the polynomial to divide by the given scalar.
- * @param scalar the scalar factor to divide by.
- * @return the quotient of the given polynomial by the given scalar.
+ * \param poly the polynomial to divide by the given scalar.
+ * \param scalar the scalar factor to divide by.
+ * \return the quotient of the given polynomial by the given scalar.
  *
  * \ingroup maths
  */
@@ -706,12 +710,12 @@ Polynomial<T> operator / (Polynomial<T> poly,
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -721,12 +725,12 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -736,12 +740,12 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -751,12 +755,12 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -766,8 +770,8 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
 /**
  * Returns the negative of the given polynomial.
  *
- * @param arg the polynomial to negate.
- * @return the negative of \a arg.
+ * \param arg the polynomial to negate.
+ * \return the negative of \a arg.
  *
  * \ingroup maths
  */
@@ -777,12 +781,12 @@ Polynomial<T> operator - (Polynomial<T> arg);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -792,12 +796,12 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -807,12 +811,12 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -822,12 +826,12 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -837,9 +841,9 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
 /**
  * Multiplies the two given polynomials.
  *
- * @param lhs the first polynomial to multiply.
- * @param rhs the second polynomial to multiply.
- * @return the product of both polynomials.
+ * \param lhs the first polynomial to multiply.
+ * \param rhs the second polynomial to multiply.
+ * \return the product of both polynomials.
  *
  * \ingroup maths
  */
@@ -850,9 +854,9 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * Divides the two given polynomials.
  *
  * More precisely: suppose there exist polynomials \a q and \a r with
- * coefficients of type \a T for which <tt>lhs = q.rhs + r</tt>,
+ * coefficients of type \a T for which `lhs = q.rhs + r`,
  * and where \a r has smaller degree than \a rhs.  Then we call
- * \a q the \e quotient, and \a r the \e remainder.
+ * \a q the _quotient_, and \a r the _remainder_.
  *
  * This routine returns the quotient \a q, and discards the remainder.
  * If you need to keep the remainder also, then call Polynomial::divisionAlg()
@@ -872,9 +876,9 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * If not (e.g., if \a T is Integer) then this requires some
  * prior knowledge about the arguments.
  *
- * @param lhs the polynomial to divide by \a rhs.
- * @param rhs the polynomial that we will divide \a lhs by.
- * @return the quotient, as described above.
+ * \param lhs the polynomial to divide by \a rhs.
+ * \param rhs the polynomial that we will divide \a lhs by.
+ * \return the quotient, as described above.
  *
  * \ingroup maths
  */
@@ -1058,6 +1062,9 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
     return *this;
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <typename T>
 template <typename U>
 Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
@@ -1073,6 +1080,7 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
         coeff_[i] = value[i];
     return *this;
 }
+#endif // __DOXYGEN
 
 template <typename T>
 inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)

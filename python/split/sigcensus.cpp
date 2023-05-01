@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,14 +35,20 @@
 #include "../pybind11/stl.h"
 #include "split/sigcensus.h"
 #include "../helpers.h"
+#include "../docstrings/split/sigcensus.h"
 
 using regina::SigCensus;
 
 void addSigCensus(pybind11::module_& m) {
-    auto c = pybind11::class_<SigCensus>(m, "SigCensus")
+    RDOC_SCOPE_BEGIN(SigCensus)
+
+    auto c = pybind11::class_<SigCensus>(m, "SigCensus", rdoc_scope)
         .def_static("formCensus", &SigCensus::formCensus<const std::function<
-            void(const regina::Signature&, const SigCensus::IsoList&)>&>)
+            void(const regina::Signature&, const SigCensus::IsoList&)>&>,
+            pybind11::arg("order"), pybind11::arg("action"), rdoc::formCensus)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 

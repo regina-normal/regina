@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,7 @@
 #endif
 
 #include <algorithm>
+#include <cstdlib>
 
 namespace regina {
 
@@ -196,7 +197,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     delete[] graph;
 
     // From the work above, we know that the input sequence contained each of
-    // the integers +/-1, +/-2, ..., +/-n exactly once each.
+    // the integers ±1, ±2, ..., ±n exactly once each.
 
     // The sequence J encodes which elements of S[..] are first vs second
     // occurrences of a crossing.
@@ -302,14 +303,14 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     StrandRef prev, curr;
     Iterator it = begin;
 
-    Crossing* cr = ans.crossings_[::abs(*it) - 1];
+    Crossing* cr = ans.crossings_[std::abs(*it) - 1];
     curr = cr->strand(*it > 0 ? 1 : 0);
     ans.components_.push_back(curr);
 
     for (++it; it != end; ++it) {
         prev = curr;
 
-        cr = ans.crossings_[::abs(*it) - 1];
+        cr = ans.crossings_[std::abs(*it) - 1];
         curr = cr->strand(*it > 0 ? 1 : 0);
 
         prev.crossing()->next_[prev.strand()] = curr;

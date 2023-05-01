@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,16 +33,23 @@
 #include "../pybind11/pybind11.h"
 #include "utilities/i18nutils.h"
 #include "../helpers.h"
+#include "../docstrings/utilities/i18nutils.h"
 
 void addLocale(pybind11::module_& m) {
-    auto c = pybind11::class_<regina::i18n::Locale>(m, "Locale")
-        .def_static("codeset", &regina::i18n::Locale::codeset)
+    RDOC_SCOPE_BEGIN(i18n::Locale)
+
+    auto c = pybind11::class_<regina::i18n::Locale>(m, "Locale", rdoc_scope)
+        .def_static("codeset", &regina::i18n::Locale::codeset, rdoc::codeset)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_SWITCH_MAIN
 
     m.def("utf8ValidTo", [](const char* s) {
         const char* ans = regina::i18n::utf8ValidTo(s);
         return (ans - s);
-    });
+    }, rdoc::i18n::utf8ValidTo);
+
+    RDOC_SCOPE_END
 }
 

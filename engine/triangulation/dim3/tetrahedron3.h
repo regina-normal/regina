@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -60,8 +60,9 @@ namespace regina {
  * This class Face<3, 3> specialises it further to add dimension-specific
  * aliases for dimension 3.
  *
- * See the documentation for the partial specialisation Face<dim, dim> for an
- * overview of how a top-dimensional simplex class works.
+ * See the generic documentation for Face<dim, dim> for an overview of how the
+ * top-dimensional simplex classes work.  In Python, you can read this
+ * generic documentation by looking at a higher dimension: try `help(Simplex5)`.
  *
  * Tetrahedra do not support value semantics: they cannot be copied, swapped,
  * or manually constructed.  Their location in memory defines them, and
@@ -94,15 +95,23 @@ class Face<3, 3> : public detail::SimplexBase<3> {
          * Creates a new tetrahedron with empty description and no
          * faces joined to anything.
          *
-         * @param tri the triangulation to which the new tetrahedron belongs.
+         * \param tri the triangulation to which the new tetrahedron belongs.
          */
         Face(Triangulation<3>* tri);
         /**
-         * Creates a new tetrahedron with the given description and
-         * no edges joined to anything.
+         * Creates a new tetrahedron whose description and locks are cloned
+         * from the given tetrahedron, and with no faces joined to anything.
          *
-         * @param desc the description to give the new tetrahedron.
-         * @param tri the triangulation to which the new tetrahedron belongs.
+         * \param clone the tetrahedron whose details should be cloned.
+         * \param tri the triangulation to which the new tetrahedron belongs.
+         */
+        Face(const Face& clone, Triangulation<3>* tri);
+        /**
+         * Creates a new tetrahedron with the given description, no locks, and
+         * no faces joined to anything.
+         *
+         * \param desc the description to give the new tetrahedron.
+         * \param tri the triangulation to which the new tetrahedron belongs.
          */
         Face(const std::string& desc, Triangulation<3>* tri);
 
@@ -132,6 +141,10 @@ inline int Face<3, 3>::adjacentFace(int face) const {
 }
 
 inline Face<3, 3>::Face(Triangulation<3>* tri) : detail::SimplexBase<3>(tri) {
+}
+
+inline Face<3, 3>::Face(const Face& clone, Triangulation<3>* tri) :
+        detail::SimplexBase<3>(clone, tri) {
 }
 
 inline Face<3, 3>::Face(const std::string& desc, Triangulation<3>* tri) :

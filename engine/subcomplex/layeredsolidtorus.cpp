@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -626,9 +626,6 @@ Triangulation<3> LayeredSolidTorus::flatten(int mobiusBandBdry) const {
 
     Tetrahedron<3>* newTop = ans.tetrahedron(top_->index());
     Tetrahedron<3>* newBase = ans.tetrahedron(base_->index());
-
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(ans);
 
     // Reglue the top faces before deleting the layered solid torus.
     Tetrahedron<3>* adj0 = newTop->adjacentTetrahedron(topFace_.lower());

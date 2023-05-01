@@ -61,6 +61,33 @@
   </provides>
 
   <releases>
+    <release version="7.3" date="2023-03-18">
+      <description>
+        <p>
+          Maintenance release that fixes some bugs, cleans up some
+          unexpected behaviour, and improves compatibility with Python 3.11.
+        </p>
+      </description>
+    </release>
+    <release version="7.2" date="2022-10-28">
+      <description>
+        <p>
+          Significant updates for Python users, including comprehensive
+          docstrings throughout Regina's API and support for Python 3.11,
+          plus a handful of other minor improvements.
+        </p>
+      </description>
+    </release>
+    <release version="7.1" date="2022-09-30">
+      <description>
+        <p>
+          Adds intersection forms, thin and normalised links in all facial
+          dimensions, handlebody recognition, multithreaded census construction,
+          and widespread support for tight encodings, plus several other
+          features and improvements.
+        </p>
+      </description>
+    </release>
     <release version="7.0" date="2021-12-19">
       <description>
         <p>

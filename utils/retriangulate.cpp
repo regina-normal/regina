@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Exhaustively retriangulate a given manifold                           *
  *                                                                        *
- *  Copyright (c) 2017-2021, Ben Burton                                   *
+ *  Copyright (c) 2017-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -135,6 +135,7 @@ void process(const regina::Link& knot) {
 
 int main(int argc, const char* argv[]) {
     // Set up the command-line arguments.
+    int showVersion = 0;
     std::string sig;
 
     poptOption opts[] = {
@@ -150,6 +151,8 @@ int main(int argc, const char* argv[]) {
             "Input is a knot signature", nullptr },
         { "anysig", 'a', POPT_ARG_NONE, &internalSig, 0,
             "Output does not need to use classic signature(s)", nullptr },
+        { "version", 'v', POPT_ARG_NONE, &showVersion, 0,
+            "Show which version of Regina is being used.", nullptr },
         POPT_AUTOHELP
         { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
@@ -165,6 +168,14 @@ int main(int argc, const char* argv[]) {
         poptPrintHelp(optCon, stderr, 0);
         poptFreeContext(optCon);
         return 1;
+    }
+
+    if (showVersion) {
+        // If other arguments were passed, just silently ignore them for now.
+        // Other (non-popt) command-line tools give an error in this scenario.
+        std::cout << PACKAGE_BUILD_STRING << std::endl;
+        poptFreeContext(optCon);
+        return 0;
     }
 
     const char** otherOpts = poptGetArgs(optCon);

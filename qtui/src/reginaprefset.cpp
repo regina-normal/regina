@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
+#include "core/engine.h"
 #include "file/globaldirs.h"
 #include "snappea/snappeatriangulation.h"
 #include "surface/normalsurfaces.h"
@@ -41,6 +42,7 @@
 #include "shortrunner.h"
 
 #include <fstream>
+#include <thread>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -76,6 +78,7 @@ ReginaPrefSet::ReginaPrefSet() :
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
         linkCodeType(Gauss),
+        linkCreationType(0),
         linkCrossingsStyle(PictorialCrossings),
         linkHomflyType(HomflyAZ),
         linkInitialGraphType(TreeDecomposition),
@@ -87,6 +90,7 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesCreationList(regina::NS_LIST_DEFAULT),
         surfacesInitialCompat(LocalCompat),
         surfacesSupportOriented(false),
+        threadCount(ThreadPolite),
         treeJumpSize(10),
         tabDim2Tri(0),
         tabDim2TriSkeleton(0),
@@ -101,6 +105,9 @@ ReginaPrefSet::ReginaPrefSet() :
         tabSnapPeaTri(0),
         tabSnapPeaTriAlgebra(0),
         tabSurfaceList(0),
+        triDim2CreationType(0),
+        triDim3CreationType(0),
+        triDim4CreationType(0),
         triGAPExec(defaultGAPExec),
         triGraphvizLabels(true),
         triInitialGraphType(DualGraph),
@@ -214,6 +221,16 @@ void ReginaPrefSet::readInternal() {
     anglesCreationTaut = settings.value("CreationTaut", false).toBool();
     settings.endGroup();
 
+    settings.beginGroup("Compute");
+    QString str = settings.value("ThreadCount").toString();
+    if (str == "Single")
+        threadCount = ReginaPrefSet::ThreadSingle;
+    else if (str == "All")
+        threadCount = ReginaPrefSet::ThreadAll;
+    else
+        threadCount = ReginaPrefSet::ThreadPolite; /* default */
+    settings.endGroup();
+
     settings.beginGroup("Display");
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     displayUnicode = settings.value("DisplayUnicode", true).toBool();
@@ -236,7 +253,8 @@ void ReginaPrefSet::readInternal() {
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
     settings.beginGroup("Link");
-    QString str = settings.value("CodeType").toString();
+    linkCreationType = settings.value("CreationType", 0).toInt();
+    str = settings.value("CodeType").toString();
     if (str == "DowkerThistlethwaite")
         linkCodeType = ReginaPrefSet::DowkerThistlethwaite;
     else if (str == "KnotSig")
@@ -314,6 +332,9 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    triDim2CreationType = settings.value("Dim2CreationType", 0).toInt();
+    triDim3CreationType = settings.value("Dim3CreationType", 0).toInt();
+    triDim4CreationType = settings.value("Dim4CreationType", 0).toInt();
     triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
 
     str = settings.value("InitialGraphType").toString();
@@ -360,6 +381,17 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationTaut", anglesCreationTaut);
     settings.endGroup();
 
+    settings.beginGroup("Compute");
+    switch (threadCount) {
+        case ReginaPrefSet::ThreadSingle:
+            settings.setValue("ThreadCount", "Single"); break;
+        case ReginaPrefSet::ThreadAll:
+            settings.setValue("ThreadCount", "All"); break;
+        default:
+            settings.setValue("ThreadCount", "Polite"); break;
+    }
+    settings.endGroup();
+
     settings.beginGroup("Display");
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
     settings.setValue("DisplayUnicode", displayUnicode);
@@ -379,6 +411,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
     settings.beginGroup("Link");
+    settings.setValue("CreationType", linkCreationType);
     switch (linkCodeType) {
         case ReginaPrefSet::DowkerThistlethwaite:
             settings.setValue("CodeType", "DowkerThistlethwaite"); break;
@@ -459,6 +492,9 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    settings.setValue("Dim2CreationType", triDim2CreationType);
+    settings.setValue("Dim3CreationType", triDim3CreationType);
+    settings.setValue("Dim4CreationType", triDim4CreationType);
     settings.setValue("GraphvizLabels", triGraphvizLabels);
 
     switch (triInitialGraphType) {
@@ -504,3 +540,17 @@ ReginaPrefSet::Codec ReginaPrefSet::importExportCodec() {
 #endif
 }
 
+int ReginaPrefSet::threads() {
+    switch (global().threadCount) {
+        case ThreadSingle:
+            return 1;
+        case ThreadAll:
+        {
+            int ans = std::thread::hardware_concurrency();
+            return (ans >= 1 ? ans : 1);
+        }
+        default:
+            // Use the ThreadPolite setting.
+            return regina::politeThreads();
+    }
+}

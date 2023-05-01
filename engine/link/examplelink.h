@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -61,7 +61,7 @@ class ExampleLink {
         /**
          * Returns a zero-crossing diagram of the unknot.
          *
-         * @return the unknot.
+         * \return the unknot.
          */
         static Link unknot();
 
@@ -69,7 +69,7 @@ class ExampleLink {
          * Returns the monster unknot, a 10-crossing diagram of the
          * unknot that is difficult to untangle.
          *
-         * @return the monster unknot.
+         * \return the monster unknot.
          */
         static Link monster();
 
@@ -77,14 +77,14 @@ class ExampleLink {
          * Returns Haken's Gordian unknot, a 141-crossing diagram of the
          * unknot that is difficult to untangle.
          *
-         * @return the Gordian unknot.
+         * \return the Gordian unknot.
          */
         static Link gordian();
 
         /**
          * Returns a three-crossing diagram of the left-hand trefoil.
          *
-         * @return the left-hand trefoil.
+         * \return the left-hand trefoil.
          */
         static Link trefoilLeft();
 
@@ -92,7 +92,7 @@ class ExampleLink {
          * Returns a three-crossing diagram of the right-hand trefoil.
          * This returns the same knot as trefoil().
          *
-         * @return the right-hand trefoil.
+         * \return the right-hand trefoil.
          */
         static Link trefoilRight();
 
@@ -100,14 +100,14 @@ class ExampleLink {
          * Returns a three-crossing diagram of the right-hand trefoil.
          * This returns the same knot as trefoilRight().
          *
-         * @return the right-hand trefoil.
+         * \return the right-hand trefoil.
          */
         static Link trefoil();
 
         /**
          * Returns a four-crossing diagram of the figure eight knot.
          *
-         * @return the figure eight knot.
+         * \return the figure eight knot.
          */
         static Link figureEight();
 
@@ -115,21 +115,21 @@ class ExampleLink {
          * Returns a two-crossing diagram of the Hopf link.
          * This is the variant in which both crossings are positive.
          *
-         * @return the Hopf link.
+         * \return the Hopf link.
          */
         static Link hopf();
 
         /**
          * Returns a five-crossing diagram of the Whitehead link.
          *
-         * @return the Whitehead link.
+         * \return the Whitehead link.
          */
         static Link whitehead();
 
         /**
          * Returns a six-crossing diagram of the Borromean rings.
          *
-         * @return the Borromean rings.
+         * \return the Borromean rings.
          */
         static Link borromean();
 
@@ -139,7 +139,7 @@ class ExampleLink {
          * This is the reflection of \a K11n34 in the Knot Atlas, and is
          * a mutant of the Kinoshita-Terasaka knot.
          *
-         * @return the Conway knot.
+         * \return the Conway knot.
          */
         static Link conway();
 
@@ -149,7 +149,7 @@ class ExampleLink {
          * This is the reflection of \a K11n42 in the Knot Atlas, and is
          * a mutant of the Conway knot.  It has trivial Alexander polynomial.
          *
-         * @return the kinoshita-Terasaka knot.
+         * \return the kinoshita-Terasaka knot.
          */
         static Link kinoshitaTerasaka();
 
@@ -161,11 +161,11 @@ class ExampleLink {
          *
          * All of the crossings in the resulting link will be positive.
          *
-         * @param p the first parameter of the torus link; this must be
+         * \param p the first parameter of the torus link; this must be
          * strictly non-negative.
-         * @param q the second parameter of the torus link; this must
+         * \param q the second parameter of the torus link; this must
          * also be strictly non-negative.
-         * @return the (\a p, \a q) torus link.
+         * \return the (\a p, \a q) torus link.
          */
         static Link torus(int p, int q);
 
@@ -178,7 +178,7 @@ class ExampleLink {
          * "Fibered knots and potential counterexamples to the property
          * 2R and slice-ribbon conjectures", arXiv:1103.1601.
          *
-         * @return the Gompf-Scharlemann-Thompson knot.
+         * \return the Gompf-Scharlemann-Thompson knot.
          */
         static Link gst();
 

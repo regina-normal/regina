@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,8 +33,14 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
 #include "utilities/osutils.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/utilities/osutils.h"
 
 void addOSUtils(pybind11::module_& m) {
-    m.def("resUsage", &regina::resUsage);
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("resUsage", &regina::resUsage, rdoc::resUsage);
+
+    RDOC_SCOPE_END
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,14 +76,14 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         SnappedTwoSphere(const SnappedTwoSphere&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         SnappedTwoSphere& operator = (const SnappedTwoSphere&) = default;
 
@@ -91,9 +91,9 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Returns one of the two snapped 3-balls whose equators are
          * joined.
          *
-         * @param index specifies which of the two 3-balls to return;
+         * \param index specifies which of the two 3-balls to return;
          * this must be either 0 or 1.
-         * @return the corresponding snapped 3-ball.
+         * \return the corresponding snapped 3-ball.
          */
         const SnappedBall& snappedBall(int index) const;
 
@@ -110,8 +110,8 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Tetrahedron objects, it is meaningful to compare snapped 2-spheres
          * within different triangulations.
          *
-         * @param other the snapped 2-sphere to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the snapped 2-sphere to compare with this.
+         * \return \c true if and only if this and the given object represent
          * the same specific presentation of a snapped 2-sphere.
          */
         bool operator == (const SnappedTwoSphere& other) const;
@@ -129,8 +129,8 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Tetrahedron objects, it is meaningful to compare snapped 2-spheres
          * within different triangulations.
          *
-         * @param other the snapped 2-sphere to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \param other the snapped 2-sphere to compare with this.
+         * \return \c true if and only if this and the given object represent
          * different specific presentations of a snapped 2-sphere.
          */
         bool operator != (const SnappedTwoSphere& other) const;
@@ -147,9 +147,9 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          *
          * \pre The two given tetrahedra are distinct.
          *
-         * @param tet1 the first tetrahedron to examine.
-         * @param tet2 the second tetrahedron to examine.
-         * @return a structure containing details of the snapped 2-sphere, or
+         * \param tet1 the first tetrahedron to examine.
+         * \param tet2 the second tetrahedron to examine.
+         * \return a structure containing details of the snapped 2-sphere, or
          * \c null if the given tetrahedra do not form a snapped 2-sphere.
          */
         static std::unique_ptr<SnappedTwoSphere> recognise(Tetrahedron<3>* tet1,
@@ -170,9 +170,9 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          *
          * \pre The two given snapped 3-balls use distinct tetrahedra.
          *
-         * @param ball1 the first snapped 3-ball to examine.
-         * @param ball2 the second snapped 3-ball to examine.
-         * @return a structure containing details of the snapped 2-sphere, or
+         * \param ball1 the first snapped 3-ball to examine.
+         * \param ball2 the second snapped 3-ball to examine.
+         * \return a structure containing details of the snapped 2-sphere, or
          * \c null if the given snapped 3-balls do not form a snapped 2-sphere.
          */
         static std::unique_ptr<SnappedTwoSphere> recognise(
@@ -182,9 +182,9 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 

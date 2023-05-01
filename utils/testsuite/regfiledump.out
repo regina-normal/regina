@@ -5,6 +5,7 @@ No file has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -14,6 +15,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -23,6 +27,7 @@ More than one detail level has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -32,6 +37,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -41,6 +49,7 @@ More than one detail level has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -50,6 +59,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -59,6 +71,7 @@ More than one detail level has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -68,6 +81,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -77,6 +93,7 @@ Invalid option: -z
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -86,6 +103,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -95,6 +115,7 @@ Empty arguments are not allowed.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -104,6 +125,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -127,6 +151,7 @@ You cannot specify individual packets if packets are not to be displayed.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -136,6 +161,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -211,12 +239,12 @@ Size of the skeleton:
   Vertices: 1
 
 Tetrahedron gluing:
-  Tet  |  glued to:      (012)      (013)      (023)      (123)
-  -----+-------------------------------------------------------
-    0  |              boundary   boundary    1 (012)    1 (130)
-    1  |               0 (023)    0 (312)    2 (012)    2 (130)
-    2  |               1 (023)    1 (312)    3 (013)    3 (120)
-    3  |               2 (312)    2 (023)    3 (312)    3 (230)
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |             boundary    boundary     1 (012)     1 (130)
+    1  |              0 (023)     0 (312)     2 (012)     2 (130)
+    2  |              1 (023)     1 (312)     3 (013)     3 (120)
+    3  |              2 (312)     2 (023)     3 (312)     3 (230)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -259,11 +287,11 @@ Size of the skeleton:
   Vertices: 1
 
 Tetrahedron gluing:
-  Tet  |  glued to:      (012)      (013)      (023)      (123)
-  -----+-------------------------------------------------------
-    0  |               2 (023)    2 (132)    1 (023)    1 (123)
-    1  |               2 (201)    2 (310)    0 (023)    0 (123)
-    2  |               1 (120)    1 (310)    0 (012)    0 (031)
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              2 (023)     2 (132)     1 (023)     1 (123)
+    1  |              2 (201)     2 (310)     0 (023)     0 (123)
+    2  |              1 (120)     1 (310)     0 (012)     0 (031)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -331,10 +359,10 @@ Size of the skeleton:
   Vertices: 1
 
 Tetrahedron gluing:
-  Tet  |  glued to:      (012)      (013)      (023)      (123)
-  -----+-------------------------------------------------------
-    0  |               1 (210)    1 (230)    1 (130)    1 (132)
-    1  |               0 (210)    0 (302)    0 (301)    0 (132)
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              1 (210)     1 (230)     1 (130)     1 (132)
+    1  |              0 (210)     0 (302)     0 (301)     0 (132)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -421,10 +449,10 @@ Size of the skeleton:
   Vertices: 1
 
 Pentachoron gluing:
-  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)
-  ------+------------------------------------------------------------------
-     0  |              0 (1234)   1 (0124)   1 (0134)   1 (0234)   0 (0123)
-     1  |              1 (1234)   0 (0124)   0 (0134)   0 (0234)   1 (0123)
+  Pent  |  gluing:      (0123)      (0124)      (0134)      (0234)      (1234)
+  ------+---------------------------------------------------------------------
+     0  |             0 (1234)    1 (0124)    1 (0134)    1 (0234)    0 (0123)
+     1  |             1 (1234)    0 (0124)    0 (0134)    0 (0234)    1 (0123)
 
 Vertices:
   Pent  |  vertex:    0   1   2   3   4
@@ -495,10 +523,10 @@ Size of the skeleton:
   Vertices: 1
 
 Triangle gluing:
-  Triangle  |  glued to:     (01)     (02)     (12)
-  ----------+--------------------------------------
-         0  |              1 (01)   1 (20)   1 (21)
-         1  |              0 (01)   0 (20)   0 (21)
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             1 (01)    1 (20)    1 (21)
+         1  |             0 (01)    0 (20)    0 (21)
 
 Vertices:
   Triangle  |  vertex:    0   1   2
@@ -528,10 +556,10 @@ Size of the skeleton:
   Vertices: 1
 
 Triangle gluing:
-  Triangle  |  glued to:     (01)     (02)     (12)
-  ----------+--------------------------------------
-         0  |              0 (12)   1 (02)   0 (01)
-         1  |              1 (12)   0 (02)   1 (01)
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             0 (12)    1 (02)    0 (01)
+         1  |             1 (12)    0 (02)    1 (01)
 
 Vertices:
   Triangle  |  vertex:    0   1   2
@@ -568,10 +596,10 @@ Container with 2 children, 2 descendants
 
 Bounded non-orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
-  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
-  ---------+-----------------------------------------------------------------------------------
-        0  |              1 (12354)    boundary    boundary    boundary    boundary   1 (01234)
-        1  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01243)
+  Simplex  |  gluing:      (01234)      (01235)      (01245)      (01345)      (02345)      (12345)
+  ---------+---------------------------------------------------------------------------------------
+        0  |             1 (12354)     boundary     boundary     boundary     boundary    1 (01234)
+        1  |             0 (12345)     boundary     boundary     boundary     boundary    0 (01243)
 
 
 
@@ -585,10 +613,10 @@ Bounded non-orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
 Possibly closed orientable 8-D triangulation, f = ( 9 36 84 126 126 84 36 9 2 )
 
-  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
-  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
-        0  |              1 (01234567)   1 (01234568)   1 (01234578)   1 (01234678)   1 (01235678)   1 (01245678)   1 (01345678)   1 (02345678)   1 (12345678)
-        1  |              0 (01234567)   0 (01234568)   0 (01234578)   0 (01234678)   0 (01235678)   0 (01245678)   0 (01345678)   0 (02345678)   0 (12345678)
+  Simplex  |  gluing:      (01234567)      (01234568)      (01234578)      (01234678)      (01235678)      (01245678)      (01345678)      (02345678)      (12345678)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |             1 (01234567)    1 (01234568)    1 (01234578)    1 (01234678)    1 (01235678)    1 (01245678)    1 (01345678)    1 (02345678)    1 (12345678)
+        1  |             0 (01234567)    0 (01234568)    0 (01234578)    0 (01234678)    0 (01235678)    0 (01245678)    0 (01345678)    0 (02345678)    0 (12345678)
 
 
 
@@ -733,12 +761,12 @@ Size of the skeleton:
   Vertices: 1
 
 Tetrahedron gluing:
-  Tet  |  glued to:      (012)      (013)      (023)      (123)
-  -----+-------------------------------------------------------
-    0  |              boundary   boundary    1 (012)    1 (130)
-    1  |               0 (023)    0 (312)    2 (012)    2 (130)
-    2  |               1 (023)    1 (312)    3 (013)    3 (120)
-    3  |               2 (312)    2 (023)    3 (312)    3 (230)
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |             boundary    boundary     1 (012)     1 (130)
+    1  |              0 (023)     0 (312)     2 (012)     2 (130)
+    2  |              1 (023)     1 (312)     3 (013)     3 (120)
+    3  |              2 (312)     2 (023)     3 (312)     3 (230)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -781,11 +809,11 @@ Size of the skeleton:
   Vertices: 1
 
 Tetrahedron gluing:
-  Tet  |  glued to:      (012)      (013)      (023)      (123)
-  -----+-------------------------------------------------------
-    0  |               2 (023)    2 (132)    1 (023)    1 (123)
-    1  |               2 (201)    2 (310)    0 (023)    0 (123)
-    2  |               1 (120)    1 (310)    0 (012)    0 (031)
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              2 (023)     2 (132)     1 (023)     1 (123)
+    1  |              2 (201)     2 (310)     0 (023)     0 (123)
+    2  |              1 (120)     1 (310)     0 (012)     0 (031)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -853,10 +881,10 @@ Size of the skeleton:
   Vertices: 1
 
 Tetrahedron gluing:
-  Tet  |  glued to:      (012)      (013)      (023)      (123)
-  -----+-------------------------------------------------------
-    0  |               1 (210)    1 (230)    1 (130)    1 (132)
-    1  |               0 (210)    0 (302)    0 (301)    0 (132)
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              1 (210)     1 (230)     1 (130)     1 (132)
+    1  |              0 (210)     0 (302)     0 (301)     0 (132)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -943,10 +971,10 @@ Size of the skeleton:
   Vertices: 1
 
 Pentachoron gluing:
-  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)
-  ------+------------------------------------------------------------------
-     0  |              0 (1234)   1 (0124)   1 (0134)   1 (0234)   0 (0123)
-     1  |              1 (1234)   0 (0124)   0 (0134)   0 (0234)   1 (0123)
+  Pent  |  gluing:      (0123)      (0124)      (0134)      (0234)      (1234)
+  ------+---------------------------------------------------------------------
+     0  |             0 (1234)    1 (0124)    1 (0134)    1 (0234)    0 (0123)
+     1  |             1 (1234)    0 (0124)    0 (0134)    0 (0234)    1 (0123)
 
 Vertices:
   Pent  |  vertex:    0   1   2   3   4
@@ -1017,10 +1045,10 @@ Size of the skeleton:
   Vertices: 1
 
 Triangle gluing:
-  Triangle  |  glued to:     (01)     (02)     (12)
-  ----------+--------------------------------------
-         0  |              1 (01)   1 (20)   1 (21)
-         1  |              0 (01)   0 (20)   0 (21)
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             1 (01)    1 (20)    1 (21)
+         1  |             0 (01)    0 (20)    0 (21)
 
 Vertices:
   Triangle  |  vertex:    0   1   2
@@ -1050,10 +1078,10 @@ Size of the skeleton:
   Vertices: 1
 
 Triangle gluing:
-  Triangle  |  glued to:     (01)     (02)     (12)
-  ----------+--------------------------------------
-         0  |              0 (12)   1 (02)   0 (01)
-         1  |              1 (12)   0 (02)   1 (01)
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             0 (12)    1 (02)    0 (01)
+         1  |             1 (12)    0 (02)    1 (01)
 
 Vertices:
   Triangle  |  vertex:    0   1   2
@@ -1090,10 +1118,10 @@ Container with 2 children, 2 descendants
 
 Bounded non-orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
-  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
-  ---------+-----------------------------------------------------------------------------------
-        0  |              1 (12354)    boundary    boundary    boundary    boundary   1 (01234)
-        1  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01243)
+  Simplex  |  gluing:      (01234)      (01235)      (01245)      (01345)      (02345)      (12345)
+  ---------+---------------------------------------------------------------------------------------
+        0  |             1 (12354)     boundary     boundary     boundary     boundary    1 (01234)
+        1  |             0 (12345)     boundary     boundary     boundary     boundary    0 (01243)
 
 
 
@@ -1107,10 +1135,10 @@ Bounded non-orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
 Possibly closed orientable 8-D triangulation, f = ( 9 36 84 126 126 84 36 9 2 )
 
-  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
-  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
-        0  |              1 (01234567)   1 (01234568)   1 (01234578)   1 (01234678)   1 (01235678)   1 (01245678)   1 (01345678)   1 (02345678)   1 (12345678)
-        1  |              0 (01234567)   0 (01234568)   0 (01234578)   0 (01234678)   0 (01235678)   0 (01245678)   0 (01345678)   0 (02345678)   0 (12345678)
+  Simplex  |  gluing:      (01234567)      (01234568)      (01234578)      (01234678)      (01235678)      (01245678)      (01345678)      (02345678)      (12345678)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |             1 (01234567)    1 (01234568)    1 (01234578)    1 (01234678)    1 (01235678)    1 (01245678)    1 (01345678)    1 (02345678)    1 (12345678)
+        1  |             0 (01234567)    0 (01234568)    0 (01234578)    0 (01234678)    0 (01235678)    0 (01245678)    0 (01345678)    0 (02345678)    0 (12345678)
 
 
 
@@ -1379,13 +1407,13 @@ Size of the skeleton:
   Vertices: 1
 
 Tetrahedron gluing:
-  Tet  |  glued to:      (012)      (013)      (023)      (123)
-  -----+-------------------------------------------------------
-    0  |               4 (312)    3 (321)    2 (312)    1 (321)
-    1  |               3 (203)    4 (230)    2 (203)    0 (321)
-    2  |               4 (301)    3 (120)    1 (203)    0 (230)
-    3  |               2 (301)    4 (120)    1 (102)    0 (310)
-    4  |               3 (301)    2 (120)    1 (301)    0 (120)
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              4 (312)     3 (321)     2 (312)     1 (321)
+    1  |              3 (203)     4 (230)     2 (203)     0 (321)
+    2  |              4 (301)     3 (120)     1 (203)     0 (230)
+    3  |              2 (301)     4 (120)     1 (102)     0 (310)
+    4  |              3 (301)     2 (120)     1 (301)     0 (120)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -1433,10 +1461,10 @@ Size of the skeleton:
   Vertices: 1
 
 Pentachoron gluing:
-  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)
-  ------+------------------------------------------------------------------
-     0  |              1 (0134)   0 (1234)   1 (1234)   1 (0124)   0 (0124)
-     1  |              1 (0234)   0 (0234)   0 (0123)   1 (0123)   0 (0134)
+  Pent  |  gluing:      (0123)      (0124)      (0134)      (0234)      (1234)
+  ------+---------------------------------------------------------------------
+     0  |             1 (0134)    0 (1234)    1 (1234)    1 (0124)    0 (0124)
+     1  |             1 (0234)    0 (0234)    0 (0123)    1 (0123)    0 (0134)
 
 Vertices:
   Pent  |  vertex:    0   1   2   3   4

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,15 +33,22 @@
 #include "../pybind11/pybind11.h"
 #include "utilities/randutils.h"
 #include "../helpers.h"
+#include "../docstrings/utilities/randutils.h"
 
 using regina::RandomEngine;
 
 void addRandUtils(pybind11::module_& m) {
-    auto c = pybind11::class_<RandomEngine>(m, "RandomEngine")
-        .def_static("rand", &RandomEngine::rand<long>)
-        .def_static("reseedWithHardware", &RandomEngine::reseedWithHardware)
-        .def_static("reseedWithDefault", &RandomEngine::reseedWithDefault)
+    RDOC_SCOPE_BEGIN(RandomEngine)
+
+    auto c = pybind11::class_<RandomEngine>(m, "RandomEngine", rdoc_scope)
+        .def_static("rand", &RandomEngine::rand<long>, rdoc::rand)
+        .def_static("reseedWithHardware", &RandomEngine::reseedWithHardware,
+            rdoc::reseedWithHardware)
+        .def_static("reseedWithDefault", &RandomEngine::reseedWithDefault,
+            rdoc::reseedWithDefault)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -118,7 +118,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      */
     theAlternatingDT = new size_t[aNumCrossings];
     for (it = begin, i = 0; it != end; ++it, ++i)
-        theAlternatingDT[i] = abs(*it);
+        theAlternatingDT[i] = std::abs(*it);
 
     /*
      *  Switch from 1-based indexing to 0-based indexing.

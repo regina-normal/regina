@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,21 +103,21 @@ class LayeredSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         LayeredSolidTorus(const LayeredSolidTorus&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredSolidTorus& operator = (const LayeredSolidTorus&) = default;
 
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredSolidTorus& other) noexcept;
@@ -125,7 +125,7 @@ class LayeredSolidTorus : public StandardTriangulation {
         /**
          * Returns the number of tetrahedra in this layered solid torus.
          *
-         * @return the number of tetrahedra.
+         * \return the number of tetrahedra.
          */
         size_t size() const;
 
@@ -133,7 +133,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * Returns the tetrahedron that is glued to itself at the base of
          * this layered solid torus.
          *
-         * @return the base tetrahedron.
+         * \return the base tetrahedron.
          */
         const Tetrahedron<3>* base() const;
         /**
@@ -143,21 +143,21 @@ class LayeredSolidTorus : public StandardTriangulation {
          * and a single unidentified edge; these are referred to as
          * groups 3, 2 and 1 respectively.
          *
-         * Note that <tt>baseEdgeGroup(baseEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index.
+         * Note that `baseEdgeGroup(baseEdge(group, index)) == group`
+         * for all values of \c group and \c index.
          *
-         * Edges <tt>baseEdge(2,0)</tt> and <tt>baseEdge(3,0)</tt>
-         * will both belong to face <tt>baseFace(0)</tt>.
-         * Edges <tt>baseEdge(2,1)</tt> and <tt>baseEdge(3,2)</tt>
-         * will both belong to face <tt>baseFace(1)</tt>.
+         * Edges `baseEdge(2,0)` and `baseEdge(3,0)`
+         * will both belong to face `baseFace(0)`.
+         * Edges `baseEdge(2,1)` and `baseEdge(3,2)`
+         * will both belong to face `baseFace(1)`.
          *
-         * @param group the group that the requested edge should belong
+         * \param group the group that the requested edge should belong
          * to; this must be 1, 2 or 3.
-         * @param index the index within the given group of the requested
+         * \param index the index within the given group of the requested
          * edge; this must be between 0 and <i>group</i>-1 inclusive.
          * Note that in group 3 the edge at index 1 is adjacent to both the
          * edges at indexes 0 and 2.
-         * @return the edge number in the base tetrahedron of the
+         * \return the edge number in the base tetrahedron of the
          * requested edge; this will be between 0 and 5 inclusive.
          */
         int baseEdge(int group, int index) const;
@@ -166,12 +166,12 @@ class LayeredSolidTorus : public StandardTriangulation {
          * belongs to.  See baseEdge() for further details about
          * groups.
          *
-         * Note that <tt>baseEdgeGroup(baseEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index.
+         * Note that `baseEdgeGroup(baseEdge(group, index)) == group`
+         * for all values of \c group and \c index.
          *
-         * @param edge the edge number in the base tetrahedron of the
+         * \param edge the edge number in the base tetrahedron of the
          * given edge; this must be between 0 and 5 inclusive.
-         * @return the group to which the given edge belongs; this will
+         * \return the group to which the given edge belongs; this will
          * be 1, 2 or 3.
          */
         int baseEdgeGroup(int edge) const;
@@ -179,9 +179,9 @@ class LayeredSolidTorus : public StandardTriangulation {
          * Returns one of the two faces of the base tetrahedron that are
          * glued to each other.
          *
-         * @param index specifies which of the two faces to return; this
+         * \param index specifies which of the two faces to return; this
          * must be 0 or 1.
-         * @return the requested face number in the base tetrahedron;
+         * \return the requested face number in the base tetrahedron;
          * this will be between 0 and 3 inclusive.
          */
         int baseFace(int index) const;
@@ -191,7 +191,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * This is the tetrahedron that would be on the boundary of the
          * torus if the torus were the entire manifold.
          *
-         * @return the top level tetrahedron.
+         * \return the top level tetrahedron.
          */
         const Tetrahedron<3>* topLevel() const;
         /**
@@ -199,8 +199,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * cuts the top level tetrahedron edges in the given group.
          * See topEdge() for further details about groups.
          *
-         * @param group the given edge group; this must be 0, 1 or 2.
-         * @return the number of times the meridinal disc cuts the edges
+         * \param group the given edge group; this must be 0, 1 or 2.
+         * \return the number of times the meridinal disc cuts the edges
          * in the given group.
          */
         unsigned long meridinalCuts(int group) const;
@@ -215,21 +215,20 @@ class LayeredSolidTorus : public StandardTriangulation {
          * cuts fewest times.  Group 2 represents the boundary edge that
          * the meridinal disc cuts most times.  Group 1 is in the middle.
          *
-         * Note that <tt>topEdgeGroup(topEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index that
-         * actually correspond to an edge.
+         * Note that `topEdgeGroup(topEdge(group, index)) == group` for all
+         * values of \c group and \c index that actually correspond to an edge.
          *
-         * Edges <tt>topEdge(group, 0)</tt> will all belong to face
-         * <tt>topFace(0)</tt>.  Edges <tt>topEdge(group, 1)</tt>
-         * (if they exist) will all belong to face <tt>topFace(1)</tt>.
+         * Edges `topEdge(group, 0)` will all belong to face
+         * `topFace(0)`.  Edges `topEdge(group, 1)`
+         * (if they exist) will all belong to face `topFace(1)`.
          *
-         * @param group the group that the requested edge should belong
+         * \param group the group that the requested edge should belong
          * to; this must be 0, 1 or 2.
-         * @param index the index within the given group of the requested
+         * \param index the index within the given group of the requested
          * edge; this must be 0 or 1.  Note that one of the groups only
          * contains one tetrahedron edge, in which case this edge will be
          * stored at index 0.
-         * @return the edge number in the top level tetrahedron of the
+         * \return the edge number in the top level tetrahedron of the
          * requested edge (between 0 and 5 inclusive), or -1 if there is
          * no such edge (only possible if the given group was the group
          * of size one and the given index was 1).
@@ -240,13 +239,12 @@ class LayeredSolidTorus : public StandardTriangulation {
          * tetrahedron belongs to.  See topEdge() for further details
          * about groups.
          *
-         * Note that <tt>topEdgeGroup(topEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index that
-         * actually correspond to an edge.
+         * Note that `topEdgeGroup(topEdge(group, index)) == group` for all
+         * values of \c group and \c index that actually correspond to an edge.
          *
-         * @param edge the edge number in the top level tetrahedron of
+         * \param edge the edge number in the top level tetrahedron of
          * the given edge; this must be between 0 and 5 inclusive.
-         * @return the group to which the given edge belongs (0, 1 or 2),
+         * \return the group to which the given edge belongs (0, 1 or 2),
          * or -1 if this edge does not belong to any group (only possible
          * if this is the unique edge in the top tetrahedron not on the
          * torus boundary).
@@ -256,9 +254,9 @@ class LayeredSolidTorus : public StandardTriangulation {
          * Returns one of the two faces of the top level tetrahedron that
          * form the boundary of this layered solid torus.
          *
-         * @param index specifies which of the two faces to return; this
+         * \param index specifies which of the two faces to return; this
          * must be 0 or 1.
-         * @return the requested face number in the top level tetrahedron;
+         * \return the requested face number in the top level tetrahedron;
          * this will be between 0 and 3 inclusive.
          */
         int topFace(int index) const;
@@ -283,8 +281,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass, as noted above, is weaker than combinatorial isomorphism).
          *
-         * @param other the layered solid torus to compare with this.
-         * @return \c true if and only if this and the given object
+         * \param other the layered solid torus to compare with this.
+         * \return \c true if and only if this and the given object
          * represent the same type of layered solid torus.
          */
         bool operator == (const LayeredSolidTorus& other) const;
@@ -309,8 +307,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass, as noted above, is weaker than combinatorial isomorphism).
          *
-         * @param other the layered solid torus to compare with this.
-         * @return \c true if and only if this and the given object
+         * \param other the layered solid torus to compare with this.
+         * \return \c true if and only if this and the given object
          * do not represent the same type of layered solid torus.
          */
         bool operator != (const LayeredSolidTorus& other) const;
@@ -325,12 +323,12 @@ class LayeredSolidTorus : public StandardTriangulation {
          * different edges of the boundary torus that could become the
          * boundary edge of the new Mobius band.
          *
-         * @param mobiusBandBdry the edge group on the boundary of this
+         * \param mobiusBandBdry the edge group on the boundary of this
          * layered solid torus that will become the boundary of the new
          * Mobius band (the remaining edge groups will become internal
          * edges of the new Mobius band).  This must be 0, 1 or 2.
          * See topEdge() for further details about edge groups.
-         * @return a new triangulation in which this layered solid torus has
+         * \return a new triangulation in which this layered solid torus has
          * been flattened to a Mobius band.
          */
         Triangulation<3> flatten(int mobiusBandBdry) const;
@@ -350,10 +348,10 @@ class LayeredSolidTorus : public StandardTriangulation {
          * in \a originalTri, and \a iso describes a mapping from
          * \a originalTri to \a newTri.
          *
-         * @param originalTri the triangulation currently referenced by this
+         * \param originalTri the triangulation currently referenced by this
          * layered solid torus.
-         * @param iso the mapping from \a originalTri to \a newTri.
-         * @param newTri the triangulation to be referenced by the updated
+         * \param iso the mapping from \a originalTri to \a newTri.
+         * \param newTri the triangulation to be referenced by the updated
          * layered solid torus.
          */
         void transform(const Triangulation<3>& originalTri,
@@ -373,8 +371,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tet the tetrahedron to examine as a potential base.
-         * @return a structure containing details of the layered solid torus,
+         * \param tet the tetrahedron to examine as a potential base.
+         * \return a structure containing details of the layered solid torus,
          * or \c null if the given tetrahedron is not the base of a
          * layered solid torus.
          */
@@ -399,16 +397,16 @@ class LayeredSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tet the tetrahedron to examine as a potential top
+         * \param tet the tetrahedron to examine as a potential top
          * level of a layered solid torus.
-         * @param topFace1 the face number of the given tetrahedron that
+         * \param topFace1 the face number of the given tetrahedron that
          * should represent the first boundary triangle of the layered solid
          * torus.  This should be between 0 and 3 inclusive.
-         * @param topFace2 the face number of the given tetrahedron that
+         * \param topFace2 the face number of the given tetrahedron that
          * should represent the second boundary triangle of the layered solid
          * torus.  This should be between 0 and 3 inclusive, and should
          * not be equal to \a topFace1.
-         * @return a structure containing details of the layered solid torus,
+         * \return a structure containing details of the layered solid torus,
          * or \c null if the given tetrahedron with its two faces do not form
          * the top level of a layered solid torus.
          */
@@ -429,8 +427,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
-         * @return a structure containing details of the layered solid torus,
+         * \param comp the triangulation component to examine.
+         * \return a structure containing details of the layered solid torus,
          * or \c null if the given component is not a layered solid torus.
          */
         static std::unique_ptr<LayeredSolidTorus> recognise(
@@ -455,8 +453,8 @@ class LayeredSolidTorus : public StandardTriangulation {
  * This global routine simply calls LayeredSolidTorus::swap(); it is provided
  * so that LayeredSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

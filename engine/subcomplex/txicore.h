@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,7 @@
 namespace regina {
 
 /**
- * Provides a triangulation of the product <tt>T x I</tt> (the
+ * Provides a triangulation of the product `T x I` (the
  * product of the torus and the interval).  Generally these
  * triangulations are only one tetrahedron thick (i.e., a "thin I-bundle"),
  * though this is not a strict requirement of this class.  Triangulations of
@@ -61,12 +61,11 @@ namespace regina {
  * curves on the upper and lower boundaries, as well as mappings from
  * boundary curves to specific tetrahedron edges.
  *
- * For each of the two torus boundaries, two curves are chosen as
- * generators of the fundamental group; these curves are called
- * \a alpha and \a beta.  Note that there is no requirement that the
- * upper \a alpha and \a beta be parallel to the lower \a alpha and
- * \a beta.  The parallelReln() routine can be called to establish the
- * precise relationship between these upper and lower curves.
+ * For each of the two torus boundaries, two curves are chosen as generators
+ * of the fundamental group; these curves are called α and β.  Note that there
+ * is no requirement that the upper α and β be parallel to the lower α and β.
+ * The parallelReln() routine can be called to establish the precise
+ * relationship between these upper and lower curves.
  *
  * Every object of this class contains a full copy of the triangulation
  * that it describes (so you should not create excessive objects of this
@@ -82,7 +81,7 @@ namespace regina {
 class TxICore : public Output<TxICore> {
     protected:
         Triangulation<3> core_;
-            /**< A full copy of the <tt>T x I</tt> triangulation that is
+            /**< A full copy of the `T x I` triangulation that is
                  described. */
         std::array<std::array<size_t, 2>, 2> bdryTet_;
             /**< The tetrahedra that provide the upper and lower
@@ -92,16 +91,14 @@ class TxICore : public Output<TxICore> {
                  in the upper and lower boundary triangles.  See bdryRoles()
                  for details. */
         std::array<Matrix2, 2> bdryReln_;
-            /**< Expresses the \a alpha and \a beta curves for each
-                 torus boundary in terms of specific tetrahedron edges and
-                 vertices.  The elements \a bdryReln_[0] and \a bdryReln_[1]
-                 refer to the upper and lower boundaries respectively,
-                 and each of these matrices must have determinant +1 or -1.
-                 See bdryReln() for further details. */
+            /**< Expresses the α and β curves for each torus boundary in terms
+                 of specific tetrahedron edges and vertices.  The elements
+                 \a bdryReln_[0] and \a bdryReln_[1] refer to the upper and
+                 lower boundaries respectively, and each of these matrices must
+                 have determinant ±1.  See bdryReln() for further details. */
         Matrix2 parallelReln_;
-            /**< Expresses the lower \a alpha and \a beta curves in
-                 terms of the upper \a alpha and \a beta curves.  See
-                 parallelReln() for details. */
+            /**< Expresses the lower α and β curves in terms of the upper
+                 α and β curves.  See parallelReln() for details. */
 
     public:
         /**
@@ -109,35 +106,35 @@ class TxICore : public Output<TxICore> {
          */
         virtual ~TxICore() = default;
         /**
-         * Returns a full copy of the <tt>T x I</tt> triangulation that
+         * Returns a full copy of the `T x I` triangulation that
          * this object describes.
          *
          * Successive calls to this routine will return a reference to the
          * same triangulation (i.e., it is not recreated each time this
          * function is called).
          *
-         * @return the full triangulation.
+         * \return the full triangulation.
          */
         const Triangulation<3>& core() const;
         /**
          * Determines which tetrahedron provides the requested boundary
          * triangle.
          *
-         * Recall that the <tt>T x I</tt> triangulation has two torus
+         * Recall that the `T x I` triangulation has two torus
          * boundaries, each consisting of two boundary triangles.  This
          * routine returns the specific tetrahedron that provides the
          * given triangle of the given torus boundary.
          *
          * What is returned is the index number of the tetrahedron
          * within the triangulation.  To access the tetrahedron itself,
-         * you may call <tt>core().tetrahedron(bdryTet(...))</tt>.
+         * you may call `core().tetrahedron(bdryTet(...))`.
          *
          * Note that the same tetrahedron may provide more than one
          * boundary triangle.
          *
-         * @param whichBdry 0 if the upper boundary should be examined,
+         * \param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @param whichTri 0 if the first boundary triangle should be
+         * \param whichTri 0 if the first boundary triangle should be
          * examined, or 1 if the second boundary triangle should be examined.
          */
         size_t bdryTet(int whichBdry, int whichTri) const;
@@ -176,16 +173,16 @@ class TxICore : public Output<TxICore> {
          * upper or lower boundary and whether we examine the first or
          * second triangle of this boundary 
          *
-         * @param whichBdry 0 if the upper boundary should be examined,
+         * \param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @param whichTri 0 if the first boundary triangle should be
+         * \param whichTri 0 if the first boundary triangle should be
          * examined, or 1 if the second boundary triangle should be examined.
-         * @return the permutation mapping roles 0, 1 and 2 in the
+         * \return the permutation mapping roles 0, 1 and 2 in the
          * diagram above to real tetrahedron vertex numbers.
          */
         Perm<4> bdryRoles(int whichBdry, int whichTri) const;
         /**
-         * Returns a 2-by-2 matrix describing the \a alpha and \a beta curves
+         * Returns a 2-by-2 matrix describing the α and β curves
          * on a torus boundary in terms of specific tetrahedron edges.
          *
          * Consider the first triangle of the given boundary.  Let
@@ -194,22 +191,22 @@ class TxICore : public Output<TxICore> {
          *
          * Let \a edge01 be the directed edge from vertex \a p[0] to \a p[1]
          * of tetrahedron \a t, and let \a edge02 be the directed edge from
-         * vertex \a p[0] to \a p[2] of tetrahedron \a t.  Then the
-         * matrix returned by this routine describes how the directed
-         * edges \a edge01 and \a edge02 relate to the \a alpha and \a beta
-         * curves on the given boundary.  Specifically:
+         * vertex \a p[0] to \a p[2] of tetrahedron \a t.  Then the matrix
+         * returned by this routine describes how the directed edges \a edge01
+         * and \a edge02 relate to the α and β curves on the given boundary.
+         * Specifically:
          *
          * <pre>
-         *     [ alpha ]                  [ edge01 ]
-         *     [       ]  =  bdryReln() * [        ] .
-         *     [ beta  ]                  [ edge02 ]
+         *     [ α ]                  [ edge01 ]
+         *     [   ]  =  bdryReln() * [        ] .
+         *     [ β ]                  [ edge02 ]
          * </pre>
          *
          * It is guaranteed that this matrix has determinant +1 or -1.
          *
-         * @param whichBdry 0 if the upper boundary should be examined,
+         * \param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @return the relationship between the boundary curves and
+         * \return the relationship between the boundary curves and
          * tetrahedron edges.
          */
         const Matrix2& bdryReln(int whichBdry) const;
@@ -217,11 +214,10 @@ class TxICore : public Output<TxICore> {
          * Returns a 2-by-2 matrix describing the parallel relationship
          * between the upper and lower boundary curves.
          *
-         * Let \a a_u and \a b_u be the upper \a alpha and \a beta
-         * boundary curves.  Suppose that the lower \a alpha is parallel
-         * to \a w.\a a_u + \a x.\a b_u, and that the lower \a beta is
-         * parallel to \a y.\a a_u + \a z.\a b_u.  Then the matrix
-         * returned will be
+         * Let \a a_u and \a b_u be the upper α and β boundary curves.
+         * Suppose that the lower α is parallel to \a w.\a a_u + \a x.\a b_u,
+         * and that the lower β is parallel to \a y.\a a_u + \a z.\a b_u.
+         * Then the matrix returned will be
          *
          * <pre>
          *     [ w  x ]
@@ -229,8 +225,8 @@ class TxICore : public Output<TxICore> {
          *     [ y  z ]
          * </pre>
          *
-         * In other words, if \a a_l and \a b_l are the lower \a alpha
-         * and \a beta curves respectively, we have
+         * In other words, if \a a_l and \a b_l are the lower α and β curves
+         * respectively, we have
          *
          * <pre>
          *     [ a_l ]                      [ a_u ]
@@ -238,75 +234,75 @@ class TxICore : public Output<TxICore> {
          *     [ b_l ]                      [ b_u ]
          * </pre>
          *
-         * @return the relationship between the upper and lower boundary curves.
+         * \return the relationship between the upper and lower boundary curves.
          */
         const Matrix2& parallelReln() const;
 
         /**
          * Returns the name of this specific triangulation of
-         * <tt>T x I</tt> as a human-readable string.
+         * `T x I` as a human-readable string.
          *
-         * @return the name of this triangulation.
+         * \return the name of this triangulation.
          */
         std::string name() const;
         /**
          * Returns the name of this specific triangulation of
-         * <tt>T x I</tt> in TeX format.  No leading or trailing dollar
+         * `T x I` in TeX format.  No leading or trailing dollar
          * signs will be included.
          *
-         * @return the name of this triangulation in TeX format.
+         * \return the name of this triangulation in TeX format.
          */
         std::string texName() const;
 
         /**
-         * Determines if this and the given <tt>T x I</tt> triangulation
+         * Determines if this and the given `T x I` triangulation
          * are of the same type and have the same parameters.
          *
          * If this returns \c true, then the triangulations returned
          * by core() should also be combinatorially identical.
          *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c true if and only if this and the given triangulation
+         * \param other the `T x I` triangulation to compare with this.
+         * \return \c true if and only if this and the given triangulation
          * are of the same type and have the same parameters.
          */
         virtual bool operator == (const TxICore& other) const = 0;
 
         /**
-         * Determines if this and the given <tt>T x I</tt> triangulation
+         * Determines if this and the given `T x I` triangulation
          * are of different types and/or have different parameters.
          *
          * If this returns \c false (i.e., both objects compare as equal),
          * then the triangulations returned by core() should also be
          * combinatorially identical.
          *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c true if and only if this and the given triangulation
+         * \param other the `T x I` triangulation to compare with this.
+         * \return \c true if and only if this and the given triangulation
          * are of different types and/or have different parameters.
          */
         bool operator != (const TxICore& other) const;
 
         /**
          * Writes the name of this specific triangulation of
-         * <tt>T x I</tt> to the given output stream.  The name will be
+         * `T x I` to the given output stream.  The name will be
          * written as a human-readable string.
          *
-         * \ifacespython Not present; instead use the variant name()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant name() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
          * Writes the name of this specific triangulation of
-         * <tt>T x I</tt> in TeX format to the given output stream.
+         * `T x I` in TeX format to the given output stream.
          * No leading or trailing dollar signs will be written.
          *
-         * \ifacespython Not present; instead use the variant texName()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant texName() that takes no arguments
+         * and returns a string.
          *
-         * @param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \param out the output stream to which to write.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
@@ -314,18 +310,18 @@ class TxICore : public Output<TxICore> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -374,14 +370,14 @@ class TxICore : public Output<TxICore> {
          * listeners, and the internal triangulation here does not belong to a
          * packet.
          *
-         * @param other the triangulation whose data should be swapped
+         * \param other the triangulation whose data should be swapped
          * with this.
          */
         void swapBaseData(TxICore& other) noexcept;
 };
 
 /**
- * One of a family of thin <tt>T x I</tt> triangulations that typically
+ * One of a family of thin `T x I` triangulations that typically
  * appear at the centres of layered torus bundles.  Different
  * triangulations in this family use different numbers of tetrahedra,
  * with the larger triangulations producing more complicated
@@ -389,12 +385,12 @@ class TxICore : public Output<TxICore> {
  *
  * Members of this family are parameterised by their size (the number of
  * tetrahedra) and an additional integer \a k, where
- * 1 <= \a k <= \a size - 5.  Note that this means we must have
- * \a size >= 6.  The member of this family of size \a n with additional
- * parameter \a k is labelled <tt>T_n:k</tt>.
+ * 1 ≤ \a k ≤ \a size - 5.  Note that this means we must have
+ * \a size ≥ 6.  The member of this family of size \a n with additional
+ * parameter \a k is labelled `T_n:k`.
  *
- * It is worth noting that <tt>T_n:k</tt> is isomorphic to
- * <tt>T_n:(n-4-k)</tt>, so in reality there are only [(\a n-4)/2]
+ * It is worth noting that `T_n:k` is isomorphic to
+ * `T_n:(n-4-k)`, so in reality there are only [(\a n-4)/2]
  * different triangulations for a given size (rounded down).
  *
  * A triangulation of this family is most easily defined in terms of its
@@ -429,8 +425,7 @@ class TxICore : public Output<TxICore> {
  * is coned out from triangles \a u0 and \a u1, and the lower boundary is
  * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
  * \a w0 gives the first boundary triangle and \a u1 or \a w1 gives the second.
- * The directions of the corresponding \a alpha and \a beta curves are
- * illustrated below.
+ * The directions of the corresponding α and β curves are illustrated below.
  *
  * \image html diagbdry.png
  *
@@ -448,7 +443,7 @@ class TxICore : public Output<TxICore> {
 class TxIDiagonalCore : public TxICore {
     private:
         size_t size_;
-            /**< The number of tetrahedra in this <tt>T x I</tt>
+            /**< The number of tetrahedra in this `T x I`
                  triangulation. */
         size_t k_;
             /**< The additional parameter \a k as described in the
@@ -456,24 +451,23 @@ class TxIDiagonalCore : public TxICore {
 
     public:
         /**
-         * Creates a new <tt>T x I</tt> triangulation with the given
+         * Creates a new `T x I` triangulation with the given
          * parameters.
          *
-         * @param size the number of tetrahedra in this
+         * \param size the number of tetrahedra in this
          * triangulation.  This must be at least 6.
-         * @param k the additional parameter \a k as described in the
-         * class notes.  This must be between 1 and (\a newSize - 5)
-         * inclusive.
+         * \param k the additional parameter \a k as described in the
+         * class notes.  This must be between 1 and (\a size - 5) inclusive.
          */
         TxIDiagonalCore(size_t size, size_t k);
 
         /**
-         * Creates a new copy of the given <tt>T x I</tt> triangulation.
+         * Creates a new copy of the given `T x I` triangulation.
          */
         TxIDiagonalCore(const TxIDiagonalCore&) = default;
 
         /**
-         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * Moves the contents of the given `T x I` triangulation
          * into this new triangulation.
          *
          * The triangulation that was passed will no longer be usable.
@@ -481,28 +475,28 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore(TxIDiagonalCore&&) noexcept = default;
 
         /**
-         * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
+         * Sets this to be a copy of the given `T x I` triangulation.
          * This will induce a deep copy.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIDiagonalCore& operator = (const TxIDiagonalCore& src) = default;
 
         /**
-         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * Moves the contents of the given `T x I` triangulation
          * into this triangulation.
          *
          * The triangulation that was passed will no longer be usable.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIDiagonalCore& operator = (TxIDiagonalCore&& src) noexcept = default;
 
         /**
-         * Returns the total number of tetrahedra in this <tt>T x I</tt>
+         * Returns the total number of tetrahedra in this `T x I`
          * triangulation.
          *
-         * @return the total number of tetrahedra.
+         * \return the total number of tetrahedra.
          */
         size_t size() const;
 
@@ -510,15 +504,15 @@ class TxIDiagonalCore : public TxICore {
          * Returns the additional parameter \a k as described in the
          * class notes.
          *
-         * @return the additional parameter \a k.
+         * \return the additional parameter \a k.
          */
         size_t k() const;
 
         /**
          * Swaps the contents of this and the given
-         * <tt>T x I</tt> triangulation.
+         * `T x I` triangulation.
          *
-         * @param other the triangulation whose contents should be swapped
+         * \param other the triangulation whose contents should be swapped
          * with this.
          */
         void swap(TxIDiagonalCore& other) noexcept;
@@ -529,15 +523,15 @@ class TxIDiagonalCore : public TxICore {
 };
 
 /**
- * Swaps the contents of the two given <tt>T x I</tt> triangulations.
+ * Swaps the contents of the two given `T x I` triangulations.
  *
  * This global routine simply calls TxIDiagonalCore::swap(); it is
  * provided so that TxIDiagonalCore meets the C++ Swappable requirements.
  *
  * See TxIDiagonalCore::swap() for more details.
  *
- * @param lhs the triangulation whose contents should be swapped with \a rhs.
- * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ * \param lhs the triangulation whose contents should be swapped with \a rhs.
+ * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
  * \ingroup subcomplex
  */
@@ -549,15 +543,15 @@ void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
  *
  * This triangulation contains the fewest possible number of tetrahedra
  * (TxICore triangulations are not seen below six tetrahedra).  It is
- * referred to as <tt>T_6^1</tt> in the paper "Structures of small closed
+ * referred to as `T_6¹` in the paper "Structures of small closed
  * non-orientable 3-manifold triangulations", Benjamin A. Burton,
  * J. Knot Theory Ramifications 16 (2007), 545--574.
- * In Regina it is given the name <tt>T_6*</tt>, to avoid confusion with
- * the different TxIDiagonalCore triangulation <tt>T_6:1</tt>.
+ * In Regina it is given the name `T_6*`, to avoid confusion with
+ * the different TxIDiagonalCore triangulation `T_6:1`.
  *
  * The triangulations of the upper and lower boundary tori are completely
- * parallel (and in particular, the upper and lower \a alpha curves are
- * parallel, as are the upper and lower \a beta curves).
+ * parallel (and in particular, the upper and lower α curves are parallel,
+ * as are the upper and lower β curves).
  *
  * For reference, the central torus of this triangulation is depicted below.
  * The left and right sides of the diagram are identified, as are the
@@ -566,8 +560,7 @@ void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
  * boundary coned out from triangles \a u0 and \a u1 and the lower boundary
  * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
  * \a w0 gives the first boundary triangle and \a u1 or \a w1 gives the second.
- * The directions of the corresponding \a alpha and \a beta curves are
- * are also included.
+ * The directions of the corresponding α and β curves are are also included.
  *
  * \image html parallel.png
  *
@@ -580,12 +573,12 @@ void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
 class TxIParallelCore : public TxICore {
     public:
         /**
-         * Creates a new copy of this <tt>T x I</tt> triangulation.
+         * Creates a new copy of this `T x I` triangulation.
          */
         TxIParallelCore();
 
         /**
-         * Creates a new copy of the given <tt>T x I</tt> triangulation.
+         * Creates a new copy of the given `T x I` triangulation.
          *
          * Since there is only one triangulation of this type, the copy
          * constructor will give the same end result as the default constructor
@@ -594,7 +587,7 @@ class TxIParallelCore : public TxICore {
         TxIParallelCore(const TxIParallelCore&) = default;
 
         /**
-         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * Moves the contents of the given `T x I` triangulation
          * into this new triangulation.
          *
          * The triangulation that was passed will no longer be usable.
@@ -602,28 +595,28 @@ class TxIParallelCore : public TxICore {
         TxIParallelCore(TxIParallelCore&&) noexcept = default;
 
         /**
-         * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
+         * Sets this to be a copy of the given `T x I` triangulation.
          * This will induce a deep copy.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIParallelCore& operator = (const TxIParallelCore& src) = default;
 
         /**
-         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * Moves the contents of the given `T x I` triangulation
          * into this triangulation.
          *
          * The triangulation that was passed will no longer be usable.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIParallelCore& operator = (TxIParallelCore&& src) noexcept = default;
 
         /**
          * Swaps the contents of this and the given
-         * <tt>T x I</tt> triangulation.
+         * `T x I` triangulation.
          *
-         * @param other the triangulation whose contents should be swapped
+         * \param other the triangulation whose contents should be swapped
          * with this.
          */
         void swap(TxIParallelCore& other) noexcept;
@@ -634,15 +627,15 @@ class TxIParallelCore : public TxICore {
 };
 
 /**
- * Swaps the contents of the two given <tt>T x I</tt> triangulations.
+ * Swaps the contents of the two given `T x I` triangulations.
  *
  * This global routine simply calls TxIParallelCore::swap(); it is
  * provided so that TxIParallelCore meets the C++ Swappable requirements.
  *
  * See TxIParallelCore::swap() for more details.
  *
- * @param lhs the triangulation whose contents should be swapped with \a rhs.
- * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ * \param lhs the triangulation whose contents should be swapped with \a rhs.
+ * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
  * \ingroup subcomplex
  */

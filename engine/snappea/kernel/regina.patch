@@ -1,8 +1,16 @@
 diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
-index bb7ccad80..6fa6aaa96 100644
+index 5cf1ac77e..006fa5ea0 100644
 --- a/engine/snappea/kernel/SnapPea.h
 +++ b/engine/snappea/kernel/SnapPea.h
-@@ -496,9 +496,11 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
+@@ -430,6 +430,7 @@ typedef struct SymmetryGroup                SymmetryGroup;
+ typedef struct SymmetryGroupPresentation    SymmetryGroupPresentation;
+ typedef struct DualOneSkeletonCurve         DualOneSkeletonCurve;
+ typedef struct TerseTriangulation           TerseTriangulation;
++struct GroupPresentation; // To distinguish snappea's from regina's.
+ typedef struct GroupPresentation            GroupPresentation;
+ typedef struct CuspNeighborhoods            CuspNeighborhoods;
+ typedef struct NormalSurfaceList            NormalSurfaceList;
+@@ -496,9 +497,11 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
  /* #define CONST const */
  
  
@@ -14,7 +22,7 @@ index bb7ccad80..6fa6aaa96 100644
  
  /************************************************************************/
  
-@@ -2697,9 +2699,11 @@ extern Real volume(Triangulation *manifold, int *precision);
+@@ -2716,9 +2719,11 @@ extern Real volume(Triangulation *manifold, int *precision);
  
  #include "end_namespace.h"
  
@@ -26,8 +34,35 @@ index bb7ccad80..6fa6aaa96 100644
  
  #endif
  /* Local Variables:                      */
+diff --git a/engine/snappea/kernel/complex.cpp b/engine/snappea/kernel/complex.cpp
+index 0118f2df2..9a6b8dbcf 100644
+--- a/engine/snappea/kernel/complex.cpp
++++ b/engine/snappea/kernel/complex.cpp
+@@ -22,14 +22,14 @@
+ #include "kernel.h"
+ #include "kernel_namespace.h"
+ 
+-Complex Zero        = { 0.0, 0.0};
+-Complex One         = { 1.0, 0.0};
+-Complex Two         = { 2.0, 0.0};
+-Complex Four        = { 4.0, 0.0};
+-Complex MinusOne    = {-1.0, 0.0};
+-Complex I           = { 0.0, 1.0};
+-Complex TwoPiI      = { 0.0, TWO_PI};
+-Complex Infinity    = {1e64, 0.0};
++const Complex Zero        = { 0.0, 0.0};
++const Complex One         = { 1.0, 0.0};
++const Complex Two         = { 2.0, 0.0};
++const Complex Four        = { 4.0, 0.0};
++const Complex MinusOne    = {-1.0, 0.0};
++const Complex I           = { 0.0, 1.0};
++const Complex TwoPiI      = { 0.0, TWO_PI};
++const Complex Infinity    = {1e64, 0.0};
+ 
+ Complex complex_plus(
+     Complex z0,
 diff --git a/engine/snappea/kernel/end_namespace.h b/engine/snappea/kernel/end_namespace.h
-index 7f7c29f1b..c0911805e 100644
+index 7f7c29f1b..d32a71c68 100644
 --- a/engine/snappea/kernel/end_namespace.h
 +++ b/engine/snappea/kernel/end_namespace.h
 @@ -5,3 +5,5 @@
@@ -65,7 +100,7 @@ index 7b97fd785..837f6d1c7 100644
  #endif
  /* Local Variables:                      */
 diff --git a/engine/snappea/kernel/kernel_namespace.h b/engine/snappea/kernel/kernel_namespace.h
-index c24d6199e..ef142f978 100644
+index c24d6199e..281eed90b 100644
 --- a/engine/snappea/kernel/kernel_namespace.h
 +++ b/engine/snappea/kernel/kernel_namespace.h
 @@ -16,3 +16,5 @@
@@ -74,20 +109,78 @@ index c24d6199e..ef142f978 100644
  #endif
 +
 +namespace regina::snappea {
-diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
-index 6fa6aaa96..469223e71 100644
---- a/engine/snappea/kernel/SnapPea.h
-+++ b/engine/snappea/kernel/SnapPea.h
-@@ -430,6 +430,7 @@ typedef struct SymmetryGroup                SymmetryGroup;
- typedef struct SymmetryGroupPresentation    SymmetryGroupPresentation;
- typedef struct DualOneSkeletonCurve         DualOneSkeletonCurve;
- typedef struct TerseTriangulation           TerseTriangulation;
-+struct GroupPresentation; // To distinguish snappea's from regina's.
- typedef struct GroupPresentation            GroupPresentation;
- typedef struct CuspNeighborhoods            CuspNeighborhoods;
- typedef struct NormalSurfaceList            NormalSurfaceList;
+diff --git a/engine/snappea/kernel/kernel_prototypes.h b/engine/snappea/kernel/kernel_prototypes.h
+index 1d081a74c..ce1013b55 100644
+--- a/engine/snappea/kernel/kernel_prototypes.h
++++ b/engine/snappea/kernel/kernel_prototypes.h
+@@ -93,14 +93,14 @@ extern void close_cusps(Triangulation *manifold,
+  * Complex constant
+  */
+ /** @{ */
+-extern Complex  Zero,
+-                One,
+-                Two,
+-                Four,
+-                MinusOne,
+-                I,
+-                TwoPiI,
+-                Infinity;
++extern const Complex  Zero,
++                      One,
++                      Two,
++                      Four,
++                      MinusOne,
++                      I,
++                      TwoPiI,
++                      Infinity;
+ /** @} */
+ 
+ /************************************************************************/
+@@ -668,9 +668,9 @@ extern void recognize_embedded_surface( Triangulation   *manifold,
+ /*                                                                      */
+ /************************************************************************/
+ 
+-extern O31Matrix    O31_identity;
++extern const O31Matrix    O31_identity;
+ 
+-extern void         o31_copy(O31Matrix dest, O31Matrix source);
++extern void         o31_copy(O31Matrix dest, const O31Matrix source);
+ extern void         o31_invert(O31Matrix m, O31Matrix m_inverse);
+ extern FuncResult   gl4R_invert(GL4RMatrix m, GL4RMatrix m_inverse);
+ extern void         o31_product(O31Matrix a, O31Matrix b, O31Matrix product);
+@@ -1061,7 +1061,7 @@ extern void tidy_peripheral_curves(Triangulation *manifold);
+ extern Real safe_acos(Real x);
+ extern Real safe_asin(Real x);
+ extern Real safe_sqrt(Real x);
+-/** @{ */
++/** @} */
+ 
+ extern Real arcsinh(Real x);
+ /**<
+diff --git a/engine/snappea/kernel/o31_matrices.cpp b/engine/snappea/kernel/o31_matrices.cpp
+index 91880f0c1..3a2228f00 100644
+--- a/engine/snappea/kernel/o31_matrices.cpp
++++ b/engine/snappea/kernel/o31_matrices.cpp
+@@ -33,7 +33,7 @@
+ #define COLUMN_PRODUCT(m, i, j)     \
+     (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])
+ 
+-O31Matrix   O31_identity = {
++const O31Matrix   O31_identity = {
+                                 {1.0, 0.0, 0.0, 0.0},
+                                 {0.0, 1.0, 0.0, 0.0},
+                                 {0.0, 0.0, 1.0, 0.0},
+@@ -43,7 +43,7 @@ O31Matrix   O31_identity = {
+ 
+ void o31_copy(
+     O31Matrix   dest,
+-    O31Matrix   source)
++    const O31Matrix   source)
+ {
+     int i,
+         j;
 diff --git a/engine/snappea/kernel/triangulation.h b/engine/snappea/kernel/triangulation.h
-index c1c515f54..3650008b4 100644
+index 4023602b1..744b1cc4c 100644
 --- a/engine/snappea/kernel/triangulation.h
 +++ b/engine/snappea/kernel/triangulation.h
 @@ -62,7 +62,7 @@ typedef struct ComplexWithLog   ComplexWithLog;
@@ -111,100 +204,3 @@ index 568c6011b..875f7f434 100644
  typedef struct Tetrahedron      TetrahedronSneak;
  
  
-diff --git a/engine/snappea/kernel/complex.c b/engine/snappea/kernel/complex.c
-index 0118f2df2..9a6b8dbcf 100644
---- a/engine/snappea/kernel/complex.c
-+++ b/engine/snappea/kernel/complex.c
-@@ -22,14 +22,14 @@
- #include "kernel.h"
- #include "kernel_namespace.h"
- 
--Complex Zero        = { 0.0, 0.0};
--Complex One         = { 1.0, 0.0};
--Complex Two         = { 2.0, 0.0};
--Complex Four        = { 4.0, 0.0};
--Complex MinusOne    = {-1.0, 0.0};
--Complex I           = { 0.0, 1.0};
--Complex TwoPiI      = { 0.0, TWO_PI};
--Complex Infinity    = {1e64, 0.0};
-+const Complex Zero        = { 0.0, 0.0};
-+const Complex One         = { 1.0, 0.0};
-+const Complex Two         = { 2.0, 0.0};
-+const Complex Four        = { 4.0, 0.0};
-+const Complex MinusOne    = {-1.0, 0.0};
-+const Complex I           = { 0.0, 1.0};
-+const Complex TwoPiI      = { 0.0, TWO_PI};
-+const Complex Infinity    = {1e64, 0.0};
- 
- Complex complex_plus(
-     Complex z0,
-diff --git a/engine/snappea/kernel/kernel_prototypes.h b/engine/snappea/kernel/kernel_prototypes.h
-index 76c77fbbe..1c26a340f 100644
---- a/engine/snappea/kernel/kernel_prototypes.h
-+++ b/engine/snappea/kernel/kernel_prototypes.h
-@@ -89,14 +89,14 @@ extern void close_cusps(Triangulation *manifold, Boolean fill_cusp[]);
-  * Complex constant
-  */
- /** @{ */
--extern Complex  Zero,
--                One,
--                Two,
--                Four,
--                MinusOne,
--                I,
--                TwoPiI,
--                Infinity;
-+extern const Complex  Zero,
-+                      One,
-+                      Two,
-+                      Four,
-+                      MinusOne,
-+                      I,
-+                      TwoPiI,
-+                      Infinity;
- /** @} */
- 
- /************************************************************************/
-@@ -664,9 +664,9 @@ extern void recognize_embedded_surface( Triangulation   *manifold,
- /*                                                                      */
- /************************************************************************/
- 
--extern O31Matrix    O31_identity;
-+extern const O31Matrix    O31_identity;
- 
--extern void         o31_copy(O31Matrix dest, O31Matrix source);
-+extern void         o31_copy(O31Matrix dest, const O31Matrix source);
- extern void         o31_invert(O31Matrix m, O31Matrix m_inverse);
- extern FuncResult   gl4R_invert(GL4RMatrix m, GL4RMatrix m_inverse);
- extern void         o31_product(O31Matrix a, O31Matrix b, O31Matrix product);
-@@ -1053,7 +1053,7 @@ extern void tidy_peripheral_curves(Triangulation *manifold);
- extern Real safe_acos(Real x);
- extern Real safe_asin(Real x);
- extern Real safe_sqrt(Real x);
--/** @{ */
-+/** @} */
- 
- extern Real arcsinh(Real x);
- /**<
-diff --git a/engine/snappea/kernel/o31_matrices.c b/engine/snappea/kernel/o31_matrices.c
-index 36d64e642..281a21611 100644
---- a/engine/snappea/kernel/o31_matrices.c
-+++ b/engine/snappea/kernel/o31_matrices.c
-@@ -33,7 +33,7 @@
- #define COLUMN_PRODUCT(m, i, j)     \
-     (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])
- 
--O31Matrix   O31_identity = {
-+const O31Matrix   O31_identity = {
-                                 {1.0, 0.0, 0.0, 0.0},
-                                 {0.0, 1.0, 0.0, 0.0},
-                                 {0.0, 0.0, 1.0, 0.0},
-@@ -43,7 +43,7 @@ O31Matrix   O31_identity = {
- 
- void o31_copy(
-     O31Matrix   dest,
--    O31Matrix   source)
-+    const O31Matrix   source)
- {
-     int i,
-         j;

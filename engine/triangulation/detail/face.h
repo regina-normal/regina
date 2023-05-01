@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,7 +68,7 @@ template <int dim> class TriangulationBase;
  *
  * See the FaceEmbedding template class notes for further information.
  *
- * \ifacespython This base class is not present, but the "end user" class
+ * \python This base class is not present, but the "end user" class
  * FaceEmbedding<dim, subdim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -99,18 +99,18 @@ class FaceEmbeddingBase :
     public:
         /**
          * Default constructor.  This object is unusable until it has
-         * some data assigned to it using <tt>operator =</tt>.
+         * some data assigned to it using `operator =`.
          *
-         * \ifacespython Not present, since the C++ assignment operators
+         * \nopython This is because the C++ assignment operators
          * are not accessible to Python.
          */
         FaceEmbeddingBase();
         /**
          * Creates a new object containing the given data.
          *
-         * @param simplex the top-dimensional simplex in which the
+         * \param simplex the top-dimensional simplex in which the
          * underlying <i>subdim</i>-face of the triangulation is contained.
-         * @param vertices a mapping from the vertices of the underlying
+         * \param vertices a mapping from the vertices of the underlying
          * <i>subdim</i>-face of the triangulation to the corresponding
          * vertex numbers of \a simplex.  See vertices() for details of how
          * this permutation should be structured.
@@ -119,14 +119,14 @@ class FaceEmbeddingBase :
         /**
          * Creates a new copy of the given object.
          *
-         * @param cloneMe the object to copy.
+         * \param cloneMe the object to copy.
          */
         FaceEmbeddingBase(const FaceEmbeddingBase& cloneMe) = default;
 
         /**
          * Makes this a copy of the given object.
          *
-         * @param cloneMe the object to copy.
+         * \param cloneMe the object to copy.
          */
         FaceEmbeddingBase& operator = (const FaceEmbeddingBase& cloneMe) =
             default;
@@ -139,7 +139,7 @@ class FaceEmbeddingBase :
          * also access this simplex through a dimension-specific alias
          * (e.g., tetrahedron() in the case \a dim = 3).
          *
-         * @return the top-dimensional simplex.
+         * \return the top-dimensional simplex.
          */
         Simplex<dim>* simplex() const;
 
@@ -153,7 +153,7 @@ class FaceEmbeddingBase :
          * access this face number through a dimension-specific alias
          * (e.g., edge() in the case \a subdim = 1).
          *
-         * @return the corresponding face number of the top-dimensional simplex.
+         * \return the corresponding face number of the top-dimensional simplex.
          * This will be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
          * inclusive.
          */
@@ -171,11 +171,11 @@ class FaceEmbeddingBase :
          * FaceEmbedding objects for the same underlying <i>subdim</i>-face.
          *
          * This routine returns the same permutation as
-         * <tt>simplex().faceMapping<subdim>(face())</tt> (and this
+         * `simplex().faceMapping<subdim>(face())` (and this
          * routine is faster if you already have a FaceEmbedding).
          * See Simplex<dim>::faceMapping() for details.
          *
-         * @return a mapping from the vertices of the underlying
+         * \return a mapping from the vertices of the underlying
          * <i>subdim</i>-face to the corresponding vertices of simplex().
          */
         Perm<dim+1> vertices() const;
@@ -183,12 +183,12 @@ class FaceEmbeddingBase :
         /**
          * Tests whether this and the given object are identical.
          *
-         * Here \e identical means that two FaceEmbedding objects refer to
-         * the same-numbered face of the same-numbered simplex, \e and have
+         * Here _identical_ means that two FaceEmbedding objects refer to
+         * the same-numbered face of the same-numbered simplex, _and_ have
          * the same embedding permutations as returned by vertices().
          *
          * In particular, since this test only examines face/simplex/vertex
-         * \e numbers (not object pointers), it is meaningful to compare two
+         * _numbers_ (not object pointers), it is meaningful to compare two
          * FaceEmbedding objects from different underlying triangulations.
          *
          * \warning The meaning of this comparison changed in Regina 7.0.
@@ -200,20 +200,20 @@ class FaceEmbeddingBase :
          * (a weaker requirement that nowadays would incur an unacceptable
          * performance cost).
          *
-         * @param rhs the object to compare with this.
-         * @return \c true if and only if both object are identical.
+         * \param rhs the object to compare with this.
+         * \return \c true if and only if both object are identical.
          */
         bool operator == (const FaceEmbeddingBase& rhs) const;
 
         /**
          * Tests whether this and the given object are not identical.
          *
-         * Here \e identical means that two FaceEmbedding objects refer to
-         * the same-numbered face of the same-numbered simplex, \e and have
+         * Here _identical_ means that two FaceEmbedding objects refer to
+         * the same-numbered face of the same-numbered simplex, _and_ have
          * the same embedding permutations as returned by vertices().
          *
          * In particular, since this test only examines face/simplex/vertex
-         * \e numbers (not object pointers), it is meaningful to compare two
+         * _numbers_ (not object pointers), it is meaningful to compare two
          * FaceEmbedding objects from different underlying triangulations.
          *
          * \warning The meaning of this comparison changed in Regina 7.0.
@@ -225,8 +225,8 @@ class FaceEmbeddingBase :
          * (a weaker requirement that nowadays would incur an unacceptable
          * performance cost).
          *
-         * @param rhs the object to compare with this.
-         * @return \c true if and only if both object are identical.
+         * \param rhs the object to compare with this.
+         * \return \c true if and only if both object are identical.
          */
         bool operator != (const FaceEmbeddingBase& rhs) const;
 
@@ -234,9 +234,9 @@ class FaceEmbeddingBase :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -261,7 +261,7 @@ class FaceEmbeddingBase :
  * End users should have no need to use this class, and should never
  * need to see or know about the data type that it describes.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
@@ -314,7 +314,7 @@ struct FaceEmbeddingsList<dim, 1> {
  * Their memory is managed by the Triangulation class, and their locations
  * in memory define them.  See Face<dim> for further details.
  *
- * \ifacespython This base class is not present, but the "end user" class
+ * \python This base class is not present, but the "end user" class
  * Face<dim, subdim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -353,14 +353,20 @@ class FaceBase :
          * These can be combined using bitwise OR.
          */
         enum Validity {
+            /**
+             * Signifies that this face is valid.
+             */
             VALID = 0,
-                /**< Signifies that this face is valid. */
+            /**
+             * Signifies that the face is identified with itself under a
+             * non-identity permutation.
+             */
             INVALID_IDENTIFICATION = 1,
-                /**< Signifies that the face is identified with itself
-                     under a non-identity permutation. */
+            /**
+             * Signifies that the link of the face does not obey the rules
+             * laid out by isValid().
+             */
             INVALID_LINK = 2
-                /**< Signifies that the link of the face does not obey
-                     the rules laid out by isValid(). */
         };
 
         typename FaceEmbeddingsList<dim, dim - subdim>::type embeddings_;
@@ -388,20 +394,20 @@ class FaceBase :
          * Returns the index of this face within the underlying
          * triangulation.
          *
-         * @return the index of this face.
+         * \return the index of this face.
          */
         size_t index() const;
         /**
          * Returns the triangulation to which this face belongs.
          *
-         * @return a reference to the triangulation containing this face.
+         * \return a reference to the triangulation containing this face.
          */
         Triangulation<dim>& triangulation() const;
         /**
          * Returns the component of the triangulation to which this
          * face belongs.
          *
-         * @return the component containing this face.
+         * \return the component containing this face.
          */
         Component<dim>* component() const;
         /**
@@ -419,7 +425,7 @@ class FaceBase :
          * an invalid vertex boundary component if the invalid vertex does
          * not already belong to some real boundary component.
          *
-         * @return the boundary component containing this face, or \c null if
+         * \return the boundary component containing this face, or \c null if
          * this face does not lie entirely within the boundary of the
          * triangulation.
          */
@@ -432,7 +438,7 @@ class FaceBase :
          * both possible and recognised: both ideal and invalid vertices
          * are considered to be on the boundary.
          *
-         * @return \c true if and only if this face lies on the boundary.
+         * \return \c true if and only if this face lies on the boundary.
          */
         bool isBoundary() const;
 
@@ -446,7 +452,7 @@ class FaceBase :
          * top-dimensional simplex, then it will be counted multiple
          * times by this routine.
          *
-         * @return the degree of this face.
+         * \return the degree of this face.
          */
         size_t degree() const;
         /**
@@ -462,9 +468,9 @@ class FaceBase :
          * are ordered in a way that follows the link around the face
          * (which in codimension 2 is always a path or a cycle).
          *
-         * @param index the index of the requested appearance.  This
+         * \param index the index of the requested appearance.  This
          * must be between 0 and degree()-1 inclusive.
-         * @return details of the requested appearance.
+         * \return details of the requested appearance.
          */
         const FaceEmbedding<dim, subdim>& embedding(size_t index) const;
 
@@ -479,7 +485,7 @@ class FaceBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  The elements of the list will be
+         * range-based \c for loops.  The elements of the list will be
          * read-only objects of type FaceEmbedding<dim, subdim>.  For
          * example, your code might look like:
          *
@@ -511,13 +517,13 @@ class FaceBase :
          * }
          * \endcode
          *
-         * @return access to the list of all appearances of this face
+         * \return access to the list of all appearances of this face
          * within a top-dimensional simplex of the underlying triangulation.
          */
         auto embeddings() const;
 
         /**
-         * A begin function for iterating through all appearances of
+         * A C++ begin function for iterating through all appearances of
          * this face within the various top-dimensional simplices of the
          * underlying triangulation.
          *
@@ -558,14 +564,15 @@ class FaceBase :
          * }
          * \endcode
          *
-         * \ifacespython Not present; Python users can iterate over
-         * embeddings() instead.
+         * \nopython For Python users, Face implements the Python iterable
+         * interface.  You can iterate over this face in the same way that
+         * you would iterate over any native Python container.
          *
-         * @return a iterator that points to the first appearance.
+         * \return a iterator that points to the first appearance.
          */
         auto begin() const;
         /**
-         * An end function for iterating through all appearances of
+         * A C++ end function for iterating through all appearances of
          * this face within the various top-dimensional simplices of the
          * underlying triangulation.
          *
@@ -577,20 +584,63 @@ class FaceBase :
          * The precise C++ type of the iterator is subject to change, so
          * C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython Not present; Python users can iterate over
-         * embeddings() instead.
+         * \nopython For Python users, Face implements the Python iterable
+         * interface.  You can iterate over this face in the same way that
+         * you would iterate over any native Python container.
          *
-         * @return a "beyond the end" iterator that comes immediately
+         * \return a "beyond the end" iterator that comes immediately
          * after the last appearance.
          */
         auto end() const;
+#ifdef __APIDOCS
+        /**
+         * Provides Python support for iterating through all appearances of
+         * this face within the various top-dimensional simplices of the
+         * underlying triangulation.
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where these appearances
+         * are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         *
+         * Iterating over this face will run through degree() appearances in
+         * total.  This is also equivalent to iterating over embeddings():
+         * iterating directly over a face generates a tiny bit less overhead,
+         * but you may also find it to be less readable.  In particular, the
+         * following three blocks of code are all equivalent:
+         *
+         * \code{.py}
+         * for emb in face:
+         *     ...
+         * \endcode
+         *
+         * \code{.py}
+         * for emb in face.embeddings():
+         *     ...
+         * \endcode
+         *
+         * \code{.py}
+         * for i in range(face.degree()):
+         *     emb = face.embedding(i)
+         *     ...
+         * \endcode
+         *
+         * \nocpp For C++ users, Face provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the
+         * appearances of this face in the usual way using a range-based
+         * \a for loop.
+         *
+         * \return an iterator over all the appearances of this face.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Returns the first appearance of this face within a top-dimensional
          * simplex of the underlying triangluation.
          *
-         * This is equivalent to calling <tt>*begin()</tt>, or
-         * <tt>embedding(0)</tt>.
+         * This is equivalent to calling `*begin()`, or
+         * `embedding(0)`.
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where the appearances of
@@ -600,14 +650,14 @@ class FaceBase :
          * front() and back() will refer to the two appearances of this
          * face on the (<i>dim</i>-1)-dimensional boundary.
          *
-         * @return details of the first appearance.
+         * \return details of the first appearance.
          */
         const FaceEmbedding<dim, subdim>& front() const;
         /**
          * Returns the last appearance of this face within a top-dimensional
          * simplex of the underlying triangluation.
          *
-         * This is equivalent to calling <tt>embedding(degree()-1)</tt>.
+         * This is equivalent to calling `embedding(degree()-1)`.
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where the appearances of
@@ -617,7 +667,7 @@ class FaceBase :
          * front() and back() will refer to the two appearances of this
          * face on the (<i>dim</i>-1)-dimensional boundary.
          *
-         * @return details of the last appearance.
+         * \return details of the last appearance.
          */
         const FaceEmbedding<dim, subdim>& back() const;
 
@@ -650,7 +700,7 @@ class FaceBase :
          *
          * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
          *
-         * @return \c true if and only if this (<i>dim</i>-1)-face represents
+         * \return \c true if and only if this (<i>dim</i>-1)-face represents
          * a dual edge in the maximal forest.
          */
         bool inMaximalForest() const;
@@ -665,7 +715,7 @@ class FaceBase :
          * non-identity permutation (which makes the face invalid), then
          * the return value of this routine is undefined.
          *
-         * @return \c true if and only if the link is orientable.
+         * \return \c true if and only if the link is orientable.
          */
         bool isLinkOrientable() const;
 
@@ -675,22 +725,22 @@ class FaceBase :
          * There are several conditions that might make a <i>subdim</i>-face
          * of a <i>dim</i>-dimensional triangulation invalid:
          *
-         * 1. if the face is identified with itself under a non-identity
+         * -# if the face is identified with itself under a non-identity
          *    permutation (e.g., an edge is identified with itself in
          *    reverse, or a triangle is identified with itself under a
          *    rotation);
-         * 2. if the face does not have an appropriate link.  Here the
+         * -# if the face does not have an appropriate link.  Here the
          *    meaning of "appropriate" depends upon the type of face:
          *    - for a face that belongs to some boundary facet(s) of the
          *      triangulation, its link must be a topological ball;
          *    - for a vertex that does not belong to any boundary facets,
          *      its link must be a closed (\a dim - 1)-manifold;
-         *    - for a (\a subdim &ge; 1)-face that does not belong to any
+         *    - for a (\a subdim ≥ 1)-face that does not belong to any
          *      boundary facets, its link must be a topological sphere.
          *
          * Condition (1) is tested for all dimensions \a subdim and \a dim.
          * Condition (2) is more difficult, since it relies on undecidable
-         * problems.  As a result, (2) is \e only tested when \a dim is one
+         * problems.  As a result, (2) is _only_ tested when \a dim is one
          * of Regina's \ref stddim "standard dimensions".
          *
          * If this face is invalid, then it is possible to find out why.
@@ -699,7 +749,7 @@ class FaceBase :
          * functions hasBadIdentification() and/or hasBadLink() to determine
          * whether the failure is due to conditions (1) or (2) respectively.
          *
-         * @return for standard dimensions \a dim, returns \c true if and only
+         * \return for standard dimensions \a dim, returns \c true if and only
          * if this face is valid according to both conditions (1) and (2) above;
          * for non-standard dimensions \a dim, returns \c true if and only if
          * this face is valid according to condition (1).
@@ -717,7 +767,7 @@ class FaceBase :
          * types of invalid faces also.  See isValid() for a full
          * discussion of what it means for a face to be valid.
          *
-         * @return \c true if and only if this face is identified with
+         * \return \c true if and only if this face is identified with
          * itself under a non-identity permutation.
          */
         bool hasBadIdentification() const;
@@ -738,7 +788,7 @@ class FaceBase :
          * This is because testing for bad links in higher dimensions can
          * require solutions to problems that are proven to be undecidable.
          *
-         * @return \c true if the link of this face is not appropriate (thereby
+         * \return \c true if the link of this face is not appropriate (thereby
          * making the face invalid), or \c false if the link is appropriate.
          */
         bool hasBadLink() const;
@@ -759,15 +809,23 @@ class FaceBase :
          * See FaceNumbering<subdim, lowerdim> for the conventions of how
          * <i>lowerdim</i>-faces are numbered within a <i>subdim</i>-simplex.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \pre The dimension of this face (\a subdim) is strictly positive
+         * (i.e., this face is not a vertex).  Note that, without this
+         * constraint, there are no possible values for the template
+         * parameter \a lowerdim.
+         *
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(lowerdim, face)</tt>; that is, the template parameter
+         * `face(lowerdim, face)`; that is, the template parameter
          * \a lowerdim becomes the first argument of the function.
          *
-         * @param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
+         * \tparam lowerdim the dimension of subface to examine.
+         * This must be between 0 and (\a subdim - 1) inclusive.
+         *
+         * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
          * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
-         * @return the corresponding <i>lowerdim</i>-face of the triangulation.
+         * \return the corresponding <i>lowerdim</i>-face of the triangulation.
          */
         template <int lowerdim>
         Face<dim, lowerdim>* face(int face) const;
@@ -793,7 +851,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for face<2>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 3.
+         * This alias is available for facial dimensions \a subdim ≥ 3.
          *
          * See face() for further information.
          */
@@ -802,7 +860,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for face<3>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 4.
+         * This alias is available for facial dimensions \a subdim ≥ 4.
          *
          * See face() for further information.
          */
@@ -811,7 +869,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for face<4>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 5.
+         * This alias is available for facial dimensions \a subdim ≥ 5.
          *
          * See face() for further information.
          */
@@ -859,15 +917,23 @@ class FaceBase :
          * See FaceNumbering<subdim, lowerdim> for the conventions of how
          * <i>lowerdim</i>-faces are numbered within a <i>subdim</i>-simplex.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \pre The dimension of this face (\a subdim) is strictly positive
+         * (i.e., this face is not a vertex).  Note that, without this
+         * constraint, there are no possible values for the template
+         * parameter \a lowerdim.
+         *
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faceMapping(lowerdim, face)</tt>; that is, the template
+         * `faceMapping(lowerdim, face)`; that is, the template
          * parameter \a lowerdim becomes the first argument of the function.
          *
-         * @param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
+         * \tparam lowerdim the dimension of subface to examine.
+         * This must be between 0 and (\a subdim - 1) inclusive.
+         *
+         * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
          * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
-         * @return a mapping from the vertices of the underlying
+         * \return a mapping from the vertices of the underlying
          * <i>lowerdim</i>-face of the triangulation to the vertices of
          * this <i>subdim</i>-face.
          */
@@ -895,7 +961,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for faceMapping<2>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 3.
+         * This alias is available for facial dimensions \a subdim ≥ 3.
          *
          * See faceMapping() for further information.
          */
@@ -904,7 +970,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for faceMapping<3>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 4.
+         * This alias is available for facial dimensions \a subdim ≥ 4.
          *
          * See faceMapping() for further information.
          */
@@ -913,11 +979,72 @@ class FaceBase :
         /**
          * A dimension-specific alias for faceMapping<4>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 5.
+         * This alias is available for facial dimensions \a subdim ≥ 5.
          *
          * See faceMapping() for further information.
          */
         Perm<dim + 1> pentachoronMapping(int face) const;
+
+        /**
+         * Locks this codimension-1-face.
+         *
+         * Essentially, locking a face of dimension (<i>dim</i>-1) means
+         * that the face must not change.  See Simplex<dim>::lockFacet()
+         * for full details on how locks work and what their implications are.
+         *
+         * These locks are actually stored within the top-dimensional simplices
+         * on either side of this facet.  This means that, even if the
+         * underlying triangulation changes (which means all
+         * (<i>dim</i>-1)-faces will be destroyed and re-created as part of the
+         * skeleton recomputation), this lock will nevertheless be preserved.
+         *
+         * This is equivalent to calling Simplex<dim>::lockFacet() from
+         * one of the simplices on either side of this (<i>dim</i>-1)-face.
+         *
+         * It is safe to call this function even if this face is already locked.
+         *
+         * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
+         */
+        void lock();
+        /**
+         * Unlocks this codimension-1-face.
+         *
+         * Essentially, locking a face of dimension (<i>dim</i>-1) means
+         * that the face must not change.  See Simplex<dim>::lockFacet()
+         * for full details on how locks work and what their implications are.
+         *
+         * This is equivalent to calling Simplex<dim>::unlockFacet() from
+         * one of the simplices on either side of this (<i>dim</i>-1)-face.
+         *
+         * It is safe to call this function even if this face is already
+         * unlocked.
+         *
+         * See Triangulation<dim>::unlockAll() for a convenient way to unlock
+         * all top-dimensional simplices and (<i>dim</i>-1)-faces across an
+         * entire triangulation.
+         *
+         * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
+         */
+        void unlock();
+        /**
+         * Determines whether this codimension-1-face is locked.
+         *
+         * Essentially, locking a face of dimension (<i>dim</i>-1) means
+         * that the face must not change.  See Simplex<dim>::lockFacet()
+         * for full details on how locks work and what their implications are.
+         *
+         * This is equivalent to calling Simplex<dim>::isFacetLocked() from
+         * one of the simplices on either side of this (<i>dim</i>-1)-face.
+         *
+         * See Triangulation<dim>::hasLocks() for a convenient way to test
+         * whether any top-dimensional simplex and/or (<i>dim</i>-1)-face
+         * is locked across an entire triangulation.
+         *
+         * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
+         *
+         * \return \c true if and only if this (<i>dim</i>-1)-face is locked.
+         */
+        bool isLocked() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -927,9 +1054,9 @@ class FaceBase :
          * since the output routines cast down to Face<dim, subdim>
          * before calling it.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -942,7 +1069,7 @@ class FaceBase :
          * Creates a new face.  The face will be initialised as belong
          * to no boundary component.
          *
-         * @param component the component of the underlying triangulation
+         * \param component the component of the underlying triangulation
          * to which the new face belongs.
          */
         FaceBase(Component<dim>* component);
@@ -1115,6 +1242,10 @@ inline bool FaceBase<dim, subdim>::hasBadLink() const {
 template <int dim, int subdim>
 template <int lowerdim>
 inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
+    static_assert(0 <= lowerdim && lowerdim < subdim,
+        "Face<dim, subdim>::face<lowerdim>() requires "
+        "0 <= lowerdim < subdim.");
+
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
     // Let face f of this subdim-face correspond to face inSimp of S.
@@ -1162,6 +1293,10 @@ inline Face<dim, 4>* FaceBase<dim, subdim>::pentachoron(int i) const {
 template <int dim, int subdim>
 template <int lowerdim>
 Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
+    static_assert(0 <= lowerdim && lowerdim < subdim,
+        "Face<dim, subdim>::faceMapping<lowerdim>() requires "
+        "0 <= lowerdim < subdim.");
+
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
     // Let face f of this subdim-face correspond to face inSimp of S.
@@ -1222,6 +1357,33 @@ inline Perm<dim + 1> FaceBase<dim, subdim>::pentachoronMapping(int face) const {
     static_assert(subdim >= 5, "pentachoronMapping() is only available "
         "for faces of dimension >= 5.");
     return faceMapping<4>(face);
+}
+
+template <int dim, int subdim>
+inline void FaceBase<dim, subdim>::lock() {
+    static_assert(subdim == dim - 1,
+        "lock() is only available for faces of codimension 1.");
+
+    auto emb = front();
+    emb.simplex()->lockFacet(emb.vertices()[dim]);
+}
+
+template <int dim, int subdim>
+inline void FaceBase<dim, subdim>::unlock() {
+    static_assert(subdim == dim - 1,
+        "unlock() is only available for faces of codimension 1.");
+
+    auto emb = front();
+    emb.simplex()->unlockFacet(emb.vertices()[dim]);
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::isLocked() const {
+    static_assert(subdim == dim - 1,
+        "isLocked() is only available for faces of codimension 1.");
+
+    auto emb = front();
+    return emb.simplex()->isFacetLocked(emb.vertices()[dim]);
 }
 
 template <int dim, int subdim>

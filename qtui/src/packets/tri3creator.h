@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,6 +62,7 @@ class Tri3Creator : public PacketCreator {
         QLineEdit* lstParams;
         QLineEdit* lensParams;
         QLineEdit* sfsParams;
+        QLineEdit* handlebodyGenus;
         QLineEdit* isoSig;
         QLineEdit* dehydrationString;
         QLineEdit* splittingSignature;

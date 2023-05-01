@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,11 +32,19 @@
 
 #include "../pybind11/pybind11.h"
 #include "utilities/xmlutils.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/utilities/xmlutils.h"
 
 using pybind11::overload_cast;
 
 void addXMLUtils(pybind11::module_& m) {
-    m.def("xmlEncodeComment", &regina::xml::xmlEncodeComment);
-    m.def("xmlEncodeSpecialChars", &regina::xml::xmlEncodeSpecialChars);
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("xmlEncodeComment", &regina::xml::xmlEncodeComment,
+        rdoc::xml::xmlEncodeComment);
+    m.def("xmlEncodeSpecialChars", &regina::xml::xmlEncodeSpecialChars,
+        rdoc::xml::xmlEncodeSpecialChars);
+
+    RDOC_SCOPE_END
 }
 

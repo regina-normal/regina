@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2021, Ben Burton                                   *
+ *  Copyright (c) 2011-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,7 @@
 #include "core/output.h"
 #include <cstring>
 #include <stack>
+#include <vector>
 
 namespace regina {
 
@@ -61,7 +62,7 @@ namespace regina {
  * values, not ASCII digits).  The length of a type vector must be
  * passed alongside it (i.e., there is no special terminating character).
  *
- * A type vector \a v is said to \e dominate \a u if, for each position
+ * A type vector \a v is said to _dominate_ \a u if, for each position
  * \a i, either v[i] == u[i] or else u[i] == 0.  So, for instance,
  * (1,0,2,3) dominates (1,0,2,0), which in turn dominates (1,0,0,0).
  * Domination is a partial order, not a total order: for instance,
@@ -83,7 +84,7 @@ namespace regina {
  * \a nTypes for normal surface enumeration is either 4 or 7 (depending upon
  * whether we are supporting almost normal surfaces).
  *
- * \ifacespython This is available only for the template parameters
+ * \python This is available only for the template parameters
  * \a nTypes = 4 and 7, under the names TypeTrie4 and TypeTrie7 respectively.
  *
  * \ingroup enumerate
@@ -110,7 +111,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
                      only if \a elementHere_ is \c true at the root node.)
                      If this is \c false at a non-root node, then the fact
                      that the node was ever constructed means that the path
-                     from the root to this node describes some \e prefix of
+                     from the root to this node describes some _prefix_ of
                      a longer type vector in the set that has additional
                      subsequent non-zero elements. */
 
@@ -141,7 +142,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Creates a new copy of the given trie.
          * This will induce a deep copy of \a src.
          *
-         * @param src the trie to copy.
+         * \param src the trie to copy.
          */
         TypeTrie(const TypeTrie& src);
 
@@ -152,7 +153,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          *
          * The trie that was passed (\a src) will no longer be usable.
          *
-         * @param src the trie whose contents should be moved.
+         * \param src the trie whose contents should be moved.
          */
         TypeTrie(TypeTrie&& src) noexcept;
 
@@ -160,8 +161,8 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Sets this to be a copy of the given trie.
          * This will induce a deep copy of \a src.
          *
-         * @param src the trie to copy.
-         * @return a reference to this trie.
+         * \param src the trie to copy.
+         * \return a reference to this trie.
          */
         TypeTrie& operator = (const TypeTrie& src);
 
@@ -172,15 +173,15 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          *
          * The trie that was passed (\a src) will no longer be usable.
          *
-         * @param src the trie whose contents should be moved.
-         * @return a reference to this trie.
+         * \param src the trie whose contents should be moved.
+         * \return a reference to this trie.
          */
         TypeTrie& operator = (TypeTrie&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given trie.
          *
-         * @param other the trie whose contents should be swapped with this.
+         * \param other the trie whose contents should be swapped with this.
          */
         void swap(TypeTrie& other) noexcept;
 
@@ -188,8 +189,8 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Determines whether this and the given trie store exactly the
          * same type vectors.
          *
-         * @param other the trie to compare with this.
-         * @return \c true if and only if both tries store the same type
+         * \param other the trie to compare with this.
+         * \return \c true if and only if both tries store the same type
          * vectors.
          */
         bool operator == (const TypeTrie& other) const;
@@ -198,8 +199,8 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Determines whether this and the given trie do not store exactly the
          * same type vectors.
          *
-         * @param other the trie to compare with this.
-         * @return \c true if and only if both tries do not store the same type
+         * \param other the trie to compare with this.
+         * \return \c true if and only if both tries do not store the same type
          * vectors.
          */
         bool operator != (const TypeTrie& other) const;
@@ -216,13 +217,13 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * the life of this trie; that is, it is the same every time
          * insert() or dominates() is called.
          *
-         * \ifacespython Instead of the arguments \a entry and \a len,
+         * \python Instead of the arguments \a entry and \a len,
          * you should pass a single argument which is a python sequence
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.
          *
-         * @param entry the type vector to insert.
-         * @param len the number of elements in the given type vector.
+         * \param entry the type vector to insert.
+         * \param len the number of elements in the given type vector.
          */
         void insert(const char* entry, size_t len);
 
@@ -234,14 +235,14 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * the life of this trie; that is, it is the same every time
          * insert() or dominates() is called.
          *
-         * \ifacespython Instead of the arguments \a entry and \a len,
+         * \python Instead of the arguments \a vec and \a len,
          * you should pass a single argument which is a python sequence
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.
          *
-         * @param vec the type vector to test.
-         * @param len the number of elements in the given type vector.
-         * @return \c true if and only if \a vec dominates some type
+         * \param vec the type vector to test.
+         * \param len the number of elements in the given type vector.
+         * \return \c true if and only if \a vec dominates some type
          * vector stored in this trie.
          */
         bool dominates(const char* vec, size_t len) const;
@@ -250,18 +251,18 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -269,8 +270,8 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
 /**
  * Swaps the contents of the two given tries.
  *
- * @param a the first trie whose contents should be swapped.
- * @param b the second trie whose contents should be swapped.
+ * \param a the first trie whose contents should be swapped.
+ * \param b the second trie whose contents should be swapped.
  *
  * \ingroup enumerate
  */
@@ -533,7 +534,7 @@ void TypeTrie<nTypes>::writeTextLong(std::ostream& out) const {
 }
 
 template <int nTypes>
-void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept {
+inline void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept {
     a.swap(b);
 }
 

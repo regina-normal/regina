@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,43 +34,48 @@
 #include "../pybind11/operators.h"
 #include "utilities/boolset.h"
 #include "../helpers.h"
+#include "../docstrings/utilities/boolset.h"
 
 using regina::BoolSet;
 
 void addBoolSet(pybind11::module_& m) {
-    auto c = pybind11::class_<BoolSet>(m, "BoolSet")
-        .def(pybind11::init<>())
-        .def(pybind11::init<bool>())
-        .def(pybind11::init<const BoolSet&>())
-        .def(pybind11::init<bool, bool>())
-        .def("hasTrue", &BoolSet::hasTrue)
-        .def("hasFalse", &BoolSet::hasFalse)
-        .def("contains", &BoolSet::contains)
-        .def("insertTrue", &BoolSet::insertTrue)
-        .def("insertFalse", &BoolSet::insertFalse)
-        .def("removeTrue", &BoolSet::removeTrue)
-        .def("removeFalse", &BoolSet::removeFalse)
-        .def("empty", &BoolSet::empty)
-        .def("fill", &BoolSet::fill)
-        .def(pybind11::self < pybind11::self)
-        .def(pybind11::self > pybind11::self)
-        .def(pybind11::self <= pybind11::self)
-        .def(pybind11::self >= pybind11::self)
-        .def(pybind11::self |= pybind11::self)
-        .def(pybind11::self &= pybind11::self)
-        .def(pybind11::self ^= pybind11::self)
-        .def(pybind11::self | pybind11::self)
-        .def(pybind11::self & pybind11::self)
-        .def(pybind11::self ^ pybind11::self)
-        .def(~ pybind11::self)
-        .def("byteCode", &BoolSet::byteCode)
-        .def("setByteCode", &BoolSet::setByteCode)
-        .def_static("fromByteCode", &BoolSet::fromByteCode)
-        .def("stringCode", &BoolSet::stringCode)
-        .def("setStringCode", &BoolSet::setStringCode)
+    RDOC_SCOPE_BEGIN(BoolSet)
+
+    auto c = pybind11::class_<BoolSet>(m, "BoolSet", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<bool>(), rdoc::__init)
+        .def(pybind11::init<const BoolSet&>(), rdoc::__copy)
+        .def(pybind11::init<bool, bool>(), rdoc::__init_2)
+        .def("hasTrue", &BoolSet::hasTrue, rdoc::hasTrue)
+        .def("hasFalse", &BoolSet::hasFalse, rdoc::hasFalse)
+        .def("contains", &BoolSet::contains, rdoc::contains)
+        .def("insertTrue", &BoolSet::insertTrue, rdoc::insertTrue)
+        .def("insertFalse", &BoolSet::insertFalse, rdoc::insertFalse)
+        .def("removeTrue", &BoolSet::removeTrue, rdoc::removeTrue)
+        .def("removeFalse", &BoolSet::removeFalse, rdoc::removeFalse)
+        .def("empty", &BoolSet::empty, rdoc::empty)
+        .def("fill", &BoolSet::fill, rdoc::fill)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def(pybind11::self > pybind11::self, rdoc::__gt)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
+        .def(pybind11::self >= pybind11::self, rdoc::__ge)
+        .def(pybind11::self |= pybind11::self, rdoc::__ior)
+        .def(pybind11::self &= pybind11::self, rdoc::__iand)
+        .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
+        .def(pybind11::self | pybind11::self, rdoc::__bor)
+        .def(pybind11::self & pybind11::self, rdoc::__band)
+        .def(pybind11::self ^ pybind11::self, rdoc::__bxor)
+        .def(~ pybind11::self, rdoc::__bnot)
+        .def("byteCode", &BoolSet::byteCode, rdoc::byteCode)
+        .def("setByteCode", &BoolSet::setByteCode, rdoc::setByteCode)
+        .def_static("fromByteCode", &BoolSet::fromByteCode, rdoc::fromByteCode)
+        .def("stringCode", &BoolSet::stringCode, rdoc::stringCode)
+        .def("setStringCode", &BoolSet::setStringCode, rdoc::setStringCode)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 
     pybind11::implicitly_convertible<bool, BoolSet>();
 }

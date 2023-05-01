@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,22 +32,40 @@
 
 #include "pythonoutputstream.h"
 #include "../pybind11/pybind11.h"
+#include "../helpers/gil.h"
 
 namespace regina::python {
 
 void PythonOutputStream::write(const std::string& data) {
     buffer.append(data);
 
-    std::string::size_type pos;
-    while ((pos = buffer.find('\n')) < buffer.length()) {
-        processOutput(buffer.substr(0, pos + 1));
-        buffer.erase(0, pos + 1);
+    auto pos = buffer.find('\n');
+    if (pos < buffer.length()) {
+        if (PyGILState_Check()) {
+            GILScopedRelease release;
+            do {
+                processOutput(buffer.substr(0, pos + 1));
+                buffer.erase(0, pos + 1);
+                pos = buffer.find('\n');
+            } while (pos < buffer.length());
+        } else {
+            do {
+                processOutput(buffer.substr(0, pos + 1));
+                buffer.erase(0, pos + 1);
+                pos = buffer.find('\n');
+            } while (pos < buffer.length());
+        }
     }
 }
 
 void PythonOutputStream::flush() {
     if (! buffer.empty()) {
-        processOutput(buffer);
+        if (PyGILState_Check()) {
+            GILScopedRelease release;
+            processOutput(buffer);
+        } else {
+            processOutput(buffer);
+        }
         buffer.clear();
     }
 }

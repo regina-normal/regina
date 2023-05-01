@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "30 May 2022" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "24 April 2023" "" "The Regina Handbook"
 
 .SH NAME
 tricensus \- Form a census of triangulations
@@ -12,7 +12,7 @@ tricensus \- Form a census of triangulations
 \fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR | \fB-4, --dim4\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB--allowinvalid\fR ] [ \fB-s, --sigs\fR | \fB-S, --canonical\fR | \fB-e, --encodings\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] [ \fB--threads=\fInum_threads\fB\fR ] \fB\fIoutput-file\fB\fR
 
 
-\fBtricensus\fR \fB--help\fR
+\fBtricensus\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -304,6 +304,14 @@ large census enumerations than saving a full Regina data file:
 the output file will be considerably smaller, and the memory footprint
 of \fBtricensus\fR will also be much smaller.
 See the \fB--sigs\fR option for further details.
+
+You can also use \fB--encodings\fR with
+\fB--genpairs\fR, in which case the facet pairings
+will be written using tight encodings instead of human-readable
+text representations.  Tight encodings of facet pairings cannot
+be used as input with \fB--usepairs\fR, and again you
+will need to use C++ or Python to reconstruct facet pairings
+from them.
 .TP
 \fB-c, --subcontainers\fR
 For each facet pairing, a new container will be created, and
@@ -339,12 +347,22 @@ a complete list of possible facet pairings, so that you can feed subsets
 of this list to different machines to work on simultaneously.
 
 The list of all facet pairings will be written to the given output
-file in text format (though you may omit the output file from the
-command line, in which case the facet pairings will be written to
+file in a plain text format (though you may omit the output file from
+the command line, in which case the facet pairings will be written to
 standard output).
-If you are coordinating your sub-censuses manually, you can use
-the option \fB--usepairs\fR to generate triangulations
-from a subset of these facet pairings.
+By default, the output format will be a space-separated
+numerical format, suitable for use with
+\fB--usepairs\fR (see below).  However, if you pass
+\fB--encodings\fR then the output format will use
+tight encodings (which are shorter, contain no spaces, and are
+much harder for humans to read).  See \fB--encodings\fR
+for further details on tight encodings.
+
+If you are coordinating your sub-censuses manually, you can
+use the option \fB--usepairs\fR to generate triangulations
+from a subset of these facet pairings.  In this case, the facet
+pairings will need to be presented using the default
+space-separated numerical format (not tight encodings).
 
 Options for orientability, finiteness or minimality cannot be
 used with \fB--genpairs\fR; instead you should use them
@@ -364,8 +382,8 @@ isomorphism class.  All facet pairings generated using
 \fB--genpairs\fR are guaranteed to satisfy this condition.
 
 Facet pairings should be supplied on standard input, one per line.
-They should be listed in the format produced by the option
-\fB--genpairs\fR\&.
+They should be presented using the space-separated numerical format
+produced by the option \fB--genpairs\fR\&.
 
 This option effectively lets you run a subset of a larger census.
 See \fB--genpairs\fR for further details on how to split
@@ -408,6 +426,13 @@ Once all of the pairings have been output, you may still face a
 long wait while the threads together work their way through the
 queue of subsearches that has accumulated.
 .RE
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "EXAMPLES"
 .PP
 The following command forms a census of all 3-tetrahedron closed
@@ -439,7 +464,7 @@ non-minimal triangulations in the census also.
     Starting census generation...
     0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 3:0 3:1 | 2:2 ...
     0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 3:0 | 1:2 2:2 2:1 3:1 | 1:3 ...
-    ...
+    \&...
     1:0 1:1 2:0 3:0 | 0:0 0:1 2:1 3:1 | 0:2 1:2 3:2 3:3 | 0:3 ...
     Finished.
     Total triangulations: 17
@@ -473,9 +498,9 @@ written to \fIresults.rga\fR\&.
     Trying face pairings...
     0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 3:0 3:1 | 2:2 ...
     0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 3:0 3:1 | 2:2 ...
-    ...
-    ... (running through all 118 face pairings)
-    ...
+    \&...
+    \&... (running through all 118 face pairings)
+    \&...
     1:0 2:0 3:0 4:0 | 0:0 2:1 3:1 4:1 | 0:1 1:1 3:2 4:2 | 0:2 ...
     Total triangulations: 5817
     example$
@@ -493,7 +518,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\tricensus.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.4\\bin\\tricensus.exe\&.
 .SH "SEE ALSO"
 .PP
 censuslookup,

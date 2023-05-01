@@ -74,6 +74,7 @@
  &data-H1Rel;
  &data-H2;
  &data-haken;
+ &data-handlebody;
  &data-hypersurface;
  &data-hypersurfaces;
  &data-irreducible;
@@ -85,7 +86,6 @@
  &data-script;
  &data-simplex;
  &data-snappeadata;
- &data-solidtorus;
  &data-spanstrict;
  &data-spantaut;
  &data-splitsfce;
@@ -94,7 +94,6 @@
  &data-surfaces;
  &data-tag;
  &data-textdata;
- &data-threeball;
  &data-threesphere;
  &data-tri;
  &data-twosided;
@@ -159,9 +158,11 @@
  &data-reginadata;
  &data-simplices;
  &data-snappea;
+ &data-solidtorus;
  &data-tet;
  &data-tetrahedra;
  &data-text;
+ &data-threeball;
  &data-triangle;
  &data-triangles;
  &data-turaevviro;

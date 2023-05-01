@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,26 +63,26 @@ namespace regina {
  * enough information to fully reconstruct a triangulation, since
  * the permutations used for each individual gluing are not stored.
  *
- * Facet pairings are \e labelled, in that the simplices are explicitly
+ * Facet pairings are _labelled_, in that the simplices are explicitly
  * numbered 0,1,..., and the facets of each simplex are explicitly numbered
  * 0,...,\a dim (just like in a triangulation).  Facet pairings do also come
  * with code to help identify and work with relabellings, via isomorphisms,
  * automorphisms, and canonical representations.  In this context:
  *
- * - An \e isomorphism of a facet pairing means a relabelling of the simplices
+ * - An _isomorphism_ of a facet pairing means a relabelling of the simplices
  *   and a relabelling of the (\a dim + 1) facets within each simplex;
  *   this can be represented by the same class Isomorphism<dim> that is used
  *   for isomorphisms of triangulations.
  *
- * - An \e automorphism of a facet pairing is an isomorphism that, when
+ * - An _automorphism_ of a facet pairing is an isomorphism that, when
  *   applied, results in an identical facet pairing (i.e., where exactly the
  *   same pairs of labelled simplex facets are matched together).
  *
- * - A facet pairing is in <i>canonical form</i> if it is a
+ * - A facet pairing is in _canonical form_ if it is a
  *   lexicographically minimal representative of its isomorphism class.
  *   Here we order facet pairings by lexicographical comparison of the
- *   sequence <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
- *   <tt>dest(size()-1,\a dim)</tt> (which in turn uses the ordering
+ *   sequence `dest(0,0)`, `dest(0,1)`, ...,
+ *   `dest(size()-1, dim)` (which in turn uses the ordering
  *   defined by FacetSpec<dim>, where each simplex facet is ordered
  *   first by simplex number and then by facet number, and where the
  *   boundary is ordered last).
@@ -95,7 +95,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., FacetPairing2 and FacetPairing3 for dimensions 2 and 3).
  *
@@ -116,7 +116,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
         /**
          * Creates a new copy of the given facet pairing.
          *
-         * @param src the facet pairing to clone.
+         * \param src the facet pairing to clone.
          */
         FacetPairing(const FacetPairing& src) = default;
 
@@ -126,7 +126,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the facet pairing to move.
+         * \param src the facet pairing to move.
          */
         FacetPairing(FacetPairing&& src) noexcept = default;
 
@@ -136,12 +136,12 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * simplices in the given triangulation are joined together, as
          * described in the class notes.
          *
-         * Calling <tt>FacetPairing<dim>(tri)</tt> is equivalent to calling
-         * <tt>tri.pairing()</tt>.
+         * Calling `FacetPairing<dim>(tri)` is equivalent to calling
+         * `tri.pairing()`.
          *
          * \pre The given triangulation is not empty.
          *
-         * @param tri the triangulation whose facet pairing should
+         * \param tri the triangulation whose facet pairing should
          * be constructed.
          */
         FacetPairing(const Triangulation<dim>& tri);
@@ -152,19 +152,19 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
-         * it will read the \e entire line from the input stream and expect
+         * it will read the _entire_ line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present; instead you can use fromTextRep(), which
-         * reads this same text format in string form.  The main differences
-         * between this constructor and fromTextRep() are: (i) fromTextRep()
-         * does not skip over initial whitespace; and (ii) fromTextRep()
-         * throws InvalidArgument exceptions on error (not InvalidInput).
+         * \nopython Instead use fromTextRep(), which reads this same text
+         * format in string form.  The main differences between this
+         * constructor and fromTextRep() are: (i) fromTextRep() does not
+         * skip over initial whitespace; and (ii) fromTextRep() throws
+         * InvalidArgument exceptions on error (not InvalidInput).
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         FacetPairing(std::istream& in);
 
@@ -177,8 +177,8 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the facet pairing to copy.
-         * @return a reference to this facet pairing.
+         * \param src the facet pairing to copy.
+         * \return a reference to this facet pairing.
          */
         FacetPairing& operator = (const FacetPairing& src) = default;
 
@@ -192,8 +192,8 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the facet pairing to move.
-         * @return a reference to this facet pairing.
+         * \param src the facet pairing to move.
+         * \return a reference to this facet pairing.
          */
         FacetPairing& operator = (FacetPairing&& src) noexcept = default;
 
@@ -204,7 +204,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * \pre \a size is at least 1.
          *
-         * @param size the number of top-dimensional simplicies under
+         * \param size the number of top-dimensional simplicies under
          * consideration in this new facet pairing.
          */
         FacetPairing(size_t size);
@@ -217,20 +217,6 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
     friend class Isomorphism<dim>;
     friend class Cut;
 };
-
-/**
- * Swaps the contents of the given facet pairings.
- *
- * This global routine simply calls FacetPairing<dim>::swap(); it is provided
- * so that FacetPairing<dim> meets the C++ Swappable requirements.
- *
- * @param a the first facet pairing whose contents should be swapped.
- * @param b the second facet pairing whose contents should be swapped.
- *
- * \ingroup generic
- */
-template <int dim>
-void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept;
 
 // Inline functions for FacetPairing
 
@@ -247,11 +233,6 @@ inline FacetPairing<dim>::FacetPairing(std::istream& in) :
 template <int dim>
 inline FacetPairing<dim>::FacetPairing(size_t size) :
         detail::FacetPairingBase<dim>(size) {
-}
-
-template <int dim>
-inline void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept {
-    a.swap(b);
 }
 
 } // namespace regina

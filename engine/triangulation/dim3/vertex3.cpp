@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,9 +44,6 @@ const Triangulation<2>& Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // Build the triangulation.
         auto* ans = new Triangulation<2>();
-        // Ensure only one event pair is fired in this sequence of changes.
-        Triangulation<2>::ChangeEventSpan span(*ans);
-
         ans->newTriangles(degree());
 
         size_t i = 0;
@@ -107,16 +104,6 @@ Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
     }
 
     return inclusion;
-}
-
-NormalSurface Face<3, 0>::linkingSurface() const {
-    const Triangulation<3>& tri = triangulation();
-    Vector<LargeInteger> coords(7 * tri.size());
-
-    for (auto& emb : *this)
-        coords[7 * emb.simplex()->index() + emb.vertex()] = 1;
-
-    return NormalSurface(tri, NS_STANDARD, std::move(coords));
 }
 
 } // namespace regina

@@ -19,6 +19,9 @@ Equality type : EqualityType.BY_VALUE
 BanBoundary : class
 Equality type : EqualityType.BY_VALUE
 
+BanEdge : class
+Equality type : EqualityType.BY_VALUE
+
 BanNone : class
 Equality type : EqualityType.BY_VALUE
 
@@ -125,120 +128,6 @@ Component7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 Component8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm10_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm10_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm11_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm11_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm12_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm12_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm13_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm13_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm14_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm14_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm15_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm15_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm16_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm16_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm2_S2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm3_S2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm3_S3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm3_orderedS3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm4_S2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm4_S3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm4_S4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm4_orderedS3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm4_orderedS4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm5_S2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm5_S3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm5_S4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm5_S5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm5_orderedS3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm5_orderedS4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm5_orderedS5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm6_S6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm6_orderedS6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm7_S7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm7_orderedS7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm8_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm8_orderedSn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm9_Sn : class
-Equality type : EqualityType.BY_REFERENCE
-
-ConstArray_Perm9_orderedSn : class
 Equality type : EqualityType.BY_REFERENCE
 
 Container : class
@@ -610,42 +499,6 @@ Exception type
 FileInfo : class
 Equality type : EqualityType.BY_VALUE
 
-GlobalArray2D_Perm4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray2D_Perm5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray2D_int : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray3D_Perm5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray3D_int : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_char_string : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_int : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_unsigned : class
-Equality type : EqualityType.BY_REFERENCE
-
 GlobalDirs : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -746,46 +599,46 @@ InvalidInput : class
 Exception type
 
 IsoSigClassic2 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic3 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic4 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic5 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic6 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic7 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees2 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees3 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees4 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees5 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees6 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees7 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigPrintable2 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -809,24 +662,24 @@ IsoSigPrintable8 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 IsoSigRidgeDegrees2 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees3 : alias ->  IsoSigEdgeDegrees3
 
 IsoSigRidgeDegrees4 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees5 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees6 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees7 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 Isomorphism2 : class
 Equality type : EqualityType.BY_VALUE
@@ -930,6 +783,9 @@ Equality type : EqualityType.BY_VALUE
 Locale : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
+LockViolation : class
+Exception type
+
 Manifold : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -937,9 +793,6 @@ MarkedAbelianGroup : class
 Equality type : EqualityType.BY_VALUE
 
 Matrix2 : class
-Equality type : EqualityType.BY_VALUE
-
-Matrix2Row : class
 Equality type : EqualityType.BY_VALUE
 
 MatrixBool : class
@@ -1108,6 +961,141 @@ Perm8 : class
 Equality type : EqualityType.BY_VALUE
 
 Perm9 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass10 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass11 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass12 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass13 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass14 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass15 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass16 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass2 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass3 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass4 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass5 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass6 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass7 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass8 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass9 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup10 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup10_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup11 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup11_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup12 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup12_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup13 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup13_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup14 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup14_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup15 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup15_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup16 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup16_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup2 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup2_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup3 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup3_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup4 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup4_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup5 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup5_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup6 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup6_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup7 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup7_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup8 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup8_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup9 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup9_Cached : class
 Equality type : EqualityType.BY_VALUE
 
 PillowTwoSphere : class
@@ -1342,6 +1330,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeEnumeration_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeEnumeration_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeEnumeration_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1351,6 +1342,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeEnumeration_EulerPositive_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeEnumeration_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeEnumeration_EulerPositive_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1358,6 +1352,9 @@ TreeEnumeration_EulerZero : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeEnumeration_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero_BanEdge : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeEnumeration_EulerZero_BanTorusBoundary : class
@@ -1372,6 +1369,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeSingleSoln_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeSingleSoln_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeSingleSoln_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1381,6 +1381,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeSingleSoln_EulerPositive_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeSingleSoln_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeSingleSoln_EulerPositive_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1388,6 +1391,9 @@ TreeSingleSoln_EulerZero : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeSingleSoln_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero_BanEdge : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeSingleSoln_EulerZero_BanTorusBoundary : class
@@ -1402,6 +1408,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeTraversal_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeTraversal_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeTraversal_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1411,6 +1420,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeTraversal_EulerPositive_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeTraversal_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeTraversal_EulerPositive_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1418,6 +1430,9 @@ TreeTraversal_EulerZero : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeTraversal_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero_BanEdge : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeTraversal_EulerZero_BanTorusBoundary : class

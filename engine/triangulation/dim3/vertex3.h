@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,9 @@ namespace regina {
  * Represents a vertex in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
- * documentation for Face for a general overview of how this class works.
+ * generic documentation for Face for a general overview of how the face
+ * classes work.  In Python, you can read this generic documentation by
+ * looking at faces in a higher dimension: try `help(Vertex5)`.
  *
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
@@ -76,33 +78,40 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * of common types.  Here a vertex link is considered only up to its
          * topology (not the combinatorics of its triangulation).
          *
-         * @see link
+         * \see link
          */
         enum LinkType {
+            /**
+             * Specifies a vertex link that is a sphere.  In other words, the
+             * vertex is internal.
+             */
             SPHERE = 1,
-                /**< Specifies a vertex link that is a sphere.
-                     In other words, the vertex is internal. */
+            /**
+             * Specifies a vertex link that is a disc.  In other words, the
+             * vertex lies on a real boundary component.
+             */
             DISC = 2,
-                /**< Specifies a vertex link that is a disc.
-                     In other words, the vertex lies on a real boundary
-                     component. */
+            /**
+             * Specifies a vertex link that is a torus.  In other words, this
+             * is an ideal vertex representing a torus cusp.
+             */
             TORUS = 3,
-                /**< Specifies a vertex link that is a torus.
-                     In other words, this is an ideal vertex
-                     representing a torus cusp. */
+            /**
+             * Specifies a vertex link that is a Klein bottle.  In other words,
+             * this is an ideal vertex representing a Klein bottle cusp.
+             */
             KLEIN_BOTTLE = 4,
-                /**< Specifies a vertex link that is a Klein bottle.
-                     In other words, this is an ideal vertex
-                     representing a Klein bottle cusp. */
+            /**
+             * Specifies a vertex link that is closed and is not a sphere,
+             * torus or Klein bottle.  In other words, this is an ideal vertex
+             * but not one of the standard ideal vertex types.
+             */
             NON_STANDARD_CUSP = 5,
-                /**< Specifies a vertex link that is closed and is not a
-                     sphere, torus or Klein bottle.
-                     In other words, this is an ideal vertex but not one
-                     of the standard ideal vertex types. */
+            /**
+             * Specifies a vertex link that has boundary and is not a disc.
+             * In other words, this vertex makes the triangulation invalid.
+             */
             INVALID = 6
-                /**< Specifies a vertex link that has boundary and is not a
-                     disc.  In other words, this vertex makes the
-                     triangulation invalid. */
         };
     private:
         LinkType link_;
@@ -134,7 +143,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * and earlier.  It was renamed to linkType() in Regina 7.0, to clear
          * the way for a different routine to be called link() in the future.
          *
-         * @return a broad categorisation of the vertex link.
+         * \return a broad categorisation of the vertex link.
          */
         LinkType linkType() const;
 
@@ -150,22 +159,22 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          *
          * - The triangles of the vertex link are numbered as follows.
          *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a tet represent <tt>embedding(i).tetrahedron()</tt>,
-         *   and let \a v represent <tt>embedding(i).vertex()</tt>.
-         *   Then <tt>buildLink()->triangle(i)</tt> is the triangle
+         *   \a tet represent `embedding(i).tetrahedron()`,
+         *   and let \a v represent `embedding(i).vertex()`.
+         *   Then `buildLink()->triangle(i)` is the triangle
          *   in the vertex link that "slices off" vertex \a v from
          *   tetrahedron \a tet.  In other words,
-         *   <tt>buildLink()->triangle(i)</tt> in the vertex link
-         *   is parallel to triangle <tt>tet->triangle(v)</tt> in the
+         *   `buildLink()->triangle(i)` in the vertex link
+         *   is parallel to triangle `tet->triangle(v)` in the
          *   surrounding 3-manifold triangulation.
          *
          * - The vertices of each triangle in the vertex link are
          *   numbered as follows.  Following the discussion above,
-         *   suppose that <tt>buildLink()->triangle(i)</tt> sits within
-         *   \c tet and is parallel to <tt>tet->triangle(v)</tt>.
+         *   suppose that `buildLink()->triangle(i)` sits within
+         *   \c tet and is parallel to `tet->triangle(v)`.
          *   Then vertices 0,1,2 of the triangle in the link will be
          *   parallel to vertices 0,1,2 of the corresponding Triangle<3>.
-         *   The permutation <tt>tet->triangleMapping(v)</tt> will map
+         *   The permutation `tet->triangleMapping(v)` will map
          *   vertices 0,1,2 of the triangle in the link to the
          *   corresponding vertices of \c tet (those opposite \c v),
          *   and will map 3 to \c v itself.
@@ -174,12 +183,12 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          *   compute with, you can call buildLinkInclusion() to retrieve
          *   this information as an isomorphism.
          *
-         * \ifacespython Since Python does not distinguish between const and
+         * \python Since Python does not distinguish between const and
          * non-const, this routine will return by value (thus making a
          * deep copy of the vertex link).  You are free to modify the
          * triangulation that is returned.
          *
-         * @return the read-only triangulated link of the vertex.
+         * \return the read-only triangulated link of the vertex.
          */
         const Triangulation<2>& buildLink() const;
 
@@ -195,9 +204,9 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * Specifically, this function returns an Isomorphism<3> that describes
          * how the individual triangles of the link sit within the tetrahedra
          * of the original triangulation.  If \a p is the isomorphism returned,
-         * then <tt>p.tetImage(i)</tt> will indicate which tetrahedron
+         * then `p.tetImage(i)` will indicate which tetrahedron
          * \a tet of the 3-manifold triangulation contains the <i>i</i>th
-         * triangle of the link.  Moreover, <tt>p.facePerm(i)</tt> will
+         * triangle of the link.  Moreover, `p.facePerm(i)` will
          * indicate exactly where the <i>i</i>th triangle sits within \a tet:
          * it will send 3 to the vertex of \a t that the triangle links,
          * and it will send 0,1,2 to the vertices of \a tet that are
@@ -212,7 +221,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * This is the same isomorphism that was accessible through the
          * old buildLinkDetail() function in Regina 6.0.1 and earlier.
          *
-         * @return details of how buildLink() labels the triangles of
+         * \return details of how buildLink() labels the triangles of
          * the vertex link.
          */
         Isomorphism<3> buildLinkInclusion() const;
@@ -220,7 +229,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
         /**
          * Determines if the link of this vertex is closed.
          *
-         * @return \c true if and only if the link of this vertex is
+         * \return \c true if and only if the link of this vertex is
          * closed.
          */
         bool isLinkClosed() const;
@@ -230,7 +239,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * This requires the vertex link to be closed and not a
          * 2-sphere.
          *
-         * @return \c true if and only if this is an ideal vertex.
+         * \return \c true if and only if this is an ideal vertex.
          */
         bool isIdeal() const;
 
@@ -239,7 +248,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * This requires the vertex link to be a sphere, disc, torus or
          * Klein bottle.
          *
-         * @return \c true if and only if this vertex is standard.
+         * \return \c true if and only if this vertex is standard.
          */
         bool isStandard() const;
 
@@ -250,20 +259,19 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * vertex link, and so can be much faster than calling
          * buildLink().eulerChar().
          *
-         * @return the Euler characteristic of the vertex link.
+         * \return the Euler characteristic of the vertex link.
          */
         long linkEulerChar() const;
 
         /**
          * Returns the link of this vertex as a normal surface.
          *
-         * Vertex linking surfaces only ever contain triangles (not
-         * quadrilaterals).  Moreover, after constructing the frontier of a
-         * regular neighbourhood of the vertex, such a surface will never
-         * require further normalisation steps (unlike edge links, which
-         * sometimes do).
+         * Note that vertex linking surfaces only ever contain triangles
+         * (not quadrilaterals).  Moreover, vertex links are always thin
+         * (i.e., after constructing the frontier of a regular neighbourhood
+         * of the vertex, no further normalisation steps are required).
          *
-         * @return the corresponding vertex linking normal surface.
+         * \return the corresponding vertex linking normal surface.
          */
         NormalSurface linkingSurface() const;
 
@@ -272,7 +280,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * Creates a new vertex and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * vertex belongs.
          */
         Face(Component<3>* component);
@@ -307,6 +315,10 @@ inline bool Face<3, 0>::isStandard() const {
 
 inline long Face<3, 0>::linkEulerChar() const {
     return linkEulerChar_;
+}
+
+inline NormalSurface Face<3, 0>::linkingSurface() const {
+    return std::move(triangulation().linkingSurface(*this).first);
 }
 
 } // namespace regina

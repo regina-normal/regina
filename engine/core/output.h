@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,7 +47,7 @@
 
 namespace regina {
 
-#ifndef __DOXYGEN
+#ifndef __APIDOCS
 template <class T, bool supportsUtf8 = false> struct Output;
 #else
 /**
@@ -57,20 +57,20 @@ template <class T, bool supportsUtf8 = false> struct Output;
  *
  * Three types of output are supported:
  *
- * - \e short output, which fits on a single line and uses plain ASCII
+ * - _short_ output, which fits on a single line and uses plain ASCII
  *   characters wherever possible;
- * - \e utf8 output, which is like short output but supports the much richer
+ * - _utf8_ output, which is like short output but supports the much richer
  *   unicode character set; and
- * - \e detailed output, which may be arbitrarily long.
+ * - _detailed_ output, which may be arbitrarily long.
  *
  * Any class that provides text output should ultimately inherit from
  * this base class.  Your derived class must provide two functions:
  *
- * - <tt>writeTextShort(std::ostream& out, bool utf8 = false)</tt>, which writes
+ * - `writeTextShort(std::ostream& out, bool utf8 = false)`, which writes
  *   either the short output or the utf8 output to the given output stream,
  *   according to whether \a utf8 is \c false or \c true respectively;
  *
- * - <tt>writeTextLong(std::ostream& out)</tt>, which writes the detailed
+ * - `writeTextLong(std::ostream& out)`, which writes the detailed
  *   output to the given output stream.
  *
  * The boolean \a utf8 argument to writeTextShort() must be optional.
@@ -101,17 +101,17 @@ template <class T, bool supportsUtf8 = false> struct Output;
  * \tparam supportsUtf8 \c true if the class \a T can make use of the
  * richer unicode character set, or \c false if the short and utf8 outputs
  * are identical.  If this is \c false then T::writeTextShort() will only
- * ever be called in the form <tt>writeTextShort(std::ostream&)</tt>,
+ * ever be called in the form `writeTextShort(std::ostream&)`,
  * and you may for simplicity omit the second boolean \a utf8 argument.
  * This Output base class will still provide a utf8() function, but it will
  * return the same output as short().
  *
- * \note Every object of this class that is ever instantiated \e must be
+ * \note Every object of this class that is ever instantiated _must_ be
  * derived from the class \a T.  In other words, end users can construct
  * objects of type \a T (which derives from Output<T>), but they cannot
  * construct objects of the parent class Output<T> itself.
  *
- * \ifacespython Not present, but the output routines str(), utf8() and
+ * \python Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
  *
  * \ingroup engine
@@ -125,14 +125,14 @@ struct Output {
      *
      * Within these limits, this short text ouptut should be as
      * information-rich as possible, since in most cases this forms the
-     * basis for the Python <tt>__str__()</tt> and <tt>__repr__()</tt>
+     * basis for the Python `__str__()` and `__repr__()`
      * functions.
      *
-     * \ifacespython The Python "stringification" function <tt>__str__()</tt>
+     * \python The Python "stringification" function `__str__()`
      * will use precisely this function, and for most classes the Python
-     * <tt>__repr__()</tt> function will incorporate this into its output.
+     * `__repr__()` function will incorporate this into its output.
      *
-     * @return a short text representation of this object.
+     * \return a short text representation of this object.
      */
     std::string str() const;
     /**
@@ -145,7 +145,7 @@ struct Output {
      * output more pleasant to read.  The string that is returned
      * will be encoded in UTF-8.
      *
-     * @return a short text representation of this object.
+     * \return a short text representation of this object.
      */
     std::string utf8() const;
     /**
@@ -157,7 +157,7 @@ struct Output {
      * and should end with a final newline.  There are no restrictions
      * on the underlying character set.
      *
-     * @return a detailed text representation of this object.
+     * \return a detailed text representation of this object.
      */
     std::string detail() const;
 };
@@ -166,11 +166,11 @@ struct Output {
  * Writes the short text representation of the given object to the
  * given output stream.
  *
- * This is equivalent to calling <tt>out << object.str()</tt>.
+ * This is equivalent to calling `out << object.str()`.
  *
- * @param out the output stream to which to write.
- * @param object the object to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param object the object to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup engine
  */
@@ -205,12 +205,12 @@ std::ostream& operator << (std::ostream& out,
  * \tparam supportsUtf8 \c true if the class \a T can make use of the
  * richer unicode character set, or \c false if the short and utf8 outputs
  * are identical.  If this is \c false then T::writeTextShort() will only
- * ever be called in the form <tt>writeTextShort(std::ostream&)</tt>,
+ * ever be called in the form `writeTextShort(std::ostream&)`,
  * and you may for simplicity omit the second boolean \a utf8 argument.
  * This ShortOutput base class will still provide a utf8() function, but it
  * will return the same output as short().
  *
- * \ifacespython Not present, but the output routines str(), utf8() and
+ * \python Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
  *
  * \ingroup engine
@@ -222,10 +222,10 @@ struct ShortOutput : public Output<T, supportsUtf8> {
      * This routine simply calls \a T::writeTextShort() and appends
      * a final newline.
      *
-     * \ifacespython Not present; instead you can call detail() from the
-     * subclass \a T, which returns this output as a string.
+     * \nopython Instead you can call detail() from the subclass \a T, which
+     * returns this output as a string.
      *
-     * @param out the output stream to which to write.
+     * \param out the output stream to which to write.
      */
     void writeTextLong(std::ostream& out) const;
 };
@@ -235,13 +235,13 @@ struct ShortOutput : public Output<T, supportsUtf8> {
  * output functions T::str() and T::detail() are implemented.
  *
  * If \a T is a class derived (directly or indirectly) from some class
- * Output<...>, then <tt>OutputBase<T>::type</tt> is defined to be this
+ * Output<...>, then `OutputBase<T>::type` is defined to be this
  * parent class Output<...>.  If \a T is derived from multiple Output<...>
  * classes (like SnapPeaTriangulation is), then this ambiguity will be
  * resolved if possible by prioritising Output<T, ...>.
  *
  * If \a T is not derived from any class Output<...>, then
- * <tt>OutputBase<T>::type</tt> is defined to be \a T itself.
+ * `OutputBase<T>::type` is defined to be \a T itself.
  *
  * This helper class can be useful when trying to disambiguate between the
  * implementation of str() that is inherited from Output, versus an extended

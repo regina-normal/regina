@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2021, Ben Burton
+# Copyright (c) 2007-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides detailed tests for UTF-8 representations of various objects.
@@ -60,7 +60,6 @@ p = Polynomial()
 p[3] = -1
 p[1] = 4
 p[0] = -2
-p
 print(p)
 print(p.str())
 print(p.str('z'))
@@ -70,7 +69,6 @@ print(p.utf8('z'))
 p = Cyclotomic(7)
 p[4] = 3
 p[1] = -1
-p
 print(p)
 print(p.str())
 print(p.str('z'))
@@ -79,7 +77,6 @@ print(p.utf8('z'))
 
 p = Laurent(4)
 p[-3] = 2
-p
 print(p)
 print(p.str())
 print(p.str('z'))
@@ -88,7 +85,6 @@ print(p.utf8('z'))
 
 p = Laurent2(-1, 2)
 p[0, -3] = 4
-p
 print(p)
 print(p.str())
 print(p.str('z'))

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,7 @@
 #include <QFont>
 #include <QList>
 #include <QMutex>
+#include <QObject>
 #include <QString>
 #include <QSize>
 #include <QUrl>
@@ -110,6 +111,9 @@ class ReginaPrefSet : public QObject {
         enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
+        enum ThreadCount { ThreadSingle, ThreadPolite, ThreadAll };
+            /**< Options for how aggressively we use multithreading in long
+                 computation. */
         enum TriGraphType { DualGraph, TreeDecomposition,
                 NiceTreeDecomposition };
             /**< Possible types of graph that can be displayed in a
@@ -134,6 +138,10 @@ class ReginaPrefSet : public QObject {
                  enumerate in a 4-manifold triangulation. */
         LinkCodeType linkCodeType;
             /**< The export code to display for knots and links. */
+        int linkCreationType;
+            /**< The initial option to select in the list of link types
+                 when creating a new link.  This is given as an
+                 index into the list of options. */
         LinkCrossingsStyle linkCrossingsStyle;
             /**< The style for displaying crossings for knots and links. */
         LinkHomflyType linkHomflyType;
@@ -204,9 +212,24 @@ class ReginaPrefSet : public QObject {
         int tabSurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  surface list viewer. */
+        ThreadCount threadCount;
+            /**< Indicates how aggressively we should use multithreading in
+                 long computations. */
         unsigned treeJumpSize;
             /**< The number of steps corresponding to a jump up or down in
                  the packet tree. */
+        int triDim2CreationType;
+            /**< The initial option to select in the list of triangulation
+                 types when creating a new 2-dimensional triangulation.
+                 This is given as an index into the list of options. */
+        int triDim3CreationType;
+            /**< The initial option to select in the list of triangulation
+                 types when creating a new 3-dimensional triangulation.
+                 This is given as an index into the list of options. */
+        int triDim4CreationType;
+            /**< The initial option to select in the list of triangulation
+                 types when creating a new 4-dimensional triangulation.
+                 This is given as an index into the list of options. */
         QString triGAPExec;
             /**< The executable for starting GAP.  This need not include a
                  directory (in which case the search path will be used). */
@@ -280,6 +303,12 @@ class ReginaPrefSet : public QObject {
         static Codec importExportCodec();
 
         /**
+         * Returns a sensible number of threads to use for a long computation,
+         * according to the user's thread count setting.
+         */
+        static int threads();
+
+        /**
          * Opens the given section of an arbitrary handbook in an appropriate
          * manner.  If the handbook is in fact the users' handbook then
          * the argument \a handbook should be 0 (which enables specialised
@@ -307,7 +336,7 @@ class ReginaPrefSet : public QObject {
         /**
          * Emitted from the global ReginaPrefSet instance when the
          * global preferences have changed.  If the recent files list
-         * changes, this signal will \e not be emitted; however, one or
+         * changes, this signal will _not_ be emitted; however, one or
          * more of the recent files signals will be emitted instead.
          */
         void preferencesChanged();

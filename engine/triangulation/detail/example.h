@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ namespace regina::detail {
  * Helper class that builds various <i>dim</i>-dimensional
  * triangulations from (<i>dim</i>-1)-dimensional triangulations.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class Example<dim> is.
  *
  * \tparam dim the dimension of the example triangulations to construct.
@@ -71,14 +71,14 @@ class ExampleFromLowDim {
          * Returns a double cone over the given (<i>dim-1</i>)-dimensional
          * triangulation.
          *
-         * If the given triangulation represents the manifold <tt>M</tt>, then
-         * this returns an ideal triangulation of the product <tt>M x I</tt>
+         * If the given triangulation represents the manifold `M`, then
+         * this returns an ideal triangulation of the product `M x I`
          * (with two ideal boundary components).  A copy of the original
          * triangulation \a base can be found at the centre of this
          * construction, formed from the <i>dim</i>-simplices that sit
          * between the two ideal vertices.
          *
-         * Note that, as a special case, if <tt>M</tt> is either a sphere or
+         * Note that, as a special case, if `M` is either a sphere or
          * a ball, then this routine returns a (<i>dim</i>)-sphere or
          * a (<i>dim</i>)-ball (since "ideal spheres" and "ideal balls" just
          * become regular internal and boundary vertices respectively).
@@ -86,14 +86,14 @@ class ExampleFromLowDim {
          * This construction is essentially the suspension of the
          * triangulation \a base.  We do not call it this however, since
          * from a topological point of view, to form the ideal triangulation
-         * of <tt>M x I</tt> we "remove" the vertices at the apex of each cone.
+         * of `M x I` we "remove" the vertices at the apex of each cone.
          *
          * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
          * any boundary whatsoever (either real or ideal), then unless it is
          * a (<i>dim</i>-1)-ball, you will obtain an invalid
          * <i>dim</i>-manifold triangulation as a result.
          *
-         * @return a double cone over the given triangulation.
+         * \return a double cone over the given triangulation.
          */
         static Triangulation<dim> doubleCone(const Triangulation<dim-1>& base);
 
@@ -101,8 +101,8 @@ class ExampleFromLowDim {
          * Returns a single cone over the given (<i>dim-1</i>)-dimensional
          * triangulation.
          *
-         * If the given triangulation represents the manifold <tt>M</tt>, then
-         * this returns a triangulation of the product <tt>M x I</tt> that has
+         * If the given triangulation represents the manifold `M`, then
+         * this returns a triangulation of the product `M x I` that has
          * one real boundary component and one ideal boundary component.
          * The triangulation of the real boundary component will be identical
          * to the original (<i>dim-1</i>)-dimensional triangulation \a base.
@@ -112,7 +112,7 @@ class ExampleFromLowDim {
          * a (<i>dim</i>-1)-ball, you will obtain an invalid
          * <i>dim</i>-manifold triangulation as a result.
          *
-         * @return a single cone over the given triangulation.
+         * \return a single cone over the given triangulation.
          */
         static Triangulation<dim> singleCone(const Triangulation<dim-1>& base);
 
@@ -152,7 +152,7 @@ class ExampleFromLowDim<dim, false> {
  *
  * See the Example class notes for further information.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class Example<dim> is.
  *
  * \tparam dim the dimension of the example triangulations to construct.
@@ -173,7 +173,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         /**
          * Returns a two-simplex triangulation of the <i>dim</i>-sphere.
          *
-         * @return a two-simplex <i>dim</i>-sphere.
+         * \return a two-simplex <i>dim</i>-sphere.
          */
         static Triangulation<dim> sphere();
 
@@ -181,23 +181,23 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * Returns the standard (<i>dim</i>+2)-simplex triangulation of the
          * <i>dim</i>-sphere as the boundary of a (<i>dim</i>+1)-simplex.
          *
-         * @return the standard simplicial <i>dim</i>-sphere.
+         * \return the standard simplicial <i>dim</i>-sphere.
          */
         static Triangulation<dim> simplicialSphere();
 
         /**
          * Returns a two-simplex triangulation of the product space
-         * <tt>S^(<i>dim</i>-1) x S^1</tt>.
+         * `S^(dim-1) x S¹`.
          *
-         * @return the product <tt>S^(<i>dim</i>-1) x S^1</tt>.
+         * \return the product `S^(dim-1) x S¹`.
          */
         static Triangulation<dim> sphereBundle();
 
         /**
          * Returns a two-simplex triangulation of the twisted product
-         * space <tt>S^(<i>dim</i>-1) x~ S^1</tt>.
+         * space `S^(dim-1) x~ S¹`.
          *
-         * @return the twisted product <tt>S^(<i>dim</i>-1) x~ S^1</tt>.
+         * \return the twisted product `S^(dim-1) x~ S¹`.
          */
         static Triangulation<dim> twistedSphereBundle();
 
@@ -210,27 +210,27 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         /**
          * Returns a one-simplex triangulation of the <i>dim</i>-ball.
          *
-         * @return a one-simplex <i>dim</i>-ball.
+         * \return a one-simplex <i>dim</i>-ball.
          */
         static Triangulation<dim> ball();
 
         /**
          * Returns a triangulation of the product space
-         * <tt>B^(<i>dim</i>-1) x S^1</tt>.
+         * `B^(dim-1) x S¹`.
          * This will use one simplex in odd dimensions, or two simplices
          * in even dimensions.
          *
-         * @return the product <tt>B^(<i>dim</i>-1) x S^1</tt>.
+         * \return the product `B^(dim-1) x S¹`.
          */
         static Triangulation<dim> ballBundle();
 
         /**
          * Returns a triangulation of the twisted product
-         * space <tt>B^(<i>dim</i>-1) x~ S^1</tt>.
+         * space `B^(dim-1) x~ S¹`.
          * This will use one simplex in even dimensions, or two simplices
          * in odd dimensions.
          *
-         * @return the twisted product <tt>B^(<i>dim</i>-1) x~ S^1</tt>.
+         * \return the twisted product `B^(dim-1) x~ S¹`.
          */
         static Triangulation<dim> twistedBallBundle();
 
@@ -246,8 +246,6 @@ template <int dim, bool available>
 Triangulation<dim> ExampleFromLowDim<dim, available>::singleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
@@ -290,8 +288,6 @@ template <int dim, bool available>
 Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
@@ -343,8 +339,6 @@ Triangulation<dim> ExampleBase<dim>::sphere() {
     // Take two simplices and join their entire boundaries according to
     // the identity map.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     auto [p, q] = ans.template newSimplices<2>();
     for (int i = 0; i <= dim; ++i)
@@ -356,8 +350,6 @@ Triangulation<dim> ExampleBase<dim>::sphere() {
 template <int dim>
 Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     // One top-dimensional simplex for every vertex of the (dim+1)-simplex
     auto simps = ans.template newSimplices<dim + 2>(); // One for ever
@@ -386,8 +378,6 @@ Triangulation<dim> ExampleBase<dim>::sphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     auto [p, q] = ans.template newSimplices<2>();
     for (int i = 1; i < dim; ++i)
@@ -415,8 +405,6 @@ Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     auto [p, q] = ans.template newSimplices<2>();
     for (int i = 1; i < dim; ++i)
@@ -442,8 +430,6 @@ Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
 template <int dim>
 Triangulation<dim> ExampleBase<dim>::ball() {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     ans.newSimplex();
     return ans;
@@ -455,8 +441,6 @@ Triangulation<dim> ExampleBase<dim>::ballBundle() {
     // In even dimensions the corresponding construction is non-orientable,
     // and we need to take its orientable double cover.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     // Now join facet 0 to a facet dim to join up the S1 loop:
     //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
@@ -483,8 +467,6 @@ Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
     // double it (giving a two-vertex, two-simplex Bn x S1) but fiddle
     // with the second map to make it non-orientable.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     // Now join facet 0 to a facet dim to join up the S1 loop:
     //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1

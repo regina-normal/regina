@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,27 +37,32 @@
 #include "manifold/manifold.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/manifold.h"
 
 using regina::Manifold;
 
 void addManifold(pybind11::module_& m) {
-    auto c = pybind11::class_<Manifold>(m, "Manifold")
-        .def("name", &Manifold::name)
-        .def("texName", &Manifold::texName)
-        .def("structure", &Manifold::structure)
-        .def("construct", &Manifold::construct)
-        .def("homology", &Manifold::homology)
-        .def("isHyperbolic", &Manifold::isHyperbolic)
+    RDOC_SCOPE_BEGIN(Manifold)
+
+    auto c = pybind11::class_<Manifold>(m, "Manifold", rdoc_scope)
+        .def("name", &Manifold::name, rdoc::name)
+        .def("texName", &Manifold::texName, rdoc::texName)
+        .def("structure", &Manifold::structure, rdoc::structure)
+        .def("construct", &Manifold::construct, rdoc::construct)
+        .def("homology", &Manifold::homology, rdoc::homology)
+        .def("isHyperbolic", &Manifold::isHyperbolic, rdoc::isHyperbolic)
         // We cannot bind the < operator in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.
         .def("__lt__", [](const Manifold& lhs, const Manifold& rhs) {
             return lhs < rhs;
-        })
+        }, rdoc::__lt)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
     // Also leave the equality operators for subclasses to wrap, since
     // each subclass of Manifold provides its own custom == and != operators.
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_abstract(c);
+
+    RDOC_SCOPE_END
 }
 

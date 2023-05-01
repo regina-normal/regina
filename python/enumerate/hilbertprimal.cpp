@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,20 +35,28 @@
 #include "../pybind11/stl.h"
 #include "enumerate/hilbertprimal.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/hilbertprimal.h"
 
+using regina::python::GILCallbackManager;
 using regina::HilbertPrimal;
 using regina::VectorInt;
 
 void addHilbertPrimal(pybind11::module_& m) {
-    auto c = pybind11::class_<HilbertPrimal>(m, "HilbertPrimal")
+    RDOC_SCOPE_BEGIN(HilbertPrimal)
+
+    auto c = pybind11::class_<HilbertPrimal>(m, "HilbertPrimal", rdoc_scope)
         .def_static("enumerate", [](const std::function<void(VectorInt&&)>& a,
                 const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p) {
-            HilbertPrimal::enumerate<VectorInt>(a, r.begin(), r.end(), c, p);
-        }, pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            GILCallbackManager<false> manager;
+            HilbertPrimal::enumerate<VectorInt>([&](VectorInt&& v) {
+                GILCallbackManager<false>::ScopedAcquire acquire(manager);
+                a(std::move(v));
+            }, r.begin(), r.end(), c, p);
+        }, pybind11::arg("action"), pybind11::arg("rays"),
+            pybind11::arg("constraints"), pybind11::arg("tracker") = nullptr,
+            rdoc::enumerate)
         .def_static("enumerate", [](const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p) {
@@ -57,10 +65,13 @@ void addHilbertPrimal(pybind11::module_& m) {
                 ans.push_back(std::move(v));
             }, r.begin(), r.end(), c, p);
             return ans;
-        }, pybind11::arg(), pybind11::arg(),
+        }, pybind11::arg("rays"), pybind11::arg("constraints"),
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::enumerate)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 

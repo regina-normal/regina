@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,9 +52,9 @@ namespace regina {
  * a census that uses the flag PURGE_NON_MINIMAL might include some
  * non-minimal triangulations and exclude others.
  *
- * However, \e including a triangulation \e is a promise: for example, a
+ * However, _including_ a triangulation _is_ a promise: for example, a
  * census that uses the flag PURGE_NON_MINIMAL will promise to include
- * every \e minimal triangulations.
+ * every _minimal_ triangulations.
  *
  * These flags can be combined using the bitwise OR operator.
  * See (for example) the GluingPermSearcher<3> constructor documentation for
@@ -114,9 +114,9 @@ using CensusPurge = regina::Flags<CensusPurgeFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
+ * \return the combination of both flags.
  *
  * \ingroup census
  */

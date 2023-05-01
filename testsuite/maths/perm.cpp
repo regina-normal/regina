@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,6 +34,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
+#include "testsuite/maths/permtest.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/utilities/tightencodingtest.h"
 
@@ -45,22 +46,11 @@ static const int64_t increment[] = {
 };
 
 template <int n>
-class PermTest :
-        public CppUnit::TestFixture, public TightEncodingTest<regina::Perm<n>> {
-    CPPUNIT_TEST_SUITE(PermTest);
-
-    CPPUNIT_TEST(index);
-    CPPUNIT_TEST(products);
-    CPPUNIT_TEST(compareWith);
-    CPPUNIT_TEST(reverse);
-    CPPUNIT_TEST(comprehensive);
-    CPPUNIT_TEST(clear);
-    CPPUNIT_TEST(rot);
-    CPPUNIT_TEST(tightEncoding);
-
-    CPPUNIT_TEST_SUITE_END();
-
+class LargePermTest : public GeneralPermTest<n> {
     public:
+        using GeneralPermTest<n>::looksLikeIdentity;
+        using GeneralPermTest<n>::looksEqual;
+        using GeneralPermTest<n>::looksDistinct;
         using TightEncodingTest<regina::Perm<n>>::verifyTightEncoding;
 
     private:
@@ -74,6 +64,8 @@ class PermTest :
 
     public:
         void setUp() override {
+            GeneralPermTest<n>::setUp();
+
             idx = new Index[(Perm::nPerms / increment[n]) + 2];
             nIdx = 0;
             for (Index i = 0; i < Perm::nPerms; i += increment[n])
@@ -88,6 +80,8 @@ class PermTest :
 
         void tearDown() override {
             delete[] idx;
+
+            GeneralPermTest<n>::tearDown();
         }
 
         void index() {
@@ -127,26 +121,6 @@ class PermTest :
                     }
                 }
             }
-        }
-
-        bool looksLikeIdentity(const Perm& p) {
-            return (p.isIdentity() && p == Perm() && p.str() == idStr);
-        }
-
-        bool looksEqual(const Perm& p, const Perm& q) {
-            return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode());
-        }
-
-        bool looksEqual(const Perm& p, const Perm& q,
-                const std::string& qStr) {
-            return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode() && p.str() == qStr);
-        }
-
-        bool looksDistinct(const Perm& p, const Perm& q) {
-            return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.permCode() != q.permCode());
         }
 
         int expectedSign(const Perm& p) {
@@ -414,6 +388,47 @@ class PermTest :
             }
         }
 
+        void conjugates() {
+            Index i, j;
+            int x;
+            Perm p, q, r;
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::orderedSn[idx[i]];
+                for (j = 0; j < nIdx; ++j) {
+                    q = Perm::orderedSn[idx[j]];
+
+                    if (p.conjugate(q) != q * p * q.inverse()) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void cachedConjugates() {
+            Index i, j;
+            int x;
+            Perm p, q, r;
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::orderedSn[idx[i]];
+                for (j = 0; j < nIdx; ++j) {
+                    q = Perm::orderedSn[idx[j]];
+
+                    if (p.cachedConjugate(q) != q.cachedComp(p).cachedComp(
+                            q.cachedInverse())) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
         void compareWith() {
             Index i, j;
             Perm p, q;
@@ -455,6 +470,71 @@ class PermTest :
                         std::ostringstream msg;
                         msg << "Permutations " << q.str() << " and "
                             << p.str() << " do not appear to be distinct.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void lessThan() {
+            Index i, j;
+            Perm p, q;
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::Sn[idx[i]];
+                if (p < p) {
+                    std::ostringstream msg;
+                    msg << "Operator < incorrectly concludes that "
+                        << p.str() << " < " << p.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (! p.isIdentity()) {
+                    Perm prev = Perm::Sn[idx[i] - 1];
+                    if (! (prev < p)) {
+                        std::ostringstream msg;
+                        msg << "Operator < does not conclude that "
+                            << prev.str() << " < " << p.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (p < prev) {
+                        std::ostringstream msg;
+                        msg << "Operator < incorrectly concludes that "
+                            << p.str() << " < " << prev.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                if (idx[i] != Perm::nPerms - 1) {
+                    Perm next = Perm::Sn[idx[i] + 1];
+                    if (! (p < next)) {
+                        std::ostringstream msg;
+                        msg << "Operator < does not conclude that "
+                            << p.str() << " < " << next.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (next < p) {
+                        std::ostringstream msg;
+                        msg << "Operator < incorrectly concludes that "
+                            << next.str() << " < " << p.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::Sn[idx[i]];
+                for (j = i + 1; j < nIdx; ++j) {
+                    q = Perm::Sn[idx[j]];
+
+                    if (! (p < q)) {
+                        std::ostringstream msg;
+                        msg << "Operator < does not conclude that "
+                            << p.str() << " < " << q.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (q < p) {
+                        std::ostringstream msg;
+                        msg << "Operator < incorrectly concludes that "
+                            << q.str() << " < " << p.str() << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
@@ -575,6 +655,68 @@ class PermTest :
             clearFrom<n - 2>();
         }
 
+        void pow() {
+            for (Index i = 0; i < Perm::nPerms; i += increment[n]) {
+                Perm p = Perm::Sn[i];
+
+                if (! p.pow(0).isIdentity()) {
+                    std::ostringstream msg;
+                    msg << "pow(" << p << ", 0) is not the identity."
+                        << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+                {
+                    Perm q;
+                    int j = 0;
+                    do {
+                        Perm pow = p.pow(++j);
+                        q = q * p;
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "pow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (! q.isIdentity());
+                }
+                {
+                    Perm q;
+                    int j = 0;
+                    do {
+                        Perm pow = p.pow(--j);
+                        q = q * p.inverse();
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "pow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (! q.isIdentity());
+                }
+            }
+        }
+
+        void order() {
+            for (Index i = 0; i < Perm::nPerms; i += increment[n]) {
+                Perm p = Perm::Sn[i];
+
+                int j = 0;
+                Perm q;
+                do {
+                    q = q * p;
+                    ++j;
+                } while (! q.isIdentity());
+
+                if (j != p.order()) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << p << "^" << j << " is the "
+                        "identity, but the reported order is " << p.order()
+                        << "." << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
         void rot() {
             int i, j;
             for (i = 0; i < n; ++i) {
@@ -595,10 +737,128 @@ class PermTest :
         }
 };
 
+template <int n>
+class PermTest : public LargePermTest<n> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
+// Add some extra tests for those values of n where we can feasibly
+// iterate through all permutations.
+
+template <>
+class PermTest<8> : public LargePermTest<8> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(conjugacyMinimal);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
+template <>
+class PermTest<9> : public LargePermTest<9> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(conjugacyMinimal);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
+template <>
+class PermTest<10> : public LargePermTest<10> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(conjugacyMinimal);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
+template <>
+class PermTest<11> : public LargePermTest<11> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(conjugacyMinimal);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
 void addPerm(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(PermTest<8>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<9>::suite()); // 4-bit images, 64-bit code
-    // runner.addTest(PermTest<10>::suite());
+    runner.addTest(PermTest<10>::suite());
     runner.addTest(PermTest<11>::suite());
     // runner.addTest(PermTest<12>::suite());
     runner.addTest(PermTest<13>::suite());

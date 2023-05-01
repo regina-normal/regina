@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,11 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
+#ifndef __TIGHTENCODINGTEST_H
+#define __TIGHTENCODINGTEST_H
+
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * A class \e T that implements tight encodings (and optionally decodings) can
+ * A class \a T that implements tight encodings (and optionally decodings) can
  * derive its test class from TightEncodingTest<T, ...>, which will give its
  * test class an inherited function verifyTightEncoding(const T&).
  *
@@ -150,4 +153,6 @@ class TightEncodingTest {
             }
         }
 };
+
+#endif
 

@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2021, Ben Burton
+# Copyright (c) 2007-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for passing by value vs reference.
@@ -117,9 +117,12 @@ print(t)
 print()
 
 n = NormalSurfaces(Example3.figureEight(), NS_QUAD)
+
 for s in n:
 	s.setName('foo')
+
 for s in n:
 	print(s.name())
+
 print()
 

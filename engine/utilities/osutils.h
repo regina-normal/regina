@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,12 +48,12 @@ namespace regina {
 
 /**
  * Returns time and memory usage for the current process, for use on Linux
- * systems.  Information is gathered from the \c /proc filesystem; if
- * this is run on a non-Linux system (or a Linux system where \c /proc is not
- * mounted), then this routine will throw an exception.
+ * systems.  Information is gathered from the `/proc` filesystem; if
+ * this is run on a non-Linux system (or a Linux system where `/proc`
+ * is not mounted), then this routine will throw an exception.
  *
  * More precisely, this routine reads information on the running process from
- * \c /proc/self/stat, and returns a tuple (\a utime, \a stime, \a vsize).
+ * `/proc/self/stat`, and returns a tuple (\a utime, \a stime, \a vsize).
  * These three fields reperesent:
  *
  * - the number jiffies that this process has been scheduled in user mode
@@ -66,14 +66,14 @@ namespace regina {
  * \c proc(5) manpage.  Note that the length of a jiffy can differ
  * from system to system; see the \c time(7) manpage for details.
  *
- * \exception FileError Either \c /proc/self/stat cannot be read,
+ * \exception FileError Either <tt>/proc/self/stat</tt> cannot be read,
  * or it contains unexpected information.
  *
  * \warning Currently this routine allows at most 255 characters for the
- * \e comm field in \c /proc/self/stat (which stores the executable
+ * \e comm field in `/proc/self/stat` (which stores the executable
  * filename along with surrounding parentheses).  If the \e comm field is too
- * long (i.e., the executable filename is too long), then this routine
- * will not be able to parse \c /proc/self/stat, and will throw an exception.
+ * long (i.e., the executable filename is too long), then this routine will
+ * not be able to parse `/proc/self/stat`, and will throw an exception.
  * If you encounter this problem, you should be able to fix it by renaming
  * your executable to something shorter.
  *
@@ -100,10 +100,10 @@ std::tuple<unsigned long, unsigned long, unsigned long> resUsage();
  * exception.  Instead it will write an appropriate message to the output
  * stream.
  *
- * \ifacespython Not present; instead use the variant resUsage() that
- * takes no arguments and returns a tuple.
+ * \nopython Instead use the variant resUsage() that takes no arguments and
+ * returns a tuple.
  *
- * @param out the output stream to which to write.
+ * \param out the output stream to which to write.
  */
 void writeResUsage(std::ostream& out);
 

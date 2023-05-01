@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,7 @@
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
+#include "triangulation/generic/isomorphism.h"
 #include "utilities/exception.h"
 
 namespace regina {
@@ -265,7 +266,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * @param out the output stream to which the data should be
+             * \param out the output stream to which the data should be
              * written.
              */
             void dumpData(std::ostream& out) const;
@@ -279,12 +280,12 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * temporary basis only.
              *
              * This routine does test for bad input data, but it
-             * does \e not test for end-of-file.
+             * does _not_ test for end-of-file.
              *
-             * @param in the input stream from which to read.
-             * @param nStates the total number of edge states under
+             * \param in the input stream from which to read.
+             * \param nStates the total number of edge states under
              * consideration (this must be ten times the number of tetrahedra).
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nStates);
@@ -369,7 +370,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * @param out the output stream to which the data should be
+             * \param out the output stream to which the data should be
              * written.
              */
             void dumpData(std::ostream& out) const;
@@ -382,13 +383,13 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * This routine does test for bad input data, but it does \e not
+             * This routine does test for bad input data, but it does _not_
              * test for end-of-file.
              *
-             * @param in the input stream from which to read.
-             * @param nStates the total number of triangle states under
+             * \param in the input stream from which to read.
+             * \param nStates the total number of triangle states under
              * consideration (this must be ten times the number of pentachora).
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nStates);
@@ -426,7 +427,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                  underlying triangulation.  Orientation is positive/negative,
                  or 0 if unknown.
                  Note that in some algorithms the orientation is simply
-                 +/-1, and in some algorithms the orientation counts
+                 ±1, and in some algorithms the orientation counts
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
 
@@ -524,18 +525,18 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * by FacetPairing<4>::isCanonical().  Note that all facet pairings
          * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
-         * @param pairing the specific pairing of pentachoron facets
+         * \param pairing the specific pairing of pentachoron facets
          * that the generated permutation sets will complement.
-         * @param autos the collection of isomorphisms that define equivalence
+         * \param autos the collection of isomorphisms that define equivalence
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given facet pairing,
          * and will generally be the set of all such automorphisms (which
-         * you can generate via <tt>pairing.findAutomorphisms()</tt>).
-         * @param orientableOnly \c true if only gluing permutations
+         * you can generate via `pairing.findAutomorphisms()`).
+         * \param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
-         * @param finiteOnly \c true if only gluing permutations
+         * \param finiteOnly \c true if only gluing permutations
          * corresponding to finite (non-ideal) triangulations are required, or
          * \c false if there is no such requirement.  Note that
          * regardless of this value, some ideal triangulations
@@ -558,17 +559,16 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present, since this constructor is fundamentally
-         * designed around working through a single input stream as we make
-         * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and fromTaggedData() instead,
-         * which incorporate this same text data as part of their richer text
-         * format.
+         * \nopython This constructor is fundamentally designed around working
+         * through a single input stream as we make our way from base class
+         * constructors down to subclass constructors.  Python users should
+         * use taggedData() and fromTaggedData() instead, which incorporate
+         * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         GluingPermSearcher(std::istream& in);
 
@@ -607,14 +607,14 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * \todo \feature Allow cancellation of permutation set generation.
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
          *
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -651,11 +651,16 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * large enough), it is possible that this routine will produce
          * complete gluing permutation sets.
          *
-         * @param maxDepth the depth of the partial search to run.
+         * \python This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
+         * \param maxDepth the depth of the partial search to run.
          * A negative number indicates that a full search should be run.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set (partial or complete) that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -669,7 +674,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * This may assist the \a action routine when running partial
          * depth-based searches.  See partialSearch() for further details.
          *
-         * @return \c true if a complete gluing permutation set is held,
+         * \return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
         bool isComplete() const;
@@ -691,10 +696,10 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython Not present; instead use taggedData(), which
-         * returns this same information as a string.
+         * \nopython Instead use taggedData(), which returns this same
+         * information as a string.
          *
-         * @param out the output stream to which the data should be
+         * \param out the output stream to which the data should be
          * written.
          */
         void dumpTaggedData(std::ostream& out) const;
@@ -717,7 +722,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string taggedData() const;
 
@@ -745,12 +750,12 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython Not present; instead use data(), which returns this
-         * same information as a string.  However, the matching input stream
+         * \nopython You can instead use data(), which returns this same
+         * information as a string.  However, the matching input stream
          * constructor is not available in Python either, so it is recommended
          * that Python users use taggedData() and fromTaggedData() instead.
          *
-         * @param out the output stream to which the data should be written.
+         * \param out the output stream to which the data should be written.
          */
         virtual void dumpData(std::ostream& out) const;
 
@@ -778,11 +783,11 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython This routine is available, but the matching
+         * \python This routine is available, but the matching
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -790,9 +795,9 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -817,7 +822,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * by FacetPairing<4>::isCanonical().  Note that all facet pairings
          * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
@@ -849,7 +854,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * by FacetPairing<4>::isCanonical().  Note that all facet pairings
          * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
-         * @return the new search manager.
+         * \return the new search manager.
          */
         static std::unique_ptr<GluingPermSearcher<4>> bestSearcher(
                 FacetPairing<4> pairing, FacetPairing<4>::IsoList autos,
@@ -871,14 +876,14 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the given input stream
+         * \exception InvalidInput The data found in the given input stream
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present; instead you can use the variant of
-         * fromTaggedData() that takes its input as a string.
+         * \nopython Instead use the variant of fromTaggedData() that takes
+         * its input as a string.
          *
-         * @param in the input stream from which to read.
-         * @return the new search manager, or \c null if the data in the
+         * \param in the input stream from which to read.
+         * \return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<4>> fromTaggedData(
@@ -900,12 +905,12 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidArgument the data found in the given string
+         * \exception InvalidArgument The data found in the given string
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * @param data the tagged data from which to reconstruct a
+         * \param data the tagged data from which to reconstruct a
          * search manager.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<4>> fromTaggedData(
@@ -936,7 +941,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * in order to see whether the current set is in canonical form
          * (i.e., is lexicographically smallest).
          *
-         * @return \c true if the current set is in canonical form,
+         * \return \c true if the current set is in canonical form,
          * or \c false otherwise.
          */
         bool isCanonical() const;
@@ -954,9 +959,9 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * selected have the corresponding element of permIndices[] set
          * to -1.
          *
-         * @param facet the specific pentachoron facet upon which tests
+         * \param facet the specific pentachoron facet upon which tests
          * will be based.
-         * @return \c true if the permutations under construction will
+         * \return \c true if the permutations under construction will
          * lead to a triangle identified with itself using a non-trivial
          * rotation or reflection, or \c false if no such triangle is found.
          */
@@ -966,7 +971,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * Returns the character used to identify this class when
          * storing tagged data in text format.
          *
-         * @return the class tag.
+         * \return the class tag.
          */
         virtual char dataTagInternal() const;
 
@@ -979,11 +984,11 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * the other variant of findTriangleClass(), which is slower
          * but which also tracks triangle rotations and reflections.
          *
-         * @param triID the index of a single pentachoron triangle; this
+         * \param triID the index of a single pentachoron triangle; this
          * must be between 0 and 10p-1 inclusive, where \a p is the
          * number of pentachora.  See the PentTriangleState class notes for
          * details on triangle indexing.
-         * @return the index of the pentachoron triangle at the root of the
+         * \return the index of the pentachoron triangle at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -997,7 +1002,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * The argument \a twist is also modified to indicate what
          * rotation or reflection is used to identify vertices (0,1,2)
          * of the given triangle with vertices (0,1,2) of the class
-         * representative.  Note that this argument is \e not initialised.
+         * representative.  Note that this argument is _not_ initialised.
          * Instead, the original \a twist will be multiplied on the left
          * by the mapping described above.
          *
@@ -1005,15 +1010,15 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * the other variant of findTriangleClass(), which is faster
          * but which does not track triangle rotations and reflections.
          *
-         * @param triID the index of a single pentachoron triangle; this
+         * \param triID the index of a single pentachoron triangle; this
          * must be between 0 and 10p-1 inclusive, where \a p is the
          * number of pentachora.  See the PentTriangleState class notes for
          * details on triangle indexing.
-         * @param twist used to track triangle rotations and reflections, as
+         * \param twist used to track triangle rotations and reflections, as
          * described above.  This must be a mapping from (0,1,2) to (0,1,2)
          * as it is passed into the function, and it will also be a mapping
          * from (0,1,2) to (0,1,2) upon returning from the function.
-         * @return the index of the pentachoron triangle at the root of the
+         * \return the index of the pentachoron triangle at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -1030,7 +1035,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * with itself in reverse, or whose link is something other than a
          * (possibly) punctured 2-sphere).
          *
-         * @return \c true if this merge creates an invalid edge, or
+         * \return \c true if this merge creates an invalid edge, or
          * \c false if not.
          */
         bool mergeEdgeClasses();
@@ -1045,7 +1050,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * merge creates an invalid triangle (i.e., a triangle identified with
          * itself using a non-trivial rotation or reflection).
          *
-         * @return \c true if this merge creates an invalid triangle, or
+         * \return \c true if this merge creates an invalid triangle, or
          * \c false if not.
          */
         bool mergeTriangleClasses();
@@ -1074,18 +1079,18 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * See the PentEdgeState class for details.
          *
-         * @param edgeID the first pentachoron edge on which to operate;
+         * \param edgeID the first pentachoron edge on which to operate;
          * this must be between 0 and 10n-1 inclusive, where \a n is the number
          * of pentachora.
-         * @param end specifies in which direction the adjacent boundary
+         * \param end specifies in which direction the adjacent boundary
          * edges lie.  This must be either 0 or 1, and its value should
          * correspond to the relevant index in the \a bdryNext and \a bdryTwist
          * arrays for edge \a edgeID.
-         * @param adjEdgeID the pentachoron edge whose boundary edges are
+         * \param adjEdgeID the pentachoron edge whose boundary edges are
          * adjacent to the boundary edges supplied by \a edgeID; this must
          * be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
-         * @param twist 0 if the orientations of the two boundary segments of
+         * \param twist 0 if the orientations of the two boundary segments of
          * edge link are oriented in the same direction, or 1 if they are
          * oriented in opposite directions; see the \a bdryTwist
          * documentation for details.
@@ -1121,7 +1126,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * \pre The linking triangle for the given pentachoron edge
          * contributes at least one boundary edge to the 4-manifold edge link.
          *
-         * @param edgeID the pentachoron edge to examine; this must
+         * \param edgeID the pentachoron edge to examine; this must
          * be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
          */
@@ -1134,7 +1139,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * See the PentEdgeState class for further information.
          *
-         * @param edgeID the pentachoron edge on which to operate; this
+         * \param edgeID the pentachoron edge on which to operate; this
          * must be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
          */
@@ -1147,7 +1152,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * See the PentEdgeState class for further information.
          *
-         * @param edgeID the pentachoron edge on which to operate; this
+         * \param edgeID the pentachoron edge on which to operate; this
          * must be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
          */
@@ -1183,23 +1188,23 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * this facet is either order_[orderElt_] or its partner in the
          * underlying pentachoron facet pairing.
          *
-         * @param edgeID the pentachoron edge to examine; this must
+         * \param edgeID the pentachoron edge to examine; this must
          * be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
-         * @param pent the pentachoron described by \a edgeID; this
+         * \param pent the pentachoron described by \a edgeID; this
          * must be (edgeID / 10).  It is passed separately to avoid a
          * slow division operation.
-         * @param edge the pentachoron edge number described by \a edgeID;
+         * \param edge the pentachoron edge number described by \a edgeID;
          * this must be (edgeID % 10).  It is passed separately to
          * avoid a slow modulus operation.
-         * @param bdryFacet the facet number of the given pentachoron
+         * \param bdryFacet the facet number of the given pentachoron
          * containing the edge of the linking triangle that is
          * under consideration.  This must be between 0 and 4 inclusive.
-         * @param next returns the pentachoron edge supplying each adjacent
+         * \param next returns the pentachoron edge supplying each adjacent
          * boundary edge of the link; see the PentEdgeState::bdryNext
          * notes for details on which directions correspond to array
          * indices 0 and 1.
-         * @param twist returns whether the orientations of the adjacent
+         * \param twist returns whether the orientations of the adjacent
          * boundary edges are consistent with the orientation of this
          * boundary edge; see the PentEdgeState::bdryTwist notes for
          * further information on orientations in the link.
@@ -1214,10 +1219,10 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * See the PentEdgeState class for further information.
          *
-         * @param edgeID the pentachoron edge to examine; this must
+         * \param edgeID the pentachoron edge to examine; this must
          * be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
-         * @return \c true if a one-edge boundary component is formed as
+         * \return \c true if a one-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool edgeBdryLength1(size_t edgeID);
@@ -1230,13 +1235,13 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * See the PentEdgeState class for further information.
          *
-         * @param edgeID1 the first pentachoron edge to examine; this
+         * \param edgeID1 the first pentachoron edge to examine; this
          * must be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
-         * @param edgeID2 the second pentachoron edge to examine; this
+         * \param edgeID2 the second pentachoron edge to examine; this
          * must be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
-         * @return \c true if a two-edge boundary component is formed as
+         * \return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool edgeBdryLength2(size_t edgeID1, size_t edgeID2);
@@ -1263,7 +1268,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * See the PentEdgeState class for further information.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void edgeBdryDump(std::ostream& out);
 };

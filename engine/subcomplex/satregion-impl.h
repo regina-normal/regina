@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 /*! \file subcomplex/satregion-impl.h
  *  \brief Full implementation details for SatRegion::find().
  *
- *  This file is \e not included automatically by satregion.h.
+ *  This file is _not_ included automatically by satregion.h.
  */
 
 #ifndef __REGINA_SATREGION_IMPL_H

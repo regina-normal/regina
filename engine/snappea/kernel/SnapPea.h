@@ -745,8 +745,8 @@ extern void canonical_retriangulation_with_opacities( Triangulation *manifold,
  * Similar to canonical_retriangulation, replaces the given triangulation
  * (which has to be a subdivision of the canonical cell decomposition) with
  * the canonical retriangulation of the canonical cell decompositon.
- * However, instead of doing numerical comparisions of tilt, it takes an array
- * of booleans indicating which faces are opaque. Four consecutive entires
+ * However, instead of doing numerical comparisons of tilt, it takes an array
+ * of booleans indicating which faces are opaque. Four consecutive entries
  * correspond to the four faces of one tetrahedron. Thus, the length has to
  * be 4 times the number of tetrahedra.
  */
@@ -1930,10 +1930,11 @@ extern Boolean same_triangulation(  Triangulation   *manifold0,
 /************************************************************************/
 
 extern void length_spectrum(    WEPolyhedron    *polyhedron,
-                                Real          cutoff_length,
+                                Real            cutoff_length,
                                 Boolean         full_rigor,
                                 Boolean         multiplicities,
-                                Real          user_radius,
+				Boolean         grouped,
+                                Real            user_radius,
                                 MultiLength     **spectrum,
                                 int             *num_lengths);
 /**<
@@ -2362,11 +2363,29 @@ extern void basic_simplification(Triangulation *manifold);
  *  Simplifies the triangulation in a speedy yet effective manner.
  */
 
+extern void basic_simplification_with_options(Triangulation   *manifold,
+					      int order_four_iterations);
+
+/**<
+ * basic_simplification where the number of order_four_iterations can be
+ * controlled.
+ */
+
 extern void randomize_triangulation(Triangulation *manifold);
 /**<
  *  Randomizes the Triangulation, and then resimplifies it.
  */
 
+
+extern void randomize_triangulation_with_options(
+    Triangulation   *manifold,
+    int order_four_iterations,
+    int randomization_multiple);
+
+/**<
+ * Same as randomize_triangulation but with more control.
+ */
+   
 
 /************************************************************************/
 /*                                                                      */

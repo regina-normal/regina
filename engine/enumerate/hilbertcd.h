@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -96,12 +96,12 @@ class HilbertCD {
          * of basis vectors will contain no duplicates or redundancies.
          *
          * The parameter \a constraints may contain a set of validity
-         * constraints, in which case this routine will only return \e valid
+         * constraints, in which case this routine will only return _valid_
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
          * ValidityConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
-         * addition, \e invalidity is.
+         * addition, _invalidity_ is.
          *
          * For each of the resulting basis elements, this routine will call
          * \a action (which must be a function or some other callable object).
@@ -120,23 +120,23 @@ class HilbertCD {
          * constraints.  Consider using the much faster HilbertPrimal or
          * HilbertDual instead.
          *
-         * \ifacespython There are two versions of this function available
+         * \python There are two versions of this function available
          * in Python.  The first version is the same as the C++ function;
          * here you must pass \a action, which may be a pure Python function.
          * The second form does not have an \a action argument; instead you
-         * call <tt>enumerate(subspace, constraints)</tt>,
+         * call `enumerate(subspace, constraints)`,
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
          *
-         * @param action a function (or other callable object) that will be
+         * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type RayClass.
-         * @param subspace a matrix defining the linear subspace to intersect
+         * \param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described above,
+         * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
          */
         template <class RayClass, typename Action>
@@ -174,7 +174,7 @@ class HilbertCD {
             /**
              * Creates the zero vector.
              *
-             * @param dim the total dimension of the space (and
+             * \param dim the total dimension of the space (and
              * therefore the toatl length of this vector).
              */
             inline VecSpec(size_t dim);

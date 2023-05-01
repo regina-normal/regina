@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,6 +38,7 @@
 #include "examplecreator.h"
 #include "tri2creator.h"
 #include "reginasupport.h"
+#include "reginaprefset.h"
 
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -218,8 +219,16 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     details->addWidget(hArea);//, TRI_EXAMPLE);
 
     // Tidy up.
-    type->setCurrentIndex(0);
-    details->setCurrentIndex((int)0);
+    {
+        int typeId = ReginaPrefSet::global().triDim2CreationType;
+        if (typeId >= 0 && typeId < type->count()) {
+            type->setCurrentIndex(typeId);
+            details->setCurrentIndex(typeId);
+        } else {
+            type->setCurrentIndex(0);
+            details->setCurrentIndex((int)0);
+        }
+    }
 
     QObject::connect(type, SIGNAL(activated(int)), details,
         SLOT(setCurrentIndex(int)));
@@ -232,6 +241,9 @@ QWidget* Tri2Creator::getInterface() {
 std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
+    // Remember our selection for next time.
+    ReginaPrefSet::global().triDim2CreationType = typeId;
+
     if (typeId == TRI_EMPTY) {
         auto ans = regina::make_packet<Triangulation<2>>();
         ans->setLabel("2-D triangulation");

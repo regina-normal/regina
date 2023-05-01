@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 /*! \file census/gluingperms-impl.h
  *  \brief Contains implementation details for the GluingPerms class template.
  *
- *  This file is \e not included automatically by gluingperms.h.
+ *  This file is _not_ included automatically by gluingperms.h.
  *  However, typical end users should never need to include it, since
  *  Regina's calculation engine provides full explicit instantiations
  *  of GluingPerms for \ref stddim "standard dimensions".

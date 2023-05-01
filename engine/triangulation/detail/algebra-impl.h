@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,7 +34,7 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is \e not included from triangulation.h, but the routines
+ *  This file is _not_ included from triangulation.h, but the routines
  *  it contains are explicitly instantiated in Regina's calculation engine.
  *  Therefore end users should never need to include this header.
  */
@@ -174,7 +174,7 @@ AbelianGroup TriangulationBase<dim>::homology() const {
 }
 
 template <int dim>
-const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
+const GroupPresentation& TriangulationBase<dim>::group() const {
     if (fundGroup_.has_value())
         return *fundGroup_;
 

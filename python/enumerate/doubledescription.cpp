@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,18 +35,32 @@
 #include "../pybind11/stl.h"
 #include "enumerate/doubledescription.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/doubledescription.h"
 
+using regina::python::GILCallbackManager;
 using regina::DoubleDescription;
 using regina::VectorInt;
 
 void addDoubleDescription(pybind11::module_& m) {
-    auto c = pybind11::class_<DoubleDescription>(m, "DoubleDescription")
-        .def_static("enumerate", &DoubleDescription::enumerate<VectorInt,
-                const std::function<void(VectorInt&&)>&>,
-            pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr,
+    RDOC_SCOPE_BEGIN(DoubleDescription)
+
+    auto c = pybind11::class_<DoubleDescription>(m, "DoubleDescription",
+            rdoc_scope)
+        .def_static("enumerate", [](
+                const std::function<void(VectorInt&&)>& action,
+                const regina::MatrixInt& s,
+                const regina::ValidityConstraints& c,
+                regina::ProgressTracker* p, size_t r) {
+            GILCallbackManager<false> manager;
+            DoubleDescription::enumerate<VectorInt>([&](VectorInt&& v) {
+                GILCallbackManager<false>::ScopedAcquire acquire(manager);
+                action(std::move(v));
+            }, s, c, p, r);
+        },
+            pybind11::arg("action"), pybind11::arg("subspace"),
+            pybind11::arg("constraints"), pybind11::arg("tracker") = nullptr,
             pybind11::arg("initialRows") = 0,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            rdoc::enumerate)
         .def_static("enumerate", [](const regina::MatrixInt& s,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p, size_t r) {
@@ -55,11 +69,14 @@ void addDoubleDescription(pybind11::module_& m) {
                 ans.push_back(std::move(v));
             }, s, c, p, r);
             return ans;
-        }, pybind11::arg(), pybind11::arg(),
+        }, pybind11::arg("subspace"), pybind11::arg("constraints"),
             pybind11::arg("tracker") = nullptr,
             pybind11::arg("initialRows") = 0,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::enumerate)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 

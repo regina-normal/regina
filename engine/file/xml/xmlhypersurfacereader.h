@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ namespace regina {
  * An XML element reader that reads a single normal hypersurface in a
  * 4-manifold triangulation.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalHypersurfaceReader : public XMLElementReader {
     private:
@@ -73,8 +73,8 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
         /**
          * Creates a new normal hypersurface reader.
          *
-         * @param tri the triangulation in which this normal hypersurface lives.
-         * @param coords the coordinate system used by this normal hypersurface.
+         * \param tri the triangulation in which this normal hypersurface lives.
+         * \param coords the coordinate system used by this normal hypersurface.
          */
         XMLNormalHypersurfaceReader(const SnapshotRef<Triangulation<4>>& tri,
             HyperCoords coords);
@@ -82,7 +82,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
         /**
          * Returns a reference to the normal hypersurface that has been read.
          *
-         * @return the normal hypersurface, or no value if an error occurred.
+         * \return the normal hypersurface, or \nullopt if an error occurred.
          */
         std::optional<NormalHypersurface>& hypersurface();
 
@@ -97,7 +97,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single normal hypersurface list.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalHypersurfacesReader : public XMLPacketReader {
     private:
@@ -113,7 +113,7 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c hypersurfaces XML element.
+         * \param props the attributes of the \c hypersurfaces XML element.
          */
         XMLNormalHypersurfacesReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -130,7 +130,7 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
  * An XML packet reader that reads a single normal hypersurface list
  * using the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
     private:
@@ -146,7 +146,7 @@ class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param tri the triangulation in which these normal hypersurfaces
+         * \param tri the triangulation in which these normal hypersurfaces
          * live.
          */
         XMLLegacyNormalHypersurfacesReader(XMLTreeResolver& resolver,

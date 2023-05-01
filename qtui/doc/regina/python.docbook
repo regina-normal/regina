@@ -17,32 +17,18 @@
  <para>
   All scripts in &regina; use the &python; programming language
   (<ulink url="http://www.python.org/"/>).
-  &regina; can work with either &python;&nbsp;3 or &python;&nbsp;2,
-  but you must choose your &python; version when you build &regina;.
-  If you download a ready-made package then the packager has already made this
-  choice for you; the ready-made packages on the &regina; website use the
-  default version of &python; on each system where possible.
+  The specific &python; version must be chosen at build time.
+  If you download a ready-made package then the packager has already chosen
+  the &python; version for you; the ready-made packages on the
+  &regina; website will always use the default version of &python;
+  on each system where possible.
  </para>
- <para id="python-docs">
-  &regina; includes a complete &api; reference for its calculation engine,
-  which describes in detail the objects, classes and methods that are
-  available through &python;.  To read this documentation, select
-  <menuchoice>
-   <guimenu>Help</guimenu>
-   <guimenuitem>Python &api; Reference</guimenuitem>
-  </menuchoice>
-  from the menu, or read it online at &regenginedocsurlbase;.
-  There is a special page in the &api; documentation outlining the main
-  issues relevant to &python; users, and you should
-  <ulink url="https://regina-normal.github.io/&regversion;/engine-docs/pythonapi.html">read this also</ulink>.
- </para>
-
  <warning>
   <para>
    &regina;'s &python; interface typically assumes you know what you are
    doing, and so the onus is on you to follow the rules.
    All constraints, preconditions and so on are thoroughly documented in the
-   &api; documentation.
+   <link linkend="python-docs">&api; documentation</link>.
    Probably the easiest way to crash &regina; is to bring up a &python;
    console and do something &ldquo;illegal&rdquo; (like gluing together
    two tetrahedra that belong to different triangulations).
@@ -226,33 +212,136 @@
    All of &regina;'s objects, classes and methods belong to the
    module called <parameter>regina</parameter>.
    For instance, the main 3-manifold triangulation class is
-   <literal>regina.Triangulation3</literal>, and the main routine to
-   read a data file is <literal>regina.open</literal>.
+   <literal>regina.Triangulation3</literal>,
+   the main knot/link class is <literal>regina.Link</literal>,
+   and the main routine to read a data file is <literal>regina.open</literal>.
   </para>
+  <sect2 id="python-autoimport">
+   <title>Automatic Imports</title>
+   <para>
+    Whenever &regina; gives you access to &python; (either through a
+    <link linkend="python-gui">graphical console</link>,
+    a <link linkend="python-script">script packet</link>, or a
+    <link linkend="python-cmdline"><command>regina-python</command>
+    command-line session</link>),
+    it will automatically import the <parameter>regina</parameter>
+    module (i.e., &ldquo;<literal>import regina</literal>&rdquo;),
+    and it will import all of &regina;'s objects,
+    classes and methods into the current namespace
+    (i.e., &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;).
+    As a single exception, it will <emphasis>not</emphasis> import
+    <literal>regina.open</literal>, so as to not hide &python;'s own
+    <function>open()</function> function.
+   </para>
+   <para>
+    This means, for instance, that you can create a new triangulation by just
+    calling <literal>Triangulation3()</literal>, but to read a data file
+    you should still call <literal>regina.open(filename)</literal>.
+    For command-line sessions,
+    if you wish to avoid the heavy-handed
+    &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;, you can pass
+    the option <option>--noautoimport</option>
+    to <command>regina-python</command>
+    (in which case you will need to use fully qualified names such as
+    <literal>regina.Triangulation3()</literal>).
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="python-docs">
+  <title>&api; Documentation</title>
   <para>
-   Whenever &regina; gives you access to &python; (either through a
-   <link linkend="python-gui">graphical console</link>,
-   a <link linkend="python-script">script packet</link> or a
-   <link linkend="python-cmdline">command-line session</link>),
-   it will automatically import the <parameter>regina</parameter>
-   module (i.e., &ldquo;<literal>import regina</literal>&rdquo;),
-   and it will import all of &regina;'s objects,
-   classes and methods into the current namespace
-   (i.e., &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;).
-   As a single exception, it will <emphasis>not</emphasis> import
-   <literal>regina.open</literal>, so as to not hide &python;'s own
-   <function>open()</function> function.
+   &regina; includes a complete &api; reference for its calculation engine,
+   which describes in detail the objects, classes and methods that are
+   available through &python;.
+   To read this documentation, you can:
+   <itemizedlist>
+    <listitem>read the locally installed documentation by selecting
+    <menuchoice>
+     <guimenu>Help</guimenu>
+     <guimenuitem>Python &api; Reference</guimenuitem>
+    </menuchoice>;</listitem>
+    <listitem>read it online through the
+     <ulink url="https://regina-normal.github.io/engine-docs/">&regina;
+     website</ulink>;</listitem>
+    <listitem>read it inline from
+    <link linkend="python-docstrings">within &python;</link>
+     (see below).</listitem>
+   </itemizedlist>
+   Be aware that this &api; documentation is primarily written for &cpp;
+   (the main language that &regina; is written in).  This means:
+   <itemizedlist>
+    <listitem>
+     The documentation uses &cpp; notation and &cpp; types,
+     though these are all translated in the natural way to &python;
+     (e.g., <literal>std::string</literal> becomes a &python; string,
+     and <literal>std::vector</literal> becomes a &python; list).
+    </listitem>
+    <listitem>
+     Some functions differ in how they are called from &cpp;
+     versus &python;.  In such cases you will see the &cpp; description,
+     but there will also be a &ldquo;&python;&rdquo; paragraph explaining
+     how things differ in &python;.
+    </listitem>
+   </itemizedlist>
+   There are more issues that &python; users should be aware of;
+   please do read the
+   <ulink url="https://regina-normal.github.io/engine-docs/pythonapi.html">summary page in the &api; documentation</ulink>
+   that outlines the main differences.
   </para>
-  <para>
-   This means, for instance, that you create a new triangulation by just
-   calling <literal>Triangulation3()</literal>, but to read a data file
-   you should still call <literal>regina.open(filename)</literal>.
-   For command-line sessions, if you wish to avoid the heavy-handed
-   &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;, you can pass
-   the option <option>--noautoimport</option> (in which case you will need to
-   use fully qualified names such as
-   <literal>regina.Triangulation3()</literal>.
-  </para>
+
+  <sect2 id="python-docstrings">
+   <title>Inline Documentation</title>
+   <para>
+    Since version;&nbsp;7.2, &regina; now provides &python; docstrings
+    for all of its classes and functions.  This means that you can get help
+    directly from the &python; prompt, as illustrated below.
+   </para>
+   <para>
+    Be aware, however, that this documentation is extracted automatically
+    from the hand-written &cpp; &api; documentation discussed above.
+    Although great attention has been paid to making this extraction
+    as useful and natural as possible, it is still automated.
+    Therefore you will find:
+    <itemizedlist>
+     <listitem>The documentation still uses some &cpp; terminology
+      (e.g., <literal>std::string</literal>, pointers and references,
+      move semantics, etc.).</listitem>
+     <listitem>Function arguments are often not named in the synopsis
+      at the beginning of the docstring (you will see them called
+      <literal>arg0</literal>, <literal>arg1</literal>, etc.).
+      However, they <emphasis>are</emphasis> named in the detailed
+      descriptions of the arguments that follow.</listitem>
+     <listitem>Some functions differ in how they are called from &cpp;
+      versus &python; (e.g., <literal>Tetrahedron3.face()</literal>, or
+      <literal>Link.rewrite()</literal>).
+      In these cases, the detailed hand-written argument descriptions will
+      follow the &cpp; variant, but the initial synopsis will be written for
+      &python;.  For clarity, here the arguments in the &python; synopsis
+      <emphasis>will</emphasis> be named.
+      Look also for a &ldquo;&python;&rdquo; paragraph that explains
+      exactly how the &cpp; and &python; versions differ.</listitem>
+     <listitem>Some parts of the documentation are not accessible at all
+      through &python;, since they do not correspond to entities that
+      hold docstrings (e.g., class constants such as
+      <literal>Perm4::nPerms</literal>, or standalone pages such as the
+      discussion on Seifert fibred space notation).</listitem>
+    </itemizedlist>
+    Ultimately, <emphasis>it is the &cpp; documentation that is
+    authoritative</emphasis>, not the inline &python; documentation.
+    Again, remember that you can always
+    <ulink url='https://regina-normal.github.io/engine-docs/'>read
+    the &cpp; documentation online</ulink>.
+   </para>
+   <para>
+    An example of docstrings for member functions:
+    <programlisting>&docstring1;</programlisting>
+   </para>
+   <para>
+    An example of docstrings for classes:
+    <programlisting>&docstring2;</programlisting>
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="python-snappy">
@@ -364,9 +453,9 @@
   </para>
   <programlisting>
 bab@ember:~$ regina-python 
-Regina 7.1
+Regina 7.2
 Software for low-dimensional topology
-Copyright (c) 1999-2021, The Regina development team
+Copyright (c) 1999-2022, The Regina development team
 &gt;&gt;&gt; import snappy
 &gt;&gt;&gt; m = snappy.Manifold('m001')
 &gt;&gt;&gt; t = SnapPeaTriangulation(m._to_string())

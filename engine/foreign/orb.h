@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,21 +54,21 @@ template <typename> class PacketOf;
  *
  * The packet label of the new triangulation will be the manifold name
  * read from the second line of the Orb / Casson file.  The first line
- * of the Orb / Casson file must simply be ``<tt>% orb</tt>''.
+ * of the Orb / Casson file must simply be: `% orb`
  *
  * If the file could not be read or if the data was not in the correct
  * format, \c null will be returned.
  *
  * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
+ * \ref i18n "character encoding" used in the given file _name_, and
  * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
+ * It assumes however that the _contents_ of the file are in UTF-8.
  *
- * @param filename the name of the Orb / Casson file from which to read.
- * @return a new triangulation packet containing the data read from the
+ * \param filename the name of the Orb / Casson file from which to read.
+ * \return a new triangulation packet containing the data read from the
  * Orb / Casson file, or \c null on error.
  *
- * @author Ryan Budney, also with code from Damien Heard
+ * \author Ryan Budney, also with code from Damien Heard
  *
  * \ingroup foreign
  */

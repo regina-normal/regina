@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2021, Ben Burton                                   *
+ *  Copyright (c) 2011-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,14 @@ template BanBoundary::BanBoundary(
     const LPInitialTableaux<LPConstraintEulerZero>&);
 template BanBoundary::BanBoundary(
     const LPInitialTableaux<LPConstraintNonSpun>&);
+
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintNone>&, Edge<3>*);
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintEulerPositive>&,
+    Edge<3>*);
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintEulerZero>&,
+    Edge<3>*);
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintNonSpun>&,
+    Edge<3>*);
 
 template BanTorusBoundary::BanTorusBoundary(
     const LPInitialTableaux<LPConstraintNone>&);

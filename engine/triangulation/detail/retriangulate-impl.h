@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,7 +35,7 @@
  *  \brief Full implementation details for the retriangulation and
  *  link rewriting functions.
  *
- *  This file is \e not included from triangulation.h or link.h, and it is not
+ *  This file is _not_ included from triangulation.h or link.h, and it is not
  *  shipped with Regina's development headers.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *
@@ -74,18 +74,18 @@ namespace regina::detail {
  * The specialisation should provide:
  *
  * - a template function
- *   <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>,
+ *   `static void propagateFrom<T>(sig, max, retriangulator)`,
  *   as described below;
  *
- * - a static constexpr member <tt>const char* progressStage</tt>, which
+ * - a static constexpr member `const char* progressStage`, which
  *   returns the human-readable description of the processing stage that
  *   will be set up in the progress tracker;
  *
- * - a function <tt>static std::string sig(const Object&)</tt>, which
+ * - a function `static std::string sig(const Object&)`, which
  *   returns the text signature that is used to identify a triangulation
  *   or link up to the appropriate notion of combinatorial equivalence.
  *
- * The function <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>
+ * The function `static void propagateFrom<T>(sig, max, retriangulator)`
  * takes the following arguments:
  *
  * - \a sig is the isomorphism signature of a triangulation or the knot
@@ -102,10 +102,10 @@ namespace regina::detail {
  * The function should reconstruct a triangulation or link \a obj from \a sig;
  * examine all possible moves from \a obj that do not exceed size \a max; and
  * for each resulting triangulation/link \a alt, it should call
- * <tt>retriangulator->candidate(std::move(alt), sig)</tt>.
+ * `retriangulator->candidate(std::move(alt), sig)`.
  *
  * The function should also check the return value each time it calls
- * <tt>retriangulator->candidate(...)</tt>.  If the \a candidate
+ * `retriangulator->candidate(...)`.  If the \a candidate
  * function ever returns \c true then it should not try any further moves, but
  * instead should clean up and return immediately.
  *
@@ -176,7 +176,7 @@ class RetriangulateThreadSync<true> {
             auto* t = new std::thread[nThreads];
             unsigned i;
 
-            // In the std::thread constructor, we \e must pass \c this as a
+            // In the std::thread constructor, we _must_ pass \c this as a
             // pointer - otherwise we may end up making deep copies instead.
             for (i = 0; i < nThreads; ++i)
                 t[i] = std::thread(&RetriangulatorType::processQueue,

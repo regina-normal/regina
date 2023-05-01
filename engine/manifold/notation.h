@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,9 +65,9 @@
  *  description above.
  *
  *  Where necessary, we use the oriented curves \a o1 and \a o2 as
- *  curves on the boundaries <i>"representing the base orbifold"</i>,
+ *  curves on the boundaries _representing the base orbifold_,
  *  and parallel copies of \a f as curves on the boundaries
- *  <i>"representing the fibres"</i>.  This becomes particularly
+ *  _representing the fibres_.  This becomes particularly
  *  important when joining different boundary components together.
  *
  *  It is worth noting the following observation.  Suppose we have a

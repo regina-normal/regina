@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,7 +63,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -74,14 +74,14 @@ class LightweightSequence {
             /**< An iterator type for read-write access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a reference to type \a T), and manipulated
-                using the usual pointer arithmetic (such as <tt>p++</tt>,
-                <tt>--p</tt>, <tt>p += n</tt>, and so on). */
+                using the usual pointer arithmetic (such as `p++`,
+                `--p`, `p += n`, and so on). */
         using const_iterator = const T*;
             /**< An iterator type for read-only access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a const reference to type \a T), and manipulated
-                using the usual pointer arithmetic (such as <tt>p++</tt>,
-                <tt>--p</tt>, <tt>p += n</tt>, and so on). */
+                using the usual pointer arithmetic (such as `p++`,
+                `--p`, `p += n`, and so on). */
 
     private:
         T* data_;
@@ -101,7 +101,7 @@ class LightweightSequence {
          * elements.  The elements themselves will be initialised using
          * the default constructor for type \a T.
          *
-         * @param size the number of elements in the new sequence.
+         * \param size the number of elements in the new sequence.
          */
         explicit LightweightSequence(size_t size);
         /**
@@ -117,7 +117,7 @@ class LightweightSequence {
          *   added onto the end of the sequence.
          *
          * - If the next argument is a LightweightSequence iterator, then this
-         *   must be followed by \e another LightweightSequence iterator.
+         *   must be followed by _another_ LightweightSequence iterator.
          *   The range defined by this iterator pair will be copied onto
          *   the end of the sequence.
          *
@@ -129,8 +129,8 @@ class LightweightSequence {
          * iterator ranges plus the number of standalone elements in the
          * argument list \a elements.
          *
-         * @param size the number of elements in the new sequence.
-         * @param elements the elements and/or iterator ranges with which to
+         * \param size the number of elements in the new sequence.
+         * \param elements the elements and/or iterator ranges with which to
          * fill the sequence, as described above.
          */
         template <typename... Args>
@@ -141,7 +141,7 @@ class LightweightSequence {
          * This induces a deep copy of \a src, in that all of the elements of
          * \a src will be copied into the new sequence.
          *
-         * @param src the sequence to copy.
+         * \param src the sequence to copy.
          */
         LightweightSequence(const LightweightSequence& src);
         /**
@@ -150,7 +150,7 @@ class LightweightSequence {
          *
          * The sequence that was passed (\a src) will no longer be usable.
          *
-         * @param src the sequence to move.
+         * \param src the sequence to move.
          */
         LightweightSequence(LightweightSequence&& src) noexcept;
         /**
@@ -178,7 +178,7 @@ class LightweightSequence {
          * always force a reallocation of the underlying storage (even if the
          * new size is smaller than the old).
          *
-         * @param size the number of elements that the sequence will
+         * \param size the number of elements that the sequence will
          * contain after this routine is called.
          */
         void init(size_t size = 0);
@@ -192,18 +192,18 @@ class LightweightSequence {
         /**
          * Returns a copy of the element at the given index in the sequence.
          *
-         * @param pos the index of the requested element; this must be
+         * \param pos the index of the requested element; this must be
          * between 0 and size()-1 inclusive.
-         * @return a copy of the requested element.
+         * \return a copy of the requested element.
          */
         T operator [] (size_t pos) const;
         /**
          * Returns a reference to the element at the given index in the
          * sequence.
          *
-         * @param pos the index of the requested element; this must be
+         * \param pos the index of the requested element; this must be
          * between 0 and size()-1 inclusive.
-         * @return a reference to the requested element.
+         * \return a reference to the requested element.
          */
         T& operator [] (size_t pos);
 
@@ -215,7 +215,7 @@ class LightweightSequence {
          * the sequence, and so by dereferencing an iterator you can
          * change the corresponding element of the sequence directly.
          *
-         * @return a read-write begin iterator.
+         * \return a read-write begin iterator.
          */
         iterator begin();
         /**
@@ -226,7 +226,7 @@ class LightweightSequence {
          * of the sequence, and so by dereferencing a const_iterator you can
          * access (but not change) the corresponding element of the sequence.
          *
-         * @return a read-only begin iterator.
+         * \return a read-only begin iterator.
          */
         const_iterator begin() const;
         /**
@@ -236,7 +236,7 @@ class LightweightSequence {
          * Note that, because this iterator is past-the-end, it must not be
          * dereferenced.
          *
-         * @return a read-write past-the-end iterator.
+         * \return a read-write past-the-end iterator.
          */
         iterator end();
         /**
@@ -246,7 +246,7 @@ class LightweightSequence {
          * Note that, because this iterator is past-the-end, it must not be
          * dereferenced.
          *
-         * @return a read-only past-the-end iterator.
+         * \return a read-only past-the-end iterator.
          */
         const_iterator end() const;
 
@@ -257,8 +257,8 @@ class LightweightSequence {
          * This induces a deep copy of \a src, in that all of the elements of
          * \a src will be copied into the new sequence.
          *
-         * @param src the sequence to copy.
-         * @return a reference to this sequence.
+         * \param src the sequence to copy.
+         * \return a reference to this sequence.
          */
         LightweightSequence<T>& operator = (const LightweightSequence& src);
         /**
@@ -267,15 +267,15 @@ class LightweightSequence {
          *
          * The sequence that was passed (\a src) will no longer be usable.
          *
-         * @param src the sequence to move.
-         * @return a reference to this sequence.
+         * \param src the sequence to move.
+         * \return a reference to this sequence.
          */
         LightweightSequence<T>& operator = (LightweightSequence&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given sequence.
          *
-         * @param other the sequence whose contents are to be swapped with this.
+         * \param other the sequence whose contents are to be swapped with this.
          */
         void swap(LightweightSequence<T>& other) noexcept;
 
@@ -285,8 +285,8 @@ class LightweightSequence {
          * The sequences need not be the same size, though if the sizes
          * are different then this routine will return \c false immediately.
          *
-         * @param rhs the sequence to compare with this.
-         * @return \c true if and only if this and the given sequence
+         * \param rhs the sequence to compare with this.
+         * \return \c true if and only if this and the given sequence
          * are identical.
          */
         bool operator == (const LightweightSequence& rhs) const;
@@ -295,8 +295,8 @@ class LightweightSequence {
          * Tests whether this sequence is lexicographically smaller than the
          * given sequence.  The sequences need not be the same size.
          *
-         * @param rhs the sequence to compare with this.
-         * @return \c true if this is strictly lexicographically
+         * \param rhs the sequence to compare with this.
+         * \return \c true if this is strictly lexicographically
          * smaller than \a rhs, or \c false if this is either
          * lexicographically greater than or equal to \a rhs.
          */
@@ -320,9 +320,9 @@ class LightweightSequence {
          * More precisely: suppose the indices of the elements to
          * compare are \a i0, \a i1, \a i2, ..., and that we are comparing
          * iterators \a a, \a b.  Then this function object will consider the
-         * sequences <tt>s = a->first</tt> and <tt>t = b->first</tt>,
+         * sequences `s = a->first` and `t = b->first`,
          * and will lexicographically compare their subsequences
-         * <tt>s[i0], s[i1], ...</tt> and <tt>t[i0], t[i1], ...</tt>.
+         * `s[i0], s[i1], ...` and `t[i0], t[i1], ...`.
          *
          * Note that the indices \a i0, \a i1, ... do not need to be in
          * increasing order.
@@ -330,7 +330,7 @@ class LightweightSequence {
          * This class is meant to be lightweight: it merely stores a
          * reference to the list of elements to compare, and it is safe
          * and fast to pass around by value.  The cost of this is that
-         * the caller \e must ensure that the list of elements to compare
+         * the caller _must_ ensure that the list of elements to compare
          * (which is a C-style array) has a lifespan at least as long as
          * this object.  This behaviour is new as of Regina 5.96; in past
          * versions of Regina the list of elements was copied on construction.
@@ -370,9 +370,9 @@ class LightweightSequence {
                  * this function object and any function objects that are
                  * copied from it.
                  *
-                 * @param beginSub the beginning of the range of indices of
+                 * \param beginSub the beginning of the range of indices of
                  * elements to compare from each sequence.
-                 * @param endSub the end (i.e., a past-the-end iterator) of
+                 * \param endSub the end (i.e., a past-the-end iterator) of
                  * the range of indices of elements to compare from each
                  * sequence.
                  */
@@ -387,7 +387,7 @@ class LightweightSequence {
                 /**
                  * Copies the given function object into this object.
                  *
-                 * @return a reference to this function object.
+                 * \return a reference to this function object.
                  */
                 SubsequenceCompareFirst& operator = (
                     const SubsequenceCompareFirst&) = default;
@@ -399,11 +399,11 @@ class LightweightSequence {
                  * See the class notes for details on how each iterator
                  * is converted into a subsequence.
                  *
-                 * @param a an iterator indicating the first of the two
+                 * \param a an iterator indicating the first of the two
                  * subsequences to compare.
-                 * @param b an iterator indicating the second of the two
+                 * \param b an iterator indicating the second of the two
                  * subsequences to compare.
-                 * @return \c true if and only if the two subsequences
+                 * \return \c true if and only if the two subsequences
                  * are identical.
                  */
                 template <typename SeqIterator>
@@ -417,11 +417,11 @@ class LightweightSequence {
                  *
                  * This member function is identical to the bracket operator.
                  *
-                 * @param a an iterator indicating the first of the two
+                 * \param a an iterator indicating the first of the two
                  * subsequences to compare.
-                 * @param b an iterator indicating the second of the two
+                 * \param b an iterator indicating the second of the two
                  * subsequences to compare.
-                 * @return \c true if and only if the subsequence
+                 * \return \c true if and only if the subsequence
                  * indicated by \a a is lexicographically smaller than
                  * the subsequence indicated by \a b.
                  */
@@ -437,11 +437,11 @@ class LightweightSequence {
                  * This bracket operator is identical to the less()
                  * member function.
                  *
-                 * @param a an iterator indicating the first of the two
+                 * \param a an iterator indicating the first of the two
                  * subsequences to compare.
-                 * @param b an iterator indicating the second of the two
+                 * \param b an iterator indicating the second of the two
                  * subsequences to compare.
-                 * @return \c true if and only if the subsequence
+                 * \return \c true if and only if the subsequence
                  * indicated by \a a is lexicographically smaller than
                  * the subsequence indicated by \a b.
                  */
@@ -484,14 +484,14 @@ class LightweightSequence {
  * Writes the given sequence to the given output stream.  No newline
  * will be written.
  *
- * The sequence will be written in the form <tt>(a, b, c, ...)</tt>.
+ * The sequence will be written in the form `(a, b, c, ...)`.
  *
  * \pre An object \a x of type \a T can be written to an output stream
- * using the syntax <tt>out << x</tt>.
+ * using the syntax `out << x`.
  *
- * @param out the output stream to which to write.
- * @param s the sequence to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param s the sequence to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -504,8 +504,8 @@ std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
  * This global routine simply calls LightweightSequence<T>::swap(); it is
  * provided so that LightweightSequence<T> meets the C++ Swappable requirements.
  *
- * @param a the first sequence whose contents should be swapped.
- * @param b the second sequence whose contents should be swapped.
+ * \param a the first sequence whose contents should be swapped.
+ * \param b the second sequence whose contents should be swapped.
  *
  * \ingroup utilities
  */

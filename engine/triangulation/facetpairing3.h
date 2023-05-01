@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,8 +50,10 @@ class FacePair;
 /**
  * Represents the dual graph of a 3-manifold triangulation.
  *
- * This is a specialisation of the generic FacetPairing class template;
- * see the FacetPairing documentation for an overview of how this class works.
+ * This is a specialisation of the generic FacetPairing class template; see the
+ * generic FacetPairing documentation for an overview of how the facet pairing
+ * classes work.  In Python, you can read this generic documentation by
+ * looking at a higher dimension: try `help(FacetPairing5)`.
  *
  * This 3-dimensional specialisation contains some extra functionality.
  * In particular, it provides routines for finding informative subgraphs
@@ -69,7 +71,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
         /**
          * Creates a new copy of the given face pairing.
          *
-         * @param src the face pairing to clone.
+         * \param src the face pairing to clone.
          */
         FacetPairing(const FacetPairing& src) = default;
 
@@ -79,7 +81,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * The face pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the face pairing to move.
+         * \param src the face pairing to move.
          */
         FacetPairing(FacetPairing&& src) noexcept = default;
 
@@ -88,12 +90,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * This describes how the tetrahedron faces of the given triangulation
          * are joined together in pairs.
          *
-         * Calling <tt>FacetPairing<3>(tri)</tt> is equivalent to calling
-         * <tt>tri.pairing()</tt>.
+         * Calling `FacetPairing<3>(tri)` is equivalent to calling
+         * `tri.pairing()`.
          *
          * \pre The given triangulation is not empty.
          *
-         * @param tri the triangulation whose face pairing should be
+         * \param tri the triangulation whose face pairing should be
          * constructed.
          */
         FacetPairing(const Triangulation<3>& tri);
@@ -104,20 +106,20 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
-         * it will read the \e entire line from the input stream and expect
+         * it will read the _entire_ line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
          * If the data found in the input stream is invalid, incomplete or
          * incorrectly formatted, this constructor will throw an InvalidInput
          * exception.
          *
-         * \ifacespython Not present; instead you can use fromTextRep(), which
-         * reads this same text format in string form.  The main differences
-         * between this constructor and fromTextRep() are: (i) fromTextRep()
-         * does not skip over initial whitespace; and (ii) fromTextRep()
-         * throws InvalidArgument exceptions on error (not InvalidInput).
+         * \nopython Instead use fromTextRep(), which reads this same text
+         * format in string form.  The main differences between this
+         * constructor and fromTextRep() are: (i) fromTextRep() does not
+         * skip over initial whitespace; and (ii) fromTextRep() throws
+         * InvalidArgument exceptions on error (not InvalidInput).
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         FacetPairing(std::istream& in);
 
@@ -130,8 +132,8 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the facet pairing to copy.
-         * @return a reference to this face pairing.
+         * \param src the facet pairing to copy.
+         * \return a reference to this face pairing.
          */
         FacetPairing& operator = (const FacetPairing& src) = default;
 
@@ -145,8 +147,8 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * The face pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the face pairing to move.
-         * @return a reference to this face pairing.
+         * \param src the face pairing to move.
+         * \return a reference to this face pairing.
          */
         FacetPairing& operator = (FacetPairing&& src) noexcept = default;
 
@@ -186,10 +188,10 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * next, this routine will cycle around the loop forever and
          * never return.
          *
-         * @param tet the index in the underlying triangulation of the
+         * \param tet the index in the underlying triangulation of the
          * tetrahedron to begin at.  This parameter will be modified
          * directly by this routine as a way of returning the results.
-         * @param faces the pair of face numbers in the given
+         * \param faces the pair of face numbers in the given
          * tetrahedron at which we begin.  This parameter will also be
          * modified directly by this routine as a way of returning results.
          */
@@ -214,10 +216,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * with some extra casts on either side that may add a tiny
          * performance cost.
          *
-         * @param tet the index in the underlying triangulation of the
+         * \nopython Use the non-deprecated variant of this routine instead.
+         *
+         * \param tet the index in the underlying triangulation of the
          * tetrahedron to begin at.  This parameter will be modified
          * directly by this routine as a way of returning the results.
-         * @param faces the pair of face numbers in the given
+         * \param faces the pair of face numbers in the given
          * tetrahedron at which we begin.  This parameter will also be
          * modified directly by this routine as a way of returning results.
          */
@@ -229,12 +233,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * along three of their faces.
          *
          * A face pairing containing a triple edge cannot model a closed
-         * minimal irreducible P^2-irreducible 3-manifold triangulation on
+         * minimal irreducible P²-irreducible 3-manifold triangulation on
          * more than two tetrahedra.  See "Face pairing graphs and 3-manifold
          * enumeration", Benjamin A. Burton, J. Knot Theory Ramifications
          * 13 (2004), 1057--1101.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * triple edge.
          */
         bool hasTripleEdge() const;
@@ -267,12 +271,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * not joined together.
          *
          * A face pairing containing a broken double-ended chain cannot
-         * model a closed minimal irreducible P^2-irreducible 3-manifold
+         * model a closed minimal irreducible P²-irreducible 3-manifold
          * triangulation on more than two tetrahedra.  See "Face pairing
          * graphs and 3-manifold enumeration", Benjamin A. Burton,
          * J. Knot Theory Ramifications 13 (2004), 1057--1101.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * broken double-ended chain that is not part of a complete
          * double-ended chain.
          */
@@ -299,13 +303,13 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * structure.
          *
          * A face pairing containing a one-ended chain with a double handle
-         * cannot model a closed minimal irreducible P^2-irreducible
+         * cannot model a closed minimal irreducible P²-irreducible
          * 3-manifold triangulation on more than two tetrahedra.  See
          * "Face pairing graphs and 3-manifold enumeration",
          * Benjamin A. Burton, J. Knot Theory Ramifications 13 (2004),
          * 1057--1101.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with a double handle.
          */
         bool hasOneEndedChainWithDoubleHandle() const;
@@ -352,13 +356,13 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * hasOneEndedChainWithDoubleHandle() for further details.
          *
          * A face pairing containing a wedged double-ended chain
-         * cannot model a closed minimal irreducible P^2-irreducible
+         * cannot model a closed minimal irreducible P²-irreducible
          * 3-manifold triangulation on more than two tetrahedra.  See
          * "Enumeration of non-orientable 3-manifolds using face-pairing
          * graphs and union-find", Benjamin A. Burton,
          * Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * wedged double-ended chain.
          */
         bool hasWedgedDoubleEndedChain() const;
@@ -396,13 +400,13 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * unaccounted for by this structure.
          *
          * A face pairing containing a structure of this type
-         * cannot model a closed minimal irreducible P^2-irreducible
+         * cannot model a closed minimal irreducible P²-irreducible
          * 3-manifold triangulation on more than two tetrahedra.  See
          * "Enumeration of non-orientable 3-manifolds using face-pairing
          * graphs and union-find", Benjamin A. Burton,
          * Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with a stray bigon.
          */
         bool hasOneEndedChainWithStrayBigon() const;
@@ -426,13 +430,13 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * new tetrahedra) remain unaccounted for by this structure.
          *
          * A face pairing containing a triple one-ended chain
-         * cannot model a closed minimal irreducible P^2-irreducible
+         * cannot model a closed minimal irreducible P²-irreducible
          * 3-manifold triangulation on more than two tetrahedra.  See
          * "Enumeration of non-orientable 3-manifolds using face-pairing
          * graphs and union-find", Benjamin A. Burton,
          * Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * triple one-ended chain.
          */
         bool hasTripleOneEndedChain() const;
@@ -447,7 +451,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * none of the eight tetrahedra described in this structure are
          * the same).
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * single-edged star.
          */
         bool hasSingleStar() const;
@@ -462,7 +466,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * tetrahedra (so that none of the six tetrahedra described in
          * this structure are the same).
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * double-edged star.
          */
         bool hasDoubleStar() const;
@@ -479,7 +483,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * (one from each tetrahedron) remain unaccounted for by this
          * structure.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * double-edged square.
          */
         bool hasDoubleSquare() const;
@@ -491,7 +495,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * \pre \a size is at least 1.
          *
-         * @param size the number of tetrahedra under
+         * \param size the number of tetrahedra under
          * consideration in this new face pairing.
          */
         FacetPairing(size_t size);
@@ -506,12 +510,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * broken double-ended chain as described above.
          */
         bool hasBrokenDoubleEndedChain(size_t tet, int face) const;
@@ -526,12 +530,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with a double handle as described above.
          */
         bool hasOneEndedChainWithDoubleHandle(size_t tet, int face) const;
@@ -546,12 +550,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * wedged double-ended chain as described above.
          */
         bool hasWedgedDoubleEndedChain(size_t tet, int face) const;
@@ -566,12 +570,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with stray bigon as described above.
          */
         bool hasOneEndedChainWithStrayBigon(size_t tet, int face) const;
@@ -586,12 +590,12 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * triple one-ended chain as described above.
          */
         bool hasTripleOneEndedChain(size_t tet, int face) const;

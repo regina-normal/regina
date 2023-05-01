@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,17 +51,17 @@ namespace regina {
 /**
  * Fills the picker with all packets in the given tree.
  *
- * @param tree The root of the packet tree for the current document.
- * @param allowNone Indicates whether the null packet should be offered
+ * \param tree The root of the packet tree for the current document.
+ * \param allowNone Indicates whether the null packet should be offered
  * at the top of the list of options.  If the packet tree is empty and
  * \a allowRoot is \c false, then the null packet will be offered regardless
  * of what you pass as \a allowNone.
- * @param noneText The text to display for the null packet.
+ * \param noneText The text to display for the null packet.
  * This must not be \c nil.
- * @param allowRoot Indicates whether the root of the packet tree should be
+ * \param allowRoot Indicates whether the root of the packet tree should be
  * offered at the top of the list of options.  If both \a allowNone and
  * \a allowRoot are \c true, then the null packet will appear first.
- * @param rootText The text to display for the root packet.
+ * \param rootText The text to display for the root packet.
  * If \a allowRoot is \c false then this may be \c nil.
  * @select The packet that should be initially selected in the picker.
  */
@@ -71,12 +71,12 @@ namespace regina {
  * Fills the picker with all packets of the given type.  The root of the packet
  * tree will not be displayed.
  *
- * @param tree The root of the packet tree for the current document.
- * @param packetType The type of packets that will be offered.
- * @param allowNone Indicates whether the null packet should be offered
+ * \param tree The root of the packet tree for the current document.
+ * \param packetType The type of packets that will be offered.
+ * \param allowNone Indicates whether the null packet should be offered
  * at the top of the list of options.  If there are no packets of the given type,
  * then the null packet will be offered regardless of what you pass as \a allowNone.
- * @param noneText The text to display for the null packet.
+ * \param noneText The text to display for the null packet.
  * This must not be \c nil.
  */
 - (void)fill:(regina::Packet*)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
@@ -88,13 +88,13 @@ namespace regina {
  * This function is useful (for instance) when you wish to allow both
  * Triangulation<3> and SnapPeaTriangulation.
  *
- * @param tree The root of the packet tree for the current document.
- * @param packetType The type of packets that will be offered.
- * @param allowNone Indicates whether the null packet should be offered
+ * \param tree The root of the packet tree for the current document.
+ * \param packetType The type of packets that will be offered.
+ * \param allowNone Indicates whether the null packet should be offered
  * at the top of the list of options.  If there are no packets of either of the
  * given types, then the null packet will be offered regardless of what you pass
  * as \a allowNone.
- * @param noneText The text to display for the null packet.
+ * \param noneText The text to display for the null packet.
  * This must not be \c nil.
  */
 - (void)fill:(regina::Packet*)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString*)noneText;

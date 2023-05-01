@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -100,7 +100,7 @@ class GAPRunner : public QDialog {
          * the return value.  Further calls to this routine will result
          * in undefined behaviour.
          *
-         * If no simplified group has been created, then no value will
+         * If no simplified group has been created, then \nullopt will
          * be returned.
          */
         std::optional<regina::GroupPresentation> simplifiedGroup();

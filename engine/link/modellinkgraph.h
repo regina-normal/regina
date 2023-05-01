@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,21 +103,21 @@ class ModelLinkGraphArc {
          * so that comparison tests treat this null reference as equal to
          * a null reference created by the zero-argument constructor.
          *
-         * @param node the node of the model graph that this arc exits.
-         * @param arc an integer in the range 0 to 3 inclusive,
+         * \param node the node of the model graph that this arc exits.
+         * \param arc an integer in the range 0 to 3 inclusive,
          * indicating which of the four arcs exiting \a node this represents.
          */
         ModelLinkGraphArc(ModelLinkGraphNode* node, int arc);
 
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given arc reference.
          */
         ModelLinkGraphArc(const ModelLinkGraphArc&) = default;
 
         /**
          * The node of the model graph from which this arc exits.
          *
-         * @return the corresponding node, or \c null if this is a null arc.
+         * \return the corresponding node, or \c null if this is a null arc.
          */
         ModelLinkGraphNode* node() const;
 
@@ -128,7 +128,7 @@ class ModelLinkGraphArc {
          * For each node of a model graph, the four arcs exiting that
          * node are numbered 0,1,2,3 in a clockwise order.
          *
-         * @return an integer between 0 and 3 inclusive indicating one
+         * \return an integer between 0 and 3 inclusive indicating one
          * of the four arcs exiting node().
          */
         int arc() const;
@@ -141,7 +141,7 @@ class ModelLinkGraphArc {
          *
          * \warning If you create a null arc by calling
          * ModelLinkGraphArc(\c null, \a i) for some non-zero \a i, then this
-         * will \e not be considered equal to the null arc created by calling
+         * will _not_ be considered equal to the null arc created by calling
          * ModelLinkGraphArc(), since the latter is equivalent to calling
          * ModelLinkGraphArc(\c null, 0).
          *
@@ -156,7 +156,7 @@ class ModelLinkGraphArc {
          *
          * \warning If you create a null arc by calling
          * ModelLinkGraphArc(\c null, \a i) for some non-zero \a i, then this
-         * will \e not be considered equal to the null arc created by calling
+         * will _not_ be considered equal to the null arc created by calling
          * ModelLinkGraphArc(), since the latter is equivalent to calling
          * ModelLinkGraphArc(\c null, 0).
          *
@@ -164,9 +164,9 @@ class ModelLinkGraphArc {
          */
         bool operator != (const ModelLinkGraphArc& rhs) const;
         /**
-         * Default assignment operator.
+         * Sets this to be a copy of the given arc reference.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         ModelLinkGraphArc& operator = (const ModelLinkGraphArc&) = default;
 
@@ -180,12 +180,12 @@ class ModelLinkGraphArc {
          * this (modulo 4).
          *
          * Note that, for any arc \a a,
-         * <tt>a.opposite().opposite()</tt> is identical to \a a.
+         * `a.opposite().opposite()` is identical to \a a.
          *
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * @return the opposite arc exiting the same node.
+         * \return the opposite arc exiting the same node.
          */
         ModelLinkGraphArc opposite() const;
 
@@ -200,11 +200,11 @@ class ModelLinkGraphArc {
          * represents the other.
          *
          * Note that, for any arc \a a,
-         * <tt>a.traverse().traverse()</tt> is identical to \a a.
+         * `a.traverse().traverse()` is identical to \a a.
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
-         * @return the arc at the other end of the underlying edge of the
+         * \return the arc at the other end of the underlying edge of the
          * model graph.
          */
         ModelLinkGraphArc traverse() const;
@@ -218,12 +218,12 @@ class ModelLinkGraphArc {
          * arc at the resulting node (i.e., not just pointing backwards along
          * the same edge).
          *
-         * For any arc \a a, calling <tt>a.next()</tt> is equivalent to
-         * calling <tt>a.traverse().opposite()</tt>.
+         * For any arc \a a, calling `a.next()` is equivalent to
+         * calling `a.traverse().opposite()`.
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
-         * @return the next arc after this when walking through the graph as
+         * \return the next arc after this when walking through the graph as
          * though it were a link.
          */
         ModelLinkGraphArc next() const;
@@ -235,12 +235,12 @@ class ModelLinkGraphArc {
          * and then move to the other endpoint of the graph edge described by
          * that opposite arc.
          *
-         * For any arc \a a, calling <tt>a.prev()</tt> is equivalent to
-         * calling <tt>a.opposite().traverse()</tt>.
+         * For any arc \a a, calling `a.prev()` is equivalent to
+         * calling `a.opposite().traverse()`.
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
-         * @return the previous arc before this when walking through the graph
+         * \return the previous arc before this when walking through the graph
          * as though it were a link.
          */
         ModelLinkGraphArc prev() const;
@@ -258,10 +258,10 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * postincrement operator is available under the name inc().
+         * \nopython The postincrement operator is available in Python
+         * under the name inc().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         ModelLinkGraphArc& operator ++ ();
         /**
@@ -277,9 +277,9 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \python This routine is available under the name inc().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         ModelLinkGraphArc operator ++ (int);
         /**
@@ -295,10 +295,10 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * postdecrement operator is available under the name dec().
+         * \nopython The postdecrement operator is available in Python
+         * under the name dec().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         ModelLinkGraphArc& operator -- ();
         /**
@@ -314,16 +314,16 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \python This routine is available under the name dec().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         ModelLinkGraphArc operator -- (int);
 
         /**
          * Tests whether this is a non-null arc.
          *
-         * @return \c true if this is not a null arc (i.e., node()
+         * \return \c true if this is not a null arc (i.e., node()
          * does not return a null pointer), or \c false if this is a null
          * arc.
          */
@@ -335,9 +335,9 @@ class ModelLinkGraphArc {
 /**
  * Writes a depiction of the given arc reference to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param a the arc reference to write.
- * @return a reference to the given output stream.
+ * \param out the output stream to which to write.
+ * \param a the arc reference to write.
+ * \return a reference to the given output stream.
  *
  * \ingroup link
  */
@@ -364,7 +364,7 @@ class ModelLinkGraphNode : public MarkedElement,
         public ShortOutput<ModelLinkGraphNode> {
     private:
         ModelLinkGraphArc adj_[4];
-            /**< Stores the arcs at the \e other endpoints of the four
+            /**< Stores the arcs at the _other_ endpoints of the four
                  graph edges that exit this node.  The four arc references
                  are stored in a clockwise order around this node. */
 
@@ -377,7 +377,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * \warning The index of this node might change if other
          * nodes are added or removed.
          *
-         * @return the index of this node.
+         * \return the index of this node.
          */
         size_t index() const;
         /**
@@ -388,9 +388,9 @@ class ModelLinkGraphNode : public MarkedElement,
          * The four arcs exiting this node are numbered 0,1,2,3 in a
          * clockwise order around the node.
          *
-         * @param which an integer in the range 0 to 3 inclusive, indicating
+         * \param which an integer in the range 0 to 3 inclusive, indicating
          * which of the four arcs exiting this node we should return.
-         * @return a reference to the corresponding arc exiting this node.
+         * \return a reference to the corresponding arc exiting this node.
          */
         ModelLinkGraphArc arc(int which);
         /**
@@ -402,15 +402,15 @@ class ModelLinkGraphNode : public MarkedElement,
          * Recall that there are two ModelLinkGraphArc objects corresponding
          * to \a e, one for each of its endpoints.  One of these will
          * be ModelLinkGraphArc(\c this, \a which); this routine returns the
-         * \e other object, which is the ModelLinkGraphArc describing the other
+         * _other_ object, which is the ModelLinkGraphArc describing the other
          * endpoint of \a e.
          *
-         * Note that for a node \a n, calling <tt>n.adj(i)</tt>
-         * is equivalent to calling <tt>n.arc(i).traverse()</tt>.
+         * Note that for a node \a n, calling `n.adj(i)`
+         * is equivalent to calling `n.arc(i).traverse()`.
          *
-         * @param which an integer in the range 0 to 3 inclusive, indicating
+         * \param which an integer in the range 0 to 3 inclusive, indicating
          * which of the four arcs exiting this node we should examine.
-         * @return a reference to the other end of the same undirected
+         * \return a reference to the other end of the same undirected
          * edge of the underlying model graph.
          */
         const ModelLinkGraphArc& adj(int which) const;
@@ -419,9 +419,9 @@ class ModelLinkGraphNode : public MarkedElement,
          * Writes a short text representation of this node to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -447,7 +447,7 @@ class ModelLinkGraphNode : public MarkedElement,
  * in a link diagram, would correspond to zero-crossing unknot components
  * of the link).
  *
- * This class is primarily designed for \e enumerating knots and links.
+ * This class is primarily designed for _enumerating_ knots and links.
  * If you wish to study the underlying graph of an existing link, you do
  * not need to create a ModelLinkGraph - instead the Link class already
  * gives you direct access to the graph structure.  In particular, if
@@ -484,13 +484,13 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * Using this constructor is identical to calling Link::graph().
          *
-         * @param link the link that this new graph will model.
+         * \param link the link that this new graph will model.
          */
         ModelLinkGraph(const Link& link);
         /**
          * Constructs a new copy of the given graph.
          *
-         * @param copy the graph to copy.
+         * \param copy the graph to copy.
          */
         ModelLinkGraph(const ModelLinkGraph& copy);
         /**
@@ -503,7 +503,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * The graph that is passed (\a src) will no longer be usable.
          *
-         * @param src the graph to move.
+         * \param src the graph to move.
          */
         ModelLinkGraph(ModelLinkGraph&& src) noexcept;
 
@@ -518,7 +518,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         /**
          * Returns the number of nodes in this graph.
          *
-         * @return the number of nodes.
+         * \return the number of nodes.
          */
         size_t size() const;
 
@@ -533,9 +533,9 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * node through such operations then you should use the pointer
          * to the relevant ModelLinkGraphNode object instead.
          *
-         * @param index the index of the requested node.  This must
+         * \param index the index of the requested node.  This must
          * be between 0 and size()-1 inclusive.
-         * @return the node at the given index.
+         * \return the node at the given index.
          */
         ModelLinkGraphNode* node(size_t index) const;
         /**
@@ -548,7 +548,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -561,15 +561,15 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call nodes() again each time you need it.
          *
-         * @return access to the list of all nodes.
+         * \return access to the list of all nodes.
          */
         auto nodes() const;
 
         /**
          * Sets this to be a (deep) copy of the given graph.
          *
-         * @param src the graph to copy.
-         * @return a reference to this graph.
+         * \param src the graph to copy.
+         * \return a reference to this graph.
          */
         ModelLinkGraph& operator = (const ModelLinkGraph& src);
         /**
@@ -582,8 +582,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * The graph that is passed (\a src) will no longer be usable.
          *
-         * @param src the graph to move.
-         * @return a reference to this graph.
+         * \param src the graph to move.
+         * \return a reference to this graph.
          */
         ModelLinkGraph& operator = (ModelLinkGraph&& src) noexcept;
 
@@ -599,7 +599,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * This routine will behave correctly if \a other is in fact
          * this graph.
          *
-         * @param other the graph whose contents should be swapped with this.
+         * \param other the graph whose contents should be swapped with this.
          */
         void swap(ModelLinkGraph& other) noexcept;
 
@@ -611,8 +611,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * of nodes, and in both graphs the same pairs of outgoing arcs of
          * numbered nodes are connected by edges.
          *
-         * @param other the graph to compare with this.
-         * @return \c true if and only if the two graphs are
+         * \param other the graph to compare with this.
+         * \return \c true if and only if the two graphs are
          * combinatorially identical.
          */
         bool operator == (const ModelLinkGraph& other) const;
@@ -625,8 +625,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * of nodes, and in both graphs the same pairs of outgoing arcs of
          * numbered nodes are connected by edges.
          *
-         * @param other the graph to compare with this.
-         * @return \c true if and only if the two graphs are
+         * \param other the graph to compare with this.
+         * \return \c true if and only if the two graphs are
          * not combinatorially identical.
          */
         bool operator != (const ModelLinkGraph& other) const;
@@ -650,149 +650,334 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \pre This graph is connected.
          *
-         * @return the induced cellular decomposition of the sphere.
+         * \return the induced cellular decomposition of the sphere.
          */
         const ModelLinkGraphCells& cells() const;
 
         /**
-         * TODO: Flype is between arc-- and arc, i.e., over the region
-         * defined by cell(arc).  Returns (null, null) iff flype() will
-         * refuse to work with this.
-         * Otherwise returns (left outgoing arc, right outgoing arc).
+         * Identifies the smallest flype that can be performed on this
+         * graph from the given starting location.
          *
-         * Conditions that explicitly return \c null:
+         * Here we use the same notation as in the three-argument flype()
+         * function, where you perform a flype by passing three arcs
+         * \a from, \a left and \a right.  Read the flype() documentation
+         * now if you have not done so already; this includes a full
+         * description of the flype operation as well as diagrams with
+         * the arcs \a from, \a left and \a right clearly marked.
          *
-         * - The upper and lower cells are the same.
-         * - The common cell is the inside cell at from.node().
+         * The given arc \a from identifies the node to the left of the flype
+         * disc.  The aim of this routine is to identify two suitable arcs
+         * \a left and \a right that exit through the right of the flype
+         * disc.  Together, these three arcs uniquely identify the entire
+         * flype disc, and therefore prescribe the operation precisely.
          *
-         * \pre This graph is connected and TODO: valid.
+         * Here, by "suitable arcs", we mean a pair of arcs (\a left, \a right)
+         * for which the three arcs (\a from, \a left, \a right) together
+         * satisfy the preconditions for the flype() routine.
+         *
+         * There are several possible outcomes:
+         *
+         * - It is possible that there are _no_ suitable arcs \a left and
+         *   \a right.  In this case, this routine returns a pair of null arcs.
+         *
+         * - It is possible that there is exactly one pair of suitable arcs
+         *   (\a left, \a right).  In this case, this pair will be returned.
+         *
+         * - It is possible that there are _many_ pairs of suitable arcs.
+         *   In this case, it can be shown that the suitable pairs have an
+         *   ordering \a P_1, ..., \a P_k in which the flype disc for \a P_i
+         *   is completely contained within the flype disc for \a P_j whenever
+         *   \a i < \a j.  In this case, this routine returns the _smallest_
+         *   pair \a P_1; that is, the pair (\a left, \a right) that gives
+         *   the smallest possible flype disc.
+         *
+         * It should be noted that choosing only the smallest flype is not
+         * a serious restriction: assuming the graph does not model a
+         * composition of non-trivial knot diagrams, _any_ suitable flype
+         * can be expressed as a composition of minimal flypes in this sense.
+         *
+         * \pre This graph is connected.
+         *
+         * \param from the arc that indicates where the flype disc should
+         * begin.  This is the arc labelled \a from in the diagrams for the
+         * three-argument flype() function: it is the lower of the two arcs
+         * that enter the flype disc from the node \a X to the left of the
+         * disc.  This should be presented as an arc of the node \a X.
+         * \return the pair (\a left, \a right) representing the smallest
+         * suitable flype beginning at \a from, or a pair of null arcs
+         * if there are no suitable pairs (\a left, \a right).
          */
         std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
             const ModelLinkGraphArc& from) const;
 
         /**
-         * TODO: Document.
+         * Performs a flype on this graph at the given location.
+         *
+         * A _flype_ is an operation on a disc in the plane.  The boundary
+         * of the disc must cut through four arcs of the graph (and otherwise
+         * must not meet the graph at all), as indicated in the diagram below.
+         * Moreover, the two arcs that exit the disc on the left must meet at
+         * a common node just outside the disc.  (The punctuation symbols
+         * drawn inside the disc are just to help illustrate how the
+         * transformation works.)
          *
            \verbatim
-                  Cell A
-          
-               __   __
-                 \ /                    ----> left
-                  X         Cell B
-               __/ \__from              ----> right
-          
-                  Cell C
+                    ______                       ______
+                   /      \                     /      \
+           __   __| ##  ** |_______     _______| ::  <> |__   __
+             \ /  |        |                   |        |  \ /
+              X   |  Disc  |        ==>        |        |   X
+           __/ \__|        |_______     _______|        |__/ \__
+                  | ::  <> |                   | ##  ** |
+                   \______/                     \______/
            \endverbatim
          *
-         * Conditions that explicitly throw exceptions:
+         * The operation involves:
          *
-         * - Neither left nor right ends at from.node().
-         * - The upper and lower bounding cells are distinct,
-         * - The cell between left and right is not the inside cell
-         * where the flype begins from from.node().
+         * - reflecting this disc in a horizontal axis (so the two arcs
+         *   on the left switch places, and the two arcs on the right
+         *   switch places);
          *
-         * Even if the arguments are a (non-null) result of findFlype(),
-         * this routine could still throw an exception, but only for graphs
-         * that model non-minimal and/or composite link diagrams.
+         * - removing the node outside the disc on the left, where the
+         *   two arcs meet;
          *
-         * \exception InvalidArgument TODO.
+         * - introducing a new node on the right instead, where the two
+         *   arcs on the right will now meet.
+         *
+         * The equivalent operation on a knot diagram involves twisting the
+         * entire region inside the disc about a horizontal axis, in a way
+         * that undoes the crossing on the left but introduces a new crossing
+         * on the right instead.
+         *
+         * You will need to pass arguments to indicate where the flype should
+         * take place.  For this, we will label some of the features of the
+         * initial diagram (before the move takes place): see the diagram below.
+         * Here the labels \a from, \a left and \a right all refer to arcs.
+         * The labels \a A, \a B, \a C and \a D all refer to dual 2-cells in
+         * the plane; these are not passed as arguments, but they do appear
+         * in the list of preconditions for this routine.
+         *
+           \verbatim
+                            ______
+           Cell A          /      \
+           __   __________|        |_________ left
+             \ /          |        |
+              X   Cell B  |        |  Cell D
+           __/ \__________|        |_________ right
+                    from  |        |
+           Cell C          \______/
+           \endverbatim
+         *
+         * The arc \a from must be given as an arc of the node \a outside
+         * the disc (i.e., the node to the left of cell \a B).  The arcs
+         * \a left and \a right must be given as arcs of their respective
+         * nodes \a inside the disc.
+         *
+         * \pre This graph is connected.
+         *
+         * \pre The arcs \a from, \a left and \a right are laid out as
+         * in the diagram above.  In particular: \a from and \a right
+         * have the same cell to their right (cell \a C); \a left and the
+         * arc to the left of \a from have the same cell to their left
+         * (cell \a A); and \a left and \a right have the same cell between
+         * them (cell \a D).
+         *
+         * \pre Neither of the arcs \a left or \a right, when followed in the
+         * direction away from the disc, end back at the node on the left of
+         * the diagram.  That is, neither `left.traverse().node()` nor
+         * `right.traverse().node()` is equal to `from.node()`.
+         * (If this fails, then either the flype simply reflects the entire
+         * graph, or else the graph models a composition of two non-trivial
+         * knot diagrams.)
+         *
+         * \pre Cells \a A and \a C are distinct (that is, the node on
+         * the left of the diagram is not a cut-vertex of the graph).
+         *
+         * \pre Cells \a B and \a D are distinct (that is, the disc actually
+         * contains one or more nodes, and the graph does not model a
+         * composition of two non-trivial knot diagrams).
+         *
+         * \exception InvalidArgument One or more of the preconditions
+         * above fails to hold.  Be warned that the connectivity precondition
+         * will not be checked - this is the user's responsibility - but all
+         * other preconditions _will_ be checked, and an exception will
+         * be thrown if any of them fails.
+         *
+         * \param from the first arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node outside the disc, to the left.
+         * \param left the second arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node that it meets inside the disc.
+         * \param right the third arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node that it meets inside the disc.
+         * \return the graph obtained by performing the flype.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from,
             const ModelLinkGraphArc& left, const ModelLinkGraphArc& right)
             const;
 
         /**
-         * TODO: Document.
+         * Performs the smallest possible flype on this graph from the given
+         * starting location.
          *
-         * \exception InvalidArgument there is no flype available from
-         * the given starting arc.
+         * This is a convenience routine that simply calls findFlype() to
+         * identify the smallest possible flype from the given starting
+         * location, and then calls the three-argument flype() to actually
+         * perform it.  If there is no possible flype from the given starting
+         * location then this routine throws an exception.
+         *
+         * See the documentation for the three-argument flype() for further
+         * details on the flype operation, and see findFlype() for a
+         * discussion on what is meant by "smallest possible".
+         *
+         * \pre This graph is connected.
+         *
+         * \exception InvalidArgument There is no suitable flype on this
+         * graph from the given starting location (that is, findFlype()
+         * returns a pair of null arcs).
+         *
+         * \param from the arc that indicates where the flype disc should
+         * begin.  This is the arc labelled \a from in the diagrams for the
+         * three-argument flype() function: it is the lower of the two arcs
+         * that enter the flype disc from the node \a X to the left of the
+         * disc.  This should be presented as an arc of the node \a X.
+         * \return the graph obtained by performing the flype.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from) const;
 
         /**
-         * TODO: Document.  Only aims for minimal, ignores reflections.
+         * Exhaustively generates potentially-minimal knot diagrams that
+         * are modelled by this graph.
          *
-         * Node n will become crossing n.
+         * Here _potentially-minimal_ means there are no "obvious"
+         * simplification moves (such as a simplifying type II Reidemeister
+         * move, for example).  The list of "obvious" moves considered
+         * here is subject to change in future versions of Regina.
          *
-         * Arc (0,0) will always be forwards, and crossing 0 will always
-         * be positive.
+         * By _exhaustive_, we mean:
          *
-         * For each link that is generated, this routine will call \a action
-         * (which must be a function or some other callable object).
+         * - Every minimal knot diagram modelled by this graph will be
+         *   generated by this routine, up to reflection and/or reversal
+         *   (as noted below).
          *
-         * - The first argument passed to \a action will be the link that was
-         *   generated.  This will be passed as an rvalue; a typical action
-         *   could (for example) take it by const reference and query it,
-         *   or take it by value and modify it, or take it by rvalue reference
-         *   and move it into more permanent storage.
+         * - If a knot diagram is non-minimal and modelled by this graph,
+         *   it _might_ still be generated by this routine.
+         *
+         * In other words, this routine will generate all minimal knot diagrams
+         * modelled by this graph, but there is no promise that all of the
+         * diagrams generated are minimal.
+         *
+         * Labelled diagrams are only generated once up to reflection and/or
+         * reversal, in that this routine will fix the orientation of the knot
+         * (always following arc 0 away from node 0 of the graph) and the
+         * sign of the crossing at node 0 (always positive).
+         *
+         * In each knot diagram that is generated, crossing \a k will always
+         * correspond to node \a k of this graph.
+         *
+         * For each knot diagram that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
+         *
+         * - The first argument passed to \a action will be the knot diagram
+         *   that was generated (of type Link).  This will be passed as an
+         *   rvalue; a typical action could (for example) take it by const
+         *   reference and query it, or take it by value and modify it, or take
+         *   it by rvalue reference and move it into more permanent storage.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
          * - \a action must return \c void.
          *
-         * TODO: PRE: Knot, not link.
+         * \pre This graph does not model multiple-component links (i.e.,
+         * either it models single-component knots, or it is the empty graph).
+         *
+         * \exception FailedPrecondition This graph models links with
+         * more than one component.
          *
          * \apinotfinal
+         *
+         * \python This function is available in Python, and the
+         * \a action argument may be a pure Python function.  However, its
+         * form is more restricted: the argument \a args is removed, so you
+         * simply call it as generateMinimalLinks(action).  Moreover,
+         * \a action must take exactly one argument (the knot diagram).
+         *
+         * \param action a function (or other callable object) to call
+         * for each knot diagram that is generated.
+         * \param args any additional arguments that should be passed to
+         * \a action, following the initial knot diagram argument.
          */
         template <typename Action, typename... Args>
         void generateMinimalLinks(Action&& action, Args&&... args) const;
 
         /**
-         * Outputs this graph in the ASCII text format used by \e plantri.
+         * Outputs this graph in a variant of the ASCII text format used
+         * by \e plantri.
          *
          * The software \e plantri, by Gunnar Brinkmann and Brendan McKay,
          * can be used to enumerate 4-valent planar graphs (amongst many
          * other things).  This routine outputs this graph in a format
          * that mimics \e plantri's own dual ASCII format (i.e., the format
-         * that \e plantri outputs when run with the flags <tt>-adq</tt>).
+         * that \e plantri outputs when run with the flags `-adq`).
          *
          * Specifically, the output will be a comma-separated sequence
          * of alphabetical strings.  The <i>i</i>th such string will consist
-         * of four lower-case letters, encoding the endpoints of the four
-         * edges in clockwise order that leave node <i>i</i>.  The letters
-         * \c a,\c b,\c c,... represent nodes 0,1,2,... respectively.
-         * An example of such a string is:
+         * of four letters, encoding the endpoints of the four edges in
+         * clockwise order that leave node \a i.  The lower-case letters
+         * \c a,\c b,...,\c z represent nodes 0,1,...,25 respectively,
+         * and the upper-case letters \c A,\c B,...,\c Z represent nodes
+         * 26,27,...,51 respectively.  An example of such a string is:
          *
            \verbatim
            bcdd,aeec,abfd,acfa,bffb,ceed
            \endverbatim
          *
+         * For graphs with at most 26 nodes, this is identical to
+         * \e plantri's own dual ASCII format.  For larger graphs, this
+         * format differs: \e plantri uses punctuation to represent
+         * higher-index nodes, whereas Regina uses upper-case letters.
+         *
          * This routine is an inverse to fromPlantri(): for any graph \a g
          * that satisfies the preconditions below,
-         * <tt>fromPlantri(g.plantri())</tt> is identical to \a g.  Likewise,
+         * `fromPlantri(g.plantri())` is identical to \a g.  Likewise,
          * for any string \a s that satisfies the preconditions for
-         * fromPlantri(), calling <tt>fromPlantri(s).plantri()</tt> will
+         * fromPlantri(), calling `fromPlantri(s).plantri()` will
          * recover the original string \a s.
          *
          * It is important to note the preconditions below: in particular,
-         * that this graph must be dual to a \e simple quadrangulation of
+         * that this graph must be dual to a _simple_ quadrangulation of
          * the sphere.  This is because the planar embeddings for more general
          * graphs (i.e., the duals of non-simple quadrangulations) cannot
          * always be uniquely reconstructed from their \e plantri output.
          *
          * \note The output of this function might not correspond to any
-         * possible output from the program \e plantri itself.  This is
-         * because \e plantri only outputs graphs with a certain canonical
-         * labelling.  In contrast, plantri() can be called on any graph
-         * that satisfies the preconditions below, and it will preserve
-         * the labels of the nodes and the order of the arcs around each node.
+         * possible output from the program \e plantri itself, even if only
+         * lower-case letters are used.  This is because \e plantri only
+         * outputs graphs with a certain canonical labelling.  In contrast,
+         * plantri() can be called on any graph that satisfies the
+         * preconditions below, and it will preserve the labels of the nodes
+         * and the order of the arcs around each node.
          *
          * \pre This graph is connected.
-         * \pre This graph has between 1 and 26 nodes inclusive.
-         * \pre The dual to this graph is a \e simple quadrangulation of the
+         * \pre This graph has between 1 and 52 nodes inclusive.
+         * \pre The dual to this graph is a _simple_ quadrangulation of the
          * sphere.  In particular, the dual must not have any parallel edges.
          * Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
          *
-         * @return a \e plantri format ASCII representation of this graph.
+         * \exception FailedPrecondition This graph has more than 52 nodes.
+         *
+         * \return a \e plantri format ASCII representation of this graph.
          */
         std::string plantri() const;
 
         /**
-         * Outputs a text representation of this graph in the \e plantri
-         * ASCII format, using a canonical relabelling of nodes and arcs,
-         * and with optional compression.
+         * Outputs a text representation of this graph in a variant of the
+         * \e plantri ASCII format, using a canonical relabelling of nodes
+         * and arcs, and with optional compression.
          *
          * This routine is similar to plantri(), but with two
          * significant differences:
@@ -821,28 +1006,32 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * relabelling of the original (and might even be a reflection
          * of the original, if \a useReflection was passed as \c true).
          *
-         * See plantri() for further details on the ASCII format itself.
+         * See plantri() for further details on the ASCII format itself,
+         * including the ways in which Regina's implementation of this format
+         * differs from \e plantri's for graphs with more than 26 nodes.
          *
          * The running time for this routine is quadratic in the size of
          * the graph.
          *
          * \pre This graph is connected.
-         * \pre This graph has between 1 and 26 nodes inclusive.
-         * \pre The dual to this graph is a \e simple quadrangulation of the
+         * \pre This graph has between 1 and 52 nodes inclusive.
+         * \pre The dual to this graph is a _simple_ quadrangulation of the
          * sphere.  In particular, the dual must not have any parallel edges.
          * Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
          *
-         * @param useReflection \c true if a graph and its reflection
+         * \exception FailedPrecondition This graph has more than 52 nodes.
+         *
+         * \param useReflection \c true if a graph and its reflection
          * should be considered the same (i.e., produce the same canonical
          * output), or \c false if they should be considered different.
          * Of course, if a graph is symmetric under reflection then the
          * graph and its reflection will produce the same canonical
          * output regardless of this parameter.
-         * @param tight \c false if the usual \e plantri ASCII format should
+         * \param tight \c false if the usual \e plantri ASCII format should
          * be used (as described by plantri() and fromPlantri()), or \c true
          * if the abbreviated format should be used as described above.
-         * @return an optionally compressed \e plantri ASCII representation
+         * \return an optionally compressed \e plantri ASCII representation
          * of this graph.
          */
         std::string canonicalPlantri(bool useReflection = true,
@@ -852,36 +1041,38 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Writes a short text representation of this graph to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this graph to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
         /**
-         * Builds a graph from a line of \e plantri output.
+         * Builds a graph from a line of \e plantri output, using
+         * Regina's variant of the \e plantri ASCII format.
          *
          * The software \e plantri, by Gunnar Brinkmann and Brendan McKay,
          * can be used to enumerate 4-valent planar graphs (amongst many
          * other things).  This routine converts a piece of output from
-         * \e plantri into a ModelLinkGraph object that Regina can work
-         * with directly.
+         * \e plantri, or the encoding of a graph using Regina's own plantri()
+         * or canonicalPlantri() functions, into a ModelLinkGraph object
+         * that Regina can work with directly.
          *
-         * The output from \e plantri must be in ASCII format, and must
-         * be the dual graph of a simple quadrangulation of the sphere.  The
-         * corresponding flags that must be passed to \e plantri to
-         * obtain such output are <tt>-adq</tt> (although you will
-         * may wish to pass additional flags to expand or restrict
-         * the classes of graphs that \e plantri builds).
+         * If you are converting output from \e plantri, this output must be
+         * in ASCII format, and must be the dual graph of a simple
+         * quadrangulation of the sphere.  The corresponding flags that must
+         * be passed to \e plantri to obtain such output are `-adq`
+         * (although you will may wish to pass additional flags to expand or
+         * restrict the classes of graphs that \e plantri builds).
          *
          * When run with these flags, \e plantri produces output in the
          * following form:
@@ -896,7 +1087,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * followed by a comma-separated sequence of alphabetical strings
          * that encode the edges leaving each node.
          *
-         * This function \e only takes the comma-separated sequence of
+         * This function _only_ takes the comma-separated sequence of
          * alphabetical strings.  So, for example, to construct the graph
          * corresponding to the second line of output above, you could call:
          *
@@ -904,47 +1095,60 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");
          * \endcode
          *
-         * Regina can only recognise graphs in this format with up to 26
-         * nodes.  If the graph contains more than 27 nodes then the
-         * \e plantri output will contain punctuation, Regina will not
-         * be able to parse it, and this function will return \c null.
+         * Regina uses its own variant of \e plantri's output format, which is
+         * identical for smaller graphs but which differs from \e plantri's
+         * own output format for larger graphs.  In particular:
          *
-         * The given string does not \e need to be come from the program
-         * \e plantri itself.  Whereas \e plantri always outputs graphs
-         * with a particular canonical labelling, this function can
-         * accept an arbitrary ordering of nodes and arcs - in particular,
-         * it can accept the string <tt>g.plantri()</tt> for any graph
-         * \a g that meets the preconditions below.  Nevertheless, the graph
-         * must still meet these preconditions, since otherwise the \e plantri
-         * format might not be enough to uniquely reconstruct the graph and
-         * its planar embedding.
+         * - For graphs with ≤ 26 nodes, Regina and \e plantri use identical
+         *   formats.  Here Regina can happily recognise the output from
+         *   \e plantri as described above, as well as the output from
+         *   Regina's own plantri() and canonicalPlantri() functions.
          *
-         * This routine can also interpret the "tight" format that is output
-         * by the member function canonicalPlantri() (even though such output
-         * would certainly \e not be produced by the program \e plantri).
+         * - For graphs with 27-52 nodes, Regina's and \e plantri's formats
+         *   differ: whereas \e plantri uses punctuation for higher-index
+         *   nodes, Regina uses the upper-case letters \c A,...,\c Z.
+         *   For these larger graphs, Regina can only recognise Regina's own
+         *   plantri() and canonicalPlantri() output, not \e plantri's
+         *   punctuation-based encodings.
+         *
+         * - For graphs with 53 nodes or more, Regina cannot encode or
+         *   decode such graphs using \e plantri format at all.
+         *
+         * Even for graphs with at most 26 nodes, the given string does not
+         * _need_ to be come from the program \e plantri itself.  Whereas
+         * \e plantri always outputs graphs with a particular canonical
+         * labelling, this function can accept an arbitrary ordering of nodes
+         * and arcs - in particular, it can accept the string
+         * `g.plantri()` for any graph \a g that meets the preconditions
+         * below.  Nevertheless, the graph must still meet these preconditions,
+         * since otherwise the \e plantri format might not be enough to
+         * uniquely reconstruct the graph and its planar embedding.
+         *
+         * This routine can also interpret the "tight" format that is
+         * optionally produced by the member function canonicalPlantri()
+         * (even though such output would certainly _not_ be produced by
+         * the program \e plantri).
          *
          * \warning While this routine does some basic error checking on the
          * input, these checks are not exhaustive.  In particular, it does
-         * \e not test for planarity of the graph.  (Of course \e plantri
+         * _not_ test for planarity of the graph.  (Of course \e plantri
          * does not output non-planar graphs, but a user could still construct
          * one by hand and passes it to this routine, in which case the
          * resulting behaviour is undefined.)
          *
          * \pre The graph being described is connected.
-         * \pre The graph being described has between 1 and 26 nodes inclusive.
-         * \pre The graph being described is dual to a \e simple quadrangulation
+         * \pre The graph being described is dual to a _simple_ quadrangulation
          * of the sphere.  In particular, the dual must not have any parallel
          * edges.  Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
          *
-         * \exception InvalidArgument the input was not a valid
+         * \exception InvalidArgument The input was not a valid
          * representation of a graph using the \e plantri output format.
          * As noted above, the checks performed here are not exhaustive.
          *
-         * @param plantri a string containing the comma-separated
-         * sequence of alphabetical strings output by \e plantri, as
-         * described above.
-         * @return the resulting graph.
+         * \param plantri a string containing the comma-separated sequence of
+         * alphabetical strings in \e plantri format, as described above.
+         * \return the resulting graph.
          */
         static ModelLinkGraph fromPlantri(const std::string& plantri);
 
@@ -981,8 +1185,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
  *
  * See ModelLinkGraph::swap() for more details.
  *
- * @param lhs the graph whose contents should be swapped with \a rhs.
- * @param rhs the graph whose contents should be swapped with \a lhs.
+ * \param lhs the graph whose contents should be swapped with \a rhs.
+ * \param rhs the graph whose contents should be swapped with \a lhs.
  *
  * \ingroup link
  */
@@ -1022,7 +1226,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
                  this array store the arcs in order as they would appear if
                  you walked anticlockwise around the cell boundary (so the
                  2-cell is on the left of each arc as you follow them around).
-                 Each arc is described as an \e outgoing arc as you exit each
+                 Each arc is described as an _outgoing_ arc as you exit each
                  node in turn.  Note that this array contains every arc of the
                  underlying graph exactly once. */
         size_t* start_;
@@ -1058,7 +1262,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * ModelLinkGraph object also describes a planar embedding.
          *
          * The constructor for this class requires you to pass a graph
-         * that is already known to be connected.  However, \e assuming
+         * that is already known to be connected.  However, _assuming_
          * the graph is connected, the constructor then tests for the
          * remaining conditions.  This routine returns the results of these
          * tests: if the underlying graph is empty or does not describe a
@@ -1072,7 +1276,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * should not attempt to query the details of the cell decomposition.
          * See the preconditions on individual routines for further details.
          *
-         * @return \c true if and only if the underlying ModelLinkGraph
+         * \return \c true if and only if the underlying ModelLinkGraph
          * describes a planar embedding of a non-empty graph.
          */
         bool isValid() const;
@@ -1082,14 +1286,14 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * If isValid() returns \c false (i.e., the underlying ModelLinkGraph
          * is either empty or does not describe a planar embedding), then
          * this routine will return 0 instead.  Note that this routine
-         * \e cannot be used to test for connectivity, which is a
+         * _cannot_ be used to test for connectivity, which is a
          * non-negotiable precondition required by the class constructor.
          *
          * Note that, if isValid() returns \c true, then countCells()
          * will always return <i>n</i>+2 where \a n is the number of
          * nodes in the underlying graph.
          *
-         * @return a strictly positive number of 2-cells if isValid()
+         * \return a strictly positive number of 2-cells if isValid()
          * returns \c true, or 0 if isValid() returns \c false.
          */
         size_t countCells() const;
@@ -1104,9 +1308,9 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param cell indicates which cell to query; this must be
+         * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @return the size of the correpsonding 2-cell.
+         * \return the size of the correpsonding 2-cell.
          */
         size_t size(size_t cell) const;
         /**
@@ -1116,12 +1320,12 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * as you walk anticlockwise around the cell (so the cell is on
          * the left of each arc as you walk around the cell boundary).
          *
-         * Each arc is described in the form of an \e outgoing arc from some
+         * Each arc is described in the form of an _outgoing_ arc from some
          * node of the underlying graph (so if the return ModelLinkGraphArc
          * is \a a then this describes an outgoing arc from a.node()).
          * It follows that, if the underlying graph has \a n nodes, then
          * each of the 4<i>n</i> possible ModelLinkGraphArc values
-         * appears exactly once as <tt>arc(cell, which)</tt> for some
+         * appears exactly once as `arc(cell, which)` for some
          * integers \a cell and \a which.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
@@ -1129,12 +1333,12 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param cell indicates which cell to query; this must be
+         * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @param which indicates which arc along the boundary of the
+         * \param which indicates which arc along the boundary of the
          * corresponding cell to return; this must be between 0 and
-         * <tt>size(cell)-1</tt> inclusive.
-         * @return the requested arc on the boundary of the given 2-cell.
+         * `size(cell)-1` inclusive.
+         * \return the requested arc on the boundary of the given 2-cell.
          */
         const ModelLinkGraphArc& arc(size_t cell, size_t which) const;
         /**
@@ -1153,7 +1357,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  The elements of the list will be
+         * range-based \c for loops.  The elements of the list will be
          * read-only objects of type ModelLinkGraphArc, and so your code might
          * look like:
          *
@@ -1161,14 +1365,14 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
          * \endcode
          *
-         * Using <tt>arcs(cell)</tt> is equivalent to iterating over the
-         * iterator range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>).
+         * Using `arcs(cell)` is equivalent to iterating over the
+         * iterator range (`begin(cell)`, `end(cell)`).
          * Using arcs() generates a tiny amount of extra overhead, but you may
          * also find it more readable.
          *
-         * @param cell indicates which cell to query; this must be
+         * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @return access to the list of all arcs along the boundary of
+         * \return access to the list of all arcs along the boundary of
          * the given cell.
          */
         auto arcs(size_t cell) const;
@@ -1177,26 +1381,25 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * boundary of the given 2-cell.
          *
          * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then the
-         * iterator range described by <tt>begin(i)</tt> and <tt>end(i)</tt>
+         * iterator range described by `begin(i)` and `end(i)`
          * will iterate through the \a k arcs along the boundary of the
          * <i>i</i>th cell in the same order as described by arc(); that
          * is, walking anticlockwise around the cell boundary with the
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>, and iterating
-         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
-         * is equivalent to iterating over <tt>arcs(cell)</tt>.
+         * same result as calling `arc(cell, j)`, and iterating
+         * over the entire range (`begin(cell)`, `end(cell)`)
+         * is equivalent to iterating over `arcs(cell)`.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present; Python users can iterate over
-         * arcs(\a cell) instead.
+         * \nopython Python users can iterate over arcs(\a cell) instead.
          *
-         * @return the beginning of an iterator range for the boundary
+         * \return the beginning of an iterator range for the boundary
          * of the given cell.
          */
         ArcIterator begin(size_t cell) const;
@@ -1207,26 +1410,25 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * cannot be dereferenced).
          *
          * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then the
-         * iterator range described by <tt>begin(i)</tt> and <tt>end(i)</tt>
+         * iterator range described by `begin(i)` and `end(i)`
          * will iterate through the \a k arcs along the boundary of the
          * <i>i</i>th cell in the same order as described by arc(); that
          * is, walking anticlockwise around the cell boundary with the
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>, and iterating
-         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
-         * is equivalent to iterating over <tt>arcs(cell)</tt>.
+         * same result as calling `arc(cell, j)`, and iterating
+         * over the entire range (`begin(cell)`, `end(cell)`)
+         * is equivalent to iterating over `arcs(cell)`.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present; Python users can iterate over
-         * arcs(\a cell) instead.
+         * \nopython Python users can iterate over arcs(\a cell) instead.
          *
-         * @return the end of an iterator range for the boundary
+         * \return the end of an iterator range for the boundary
          * of the given cell.
          */
         ArcIterator end(size_t cell) const;
@@ -1236,9 +1438,9 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * Specifically, this function returns the number of the cell
          * that lies to the left of the given arc as you walk along it
-         * away from <tt>arc.node()</tt>.
+         * away from `arc.node()`.
          *
-         * For any arc \a a, calling <tt>arc(cell(a), cellPos(a))</tt>
+         * For any arc \a a, calling `arc(cell(a), cellPos(a))`
          * will return the same arc \a a again.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
@@ -1246,10 +1448,10 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param arc the given arc of the underlying graph.
-         * @return the number of the cell that lies to the left of the
+         * \param arc the given arc of the underlying graph.
+         * \return the number of the cell that lies to the left of the
          * given arc; this will be an integer between 0 and
-         * <tt>countCells()-1</tt> inclusive.
+         * `countCells()-1` inclusive.
          */
         size_t cell(const ModelLinkGraphArc& arc) const;
         /**
@@ -1257,13 +1459,13 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * 2-cell to its left.
          *
          * Consider the cell \a c to the left of the given arc as you follow
-         * the arc away from <tt>arc.node()</tt>.  The routine arc()
+         * the arc away from `arc.node()`.  The routine arc()
          * can be used to enumerate the sequence of arcs along the boundary of
          * this cell \a c, in order as you walk anticlockwise around the cell
-         * boundary.  The purpose of this routine is to identify \e where in
+         * boundary.  The purpose of this routine is to identify _where_ in
          * this sequence the given arc occurs.
          *
-         * For any arc \a a, calling <tt>arc(cell(a), cellPos(a))</tt>
+         * For any arc \a a, calling `arc(cell(a), cellPos(a))`
          * will return the same arc \a a again.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
@@ -1271,10 +1473,10 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param arc the given arc of the underlying graph.
-         * @return the position of the given arc on the boundary of the
+         * \param arc the given arc of the underlying graph.
+         * \return the position of the given arc on the boundary of the
          * cell to its left; this will be an integer between 0 and
-         * <tt>size(cell(arc))-1</tt> inclusive.
+         * `size(cell(arc))-1` inclusive.
          */
         size_t cellPos(const ModelLinkGraphArc& arc) const;
 
@@ -1288,8 +1490,8 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * same numbered nodes, using the same directions of traversal and
          * the same starting points on each cell boundary.
          *
-         * @param other the cellular decomposition to compare with this.
-         * @return \c true if and only if the two cellular decompositions are
+         * \param other the cellular decomposition to compare with this.
+         * \return \c true if and only if the two cellular decompositions are
          * combinatorially identical.
          */
         bool operator == (const ModelLinkGraphCells& other) const;
@@ -1304,8 +1506,8 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * same numbered nodes, using the same directions of traversal and
          * the same starting points on each cell boundary.
          *
-         * @param other the cellular decomposition to compare with this.
-         * @return \c true if and only if the two cellular decompositions are
+         * \param other the cellular decomposition to compare with this.
+         * \return \c true if and only if the two cellular decompositions are
          * not combinatorially identical.
          */
         bool operator != (const ModelLinkGraphCells& other) const;
@@ -1314,18 +1516,18 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1353,7 +1555,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \pre The graph \a g must be connected.
          *
-         * @param g the 4-valent graph, including its planar embedding, that
+         * \param g the 4-valent graph, including its planar embedding, that
          * defines this new cellular decomposition.
          */
         ModelLinkGraphCells(const ModelLinkGraph& g);
@@ -1361,12 +1563,12 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Creates a duplicate copy of the given cellular decomposition.
          * Both decompositions will refer to the same underlying ModelLinkGraph.
          *
-         * It is allowed for <tt>cloneMe.isValid()</tt> to return \c false;
+         * It is allowed for `cloneMe.isValid()` to return \c false;
          * in this case, the validity data will be carried across to the
-         * new decomposition and <tt>this->isValid()</tt> will return
+         * new decomposition and `this->isValid()` will return
          * \c false also.
          *
-         * @param cloneMe the cellular decomposition to clone.
+         * \param cloneMe the cellular decomposition to clone.
          */
         ModelLinkGraphCells(const ModelLinkGraphCells& cloneMe);
 

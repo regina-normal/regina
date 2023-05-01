@@ -35,6 +35,7 @@
 <!ENTITY data-H1Rel SYSTEM "data-H1Rel.docbook">
 <!ENTITY data-H2 SYSTEM "data-H2.docbook">
 <!ENTITY data-haken SYSTEM "data-haken.docbook">
+<!ENTITY data-handlebody SYSTEM "data-handlebody.docbook">
 <!ENTITY data-hypersurface SYSTEM "data-hypersurface.docbook">
 <!ENTITY data-hypersurfaces SYSTEM "data-hypersurfaces.docbook">
 <!ENTITY data-irreducible SYSTEM "data-irreducible.docbook">
@@ -159,6 +160,8 @@
  '<link linkend="data-H2"><sgmltag>H2</sgmltag></link>'>
 <!ENTITY xml-haken
  '<link linkend="data-haken"><sgmltag>haken</sgmltag></link>'>
+<!ENTITY xml-handlebody
+ '<link linkend="data-handlebody"><sgmltag>handlebody</sgmltag></link>'>
 <!ENTITY xml-hypersurface
  '<link linkend="data-hypersurface"><sgmltag>hypersurface</sgmltag></link>'>
 <!ENTITY xml-hypersurfaces

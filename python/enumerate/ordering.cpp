@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,17 +34,20 @@
 #include "enumerate/ordering.h"
 #include "maths/matrix.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/ordering.h"
 
 using regina::MatrixInt;
 using regina::PosOrder;
 
 void addOrdering(pybind11::module_& m) {
-    auto c = pybind11::class_<PosOrder>(m, "PosOrder")
-        .def(pybind11::init<const MatrixInt&>())
-        .def(pybind11::init<const PosOrder&>())
+    RDOC_SCOPE_BEGIN(PosOrder)
+
+    auto c = pybind11::class_<PosOrder>(m, "PosOrder", rdoc_scope)
+        .def(pybind11::init<const MatrixInt&>(), rdoc::__init)
+        .def(pybind11::init<const PosOrder&>(), rdoc::__copy)
         .def("__call__", [](const PosOrder& p, long i, long j) {
             return p(i, j);
-        })
+        }, rdoc::__call)
     ;
     regina::python::add_output_custom(c, [](const PosOrder& o,
             std::ostream& s) {
@@ -58,5 +61,7 @@ void addOrdering(pybind11::module_& m) {
     });
     // It doesn't really make sense to compare these objects either.
     regina::python::disable_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

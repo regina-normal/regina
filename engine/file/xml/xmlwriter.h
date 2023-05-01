@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -169,9 +169,9 @@ class XMLWriter :
          * This constructor has a default implementation, which simply
          * stores the given arguments in the corresponding member variables.
          *
-         * @param data the object to be written in XML.
-         * @param out the output stream to which the XML will be written.
-         * @param format indicates which of Regina's XML file formats to use.
+         * \param data the object to be written in XML.
+         * \param out the output stream to which the XML will be written.
+         * \param format indicates which of Regina's XML file formats to use.
          */
         XMLWriter(const T& data, std::ostream& out, FileFormat format);
 
@@ -180,7 +180,7 @@ class XMLWriter :
          * being written.
          *
          * This will output an XML snippet of the form
-         * <tt>\<foo bar="..." baz="..."</tt>, \e without the closing angle
+         * `<foo bar="..." baz="..."`, _without_ the closing angle
          * brackets.  This means that the caller can inject additional
          * attributes into the opening XML element tag simply by writing
          * them to the output stream (with a preceding space) after the

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,14 +33,21 @@
 #include "../pybind11/pybind11.h"
 #include "foreign/dehydration.h"
 #include "packet/container.h"
+#include "../helpers.h"
+#include "../docstrings/foreign/dehydration.h"
 
 using pybind11::overload_cast;
 
 void addForeignDehydration(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     m.def("readDehydrationList", regina::readDehydrationList,
         pybind11::arg(),
         pybind11::arg("colDehydrations") = 0,
         pybind11::arg("colLabels") = -1,
-        pybind11::arg("ignoreLines") = 0);
+        pybind11::arg("ignoreLines") = 0,
+        rdoc::readDehydrationList);
+
+    RDOC_SCOPE_END
 }
 

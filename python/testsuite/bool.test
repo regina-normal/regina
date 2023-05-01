@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2021, Ben Burton
+# Copyright (c) 2007-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests casts to booleans.
@@ -56,9 +56,9 @@ if g.node(0).adj(0):
 	print('Non-null graph arc')
 else:
 	print('Null graph arc')
-	
+
 if ModelLinkGraphArc():
 	print('Non-null graph arc')
 else:
 	print('Null graph arc')
-	
+

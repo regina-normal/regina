@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #endif
 
 #include <array>
+#include <cstdint>
+#include <string>
 #include "regina-core.h"
 
 namespace regina {
@@ -50,7 +52,7 @@ namespace regina {
  * These are (in particular) used in the default encodings for Regina's
  * own isomorphism signatures and knot signatures.
  *
- * This base64 encoding uses the characters: <tt>a..zA..Z0..9+-</tt>
+ * This base64 encoding uses the characters: `a..zA..Z0..9+-`
  *
  * \warning Note that this base64 encoding uses a different set of
  * printable symbols from the encoding used in utilities/base64.h.
@@ -65,9 +67,9 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is encodeSingle().
      *
-     * @param c a base64 character, which must be one of the 64 printable
+     * \param c a base64 character, which must be one of the 64 printable
      * characters described in the class notes.
-     * @return the corresponding integer, which will be between 0 and 63
+     * \return the corresponding integer, which will be between 0 and 63
      * inclusive.
      */
     static constexpr unsigned decodeSingle(char c) {
@@ -87,8 +89,8 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is decodeSingle().
      *
-     * @param c an integer between 0 and 63 inclusive.
-     * @return the corresponding printable base64 character.
+     * \param c an integer between 0 and 63 inclusive.
+     * \return the corresponding printable base64 character.
      */
     static constexpr char encodeSingle(unsigned c) {
         if (c < 26)
@@ -105,7 +107,7 @@ struct Base64SigEncoding {
     /**
      * Is the given character a valid base64 character?
      *
-     * @return \c true if and only if the given character is one of the
+     * \return \c true if and only if the given character is one of the
      * 64 printable characters described in the class notes.
      */
     static constexpr bool isValid(char c) {
@@ -123,15 +125,15 @@ struct Base64SigEncoding {
      * \pre The given integer \a val is non-negative, and fits within
      * 6<i>nChars</i> bits.
      *
-     * \ifacespython The template argument \a IntType is taken to be a
+     * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
      * \tparam IntType a native C++ integer type, such as \c uint8_t, or
-     * \c unsigned, or <tt>long long</tt>.
+     * \c unsigned, or `long long`.
      *
-     * @param s the string that resulting characters should be appended to.
-     * @param val the integer to encode.
-     * @param nChars the number of base64 characters to use.
+     * \param s the string that resulting characters should be appended to.
+     * \param val the integer to encode.
+     * \param nChars the number of base64 characters to use.
      */
     template <typename IntType>
     static void encodeInt(std::string& s, IntType val, unsigned nChars) {
@@ -153,19 +155,19 @@ struct Base64SigEncoding {
      *
      * \pre The given string contains at least \a nChars characters.
      *
-     * \ifacespython The template argument \a IntType is taken to be a
+     * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
      * \tparam IntType a native C++ integer type, such as \c uint8_t,
-     * or \c unsigned, or <tt>long long</tt>.  The result will be
+     * or \c unsigned, or `long long`.  The result will be
      * assembled using bitwise OR and bitwise shift lefts, and it is
      * assumed that the programmer has chosen an integer type large enough
      * to contain whatever values they expect to read.
      *
-     * @param s the string from which the encoded base64 characters
+     * \param s the string from which the encoded base64 characters
      * should be read.
-     * @param nChars the number of base64 characters to read.
-     * @return the native integer that was encoded.
+     * \param nChars the number of base64 characters to read.
+     * \return the native integer that was encoded.
      */
     template <typename IntType>
     static IntType decodeInt(const char* s, unsigned nChars) {
@@ -177,7 +179,7 @@ struct Base64SigEncoding {
 
     /**
      * Returns a single base64 character that encodes up to three trits,
-     * given using an input iterator.  A \e trit is either 0, 1 or 2.
+     * given using an input iterator.  A _trit_ is either 0, 1 or 2.
      *
      * The given trits will be packed into a single base64 character, with
      * the first trit representing the lowest-significance bits of the
@@ -185,15 +187,15 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is decodeTrits().
      *
-     * \ifacespython Not present; instead you can use the variant of
-     * this routine that takes the trits as a fixed-size array.
+     * \nopython Instead you can use the variant of this routine that takes
+     * the trits as a fixed-size array.
      *
-     * @param trits an input iterator pointing to the first trit to encode;
+     * \param trits an input iterator pointing to the first trit to encode;
      * it must be possible to read and advance this iterator at least
      * \a nTrits times.  Each trit will be cast to a \c uint8_t, and must take
      * the value 0, 1 or 2.
-     * @param nTrits the number of trits to encode; this must be at most 3.
-     * @return the resulting printable base64 character.
+     * \param nTrits the number of trits to encode; this must be at most 3.
+     * \return the resulting printable base64 character.
      */
     template <typename InputIterator>
     static char encodeTrits(InputIterator trits, unsigned nTrits) {
@@ -209,7 +211,7 @@ struct Base64SigEncoding {
 
     /**
      * Returns a single base64 character that encodes up to three trits,
-     * given using a fixed-size array.  A \e trit is either 0, 1 or 2.
+     * given using a fixed-size array.  A _trit_ is either 0, 1 or 2.
      *
      * The given trits will be packed into a single base64 character, with
      * the first trit representing the lowest-significance bits of the
@@ -220,9 +222,9 @@ struct Base64SigEncoding {
      * \tparam nTrits the number of trits to encode; this must be between
      * 0 and 3 inclusive.
      *
-     * @param trits the array of trits to encode.  Each trit must take
+     * \param trits the array of trits to encode.  Each trit must take
      * the value 0, 1 or 2.
-     * @return the resulting printable base64 character.
+     * \return the resulting printable base64 character.
      */
     template <int nTrits>
     static constexpr char encodeTrits(
@@ -242,16 +244,16 @@ struct Base64SigEncoding {
 
     /**
      * Decodes a single base64 character into three trits, and returns
-     * these using an output iterator.  A \e trit is either 0, 1 or 2.
+     * these using an output iterator.  A _trit_ is either 0, 1 or 2.
      *
      * The inverse to this routine is encodeTrits(); see that routine
      * for details of the encoding.
      *
-     * \ifacespython Not present; instead you can use the variant of
-     * this routine that takes one argument and returns a fixed-size array.
+     * \nopython Instead you can use the variant of this routine that takes
+     * one argument and returns a fixed-size array.
      *
-     * @param c the base64 character to decode.
-     * @param result an output iterator pointing to the location where the
+     * \param c the base64 character to decode.
+     * \param result an output iterator pointing to the location where the
      * resulting trits will be stored; it must be possible to write and advance
      * this iterator at least three times.  Each trit will be written as a
      * \c uint8_t.
@@ -266,13 +268,13 @@ struct Base64SigEncoding {
 
     /**
      * Decodes a single base64 character into three trits, and returns
-     * these as a fixed-size array.  A \e trit is either 0, 1 or 2.
+     * these as a fixed-size array.  A _trit_ is either 0, 1 or 2.
      *
      * The inverse to this routine is encodeTrits(); see that routine
      * for details of the encoding.
      *
-     * @param c the base64 character to decode.
-     * @return an array containing the three trits that had been
+     * \param c the base64 character to decode.
+     * \return an array containing the three trits that had been
      * encoded in the given base64 character.
      */
     static constexpr std::array<uint8_t, 3> decodeTrits(char c) {

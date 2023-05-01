@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,7 +34,6 @@ namespace pybind11 { class module_; }
 
 void addContainer(pybind11::module_& m);
 void addPacket(pybind11::module_& m);
-void addPacketListener(pybind11::module_& m);
 void addAttachment(pybind11::module_& m);
 void addScript(pybind11::module_& m);
 void addText(pybind11::module_& m);
@@ -43,7 +42,6 @@ void addPacketType(pybind11::module_& m);
 void addPacketClasses(pybind11::module_& m) {
     addPacketType(m);
     addPacket(m);
-    addPacketListener(m);
     addContainer(m);
     addAttachment(m);
     addScript(m);

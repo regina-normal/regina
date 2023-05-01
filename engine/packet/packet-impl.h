@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 /*! \file packet/packet-impl.h
  *  \brief Contains some implementation details for packet wrapper classes.
  *
- *  This file is \e not included from packet.h.  The routines it contains are
+ *  This file is _not_ included from packet.h.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all necessary
  *  packet types, and so end users should not need to include this file
  *  themselves.

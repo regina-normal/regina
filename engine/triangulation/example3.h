@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,9 +55,10 @@ namespace regina {
  * Offers routines for constructing a variety of sample 3-dimensional
  * triangulations.
  *
- * This is a specialisation of the generic Example class template; see
- * the Example template documentation for a general overview of how the example
- * triangulation classes work.
+ * This is a specialisation of the generic Example class template; see the
+ * generic Example template documentation for a general overview of how the
+ * example triangulation classes work.  In Python, you can read this generic
+ * documentation by looking at a higher dimension: try `help(Example5)`.
  *
  * This 3-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded and parameterised constructions.
@@ -74,10 +75,10 @@ class Example<3> : public detail::ExampleBase<3> {
 
         /**
          * Returns a one-tetrahedron triangulation of the 3-sphere.
-         * This is \e different from the generic routine sphere(),
+         * This is _different_ from the generic routine sphere(),
          * which uses two tetrahedra instead.
          *
-         * @return a one-tetrahedron 3-sphere.
+         * \return a one-tetrahedron 3-sphere.
          */
         static Triangulation<3> threeSphere();
 
@@ -85,37 +86,37 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the two-tetrahedron triangulation of the 3-sphere
          * that is dual to Bing's house with two rooms.
          *
-         * @return a 3-sphere triangulation dual to Bing's house.
+         * \return a 3-sphere triangulation dual to Bing's house.
          */
         static Triangulation<3> bingsHouse();
 
         /**
          * Returns a two-tetrahedron triangulation of the product space
-         * <tt>S^2 x S^1</tt>.
+         * `S² x S¹`.
          * This is identical to calling the generic routine sphereBundle().
          *
-         * @return the product space <tt>S^2 x S^1</tt>.
+         * \return the product space `S² x S¹`.
          */
         static Triangulation<3> s2xs1();
 
         /**
          * Returns a three-tetrahedron triangulation of the non-orientable
-         * product space <tt>RP^2 x S^1</tt>.
+         * product space `RP² x S¹`.
          *
-         * @return the product space <tt>RP^2 x S^1</tt>.
+         * \return the product space `RP² x S¹`.
          */
         static Triangulation<3> rp2xs1();
 
         /**
          * Returns a triangulation of the connected sum
-         * <tt>RP^3 # RP^3</tt>.
+         * `RP³ # RP³`.
          *
-         * @return the connected sum <tt>RP^3 # RP^3</tt>.
+         * \return the connected sum `RP³ # RP³`.
          */
         static Triangulation<3> rp3rp3();
 
         /**
-         * Returns a triangulation of the lens space <tt>L(p,q)</tt>.
+         * Returns a triangulation of the lens space `L(p,q)`.
          *
          * The triangulation uses a layered lens space, which is conjectured
          * (but not proven in all cases) to be the triangulation requiring the
@@ -123,12 +124,16 @@ class Example<3> : public detail::ExampleBase<3> {
          * building a layered solid torus and then joining together the
          * two boundary triangles.
          *
-         * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1).
+         * \pre \a p \> \a q ≥ 0 unless (\a p,\a q) = (0,1).
          * \pre gcd(\a p, \a q) = 1.
          *
-         * @param p a parameter of the desired lens space.
-         * @param q a parameter of the desired lens space.
-         * @return the lens space <tt>L(p,q)</tt>.
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, either \a q ≥ \a p and (\a p,\a q) ≠ (0,1), and/or
+         * \a p and \a q are not coprime.
+         *
+         * \param p a parameter of the desired lens space.
+         * \param q a parameter of the desired lens space.
+         * \return the lens space `L(p,q)`.
          */
         static Triangulation<3> lens(size_t p, size_t q);
 
@@ -136,11 +141,11 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a layered loop of the given length.
          * Layered loops are described in detail in the LayeredLoop class notes.
          *
-         * @param length the length of the layered loop to construct;
+         * \param length the length of the layered loop to construct;
          * this must be strictly positive.
-         * @param twisted \c true if the layered loop should be twisted,
+         * \param twisted \c true if the layered loop should be twisted,
          * or \c false if it should be untwisted.
-         * @return the resulting layered loop.
+         * \return the resulting layered loop.
          */
         static Triangulation<3> layeredLoop(size_t length, bool twisted);
 
@@ -148,7 +153,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the five-tetrahedron triangulation of the
          * Poincare homology sphere.
          *
-         * @return the Poincare homology sphere.
+         * \return the Poincare homology sphere.
          */
         static Triangulation<3> poincare();
 
@@ -173,21 +178,23 @@ class Example<3> : public detail::ExampleBase<3> {
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
          *
-         * \pre gcd(\a a1, \a b1) = 1.
-         * \pre gcd(\a a2, \a b2) = 1.
-         * \pre gcd(\a a3, \a b3) = 1.
+         * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
-         * @param a1 a parameter describing the first layered solid
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, at least one of the pairs (\a a1, \a b1), (\a a2, \a b2)
+         * or (\a a3, \a b3) is not coprime.
+         *
+         * \param a1 a parameter describing the first layered solid
          * torus in the augmented triangular solid torus.
-         * @param b1 a parameter describing the first layered solid
+         * \param b1 a parameter describing the first layered solid
          * torus in the augmented triangular solid torus.
-         * @param a2 a parameter describing the second layered solid
+         * \param a2 a parameter describing the second layered solid
          * torus in the augmented triangular solid torus.
-         * @param b2 a parameter describing the second layered solid
+         * \param b2 a parameter describing the second layered solid
          * torus in the augmented triangular solid torus.
-         * @param a3 a parameter describing the third layered solid
+         * \param a3 a parameter describing the third layered solid
          * torus in the augmented triangular solid torus.
-         * @param b3 a parameter describing the third layered solid
+         * \param b3 a parameter describing the third layered solid
          * torus in the augmented triangular solid torus.
          */
         static Triangulation<3> augTriSolidTorus(long a1, long b1,
@@ -214,17 +221,20 @@ class Example<3> : public detail::ExampleBase<3> {
          * orbifold), you can use the more sophisticated SFSpace::construct().
          *
          * \pre None of \a a1, \a a2 or \a a3 are 0.
-         * \pre gcd(\a a1, \a b1) = 1.
-         * \pre gcd(\a a2, \a b2) = 1.
-         * \pre gcd(\a a3, \a b3) = 1.
+         * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
-         * @param a1 a parameter describing the first exceptional fibre.
-         * @param b1 a parameter describing the first exceptional fibre.
-         * @param a2 a parameter describing the second exceptional fibre.
-         * @param b2 a parameter describing the second exceptional fibre.
-         * @param a3 a parameter describing the third exceptional fibre.
-         * @param b3 a parameter describing the third exceptional fibre.
-         * @return the triangulated Seifert fibred space.
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, at least one of \a a_1, \a a_2 or \a a_3 is zero, and/or
+         * at least one of the pairs (\a a1, \a b1), (\a a2, \a b2) or
+         * (\a a3, \a b3) is not coprime.
+         *
+         * \param a1 a parameter describing the first exceptional fibre.
+         * \param b1 a parameter describing the first exceptional fibre.
+         * \param a2 a parameter describing the second exceptional fibre.
+         * \param b2 a parameter describing the second exceptional fibre.
+         * \param a3 a parameter describing the third exceptional fibre.
+         * \param b3 a parameter describing the third exceptional fibre.
+         * \return the triangulated Seifert fibred space.
          */
         static Triangulation<3> sfsOverSphere(long a1 = 1, long b1 = 0,
             long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
@@ -236,7 +246,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Note that there are nine minimal triangulations of the Weeks
          * manifold (of course this routine returns just one).
          *
-         * @return the Weeks manifold.
+         * \return the Weeks manifold.
          */
         static Triangulation<3> weeks();
 
@@ -251,7 +261,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
          * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
          *
-         * @return the Weber-Seifert dodecahedral space.
+         * \return the Weber-Seifert dodecahedral space.
          */
         static Triangulation<3> weberSeifert();
 
@@ -259,7 +269,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the nine-tetrahedron closed orientable hyperbolic
          * 3-manifold with volume 0.94270736.
          *
-         * @return the closed orientable hyperbolic manifold described above.
+         * \return the closed orientable hyperbolic manifold described above.
          */
         static Triangulation<3> smallClosedOrblHyperbolic();
 
@@ -267,7 +277,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the eleven-tetrahedron closed non-orientable hyperbolic
          * 3-manifold with volume 2.02988321.
          *
-         * @return the closed non-orientable hyperbolic manifold described
+         * \return the closed non-orientable hyperbolic manifold described
          * above.
          */
         static Triangulation<3> smallClosedNonOrblHyperbolic();
@@ -281,7 +291,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * library of triangulations.  See:
          * http://page.math.tu-berlin.de/~lutz/stellar/library_of_triangulations.html
          *
-         * @return the boundary of the regular 600-cell.
+         * \return the boundary of the regular 600-cell.
          */
         static Triangulation<3> sphere600();
 
@@ -292,7 +302,7 @@ class Example<3> : public detail::ExampleBase<3> {
         /*@{*/
 
         /**
-         * Returns the layered solid torus <tt>LST(a,b,c)</tt>.
+         * Returns the layered solid torus `LST(a,b,c)`.
          *
          * This is a parameterised triangulation of the solid torus.
          * It has two boundary triangles and three boundary edges,
@@ -305,18 +315,43 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \pre gcd(\a a, \a b) = 1.
          *
-         * @param a the first parameter of the layered solid torus.
-         * @param b the second parameter of the layered solid torus.
-         * @return the layered solid torus <tt>LST(a,b,c)</tt>.
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, \a a and \a b are not coprime.
+         *
+         * \param a the first parameter of the layered solid torus.
+         * \param b the second parameter of the layered solid torus.
+         * \return the layered solid torus `LST(a,b,c)`.
          */
         static Triangulation<3> lst(size_t a, size_t b);
+
+        /**
+         * Returns a triangulation of the orientable handlebody with the
+         * given genus.
+         *
+         * For positive genus, this routine uses a minimal layered
+         * triangulation of the orientable handlebody. This is constructed by
+         * starting with a one-vertex triangulation of a once-punctured
+         * non-orientable surface with the given genus, and layering a
+         * tetrahedron onto each internal edge of this surface, yielding a
+         * (3*genus-2)-tetrahedron triangulation. For genus greater than one,
+         * there are many choices for how to do this; this routine makes an
+         * arbitrary choice.
+         *
+         * For genus 0, this routine uses the one-tetrahedron 3-ball.
+         *
+         * \param genus the genus of the handlebody.
+         * \return the orientable handlebody with the given genus.
+         *
+         * \author Alex He
+         */
+        static Triangulation<3> handlebody(size_t genus);
 
         /**
          * Returns a triangulation of the solid Klein bottle.
          * This is isomorphic to the triangulation returned by the
          * generic routine twistedBallBundle().
          *
-         * @return the solid Klein bottle.
+         * \return the solid Klein bottle.
          */
         static Triangulation<3> solidKleinBottle();
 
@@ -330,7 +365,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a two-tetrahedron ideal triangulation of the figure
          * eight knot complement.
          *
-         * @return the figure eight knot complement.
+         * \return the figure eight knot complement.
          */
         static Triangulation<3> figureEight();
 
@@ -338,7 +373,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a two-tetrahedron ideal triangulation of the trefoil
          * knot complement.
          *
-         * @return the trefoil knot complement.
+         * \return the trefoil knot complement.
          */
         static Triangulation<3> trefoil();
 
@@ -346,15 +381,25 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a four-tetrahedron ideal triangulation of the
          * Whitehead link complement.
          *
-         * @return the Whitehead link complement.
+         * \return the Whitehead link complement.
          */
-        static Triangulation<3> whiteheadLink();
+        static Triangulation<3> whitehead();
+
+        /**
+         * Deprecated alias for whitehead(), which returns a four-tetrahedron
+         * ideal triangulation of the Whitehead link complement.
+         *
+         * \deprecated This routine has been renamed to whitehead().
+         *
+         * \return the Whitehead link complement.
+         */
+        [[deprecated]] static Triangulation<3> whiteheadLink();
 
         /**
          * Returns the one-tetrahedron ideal triangulation of the
          * non-orientable Gieseking manifold.
          *
-         * @return the Gieseking manifold.
+         * \return the Gieseking manifold.
          */
         static Triangulation<3> gieseking();
 
@@ -363,7 +408,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * cusped boundary.  This triangulation has one internal finite
          * vertex and one genus two ideal vertex.
          *
-         * @return the solid genus two torus with cusped boundary.
+         * \return the solid genus two torus with cusped boundary.
          */
         static Triangulation<3> cuspedGenusTwoTorus();
 
@@ -380,6 +425,10 @@ inline Triangulation<3> Example<3>::s2xs1() {
 
 inline Triangulation<3> Example<3>::solidKleinBottle() {
     return twistedBallBundle();
+}
+
+inline Triangulation<3> Example<3>::whiteheadLink() {
+    return whitehead();
 }
 
 } // namespace regina

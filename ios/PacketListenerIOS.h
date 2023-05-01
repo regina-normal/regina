@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,7 +84,7 @@
  * Creates a new packet listener, listening to the given packet and
  * sending events to the given delegate object.
  *
- * @param listenChildren If \c YES, then this will always listen to not only
+ * \param listenChildren If \c YES, then this will always listen to not only
  * the given packet but also all of its immediate children (but not descendants at a
  * deeper level in the packet tree).  This behaviour will be maintained automatically as
  * packets are added and/or removed from the packet tree.

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ namespace regina {
  * Represents the different types of packet that are available in Regina.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own packet type, you should choose an ID >= 10000.
+ * Regina to include your own packet type, you should choose an ID ≥ 10000.
  *
  * \ingroup packet
  */
@@ -184,8 +184,8 @@ class PacketInfo {
          * This routine is guaranteed to return a non-null string, even
          * if \a packetType is not one of the PacketType enum values.
          *
-         * @param packetType the packet type being queried.
-         * @return the name of the given packet type.
+         * \param packetType the packet type being queried.
+         * \return the name of the given packet type.
          */
         constexpr static const char* name(PacketType packetType) {
             switch (packetType) {
@@ -258,7 +258,7 @@ class PacketInfo {
  * In particular, if \a Held is a full packet type itself (such as Container,
  * Script, or PacketOf<...>), then this template variable will be PACKET_NONE.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 template <typename Held>
 static constexpr PacketType packetTypeHolds = PACKET_NONE;

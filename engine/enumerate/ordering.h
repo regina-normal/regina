@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,7 +58,7 @@ namespace regina {
  * DoubleDescription::enumerate() or HilbertDual::enumerate().
  *
  * The ordering is defined as follows.  For each hyperplane, we
- * create a <i>position vector</i> (h_1, ..., h_f), where h_i is 0 if the
+ * create a _position vector_ (h_1, ..., h_f), where h_i is 0 if the
  * hyperplane contains the ith coordinate axis, or 1 if not.
  * We then compare these position vectors lexicographically.
  *
@@ -76,7 +76,7 @@ class PosOrder {
         /**
          * Creates a new helper object for comparing hyperplanes.
          *
-         * @param matrix the \a subspace matrix as passed to
+         * \param matrix the \a subspace matrix as passed to
          * the normal surface enumeration routine.
          */
         inline PosOrder(const MatrixInt& matrix);
@@ -93,12 +93,12 @@ class PosOrder {
          * Here "smaller" is defined by position vectors;
          * see the PosOrder class notes for details.
          *
-         * @param i the first matrix row index; this must be between
+         * \param i the first matrix row index; this must be between
          * 0 and matrix.rows()-1 inclusive, where \a matrix is
          * the matrix passed to the class constructor.
-         * @param j the second matrix row index; this must also be
+         * \param j the second matrix row index; this must also be
          * between 0 and matrix.rows()-1 inclusive.
-         * @return \c true if and only if the hyperplane described by
+         * \return \c true if and only if the hyperplane described by
          * row \a i is smaller than the hyperplane described by row \a j.
          */
         inline bool operator () (size_t i, size_t j) const;

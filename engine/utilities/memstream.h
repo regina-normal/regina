@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2019-2021, Ben Burton                                   *
+ *  Copyright (c) 2019-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,7 +54,7 @@ namespace regina {
  * End users should not use this class, but should use mem_istream instead.
  * The API for this class is subject to change in future versions of Regina.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -64,12 +64,12 @@ class mem_istream : public std::istream {
          * Initialies an input stream that reads from the given array of
          * characters.
          *
-         * @param begin a pointer to the beginning of the array to read.
-         * @param end a pointer past-the-end of the array to read.
+         * \param begin a pointer to the beginning of the array to read.
+         * \param end a pointer past-the-end of the array to read.
          */
         mem_istream(const char* begin, const char* end);
         /**
-         * Destructor.  Note that this does \e not deallocate the array of
+         * Destructor.  Note that this does _not_ deallocate the array of
          * characters being read.
          */
         ~mem_istream() override;
@@ -85,7 +85,7 @@ class mem_istream : public std::istream {
  * End users should not use this class, but should use mem_istream instead.
  * The API for this class is subject to change in future versions of Regina.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -95,8 +95,8 @@ class mem_streambuf : public std::streambuf {
          * Initialies a read-only stream buffer that reads from the
          * given array of characters.
          *
-         * @param begin a pointer to the beginning of the array to read.
-         * @param end a pointer past-the-end of the array to read.
+         * \param begin a pointer to the beginning of the array to read.
+         * \param end a pointer past-the-end of the array to read.
          */
         mem_streambuf(const char *begin, const char *end);
 

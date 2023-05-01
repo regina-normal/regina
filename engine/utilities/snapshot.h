@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,8 +44,6 @@
 #include <exception>
 
 namespace regina {
-
-class SnapshotWriteError;
 
 template <class T> class SnapshotRef;
 template <class T> class Snapshottable;
@@ -88,9 +86,9 @@ class SnapshotWriteError : public std::exception {
  *
  * To describe how this class works, we need some terminology:
  *
- * - the \e image is a single object of type \a T whose snapshot we are taking;
+ * - the _image_ is a single object of type \a T whose snapshot we are taking;
  *
- * - the \e viewers are many object of other types that all require access to
+ * - the _viewers_ are many object of other types that all require access to
  *   this snapshot.
  *
  * The life cycle of this process is as follows:
@@ -99,12 +97,12 @@ class SnapshotWriteError : public std::exception {
  *   remains uninvolved in the snapshotting machinery.
  *
  * - At some point in time, a viewer \a V1 wishes to take a snapshot of \a I.
- *   To do this, it creates a <i>snapshot reference</i> <tt>SnapshotRef(I)</tt>.
+ *   To do this, it creates a _snapshot reference_ `SnapshotRef(I)`.
  *   This is a cheap operation that "enrols" \a I in the snapshotting machinery,
  *   by creating a single Snapshot object \a S.
  *
  * - More viewers may take snapshots of \a I, either by creating a new
- *   <tt>SnapshotRef(I)</tt> or by copying other viewers' snapshot references.
+ *   `SnapshotRef(I)` or by copying other viewers' snapshot references.
  *   Again, these are all cheap operations.  All references to \a I will
  *   refer to the same snapshot object \a S.
  *
@@ -115,7 +113,7 @@ class SnapshotWriteError : public std::exception {
  *   snapshotting machinery again; the only way to access the original
  *   snapshot at this point is by copying other references.
  *
- * - After the image was modified, making a new <tt>SnapshotRef(I)</tt> will
+ * - After the image was modified, making a new `SnapshotRef(I)` will
  *   re-enrol \a I and create a completely new Snapshot object.  The original
  *   Snapshot may of course still exist, maintaining its copy of \a I as it
  *   used to be.
@@ -133,7 +131,7 @@ class SnapshotWriteError : public std::exception {
  *   because the image may change to be a different object if the original
  *   is modified or destroyed.
  *
- * - Snapshot references are only ever granted \e read-only access to the image.
+ * - Snapshot references are only ever granted _read-only_ access to the image.
  *   Semantically this makes sense (since this is a snapshot); also this
  *   avoids unpleasant lifespan questions if someone tries to modify a
  *   Snapshot's internal deep copy.  If you need write access from a snapshot,
@@ -157,9 +155,9 @@ class SnapshotWriteError : public std::exception {
  * - In particular, \a T must have a copy constructor.  This will be used by
  *   the snapshot whenever it needs to take its own deep copy.
  *
- * - Whenever an object of type \a T changes, it \e must call
+ * - Whenever an object of type \a T changes, it _must_ call
  *   Snapshottable<T>::takeSnapshot() from within the modifying member
- *   function, \e before the change takes place (though there are a handful
+ *   function, _before_ the change takes place (though there are a handful
  *   of exceptions to this requirement, described in the Snapshottable class
  *   notes).  If the object does not have a current snapshot, this is very fast
  *   (a single test for a null pointer).  If the object does have a current
@@ -178,12 +176,12 @@ class SnapshotWriteError : public std::exception {
  *
  * Regarding multithreading:
  *
- * - In general, this class is \e not thread-safe; in particular, the
+ * - In general, this class is _not_ thread-safe; in particular, the
  *   code that creates new snapshots, takes deep copies before modification,
  *   destroys snapshots, and enrols/unenrols images from the snapshot
  *   machinery is all unsafe for multithreading.
  *
- * - However: the reference counting machinery \e is thread-safe.
+ * - However: the reference counting machinery _is_ thread-safe.
  *   This means that, if your image is not being modified and you already have
  *   one snapshot reference \a R, it is safe to create more references,
  *   access the image through your references, and/or destroy references,
@@ -204,7 +202,7 @@ class SnapshotWriteError : public std::exception {
  * Images should always work through their base class Snapshottable<T>,
  * and viewers shoudl always work through SnapshotRef<T>.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -250,7 +248,7 @@ class Snapshot {
          * This is called from Snapshottable<T> whenever \a value is
          * about to be modified or destroyed.
          *
-         * If we already \e have a deep copy, then this is an error:
+         * If we already _have_ a deep copy, then this is an error:
          * it means the call came from within the deep copy, which should be
          * read-only and which we ourselves are responsible for destroying.
          */
@@ -291,7 +289,7 @@ class Snapshot {
  *   any data is destroyed.
  *
  * There are some situations where an object of type \a T is modified but
- * does \e not need to call takeSnapshot().  These include:
+ * does _not_ need to call takeSnapshot().  These include:
  *
  * - move, copy and swap operations, since these are required to call the
  *   base class implementations from Snapshottable<T>, which take care of
@@ -300,7 +298,8 @@ class Snapshot {
  * - modifications of objects that are freshly constructed, and cannot
  *   possibly have snapshots that refer to them yet.
  *
- * \ifacespython Not present.
+ * \python Not present, but the routine isReadOnlySnapshot() will be
+ * provided directly through each corresponding subclass \a T.
  *
  * \ingroup utilities
  */
@@ -331,17 +330,17 @@ class Snapshottable {
         /**
          * Move constructor.
          *
-         * This should \e only be called when the entire type \a T contents
+         * This should _only_ be called when the entire type \a T contents
          * of \a src are being moved into this new type \a T object.  If \a src
          * has a current snapshot, then this object will move in as the new
-         * image for that \e same snapshot.  This avoids a deep copy of \a src,
+         * image for that _same_ snapshot.  This avoids a deep copy of \a src,
          * even though \a src is changing (and presumably will be destroyed).
          *
          * In particular, if the move constructor for \a T calls this
          * base class constructor (as it should), then there is no need
          * for it to call takeSnapshot() from \a src.
          *
-         * @param src the snapshot image being moved.
+         * \param src the snapshot image being moved.
          */
         Snapshottable(Snapshottable&& src) noexcept : snapshot_(src.snapshot_) {
             if (snapshot_) {
@@ -364,7 +363,7 @@ class Snapshottable {
          * behave as though the object were being modified (i.e., it may
          * still take a snapshot).
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         Snapshottable& operator = (const Snapshottable&) {
@@ -383,10 +382,10 @@ class Snapshottable {
          * operator for \a T calls this base class operator (as it should),
          * then it does not need to call takeSnapshot() itself.
          *
-         * This should \e only be called when the entire type \a T contents
+         * This should _only_ be called when the entire type \a T contents
          * of \a src are being moved into this type \a T object.  If \a src
          * has a current snapshot, then this object will move in as the new
-         * image for that \e same snapshot.  This avoids a deep copy of \a src,
+         * image for that _same_ snapshot.  This avoids a deep copy of \a src,
          * even though \a src is changing (and presumably will be destroyed).
          *
          * In particular, if the move assignment operator for \a T calls this
@@ -396,8 +395,8 @@ class Snapshottable {
          * This operator is not marked \c noexcept, since it might create a
          * deep copy of the old type \a T value of this object.
          *
-         * @param src the snapshot image being moved.
-         * @return a reference to this object.
+         * \param src the snapshot image being moved.
+         * \return a reference to this object.
          */
         Snapshottable& operator = (Snapshottable&& src) {
             if (snapshot_)
@@ -413,17 +412,17 @@ class Snapshottable {
         /**
          * Swap operation.
          *
-         * This should \e only be called when the entire type \a T contents
+         * This should _only_ be called when the entire type \a T contents
          * of this object and \a other are being swapped.  If one object has
          * a current snapshot, then the other object will move in as the new
-         * image for that \e same snapshot.  This avoids a deep copies of
+         * image for that _same_ snapshot.  This avoids a deep copies of
          * this object and/or \a other, even though both objects are changing.
          *
          * In particular, if the swap function for \a T calls this base class
          * function (as it should), then there is no need to call
          * takeSnapshot() from either this object or \a src.
          *
-         * @param other the snapshot image being swapped with this.
+         * \param other the snapshot image being swapped with this.
          */
         void swap(Snapshottable& other) noexcept {
             std::swap(snapshot_, other.snapshot_);
@@ -454,6 +453,7 @@ class Snapshottable {
                 snapshot_->freeze();
         }
 
+    public:
         /**
          * Determines if this object is a read-only deep copy that was created
          * by a snapshot.
@@ -471,11 +471,7 @@ class Snapshottable {
          * dereference operators, but there are settings in which this
          * constness is "forgotten", such as Regina's Python bindings.)
          *
-         * \ifacespython Although this Snapshottable base class is not
-         * visible to Python, the isReadOnlySnapshot() function is still
-         * visible as a member function of the class \a T.
-         *
-         * @return \c true if and only if this object is a deep copy that was
+         * \return \c true if and only if this object is a deep copy that was
          * taken by a Snapshot object of some original type \a T image.
          */
         bool isReadOnlySnapshot() const {
@@ -489,7 +485,7 @@ class Snapshottable {
          *
          * This should only be called when creating a new SnapshotRef.
          *
-         * @return the snapshot for this object.  This is guaranteed to
+         * \return the snapshot for this object.  This is guaranteed to
          * be non-null, and to have a positive reference count.
          */
         Snapshot<T>* addSnapshotRef() const {
@@ -519,7 +515,7 @@ class Snapshottable {
  *   original type \a T object has since been modified or destroyed.
  *
  * - The user of a SnapshotRef \a R must only access the snapshotted image
- *   through the dereference operators <tt>*R</tt> and <tt>R-&gt;</tt>.
+ *   through the dereference operators `*R` and `R->`.
  *   This access must remain read-only, and any attempt to circumvent it
  *   could lead to a regina::SnapshotWriteError exception being thrown.
  *
@@ -531,7 +527,7 @@ class Snapshottable {
  * value.  They do also offer move and swap operations that in some cases
  * are more efficient (though all copy, move and swap operations are fast).
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -551,7 +547,7 @@ class SnapshotRef {
          * in the same state, it is (slightly) cheaper to copy \a R instead
          * of going through the source object \a src.
          *
-         * @param src the underlying type \a T object whose current
+         * \param src the underlying type \a T object whose current
          * snapshot we wish to maintain a reference to.
          */
         SnapshotRef(const T& src) : snapshot_(src.addSnapshotRef()) {
@@ -562,7 +558,7 @@ class SnapshotRef {
          * The new reference will refer to the same object as \a src, as it
          * appeared at the same point in time.
          *
-         * @param src the snapshot reference to copy.
+         * \param src the snapshot reference to copy.
          */
         SnapshotRef(const SnapshotRef& src) : snapshot_(src.snapshot_) {
             ++snapshot_->refCount_;
@@ -575,10 +571,10 @@ class SnapshotRef {
          *
          * This move constructor is identical to the copy constructor,
          * and there is no particular reason to call it.  It is included
-         * here for consistency because the move \e assignment operator is
+         * here for consistency because the move _assignment_ operator is
          * different from (and more efficient) than copy assignment.
          *
-         * @param src the snapshot reference to move.
+         * \param src the snapshot reference to move.
          */
         SnapshotRef(SnapshotRef&& src) noexcept : snapshot_(src.snapshot_) {
             // We don't do anything special here like preserving the reference
@@ -612,12 +608,12 @@ class SnapshotRef {
          * with its internal deep copy of the original object, if it made one)
          * will be destroyed.
          *
-         * Self-assignment (<tt>r = *r</tt>) is harmless, and will never cause
+         * Self-assignment (`r = *r`) is harmless, and will never cause
          * the underlying snapshot to be destroyed.
          *
-         * @param src the underlying type \a T object whose current
+         * \param src the underlying type \a T object whose current
          * snapshot we wish to make this a reference to.
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         SnapshotRef& operator = (const T& src) {
             if (snapshot_ != src.snapshot_) {
@@ -638,11 +634,11 @@ class SnapshotRef {
          * with its internal deep copy of the original object, if it made one)
          * will be destroyed.
          *
-         * Self-assignment (<tt>r = r</tt>) is harmless, and will never cause
+         * Self-assignment (`r = r`) is harmless, and will never cause
          * the underlying snapshot to be destroyed.
          *
-         * @param src the snapshot reference to copy.
-         * @return a reference to this object.
+         * \param src the snapshot reference to copy.
+         * \return a reference to this object.
          */
         // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         SnapshotRef& operator = (const SnapshotRef& src) {
@@ -663,8 +659,8 @@ class SnapshotRef {
          * This is more efficient than copy assignment, since it avoids
          * atomic changes to reference counts.
          *
-         * @param src the snapshot reference to move.
-         * @return a reference to this object.
+         * \param src the snapshot reference to move.
+         * \return a reference to this object.
          */
         SnapshotRef& operator = (SnapshotRef&& src) noexcept {
             // Let src manage the destruction of the old snapshot,
@@ -676,13 +672,13 @@ class SnapshotRef {
          * Swaps this and the given reference so that they refer to each
          * others' snapshots.
          *
-         * Self-swapping (<tt>r.swap(r)</tt>) is harmless, and will never
+         * Self-swapping (`r.swap(r)`) is harmless, and will never
          * cause the underlying snapshot to be destroyed.
          *
          * This is more efficient than a sequence of copies, since it avoids
          * atomic changes to reference counts.
          *
-         * @param other the reference to swap with this.
+         * \param other the reference to swap with this.
          */
         void swap(SnapshotRef& other) noexcept {
             std::swap(snapshot_, other.snapshot_);
@@ -696,8 +692,8 @@ class SnapshotRef {
          * other references), during the same time period in which the
          * underlying type \a T object was not modified.
          *
-         * @param rhs the snapshot reference to compare with this.
-         * @return \c true if and only if this and \a rhs refer to the
+         * \param rhs the snapshot reference to compare with this.
+         * \return \c true if and only if this and \a rhs refer to the
          * same snapshot of the same underlying type \a T object.
          */
         bool operator == (const SnapshotRef& rhs) const {
@@ -713,8 +709,8 @@ class SnapshotRef {
          * object but at times that were separated by a modification of this
          * type \a T object.
          *
-         * @param rhs the snapshot reference to compare with this.
-         * @return \c true if and only if this and \a rhs do not refer to the
+         * \param rhs the snapshot reference to compare with this.
+         * \return \c true if and only if this and \a rhs do not refer to the
          * same snapshot of the same underlying type \a T object.
          */
         bool operator != (const SnapshotRef& rhs) const {
@@ -730,7 +726,7 @@ class SnapshotRef {
          * and never take your own reference or pointer to the underlying
          * type \a T object.
          *
-         * @return a reference to the snapshot of the type \a T object.
+         * \return a reference to the snapshot of the type \a T object.
          */
         const T& operator * () const {
             return *snapshot_->value_;
@@ -745,7 +741,7 @@ class SnapshotRef {
          * and never take your own reference or pointer to the underlying
          * type \a T object.
          *
-         * @return a reference to the snapshot of the type \a T object.
+         * \return a reference to the snapshot of the type \a T object.
          */
         const T* operator -> () const {
             return snapshot_->value_;
@@ -761,8 +757,10 @@ class SnapshotRef {
  * See the Snapshot documentation for a full explanation of how Regina's
  * snapshotting machinery works.
  *
- * @param a the first snapshot reference to swap.
- * @param b the second snapshot reference to swap.
+ * \nopython The SnapshotRef classes are not accessible to Python users.
+ *
+ * \param a the first snapshot reference to swap.
+ * \param b the second snapshot reference to swap.
  *
  * \ingroup utilities
  */

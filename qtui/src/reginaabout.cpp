@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,10 @@
 #include "regina-config.h"
 #include "libnormaliz/version.h"
 
+#ifdef BUILD_PYTHON_BINDINGS
+#include "Python.h" // for PY_VERSION
+#endif
+
 #include "iconcache.h"
 #include "reginaabout.h"
 #include "reginaprefset.h"
@@ -40,6 +44,7 @@
 
 #include <cstdlib>
 
+#include <QtGlobal>
 #include <QDateTime>
 #include <QDialogButtonBox>
 #include <QFile>
@@ -55,24 +60,21 @@
 #define NMZ_VERSION_STRING REGINA_XSTR(NMZ_VERSION)
 
 const QString ReginaAbout::regCopyright(
-    tr("Copyright (c) 1999-2021, The Regina development team"));
+    tr("Copyright (c) 1999-2023, The Regina development team"));
 
 const QString ReginaAbout::regDescription(
     tr("Software for low-dimensional topology"));
 
-const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2021, 12, 19).toString(Qt::TextDate)));
-
 const QString ReginaAbout::regWebsite("http://regina-normal.github.io/");
 
 const QString ReginaAbout::regLicense( tr( 
-    "Copyright (c) 1999-2021, The Regina development team\n\n"
+    "Copyright (c) 1999-2023, The Regina development team\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for low-dimensional topology\",\n"
-    "  http://regina-normal.github.io/, 1999-2021.\n\n"
+    "  http://regina-normal.github.io/, 1999-2023.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"
@@ -231,11 +233,18 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     auto* tabs = new QTabWidget;
 
-    QString aboutText = QString("<qt>") + regDescription +
-        "<p>" + regReleased +
-        "<p>" + regCopyright +
-        "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>";
-    auto* aboutLabel = new QLabel(aboutText);
+    QLabel* aboutLabel;
+    const char* buildInfo = BUILD_INFO;
+    if (*buildInfo) {
+        aboutLabel = new QLabel((QString("<qt>") + regDescription +
+            "<p>%1<p>" + regCopyright +
+            "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>")
+            .arg(BUILD_INFO));
+    } else {
+        aboutLabel = new QLabel(QString("<qt>") + regDescription +
+            "<p>" + regCopyright +
+            "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>");
+    }
     aboutLabel->setWordWrap(true);
     aboutLabel->setOpenExternalLinks(true);
     aboutLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -289,6 +298,13 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
             "<a href=\"%1\">%1</a></p>").arg(info.website);
         bundledText += "<p style=\"margin: 0px;\">&nbsp;</p>";
     }
+#ifdef BUILD_PYTHON_BINDINGS
+    bundledText += tr("<p style=\"margin: 0px;\">"
+        "Built against Qt " QT_VERSION_STR " and Python " PY_VERSION "</p>");
+#else
+    bundledText += tr("<p style=\"margin: 0px;\">"
+        "Built against Qt " QT_VERSION_STR " without Python</p>");
+#endif
 
     auto* softwarePage = new QTextBrowser;
     softwarePage->setFrameStyle(QFrame::NoFrame);

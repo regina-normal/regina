@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,7 +63,7 @@ namespace python {
  * of Held) inherit the full interface from Held.
  *
  * Since all packet types are held by std::shared_ptr in their Python
- * bindings, you \e must ensure that the base class Held is likewise held by
+ * bindings, you _must_ ensure that the base class Held is likewise held by
  * std::shared_ptr (not the default std::unique_ptr that pybind11 uses
  * unless instructed otherwise).  If you do not do this, then Python
  * will raise an ImportError when loading Regina's module.
@@ -75,19 +75,21 @@ namespace python {
 template <class Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     auto c = pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
-            std::shared_ptr<regina::PacketOf<Held>>>(m, className)
-        .def(pybind11::init<const Held&>()) // also takes PacketOf<Held>
+            std::shared_ptr<regina::PacketOf<Held>>>(m, className,
+            doc::common::PacketOf)
+        .def(pybind11::init<const Held&>(), // also takes PacketOf<Held>
+            doc::common::PacketOf_copy)
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
     regina::python::add_output(c);
     m.def("make_packet", [](const Held& h) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h));
-    });
+    }, doc::common::make_packet);
     m.def("make_packet", [](const Held& h, const std::string& label) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h), label);
-    });
+    }, doc::common::make_packet_2);
     return c;
 }
 
@@ -102,9 +104,11 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
  * At the Python level, this constructor looks like PacketOfHeld(x, y, .., z).
  * At the C++ level, it will call PacketOf<Held>(std::in_place, x, y, ..., z).
  *
- * To add the wrapper, call add_packet_constructor<Tx, Ty, ...  Tz>(c),
+ * To add the wrapper, call add_packet_constructor<Tx, Ty, ...  Tz>(c, ...),
  * where c is the pybind11::class_ object returned from add_packet_wrapper()
- * (that is, the pybind11 wrapper for the C++ class PacketOf<Held>).
+ * (that is, the pybind11 wrapper for the C++ class PacketOf<Held>).  Any
+ * additional arguments (e.g., a docstring) will be passed through to
+ * class_.def().
  *
  * The additional \a options arguments are the usual pybind11 options
  * (for example, pybind11::arg objects to specify default arguments).
@@ -131,8 +135,9 @@ template <typename PythonClass>
 void add_packet_data(PythonClass& classWrapper) {
     using DataType = regina::PacketData<typename PythonClass::type>;
     classWrapper
-        .def("packet", pybind11::overload_cast<>(&DataType::packet))
-        .def("anonID", &DataType::anonID)
+        .def("packet", pybind11::overload_cast<>(&DataType::packet),
+            doc::common::PacketData_packet)
+        .def("anonID", &DataType::anonID, doc::common::PacketData_anonID)
         ;
 }
 

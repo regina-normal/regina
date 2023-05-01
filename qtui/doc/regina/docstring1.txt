@@ -1,0 +1,26 @@
+>>> help(NormalSurface.components)
+Help on instancemethod in module regina.engine:
+
+components(...)
+    components(self: regina.NormalSurface) -> List[regina.NormalSurface]
+    
+    Splits this surface into connected components.
+    
+    A list of connected components will be returned. These components will
+    always be encoded using standard (tri-quad or tri-quad-oct)
+    coordinates, regardless of the internal vector encoding that is used
+    by this surface.
+    
+    Precondition:
+        This normal surface is embedded (not singular or immersed).
+    
+    Precondition:
+        This normal surface is compact (has finitely many discs).
+    
+    .. warning::
+        This routine explicitly builds the normal discs, and so may run
+        out of memory if the normal coordinates are extremely large.
+    
+    Returns:
+        the list of connected components.
+

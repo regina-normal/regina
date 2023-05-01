@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,22 +35,26 @@
 #include "subcomplex/layeredchainpair.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredchainpair.h"
 
 using regina::LayeredChainPair;
 
 void addLayeredChainPair(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredChainPair)
+
     auto c = pybind11::class_<LayeredChainPair, regina::StandardTriangulation>
-            (m, "LayeredChainPair")
-        .def(pybind11::init<const LayeredChainPair&>())
-        .def("swap", &LayeredChainPair::swap)
+            (m, "LayeredChainPair", rdoc_scope)
+        .def(pybind11::init<const LayeredChainPair&>(), rdoc::__copy)
+        .def("swap", &LayeredChainPair::swap, rdoc::swap)
         .def("chain", &LayeredChainPair::chain,
-            pybind11::return_value_policy::reference_internal)
-        .def_static("recognise", &LayeredChainPair::recognise)
+            pybind11::return_value_policy::reference_internal, rdoc::chain)
+        .def_static("recognise", &LayeredChainPair::recognise, rdoc::recognise)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    m.def("swap",
-        (void(*)(LayeredChainPair&, LayeredChainPair&))(regina::swap));
+    regina::python::add_global_swap<LayeredChainPair>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

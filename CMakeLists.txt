@@ -12,9 +12,12 @@ SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+# Regina's own cmake scripts:
+INCLUDE( ReginaMacros )
+
 # Version
-SET (PACKAGE_VERSION 7.1)
-SET (SNAPPY_VERSION 2.8)
+SET (PACKAGE_VERSION 7.4)
+SET (SNAPPY_VERSION 3.0.3)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
 # Extract major/minor version
@@ -23,6 +26,18 @@ SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 STRING(REGEX MATCH "^([0-9]+).([0-9]+)" PACKAGE_VERSION_MAJOR "${PACKAGE_VERSION}")
 SET (PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1} )
 SET (PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2} )
+
+IF(BUILD_INFO)
+  SET (PACKAGE_BUILD_STRING "${PACKAGE_STRING} (${BUILD_INFO})")
+ELSE(BUILD_INFO)
+  SET (BUILD_INFO "" CACHE STRING
+    "Optional additional information about this specific build.  Examples might be: \"Official macOS build\", or \"Debian package build\"."
+  FORCE)
+  SET (PACKAGE_BUILD_STRING "${PACKAGE_STRING}")
+ENDIF(BUILD_INFO)
+REGINA_ESCAPE_C (BUILD_INFO)
+REGINA_ESCAPE_C (PACKAGE_BUILD_STRING)
+MESSAGE (STATUS "Detailed version: ${PACKAGE_BUILD_STRING}")
 
 # Make a release build by default.
 IF(NOT CMAKE_BUILD_TYPE)
@@ -48,9 +63,6 @@ ENDIF(HIGHDIM)
 IF (WIN32)
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-ipa-cp-clone")
 ENDIF (WIN32)
-
-# Regina's own cmake scripts:
-INCLUDE( ReginaMacros )
 
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
@@ -190,6 +202,7 @@ REGINA_ESCAPE_BASH (CMAKE_SOURCE_DIR)
 REGINA_ESCAPE_BASH (CMAKE_INSTALL_PREFIX)
 REGINA_ESCAPE_BASH (INCLUDEDIR)
 REGINA_ESCAPE_BASH (LIBDIR)
+REGINA_ESCAPE_BASH (PACKAGE_BUILD_STRING)
 REGINA_ESCAPE_PERL (CMAKE_INSTALL_PREFIX)
 REGINA_ESCAPE_PERL (LIBDIR)
 REGINA_ESCAPE_PERL (PYLIBDIR)
@@ -257,7 +270,7 @@ CHECK_CXX_SOURCE_COMPILES("
 # Note that pkg-config is optional, but it does help us find some libraries
 # that we could perhaps not have found otherwise.
 # In particular, most build environments will need it to locate Graphviz.
-FIND_PACKAGE(PkgConfig)
+FIND_PACKAGE(PkgConfig QUIET)
 
 FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
@@ -300,12 +313,22 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   TRUE)
 
 FIND_PACKAGE(Jansson)
-INCLUDE_DIRECTORIES(${JANSSON_INCLUDE_DIR})
-MACRO_LOG_FEATURE(JANSSON_FOUND
+INCLUDE_DIRECTORIES(${Jansson_INCLUDE_DIR})
+MACRO_LOG_FEATURE(Jansson_FOUND
   "Jansson"
   "Essential: JSON support"
   "http://www.digip.org/jansson/"
   TRUE)
+
+IF (NOT DISABLE_UTILS)
+  FIND_PACKAGE(POPT)
+  MACRO_LOG_FEATURE(POPT_FOUND
+    "Popt"
+    "Required for Regina's command-line utilities"
+    "http://rpm5.org/files/popt/"
+    TRUE ""
+    "To disable the command-line utilities, run: cmake -DDISABLE_UTILS=1")
+ENDIF (NOT DISABLE_UTILS)
 
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
@@ -329,32 +352,24 @@ IF (NOT DISABLE_PYTHON)
     IF (${Python_VERSION_MAJOR} EQUAL 2)
       MESSAGE(FATAL_ERROR "Regina no longer supports Python 2.")
     ELSEIF (${Python_VERSION_MAJOR} EQUAL 3)
-      IF (${Python_VERSION_MINOR} LESS 1)
-        MESSAGE(FATAL_ERROR "For Python 3.x, Regina needs Python >= 3.1.")
+      IF (${Python_VERSION_MINOR} LESS 4)
+        MESSAGE(FATAL_ERROR "Regina needs Python >= 3.4.")
       ENDIF ()
     ELSE ()
       MESSAGE(FATAL_ERROR "Unknown Python major version: ${Python_VERSION_MAJOR}")
     ENDIF ()
   ENDIF (Python_FOUND)
 
-  # We need to properly escape the python executable for use in the bash
-  # script regina-python.
+  # We need to properly escape some python locations for use in various scripts.
   REGINA_ESCAPE_PERL (Python_EXECUTABLE)
+  REGINA_ESCAPE_BASH (Python_EXECUTABLE)
 ENDIF (NOT DISABLE_PYTHON)
 
 FIND_PACKAGE(KVStore)
-MACRO_LOG_FEATURE(KVSTORE_FOUND
-  "${KVSTORE_DISPLAYNAME}"
+MACRO_LOG_FEATURE(KVStore_FOUND
+  "${KVStore_DISPLAYNAME}"
   "Essential: lightweight database library for census data"
-  "${KVSTORE_DISPLAYURL}"
-  TRUE)
-
-# Dependencies used by only some components of Regina
-FIND_PACKAGE(POPT)
-MACRO_LOG_FEATURE(POPT_FOUND
-  "Popt"
-  "Essential: command-line option processing"
-  "http://rpm5.org/files/popt/"
+  "${KVStore_DISPLAYURL}"
   TRUE)
 
 # Optionals
@@ -450,7 +465,14 @@ endif ()
 # Core directories
 ADD_SUBDIRECTORY(admin)
 ADD_SUBDIRECTORY(engine)
-ADD_SUBDIRECTORY(utils)
+
+# Command-line utilities
+IF (POPT_FOUND)
+  ADD_SUBDIRECTORY(utils)
+  MESSAGE(STATUS "Command-line utilities enabled.")
+ELSE (POPT_FOUND)
+  MESSAGE(STATUS "Command-line utilities disabled.")
+ENDIF (POPT_FOUND)
 
 # Python support
 
@@ -496,8 +518,27 @@ ELSEIF(DISABLE_GUI)
   MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
 ELSE(DISABLE_GUI)
   set(CMAKE_AUTOMOC ON)
-  FIND_PACKAGE(Qt5Widgets)
-  FIND_PACKAGE(Qt5Svg)
+
+  FIND_PACKAGE(Qt6Widgets QUIET)
+  FIND_PACKAGE(Qt6SvgWidgets QUIET)
+  if (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
+    set(QT_FOUND TRUE)
+    set(REGINA_QT 6)
+    MESSAGE(STATUS "Found Qt6: ${Qt6_DIR}")
+  else (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
+    MESSAGE(STATUS "Qt6 not found: will look for Qt5 instead")
+    FIND_PACKAGE(Qt5Widgets QUIET)
+    FIND_PACKAGE(Qt5Svg QUIET)
+    if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+      set(QT_FOUND TRUE)
+      set(REGINA_QT 5)
+      MESSAGE(STATUS "Found Qt5: ${Qt5Core_DIR}")
+    else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+      set(QT_FOUND FALSE)
+      unset(REGINA_QT)
+      MESSAGE(STATUS "Qt5 not found")
+    endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+  endif (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
 
   IF (APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
     # The GRAPHVIZ_FRAMEWORK_PATH option is a hack that allows you to link
@@ -581,17 +622,14 @@ ELSE(DISABLE_GUI)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
-  if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+  if (QT_FOUND)
     ADD_SUBDIRECTORY(qtui)
-    SET(QT5_FOUND TRUE)
-  else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
-    SET(QT5_FOUND FALSE)
-  endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+  endif (QT_FOUND)
 
-  MACRO_LOG_FEATURE(QT5_FOUND
-    "Qt5"
+  MACRO_LOG_FEATURE(QT_FOUND
+    "Qt6 or Qt5"
     "Required for Regina's graphical user interface"
-    "http://qt-project.org/"
+    "https://www.qt.io/"
     TRUE ""
     "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 ENDIF()
@@ -641,9 +679,12 @@ set(CPACK_SOURCE_IGNORE_FILES
   "~$"
   "^${PROJECT_BINARY_DIR}/"
   "^${PROJECT_SOURCE_DIR}/Regina.xcodeproj/"
+  "^${PROJECT_SOURCE_DIR}/admin/RELEASE.txt"
+  "^${PROJECT_SOURCE_DIR}/admin/distcheck"
   "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
   "^${PROJECT_SOURCE_DIR}/ios/"
   "^${PROJECT_SOURCE_DIR}/packaging/"
+  "^${PROJECT_SOURCE_DIR}/python/docstrings/clang-support/"
   "^${PROJECT_SOURCE_DIR}/utils/local/"
   "^${PROJECT_SOURCE_DIR}/utils/snappea/"
   "^${PROJECT_SOURCE_DIR}/www/"

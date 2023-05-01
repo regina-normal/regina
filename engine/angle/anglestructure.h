@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -119,8 +119,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * combinatorially identical to, the triangulation on which
          * \a src is placed.
          *
-         * @param src the angle structure to copy.
-         * @param triangulation the triangulation on which this new
+         * \param src the angle structure to copy.
+         * \param triangulation the triangulation on which this new
          * angle structure will be placed.
          */
         AngleStructure(const AngleStructure& src,
@@ -134,11 +134,10 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * combinatorially identical to, the triangulation on which
          * \a src is placed.
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param src the angle structure to copy.
-         * @param triangulation a snapshot, frozen in time, of the
+         * \param src the angle structure to copy.
+         * \param triangulation a snapshot, frozen in time, of the
          * triangulation on which this new angle structure will be placed.
          */
         AngleStructure(const AngleStructure& src,
@@ -165,11 +164,11 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Instead of a Vector<Integer>, you may (if you prefer)
+         * \python Instead of a Vector<Integer>, you may (if you prefer)
          * pass a Python list of integers.
          *
-         * @param triang the triangulation on which this angle structure lies.
-         * @param vector a vector containing the individual angles in the
+         * \param triang the triangulation on which this angle structure lies.
+         * \param vector a vector containing the individual angles in the
          * angle structure.
          */
         AngleStructure(const Triangulation<3>& triang,
@@ -188,11 +187,10 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation on which this angle structure lies.
-         * @param vector a vector containing the individual angles in the
+         * \param triang the triangulation on which this angle structure lies.
+         * \param vector a vector containing the individual angles in the
          * angle structure.
          */
         AngleStructure(const Triangulation<3>& triang,
@@ -206,12 +204,11 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the triangulation on
+         * \param triang a snapshot, frozen in time, of the triangulation on
          * which this angle structure lies.
-         * @param vector a vector containing the individual angles in the
+         * \param vector a vector containing the individual angles in the
          * angle structure.
          */
         AngleStructure(const SnapshotRef<Triangulation<3>>& triang,
@@ -225,12 +222,12 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the triangulation on
+         * \param triang a snapshot, frozen in time, of the triangulation on
          * which this angle structure lies.
-         * @param vector a vector containing the individual angles in the
+         * \param vector a vector containing the individual angles in the
          * angle structure.
          */
         AngleStructure(const SnapshotRef<Triangulation<3>>& triang,
@@ -246,7 +243,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *
          * This operator induces a deep copy of the given angle structure.
          *
-         * @return a reference to this angle structure.
+         * \return a reference to this angle structure.
          */
         AngleStructure& operator = (const AngleStructure&) = default;
 
@@ -261,7 +258,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *
          * The structure that was passed will no longer be usable.
          *
-         * @return a reference to this angle structure.
+         * \return a reference to this angle structure.
          */
         AngleStructure& operator = (AngleStructure&&) noexcept = default;
 
@@ -274,7 +271,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * length vectors (but of course if either property differs then
          * these features will be adjusted accordingly).
          *
-         * @param other the angle structure whose contents should be swapped
+         * \param other the angle structure whose contents should be swapped
          * with this.
          */
         void swap(AngleStructure& other) noexcept;
@@ -282,19 +279,19 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         /**
          * Returns the requested angle in this angle structure.
          * The angle returned will be scaled down; the actual angle is
-         * the returned value multiplied by <i>pi</i>.
+         * the returned value multiplied by π.
          *
          * Within a tetrahedron, the three angles are indexed 0, 1 and 2.
          * Angle \a i appears on edge \a i of the tetrahedron as well as
          * its opposite edge (5-\a i).
          *
-         * @param tetIndex the index in the triangulation of the
+         * \param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested angle lives; this should
          * be between 0 and Triangulation<3>::size()-1
          * inclusive.
-         * @param edgePair the number representing the pair of edges holding
+         * \param edgePair the number representing the pair of edges holding
          * the requested angle, as described above; this should be 0, 1 or 2.
-         * @return the requested angle scaled down by <i>pi</i>.
+         * \return the requested angle scaled down by π.
          */
         Rational angle(size_t tetIndex, int edgePair) const;
 
@@ -320,22 +317,22 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
 
         /**
          * Determines whether this is a strict angle structure.
          * A strict angle structure has all angles strictly between (not
-         * including) 0 and <i>pi</i>.
+         * including) 0 and π.
          *
-         * @return \c true if and only if this is a strict angle structure.
+         * \return \c true if and only if this is a strict angle structure.
          */
         bool isStrict() const;
 
         /**
          * Determines whether this is a taut angle structure.
-         * A taut angle structure contains only angles 0 and <i>pi</i>.
+         * A taut angle structure contains only angles 0 and π.
          *
          * Here we use the Kang-Rubinstein definition of a taut
          * angle structure [1], which is based on the angles alone.
@@ -350,7 +347,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * [2] M. Lackenby, "Taut ideal triangulations of 3-manifolds",
          * Geom. Topol. 4 (2000), pp. 369-395.
          *
-         * @return \c true if and only if this is a taut structure.
+         * \return \c true if and only if this is a taut structure.
          */
         bool isTaut() const;
 
@@ -376,7 +373,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * triangulation is non-orientable, then this routine will
          * return \c false.
          *
-         * @return \c true if and only if this is a veering structure.
+         * \return \c true if and only if this is a veering structure.
          */
         bool isVeering() const;
 
@@ -387,7 +384,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * This vector contains one member per angle plus a final scaling
          * member; to obtain the actual angle in the angle structure one should
          * divide the corresonding angle member by the scaling member and then
-         * multiply by <i>pi</i>.
+         * multiply by π.
          *
          * If there are \a t tetrahedra in the underlying triangulation, there
          * will be precisely 3<i>t</i>+1 elements in this vector.  The first
@@ -398,7 +395,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * opposite edges 5, 4 and 3 respectively).  The final element of the
          * vector is the scaling member as described above.
          *
-         * @return the underlying integer vector.
+         * \return the underlying integer vector.
          */
         const Vector<Integer>& vector() const;
 
@@ -416,8 +413,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c false.
          *
-         * @param other the angle structure to be compared with this structure.
-         * @return \c true if and only if this and the given structure
+         * \param other the angle structure to be compared with this structure.
+         * \return \c true if and only if this and the given structure
          * are identical.
          */
         bool operator == (const AngleStructure& other) const;
@@ -436,8 +433,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c true.
          *
-         * @param other the angle structure to be compared with this structure.
-         * @return \c true if and only if this and the given structure
+         * \param other the angle structure to be compared with this structure.
+         * \return \c true if and only if this and the given structure
          * are different.
          */
         bool operator != (const AngleStructure& other) const;
@@ -449,7 +446,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * provided for scenarios where you need to be able to sort
          * angle structures (e.g., when using them as keys in a map).
          *
-         * The order \e is well-defined, and will be preserved across
+         * The order _is_ well-defined, and will be preserved across
          * copy/move operations, different program executions, and different
          * platforms (since it is defined purely in terms of the angle
          * coordinates, and does not use transient properties such as
@@ -460,8 +457,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * belong to different triangulations.
          * See the equality test operator==() for further details.
          *
-         * @param other the angle structure to be compared with this structure.
-         * @return \c true if and only if this appears before the given
+         * \param other the angle structure to be compared with this structure.
+         * \return \c true if and only if this appears before the given
          * structure in the total order.
          */
         bool operator < (const AngleStructure& other) const;
@@ -470,9 +467,9 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -481,10 +478,10 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * of its properties.  This routine will be called from within
          * AngleStructures::writeXMLPacketData().
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
+         * \param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
 
@@ -504,8 +501,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
  * This global routine simply calls AngleStructure::swap(); it is provided
  * so that AngleStructure meets the C++ Swappable requirements.
  *
- * @param a the first angle structure whose contents should be swapped.
- * @param b the second angle structure whose contents should be swapped.
+ * \param a the first angle structure whose contents should be swapped.
+ * \param b the second angle structure whose contents should be swapped.
  *
  * \ingroup angle
  */
@@ -594,6 +591,10 @@ inline void swap(AngleStructure& a, AngleStructure& b) noexcept {
 }
 
 } // namespace regina
+
+// If we haven't yet seen the full definition of Triangulation<3>, include it
+// now - the SnapshotRef constructor (used inline above) needs it.
+#include "triangulation/dim3.h"
 
 #endif
 

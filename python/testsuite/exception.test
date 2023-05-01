@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2015-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests throwing and catching Regina's exception types.
@@ -39,6 +39,7 @@ try:
     print('ERROR: Did not throw exception')
 except InvalidArgument:
     pass
+
 try:
     print(t.faces(-1).size())
     print('ERROR: Did not throw exception')
@@ -51,10 +52,11 @@ try:
     print('ERROR: Did not throw exception')
 except FailedPrecondition:
     pass
-t.fill(1,2,0)
-t.fill(3,4,1)
+
+dummy = t.fill(1,2,0)
+dummy = t.fill(3,4,1)
 print(t.filledAll().homology())
-t.pachner(t.triangle(0))
+dummy = t.pachner(t.triangle(0))
 try:
     print(t.filledAll())
     print('ERROR: Did not throw exception')
@@ -75,6 +77,23 @@ try:
     print(s.construct())
     print('ERROR: Did not throw exception')
 except NotImplemented:
+    pass
+
+t = Example3.poincare()
+s = NormalSurfaces(t, NS_STANDARD)
+t = None
+print(s)
+try:
+    t = s.triangulation()
+    print(t.isReadOnlySnapshot())
+    # TODO: subdivide(), due to a swap() in its internal implementation,
+    # actually throws a SnapshotWriteError from a triangulation destructor.
+    # This is *bad*, and moreover results in an exception that Python cannot
+    # catch.
+    # t.subdivide()
+    t.pachner(t.triangle(0))
+    print('ERROR: Did not throw exception')
+except SnapshotWriteError:
     pass
 
 print('All done!')

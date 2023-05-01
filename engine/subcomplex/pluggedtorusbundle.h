@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,7 +55,7 @@ namespace regina {
  * possibly with layerings in between.
  *
  * The thin I-bundle must be untwisted, so that it forms the product
- * <tt>T x I</tt> with two boundary tori.  Moreover, it must be isomorphic
+ * `T x I` with two boundary tori.  Moreover, it must be isomorphic
  * to some existing instance of the class TxICore.
  *
  * The saturated region is described by an object of the class SatRegion.
@@ -102,7 +102,7 @@ namespace regina {
  *     [o1]       [o0]
  * </pre>
  *
- * Note that the routines writeName() and writeTeXName() do \e not offer
+ * Note that the routines writeName() and writeTeXName() do _not_ offer
  * enough information to uniquely identify the triangulation, since this
  * essentially requires 2-dimensional assemblings of saturated blocks.
  * For more detail, writeTextLong() may be used instead.
@@ -149,10 +149,10 @@ class PluggedTorusBundle : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          */
         PluggedTorusBundle(const PluggedTorusBundle& src) = default;
         /**
@@ -161,15 +161,15 @@ class PluggedTorusBundle : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          */
         PluggedTorusBundle(PluggedTorusBundle&& src) noexcept = default;
         /**
          * Sets this to be a copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
-         * @return a reference to this structure.
+         * \param src the structure to copy.
+         * \return a reference to this structure.
          */
         PluggedTorusBundle& operator = (const PluggedTorusBundle& src) =
             default;
@@ -179,15 +179,15 @@ class PluggedTorusBundle : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
-         * @return a reference to this structure.
+         * \param src the structure to move from.
+         * \return a reference to this structure.
          */
         PluggedTorusBundle& operator = (PluggedTorusBundle&& src) noexcept =
             default;
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(PluggedTorusBundle& other) noexcept;
@@ -196,11 +196,11 @@ class PluggedTorusBundle : public StandardTriangulation {
          * Returns an isomorphic copy of the thin I-bundle that forms part
          * of this triangulation.  Like all objects of class TxICore, the
          * thin I-bundle that is returned is an external object with its own
-         * separate triangulation of the product <tt>T x I</tt>.  For
+         * separate triangulation of the product `T x I`.  For
          * information on how the thin I-bundle is embedded within this
          * triangulation, see the routine bundleIso().
          *
-         * @return the an isomorphic copy of the thin I-bundle within
+         * \return the an isomorphic copy of the thin I-bundle within
          * this triangulation.
          */
         const TxICore& bundle() const;
@@ -218,7 +218,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * showing how the thin I-bundle appears as a subcomplex of this
          * structure.
          *
-         * @return an isomorphism from the thin I-bundle described
+         * \return an isomorphism from the thin I-bundle described
          * by bundle() to the tetrahedra of this triangulation.
          */
         const Isomorphism<3>& bundleIso() const;
@@ -228,7 +228,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * (as opposed to the thin I-bundle, which refers to a separate
          * external triangulation).
          *
-         * @return the saturated region.
+         * \return the saturated region.
          */
         const SatRegion& region() const;
         /**
@@ -236,7 +236,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * the saturated region are joined by the thin I-bundle and
          * layerings.  See the class notes above for details.
          *
-         * @return the matching relation between the two region boundaries.
+         * \return the matching relation between the two region boundaries.
          */
         const Matrix2& matchingReln() const;
 
@@ -264,8 +264,8 @@ class PluggedTorusBundle : public StandardTriangulation {
          * this test does not account for the many possible symmetries in a
          * plugged torus bundle).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * represent the same type of plugged torus bundle.
          */
         bool operator == (const PluggedTorusBundle& other) const;
@@ -294,8 +294,8 @@ class PluggedTorusBundle : public StandardTriangulation {
          * this test does not account for the many possible symmetries in a
          * plugged torus bundle).
          *
-         * @param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \param other the structure with which this will be compared.
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of plugged torus bundle.
          */
         bool operator != (const PluggedTorusBundle& other) const;
@@ -314,8 +314,8 @@ class PluggedTorusBundle : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tri the triangulation to examine.
-         * @return an object containing details of the structure that was
+         * \param tri the triangulation to examine.
+         * \return an object containing details of the structure that was
          * found, or \c null if the given triangulation is not of the form
          * described by this class.
          */
@@ -336,20 +336,20 @@ class PluggedTorusBundle : public StandardTriangulation {
          * Typically \a bundle would be a static or global variable that is
          * not destroyed until the program exits.
          *
-         * @param bundle the thin I-bundle whose isomorphic copy is used
+         * \param bundle the thin I-bundle whose isomorphic copy is used
          * within the triangulation described by the new object.
-         * @param bundleIso the corresponding isomorphism from the given
+         * \param bundleIso the corresponding isomorphism from the given
          * thin I-bundle to the triangulation described by the new object.
-         * @param layerUpper the layering applied to the upper boundary
+         * \param layerUpper the layering applied to the upper boundary
          * of the thin I-bundle.
-         * @param layerLower the layering applied to the lower boundary
+         * \param layerLower the layering applied to the lower boundary
          * of the thin I-bundle.
-         * @param region the saturated region used within the new object.
-         * @param upperConnection 0, 1 or 2, indicating the rotation used to
+         * \param region the saturated region used within the new object.
+         * \param upperConnection 0, 1 or 2, indicating the rotation used to
          * connect the layering on the upper boundary of the thin I-bundle to
          * the first boundary annulus of the saturated region.  See the
          * \a regionPos variable in the implementation of hunt() for details.
-         * @param matchingReln the full matching relation describing how the
+         * \param matchingReln the full matching relation describing how the
          * two saturated region boundaries are joined by the thin
          * I-bundle and layerings, as described in the class notes above.
          */
@@ -373,10 +373,10 @@ class PluggedTorusBundle : public StandardTriangulation {
          * must not outlive the given thin I-bundle (since the returned object
          * will in fact contain a direct reference to this thin I-bundle).
          *
-         * @param tri the triangulation to examine.
-         * @param bundle the thin I-bundle whose isomorphic copy must be
+         * \param tri the triangulation to examine.
+         * \param bundle the thin I-bundle whose isomorphic copy must be
          * used in the given triangulation.
-         * @return an object containing details of the structure that was
+         * \return an object containing details of the structure that was
          * found, or \c null if the given triangulation is not of the form
          * described by this class using an isomorphic copy of the given
          * thin I-bundle.
@@ -391,8 +391,8 @@ class PluggedTorusBundle : public StandardTriangulation {
  * This global routine simply calls PluggedTorusBundle::swap(); it is provided
  * so that PluggedTorusBundle meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

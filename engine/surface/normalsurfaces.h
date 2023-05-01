@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -79,57 +79,77 @@ class SurfaceFilter;
  * \ingroup surfaces
  */
 enum SurfaceExportFields {
+    /**
+     * Represents the user-assigned surface name.
+     */
     surfaceExportName = 0x0001,
-        /**< Represents the user-assigned surface name. */
+    /**
+     * Represents the calculated Euler characteristic of a
+     * surface.  This will be an integer, and will be left empty
+     * if the Euler characteristic cannot be computed.
+     */
     surfaceExportEuler = 0x0002,
-        /**< Represents the calculated Euler characteristic of a
-             surface.  This will be an integer, and will be left empty
-             if the Euler characteristic cannot be computed. */
+    /**
+     * Represents the calculated property of whether a surface is
+     * orientable.  This will be the string \c TRUE or \c FALSE, or
+     * will be left empty if the orientability cannot be computed.
+     */
     surfaceExportOrient = 0x0004,
-        /**< Represents the calculated property of whether a surface is
-             orientable.  This will be the string \c TRUE or \c FALSE, or
-             will be left empty if the orientability cannot be computed. */
+    /**
+     * Represents the calculated property of whether a surface is
+     * one-sided or two-sided.  This will be the integer 1 or 2,
+     * or will be left empty if the "sidedness" cannot be computed.
+     */
     surfaceExportSides = 0x0008,
-        /**< Represents the calculated property of whether a surface is
-             one-sided or two-sided.  This will be the integer 1 or 2,
-             or will be left empty if the "sidedness" cannot be computed. */
+    /**
+     * Represents the calculated property of whether a surface is
+     * bounded.  In most cases, this will be one of the strings "closed",
+     * "real bdry" or "infinite" (where "infinite" indicates a
+     * surface with infinitely many discs).  For spun-normal
+     * surfaces in certain ideal triangulations, this string will
+     * be followed by the boundary slopes of the surface at the
+     * cusps: these written as a list of pairs (\a p, \a q),
+     * one for each cusp, indicating that the boundary curves of
+     * the surface run \a p times around the meridian and \a q times
+     * around the longitude.  See NormalSurface::boundaryIntersections()
+     * for further information on interpreting these values.
+     */
     surfaceExportBdry = 0x0010,
-        /**< Represents the calculated property of whether a surface is
-             bounded.  In most cases, this will be one of the strings "closed",
-             "real bdry" or "infinite" (where "infinite" indicates a
-             surface with infinitely many discs).  For spun-normal
-             surfaces in certain ideal triangulations, this string will
-             be followed by the boundary slopes of the surface at the
-             cusps: these written as a list of pairs (\a p, \a q),
-             one for each cusp, indicating that the boundary curves of
-             the surface run \a p times around the meridian and \a q times
-             around the longitude.  See NormalSurface::boundaryIntersections()
-             for further information on interpreting these values. */
+    /**
+     * Represents whether a surface is a single vertex link or a
+     * thin edge link.  See NormalSurface::isVertexLink() and
+     * NormalSurface::isThinEdgeLink() for details.  This will be
+     * written as a human-readable string.
+     */
     surfaceExportLink = 0x0020,
-        /**< Represents whether a surface is a single vertex link or a
-             thin edge link.  See NormalSurface::isVertexLink() and
-             NormalSurface::isThinEdgeLink() for details.  This will be
-             written as a human-readable string. */
+    /**
+     * Represents any additional high-level properties of a
+     * surface, such as whether it is a splitting surface or a
+     * central surface.  This will be written as a human-readable
+     * string.  This field is somewhat arbitrary, and the precise
+     * properties it describes are subject to change in future
+     * releases of Regina.
+     */
     surfaceExportType = 0x0040,
-        /**< Represents any additional high-level properties of a
-             surface, such as whether it is a splitting surface or a
-             central surface.  This will be written as a human-readable
-             string.  This field is somewhat arbitrary, and the precise
-             properties it describes are subject to change in future
-             releases of Regina. */
 
+    /**
+     * Indicates that no additional fields should be exported.
+     */
     surfaceExportNone = 0,
-        /**< Indicates that no additional fields should be exported. */
+    /**
+     * Indicates that all available fields should be exported,
+     * except for the user-assigned surface name.  Since the list
+     * of available fields may grow with future releases, the numerical
+     * value of this constant may change as a result.
+     */
     surfaceExportAllButName = 0x007e,
-        /**< Indicates that all available fields should be exported,
-             except for the user-assigned surface name.  Since the list
-             of available fields may grow with future releases, the numerical
-             value of this constant may change as a result. */
+    /**
+     * Indicates that all available fields should be exported,
+     * including the user-assigned surface name.  Since the list
+     * of available fields may grow with future releases, the numerical
+     * value of this constant may change as a result.
+     */
     surfaceExportAll = 0x007f
-        /**< Indicates that all available fields should be exported,
-             including the user-assigned surface name.  Since the list
-             of available fields may grow with future releases, the numerical
-             value of this constant may change as a result. */
 };
 
 /**
@@ -147,9 +167,9 @@ using SurfaceExport = regina::Flags<SurfaceExportFields>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
+ * \return the combination of both flags.
  *
  * \ingroup surfaces
  */
@@ -163,7 +183,7 @@ inline SurfaceExport operator | (
  *
  * There are some important changes to this class as of Regina 7.0:
  *
- * - A normal surface list does \e not need to be a child packet of the
+ * - A normal surface list does _not_ need to be a child packet of the
  *   underlying triangulation, and indeed does not need to interact with
  *   the packet tree at all.
  *
@@ -188,7 +208,7 @@ inline SurfaceExport operator | (
  *   event listeners.
  *
  * - To include an NormalSurfaces object in the packet tree, you must create
- *   a new PacketOf<NormalSurfaces>.  This \e is a packet type, and supports
+ *   a new PacketOf<NormalSurfaces>.  This _is_ a packet type, and supports
  *   labels, tags, child/parent packets, and event listeners.  It derives from
  *   NormalSurfaces, and so inherits the full NormalSurfaces interface.
  *
@@ -273,7 +293,7 @@ class NormalSurfaces :
          * to use the smallest possible integer coordinates.
          *
          * Unlike the old enumerate() function, the new normal surface
-         * list will \e not be inserted into the packet tree.  Moreover,
+         * list will _not_ be inserted into the packet tree.  Moreover,
          * the given triangulation may change or even be destroyed
          * without causing problems.  See the class notes for details.
          *
@@ -295,38 +315,38 @@ class NormalSurfaces :
          * progress tracker (if passed) will be marked as finished.
          * See the exception specifications below for details.
          *
-         * \exception InvalidArgument the matching equations could not
+         * \exception InvalidArgument The matching equations could not
          * be created for the given triangulation in the given coordinate
          * system, due to an error that should have been preventable
          * with the right checks in advance.  This can only happen in certain
          * coordinate systems, and for all such coordinate systems this is
          * explicitly described in the NormalCoords enum documentation.
          *
-         * \exception UnsolvedCase the list of hypersurfaces could not be
+         * \exception UnsolvedCase The list of hypersurfaces could not be
          * be created for the given triangulation in the given coordinate
          * system, due to an error that was "genuinely" unforseeable.
          * Currently there are two scenarios in which this could happen:
          * (i) the matching equations could not be constructed, which can
          * only happen in certain coordinate systems where this is explicitly
          * described in the NormalCoords enum documentation; or
-         * (ii) the arguments require enumerating \e fundamental normal
+         * (ii) the arguments require enumerating _fundamental_ normal
          * surfaces using the primal Hilbert basis algorithm, and Normaliz
          * was unable to complete its portion of the task, which in theory
          * should never happen at all.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this constructor runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param triangulation the triangulation upon which this list of
+         * \param triangulation the triangulation upon which this list of
          * normal surfaces will be based.
-         * @param coords the coordinate system to be used.  This must be
+         * \param coords the coordinate system to be used.  This must be
          * one of the system that Regina is able to use for enumeration;
          * this is documented alongside each NormalCoords enum value.
-         * @param which indicates which normal surfaces should be enumerated.
-         * @param algHints passes requests to Regina for which specific
+         * \param which indicates which normal surfaces should be enumerated.
+         * \param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          */
         NormalSurfaces(
@@ -356,15 +376,15 @@ class NormalSurfaces :
          * fails then this constructor will throw an exception (see below).
          *
          * Unlike the old conversion and filter functions, this constructor
-         * will \e not insert the new normal surface list into the packet tree.
+         * will _not_ insert the new normal surface list into the packet tree.
          *
-         * \exception FailedPrecondition the preconditions for the given
+         * \exception FailedPrecondition The preconditions for the given
          * transformation were not met.  See each NormalTransform enum
          * constant for the corresponding set of preconditions.
          *
-         * @param src the normal surface list that we wish to transform;
+         * \param src the normal surface list that we wish to transform;
          * this will not be modified.
-         * @param transform the specific transformation to apply.
+         * \param transform the specific transformation to apply.
          */
         NormalSurfaces(const NormalSurfaces& src, NormalTransform transform);
 
@@ -372,15 +392,15 @@ class NormalSurfaces :
          * A "filter constructor" that creates a new list filled with those
          * surfaces from the given list that pass the given filter.
          *
-         * Unlike the old filter() function, this constructor will \e not
+         * Unlike the old filter() function, this constructor will _not_
          * insert the new normal surface list into the packet tree.
          *
          * For this new filtered list, which() will include the NS_CUSTOM
          * flag, and algorithm() will include the NS_ALG_CUSTOM flag.
          *
-         * @param src the normal surface list that we wish to filter;
+         * \param src the normal surface list that we wish to filter;
          * this will not be modified.
-         * @param filter the filter to apply to the given list.
+         * \param filter the filter to apply to the given list.
          */
         NormalSurfaces(const NormalSurfaces& src, const SurfaceFilter& filter);
 
@@ -399,17 +419,17 @@ class NormalSurfaces :
          * does not fire any change events.  This is because this list
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
-         * @param src the list to move.
+         * \param src the list to move.
          */
         NormalSurfaces(NormalSurfaces&& src) noexcept = default;
 
         /**
          * Sets this to be a (deep) copy of the given list.
          *
-         * @param src the list to copy.
-         * @return a reference to this list.
+         * \param src the list to copy.
+         * \return a reference to this list.
          */
         NormalSurfaces& operator = (const NormalSurfaces& src);
 
@@ -419,14 +439,14 @@ class NormalSurfaces :
          *
          * The list that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this list which may in turn call arbitrary code
-         * via any registered packet listeners.  It deliberately does \e not
+         * via any registered packet listeners.  It deliberately does _not_
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the list to move.
-         * @return a reference to this list.
+         * \param src the list to move.
+         * \return a reference to this list.
          */
         NormalSurfaces& operator = (NormalSurfaces&& src);
 
@@ -436,11 +456,11 @@ class NormalSurfaces :
          * This routine will behave correctly if \a other is in fact
          * this list.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both lists which may in turn call arbitrary
          * code via any registered packet listeners.
          *
-         * @param other the list whose contents should be swapped with this.
+         * \param other the list whose contents should be swapped with this.
          */
         void swap(NormalSurfaces& other);
 
@@ -448,7 +468,7 @@ class NormalSurfaces :
          * Returns the coordinate system that was originally used to enumerate
          * the surfaces in this list.
          *
-         * @return the coordinate system used.
+         * \return the coordinate system used.
          */
         NormalCoords coords() const;
         /**
@@ -460,7 +480,7 @@ class NormalSurfaces :
          * explicitly filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY),
          * and invalid and/or redundant values will have been removed.
          *
-         * @return details of what this list represents.
+         * \return details of what this list represents.
          */
         NormalList which() const;
         /**
@@ -474,7 +494,7 @@ class NormalSurfaces :
          * of algorithm flags will be replaced with whatever algorithm was
          * actually used.
          *
-         * @return details of the algorithm used to enumerate this list.
+         * \return details of the algorithm used to enumerate this list.
          */
         NormalAlg algorithm() const;
         /**
@@ -485,7 +505,7 @@ class NormalSurfaces :
          * actually contain octagons: it simply returns a basic property
          * of the coordinate system that was used for enumeration.
          *
-         * @return \c true if and only if almost normal surfaces are supported.
+         * \return \c true if and only if almost normal surfaces are supported.
          */
         bool allowsAlmostNormal() const;
         /**
@@ -496,7 +516,7 @@ class NormalSurfaces :
          * are actually non-compact: it simply returns a basic property
          * of the coordinate system that was used for enumeration.
          *
-         * @return \c true if and only if non-compact normal surfaces are
+         * \return \c true if and only if non-compact normal surfaces are
          * supported.
          */
         bool allowsNonCompact() const;
@@ -509,7 +529,7 @@ class NormalSurfaces :
          * that they were not deliberately excluded (for instance, the
          * quadrilateral constraints were not enforced).
          *
-         * @return \c true if this list was constructed to contain only
+         * \return \c true if this list was constructed to contain only
          * properly embedded surfaces, or \c false otherwise.
          */
         bool isEmbeddedOnly() const;
@@ -535,39 +555,85 @@ class NormalSurfaces :
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * \warning As of Regina 7.0, you \e cannot access this triangulation
+         * \warning As of Regina 7.0, you _cannot_ access this triangulation
          * via the packet tree as Packet::parent().  This is because normal
          * surface lists can now be kept anywhere in the packet tree, or can
          * be kept as standalone objects outside the packet tree entirely.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
         /**
          * Returns the number of surfaces stored in this list.
          *
-         * @return the number of surfaces.
+         * \python This is also used to implement the Python special
+         * method __len__().
+         *
+         * \return the number of surfaces.
          */
         size_t size() const;
         /**
          * Returns the surface at the requested index in this list.
+         * This is identical to using the square bracket operator.
          *
-         * @param index the index of the requested surface in this list;
+         * \param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
-         * @return the normal surface at the requested index in this list.
+         * \return the normal surface at the requested index in this list.
          */
         const NormalSurface& surface(size_t index) const;
         /**
-         * Returns an iterator at the beginning of this list of surfaces.
+         * Returns the surface at the requested index in this list.
+         * This is identical to calling surface().
          *
-         * The begin() and end() functions allow you to iterate through all
-         * surfaces in this list using C++11 range-based \c for loops:
+         * \param index the index of the requested surface in this list;
+         * this must be between 0 and size()-1 inclusive.
+         *
+         * \return the normal surface at the requested index in this list.
+         */
+        const NormalSurface& operator [](size_t index) const;
+        /**
+         * Returns a C++ iterator at the beginning of this list of surfaces.
+         *
+         * These begin() and end() functions allow you to iterate through all
+         * surfaces in this list using a range-based \c for loop:
          *
          * \code{.cpp}
          * NormalSurfaces list(...);
          * for (const NormalSurface& s : list) { ... }
          * \endcode
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * \nopython For Python users, NormalSurfaces implements the Python
+         * iterable interface.  You can iterate over the normal surfaces in
+         * this list in the same way that you would iterate over any native
+         * Python container.
+         *
+         * \return an iterator at the beginning of this list.
+         */
+        auto begin() const;
+        /**
+         * Returns a C++ iterator beyond the end of this list of surfaces.
+         *
+         * These begin() and end() routines allow you to iterate through all
+         * surfaces in this list using a range-based \c for loop.
+         * See the begin() documentation for further details.
+         *
+         * \nopython For Python users, NormalSurfaces implements the Python
+         * iterable interface.  You can iterate over the normal surfaces in
+         * this list in the same way that you would iterate over any native
+         * Python container.
+         *
+         * \return an iterator beyond the end of this list.
+         */
+        auto end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the normal surfaces in this list.
          *
          * In Python, a normal surface list can be treated as an iterable
          * object:
@@ -578,27 +644,15 @@ class NormalSurfaces :
          *     ...
          * \endcode
          *
-         * The type that is returned will be a lightweight iterator type,
-         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
-         * The precise C++ type of the iterator is subject to change, so
-         * C++ users should use \c auto (just like this declaration does).
+         * \nocpp For C++ users, NormalSurfaces provides the usual begin()
+         * and end() functions instead.  In particular, you can iterate over
+         * the normal surfaces in this list in the usual way using a
+         * range-based \c for loop.
          *
-         * @return an iterator at the beginning of this list.
+         * \return an iterator over the normal surfaces in this list.
          */
-        auto begin() const;
-        /**
-         * Returns an iterator beyond the end of this list of surfaces.
-         *
-         * In C++, the begin() and end() routines allow you to iterate through
-         * all surfaces in this list using C++11 range-based \c for loops.
-         * In Python, a normal surface list can be treated as an iterable
-         * object.
-         *
-         * See the begin() documentation for further details.
-         *
-         * @return an iterator beyond the end of this list.
-         */
-        auto end() const;
+        auto __iter__() const;
+#endif
 
         /**
          * Determines whether this and the given list contain the same
@@ -627,8 +681,8 @@ class NormalSurfaces :
          * - If the two triangulations have different sizes, then this
          *   comparison will return \c false.
          *
-         * @param other the list to be compared with this list.
-         * @return \c true if both lists represent the same multiset of
+         * \param other the list to be compared with this list.
+         * \return \c true if both lists represent the same multiset of
          * normal or almost normal surfaces, or \c false if not.
          */
         bool operator == (const NormalSurfaces& other) const;
@@ -661,8 +715,8 @@ class NormalSurfaces :
          *   comparison will return \c true (i.e., the lists will be
          *   considered different).
          *
-         * @param other the list to be compared with this list.
-         * @return \c true if both lists do not represent the same multiset of
+         * \param other the list to be compared with this list.
+         * \return \c true if both lists do not represent the same multiset of
          * normal or almost normal surfaces, or \c false if they do.
          */
         bool operator != (const NormalSurfaces& other) const;
@@ -671,18 +725,18 @@ class NormalSurfaces :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -694,10 +748,10 @@ class NormalSurfaces :
          *
          * The implementation of this routine uses std::stable_sort.
          *
-         * \ifacespython This is available in Python, and \a comp may be
+         * \python This is available in Python, and \a comp may be
          * a pure Python function.
          *
-         * @param comp a binary function (or other callable object) that
+         * \param comp a binary function (or other callable object) that
          * accepts two const NormalSurface references, and returns \c true
          * if and only if the first surface should appear before the second
          * in the sorted list.
@@ -722,7 +776,7 @@ class NormalSurfaces :
          * then this normal surface list would not have been created
          * in the first place.
          *
-         * @return the matching equations used to create this normal
+         * \return the matching equations used to create this normal
          * surface list.
          */
         MatrixInt recreateMatchingEquations() const;
@@ -749,20 +803,20 @@ class NormalSurfaces :
          * as field separators.  Text fields with arbitrary contents are
          * placed inside double quotes, and the double quote character itself
          * is represented by a pair of double quotes.  Thus the string
-         * <tt>my "normal" surface's name</tt> would be stored as
-         * <tt>"my ""normal"" surface's name"</tt>.
+         * ``my "normal" surface's name`` would be stored as
+         * ``"my ""normal"" surface's name"``.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  Any user strings such as surface names will be written
          * in UTF-8.
          *
-         * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise OR combination of constants from
+         * \param filename the name of the CSV file to export to.
+         * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
-         * @return \c true if the export was successful, or \c false otherwise.
+         * \return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVStandard(const char* filename,
             SurfaceExport additionalFields = regina::surfaceExportAll) const;
@@ -789,30 +843,51 @@ class NormalSurfaces :
          * as field separators.  Text fields with arbitrary contents are
          * placed inside double quotes, and the double quote character itself
          * is represented by a pair of double quotes.  Thus the string
-         * <tt>my "normal" surface's name</tt> would be stored as
-         * <tt>"my ""normal"" surface's name"</tt>.
+         * ``my "normal" surface's name`` would be stored as
+         * ``"my ""normal"" surface's name"``.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  Any user strings such as surface names will be written
          * in UTF-8.
          *
-         * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise OR combination of constants from
+         * \param filename the name of the CSV file to export to.
+         * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
-         * @return \c true if the export was successful, or \c false otherwise.
+         * \return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVEdgeWeight(const char* filename,
             SurfaceExport additionalFields = regina::surfaceExportAll) const;
 
         /**
-         * An iterator that gives access to the raw vectors for surfaces in
-         * this list, pointing to the beginning of this surface list.
+         * A C++ iterator that gives access to the raw vectors for surfaces
+         * in this list, pointing to the beginning of this surface list.
          *
-         * In Python, beginVectors() and endVectors() are replaced
-         * by a single routine vectors(), which returns an iterable object:
+         * \nopython Use vectors() instead, which returns an iterable object
+         * for iterating over these same raw vectors.
+         *
+         * \return an iterator at the beginning of this surface list.
+         */
+        VectorIterator beginVectors() const;
+
+        /**
+         * A C++ iterator that gives access to the raw vectors for surfaces
+         * in this list, pointing past the end of this surface list.
+         * This iterator is not dereferenceable.
+         *
+         * \nopython Use vectors() instead, which returns an iterable object
+         * for iterating over these same raw vectors.
+         *
+         * \return an iterator past the end of this surface list.
+         */
+        VectorIterator endVectors() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterable object that iterates over the raw
+         * vectors for all surfaces in this list.  For example:
          *
          * \code{.py}
          * list = NormalSurfaces(...)
@@ -820,34 +895,21 @@ class NormalSurfaces :
          *     ...
          * \endcode
          *
-         * \ifacespython Not present; use vectors() instead.
+         * \nocpp For C++ users, NormalHypersurfaces provides beginVectors()
+         * and endVectors() instead, which together define an iterator range
+         * over these same raw vectors.
          *
-         * @return an iterator at the beginning of this surface list.
+         * \return an iterator over the normal surfaces in this list.
          */
-        VectorIterator beginVectors() const;
-
-        /**
-         * An iterator that gives access to the raw vectors for surfaces in
-         * this list, pointing past the end of this surface list.
-         * This iterator is not dereferenceable.
-         *
-         * In Python, beginVectors() and endVectors() are replaced
-         * by a single routine vectors(), which returns an iterable object;
-         * see the beginVectors() documentation for further details.
-         *
-         * \ifacespython Not present; use vectors() instead.
-         *
-         * @return an iterator past the end of this surface list.
-         */
-        VectorIterator endVectors() const;
-
+        auto vectors() const;
+#endif
         /**
          * A bidirectional iterator that runs through the raw vectors for
          * surfaces in this list.
          *
-         * \ifacespython Not present.  Instead NormalSurfaces::vectors()
-         * returns an object of a different (hidden) class that supports
-         * the Python iterable/iterator interface.
+         * \nopython Instead NormalSurfaces::vectors() returns an object of a
+         * different (hidden) class that supports the Python iterable/iterator
+         * interface.
          */
         class VectorIterator {
             public:
@@ -875,25 +937,21 @@ class NormalSurfaces :
 
                 /**
                  * Creates a copy of the given iterator.
-                 *
-                 * @param cloneMe the iterator to clone.
                  */
-                VectorIterator(const VectorIterator& cloneMe) = default;
+                VectorIterator(const VectorIterator&) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
                  *
-                 * @param cloneMe the iterator to clone.
-                 * @return a reference to this iterator.
+                 * \return a reference to this iterator.
                  */
-                VectorIterator& operator = (const VectorIterator& cloneMe) =
-                    default;
+                VectorIterator& operator = (const VectorIterator&) = default;
 
                 /**
                  * Compares this with the given iterator for equality.
                  *
-                 * @param other the iterator to compare this with.
-                 * @return \c true if the iterators point to the same
+                 * \param other the iterator to compare this with.
+                 * \return \c true if the iterators point to the same
                  * element of the same normal surface list, or \c false
                  * if they do not.
                  */
@@ -902,8 +960,8 @@ class NormalSurfaces :
                 /**
                  * Compares this with the given iterator for inequality.
                  *
-                 * @param other the iterator to compare this with.
-                 * @return \c false if the iterators point to the same
+                 * \param other the iterator to compare this with.
+                 * \return \c false if the iterators point to the same
                  * element of the same normal surface list, or \c true
                  * if they do not.
                  */
@@ -916,21 +974,21 @@ class NormalSurfaces :
                  * \pre This iterator is dereferenceable (in particular,
                  * it is not past-the-end).
                  *
-                 * @return the corresponding normal surface vector.
+                 * \return the corresponding normal surface vector.
                  */
                 const Vector<LargeInteger>& operator *() const;
 
                 /**
                  * The preincrement operator.
                  *
-                 * @return a reference to this iterator after the increment.
+                 * \return a reference to this iterator after the increment.
                  */
                 VectorIterator& operator ++();
 
                 /**
                  * The postincrement operator.
                  *
-                 * @return a copy of this iterator before the
+                 * \return a copy of this iterator before the
                  * increment took place.
                  */
                 VectorIterator operator ++(int);
@@ -938,14 +996,14 @@ class NormalSurfaces :
                 /**
                  * The predecrement operator.
                  *
-                 * @return a reference to this iterator after the decrement.
+                 * \return a reference to this iterator after the decrement.
                  */
                 VectorIterator& operator --();
 
                 /**
                  * The postdecrement operator.
                  *
-                 * @return a copy of this iterator before the
+                 * \return a copy of this iterator before the
                  * decrement took place.
                  */
                 VectorIterator operator --(int);
@@ -996,7 +1054,7 @@ class NormalSurfaces :
          * called after this routine returns.
          *
          * Although this is a template function, it is a private
-         * template function and so is only defined in the one <tt>.cpp</tt>
+         * template function and so is only defined in the one `.cpp`
          * file that needs it.
          *
          * \pre The coordinate system for this surface list is set to
@@ -1004,9 +1062,9 @@ class NormalSurfaces :
          * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *
-         * @param reducedList a full list of vertex surfaces in
+         * \param reducedList a full list of vertex surfaces in
          * (quad or quad-oct) coordinates for the underlying triangulation.
-         * @param tracker a progress tracker to be used for progress reporting
+         * \param tracker a progress tracker to be used for progress reporting
          * and cancellation requests, or \c null if this is not required.
          */
         void buildStandardFromReduced(
@@ -1051,7 +1109,7 @@ class NormalSurfaces :
          * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *
-         * @param stdList a full list of vertex surfaces in standard normal or
+         * \param stdList a full list of vertex surfaces in standard normal or
          * almost normal coordinates for the underlying triangulation.
          */
         void buildReducedFromStandard(
@@ -1280,12 +1338,12 @@ class NormalSurfaces :
  *
  * See NormalSurfaces::swap() for more details.
  *
- * \note This swap function is \e not marked \c noexcept, since it
+ * \note This swap function is _not_ marked \c noexcept, since it
  * fires change events on both lists which may in turn call arbitrary
  * code via any registered packet listeners.
  *
- * @param lhs the list whose contents should be swapped with \a rhs.
- * @param rhs the list whose contents should be swapped with \a lhs.
+ * \param lhs the list whose contents should be swapped with \a rhs.
+ * \param rhs the list whose contents should be swapped with \a lhs.
  *
  * \ingroup surfaces
  */
@@ -1302,22 +1360,22 @@ void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
- * \exception InvalidArgument the matching equations could not be created for
+ * \exception InvalidArgument The matching equations could not be created for
  * the given triangulation in the given coordinate system, due to an error
  * that should have been preventable with the right checks in advance.  This
  * can only happen in certain coordinate systems, and for all such coordinate
  * systems this is explicitly described in the NormalCoords enum documentation.
  *
- * \exception UnsolvedCase the matching equations could not be created for the
+ * \exception UnsolvedCase The matching equations could not be created for the
  * given triangulation in the given coordinate system, due to an error that was
  * "genuinely" unforseeable.  Again this can only happen in certain coordinate
  * systems, where this is explicitly described in the NormalCoords enum
  * documentation.
  *
- * @param triangulation the triangulation upon which these matching equations
+ * \param triangulation the triangulation upon which these matching equations
  * will be based.
- * @param coords the coordinate system to be used.
- * @return the resulting set of matching equations.
+ * \param coords the coordinate system to be used.
+ * \return the resulting set of matching equations.
  *
  * \ingroup surfaces
  */
@@ -1340,10 +1398,10 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
  * NS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
  * allows for immersed and/or singular surfaces.
  *
- * @param triangulation the triangulation upon which these validity constraints
+ * \param triangulation the triangulation upon which these validity constraints
  * will be based.
- * @param coords the coordinate system to be used.
- * @return the set of validity constraints.
+ * \param coords the coordinate system to be used.
+ * \return the set of validity constraints.
  *
  * \ingroup surfaces
  */
@@ -1418,6 +1476,10 @@ inline size_t NormalSurfaces::size() const {
 }
 
 inline const NormalSurface& NormalSurfaces::surface(size_t index) const {
+    return surfaces_[index];
+}
+
+inline const NormalSurface& NormalSurfaces::operator [](size_t index) const {
     return surfaces_[index];
 }
 

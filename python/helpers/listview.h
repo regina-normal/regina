@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,21 +36,30 @@
  */
 
 #include "utilities/listview.h"
+#include "../docstrings/utilities/listview.h"
 
 namespace regina::python {
 
 /**
- * Adds Python bindings for one of Regina's ListView classes.
+ * Adds Python bindings for one of Regina's ListView classes, given the
+ * class type.
  *
- * The type \a T must be of the form regina::ListView<T>.
+ * The type \a T must be of the form regina::ListView<...>, and must be
+ * explicitly specified in the template arguments for addListView().
  *
- * Typically you would not write out the full type explicitly (since this is
- * an implementation detail that may change in future versions of Regina);
- * instead you would access the type using an appropriate decltype() statement.
+ * Typically you would not write out the full ListView type explicitly (since
+ * this is an implementation detail that may change in future versions of
+ * Regina); instead you would access the type using an appropriate decltype()
+ * statement.
  *
  * The Python class corresponding to \a T will not be given a unique name;
  * instead all such types will be called \c ListView, and will be put into
  * their own unique namespaces to avoid clashes.
+ *
+ * It is assumed that the ListView type \a T has not yet been wrapped in
+ * Python.  If it has, then this routine will throw an exception.
+ * Note that this behaviour is different from addTableView, which detects
+ * and gracefully avoids attempts to bind the same type multiple times.
  *
  * Return value policies work as follows:
  *
@@ -82,20 +91,60 @@ void addListView(pybind11::module_& m) {
     // and make them all local to their own unique Python namespaces.
     // End users should not be constructing them anyway.
     auto c = pybind11::class_<T>(pybind11::handle(), "ListView",
-            pybind11::module_local())
-        .def(pybind11::init<const T&>())
+            pybind11::module_local(), doc::ListView)
+        .def(pybind11::init<const T&>(), doc::ListView_::__copy)
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps ListView alive
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive
+            doc::ListView_::__iter__)
         .def("__getitem__", [](const T& view, size_t index) {
+            if (index >= view.size())
+                throw pybind11::index_error("ListView index out of range");
             return view[index];
-        }, Policy)
-        .def("empty", &T::empty)
-        .def("size", &T::size)
-        .def("front", &T::front, Policy)
-        .def("back", &T::back, Policy)
+        }, Policy, doc::ListView_::__array)
+        .def("empty", &T::empty, doc::ListView_::empty)
+        .def("size", &T::size, doc::ListView_::size)
+        .def("__len__", &T::size, doc::ListView_::size)
+        .def("front", [](const T& view) {
+            if (view.empty())
+                throw pybind11::index_error("List is empty");
+            return view.front();
+        }, Policy, doc::ListView_::front)
+        .def("back", [](const T& view) {
+            if (view.empty())
+                throw pybind11::index_error("List is empty");
+            return view.back();
+        }, Policy, doc::ListView_::back)
         ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {
+        out << "[ ";
+        // For very small lists, output the entire list.
+        // For larger lists, do not output everything.
+        if (view.empty()) {
+            out << "[ ]";
+        } else if (view.size() <= 5) {
+            bool started = false;
+            for (const auto& i : view) {
+                if (started)
+                    out << ", ";
+                else
+                    started = true;
+                regina::python::writeRepr(out, i);
+            }
+            out << ' ';
+        } else {
+            for (int i = 0; i < 3; ++i) {
+                regina::python::writeRepr(out, view[i]);
+                out << ", ";
+            }
+            out << "..., ";
+            regina::python::writeRepr(out, view.back());
+            out << ' ';
+        }
+        out << ']';
+    });
+    regina::python::add_eq_operators(c,
+        doc::ListView_::__eq, doc::ListView_::__ne);
 }
 
 } // namespace regina::python

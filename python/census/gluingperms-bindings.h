@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,6 +34,7 @@
 #include "census/gluingperms.h"
 #include "triangulation/facetpairing.h"
 #include "../helpers.h"
+#include "../docstrings/census/gluingperms.h"
 
 using pybind11::overload_cast;
 using regina::FacetPairing;
@@ -45,51 +46,58 @@ template <int dim>
 void addGluingPerms(pybind11::module_& m, const char* name) {
     using Index = typename GluingPerms<dim>::Index;
 
-    auto c = pybind11::class_<GluingPerms<dim>>(m, name)
-        .def(pybind11::init<const FacetPairing<dim>&>())
-        .def(pybind11::init<const GluingPerms<dim>&>())
-        .def("swap", &GluingPerms<dim>::swap)
-        .def("size", &GluingPerms<dim>::size)
+    RDOC_SCOPE_BEGIN(GluingPerms)
+
+    auto c = pybind11::class_<GluingPerms<dim>>(m, name, rdoc_scope)
+        .def(pybind11::init<const FacetPairing<dim>&>(), rdoc::__init)
+        .def(pybind11::init<const GluingPerms<dim>&>(), rdoc::__copy)
+        .def("swap", &GluingPerms<dim>::swap, rdoc::swap)
+        .def("size", &GluingPerms<dim>::size, rdoc::size)
         .def("pairing", &GluingPerms<dim>::pairing,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::pairing)
         .def("perm", overload_cast<const FacetSpec<dim>&>(
-            &GluingPerms<dim>::perm, pybind11::const_))
+            &GluingPerms<dim>::perm, pybind11::const_), rdoc::perm)
         .def("perm", overload_cast<size_t, int>(
-            &GluingPerms<dim>::perm, pybind11::const_))
+            &GluingPerms<dim>::perm, pybind11::const_), rdoc::perm_2)
         .def("permIndex",
             overload_cast<const FacetSpec<dim>&>(
-            &GluingPerms<dim>::permIndex, pybind11::const_))
+            &GluingPerms<dim>::permIndex, pybind11::const_), rdoc::permIndex)
         .def("permIndex",
             overload_cast<size_t, int>(
-            &GluingPerms<dim>::permIndex, pybind11::const_))
+            &GluingPerms<dim>::permIndex, pybind11::const_), rdoc::permIndex_2)
         .def("setPermIndex", [](GluingPerms<dim>& g,
                 const FacetSpec<dim>& s, Index val) {
             g.permIndex(s) = val;
-        })
+        }, rdoc::setPermIndex)
         .def("setPermIndex", [](GluingPerms<dim>& g,
                 size_t s, int f, Index val) {
             g.permIndex(s, f) = val;
-        })
-        .def("triangulate", &GluingPerms<dim>::triangulate)
-        .def("data", &GluingPerms<dim>::data)
+        }, rdoc::setPermIndex_2)
+        .def("triangulate", &GluingPerms<dim>::triangulate, rdoc::triangulate)
+        .def("data", &GluingPerms<dim>::data, rdoc::data)
         .def("gluingToIndex",
             overload_cast<const FacetSpec<dim>&, const Perm<dim+1>&>(
-            &GluingPerms<dim>::gluingToIndex, pybind11::const_))
+            &GluingPerms<dim>::gluingToIndex, pybind11::const_),
+            rdoc::gluingToIndex)
         .def("gluingToIndex",
             overload_cast<size_t, int, const Perm<dim+1>&>(
-            &GluingPerms<dim>::gluingToIndex, pybind11::const_))
+            &GluingPerms<dim>::gluingToIndex, pybind11::const_),
+            rdoc::gluingToIndex_2)
         .def("indexToGluing",
             overload_cast<const FacetSpec<dim>&, Index>(
-            &GluingPerms<dim>::indexToGluing, pybind11::const_))
+            &GluingPerms<dim>::indexToGluing, pybind11::const_),
+            rdoc::indexToGluing)
         .def("indexToGluing",
             overload_cast<size_t, int, Index>(
-            &GluingPerms<dim>::indexToGluing, pybind11::const_))
-        .def_static("fromData", &GluingPerms<dim>::fromData)
+            &GluingPerms<dim>::indexToGluing, pybind11::const_),
+            rdoc::indexToGluing_2)
+        .def_static("fromData", &GluingPerms<dim>::fromData, rdoc::fromData)
         ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    m.def("swap",
-        (void(*)(GluingPerms<dim>&, GluingPerms<dim>&))(regina::swap));
+    regina::python::add_global_swap<GluingPerms<dim>>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

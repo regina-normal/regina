@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,9 @@ namespace regina {
  * Represents a vertex in the skeleton of a 4-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
- * documentation for Face for a general overview of how this class works.
+ * generic documentation for Face for a general overview of how the face
+ * classes work.  In Python, you can read this generic documentation by
+ * looking at faces in a higher dimension: try `help(Vertex5)`.
  *
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
@@ -99,23 +101,23 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          *
          * - The tetrahedra of the vertex link are numbered as follows.
          *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a pent represent <tt>embedding(i).pentachoron()</tt>,
-         *   and let \a v represent <tt>embedding(i).vertex()</tt>.
-         *   Then <tt>buildLink()->tetrahedron(i)</tt> is the tetrahedron
+         *   \a pent represent `embedding(i).pentachoron()`,
+         *   and let \a v represent `embedding(i).vertex()`.
+         *   Then `buildLink()->tetrahedron(i)` is the tetrahedron
          *   in the vertex link that "slices off" vertex \a v from
          *   pentachoron \a pent.  In other words,
-         *   <tt>buildLink()->tetrahedron(i)</tt> in the vertex link
-         *   is parallel to tetrahedron <tt>pent->tetrahedron(v)</tt> in the
+         *   `buildLink()->tetrahedron(i)` in the vertex link
+         *   is parallel to tetrahedron `pent->tetrahedron(v)` in the
          *   surrounding 4-manifold triangulation.
          *
          * - The vertices of each tetrahedron in the vertex link are
          *   numbered as follows.  Following the discussion above,
-         *   suppose that <tt>buildLink()->tetrahedron(i)</tt>
+         *   suppose that `buildLink()->tetrahedron(i)`
          *   sits within \c pent and is parallel to
-         *   <tt>pent->tetrahedron(v)</tt>.
+         *   `pent->tetrahedron(v)`.
          *   Then vertices 0,1,2,3 of the tetrahedron in the link will be
          *   parallel to vertices 0,1,2,3 of the corresponding Tetrahedron<4>.
-         *   The permutation <tt>pent->tetrahedronMapping(v)</tt> will map
+         *   The permutation `pent->tetrahedronMapping(v)` will map
          *   vertices 0,1,2,3 of the tetrahedron in the link to the
          *   corresponding vertices of \c pent (those opposite \c v),
          *   and will map 4 to \c v itself.
@@ -124,12 +126,12 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          *   compute with, you can call buildLinkInclusion() to retrieve
          *   this information as an isomorphism.
          *
-         * \ifacespython Since Python does not distinguish between const and
+         * \python Since Python does not distinguish between const and
          * non-const, this routine will return by value (thus making a
          * deep copy of the vertex link.  You are free to modify the
          * triangulation that is returned.
          *
-         * @return the read-only triangulated link of this vertex.
+         * \return the read-only triangulated link of this vertex.
          */
         const Triangulation<3>& buildLink() const;
 
@@ -145,9 +147,9 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * Specifically, this function returns an Isomorphism<4> that describes
          * how the individual tetrahedra of the link sit within the pentachora
          * of the original triangulation.  If \a p is the isomorphism returned,
-         * then <tt>p.pentImage(i)</tt> will indicate which pentachoron
+         * then `p.pentImage(i)` will indicate which pentachoron
          * \a pent of the 4-manifold triangulation contains the <i>i</i>th
-         * tetrahedron of the link.  Moreover, <tt>p.facetPerm(i)</tt> will
+         * tetrahedron of the link.  Moreover, `p.facetPerm(i)` will
          * indicate exactly where the <i>i</i>th tetrahedron sits within
          * \a pent: it will send 4 to the vertex of \a pent that the
          * tetrahedron links, and it will send 0,1,2,3 to the vertices of
@@ -162,7 +164,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * This is the same isomorphism that was accessible through the
          * old buildLinkDetail() function in Regina 6.0.1 and earlier.
          *
-         * @return details of how buildLink() labels the tetrahedra of
+         * \return details of how buildLink() labels the tetrahedra of
          * the vertex link.
          */
         Isomorphism<4> buildLinkInclusion() const;
@@ -172,16 +174,28 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * To be an ideal, a vertex must (i) be valid, and (ii) have
          * a closed vertex link that is not a 3-sphere.
          *
-         * @return \c true if and only if this is an ideal vertex.
+         * \return \c true if and only if this is an ideal vertex.
          */
         bool isIdeal() const;
+
+        /**
+         * Returns the link of this vertex as a normal hypersurface.
+         *
+         * Note that vertex linking hypersurfaces only ever contain tetrahedra
+         * (not prisms).  Moreover, vertex links are always thin
+         * (i.e., after constructing the frontier of a regular neighbourhood
+         * of the vertex, no further normalisation steps are required).
+         *
+         * \return the corresponding vertex linking normal hypersurface.
+         */
+        NormalHypersurface linkingSurface() const;
 
     private:
         /**
          * Creates a new vertex and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * vertex belongs.
          */
         Face(Component<4>* component);
@@ -202,6 +216,10 @@ inline const Triangulation<3>& Face<4, 0>::buildLink() const {
 
 inline bool Face<4, 0>::isIdeal() const {
     return ideal_;
+}
+
+inline NormalHypersurface Face<4, 0>::linkingSurface() const {
+    return std::move(triangulation().linkingSurface(*this).first);
 }
 
 } // namespace regina

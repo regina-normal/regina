@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,7 +63,7 @@ namespace regina {
  * subelement encountered the following processing will take place:
  * startSubElement() will be called to create a new child reader, the entire
  * cycle of parsing routines will be called upon this child reader and
- * then endSubElement() will be called upon the parent reader, \e after
+ * then endSubElement() will be called upon the parent reader, _after_
  * which the child reader will be destroyed.  After all subelements have
  * been processed, endElement() will be called.
  *
@@ -79,7 +79,7 @@ namespace regina {
  * usingParser() will be called on the top-level element reader, so that
  * it can gain direct access to the parser if required.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLElementReader {
     public:
@@ -99,9 +99,9 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param tagName the name of the opening tag for this element.
-         * @param tagProps the properties associated with the opening tag.
-         * @param parentReader the reader currently parsing the parent XML
+         * \param tagName the name of the opening tag for this element.
+         * \param tagProps the properties associated with the opening tag.
+         * \param parentReader the reader currently parsing the parent XML
          * element, or \c null if this is the top-level element.  If this
          * paraneter is non-null, it is guaranteed that startSubElement()
          * has already been called upon the parent reader.
@@ -116,7 +116,7 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param chars the initial text for this element.
+         * \param chars the initial text for this element.
          */
         virtual void initialChars(const std::string& chars);
         /**
@@ -126,11 +126,11 @@ class XMLElementReader {
          * The default implementation returns a new XMLElementReader
          * which can be used to ignore the subelement completely.
          *
-         * @param subTagName the name of the subelement opening tag.
-         * @param subTagProps the properties associated with the
+         * \param subTagName the name of the subelement opening tag.
+         * \param subTagProps the properties associated with the
          * subelement opening tag.
-         * @return a newly created element reader that will be used to
-         * parse the subelement.  This class should \e not take care of
+         * \return a newly created element reader that will be used to
+         * parse the subelement.  This class should _not_ take care of
          * the new reader's destruction; that will be done by the parser.
          */
         virtual XMLElementReader* startSubElement(
@@ -142,8 +142,8 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param subTagName the name of the subelement closing tag.
-         * @param subReader the child reader that was used to parse the
+         * \param subTagName the name of the subelement closing tag.
+         * \param subReader the child reader that was used to parse the
          * subelement (this is the reader that was returned by the
          * corresponding startSubElement() call).  It is guaranteed that
          * endElement() has already been called upon this child reader
@@ -167,7 +167,7 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param parser the current XML parser.
+         * \param parser the current XML parser.
          */
         virtual void usingParser(regina::xml::XMLParser* parser);
 
@@ -178,7 +178,7 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param subReader the corresponding child reader if a
+         * \param subReader the corresponding child reader if a
          * subelement is currently being parsed, or \c null otherwise.
          * If this parameter is non-zero, it is guaranteed that abort() has
          * already been called upon the child reader and that the child
@@ -196,7 +196,7 @@ class XMLElementReader {
  * Any XML subelements will be ignored (as will any characters occurring
  * after any subelements).
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLCharsReader : public XMLElementReader {
     private:
@@ -213,7 +213,7 @@ class XMLCharsReader : public XMLElementReader {
          * Returns the characters stored in the XML element that has
          * been read.
          *
-         * @return the characters stored in the XML element.
+         * \return the characters stored in the XML element.
          */
         const std::string& chars();
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -83,7 +83,7 @@ class SFSpace;
  *     [o_alt]         [o_old]
  * </pre>
  *
- * Note that this \e only applies to the first boundary torus!  If the
+ * Note that this _only_ applies to the first boundary torus!  If the
  * Seifert fibred space has more than one boundary, then for the
  * remaining boundaries the unoriented fibre and base curves remain the
  * same.  More specifically, the directed fibre remains identical, and
@@ -124,15 +124,15 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * - add twists to the first boundary torus so that the obstruction
          *   constant \a b in the Seifert fibred space becomes zero;
          *
-         * - if the Seifert fibred space is over <tt>M/n2</tt> with no
-         *   exceptional fibres (where \c M represents the Mobius band),
-         *   it will switch the fibre and orbifold curves to give a
-         *   Seifert fibred space over the disc with two exception fibres.
+         * - if the Seifert fibred space is over `M/n2` with no exceptional
+         *   fibres (where `M` represents the Mobius band), it will switch the
+         *   fibre and orbifold curves to give a Seifert fibred space over the
+         *   disc with two exception fibres.
          *
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param original the original Seifert fibred space for which we are
+         * \param original the original Seifert fibred space for which we are
          * creating a set of alternative representations.
          */
         SFSAlt(const SFSpace& original);
@@ -145,7 +145,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * - if \a negate is \c true, then this will attempt to replace all
          *   fibres (\a alpha, \a beta) with (\a alpha, \a alpha - \a beta),
-         *   \e without any further reflections (but see below for conditions
+         *   _without_ any further reflections (but see below for conditions
          *   on when this is possible);
          *
          * - in all cases, this will reduce the parameters via SFSpace::reduce()
@@ -164,17 +164,17 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * \pre If \a negate is \c true, then the underlying Seifert
          * fibred space satisfies the requirements outlined above, or
-         * equivalently, <tt>canNegate(base.sfs())</tt> is \c true.
+         * equivalently, `canNegate(base.sfs())` is \c true.
          *
          * \note This constructor only makes sense if at least one of
          * \c reflect or \c negate is \c true, since \a base should
          * already be in a reduced form with zero obstruction constant.
          *
-         * @param base the Seifert fibred space representation that will
+         * \param base the Seifert fibred space representation that will
          * be used as a starting point for this new alternative.
-         * @param reflect \c true if we should reflect the Seifert
+         * \param reflect \c true if we should reflect the Seifert
          * fibred space.
-         * @param negate \c true if we should attempt to negate all
+         * \param negate \c true if we should attempt to negate all
          * exceptional fibres without reflecting, as described above.
          */
         SFSAlt(const SFSAlt& base, bool reflect, bool negate = false);
@@ -193,7 +193,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
         /**
          * Sets this to be a copy of the given alternative.
          *
-         * @return a reference to this alternative.
+         * \return a reference to this alternative.
          */
         SFSAlt& operator = (const SFSAlt&) = default;
         /**
@@ -202,14 +202,14 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * The alternative that was passed will no longer be usable.
          *
-         * @return a reference to this alternative.
+         * \return a reference to this alternative.
          */
         SFSAlt& operator = (SFSAlt&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given alternative.
          *
-         * @param other the alternative whose contents should be swapped
+         * \param other the alternative whose contents should be swapped
          * with this.
          */
         void swap(SFSAlt& other) noexcept;
@@ -233,8 +233,8 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param sfs the original Seifert fibred space.
-         * @return the resulting set of alternative representations for \a sfs.
+         * \param sfs the original Seifert fibred space.
+         * \return the resulting set of alternative representations for \a sfs.
          */
         static std::vector<SFSAlt> altSet(const SFSpace& sfs);
 
@@ -249,9 +249,9 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param sfs the Seifert fibred space that we are attempting to
+         * \param sfs the Seifert fibred space that we are attempting to
          * represent.
-         * @return \c true if and only if it is possible to set the
+         * \return \c true if and only if it is possible to set the
          * negation argument to \c true in the SFSAlt class constructor.
          */
         static bool canNegate(const SFSpace& sfs);
@@ -260,21 +260,21 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * Returns the alternative representation of the original
          * Seifert fibred space.
          *
-         * @return the alternative representation.
+         * \return the alternative representation.
          */
         const SFSpace& alt() const&;
         /**
          * Returns a non-const reference to the alternative representation of
          * the original Seifert fibred space.
          *
-         * @return the alternative representation.
+         * \return the alternative representation.
          */
         SFSpace& alt() &;
         /**
          * Returns an rvalue reference to the alternative representation of
          * the original Seifert fibred space.
          *
-         * @return the alternative representation.
+         * \return the alternative representation.
          */
         SFSpace&& alt() &&;
         /**
@@ -284,13 +284,13 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * curves of the original space (which was passed to the SFSAlt
          * constructor).  See the class notes above for details.
          *
-         * Note that this conversion matrix applies \e only to the first
+         * Note that this conversion matrix applies _only_ to the first
          * boundary torus!  If there is more than one boundary, the
          * remaining boundary conversions are simpler and depend only
          * on whether a reflection has been used or not.  See reflected()
          * or the class notes for details.
          *
-         * @return the conversion matrix for this alternative space.
+         * \return the conversion matrix for this alternative space.
          */
         const Matrix2& conversion() const;
         /**
@@ -311,7 +311,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * whether the conversion matrix has determinant 1 or -1.
          * However, calling reflected() is both simpler and a little faster.
          *
-         * @return \c true if a reflection was used in creating this
+         * \return \c true if a reflection was used in creating this
          * alternative space, or \c false if no reflection was used.
          */
         bool reflected() const;
@@ -320,14 +320,14 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * Determines whether this and the given alternative representation
          * have identical presentations.
          *
-         * To be considered \e identical, the two alternatives must have equal
+         * To be considered _identical_, the two alternatives must have equal
          * alternative SFSpace representations, equal conversion matrices,
          * and either both must have used a reflection or both must have
          * not used a reflection.  In other words, this is equivalent to
          * testing all of alt(), conversion() and reflected() for equality.
          *
-         * @param other the alternative to compare against this.
-         * @return \c true if and only if this and the given alternative
+         * \param other the alternative to compare against this.
+         * \return \c true if and only if this and the given alternative
          * have identical presentations, as described above.
          */
         bool operator == (const SFSAlt& other) const;
@@ -336,14 +336,14 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * Determines whether this and the given alternative representation
          * do not have identical presentations.
          *
-         * To be considered \e identical, the two alternatives must have equal
+         * To be considered _identical_, the two alternatives must have equal
          * alternative SFSpace representations, equal conversion matrices,
          * and either both must have used a reflection or both must have
          * not used a reflection.  In other words, this is equivalent to
          * testing all of alt(), conversion() and reflected() for equality.
          *
-         * @param other the alternative to compare against this.
-         * @return \c true if and only if this and the given alternative
+         * \param other the alternative to compare against this.
+         * \return \c true if and only if this and the given alternative
          * do not have identical presentations, as described above.
          */
         bool operator != (const SFSAlt& other) const;
@@ -352,9 +352,9 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };
@@ -366,8 +366,8 @@ class SFSAlt : public ShortOutput<SFSAlt> {
  * This global routine simply calls SFSAlt::swap(); it is provided so
  * that SFSAlt meets the C++ Swappable requirements.
  *
- * @param a the first alternative whose contents should be swapped.
- * @param b the second alternative whose contents should be swapped.
+ * \param a the first alternative whose contents should be swapped.
+ * \param b the second alternative whose contents should be swapped.
  *
  * \ingroup manifold
  */

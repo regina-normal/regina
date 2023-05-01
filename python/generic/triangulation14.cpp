@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,10 +37,10 @@
 #include "simplex-bindings.h"
 
 void addTriangulations14(pybind11::module_& m) {
-    addTriangulation<14>(m, "Triangulation14");
+    addSimplex<14>(m, "Simplex14");
     addComponent<14>(m, "Component14");
     addBoundaryComponent<14>(m, "BoundaryComponent14");
-    addSimplex<14>(m, "Simplex14");
+    addTriangulation<14>(m, "Triangulation14");
 
     addIsoSigClassic<14>(m, "IsoSigClassic14");
     addIsoSigEdgeDegrees<14>(m, "IsoSigEdgeDegrees14");

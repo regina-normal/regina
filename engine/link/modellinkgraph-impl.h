@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -70,9 +70,9 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     } while (a.node()->index() != 0 || a.arc() != 0);
 
     if (steps != 2 * size()) {
-        std::cerr << "ERROR: Not a knot graph!" << std::endl;
         delete[] dir;
-        return;
+        throw FailedPrecondition("generateMinimalLinks() cannot work with "
+            "a graph that models multiple-component links");
     }
 
     // Next work out which relationships we may assume between different

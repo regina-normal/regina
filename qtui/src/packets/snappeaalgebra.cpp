@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -168,7 +168,7 @@ void SnapPeaAlgebraUI::refresh() {
         unfilledH1->setText(tri->homology().utf8().c_str());
     else
         unfilledH1->setText(tri->homology().str().c_str());
-    unfilledFundGroup->setGroup(tri->fundamentalGroup());
+    unfilledFundGroup->setGroup(tri->group());
 
     unfilledH1Title->show();
     unfilledH1->show();

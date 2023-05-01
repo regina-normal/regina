@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -321,7 +321,7 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
 
 /*
  * The marked abelian group was defined by matrices M and N
- * with M*N==0.  Think of M as m by l and N as l by n.  Then
+ * with M×N==0.  Think of M as m by l and N as l by n.  Then
  * this routine returns the index-th free generator of the
  * ker(M)/img(N) in Z^l.
  */
@@ -344,7 +344,7 @@ Vector<Integer> MarkedAbelianGroup::freeRep(size_t index) const {
 
 /*
  * The marked abelian group was defined by matrices M and N
- * with M*N==0.  Think of M as m by l and N as l by n.  Then
+ * with M×N==0.  Think of M as m by l and N as l by n.  Then
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
@@ -477,7 +477,7 @@ Vector<Integer> MarkedAbelianGroup::ccRep(size_t SNFRep) const {
 
 /*
  * The marked abelian group was defined by matrices M and N
- * with M*N==0.  Think of M as m by l and N as l by n.
+ * with M×N==0.  Think of M as m by l and N as l by n.
  * When the group was initialized, it was computed to be isomorphic
  * to some Z_{d1} + ... + Z_{dk} + Z^d where d1 | d2 | ... | dk
  * this routine assumes element is in Z^l, and it returns a vector
@@ -1108,8 +1108,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
  *                   ^                             ^
  *                   |  this                       | other
  * Z^d --N2--> Z^e --M2--> Z^f   Z^j --N4--> Z^k --M4--> Z^l
- * @return true if and only if M1 == N3, M2 == N4 and diagram commutes
- *         commutes.
+ * \return true if and only if M1 == N3, M2 == N4 and diagram commutes
  */
 bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other)
         const {

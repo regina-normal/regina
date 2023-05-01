@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,7 +58,7 @@ class XMLParser;
 /**
  * Represents a map from property names to property values.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPropertyDict : private std::map<std::string, std::string> {
     public:
@@ -71,8 +71,8 @@ class XMLPropertyDict : private std::map<std::string, std::string> {
          * Return a value for the given key, or the empty string if the
          * key does not exist in the map.
          *
-         * @param key the key to look up.
-         * @return the value associated with the given key, or the
+         * \param key the key to look up.
+         * \return the value associated with the given key, or the
          * empty string if the key does not exist in the map.
          */
         const std::string& lookup(const std::string& key) const;
@@ -101,10 +101,10 @@ class XMLPropertyDict : private std::map<std::string, std::string> {
  * derived class that overrides some or all of these routines to do the
  * processing that you require.
  *
- * \ifacespython Not present.
+ * \nopython
  *
- * @author This class was taken and modified from the libxml++ library
- * (<tt>http://lusis.org/~ari/xml++/</tt>).
+ * \author This class was taken and modified from the libxml++ library
+ * (http://lusis.org/~ari/xml++/).
  */
 class XMLParserCallback {
     public:
@@ -116,7 +116,7 @@ class XMLParserCallback {
         /**
          * Called at the start of the document.
          *
-         * @param parser the XML parser that is currently parsing this document.
+         * \param parser the XML parser that is currently parsing this document.
          */
         virtual void start_document(XMLParser* parser);
         /**
@@ -126,47 +126,47 @@ class XMLParserCallback {
         /**
          * Called when an element's opening tag is encountered.
          *
-         * @param n the name of the tag.
-         * @param p a dictionary of all the properties of the tag.
+         * \param n the name of the tag.
+         * \param p a dictionary of all the properties of the tag.
          */
         virtual void start_element(const std::string& n,
             const regina::xml::XMLPropertyDict& p);
         /**
          * Called when an element's closing tag is encountered.
          * This is called immediately after start_element() if the
-         * opening tag is in <tt>\<tag/\></tt> format.
+         * opening tag is in `<tag/>` format.
          *
-         * @param n the name of the tag.
+         * \param n the name of the tag.
          */
         virtual void end_element(const std::string& n);
         /**
          * Called when characters are encountered.
          *
-         * @param s the characters encountered.
+         * \param s the characters encountered.
          */
         virtual void characters(const std::string& s);
         /**
          * Called when a comment is encountered.
          *
-         * @param s the comment string.
+         * \param s the comment string.
          */
         virtual void comment(const std::string& s);
         /**
          * Called when a parser warning occurs.
          *
-         * @param s the warning message.
+         * \param s the warning message.
          */
         virtual void warning(const std::string& s);
         /**
          * Called when a parser error occurs.
          *
-         * @param s the error message.
+         * \param s the error message.
          */
         virtual void error(const std::string& s);
         /**
          * Called when a parser fatal error occurs.
          *
-         * @param s the error message.
+         * \param s the error message.
          */
         virtual void fatal_error(const std::string& s);
 };
@@ -186,10 +186,10 @@ class XMLParserCallback {
  * XML file has been sent through parse_chunk(), routine finish() should
  * be called once to signal that processing is complete.
  *
- * \ifacespython Not present.
+ * \nopython
  *
- * @author This class was taken and modified from the libxml++ library
- * (<tt>http://lusis.org/~ari/xml++/</tt>).
+ * \author This class was taken and modified from the libxml++ library
+ * (http://lusis.org/~ari/xml++/).
  */
 class XMLParser {
     private:
@@ -202,7 +202,7 @@ class XMLParser {
         /**
          * Creates a new XML parser.
          *
-         * @param callback the object providing the routines to call
+         * \param callback the object providing the routines to call
          * when particular XML components are encountered during parsing.
          */
         XMLParser(XMLParserCallback& callback);
@@ -214,7 +214,7 @@ class XMLParser {
         /**
          * Parses the given chunk of XML.
          *
-         * @param s the chunk of XML to parse.
+         * \param s the chunk of XML to parse.
          */
         void parse_chunk(const std::string& s);
         /**
@@ -226,10 +226,10 @@ class XMLParser {
          * Parses an entire XML file.  The given stream will be read
          * from until end-of-file is reached.
          *
-         * @param callback the object providing the routines to call
+         * \param callback the object providing the routines to call
          * when particular XML components are encountered during parsing.
-         * @param file the stream from which the raw XML will be read.
-         * @param chunkSize the number of characters to read and process
+         * \param file the stream from which the raw XML will be read.
+         * \param chunkSize the number of characters to read and process
          * at a time (this is the size of each string that will be
          * passed to parse_chunk()).
          */
@@ -291,10 +291,10 @@ class XMLParser {
  * The given libxml string \a str may be \c null, in which case the
  * resulting C++ string will be the empty string.
  *
- * @param str the string to convert.
- * @param free \c true if the original libxml string \a str should be
+ * \param str the string to convert.
+ * \param free \c true if the original libxml string \a str should be
  * deallocated, or \c false if it should be preserved.
- * @return the given string as a C++ string.
+ * \return the given string as a C++ string.
  */
 std::string xmlString(xmlChar* str, bool free = true);
 

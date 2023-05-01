@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2015-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests that == and != behave as expected for Regina's python bindings.
@@ -112,7 +112,7 @@ cmp('PacketOfTriangulation3', p, p.root(), True)
 
 w = ExampleSnapPea.whiteheadLink()
 cmp('SnapPeaTriangulation', w, ExampleSnapPea.whiteheadLink())
-w.fill(3,4,0)
+dummy = w.fill(3,4,0)
 cmp('SnapPeaTriangulation', w, ExampleSnapPea.whiteheadLink())
 cmp('SnapPeaTriangulation', ExampleSnapPea.whiteheadLink(), w)
 cmp('SnapPeaTriangulation', ExampleSnapPea.figureEight(), w)
@@ -129,15 +129,15 @@ cmp('Text', Text('foo'), Text('foof'), True)
 
 s = Script()
 s.setText('print("Hello world!")')
-s.addVariable('foo', None)
-s.addVariable('bar', s)
+dummy = s.addVariable('foo', None)
+dummy = s.addVariable('bar', s)
 t = Script()
 t.setText('print("Hello world!")')
-t.addVariable('foo', None)
-t.addVariable('bar', t)
+dummy = t.addVariable('foo', None)
+dummy = t.addVariable('bar', t)
 cmp('Script', s, t)
 t.removeVariable('bar')
-t.addVariable('bar', s)
+dummy = t.addVariable('bar', s)
 cmp('Script', s, t)
 cmp('Script', s, Script(s))
 
@@ -272,6 +272,7 @@ iso = Isomorphism3(t.size())
 for i in range(t.size()):
 	iso.setSimpImage(i, t.size() - i - 1)
 	iso.setFacetPerm(i, Perm4(3,2,1,0))
+
 t2 = iso.apply(t)
 b3 = BlockedSFSTriple.recognise(t2)
 cmp('BlockedSFSTriple', b1, b3)

@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGFILEDUMP" "1" "30 May 2022" "" "The Regina Handbook"
+.TH "REGFILEDUMP" "1" "24 April 2023" "" "The Regina Handbook"
 
 .SH NAME
 regfiledump \- Dump the contents of a Regina data file
 .SH SYNOPSIS
 
 \fBregfiledump\fR [ \fB-f\fR | \fB-l\fR | \fB-n\fR ] [ \fB-c\fR ] \fB\fIfile\fB\fR [ \fB\fIpacket-label\fB\fR\fI ...\fR ]
+
+
+\fBregfiledump\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -36,6 +39,13 @@ count (see option \fB-c\fR).
 \fB-c\fR
 Finish the output with a total count of all packets in the
 file.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "INTERNATIONALISATION"
 .PP
 If any packets contain international characters,
@@ -71,7 +81,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\regfiledump.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.4\\bin\\regfiledump.exe\&.
 .SH "SEE ALSO"
 .PP
 regina-gui\&.

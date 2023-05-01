@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,30 +33,36 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
 #include "utilities/stringutils.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/utilities/stringutils.h"
 
 using pybind11::overload_cast;
 
 void addStringUtils(pybind11::module_& m) {
-    m.def("startsWith", &regina::startsWith);
-    m.def("stripWhitespace", &regina::stripWhitespace);
-    m.def("stringToToken", &regina::stringToToken);
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("startsWith", &regina::startsWith, rdoc::startsWith);
+    m.def("stripWhitespace", &regina::stripWhitespace, rdoc::stripWhitespace);
+    m.def("stringToToken", &regina::stringToToken, rdoc::stringToToken);
 
     // overload_cast has trouble with templated vs non-templated overloads.
     // Just cast directly.
-    m.def("basicTokenise", (std::vector<std::string> (*)(const std::string&))(
-        &regina::basicTokenise));
+    m.def("basicTokenise", static_cast<std::vector<std::string>(&)(
+        const std::string&)>(regina::basicTokenise), rdoc::basicTokenise);
 
     m.def("subscript",
-        &regina::subscript<long>);
+        &regina::subscript<long>, rdoc::subscript);
     m.def("subscript", overload_cast<const regina::Integer&>(
-        &regina::subscript<false>));
+        &regina::subscript<false>), rdoc::subscript);
     m.def("subscript", overload_cast<const regina::LargeInteger&>(
-        &regina::subscript<true>));
+        &regina::subscript<true>), rdoc::subscript);
     m.def("superscript",
-        &regina::superscript<long>);
+        &regina::superscript<long>, rdoc::superscript);
     m.def("superscript", overload_cast<const regina::Integer&>(
-        &regina::superscript<false>));
+        &regina::superscript<false>), rdoc::superscript);
     m.def("superscript", overload_cast<const regina::LargeInteger&>(
-        &regina::superscript<true>));
+        &regina::superscript<true>), rdoc::superscript);
+
+    RDOC_SCOPE_END
 }
 

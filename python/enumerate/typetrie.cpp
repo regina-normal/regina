@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,16 +34,19 @@
 #include "enumerate/typetrie.h"
 #include "utilities/exception.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/typetrie.h"
 
 using regina::TypeTrie;
 
 template <int nTypes>
 void addTypeTrieFor(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name)
-        .def(pybind11::init<>())
-        .def(pybind11::init<const TypeTrie<nTypes>&>())
-        .def("swap", &TypeTrie<nTypes>::swap)
-        .def("clear", &TypeTrie<nTypes>::clear)
+    RDOC_SCOPE_BEGIN(TypeTrie)
+
+    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const TypeTrie<nTypes>&>(), rdoc::__copy)
+        .def("swap", &TypeTrie<nTypes>::swap, rdoc::swap)
+        .def("clear", &TypeTrie<nTypes>::clear, rdoc::clear)
         .def("insert", [](TypeTrie<nTypes>& t, pybind11::list arg) {
             char* c = new char[arg.size() + 1];
             size_t len = 0;
@@ -66,7 +69,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             c[len] = 0;
             t.insert(c, len);
             delete[] c;
-        })
+        }, pybind11::arg("entry"), rdoc::insert)
         .def("dominates", [](const TypeTrie<nTypes>& t, pybind11::list arg) {
             char* c = new char[arg.size() + 1];
             size_t len = 0;
@@ -90,12 +93,14 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             bool ans = t.dominates(c, len);
             delete[] c;
             return ans;
-        })
+        }, pybind11::arg("vec"), rdoc::dominates)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    m.def("swap", (void(*)(TypeTrie<nTypes>&, TypeTrie<nTypes>&))(regina::swap));
+    regina::python::add_global_swap<TypeTrie<nTypes>>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 
 void addTypeTrie(pybind11::module_& m) {

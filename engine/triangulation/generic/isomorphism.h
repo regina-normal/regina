@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,20 +72,18 @@ namespace regina {
  * simplex \a S of \a T, a permutation \a f<sub>S</sub> of the facets
  * (0,...,\a dim) of \a S, for which the following condition holds:
  *
- *   - If facet \a k of simplex \a S and facet \a k' of simplex \a S'
- *     are identified in \a T, then facet \a f<sub>S</sub>(\a k) of \a f(S)
- *     and facet \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
- *     Moreover, their gluing is consistent with the facet/vertex permutations;
- *     that is, there is a commutative square involving the gluing maps in
- *     \a T and \a U and the permutations \a f<sub>S</sub> and
- *     \a f<sub>S'</sub>.
+ * - If facet \a k of simplex \a S and facet \a k' of simplex \a S'
+ *   are identified in \a T, then facet \a f<sub>S</sub>(\a k) of \a f(S)
+ *   and facet \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
+ *   Moreover, their gluing is consistent with the facet/vertex permutations;
+ *   that is, there is a commutative square involving the gluing maps in
+ *   \a T and \a U and the permutations \a f<sub>S</sub> and \a f<sub>S'</sub>.
  *
- * Isomorphisms can be <i>boundary complete</i> or
- * <i>boundary incomplete</i>.  A boundary complete isomorphism
- * satisfies the additional condition:
+ * Isomorphisms can be _boundary complete_ or _boundary incomplete_.
+ * A boundary complete isomorphism satisfies the additional condition:
  *
- *   - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
- *     boundary facet of \a U.
+ * - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
+ *   boundary facet of \a U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
  * triangulation \a T is present as an entire component (or components) of \a U,
@@ -100,7 +98,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Isomorphism2 and Isomorphism3 for dimensions 2 and 3).
  *
@@ -135,11 +133,11 @@ class Isomorphism :
          * The images of the simplices and their vertices must be
          * explicitly set using simpImage() and facetPerm().
          *
-         * \ifacespython For Python users, the images of the simplices and
+         * \python For Python users, the images of the simplices and
          * their vertices must be set using setSimpImage() and setFacetPerm()
          * instead.
          *
-         * @param nSimplices the number of simplices in the source
+         * \param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism.
          * This is allowed to be zero.
          */
@@ -147,7 +145,7 @@ class Isomorphism :
         /**
          * Creates a copy of the given isomorphism.
          *
-         * @param src the isomorphism to copy.
+         * \param src the isomorphism to copy.
          */
         Isomorphism(const Isomorphism& src);
         /**
@@ -156,7 +154,7 @@ class Isomorphism :
          *
          * The isomorphism that is passed (\a src) will no longer be usable.
          *
-         * @param src the isomorphism to move.
+         * \param src the isomorphism to move.
          */
         Isomorphism(Isomorphism&& src) noexcept;
         /**
@@ -172,8 +170,8 @@ class Isomorphism :
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the isomorphism to copy.
-         * @return a reference to this isomorphism.
+         * \param src the isomorphism to copy.
+         * \return a reference to this isomorphism.
          */
         Isomorphism& operator = (const Isomorphism& src);
         /**
@@ -186,8 +184,8 @@ class Isomorphism :
          *
          * The isomorphism that is passed (\a src) will no longer be usable.
          *
-         * @param src the isomorphism to move.
-         * @return a reference to this isomorphism.
+         * \param src the isomorphism to move.
+         * \return a reference to this isomorphism.
          */
         Isomorphism& operator = (Isomorphism&& src) noexcept;
 
@@ -197,7 +195,7 @@ class Isomorphism :
          * It does not matter if this and the given isomorphism use different
          * numbers of simplices; if so then they will be adjusted accordingly.
          *
-         * @param other the isomorphism whose contents are to be swapped with
+         * \param other the isomorphism whose contents are to be swapped with
          * this.
          */
         void swap(Isomorphism& other) noexcept;
@@ -208,7 +206,10 @@ class Isomorphism :
          * less than or equal to the number of simplices in the
          * destination triangulation.
          *
-         * @return the number of simplices in the source triangulation.
+         * \python This is also used to implement the Python special
+         * method __len__().
+         *
+         * \return the number of simplices in the source triangulation.
          */
         size_t size() const;
 
@@ -224,14 +225,13 @@ class Isomorphism :
          * and so you can safely use the special value -1 as a marker for an
          * image that is unknown or not yet initialised.
          *
-         * \ifacespython Python users can only access the read-only version
-         * of this function that returns by value: you cannot use simpImage()
-         * to edit the isomorphism.  As an alternative however, Python users
-         * can call <tt>setSimpImage(sourceSimp, image)</tt> instead.
+         * \nopython For Python users, simpImage() is a read-only function
+         * that returns by value.  To edit the isomorphism, use the
+         * Python-only routine setSimpImage() instead.
          *
-         * @param sourceSimp the index of the source simplex; this must
-         * be between 0 and <tt>size()-1</tt> inclusive.
-         * @return a reference to the index of the destination simplex
+         * \param sourceSimp the index of the source simplex; this must
+         * be between 0 and `size()-1` inclusive.
+         * \return a reference to the index of the destination simplex
          * that the source simplex maps to.
          */
         ssize_t& simpImage(size_t sourceSimp);
@@ -243,33 +243,55 @@ class Isomorphism :
          * this image through the dimension-specific alias triImage(),
          * tetImage() or pentImage() respectively.
          *
-         * @param sourceSimp the index of the source simplex; this must
-         * be between 0 and <tt>size()-1</tt> inclusive.
-         * @return the index of the destination simplex
+         * \param sourceSimp the index of the source simplex; this must
+         * be between 0 and `size()-1` inclusive.
+         * \return the index of the destination simplex
          * that the source simplex maps to.
          */
         ssize_t simpImage(size_t sourceSimp) const;
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the image of the given source
+         * simplex to the given value under this isomorphism.
+         *
+         * If the dimension \a dim is 2, 3 or 4, then you can also set
+         * this image through the dimension-specific alias setTriImage(),
+         * setTetImage() or setPentImage() respectively.
+         *
+         * Simplex images are stored using type \c ssize_t, not \c size_t,
+         * and so you can safely use the special value -1 as a marker for an
+         * image that is unknown or not yet initialised.
+         *
+         * \nocpp For C++ users, simpImage() is used for both reading and
+         * writing: just write `simpImage(sourceSimp) = image`.
+         *
+         * \param sourceSimp the index of the source simplex; this must
+         * be between 0 and `size()-1` inclusive.
+         * \param image the index of the new destination simplex that the
+         * source simplex should map to.
+         */
+        void setSimpImage(size_t sourceSimp, ssize_t image);
+#endif
         /**
          * Returns a read-write reference to the permutation that is
          * applied to the (\a dim + 1) facets of the given source simplex
          * under this isomorphism.
          * Facet \a i of source simplex \a sourceSimp will be mapped to
-         * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
-         * <tt>simpImage(sourceSimp)</tt>.
+         * facet `facetPerm(sourceSimp)[i]` of simplex
+         * `simpImage(sourceSimp)`.
          *
          * If the dimension \a dim is 2 or 3, then you can also access
          * this permutation through the dimension-specific alias
          * edgePerm() or facePerm() respectively.
          *
-         * \ifacespython Python users can only access the read-only version
-         * of this function that returns by value: you cannot use facetPerm()
-         * to edit the isomorphism.  As an alternative however, Python users
-         * can call <tt>setFacetPerm(sourceSimp, perm)</tt> instead.
+         * \nopython For Python users, facetPerm() is a read-only function
+         * that returns by value.  To edit the isomorphism, use the
+         * Python-only routine setFacetPerm() instead.
          *
-         * @param sourceSimp the index of the source simplex containing
+         * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
-         * <tt>size()-1</tt> inclusive.
-         * @return a read-write reference to the permutation applied to the
+         * `size()-1` inclusive.
+         * \return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
         Perm<dim+1>& facetPerm(size_t sourceSimp);
@@ -277,29 +299,51 @@ class Isomorphism :
          * Determines the permutation that is applied to the (\a dim + 1)
          * facets of the given source simplex under this isomorphism.
          * Facet \a i of source simplex \a sourceSimp will be mapped to
-         * face <tt>facetPerm(sourceSimp)[i]</tt> of simplex
-         * <tt>simpImage(sourceSimp)</tt>.
+         * face `facetPerm(sourceSimp)[i]` of simplex
+         * `simpImage(sourceSimp)`.
          *
          * If the dimension \a dim is 2 or 3, then you can also access
          * this permutation through the dimension-specific alias
          * edgePerm() or facePerm() respectively.
          *
-         * @param sourceSimp the index of the source simplex containing
+         * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
-         * <tt>size()-1</tt> inclusive.
-         * @return the permutation applied to the facets of the
+         * `size()-1` inclusive.
+         * \return the permutation applied to the facets of the
          * source simplex.
          */
         Perm<dim+1> facetPerm(size_t sourceSimp) const;
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the permutation that is applied to
+         * the (\a dim + 1) facets of the given source simplex under this
+         * isomorphism.  Facet \a i of source simplex \a sourceSimp will be
+         * mapped to facet `perm[i]` of simplex `simpImage(sourceSimp)`.
+         *
+         * If the dimension \a dim is 2 or 3, then you can also set
+         * this permutation through the dimension-specific alias
+         * setEdgePerm() or setFacePerm() respectively.
+         *
+         * \nocpp For C++ users, facetPerm() is used for both reading and
+         * writing: just write `facetPerm(sourceSimp) = perm`.
+         *
+         * \param sourceSimp the index of the source simplex containing
+         * the original (\a dim + 1) facets; this must be between 0 and
+         * `size()-1` inclusive.
+         * \param perm the new permutation that should be applied to the facets
+         * of the source simplex.
+         */
+        void setFacetPerm(size_t sourceSimp, Perm<dim+1> perm);
+#endif
         /**
          * Determines the image of the given source simplex facet
          * under this isomorphism.  This operator returns by value:
          * it cannot be used to alter the isomorphism.
          *
-         * @param source the given source simplex facet; this must
+         * \param source the given source simplex facet; this must
          * be one of the (\a dim + 1) facets of one of the size()
          * simplices in the source triangulation.
-         * @return the image of the source simplex facet under this
+         * \return the image of the source simplex facet under this
          * isomorphism.
          */
         FacetSpec<dim> operator [] (const FacetSpec<dim>& source) const;
@@ -311,7 +355,7 @@ class Isomorphism :
          * and within each simplex the facet/vertex permutation is
          * the identity permutation.
          *
-         * @return \c true if this is an identity isomorphism, or
+         * \return \c true if this is an identity isomorphism, or
          * \c false otherwise.
          */
         bool isIdentity() const;
@@ -332,6 +376,12 @@ class Isomorphism :
          * describes the mapping from the simplices of \a T and their facets
          * to the simplices of \a U and their facets.
          *
+         * If the given triangulation \a T has any locks on top-dimensional
+         * simplices and/or their facets, then the resulting triangulation \a U
+         * will have matching locks that have been carried through the
+         * isomorphism correctly (i.e., the locks will be copied over to the
+         * appropriate destination simplices and/or facets).
+         *
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
@@ -339,13 +389,13 @@ class Isomorphism :
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the isomorphism is applied.
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
-         * @param tri the triangulation to which this isomorphism
+         * \param tri the triangulation to which this isomorphism
          * should be applied.
-         * @return the new isomorphic triangulation.
+         * \return the new isomorphic triangulation.
          */
         Triangulation<dim> operator ()(const Triangulation<dim>& tri) const;
 
@@ -355,13 +405,13 @@ class Isomorphism :
          *
          * Specifically:
          *
-         * - If <tt>f.simp</tt> is in the range 0,1,...,size()-1 inclusive
+         * - If `f.simp` is in the range 0,1,...,size()-1 inclusive
          *   (i.e., \a f denotes a facet of an actual top-dimensional simplex),
          *   then this routine will return an object denoting facet
-         *   <tt>facetPerm(f.facet)</tt> of simplex <tt>simpImage(f.simp)</tt>.
+         *   `facetPerm(f.facet)` of simplex `simpImage(f.simp)`.
          *
-         * - If <tt>f.simp</tt> is negative (i.e., \a f takes a
-         *   before-the-start value), or if <tt>f.simp</tt> is at least size()
+         * - If `f.simp` is negative (i.e., \a f takes a
+         *   before-the-start value), or if `f.simp` is at least size()
          *   (i.e., \a f takes a boundary or past-the-end value), then this
          *   routine will return \a f unchanged (but see the precondition
          *   below).
@@ -371,15 +421,15 @@ class Isomorphism :
          * isomorphism are not just some reordering of 0,1,...,size()-1),
          * then \a f must not denote a boundary or past-the-end value.
          * This is because a boundary or past-the-end value is encoded
-         * by using a past-the-end value of <tt>FacetSpec::simp</tt>.
+         * by using a past-the-end value of `FacetSpec::simp`.
          * If this isomorphism maps into a larger triangulation then this
          * past-the-end simplex number would need to change, but the
          * isomorphism does not actually know what the new value of
-         * <tt>FacetSpec::simp</tt> should be.
+         * `FacetSpec::simp` should be.
          *
-         * @param f the facet-of-simplex which should be transformed by
+         * \param f the facet-of-simplex which should be transformed by
          * this isomorphism.
-         * @return the image of \a f under this isomorphism.
+         * \return the image of \a f under this isomorphism.
          */
         FacetSpec<dim> operator ()(const FacetSpec<dim>& f) const;
 
@@ -392,8 +442,8 @@ class Isomorphism :
          * describe mappings between isomorphic facet pairings.
          * In particular, if \a iso represents this isomorphism and if \a p
          * were the facet pairing of some triangulation \a tri, then
-         * <tt>iso(p)</tt> would be the facet pairing for the triangulation
-         * <tt>iso(tri)</tt>.  Of course, this routine works directly with
+         * `iso(p)` would be the facet pairing for the triangulation
+         * `iso(tri)`.  Of course, this routine works directly with
          * the facet pairing, and does not actually construct any
          * triangulations at all.
          *
@@ -405,13 +455,13 @@ class Isomorphism :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * described by the given facet pairing is not equal to size() for
          * this isomorphism.
          *
-         * @param p the facet pairing to which this isomorphism should be
+         * \param p the facet pairing to which this isomorphism should be
          * applied.
-         * @return the new isomorphic facet pairing.
+         * \return the new isomorphic facet pairing.
          */
         FacetPairing<dim> operator ()(const FacetPairing<dim>& p) const;
 
@@ -419,21 +469,27 @@ class Isomorphism :
          * Deprecated routine that applies this isomorphism to the given
          * triangulation, and returns the result as a new triangulation.
          *
+         * If the given triangulation has any locks on top-dimensional
+         * simplices and/or their facets, then the triangulation that is
+         * returned will have matching locks that have been carried through
+         * the isomorphism correctly (i.e., the locks will be copied over
+         * to the appropriate destination simplices and/or facets).
+         *
          * \deprecated If this isomorphism is \a iso, then this routine
-         * is equivalent to calling <tt>iso(tri)</tt>.  See the bracket
+         * is equivalent to calling `iso(tri)`.  See the bracket
          * operator for further details.
          *
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
-         * @param tri the triangulation to which this isomorphism
+         * \param tri the triangulation to which this isomorphism
          * should be applied.
-         * @return the new isomorphic triangulation.
+         * \return the new isomorphic triangulation.
          */
         [[deprecated]] Triangulation<dim> apply(const Triangulation<dim>& tri)
             const;
@@ -442,19 +498,24 @@ class Isomorphism :
          * Deprecated routine that applies this isomorphism to the given
          * triangulation, modifying the given triangulation directly.
          *
+         * If the given triangulation has any locks on top-dimensional
+         * simplices and/or their facets, then these locks will be carried
+         * through the isomorphism correctly (i.e., the locks will be moved
+         * to the appropriate destination simplices and/or facets).
+         *
          * \deprecated If this isomorphism is \a iso, then this routine
-         * is equivalent to calling <tt>tri = iso(tri)</tt>.  See the bracket
+         * is equivalent to calling `tri = iso(tri)`.  See the bracket
          * operator for further details.
          *
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
-         * @param tri the triangulation to which this isomorphism
+         * \param tri the triangulation to which this isomorphism
          * should be applied.
          */
         [[deprecated]] void applyInPlace(Triangulation<dim>& tri) const;
@@ -464,16 +525,16 @@ class Isomorphism :
          * isomorphism.
          *
          * This follows the same order convention as Regina's permutation
-         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * classes: the composition `a * b` first applies the right-hand
          * isomorphism \a b, and then the left-hand isomorphism \a a.
          *
          * \pre The source triangulation for this isomorphism (the left-hand
          * side) is at least as large as the destination triangulation
          * for \a rhs (the right-hand side).  In other words, the maximum
-         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
-         * <tt>this->size()</tt>.
+         * value of `rhs.simpImage(i)` over all \a i must be less than
+         * `this->size()`.
          *
-         * @return the composition of both isomorphisms.
+         * \return the composition of both isomorphisms.
          */
         Isomorphism operator * (const Isomorphism& rhs) const;
 
@@ -482,16 +543,16 @@ class Isomorphism :
          * isomorphism.
          *
          * This follows the same order convention as Regina's permutation
-         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * classes: the composition `a * b` first applies the right-hand
          * isomorphism \a b, and then the left-hand isomorphism \a a.
          *
          * \pre The source triangulation for this isomorphism (the left-hand
          * side) is at least as large as the destination triangulation
          * for \a rhs (the right-hand side).  In other words, the maximum
-         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
-         * <tt>this->size()</tt>.
+         * value of `rhs.simpImage(i)` over all \a i must be less than
+         * `this->size()`.
          *
-         * @return the composition of both isomorphisms.
+         * \return the composition of both isomorphisms.
          */
         Isomorphism operator * (Isomorphism&& rhs) const;
 
@@ -501,10 +562,10 @@ class Isomorphism :
          * \pre The destination triangulation has precisely the same
          * number of simplices as the source triangulation.  In other words,
          * there are no "gaps" in the simplex images: the values
-         * <tt>simpImage(0)</tt>, ..., <tt>simpImage(size()-1)</tt> must be
-         * a permutation of 0, ..., <tt>size()-1</tt>.
+         * `simpImage(0)`, ..., `simpImage(size()-1)` must be
+         * a permutation of 0, ..., `size()-1`.
          *
-         * @return the inverse isomorphism.
+         * \return the inverse isomorphism.
          */
         Isomorphism inverse() const;
 
@@ -519,21 +580,21 @@ class Isomorphism :
          * the array Perm<dim>::Sn.
          *
          * In particular, the identity isomorphism is the first in such an
-         * iteration.  If this isomorphism is the \e last in such an
+         * iteration.  If this isomorphism is the _last_ in such an
          * iteration, then this operator will "wrap around" and set this
          * to the identity.
          *
          * \pre The class Perm<dim+1> supports the preincrement operator;
          * currently this means that \a dim must be at most 6.
          *
-         * \ifacespython This routine is named inc() since python does
+         * \python This routine is named inc() since Python does
          * not support the increment operator.  Unlike other Regina
          * classes, here inc() wraps the preincrement operator (not the
          * postincrement operator), since the postincrement operator is
          * significantly more expensive.  To avoid confusion, the python
          * inc() function returns \c None (not this isomorphism).
          *
-         * @return a reference to this isomorphism after the increment.
+         * \return a reference to this isomorphism after the increment.
          */
         Isomorphism<dim>& operator ++();
 
@@ -548,7 +609,7 @@ class Isomorphism :
          * the array Perm<dim>::Sn.
          *
          * In particular, the identity isomorphism is the first in such an
-         * iteration.  If this isomorphism is the \e last in such an
+         * iteration.  If this isomorphism is the _last_ in such an
          * iteration, then this operator will "wrap around" and set this
          * to the identity.
          *
@@ -561,10 +622,12 @@ class Isomorphism :
          * \pre The class Perm<dim+1> supports the preincrement operator;
          * currently this means that \a dim must be at most 6.
          *
-         * \ifacespython Not present, although the preincrement operator is
-         * present in python as the member function inc().
+         * \nopython The preincrement operator is present in Python as the
+         * member function inc().  (Note that this is different from other
+         * Regina classes, where inc() typically wraps the postincrement
+         * operator instead.  See the preincrement documentation for details.)
          *
-         * @return a copy of this isomorphism before the increment took place.
+         * \return a copy of this isomorphism before the increment took place.
          */
         Isomorphism<dim> operator ++(int);
 
@@ -572,10 +635,9 @@ class Isomorphism :
          * Writes the tight encoding of this isomorphism to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -587,21 +649,21 @@ class Isomorphism :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input stream _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an isomorphism on <i>dim</i>-dimensional
          * triangulations.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for an isomorphism on <i>dim</i>-dimensional triangulations.
-         * @return the isomorphism represented by the given tight encoding.
+         * \return the isomorphism represented by the given tight encoding.
          */
         static Isomorphism tightDecode(std::istream& input);
 
@@ -609,30 +671,30 @@ class Isomorphism :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
         /**
          * Determines whether this and the given isomorphism are identical.
          *
-         * Two isomorphisms are considered \e identical if they act on the
+         * Two isomorphisms are considered _identical_ if they act on the
          * same number of top-dimensional simplices, and all destination
          * simplex numbers and facet permutations are the same for both
          * isomorphisms.
          *
-         * In particular it is only the simplex, facet and vertex \e labels
+         * In particular it is only the simplex, facet and vertex _labels_
          * that matter: an isomorphism does not refer to a specific
          * triangulation, and there is no sense in which the two isomorphisms
          * need to act on the same triangulations and/or point to the same
@@ -641,8 +703,8 @@ class Isomorphism :
          * It is safe to compare isomorphisms of different sizes (in
          * which case this routine will return \c false).
          *
-         * @param other the isomorphism to compare with this.
-         * @return \c true if and only if this and the given isomorphism
+         * \param other the isomorphism to compare with this.
+         * \return \c true if and only if this and the given isomorphism
          * are identical.
          */
         bool operator == (const Isomorphism& other) const;
@@ -650,12 +712,12 @@ class Isomorphism :
         /**
          * Determines whether this and the given isomorphism are not identical.
          *
-         * Two isomorphisms are considered \e identical if they act on the
+         * Two isomorphisms are considered _identical_ if they act on the
          * same number of top-dimensional simplices, and all destination
          * simplex numbers and facet permutations are the same for both
          * isomorphisms.
          *
-         * In particular it is only the simplex, facet and vertex \e labels
+         * In particular it is only the simplex, facet and vertex _labels_
          * that matter: an isomorphism does not refer to a specific
          * triangulation, and there is no sense in which the two isomorphisms
          * need to act on the same triangulations and/or point to the same
@@ -664,8 +726,8 @@ class Isomorphism :
          * It is safe to compare isomorphisms of different sizes (in
          * which case this routine will return \c true).
          *
-         * @param other the isomorphism to compare with this.
-         * @return \c true if and only if this and the given isomorphism
+         * \param other the isomorphism to compare with this.
+         * \return \c true if and only if this and the given isomorphism
          * are not identical.
          */
         bool operator != (const Isomorphism& other) const;
@@ -674,16 +736,16 @@ class Isomorphism :
          * Returns the identity isomorphism for the given number of simplices.
          * This isomorphism sends every simplex and every vertex to itself.
          *
-         * @param nSimplices the number of simplices that the new
+         * \param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
-         * @return the identity isomorphism.
+         * \return the identity isomorphism.
          */
         static Isomorphism<dim> identity(size_t nSimplices);
 
         /**
          * Returns a random isomorphism for the given number of simplices.
          * This isomorphism will reorder simplices
-         * 0 to <tt>nSimplices-1</tt> in a random fashion, and for
+         * 0 to `nSimplices-1` in a random fashion, and for
          * each simplex a random permutation of its (\a dim + 1) vertices
          * will be selected.
          *
@@ -693,13 +755,13 @@ class Isomorphism :
          * This routine is thread-safe, and uses RandomEngine for its
          * random number generation.
          *
-         * @param nSimplices the number of simplices that the new
+         * \param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
-         * @param even if \c true, then every simplex will have its
+         * \param even if \c true, then every simplex will have its
          * vertices permuted with an even permutation.  This means that,
          * if the random isomorphism is applied to an oriented triangulation,
          * it will preserve the orientation.
-         * @return the new random isomorphism.
+         * \return the new random isomorphism.
          */
         static Isomorphism<dim> random(size_t nSimplices, bool even = false);
 };
@@ -710,8 +772,8 @@ class Isomorphism :
  * This global routine simply calls Isomorphism<dim>::swap(); it is provided
  * so that Isomorphism<dim> meets the C++ Swappable requirements.
  *
- * @param a the first isomorphism whose contents should be swapped.
- * @param b the second isomorphism whose contents should be swapped.
+ * \param a the first isomorphism whose contents should be swapped.
+ * \param b the second isomorphism whose contents should be swapped.
  *
  * \ingroup generic
  */
@@ -851,31 +913,42 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
     Triangulation<dim> ans;
     auto* tet = new Simplex<dim>*[size_];
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
     for (size_t t = 0; t < size_; t++)
         tet[t] = ans.newSimplex();
 
-    for (size_t t = 0; t < size_; t++)
-        tet[simpImage_[t]]->setDescription(
-            original.simplex(t)->description());
+    const Simplex<dim> *src, *adj;
+    Simplex<dim> *dest;
 
-    const Simplex<dim> *myTet, *adjTet;
     for (size_t t = 0; t < size_; t++) {
-        myTet = original.simplex(t);
-        for (int f = 0; f <= dim; f++)
-            if ((adjTet = myTet->adjacentSimplex(f))) {
-                // We have an adjacent simplex.
-                size_t adjTetIndex = adjTet->index();
-                Perm<dim+1> gluingPerm = myTet->adjacentGluing(f);
+        src = original.simplex(t);
+        dest = tet[simpImage_[t]];
 
-                // Make the gluing from one side only.
+        dest->setDescription(src->description());
+        if (src->isLocked())
+            dest->lock();
+    }
+
+    for (size_t t = 0; t < size_; t++) {
+        src = original.simplex(t);
+        for (int f = 0; f <= dim; f++)
+            if ((adj = src->adjacentSimplex(f))) {
+                // We have an adjacent simplex.
+                size_t adjTetIndex = adj->index();
+                Perm<dim+1> gluingPerm = src->adjacentGluing(f);
+
+                // Make the gluing (and any necessary locks) from one side only.
                 if (adjTetIndex > t || (adjTetIndex == t &&
-                        gluingPerm[f] > f))
-                    tet[simpImage_[t]]->join(facetPerm_[t][f],
-                        tet[simpImage_[adjTetIndex]],
+                        gluingPerm[f] > f)) {
+                    dest = tet[simpImage_[t]];
+                    dest->join(facetPerm_[t][f], tet[simpImage_[adjTetIndex]],
                         facetPerm_[adjTetIndex] * gluingPerm *
                             facetPerm_[t].inverse());
+                    if (src->isFacetLocked(f))
+                        dest->lockFacet(facetPerm_[t][f]);
+                }
+            } else {
+                if (src->isFacetLocked(f))
+                    tet[simpImage_[t]]->lockFacet(facetPerm_[t][f]);
             }
     }
 

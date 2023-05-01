@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,6 +50,21 @@ void Triangulation<2>::calculateSkeleton() {
         v->component()->vertices_.push_back(v);
     for (auto e : edges())
         e->component()->edges_.push_back(e);
+}
+
+void Triangulation<2>::cloneSkeleton(const Triangulation& src) {
+    TriangulationBase<2>::cloneSkeleton(src);
+
+    {
+        auto me = components_.begin();
+        auto you = src.components_.begin();
+        for ( ; me != components_.end(); ++me, ++you) {
+            for (auto f : (*you)->vertices_)
+                (*me)->vertices_.push_back(vertex(f->index()));
+            for (auto f : (*you)->edges_)
+                (*me)->edges_.push_back(edge(f->index()));
+        }
+    }
 }
 
 } // namespace regina

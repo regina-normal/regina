@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,7 +84,7 @@ Triangulation<3> SnapPeaCensusManifold::construct() const {
         } else if (index_ == 4) {
             return Example<3>::figureEight();
         } else if (index_ == 129) {
-            return Example<3>::whiteheadLink();
+            return Example<3>::whitehead();
         }
     }
 

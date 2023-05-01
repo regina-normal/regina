@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,12 +55,12 @@ namespace regina {
  * cone with a given linear subspace, and return the extremal rays of the new
  * cone that results.
  *
- * In some cases we are only interested in \e valid rays of the new cone.
+ * In some cases we are only interested in _valid_ rays of the new cone.
  * The ValidityConstraints class stores a number of "validity constraints";
  * a ray is then "valid" if it satisfies all of these constraints.
  *
  * Each individual constraint encodes a subset \a S of coordinate positions,
- * and requires that a ray can only be non-zero on at most \e one of those
+ * and requires that a ray can only be non-zero on at most _one_ of those
  * coordinate positions.  Equivalently, if we were to assume that the
  * linear subspace is in general position with respect to the coordinate
  * axes (which it is often not), then the <i>i</i>th facet of the cone would
@@ -72,7 +72,7 @@ namespace regina {
  * normal surfaces and angle structures:
  *
  * - We assume that the coordinate positions are grouped into consecutive
- *   \e blocks, each of the same size.  For instance, in standard coordinates
+ *   _blocks_, each of the same size.  For instance, in standard coordinates
  *   for normal surfaces, there is one block per tetrahedron, each of size
  *   seven (since each tetrahedron provides four triangle coordinates and
  *   three quadrilateral coordinates).
@@ -82,17 +82,17 @@ namespace regina {
  *   However, these additional coordinates cannot be used in any validity
  *   constraints.
  *
- * It is assumed that all constraints are either \e local or \e global:
+ * It is assumed that all constraints are either _local_ or _global:_
  *
- * - A \e local constraint involves coordinates within a single block only.
- *   It is assumed that, if local constraints are used, then \e every block
+ * - A _local_ constraint involves coordinates within a single block only.
+ *   It is assumed that, if local constraints are used, then _every_ block
  *   will use analogous local constraints (where "analagous" means they use
  *   the same coordinate positions relative to the start of each block).
  *   An example of a local constraint is the quadrilateral constraints from
  *   normal surface theory, which require that each tetrahedron has at most
  *   one non-zero quadrilateral coordinate.
  *
- * - A \e global constraint involves coordinates in every block; moreover,
+ * - A _global_ constraint involves coordinates in every block; moreover,
  *   each block must constraint the same coordinates relative to the start
  *   of the block.  An example of a global constraint is with almost normal
  *   surfaces, where we require that the entire surface has at most one
@@ -140,18 +140,18 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * additional coordinates beyond this block structure that are
          * not used in any validity constraints).
          *
-         * @param blockSize the number of coordinates in each block.
+         * \param blockSize the number of coordinates in each block.
          * For example, for vectors describing normal surfaces in standard
          * coordinates, this block size would be 7 (representing the three
          * triangle and four quadrilateral coordinates for each tetrahedron).
-         * @param nBlocks the number of consecutive blocks of size \a blockSize.
+         * \param nBlocks the number of consecutive blocks of size \a blockSize.
          * For example, for vectors describing normal surfaces in standard
          * coordinates, this number of blocks would be the number of
          * tetrahedra in the underlying triangulation.
-         * @param reserveLocal indicates that we should reserve space
+         * \param reserveLocal indicates that we should reserve space
          * for \a reserveLocal calls to addLocal().  This is purely for
          * optimisation; it is safe to leave this as 0 (the default).
-         * @param reserveGlobal indicates that we should reserve space
+         * \param reserveGlobal indicates that we should reserve space
          * for \a reserveGlobal calls to addGlobal().  This is purely for
          * optimisation; it is safe to leave this as 0 (the default).
          */
@@ -173,7 +173,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
         /**
          * Sets this to be a copy of the given constraint set.
          *
-         * @return a reference to this constraint set.
+         * \return a reference to this constraint set.
          */
         ValidityConstraints& operator = (const ValidityConstraints&) = default;
         /**
@@ -182,7 +182,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * The constraint set that was passed will no longer be usable.
          *
-         * @return a reference to this constraint set.
+         * \return a reference to this constraint set.
          */
         ValidityConstraints& operator = (ValidityConstraints&&) noexcept =
             default;
@@ -202,13 +202,13 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \pre The iterator type \a iterator, when dereferenced, can be
          * assigned to a native C++ \c int.
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
-         * @param begin the beginning of the list of coordinates to constraint
+         * \param begin the beginning of the list of coordinates to constraint
          * within each block, relative to the start of the block, as outlined
          * above.
-         * @param end a past-the-end iterator indicating the end of the list of
+         * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
         template <typename iterator>
@@ -223,13 +223,13 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * For example, to encode the quadrilateral constraints for
          * normal surfaces in standard coordinates, you can make the
-         * single call <tt>addLocal({4, 5, 6})</tt>.
+         * single call `addLocal({4, 5, 6})`.
          *
-         * \ifacespython Not present, but there is a Python version of this
-         * function that takes the coordinate pattern as a Python list
-         * (which need not be constant).
+         * \nopython Instead, use the Python version of this function that
+         * takes the coordinate pattern as a Python list (which need not be
+         * constant).
          *
-         * @param pattern the coordinates to constraint within each block,
+         * \param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
          */
         void addLocal(std::initializer_list<int> pattern);
@@ -250,13 +250,13 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \pre The iterator type \a iterator, when dereferenced, can be
          * assigned to a native C++ \c int.
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
-         * @param begin the beginning of the list of coordinates to constraint
+         * \param begin the beginning of the list of coordinates to constraint
          * within each block, relative to the start of the block, as outlined
          * above.
-         * @param end a past-the-end iterator indicating the end of the list of
+         * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
         template <typename iterator>
@@ -272,13 +272,13 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * As an example, for almost normal surfaces in standard coordinates,
          * you can encode the constraint that there is at most one octagon
-         * in the entire surface by calling <tt>addGlobal({7, 8, 9})</tt>.
+         * in the entire surface by calling `addGlobal({7, 8, 9})`.
          *
-         * \ifacespython Not present, but there is a Python version of this
-         * function that takes the coordinate pattern as a Python list
-         * (which need not be constant).
+         * \nopython Instead, use the Python version of this function that
+         * takes the coordinate pattern as a Python list (which need not be
+         * constant).
          *
-         * @param pattern the coordinates to constraint within each block,
+         * \param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
          */
         void addGlobal(std::initializer_list<int> pattern);
@@ -286,7 +286,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
         /**
          * Swaps the contents of this and the given constraint set.
          *
-         * @param other the constraint set whose contents should be swapped
+         * \param other the constraint set whose contents should be swapped
          * with this.
          */
         void swap(ValidityConstraints& other) noexcept;
@@ -309,15 +309,15 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \pre A bitmask of type \a BitmaskType is large enough to store
          * \a len bits.
          *
-         * \ifacespython This routine uses the bitmask type regina::Bitmask.
+         * \python This routine uses the bitmask type regina::Bitmask.
          *
          * \tparam BitmaskType the bitmask type used to encode each constraint;
          * this must be one of Regina's own bitmask types, such as Bitmask,
          * Bitmask1 or Bitmask2.
          *
-         * @param len the total number of coordinates in the vectors being
+         * \param len the total number of coordinates in the vectors being
          * constrained.  Each bitmask will be created with this length.
-         * @return the list of bitmasks describing the full set of validity
+         * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
         template <typename BitmaskType>
@@ -327,9 +327,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * Returns the list of all individual validity constraints, each
          * expressed as a bitmask of the smallest possible length.
          *
-         * Calling <tt>bitmasks()</tt> is equivalent to calling
-         * <tt>bitmasks(len)</tt>, where \a len is the block size multiplied
-         * by the number of blocks.
+         * Calling `bitmasks()` is equivalent to calling `bitmasks(len)`,
+         * where \a len is the block size multiplied by the number of blocks.
          *
          * As an example, this is appropriate for normal surface coordinate
          * systems, where the normal coordinates incorporate precisely
@@ -350,13 +349,13 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * number of blocks.  Each bitmask that is returned will be created
          * with this length.
          *
-         * \ifacespython This routine uses the bitmask type regina::Bitmask.
+         * \python This routine uses the bitmask type regina::Bitmask.
          *
          * \tparam BitmaskType the bitmask type used to encode each constraint;
          * this must be one of Regina's own bitmask types, such as Bitmask,
          * Bitmask1 or Bitmask2.
          *
-         * @return the list of bitmasks describing the full set of validity
+         * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
         template <typename BitmaskType>
@@ -377,8 +376,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * not very efficient.  It is assumed that this will not be a problem,
          * because typical constraint sets are extremely small.
          *
-         * @param other the constraint set to compare against this.
-         * @return \c true if and only if this and the given set
+         * \param other the constraint set to compare against this.
+         * \return \c true if and only if this and the given set
          * contain the same constraints.
          */
         bool operator == (const ValidityConstraints& other) const;
@@ -398,8 +397,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * not very efficient.  It is assumed that this will not be a problem,
          * because typical constraint sets are extremely small.
          *
-         * @param other the constraint set to compare against this.
-         * @return \c true if and only if this and the given set
+         * \param other the constraint set to compare against this.
+         * \return \c true if and only if this and the given set
          * do not contain the same constraints.
          */
         bool operator != (const ValidityConstraints& other) const;
@@ -408,9 +407,9 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -418,9 +417,9 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -442,8 +441,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
  * This global routine simply calls ValidityConstraints::swap(); it is provided
  * so that ValidityConstraints meets the C++ Swappable requirements.
  *
- * @param a the first constraint set whose contents should be swapped.
- * @param b the second constraint set whose contents should be swapped.
+ * \param a the first constraint set whose contents should be swapped.
+ * \param b the second constraint set whose contents should be swapped.
  *
  * \ingroup enumerate
  */

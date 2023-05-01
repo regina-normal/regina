@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,6 +53,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
+#include <QMenu>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QToolBar>
@@ -110,9 +111,7 @@ QVariant GluingsModel4::data(const QModelIndex& index, int role) const {
         // Facet gluing?
         int facet = 5 - index.column();
         if (facet >= 0)
-            return destString(facet,
-                p->adjacentSimplex(facet),
-                p->adjacentGluing(facet));
+            return destString(p, facet);
         return QVariant();
     } else if (role == Qt::EditRole) {
         // Pentachoron name?
@@ -122,9 +121,25 @@ QVariant GluingsModel4::data(const QModelIndex& index, int role) const {
         // Facet gluing?
         int facet = 5 - index.column();
         if (facet >= 0)
-            return destString(facet,
-                p->adjacentSimplex(facet),
-                p->adjacentGluing(facet));
+            return destString(p, facet);
+        return QVariant();
+    } else if (role == Qt::BackgroundRole) {
+        if (index.column() == 0) {
+            if (p->isLocked())
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        } else {
+            if (p->isFacetLocked(5 - index.column()))
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        }
+        return QVariant();
+    } else if (role == Qt::ForegroundRole) {
+        if (index.column() == 0) {
+            if (p->isLocked())
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        } else {
+            if (p->isFacetLocked(5 - index.column()))
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        }
         return QVariant();
     } else
         return QVariant();
@@ -148,8 +163,13 @@ QVariant GluingsModel4::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags GluingsModel4::flags(const QModelIndex& /* index */) const {
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+Qt::ItemFlags GluingsModel4::flags(const QModelIndex& index) const {
+    // Do not allow locked facets to be edited.
+    if (index.column() == 0 ||
+            ! tri_->simplex(index.row())->isFacetLocked(5 - index.column()))
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
@@ -217,8 +237,15 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
             newAdjPerm == p->adjacentGluing(facet))
         return false;
 
+    // There is a change.  Will it violate a lock?
+    if (p->isFacetLocked(facet)) {
+        showError(tr("This facet is currently locked. "
+            "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+
     // Yes!  Go ahead and make the change.
-    regina::Triangulation<4>::ChangeEventSpan span(*tri_);
+    regina::Triangulation<4>::ChangeEventGroup span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (p->adjacentSimplex(facet))
@@ -278,15 +305,14 @@ void GluingsModel4::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString GluingsModel4::destString(int srcFacet,
-        regina::Pentachoron<4>* destPent,
-        const regina::Perm<5>& gluing) {
+QString GluingsModel4::destString(regina::Simplex<4>* srcPent, int srcFacet) {
+    regina::Simplex<4>* destPent = srcPent->adjacentSimplex(srcFacet);
     if (! destPent)
         return "";
     else
         return QString::number(destPent->markedIndex()) + " (" +
-            (gluing * regina::Tetrahedron<4>::ordering(srcFacet)).
-            trunc4().c_str() + ')';
+            (srcPent->adjacentGluing(srcFacet) *
+            regina::Tetrahedron<4>::ordering(srcFacet)).trunc4().c_str() + ')';
 }
 
 regina::Perm<5> GluingsModel4::facetStringToPerm(int srcFacet,
@@ -341,6 +367,10 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     //facetTable->setColumnStretchable(3, true);
     //facetTable->setColumnStretchable(4, true);
     //facetTable->setColumnStretchable(5, true);
+
+    facetTable->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(facetTable, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(lockMenu(const QPoint&)));
 
     ui = facetTable;
 
@@ -608,6 +638,19 @@ void Tri4GluingsUI::removeSelectedPents() {
             last = row;
     }
 
+    // Look for any potential lock violations.
+    for (i = first; i <= last; ++i)
+        if (tri->simplex(i)->lockMask()) {
+            ReginaSupport::sorry(ui,
+                tr("The selection includes locks."),
+                tr("The selection includes one or more locked "
+                "pentachora and/or tetrahedra, and so I cannot remove "
+                "the selected pentachora.\n\n"
+                "You can unlock pentachora and tetrahedra by right-clicking "
+                "within the corresponding table cells."));
+            return;
+        }
+
     // Notify the user that pentachora will be removed.
     QMessageBox msgBox(ui);
     msgBox.setWindowTitle(tr("Question"));
@@ -630,10 +673,76 @@ void Tri4GluingsUI::removeSelectedPents() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
+        regina::Packet::ChangeEventGroup span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
+}
+
+void Tri4GluingsUI::lockMenu(const QPoint& pos) {
+    QModelIndex index = facetTable->indexAt(pos);
+    if ((! index.isValid()) ||
+            static_cast<size_t>(index.row()) >= tri->size()) {
+        lockSimplex = -1;
+        return;
+    }
+
+    lockSimplex = index.row();
+    auto s = tri->simplex(lockSimplex);
+
+    QMenu m(tr("Context menu"), ui);
+    QAction lock(this);
+    if (index.column() == 0) {
+        lockFacet = -1;
+        lockAdd = ! s->isLocked();
+
+        if (lockAdd)
+            lock.setText(tr("Lock pentachoron %1").arg(index.row()));
+        else
+            lock.setText(tr("Unlock pentachoron %1").arg(index.row()));
+    } else {
+        lockFacet = 5 - index.column();
+        auto f = s->tetrahedron(lockFacet);
+        lockAdd = ! f->isLocked();
+
+        QString action = lockAdd ? tr("Lock") : tr("Unlock");
+        QString facetDesc;
+        switch (lockFacet) {
+            case 4: facetDesc = tr("0123"); break;
+            case 3: facetDesc = tr("0124"); break;
+            case 2: facetDesc = tr("0134"); break;
+            case 1: facetDesc = tr("0234"); break;
+            case 0: facetDesc = tr("1234"); break;
+        }
+
+        if (f->isBoundary())
+            lock.setText(tr("%1 boundary facet %2 (%3)")
+                .arg(action).arg(index.row()).arg(facetDesc));
+        else
+            lock.setText(tr("%1 facet %2 (%3) = %4")
+                .arg(action).arg(index.row()).arg(facetDesc)
+                .arg(GluingsModel4::destString(s, lockFacet)));
+    }
+    connect(&lock, SIGNAL(triggered()), this, SLOT(changeLock()));
+    m.addAction(&lock);
+    m.exec(facetTable->viewport()->mapToGlobal(pos));
+}
+
+void Tri4GluingsUI::changeLock() {
+    if (lockSimplex < 0 || lockSimplex >= tri->size())
+        return;
+    if (lockFacet < 0) {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lock();
+        else
+            tri->simplex(lockSimplex)->unlock();
+    } else {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lockFacet(lockFacet);
+        else
+            tri->simplex(lockSimplex)->unlockFacet(lockFacet);
+    }
+    lockSimplex = -1;
 }
 
 void Tri4GluingsUI::simplify() {
@@ -682,7 +791,7 @@ void Tri4GluingsUI::simplifyExhaustive(int height) {
         tr("Tried %1 triangulations"), ui);
 
     std::thread(&Triangulation<4>::simplifyExhaustive, tri, height,
-        regina::politeThreads(), &tracker).detach();
+        ReginaPrefSet::threads(), &tracker).detach();
 
     if (dlg.run() && tri->size() == initSize) {
         dlg.hide();
@@ -738,7 +847,13 @@ void Tri4GluingsUI::reflect() {
 void Tri4GluingsUI::barycentricSubdivide() {
     endEdit();
 
-    tri->barycentricSubdivision();
+    if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "pentachora or tetrahedra, and so cannot be subdivided."));
+    else
+        tri->subdivide();
 }
 
 void Tri4GluingsUI::idealToFinite() {
@@ -748,8 +863,14 @@ void Tri4GluingsUI::idealToFinite() {
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices can be truncated."));
+    else if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "pentachora or tetrahedra, and so cannot be subdivided "
+            "to truncate ideal vertices."));
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
+        regina::Packet::ChangeEventGroup span(*tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -764,8 +885,19 @@ void Tri4GluingsUI::finiteToIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
-        regina::Packet::ChangeEventSpan span(*tri);
-        tri->finiteToIdeal();
+        // We could check for locks explicitly here, but finiteToIdeal()
+        // will do it again - so just catch the exception that it would throw.
+        regina::Packet::ChangeEventGroup span(*tri);
+        try {
+            tri->finiteToIdeal();
+        } catch (const regina::LockViolation&) {
+            ReginaSupport::sorry(ui,
+                tr("This triangulation has boundary locks."),
+                tr("This triangulation has one or more locked "
+                "boundary tetrahedra, and so cannot be converted to "
+                "have ideal boundary."));
+            return;
+        }
         tri->intelligentSimplify();
     }
 }
@@ -805,7 +937,7 @@ void Tri4GluingsUI::boundaryComponents() {
                 std::in_place, chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -835,7 +967,7 @@ void Tri4GluingsUI::vertexLinks() {
                 chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -858,7 +990,7 @@ void Tri4GluingsUI::splitIntoComponents() {
         std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
             base = std::make_shared<regina::Container>();
-            tri->insertChildLast(base);
+            tri->append(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
             base = tri->shared_from_this();
@@ -868,8 +1000,7 @@ void Tri4GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::make_packet(std::move(c),
-                label.str()));
+            base->append(regina::make_packet(std::move(c), label.str()));
         }
 
         // Make sure the new components are visible.

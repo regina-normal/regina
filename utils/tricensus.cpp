@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of triangulations that satisfy given properties         *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -243,9 +243,9 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         auto packet = regina::make_packet(std::move(tri), out.str());
         if (threads > 1) {
             std::unique_lock<std::mutex> lock(outputMutex);
-            container->insertChildLast(packet);
+            container->append(packet);
         } else {
-            container->insertChildLast(packet);
+            container->append(packet);
         }
     }
     ++nSolns;
@@ -287,7 +287,7 @@ void foundFacePairing(const regina::FacetPairing<dim>& pairing,
     if (subContainers) {
         auto subContainer = std::make_shared<regina::Container>();
         subContainer->setLabel(pairing.str());
-        container->insertChildLast(subContainer);
+        container->append(subContainer);
 
         findAllPerms<dim>(pairing, std::move(autos),
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
@@ -404,6 +404,7 @@ int main(int argc, const char* argv[]) {
     int argNor = 0;
     int argFinite = 0;
     int argIdeal = 0;
+    int showVersion = 0;
     poptOption opts[] = {
         { "tetrahedra", 't', POPT_ARG_INT, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
@@ -464,6 +465,8 @@ int main(int argc, const char* argv[]) {
             "Only use face pairings read from standard input.", nullptr },
         { "threads", 0, POPT_ARG_INT, &threads, 0,
             "Number of parallel threads (default = 1).", "<threads>" },
+        { "version", 'v', POPT_ARG_NONE, &showVersion, 0,
+            "Show which version of Regina is being used.", nullptr },
         POPT_AUTOHELP
         { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
@@ -479,6 +482,14 @@ int main(int argc, const char* argv[]) {
         poptPrintHelp(optCon, stderr, 0);
         poptFreeContext(optCon);
         return 1;
+    }
+
+    if (showVersion) {
+        // If other arguments were passed, just silently ignore them for now.
+        // Other (non-popt) command-line tools give an error in this scenario.
+        std::cout << PACKAGE_BUILD_STRING << std::endl;
+        poptFreeContext(optCon);
+        return 0;
     }
 
     const char** otherOpts = poptGetArgs(optCon);
@@ -742,8 +753,8 @@ int runCensus() {
         census = std::make_shared<regina::Container>();
         census->setLabel("Triangulations");
 
-        parent->insertChildLast(desc);
-        parent->insertChildLast(census);
+        parent->append(desc);
+        parent->append(census);
     }
 
     // Start the census running.
@@ -809,7 +820,7 @@ int runCensus() {
             pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
                 "Face Pairings");
-            parent->insertChildAfter(pairingPacket, desc);
+            parent->insert(pairingPacket, desc);
         }
     } else {
         // An ordinary all-face-pairings census.

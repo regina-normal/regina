@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,20 +34,25 @@
 #include "../pybind11/operators.h"
 #include "surface/disctype.h"
 #include "../helpers.h"
+#include "../docstrings/surface/disctype.h"
 
 using regina::DiscType;
 
 void addDiscType(pybind11::module_& m) {
-    auto c = pybind11::class_<DiscType>(m, "DiscType")
-        .def(pybind11::init<>())
-        .def(pybind11::init<unsigned long, int>())
-        .def(pybind11::init<const DiscType&>())
-        .def(pybind11::self < pybind11::self)
-        .def("__bool__", &DiscType::operator bool)
+    RDOC_SCOPE_BEGIN(DiscType)
+
+    auto c = pybind11::class_<DiscType>(m, "DiscType", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<size_t, int>(), rdoc::__init)
+        .def(pybind11::init<const DiscType&>(), rdoc::__copy)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def("__bool__", &DiscType::operator bool, rdoc::__as_bool)
         .def_readwrite("tetIndex", &DiscType::tetIndex)
         .def_readwrite("type", &DiscType::type)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 

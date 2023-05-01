@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -164,6 +164,8 @@ void Triangulation<4>::calculateVertexLinks() {
                     vertex->isLinkOrientable();
                 vertex->boundaryComponent_->push_back(vertex);
                 boundaryComponents_.push_back(vertex->boundaryComponent_);
+                vertex->component_->boundaryComponents_.push_back(
+                    vertex->boundaryComponent_);
             } else {
                 // If we have a 3-sphere link then there is nothing to do.
                 // Otherwise we have a non-sphere closed 3-manifold, and
@@ -193,6 +195,8 @@ void Triangulation<4>::calculateVertexLinks() {
                         vertex->isLinkOrientable();
                     vertex->boundaryComponent_->push_back(vertex);
                     boundaryComponents_.push_back(vertex->boundaryComponent_);
+                    vertex->component_->boundaryComponents_.push_back(
+                        vertex->boundaryComponent_);
                 }
             }
         }
@@ -256,6 +260,40 @@ void Triangulation<4>::calculateEdgeLinks() {
                     ((! link.isClosed()) && link.eulerChar() != 1))
                 e->whyInvalid_.value |= Edge<4>::INVALID_LINK;
         }
+}
+
+void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
+    TriangulationBase<4>::cloneSkeleton(src);
+
+    vertexLinkSummary_ = src.vertexLinkSummary_;
+
+    {
+        auto me = vertices().begin();
+        auto you = src.vertices().begin();
+        for ( ; me != vertices().end(); ++me, ++you) {
+            (*me)->link_ = new Triangulation<3>(*((*you)->link_));
+            (*me)->ideal_ = (*you)->ideal_;
+        }
+    }
+
+    // Leave Edge::link_ as built-on-demand for now.
+
+    {
+        auto me = components_.begin();
+        auto you = src.components_.begin();
+        for ( ; me != components_.end(); ++me, ++you) {
+            (*me)->ideal_ = (*you)->ideal_;
+
+            for (auto f : (*you)->vertices_)
+                (*me)->vertices_.push_back(vertex(f->index()));
+            for (auto f : (*you)->edges_)
+                (*me)->edges_.push_back(edge(f->index()));
+            for (auto f : (*you)->triangles_)
+                (*me)->triangles_.push_back(triangle(f->index()));
+            for (auto f : (*you)->tetrahedra_)
+                (*me)->tetrahedra_.push_back(tetrahedron(f->index()));
+        }
+    }
 }
 
 } // namespace regina

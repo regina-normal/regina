@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,7 +58,7 @@ namespace regina {
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g.,
  * IsoSigPrintable2 and IsoSigPrintable3 for dimensions 2 and 3).
  *
@@ -100,22 +100,22 @@ class IsoSigPrintable : public Base64SigEncoding {
          * of this routine is simply to encode the given information.
          * See the isoSig() implementation for further details.
          *
-         * \ifacespython The arrays \a facetAction, \a joinDest and
+         * \python The arrays \a facetAction, \a joinDest and
          * \a joinGluing should each be passed as Python lists of integers.
          * The arguments \a nFacetActions and \a nJoins are not present,
          * since Python lists already know their own sizes.
          *
-         * @param size the number of top-dimensional simplices in the component.
-         * @param nFacetActions the size of the array \a facetAction.
-         * @param facetAction an array of size \a nFacetActions, where
+         * \param size the number of top-dimensional simplices in the component.
+         * \param nFacetActions the size of the array \a facetAction.
+         * \param facetAction an array of size \a nFacetActions, where
          * each element is either 0, 1 or 2, respectively representing
          * a boundary facet, a facet joined to a new simplex, or a facet
          * joined to a simplex that has already been seen.
-         * @param nJoins the size of the arrays \a joinDest and \a joinGluing.
-         * @param joinDest an array whose elements are indices of
+         * \param nJoins the size of the arrays \a joinDest and \a joinGluing.
+         * \param joinDest an array whose elements are indices of
          * top-dimensional simplices to which gluings are being made.
-         * @param joinGluing an array of gluing permutations.
-         * @return the encoding of the component being described.
+         * \param joinGluing an array of gluing permutations.
+         * \return the encoding of the component being described.
          */
         static Signature encode(size_t size,
             size_t nFacetActions, const uint8_t* facetAction,
@@ -125,8 +125,6 @@ class IsoSigPrintable : public Base64SigEncoding {
         // Make this class non-constructible.
         IsoSigPrintable() = delete;
 };
-
-/*@}*/
 
 } // namespace regina
 

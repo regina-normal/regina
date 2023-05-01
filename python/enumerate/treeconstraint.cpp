@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,7 @@
 #include "enumerate/treeconstraint.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/treeconstraint.h"
 
 using pybind11::overload_cast;
 
@@ -46,6 +47,7 @@ using regina::Triangulation;
 using regina::BanConstraintBase;
 using regina::BanNone;
 using regina::BanBoundary;
+using regina::BanEdge;
 using regina::BanTorusBoundary;
 
 using regina::LPConstraintNone;
@@ -54,8 +56,10 @@ using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
 
 template <class LPConstraint>
-void addLPConstraint(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<LPConstraint>(m, name)
+void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
+    RDOC_SCOPE_BEGIN(LPConstraintBase)
+
+    auto c = pybind11::class_<LPConstraint>(m, name, doc)
         .def_readonly_static("nConstraints", &LPConstraint::nConstraints)
         .def_readonly_static("octAdjustment", &LPConstraint::octAdjustment)
         .def_static("addRows", [](const LPInitialTableaux<LPConstraint>& t) {
@@ -78,50 +82,91 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
             delete[] col;
 
             return ans;
-        })
-        .def_static("constrain", &LPConstraint::template constrain<Integer>)
+        }, pybind11::arg("init"), rdoc::addRows)
+        .def_static("constrain", &LPConstraint::template constrain<Integer>,
+            rdoc::constrain)
         .def_static("verify", overload_cast<const regina::NormalSurface&>(
-            &LPConstraint::verify))
+            &LPConstraint::verify), rdoc::verify)
         .def_static("verify", overload_cast<const regina::AngleStructure&>(
-            &LPConstraint::verify))
-        .def_static("supported", &LPConstraint::supported)
+            &LPConstraint::verify), rdoc::verify_2)
+        .def_static("supported", &LPConstraint::supported, rdoc::supported)
         ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 
-template <class BanConstraint>
-void addBanConstraint(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<BanConstraint>(m, name)
-        .def(pybind11::init<const LPInitialTableaux<LPConstraintNone>&>())
+template <class BanConstraint, typename... BanArgs>
+void addBanConstraint(pybind11::module_& m, const char* name,
+        const char* classDoc, const char* initDoc) {
+    RDOC_SCOPE_BEGIN(BanConstraintBase)
+
+    auto c = pybind11::class_<BanConstraint>(m, name, classDoc)
         .def(pybind11::init<
-            const LPInitialTableaux<LPConstraintEulerPositive>&>())
-        .def(pybind11::init<const LPInitialTableaux<LPConstraintEulerZero>&>())
-        .def(pybind11::init<const LPInitialTableaux<LPConstraintNonSpun>&>())
+            const LPInitialTableaux<LPConstraintNone>&, BanArgs...>(),
+            initDoc)
+        .def(pybind11::init<
+            const LPInitialTableaux<LPConstraintEulerPositive>&, BanArgs...>(),
+            initDoc)
+        .def(pybind11::init<
+            const LPInitialTableaux<LPConstraintEulerZero>&, BanArgs...>(),
+            initDoc)
+        .def(pybind11::init<
+            const LPInitialTableaux<LPConstraintNonSpun>&, BanArgs...>(),
+            initDoc)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintNone, Integer>)
+            &BanConstraint::template enforceBans<LPConstraintNone, Integer>,
+            rdoc::enforceBans)
         .def("enforceBans",
             &BanConstraint::template enforceBans<LPConstraintEulerPositive,
-                Integer>)
+                Integer>,
+            rdoc::enforceBans)
         .def("enforceBans",
             &BanConstraint::template enforceBans<LPConstraintEulerZero,
-                Integer>)
+                Integer>,
+            rdoc::enforceBans)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintNonSpun, Integer>)
-        .def("marked", &BanConstraint::marked)
-        .def_static("supported", &BanConstraint::supported)
+            &BanConstraint::template enforceBans<LPConstraintNonSpun, Integer>,
+            rdoc::enforceBans)
+        .def("marked", &BanConstraint::marked, rdoc::marked)
+        .def_static("supported", &BanConstraint::supported, rdoc::supported)
         ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 
 void addTreeConstraint(pybind11::module_& m) {
-    addLPConstraint<LPConstraintNone>(m, "LPConstraintNone");
-    addLPConstraint<LPConstraintEulerPositive>(m, "LPConstraintEulerPositive");
-    addLPConstraint<LPConstraintEulerZero>(m, "LPConstraintEulerZero");
-    addLPConstraint<LPConstraintNonSpun>(m, "LPConstraintNonSpun");
+    // The constraint classes do not have their own method docs, and so
+    // the class-specific doc namespaces are unavailable.
+    RDOC_SCOPE_BEGIN_MAIN
 
-    addBanConstraint<BanNone>(m, "BanNone");
-    addBanConstraint<BanBoundary>(m, "BanBoundary");
-    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary");
+    addLPConstraint<LPConstraintNone>(m, "LPConstraintNone",
+        rdoc::LPConstraintNone);
+    addLPConstraint<LPConstraintEulerPositive>(m, "LPConstraintEulerPositive",
+        rdoc::LPConstraintEulerPositive);
+    addLPConstraint<LPConstraintEulerZero>(m, "LPConstraintEulerZero",
+        rdoc::LPConstraintEulerZero);
+    addLPConstraint<LPConstraintNonSpun>(m, "LPConstraintNonSpun",
+        rdoc::LPConstraintNonSpun);
+
+    // BanNone does not have its own constructor documentation, since it
+    // behaves identically to the base class constructor.
+    addBanConstraint<BanNone>(m, "BanNone", rdoc::BanNone,
+        rdoc::BanConstraintBase_::__init);
+
+    RDOC_SCOPE_SWITCH(BanBoundary)
+    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc_scope, rdoc::__init);
+
+    RDOC_SCOPE_SWITCH(BanEdge)
+    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc_scope,
+        rdoc::__init);
+
+    RDOC_SCOPE_SWITCH(BanTorusBoundary)
+    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary", rdoc_scope,
+        rdoc::__init);
+
+    RDOC_SCOPE_END
 }
 

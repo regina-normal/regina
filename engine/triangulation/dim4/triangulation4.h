@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "hypersurface/normalhypersurface.h"
 #include "progress/progresstracker.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
@@ -71,13 +72,14 @@ template <int> class XMLTriangulationReader;
  * Represents a 4-dimensional triangulation, typically of a 4-manifold.
  *
  * This is a specialisation of the generic Triangulation class template;
- * see the Triangulation documentation for a general overview of how
- * the triangulation classes work.
+ * see the generic Triangulation documentation for a general overview of how
+ * the triangulation classes work.  In Python, you can read this generic
+ * documentation by looking at a higher dimension: try `help(Triangulation5)`.
  *
  * This 4-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 4-manifolds.
  *
- * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
+ * A 4-manifold triangulation is built from pentachora: a _pentachoron_ is a
  * 4-dimensional simplex, with five vertices.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -102,7 +104,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
                  If \a vertexLinkSummary_ is negative, this means that either
                  one or more vertices are invalid, and/or the skeleton has
                  not yet been computed.
-                 Crucially, this property may be known \e before the skeleton
+                 Crucially, this property may be known _before_ the skeleton
                  is computed (thereby allowing us to avoid costly 3-sphere or
                  3-ball recognition when the skeleton is computed later on). */
 
@@ -133,31 +135,56 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         Triangulation() = default;
         /**
-         * Creates a copy of the given triangulation.
+         * Creates a new copy of the given triangulation.
          *
-         * This will clone any computed properties (such as homology,
-         * fundamental group, and so on) of the given triangulation also.
-         * If you want a "clean" copy that resets all properties to unknown,
-         * you can use the two-argument copy constructor instead.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
          *
-         * @param copy the triangulation to copy.
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * If you want a "clean" copy that resets all properties to unknown
+         * and leaves the skeleton uncomputed, you can use the two-argument
+         * copy constructor instead.
+         *
+         * \param src the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy) = default;
+        Triangulation(const Triangulation& src) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
+         *
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on), as well as the skeleton (vertices, edges, components, etc.).
+         * In particular, the same numbering and labelling will be used for
+         * all skeletal objects in both triangulations.
+         *
+         * If \a cloneProps is \c false, then these properties and skeletal
+         * objects will be marked as unknown in the new triangulation, and
+         * will be recomputed on demand if/when they are required.  Note
+         * in particular that, when the skeleton is recomputed, there is
+         * no guarantee that the numbering and labelling for skeletal objects
+         * will be the same as in the source triangulation.
          *
          * Regardless of the argument \a cloneProps, if it is known that
          * all vertex links of \a copy are 3-sphere or 3-balls, this
          * knowledge will be copied over to the new triangulation.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
-         * properties of the given triangulation (such as homology,
-         * fundamental group, and so on), or \c false if the new triangulation
-         * should have all properties marked as unknown.
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will be copied across _only_ if \a cloneProps
+         * is \c true.  If \a cloneProps is \c false then the new triangulation
+         * will have no locks at all.
+         *
+         * \param src the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
+         * properties as well as the skeleton of the given triangulation,
+         * or \c false if the new triangulation should have such properties
+         * and skeletal data marked as unknown.
          */
-        Triangulation(const Triangulation& copy, bool cloneProps);
+        Triangulation(const Triangulation& src, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -172,15 +199,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * BoundaryComponent<4> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
          * \note This operator is marked \c noexcept, and in particular
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -198,7 +228,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * string as representing a triangulation using any of the supported
          * string types.
          *
-         * @param description a string that describes a 4-manifold
+         * \param description a string that describes a 4-manifold
          * triangulation.
          */
         Triangulation(const std::string& description);
@@ -209,8 +239,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * properties will also be deallocated.
          */
         ~Triangulation();
-
-        using Snapshottable<Triangulation<4>>::isReadOnlySnapshot;
 
         /*@}*/
         /**
@@ -247,26 +275,58 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
+         *
+         * \exception LockViolation The given pentachoron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param pent the pentachoron to remove.
          */
-        void removePentachoron(Pentachoron<4>* tet);
+        void removePentachoron(Pentachoron<4>* pent);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
          * See removeSimplexAt() for further information.
+         *
+         * \exception LockViolation The requested pentachoron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param index specifies which pentachoron to remove; this
+         * must be between 0 and size()-1 inclusive.
          */
         void removePentachoronAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
          * See removeAllSimplices() for further information.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked pentachoron and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          */
         void removeAllPentachora();
 
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @param src the triangulation to copy.
-         * @return a reference to this triangulation.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * \param src the triangulation to copy.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation& src);
 
@@ -285,16 +345,19 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * BoundaryComponent<4> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \param src the triangulation to move.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src);
 
@@ -314,11 +377,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<4>& other);
@@ -353,7 +416,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Returns the Euler characteristic of the corresponding compact
          * manifold.
          *
-         * Instead of simply calculating \a V-E+F-T+P, this routine also
+         * Instead of simply calculating `V-E+F-T+P`, this routine also
          * treats ideal vertices as 3-manifold boundary components (i.e.,
          * effectively truncates them).
          *
@@ -364,13 +427,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * For triangulations whose vertex links are all 3-spheres or
          * 3-balls, this routine and eulerCharTri() give identical results.
          *
-         * This routine does \e not yet handle invalid triangulations
+         * This routine does _not_ yet handle invalid triangulations
          * correctly.  For this reason, this routine currently insists on
          * a valid triangulation as a precondition.
          *
          * \pre This triangulation is valid.
          *
-         * @return the Euler characteristic of the corresponding compact
+         * \return the Euler characteristic of the corresponding compact
          * manifold.
          */
         long eulerCharManifold() const;
@@ -388,7 +451,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * situations like 4-manifold vertices whose links are cusped
          * 3-manifolds (a situation that has no analogue in lower dimensions).
          *
-         * @return \c true if and only if this triangulation is ideal.
+         * \return \c true if and only if this triangulation is ideal.
          */
         bool isIdeal() const;
         /**
@@ -399,7 +462,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * with invalid vertices are also considered not closed; see
          * Vertex<4>::isBoundary() for details.
          *
-         * @return \c true if and only if this triangulation is closed.
+         * \return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
 
@@ -436,7 +499,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \exception FailedPrecondition This triangulation is invalid,
          * empty, non-orientable, or not closed.
          *
-         * @return the intersection form of this 4-manifold.
+         * \return the intersection form of this 4-manifold.
          */
         IntersectionForm intersectionForm() const;
 
@@ -463,7 +526,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * weak (as opposed to 3-manifolds, where a rich library of
          * simplification techinques is available to call upon).
          *
-         * @return \c true if and only if the triangulation was changed.
+         * \return \c true if and only if the triangulation was changed.
          */
         bool intelligentSimplify();
         /**
@@ -490,10 +553,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * weak (as opposed to 3-manifolds, where a rich library of
          * simplification techinques is available to call upon).
          *
-         * @param perform \c true if we are to perform the simplifications,
+         * \param perform \c true if we are to perform the simplifications,
          * or \c false if we are only to investigate whether simplifications
          * are possible (defaults to \c true).
-         * @return if \a perform is \c true, this routine returns \c true
+         * \return if \a perform is \c true, this routine returns \c true
          * if and only if the triangulation was changed to reduce the
          * number of pentachora; if \a perform is \c false, this routine
          * returns \c true if and only if it determines that it is
@@ -513,7 +576,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Note that 5-1 moves are currently not supported, though this
          * may be added in a future verson of Regina.
          *
-         * If at any stage it finds a triangulation with \e fewer
+         * If at any stage it finds a triangulation with _fewer_
          * pentachora than the original, then this routine will call
          * intelligentSimplify() to shrink the triangulation further if
          * possible and will then return \c true.  If it cannot find a
@@ -529,14 +592,14 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional pentachora.  This means that the
          * routine will not terminate until a simpler triangulation is found.
          * If no simpler diagram exists then the only way to terminate this
          * function is to cancel the operation via a progress tracker
          * (read on for details).
          *
-         * If you want a \e fast simplification routine, you should call
+         * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn triangulations where intelligentSimplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
@@ -551,7 +614,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * in the argument \a threads.  Even in multithreaded mode, this
          * routine will not return until processing has finished (i.e., either
          * the triangulation was simplified or the search was exhausted).
          *
@@ -560,25 +623,25 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param height the maximum number of \e additional pentachora to
+         * \param height the maximum number of _additional_ pentachora to
          * allow beyond the number of pentachora originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return \c true if and only if the triangulation was successfully
+         * \return \c true if and only if the triangulation was successfully
          * simplified to fewer pentachora.
          */
-        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+        bool simplifyExhaustive(int height = 1, unsigned threads = 1,
             ProgressTrackerOpen* tracker = nullptr);
 
         /**
@@ -639,9 +702,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional pentachora.  This means that the
-         * routine will <i>never terminate</i>, unless \a action returns
+         * routine will _never terminate_, unless \a action returns
          * \c true for some triangulation that is passed to it.
          *
          * Since Regina 7.0, this routine will not return until the exploration
@@ -652,7 +715,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads in
-         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * the argument \a threads.  Even in multithreaded mode, this routine
          * will not return until processing has finished (i.e., either \a action
          * returned \c true, or the search was exhausted).  All calls to
          * \a action will be protected by a mutex (i.e., different threads will
@@ -666,13 +729,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
+         * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.  However, its
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you call it as retriangulate(height, threads, action).
@@ -680,38 +743,39 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * (const std::string&, Triangulation<4>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
-         * @param height the maximum number of \e additional pentachora to
+         * \param height the maximum number of _additional_ pentachora to
          * allow beyond the number of pentachora originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each triangulation that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
-         * @return \c true if some call to \a action returned \c true (thereby
+         * \return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
          * completion.
          */
         template <typename Action, typename... Args>
-        bool retriangulate(int height, unsigned nThreads,
+        bool retriangulate(int height, unsigned threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
         /**
-         * Checks the eligibility of and/or performs a 2-0 move about
-         * the given triangle of degree 2.
-         * This involves taking the two pentachora joined at that triangle
-         * and squashing them flat.
+         * Checks the eligibility of and/or performs a 2-0 move about the given
+         * triangle of degree 2.  This involves taking the two pentachora
+         * joined at that triangle and squashing them flat.
          *
          * The eligibility requirements for this move are somewhat
          * involved, and are discussed in detail in the source code for
          * those who are interested.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -722,27 +786,32 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param t the triangle about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param t the triangle about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Triangle<4>* t, bool check = true,
             bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-0 move about
-         * the given edge of degree 2.
-         * This involves taking the two pentachora joined at that edge
-         * and squashing them flat.
-         * This can be done if:
+         * Checks the eligibility of and/or performs a 2-0 move about the
+         * given edge of degree 2.  This involves taking the two pentachora
+         * joined at that edge and squashing them flat.  This can be done if:
          *
          * - the edge is valid and non-boundary and has a 2-sphere edge link;
          *
@@ -766,7 +835,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   facet and being glued to themselves along the other two).
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -777,32 +848,37 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Edge<4>* e, bool check = true, bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-0 move
-         * about the given vertex of degree 2.
-         * This involves taking the two pentachora joined at that vertex
-         * and squashing them flat.
-         * This can be done if:
+         * Checks the eligibility of and/or performs a 2-0 move about the
+         * given vertex of degree 2.  This involves taking the two pentachora
+         * joined at that vertex and squashing them flat.  This can be done if:
          *
          * - the vertex is non-boundary and has a 3-sphere vertex link;
          *
          * - the two pentachora are distinct;
          *
-         * - the tetrahedra opposite \c v in each pentachoron are distinct and
+         * - the tetrahedra opposite \a v in each pentachoron are distinct and
          *   not both boundary;
          *
          * - the two pentachora meet each other on all four facets touching
@@ -810,7 +886,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   being glued to themselves along the other two).
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -821,17 +899,24 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given vertex is a vertex of this triangulation.
          *
-         * @param v the vertex about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param v the vertex about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Vertex<4>* v, bool check = true, bool perform = true);
@@ -853,7 +938,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * - the four pentachora joined at \a e are distinct.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this 4-4 move
          * will label the new pentachora in a way that preserves the
@@ -864,21 +951,28 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no check is being run, it
-         * must be known in advance that the move is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge \a e is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is allowed
-         * (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
-         * \c true).
-         * @return If \a check is \c true, the function returns \c true if and
-         * only if the requested move may be performed without changing the
-         * topology of the manifold. If \a check is \c false, the function
-         * simply returns \c true.
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
-         * @author Alex He
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is allowed
+         * (defaults to \c true).
+         * \param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks. If \a check is
+         * \c false, the function simply returns \c true.
+         *
+         * \author Alex He
          */
         bool fourFourMove(Edge<4>* e, bool check = true, bool perform = true);
         /**
@@ -911,7 +1005,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * affect invalid triangulations.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<4>::lockFacet() for further
+         * details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -922,17 +1018,23 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \a t) can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * @param t the tetrahedron about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<4>::lockFacet() for
+         * details on how facet locks work and what their implications are.
+         *
+         * \param t the tetrahedron about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool openBook(Tetrahedron<4>* t,
@@ -966,7 +1068,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * affect invalid triangulations.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -975,19 +1079,26 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * (edges, components, etc.) will be reconstructed, which means
          * that any pointers to old skeletal objects can no longer be used.
          *
-         * \pre If the move is being performed and no check is being
-         * run, it must be known in advance that the move is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given pentachoron is a pentachoron of this triangulation.
          *
-         * @param p the pentachoron upon which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param p the pentachoron upon which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \a true, this function returns \c true
-         * if and only if the requested move may be performed without
-         * changing the topology of the manifold.  If \a check is \c false,
-         * this function simply returns \c true.
+         * \return If \a check is \a true, this function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check is
+         * \c false, this function simply returns \c true.
          */
         bool shellBoundary(Pentachoron<4>* p,
             bool check = true, bool perform = true);
@@ -998,7 +1109,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * decreases by one.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If you are trying to reduce the number of vertices without changing
          * the topology, and if \a e is an edge connecting an internal vertex
@@ -1026,18 +1139,25 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * involved, and are discussed in detail in the collapseEdge()
          * source code for those who are interested.
          *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge to collapse.
-         * @param check \c true if we are to check whether the move is
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param e the edge to collapse.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the given edge may be collapsed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the given edge may be collapsed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool collapseEdge(Edge<4>* e, bool check = true, bool perform = true);
@@ -1070,6 +1190,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   the other hand can always be used for edges \a e of the type
          *   described above.
          *
+         * This operation works by prying open a tetrahedron \a t and inserting
+         * a four-pentachoron gadget \a g within the resulting tetrahedral
+         * pillow.  In particular, this means that simplex and/or facet locks
+         * will never prevent this operation from taking place: if the
+         * tetrahedron \a t happens to be locked, then this lock will simply
+         * move across to one of the two tetrahedra bounding the gadget \a g.
+         *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
@@ -1082,17 +1209,17 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * must be known in advance that the move is legal.
          * \pre The given edge \a e is an edge of this triangulation.
          *
-         * @param e the edge whose endpoints are to be snapped together.
-         * @param check \c true if we are to check whether the move is allowed
+         * \param e the edge whose endpoints are to be snapped together.
+         * \param check \c true if we are to check whether the move is allowed
          * (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
+         * \param perform \c true if we are to perform the move (defaults to
          * \c true).
-         * @return If \a check is \c true, the function returns \c true if and
+         * \return If \a check is \c true, the function returns \c true if and
          * only if the requested move may be performed without changing the
          * topology of the manifold. If \a check is \c false, the function
          * simply returns \c true.
          *
-         * @author Alex He
+         * \author Alex He
          */
         bool snapEdge( Edge<4>* e, bool check = true, bool perform = true );
 
@@ -1108,9 +1235,54 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * converted into real boundary components made from unglued
          * facets of pentachora.
          *
-         * @return \c true if and only if the triangulation was changed.
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  (This 4-dimensional
+         * algorithm does not necessarily subdivide _every_ pentachoron,
+         * and so this test is stronger than necessary; however, it will be
+         * enforced.)  This exception will be thrown before any changes are
+         * made.  See Simplex<4>::lock() and Simplex<4>::lockFacet() for
+         * further details on how such locks work and what their implications
+         * are.
+         *
+         * \return \c true if and only if the triangulation was changed.
          */
         bool idealToFinite();
+
+        /*@}*/
+        /**
+         * \name Normal Hypersurfaces
+         */
+        /*@{*/
+
+        /**
+         * Returns the link of the given face as a normal hypersurface.
+         *
+         * Constructing the link of a face begins with building the frontier
+         * of a regular neighbourhood of the face.  If this is already a
+         * normal hypersurface, then then link is called _thin_.  Otherwise
+         * some basic normalisation steps are performed until the hypersurface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the hypersurface, and in some pathological
+         * cases could even reduce it to the empty hypersurface.
+         *
+         * Although normalisation of arbitrary embedded 3-manifolds is messy,
+         * for face links the process is thankfully simpler.  Essentially,
+         * any changes will be limited to operations analagous to compressions
+         * and boundary compressions along discs and 3-balls, as well as
+         * removing trivial 4-sphere components.
+         *
+         * \tparam subdim the dimension of the face to link; this must be
+         * between 0 and 3 inclusive.
+         *
+         * \pre The given face is a face of this triangulation.
+         *
+         * \return a pair (\a s, \a thin), where \a s is the face linking
+         * normal hypersurface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
+         */
+        template <int subdim>
+        std::pair<NormalHypersurface, bool> linkingSurface(
+            const Face<4, subdim>& face) const;
 
         /*@}*/
 
@@ -1122,10 +1294,15 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 
         void calculateSkeleton();
+        void cloneSkeleton(const Triangulation& src);
 
         /**
          * Internal to calculateSkeleton().  See the comments within
@@ -1148,6 +1325,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim4/pentachoron4.h"
+#include "triangulation/dim4/tetrahedron4.h"
+#include "triangulation/dim4/triangle4.h"
 #include "triangulation/dim4/edge4.h"
 #include "triangulation/dim4/vertex4.h"
 #include "triangulation/dim4/component4.h"
@@ -1196,7 +1375,9 @@ inline Triangulation<4>& Triangulation<4>::operator = (
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
     // properties specific to dimension 4.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to clone computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     TriangulationBase<4>::operator = (src);
@@ -1210,7 +1391,9 @@ inline Triangulation<4>& Triangulation<4>::operator = (
 inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to move computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     // The parent class assignment goes last, since its move invalidates src.
@@ -1250,7 +1433,7 @@ inline bool Triangulation<4>::isClosed() const {
 }
 
 template <typename Action, typename... Args>
-inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
+inline bool Triangulation<4>::retriangulate(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() != 1) {
         if (tracker)
@@ -1268,25 +1451,25 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
         return regina::detail::retriangulateInternal<Triangulation<4>, true>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](const std::string& sig, Triangulation<4>&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
         return regina::detail::retriangulateInternal<Triangulation<4>, false>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](Triangulation<4>&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
     }
 }
 
-inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned nThreads,
+inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
         ProgressTrackerOpen* tracker) {
-    return retriangulate(height, nThreads, tracker,
+    return retriangulate(height, threads, tracker,
         [](Triangulation<4>&& alt, Triangulation<4>& original, size_t minSimp) {
             if (alt.size() < minSimp) {
-                ChangeEventSpan span(original);
+                ChangeEventGroup span(original);
                 original = std::move(alt);
                 original.intelligentSimplify();
                 return true;

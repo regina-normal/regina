@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,12 +51,12 @@
 #include <type_traits>
 #include "triangulation/detail/triangulation.h"
 
+namespace regina {
+
 /**
  * \defgroup generic Generic triangulations
  * Details for implementing triangulations in arbitrary dimensions.
  */
-
-namespace regina {
 
 /**
  * A <i>dim</i>-dimensional triangulation, built by gluing together
@@ -64,8 +64,10 @@ namespace regina {
  * facets.  Typically (but not necessarily) such triangulations are used
  * to represent <i>dim</i>-manifolds.
  *
- * Such triangulations are not the same as pure simplicial complexes, for two
- * reasons:
+ * ### Structure of triangulations
+ *
+ * Triangulations in Regina are not the same as pure simplicial complexes,
+ * for two reasons:
  *
  * - The only identifications that the user can explicitly specify are
  *   gluings between <i>dim</i>-dimensional simplices along their
@@ -78,7 +80,7 @@ namespace regina {
  *   vertices (so, for example, edges may be loops).  Many distinct
  *   <i>k</i>-faces of a top-dimensional simplex may be identified together
  *   as a consequence of the (<i>dim</i>-1)-dimensional gluings, and indeed
- *   we are even allowed to glue together two distinct factets of the same
+ *   we are even allowed to glue together two distinct facets of the same
  *   <i>dim</i>-simplex.  In contrast, a simplicial complex does not allow
  *   any of these situations.
  *
@@ -91,8 +93,10 @@ namespace regina {
  * You can construct a triangulation from scratch using routines such as
  * newSimplex() and Simplex<dim>::join().  There are also routines for
  * exporting and importing triangulations in bulk, such as isoSig() and
- * fromIsoSig() (which use <em>isomorphism signatures</em>), or
- * dumpConstruction() and fromGluings() (which use C++ code).
+ * fromIsoSig() (which use _isomorphism signatures_), or dumpConstruction()
+ * and fromGluings() (which use C++ code).
+ *
+ * ### Skeleta and components
  *
  * In additional to top-dimensional simplices, this class also tracks:
  *
@@ -108,6 +112,8 @@ namespace regina {
  * Likewise, if the triangulation is deleted then all component objects
  * will be deleted alongside it.
  *
+ * ### The packet tree
+ *
  * Since Regina 7.0, this is no longer a "packet type" that can be
  * inserted directly into the packet tree.  Instead a Triangulation is now a
  * standalone mathematatical object, which makes it slimmer and faster
@@ -118,28 +124,31 @@ namespace regina {
  *   not support a label, tags, child/parent packets, and/or event listeners.
  *
  * - To include a Triangulation in the packet tree, you must create a new
- *   PacketOf<Triangulation>.  This \e is a packet type, and supports labels,
+ *   PacketOf<Triangulation>.  This _is_ a packet type, and supports labels,
  *   tags, child/parent packets, and event listeners.  It derives from
  *   Triangulation, and so inherits the full Triangulation interface.
  *
- * - If you are adding new functions to this class that edit the triangulation,
- *   you must still remember to create a ChangeEventSpan.  This will ensure
- *   that, if the triangulation is being managed by a PacketOf<Triangulation>,
- *   then the appropriate packet change events will be fired.  All other events
- *   (aside from packetToBeChanged() and packetWasChanged() are managed
- *   directly by the PacketOf<Triangulation> wrapper class.
+ * - If you are adding new functions to this class that edit the internal
+ *   data structures of the triangulation, you must still remember to create a
+ *   ChangeEventSpan (or a ChangeAndClearSpan).  This will ensure that, if the
+ *   triangulation is being managed by a PacketOf<Triangulation>, then the
+ *   appropriate packet change events will be fired.  All other events (aside
+ *   from packetToBeChanged() and packetWasChanged() are managed directly by
+ *   the PacketOf<Triangulation> wrapper class.
+ *
+ * ### C++ housekeeping
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
- * and offers \e much more functionality.  In order to use these specialised
+ * and offers _much_ more functionality.  In order to use these specialised
  * classes, you will need to include the corresponding headers (e.g.,
  * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
  * for \a dim = 3).
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Triangulation2 and Triangulation3 for dimensions 2 and 3).
  *
@@ -180,25 +189,50 @@ class Triangulation : public detail::TriangulationBase<dim> {
         /**
          * Creates a new copy of the given triangulation.
          *
-         * This will clone any computed properties (such as homology,
-         * fundamental group, and so on) of the given triangulation also.
-         * If you want a "clean" copy that resets all properties to unknown,
-         * you can use the two-argument copy constructor instead.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
          *
-         * @param copy the triangulation to copy.
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * If you want a "clean" copy that resets all properties to unknown
+         * and leaves the skeleton uncomputed, you can use the two-argument
+         * copy constructor instead.
+         *
+         * \param src the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        Triangulation(const Triangulation& src) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
-         * properties of the given triangulation (such as homology,
-         * fundamental group, and so on), or \c false if the new triangulation
-         * should have all properties marked as unknown.
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on), as well as the skeleton (vertices, edges, components, etc.).
+         * In particular, the same numbering and labelling will be used for
+         * all skeletal objects in both triangulations.
+         *
+         * If \a cloneProps is \c false, then these properties and skeletal
+         * objects will be marked as unknown in the new triangulation, and
+         * will be recomputed on demand if/when they are required.  Note
+         * in particular that, when the skeleton is recomputed, there is
+         * no guarantee that the numbering and labelling for skeletal objects
+         * will be the same as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will be copied across _only_ if \a cloneProps
+         * is \c true.  If \a cloneProps is \c false then the new triangulation
+         * will have no locks at all.
+         *
+         * \param src the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
+         * properties as well as the skeleton of the given triangulation,
+         * or \c false if the new triangulation should have such properties
+         * and skeletal data marked as unknown.
          */
-        Triangulation(const Triangulation& copy, bool cloneProps);
+        Triangulation(const Triangulation& src, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -213,15 +247,18 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * BoundaryComponent<dim> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
          * \note This operator is marked \c noexcept, and in particular
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -232,8 +269,6 @@ class Triangulation : public detail::TriangulationBase<dim> {
          */
         ~Triangulation();
 
-        using Snapshottable<Triangulation<dim>>::isReadOnlySnapshot;
-
         /*@}*/
         /**
          * \name Simplices
@@ -243,7 +278,16 @@ class Triangulation : public detail::TriangulationBase<dim> {
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @return a reference to this triangulation.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation&) = default;
 
@@ -262,16 +306,19 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * BoundaryComponent<dim> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \param src the triangulation to move.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src) = default;
 
@@ -291,11 +338,11 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<dim>& other);
@@ -310,6 +357,10 @@ class Triangulation : public detail::TriangulationBase<dim> {
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 
@@ -318,7 +369,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
 };
 
 /**
- * A function object used for sorting faces of triangulations by
+ * Deprecated function object used for sorting faces of triangulations by
  * increasing degree.  This can (for instance) be used with std::sort().
  *
  * The template argument \a dim refers to the dimension of the overall
@@ -333,13 +384,17 @@ class Triangulation : public detail::TriangulationBase<dim> {
  * An object of this class behaves like a reference: it is lightweight and can
  * be copy-constructed cheaply, but it does not support assignments or swaps.
  *
+ * \deprecated This comparison is a one-liner.  Just use a lambda instead.
+ *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \nopython
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
-class DegreeLessThan {
+class [[deprecated]] DegreeLessThan {
     static_assert(standardDim(dim),
         "DegreeLessThan is only available for Regina's standard dimensions.");
 
@@ -352,9 +407,9 @@ class DegreeLessThan {
          * Constructions a function object for working with faces of the
          * given triangulation.
          *
-         * @param tri the triangulation with which we are working.
+         * \param tri the triangulation with which we are working.
          */
-        DegreeLessThan(const Triangulation<dim>& tri);
+        DegreeLessThan(const Triangulation<dim>& tri) : tri_(tri) {}
         /**
          * Creates a new clone of the given function object.
          */
@@ -369,21 +424,24 @@ class DegreeLessThan {
          * less than the total number of <i>subdim</i>-dimensional faces in
          * the triangulation.
          *
-         * @param a the index of the first <i>subdim</i>-dimensional face
+         * \param a the index of the first <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @param b the index of the second <i>subdim</i>-dimensional face
+         * \param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @return \c true if and only if face \a a has smaller degree than
+         * \return \c true if and only if face \a a has smaller degree than
          * face \a b within the given triangulation.
          */
-        bool operator() (unsigned a, unsigned b) const;
+        bool operator() (unsigned a, unsigned b) const {
+            return (tri_.template face<subdim>(a)->degree() <
+                    tri_.template face<subdim>(b)->degree());
+        }
 
         // Make this class non-assignable, since \a tri_ is a reference.
         DegreeLessThan& operator = (const DegreeLessThan&) = delete;
 };
 
 /**
- * A function object used for sorting faces of triangulations by
+ * Deprecated function object used for sorting faces of triangulations by
  * decreasing degree.  This can (for instance) be used with std::sort().
  *
  * The template argument \a dim refers to the dimension of the overall
@@ -398,13 +456,17 @@ class DegreeLessThan {
  * An object of this class behaves like a reference: it is lightweight and can
  * be copy-constructed cheaply, but it does not support assignments or swaps.
  *
+ * \deprecated This comparison is a one-liner.  Just use a lambda instead.
+ *
+ * \nopython
+ *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
-class DegreeGreaterThan {
+class [[deprecated]] DegreeGreaterThan {
     static_assert(standardDim(dim),
         "DegreeGreaterThan is only available for Regina's standard dimensions.");
 
@@ -417,9 +479,9 @@ class DegreeGreaterThan {
          * Constructions a function object for working with faces of the
          * given triangulation.
          *
-         * @param tri the triangulation with which we are working.
+         * \param tri the triangulation with which we are working.
          */
-        DegreeGreaterThan(const Triangulation<dim>& tri);
+        DegreeGreaterThan(const Triangulation<dim>& tri) : tri_(tri) {}
         /**
          * Creates a new clone of the given function object.
          */
@@ -434,14 +496,17 @@ class DegreeGreaterThan {
          * less than the total number of <i>subdim</i>-dimensional faces in
          * the triangulation.
          *
-         * @param a the index of the first <i>subdim</i>-dimensional face
+         * \param a the index of the first <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @param b the index of the second <i>subdim</i>-dimensional face
+         * \param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @return \c true if and only if face \a a has greater degree than
+         * \return \c true if and only if face \a a has greater degree than
          * face \a b within the given triangulation.
          */
-        bool operator() (unsigned a, unsigned b) const;
+        bool operator() (unsigned a, unsigned b) const {
+            return (tri_.template face<subdim>(a)->degree() >
+                    tri_.template face<subdim>(b)->degree());
+        }
 
         // Make this class non-assignable, since \a tri_ is a reference.
         DegreeGreaterThan& operator = (const DegreeGreaterThan&) = delete;
@@ -454,14 +519,8 @@ inline Triangulation<dim>::Triangulation() : detail::TriangulationBase<dim>() {
 }
 
 template <int dim>
-inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
-        detail::TriangulationBase<dim>(copy) {
-    // All properties to clone are held by TriangulationBase.
-}
-
-template <int dim>
-inline Triangulation<dim>::Triangulation(const Triangulation& copy,
-        bool cloneProps) : detail::TriangulationBase<dim>(copy, cloneProps) {
+inline Triangulation<dim>::Triangulation(const Triangulation& src,
+        bool cloneProps) : detail::TriangulationBase<dim>(src, cloneProps) {
     // All properties to clone are held by TriangulationBase.
 }
 
@@ -481,37 +540,13 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to swap computed properties (not clear them).
     typename Triangulation<dim>::ChangeEventSpan span1(*this);
     typename Triangulation<dim>::ChangeEventSpan span2(other);
 
     // Note: swapBaseData() calls Snapshottable::swap().
     this->swapBaseData(other);
-}
-
-// Inline functions for DegreeLessThan / DegreeGreaterThan
-
-template <int dim, int subdim>
-inline DegreeLessThan<dim, subdim>::DegreeLessThan(
-        const Triangulation<dim>& tri) : tri_(tri) {
-}
-
-template <int dim, int subdim>
-inline bool DegreeLessThan<dim, subdim>::operator () (
-        unsigned a, unsigned b) const {
-    return (tri_.template face<subdim>(a)->degree() <
-            tri_.template face<subdim>(b)->degree());
-}
-
-template <int dim, int subdim>
-inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
-        const Triangulation<dim>& tri) : tri_(tri) {
-}
-
-template <int dim, int subdim>
-inline bool DegreeGreaterThan<dim, subdim>::operator () (
-        unsigned a, unsigned b) const {
-    return (tri_.template face<subdim>(a)->degree() >
-            tri_.template face<subdim>(b)->degree());
 }
 
 } // namespace regina

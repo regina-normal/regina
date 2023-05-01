@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,23 +36,29 @@
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/blockedsfsloop.h"
 
 using regina::BlockedSFSLoop;
 
 void addBlockedSFSLoop(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(BlockedSFSLoop)
+
     auto c = pybind11::class_<BlockedSFSLoop, regina::StandardTriangulation>(
-            m, "BlockedSFSLoop")
-        .def(pybind11::init<const BlockedSFSLoop&>())
-        .def("swap", &BlockedSFSLoop::swap)
+            m, "BlockedSFSLoop", rdoc_scope)
+        .def(pybind11::init<const BlockedSFSLoop&>(), rdoc::__copy)
+        .def("swap", &BlockedSFSLoop::swap, rdoc::swap)
         .def("region", &BlockedSFSLoop::region,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::region)
         .def("matchingReln", &BlockedSFSLoop::matchingReln,
-            pybind11::return_value_policy::reference_internal)
-        .def_static("recognise", &BlockedSFSLoop::recognise)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::matchingReln)
+        .def_static("recognise", &BlockedSFSLoop::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    m.def("swap", (void(*)(BlockedSFSLoop&, BlockedSFSLoop&))(regina::swap));
+    regina::python::add_global_swap<BlockedSFSLoop>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

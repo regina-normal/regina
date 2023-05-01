@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -527,7 +527,10 @@ void ScriptUI::removeSelectedVariables() {
     // Remove the variables!
     // Since std::set uses sorted order, we can delete from the bottom
     // up without affecting the indices of the rows yet to be removed.
-    Script::ChangeEventSpan span(*script);
+
+    // Wrap everything in an outer ChangeEventGroup, so we do not have to
+    // worry about the table being refreshed partway through the operation.
+    Script::ChangeEventGroup span(*script);
     for (auto rit = rows.rbegin(); rit != rows.rend(); ++rit)
         script->removeVariable(*rit);
 }

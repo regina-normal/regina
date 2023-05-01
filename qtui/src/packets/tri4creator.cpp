@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,7 @@
 #include "packetfilter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "reginaprefset.h"
 
 #include <QCheckBox>
 #include <QComboBox>
@@ -209,8 +210,16 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     details->addWidget(area);
 
     // Tidy up.
-    type->setCurrentIndex(0);
-    details->setCurrentIndex((int)0);
+    {
+        int typeId = ReginaPrefSet::global().triDim4CreationType;
+        if (typeId >= 0 && typeId < type->count()) {
+            type->setCurrentIndex(typeId);
+            details->setCurrentIndex(typeId);
+        } else {
+            type->setCurrentIndex(0);
+            details->setCurrentIndex((int)0);
+        }
+    }
 
     QObject::connect(type, SIGNAL(activated(int)), details,
         SLOT(setCurrentIndex(int)));
@@ -223,6 +232,9 @@ QWidget* Tri4Creator::getInterface() {
 std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
+    // Remember our selection for next time.
+    ReginaPrefSet::global().triDim4CreationType = typeId;
+
     if (typeId == TRI_EMPTY) {
         auto ans = regina::make_packet<Triangulation<4>>();
         ans->setLabel("4-D triangulation");

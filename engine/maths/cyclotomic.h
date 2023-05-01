@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,14 +51,14 @@ namespace regina {
  *
  * The cyclotomic field of order \a n extends the rationals with a
  * primitive <i>n</i>th root of unity.  This is isomorphic to the
- * polynomial field <tt>ℚ[x]/Φ_n</tt>, where <tt>Φ_n</tt> is the <i>n</i>th
+ * polynomial field `ℚ[x]/Φ_n`, where `Φ_n` is the <i>n</i>th
  * cyclotomic polynomial.
  *
  * Using this isomorphism, each element of the cyclotomic field can be
  * uniquely represented as a rational polynomial of degree strictly less than
- * <tt>deg(Φ_n) = φ(n)</tt>, where <tt>φ</tt> denotes Euler's totient function.
+ * `deg(Φ_n) = φ(n)`, where `φ` denotes Euler's totient function.
  * This class stores field elements using such a polynomial representation,
- * and does \e not store complex numbers directly.  If you require the
+ * and does _not_ store complex numbers directly.  If you require the
  * complex value of a field element (as a floating point approximation),
  * you can call evaluate().
  *
@@ -92,7 +92,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
                  or zero if not. */
         size_t degree_;
             /**< The degree of the underlying cyclotomic polynomial,
-                 which is equal to <tt>φ(field_)</tt>.
+                 which is equal to `φ(field_)`.
                  This is strictly positive if the element has been
                  initialised, or zero if not. */
         Rational* coeff_;
@@ -115,7 +115,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
         /**
          * Creates the zero element of the given cyclotomic field.
          *
-         * @param field the order of the underlying cyclotomic field;
+         * \param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
          */
         explicit Cyclotomic(size_t field);
@@ -125,9 +125,9 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * The polynomial representation of this element will simply be an
          * integer constant.
          *
-         * @param field the order of the underlying cyclotomic field;
+         * \param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
-         * @param value the value of this element; that is, the integer
+         * \param value the value of this element; that is, the integer
          * constant.
          */
         Cyclotomic(size_t field, int value);
@@ -137,9 +137,9 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * The polynomial representation of this element will simply be a
          * rational constant.
          *
-         * @param field the order of the underlying cyclotomic field;
+         * \param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
-         * @param value the value of this element; that is, the rational
+         * \param value the value of this element; that is, the rational
          * constant.
          */
         Cyclotomic(size_t field, const Rational& value);
@@ -149,7 +149,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * This constructor induces a deep copy of \a value.
          *
-         * @param value the field element to copy.
+         * \param value the field element to copy.
          */
         Cyclotomic(const Cyclotomic& value);
         /**
@@ -158,7 +158,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * The element that was passed (\a value) will no longer be usable.
          *
-         * @param value the field element to move.
+         * \param value the field element to move.
          */
         Cyclotomic(Cyclotomic&& value) noexcept;
         /**
@@ -168,7 +168,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * coefficient upwards.  See operator[] for details on what this
          * polynomial representation means.
          *
-         * There should be at most <tt>deg(Φ_n) = φ(n)</tt> coefficients in
+         * There should be at most `deg(Φ_n) = φ(n)` coefficients in
          * the list, where \a n is the given order of the underlying field;
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
@@ -176,14 +176,14 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre Rationals can be assigned values from dereferenced iterators
          * of type \a iterator.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
-         * @param field the order of the underlying cyclotomic field;
+         * \param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
-         * @param begin the beginning of a sequence of at most <tt>φ(n)</tt>
+         * \param begin the beginning of a sequence of at most `φ(n)`
          * coefficients, as described above.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
         template <typename iterator>
@@ -195,17 +195,17 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * constant coefficient upwards.  See operator[] for details on what
          * this polynomial representation means.
          *
-         * There should be at most <tt>deg(Φ_n) = φ(n)</tt> coefficients in
+         * There should be at most `deg(Φ_n) = φ(n)` coefficients in
          * the list, where \a n is the given order of the underlying field;
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a list
+         * of coefficients (which need not be constant).
          *
-         * @param field the order of the underlying cyclotomic field;
+         * \param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
-         * @param coefficients a sequence of at most <tt>φ(n)</tt>
+         * \param coefficients a sequence of at most `φ(n)`
          * coefficients, as described above.
          */
         Cyclotomic(size_t field, std::initializer_list<Rational> coefficients);
@@ -220,10 +220,10 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * cyclotomic field.
          *
          * This is safe even if this element was previously initialised
-         * as an element of a \e different field - all prior information
+         * as an element of a _different_ field - all prior information
          * about this field element will be safely discarded.
          *
-         * @param field the order of the cyclotomic field to which this
+         * \param field the order of the cyclotomic field to which this
          * field element will now belong; this must be strictly positive.
          */
         void init(size_t field);
@@ -235,22 +235,25 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * been initialised (for instance, it was created using the
          * default constructor).
          *
-         * @return the order of the underlying cyclotomic field.
+         * \return the order of the underlying cyclotomic field.
          */
         size_t field() const;
         /**
          * Returns the degree of the polynomial that defines the
          * underlying cyclotomic field.
          *
-         * This is the degree of the cyclotomic polynomial <tt>Φ_n</tt>,
-         * and also the value of Euler's totient function <tt>φ(n)</tt>,
+         * This is the degree of the cyclotomic polynomial `Φ_n`,
+         * and also the value of Euler's totient function `φ(n)`,
          * where \a n is the order of the field as returned by field().
          *
          * A value of zero indicates that this field element has not yet
          * been initialised (for instance, it was created using the
          * default constructor).
          *
-         * @return the degree of the polynomial that defines the
+         * \python This is also used to implement the Python special
+         * method __len__().
+         *
+         * \return the degree of the polynomial that defines the
          * underlying field.
          */
         size_t degree() const;
@@ -259,21 +262,21 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * polynomial representation of this field element.
          *
          * The polynomial representation expresses this field element
-         * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
-         * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
+         * as a member of `ℚ[x]/Φ_n`, using a rational polynomial
+         * of degree strictly less than `deg(Φ_n) = φ(n)`;
          * that is, strictly less than the value returned by degree().
          * See the Cyclotomic class notes for further details.
          *
          * In particular, for a field element \a e, the operator
-         * <tt>e[i]</tt> will return the coefficient of <tt>x^i</tt>
+         * `e[i]` will return the coefficient of `x^i`
          * in this polynomial representation.
          *
          * This is a constant (read-only) routine; note that there is a
          * non-constant (read-write) variant of this routine also.
          *
-         * @param exp indicates which coefficient to return; this must
+         * \param exp indicates which coefficient to return; this must
          * be between 0 and degree()-1 inclusive.
-         * @return a constant reference to the corresponding
+         * \return a constant reference to the corresponding
          * rational coefficient.
          */
         const Rational& operator [] (size_t exp) const;
@@ -282,13 +285,13 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * polynomial representation of this field element.
          *
          * The polynomial representation expresses this field element
-         * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
-         * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
+         * as a member of `ℚ[x]/Φ_n`, using a rational polynomial
+         * of degree strictly less than `deg(Φ_n) = φ(n)`;
          * that is, strictly less than the value returned by degree().
          * See the Cyclotomic class notes for further details.
          *
          * In particular, for a field element \a e, the operator
-         * <tt>e[i]</tt> will give access to the coefficient of <tt>x^i</tt>
+         * `e[i]` will give access to the coefficient of `x^i`
          * in this polynomial representation.
          *
          * This routine returns a non-constant reference: you can use
@@ -296,17 +299,17 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * the field element).  Note that there is also a constant (read-only)
          * variant of this routine.
          *
-         * @param exp indicates which coefficient to access; this must
+         * \param exp indicates which coefficient to access; this must
          * be between 0 and degree()-1 inclusive.
-         * @return a reference to the corresponding rational coefficient.
+         * \return a reference to the corresponding rational coefficient.
          */
         Rational& operator [] (size_t exp);
         /**
          * Returns the full polynomial representation of this field element.
          *
          * The polynomial representation expresses this field element
-         * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
-         * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
+         * as a member of `ℚ[x]/Φ_n`, using a rational polynomial
+         * of degree strictly less than `deg(Φ_n) = φ(n)`;
          * that is, strictly less than the value returned by degree().
          * See the Cyclotomic class notes for further details.
          *
@@ -314,22 +317,22 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * a non-default constructor, an assignment operator, or by
          * calling init()).
          *
-         * @return the full polynomial representation of this field element.
+         * \return the full polynomial representation of this field element.
          */
         Polynomial<Rational> polynomial() const;
         /**
          * Returns the value of this cyclotomic field element as a
          * complex number.
          *
-         * The evaluation depends upon \e which primitive root of unity
+         * The evaluation depends upon _which_ primitive root of unity
          * is used to build the underlying cyclotomic field of order \a n.
          * This ambiguity is resolved as follows.
          *
          * Suppose the polynomial representation of this field element in
-         * <tt>ℚ[x]/Φ_n</tt> (as described in the Cyclotomic class notes) is
-         * <tt>f(x)</tt>.  Then the evaluation of this field element will be
-         * <tt>f(ρ)</tt>, where \a ρ is the <tt>n</tt>th root of unity
-         * <tt>ρ = exp(2πi × k/n)</tt>,
+         * `ℚ[x]/Φ_n` (as described in the Cyclotomic class notes) is
+         * `f(x)`.  Then the evaluation of this field element will be
+         * `f(ρ)`, where \a ρ is the `n`th root of unity
+         * `ρ = exp(2πi × k/n)`,
          * and where \a k is the argument \e whichRoot as passed to this
          * routine.
          *
@@ -343,10 +346,10 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \warning This routine uses floating point arithmetic, and so the
          * value that it returns is subject to the usual floating point error.
          *
-         * @param whichRoot indicates which root of unity will be used
+         * \param whichRoot indicates which root of unity will be used
          * to convert the polynomial representation of this field
          * element into a complex number.
-         * @return a floating-point approximation of this cyclotomic field
+         * \return a floating-point approximation of this cyclotomic field
          * element as a complex number.
          */
         std::complex<double> evaluate(size_t whichRoot = 1) const;
@@ -361,12 +364,12 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * If either this or \a rhs have not been initialised (typically
          * because they were created using the default constructor),
-         * then this comparison will return \c false.  If \e both field
+         * then this comparison will return \c false.  If _both_ field
          * elements have not been initialised, then this comparison will
          * return \c true.
          *
-         * @param rhs the value to compare with this.
-         * @return \c true if and only if this and \a rhs are the same
+         * \param rhs the value to compare with this.
+         * \return \c true if and only if this and \a rhs are the same
          * element of the same cyclotomic field.
          */
         bool operator == (const Cyclotomic& rhs) const;
@@ -382,12 +385,12 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * If either this or \a rhs have not been initialised (typically
          * because they were created using the default constructor),
-         * then this comparison will return \c true.  If \e both field
+         * then this comparison will return \c true.  If _both_ field
          * elements have not been initialised, then this comparison will
          * return \c false.
          *
-         * @param rhs the value to compare with this.
-         * @return \c false if this and \a rhs are the same element of the
+         * \param rhs the value to compare with this.
+         * \return \c false if this and \a rhs are the same element of the
          * same cyclotomic field, or \c true if they are not.
          */
         bool operator != (const Cyclotomic& rhs) const;
@@ -405,8 +408,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * This operator induces a deep copy of \a value.
          *
-         * @param value the new value to assign to this field element.
-         * @return a reference to this field element.
+         * \param value the new value to assign to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator = (const Cyclotomic& value);
 
@@ -424,8 +427,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * The element that was passed (\a value) will no longer be usable.
          *
-         * @param value the field element to move.
-         * @return a reference to this field element.
+         * \param value the field element to move.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator = (Cyclotomic&& value) noexcept;
 
@@ -439,8 +442,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre This field element has already been initialised (and so
          * it already has specified an underlying cyclotomic field).
          *
-         * @param scalar the new rational value of this field element.
-         * @return a reference to this field element.
+         * \param scalar the new rational value of this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator = (const Rational& scalar);
 
@@ -453,7 +456,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * uninitialised.  The underlying fields (if different) will be
          * swapped accordingly.
          *
-         * @param other the field element whose contents should be swapped
+         * \param other the field element whose contents should be swapped
          * with this.
          */
         void swap(Cyclotomic& other) noexcept;
@@ -492,8 +495,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * This has the effect of multiplying the polynomial representation
          * by a scalar constant.
          *
-         * @param scalar the rational to multiply this by.
-         * @return a reference to this field element.
+         * \param scalar the rational to multiply this by.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator *= (const Rational& scalar);
 
@@ -505,8 +508,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \pre The given rational is non-zero.
          *
-         * @param scalar the rational to divide this by.
-         * @return a reference to this field element.
+         * \param scalar the rational to divide this by.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator /= (const Rational& scalar);
 
@@ -516,8 +519,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
          *
-         * @param other the field element to add to this.
-         * @return a reference to this field element.
+         * \param other the field element to add to this.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator += (const Cyclotomic& other);
 
@@ -527,8 +530,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
          *
-         * @param other the field element to subtract from this.
-         * @return a reference to this field element.
+         * \param other the field element to subtract from this.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator -= (const Cyclotomic& other);
 
@@ -538,8 +541,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
          *
-         * @param other the field element to multiply this by.
-         * @return a reference to this field element.
+         * \param other the field element to multiply this by.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator *= (const Cyclotomic& other);
 
@@ -550,16 +553,16 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
          *
-         * @param other the field element to divide this by.
-         * @return a reference to this field element.
+         * \param other the field element to divide this by.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator /= (const Cyclotomic& other);
 
         /**
-         * Returns the <i>n</i>th cyclotomic polynomial <tt>Φ_n</tt>.
+         * Returns the <i>n</i>th cyclotomic polynomial `Φ_n`.
          *
          * Cyclotomic polynomials are cached after they are computed, and
-         * so after the first call to <tt>cyclotomic(n)</tt>, all subsequent
+         * so after the first call to `cyclotomic(n)`, all subsequent
          * calls with the same value of \a n will be essentially instantaneous.
          *
          * Although it queries and manipulates a global cache, this routine
@@ -567,13 +570,13 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \pre The given integer \a n must be strictly positive.
          *
-         * \ifacespython Since Python exposes the class Polynomial<Rational>
+         * \python Since Python exposes the class Polynomial<Rational>
          * but not Polynomial<Integer>, this routine will convert the result
          * to a Polynomial<Rational> (and will therefore return by value,
          * not by reference).
          *
-         * @param n indicates which cyclotomic polynomial to return.
-         * @return the cyclotomic polynomial <tt>Φ_n</tt>.
+         * \param n indicates which cyclotomic polynomial to return.
+         * \return the cyclotomic polynomial `Φ_n`.
          */
         static const Polynomial<Integer>& cyclotomic(size_t n);
 
@@ -582,20 +585,20 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * given variable name instead of \c x.
          *
          * The field element will be written using its rational polynomial
-         * representation.  The underlying field will \e not be indicated in the
+         * representation.  The underlying field will _not_ be indicated in the
          * output, since this is often already understood.  If required, it can
-         * be accessed by calling <tt>c.field()</tt>.
+         * be accessed by calling `c.field()`.
          *
          * If \a utf8 is passed as \c true then unicode superscript characters
          * will be used for exponents; these will be encoded using UTF-8.
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
-         * @param out the output stream to which to write.
-         * @param utf8 \c true if unicode superscript characters may be used.
-         * @param variable the symbol to use for the polynomial variable.
+         * \param out the output stream to which to write.
+         * \param utf8 \c true if unicode superscript characters may be used.
+         * \param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
          * will be used.
          */
@@ -607,17 +610,17 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * given variable name instead of \c x.
          *
          * The field element will be written using its rational polynomial
-         * representation.  The underlying field will \e not be indicated in the
+         * representation.  The underlying field will _not_ be indicated in the
          * output, since this is often already understood.  If required, it can
-         * be accessed by calling <tt>c.field()</tt>.
+         * be accessed by calling `c.field()`.
          *
          * \note There is also the usual variant of str() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param variable the symbol to use for the polynomial variable.
+         * \param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
          * will be used.
-         * @return this field element as a human-readable string.
+         * \return this field element as a human-readable string.
          */
         std::string str(const char* variable) const;
 
@@ -626,9 +629,9 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * unicode characters, using the given variable name instead of \c x.
          *
          * The field element will be written using its rational polynomial
-         * representation.  The underlying field will \e not be indicated in the
+         * representation.  The underlying field will _not_ be indicated in the
          * output, since this is often already understood.  If required, it can
-         * be accessed by calling <tt>c.field()</tt>.
+         * be accessed by calling `c.field()`.
          *
          * This is similar to the output from str(), except that it uses
          * unicode characters to make the output more pleasant to read.
@@ -639,10 +642,10 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \note There is also the usual variant of utf8() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param variable the symbol to use for the polynomial variable.
+         * \param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
          * will be used.
-         * @return this field element as a unicode-enabled human-readable
+         * \return this field element as a unicode-enabled human-readable
          * string.
          */
         std::string utf8(const char* variable) const;
@@ -668,8 +671,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
  * This global routine simply calls Cyclotomic::swap(); it is provided
  * so that Cyclotomic meets the C++ Swappable requirements.
  *
- * @param a the first field element whose contents should be swapped.
- * @param b the second field element whose contents should be swapped.
+ * \param a the first field element whose contents should be swapped.
+ * \param b the second field element whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -678,9 +681,9 @@ void swap(Cyclotomic& a, Cyclotomic& b) noexcept;
 /**
  * Multiplies the given field element by the given rational.
  *
- * @param elt the field element to multiply by.
- * @param scalar the rational to multiply by.
- * @return the product of the given field element and rational.
+ * \param elt the field element to multiply by.
+ * \param scalar the rational to multiply by.
+ * \return the product of the given field element and rational.
  *
  * \ingroup maths
  */
@@ -689,9 +692,9 @@ Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
 /**
  * Multiplies the given field element by the given rational.
  *
- * @param scalar the rational to multiply by.
- * @param elt the field element to multiply by.
- * @return the product of the given field element and rational.
+ * \param scalar the rational to multiply by.
+ * \param elt the field element to multiply by.
+ * \return the product of the given field element and rational.
  *
  * \ingroup maths
  */
@@ -702,9 +705,9 @@ Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
  *
  * \pre The argument \a scalar is non-zero.
  *
- * @param elt the field element to divide by the given rational.
- * @param scalar the rational to divide by.
- * @return the quotient of the given field element by the given rational.
+ * \param elt the field element to divide by the given rational.
+ * \param scalar the rational to divide by.
+ * \return the quotient of the given field element by the given rational.
  *
  * \ingroup maths
  */
@@ -715,9 +718,9 @@ Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the first field element to add.
- * @param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \param lhs the first field element to add.
+ * \param rhs the second field element to add.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -728,9 +731,9 @@ Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the first field element to add.
- * @param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \param lhs the first field element to add.
+ * \param rhs the second field element to add.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -741,9 +744,9 @@ Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the first field element to add.
- * @param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \param lhs the first field element to add.
+ * \param rhs the second field element to add.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -754,9 +757,9 @@ Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the first field element to add.
- * @param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \param lhs the first field element to add.
+ * \param rhs the second field element to add.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -765,8 +768,8 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
 /**
  * Returns the negative of the given field element.
  *
- * @param arg the field element to negate.
- * @return the negative of \a arg.
+ * \param arg the field element to negate.
+ * \return the negative of \a arg.
  *
  * \ingroup maths
  */
@@ -777,9 +780,9 @@ Cyclotomic operator - (Cyclotomic arg);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the field element to subtract from.
- * @param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \param lhs the field element to subtract from.
+ * \param rhs the field element to subtract.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -790,9 +793,9 @@ Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the field element to subtract from.
- * @param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \param lhs the field element to subtract from.
+ * \param rhs the field element to subtract.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -803,9 +806,9 @@ Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the field element to subtract from.
- * @param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \param lhs the field element to subtract from.
+ * \param rhs the field element to subtract.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -816,9 +819,9 @@ Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the field element to subtract from.
- * @param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \param lhs the field element to subtract from.
+ * \param rhs the field element to subtract.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -829,9 +832,9 @@ Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the first field element to multiply.
- * @param rhs the second field element to multiply.
- * @return the product of both field elements.
+ * \param lhs the first field element to multiply.
+ * \param rhs the second field element to multiply.
+ * \return the product of both field elements.
  *
  * \ingroup maths
  */
@@ -843,9 +846,9 @@ Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * \pre The second argument \a rhs is non-zero.
  * \pre Both arguments belong to the same cyclotomic field.
  *
- * @param lhs the field element to divide by \a rhs.
- * @param rhs the field element to divide \a lhs by.
- * @return the result of dividing \a lhs by \a rhs.
+ * \param lhs the field element to divide by \a rhs.
+ * \param rhs the field element to divide \a lhs by.
+ * \return the result of dividing \a lhs by \a rhs.
  *
  * \ingroup maths
  */

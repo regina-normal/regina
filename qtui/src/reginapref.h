@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -84,7 +84,7 @@ class ReginaPreferences : public QDialog {
          * Propagate changes back to the main UI.
          */
         virtual void slotApply();
-        
+
         /**
          * Overridden to handle saving of preferences.
          */
@@ -100,8 +100,8 @@ class ReginaPrefGeneral : public QWidget {
     private:
         // QCheckBox* cbDisplayTagsInTree;
         QCheckBox* cbUnicode;
+        QComboBox* chooserThreadCount;
         QCheckBox* cbWarnOnNonEmbedded;
-        QCheckBox* cbSupportOriented;
         QCheckBox* cbGraphvizLabels;
         QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;
@@ -110,9 +110,6 @@ class ReginaPrefGeneral : public QWidget {
 
     public:
         ReginaPrefGeneral(QWidget* parent = nullptr);
-
-    private slots:
-        void orientedChecked(int);
 
     friend class ReginaPreferences;
 };

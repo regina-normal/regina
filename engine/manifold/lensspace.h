@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,11 +49,10 @@ namespace regina {
  *
  * The lens space L(\a p,\a q) is the 3-manifold you get by
  * \a p/q Dehn surgery on the unknot.  For instance, L(1,0) and L(1,1)
- * are the 3-sphere, L(0,1) is the product S^1 x S^2, and L(\a p,1) is the
- * circle bundle over S^2 with Euler class \a p.  In L(\a p,\a q) if you
+ * are the 3-sphere, L(0,1) is the product S¹ x S², and L(\a p,1) is the
+ * circle bundle over S² with Euler class \a p.  In L(\a p,\a q) if you
  * take a generator \a g of H_1 and evaluate the torsion linking form on it,
- * then &lt;\a g,\a g&gt; = [+/- \a r^2 \a q/\a p] in Q/Z where \a r is an
- * integer.
+ * then `<g,g> = [± r² q/p]` in Q/Z where \a r is an integer.
  *
  * All optional Manifold routines are implemented for this class.
  *
@@ -79,12 +78,12 @@ class LensSpace : public Manifold {
          *
          * \pre The two given parameters are coprime (have a gcd of 1).
          *
-         * @param newP the first parameter \a p of the lens space L(p,q).
-         * @param newQ the second parameter \a q of the lens space L(p,q).
+         * \param p the first parameter \a p of the lens space L(p,q).
+         * \param q the second parameter \a q of the lens space L(p,q).
          * Note that there are no range restrictions whatsoever on this
          * parameter.
          */
-        LensSpace(unsigned long newP, unsigned long newQ);
+        LensSpace(unsigned long p, unsigned long q);
         /**
          * Creates a new copy of the given lens space.
          */
@@ -93,7 +92,7 @@ class LensSpace : public Manifold {
          * Returns the first parameter \a p of this lens space L(p,q).
          * See the class notes for details.
          *
-         * @return the first parameter.
+         * \return the first parameter.
          */
         unsigned long p() const;
         /**
@@ -117,8 +116,8 @@ class LensSpace : public Manifold {
          * fibred spaces and graph manifolds), where the same manifold
          * could have different presentations that compare as not equal.
          *
-         * @param compare the lens space with which this should be compared.
-         * @return \c true if and only if this and the given lens space
+         * \param compare the lens space with which this should be compared.
+         * \return \c true if and only if this and the given lens space
          * have the same presentation (i.e., are homeomorphic).
          */
         bool operator == (const LensSpace& compare) const;
@@ -133,8 +132,8 @@ class LensSpace : public Manifold {
          * fibred spaces and graph manifolds), where the same manifold
          * could have different presentations that compare as not equal.
          *
-         * @param compare the lens space with which this should be compared.
-         * @return \c true if and only if this and the given lens space
+         * \param compare the lens space with which this should be compared.
+         * \return \c true if and only if this and the given lens space
          * have different presentations (i.e., are non-homeomorphic).
          */
         bool operator != (const LensSpace& compare) const;
@@ -142,14 +141,14 @@ class LensSpace : public Manifold {
         /**
          * Sets this to be a copy of the given lens space.
          *
-         * @return a reference to this lens space.
+         * \return a reference to this lens space.
          */
         LensSpace& operator = (const LensSpace&) = default;
 
         /**
          * Swaps the contents of this and the given lens space.
          *
-         * @param other the lens space whose contents should be swapped
+         * \param other the lens space whose contents should be swapped
          * with this.
          */
         void swap(LensSpace& other) noexcept;
@@ -174,8 +173,8 @@ class LensSpace : public Manifold {
  * This global routine simply calls LensSpace::swap(); it is provided so
  * that LensSpace meets the C++ Swappable requirements.
  *
- * @param a the first lens space whose contents should be swapped.
- * @param b the second lens space whose contents should be swapped.
+ * \param a the first lens space whose contents should be swapped.
+ * \param b the second lens space whose contents should be swapped.
  *
  * \ingroup manifold
  */
@@ -183,8 +182,7 @@ void swap(LensSpace& a, LensSpace& b) noexcept;
 
 // Inline functions for LensSpace
 
-inline LensSpace::LensSpace(unsigned long newP, unsigned long newQ) :
-        p_(newP), q_(newQ) {
+inline LensSpace::LensSpace(unsigned long p, unsigned long q) : p_(p), q_(q) {
     reduce();
 }
 inline unsigned long LensSpace::p() const {

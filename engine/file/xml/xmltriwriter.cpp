@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -127,12 +127,24 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
             out_ << "  </simplices>\n";
     } else {
         for (auto s : data_.simplices()) {
-            if (s->description().empty())
-                out_ << "  <simplex> ";
-            else
-                out_ << "  <simplex desc=\""
+            out_ << "  <simplex";
+            if (auto locks = s->lockMask()) {
+                out_ << std::hex;
+                out_ << " lock=\"";
+                if (sizeof(decltype(locks)) == 1) {
+                    // Make sure this comes out as numeric, not a character.
+                    out_ << static_cast<int>(locks);
+                } else
+                    out_ << locks;
+                out_ << '\"';
+                out_ << std::setbase(0);
+            }
+            if (! s->description().empty()) {
+                out_ << " desc=\""
                     << regina::xml::xmlEncodeSpecialChars(s->description())
-                    << "\"> ";
+                    << '\"';
+            }
+            out_ << "> ";
             for (int facet = 0; facet <= dim; ++facet) {
                 Simplex<dim>* adj = s->adjacentSimplex(facet);
                 if (adj) {
@@ -194,12 +206,9 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         if (data_.prop_.threeSphere_.has_value())
             out_ << "  " << xmlValueTag("threesphere",
                 *data_.prop_.threeSphere_) << '\n';
-        if (data_.prop_.threeBall_.has_value())
-            out_ << "  " << xmlValueTag("threeball",
-                *data_.prop_.threeBall_) << '\n';
-        if (data_.prop_.solidTorus_.has_value())
-            out_ << "  " << xmlValueTag("solidtorus",
-                *data_.prop_.solidTorus_) << '\n';
+        if (data_.prop_.handlebody_.has_value())
+            out_ << "  " << xmlValueTag("handlebody",
+                *data_.prop_.handlebody_) << '\n';
         if (data_.prop_.TxI_.has_value())
             out_ << "  " << xmlValueTag("txi", *data_.prop_.TxI_) << '\n';
         if (data_.prop_.irreducible_.has_value())

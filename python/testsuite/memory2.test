@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2015-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the independence and lifespans of engine-generated packets.
@@ -44,15 +44,15 @@ print('Script variables #1')
 print('Step 1')
 a = Container(); aw1 = Watcher(a, 'a1')
 print('Step 2')
-b = PacketOfTriangulation3(); b.newSimplex(); bw1 = Watcher(b, 'b1')
+b = PacketOfTriangulation3(); dummy = b.newSimplex(); bw1 = Watcher(b, 'b1')
 print('Step 3')
 c = Script(); cw1 = Watcher(c, 'c1')
 print('Step 4')
-a.insertChildLast(b)
+a.append(b)
 print('Step 5')
-a.insertChildLast(c)
+a.append(c)
 print('Step 6')
-c.addVariable('foo', b)
+dummy = c.addVariable('foo', b)
 print('Step 7')
 val = c.variableValue('foo')
 print('Step 8')
@@ -66,15 +66,15 @@ print('Script variables #2')
 print('Step 1')
 a = Container(); aw2 = Watcher(a, 'a2')
 print('Step 2')
-b = PacketOfTriangulation3(); b.newSimplex(); bw2 = Watcher(b, 'b2')
+b = PacketOfTriangulation3(); dummy = b.newSimplex(); bw2 = Watcher(b, 'b2')
 print('Step 3')
 c = Script(); cw2 = Watcher(c, 'c2') # destroys c1
 print('Step 4')
-a.insertChildLast(b)
+a.append(b)
 print('Step 5')
-a.insertChildLast(c)
+a.append(c)
 print('Step 6')
-c.addVariable('foo', a)
+dummy = c.addVariable('foo', a)
 print('Step 7')
 val = c.variableValue('foo') # destroys b1
 print('Step 8')

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,10 +55,10 @@ namespace detail {
  * to a retriangulation or link rewriting function.
  *
  * A retriangulation or link rewriting function can work with arbitrary
- * callable objects.  However, the \e implementations of such functions are
+ * callable objects.  However, the _implementations_ of such functions are
  * long and should not be dragged into the main headers.  The core purpose
  * of this class is therefore to coalesce the arbitrary action types
- * down to just \e two fixed types (depending on whether the action includes a
+ * down to just _two_ fixed types (depending on whether the action includes a
  * text signature (e.g., an isomorphism signature) in its initial argument(s)).
  * This means that the retriangulation or rewriting code can be templated on
  * a single boolean parameter, and so we can instatiate it completely in
@@ -108,16 +108,16 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * or \c false if we are storing an action whose argument list begins with
  * just a triangulation/link.
  *
- * @param obj the object being retriangulated or rewritten.
- * @param height the maximum number of top-dimensional simplices or crossings
+ * \param obj the object being retriangulated or rewritten.
+ * \param height the maximum number of top-dimensional simplices or crossings
  * to allow beyond the initial number in \a obj, or a negative number if
  * this should not be bounded.
- * @param nThreads the number of threads to use.  If this is 1 or smaller then
+ * \param nThreads the number of threads to use.  If this is 1 or smaller then
  * the routine will run single-threaded.
- * @param tracker a progress tracker through which progress will be reported,
+ * \param tracker a progress tracker through which progress will be reported,
  * or \c null if no progress reporting is required.
- * @param action a function to call for each triangulation that is found.
- * @return \c true if some call to \a action returned \c true (thereby
+ * \param action a function to call for each triangulation that is found.
+ * \return \c true if some call to \a action returned \c true (thereby
  * terminating the search early), or \c false if the search ran to completion.
  *
  * \ingroup detail

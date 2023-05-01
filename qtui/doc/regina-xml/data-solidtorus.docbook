@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>solidtorus</refname>
-  <refpurpose>Does a triangulation represent the solid torus?</refpurpose>
+  <refpurpose>Replaced by &xml-handlebody;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,10 +40,18 @@ solidtorus ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.1</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was replaced by the more general &xml-handlebody;
+   element in &regina;&nbsp;7.1.
+   The old name &xml-solidtorus; has been kept for backward compatibility,
+   in that &regina; still understands it when reading data files; however,
+   any new code that writes data files should use &xml-handlebody; instead.
+  </para>
   <para>
    A &xml-solidtorus; element stores whether or not the parent
    triangulation is in fact a triangulation of the solid torus.

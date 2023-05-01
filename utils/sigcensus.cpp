@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of splitting surface signatures of given order          *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,28 +31,49 @@
  **************************************************************************/
 
 #include <cstdlib>
+#include <cstring>
 #include "split/sigcensus.h"
 #include "utilities/stringutils.h"
 
 #define MAXORDER 20
 
-void usage(const char* progName) {
+// Stringification of MAXORDER requires several layers of macros.
+#define ORDER_STR(order) #order
+#define ORDER_XSTR(order) ORDER_STR(order)
+#define MAXORDER_STR ORDER_XSTR(MAXORDER)
+
+void usage(const char* progName, const std::string& error = std::string()) {
+    if (! error.empty())
+        std::cerr << error << "\n\n";
+
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " <order>\n";
+    std::cerr << "    " << progName
+        << " [ -v, --version | -?, --help ]\n\n";
+    std::cerr << "    -v, --version : Show which version of Regina "
+        "is being used\n";
+    std::cerr << "    -?, --help    : Display this help\n";
     exit(1);
 }
 
 int main(int argc, char* argv[]) {
     if (argc != 2)
+        usage(argv[0], "Please specify exactly one order.");
+
+    // Check for standard arguments:
+    if (strcmp(argv[1], "-?") == 0 || strcmp(argv[1], "--help") == 0)
         usage(argv[0]);
+    if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+        std::cout << PACKAGE_BUILD_STRING << std::endl;
+        exit(0);
+    }
 
     int order;
     bool valid = regina::valueOf(argv[1], order);
-    if ((! valid) || order < 1 || order > MAXORDER) {
-        std::cerr << "Only numerical orders between 1 and " << MAXORDER
-            << " inclusive are accepted.\n";
-        usage(argv[0]);
-    }
+    if ((! valid) || order < 1 || order > MAXORDER)
+        usage(argv[0],
+            "Only numerical orders between 1 and " MAXORDER_STR
+            " inclusive are accepted.");
 
     size_t result = regina::SigCensus::formCensus(order,
             [](const regina::Signature& sig,

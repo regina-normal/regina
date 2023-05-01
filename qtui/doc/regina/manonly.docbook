@@ -5,7 +5,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.2//EN" [
   <!ENTITY regina "Regina">
 
-  <!ENTITY regversion "7.1">
+  <!ENTITY regversion "7.4">
   <!ENTITY regabstract
    "<para>
      &regina; is a software package for studying 3-manifold triangulations
@@ -26,6 +26,26 @@
    "<emphasis>http://www.maths.uq.edu.au/~bab/papers/</emphasis>">
   <!ENTITY manpageack "Many people have been involved in the development
    of &regina;; see the users' handbook for a full list of credits.">
+
+  <!ENTITY versionhelpopts
+   "<group choice='req'>
+     <arg choice='req'><option>-v, --version</option></arg>
+     <arg choice='req'><option>-?, --help</option></arg>
+    </group>">
+  <!ENTITY versionhelpdesc
+   "<varlistentry>
+     <term><option>-v, --version</option></term>
+     <listitem>
+      <para>Show which version of &regina; is being used, and exit
+      immediately.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-?, --help</option></term>
+     <listitem>
+      <para>Display brief usage information, and exit immediately.</para>
+     </listitem>
+    </varlistentry>">
 
   <!ENTITY api "<acronym>API</acronym>">
   <!ENTITY bzip2 "bzip2">

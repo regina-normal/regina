@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -94,12 +94,12 @@ class DoubleDescription {
          * contain no duplicates or redundancies.
          *
          * Parameter \a constraints may contain a set of validity constraints,
-         * in which case this routine will only return \e valid extremal
+         * in which case this routine will only return _valid_ extremal
          * rays.  Each validity constraint is of the form "an extremal ray
          * may only lie outside at most one of these facets of the original
          * cone"; see the ValidityConstraints class for details.  These
          * contraints have the important property that, although validity is
-         * not preserved under convex combination, \e invalidity is.
+         * not preserved under convex combination, _invalidity_ is.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -120,29 +120,29 @@ class DoubleDescription {
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
          * integer classes (Integer or LargeInteger).
          *
-         * \ifacespython There are two versions of this function available
+         * \python There are two versions of this function available
          * in Python.  The first version is the same as the C++ function;
          * here you must pass \a action, which may be a pure Python function.
          * The second form does not have an \a action argument; instead you
-         * call <tt>enumerate(subspace, constraints, tracker, initialRows)</tt>,
+         * call `enumerate(subspace, constraints, tracker, initialRows)`,
          * and it returns a Python list containing all extremal rays.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
-         * @param action a function (or other callable object) that will be
+         * \param action a function (or other callable object) that will be
          * called for each extremal ray.  This function must take a single
          * argument, which will be passed as an rvalue of type RayClass.
-         * @param subspace a matrix defining the linear subspace to intersect
+         * \param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described above,
+         * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
-         * @param tracker a progress tracker through which progress
+         * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
-         * @param initialRows specifies how many initial rows of \a subspace
+         * \param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
@@ -214,17 +214,17 @@ class DoubleDescription {
                  * \a BitmaskType can hold the corresponding number of bits
                  * (one bit per dimension).
                  *
-                 * @param axis indicates which coordinate axis to use;
+                 * \param axis indicates which coordinate axis to use;
                  * this must be at least zero but strictly less than the
                  * dimension of the entire space.
-                 * @param subspace the matrix containing the set of
+                 * \param subspace the matrix containing the set of
                  * hyperplanes to intersect with the original cone
                  * (one hyperplane for each row of the matrix).
-                 * @param hypOrder the order in which we plan to
+                 * \param hypOrder the order in which we plan to
                  * intersect the hyperplanes.  The length of this array
                  * must be the number of rows in \a subspace, and the
                  * <i>i</i>th hyperplane to intersect must be described
-                 * by row <tt>hypOrder[i]</tt> of \a subspace.
+                 * by row `hypOrder[i]` of \a subspace.
                  */
                 inline RaySpec(size_t axis, const MatrixInt& subspace,
                     const long* hypOrder);
@@ -238,7 +238,7 @@ class DoubleDescription {
                  * hyperplane with a partial solution space and some ray
                  * lies directly in this hyperplane (not on either side).
                  *
-                 * @param trunc the ray to copy and truncate.
+                 * \param trunc the ray to copy and truncate.
                  */
                 inline RaySpec(const RaySpec& trunc);
 
@@ -259,10 +259,10 @@ class DoubleDescription {
                  * products are not empty).
                  * \pre The two given rays lie on opposite sides of the
                  * next hyperplane to intersect, and neither ray actually
-                 * lies \e in this next hyperplane.
+                 * lies _in_ this next hyperplane.
                  *
-                 * @param first the first of the given rays.
-                 * @param second the second of the given rays.
+                 * \param first the first of the given rays.
+                 * \param second the second of the given rays.
                  */
                 RaySpec(const RaySpec& first, const RaySpec& second);
 
@@ -271,7 +271,7 @@ class DoubleDescription {
                  * next hyperplane.  This is simply the sign of the first
                  * element in the list of remaining dot products.
                  *
-                 * @return 1, 0 or -1 according to the sign of the next
+                 * \return 1, 0 or -1 according to the sign of the next
                  * dot product.
                  */
                 int sign() const;
@@ -281,7 +281,7 @@ class DoubleDescription {
                  * cone this ray belongs to.  Each bit is set to \c true
                  * if and only if this ray belongs to the corresponding facet.
                  *
-                 * @return a bitmask of facets.
+                 * \return a bitmask of facets.
                  */
                 inline const BitmaskType& facets() const;
 
@@ -292,10 +292,10 @@ class DoubleDescription {
                  * For this routine to return \c true, every facet that
                  * contains both \a x and \a y must contain this ray also.
                  *
-                 * @param x the first of the given rays.
-                 * @param y the second of the given rays.
-                 * @return \c true if and only if this ray belongs to all
-                 * of the facets that \e both \a x and \a y belong to.
+                 * \param x the first of the given rays.
+                 * \param y the second of the given rays.
+                 * \return \c true if and only if this ray belongs to all
+                 * of the facets that _both_ \a x and \a y belong to.
                  */
                 inline bool onAllCommonFacets(
                     const RaySpec& x, const RaySpec& y) const;
@@ -305,15 +305,15 @@ class DoubleDescription {
                  * described by this object.  This routine is not fast,
                  * since it needs to solve a system of linear equations.
                  *
-                 * \pre This ray is a member of the \e final solution
+                 * \pre This ray is a member of the _final_ solution
                  * space.  That is, all hyperplanes have been
                  * intersected with the original cone, and the list of
                  * dot products stored in this object is empty.
                  *
-                 * @param dest the ray in which the final coordinates
+                 * \param dest the ray in which the final coordinates
                  * will be stored; the length of this ray must be the
                  * dimension of the overall space in which we are working.
-                 * @param subspace the matrix containing the set of
+                 * \param subspace the matrix containing the set of
                  * hyperplanes that were intersected with the original cone
                  * (one hyperplane for each row of the matrix).
                  */
@@ -370,21 +370,21 @@ class DoubleDescription {
          * \post The input list \a src will be empty, and the output
          * list \a dest will own all of the elements that it contains.
          *
-         * @param src contains the vertices of the current solution space
+         * \param src contains the vertices of the current solution space
          * before this routine is called.
-         * @param dest contains the vertices of the new solution space
+         * \param dest contains the vertices of the new solution space
          * after this routine returns.
-         * @param dim the dimension of the entire space in which we are working.
-         * @param prevHyperplanes the number of hyperplanes that have
+         * \param dim the dimension of the entire space in which we are working.
+         * \param prevHyperplanes the number of hyperplanes that have
          * already been intersected with the original cone to form the
          * current solution set.  This does not include the hyperplane
          * currently under consideration.
-         * @param constraintsMask the list of additional validity constraints
+         * \param constraintsMask the list of additional validity constraints
          * to impose.
-         * @param tracker an optional progress tracker that will be polled
+         * \param tracker an optional progress tracker that will be polled
          * for cancellation (though no incremental progress will be reported
          * within this routine).  This may be null.
-         * @return \c true if vertices of the old solution set were found
+         * \return \c true if vertices of the old solution set were found
          * on both sides of the new hyperplane, \c false if one of
          * the closed half-spaces defined by the new hyperplane contained
          * the entire old solution set, or undefined if the operation

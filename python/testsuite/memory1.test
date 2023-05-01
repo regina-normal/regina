@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2015-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the lifetime management of packets.
@@ -53,7 +53,7 @@ c = Container(); cw = Watcher(c); c.setLabel('c')
 print('Step 2')
 t = PacketOfTriangulation3(); t.newTetrahedron(); tw = Watcher(t); t.setLabel('t')
 print('Step 3')
-c.insertChildLast(t)
+c.append(t)
 print('Step 4')
 t = None
 print('Step 5')
@@ -66,7 +66,7 @@ a = Container(); aw = Watcher(a); a.setLabel('a')
 print('Step 2')
 b = PacketOfTriangulation3(); bw = Watcher(b); b.setLabel('b')
 print('Step 3')
-a.insertChildLast(b)
+a.append(b)
 print('Step 4')
 a = None # Should destroy a only, since we are holding a reference to b
 print('Step 5')
@@ -80,7 +80,7 @@ p = Container(); pw = Watcher(p); p.setLabel('p')
 print('Step 2')
 q = PacketOfTriangulation3(); qw = Watcher(q); q.setLabel('q')
 print('Step 3')
-p.insertChildLast(q)
+p.append(q)
 print('Step 4')
 q.makeOrphan()
 print('Step 5')
@@ -139,9 +139,9 @@ y = Container(); y.setLabel('y'); yw = Watcher(y);
 z1 = Container(); z1.setLabel('z1'); z1w = Watcher(z1);
 z2 = Container(); z2.setLabel('z2'); z2w = Watcher(z2);
 print('Step 1')
-x.insertChildLast(z1)
-x.insertChildLast(z2)
-z1.insertChildLast(y)
+x.append(z1)
+x.append(z2)
+z1.append(y)
 print('Step 2')
 z2 = None
 print('Step 3')

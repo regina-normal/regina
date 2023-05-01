@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,64 +37,84 @@
 #include "triangulation/isosigtype.h"
 #include "utilities/exception.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/isosigencoding.h"
+#include "../docstrings/triangulation/isosigtype.h"
 
 using regina::Perm;
 
 template <int dim>
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigClassic)
+
     using Type = regina::IsoSigClassic<dim>;
-    auto s = pybind11::class_<Type>(m, name)
-        .def(pybind11::init<const regina::Component<dim>&>())
-        .def("simplex", &Type::simplex)
-        .def("perm", &Type::perm)
-        .def("next", &Type::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::disable_eq_operators(s);
+
+    RDOC_SCOPE_END
 }
 
 template <int dim>
 void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigDegrees)
+
     using Type = regina::IsoSigEdgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name)
-        .def(pybind11::init<const regina::Component<dim>&>())
-        .def("simplex", &Type::simplex)
-        .def("perm", &Type::perm)
-        .def("next", &Type::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::disable_eq_operators(s);
+
+    RDOC_SCOPE_END
 }
 
 template <int dim>
 void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigDegrees)
+
     using Type = regina::IsoSigRidgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name)
-        .def(pybind11::init<const regina::Component<dim>&>())
-        .def("simplex", &Type::simplex)
-        .def("perm", &Type::perm)
-        .def("next", &Type::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::disable_eq_operators(s);
+
+    RDOC_SCOPE_END
 }
 
 template <int dim>
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigPrintable)
+
     using Encoding = regina::IsoSigPrintable<dim>;
-    auto s = pybind11::class_<Encoding>(m, name)
+    auto s = pybind11::class_<Encoding>(m, name, rdoc_scope)
         .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
-        .def_static("emptySig", &Encoding::emptySig)
+        .def_static("emptySig", &Encoding::emptySig, rdoc::emptySig)
         .def_static("encode", [](
                 size_t size,
-                const std::vector<uint8_t>& facetActions,
+                const std::vector<uint8_t>& facetAction,
                 const std::vector<size_t>& joinDest,
                 const std::vector<typename Perm<dim+1>::Index>& joinGluing) {
             if (joinDest.size() != joinGluing.size())
                 throw regina::InvalidArgument("The arguments "
                     "joinDest and joinGluing must be lists of the same size");
-            return Encoding::encode(size, facetActions.size(),
-                facetActions.data(), joinDest.size(), joinDest.data(),
+            return Encoding::encode(size, facetAction.size(),
+                facetAction.data(), joinDest.size(), joinDest.data(),
                 joinGluing.data());
-        })
+        }, pybind11::arg("size"), pybind11::arg("facetAction"),
+            pybind11::arg("joinDest"), pybind11::arg("joinGluing"),
+            rdoc::encode)
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::no_eq_static(s);
+
+    RDOC_SCOPE_END
 }
 

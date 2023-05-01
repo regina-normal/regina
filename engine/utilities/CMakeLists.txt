@@ -11,6 +11,7 @@ SET ( FILES
   stringutils.cpp
   tightencoding.cpp
   trieset.cpp
+  typeutils.cpp
   xmlutils.cpp
   )
 
@@ -44,6 +45,7 @@ if (${REGINA_INSTALL_DEV})
     snapshot.h
     stringutils.h
     stringutils-impl.h
+    tableview.h
     tightencoding.h
     tightencoding-impl.h
     trieset.h

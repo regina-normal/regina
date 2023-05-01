@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2021, Ben Burton                                   *
+ *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,25 +34,30 @@
 #include "../pybind11/operators.h"
 #include "algebra/intersectionform.h"
 #include "../helpers.h"
+#include "../docstrings/algebra/intersectionform.h"
 
 using regina::IntersectionForm;
 using regina::MatrixInt;
 
 void addIntersectionForm(pybind11::module_& m) {
-    auto c = pybind11::class_<IntersectionForm>(m, "IntersectionForm")
-        .def(pybind11::init<MatrixInt>())
-        .def(pybind11::init<const IntersectionForm&>())
-        .def("swap", &IntersectionForm::swap)
-        .def("matrix", &IntersectionForm::matrix)
-        .def("rank", &IntersectionForm::rank)
-        .def("signature", &IntersectionForm::signature)
-        .def("even", &IntersectionForm::even)
-        .def("odd", &IntersectionForm::odd)
+    RDOC_SCOPE_BEGIN(IntersectionForm)
+
+    auto c = pybind11::class_<IntersectionForm>(m, "IntersectionForm",
+            rdoc_scope)
+        .def(pybind11::init<MatrixInt>(), rdoc::__init)
+        .def(pybind11::init<const IntersectionForm&>(), rdoc::__copy)
+        .def("swap", &IntersectionForm::swap, rdoc::swap)
+        .def("matrix", &IntersectionForm::matrix, rdoc::matrix)
+        .def("rank", &IntersectionForm::rank, rdoc::rank)
+        .def("signature", &IntersectionForm::signature, rdoc::signature)
+        .def("even", &IntersectionForm::even, rdoc::even)
+        .def("odd", &IntersectionForm::odd, rdoc::odd)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    m.def("swap",
-        (void(*)(IntersectionForm&, IntersectionForm&))(regina::swap));
+    regina::python::add_global_swap<IntersectionForm>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 
