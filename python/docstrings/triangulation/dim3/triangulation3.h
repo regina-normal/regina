@@ -1154,6 +1154,13 @@ powerful but (much) slower simplifyExhaustive() instead.
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
+If any tetrahedra and/or triangles are locked, these locks will be
+respected: that is, the simplification operation will avoid any moves
+that would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+make the simplification less effective in reducing the number of
+tetrahedra.
+
 .. warning::
     Running this routine multiple times upon the same triangulation
     may return different results, since the implementation makes
@@ -2614,7 +2621,14 @@ expensive to run.
 If *height* is negative, then there will be _no_ bound on the number
 of additional tetrahedra. This means that the routine will _never
 terminate_, unless *action* returns ``True`` for some triangulation
-that is passed to it.
+that is passed to it (or unless there are so many locks that the
+number of reachable triangulations becomes finite).
+
+If any tetrahedra and/or triangles are locked, these locks will be
+respected: that is, the retriangulation will avoid any moves that
+would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+reduce the number of distinct triangulations that can be reached.
 
 Since Regina 7.0, this routine will not return until the exploration
 of triangulations is complete, regardless of whether a progress
@@ -2854,9 +2868,17 @@ simplification or the routine becomes too expensive to run.
 
 If *height* is negative, then there will be _no_ bound on the number
 of additional tetrahedra. This means that the routine will not
-terminate until a simpler triangulation is found. If no simpler
-diagram exists then the only way to terminate this function is to
-cancel the operation via a progress tracker (read on for details).
+terminate until a simpler triangulation is found (unless there are so
+many locks that the number of reachable triangulations is finite).
+This means that, if no simpler triangulation exists, the only way to
+terminate this function is to cancel the operation via a progress
+tracker (read on for details).
+
+If any tetrahedra and/or triangles are locked, these locks will be
+respected: that is, the retriangulation will avoid any moves that
+would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+reduce the number of distinct triangulations that can be reached.
 
 If you want a _fast_ simplification routine, you should call
 intelligentSimplify() instead. The benefit of simplifyExhaustive() is
@@ -2929,6 +2951,13 @@ however feature in intelligentSimplify().
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
+
+If any tetrahedra and/or triangles are locked, these locks will be
+respected: that is, the simplification operation will avoid any moves
+that would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+make the simplification less effective in reducing the number of
+tetrahedra.
 
 .. warning::
     The implementation of this routine (and therefore its results) may
@@ -3304,7 +3333,9 @@ faces of the second tetrahedron, but those follow automatically from
 the final condition above.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+simplex and/or facet locks (see Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks).
 
 If this triangulation is currently oriented, then this 2-1 move will
 label the new tetrahedra in a way that preserves the orientation.
@@ -3315,10 +3346,18 @@ old skeletal objects (such as the argument *e*) can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any simplex and/or facet locks.
 
 Precondition:
     The given edge is an edge of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a simplex or facet lock, and *check* was
+    passed as ``False``. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how locks work and
+    what their implications are.
 
 Parameter ``e``:
     the edge about which to perform the move.
@@ -3339,8 +3378,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.)doc";
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::twoZeroMove
 static const char *twoZeroMove =
@@ -3486,7 +3525,11 @@ if the following conditions are satisfied:
 * The edge *e* is valid.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+facet locks (see Simplex<3>::lockFacet() for further details on facet
+locks). In particular, since this move pries open a _pair_ of adjacent
+triangles and not just a single triangle, a lock on either of the two
+requested triangles will prevent this move from taking place.
 
 If this triangulation is currently oriented, then this 0-2 move will
 label the new tetrahedra in a way that preserves the orientation.
@@ -3498,10 +3541,17 @@ longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    by known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any facet locks.
 
 Precondition:
     The edge *e* is an edge of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a facet lock, and *check* was passed as
+    ``False``. This exception will be thrown before any changes are
+    made. See Simplex<3>::lockFacet() for details on how facet locks
+    work and what their implications are.
 
 Parameter ``e0``:
     an embedding of the common edge *e* of the two triangles about
@@ -3528,8 +3578,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is false, the function simply
-    returns ``True``.
+    topology of the manifold or violating any locks. If *check* is
+    false, the function simply returns ``True``.
 
 Author:
     Alex He)doc";
@@ -3564,7 +3614,11 @@ The triangles incident to *e* are numbered as follows:
   *emb* denotes ``e->back()``.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+facet locks (see Simplex<3>::lockFacet() for further details on facet
+locks). In particular, since this move pries open a _pair_ of adjacent
+triangles and not just a single triangle, a lock on either of the two
+requested triangles will prevent this move from taking place.
 
 If this triangulation is currently oriented, then this 0-2 move will
 label the new tetrahedra in a way that preserves the orientation.
@@ -3579,10 +3633,17 @@ old skeletal objects (such as the argument *e*) can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    by known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any facet locks.
 
 Precondition:
     The given edge *e* is an edge of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a facet lock, and *check* was passed as
+    ``False``. This exception will be thrown before any changes are
+    made. See Simplex<3>::lockFacet() for details on how facet locks
+    work and what their implications are.
 
 Parameter ``e``:
     the common edge of the two triangles about which to perform the
@@ -3606,8 +3667,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is false, the function simply
-    returns ``True``.
+    topology of the manifold or violating any locks. If *check* is
+    false, the function simply returns ``True``.
 
 Author:
     Alex He)doc";
@@ -3628,7 +3689,11 @@ if the following conditions are satisfied:
 * The edge *e* is valid.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+facet locks (see Simplex<3>::lockFacet() for further details on facet
+locks). In particular, since this move pries open a _pair_ of adjacent
+triangles and not just a single triangle, a lock on either of the two
+given triangles will prevent this move from taking place.
 
 If this triangulation is currently oriented, then this 0-2 move will
 label the new tetrahedra in a way that preserves the orientation.
@@ -3644,7 +3709,8 @@ longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    by known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any facet locks.
 
 Precondition:
     The given triangles *t0* and *t1* are triangles of this
@@ -3652,6 +3718,12 @@ Precondition:
 
 Precondition:
     The numbers *e0* and *e1* are both 0, 1 or 2.
+
+Exception ``LockViolation``:
+    This move would violate a facet lock, and *check* was passed as
+    ``False``. This exception will be thrown before any changes are
+    made. See Simplex<3>::lockFacet() for details on how facet locks
+    work and what their implications are.
 
 Parameter ``t0``:
     one of the two triangles about which to perform the move.
@@ -3676,8 +3748,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is false, the function simply
-    returns ``True``.
+    topology of the manifold or violating any locks. If *check* is
+    false, the function simply returns ``True``.
 
 Author:
     Alex He)doc";

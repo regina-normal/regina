@@ -1418,6 +1418,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * now handle octagons, including cases with multiple octagons in the
          * same tetrahedron and/or octagons in multiple tetrahedra.
          *
+         * This routine will ignore any locks on tetrahedra and/or triangles
+         * of the original triangulation (and of course the original
+         * triangulation will be left safely unchanged).  The triangulation
+         * that is returned will not have any locks at all.
+         *
          * \warning The number of tetrahedra in the new triangulation
          * can be _very_ large.
          *
@@ -1451,6 +1456,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * connected sum decompositions, removal of 3-spheres and
          * small Lens spaces and so on; a full list of possible changes
          * is beyond the scope of this API documentation.
+         *
+         * This routine will ignore any locks on tetrahedra and/or triangles
+         * of the original triangulation (and of course the original
+         * triangulation will be left safely unchanged).  The triangulation
+         * that is returned will not have any locks at all.
          *
          * \warning This routine can have unintended topological
          * side-effects, as described above.

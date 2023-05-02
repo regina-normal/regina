@@ -544,8 +544,8 @@ There are some important exceptions to these rules:
 
 * We also allow moves that "pry open" a (*dim*-1)-face *F* to become a
   pair of parallel faces *F1*, *F2*, between which new material is
-  inserted. For example, this kind of operation happens with 0-2
-  moves, pinchEdge() and connected sum operations in dimension 3, and
+  inserted. For example, this kind of operation happens with
+  pinchEdge() and connected sum operations in dimension 3, and
   snapEdge() in dimension 4. In this case, the lock will move across
   to one of *F1* or *F2*. In particular, if *F* was originally
   boundary then the lock will move to whichever of *F1* or *F2* is

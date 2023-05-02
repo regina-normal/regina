@@ -312,6 +312,13 @@ with random 3-3 moves and book opening moves.
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
+If any pentachora and/or tetrahedra are locked, these locks will be
+respected: that is, the simplification operation will avoid any moves
+that would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+make the simplification less effective in reducing the number of
+pentachora.
+
 .. warning::
     The specific behaviour of this routine will almost certainly
     change between releases. At present, simplification for 4-manifold
@@ -610,7 +617,14 @@ expensive to run.
 If *height* is negative, then there will be _no_ bound on the number
 of additional pentachora. This means that the routine will _never
 terminate_, unless *action* returns ``True`` for some triangulation
-that is passed to it.
+that is passed to it (or unless there are so many locks that the
+number of reachable triangulations becomes finite).
+
+If any pentachora and/or tetrahedra are locked, these locks will be
+respected: that is, the retriangulation will avoid any moves that
+would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+reduce the number of distinct triangulations that can be reached.
 
 Since Regina 7.0, this routine will not return until the exploration
 of triangulations is complete, regardless of whether a progress
@@ -781,9 +795,17 @@ simplification or the routine becomes too expensive to run.
 
 If *height* is negative, then there will be _no_ bound on the number
 of additional pentachora. This means that the routine will not
-terminate until a simpler triangulation is found. If no simpler
-diagram exists then the only way to terminate this function is to
-cancel the operation via a progress tracker (read on for details).
+terminate until a simpler triangulation is found (unless there are so
+many locks that the number of reachable triangulations is finite).
+This means that, if no simpler triangulation exists, the only way to
+terminate this function is to cancel the operation via a progress
+tracker (read on for details).
+
+If any pentachora and/or tetrahedra are locked, these locks will be
+respected: that is, the retriangulation will avoid any moves that
+would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+reduce the number of distinct triangulations that can be reached.
 
 If you want a _fast_ simplification routine, you should call
 intelligentSimplify() instead. The benefit of simplifyExhaustive() is
@@ -855,6 +877,13 @@ however feature in intelligentSimplify().
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
+If any pentachora and/or tetrahedra are locked, these locks will be
+respected: that is, the simplification operation will avoid any moves
+that would violate these locks (and in particular, no LockException
+exceptions should be thrown). Of course, however, having locks may
+make the simplification less effective in reducing the number of
+pentachora.
+
 .. warning::
     The specific behaviour of this routine will almost certainly
     change between releases. At present, simplification for 4-manifold
@@ -873,6 +902,57 @@ Returns:
     pentachora; if *perform* is ``False``, this routine returns
     ``True`` if and only if it determines that it is capable of
     performing such a change.)doc";
+
+// Docstring regina::python::doc::Triangulation_::simplifyUpDown
+static const char *simplifyUpDown =
+R"doc(Attempts to simplify this triangulation by making increasingly long
+sequences of 2-4 moves and then attempting to simplify back down.
+
+This routine will _only_ perform 2-4 moves, 2-0 edge moves, 2-0
+triangle moves, and 3-3 moves.
+
+The main purpose of this routine is to offer a "well-climbing"
+technique that explores more widely than intelligentSimplify(), but
+that is not nearly as slow as simplifyExhaustive().
+
+If this triangulation is currently oriented, then this operation will
+preserve the orientation.
+
+If any pentachora and/or tetrahedra are locked, these locks will be
+respected: that is, this routine will avoid any moves that would
+violate these locks (and in particular, no LockException exceptions
+should be thrown). Of course, however, having locks may make the
+simplification less effective in reducing the number of pentachora.
+
+.. warning::
+    The specific behaviour of this routine will almost certainly
+    change between releases.
+
+Parameter ``max24``:
+    the maximum number of consecutive 2-4 moves to perform in a single
+    "up" sequence. Note that this routine will attempt several "up"
+    sequences of differing lengths, and in particular may eventually
+    pass through triangulations with more than ``size() + max24``
+    pentachora. If this is -1, then a sensible default will be chosen.
+
+Parameter ``max33``:
+    the maximum number of consecutive 3-3 moves to perform immediately
+    after each "up" sequence. If this is -1, then a sensible default
+    will be chosen.
+
+Parameter ``alwaysModify``:
+    ``True`` if this triangulation should be modified after this
+    operation, even if the final endpoint has _more_ pentachora than
+    the triangulation began with, or ``False`` if this triangulation
+    should only be modified if the total number of pentachora was
+    strictly reduced.
+
+Returns:
+    ``True`` if and only if the number of pentachora was strictly
+    reduced.
+
+Author:
+    Rhuaidi Burke)doc";
 
 // Docstring regina::python::doc::Triangulation_::snapEdge
 static const char *snapEdge =

@@ -292,6 +292,11 @@ void addTriangulation4(pybind11::module_& m) {
         .def("simplifyToLocalMinimum",
             &Triangulation<4>::simplifyToLocalMinimum,
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
+        .def("simplifyUpDown", &Triangulation<4>::simplifyUpDown,
+            pybind11::arg("max24") = -1,
+            pybind11::arg("max33") = -1,
+            pybind11::arg("alwaysModify") = false,
+            rdoc::simplifyUpDown)
         .def("simplifyExhaustive", &Triangulation<4>::simplifyExhaustive,
             pybind11::arg("height") = 1,
             pybind11::arg("threads") = 1,

@@ -93,6 +93,24 @@ template <int> class XMLTriangulationReader;
 template <>
 class Triangulation<4> : public detail::TriangulationBase<4> {
     private:
+        /**
+         * Represents different contexts in which a member function might try
+         * to simplify a triangulation.
+         */
+        enum SimplifyContext {
+            /**
+             * Indicates that we want to use all available techniques to
+             * simplify the triangulation as much as possible.
+             */
+            simplifyBest,
+            /**
+             * Indicates that we are within a "down" sequence of
+             * simplifyUpDown().  Only 2-0 edge moves, 2-0 triangle moves and
+             * 3-3 moves will be considered.
+             */
+            simplifyUpDownDescent
+        };
+
         long vertexLinkSummary_ { -1 };
             /**< This is a computed property that caches information about the
                  vertex links, and is optimised for valid triangulations.
@@ -520,6 +538,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
+         * If any pentachora and/or tetrahedra are locked, these locks will be
+         * respected: that is, the simplification operation will avoid any
+         * moves that would violate these locks (and in particular, no
+         * LockException exceptions should be thrown).  Of course, however,
+         * having locks may make the simplification less effective in reducing
+         * the number of pentachora.
+         *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,
          * simplification for 4-manifold triangulations is extremely
@@ -547,6 +572,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
+         * If any pentachora and/or tetrahedra are locked, these locks will be
+         * respected: that is, the simplification operation will avoid any
+         * moves that would violate these locks (and in particular, no
+         * LockException exceptions should be thrown).  Of course, however,
+         * having locks may make the simplification less effective in reducing
+         * the number of pentachora.
+         *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,
          * simplification for 4-manifold triangulations is extremely
@@ -563,6 +595,51 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
+
+        /**
+         * Attempts to simplify this triangulation by making increasingly long
+         * sequences of 2-4 moves and then attempting to simplify back down.
+         *
+         * This routine will _only_ perform 2-4 moves, 2-0 edge moves,
+         * 2-0 triangle moves, and 3-3 moves.
+         *
+         * The main purpose of this routine is to offer a "well-climbing"
+         * technique that explores more widely than intelligentSimplify(),
+         * but that is not nearly as slow as simplifyExhaustive().
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * If any pentachora and/or tetrahedra are locked, these locks will be
+         * respected: that is, this routine will avoid any moves that would
+         * violate these locks (and in particular, no LockException exceptions
+         * should be thrown).  Of course, however, having locks may make the
+         * simplification less effective in reducing the number of pentachora.
+         *
+         * \warning The specific behaviour of this routine will almost
+         * certainly change between releases.
+         *
+         * \param max24 the maximum number of consecutive 2-4 moves to perform
+         * in a single "up" sequence.  Note that this routine will attempt
+         * several "up" sequences of differing lengths, and in particular
+         * may eventually pass through triangulations with more than
+         * `size() + max24` pentachora.  If this is -1, then a sensible
+         * default will be chosen.
+         * \param max33 the maximum number of consecutive 3-3 moves to perform
+         * immediately after each "up" sequence.  If this is -1, then a sensible
+         * default will be chosen.
+         * \param alwaysModify \c true if this triangulation should be modified
+         * after this operation, even if the final endpoint has _more_
+         * pentachora than the triangulation began with, or \c false if this
+         * triangulation should only be modified if the total number of
+         * pentachora was strictly reduced.
+         * \return \c true if and only if the number of pentachora was
+         * strictly reduced.
+         *
+         * \author Rhuaidi Burke
+         */
+        bool simplifyUpDown(ssize_t max24 = -1, ssize_t max33 = -1,
+            bool alwaysModify = false);
 
         /**
          * Attempts to simplify this triangulation using a slow but
@@ -592,12 +669,19 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
-         * If \a height is negative, then there will be _no_ bound on
-         * the number of additional pentachora.  This means that the
-         * routine will not terminate until a simpler triangulation is found.
-         * If no simpler diagram exists then the only way to terminate this
-         * function is to cancel the operation via a progress tracker
-         * (read on for details).
+         * If \a height is negative, then there will be _no_ bound on the
+         * number of additional pentachora.  This means that the routine will
+         * not terminate until a simpler triangulation is found (unless there
+         * are so many locks that the number of reachable triangulations is
+         * finite).  This means that, if no simpler triangulation exists, the
+         * only way to terminate this function is to cancel the operation via
+         * a progress tracker (read on for details).
+         *
+         * If any pentachora and/or tetrahedra are locked, these locks will be
+         * respected: that is, the retriangulation will avoid any moves that
+         * would violate these locks (and in particular, no LockException
+         * exceptions should be thrown).  Of course, however, having locks may
+         * reduce the number of distinct triangulations that can be reached.
          *
          * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
@@ -702,10 +786,17 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * If \a height is negative, then there will be _no_ bound on
-         * the number of additional pentachora.  This means that the
-         * routine will _never terminate_, unless \a action returns
-         * \c true for some triangulation that is passed to it.
+         * If \a height is negative, then there will be _no_ bound on the
+         * number of additional pentachora.  This means that the routine will
+         * _never terminate_, unless \a action returns \c true for some
+         * triangulation that is passed to it (or unless there are so many
+         * locks that the number of reachable triangulations becomes finite).
+         *
+         * If any pentachora and/or tetrahedra are locked, these locks will be
+         * respected: that is, the retriangulation will avoid any moves that
+         * would violate these locks (and in particular, no LockException
+         * exceptions should be thrown).  Of course, however, having locks may
+         * reduce the number of distinct triangulations that can be reached.
          *
          * Since Regina 7.0, this routine will not return until the exploration
          * of triangulations is complete, regardless of whether a progress
@@ -1315,6 +1406,24 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         void calculateEdgeLinks();
 
+        /**
+         * Implements intelligentSimplify().  The template argument indicates
+         * which individual moves we are allowed to use.
+         *
+         * See intelligentSimplify() for further details.
+         */
+        template <SimplifyContext>
+        bool intelligentSimplifyInternal();
+
+        /**
+         * Implements simplifyToLocalMinimum().  The template argument
+         * indicates which individual moves we are allowed to use.
+         *
+         * See simplifyToLocalMinimum() for further details.
+         */
+        template <SimplifyContext>
+        bool simplifyToLocalMinimumInternal(bool perform);
+
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
@@ -1430,6 +1539,14 @@ inline bool Triangulation<4>::isIdeal() const {
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
+}
+
+inline bool Triangulation<4>::intelligentSimplify() {
+    return intelligentSimplifyInternal<simplifyBest>();
+}
+
+inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
+    return simplifyToLocalMinimumInternal<simplifyBest>(perform);
 }
 
 template <typename Action, typename... Args>

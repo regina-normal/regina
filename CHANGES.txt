@@ -84,6 +84,8 @@ Version 7.4  [ (to be announced) ]
               exception if their preconditions fail.
             - Routine reorderTetrahedraBFS() is now a deprecated alias for
               reorderBFS() (which is available in all dimensions).
+        Class Triangulation<4>:
+            - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
         Class Vector<T>:
             - Added support for tight encodings and decodings.
             - New routine hash(), which uses the tight encoding.
