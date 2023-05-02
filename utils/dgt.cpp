@@ -484,8 +484,8 @@ public:
             adjList[P4][4] = P5;
             adjList[P5][4] = P4;
             
-            for (int i=0; i<4; i++) {
-                quadriVertsUsed.push_back(currentQuadri[i]);
+            for (int j=0; j<4; j++) {
+                quadriVertsUsed.push_back(currentQuadri[j]);
             }
         }
                 
@@ -681,7 +681,7 @@ std::vector<std::pair<int, int>> pdc_xotype(const pdcode& code) {
     std::vector<int> pdc_os = pdc_orientations(code);
     std::vector<int> pdc_xs = pdc_xtype(code);
     
-    for (int i=0; i<code.size(); i++) {
+    for (size_t i=0; i<code.size(); i++) {
         ans.emplace_back(pdc_xs[i], pdc_os[i]);
     }
     return ans;
@@ -1149,7 +1149,11 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    pdc_g.print_vertices();
+    
     pdc_g.pd_sub(pdc);
+    
+    pdc_g.print_vertices();
 
     std::vector<std::pair<vertex3, vertex3>> pdc_fl = pdc_g.fuse_list();
 
@@ -1161,6 +1165,11 @@ int main(int argc, char* argv[]) {
     
     if (dim_flag_int == 4) {
         std::vector<std::array<vertex3, 4>> component_ql = find_component_quadris(pdc_g);
+
+        for (const auto& el : component_ql) {
+            std::cout << el[0] << ", " << el[1] << ", " << el[2] << ", " << el[3] << std::endl;
+        }
+        
         std::cout << std::endl;
         std::cout << "Performing " << component_ql.size() << " quadricolour substitution";
         if (component_ql.size() == 1) {

@@ -16,15 +16,15 @@ int main(int argc, char* argv[]){
     
     int twoFourCap,threeThreeCap;
     
-    std::cout << "Max. number of attempts per run: ";
+    std::cout << "Max. number of 2-4 moves: ";
     std::cin >> twoFourCap;
 
     std::cout << "Max. number of 3-3 moves: ";
     std::cin >> threeThreeCap;
 
-    int numberOfRuns;
-    std::cout << "Number of runs: ";
-    std::cin >> numberOfRuns;
+    int numberOfEpochs;
+    std::cout << "Number of epochs: ";
+    std::cin >> numberOfEpochs;
 
     std::string initIsoSig;
     std::cout << "Iso Sig: ";
@@ -36,115 +36,103 @@ int main(int argc, char* argv[]){
     
     bool verbose = true;
 
-//    for (int i=1; i<argc; ++i) {
-//        if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--verbose")) {
-//            verbose = true;
-//        }
-//        else {
-            isoSigFile = argv[1];
-            std::string argString = std::string(argv[1]);
-            simplificationDataFile = "Simplification Data - " + argString;
-//        }
-//    }
+    if (argc > 0) {
+        isoSigFile = argv[1];
+        std::string argString = std::string(argv[1]);
+        simplificationDataFile = "Simplification Data - " + argString;
+    }
+
     isoSigs.open(isoSigFile);
     simplificationData.open(simplificationDataFile);
     
-    int currentRun = 1;
+    int currentEpoch = 1;
     
-    while (currentRun <= numberOfRuns) {
+    while (currentEpoch <= numberOfEpochs) {
+        regina::Triangulation<4> init_mfld = regina::Triangulation<4>::fromIsoSig(initIsoSig);
         
-    regina::Triangulation<4> init_mfld = regina::Triangulation<4>::fromIsoSig(initIsoSig);
+        size_t ogEdges, numEdges;
+        ogEdges = numEdges = init_mfld.countEdges();
+        auto ogIsoSig = init_mfld.isoSig();
     
-    size_t ogEdges, numEdges;
-    ogEdges = numEdges = init_mfld.countEdges();
-    auto ogIsoSig = init_mfld.isoSig();
-
-//    std::cout << "Original number of edges: " << ogEdges << "\n";
         size_t runOrigEdges = ogEdges;
-    
-    bool runaway = false;
-    
-    clock_t time = clock();
-    size_t edgeLowerbound = ogEdges - 1;
-    while ((numEdges > edgeLowerbound) || (init_mfld.countPentachora() != 2)) {
-        bool doIT = true;
-
-        int attempts = 1;
-    
-        while (doIT) {
-
-            for (int i=0; i<attempts; i++) {
-                for (regina::Tetrahedron<4>* tet : init_mfld.tetrahedra()) {
-                    if (init_mfld.pachner(tet,true,true)) {
-                        break;
-                    }
-                }
-            }
         
-            init_mfld.intelligentSimplify();
-            numEdges = init_mfld.countEdges();
-        
-//            if ((init_mfld.isoSig() != ogIsoSig) && (init_mfld.countPentachora() <= 6)) {
-            if (verbose) {
-                std::cout << "\r" << std::setw(3) << attempts << ", " << std::setw(3) << numEdges << std::flush;
-//                std::cout << attempts << ", " << numEdges << std::endl;
-            }
-//                std::cout << init_mfld.isoSig() << "\n";
-//            }
-            
-//            if (std::cin.get() == 's') {
-//                std::cout << init_mfld.isoSig() << std::endl;
-//            }
-            
-            attempts+=1;
+        clock_t time = clock();
+        size_t edgeLowerbound = ogEdges - 1;
+        while ((numEdges > edgeLowerbound)) {
 
-            if (numEdges<ogEdges) {
+            bool doIT = true;
+
+            int attempts = 1;
+        
+            // Hardcoded stop if we hit 2 pentachora.
+            if (init_mfld.size() == 2) {
                 doIT = false;
-                ogEdges = numEdges;
+                ogEdges = numEdges = edgeLowerbound;
                 break;
             }
-            
-            for (int i=0; i<threeThreeCap; i++) {
-                for (regina::Triangle<4>* tri : init_mfld.triangles()) {
-                    if (init_mfld.pachner(tri,true,true)) {
-                        break;
+        
+            while (doIT) {
+                
+                for (int i=0; i<attempts; i++) {
+                    for (regina::Tetrahedron<4>* tet : init_mfld.tetrahedra()) {
+                        if (init_mfld.pachner(tet,true,true)) {
+                            break;
+                        }
                     }
                 }
+        
+                init_mfld.intelligentSimplify();
+//                if (init_mfld.isoSig() != "eAMPcaabcddd+aoa+aAa8aQara") {
+//                    isoSigs << init_mfld.isoSig() << std::endl;
+//                }
+                numEdges = init_mfld.countEdges();
+        
+                if (verbose) {
+                    std::cout << "\r" << std::setw(3) << attempts << ", " << std::setw(3) << numEdges << std::flush;
+                }
+                
+//                attempts+=1;
+
+                if (numEdges<ogEdges) {
+                    doIT = false;
+                    ogEdges = numEdges;
+                    break;
+                }
+            
+                for (int i=0; i<threeThreeCap; i++) {
+                    for (regina::Triangle<4>* tri : init_mfld.triangles()) {
+                        if (init_mfld.pachner(tri,true,true)) {
+                            break;
+                        }
+                    }
+                }
+                
+                attempts+=1;
+                
+                if (attempts > twoFourCap) {
+                    doIT = false;
+                    break;
+                }
+                
             }
 
-            if (attempts > twoFourCap) {
-                doIT = false;
-                break;
-            }
-            
         }
-    }
-
-    time = clock() - time;
-    double time_taken = ((double)time)/CLOCKS_PER_SEC;
+        
+        time = clock() - time;
+        double time_taken = ((double)time)/CLOCKS_PER_SEC;
     
-    if (!runaway) {
         std::cout << std::endl;
         std::cout << init_mfld.isoSig() << "\n";
         std::cout <<
-        //"s-vector: " <<
-        currentRun << " | " << init_mfld.countVertices() << ", " << runOrigEdges << " -> " << init_mfld.countEdges() << ", " << init_mfld.countPentachora() << " | " << time_taken << "\n";
+        currentEpoch << " | " << init_mfld.countVertices() << ", " << runOrigEdges << " -> " << init_mfld.countEdges() << ", " << init_mfld.countPentachora() << " | " << time_taken << "\n";
         
         if (argc == 2) {
-            isoSigs << init_mfld.isoSig() << std::endl;
-            
-            simplificationData << currentRun << "," << init_mfld.countVertices() << "," << runOrigEdges << "," << init_mfld.countEdges() << "," << init_mfld.countPentachora() << "," << time_taken << std::endl;
+            simplificationData << currentEpoch << "," << init_mfld.countVertices() << "," << runOrigEdges << "," << init_mfld.countEdges() << "," << init_mfld.countPentachora() << "," << time_taken << std::endl;
         }
-    }
-    else {
-        std::cout << "Original isomorphism signature: " << initIsoSig << "\n";
-    }
-    
-//    std::cout << "Time taken (run): " << time_taken << std::endl;
-    
-    initIsoSig = init_mfld.isoSig();
         
-        currentRun+=1;
+        initIsoSig = init_mfld.isoSig();
+        
+        currentEpoch+=1;
     }
     
     std::cout << "\007";
