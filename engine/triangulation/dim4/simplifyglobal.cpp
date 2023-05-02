@@ -39,14 +39,15 @@
 
 namespace regina {
 
-bool Triangulation<4>::intelligentSimplify() {
+template <Triangulation<4>::SimplifyContext context>
+bool Triangulation<4>::intelligentSimplifyInternal() {
     bool changed;
 
     { // Begin scope for change event span.
         ChangeEventGroup span(*this);
 
         // Reduce to a local minimum.
-        changed = simplifyToLocalMinimum(true);
+        changed = simplifyToLocalMinimumInternal<context>(true);
 
         // Clone to work with when we might want to roll back changes.
         Triangulation<4>* use;
@@ -99,7 +100,7 @@ bool Triangulation<4>::intelligentSimplify() {
                 use->pachner(threeThreeChoice, false, true);
 
                 // See if we can simplify now.
-                if (use->simplifyToLocalMinimum(true)) {
+                if (use->simplifyToLocalMinimumInternal<context>(true)) {
                     // We have successfully simplified!
                     // Start all over again.
                     threeThreeAttempts = threeThreeCap = 0;
@@ -120,6 +121,11 @@ bool Triangulation<4>::intelligentSimplify() {
 
             // At this point we have decided that 3-3 moves will help us
             // no more.
+
+            if constexpr (context == simplifyUpDownDescent) {
+                // In this context, we are not allowed to try any other moves.
+                break;
+            }
 
             // --- Open book moves ---
 
@@ -146,7 +152,7 @@ bool Triangulation<4>::intelligentSimplify() {
 
                 // If we're lucky, we can now simplify further.
                 if (opened) {
-                    if (use->simplifyToLocalMinimum(true)) {
+                    if (use->simplifyToLocalMinimumInternal<context>(true)) {
                         // Yay!
                         swap(*use);
                         changed = true;
@@ -172,7 +178,14 @@ bool Triangulation<4>::intelligentSimplify() {
     return changed;
 }
 
-bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
+// Instantiate all variants of intelligentSimplifyInternal().
+template bool Triangulation<4>::intelligentSimplifyInternal<
+    Triangulation<4>::simplifyBest>();
+template bool Triangulation<4>::intelligentSimplifyInternal<
+    Triangulation<4>::simplifyUpDownDescent>();
+
+template <Triangulation<4>::SimplifyContext context>
+bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
     unsigned long nTetrahedra;
     unsigned long iTet;
 
@@ -186,20 +199,22 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
             changedNow = false;
             ensureSkeleton();
 
-            // Crush edges if we can.
-            if (countVertices() > countComponents() &&
-                    countVertices() > countBoundaryComponents()) {
-                for (Edge<4>* e : edges()) {
-                    if (collapseEdge(e, true, perform)) {
-                        changedNow = changed = true;
-                        break;
+            if constexpr (context != simplifyUpDownDescent) {
+                // Crush edges if we can.
+                if (countVertices() > countComponents() &&
+                        countVertices() > countBoundaryComponents()) {
+                    for (Edge<4>* e : edges()) {
+                        if (collapseEdge(e, true, perform)) {
+                            changedNow = changed = true;
+                            break;
+                        }
                     }
-                }
-                if (changedNow) {
-                    if (perform)
-                        continue;
-                    else
-                        return true;
+                    if (changedNow) {
+                        if (perform)
+                            continue;
+                        else
+                            return true;
+                    }
                 }
             }
 
@@ -232,6 +247,11 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
                     continue;
                 else
                     return true;
+            }
+
+            if constexpr (context == simplifyUpDownDescent) {
+                // In this context, we are not allowed to try any other moves.
+                break;
             }
 
             for (Vertex<4>* v : vertices()) {
@@ -288,6 +308,65 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
     } // End scope for change event span.
 
     return changed;
+}
+
+// Instantiate all variants of simplifyToLocalMinimumInternal().
+template bool Triangulation<4>::simplifyToLocalMinimumInternal<
+    Triangulation<4>::simplifyBest>(bool);
+template bool Triangulation<4>::simplifyToLocalMinimumInternal<
+    Triangulation<4>::simplifyUpDownDescent>(bool);
+
+bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
+        bool alwaysModify) {
+    if ((! alwaysModify) && size() <= 2)
+        return false;
+
+    // Set up some sensible default arguments.
+    if (max24 < 0)
+        max24 = 10;
+    if (max33 < 0)
+        max33 = max24 * 3;
+
+    size_t initEdges = countEdges();
+
+    // Set up a temporary working triangulation, just in case we end up making
+    // things worse, not better.
+    Triangulation<4> working(*this, false);
+    working.copyLocksFrom(*this);
+
+    for (size_t attempts = 1; attempts <= max24; ++attempts) {
+        // Do attempts successive 2-4 moves.
+        for (int i=0; i<attempts; i++) {
+            for (auto tet : working.tetrahedra()) {
+                if (working.pachner(tet,true,true)) {
+                    break;
+                }
+            }
+        }
+
+        // Simplify using only 2-0 edge/triangle moves and 3-3 moves.
+        working.intelligentSimplifyInternal<simplifyUpDownDescent>();
+
+        if (working.countEdges() < initEdges) {
+            // We simplified!
+            swap(working);
+            return true;
+        }
+
+        // Make the requested number of 3-3 moves.
+        for (int i=0; i<max33; i++) {
+            for (auto tri : working.triangles()) {
+                if (working.pachner(tri,true,true)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    // We never reduced the number of edges.
+    if (alwaysModify)
+        swap(working);
+    return false;
 }
 
 } // namespace regina
