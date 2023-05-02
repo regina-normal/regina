@@ -65,7 +65,15 @@ bool Triangulation<4>::intelligentSimplify() {
             // might not lead to a simplification.
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
-            use = (changed ? this : new Triangulation<4>(*this, false));
+            //
+            // If we are cloning the triangulation, ensure we clone the locks
+            // also.
+            if (changed)
+                use = this;
+            else {
+                use = new Triangulation<4>(*this, false);
+                use->copyLocksFrom(*this);
+            }
 
             // Make random 3-3 moves.
             threeThreeAttempts = threeThreeCap = 0;
@@ -118,7 +126,10 @@ bool Triangulation<4>::intelligentSimplify() {
             if (hasBoundaryTetrahedra()) {
                 // Clone again, always -- we don't want to create gratuitous
                 // boundary facets if they won't be of any help.
+                //
+                // Again, don't clone properties, but do clone locks.
                 use = new Triangulation<4>(*this, false);
+                use->copyLocksFrom(*this);
 
                 // Perform every book opening move we can find.
                 bool opened = false;

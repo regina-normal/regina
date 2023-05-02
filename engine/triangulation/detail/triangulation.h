@@ -3134,6 +3134,32 @@ class TriangulationBase :
         TriangulationBase& operator = (TriangulationBase&& src);
 
         /**
+         * Copies all simplex and/or facet locks from the given source
+         * triangulation to this triangulation.
+         *
+         * The main purpose of this function is to allow other member functions
+         * to make a "light" copy of a triangulation without cloning all of
+         * its computed properties, but to still copy locks across:
+         *
+         * \code{.cpp}
+         * Triangulation<dim> t(src, false);
+         * t.copyLocksFrom(src);
+         * \endcode
+         *
+         * All simplex lock masks will be copied over verbatim.  A side-effect
+         * of this is that any simplices or facets that are locked in this
+         * triangulation but not locked in \a src will become _unlocked_ as a
+         * result of this operation.
+         *
+         * \pre This and the given triangulation are identical, in that they
+         * have the same number of top-dimensional simplices and the same
+         * gluings between these simplices.
+         *
+         * \param src the source triangulation whose locks should be copied.
+         */
+        void copyLocksFrom(const TriangulationBase& src);
+
+        /**
          * A variant of newSimplex() with no management of the underlying
          * triangulation.
          *
@@ -5125,6 +5151,15 @@ inline bool TriangulationBase<dim>::sameDegreesAt(
         const TriangulationBase& other,
         std::integer_sequence<int, useDim...>) const {
     return (sameDegreesAt<useDim>(other) && ...);
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::copyLocksFrom(
+        const TriangulationBase& src) {
+    auto srcit = src.simplices_.begin();
+    auto destit = simplices_.begin();
+    for ( ; srcit != src.simplices_.end(); ++srcit, ++destit)
+        (*destit)->locks_ = (*srcit)->locks_;
 }
 
 // Inline functions for TriangulationBase::ChangeAndClearSpan
