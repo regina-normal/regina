@@ -4961,7 +4961,7 @@ std::vector<Triangulation<dim>>
     std::vector<Triangulation<dim>> ans(nComp);
 
     // Clone the simplices, sorting them into the new components.
-    auto* newSimp = new Simplex<dim>*[size()];
+    auto newSimp = std::make_unique<Simplex<dim>*[]>(size());
 
     for (size_t simpPos = 0; simpPos < size(); ++simpPos) {
         Triangulation<dim>& tri =
@@ -4983,7 +4983,6 @@ std::vector<Triangulation<dim>>
         }
     }
 
-    delete[] newSimp;
     return ans;
 }
 
