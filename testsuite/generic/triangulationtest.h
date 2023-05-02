@@ -1830,6 +1830,14 @@ class TriangulationTest : public CppUnit::TestFixture,
                     assigned = built;
                     BoundaryHelper<dim, dim-2>::verifyFaces(bc, assigned,
                         name2.c_str());
+
+                    // And yet again, this time with a "light" deep copy that
+                    // does not clone properties (but should still clone the
+                    // skeleton).
+
+                    name2 = std::string(name) + " (light cloned bdry)";
+                    BoundaryHelper<dim, dim-2>::verifyFaces(bc,
+                        Triangulation<dim-1>(built, false), name2.c_str());
                 }
         }
 

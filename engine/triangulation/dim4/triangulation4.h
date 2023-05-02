@@ -163,9 +163,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If \a src has any locks on top-dimensional simplices and/or their
          * facets, these locks will also be copied across.
          *
-         * If you want a "clean" copy that resets all properties to unknown
-         * and leaves the skeleton uncomputed, you can use the two-argument
-         * copy constructor instead.
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
          *
          * \param src the triangulation to copy.
          */
@@ -176,16 +175,14 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * If \a cloneProps is \c true, then this constructor will also clone
          * any computed properties (such as homology, fundamental group, and
-         * so on), as well as the skeleton (vertices, edges, components, etc.).
-         * In particular, the same numbering and labelling will be used for
-         * all skeletal objects in both triangulations.
+         * so on).  If \a cloneProps is \c false, then these properties
+         * will be marked as unknown in the new triangulation, and will be
+         * recomputed on demand if/when they are required.
          *
-         * If \a cloneProps is \c false, then these properties and skeletal
-         * objects will be marked as unknown in the new triangulation, and
-         * will be recomputed on demand if/when they are required.  Note
-         * in particular that, when the skeleton is recomputed, there is
-         * no guarantee that the numbering and labelling for skeletal objects
-         * will be the same as in the source triangulation.
+         * Regardless of \a cloneProps, the skeleton (vertices, edges,
+         * components, etc.) will _always_ be cloned.  This is to ensure that
+         * the same numbering and labelling will be used for all skeletal
+         * objects in both triangulations.
          *
          * Regardless of the argument \a cloneProps, if it is known that
          * all vertex links of \a copy are 3-sphere or 3-balls, this
