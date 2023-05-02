@@ -2067,11 +2067,11 @@
 		05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* examplesnappea.h */; };
 		05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07E19C2B96000A31924 /* PacketPicker.mm */; };
 		05FF4D3E1DB6BE310056D1EA /* SyntaxHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */; };
-		5033A0912761D55400CE8CAB /* up-down-simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F19A8E26D4E6A7005BADB8 /* up-down-simplify.cpp */; };
-		50BC46F326EECC4E003759CA /* 1h-testing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50BC46F226EECC4E003759CA /* 1h-testing.cpp */; };
 		05FFD26A2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
 		05FFD26B2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
 		05FFD26D2905263800E0F61C /* faceembedding.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FFD26C2905263700E0F61C /* faceembedding.h */; };
+		5033A0912761D55400CE8CAB /* up-down-simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F19A8E26D4E6A7005BADB8 /* up-down-simplify.cpp */; };
+		50BC46F326EECC4E003759CA /* 1h-testing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50BC46F226EECC4E003759CA /* 1h-testing.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -4823,13 +4823,13 @@
 		05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyntaxHighlighter.h; sourceTree = "<group>"; };
 		05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SyntaxHighlighter.mm; sourceTree = "<group>"; };
 		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
+		05FFD2692900C75900E0F61C /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
+		05FFD26C2905263700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
+		05FFD26E2905265700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
 		50BC46F026EECC4E003759CA /* 1h-testing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "1h-testing"; sourceTree = BUILT_PRODUCTS_DIR; };
 		50BC46F226EECC4E003759CA /* 1h-testing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "1h-testing.cpp"; sourceTree = "<group>"; };
 		50F19A8E26D4E6A7005BADB8 /* up-down-simplify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "up-down-simplify.cpp"; sourceTree = "<group>"; };
 		50F19B4E26D5E602005BADB8 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
-		05FFD2692900C75900E0F61C /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
-		05FFD26C2905263700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
-		05FFD26E2905265700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -12103,8 +12103,8 @@
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
 				CURRENT_PROJECT_VERSION = 14;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -12154,8 +12154,8 @@
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
 				CURRENT_PROJECT_VERSION = 14;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -12327,8 +12327,8 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -12353,8 +12353,8 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
