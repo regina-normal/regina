@@ -35,7 +35,7 @@
 #include "utilities/randutils.h"
 
 // Affects the number of random 3-3 moves attempted during simplification.
-#define COEFF_3_3 200
+#define COEFF_3_3 10
 
 namespace regina {
 
@@ -223,6 +223,18 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             // Experience suggests that 2-0 moves are more important to
             // "unblock" other moves, and we should leave the simpler
             // 4-2 moves until last.
+            for (Triangle<4>* t : triangles()) {
+                if (twoZeroMove(t, true, perform)) {
+                    changedNow = changed = true;
+                    break;
+                }
+            }
+            if (changedNow) {
+                if (perform)
+                    continue;
+                else
+                    return true;
+            }
 
             for (Edge<4>* e : edges()) {
                 if (twoZeroMove(e, true, perform)) {
@@ -268,57 +280,30 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
                     return true;
             }
 
-//
-//            for (Vertex<4>* v : vertices()) {
-//                if (twoZeroMove(v, true, perform)) {
-//                    changedNow = changed = true;
-//                    break;
-//                }
-//            }
-//            if (changedNow) {
-//                if (perform)
-//                    continue;
-//                else
-//                    return true;
-//            }
-//
-//            for (Edge<4>* e : edges()) {
-//                if (pachner(e, true, perform)) {
-//                    changedNow = changed = true;
-//                    break;
-//                }
-//            }
-//            if (changedNow) {
-//                if (perform)
-//                    continue;
-//                else
-//                    return true;
-//            }
-//
-//            // Look for boundary simplifications.
-//            if (hasBoundaryTetrahedra()) {
-//                for (BoundaryComponent<4>* bc : boundaryComponents()) {
-//                    // Run through facets of this boundary component looking
-//                    // for shell boundary moves.
-//                    nTetrahedra = bc->countTetrahedra();
-//                    for (iTet = 0; iTet < nTetrahedra; ++iTet) {
-//                        if (shellBoundary(bc->tetrahedron(iTet)->
-//                                front().pentachoron(),
-//                                true, perform)) {
-//                            changedNow = changed = true;
-//                            break;
-//                        }
-//                    }
-//                    if (changedNow)
-//                        break;
-//                }
-//                if (changedNow) {
-//                    if (perform)
-//                        continue;
-//                    else
-//                        return true;
-//                }
-//            }
+            // Look for boundary simplifications.
+            if (hasBoundaryTetrahedra()) {
+                for (BoundaryComponent<4>* bc : boundaryComponents()) {
+                    // Run through facets of this boundary component looking
+                    // for shell boundary moves.
+                    nTetrahedra = bc->countTetrahedra();
+                    for (iTet = 0; iTet < nTetrahedra; ++iTet) {
+                        if (shellBoundary(bc->tetrahedron(iTet)->
+                                front().pentachoron(),
+                                true, perform)) {
+                            changedNow = changed = true;
+                            break;
+                        }
+                    }
+                    if (changedNow)
+                        break;
+                }
+                if (changedNow) {
+                    if (perform)
+                        continue;
+                    else
+                        return true;
+                }
+            }
         }
     } // End scope for change event span.
 
