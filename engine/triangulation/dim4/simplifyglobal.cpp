@@ -223,8 +223,11 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             // Experience suggests that 2-0 moves are more important to
             // "unblock" other moves, and we should leave the simpler
             // 4-2 moves until last.
-            for (Triangle<4>* t : triangles()) {
-                if (twoZeroMove(t, true, perform)) {
+            //
+            // We prioritise edge moves, since in general we are trying to
+            // reduce the number of edges.
+            for (Edge<4>* e : edges()) {
+                if (twoZeroMove(e, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -236,8 +239,8 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
                     return true;
             }
 
-            for (Edge<4>* e : edges()) {
-                if (twoZeroMove(e, true, perform)) {
+            for (Triangle<4>* t : triangles()) {
+                if (twoZeroMove(t, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
