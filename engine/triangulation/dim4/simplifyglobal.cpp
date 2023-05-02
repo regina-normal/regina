@@ -34,9 +34,6 @@
 #include "triangulation/dim4.h"
 #include "utilities/randutils.h"
 
-// Affects the number of random 3-3 moves attempted during simplification.
-#define COEFF_3_3 10
-
 namespace regina {
 
 template <Triangulation<4>::SimplifyContext context>
@@ -77,6 +74,9 @@ bool Triangulation<4>::intelligentSimplifyInternal() {
             }
 
             // Make random 3-3 moves.
+            static constexpr int COEFF_3_3 =
+                (context == simplifyUpDownDescent ? 200 : 10);
+
             threeThreeAttempts = threeThreeCap = 0;
             while (true) {
                 // Calculate the list of available 3-3 moves.
