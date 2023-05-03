@@ -731,7 +731,7 @@ class TriangulationTest : public CppUnit::TestFixture,
             const int trials = 10;
 
             {
-                Triangulation<dim> oriented(tri, false);
+                Triangulation<dim> oriented(tri, false, true);
                 oriented.orient();
                 clearProperties(oriented);
                 verifyOrient(tri, oriented, name);
@@ -1594,7 +1594,7 @@ class TriangulationTest : public CppUnit::TestFixture,
             if (! tri.isConnected())
                 return;
 
-            Triangulation<dim> cover(tri, false);
+            Triangulation<dim> cover(tri, false, true);
             cover.makeDoubleCover();
 
             if (tri.isEmpty()) {
@@ -1837,7 +1837,8 @@ class TriangulationTest : public CppUnit::TestFixture,
 
                     name2 = std::string(name) + " (light cloned bdry)";
                     BoundaryHelper<dim, dim-2>::verifyFaces(bc,
-                        Triangulation<dim-1>(built, false), name2.c_str());
+                        Triangulation<dim-1>(built, false, false),
+                        name2.c_str());
                 }
         }
 

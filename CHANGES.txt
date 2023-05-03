@@ -73,6 +73,9 @@ Version 7.4  [ (to be announced) ]
               dimensions.
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
+            - The two-argument copy constructor is now a three-argument
+              copy constructor, giving an additional boolean option for
+              whether to clone simplex/facet locks.
             - Renamed simplifiedFundamentalGroup to setGroupPresentation().
               The old name is deprecated but kept for backwards compatibility.
         Class Triangulation<3>:

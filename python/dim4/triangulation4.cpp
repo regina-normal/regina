@@ -63,7 +63,11 @@ void addTriangulation4(pybind11::module_& m) {
             std::shared_ptr<Triangulation<4>>>(m, "Triangulation4", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Triangulation<4>&>(), rdoc::__copy)
-        .def(pybind11::init<const Triangulation<4>&, bool>(), rdoc::__init)
+        .def(pybind11::init<const Triangulation<4>&, bool, bool>(),
+            pybind11::arg("src"),
+            pybind11::arg("cloneProps"),
+            pybind11::arg("cloneLocks") = true,
+            rdoc::__init)
         .def(pybind11::init<const std::string&>(), rdoc::__init_2)
         .def("isReadOnlySnapshot", &Triangulation<4>::isReadOnlySnapshot,
             rbase2::isReadOnlySnapshot)
@@ -457,7 +461,11 @@ void addTriangulation4(pybind11::module_& m) {
     auto wrap = regina::python::add_packet_wrapper<Triangulation<4>>(
         m, "PacketOfTriangulation4");
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);
-    regina::python::add_packet_constructor<const Triangulation<4>&, bool>(wrap,
+    regina::python::add_packet_constructor<const Triangulation<4>&, bool,
+        bool>(wrap,
+        pybind11::arg("src"),
+        pybind11::arg("cloneProps"),
+        pybind11::arg("cloneLocks") = true,
         rdoc::__init);
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init_2);

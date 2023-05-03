@@ -60,7 +60,11 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             std::shared_ptr<Triangulation<dim>>>(m, name, rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Triangulation<dim>&>(), rdoc::__copy)
-        .def(pybind11::init<const Triangulation<dim>&, bool>(), rdoc::__init)
+        .def(pybind11::init<const Triangulation<dim>&, bool, bool>(),
+            pybind11::arg("src"),
+            pybind11::arg("cloneProps"),
+            pybind11::arg("cloneLocks") = true,
+            rdoc::__init)
         .def("isReadOnlySnapshot", &Triangulation<dim>::isReadOnlySnapshot,
             rbase2::isReadOnlySnapshot)
         .def("size", &Triangulation<dim>::size, rbase::size)
@@ -306,8 +310,12 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     auto wrap = regina::python::add_packet_wrapper<Triangulation<dim>>(
         m, (std::string("PacketOf") + name).c_str());
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);
-    regina::python::add_packet_constructor<const Triangulation<dim>&, bool>(
-        wrap, rdoc::__init);
+    regina::python::add_packet_constructor<const Triangulation<dim>&, bool,
+        bool>(wrap,
+        pybind11::arg("src"),
+        pybind11::arg("cloneProps"),
+        pybind11::arg("cloneLocks") = true,
+        rdoc::__init);
 
     // We cannot use add_global_swap() here, since add_global_swap() cannot
     // resolve regina::swap to the templated triangulation swap function.

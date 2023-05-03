@@ -276,7 +276,7 @@ class TriangulationBase :
         TriangulationBase(const TriangulationBase<dim>& src);
         /**
          * Creates a new copy of the given triangulation, with the option
-         * of whether or not to clone its computed properties also.
+         * of whether or not to clone its computed properties and/or locks also.
          *
          * If \a cloneProps is \c true, then this constructor will also clone
          * any computed properties (such as homology, fundamental group, and
@@ -289,18 +289,22 @@ class TriangulationBase :
          * the same numbering and labelling will be used for all skeletal
          * objects in both triangulations.
          *
-         * If \a src has any locks on top-dimensional simplices and/or their
-         * facets, these locks will be copied across _only_ if \a cloneProps
-         * is \c true.  If \a cloneProps is \c false then the new triangulation
-         * will have no locks at all.
+         * If \a cloneLocks is \c true then any locks on the top-dimensional
+         * simplices and/or facets of \a src will be copied across.
+         * If \a cloneLocks is \c false then the new triangulation will have
+         * no locks at all.
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
          * properties as well as the skeleton of the given triangulation,
          * or \c false if the new triangulation should have such properties
          * and skeletal data marked as unknown.
+         * \param cloneLocks \c true if this should also clone any simplex
+         * and/or facet locks from the given triangulation, or \c false if
+         * the new triangulation should have no locks at all.
          */
-        TriangulationBase(const TriangulationBase<dim>& src, bool cloneProps);
+        TriangulationBase(const TriangulationBase<dim>& src,
+            bool cloneProps, bool cloneLocks);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -3131,32 +3135,6 @@ class TriangulationBase :
         TriangulationBase& operator = (TriangulationBase&& src);
 
         /**
-         * Copies all simplex and/or facet locks from the given source
-         * triangulation to this triangulation.
-         *
-         * The main purpose of this function is to allow other member functions
-         * to make a "light" copy of a triangulation without cloning all of
-         * its computed properties, but to still copy locks across:
-         *
-         * \code{.cpp}
-         * Triangulation<dim> t(src, false);
-         * t.copyLocksFrom(src);
-         * \endcode
-         *
-         * All simplex lock masks will be copied over verbatim.  A side-effect
-         * of this is that any simplices or facets that are locked in this
-         * triangulation but not locked in \a src will become _unlocked_ as a
-         * result of this operation.
-         *
-         * \pre This and the given triangulation are identical, in that they
-         * have the same number of top-dimensional simplices and the same
-         * gluings between these simplices.
-         *
-         * \param src the source triangulation whose locks should be copied.
-         */
-        void copyLocksFrom(const TriangulationBase& src);
-
-        /**
          * A variant of newSimplex() with no management of the underlying
          * triangulation.
          *
@@ -3799,12 +3777,13 @@ inline TriangulationBase<dim>::TriangulationBase() :
 
 template <int dim>
 inline TriangulationBase<dim>::TriangulationBase(
-        const TriangulationBase<dim>& src) : TriangulationBase(src, true) {
+        const TriangulationBase<dim>& src) :
+        TriangulationBase(src, true, true) {
 }
 
 template <int dim>
 TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
-        bool cloneProps) :
+        bool cloneProps, bool cloneLocks) :
         Snapshottable<Triangulation<dim>>(src),
         topologyLock_(0),
         calculatedSkeleton_(false) {
@@ -3815,7 +3794,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
 
     simplices_.reserve(src.simplices_.size());
 
-    if (cloneProps) {
+    if (cloneLocks) {
         // Clone simplices with descriptions and locks
         for (auto s : src.simplices_)
             simplices_.push_back(new Simplex<dim>(*s,
@@ -5147,15 +5126,6 @@ inline bool TriangulationBase<dim>::sameDegreesAt(
         const TriangulationBase& other,
         std::integer_sequence<int, useDim...>) const {
     return (sameDegreesAt<useDim>(other) && ...);
-}
-
-template <int dim>
-inline void TriangulationBase<dim>::copyLocksFrom(
-        const TriangulationBase& src) {
-    auto srcit = src.simplices_.begin();
-    auto destit = simplices_.begin();
-    for ( ; srcit != src.simplices_.end(); ++srcit, ++destit)
-        (*destit)->locks_ = (*srcit)->locks_;
 }
 
 // Inline functions for TriangulationBase::ChangeAndClearSpan

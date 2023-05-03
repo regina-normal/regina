@@ -56,7 +56,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     std::stack<Triangulation<3>> toProcess;
 
     // Make a working copy, simplify, and record the initial homology.
-    Triangulation<3>& start = toProcess.emplace(*this, false);
+    Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.intelligentSimplify();
 
     unsigned long initZ, initZ2, initZ3;
@@ -231,7 +231,7 @@ bool Triangulation<3>::isSphere() const {
 
     // Check homology and fundamental group.
     // Better simplify first, which means we need a clone.
-    Triangulation<3>& start = toProcess.emplace(*this, false);
+    Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.intelligentSimplify();
 
     // The Poincare conjecture!
@@ -360,7 +360,7 @@ bool Triangulation<3>::isBall() const {
     // Cone the boundary to a point (i.e., fill it with a ball), then
     // call isSphere() on the resulting closed triangulation.
 
-    Triangulation<3> working(*this, false);
+    Triangulation<3> working(*this, false, false);
     working.intelligentSimplify();
     working.finiteToIdeal();
 
@@ -421,7 +421,7 @@ bool Triangulation<3>::isSolidTorus() const {
 
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
-    Triangulation<3> working(*this, false);
+    Triangulation<3> working(*this, false, false);
     working.intelligentSimplify();
     if (working.isIdeal()) {
         working.idealToFinite();
@@ -601,7 +601,7 @@ ssize_t Triangulation<3>::recogniseHandlebody() const {
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
     std::stack<Triangulation<3>> toProcess;
-    Triangulation<3>& start = toProcess.emplace( *this, false );
+    Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.intelligentSimplify();
     if ( start.isIdeal() ) {
         start.idealToFinite();
@@ -798,7 +798,7 @@ bool Triangulation<3>::isTxI() const {
     if (knowsTxI())
         return *prop_.TxI_;
 
-    Triangulation<3> working(*this, false);
+    Triangulation<3> working(*this, false, false);
     working.intelligentSimplify();
     working.idealToFinite();
     working.intelligentSimplify();
@@ -889,7 +889,7 @@ bool Triangulation<3>::isIrreducible() const {
     std::stack<Triangulation<3>> toProcess;
 
     // Make a working copy, simplify and record the initial homology.
-    Triangulation<3>& start = toProcess.emplace(*this, false);
+    Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.intelligentSimplify();
 
     unsigned long Z, Z2, Z3;
@@ -1028,7 +1028,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // Work with a simplified triangulation.
     // We keep this as a pointer because we will be switching and changing
     // triangulations.
-    Triangulation<3> use(*this, false);
+    Triangulation<3> use(*this, false, false);
     use.intelligentSimplify();
 
     // Try for a fast answer first.
@@ -1143,7 +1143,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
     // Off we go.
     // Work with a simplified triangulation.
-    Triangulation<3> use(*this, false);
+    Triangulation<3> use(*this, false, false);
     use.intelligentSimplify();
 
     // Check to see whether any component is a one-tetrahedron solid torus.
@@ -1194,7 +1194,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         // Cut along the triangle to be sure.
         const TriangleEmbedding<3>& emb = t->front();
 
-        Triangulation<3> cut(use, false);
+        Triangulation<3> cut(use, false, false);
         cut.tetrahedron(emb.tetrahedron()->markedIndex())->unjoin(
             emb.triangle());
 
@@ -1240,7 +1240,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
             continue;
         }
 
-        Triangulation<3> cut(use, false);
+        Triangulation<3> cut(use, false, false);
         cut.tetrahedron(t->markedIndex())->unjoin(upper);
         Tetrahedron<3>* tet = cut.newTetrahedron();
         tet->join(Edge<3>::edgeVertex[equator][0], tet, Perm<4>(
@@ -1303,7 +1303,7 @@ bool Triangulation<3>::isHaken() const {
 
     // Okay: we are closed, connected, orientable and irreducible.
     // Move to a copy of this triangulation, which we can mess with.
-    Triangulation<3> t(*this, false);
+    Triangulation<3> t(*this, false, false);
     t.intelligentSimplify();
 
     // First check for an easy answer via homology:

@@ -277,7 +277,7 @@ Edge<3>* Triangulation<3>::meridian() {
         merCuts[0] = 1;
         for (long k = 0; ; ++k) {
             {
-                Triangulation<3> t(*this, false);
+                Triangulation<3> t(*this, false, false);
                 t.fillTorus(
                     t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
                     t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
@@ -290,7 +290,7 @@ Edge<3>* Triangulation<3>::meridian() {
                 }
             }
             {
-                Triangulation<3> t(*this, false);
+                Triangulation<3> t(*this, false, false);
                 t.fillTorus(
                     t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
                     t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
@@ -343,7 +343,7 @@ Edge<3>* Triangulation<3>::meridian() {
 
         while (true) {
             {
-                Triangulation<3> t(*this, false);
+                Triangulation<3> t(*this, false, false);
                 t.fillTorus(
                     t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
                     t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
@@ -357,7 +357,7 @@ Edge<3>* Triangulation<3>::meridian() {
                 }
             }
             {
-                Triangulation<3> t(*this, false);
+                Triangulation<3> t(*this, false, false);
                 t.fillTorus(
                     t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
                     t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
@@ -446,7 +446,7 @@ std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
         {
             // std::cerr << "Trying filling: " << 1 << ',' << merCut << ','
             //     << (merCut + 1) << std::endl;
-            Triangulation<3> t(*this, false);
+            Triangulation<3> t(*this, false, false);
             t.fillTorus(
                 t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
                 t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
@@ -470,7 +470,7 @@ std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
         {
             // std::cerr << "Trying filling: " << 1 << ','
             //     << (merCut + 1) << ',' << merCut << std::endl;
-            Triangulation<3> t(*this, false);
+            Triangulation<3> t(*this, false, false);
             t.fillTorus(
                 t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
                 t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),

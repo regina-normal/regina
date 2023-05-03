@@ -434,6 +434,7 @@ inline bool Retriangulator<Object, threading, withSig>::seed(
     // This is inefficient, but at least it only happens once.
     const std::string sig = RetriangulateParams<Object>::sig(obj);
     {
+        // Note: for triangulations, this constructor clones locks also.
         Object copy(obj, false);
         if constexpr (withSig) {
             if (action_(sig, std::move(copy))) {

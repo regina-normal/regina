@@ -1207,7 +1207,7 @@ Triangulation<3> NormalSurface::cutAlong() const {
 // ------------------------------------------------------------------------
 
 Triangulation<3> NormalSurface::crush() const {
-    Triangulation<3> ans(*triangulation_, false);
+    Triangulation<3> ans(*triangulation_, false, false);
     size_t nTet = ans.size();
     if (nTet == 0)
         return ans;

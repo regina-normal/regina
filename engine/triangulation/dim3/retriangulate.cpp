@@ -54,7 +54,7 @@ namespace detail {
             size_t i;
             for (i = 0; i < t.countEdges(); ++i)
                 if (t.pachner(t.edge(i), true, false)) {
-                    Triangulation<3> alt(t, false);
+                    Triangulation<3> alt(t, false, true);
                     alt.pachner(alt.edge(i), false, true);
                     if (retriang->candidate(std::move(alt), sig))
                         return;
@@ -63,7 +63,7 @@ namespace detail {
             if (t.size() < maxSize)
                 for (i = 0; i < t.countTriangles(); ++i)
                     if (t.pachner(t.triangle(i), true, false)) {
-                        Triangulation<3> alt(t, false);
+                        Triangulation<3> alt(t, false, true);
                         alt.pachner(alt.triangle(i), false, true);
                         if (retriang->candidate(std::move(alt), sig))
                             return;

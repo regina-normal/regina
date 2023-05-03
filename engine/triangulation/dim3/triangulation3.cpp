@@ -191,8 +191,8 @@ bool Triangulation<3>::hasMinimalVertices() const {
     return true;
 }
 
-Triangulation<3>::Triangulation(const Triangulation<3>& src, bool cloneProps) :
-        TriangulationBase<3>(src, cloneProps) {
+Triangulation<3>::Triangulation(const Triangulation<3>& src, bool cloneProps,
+        bool cloneLocks) : TriangulationBase<3>(src, cloneProps, cloneLocks) {
     if (! cloneProps)
         return;
 

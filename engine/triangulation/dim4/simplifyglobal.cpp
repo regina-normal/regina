@@ -69,8 +69,7 @@ bool Triangulation<4>::intelligentSimplifyInternal() {
             if (changed)
                 use = this;
             else {
-                use = new Triangulation<4>(*this, false);
-                use->copyLocksFrom(*this);
+                use = new Triangulation<4>(*this, false, true);
             }
 
             // Make random 3-3 moves.
@@ -134,8 +133,7 @@ bool Triangulation<4>::intelligentSimplifyInternal() {
                 // boundary facets if they won't be of any help.
                 //
                 // Again, don't clone properties, but do clone locks.
-                use = new Triangulation<4>(*this, false);
-                use->copyLocksFrom(*this);
+                use = new Triangulation<4>(*this, false, true);
 
                 // Perform every book opening move we can find.
                 bool opened = false;
@@ -334,8 +332,7 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
 
     // Set up a temporary working triangulation, just in case we end up making
     // things worse, not better.
-    Triangulation<4> working(*this, false);
-    working.copyLocksFrom(*this);
+    Triangulation<4> working(*this, false, true);
 
     for (size_t attempts = 1; attempts <= max24; ++attempts) {
         // Do attempts successive 2-4 moves.

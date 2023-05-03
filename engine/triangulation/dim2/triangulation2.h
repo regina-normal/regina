@@ -110,7 +110,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         Triangulation(const Triangulation& src) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
-         * of whether or not to clone its computed properties also.
+         * of whether or not to clone its computed properties and/or locks also.
          *
          * If \a cloneProps is \c true, then this constructor will also clone
          * any computed properties (such as homology, fundamental group, and
@@ -123,18 +123,22 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * the same numbering and labelling will be used for all skeletal
          * objects in both triangulations.
          *
-         * If \a src has any locks on top-dimensional simplices and/or their
-         * facets, these locks will be copied across _only_ if \a cloneProps
-         * is \c true.  If \a cloneProps is \c false then the new triangulation
-         * will have no locks at all.
+         * If \a cloneLocks is \c true then any locks on the top-dimensional
+         * simplices and/or facets of \a src will be copied across.
+         * If \a cloneLocks is \c false then the new triangulation will have
+         * no locks at all.
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
          * properties as well as the skeleton of the given triangulation,
          * or \c false if the new triangulation should have such properties
          * and skeletal data marked as unknown.
+         * \param cloneLocks \c true if this should also clone any simplex
+         * and/or facet locks from the given triangulation, or \c false if
+         * the new triangulation should have no locks at all.
          */
-        Triangulation(const Triangulation& src, bool cloneProps);
+        Triangulation(const Triangulation& src, bool cloneProps,
+            bool cloneLocks = true);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -478,8 +482,8 @@ namespace regina {
 // Inline functions for Triangulation<2>
 
 inline Triangulation<2>::Triangulation(const Triangulation& src,
-        bool cloneProps) :
-        TriangulationBase<2>(src, cloneProps) {
+        bool cloneProps, bool cloneLocks) :
+        TriangulationBase<2>(src, cloneProps, cloneLocks) {
     // No properties yet to clone.
 }
 

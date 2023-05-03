@@ -79,8 +79,8 @@ long Triangulation<4>::eulerCharManifold() const {
     return ans;
 }
 
-Triangulation<4>::Triangulation(const Triangulation& src, bool cloneProps) :
-        TriangulationBase<4>(src, cloneProps),
+Triangulation<4>::Triangulation(const Triangulation& src, bool cloneProps,
+        bool cloneLocks) : TriangulationBase<4>(src, cloneProps, cloneLocks),
         vertexLinkSummary_(src.vertexLinkSummary_) /* always cloned */ {
     // For other properties, the user gets to decide:
     if (! cloneProps)
