@@ -241,6 +241,12 @@ class TriangulationBase :
         mutable std::optional<GroupPresentation> fundGroup_;
             /**< Fundamental group of the triangulation.
                  This is std::nullopt if it has not yet been computed. */
+        mutable std::optional<GroupPresentation> simplifiedFundGroup_;
+            /**< Simplified fundamental group of the triangulation.
+                 It was either computed from fundGroup_ by
+                 GroupPresentation::intelligentSimplify or set by the
+                 user through setGroupPresentation.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<AbelianGroup> H1_;
             /**< First homology group of the triangulation.
                  This is std::nullopt if it has not yet been computed. */
@@ -1327,7 +1333,8 @@ class TriangulationBase :
         /*@{*/
 
         /**
-         * Returns the fundamental group of this triangulation.
+         * Returns the unsimplified or simplified (default) presentation of
+         * the fundamental group of this triangulation.
          *
          * The fundamental group is computed in the dual 2-skeleton.  This
          * means:
@@ -1350,6 +1357,15 @@ class TriangulationBase :
          *   barycentric subdivision is performed on a such a triangulation,
          *   the result of group() might change.
          *
+         * By default, the presentation will be simplified. The unsimplified
+         * presentation can be obtained by passing simplify = false as
+         * argument. In the unsimplified presentation, the generators
+         * correspond to those facet-pairings that are not dual to edges
+         * in the maximal forest in the dual 2-skeleton chosen by regina
+         * (those facet-pairings can be found by checking that neither
+         * Face<dim, dim-1>::isBoundary() nor
+         * Face<dim, dim-1>::inMaximalForest returns true).
+         *
          * Bear in mind that each time the triangulation changes, the
          * fundamental group will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
@@ -1370,9 +1386,12 @@ class TriangulationBase :
          * fundamental group with fillings, call
          * SnapPeaTriangulation::fundamentalGroupFilled() instead.
          *
-         * \return the fundamental group.
+         * \param simplify \c true if the presentation should be simplified
+         * (default to \c true).
+         *
+         * \return A presentation of the fundamental group.
          */
-        const GroupPresentation& group() const;
+        const GroupPresentation& group(bool simplify = true) const;
         /**
          * An alias for group(), which returns the fundamental group of this
          * triangulation.
@@ -1394,9 +1413,9 @@ class TriangulationBase :
          * fundamental group with fillings, call
          * SnapPeaTriangulation::fundamentalGroupFilled() instead.
          *
-         * \return the fundamental group.
+         * \return a presentation of the fundamental group.
          */
-        const GroupPresentation& fundamentalGroup() const;
+        const GroupPresentation& fundamentalGroup(bool simplify = true) const;
         /**
          * Allows the specific presentation of the fundamental group to be
          * changed by some other (external) means.
@@ -3582,6 +3601,14 @@ class TriangulationBase :
         bool sameDegreesAt(const TriangulationBase& other,
             std::integer_sequence<int, useDim...>) const;
 
+        /**
+         * Computes unsimplified presentation of fundamental group.
+         *
+         * \return Unsimplified presentation of fundamental group.
+         */
+        GroupPresentation
+        unsimplifiedGroup() const;
+    
     protected:
         /**
          * An object that facilitates both firing change events and
@@ -3828,6 +3855,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
     // Clone properties:
     if (cloneProps) {
         fundGroup_ = src.fundGroup_;
+        simplifiedFundGroup_ = src.simplifiedFundGroup_;
         H1_ = src.H1_;
     }
 }
@@ -3842,6 +3870,7 @@ TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
         calculatedSkeleton_(src.calculatedSkeleton_),
         orientable_(src.orientable_),
         fundGroup_(std::move(src.fundGroup_)),
+        simplifiedFundGroup_(std::move(src.simplifiedFundGroup_)),
         H1_(std::move(src.H1_)) {
     // For our simplices and skeletal components, we use swaps instead
     // of moves because we need to ensure that src's lists finish empty.
@@ -3910,6 +3939,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     // Clone properties:
     fundGroup_ = src.fundGroup_;
+    simplifiedFundGroup_ = src.simplifiedFundGroup_;
     H1_ = src.H1_;
 
     return *this;
@@ -3948,6 +3978,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     std::swap(calculatedSkeleton_, src.calculatedSkeleton_);
 
     fundGroup_ = std::move(src.fundGroup_);
+    simplifiedFundGroup_ = std::move(src.simplifiedFundGroup_);
     H1_ = std::move(src.H1_);
 
     // Let src dispose of the original simplices and skeletal objects in
@@ -4966,9 +4997,10 @@ std::vector<Triangulation<dim>>
 }
 
 template <int dim>
-inline const GroupPresentation& TriangulationBase<dim>::fundamentalGroup()
+inline const GroupPresentation& TriangulationBase<dim>::fundamentalGroup(
+        const bool simplify)
         const {
-    return group();
+    return group(simplify);
 }
 
 template <int dim>

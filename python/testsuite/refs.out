@@ -44,6 +44,9 @@ g0^6 g1 g0^-1 g1 g0 g1^-1
 g0^6
 g0^7
 
+g1^-1 g0 g1 g2 g0^-1
+g0 g2 g1 g2^-1
+
 foo
 foo
 foo

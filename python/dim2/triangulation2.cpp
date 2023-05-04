@@ -228,12 +228,14 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isConnected", &Triangulation<2>::isConnected,
             rbase::isConnected)
         .def("group", &Triangulation<2>::group,
+            pybind11::arg("simplify") = true,
             pybind11::return_value_policy::reference_internal, rbase::group)
         .def("fundamentalGroup", &Triangulation<2>::fundamentalGroup,
+            pybind11::arg("simplify") = true,
             pybind11::return_value_policy::reference_internal,
             rbase::fundamentalGroup)
         .def("setGroupPresentation",
-             &Triangulation<2>::setGroupPresentation,
+            &Triangulation<2>::setGroupPresentation,
             rbase::setGroupPresentation)
         .def("simplifiedFundamentalGroup", // deprecated
             &Triangulation<2>::setGroupPresentation,

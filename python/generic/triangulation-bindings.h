@@ -188,8 +188,10 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("eulerCharTri", &Triangulation<dim>::eulerCharTri,
             rbase::eulerCharTri)
         .def("group", &Triangulation<dim>::group,
+            pybind11::arg("simplify") = true,
             pybind11::return_value_policy::reference_internal, rbase::group)
         .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
+            pybind11::arg("simplify") = true,
             pybind11::return_value_policy::reference_internal,
             rbase::fundamentalGroup)
         .def("setGroupPresentation",

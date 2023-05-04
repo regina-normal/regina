@@ -76,7 +76,7 @@ template MatrixInt TriangulationBase<7>::dualToPrimal<4>() const;
 template MatrixInt TriangulationBase<7>::dualToPrimal<5>() const;
 template MatrixInt TriangulationBase<7>::dualToPrimal<6>() const;
 
-template const GroupPresentation& TriangulationBase<7>::group() const;
+template const GroupPresentation& TriangulationBase<7>::group(bool) const;
 
 template void TriangulationBase<7>::calculateSkeleton();
 template void TriangulationBase<7>::cloneSkeleton(const TriangulationBase<7>&);
