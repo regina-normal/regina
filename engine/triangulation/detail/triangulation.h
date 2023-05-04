@@ -3941,8 +3941,11 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     nBoundaryFaces_.swap(src.nBoundaryFaces_);
     valid_ = src.valid_;
-    calculatedSkeleton_ = src.calculatedSkeleton_;
     orientable_ = src.orientable_;
+
+    // We need to swap calculatedSkeleton_, not just assign it, because without
+    // this flag the defunct src will not destroy the old skeletal objects.
+    std::swap(calculatedSkeleton_, src.calculatedSkeleton_);
 
     fundGroup_ = std::move(src.fundGroup_);
     H1_ = std::move(src.H1_);
