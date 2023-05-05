@@ -2727,6 +2727,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Jaco-Rubinstein 0-efficiency algorithm, and works in both
          * orientable and non-orientable settings.
          *
+         * If any tetrahedra and/or triangles in this triangulation are locked,
+         * this will not prevent summands() from doing its work (since the
+         * original triangulation will not be changed).  The triangulations
+         * that are returned (i.e., the prime summands) will have no simplex
+         * and/or facet locks at all.
+         *
          * \warning Users are strongly advised to check for exceptions if
          * embedded two-sided projective planes are a possibility, since in
          * such a case this routine might fail (as explained above).

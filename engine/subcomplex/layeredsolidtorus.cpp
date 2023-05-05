@@ -620,8 +620,8 @@ AbelianGroup LayeredSolidTorus::homology() const {
 }
 
 Triangulation<3> LayeredSolidTorus::flatten(int mobiusBandBdry) const {
-    // Create a new triangulation and identify the top-level and
-    // base tetrahedra.
+    // Create a new triangulation (throwing away all locks), and identify
+    // the top-level and base tetrahedra.
     Triangulation<3> ans(top_->triangulation(), false, false);
 
     Tetrahedron<3>* newTop = ans.tetrahedron(top_->index());

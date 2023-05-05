@@ -55,7 +55,8 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
 
     std::stack<Triangulation<3>> toProcess;
 
-    // Make a working copy, simplify, and record the initial homology.
+    // Make a working copy (throwing away any locks), simplify, and record
+    // the initial homology.
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.intelligentSimplify();
 
