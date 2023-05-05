@@ -53,6 +53,13 @@ bool Triangulation<3>::minimiseBoundary() {
         throw FailedPrecondition("minimiseBoundary() requires a "
             "valid triangulation");
 
+    // Regarding locks on boundary triangles: we leave join() (used to perform
+    // the layerings) and closeBook() (used directly for close book moves)
+    // to throw a LockViolation where relevant.  We do not go out of our way
+    // to find locations for these moves that would _not_ violate locks, since
+    // this is a lot of work, and in typical scenarios (e.g., the entire
+    // boundary is locked), this would be fruitless anyway.
+
     TopologyLock lock(*this);
     ChangeEventGroup span(*this);
 
@@ -142,11 +149,13 @@ startAgain:
 
 bool Triangulation<3>::minimiseVertices() {
     // Start by minimising the boundary.
-    // This also checks the validity precondition.
+    // This also checks the validity precondition, and this is where we would
+    // throw LockViolation exceptions if we run into locked boundary triangles.
     bool result = minimiseBoundary();
 
     // All that remains now is to remove internal vertices.
     // For this, we use collapseEdge() if we can, and pinchEdge() if we must.
+    // No lock violations should occur from here onwards.
 
     // For now, we do a lot of looping through components, since each time we
     // do a move the skeleton will be recomputed entirely.  Ideally we would

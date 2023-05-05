@@ -1860,9 +1860,26 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
+         * If this triangle has any locked tetrahedra or locked _internal_
+         * triangles, such locks will not prevent this operation from occuring
+         * (since none of the moves would violate such locks).  However, this
+         * operation does not try to avoid violating locks on _boundary_
+         * triangles (and indeed, in some scenarios this would be impossible).
+         * Therefore we require as a precondition that no boundary triangles
+         * are locked.
+         *
          * \pre This triangulation is valid.
          *
+         * \pre This triangulation does not have any locked boundary triangles.
+         *
          * \exception FailedPrecondition This triangulation is not valid.
+         *
+         * \exception LockViolation This operation attempted a move that would
+         * violate a lock on a boundary triangle.  Note that some moves might
+         * have been performed already before this exception is thrown,
+         * though the topology of the manifold should remain safely unchanged.
+         * See Simplex<3>::lockFacet() for further details on how facet locks
+         * work and what their implications are.
          *
          * \return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
@@ -1883,6 +1900,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \ref spelling "spelling throughout Regina" for further details.
          *
          * \pre This triangulation is valid.
+         *
+         * \pre This triangulation does not have any locked boundary triangles.
+         *
+         * \exception LockViolation This operation attempted a move that would
+         * violate a lock on a boundary triangle.  Note that some moves might
+         * have been performed already before this exception is thrown,
+         * though the topology of the manifold should remain safely unchanged.
+         * See Simplex<3>::lockFacet() for further details on how facet locks
+         * work and what their implications are.
          *
          * \return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
@@ -1923,9 +1949,27 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
+         * If this triangle has any locked tetrahedra or locked _internal_
+         * triangles, such locks will not prevent this operation from occuring
+         * (in particular, this routine will use pinch edge moves instead of
+         * collapse edge moves where necessary to avoid violating such locks).
+         * However, this operation does not try to avoid violating locks on
+         * _boundary_ triangles (and indeed, in some scenarios this would be
+         * impossible).  Therefore we require as a precondition that no
+         * boundary triangles are locked.
+         *
          * \pre This triangulation is valid.
          *
+         * \pre This triangulation does not have any locked boundary triangles.
+         *
          * \exception FailedPrecondition This triangulation is not valid.
+         *
+         * \exception LockViolation This operation attempted a move that would
+         * violate a lock on a boundary triangle.  Note that some moves might
+         * have been performed already before this exception is thrown,
+         * though the topology of the manifold should remain safely unchanged.
+         * See Simplex<3>::lockFacet() for further details on how facet locks
+         * work and what their implications are.
          *
          * \return \c true if the triangulation was changed, or \c false if
          * the number of vertices was already minimal to begin with.
@@ -1946,6 +1990,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \ref spelling "spelling throughout Regina" for further details.
          *
          * \pre This triangulation is valid.
+         *
+         * \pre This triangulation does not have any locked boundary triangles.
+         *
+         * \exception LockViolation This operation attempted a move that would
+         * violate a lock on a boundary triangle.  Note that some moves might
+         * have been performed already before this exception is thrown,
+         * though the topology of the manifold should remain safely unchanged.
+         * See Simplex<3>::lockFacet() for further details on how facet locks
+         * work and what their implications are.
          *
          * \return \c true if the triangulation was changed, or \c false if
          * the number of vertices was already minimal to begin with.
