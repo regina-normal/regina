@@ -196,7 +196,14 @@ bool Triangulation<3>::intelligentSimplify() {
         // fewer vertices is generally better.
         if (isValid() && ! hasMinimalVertices()) {
             Triangulation<3> tmp(*this, false, true);
-            tmp.minimiseVertices();
+            try {
+                tmp.minimiseVertices();
+            } catch (LockViolation&) {
+                // Calling minimiseVertices() could cause a lock violation if
+                // there are locked boundary triangles.  In this case it could
+                // still have performed some moves, and it guarantees that the
+                // resulting triangulation is sensible.  Keep whatever we got.
+            }
             tmp.simplifyToLocalMinimum(true);
             if (tmp.size() <= size()) {
                 swap(tmp);

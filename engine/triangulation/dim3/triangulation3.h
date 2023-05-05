@@ -1567,7 +1567,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If any tetrahedra and/or triangles are locked, these locks will be
          * respected: that is, the simplification operation will avoid any
          * moves that would violate these locks (and in particular, no
-         * LockException exceptions should be thrown).  Of course, however,
+         * LockViolation exceptions should be thrown).  Of course, however,
          * having locks may make the simplification less effective in reducing
          * the number of tetrahedra.
          *
@@ -1606,7 +1606,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If any tetrahedra and/or triangles are locked, these locks will be
          * respected: that is, the simplification operation will avoid any
          * moves that would violate these locks (and in particular, no
-         * LockException exceptions should be thrown).  Of course, however,
+         * LockViolation exceptions should be thrown).  Of course, however,
          * having locks may make the simplification less effective in reducing
          * the number of tetrahedra.
          *
@@ -1660,7 +1660,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If any tetrahedra and/or triangles are locked, these locks will be
          * respected: that is, the retriangulation will avoid any moves that
-         * would violate these locks (and in particular, no LockException
+         * would violate these locks (and in particular, no LockViolation
          * exceptions should be thrown).  Of course, however, having locks may
          * reduce the number of distinct triangulations that can be reached.
          *
@@ -1773,7 +1773,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If any tetrahedra and/or triangles are locked, these locks will be
          * respected: that is, the retriangulation will avoid any moves that
-         * would violate these locks (and in particular, no LockException
+         * would violate these locks (and in particular, no LockViolation
          * exceptions should be thrown).  Of course, however, having locks may
          * reduce the number of distinct triangulations that can be reached.
          *
