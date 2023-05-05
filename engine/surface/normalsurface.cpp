@@ -627,6 +627,7 @@ NormalSurface NormalSurface::removeOcts() const {
         for (int j = 0; j < 3; ++j)
             if (octs(i, j) != 0) {
                 expand[nExpand++] = { i, j };
+                // There should be no other octagon types in this tetrahedron.
                 break;
             }
 
@@ -662,7 +663,7 @@ NormalSurface NormalSurface::removeOcts() const {
     // - B will take the place of T in the original tetrahedron numbering,
     //   and A and C will be appended to the end of the tetrahedron list.
 
-    Triangulation<3> retri(tri);
+    Triangulation<3> retri(tri, true, false /* throw away any locks */);
 
     for (size_t i = 0; i < nExpand; ++i) {
         Tetrahedron<3>* a = retri.newTetrahedron();

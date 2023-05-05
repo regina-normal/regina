@@ -1505,6 +1505,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Note: this routine can happily cope with multiple octagons in the
          * same tetrahedron, and/or multiple tetrahedra containing octagons.
          *
+         * This routine ignores tetrahedron locks entirely. If there are
+         * octagons present and the triangulation does change, then the new
+         * triangulation will have no tetrahedron or triangle locks at all.
+         * In particular, such locks will not stop this routine from
+         * subdividing those tetrahedra that contain octagons.
+         * Of course, the original triangulation will remain untouched,
+         * with all of its locks intact.
+         *
          * \pre This surface is embedded.
          *
          * \return an isotopic normal (not almost normal) surface \a s,
