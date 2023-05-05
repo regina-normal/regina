@@ -45,9 +45,8 @@ labelling will be used for all skeletal objects.
 If *src* has any locks on top-dimensional simplices and/or their
 facets, these locks will also be copied across.
 
-If you want a "clean" copy that resets all properties to unknown and
-leaves the skeleton uncomputed, you can use the two-argument copy
-constructor instead.
+If you want a "clean" copy that resets all properties to unknown, you
+can use the two-argument copy constructor instead.
 
 Parameter ``src``:
     the triangulation to copy.)doc";
@@ -61,29 +60,27 @@ Creates an empty triangulation.)doc";
 // Docstring regina::python::doc::Triangulation_::__init
 static const char *__init =
 R"doc(Creates a new copy of the given triangulation, with the option of
-whether or not to clone its computed properties also.
+whether or not to clone its computed properties and/or locks also.
 
 If *cloneProps* is ``True``, then this constructor will also clone any
-computed properties (such as homology, fundamental group, and so on),
-as well as the skeleton (vertices, edges, components, etc.). In
-particular, the same numbering and labelling will be used for all
-skeletal objects in both triangulations.
+computed properties (such as homology, fundamental group, and so on).
+If *cloneProps* is ``False``, then these properties will be marked as
+unknown in the new triangulation, and will be recomputed on demand
+if/when they are required.
 
-If *cloneProps* is ``False``, then these properties and skeletal
-objects will be marked as unknown in the new triangulation, and will
-be recomputed on demand if/when they are required. Note in particular
-that, when the skeleton is recomputed, there is no guarantee that the
-numbering and labelling for skeletal objects will be the same as in
-the source triangulation.
+Regardless of *cloneProps*, the skeleton (vertices, edges, components,
+etc.) will _always_ be cloned. This is to ensure that the same
+numbering and labelling will be used for all skeletal objects in both
+triangulations.
 
 Regardless of the argument *cloneProps*, if it is known that all
 vertex links of *copy* are 3-sphere or 3-balls, this knowledge will be
 copied over to the new triangulation.
 
-If *src* has any locks on top-dimensional simplices and/or their
-facets, these locks will be copied across _only_ if *cloneProps* is
-``True``. If *cloneProps* is ``False`` then the new triangulation will
-have no locks at all.
+If *cloneLocks* is ``True`` then any locks on the top-dimensional
+simplices and/or facets of *src* will be copied across. If
+*cloneLocks* is ``False`` then the new triangulation will have no
+locks at all.
 
 Parameter ``src``:
     the triangulation to copy.
@@ -92,7 +89,12 @@ Parameter ``cloneProps``:
     ``True`` if this should also clone any computed properties as well
     as the skeleton of the given triangulation, or ``False`` if the
     new triangulation should have such properties and skeletal data
-    marked as unknown.)doc";
+    marked as unknown.
+
+Parameter ``cloneLocks``:
+    ``True`` if this should also clone any simplex and/or facet locks
+    from the given triangulation, or ``False`` if the new
+    triangulation should have no locks at all.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__init_2
 static const char *__init_2 =
@@ -314,7 +316,7 @@ preserve the orientation.
 
 If any pentachora and/or tetrahedra are locked, these locks will be
 respected: that is, the simplification operation will avoid any moves
-that would violate these locks (and in particular, no LockException
+that would violate these locks (and in particular, no LockViolation
 exceptions should be thrown). Of course, however, having locks may
 make the simplification less effective in reducing the number of
 pentachora.
@@ -622,7 +624,7 @@ number of reachable triangulations becomes finite).
 
 If any pentachora and/or tetrahedra are locked, these locks will be
 respected: that is, the retriangulation will avoid any moves that
-would violate these locks (and in particular, no LockException
+would violate these locks (and in particular, no LockViolation
 exceptions should be thrown). Of course, however, having locks may
 reduce the number of distinct triangulations that can be reached.
 
@@ -803,7 +805,7 @@ tracker (read on for details).
 
 If any pentachora and/or tetrahedra are locked, these locks will be
 respected: that is, the retriangulation will avoid any moves that
-would violate these locks (and in particular, no LockException
+would violate these locks (and in particular, no LockViolation
 exceptions should be thrown). Of course, however, having locks may
 reduce the number of distinct triangulations that can be reached.
 
@@ -879,7 +881,7 @@ preserve the orientation.
 
 If any pentachora and/or tetrahedra are locked, these locks will be
 respected: that is, the simplification operation will avoid any moves
-that would violate these locks (and in particular, no LockException
+that would violate these locks (and in particular, no LockViolation
 exceptions should be thrown). Of course, however, having locks may
 make the simplification less effective in reducing the number of
 pentachora.
@@ -920,7 +922,7 @@ preserve the orientation.
 
 If any pentachora and/or tetrahedra are locked, these locks will be
 respected: that is, this routine will avoid any moves that would
-violate these locks (and in particular, no LockException exceptions
+violate these locks (and in particular, no LockViolation exceptions
 should be thrown). Of course, however, having locks may make the
 simplification less effective in reducing the number of pentachora.
 

@@ -508,6 +508,11 @@ include connected sum decompositions, removal of 3-spheres and small
 Lens spaces and so on; a full list of possible changes is beyond the
 scope of this API documentation.
 
+This routine will ignore any locks on tetrahedra and/or triangles of
+the original triangulation (and of course the original triangulation
+will be left safely unchanged). The triangulation that is returned
+will not have any locks at all.
+
 .. warning::
     This routine can have unintended topological side-effects, as
     described above.
@@ -540,6 +545,11 @@ As of Regina 7.1, this routine can happily cut along _almost_ normal
 surfaces as well as normal surfaces. That is, it can now handle
 octagons, including cases with multiple octagons in the same
 tetrahedron and/or octagons in multiple tetrahedra.
+
+This routine will ignore any locks on tetrahedra and/or triangles of
+the original triangulation (and of course the original triangulation
+will be left safely unchanged). The triangulation that is returned
+will not have any locks at all.
 
 .. warning::
     The number of tetrahedra in the new triangulation can be _very_
@@ -1260,6 +1270,13 @@ that does not store octagons.
 
 Note: this routine can happily cope with multiple octagons in the same
 tetrahedron, and/or multiple tetrahedra containing octagons.
+
+This routine ignores tetrahedron locks entirely. If there are octagons
+present and the triangulation does change, then the new triangulation
+will have no tetrahedron or triangle locks at all. In particular, such
+locks will not stop this routine from subdividing those tetrahedra
+that contain octagons. Of course, the original triangulation will
+remain untouched, with all of its locks intact.
 
 Precondition:
     This surface is embedded.

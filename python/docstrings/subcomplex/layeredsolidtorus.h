@@ -168,6 +168,11 @@ torus can be flattened, corresponding to the three different edges of
 the boundary torus that could become the boundary edge of the new
 Mobius band.
 
+If any tetrahedra and/or triangles in the layered solid torus are
+locked, this will not prevent the operation from occurring (since the
+original triangulation will not be changed). The triangulation that is
+returned will have no simplex and/or facet locks at all.
+
 Parameter ``mobiusBandBdry``:
     the edge group on the boundary of this layered solid torus that
     will become the boundary of the new Mobius band (the remaining
