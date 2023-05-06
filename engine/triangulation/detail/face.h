@@ -380,7 +380,7 @@ class FaceBase :
                  top-dimensional simplices of the underlying triangulation. */
         Component<dim>* component_;
             /**< The component that this face belongs to. */
-        EnableIfUseDefault<
+        mutable EnableIfUseDefault<
             canBuildLink,
             typename LinkBuilder<dim, subdim>::UniquePtr> linkTri_;
             /**< A triangulation of the link of this face.  This will be
@@ -433,7 +433,7 @@ class FaceBase :
          * \return Triangulation of the link of this face.
          */
         const Triangulation<linkDimension> &
-        link()
+        link() const
         {
             static_assert(
                 canBuildLink,
