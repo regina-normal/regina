@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include <cstdint>
 #include <iostream>
 
 namespace regina {
