@@ -39,6 +39,7 @@
 #define __REGINA_STRINGUTILS_H
 #endif
 
+#include <cstdint>
 #include <string>
 #include <vector>
 #include "regina-core.h"
