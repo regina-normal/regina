@@ -640,6 +640,8 @@ void Link::resolve(Crossing* c) {
         crossings_.erase(crossings_.begin() + c->index());
         delete c;
     }
+
+    clearAllProperties();
 }
 
 GroupPresentation Link::group(bool simplify) const {
