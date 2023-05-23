@@ -224,10 +224,11 @@ class TriangulationBase :
                  you to avoid recomputing expensive invariants when the
                  underlying manifold is retriangulated.
 
-                 This property should be managed by creating and
-                 destroying TopologyLock objects.  The precise value of
-                 topologyLock_ indicates the number of TopologyLock
-                 objects that currently exist for this triangulation.
+                 This property should be managed by creating and destroying
+                 objects of type TopologyLock and/or
+                 ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY>.
+                 The precise value of topologyLock_ indicates the number of
+                 such locks that currently exist for this triangulation.
 
                  See the TopologyLock inner class for further details. */
 
