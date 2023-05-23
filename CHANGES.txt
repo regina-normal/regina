@@ -22,6 +22,8 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which uses the tight encoding.
         Class BitManipulator<T>:
             - New routine swapBits().
+        Enum ChangeType:
+            - New enum for internal use with triangulation change spans.
         Class IntOfBits<k>:
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Example<3>:
@@ -45,6 +47,8 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which uses the tight encoding.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
+            - Overhaul of the internal change span classes, including a new
+              inner class ChangeAndClearSpan.
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
@@ -78,6 +82,8 @@ Version 7.4  [ (to be announced) ]
               whether to clone simplex/facet locks.
             - Renamed simplifiedFundamentalGroup to setGroupPresentation().
               The old name is deprecated but kept for backwards compatibility.
+            - Overhaul of the internal change span classes, including a new
+              inner class ChangeAndClearSpan.
         Class Triangulation<3>:
             - Routine puncture() now takes an optional triangle, not an
               optional tetrahedron.  The old version is kept but deprecated.
