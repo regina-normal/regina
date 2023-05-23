@@ -60,6 +60,10 @@ bool Triangulation<3>::minimiseBoundary() {
     // this is a lot of work, and in typical scenarios (e.g., the entire
     // boundary is locked), this would be fruitless anyway.
 
+    // We do not need a ChangeAndClearSpan here, since this bookkeeping is
+    // already managed by closeBook() and join().  However, we do add a
+    // ChangeEventGroup for optimisation, and we also add our own TopologyLock
+    // because join() does not know that it will be preserving topology.
     TopologyLock lock(*this);
     ChangeEventGroup span(*this);
 
