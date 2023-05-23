@@ -313,7 +313,7 @@ Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
     // mainly so that deleting tetrahedra is easy in the case where
     // the arguments were not coprime and we have to unwind the operation.
     // This means that the ChangeAndClearSpan here is vital.
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     size_t cuts2 = cuts0 + cuts1;
 

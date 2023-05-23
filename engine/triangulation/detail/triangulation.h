@@ -3737,6 +3737,12 @@ class TriangulationBase :
          * TopologyLock objects (i.e., topological properties will be preserved
          * as long as any such object is alive).
          *
+         * Note: we would normally use a deduction guide so that, for the
+         * default case, you can just write `ChangeAndClearSpan` instead of
+         * `ChangeAndClearSpan<>`.  Unfortunately this is not possible due to
+         * a gcc bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=79501),
+         * which affects gcc versions 11 and earlier (but not clang).
+         *
          * ChangeAndClearSpan objects are not copyable, movable or swappable.
          * In particular, Regina does not offer any way for a ChangeAndClearSpan
          * to transfer its outstanding duties (i.e., firing events and calling
@@ -3795,13 +3801,6 @@ class TriangulationBase :
                 ChangeAndClearSpan& operator = (const ChangeAndClearSpan&) =
                     delete;
         };
-
-        // Use a deduction guide, so that we can write ChangeAndClearSpan
-        // instead of ChangeAndClearSpan<> and get the default argument.
-        // Hide this from doxygen, which struggles with deduction guides.
-#ifndef __DOXYGEN
-        ChangeAndClearSpan(TriangulationBase&) -> ChangeAndClearSpan<>;
-#endif
 
     template <int> friend class BoundaryComponentBase;
     friend class regina::XMLLegacySimplicesReader<dim>;
@@ -4053,7 +4052,7 @@ inline const Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) const {
 
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex() {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     auto* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
@@ -4073,7 +4072,7 @@ std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
     static_assert(k >= 0,
         "The template argument k to newSimplices() must be non-negative.");
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     std::array<Simplex<dim>*, k> ans;
     for (int i = 0; i < k; ++i)
@@ -4098,7 +4097,7 @@ inline std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplicesRaw() {
 
 template <int dim>
 void TriangulationBase<dim>::newSimplices(size_t k) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (size_t i = 0; i < k; ++i)
         simplices_.push_back(new Simplex<dim>(
@@ -4107,7 +4106,7 @@ void TriangulationBase<dim>::newSimplices(size_t k) {
 
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     auto* s = new Simplex<dim>(desc, static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
@@ -4121,7 +4120,7 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
             "top-dimensional simplex that is locked and/or has a "
             "locked facet");
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // We can use isolateRaw() because we are already managing locks,
     // snapshots, change events and computed properties manually.
@@ -4145,7 +4144,7 @@ inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
             "top-dimensional simplex that is locked and/or has a "
             "locked facet");
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // We can use isolateRaw() because we are already managing locks,
     // snapshots, change events and computed properties manually.
@@ -4161,7 +4160,7 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
             "top-dimensional simplices in a triangulation with one or more "
             "locked simplices or facets");
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (auto s : simplices_)
         delete s;
@@ -4170,8 +4169,8 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
 
 template <int dim>
 void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
-    ChangeAndClearSpan span1(*this);
-    ChangeAndClearSpan span2(dest);
+    ChangeAndClearSpan<> span1(*this);
+    ChangeAndClearSpan<> span2(dest);
 
     for (auto* s : simplices_) {
         // This is an abuse of MarkedVector, since for a brief moment
@@ -4676,7 +4675,7 @@ inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
 template <int dim>
 void TriangulationBase<dim>::insertTriangulation(
         const Triangulation<dim>& source) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     size_t nOrig = size();
     size_t nSource = source.size();

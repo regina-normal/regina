@@ -1180,7 +1180,7 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
 
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // The two tetrahedra that we insert together form a pinched ball.
     // By a "pinched ball", this means a 3-ball in which some internal curve

@@ -1438,7 +1438,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
         throw LockViolation("An attempt was made to unjoin a locked facet "
             "from its adjacent simplex");
 
-    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
+    typename Triangulation<dim>::template ChangeAndClearSpan<> span(*tri_);
 
     Simplex<dim>* you = adj_[myFacet];
     you->adj_[gluing_[myFacet][myFacet]] = nullptr;
@@ -1483,7 +1483,7 @@ void SimplexBase<dim>::isolate() {
 
 hasGluings:
 
-    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
+    typename Triangulation<dim>::template ChangeAndClearSpan<> span(*tri_);
 
     // Currently, i is the first facet that has a gluing.
     for ( ; i <= dim; ++i)
@@ -1520,7 +1520,7 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         throw LockViolation("An attempt was made to join a locked facet "
             "to another top-dimensional simplex");
 
-    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
+    typename Triangulation<dim>::template ChangeAndClearSpan<> span(*tri_);
 
     adj_[myFacet] = you;
     gluing_[myFacet] = gluing;
