@@ -592,7 +592,6 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
         }
     }
 
-    TopologyLock lock(*this);
     ChangeEventGroup span(*this);
 
     pachner( tet24, false, true );
@@ -674,6 +673,8 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a change event group: this is very simple, and
     // we will already get a ChangeEventSpan via unjoin().
+    // We should however declare a topology lock here, since unjoin() does not
+    // know that the topology will be preserved.
     TopologyLock lock(*this);
     pent->unjoin(emb.tetrahedron());
 

@@ -326,7 +326,6 @@ void TriangulationBase<dim>::reorderBFS(bool reverse) {
     if (n == 0)
         return;
 
-    TopologyLock lock(*this);
     ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*this);
 
     // Run a breadth-first search over all top-dimensional simplices.

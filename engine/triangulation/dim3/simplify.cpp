@@ -113,12 +113,12 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     // by the time we perform it the original skeleton will be destroyed.
     //
     // The two calls to pachner() can manage any lock updates without our help.
-    TopologyLock lock(*this);
-    ChangeEventGroup span(*this);
     Triangle<3>* tri23 = (newAxis == 0 ?
         oldTet[0]->triangle(e->embedding(0).vertices()[2]) :
         oldTet[1]->triangle(e->embedding(1).vertices()[2]));
     int edge32 = e->embedding(3).edge();
+
+    ChangeEventGroup span(*this);
 
     pachner(tri23, false, true);
     pachner(oldTet[3]->edge(edge32), false, true);
@@ -777,6 +777,8 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a change event group: this is very simple, and
     // we will already get a ChangeEventSpan via unjoin().
+    // We should however declare a topology lock here, since unjoin() does not
+    // know that the topology will be preserved.
     TopologyLock lock(*this);
     tet->unjoin(emb.triangle());
     return true;
@@ -821,6 +823,8 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a change event group: this is very simple, and
     // we will already get a ChangeEventSpan via join().
+    // We should however declare a topology lock here, since join() does not
+    // know that the topology will be preserved.
     TopologyLock lock(*this);
     t0->join(p0[3], t1, p1 * Perm<4>(2, 3) * p0.inverse());
     return true;
