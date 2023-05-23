@@ -4581,7 +4581,7 @@ class Link :
          * An object that facilitates both firing change events and
          * calling clearAllProperties().
          *
-         * An object of type ChangeAndClearSpan has two effects:
+         * An object of type Link::ChangeAndClearSpan has two effects:
          *
          * - On construction and destruction, if this link is actually part of a
          *   PacketOf<Link> then it fires a PacketListener::packetToBeChanged()
@@ -5006,13 +5006,13 @@ inline void swap(Link& lhs, Link& rhs) {
 
 inline Link::ChangeAndClearSpan::ChangeAndClearSpan(Link& link) :
         PacketData<Link>::ChangeEventSpan(link) {
+    // The parent class constructor fires the initial change event.
 }
 
 inline Link::ChangeAndClearSpan::~ChangeAndClearSpan() {
     static_cast<Link&>(data_).clearAllProperties();
 
-    // Now fall through to the parent class destructor, which fires change
-    // events.
+    // The parent class destructor fires the final change event.
 }
 
 } // namespace regina

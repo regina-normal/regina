@@ -124,6 +124,27 @@ enum Algorithm {
     ALG_NAIVE = 3,
 };
 
+/**
+ * Indicates different ways in which a code could change a topological object,
+ * such as a link or triangulation.
+ *
+ * \nopython This enumeration is only used internally by private and/or
+ * protected class templates, and is therefore not made available to Python.
+ */
+enum ChangeType {
+    /**
+     * Indicates a change that could potentially alter any aspect of the object.
+     */
+    CHANGE_GENERAL = 0,
+    /**
+     * Indicates a change that is cosmetic in nature, in that it will not alter
+     * any computed properties of the object.  Examples of such changes include
+     * modifying simplex locks in triangulations, or reordering the
+     * top-dimensional simplices in a triangulation.
+     */
+    CHANGE_PRESERVE_ALL_PROPERTIES = 2
+};
+
 } // namespace regina
 
 #endif

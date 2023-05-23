@@ -201,8 +201,7 @@ void Triangulation<3>::puncture(Triangle<3>* location) {
 
     // Note: we use the "raw" routines (joinRaw, newSimplexRaw, etc.),
     // mainly since we want to manage facet locks manually.  This means that
-    // the takeSnapshot() and ChangeAndClearSpan here are vital.
-    takeSnapshot();
+    // the ChangeAndClearSpan here is vital.
     ChangeAndClearSpan span(*this);
 
     // We will attach a pair of triangular prisms to the given facet of tet.

@@ -68,11 +68,9 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
 
     // Note: we use the "raw" routines (joinRaw, newSimplexRaw), mainly since
     // we did all our lock checking beforehand (not during the individual
-    // joins).  This means that the takeSnapshot() and ChangeAndClearSpan here
-    // are vital.
+    // joins).  This means that the ChangeAndClearSpan here is vital.
 
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     Tetrahedron<3>* newTet = newSimplexRaw();
@@ -316,8 +314,7 @@ Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
     // Note: we use the "raw" routines (joinRaw, newSimplexRaw, etc.),
     // mainly so that deleting tetrahedra is easy in the case where
     // the arguments were not coprime and we have to unwind the operation.
-    // This means that the takeSnapshot() and ChangeAndClearSpan here are vital.
-    takeSnapshot();
+    // This means that the ChangeAndClearSpan here is vital.
     ChangeAndClearSpan span(*this);
 
     size_t cuts2 = cuts0 + cuts1;

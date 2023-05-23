@@ -202,10 +202,9 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each other.
@@ -311,10 +310,9 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
@@ -423,10 +421,9 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
         return true;
 
     // Go ahead and perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // First glue together the two faces that will be flattened.
@@ -615,10 +612,9 @@ bool Triangulation<3>::zeroTwoMove(
     }
 
     // Actually perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     auto tet = newSimplicesRaw<2>();
@@ -895,12 +891,11 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
         return true;
 
     // Actually perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use the "raw" routines removeSimplexRaw() below.  This is
-    // because the facets on the internal side of the shelling _are_ allowed
+    // The following ChangeAndClearSpan is essential, since we use the
+    // "raw" routine removeSimplexRaw() below.  This is because
+    // the facets on the internal side of the shelling _are_ allowed
     // to be locked, and we do not want to throw an exception because of this.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     removeSimplexRaw(t);
@@ -1137,10 +1132,9 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // Clone the edge embeddings because we cannot rely on skeletal
@@ -1186,9 +1180,8 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     Perm<4> vertices = e->front().vertices();
     bool locked = open->isFacetLocked(vertices[3]);
 
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
-    takeSnapshot();
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
     ChangeAndClearSpan span(*this);
 
     // The two tetrahedra that we insert together form a pinched ball.

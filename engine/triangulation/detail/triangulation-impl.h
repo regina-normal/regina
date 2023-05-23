@@ -327,10 +327,7 @@ void TriangulationBase<dim>::reorderBFS(bool reverse) {
         return;
 
     TopologyLock lock(*this);
-    Snapshottable<Triangulation<dim>>::takeSnapshot();
-    // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
-    // computed properties of the triangulation will not change.
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*this);
 
     // Run a breadth-first search over all top-dimensional simplices.
     auto* ordered = new Simplex<dim>*[n];
@@ -396,7 +393,7 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // the skeleton will be deleted immediately - this means we can
     // temporarily hijack the Simplex::orientation_ fields for our own purposes.
     // For this we use a ChangeEventSpan (not a ChangeAndClearSpan), and just
-    // call clearAllProperties() manually at the right time.
+    // call takeSnapshot() and clearAllProperties() manually at the right time.
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();

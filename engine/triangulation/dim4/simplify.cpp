@@ -231,10 +231,9 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -363,10 +362,9 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -480,10 +478,9 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // Unglue faces from the doomed pentachora and glue them to each other.
@@ -774,12 +771,11 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         return true;
 
     // Actually perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use the "raw" routines removeSimplexRaw() below.  This is
-    // because the facets on the internal side of the shelling _are_ allowed
+    // The following ChangeAndClearSpan is essential, since we use the
+    // "raw" routine removeSimplexRaw() below.  This is because
+    // the facets on the internal side of the shelling _are_ allowed
     // to be locked, and we do not want to throw an exception because of this.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     removeSimplexRaw(p);
@@ -1151,10 +1147,9 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // Clone the edge embeddings because we cannot rely on skeletal
@@ -1206,10 +1201,9 @@ bool Triangulation<4>::snapEdge(Edge<4>* e, bool check, bool perform) {
     bool locked = open->isFacetLocked(vertices[2]);
 
     // Actually perform the move.
-    // The following takeSnapshot() and ChangeAndClearSpan are essential,
-    // since we use "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    takeSnapshot();
     ChangeAndClearSpan span(*this);
 
     // The four pentachora that we insert together form a "pinched 4-ball".

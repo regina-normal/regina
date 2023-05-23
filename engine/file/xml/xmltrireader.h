@@ -200,9 +200,9 @@ class XMLLegacySimplicesReader : public XMLElementReader {
  * triangulation.
  *
  * This triangulation will be assembled using the "raw" routines
- * newSimplexRaw(), joinRaw(), etc., _without_ the usual protections such as
- * takeSnapshot(), ChangeAndClearSpan, etc.  The reason we use the "raw"
- * routines is so we can incrementally recreate simplex/facet locks and
+ * newSimplexRaw(), joinRaw(), etc., _without_ the usual protections from
+ * a local ChangeAndClearSpan.  The reason we use the "raw" routines
+ * is so we can incrementally recreate simplex/facet locks and
  * assemble top-dimensional simplices without having to worry about how these
  * operations interact.  The reason we do not need the usual protections
  * is because this assembly should all take place before the first call to

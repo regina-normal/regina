@@ -1173,10 +1173,7 @@ inline const std::string& SimplexBase<dim>::description() const {
 
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
-    tri_->takeSnapshot();
-    // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
-    // computed properties of the triangulation will not change.
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    typename Triangulation<dim>::template ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*tri_);
     description_ = desc;
 }
 
@@ -1352,11 +1349,7 @@ template <int dim>
 inline void SimplexBase<dim>::lock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (! (locks_ & mask)) {
-        tri_->takeSnapshot();
-        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
-        // computed properties of the triangulation will not change.
-        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
-
+        typename Triangulation<dim>::template ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*tri_);
         locks_ |= mask;
     }
 }
@@ -1365,11 +1358,7 @@ template <int dim>
 void SimplexBase<dim>::lockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (! (locks_ & mask)) {
-        tri_->takeSnapshot();
-        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
-        // computed properties of the triangulation will not change.
-        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
-
+        typename Triangulation<dim>::template ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*tri_);
         locks_ |= mask;
 
         if (adj_[facet]) {
@@ -1388,11 +1377,7 @@ template <int dim>
 inline void SimplexBase<dim>::unlock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (locks_ & mask) {
-        tri_->takeSnapshot();
-        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
-        // computed properties of the triangulation will not change.
-        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
-
+        typename Triangulation<dim>::template ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*tri_);
         locks_ &= ~mask;
     }
 }
@@ -1401,11 +1386,7 @@ template <int dim>
 void SimplexBase<dim>::unlockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (locks_ & mask) {
-        tri_->takeSnapshot();
-        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
-        // computed properties of the triangulation will not change.
-        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
-
+        typename Triangulation<dim>::template ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*tri_);
         locks_ &= ~mask;
 
         if (adj_[facet]) {
@@ -1423,11 +1404,7 @@ inline void SimplexBase<dim>::unlockFacetRaw(int facet) {
 template <int dim>
 void SimplexBase<dim>::unlockAll() {
     if (locks_) {
-        tri_->takeSnapshot();
-        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
-        // computed properties of the triangulation will not change.
-        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
-
+        typename Triangulation<dim>::template ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*tri_);
         locks_ = 0;
 
         for (int facet = 0; facet <= dim; ++facet)
@@ -1461,7 +1438,6 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
         throw LockViolation("An attempt was made to unjoin a locked facet "
             "from its adjacent simplex");
 
-    tri_->takeSnapshot();
     typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     Simplex<dim>* you = adj_[myFacet];
@@ -1507,7 +1483,6 @@ void SimplexBase<dim>::isolate() {
 
 hasGluings:
 
-    tri_->takeSnapshot();
     typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     // Currently, i is the first facet that has a gluing.
@@ -1545,7 +1520,6 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         throw LockViolation("An attempt was made to join a locked facet "
             "to another top-dimensional simplex");
 
-    tri_->takeSnapshot();
     typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     adj_[myFacet] = you;

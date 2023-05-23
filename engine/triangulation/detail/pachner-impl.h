@@ -291,12 +291,10 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             return true;
 
         // Perform the move.
-        // The following takeSnapshot() and ChangeAndClearSpan are essential,
-        // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+        // The following ChangeAndClearSpan is essential, since we use
+        // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
         TopologyLock lock(*this);
-        Snapshottable<Triangulation<dim>>::takeSnapshot();
-        typename Triangulation<dim>::ChangeAndClearSpan span(
-            static_cast<Triangulation<dim>&>(*this));
+        ChangeAndClearSpan span(*this);
 
         Simplex<dim>* newSimp = newSimplexRaw();
 
@@ -359,12 +357,10 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             return true;
 
         // Perform the move.
-        // The following takeSnapshot() and ChangeAndClearSpan are essential,
-        // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+        // The following ChangeAndClearSpan is essential, since we use
+        // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
         TopologyLock lock(*this);
-        Snapshottable<Triangulation<dim>>::takeSnapshot();
-        typename Triangulation<dim>::ChangeAndClearSpan span(
-            static_cast<Triangulation<dim>&>(*this));
+        ChangeAndClearSpan span(*this);
 
         // Remember any facet locks on f - we will need to restore these later.
         LockMask oldLock = f->locks_;
@@ -609,12 +605,10 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             return true;
 
         // Perform the move.
-        // The following takeSnapshot() and ChangeAndClearSpan are essential,
-        // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+        // The following ChangeAndClearSpan is essential, since we use
+        // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
         TopologyLock lock(*this);
-        Snapshottable<Triangulation<dim>>::takeSnapshot();
-        typename Triangulation<dim>::ChangeAndClearSpan span(
-            static_cast<Triangulation<dim>&>(*this));
+        ChangeAndClearSpan span(*this);
 
         // Create (k + 1) new top-dimensional simplices.
         // We insert them in reverse order to ensure that the new internal
