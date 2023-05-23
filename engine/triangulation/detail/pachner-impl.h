@@ -293,8 +293,7 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // Perform the move.
         // The following ChangeAndClearSpan is essential, since we use
         // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-        TopologyLock lock(*this);
-        ChangeAndClearSpan span(*this);
+        ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
         Simplex<dim>* newSimp = newSimplexRaw();
 
@@ -359,8 +358,7 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // Perform the move.
         // The following ChangeAndClearSpan is essential, since we use
         // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-        TopologyLock lock(*this);
-        ChangeAndClearSpan span(*this);
+        ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
         // Remember any facet locks on f - we will need to restore these later.
         LockMask oldLock = f->locks_;
@@ -607,8 +605,7 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // Perform the move.
         // The following ChangeAndClearSpan is essential, since we use
         // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-        TopologyLock lock(*this);
-        ChangeAndClearSpan span(*this);
+        ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
         // Create (k + 1) new top-dimensional simplices.
         // We insert them in reverse order to ensure that the new internal

@@ -69,9 +69,7 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // Note: we use the "raw" routines (joinRaw, newSimplexRaw), mainly since
     // we did all our lock checking beforehand (not during the individual
     // joins).  This means that the ChangeAndClearSpan here is vital.
-
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     Tetrahedron<3>* newTet = newSimplexRaw();
 

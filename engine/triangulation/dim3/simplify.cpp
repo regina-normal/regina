@@ -204,8 +204,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     // Actually perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each other.
     Perm<4> crossover = tet[0]->adjacentGluing(perm[0][2]);
@@ -312,8 +311,7 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     // Actually perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -423,8 +421,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     // Go ahead and perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     // First glue together the two faces that will be flattened.
     Tetrahedron<3>* adjTet[2];
@@ -614,8 +611,7 @@ bool Triangulation<3>::zeroTwoMove(
     // Actually perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     auto tet = newSimplicesRaw<2>();
 
@@ -899,8 +895,7 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
     // "raw" routine removeSimplexRaw() below.  This is because
     // the facets on the internal side of the shelling _are_ allowed
     // to be locked, and we do not want to throw an exception because of this.
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     removeSimplexRaw(t);
     return true;
@@ -1138,8 +1133,7 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     // Perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.

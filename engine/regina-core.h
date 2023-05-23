@@ -128,6 +128,10 @@ enum Algorithm {
  * Indicates different ways in which a code could change a topological object,
  * such as a link or triangulation.
  *
+ * Currently this enumeration is only used with triangulations, but it is
+ * expected that it will be used with other objects (in particular, links)
+ * in a future releae of Regina.
+ *
  * \nopython This enumeration is only used internally by private and/or
  * protected class templates, and is therefore not made available to Python.
  */
@@ -136,6 +140,19 @@ enum ChangeType {
      * Indicates a change that could potentially alter any aspect of the object.
      */
     CHANGE_GENERAL = 0,
+    /**
+     * Indicates a change that could alter the representation of the object,
+     * but will not alter its topology.  Examples of such changes could include
+     * Pachner moves (which alter the triangulation but not the underlying
+     * manifold), or Reidemeister moves (which alter the link diagram but not
+     * the underlying link).
+     *
+     * The specific meaning of "will not alter its topology" depends upon the
+     * type of object.  For example, the inner class
+     * TriangulationBase<dim>::TopologyLock describes exactly what this means
+     * in the setting of triangulations.
+     */
+    CHANGE_PRESERVE_TOPOLOGY = 1,
     /**
      * Indicates a change that is cosmetic in nature, in that it will not alter
      * any computed properties of the object.  Examples of such changes include

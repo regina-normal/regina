@@ -4605,7 +4605,7 @@ class Link :
          * ChangeAndClearSpan objects then Link::clearAllProperties() will be
          * called multiple times.  This is harmless but inefficient.
          *
-         * ChangeAndClearSpan  objects are not copyable, movable or swappable.
+         * ChangeAndClearSpan objects are not copyable, movable or swappable.
          * In particular, Regina does not offer any way for a ChangeAndClearSpan
          * to transfer its duty (i.e., firing events and calling
          * clearAllProperties() upon destruction) to another object.

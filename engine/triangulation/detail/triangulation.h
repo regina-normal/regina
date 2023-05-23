@@ -3584,93 +3584,6 @@ class TriangulationBase :
 
     protected:
         /**
-         * An object that facilitates taking snapshots, firing change events,
-         * and calling clearAllProperties().
-         *
-         * An object of type Triangulation::ChangeAndClearSpan has three
-         * effects:
-         *
-         * - If this triangulation is actually part of a
-         *   PacketOf<Triangulation<dim>>, then the packet events
-         *   PacketListener::packetToBeChanged() and
-         *   PacketListener::packetWasChanged() will be fired upon this
-         *   object's construction and destruction respectively.
-         *
-         * - On construction, this object also calls
-         *   Triangulation<dim>::takeSnapshot().  This this snapshotting will
-         *   happen _after_ the initial change event is fired; however, the
-         *   order of these two operations should be irrelevant since packet
-         *   listeners should not make any changes to a packet from within
-         *   PacketListener::packetToBeChanged().
-         *
-         * - On destruction, this object also calls
-         *   Triangulation<dim>::clearAllProperties(), _unless_ the template
-         *   argument \a changeType is CHANGE_PRESERVE_ALL_PROPERTIES.
-         *   This call will happen just before the final change event is fired.
-         *
-         * The use of these objects is similar to Packet::ChangeEventSpan
-         * (and indeed, this class is intended to _replace_ ChangeEventSpan
-         * when writing Triangulation member functions): objects of this type
-         * would typically be created on the stack, just before the internal
-         * data within a triangulation is changed.
-         *
-         * Like ChangeEventSpan, these objects can be safely nested with other
-         * ChangeAndClearSpan and/or ChangeEventSpan objects.  However, unlike
-         * ChangeEventSpan, this comes with a cost: as always, only one
-         * set of change events will be fired; however, if there are multiple
-         * ChangeAndClearSpan objects then Triangulation<dim>::takeSnapshot()
-         * and Triangulation<dim>::clearAllProperties() will be called
-         * multiple times.  This is harmless but inefficient.
-         *
-         * ChangeAndClearSpan  objects are not copyable, movable or swappable.
-         * In particular, Regina does not offer any way for a ChangeAndClearSpan
-         * to transfer its outstanding duties (i.e., firing events and calling
-         * clearAllProperties() upon destruction) to another object.
-         *
-         * \nopython
-         */
-        template <ChangeType changeType = CHANGE_GENERAL>
-        class ChangeAndClearSpan :
-                public PacketData<Triangulation<dim>>::ChangeEventSpan {
-            public:
-                /**
-                 * Creates a new change-and-clear object to work with the given
-                 * triangulation.
-                 *
-                 * If this is the only ChangeAndClearSpan or ChangeEventSpan
-                 * currently in existence for the given triangulation, this
-                 * constructor will call PacketListener::packetToBeChanged()
-                 * for all registered listeners for the given triangulation.
-                 *
-                 * \param tri the triangulation whose data is about to change.
-                 */
-                ChangeAndClearSpan(TriangulationBase& tri);
-
-                /**
-                 * Destroys this change-and-clear object.
-                 *
-                 * This destructor will first call
-                 * Triangulation<dim>::clearAllProperites().  Then, if this is
-                 * the only ChangeAndClearSpan or ChangeEventSpan currently
-                 * in existence for the given triangulation, it will call
-                 * PacketListener::packetWasChanged() for all registered
-                 * listeners for the given triangulation.
-                 */
-                ~ChangeAndClearSpan();
-
-                // Make this class non-copyable.
-                ChangeAndClearSpan(const ChangeAndClearSpan&) = delete;
-                ChangeAndClearSpan& operator = (const ChangeAndClearSpan&) =
-                    delete;
-        };
-
-        // Deduction guides (hide these from Doxygen, which cannot handle them):
-#ifndef __DOXYGEN
-        ChangeAndClearSpan(TriangulationBase&) ->
-            ChangeAndClearSpan<CHANGE_GENERAL>;
-#endif
-
-        /**
          * Creates a temporary lock on the topological properties of
          * the given triangulation.
          *
@@ -3693,17 +3606,26 @@ class TriangulationBase :
          * the lock will remain in effect until the TopologyLock object goes
          * out of scope (or is otherwise destroyed).
          *
-         * Typically a TopologyLock would be created on the stack before
-         * a call to clearAllProperties(), which could occur via:
+         * The easiest way to create a TopologyLock is to have it automatically
+         * rolled in to a ChangeAndClearSpan, by declaring a local
+         * ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> on the stack
+         * whose lifespan covers all of the modifications that you are making
+         * to the triangulation.
          *
-         * - a modifying function call, such as Simplex<dim>::join();
-         * - a ChangeAndClearSpan object falling out of scope; or
-         * - a manual call to clearAllProperties().
+         * Alternatively, you can of course create a TopologyLock manually.
+         * This would, again, be a local stack variable whose lifespan covers
+         * all of your modifications to the triangulation.  In this case,
+         * the TopologyLock lifespan would need to cover all calls to
+         * clearAllProperties(), which could occur via:
          *
-         * In particular, if there is a ChangeAndClearSpan in use then the
-         * TopologyLock must be declared _before_ it (so that it is still
-         * active when the ChangeAndClearSpan calls clearAllProperties()
-         * in its destructor).
+         * - modifying function calls, such as Simplex<dim>::join();
+         * - ChangeAndClearSpan objects being destroyed; or
+         * - manual calls to clearAllProperties().
+         *
+         * In particular, if you are declaring a TopologyLock separately from
+         * a ChangeAndClearSpan, then the TopologyLock must be declared _first_
+         * (so that it is still active when the ChangeAndClearSpan calls
+         * clearAllProperties() in its destructor).
          *
          * Multiple locks are allowed.  If multiple locks are created, then
          * computed topological properties of the manifold will be preserved as
@@ -3736,19 +3658,149 @@ class TriangulationBase :
                  * Creates a new lock on the given triangulation.
                  *
                  * \param tri the triangulation whose topological
-                 * properties are to be locked.  This may be \c null
-                 * (in which case the lock has no effect).
+                 * properties are to be locked.
                  */
-                TopologyLock(TriangulationBase<dim>& tri);
+                TopologyLock(TriangulationBase<dim>& tri) : tri_(tri) {
+                    ++tri_.topologyLock_;
+                }
+
                 /**
                  * Removes this lock on the associated triangulation.
                  */
-                ~TopologyLock();
+                ~TopologyLock() {
+                    --tri_.topologyLock_;
+                }
 
                 // Make this class non-copyable.
                 TopologyLock(const TopologyLock&) = delete;
                 TopologyLock& operator = (const TopologyLock&) = delete;
         };
+
+        /**
+         * An object that facilitates taking snapshots, firing change events,
+         * and calling clearAllProperties().
+         *
+         * An object of type Triangulation::ChangeAndClearSpan has four
+         * possible effects upon the triangulation that is passed to its
+         * constructor:
+         *
+         * - If the triangulation is actually part of a
+         *   PacketOf<Triangulation<dim>>, then the packet events
+         *   PacketListener::packetToBeChanged() and
+         *   PacketListener::packetWasChanged() will be fired upon this
+         *   object's construction and destruction respectively.
+         *
+         * - On construction, this object also calls
+         *   Triangulation<dim>::takeSnapshot().  This snapshotting will
+         *   happen _after_ the initial change event is fired; however, the
+         *   order of these two operations should be irrelevant since packet
+         *   listeners should not make any changes to a packet from within
+         *   PacketListener::packetToBeChanged().
+         *
+         * - On destruction, this object also calls
+         *   Triangulation<dim>::clearAllProperties(), _unless_ the template
+         *   argument \a changeType is CHANGE_PRESERVE_ALL_PROPERTIES.
+         *   This call will happen just before the final change event is fired.
+         *
+         * - Finally, if the template argument \a changeType is
+         *   CHANGE_PRESERVE_TOPOLOGY, then this object will effectively
+         *   create a new TopologyLock for the triangulation that lasts for the
+         *   full lifespan of this object, _excluding_ the firing of packet
+         *   change events.  Specifically, the TopologyLock will be created in
+         *   the constructor immediately after snapshotting, and will be
+         *   removed in the destructor immediately after the call to
+         *   Triangulation<dim>::clearAllProperties().  In particular, this
+         *   means that topological properties of the triangulation that
+         *   have been computed and cached (such as homology and fundamental
+         *   group) will be preserved when clearAllProperties() is called
+         *   in the destructor.
+         *
+         * The use of ChangeAndClearSpan is similar to Packet::ChangeEventSpan
+         * (and indeed, this class is intended to _replace_ ChangeEventSpan
+         * when writing Triangulation member functions): objects of this type
+         * would typically be created on the stack, just before the internal
+         * data within a triangulation is changed, and have a lifespan that
+         * covers all of your changes to the triangulation.
+         *
+         * Like ChangeEventSpan, these objects can be safely nested with other
+         * ChangeAndClearSpan and/or ChangeEventSpan objects, and only the
+         * outermost object will fire packet change events.  However, unlike
+         * ChangeEventSpan, this comes with a cost: as always, only one
+         * set of change events will be fired; however, if there are multiple
+         * ChangeAndClearSpan objects then Triangulation<dim>::takeSnapshot()
+         * and Triangulation<dim>::clearAllProperties() will be called
+         * multiple times.  This is harmless but inefficient.
+         *
+         * Likewise, if \a changeType is CHANGE_PRESERVE_TOPOLOGY then these
+         * objects will behave in the expected way when nested with other
+         * TopologyLock objects (i.e., topological properties will be preserved
+         * as long as any such object is alive).
+         *
+         * ChangeAndClearSpan objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a ChangeAndClearSpan
+         * to transfer its outstanding duties (i.e., firing events and calling
+         * clearAllProperties() upon destruction) to another object.
+         *
+         * \tparam changeType controls which computed properties of the
+         * triangulation will be cleared upon the destruction of this
+         * object (unless of course this object lives within a larger
+         * surrounding change span, in which case the outer span takes full
+         * responsibility for clearing computed properties).  See the notes
+         * above for details.  If unsure, the default value of CHANGE_GENERAL
+         * (which clears _all_ computed properties) is always safe to use.
+         *
+         * \nopython
+         */
+        template <ChangeType changeType = CHANGE_GENERAL>
+        class ChangeAndClearSpan :
+                public PacketData<Triangulation<dim>>::ChangeEventSpan {
+            public:
+                /**
+                 * Performs all initial tasks before the triangulation is
+                 * modified.  See the class notes for precisely what tasks
+                 * are performed.
+                 *
+                 * \param tri the triangulation that we are about to modify.
+                 */
+                ChangeAndClearSpan(TriangulationBase& tri) :
+                        PacketData<Triangulation<dim>>::ChangeEventSpan(
+                            static_cast<Triangulation<dim>&>(tri)) {
+                    tri.Snapshottable<Triangulation<dim>>::takeSnapshot();
+
+                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                        ++tri.topologyLock_;
+                }
+
+                /**
+                 * Performs all follow-up tasks after the triangulation has
+                 * been modified.  See the class notes for precisely what
+                 * tasks are performed.
+                 */
+                ~ChangeAndClearSpan() {
+                    using Parent = typename
+                        PacketData<Triangulation<dim>>::ChangeEventSpan;
+
+                    if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
+                        static_cast<Triangulation<dim>&>(Parent::data_).
+                            clearAllProperties();
+
+                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                        --static_cast<Triangulation<dim>&>(Parent::data_).
+                            topologyLock_;
+                }
+
+                // Make this class non-copyable.
+                ChangeAndClearSpan(const ChangeAndClearSpan&) = delete;
+                ChangeAndClearSpan& operator = (const ChangeAndClearSpan&) =
+                    delete;
+        };
+
+        // Use a deduction guide, so that we can write ChangeAndClearSpan
+        // instead of ChangeAndClearSpan<> and get the default argument.
+        // Hide this from doxygen, which struggles with deduction guides.
+#ifndef __DOXYGEN
+        ChangeAndClearSpan(TriangulationBase&) -> ChangeAndClearSpan<>;
+#endif
 
     template <int> friend class BoundaryComponentBase;
     friend class regina::XMLLegacySimplicesReader<dim>;
@@ -4862,8 +4914,7 @@ template <int dim>
 void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     int f;
     for (auto s : simplices_)
@@ -4899,8 +4950,7 @@ template <int dim>
 void TriangulationBase<dim>::reflect() {
     ensureSkeleton();
 
-    TopologyLock lock(*this);
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     int f;
     for (auto s : simplices_) {
@@ -5130,43 +5180,6 @@ inline bool TriangulationBase<dim>::sameDegreesAt(
         const TriangulationBase& other,
         std::integer_sequence<int, useDim...>) const {
     return (sameDegreesAt<useDim>(other) && ...);
-}
-
-// Inline functions for TriangulationBase::ChangeAndClearSpan
-
-template <int dim>
-template <ChangeType changeType>
-inline TriangulationBase<dim>::ChangeAndClearSpan<changeType>::
-        ChangeAndClearSpan(TriangulationBase<dim>& tri) :
-        PacketData<Triangulation<dim>>::ChangeEventSpan(
-            static_cast<Triangulation<dim>&>(tri)) {
-    // The parent class constructor fires the initial change event.
-    tri.Snapshottable<Triangulation<dim>>::takeSnapshot();
-}
-
-template <int dim>
-template <ChangeType changeType>
-inline TriangulationBase<dim>::ChangeAndClearSpan<changeType>::
-        ~ChangeAndClearSpan() {
-    if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
-        static_cast<Triangulation<dim>&>(
-            PacketData<Triangulation<dim>>::ChangeEventSpan::data_).
-            clearAllProperties();
-
-    // The parent class destructor fires the final change event.
-}
-
-// Inline functions for TriangulationBase::TopologyLock
-
-template <int dim>
-inline TriangulationBase<dim>::TopologyLock::TopologyLock(
-        TriangulationBase<dim>& tri) : tri_(tri) {
-    ++tri_.topologyLock_;
-}
-
-template <int dim>
-inline TriangulationBase<dim>::TopologyLock::~TopologyLock() {
-    --tri_.topologyLock_;
 }
 
 } } // namespace regina::detail
