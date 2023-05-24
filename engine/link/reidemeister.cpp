@@ -49,7 +49,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         if (! perform)
             return true;
 
-        ChangeAndClearSpan span(*this);
+        ChangeAndClearSpan<> span(*this);
 
         if (crossing->prev(1).crossing() == crossing) {
             // This is a 1-crossing component, and we will convert it to a
@@ -84,7 +84,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         if (! perform)
             return true;
 
-        ChangeAndClearSpan span(*this);
+        ChangeAndClearSpan<> span(*this);
 
         // The twist runs from the lower strand to the upper.
         StrandRef from = crossing->prev_[0];
@@ -119,7 +119,7 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
             if (! comp) {
                 // Found it!
                 if (perform) {
-                    ChangeAndClearSpan span(*this);
+                    ChangeAndClearSpan<> span(*this);
 
                     auto* c = new Crossing(sign);
                     c->next_[0] = c->prev_[0] = StrandRef(c, 1);
@@ -150,7 +150,7 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // Insert the twist.
     auto* c = new Crossing(sign);
@@ -206,7 +206,7 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // The situation: (arc, arc2) represent opposite strands of one crossing,
     // and (to, to2) represent opposite strands of another crossing.
@@ -501,7 +501,7 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     if (! perform)
         return true;
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     auto* pos = new Crossing(1);
     auto* neg = new Crossing(-1);
@@ -650,7 +650,7 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // Reorder the two crossings on each of the three edges.
     StrandRef x, first, second, y;

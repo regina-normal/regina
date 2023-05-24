@@ -438,13 +438,13 @@ void Link::swap(Link& other) {
 }
 
 void Link::reflect() {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
     for (Crossing* cross : crossings_)
         cross->sign_ = -cross->sign_;
 }
 
 void Link::reverse() {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
     for (Crossing* cross : crossings_) {
         std::swap(cross->next_[0], cross->prev_[0]);
         std::swap(cross->next_[1], cross->prev_[1]);
@@ -452,7 +452,7 @@ void Link::reverse() {
 }
 
 void Link::rotate() {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -468,7 +468,7 @@ void Link::rotate() {
 }
 
 void Link::change(Crossing* c) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (StrandRef& s : components_)
         if (s.crossing_ == c)
@@ -506,7 +506,7 @@ void Link::change(Crossing* c) {
 }
 
 void Link::changeAll() {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -524,7 +524,7 @@ void Link::changeAll() {
 }
 
 void Link::resolve(Crossing* c) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     if (c->next_[0].crossing() == c) {
         if (c->prev_[0].crossing() == c) {
@@ -794,7 +794,7 @@ void Link::composeWith(const Link& other) {
     if (other.isEmpty())
         return;
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // From here we can assume other is non-empty.
     // Clone its crossings, and transfer them directly into this link.
@@ -1270,7 +1270,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
 
     // We have p >= q.
     if (q == 0) {
-        ChangeAndClearSpan span(*this);
+        ChangeAndClearSpan<> span(*this);
         if (p == 0) {
             // Insert a single unknot.
             components_.emplace_back();
@@ -1283,7 +1283,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     }
     if (q == 1) {
         // Insert a single unknot.
-        ChangeAndClearSpan span(*this);
+        ChangeAndClearSpan<> span(*this);
         components_.emplace_back();
         return;
     }
@@ -1294,7 +1294,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     int n = p * (q - 1);
     int nComp = std::gcd(p, q);
 
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     auto* c = new Crossing*[n];
     int i;

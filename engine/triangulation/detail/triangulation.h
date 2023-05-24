@@ -3766,7 +3766,7 @@ class TriangulationBase :
                  * modified.  See the class notes for precisely what tasks
                  * are performed.
                  *
-                 * \param tri the triangulation that we are about to modify.
+                 * \param tri the triangulation whose data is about to change.
                  */
                 ChangeAndClearSpan(TriangulationBase& tri) : PacketChangeSpan(
                             static_cast<Triangulation<dim>&>(tri)) {

@@ -4576,65 +4576,88 @@ class Link :
         void setPropertiesFromBracket(Laurent<Integer>&& bracket) const;
 
         /**
-         * An object that facilitates both firing change events and
-         * calling clearAllProperties().
+         * An object that facilitates both firing change events and calling
+         * clearAllProperties().
          *
-         * An object of type Link::ChangeAndClearSpan has two effects:
+         * An object of type Link::ChangeAndClearSpan has two possible effects
+         * upon the link that is passed to its constructor:
          *
-         * - On construction and destruction, if this link is actually part of a
-         *   PacketOf<Link> then it fires a PacketListener::packetToBeChanged()
-         *   and PacketListener::packetWasChanged() event respectively to all
-         *   registered packet listeners.
+         * - If the link is actually part of a PacketOf<Link>, then the packet
+         *   events PacketListener::packetToBeChanged() and
+         *   PacketListener::packetWasChanged() will be fired upon this
+         *   object's construction and destruction respectively.
          *
-         * - On destruction, this object calls Link::clearAllProperties()
-         *   (just before the final change event is fired).  This is always
-         *   done, whether or not the link is held in a packet.
+         * - On destruction, this object also calls Link::clearAllProperties(),
+         *   _unless_ the template argument \a changeType is
+         *   CHANGE_PRESERVE_ALL_PROPERTIES.  This call will happen just
+         *   before the final change event is fired.
          *
-         * The use of these objects is similar to Packet::PacketChangeSpan
+         * The use of ChangeAndClearSpan is similar to Packet::PacketChangeSpan
          * (and indeed, this class is intended to _replace_ PacketChangeSpan
          * when writing Link member functions): objects of this type would
          * typically be created on the stack, just before the internal data
-         * within a link is changed.
+         * within a link is changed, and have a lifespan that covers all of
+         * your changes to the link.
          *
          * Like PacketChangeSpan, these objects can be safely nested with other
-         * ChangeAndClearSpan and/or PacketChangeSpan objects.  However, unlike
+         * ChangeAndClearSpan and/or PacketChangeSpan objects, and only the
+         * outermost object will fire packet change events.  However, unlike
          * PacketChangeSpan, this comes with a cost: as always, only one
          * set of change events will be fired; however, if there are multiple
          * ChangeAndClearSpan objects then Link::clearAllProperties() will be
          * called multiple times.  This is harmless but inefficient.
          *
+         * Note: we would normally use a deduction guide so that, for the
+         * default case, you can just write `ChangeAndClearSpan` instead of
+         * `ChangeAndClearSpan<>`.  Unfortunately this is not possible due to
+         * a gcc bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=79501),
+         * which affects gcc versions 11 and earlier (but not clang).
+         *
          * ChangeAndClearSpan objects are not copyable, movable or swappable.
          * In particular, Regina does not offer any way for a ChangeAndClearSpan
-         * to transfer its duty (i.e., firing events and calling
+         * to transfer its outstanding duties (i.e., firing events and calling
          * clearAllProperties() upon destruction) to another object.
+         *
+         * \tparam changeType controls which computed properties of the link
+         * will be cleared upon the destruction of this object (unless of
+         * course this object lives within a larger surrounding change span,
+         * in which case the outer span takes full responsibility for clearing
+         * computed properties).  See the notes above for details.  Currently
+         * CHANGE_PRESERVE_TOPOLOGY is not yet supported for links (this is
+         * planned for a future release of Regina).  If unsure, the default
+         * value of CHANGE_GENERAL (which clears _all_ computed properties)
+         * is always safe to use.
          *
          * \nopython
          */
+        template <ChangeType changeType = CHANGE_GENERAL>
         class ChangeAndClearSpan : public PacketData<Link>::PacketChangeSpan {
+            static_assert(changeType != CHANGE_PRESERVE_TOPOLOGY,
+                "Link::ChangeAndClearSpan does not yet support the change "
+                "type CHANGE_PRESERVE_TOPOLOGY.  For now, use the default "
+                "CHANGE_GENERAL instead.");
+
             public:
                 /**
-                 * Creates a new change-and-clear object to work with the given
-                 * link.
-                 *
-                 * If this is the only ChangeAndClearSpan or PacketChangeSpan
-                 * currently in existence for the given link, this constructor
-                 * will call PacketListener::packetToBeChanged() for all
-                 * registered listeners for the given link.
+                 * Performs all initial tasks before the link is
+                 * modified.  See the class notes for precisely what tasks
+                 * are performed.
                  *
                  * \param link the link whose data is about to change.
                  */
-                ChangeAndClearSpan(Link& link);
+                ChangeAndClearSpan(Link& link) :
+                        PacketData<Link>::PacketChangeSpan(link) {
+                }
 
                 /**
-                 * Destroys this change-and-clear object.
-                 *
-                 * This destructor will first call Link::clearAllProperites().
-                 * Then, if this is the only ChangeAndClearSpan or
-                 * PacketChangeSpan currently in existence for the given link,
-                 * it will call PacketListener::packetWasChanged() for all
-                 * registered listeners for the given link.
+                 * Performs all follow-up tasks after the link has
+                 * been modified.  See the class notes for precisely what
+                 * tasks are performed.
                  */
-                ~ChangeAndClearSpan();
+                ~ChangeAndClearSpan() {
+                    if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
+                        static_cast<Link&>(data_).clearAllProperties();
+                }
 
                 // Make this class non-copyable.
                 ChangeAndClearSpan(const ChangeAndClearSpan&) = delete;
@@ -4998,19 +5021,6 @@ inline Link Link::fromSig(const std::string& sig) {
 
 inline void swap(Link& lhs, Link& rhs) {
     lhs.swap(rhs);
-}
-
-// Inline functions for Link::ChangeAndClearSpan
-
-inline Link::ChangeAndClearSpan::ChangeAndClearSpan(Link& link) :
-        PacketData<Link>::PacketChangeSpan(link) {
-    // The parent class constructor fires the initial change event.
-}
-
-inline Link::ChangeAndClearSpan::~ChangeAndClearSpan() {
-    static_cast<Link&>(data_).clearAllProperties();
-
-    // The parent class destructor fires the final change event.
 }
 
 } // namespace regina
