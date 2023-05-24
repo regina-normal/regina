@@ -135,7 +135,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
     }
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 
-    // Do not copy reginaChangeEventSpans_; instead use the default
+    // Do not copy reginaPacketChangeSpans_; instead use the default
     // initialisation to zero.
 }
 
@@ -154,7 +154,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(SnapPeaTriangulation&& src)
 
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 
-    // Do not copy reginaChangeEventSpans_; instead use the default
+    // Do not copy reginaPacketChangeSpans_; instead use the default
     // initialisation to zero.
 }
 
@@ -175,7 +175,7 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
     fundGroupFilled_ = std::move(src.fundGroupFilled_);
     h1Filled_ = std::move(src.h1Filled_);
 
-    // The assignment operator should not touch reginaChangeEventSpans_.
+    // The assignment operator should not touch reginaPacketChangeSpans_.
 
     // Let src dispose of the original data_, shape_ and cusp_ in its
     // own destructor.
@@ -195,7 +195,7 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
     else
         data_ = nullptr;
 
-    // The assignment operator should not touch reginaChangeEventSpans_.
+    // The assignment operator should not touch reginaPacketChangeSpans_.
     // The sync() from the SnapPeaChangeSpan should fix everything else.
     return *this;
 }
@@ -1100,7 +1100,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
 
 void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
         Triangulation<3>& dest) {
-    Triangulation<3>::ChangeEventGroup span(dest);
+    Triangulation<3>::PacketChangeGroup span(dest);
 
     regina::snappea::TriangulationData* tData;
     regina::snappea::triangulation_to_data(src, &tData);

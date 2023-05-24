@@ -460,7 +460,7 @@
                 // Do it.
                 myEdit = YES;
                 {
-                    regina::Packet::ChangeEventGroup span(self.packet);
+                    regina::Packet::PacketChangeGroup span(self.packet);
                     
                     // First unglue from the old partner if it exists.
                     if (t->adjacentSimplex(editEdge)) {

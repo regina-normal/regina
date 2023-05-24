@@ -96,7 +96,7 @@ class ProgressTracker;
  *   NormalHypersurfaces interface.
  *
  * - If you are adding new functions to this class that edit the list,
- *   you must still remember to create a ChangeEventSpan.  This will ensure
+ *   you must still remember to create a PacketChangeSpan.  This will ensure
  *   that, if the list is being managed by a PacketOf<NormalHypersurfaces>,
  *   then the appropriate packet change events will be fired.
  *   All other events (aside from packetToBeChanged() and packetWasChanged()
@@ -1026,7 +1026,7 @@ inline NormalHypersurfaces::NormalHypersurfaces(
 
 inline NormalHypersurfaces& NormalHypersurfaces::operator = (
         const NormalHypersurfaces& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     surfaces_ = src.surfaces_;
     triangulation_ = src.triangulation_;
@@ -1039,7 +1039,7 @@ inline NormalHypersurfaces& NormalHypersurfaces::operator = (
 
 inline NormalHypersurfaces& NormalHypersurfaces::operator = (
         NormalHypersurfaces&& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     surfaces_ = std::move(src.surfaces_);
     triangulation_ = std::move(src.triangulation_);
@@ -1100,7 +1100,7 @@ inline bool NormalHypersurfaces::allowsNonCompact() const {
 
 template <typename Comparison>
 inline void NormalHypersurfaces::sort(Comparison&& comp) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 

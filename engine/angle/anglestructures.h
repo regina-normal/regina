@@ -91,7 +91,7 @@ class XMLLegacyAngleStructuresReader;
  *   AngleStructures, and so inherits the full AngleStructures interface.
  *
  * - If you are adding new functions to this class that edit the list,
- *   you must still remember to create a ChangeEventSpan.  This will
+ *   you must still remember to create a PacketChangeSpan.  This will
  *   ensure that, if the list is being managed by a PacketOf<AngleStructures>,
  *   then the appropriate packet change events will be fired.
  *   All other events (aside from packetToBeChanged() and packetWasChanged()
@@ -594,7 +594,7 @@ inline AngleStructures::AngleStructures(const Triangulation<3>& triangulation,
 
 inline AngleStructures& AngleStructures::operator = (
         const AngleStructures& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     structures_ = src.structures_;
     triangulation_ = src.triangulation_;
@@ -607,7 +607,7 @@ inline AngleStructures& AngleStructures::operator = (
 }
 
 inline AngleStructures& AngleStructures::operator = (AngleStructures&& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     structures_ = std::move(src.structures_);
     triangulation_ = std::move(src.triangulation_);

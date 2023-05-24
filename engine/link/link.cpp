@@ -84,9 +84,10 @@ Link& Link::operator = (const Link& src) {
     if (std::addressof(src) == this)
         return *this;
 
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to clone computed properties (not clear them).
-    ChangeEventSpan span(*this);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to clone them, not clear them.
+    PacketChangeSpan span(*this);
 
     for (Crossing* c : crossings_)
         delete c;
@@ -151,9 +152,10 @@ bool Link::operator == (const Link& other) const {
 }
 
 Link& Link::operator = (Link&& src) {
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to move computed properties (not clear them).
-    ChangeEventSpan span(*this);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to move them, not clear them.
+    PacketChangeSpan span(*this);
 
     // MarkedVector, pointers must eventually be destroyed:
     crossings_.swap(src.crossings_);
@@ -417,10 +419,11 @@ void Link::swap(Link& other) {
     if (&other == this)
         return;
 
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to swap computed properties (not clear them).
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to swap them, not clear them.
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     // Swap core data:
     crossings_.swap(other.crossings_);

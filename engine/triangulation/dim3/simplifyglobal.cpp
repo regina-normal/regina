@@ -62,10 +62,10 @@ bool Triangulation<3>::minimiseBoundary() {
 
     // We do not need a ChangeAndClearSpan here, since this bookkeeping is
     // already managed by closeBook() and join().  However, we do add a
-    // ChangeEventGroup for optimisation, and we also add our own TopologyLock
+    // PacketChangeGroup for optimisation, and we also add our own TopologyLock
     // because join() does not know that it will be preserving topology.
     TopologyLock lock(*this);
-    ChangeEventGroup span(*this);
+    PacketChangeGroup span(*this);
 
     bool changed = false;
 
@@ -189,7 +189,7 @@ bool Triangulation<3>::intelligentSimplify() {
     bool changed;
 
     { // Begin scope for change event block.
-        ChangeEventGroup span(*this);
+        PacketChangeGroup span(*this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
@@ -380,7 +380,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
-        ChangeEventGroup span(*this);
+        PacketChangeGroup span(*this);
 
         while (changedNow) {
             changedNow = false;

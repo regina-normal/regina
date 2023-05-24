@@ -41,7 +41,7 @@
 namespace regina {
 
 Script& Script::operator = (const Script& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     text_ = src.text_;
     variables_ = src.variables_;
@@ -50,8 +50,8 @@ Script& Script::operator = (const Script& src) {
 }
 
 void Script::swap(Script& other) {
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     text_.swap(other.text_);
     variables_.swap(other.variables_);
@@ -90,7 +90,7 @@ void Script::setVariableName(size_t index, const std::string& name) {
     if (name == it->first)
         return;
 
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     std::weak_ptr<Packet> value = std::move(it->second);
     variables_.erase(it);
@@ -101,13 +101,13 @@ void Script::setVariableValue(size_t index, std::weak_ptr<Packet> value) {
     auto it = variables_.begin();
     advance(it, index);
 
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     it->second = std::move(value);
 }
 
 const std::string& Script::addVariableName(const std::string& name,
         std::weak_ptr<Packet> value) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     auto result = variables_.emplace(name, value);
     int which = 2;
@@ -127,7 +127,7 @@ void Script::removeVariable(const std::string& name) {
     if (it == variables_.end())
         return;
 
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     variables_.erase(it);
 }
 
@@ -135,7 +135,7 @@ void Script::removeVariable(size_t index) {
     auto it = variables_.begin();
     advance(it, index);
 
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     variables_.erase(it);
 }
 

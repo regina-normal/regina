@@ -1482,13 +1482,14 @@ inline void Triangulation<4>::removeAllPentachora() {
 inline Triangulation<4>& Triangulation<4>::operator = (
         const Triangulation& src) {
     // We need to implement copy assignment ourselves because it all
-    // needs to be wrapped in a ChangeEventSpan.  This is so that the
+    // needs to be wrapped in a PacketChangeSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
     // properties specific to dimension 4.
     //
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to clone computed properties (not clear them).
-    ChangeEventSpan span(*this);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to clone them, not clear them.
+    PacketChangeSpan span(*this);
 
     TriangulationBase<4>::operator = (src);
 
@@ -1500,11 +1501,12 @@ inline Triangulation<4>& Triangulation<4>::operator = (
 
 inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
-    // needs to be wrapped in a ChangeEventSpan.
+    // needs to be wrapped in a PacketChangeSpan.
     //
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to move computed properties (not clear them).
-    ChangeEventSpan span(*this);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to move them, not clear them.
+    PacketChangeSpan span(*this);
 
     // The parent class assignment goes last, since its move invalidates src.
 
@@ -1587,7 +1589,7 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
     return retriangulate(height, threads, tracker,
         [](Triangulation<4>&& alt, Triangulation<4>& original, size_t minSimp) {
             if (alt.size() < minSimp) {
-                ChangeEventGroup span(original);
+                PacketChangeGroup span(original);
                 original = std::move(alt);
                 original.intelligentSimplify();
                 return true;

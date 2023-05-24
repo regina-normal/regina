@@ -256,7 +256,7 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
     }
 
     // Yes!  Go ahead and make the change.
-    regina::Triangulation<3>::ChangeEventGroup span(*tri_);
+    regina::Triangulation<3>::PacketChangeGroup span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(face))
@@ -765,7 +765,7 @@ void Tri3GluingsUI::removeSelectedTets() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -961,7 +961,7 @@ void Tri3GluingsUI::idealToFinite() {
             "tetrahedra or triangles, and so cannot be subdivided "
             "to truncate ideal vertices."));
     else {
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -978,7 +978,7 @@ void Tri3GluingsUI::finiteToIdeal() {
     else {
         // We could check for locks explicitly here, but finiteToIdeal()
         // will do it again - so just catch the exception that it would throw.
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         try {
             tri->finiteToIdeal();
         } catch (const regina::LockViolation&) {
@@ -1012,7 +1012,7 @@ void Tri3GluingsUI::puncture() {
         ReginaSupport::info(ui,
             tr("I cannot puncture an empty triangulation."));
     else {
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         tri->puncture();
         tri->intelligentSimplify();
     }

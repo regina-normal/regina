@@ -4114,7 +4114,7 @@ const Triangulation<3>& static_triangulation3_cast(const Packet& p);
 // Doxygen struggles with specialisations; hide them from it.
 #ifndef __DOXYGEN
 template <>
-inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
+inline PacketData<Triangulation<3>>::PacketChangeSpan::PacketChangeSpan(
         PacketData& data) : data_(data) {
     switch (data_.heldBy_) {
         case HELD_BY_SNAPPEA: {
@@ -4134,7 +4134,7 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
 }
 
 template <>
-inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
+inline PacketData<Triangulation<3>>::PacketChangeSpan::~PacketChangeSpan() {
     switch (data_.heldBy_) {
         case HELD_BY_SNAPPEA: {
             static_cast<Triangulation<3>&>(data_).snapPeaPostChange();
@@ -4230,13 +4230,14 @@ inline void Triangulation<3>::removeAllTetrahedra() {
 inline Triangulation<3>& Triangulation<3>::operator = (
         const Triangulation& src) {
     // We need to implement copy assignment ourselves because it all
-    // needs to be wrapped in a ChangeEventSpan.  This is so that the
+    // needs to be wrapped in a PacketChangeSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
     // properties specific to dimension 3.
     //
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to clone computed properties (not clear them).
-    ChangeEventSpan span(*this);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to clone them, not clear them.
+    PacketChangeSpan span(*this);
 
     TriangulationBase<3>::operator = (src);
 
@@ -4261,11 +4262,12 @@ inline Triangulation<3>& Triangulation<3>::operator = (
 
 inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
-    // needs to be wrapped in a ChangeEventSpan.
+    // needs to be wrapped in a PacketChangeSpan.
     //
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to move computed properties (not clear them).
-    ChangeEventSpan span(*this);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to move them, not clear them.
+    PacketChangeSpan span(*this);
 
     // The parent class assignment goes last, since its move invalidates src.
 

@@ -455,9 +455,9 @@ class Cusp : public ShortOutput<Cusp> {
  * - SnapPeaChangeSpan is a private inner class within SnapPeaTriangulation
  *   (so it is only intended for use within member functions).
  *
- * - SnapPeaChangeSpan _replaces_ the usual ChangeEventSpan (or
- *   ChangeEventGroup) that would commonly be used with other packet types.
- *   You should _not_ create a ChangeEventSpan or ChangeEventGroup as well.
+ * - SnapPeaChangeSpan _replaces_ the usual PacketChangeSpan (or
+ *   PacketChangeGroup) that would commonly be used with other packet types.
+ *   You should _not_ create a PacketChangeSpan or PacketChangeGroup as well.
  *
  * - The SnapPeaChangeSpan class takes an optional policy template argument.
  *   Do take care to ensure that you are using the correct policy - for example,
@@ -644,8 +644,8 @@ class SnapPeaTriangulation :
                  member so that shape() can still return a reference even when
                  no tetrahedron shapes have been computed. */
 
-        unsigned reginaChangeEventSpans_ { 0 };
-            /**< The number of change event spans currently registered
+        unsigned reginaPacketChangeSpans_ { 0 };
+            /**< The number of packet change spans currently registered
                  on the inherited Triangulation<3> interface. */
 
     public:
@@ -2295,7 +2295,7 @@ class SnapPeaTriangulation :
          *   is changeTriangulationNoSync;
          *
          * - fire packet change events on construction and destruction,
-         *   in the same way that ChangeEventSpan does.
+         *   in the same way that PacketChangeSpan does.
          *
          * Using a local SnapPeaChangeSpan on the stack is preferable to
          * managing all of this bookkeeping manually, since the SnapPea
@@ -2303,19 +2303,19 @@ class SnapPeaTriangulation :
          * unexpectedly be thrown, and so this helps ensure that things are
          * always tidied up correctly.
          *
-         * Note that SnapPeaChangeSpan _replaces_ the usual ChangeEventSpan
-         * (or ChangeEventGroup) that would commonly be used with other packet
-         * types.  There is no need to create a separate ChangeEventSpan or
-         * ChangeEventGroup in addition to your SnapPeaChangeSpan.
+         * Note that SnapPeaChangeSpan _replaces_ the usual PacketChangeSpan
+         * (or PacketChangeGroup) that would commonly be used with other packet
+         * types.  There is no need to create a separate PacketChangeSpan or
+         * PacketChangeGroup in addition to your SnapPeaChangeSpan.
          *
-         * Regarding nesting: this class uses a ChangeEventSpan internally,
-         * and is therefore able to nest with other ChangeEventSpan objects
+         * Regarding nesting: this class uses a PacketChangeSpan internally,
+         * and is therefore able to nest with other PacketChangeSpan objects
          * in the usual way.
          */
         template <ChangePolicy policy = changeTriangulation>
         class SnapPeaChangeSpan {
             private:
-                PacketData<SnapPeaTriangulation>::ChangeEventSpan span_;
+                PacketData<SnapPeaTriangulation>::PacketChangeSpan span_;
 
             public:
                 SnapPeaChangeSpan(SnapPeaTriangulation& tri) : span_(tri) {
@@ -2351,7 +2351,7 @@ class SnapPeaTriangulation :
                 }
         };
 
-    // Ensure that Triangulation<3> can edit reginaChangeEventSpans_.
+    // Ensure that Triangulation<3> can edit reginaPacketChangeSpans_.
     friend class Triangulation<3>;
 };
 

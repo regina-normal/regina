@@ -171,14 +171,14 @@ inline Text::Text(std::string text) : text_(std::move(text)) {
 }
 
 inline Text& Text::operator = (const Text& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     text_ = src.text_;
     return *this;
 }
 
 inline void Text::swap(Text& other) {
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
     text_.swap(other.text_);
 }
 
@@ -190,7 +190,7 @@ inline void Text::setText(std::string text) {
     if (text_ == text)
         return; // No change event fired.
 
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     text_ = std::move(text);
 }
 

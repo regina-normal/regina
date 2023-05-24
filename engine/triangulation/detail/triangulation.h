@@ -141,8 +141,8 @@ class TriangulationBase :
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
-        using typename PacketData<Triangulation<dim>>::ChangeEventSpan;
-        using typename PacketData<Triangulation<dim>>::ChangeEventGroup;
+        using typename PacketData<Triangulation<dim>>::PacketChangeSpan;
+        using typename PacketData<Triangulation<dim>>::PacketChangeGroup;
 
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -3716,17 +3716,17 @@ class TriangulationBase :
          *   group) will be preserved when clearAllProperties() is called
          *   in the destructor.
          *
-         * The use of ChangeAndClearSpan is similar to Packet::ChangeEventSpan
-         * (and indeed, this class is intended to _replace_ ChangeEventSpan
+         * The use of ChangeAndClearSpan is similar to Packet::PacketChangeSpan
+         * (and indeed, this class is intended to _replace_ PacketChangeSpan
          * when writing Triangulation member functions): objects of this type
          * would typically be created on the stack, just before the internal
          * data within a triangulation is changed, and have a lifespan that
          * covers all of your changes to the triangulation.
          *
-         * Like ChangeEventSpan, these objects can be safely nested with other
-         * ChangeAndClearSpan and/or ChangeEventSpan objects, and only the
+         * Like PacketChangeSpan, these objects can be safely nested with other
+         * ChangeAndClearSpan and/or PacketChangeSpan objects, and only the
          * outermost object will fire packet change events.  However, unlike
-         * ChangeEventSpan, this comes with a cost: as always, only one
+         * PacketChangeSpan, this comes with a cost: as always, only one
          * set of change events will be fired; however, if there are multiple
          * ChangeAndClearSpan objects then Triangulation<dim>::takeSnapshot()
          * and Triangulation<dim>::clearAllProperties() will be called
@@ -3759,8 +3759,7 @@ class TriangulationBase :
          * \nopython
          */
         template <ChangeType changeType = CHANGE_GENERAL>
-        class ChangeAndClearSpan :
-                public PacketData<Triangulation<dim>>::ChangeEventSpan {
+        class ChangeAndClearSpan : public PacketChangeSpan {
             public:
                 /**
                  * Performs all initial tasks before the triangulation is
@@ -3769,8 +3768,7 @@ class TriangulationBase :
                  *
                  * \param tri the triangulation that we are about to modify.
                  */
-                ChangeAndClearSpan(TriangulationBase& tri) :
-                        PacketData<Triangulation<dim>>::ChangeEventSpan(
+                ChangeAndClearSpan(TriangulationBase& tri) : PacketChangeSpan(
                             static_cast<Triangulation<dim>&>(tri)) {
                     tri.Snapshottable<Triangulation<dim>>::takeSnapshot();
 
@@ -3784,16 +3782,13 @@ class TriangulationBase :
                  * tasks are performed.
                  */
                 ~ChangeAndClearSpan() {
-                    using Parent = typename
-                        PacketData<Triangulation<dim>>::ChangeEventSpan;
-
                     if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
-                        static_cast<Triangulation<dim>&>(Parent::data_).
-                            clearAllProperties();
+                        static_cast<Triangulation<dim>&>(
+                            PacketChangeSpan::data_).clearAllProperties();
 
                     if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
-                        --static_cast<Triangulation<dim>&>(Parent::data_).
-                            topologyLock_;
+                        --static_cast<Triangulation<dim>&>(
+                            PacketChangeSpan::data_).topologyLock_;
                 }
 
                 // Make this class non-copyable.
@@ -3932,9 +3927,10 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     Snapshottable<Triangulation<dim>>::operator =(src);
 
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to clone computed properties (not clear them).
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to clone them, not clear them.
+    PacketChangeSpan span(static_cast<Triangulation<dim>&>(*this));
 
     for (auto s : simplices_)
         delete s;
@@ -3989,9 +3985,10 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (TriangulationBase<dim>&& src) {
     Snapshottable<Triangulation<dim>>::operator =(std::move(src));
 
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to move computed properties (not clear them).
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to move them, not clear them.
+    PacketChangeSpan span(static_cast<Triangulation<dim>&>(*this));
 
     // We have already moved out of src, but this was in fact correct use
     // of the snapshotting machinery.
@@ -4205,7 +4202,7 @@ void TriangulationBase<dim>::lockBoundary() {
         return;
 
     // We let lock() manage change events / snapshotting / etc.
-    ChangeEventGroup span(static_cast<Triangulation<dim>&>(*this));
+    PacketChangeGroup span(static_cast<Triangulation<dim>&>(*this));
 
     for (auto b : boundaryComponents_)
         for (auto f : b->facets())

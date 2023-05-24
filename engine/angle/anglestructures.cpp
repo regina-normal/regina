@@ -83,8 +83,8 @@ void AngleStructures::swap(AngleStructures& other) {
     if (std::addressof(other) == this)
         return;
 
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     structures_.swap(other.structures_);
     triangulation_.swap(other.triangulation_);

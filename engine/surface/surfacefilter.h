@@ -548,14 +548,14 @@ inline SurfaceFilterCombination::SurfaceFilterCombination() : usesAnd_(true) {
 
 inline SurfaceFilterCombination& SurfaceFilterCombination::operator = (
         const SurfaceFilterCombination& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     usesAnd_ = src.usesAnd_;
     return *this;
 }
 
 inline void SurfaceFilterCombination::swap(SurfaceFilterCombination& other) {
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
     std::swap(usesAnd_, other.usesAnd_);
 }
 
@@ -564,7 +564,7 @@ inline bool SurfaceFilterCombination::usesAnd() const {
 }
 inline void SurfaceFilterCombination::setUsesAnd(bool value) {
     if (usesAnd_ != value) {
-        ChangeEventSpan span(*this);
+        PacketChangeSpan span(*this);
         usesAnd_ = value;
     }
 }
@@ -602,7 +602,7 @@ inline SurfaceFilterProperties::SurfaceFilterProperties() :
 
 inline SurfaceFilterProperties& SurfaceFilterProperties::operator = (
         const SurfaceFilterProperties& src) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     eulerChar_ = src.eulerChar_;
     orientability_ = src.orientability_;
@@ -613,8 +613,8 @@ inline SurfaceFilterProperties& SurfaceFilterProperties::operator = (
 }
 
 inline void SurfaceFilterProperties::swap(SurfaceFilterProperties& other) {
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     eulerChar_.swap(other.eulerChar_);
     std::swap(orientability_, other.orientability_);
@@ -642,38 +642,38 @@ inline BoolSet SurfaceFilterProperties::realBoundary() const {
 template <typename Iterator>
 inline void SurfaceFilterProperties::setEulerChars(
         Iterator beginEuler, Iterator endEuler) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     eulerChar_.clear();
     eulerChar_.insert(beginEuler, endEuler);
 }
 
 inline void SurfaceFilterProperties::addEulerChar(const LargeInteger& ec) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     eulerChar_.insert(ec);
 }
 inline void SurfaceFilterProperties::removeEulerChar(const LargeInteger& ec) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     eulerChar_.erase(ec);
 }
 inline void SurfaceFilterProperties::removeAllEulerChars() {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
     eulerChar_.clear();
 }
 inline void SurfaceFilterProperties::setOrientability(BoolSet value) {
     if (orientability_ != value) {
-        ChangeEventSpan span(*this);
+        PacketChangeSpan span(*this);
         orientability_ = value;
     }
 }
 inline void SurfaceFilterProperties::setCompactness(BoolSet value) {
     if (compactness_ != value) {
-        ChangeEventSpan span(*this);
+        PacketChangeSpan span(*this);
         compactness_ = value;
     }
 }
 inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
     if (realBoundary_ != value) {
-        ChangeEventSpan span(*this);
+        PacketChangeSpan span(*this);
         realBoundary_ = value;
     }
 }

@@ -158,7 +158,7 @@ bool Triangulation<3>::idealToFinite() {
     // Just above, we computed the skeleton for staging so we could query
     // its vertices.  We need to delete this computed property now, since
     // we are about to edit the staging triangulation further using
-    // removeSimplexRaw() with no surrounding ChangeEventSpan.
+    // removeSimplexRaw() with no surrounding ChangeAndClearSpan.
     // This means the skeleton will become incorrect, and we do not want
     // this incorrect skeleton to be moved into this triangulation as
     // part of the final swap().
@@ -275,13 +275,13 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // From here we can assume that each triangulation contains at least
     // one tetrahedron.
 
-    // Note: This ChangeEventSpan is essential, since we use "raw" routines
+    // Note: This PacketChangeSpan is essential, since we use "raw" routines
     // (joinRaw, etc.) further down below - this is so we can manage facet
-    // locks manually.  A ChangeEventSpan is enough: we do not need to take a
-    // snapshot or clear properties, since (a) that will be managed already
-    // by insertTriangulation() and puncture(), and (b) we will not compute
-    // any fresh properties that need clearing after that.
-    ChangeEventSpan span(*this);
+    // locks manually.  A basic PacketChangeSpan is enough: we do not need to
+    // take a snapshot or clear properties, since (a) that will be managed
+    // already by insertTriangulation() and puncture(), and (b) we will not
+    // compute any fresh properties that need clearing after that.
+    PacketChangeSpan span(*this);
 
     // Insert the other triangulation *before* puncturing this, so that
     // things work in the case where we sum a triangulation with itself.

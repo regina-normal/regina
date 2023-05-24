@@ -614,13 +614,11 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
  *   child/parent packets, and event listeners.  It derives from Link,
  *   and so inherits the full Link interface.
  *
- * - If you are adding new functions to this class that edit the internal
- *   data structures of the link, you must still remember to create a
- *   ChangeEventSpan (or a ChangeAndClearSpan).  This will ensure that, if the
- *   link is being managed by a PacketOf<Link>, then the appropriate packet
- *   change events will be fired.  All other events (aside from
- *   packetToBeChanged() and packetWasChanged() are managed directly by the
- *   PacketOf<Link> wrapper class.
+ * If you are adding new functions to this class that edit the internal data
+ * structures of the link, you must remember to surround these changes with
+ * a ChangeAndClearSpan.  This manages bookkeeping such as clearing computed
+ * properties, and (if this link _does_ belong to a packet) firing packet
+ * change events.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -4592,15 +4590,15 @@ class Link :
          *   (just before the final change event is fired).  This is always
          *   done, whether or not the link is held in a packet.
          *
-         * The use of these objects is similar to Packet::ChangeEventSpan
-         * (and indeed, this class is intended to _replace_ ChangeEventSpan
+         * The use of these objects is similar to Packet::PacketChangeSpan
+         * (and indeed, this class is intended to _replace_ PacketChangeSpan
          * when writing Link member functions): objects of this type would
          * typically be created on the stack, just before the internal data
          * within a link is changed.
          *
-         * Like ChangeEventSpan, these objects can be safely nested with other
-         * ChangeAndClearSpan and/or ChangeEventSpan objects.  However, unlike
-         * ChangeEventSpan, this comes with a cost: as always, only one
+         * Like PacketChangeSpan, these objects can be safely nested with other
+         * ChangeAndClearSpan and/or PacketChangeSpan objects.  However, unlike
+         * PacketChangeSpan, this comes with a cost: as always, only one
          * set of change events will be fired; however, if there are multiple
          * ChangeAndClearSpan objects then Link::clearAllProperties() will be
          * called multiple times.  This is harmless but inefficient.
@@ -4612,13 +4610,13 @@ class Link :
          *
          * \nopython
          */
-        class ChangeAndClearSpan : public PacketData<Link>::ChangeEventSpan {
+        class ChangeAndClearSpan : public PacketData<Link>::PacketChangeSpan {
             public:
                 /**
                  * Creates a new change-and-clear object to work with the given
                  * link.
                  *
-                 * If this is the only ChangeAndClearSpan or ChangeEventSpan
+                 * If this is the only ChangeAndClearSpan or PacketChangeSpan
                  * currently in existence for the given link, this constructor
                  * will call PacketListener::packetToBeChanged() for all
                  * registered listeners for the given link.
@@ -4632,7 +4630,7 @@ class Link :
                  *
                  * This destructor will first call Link::clearAllProperites().
                  * Then, if this is the only ChangeAndClearSpan or
-                 * ChangeEventSpan currently in existence for the given link,
+                 * PacketChangeSpan currently in existence for the given link,
                  * it will call PacketListener::packetWasChanged() for all
                  * registered listeners for the given link.
                  */
@@ -4980,7 +4978,7 @@ inline bool Link::simplifyExhaustive(int height, unsigned threads,
     return rewrite(height, threads, tracker,
         [](Link&& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {
-                ChangeEventGroup span(original);
+                PacketChangeGroup span(original);
                 original = std::move(alt);
                 original.intelligentSimplify();
                 return true;
@@ -5005,7 +5003,7 @@ inline void swap(Link& lhs, Link& rhs) {
 // Inline functions for Link::ChangeAndClearSpan
 
 inline Link::ChangeAndClearSpan::ChangeAndClearSpan(Link& link) :
-        PacketData<Link>::ChangeEventSpan(link) {
+        PacketData<Link>::PacketChangeSpan(link) {
     // The parent class constructor fires the initial change event.
 }
 

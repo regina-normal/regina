@@ -238,7 +238,7 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
     }
 
     // Yes!  Go ahead and make the change.
-    regina::Triangulation<2>::ChangeEventGroup span(*tri_);
+    regina::Triangulation<2>::PacketChangeGroup span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(edge))
@@ -566,7 +566,7 @@ void Tri2GluingsUI::removeSelectedTris() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }

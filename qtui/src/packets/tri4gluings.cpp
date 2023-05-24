@@ -245,7 +245,7 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
     }
 
     // Yes!  Go ahead and make the change.
-    regina::Triangulation<4>::ChangeEventGroup span(*tri_);
+    regina::Triangulation<4>::PacketChangeGroup span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (p->adjacentSimplex(facet))
@@ -673,7 +673,7 @@ void Tri4GluingsUI::removeSelectedPents() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -870,7 +870,7 @@ void Tri4GluingsUI::idealToFinite() {
             "pentachora or tetrahedra, and so cannot be subdivided "
             "to truncate ideal vertices."));
     else {
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -887,7 +887,7 @@ void Tri4GluingsUI::finiteToIdeal() {
     else {
         // We could check for locks explicitly here, but finiteToIdeal()
         // will do it again - so just catch the exception that it would throw.
-        regina::Packet::ChangeEventGroup span(*tri);
+        regina::Packet::PacketChangeGroup span(*tri);
         try {
             tri->finiteToIdeal();
         } catch (const regina::LockViolation&) {

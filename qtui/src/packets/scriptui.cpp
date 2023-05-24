@@ -528,9 +528,9 @@ void ScriptUI::removeSelectedVariables() {
     // Since std::set uses sorted order, we can delete from the bottom
     // up without affecting the indices of the rows yet to be removed.
 
-    // Wrap everything in an outer ChangeEventGroup, so we do not have to
+    // Wrap everything in an outer PacketChangeGroup, so we do not have to
     // worry about the table being refreshed partway through the operation.
-    Script::ChangeEventGroup span(*script);
+    Script::PacketChangeGroup span(*script);
     for (auto rit = rows.rbegin(); rit != rows.rend(); ++rit)
         script->removeVariable(*rit);
 }

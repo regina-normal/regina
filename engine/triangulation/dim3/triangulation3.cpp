@@ -100,10 +100,11 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     if (&other == this)
         return;
 
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to swap computed properties (not clear them).
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to swap them, not clear them.
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     // Note: swapBaseData() calls Snapshottable::swap().
     swapBaseData(other);
@@ -421,20 +422,20 @@ void Triangulation<3>::snapPeaPreChange() {
     // If this is ever fixed, we should also remember to put the corresponding
     // packet post-change event code in snapPeaPostChange() also.
 
-    ++s->reginaChangeEventSpans_;
+    ++s->reginaPacketChangeSpans_;
 }
 
 void Triangulation<3>::snapPeaPostChange() {
     // This is in the .cpp file so we can keep snappeatriangulation.h
     // out of the main Triangulation<3> headers.
     auto* s = static_cast<SnapPeaTriangulation*>(this);
-    --s->reginaChangeEventSpans_;
+    --s->reginaPacketChangeSpans_;
 
     // The triangulation changes might be nested.  Only nullify the SnapPea
     // triangulation once all of them are finished, since we do not want to
     // clear out the triangulation while a complex change set is still
     // happening.
-    if (! s->reginaChangeEventSpans_)
+    if (! s->reginaPacketChangeSpans_)
         static_cast<SnapPeaTriangulation*>(this)->nullify();
 }
 

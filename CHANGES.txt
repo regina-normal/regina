@@ -53,10 +53,16 @@ Version 7.4  [ (to be announced) ]
             - New exception class used when the user attempts to change a
               locked simplex or facet.
         Class Packet:
-            - New inner type alias ChangeEventGroup, to assist with readability
+            - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
+              that this only matters for objects held by packets.  The old
+              name is kept as a deprecated alias.
+            - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
         Class PacketData<Held>:
-            - New inner type alias ChangeEventGroup, to assist with readability
+            - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
+              that this only matters for objects held by packets.  The old
+              name is kept as a deprecated alias.
+            - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
             - The inner ChangeEventSpan class has a new member function held().
         Class Perm<n>:

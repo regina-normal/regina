@@ -106,10 +106,11 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     if (&other == this)
         return;
 
-    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
-    // our intention is to swap computed properties (not clear them).
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    // We use a basic PacketChangeSpan here, not a richer ChangeAndClearSpan,
+    // since we do not want to touch computed properties.  Our intention here
+    // is to swap them, not clear them.
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     // Note: swapBaseData() calls Snapshottable::swap().
     swapBaseData(other);

@@ -41,7 +41,7 @@ bool Triangulation<4>::intelligentSimplifyInternal() {
     bool changed;
 
     { // Begin scope for change event span.
-        ChangeEventGroup span(*this);
+        PacketChangeGroup span(*this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimumInternal<context>(true);
@@ -191,7 +191,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
-        ChangeEventGroup span(*this);
+        PacketChangeGroup span(*this);
 
         while (changedNow) {
             changedNow = false;

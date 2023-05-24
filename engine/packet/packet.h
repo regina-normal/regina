@@ -171,7 +171,7 @@ template <typename Held> class XMLWriter;
  *   support reading from file;
  *
  * - For every routine in \a C that edits the packet contents, declare a
- *   Packet::ChangeEventSpan on the stack while the modification takes place
+ *   Packet::PacketChangeSpan on the stack while the modification takes place
  *   so that listeners are notified (see the discussion below on event
  *   listeners).
  *
@@ -194,7 +194,7 @@ template <typename Held> class XMLWriter;
  *   support reading from file;
  *
  * - For every routine in \a Held that edits the packet contents, declare a
- *   Held::ChangeEventSpan on the stack while the modification takes place.
+ *   Held::PacketChangeSpan on the stack while the modification takes place.
  *   This is again lightweight (if an object does not belong to a packet
  *   then the cost is just two integer comparisions), and it will ensure that
  *   if the object _does_ belong to a packet then listeners are notified.
@@ -1559,28 +1559,28 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * PacketListener::packetToBeChanged(), and only the last
          * object to be destroyed will fire
          * PacketListener::packetWasChanged().  This is because the
-         * "inner" ChangeEventSpan objects earlier represent smaller events
+         * "inner" PacketChangeSpan objects earlier represent smaller events
          * that are part of a larger suite of changes.
          *
          * If you are writing a block of code that makes a large number of
          * changes to a packet, it is highly recommended that you declare a
-         * ChangeEventSpan at the beginning of this block.  This will ensure
+         * PacketChangeSpan at the beginning of this block.  This will ensure
          * that listeners only receive one pair of events for the
          * entire change set, instead of many events representing each
-         * individual modification.  If a ChangeEventSpan \a s is _only_ for
+         * individual modification.  If a PacketChangeSpan \a s is _only_ for
          * this purpose (i.e., the necessary events would have been fired
          * without it, but \a s serves to merge many event pairs into just one
          * event pair), then consider declaring \a s using the equivalent type
-         * ChangeEventGroup (which makes its purpose clearer to the reader).
+         * PacketChangeGroup (which makes its purpose clearer to the reader).
          *
-         * ChangeEventSpan objects are not copyable, movable or swappable.
-         * In particular, Regina does not offer any way for a ChangeEventSpan
+         * PacketChangeSpan objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a PacketChangeSpan
          * to transfer its duty (i.e., firing events upon destruction) to
          * another object.
          *
          * \nopython
          */
-        class ChangeEventSpan {
+        class PacketChangeSpan {
             private:
                 Packet& packet_;
                     /**< The packet for which change events are fired. */
@@ -1590,40 +1590,49 @@ class Packet : public std::enable_shared_from_this<Packet>,
                  * Creates a new change event object for the given
                  * packet.
                  *
-                 * If this is the only ChangeEventSpan currently in existence
+                 * If this is the only PacketChangeSpan currently in existence
                  * for the given packet, this constructor will call
                  * PacketListener::packetToBeChanged() for all
                  * registered listeners for the given packet.
                  *
                  * \param packet the packet whose data is about to change.
                  */
-                ChangeEventSpan(Packet& packet);
+                PacketChangeSpan(Packet& packet);
 
                 /**
                  * Destroys this change event object.
                  *
-                 * If this is the only ChangeEventSpan currently in existence
+                 * If this is the only PacketChangeSpan currently in existence
                  * for the given packet, this destructor will call
                  * PacketListener::packetWasChanged() for all
                  * registered listeners for the given packet.
                  */
-                ~ChangeEventSpan();
+                ~PacketChangeSpan();
 
                 // Make this class non-copyable.
-                ChangeEventSpan(const ChangeEventSpan&) = delete;
-                ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
+                PacketChangeSpan(const PacketChangeSpan&) = delete;
+                PacketChangeSpan& operator = (const PacketChangeSpan&) = delete;
         };
 
         /**
-         * A type alias for ChangeEventSpan, used when a span is being used
+         * Deprecated alias for PacketChangeSpan, which facilitates firing
+         * packetToBeChanged() and packetWasChanged() events.
+         *
+         * \deprecated This type has been renamed to PacketChangeSpan, to make
+         * it clear that it only matters for objects held by packets.
+         */
+        using ChangeEventSpan [[deprecated]] = PacketChangeSpan;
+
+        /**
+         * A type alias for PacketChangeSpan, used when a span is being used
          * purely for optimisation purposes.
          *
          * Suppose you have a block of code that makes many changes to a
          * packet, and each such change fires a pair of packet change events
-         * using its own internal ChangeEventSpan.  (An example of this
+         * using its own internal PacketChangeSpan.  (An example of this
          * could be a high-level function that modifies a triangulation by
          * calling Simplex::join() many times.)  Then it is desirable to
-         * wrap the entire block in an outer ChangeEventSpan, so that this
+         * wrap the entire block in an outer PacketChangeSpan, so that this
          * larger sequence of event pairs will be merged into just a single
          * pair of change events.
          *
@@ -1635,17 +1644,17 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * the unnecessary intermediate events).
          *
          * For this outer span, it is recommended that you use the equivalent
-         * type ChangeEventGroup instead.  This is for the benefit of the
+         * type PacketChangeGroup instead.  This is for the benefit of the
          * human reader, so that they know that the outer span is purely for
          * optimisation (and in particular, that the code would still be
          * correct without it).
          *
          * Since this is just a type alias, it is purely for readability:
-         * using ChangeEventGroup instead of ChangeEventSpan makes no
+         * using PacketChangeGroup instead of PacketChangeSpan makes no
          * changes to the compiled code, and the conventions around when
          * it should be used are not enforced at compile time or runtime.
          */
-        using ChangeEventGroup = ChangeEventSpan;
+        using PacketChangeGroup = PacketChangeSpan;
 
     protected:
         using PacketRefs = std::map<const Packet*, bool>;
@@ -2356,43 +2365,44 @@ class PacketData {
          * An object that facilitates firing packetToBeChanged() and
          * packetWasChanged() events.
          *
-         * This performs the same function as Packet::ChangeEventSpan;
+         * This performs the same function as Packet::PacketChangeSpan;
          * see that class for full details on how it works.  The main
          * differences are:
          *
          * - If the underlying \a Held object is not actually part of a larger
-         *   PacketOf<Held>, then this ChangeEventSpan will do nothing.
-         *   In such a scenario, the ChangeEventSpan constructor and
+         *   PacketOf<Held>, then this PacketChangeSpan will do nothing.
+         *   In such a scenario, the PacketChangeSpan constructor and
          *   destructor are both extremely cheap (each will make just a
          *   single integer comparison).
          *
          * - If the underlying \a Held object _is_ part of a PacketOf<Held>,
-         *   then this ChangeEventSpan will ensure that the appropriate
-         *   packet events are fired (just like Packet::ChangeEventSpan).
+         *   then this PacketChangeSpan will ensure that the appropriate
+         *   packet events are fired (just like Packet::PacketChangeSpan).
          *
-         * Just like Packet::ChangeEventSpan, these objects can be nested
+         * Just like Packet::PacketChangeSpan, these objects can be nested
          * so that only the outermost object will fire change events;
-         * furthermore, PacketData<Held>::ChangeEventSpan objects and
-         * Packet::ChangeEventSpan objects can be nested within each other.
+         * furthermore, PacketData<Held>::PacketChangeSpan objects and
+         * Packet::PacketChangeSpan objects can be nested within each other.
          *
-         * Also, just like Packet::ChangeEventSpan and Packet::ChangeEventGroup,
-         * there is an equivalent type PacketData::ChangeEventGroup whose
-         * purpose is to indicate to the reader that the an object is being
-         * used _only_ to merge many event pairs into a single event pair.
+         * Also, just like Packet::PacketChangeSpan and
+         * Packet::PacketChangeGroup, there is an equivalent type
+         * PacketData::PacketChangeGroup whose purpose is to indicate to the
+         * reader that the an object is being used _only_ to merge many event
+         * pairs into a single event pair.
          *
          * When working with PacketData<Triangulation<3>>, this class
          * includes special code that nullifies a SnapPea triangulation
          * when its inherited Triangulation<3> data changes unexpectedly.
          * See the SnapPeaTriangulation class for details.
          *
-         * ChangeEventSpan objects are not copyable, movable or swappable.
-         * In particular, Regina does not offer any way for a ChangeEventSpan
+         * PacketChangeSpan objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a PacketChangeSpan
          * to transfer its duty (i.e., firing events upon destruction) to
          * another object.
          *
          * \nopython
          */
-        class ChangeEventSpan {
+        class PacketChangeSpan {
             protected:
                 PacketData& data_;
                     /**< The object for which - if it belongs to a
@@ -2404,7 +2414,7 @@ class PacketData {
                  * \a Held data.
                  *
                  * If \a data is part of a PacketOf<Held>, and this is the
-                 * only ChangeEventSpan currently in existence for \a data,
+                 * only PacketChangeSpan currently in existence for \a data,
                  * then this constructor will call
                  * PacketListener::packetToBeChanged() for all
                  * registered listeners for the packet.
@@ -2412,44 +2422,53 @@ class PacketData {
                  * \param data the object whose data is about to change;
                  * this may or may not be of the subclass PacketOf<Held>.
                  */
-                ChangeEventSpan(PacketData& data);
+                PacketChangeSpan(PacketData& data);
 
                 /**
                  * Destroys this change event object.
                  *
                  * If the underlying \a Held object is part of a
-                 * PacketOf<Held>, and this is the only ChangeEventSpan
+                 * PacketOf<Held>, and this is the only PacketChangeSpan
                  * currently in existence for it, then this destructor will
                  * call PacketListener::packetWasChanged() for all
                  * registered listeners for the packet.
                  */
-                ~ChangeEventSpan();
+                ~PacketChangeSpan();
 
                 /**
                  * Returns the underlying \a Held object.
                  *
                  * \return the \a Held object that was originally passed
-                 * to the ChangeEventSpan constructor.
+                 * to the PacketChangeSpan constructor.
                  */
                 Held& held() const;
 
                 // Make this class non-copyable.
-                ChangeEventSpan(const ChangeEventSpan&) = delete;
-                ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
+                PacketChangeSpan(const PacketChangeSpan&) = delete;
+                PacketChangeSpan& operator = (const PacketChangeSpan&) = delete;
         };
 
         /**
-         * A type alias for ChangeEventSpan, used when a span is being used
+         * Deprecated alias for PacketChangeSpan, which facilitates firing
+         * packetToBeChanged() and packetWasChanged() events.
+         *
+         * \deprecated This type has been renamed to PacketChangeSpan, to make
+         * it clear that it only matters for objects held by packets.
+         */
+        using ChangeEventSpan [[deprecated]] = PacketChangeSpan;
+
+        /**
+         * A type alias for PacketChangeSpan, used when a span is being used
          * purely for optimisation purposes.
          *
-         * This type alias is used in the same way as Packet::ChangeEventGroup:
+         * This type alias is used in the same way as Packet::PacketChangeGroup:
          * it is purely for the benefit of the human reader, used to indicate
          * that an event span is present purely for optimisation (and in
          * particular, that the code would still be correct without it).
          *
-         * See Packet::ChangeEventGroup for further details.
+         * See Packet::PacketChangeGroup for further details.
          */
-        using ChangeEventGroup = ChangeEventSpan;
+        using PacketChangeGroup = PacketChangeSpan;
 
     friend class PacketOf<Held>;
 };
@@ -4161,10 +4180,10 @@ std::string PacketData<Held>::anonID() const {
 }
 
 template <typename Held>
-inline PacketData<Held>::ChangeEventSpan::ChangeEventSpan(PacketData& data) :
+inline PacketData<Held>::PacketChangeSpan::PacketChangeSpan(PacketData& data) :
         data_(data) {
     static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
-        "The generic ChangeEventSpan constructor should not be "
+        "The generic PacketChangeSpan constructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
     if (data_.heldBy_ == HELD_BY_PACKET) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
@@ -4175,9 +4194,9 @@ inline PacketData<Held>::ChangeEventSpan::ChangeEventSpan(PacketData& data) :
 }
 
 template <typename Held>
-inline PacketData<Held>::ChangeEventSpan::~ChangeEventSpan() {
+inline PacketData<Held>::PacketChangeSpan::~PacketChangeSpan() {
     static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
-        "The generic ChangeEventSpan destructor should not be "
+        "The generic PacketChangeSpan destructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
     if (data_.heldBy_ == HELD_BY_PACKET) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
@@ -4188,7 +4207,7 @@ inline PacketData<Held>::ChangeEventSpan::~ChangeEventSpan() {
 }
 
 template <typename Held>
-inline Held& PacketData<Held>::ChangeEventSpan::held() const {
+inline Held& PacketData<Held>::PacketChangeSpan::held() const {
     return static_cast<Held&>(data_);
 }
 
@@ -4284,14 +4303,14 @@ void Packet::writeXMLHeader(std::ostream& out, const char* element,
 inline void Packet::addPacketRefs(PacketRefs&) const {
 }
 
-inline Packet::ChangeEventSpan::ChangeEventSpan(Packet& packet) :
+inline Packet::PacketChangeSpan::PacketChangeSpan(Packet& packet) :
         packet_(packet) {
     if (! packet_.changeEventSpans_)
         packet_.fireEvent(&PacketListener::packetToBeChanged);
     ++packet_.changeEventSpans_;
 }
 
-inline Packet::ChangeEventSpan::~ChangeEventSpan() {
+inline Packet::PacketChangeSpan::~PacketChangeSpan() {
     --packet_.changeEventSpans_;
     if (! packet_.changeEventSpans_)
         packet_.fireEvent(&PacketListener::packetWasChanged);

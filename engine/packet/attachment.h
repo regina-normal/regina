@@ -468,8 +468,8 @@ inline Attachment& Attachment::operator = (const Attachment& src) {
 }
 
 inline void Attachment::swap(Attachment& other) {
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     std::swap(data_, other.data_);
     std::swap(size_, other.size_);

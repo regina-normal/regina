@@ -115,7 +115,7 @@ std::string Attachment::extension() const {
 }
 
 void Attachment::reset() {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     if (data_) {
         if (alloc_ == OWN_MALLOC)
@@ -132,7 +132,7 @@ void Attachment::reset() {
 
 void Attachment::reset(char* data, size_t size, OwnershipPolicy alloc,
         std::string filename) {
-    ChangeEventSpan span(*this);
+    PacketChangeSpan span(*this);
 
     // Out with the old data.
     if (data_) {

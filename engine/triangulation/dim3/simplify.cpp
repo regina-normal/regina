@@ -118,7 +118,7 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
         oldTet[1]->triangle(e->embedding(1).vertices()[2]));
     int edge32 = e->embedding(3).edge();
 
-    ChangeEventGroup span(*this);
+    PacketChangeGroup span(*this);
 
     pachner(tri23, false, true);
     pachner(oldTet[3]->edge(edge32), false, true);
@@ -772,7 +772,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a change event group: this is very simple, and
-    // we will already get a ChangeEventSpan via unjoin().
+    // we will already get our change management bookkeeping via unjoin().
     // We should however declare a topology lock here, since unjoin() does not
     // know that the topology will be preserved.
     TopologyLock lock(*this);
@@ -818,7 +818,7 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a change event group: this is very simple, and
-    // we will already get a ChangeEventSpan via join().
+    // we will already get our change management bookkeeping via join().
     // We should however declare a topology lock here, since join() does not
     // know that the topology will be preserved.
     TopologyLock lock(*this);

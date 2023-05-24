@@ -391,10 +391,11 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // We also clear all properties at the beginning (not the end), so that
     // the skeleton will be deleted immediately - this means we can
     // temporarily hijack the Simplex::orientation_ fields for our own purposes.
-    // For this we use a ChangeEventSpan (not a ChangeAndClearSpan), and just
-    // call takeSnapshot() and clearAllProperties() manually at the right time.
+    // For this we use a basic PacketChangeSpan (not a richer
+    // ChangeAndClearSpan), and just call takeSnapshot() and
+    // clearAllProperties() manually at the right time.
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    PacketChangeSpan span(static_cast<Triangulation<dim>&>(*this));
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 
     // Create a second sheet of simplices.
@@ -631,7 +632,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     // fired and properties are cleared.  From here on we need to stop
     // using joinRaw(), and let join() do all of its extra management.
 
-    ChangeEventGroup span(static_cast<Triangulation<dim>&>(*this));
+    PacketChangeGroup span(static_cast<Triangulation<dim>&>(*this));
 
     staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
 

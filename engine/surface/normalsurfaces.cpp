@@ -51,8 +51,8 @@ void NormalSurfaces::swap(NormalSurfaces& other) {
     if (std::addressof(other) == this)
         return;
 
-    ChangeEventSpan span1(*this);
-    ChangeEventSpan span2(other);
+    PacketChangeSpan span1(*this);
+    PacketChangeSpan span2(other);
 
     surfaces_.swap(other.surfaces_);
     triangulation_.swap(other.triangulation_);
