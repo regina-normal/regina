@@ -4123,9 +4123,9 @@ inline PacketData<Triangulation<3>>::PacketChangeSpan::PacketChangeSpan(
         }
         case HELD_BY_PACKET: {
             auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
-            if (! p.changeEventSpans_)
+            if (! p.packetChangeSpans_)
                 p.fireEvent(&PacketListener::packetToBeChanged);
-            ++p.changeEventSpans_;
+            ++p.packetChangeSpans_;
             break;
         }
         default:
@@ -4142,8 +4142,8 @@ inline PacketData<Triangulation<3>>::PacketChangeSpan::~PacketChangeSpan() {
         }
         case HELD_BY_PACKET: {
             auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
-            --p.changeEventSpans_;
-            if (! p.changeEventSpans_)
+            --p.packetChangeSpans_;
+            if (! p.packetChangeSpans_)
                 p.fireEvent(&PacketListener::packetWasChanged);
             break;
         }

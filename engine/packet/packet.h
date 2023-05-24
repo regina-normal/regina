@@ -240,8 +240,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
 
         std::unique_ptr<std::set<PacketListener*>> listeners_;
             /**< All objects listening for events on this packet. */
-        unsigned changeEventSpans_ { 0 };
-            /**< The number of change event spans currently registered.
+        unsigned packetChangeSpans_ { 0 };
+            /**< The number of packet change spans currently registered.
                  Change events will only be fired when this count is zero. */
 
     public:
@@ -4187,9 +4187,9 @@ inline PacketData<Held>::PacketChangeSpan::PacketChangeSpan(PacketData& data) :
         "used with Triangulation<3>, which uses its own specialisation.");
     if (data_.heldBy_ == HELD_BY_PACKET) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
-        if (! p.changeEventSpans_)
+        if (! p.packetChangeSpans_)
             p.fireEvent(&PacketListener::packetToBeChanged);
-        ++p.changeEventSpans_;
+        ++p.packetChangeSpans_;
     }
 }
 
@@ -4200,8 +4200,8 @@ inline PacketData<Held>::PacketChangeSpan::~PacketChangeSpan() {
         "used with Triangulation<3>, which uses its own specialisation.");
     if (data_.heldBy_ == HELD_BY_PACKET) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
-        --p.changeEventSpans_;
-        if (! p.changeEventSpans_)
+        --p.packetChangeSpans_;
+        if (! p.packetChangeSpans_)
             p.fireEvent(&PacketListener::packetWasChanged);
     }
 }
@@ -4305,14 +4305,14 @@ inline void Packet::addPacketRefs(PacketRefs&) const {
 
 inline Packet::PacketChangeSpan::PacketChangeSpan(Packet& packet) :
         packet_(packet) {
-    if (! packet_.changeEventSpans_)
+    if (! packet_.packetChangeSpans_)
         packet_.fireEvent(&PacketListener::packetToBeChanged);
-    ++packet_.changeEventSpans_;
+    ++packet_.packetChangeSpans_;
 }
 
 inline Packet::PacketChangeSpan::~PacketChangeSpan() {
-    --packet_.changeEventSpans_;
-    if (! packet_.changeEventSpans_)
+    --packet_.packetChangeSpans_;
+    if (! packet_.packetChangeSpans_)
         packet_.fireEvent(&PacketListener::packetWasChanged);
 }
 

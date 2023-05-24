@@ -413,7 +413,7 @@ void Triangulation<3>::snapPeaPreChange() {
     // However, if the SnapPeaTriangulation is held by a packet, we
     // *should* be firing a packet pre-change event now to acknowledge that
     // the triangulation will be nullified.  Unfortunately this requires us
-    // to read and edit the SnapPeaTriangulation's changeEventSpans_ member,
+    // to read and edit the SnapPeaTriangulation's packetChangeSpans_ member,
     // which is private and inaccessible to Triangulation<3>.
     //
     // See the SnapPeaTriangulation class notes for more details on this issue,
