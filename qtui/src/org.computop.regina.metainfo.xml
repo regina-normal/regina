@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>regina.desktop</id>
+  <id>org.computop.regina</id>
 
   <name>Regina</name>
   <summary>Mathematical software for low-dimensional topology</summary>
 
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-2.0-or-later</project_license>
+  <content_rating type="oars-1.0" />
 
   <description>
     <p>
@@ -30,7 +31,7 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">regina.desktop</launchable>
+  <launchable type="desktop-id">org.computop.Regina.desktop</launchable>
   <categories>
     <category>Math</category>
     <category>Education</category>
