@@ -49,6 +49,9 @@ Version 7.4  [ (to be announced) ]
               cached link polynomials that had already been computed.
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
+            - Optimised so that computed topological properties (e.g., Jones
+              and HOMFLY-PT polynomials) are preserved through operations that
+              do not change the topology (e.g., Reidemeister moves).
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.

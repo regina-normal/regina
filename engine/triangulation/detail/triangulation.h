@@ -3857,8 +3857,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
         }
     }
 
-    // Do not touch TopologyLockable members, since other objects are
-    // managing this.
+    // Do not touch TopologyLockable members.  (See TopologyLockable for why.)
 
     // Clone the skeleton:
     if (src.calculatedSkeleton_)
@@ -3895,8 +3894,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     for (Simplex<dim>* s : simplices_)
         s->tri_ = static_cast<Triangulation<dim>*>(this);
 
-    // Do not touch TopologyLockable members, since other objects are
-    // managing this.
+    // Do not touch TopologyLockable members.  (See TopologyLockable for why.)
 
     nBoundaryFaces_.swap(src.nBoundaryFaces_);
     valid_ = src.valid_;

@@ -57,6 +57,7 @@
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
+#include "utilities/topologylock.h"
 
 // Note: there are more includes after the main class definitions.
 
@@ -629,7 +630,8 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
 class Link :
         public PacketData<Link>,
         public Output<Link>,
-        public TightEncodable<Link> {
+        public TightEncodable<Link>,
+        protected TopologyLockable {
     private:
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this link. */
@@ -4579,8 +4581,8 @@ class Link :
          * An object that facilitates both firing change events and calling
          * clearAllProperties().
          *
-         * An object of type Link::ChangeAndClearSpan has two possible effects
-         * upon the link that is passed to its constructor:
+         * An object of type Link::ChangeAndClearSpan has three possible
+         * effects upon the link that is passed to its constructor:
          *
          * - If the link is actually part of a PacketOf<Link>, then the packet
          *   events PacketListener::packetToBeChanged() and
@@ -4591,6 +4593,18 @@ class Link :
          *   _unless_ the template argument \a changeType is
          *   CHANGE_PRESERVE_ALL_PROPERTIES.  This call will happen just
          *   before the final change event is fired.
+         *
+         * - Finally, if the template argument \a changeType is
+         *   CHANGE_PRESERVE_TOPOLOGY, then this object will effectively
+         *   create a new TopologyLock for the link that lasts for the
+         *   full lifespan of this object, _excluding_ the firing of packet
+         *   change events.  Specifically, the TopologyLock will be created in
+         *   the constructor after the initial change event is fired, and will
+         *   be removed in the destructor immediately after the call to
+         *   Link::clearAllProperties().  In particular, this means that
+         *   topological properties of the link that have been computed and
+         *   cached (such as Jones and HOMFLY-PT polynomials) will be preserved
+         *   when clearAllProperties() is called in the destructor.
          *
          * The use of ChangeAndClearSpan is similar to Packet::PacketChangeSpan
          * (and indeed, this class is intended to _replace_ PacketChangeSpan
@@ -4606,6 +4620,11 @@ class Link :
          * set of change events will be fired; however, if there are multiple
          * ChangeAndClearSpan objects then Link::clearAllProperties() will be
          * called multiple times.  This is harmless but inefficient.
+         *
+         * Likewise, if \a changeType is CHANGE_PRESERVE_TOPOLOGY then these
+         * objects will behave in the expected way when nested with other
+         * TopologyLock objects (i.e., topological properties will be preserved
+         * as long as any such object is alive).
          *
          * Note: we would normally use a deduction guide so that, for the
          * default case, you can just write `ChangeAndClearSpan` instead of
@@ -4632,11 +4651,6 @@ class Link :
          */
         template <ChangeType changeType = CHANGE_GENERAL>
         class ChangeAndClearSpan : public PacketData<Link>::PacketChangeSpan {
-            static_assert(changeType != CHANGE_PRESERVE_TOPOLOGY,
-                "Link::ChangeAndClearSpan does not yet support the change "
-                "type CHANGE_PRESERVE_TOPOLOGY.  For now, use the default "
-                "CHANGE_GENERAL instead.");
-
             public:
                 /**
                  * Performs all initial tasks before the link is
@@ -4647,6 +4661,8 @@ class Link :
                  */
                 ChangeAndClearSpan(Link& link) :
                         PacketData<Link>::PacketChangeSpan(link) {
+                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                        ++link.topologyLock_;
                 }
 
                 /**
@@ -4657,6 +4673,9 @@ class Link :
                 ~ChangeAndClearSpan() {
                     if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
                         static_cast<Link&>(data_).clearAllProperties();
+
+                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                        --static_cast<Link&>(data_).topologyLock_;
                 }
 
                 // Make this class non-copyable.
@@ -4702,9 +4721,12 @@ namespace regina {
 // that use them (this fixes DLL-related warnings in the windows port)
 
 inline void Link::clearAllProperties() {
-    jones_.reset();
-    homflyAZ_.reset();
-    homflyLM_.reset();
+    if (! topologyLocked()) {
+        jones_.reset();
+        homflyAZ_.reset();
+        homflyLM_.reset();
+    }
+
     bracket_.reset();
     niceTreeDecomposition_.reset();
 }

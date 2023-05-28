@@ -112,6 +112,8 @@ Link& Link::operator = (const Link& src) {
     for (const StrandRef& comp : src.components_)
         components_.push_back(translate(comp));
 
+    // Do not touch TopologyLockable members.  (See TopologyLockable for why.)
+
     // Clone properties:
     jones_ = src.jones_;
     homflyAZ_ = src.homflyAZ_;
@@ -162,6 +164,8 @@ Link& Link::operator = (Link&& src) {
 
     // std::vector, does not own its pointers:
     components_ = std::move(src.components_);
+
+    // Do not touch TopologyLockable members.  (See TopologyLockable for why.)
 
     jones_ = std::move(src.jones_);
     homflyLM_ = std::move(src.homflyLM_);
@@ -452,7 +456,7 @@ void Link::reverse() {
 }
 
 void Link::rotate() {
-    ChangeAndClearSpan<> span(*this);
+    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
