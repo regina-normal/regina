@@ -33,7 +33,8 @@
 
 # ----- Links -----
 
-# Operations that should clear properties:
+# Operations that should clear all properties:
+
 k = ExampleLink.trefoil()
 print(k.brief(), k.jones())
 print(k.knowsJones())
@@ -45,12 +46,31 @@ print()
 k = ExampleLink.trefoil()
 print(k.brief(), k.jones())
 print(k.knowsJones())
+k.resolve(k.crossing(0))
+print(k.knowsJones())
+print(k.brief(), k.jones())
+print()
+
+# Operations that should preserve topological properties:
+
+k = ExampleLink.trefoil()
+print(k.brief(), k.jones())
+print(k.knowsJones())
 tmp = k.r1(k.component(0), 1, 1)
 print(k.knowsJones())
 print(k.brief(), k.jones())
 print()
 
+k = ExampleLink.trefoil()
+print(k.brief(), k.jones())
+print(k.knowsJones())
+k.rotate()
+print(k.knowsJones())
+print(k.brief(), k.jones())
+print()
+
 # Operations that should preserve properties:
+
 k = ExampleLink.trefoil()
 l = ExampleLink.whitehead()
 print(k.brief(), k.jones())
@@ -62,9 +82,25 @@ print(k.brief(), k.jones())
 print(l.brief(), l.jones())
 print()
 
+# Verify that ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> clears the
+# topology lock:
+
+k = ExampleLink.trefoil()
+print(k.brief(), k.jones())
+print(k.knowsJones())
+tmp = k.r1(k.component(0), 1, 1)
+print(k.knowsJones())
+print(k.brief(), k.jones())
+print(k.knowsJones())
+k.changeAll()
+print(k.knowsJones())
+print(k.brief(), k.jones())
+print()
+
 # ----- Triangulations -----
 
 # Operations that should clear all properties:
+
 t = Example3.weeks()
 print(t.isoSig(), t.homology())
 tmp = t.insertLayeredSolidTorus(2,3)
