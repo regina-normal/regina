@@ -125,12 +125,8 @@ enum Algorithm {
 };
 
 /**
- * Indicates different ways in which a code could change a topological object,
+ * Indicates different ways in which code could change a topological object,
  * such as a link or triangulation.
- *
- * Currently this enumeration is only used with triangulations, but it is
- * expected that it will be used with other objects (in particular, links)
- * in a future releae of Regina.
  *
  * \nopython This enumeration is only used internally by private and/or
  * protected class templates, and is therefore not made available to Python.
@@ -148,9 +144,8 @@ enum ChangeType {
      * the underlying link).
      *
      * The specific meaning of "will not alter its topology" depends upon the
-     * type of object.  For example, the inner class
-     * TriangulationBase<dim>::TopologyLock describes exactly what this means
-     * in the setting of triangulations.
+     * particular type of object.  See the TopologyLockable class notes for
+     * further details on what this means.
      */
     CHANGE_PRESERVE_TOPOLOGY = 1,
     /**

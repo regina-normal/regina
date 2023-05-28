@@ -64,6 +64,7 @@
 #include "utilities/listview.h"
 #include "utilities/snapshot.h"
 #include "utilities/tightencoding.h"
+#include "utilities/topologylock.h"
 
 namespace regina {
 
@@ -137,7 +138,8 @@ class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
         public Output<Triangulation<dim>>,
-        public TightEncodable<Triangulation<dim>> {
+        public TightEncodable<Triangulation<dim>>,
+        protected TopologyLockable {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -215,22 +217,6 @@ class TriangulationBase :
         bool valid_;
             /**< Is this triangulation valid?  See isValid() for details
                  on what this means. */
-
-        uint8_t topologyLock_;
-            /**< If non-zero, this will cause
-                 Triangulation<dim>::clearAllProperties() to preserve any
-                 computed properties that related to the manifold (as
-                 opposed to the specific triangulation).  This allows
-                 you to avoid recomputing expensive invariants when the
-                 underlying manifold is retriangulated.
-
-                 This property should be managed by creating and destroying
-                 objects of type TopologyLock and/or
-                 ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY>.
-                 The precise value of topologyLock_ indicates the number of
-                 such locks that currently exist for this triangulation.
-
-                 See the TopologyLock inner class for further details. */
 
     private:
         bool calculatedSkeleton_;
@@ -3585,99 +3571,6 @@ class TriangulationBase :
 
     protected:
         /**
-         * Creates a temporary lock on the topological properties of
-         * the given triangulation.
-         *
-         * While this object exists, any computed properties of the underlying
-         * _manifold_ will be preserved when clearAllProperties() is called
-         * (which would typically happen whenever the triangulation changes).
-         * This allows you to avoid recomputing expensive invariants when the
-         * underlying manifold is retriangulated.
-         *
-         * Currently, the properties that are preserved must be stable under
-         * reflection and/or subdivision.  For example, this means that the
-         * intersection form of a 4-manifold will not be preserved (since it
-         * changes under reflection), and the validity of a triangulation will
-         * not be not preserved (since subdivision can change a triangulation
-         * from invalid to valid).  This particular notion of "preserved
-         * properties" may change in future versions of Regina.
-         *
-         * This lock on the topological properties will be created by the
-         * class constructor, and removed by the class destructor.  That is,
-         * the lock will remain in effect until the TopologyLock object goes
-         * out of scope (or is otherwise destroyed).
-         *
-         * The easiest way to create a TopologyLock is to have it automatically
-         * rolled in to a ChangeAndClearSpan, by declaring a local
-         * ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> on the stack
-         * whose lifespan covers all of the modifications that you are making
-         * to the triangulation.
-         *
-         * Alternatively, you can of course create a TopologyLock manually.
-         * This would, again, be a local stack variable whose lifespan covers
-         * all of your modifications to the triangulation.  In this case,
-         * the TopologyLock lifespan would need to cover all calls to
-         * clearAllProperties(), which could occur via:
-         *
-         * - modifying function calls, such as Simplex<dim>::join();
-         * - ChangeAndClearSpan objects being destroyed; or
-         * - manual calls to clearAllProperties().
-         *
-         * In particular, if you are declaring a TopologyLock separately from
-         * a ChangeAndClearSpan, then the TopologyLock must be declared _first_
-         * (so that it is still active when the ChangeAndClearSpan calls
-         * clearAllProperties() in its destructor).
-         *
-         * Multiple locks are allowed.  If multiple locks are created, then
-         * computed topological properties of the manifold will be preserved as
-         * long as any one of these locks still exists.  Multiple locks
-         * do not necessarily need to be nested (i.e., the order of
-         * destruction does not need to be the reverse order of construction).
-         *
-         * Regina is currently only able to handle 255 distinct locks on
-         * the same triangulation at a time.  This should be enormously more
-         * than enough (since external users cannot construct TopologyLock
-         * objects, and Regina's own code should not be recursing deeply
-         * inside TopologyLock scopes).  However, even if there are somehow
-         * more than 255 locks, the worst that will happen is some CPU wastage:
-         * some properties may be cleared and need to be recomputed when this
-         * was not mathematically necessary.
-         *
-         * TopologyLock objects are not copyable, movable or swappable.
-         * In particular, Regina does not offer any way for a TopologyLock
-         * to transfer its destructor's responsibilities (i.e., "unlocking"
-         * the topological properties of the triangulation) to another object.
-         */
-        class TopologyLock {
-            private:
-                TriangulationBase<dim>& tri_;
-                    /**< The triangulation whose topological properties
-                         are locked. */
-
-            public:
-                /**
-                 * Creates a new lock on the given triangulation.
-                 *
-                 * \param tri the triangulation whose topological
-                 * properties are to be locked.
-                 */
-                TopologyLock(TriangulationBase<dim>& tri) : tri_(tri) {
-                    ++tri_.topologyLock_;
-                }
-
-                /**
-                 * Removes this lock on the associated triangulation.
-                 */
-                ~TopologyLock() {
-                    --tri_.topologyLock_;
-                }
-
-                // Make this class non-copyable.
-                TopologyLock(const TopologyLock&) = delete;
-                TopologyLock& operator = (const TopologyLock&) = delete;
-        };
-
-        /**
          * An object that facilitates taking snapshots, firing change events,
          * and calling clearAllProperties().
          *
@@ -3834,7 +3727,7 @@ namespace detail {
 
 template <int dim>
 inline TriangulationBase<dim>::TriangulationBase() :
-        topologyLock_(0), calculatedSkeleton_(false) {
+        calculatedSkeleton_(false) {
 }
 
 template <int dim>
@@ -3847,7 +3740,6 @@ template <int dim>
 TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
         bool cloneProps, bool cloneLocks) :
         Snapshottable<Triangulation<dim>>(src),
-        topologyLock_(0),
         calculatedSkeleton_(false) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
@@ -3900,7 +3792,6 @@ TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
         Snapshottable<Triangulation<dim>>(std::move(src)),
         nBoundaryFaces_(std::move(src.nBoundaryFaces_)),
         valid_(src.valid_),
-        topologyLock_(0), // locks cannot move between objects
         calculatedSkeleton_(src.calculatedSkeleton_),
         orientable_(src.orientable_),
         fundGroup_(std::move(src.fundGroup_)),
@@ -3966,7 +3857,8 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
         }
     }
 
-    // Do not touch topologyLock_, since other objects are managing this.
+    // Do not touch TopologyLockable members, since other objects are
+    // managing this.
 
     // Clone the skeleton:
     if (src.calculatedSkeleton_)
@@ -4003,7 +3895,8 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     for (Simplex<dim>* s : simplices_)
         s->tri_ = static_cast<Triangulation<dim>*>(this);
 
-    // Do not touch topologyLock_, since other objects are managing this.
+    // Do not touch TopologyLockable members, since other objects are
+    // managing this.
 
     nBoundaryFaces_.swap(src.nBoundaryFaces_);
     valid_ = src.valid_;

@@ -966,6 +966,7 @@
 		055BC3EB265338E800E5E34C /* fromsiglist-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3EA265338E800E5E34C /* fromsiglist-impl.h */; };
 		055BC3ED265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
 		055BC3EE265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
+		055CD8F62A23605A0072F4B5 /* topologylock.h in Headers */ = {isa = PBXBuildFile; fileRef = 055CD8F52A23605A0072F4B5 /* topologylock.h */; };
 		055D6C6719B6F10F0062F001 /* TempFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 055D6C6619B6F10F0062F001 /* TempFile.m */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
 		055FF38219BECF590057462A /* NewTri3Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38119BECF590057462A /* NewTri3Controller.mm */; };
@@ -3575,6 +3576,7 @@
 		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
 		055BC3EF2653392000E5E34C /* compact-lmdb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "compact-lmdb.cpp"; sourceTree = "<group>"; };
 		055BC3F02653392000E5E34C /* optimise-lmdb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "optimise-lmdb.cpp"; sourceTree = "<group>"; };
+		055CD8F52A23605A0072F4B5 /* topologylock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = topologylock.h; sourceTree = "<group>"; };
 		055CF2B728C817E000CA9034 /* gil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gil.h; sourceTree = "<group>"; };
 		055D6C6519B6F10F0062F001 /* TempFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TempFile.h; sourceTree = "<group>"; };
 		055D6C6619B6F10F0062F001 /* TempFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TempFile.m; sourceTree = "<group>"; };
@@ -6892,6 +6894,7 @@
 				057B0C9F26A2AB760017F5EA /* tightencoding.h */,
 				05888BD6283F0F8B00181D2D /* tightencoding-impl.h */,
 				05888BD5283F0F8B00181D2D /* tightencoding.cpp */,
+				055CD8F52A23605A0072F4B5 /* topologylock.h */,
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				0512E0A026DF356300DDB222 /* trieset.cpp */,
 				05199A5B25C63CCE0006B8FA /* typeutils.h */,
@@ -8765,6 +8768,7 @@
 				0512E0A526DF356300DDB222 /* shortarray.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* perm.h in Headers */,
 				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
+				055CD8F62A23605A0072F4B5 /* topologylock.h in Headers */,
 				05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */,

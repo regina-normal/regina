@@ -75,6 +75,9 @@ Version 7.4  [ (to be announced) ]
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().
         Class TightEncodable<T>:
             - Now provides a hash() function also, based on the tight encoding.
+        Class TopologyLockable, TopologyLock:
+            - Split out the old Triangulation::TopologyLock machinery into
+              new standalone classes, which are now used with Link as well.
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.

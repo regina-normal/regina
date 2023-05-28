@@ -96,7 +96,7 @@ Triangulation<4>::Triangulation(const Triangulation& src, bool cloneProps,
 void Triangulation<4>::clearAllProperties() {
     clearBaseProperties();
 
-    if (! topologyLock_) {
+    if (! topologyLocked()) {
         vertexLinkSummary_ = -1; /* not yet computed */
         prop_.H2_.reset();
     }

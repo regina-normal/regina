@@ -120,6 +120,7 @@ for dir in $dirs; do
         utilities/memstream.h ) ;;
         utilities/sequence.h ) ;;
         utilities/shortarray.h ) ;;
+        utilities/topologylock.h ) ;;
         utilities/typeutils.h ) ;;
         utilities/zstr.h ) ;;
         * )

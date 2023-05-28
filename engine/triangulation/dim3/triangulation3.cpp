@@ -77,7 +77,7 @@ void Triangulation<3>::clearAllProperties() {
     prop_.niceTreeDecomposition_.reset();
 
     // Properties of the manifold:
-    if (! topologyLock_) {
+    if (! topologyLocked()) {
         prop_.H1Rel_.reset();
         prop_.H1Bdry_.reset();
         prop_.H2_.reset();

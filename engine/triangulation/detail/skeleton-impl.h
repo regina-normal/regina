@@ -605,7 +605,7 @@ void TriangulationBase<dim>::clearBaseProperties() {
     }
 
     // Clear properties.
-    if (! topologyLock_) {
+    if (! topologyLocked()) {
         fundGroup_.reset();
         H1_.reset();
     }
