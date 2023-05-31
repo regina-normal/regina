@@ -126,6 +126,17 @@ Version 7.4  [ (to be announced) ]
         - Updated the included pybind11 library from 2.10.0 to 2.10.4.
         - Improved the speed of iteration (specifically, throwing/catching
           StopIteration exceptions).
+        - Rich flag types based on regina::Flags<...> (such as NormalAlg,
+          CensusPurge, etc.) now support a bool() operator that tests for
+          a non-empty flag set.
+        - The underlying enum types for rich flags (e.g., NormalAlgFlags,
+          CensusPurgeFlags, etc.) likewise now have a bool() operator that
+          tests for a zero flag.  This is because zero flags play a special
+          role here (they have no effect when ORed or XORed into a flag set).
+        - All other enum types (i.e., those that are _not_ intended to be
+          combined bitwise into flag sets) do not have a bool() operator,
+          since their underying integer values are irrelevant.  All of their
+          enum values will be treated as True by python.
     USER INTERFACE:
         - Now uses multithreading for those long computations that support it.
     UTILITIES:

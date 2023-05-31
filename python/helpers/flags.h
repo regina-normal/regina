@@ -80,8 +80,11 @@ void add_flags(pybind11::module_& m,
         e.value(std::get<0>(v), std::get<1>(v), std::get<2>(v));
     }
     e.export_values();
-    e.def("__or__", [](const Enum& lhs, const Enum& rhs) {
+    e.def("__or__", [](Enum lhs, Enum rhs) {
         return Flags(lhs) | rhs;
+    });
+    e.def("__bool__", [](Enum val) {
+        return val != 0;
     });
 
     RDOC_SCOPE_BEGIN(Flags)
