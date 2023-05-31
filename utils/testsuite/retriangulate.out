@@ -1,7 +1,7 @@
 ============================================================
 TEST: retriangulate
 --------------------
-Please give an isomorphism/knot signature.
+Please give an isomorphism signature.
 
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)

@@ -39,18 +39,17 @@
 
 std::mutex mutex;
 
-enum Flavour {
-    FLAVOUR_DIM3 = 0,
-    FLAVOUR_DIM4 = 1,
-    FLAVOUR_KNOT = 100
-};
-
 constexpr int NO_HEIGHT = -1000;
 
 // Command-line arguments:
 int argHeight = NO_HEIGHT;
 long argThreads = 1;
-Flavour flavour = FLAVOUR_DIM3;
+enum {
+    FLAVOUR_NONE = 0,
+    FLAVOUR_DIM3 = 3,
+    FLAVOUR_DIM4 = 4,
+    FLAVOUR_KNOT = 100
+} flavour = FLAVOUR_NONE;
 bool internalSig = false;
 
 template <int dim>
@@ -185,12 +184,30 @@ int main(int argc, char* argv[]) {
                 }
                 break;
             case '3':
+                if (flavour && flavour != FLAVOUR_DIM3) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--dim3, --dim4 or --knot.\n\n";
+                    help();
+                    return 1;
+                }
                 flavour = FLAVOUR_DIM3;
                 break;
             case '4':
+                if (flavour && flavour != FLAVOUR_DIM4) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--dim3, --dim4 or --knot.\n\n";
+                    help();
+                    return 1;
+                }
                 flavour = FLAVOUR_DIM4;
                 break;
             case 'k':
+                if (flavour && flavour != FLAVOUR_KNOT) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--dim3, --dim4 or --knot.\n\n";
+                    help();
+                    return 1;
+                }
                 flavour = FLAVOUR_KNOT;
                 break;
             case 'a':
@@ -230,6 +247,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // Set any undefined options to their defaults.
+    if (! flavour)
+        flavour = FLAVOUR_DIM3;
+
     std::string sig;
     if (optind < argc) {
         sig = argv[optind];
@@ -239,7 +260,10 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     } else {
-        std::cerr << "Please give an isomorphism/knot signature.\n\n";
+        if (flavour == FLAVOUR_KNOT)
+            std::cerr << "Please give a knot signature.\n\n";
+        else
+            std::cerr << "Please give an isomorphism signature.\n\n";
         help();
         return 1;
     }
@@ -250,6 +274,7 @@ int main(int argc, char* argv[]) {
             case FLAVOUR_DIM3: argHeight = 1; break;
             case FLAVOUR_DIM4: argHeight = 2; break;
             case FLAVOUR_KNOT: argHeight = 1; break;
+            default: /* should never occur */ break;
         }
     }
 
@@ -302,6 +327,8 @@ int main(int argc, char* argv[]) {
                 }
                 break;
             }
+            default: /* should never occur */
+                break;
         }
     }
 
