@@ -58,6 +58,8 @@ namespace regina::python::doc::common {
     extern const char* eq_none_static;
     extern const char* eq_none_abstract;
 
+    extern const char* bool_enum_for_flags;
+
     extern const char* todo;
 }
 

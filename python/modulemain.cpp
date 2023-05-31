@@ -140,6 +140,16 @@ This is an abstract base class, and so objects of this base class
 cannot be created directly. Instead its various subclasses are
 responsible for providing their own comparison operators == and !=.)doc";
 
+    const char* bool_enum_for_flags =
+R"doc(Determines whether this flag has a non-zero numerical value.
+
+A zero flag will have no effect when it is combined with other flags
+using bitwise OR or XOR.
+
+Returns:
+    ``True`` if this is a non-zero flag, or ``False`` if this is a
+    zero flag.)doc";
+
     const char* todo =
 R"doc(The Python documentation for this class or function has not yet been
 extracted from the C++ source code. Please inform the Regina developers

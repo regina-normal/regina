@@ -80,12 +80,10 @@ void add_flags(pybind11::module_& m,
         e.value(std::get<0>(v), std::get<1>(v), std::get<2>(v));
     }
     e.export_values();
-    e.def("__or__", [](Enum lhs, Enum rhs) {
-        return Flags(lhs) | rhs;
-    });
-    e.def("__bool__", [](Enum val) {
-        return val != 0;
-    });
+
+    // We define some additional operators on the enum type later,
+    // once we have bound Flags<Enum>.  (This means that docstrings will
+    // get the abbreviated typenames.)
 
     RDOC_SCOPE_BEGIN(Flags)
 
@@ -132,6 +130,15 @@ void add_flags(pybind11::module_& m,
 
     RDOC_SCOPE_END
 
+    // Additional operators for Enum:
+    e.def("__or__", [](Enum lhs, Enum rhs) {
+        return Flags(lhs) | rhs;
+    }, borDoc);
+    e.def("__bool__", [](Enum val) {
+        return val != 0;
+    }, doc::common::bool_enum_for_flags);
+
+    // Type conversions:
     pybind11::implicitly_convertible<Enum, Flags>();
 }
 
