@@ -216,8 +216,10 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         if (threads > 1) {
             std::unique_lock<std::mutex> lock(outputMutex);
             sigStream << sig << std::endl;
+            ++nSolns;
         } else {
             sigStream << sig << std::endl;
+            ++nSolns;
         }
     } else if (canonical) {
         auto [sig, iso] = tri.isoSigDetail();
@@ -225,30 +227,37 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         if (threads > 1) {
             std::unique_lock<std::mutex> lock(outputMutex);
             sigStream << sig << ' ' << isoEnc << std::endl;
+            ++nSolns;
         } else {
             sigStream << sig << ' ' << isoEnc << std::endl;
+            ++nSolns;
         }
     } else if (tight) {
         std::string enc = tri.tightEncoding();
         if (threads > 1) {
             std::unique_lock<std::mutex> lock(outputMutex);
             sigStream << enc << std::endl;
+            ++nSolns;
         } else {
             sigStream << enc << std::endl;
+            ++nSolns;
         }
     } else {
         std::ostringstream out;
-        out << "Item " << (nSolns + 1);
-
-        auto packet = regina::make_packet(std::move(tri), out.str());
+        auto packet = regina::make_packet(std::move(tri));
         if (threads > 1) {
             std::unique_lock<std::mutex> lock(outputMutex);
+            out << "Item " << (nSolns + 1);
+            packet->setLabel(out.str());
             container->append(packet);
+            ++nSolns;
         } else {
+            out << "Item " << (nSolns + 1);
+            packet->setLabel(out.str());
             container->append(packet);
+            ++nSolns;
         }
     }
-    ++nSolns;
 }
 
 /**

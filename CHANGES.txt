@@ -126,6 +126,12 @@ Version 7.4  [ (to be announced) ]
           StopIteration exceptions).
     USER INTERFACE:
         - Now uses multithreading for those long computations that support it.
+    UTILITIES:
+        tricensus:
+            - Now supports --size as an alias for --tetrahedra.
+            - Fixed a race conditions with --threads where the number of
+              triangulations reported on the console could be wrong (although
+              the actual list of triangulations in the output file was correct).
 
 Version 7.3  [ 18 March, 2023 ]
 
