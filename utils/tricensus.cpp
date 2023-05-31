@@ -415,57 +415,45 @@ std::shared_ptr<regina::Text> parameterPacket() {
 }
 
 void help() {
-    // TODO: Compactify this
     std::cerr <<
 R"help(Usage: tricensus <output-file>
-  -t, --tetrahedra, --size=<num>    Number of tetrahedra.
-  -b, --boundary                    Must have at least one boundary face.
-  -i, --internal                    Must have all faces internal (no boundary
-                                    faces).
-  -B, --bdryfaces=<faces>           Must have fixed number (>= 1) of boundary
-                                    facets.
-  -o, --orientable                  Must be orientable.
-  -n, --nonorientable               Must be non-orientable.
-  -f, --finite                      Must be finite (no ideal vertices).
-  -d, --ideal                       Must have at least one ideal vertex.
-  -m, --minimal                     Ignore obviously non-minimal
-                                    triangulations.
-  -M, --minprime                    Ignore obviously non-minimal, non-prime
-                                    and/or disc-reducible triangulations.
-  -N, --minprimep2                  Ignore obviously non-minimal, non-prime,
-                                    disc-reducible and/or P2-reducible
-                                    triangulations.
-  -h, --minhyp                      Ignore triangulations that are obviously
-                                    not minimal ideal triangulations of cusped
-                                    finite-volume hyperbolic 3-manifolds.
-                                    Implies --internal and --ideal.
-      --allowinvalid                Do not test triangulations for validity
-                                    before output.
-  -2, --dim2                        Run a census of 2-manifold triangulations.
-                                    Here --size counts triangles, and
-                                    --bdryfaces counts boundary edges.
-  -3, --dim3                        Run a census of 3-manifold triangulations.
-                                    Here --size counts tetrahedra, and
-                                    --bdryfaces counts boundary triangles.
-  -4, --dim4                        Run a census of 4-manifold triangulations.
-                                    Here --size counts pentachora, and
-                                    --bdryfaces counts boundary facets.
-  -s, --sigs                        Write isomorphism signatures only, not
-                                    full Regina data files.
-  -S, --canonical                   Write isomorphism signatures with matching
-                                    isomorphisms that yield canonical facet
-                                    pairings.
-  -e, --encodings                   Write tight encodings only, not full
-                                    Regina data files.
-  -c, --subcontainers               For each face pairing, place resulting
-                                    triangulations into different subcontainers
-  -p, --genpairs                    Only generate face pairings, not
-                                    triangulations.
-  -P, --usepairs                    Only use face pairings read from standard
-                                    input.
-      --threads=<threads>           Number of parallel threads (default = 1).
-  -v, --version                     Show which version of Regina is being used.
-      --help                        Show this help message
+  -t, --top=<num>           Number of top-dimensional simplices.
+      --triangles=<num>     Alias for --top (relevant for dimension 2).
+      --tetrahedra=<num>    Alias for --top (relevant for dimension 3).
+      --pentachora=<num>    Alias for --top (relevant for dimension 4).
+  -b, --boundary            Must have at least one boundary facet.
+  -i, --internal            Must have all facets internal (no boundary facets).
+  -B, --bdryfaces=<faces>   Must have fixed number (>= 1) of boundary facets.
+  -o, --orientable          Must be orientable.
+  -n, --nonorientable       Must be non-orientable.
+  -f, --finite              Must be finite (no ideal vertices).
+  -d, --ideal               Must have at least one ideal vertex.
+  -m, --minimal             Ignore obviously non-minimal triangulations.
+  -M, --minprime            Ignore obviously non-minimal, non-prime and/or
+                            disc-reducible triangulations.
+  -N, --minprimep2          Ignore obviously non-minimal, non-prime,
+                            disc-reducible and/or P2-reducible triangulations.
+  -h, --minhyp              Ignore triangulations that are obviously not
+                            minimal ideal triangulations of cusped
+                            finite-volume hyperbolic 3-manifolds.
+                            Implies --internal and --ideal.
+      --allowinvalid        Do not test triangulations for validity.
+  -2, --dim2                Run a census of 2-manifold triangulations.
+  -3, --dim3                Run a census of 3-manifold triangulations (default).
+  -4, --dim4                Run a census of 4-manifold triangulations.
+  -r, --regina              Output is a Regina data file (default).
+  -c, --subcontainers       Output is a Regina data file, with each facet
+                            pairing using a different subcontainer.
+  -s, --sigs                Output is text-based, using isomorphism signatures.
+  -S, --canonical           Output is text-based, using isomorphism signatures
+                            and matching isomorphisms that yield canonical
+                            facet pairings.
+  -e, --encodings           Output is text-based, using tight encodings.
+  -p, --genpairs            Only generate facet pairings, not triangulations.
+  -P, --usepairs            Only use facet pairings read from standard input.
+      --threads=<threads>   Number of parallel threads (default = 1).
+  -v, --version             Show which version of Regina is being used.
+      --help                Show this help message
 )help";
 }
 
@@ -476,10 +464,12 @@ R"help(Usage: tricensus <output-file>
 int main(int argc, char* argv[]) {
     // Parse the command-line arguments.
     // TODO: Fix types of vars
-    const char* shortOpt = ":t:biB:onfdmMNh234sSecpPv";
+    const char* shortOpt = ":t:biB:onfdmMNh234rcsSepPv";
     struct option longOpt[] = {
-        { "tetrahedra", required_argument, nullptr, 't' },
-        { "size", required_argument, nullptr, 't' }, // alias for --tetrahedra
+        { "top", required_argument, nullptr, 't' },
+        { "triangles", required_argument, nullptr, 't' }, // alias for --top
+        { "tetrahedra", required_argument, nullptr, 't' }, // alias for --top
+        { "pentachora", required_argument, nullptr, 't' }, // alias for --top
         { "boundary", no_argument, nullptr, 'b' },
         { "internal", no_argument, nullptr, 'i' },
         { "bdryfaces", required_argument, nullptr, 'B' },
@@ -495,10 +485,11 @@ int main(int argc, char* argv[]) {
         { "dim2", no_argument, nullptr, '2' },
         { "dim3", no_argument, nullptr, '3' },
         { "dim4", no_argument, nullptr, '4' },
+        { "regina", no_argument, nullptr, 'r' },
+        { "subcontainers", no_argument, nullptr, 'c' },
         { "sigs", no_argument, nullptr, 's' },
         { "canonical", no_argument, nullptr, 'S' },
         { "encodings", no_argument, nullptr, 'e' },
-        { "subcontainers", no_argument, nullptr, 'c' },
         { "genpairs", no_argument, nullptr, 'p' },
         { "usepairs", no_argument, nullptr, 'P' },
         { "threads", required_argument, nullptr, 'T' }, // no short opt
@@ -627,9 +618,9 @@ int main(int argc, char* argv[]) {
                 break;
             case 's':
                 if (outputType && outputType != OUTPUT_SIGS) {
-                    std::cerr << "You cannot pass more than one output "
-                        "format option (-s/--sigs, -S/--canonical,\n"
-                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    std::cerr << "You cannot use multiple output "
+                        "formats (-r/--regina, -c/--subcontainers,\n"
+                        "-s/--sigs, -S/--canonical, -e/--encodings).\n\n";
                     help();
                     return 1;
                 }
@@ -637,9 +628,9 @@ int main(int argc, char* argv[]) {
                 break;
             case 'S':
                 if (outputType && outputType != OUTPUT_SIGS_CANONICAL) {
-                    std::cerr << "You cannot pass more than one output "
-                        "format option (-s/--sigs, -S/--canonical,\n"
-                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    std::cerr << "You cannot use multiple output "
+                        "formats (-r/--regina, -c/--subcontainers,\n"
+                        "-s/--sigs, -S/--canonical, -e/--encodings).\n\n";
                     help();
                     return 1;
                 }
@@ -647,19 +638,29 @@ int main(int argc, char* argv[]) {
                 break;
             case 'e':
                 if (outputType && outputType != OUTPUT_TIGHT) {
-                    std::cerr << "You cannot pass more than one output "
-                        "format option (-s/--sigs, -S/--canonical,\n"
-                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    std::cerr << "You cannot use multiple output "
+                        "formats (-r/--regina, -c/--subcontainers,\n"
+                        "-s/--sigs, -S/--canonical, -e/--encodings).\n\n";
                     help();
                     return 1;
                 }
                 outputType = OUTPUT_TIGHT;
                 break;
+            case 'r':
+                if (outputType && outputType != OUTPUT_DATA) {
+                    std::cerr << "You cannot use multiple output "
+                        "formats (-r/--regina, -c/--subcontainers,\n"
+                        "-s/--sigs, -S/--canonical, -e/--encodings).\n\n";
+                    help();
+                    return 1;
+                }
+                outputType = OUTPUT_DATA;
+                break;
             case 'c':
                 if (outputType && outputType != OUTPUT_DATA_SUBCONTAINERS) {
-                    std::cerr << "You cannot pass more than one output "
-                        "format option (-s/--sigs, -S/--canonical,\n"
-                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    std::cerr << "You cannot use multiple output "
+                        "formats (-r/--regina, -c/--subcontainers,\n"
+                        "-s/--sigs, -S/--canonical, -e/--encodings).\n\n";
                     help();
                     return 1;
                 }

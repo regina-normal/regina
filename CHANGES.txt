@@ -128,8 +128,10 @@ Version 7.4  [ (to be announced) ]
         - Now uses multithreading for those long computations that support it.
     UTILITIES:
         tricensus:
-            - Now supports --size as an alias for --tetrahedra.
-            - Now supports --dim3 for completeness (though this is the default).
+            - Renamed --tetrahedra to --top, with aliases --triangles,
+              --tetrahedra and --pentachora.
+            - New option --regina to output Regina data files (the default).
+            - New option --dim3 for dimension 3 (the default).
             - Fixed a race condition with --threads where the number of
               triangulations reported on the console could be wrong (although
               the actual list of triangulations in the output file was correct).
