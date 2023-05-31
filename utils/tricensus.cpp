@@ -52,26 +52,32 @@
 #define WORD_face (dimension == 4 ? "facet" : dimension == 2 ? "edge" : "face")
 #define WORD_Face (dimension == 4 ? "Facet" : dimension == 2 ? "Edge" : "Face")
 #define WORD_faces (dimension == 4 ? "facets" : dimension == 2 ? "edges" : "faces")
-#define WORD_tetrahedra (dimension == 4 ? "pentachora" : dimension == 2 ? "triangles" : "tetrahedra")
-#define WORD_tetrahedron (dimension == 4 ? "pentachoron" : dimension == 2 ? "triangle" : "tetrahedron")
-#define WORD_Tetrahedron (dimension == 4 ? "Pentachoron" : dimension == 2 ? "Triangle" : "Tetrahedron")
+#define WORD_simplices (dimension == 4 ? "pentachora" : dimension == 2 ? "triangles" : "tetrahedra")
+#define WORD_simplex (dimension == 4 ? "pentachoron" : dimension == 2 ? "triangle" : "tetrahedron")
+#define WORD_Simplex (dimension == 4 ? "Pentachoron" : dimension == 2 ? "Triangle" : "Tetrahedron")
 
 // Constants.
-constexpr int MAXTET = 20;
+constexpr int MAXTOP = 20;
 
 // Census parameters.
-int nTet = 0, nBdryFaces = -1;
+int nTop = 0, nBdryFaces = -1;
 regina::BoolSet
     finiteness(true, true),
     orientability(true, true),
     boundary(true, true);
+// TODO: merge minimality options
 int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int minimalHyp = 0;
 int allowInvalid = 0;
 int dimension = 0; // default of 3 will be set later
-int usePairs = 0;
+enum {
+    MODE_NONE = 0,
+    MODE_GENPAIRS,
+    MODE_USEPAIRS,
+    MODE_FULLCENSUS
+} mode = MODE_NONE; // default of MODE_FULLCENSUS will be set later
 enum {
     OUTPUT_NONE = 0,
     OUTPUT_PAIRINGS,
@@ -82,7 +88,6 @@ enum {
     OUTPUT_TIGHT
 } outputType = OUTPUT_NONE; // default will be set later
 regina::CensusPurge whichPurge;
-int genPairs = 0;
 int threads = 1;
 std::string outFile;
 
@@ -364,12 +369,12 @@ std::shared_ptr<regina::Text> parameterPacket() {
 
     descStream << "Searching for " << dimension << "-manifold triangulations\n";
 
-    if (usePairs)
+    if (mode == MODE_USEPAIRS)
         descStream << "Only used a subset of all available "
             << WORD_face << " pairings\n";
     else {
-        descStream << nTet << ' ' <<
-            (nTet == 1 ? WORD_tetrahedron : WORD_tetrahedra) << "\n";
+        descStream << nTop << ' ' <<
+            (nTop == 1 ? WORD_simplex : WORD_simplices) << "\n";
 
         if (boundary == true)
             descStream << "Boundary " << WORD_faces << " only\n";
@@ -463,7 +468,6 @@ R"help(Usage: tricensus <output-file>
  */
 int main(int argc, char* argv[]) {
     // Parse the command-line arguments.
-    // TODO: Fix types of vars
     const char* shortOpt = ":t:biB:onfdmMNh234rcsSepPv";
     struct option longOpt[] = {
         { "top", required_argument, nullptr, 't' },
@@ -503,7 +507,7 @@ int main(int argc, char* argv[]) {
     while ((opt = getopt_long(argc, argv, shortOpt, longOpt, nullptr)) != -1) {
         switch (opt) {
             case 't':
-                nTet = strtol(optarg, &endptr, 10);
+                nTop = strtol(optarg, &endptr, 10);
                 if (*endptr != 0) {
                     std::cerr << "The triangulation/knot size must be a "
                         "positive integer.\n\n";
@@ -667,10 +671,22 @@ int main(int argc, char* argv[]) {
                 outputType = OUTPUT_DATA_SUBCONTAINERS;
                 break;
             case 'p':
-                genPairs = 1;
+                if (mode && mode != MODE_GENPAIRS) {
+                    std::cerr << "You cannot use multiple modes of operation "
+                        "(-p/--genpairs, -P/--usepairs).\n\n";
+                    help();
+                    return 1;
+                }
+                mode = MODE_GENPAIRS;
                 break;
             case 'P':
-                usePairs = 1;
+                if (mode && mode != MODE_USEPAIRS) {
+                    std::cerr << "You cannot use multiple modes of operation "
+                        "(-p/--genpairs, -P/--usepairs).\n\n";
+                    help();
+                    return 1;
+                }
+                mode = MODE_USEPAIRS;
                 break;
             case 'T':
                 threads = strtol(optarg, &endptr, 10);
@@ -727,9 +743,10 @@ int main(int argc, char* argv[]) {
     // Set any undefined options to their defaults.
     if (! dimension)
         dimension = 3;
-
+    if (! mode)
+        mode = MODE_FULLCENSUS;
     if (! outputType)
-        outputType = (genPairs ? OUTPUT_PAIRINGS : OUTPUT_DATA);
+        outputType = (mode == MODE_GENPAIRS ? OUTPUT_PAIRINGS : OUTPUT_DATA);
 
     // Some options imply others.
     if (minimalHyp) {
@@ -741,7 +758,9 @@ int main(int argc, char* argv[]) {
         }
         finiteness = false;
 
-        if (! usePairs) {
+        if (mode != MODE_USEPAIRS) {
+            // If we _are_ in MODE_USEPAIRS, then boundary facet options are
+            // illegal anyway.
             if (! boundary.hasFalse()) {
                 std::cerr << "Options -b/--boundary and -h/--minhyp "
                     "cannot be used together.\n\n";
@@ -758,30 +777,60 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // Run a sanity check on the command-line arguments.
+    // Check for arguments that are invalid for this mode of operation.
     bool broken = false;
-    if ((! genPairs) && outFile.empty()) {
+    switch (mode) {
+        case MODE_GENPAIRS:
+            if (minimal || minimalPrime || minimalPrimeP2 || minimalHyp) {
+                std::cerr << "Minimality options cannot be used with "
+                    "-p/--genpairs.\n";
+                broken = true;
+            }
+            if (! orientability.full()) {
+                std::cerr << "Orientability options cannot be used with "
+                    "-p/--genpairs.\n";
+                broken = true;
+            }
+            if (! finiteness.full()) {
+                std::cerr << "Finiteness options cannot be used with "
+                    "-p/--genpairs.\n";
+                broken = true;
+            }
+            if (outputType != OUTPUT_PAIRINGS && outputType != OUTPUT_TIGHT) {
+                std::cerr << "Output format options (other than "
+                    "-e/--encodings) cannot be used with\n-p/--genpairs.\n";
+                broken = true;
+            }
+            if (threads != 1) {
+                std::cerr << "Multithreading options cannot be used with "
+                    "-p/--genpairs.\n";
+                broken = true;
+            }
+            break;
+        case MODE_USEPAIRS:
+            if (nTop) {
+                std::cerr << WORD_Simplex
+                    << " options cannot be used with -P/--usepairs.\n";
+                broken = true;
+            }
+            if ((! boundary.full()) || (nBdryFaces != -1)) {
+                std::cerr << "Boundary options cannot be used with "
+                    "-P/--usepairs.\n";
+                broken = true;
+            }
+            break;
+        default:
+            break;
+    }
+    if (broken) {
+        std::cerr << '\n';
+        help();
+        return 1;
+    }
+
+    // Run a broader sanity check on the command-line arguments.
+    if (mode != MODE_GENPAIRS && outFile.empty()) {
         std::cerr << "An output file must be specified.\n";
-        broken = true;
-    } else if (genPairs &&
-            (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
-        std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
-        broken = true;
-    } else if (genPairs && ! orientability.full()) {
-        std::cerr << "Orientability options cannot be used with "
-            "-p/--genpairs.\n";
-        broken = true;
-    } else if (genPairs && ! finiteness.full()) {
-        std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
-        broken = true;
-    } else if (genPairs && outputType != OUTPUT_PAIRINGS &&
-            outputType != OUTPUT_TIGHT) {
-        std::cerr << "Output format options -s/--sigs, -S/--canonical or "
-            "-c/--subcontainers cannot\nbe used with -p/--genpairs.\n";
-        broken = true;
-    } else if (genPairs && threads != 1) {
-        std::cerr << "Multithreading options cannot be used with "
-            "-p/--genpairs.\n";
         broken = true;
     } else if (dimension == 2 && minimalHyp) {
         std::cerr << "Hyperbolicity options cannot be used with -2/--dim2.\n";
@@ -797,20 +846,13 @@ int main(int argc, char* argv[]) {
             (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
         std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
-    } else if (usePairs && nTet) {
-        std::cerr << WORD_Tetrahedron
-            << " options cannot be used with -P/--usepairs.\n";
+    } else if (mode != MODE_USEPAIRS && nTop == 0) {
+        std::cerr << "The number of " << WORD_simplices
+            << " must be specified using option -t/--top.\n";
         broken = true;
-    } else if (usePairs && ((! boundary.full()) || (nBdryFaces != -1))) {
-        std::cerr << "Boundary options cannot be used with -P/--usepairs.\n";
-        broken = true;
-    } else if ((! usePairs) && nTet == 0) {
-        std::cerr << "The number of " << WORD_tetrahedra
-            << " must be specified using option -t/--tetrahedra.\n";
-        broken = true;
-    } else if ((! usePairs) && (nTet < 1 || nTet > MAXTET)) {
-        std::cerr << "The number of " << WORD_tetrahedra
-            << " must be between 1 and " << MAXTET << " inclusive.\n";
+    } else if (mode != MODE_USEPAIRS && (nTop < 1 || nTop > MAXTOP)) {
+        std::cerr << "The number of " << WORD_simplices
+            << " must be between 1 and " << MAXTOP << " inclusive.\n";
         broken = true;
     } else if (allowInvalid && ! finiteness.full()) {
         std::cerr << "Option --allowinvalid cannot be used with finite/ideal "
@@ -820,10 +862,6 @@ int main(int argc, char* argv[]) {
             (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
         std::cerr << "Option --allowinvalid cannot be used with minimality "
             "options.\n";
-        broken = true;
-    } else if (genPairs && usePairs) {
-        std::cerr << "Options -p/--genpairs and -P/--usepairs "
-            "cannot be used together.\n";
         broken = true;
     } else if (threads < 1) {
         std::cerr << "The number of threads must be strictly positive.\n";
@@ -850,28 +888,28 @@ int main(int argc, char* argv[]) {
         } else if (dimension == 3 && (nBdryFaces % 2 != 0)) {
             std::cerr << "Number of boundary faces must be even.\n";
             broken = true;
-        } else if (dimension == 2 && ((nTet + nBdryFaces) % 2 != 0)) {
+        } else if (dimension == 2 && ((nTop + nBdryFaces) % 2 != 0)) {
             std::cerr << "Number of boundary edges must have the "
                 "same parity as the number of triangles.\n";
             broken = true;
-        } else if (dimension == 4 && ((nTet + nBdryFaces) % 2 != 0)) {
+        } else if (dimension == 4 && ((nTop + nBdryFaces) % 2 != 0)) {
             std::cerr << "Number of boundary facets must have the "
                 "same parity as the number of pentachora.\n";
             broken = true;
-        } else if (dimension == 3 && (nBdryFaces > 2 * nTet + 2)) {
-            std::cerr << "Number of boundary faces for " << nTet
-                << (nTet == 1 ? " tetrahedron" : " tetrahedra")
-                << " can be at most " << (2 * nTet + 2) << ".\n";
+        } else if (dimension == 3 && (nBdryFaces > 2 * nTop + 2)) {
+            std::cerr << "Number of boundary faces for " << nTop
+                << (nTop == 1 ? " tetrahedron" : " tetrahedra")
+                << " can be at most " << (2 * nTop + 2) << ".\n";
             broken = true;
-        } else if (dimension == 2 && (3 * nTet - nBdryFaces < 2 * (nTet - 1))) {
-            std::cerr << "Number of boundary edges for " << nTet
-                << (nTet == 1 ? " triangle" : " triangles")
-                << " can be at most " << (nTet + 2) << ".\n";
+        } else if (dimension == 2 && (3 * nTop - nBdryFaces < 2 * (nTop - 1))) {
+            std::cerr << "Number of boundary edges for " << nTop
+                << (nTop == 1 ? " triangle" : " triangles")
+                << " can be at most " << (nTop + 2) << ".\n";
             broken = true;
-        } else if (dimension == 4 && (5 * nTet - nBdryFaces < 2 * (nTet - 1))) {
-            std::cerr << "Number of boundary facets for " << nTet
-                << (nTet == 1 ? " pentachoron" : " pentachora")
-                << " can be at most " << (3 * nTet + 2) << ".\n";
+        } else if (dimension == 4 && (5 * nTop - nBdryFaces < 2 * (nTop - 1))) {
+            std::cerr << "Number of boundary facets for " << nTop
+                << (nTop == 1 ? " pentachoron" : " pentachora")
+                << " can be at most " << (3 * nTop + 2) << ".\n";
             broken = true;
         } else {
             // Asking for a valid positive number of boundary faces.
@@ -899,7 +937,7 @@ int main(int argc, char* argv[]) {
 template <int dim>
 int runCensus() {
     // Are we only dumping face pairings?
-    if (genPairs) {
+    if (mode == MODE_GENPAIRS) {
         if (! outFile.empty()) {
             dumpStream = std::make_unique<std::ofstream>(outFile.c_str());
             if ((! dumpStream.get()) || (! *dumpStream)) {
@@ -908,7 +946,7 @@ int runCensus() {
             }
         }
 
-        regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
+        regina::FacetPairing<dim>::findAllPairings(nTop, boundary, nBdryFaces,
                 [](const regina::FacetPairing<dim>& pair) {
             if (dumpStream.get()) {
                 if (outputType == OUTPUT_TIGHT)
@@ -950,7 +988,7 @@ int runCensus() {
         }
     } else {
         parent = std::make_shared<regina::Container>();
-        if (usePairs)
+        if (mode == MODE_USEPAIRS)
             parent->setLabel("Partial command-line census");
         else
             parent->setLabel("Command-line census");
@@ -982,7 +1020,7 @@ int runCensus() {
             t[i] = new std::thread(processCases<dim>);
     }
 
-    if (usePairs) {
+    if (mode == MODE_USEPAIRS) {
         // Only use the face pairings read from standard input.
         std::cout << "Trying " << WORD_face << " pairings..." << std::endl;
         std::string pairingList = WORD_Face;
@@ -1034,7 +1072,7 @@ int runCensus() {
         // An ordinary all-face-pairings census.
         std::cout << "Starting census generation..." << std::endl;
 
-        regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
+        regina::FacetPairing<dim>::findAllPairings(nTop, boundary, nBdryFaces,
             foundFacePairing<dim>, census /* dest */);
     }
 
