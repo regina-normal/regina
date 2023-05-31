@@ -115,6 +115,13 @@ class BoolSet {
          * of this set.
          */
         constexpr bool contains(bool value) const;
+        /**
+         * Determines whether this is the full set, containing both
+         * \c true and \c false.
+         *
+         * \return \c true if and only if this is the full set.
+         */
+        constexpr bool full() const;
 
         /**
          * Inserts \c true into this set if it is not already present.
@@ -134,8 +141,13 @@ class BoolSet {
         void removeFalse();
         /**
          * Removes all elements from this set.
+         *
+         * In Regina 7.3 and earlier, this routine was called empty().
+         * It has been renamed to clear(), _without_ a deprecated alias, to
+         * avoid confusion with the more common pattern where empty() queries
+         * whether a container holds any elements at all.
          */
-        void empty();
+        void clear();
         /**
          * Places both \c true and \c false into this set if they are
          * not already present.
@@ -386,6 +398,9 @@ inline constexpr bool BoolSet::hasFalse() const {
 inline constexpr bool BoolSet::contains(bool value) const {
     return (elements & (value ? eltTrue : eltFalse));
 }
+inline constexpr bool BoolSet::full() const {
+    return (elements == (eltTrue | eltFalse));
+}
 
 inline void BoolSet::insertTrue() {
     elements = static_cast<unsigned char>(elements | eltTrue);
@@ -399,7 +414,7 @@ inline void BoolSet::removeTrue() {
 inline void BoolSet::removeFalse() {
     elements = static_cast<unsigned char>(elements & eltTrue);
 }
-inline void BoolSet::empty() {
+inline void BoolSet::clear() {
     elements = 0;
 }
 inline void BoolSet::fill() {

@@ -150,17 +150,17 @@ bool valueOf(const std::string& str, bool& dest) {
 
 bool valueOf(const std::string& str, BoolSet& dest) {
     if (str.length() != 2) {
-        dest.empty();
+        dest.clear();
         return false;
     }
     char t = str[0];
     char f = str[1];
     if (t != '-' && t != 'T' && t != 't') {
-        dest.empty();
+        dest.clear();
         return false;
     }
     if (f != '-' && f != 'F' && f != 'f') {
-        dest.empty();
+        dest.clear();
         return false;
     }
 

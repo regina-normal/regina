@@ -209,6 +209,15 @@ and {true, false} have byte codes 0, 1, 2 and 3 respectively.
 Returns:
     the byte code representing this set.)doc";
 
+// Docstring regina::python::doc::BoolSet_::clear
+static const char *clear =
+R"doc(Removes all elements from this set.
+
+In Regina 7.3 and earlier, this routine was called empty(). It has
+been renamed to clear(), _without_ a deprecated alias, to avoid
+confusion with the more common pattern where empty() queries whether a
+container holds any elements at all.)doc";
+
 // Docstring regina::python::doc::BoolSet_::contains
 static const char *contains =
 R"doc(Determines if the given boolean is a member of this set.
@@ -218,9 +227,6 @@ Parameter ``value``:
 
 Returns:
     ``True`` if and only if the given boolean is a member of this set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::empty
-static const char *empty = R"doc(Removes all elements from this set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::fill
 static const char *fill =
@@ -237,6 +243,14 @@ Precondition:
 
 Parameter ``code``:
     the byte code from which the new set will be created.)doc";
+
+// Docstring regina::python::doc::BoolSet_::full
+static const char *full =
+R"doc(Determines whether this is the full set, containing both ``True`` and
+``False``.
+
+Returns:
+    ``True`` if and only if this is the full set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::hasFalse
 static const char *hasFalse =

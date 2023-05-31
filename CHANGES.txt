@@ -24,6 +24,11 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which uses the tight encoding.
         Class BitManipulator<T>:
             - New routine swapBits().
+        Class BoolSet:
+            - New routine full().
+            - Renamed empty() to clear(), without a deprecated alias, to avoid
+              confusion with the more common pattern where empty() queries
+              whether or not a container is empty.
         Enum ChangeType:
             - New enum for internal use with triangulation change spans.
         Class IntOfBits<k>:
