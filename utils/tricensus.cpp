@@ -452,15 +452,8 @@ R"help(Usage: tricensus <output-file>
  */
 int main(int argc, char* argv[]) {
     // Parse the command-line arguments.
-    // TODO: Fix types of these vars
-    int argBdry = 0;
-    int argNoBdry = 0;
-    int argOr = 0;
-    int argNor = 0;
-    int argFinite = 0;
-    int argIdeal = 0;
-
-    const char* shortOpt = ":t:biB:onfdmMNh24sSecpPv"; // TODO: no I,T
+    // TODO: Fix types of vars
+    const char* shortOpt = ":t:biB:onfdmMNh24sSecpPv";
     struct option longOpt[] = {
         { "tetrahedra", required_argument, nullptr, 't' },
         { "size", required_argument, nullptr, 't' }, // alias for --tetrahedra
@@ -475,7 +468,7 @@ int main(int argc, char* argv[]) {
         { "minprime", no_argument, nullptr, 'M' },
         { "minprimep2", no_argument, nullptr, 'N' },
         { "minhyp", no_argument, nullptr, 'h' },
-        { "allowinvalid", no_argument, nullptr, 'I' },
+        { "allowinvalid", no_argument, nullptr, 'I' }, // no short opt
         { "dim2", no_argument, nullptr, '2' },
         { "dim4", no_argument, nullptr, '4' },
         { "sigs", no_argument, nullptr, 's' },
@@ -484,7 +477,7 @@ int main(int argc, char* argv[]) {
         { "subcontainers", no_argument, nullptr, 'c' },
         { "genpairs", no_argument, nullptr, 'p' },
         { "usepairs", no_argument, nullptr, 'P' },
-        { "threads", required_argument, nullptr, 'T' },
+        { "threads", required_argument, nullptr, 'T' }, // no short opt
         { "version", no_argument, nullptr, 'v' },
         { "help", no_argument, nullptr, '_' },
         { nullptr, 0, nullptr, 0 }
@@ -504,10 +497,22 @@ int main(int argc, char* argv[]) {
                 }
                 break;
             case 'b':
-                argBdry = 1;
+                if (! boundary.hasTrue()) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--boundary or --internal.\n\n";
+                    help();
+                    return 1;
+                }
+                boundary = true;
                 break;
             case 'i':
-                argNoBdry = 1;
+                if (! boundary.hasFalse()) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--boundary or --internal.\n\n";
+                    help();
+                    return 1;
+                }
+                boundary = false;
                 break;
             case 'B':
                 nBdryFaces = strtol(optarg, &endptr, 10);
@@ -519,16 +524,40 @@ int main(int argc, char* argv[]) {
                 }
                 break;
             case 'o':
-                argOr = 1;
+                if (! orientability.hasTrue()) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--orientable or --nonorientable.\n\n";
+                    help();
+                    return 1;
+                }
+                orientability = true;
                 break;
             case 'n':
-                argNor = 1;
+                if (! orientability.hasFalse()) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--orientable or --nonorientable.\n\n";
+                    help();
+                    return 1;
+                }
+                orientability = false;
                 break;
             case 'f':
-                argFinite = 1;
+                if (! finiteness.hasTrue()) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--finite or --ideal.\n\n";
+                    help();
+                    return 1;
+                }
+                finiteness = true;
                 break;
             case 'd':
-                argIdeal = 1;
+                if (! finiteness.hasFalse()) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--finite or --ideal.\n\n";
+                    help();
+                    return 1;
+                }
+                finiteness = false;
                 break;
             case 'm':
                 minimal = 1;
@@ -623,9 +652,29 @@ int main(int argc, char* argv[]) {
 
     // Some options imply others.
     if (minimalHyp) {
-        argIdeal = 1;
-        if (! usePairs)
-            argNoBdry = 1;
+        if (! finiteness.hasFalse()) {
+            std::cerr << "Options -f/--finite and -h/--minhyp "
+                "cannot be used together.\n\n";
+            help();
+            return 1;
+        }
+        finiteness = false;
+
+        if (! usePairs) {
+            if (! boundary.hasFalse()) {
+                std::cerr << "Options -b/--boundary and -h/--minhyp "
+                    "cannot be used together.\n\n";
+                help();
+                return 1;
+            }
+            if (nBdryFaces > 0) {
+                std::cerr << "Option -h/--minhyp cannot be used with "
+                    "-B/--bdryfaces=<non-zero>.\n\n";
+                help();
+                return 1;
+            }
+            boundary = false;
+        }
     }
 
     // Run a sanity check on the command-line arguments.
@@ -637,11 +686,11 @@ int main(int argc, char* argv[]) {
             (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
         std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && (argOr || argNor)) {
+    } else if (genPairs && ! orientability.full()) {
         std::cerr << "Orientability options cannot be used with "
             "-p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && (argFinite || argIdeal)) {
+    } else if (genPairs && ! finiteness.full()) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (genPairs && (sigs || canonical)) {
@@ -661,7 +710,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Primeness options cannot be used with -2/--dim2 "
             "(the weaker -m/--minimal can).\n";
         broken = true;
-    } else if (dim2 && (argFinite || argIdeal)) {
+    } else if (dim2 && ! finiteness.full()) {
         std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
         broken = true;
     } else if (dim4 &&
@@ -672,7 +721,7 @@ int main(int argc, char* argv[]) {
         std::cerr << WORD_Tetrahedron
             << " options cannot be used with -P/--usepairs.\n";
         broken = true;
-    } else if (usePairs && (argBdry || argNoBdry || (nBdryFaces != -1))) {
+    } else if (usePairs && ((! boundary.full()) || (nBdryFaces != -1))) {
         std::cerr << "Boundary options cannot be used with -P/--usepairs.\n";
         broken = true;
     } else if ((! usePairs) && nTet == 0) {
@@ -683,27 +732,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "The number of " << WORD_tetrahedra
             << " must be between 1 and " << MAXTET << " inclusive.\n";
         broken = true;
-    } else if (argBdry && minimalHyp) {
-        std::cerr << "Options -b/--boundary and -h/--minhyp "
-            "cannot be used together.\n";
-        broken = true;
-    } else if (argBdry && argNoBdry) {
-        std::cerr << "Options -b/--boundary and -i/--internal "
-            "cannot be used together.\n";
-        broken = true;
-    } else if (argOr && argNor) {
-        std::cerr << "Options -o/--orientable and -n/--nonorientable "
-            "cannot be used together.\n";
-        broken = true;
-    } else if (argFinite && minimalHyp) {
-        std::cerr << "Options -f/--finite and -h/--minhyp "
-            "cannot be used together.\n";
-        broken = true;
-    } else if (argFinite && argIdeal) {
-        std::cerr << "Options -f/--finite and -d/--ideal "
-            "cannot be used together.\n";
-        broken = true;
-    } else if (allowInvalid && (argFinite || argIdeal)) {
+    } else if (allowInvalid && ! finiteness.full()) {
         std::cerr << "Option --allowinvalid cannot be used with finite/ideal "
             "options.\n";
         broken = true;
@@ -737,12 +766,16 @@ int main(int argc, char* argv[]) {
             broken = true;
         } else if (nBdryFaces == 0) {
             // Asking for no boundary faces.
-            if (argBdry) {
+            if (! boundary.hasFalse()) {
                 std::cerr << "Option -b/--boundary cannot be used with "
-                    << "-B/--bdryfaces=0.\n";
+                    "-B/--bdryfaces=0.\n";
                 broken = true;
             } else
-                argNoBdry = 1;
+                boundary = false;
+        } else if (! boundary.hasTrue()) {
+            std::cerr << "Option -i/--internal cannot be used with "
+                "-B/--bdryfaces=<non-zero>.\n";
+            broken = true;
         } else if ((! dim4) && (! dim2) && (nBdryFaces % 2 != 0)) {
             std::cerr << "Number of boundary faces must be even.\n";
             broken = true;
@@ -771,16 +804,7 @@ int main(int argc, char* argv[]) {
             broken = true;
         } else {
             // Asking for a valid positive number of boundary faces.
-            if (minimalHyp) {
-                std::cerr << "Option -h/--minhyp cannot be used with "
-                    << "-B/--bdryfaces=<non-zero>.\n";
-                broken = true;
-            } else if (argNoBdry) {
-                std::cerr << "Option -i/--internal cannot be used with "
-                    << "-B/--bdryfaces=<non-zero>.\n";
-                broken = true;
-            } else
-                argBdry = 1;
+            boundary = true;
         }
     }
 
@@ -789,11 +813,6 @@ int main(int argc, char* argv[]) {
         help();
         return 1;
     }
-
-    // Finalise the census parameters.
-    finiteness = regina::BoolSet(! argIdeal, ! argFinite);
-    orientability = regina::BoolSet(! argNor, ! argOr);
-    boundary = regina::BoolSet(! argNoBdry, ! argBdry);
 
     // And off we go!
     if (dim2)
