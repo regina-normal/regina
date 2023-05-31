@@ -49,12 +49,12 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
-#define WORD_face (dim4 ? "facet" : dim2 ? "edge" : "face")
-#define WORD_Face (dim4 ? "Facet" : dim2 ? "Edge" : "Face")
-#define WORD_faces (dim4 ? "facets" : dim2 ? "edges" : "faces")
-#define WORD_tetrahedra (dim4 ? "pentachora" : dim2 ? "triangles" : "tetrahedra")
-#define WORD_tetrahedron (dim4 ? "pentachoron" : dim2 ? "triangle" : "tetrahedron")
-#define WORD_Tetrahedron (dim4 ? "Pentachoron" : dim2 ? "Triangle" : "Tetrahedron")
+#define WORD_face (dimension == 4 ? "facet" : dimension == 2 ? "edge" : "face")
+#define WORD_Face (dimension == 4 ? "Facet" : dimension == 2 ? "Edge" : "Face")
+#define WORD_faces (dimension == 4 ? "facets" : dimension == 2 ? "edges" : "faces")
+#define WORD_tetrahedra (dimension == 4 ? "pentachora" : dimension == 2 ? "triangles" : "tetrahedra")
+#define WORD_tetrahedron (dimension == 4 ? "pentachoron" : dimension == 2 ? "triangle" : "tetrahedron")
+#define WORD_Tetrahedron (dimension == 4 ? "Pentachoron" : dimension == 2 ? "Triangle" : "Tetrahedron")
 
 // Constants.
 constexpr int MAXTET = 20;
@@ -70,8 +70,7 @@ int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int minimalHyp = 0;
 int allowInvalid = 0;
-int dim2 = 0;
-int dim4 = 0;
+int dimension = 0;
 int usePairs = 0;
 int sigs = 0;
 int canonical = 0;
@@ -344,12 +343,7 @@ std::shared_ptr<regina::Text> parameterPacket() {
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 
-    if (dim4)
-        descStream << "Searching for 4-manifold triangulations\n";
-    else if (dim2)
-        descStream << "Searching for 2-manifold triangulations\n";
-    else
-        descStream << "Searching for 3-manifold triangulations\n";
+    descStream << "Searching for " << dimension << "-manifold triangulations\n";
 
     if (usePairs)
         descStream << "Only used a subset of all available "
@@ -584,10 +578,22 @@ int main(int argc, char* argv[]) {
                 allowInvalid = 1;
                 break;
             case '2':
-                dim2 = 1;
+                if (dimension && dimension != 2) {
+                    std::cerr << "You cannot pass more than one dimension "
+                        "option.\n\n";
+                    help();
+                    return 1;
+                }
+                dimension = 2;
                 break;
             case '4':
-                dim4 = 1;
+                if (dimension && dimension != 4) {
+                    std::cerr << "You cannot pass more than one dimension "
+                        "option.\n\n";
+                    help();
+                    return 1;
+                }
+                dimension = 4;
                 break;
             case 's':
                 sigs = 1;
@@ -659,6 +665,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // Set any undefined options to their defaults.
+    if (! dimension)
+        dimension = 3;
+
     // Some options imply others.
     if (minimalHyp) {
         if (! finiteness.hasFalse()) {
@@ -709,20 +719,17 @@ int main(int argc, char* argv[]) {
         std::cerr << "Multithreading options cannot be used with "
             "-p/--genpairs.\n";
         broken = true;
-    } else if (dim2 && dim4) {
-        std::cerr << "Options -2/--dim2 and -4/--dim4 cannot be used together.\n";
-        broken = true;
-    } else if (dim2 && minimalHyp) {
+    } else if (dimension == 2 && minimalHyp) {
         std::cerr << "Hyperbolicity options cannot be used with -2/--dim2.\n";
         broken = true;
-    } else if (dim2 && (minimalPrime || minimalPrimeP2)) {
+    } else if (dimension == 2 && (minimalPrime || minimalPrimeP2)) {
         std::cerr << "Primeness options cannot be used with -2/--dim2 "
             "(the weaker -m/--minimal can).\n";
         broken = true;
-    } else if (dim2 && ! finiteness.full()) {
+    } else if (dimension == 2 && ! finiteness.full()) {
         std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
         broken = true;
-    } else if (dim4 &&
+    } else if (dimension == 4 &&
             (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
         std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
@@ -785,28 +792,28 @@ int main(int argc, char* argv[]) {
             std::cerr << "Option -i/--internal cannot be used with "
                 "-B/--bdryfaces=<non-zero>.\n";
             broken = true;
-        } else if ((! dim4) && (! dim2) && (nBdryFaces % 2 != 0)) {
+        } else if (dimension == 3 && (nBdryFaces % 2 != 0)) {
             std::cerr << "Number of boundary faces must be even.\n";
             broken = true;
-        } else if (dim2 && ((nTet + nBdryFaces) % 2 != 0)) {
+        } else if (dimension == 2 && ((nTet + nBdryFaces) % 2 != 0)) {
             std::cerr << "Number of boundary edges must have the "
                 "same parity as the number of triangles.\n";
             broken = true;
-        } else if (dim4 && ((nTet + nBdryFaces) % 2 != 0)) {
+        } else if (dimension == 4 && ((nTet + nBdryFaces) % 2 != 0)) {
             std::cerr << "Number of boundary facets must have the "
                 "same parity as the number of pentachora.\n";
             broken = true;
-        } else if ((! dim4) && (! dim2) && (nBdryFaces > 2 * nTet + 2)) {
+        } else if (dimension == 3 && (nBdryFaces > 2 * nTet + 2)) {
             std::cerr << "Number of boundary faces for " << nTet
                 << (nTet == 1 ? " tetrahedron" : " tetrahedra")
                 << " can be at most " << (2 * nTet + 2) << ".\n";
             broken = true;
-        } else if (dim2 && (3 * nTet - nBdryFaces < 2 * (nTet - 1))) {
+        } else if (dimension == 2 && (3 * nTet - nBdryFaces < 2 * (nTet - 1))) {
             std::cerr << "Number of boundary edges for " << nTet
                 << (nTet == 1 ? " triangle" : " triangles")
                 << " can be at most " << (nTet + 2) << ".\n";
             broken = true;
-        } else if (dim4 && (5 * nTet - nBdryFaces < 2 * (nTet - 1))) {
+        } else if (dimension == 4 && (5 * nTet - nBdryFaces < 2 * (nTet - 1))) {
             std::cerr << "Number of boundary facets for " << nTet
                 << (nTet == 1 ? " pentachoron" : " pentachora")
                 << " can be at most " << (3 * nTet + 2) << ".\n";
@@ -824,12 +831,11 @@ int main(int argc, char* argv[]) {
     }
 
     // And off we go!
-    if (dim2)
-        return runCensus<2>();
-    else if (dim4)
-        return runCensus<4>();
-    else
-        return runCensus<3>();
+    switch (dimension) {
+        case 2: return runCensus<2>();
+        case 3: return runCensus<3>();
+        case 4: return runCensus<4>();
+    }
 }
 
 /**
@@ -960,7 +966,8 @@ int runCensus() {
         if (! (sigs || canonical || tight)) {
             auto pairingPacket = std::make_shared<regina::Text>(pairingList);
             pairingPacket->setLabel(
-                dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
+                dimension == 4 ? "Facet Pairings" :
+                dimension == 2 ? "Edge Pairings" :
                 "Face Pairings");
             parent->insert(pairingPacket, desc);
         }
