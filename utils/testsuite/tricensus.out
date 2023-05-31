@@ -27,13 +27,14 @@ Usage: tricensus <output-file>
                                     Implies --internal and --ideal.
       --allowinvalid                Do not test triangulations for validity
                                     before output.
-  -2, --dim2                        Run a census of 2-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts triangles, and
+  -2, --dim2                        Run a census of 2-manifold triangulations.
+                                    Here --size counts triangles, and
                                     --bdryfaces counts boundary edges.
-  -4, --dim4                        Run a census of 4-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts pentachora, and
+  -3, --dim3                        Run a census of 3-manifold triangulations.
+                                    Here --size counts tetrahedra, and
+                                    --bdryfaces counts boundary triangles.
+  -4, --dim4                        Run a census of 4-manifold triangulations.
+                                    Here --size counts pentachora, and
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
@@ -82,13 +83,14 @@ Usage: tricensus <output-file>
                                     Implies --internal and --ideal.
       --allowinvalid                Do not test triangulations for validity
                                     before output.
-  -2, --dim2                        Run a census of 2-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts triangles, and
+  -2, --dim2                        Run a census of 2-manifold triangulations.
+                                    Here --size counts triangles, and
                                     --bdryfaces counts boundary edges.
-  -4, --dim4                        Run a census of 4-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts pentachora, and
+  -3, --dim3                        Run a census of 3-manifold triangulations.
+                                    Here --size counts tetrahedra, and
+                                    --bdryfaces counts boundary triangles.
+  -4, --dim4                        Run a census of 4-manifold triangulations.
+                                    Here --size counts pentachora, and
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
@@ -137,13 +139,14 @@ Usage: tricensus <output-file>
                                     Implies --internal and --ideal.
       --allowinvalid                Do not test triangulations for validity
                                     before output.
-  -2, --dim2                        Run a census of 2-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts triangles, and
+  -2, --dim2                        Run a census of 2-manifold triangulations.
+                                    Here --size counts triangles, and
                                     --bdryfaces counts boundary edges.
-  -4, --dim4                        Run a census of 4-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts pentachora, and
+  -3, --dim3                        Run a census of 3-manifold triangulations.
+                                    Here --size counts tetrahedra, and
+                                    --bdryfaces counts boundary triangles.
+  -4, --dim4                        Run a census of 4-manifold triangulations.
+                                    Here --size counts pentachora, and
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.

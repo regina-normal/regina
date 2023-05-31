@@ -72,12 +72,17 @@ int minimalHyp = 0;
 int allowInvalid = 0;
 int dimension = 0; // default of 3 will be set later
 int usePairs = 0;
-int sigs = 0;
-int canonical = 0;
-int tight = 0;
+enum {
+    OUTPUT_NONE = 0,
+    OUTPUT_PAIRINGS,
+    OUTPUT_DATA,
+    OUTPUT_DATA_SUBCONTAINERS,
+    OUTPUT_SIGS,
+    OUTPUT_SIGS_CANONICAL,
+    OUTPUT_TIGHT
+} outputType = OUTPUT_NONE; // default will be set later
 regina::CensusPurge whichPurge;
 int genPairs = 0;
-int subContainers = 0;
 int threads = 1;
 std::string outFile;
 
@@ -87,6 +92,7 @@ unsigned long totPairings = 0;
 
 // Variables used for output.
 long long nSolns;
+bool textOutput;
 std::ofstream sigStream;
 
 // Variables used for multithreaded operation.
@@ -210,52 +216,65 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         return;
 
     // Put it in the census!
-    if (sigs) {
-        std::string sig = tri.isoSig();
-        if (threads > 1) {
-            std::unique_lock<std::mutex> lock(outputMutex);
-            sigStream << sig << std::endl;
-            ++nSolns;
-        } else {
-            sigStream << sig << std::endl;
-            ++nSolns;
-        }
-    } else if (canonical) {
-        auto [sig, iso] = tri.isoSigDetail();
-        std::string isoEnc = iso.inverse().tightEncoding();
-        if (threads > 1) {
-            std::unique_lock<std::mutex> lock(outputMutex);
-            sigStream << sig << ' ' << isoEnc << std::endl;
-            ++nSolns;
-        } else {
-            sigStream << sig << ' ' << isoEnc << std::endl;
-            ++nSolns;
-        }
-    } else if (tight) {
-        std::string enc = tri.tightEncoding();
-        if (threads > 1) {
-            std::unique_lock<std::mutex> lock(outputMutex);
-            sigStream << enc << std::endl;
-            ++nSolns;
-        } else {
-            sigStream << enc << std::endl;
-            ++nSolns;
-        }
-    } else {
-        std::ostringstream out;
-        auto packet = regina::make_packet(std::move(tri));
-        if (threads > 1) {
-            std::unique_lock<std::mutex> lock(outputMutex);
-            out << "Item " << (nSolns + 1);
-            packet->setLabel(out.str());
-            container->append(packet);
-            ++nSolns;
-        } else {
-            out << "Item " << (nSolns + 1);
-            packet->setLabel(out.str());
-            container->append(packet);
-            ++nSolns;
-        }
+    switch (outputType) {
+        case OUTPUT_SIGS:
+            {
+                std::string sig = tri.isoSig();
+                if (threads > 1) {
+                    std::unique_lock<std::mutex> lock(outputMutex);
+                    sigStream << sig << std::endl;
+                    ++nSolns;
+                } else {
+                    sigStream << sig << std::endl;
+                    ++nSolns;
+                }
+            }
+            break;
+        case OUTPUT_SIGS_CANONICAL:
+            {
+                auto [sig, iso] = tri.isoSigDetail();
+                std::string isoEnc = iso.inverse().tightEncoding();
+                if (threads > 1) {
+                    std::unique_lock<std::mutex> lock(outputMutex);
+                    sigStream << sig << ' ' << isoEnc << std::endl;
+                    ++nSolns;
+                } else {
+                    sigStream << sig << ' ' << isoEnc << std::endl;
+                    ++nSolns;
+                }
+            }
+            break;
+        case OUTPUT_TIGHT:
+            {
+                std::string enc = tri.tightEncoding();
+                if (threads > 1) {
+                    std::unique_lock<std::mutex> lock(outputMutex);
+                    sigStream << enc << std::endl;
+                    ++nSolns;
+                } else {
+                    sigStream << enc << std::endl;
+                    ++nSolns;
+                }
+            }
+            break;
+        default:
+            {
+                std::ostringstream out;
+                auto packet = regina::make_packet(std::move(tri));
+                if (threads > 1) {
+                    std::unique_lock<std::mutex> lock(outputMutex);
+                    out << "Item " << (nSolns + 1);
+                    packet->setLabel(out.str());
+                    container->append(packet);
+                    ++nSolns;
+                } else {
+                    out << "Item " << (nSolns + 1);
+                    packet->setLabel(out.str());
+                    container->append(packet);
+                    ++nSolns;
+                }
+            }
+            break;
     }
 }
 
@@ -292,7 +311,7 @@ void foundFacePairing(const regina::FacetPairing<dim>& pairing,
     std::cout << pairing.str() << std::endl;
     // If creating a full .rga file, store triangulations for each face
     // pairing in a different container.
-    if (subContainers) {
+    if (outputType == OUTPUT_DATA_SUBCONTAINERS) {
         auto subContainer = std::make_shared<regina::Container>();
         subContainer->setLabel(pairing.str());
         container->append(subContainer);
@@ -422,13 +441,14 @@ R"help(Usage: tricensus <output-file>
                                     Implies --internal and --ideal.
       --allowinvalid                Do not test triangulations for validity
                                     before output.
-  -2, --dim2                        Run a census of 2-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts triangles, and
+  -2, --dim2                        Run a census of 2-manifold triangulations.
+                                    Here --size counts triangles, and
                                     --bdryfaces counts boundary edges.
-  -4, --dim4                        Run a census of 4-manifold triangulations,
-                                    not 3-manifold triangulations.  Here
-                                    --tetrahedra counts pentachora, and
+  -3, --dim3                        Run a census of 3-manifold triangulations.
+                                    Here --size counts tetrahedra, and
+                                    --bdryfaces counts boundary triangles.
+  -4, --dim4                        Run a census of 4-manifold triangulations.
+                                    Here --size counts pentachora, and
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
@@ -456,7 +476,7 @@ R"help(Usage: tricensus <output-file>
 int main(int argc, char* argv[]) {
     // Parse the command-line arguments.
     // TODO: Fix types of vars
-    const char* shortOpt = ":t:biB:onfdmMNh24sSecpPv";
+    const char* shortOpt = ":t:biB:onfdmMNh234sSecpPv";
     struct option longOpt[] = {
         { "tetrahedra", required_argument, nullptr, 't' },
         { "size", required_argument, nullptr, 't' }, // alias for --tetrahedra
@@ -473,6 +493,7 @@ int main(int argc, char* argv[]) {
         { "minhyp", no_argument, nullptr, 'h' },
         { "allowinvalid", no_argument, nullptr, 'I' }, // no short opt
         { "dim2", no_argument, nullptr, '2' },
+        { "dim3", no_argument, nullptr, '3' },
         { "dim4", no_argument, nullptr, '4' },
         { "sigs", no_argument, nullptr, 's' },
         { "canonical", no_argument, nullptr, 'S' },
@@ -579,33 +600,70 @@ int main(int argc, char* argv[]) {
                 break;
             case '2':
                 if (dimension && dimension != 2) {
-                    std::cerr << "You cannot pass more than one dimension "
-                        "option.\n\n";
+                    std::cerr << "You cannot pass multiple dimension "
+                        "options (-2/--dim2, -3/--dim3, -4/--dim4).\n\n";
                     help();
                     return 1;
                 }
                 dimension = 2;
                 break;
+            case '3':
+                if (dimension && dimension != 3) {
+                    std::cerr << "You cannot pass multiple dimension "
+                        "options (-2/--dim2, -3/--dim3, -4/--dim4).\n\n";
+                    help();
+                    return 1;
+                }
+                dimension = 3;
+                break;
             case '4':
                 if (dimension && dimension != 4) {
-                    std::cerr << "You cannot pass more than one dimension "
-                        "option.\n\n";
+                    std::cerr << "You cannot pass multiple dimension "
+                        "options (-2/--dim2, -3/--dim3, -4/--dim4).\n\n";
                     help();
                     return 1;
                 }
                 dimension = 4;
                 break;
             case 's':
-                sigs = 1;
+                if (outputType && outputType != OUTPUT_SIGS) {
+                    std::cerr << "You cannot pass more than one output "
+                        "format option (-s/--sigs, -S/--canonical,\n"
+                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    help();
+                    return 1;
+                }
+                outputType = OUTPUT_SIGS;
                 break;
             case 'S':
-                canonical = 1;
+                if (outputType && outputType != OUTPUT_SIGS_CANONICAL) {
+                    std::cerr << "You cannot pass more than one output "
+                        "format option (-s/--sigs, -S/--canonical,\n"
+                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    help();
+                    return 1;
+                }
+                outputType = OUTPUT_SIGS_CANONICAL;
                 break;
             case 'e':
-                tight = 1;
+                if (outputType && outputType != OUTPUT_TIGHT) {
+                    std::cerr << "You cannot pass more than one output "
+                        "format option (-s/--sigs, -S/--canonical,\n"
+                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    help();
+                    return 1;
+                }
+                outputType = OUTPUT_TIGHT;
                 break;
             case 'c':
-                subContainers = 1;
+                if (outputType && outputType != OUTPUT_DATA_SUBCONTAINERS) {
+                    std::cerr << "You cannot pass more than one output "
+                        "format option (-s/--sigs, -S/--canonical,\n"
+                        "-e/--encodings, -c/--subcontainers).\n\n";
+                    help();
+                    return 1;
+                }
+                outputType = OUTPUT_DATA_SUBCONTAINERS;
                 break;
             case 'p':
                 genPairs = 1;
@@ -669,6 +727,9 @@ int main(int argc, char* argv[]) {
     if (! dimension)
         dimension = 3;
 
+    if (! outputType)
+        outputType = (genPairs ? OUTPUT_PAIRINGS : OUTPUT_DATA);
+
     // Some options imply others.
     if (minimalHyp) {
         if (! finiteness.hasFalse()) {
@@ -712,8 +773,10 @@ int main(int argc, char* argv[]) {
     } else if (genPairs && ! finiteness.full()) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && (sigs || canonical)) {
-        std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
+    } else if (genPairs && outputType != OUTPUT_PAIRINGS &&
+            outputType != OUTPUT_TIGHT) {
+        std::cerr << "Output format options -s/--sigs, -S/--canonical or "
+            "-c/--subcontainers cannot\nbe used with -p/--genpairs.\n";
         broken = true;
     } else if (genPairs && threads != 1) {
         std::cerr << "Multithreading options cannot be used with "
@@ -760,15 +823,6 @@ int main(int argc, char* argv[]) {
     } else if (genPairs && usePairs) {
         std::cerr << "Options -p/--genpairs and -P/--usepairs "
             "cannot be used together.\n";
-        broken = true;
-    } else if (subContainers && (sigs || canonical || tight)) {
-        std::cerr << "Signatures (-s/--sigs or -S/--canonical) or "
-            "tight encodings (-e/--encodings) cannot be used with "
-            "sub-containers (-c/--subcontainers).\n";
-        broken = true;
-    } else if ((sigs && canonical) || (sigs && tight) || (canonical && tight)) {
-        std::cerr << "At most one of the options -s/--sigs, -S/--canonical "
-            "or -e/--encodings can be used.\n";
         broken = true;
     } else if (threads < 1) {
         std::cerr << "The number of threads must be strictly positive.\n";
@@ -856,13 +910,13 @@ int runCensus() {
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
                 [](const regina::FacetPairing<dim>& pair) {
             if (dumpStream.get()) {
-                if (tight)
+                if (outputType == OUTPUT_TIGHT)
                     pair.tightEncode(*dumpStream);
                 else
                     (*dumpStream) << pair.textRep();
                 (*dumpStream) << std::endl;
             } else {
-                if (tight)
+                if (outputType == OUTPUT_TIGHT)
                     pair.tightEncode(std::cout);
                 else
                     std::cout << pair.textRep();
@@ -877,12 +931,16 @@ int runCensus() {
 
     // We're actually generating triangulations.
     nSolns = 0;
+    textOutput = (
+        outputType == OUTPUT_SIGS ||
+        outputType == OUTPUT_SIGS_CANONICAL ||
+        outputType == OUTPUT_TIGHT);
 
     // Prepare the packet tree (or signature file) for output.
     std::shared_ptr<regina::Packet> parent;
     std::shared_ptr<regina::Packet> census;
     std::shared_ptr<regina::Packet> desc;
-    if (sigs || canonical || tight) {
+    if (textOutput) {
         sigStream.open(outFile.c_str());
         if (! sigStream) {
             std::cerr << "Signature file " << outFile
@@ -963,7 +1021,7 @@ int runCensus() {
         }
 
         // Store the face pairings used with the census.
-        if (! (sigs || canonical || tight)) {
+        if (! textOutput) {
             auto pairingPacket = std::make_shared<regina::Text>(pairingList);
             pairingPacket->setLabel(
                 dimension == 4 ? "Facet Pairings" :
@@ -1003,7 +1061,7 @@ int runCensus() {
     std::cout << "Finished." << std::endl;
 
     // Write the completed census to file.
-    if (sigs || canonical || tight) {
+    if (textOutput) {
         sigStream.close();
     } else {
         if (! parent->save(outFile.c_str())) {

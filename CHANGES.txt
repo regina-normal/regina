@@ -129,7 +129,8 @@ Version 7.4  [ (to be announced) ]
     UTILITIES:
         tricensus:
             - Now supports --size as an alias for --tetrahedra.
-            - Fixed a race conditions with --threads where the number of
+            - Now supports --dim3 for completeness (though this is the default).
+            - Fixed a race condition with --threads where the number of
               triangulations reported on the console could be wrong (although
               the actual list of triangulations in the output file was correct).
 
