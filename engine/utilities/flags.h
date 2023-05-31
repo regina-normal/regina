@@ -124,6 +124,17 @@ class Flags {
         }
 
         /**
+         * Determines whether this flag set is non-empty.
+         *
+         * An empty flag set has no bits set at all.
+         *
+         * \return \c true if and only if this flag set is non-empty.
+         */
+        operator bool() const {
+            return value_;
+        }
+
+        /**
          * Returns whether the given flag is set.
          *
          * This requires _all_ of the bits of the given flag to be set.

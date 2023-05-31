@@ -34,6 +34,15 @@ Python:
 
 namespace Flags_ {
 
+// Docstring regina::python::doc::Flags_::__as_bool
+constexpr const char *__as_bool =
+R"doc(Determines whether this flag set is non-empty.
+
+An empty flag set has no bits set at all.
+
+Returns:
+    ``True`` if and only if this flag set is non-empty.)doc";
+
 // Docstring regina::python::doc::Flags_::__band
 constexpr const char *__band =
 R"doc(Returns the bitwise AND of this set and the given flag. This flag set

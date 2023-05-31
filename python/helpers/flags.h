@@ -94,6 +94,7 @@ void add_flags(pybind11::module_& m,
             &Flags::has, pybind11::const_), rdoc::has_2)
         .def("intValue", &Flags::intValue, rdoc::intValue)
         .def_static("fromInt", &Flags::fromInt, rdoc::fromInt)
+        .def("__bool__", &Flags::operator bool, rdoc::__as_bool)
         .def(pybind11::self |= pybind11::self, rdoc::__ior_2)
         .def(pybind11::self &= pybind11::self, rdoc::__iand_2)
         .def(pybind11::self ^= pybind11::self, rdoc::__ixor_2)

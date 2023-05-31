@@ -42,6 +42,8 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which uses the tight encoding.
         Class FacetSpec<dim>:
             - New routine hash(), which uses the tight encoding.
+        Class Flags<T>:
+            - New operator bool(), which tests for a non-empty flag set.
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
         Class Isomorphism<dim>:
