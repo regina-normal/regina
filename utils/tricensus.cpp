@@ -38,7 +38,7 @@
 #include <queue>
 #include <sstream>
 #include <thread>
-#include <popt.h>
+#include <getopt.h>
 #include <unistd.h>
 #include "census/gluingpermsearcher2.h"
 #include "census/gluingpermsearcher4.h"
@@ -79,8 +79,8 @@ int tight = 0;
 regina::CensusPurge whichPurge;
 int genPairs = 0;
 int subContainers = 0;
-std::string outFile;
 int threads = 1;
+std::string outFile;
 
 // Variables used for a dump of face pairings.
 std::unique_ptr<std::ostream> dumpStream;
@@ -392,113 +392,231 @@ std::shared_ptr<regina::Text> parameterPacket() {
     return desc;
 }
 
+void help() {
+    // TODO: Compactify this
+    std::cerr <<
+R"help(Usage: tricensus <output-file>
+  -t, --tetrahedra, --size=<num>    Number of tetrahedra.
+  -b, --boundary                    Must have at least one boundary face.
+  -i, --internal                    Must have all faces internal (no boundary
+                                    faces).
+  -B, --bdryfaces=<faces>           Must have fixed number (>= 1) of boundary
+                                    facets.
+  -o, --orientable                  Must be orientable.
+  -n, --nonorientable               Must be non-orientable.
+  -f, --finite                      Must be finite (no ideal vertices).
+  -d, --ideal                       Must have at least one ideal vertex.
+  -m, --minimal                     Ignore obviously non-minimal
+                                    triangulations.
+  -M, --minprime                    Ignore obviously non-minimal, non-prime
+                                    and/or disc-reducible triangulations.
+  -N, --minprimep2                  Ignore obviously non-minimal, non-prime,
+                                    disc-reducible and/or P2-reducible
+                                    triangulations.
+  -h, --minhyp                      Ignore triangulations that are obviously
+                                    not minimal ideal triangulations of cusped
+                                    finite-volume hyperbolic 3-manifolds.
+                                    Implies --internal and --ideal.
+      --allowinvalid                Do not test triangulations for validity
+                                    before output.
+  -2, --dim2                        Run a census of 2-manifold triangulations,
+                                    not 3-manifold triangulations.  Here
+                                    --tetrahedra counts triangles, and
+                                    --bdryfaces counts boundary edges.
+  -4, --dim4                        Run a census of 4-manifold triangulations,
+                                    not 3-manifold triangulations.  Here
+                                    --tetrahedra counts pentachora, and
+                                    --bdryfaces counts boundary facets.
+  -s, --sigs                        Write isomorphism signatures only, not
+                                    full Regina data files.
+  -S, --canonical                   Write isomorphism signatures with matching
+                                    isomorphisms that yield canonical facet
+                                    pairings.
+  -e, --encodings                   Write tight encodings only, not full
+                                    Regina data files.
+  -c, --subcontainers               For each face pairing, place resulting
+                                    triangulations into different subcontainers
+  -p, --genpairs                    Only generate face pairings, not
+                                    triangulations.
+  -P, --usepairs                    Only use face pairings read from standard
+                                    input.
+      --threads=<threads>           Number of parallel threads (default = 1).
+  -v, --version                     Show which version of Regina is being used.
+      --help                        Show this help message
+)help";
+}
+
 /**
  * Parse the command-line arguments and then farm out to runCensus(),
  * which does the real work.
  */
-int main(int argc, const char* argv[]) {
-    // Set up the command-line arguments.
+int main(int argc, char* argv[]) {
+    // Parse the command-line arguments.
+    // TODO: Fix types of these vars
     int argBdry = 0;
     int argNoBdry = 0;
     int argOr = 0;
     int argNor = 0;
     int argFinite = 0;
     int argIdeal = 0;
-    int showVersion = 0;
-    poptOption opts[] = {
-        { "tetrahedra", 't', POPT_ARG_INT, &nTet, 0,
-            "Number of tetrahedra.", "<tetrahedra>" },
-        { "boundary", 'b', POPT_ARG_NONE, &argBdry, 0,
-            "Must have at least one boundary face.", nullptr },
-        { "internal", 'i', POPT_ARG_NONE, &argNoBdry, 0,
-            "Must have all faces internal (no boundary faces).", nullptr },
-        { "bdryfaces", 'B', POPT_ARG_INT, &nBdryFaces, 0,
-            "Must have fixed number (>= 1) of boundary faces.", "<faces>" },
-        { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
-            "Must be orientable.", nullptr },
-        { "nonorientable", 'n', POPT_ARG_NONE, &argNor, 0,
-            "Must be non-orientable.", nullptr },
-        { "finite", 'f', POPT_ARG_NONE, &argFinite, 0,
-            "Must be finite (no ideal vertices).", nullptr },
-        { "ideal", 'd', POPT_ARG_NONE, &argIdeal, 0,
-            "Must have at least one ideal vertex.", nullptr },
-        { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
-            "Ignore obviously non-minimal triangulations.", nullptr },
-        { "minprime", 'M', POPT_ARG_NONE, &minimalPrime, 0,
-            "Ignore obviously non-minimal, non-prime and/or "
-            "disc-reducible triangulations.", nullptr },
-        { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
-            "Ignore obviously non-minimal, non-prime, disc-reducible and/or "
-            "P2-reducible triangulations.", nullptr },
-        { "minhyp", 'h', POPT_ARG_NONE, &minimalHyp, 0,
-            "Ignore triangulations that are obviously not minimal ideal "
-            "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
-            "Implies --internal and --ideal.", nullptr },
-        { "allowinvalid", 0, POPT_ARG_NONE, &allowInvalid, 0,
-            "Do not test triangulations for validity before output.",
-            nullptr },
-        { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
-            "Run a census of 2-manifold triangulations, "
-            "not 3-manifold triangulations.  Here --tetrahedra counts "
-            "triangles, and --bdryfaces counts boundary edges.", nullptr },
-        { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
-            "Run a census of 4-manifold triangulations, "
-            "not 3-manifold triangulations.  Here --tetrahedra counts "
-            "pentachora, and --bdryfaces counts boundary facets.", nullptr },
-        { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
-            "Write isomorphism signatures only, not full Regina data files.",
-            nullptr },
-        { "canonical", 'S', POPT_ARG_NONE, &canonical, 0,
-            "Write isomorphism signatures with matching isomorphisms "
-            "that yield canonical facet pairings.",
-            nullptr },
-        { "encodings", 'e', POPT_ARG_NONE, &tight, 0,
-            "Write tight encodings only, not full Regina data files.",
-            nullptr },
-        { "subcontainers", 'c', POPT_ARG_NONE, &subContainers, 0,
-            "For each face pairing, place resulting triangulations into "
-            "different subcontainers",
-            nullptr },
-        { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
-            "Only generate face pairings, not triangulations.", nullptr },
-        { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
-            "Only use face pairings read from standard input.", nullptr },
-        { "threads", 0, POPT_ARG_INT, &threads, 0,
-            "Number of parallel threads (default = 1).", "<threads>" },
-        { "version", 'v', POPT_ARG_NONE, &showVersion, 0,
-            "Show which version of Regina is being used.", nullptr },
-        POPT_AUTOHELP
-        { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
+
+    const char* shortOpt = ":t:biB:onfdmMNh24sSecpPv"; // TODO: no I,T
+    struct option longOpt[] = {
+        { "tetrahedra", required_argument, nullptr, 't' },
+        { "size", required_argument, nullptr, 't' }, // alias for --tetrahedra
+        { "boundary", no_argument, nullptr, 'b' },
+        { "internal", no_argument, nullptr, 'i' },
+        { "bdryfaces", required_argument, nullptr, 'B' },
+        { "orientable", no_argument, nullptr, 'o' },
+        { "nonorientable", no_argument, nullptr, 'n' },
+        { "finite", no_argument, nullptr, 'f' },
+        { "ideal", no_argument, nullptr, 'd' },
+        { "minimal", no_argument, nullptr, 'm' },
+        { "minprime", no_argument, nullptr, 'M' },
+        { "minprimep2", no_argument, nullptr, 'N' },
+        { "minhyp", no_argument, nullptr, 'h' },
+        { "allowinvalid", no_argument, nullptr, 'I' },
+        { "dim2", no_argument, nullptr, '2' },
+        { "dim4", no_argument, nullptr, '4' },
+        { "sigs", no_argument, nullptr, 's' },
+        { "canonical", no_argument, nullptr, 'S' },
+        { "encodings", no_argument, nullptr, 'e' },
+        { "subcontainers", no_argument, nullptr, 'c' },
+        { "genpairs", no_argument, nullptr, 'p' },
+        { "usepairs", no_argument, nullptr, 'P' },
+        { "threads", required_argument, nullptr, 'T' },
+        { "version", no_argument, nullptr, 'v' },
+        { "help", no_argument, nullptr, '_' },
+        { nullptr, 0, nullptr, 0 }
     };
 
-    poptContext optCon = poptGetContext(nullptr, argc, argv, opts, 0);
-    poptSetOtherOptionHelp(optCon, "<output-file>");
-
-    // Parse the command-line arguments.
-    int rc = poptGetNextOpt(optCon);
-    if (rc != -1) {
-        std::cerr << poptBadOption(optCon, POPT_BADOPTION_NOALIAS)
-            << ": " << poptStrerror(rc) << "\n\n";
-        poptPrintHelp(optCon, stderr, 0);
-        poptFreeContext(optCon);
-        return 1;
+    int opt;
+    char* endptr;
+    while ((opt = getopt_long(argc, argv, shortOpt, longOpt, nullptr)) != -1) {
+        switch (opt) {
+            case 't':
+                nTet = strtol(optarg, &endptr, 10);
+                if (*endptr != 0) {
+                    std::cerr << "The triangulation/knot size must be a "
+                        "positive integer.\n\n";
+                    help();
+                    return 1;
+                }
+                break;
+            case 'b':
+                argBdry = 1;
+                break;
+            case 'i':
+                argNoBdry = 1;
+                break;
+            case 'B':
+                nBdryFaces = strtol(optarg, &endptr, 10);
+                if (*endptr != 0) {
+                    std::cerr << "The number of boundary facets must be a "
+                        "non-negative integer.\n\n";
+                    help();
+                    return 1;
+                }
+                break;
+            case 'o':
+                argOr = 1;
+                break;
+            case 'n':
+                argNor = 1;
+                break;
+            case 'f':
+                argFinite = 1;
+                break;
+            case 'd':
+                argIdeal = 1;
+                break;
+            case 'm':
+                minimal = 1;
+                break;
+            case 'M':
+                minimalPrime = 1;
+                break;
+            case 'N':
+                minimalPrimeP2 = 1;
+                break;
+            case 'h':
+                minimalHyp = 1;
+                break;
+            case 'I':
+                allowInvalid = 1;
+                break;
+            case '2':
+                dim2 = 1;
+                break;
+            case '4':
+                dim4 = 1;
+                break;
+            case 's':
+                sigs = 1;
+                break;
+            case 'S':
+                canonical = 1;
+                break;
+            case 'e':
+                tight = 1;
+                break;
+            case 'c':
+                subContainers = 1;
+                break;
+            case 'p':
+                genPairs = 1;
+                break;
+            case 'P':
+                usePairs = 1;
+                break;
+            case 'T':
+                threads = strtol(optarg, &endptr, 10);
+                if (*endptr != 0) {
+                    std::cerr << "The number of threads must be a "
+                        "positive integer.\n\n";
+                    help();
+                    return 1;
+                }
+                break;
+            case 'v':
+                // If other arguments were passed, just silently ignore them
+                // for now.  Ideally we would give an error in this scenario.
+                std::cout << PACKAGE_BUILD_STRING << std::endl;
+                return 0;
+            case '_':
+                help();
+                return 0;
+            case '?':
+                if (optopt == 0) {
+                    // Unknown long option.
+                    std::cerr << "Unknown option: " << argv[optind - 1];
+                } else {
+                    // Unknown short option.
+                    std::cerr << "Unknown option: -" <<
+                        static_cast<char>(optopt);
+                }
+                std::cerr << "\n\n";
+                help();
+                return 1;
+            case ':':
+                // If an argument is missing, getopt_long() behaves as though
+                // the short option were passed, and there is no indication
+                // as to whether the user specified a long option instead.
+                // For now we will just use the short option in our error
+                // message, since the subsequent help text explains both the
+                // short and long options anyway.
+                std::cerr << "Missing argument: -" << static_cast<char>(optopt);
+                std::cerr << "\n\n";
+                help();
+                return 1;
+        }
     }
 
-    if (showVersion) {
-        // If other arguments were passed, just silently ignore them for now.
-        // Other (non-popt) command-line tools give an error in this scenario.
-        std::cout << PACKAGE_BUILD_STRING << std::endl;
-        poptFreeContext(optCon);
-        return 0;
-    }
-
-    const char** otherOpts = poptGetArgs(optCon);
-    if (otherOpts && otherOpts[0]) {
-        outFile = otherOpts[0];
-        if (otherOpts[1]) {
+    if (optind < argc) {
+        outFile = argv[optind];
+        if (optind + 1 < argc) {
             std::cerr << "Too many arguments.\n\n";
-            poptPrintHelp(optCon, stderr, 0);
-            poptFreeContext(optCon);
+            help();
             return 1;
         }
     }
@@ -668,13 +786,9 @@ int main(int argc, const char* argv[]) {
 
     if (broken) {
         std::cerr << '\n';
-        poptPrintHelp(optCon, stderr, 0);
-        poptFreeContext(optCon);
+        help();
         return 1;
     }
-
-    // Done parsing the command line.
-    poptFreeContext(optCon);
 
     // Finalise the census parameters.
     finiteness = regina::BoolSet(! argIdeal, ! argFinite);

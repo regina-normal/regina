@@ -321,11 +321,11 @@ MACRO_LOG_FEATURE(Jansson_FOUND
   TRUE)
 
 IF (NOT DISABLE_UTILS)
-  FIND_PACKAGE(POPT)
-  MACRO_LOG_FEATURE(POPT_FOUND
-    "Popt"
+  CHECK_GETOPT()
+  MACRO_LOG_FEATURE(GETOPT_FOUND
+    "GNU getopt functions"
     "Required for Regina's command-line utilities"
-    "http://rpm5.org/files/popt/"
+    "Shipped with GNU libc"
     TRUE ""
     "To disable the command-line utilities, run: cmake -DDISABLE_UTILS=1")
 ENDIF (NOT DISABLE_UTILS)
@@ -467,12 +467,12 @@ ADD_SUBDIRECTORY(admin)
 ADD_SUBDIRECTORY(engine)
 
 # Command-line utilities
-IF (POPT_FOUND)
+IF (GETOPT_FOUND)
   ADD_SUBDIRECTORY(utils)
   MESSAGE(STATUS "Command-line utilities enabled.")
-ELSE (POPT_FOUND)
+ELSE (GETOPT_FOUND)
   MESSAGE(STATUS "Command-line utilities disabled.")
-ENDIF (POPT_FOUND)
+ENDIF (GETOPT_FOUND)
 
 # Python support
 

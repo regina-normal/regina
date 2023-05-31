@@ -32,14 +32,14 @@
 
 #include <mutex>
 #include <thread>
-#include <popt.h>
+#include <getopt.h>
 #include "link/link.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
 std::mutex mutex;
 
-enum Flavours {
+enum Flavour {
     FLAVOUR_DIM3 = 0,
     FLAVOUR_DIM4 = 1,
     FLAVOUR_KNOT = 100
@@ -49,9 +49,9 @@ constexpr int NO_HEIGHT = -1000;
 
 // Command-line arguments:
 int argHeight = NO_HEIGHT;
-int argThreads = 1;
-int flavour = FLAVOUR_DIM3;
-int internalSig = 0;
+long argThreads = 1;
+Flavour flavour = FLAVOUR_DIM3;
+bool internalSig = false;
 
 template <int dim>
 void process(const regina::Triangulation<dim>& tri) {
@@ -133,64 +133,114 @@ void process(const regina::Link& knot) {
         std::cerr << "Found " << nSolns << " knot(s)." << std::endl;
 }
 
-int main(int argc, const char* argv[]) {
-    // Set up the command-line arguments.
-    int showVersion = 0;
-    std::string sig;
+void help() {
+    std::cerr <<
+R"help(Usage: retriangulate <isosig>
+  -h, --height=<height>       Number of extra simplices/crossings (default = 1)
+  -t, --threads=<threads>     Number of parallel threads (default = 1)
+  -3, --dim3                  Input is a 3-manifold signature (default)
+  -4, --dim4                  Input is a 4-manifold signature
+  -k, --knot                  Input is a knot signature
+  -a, --anysig                Output does not need to use classic signature(s)
+  -v, --version               Show which version of Regina is being used.
+      --help                  Show this help message
+)help";
+}
 
-    poptOption opts[] = {
-        { "height", 'h', POPT_ARG_INT, &argHeight, 0,
-            "Number of extra simplices/crossings (default = 1)", "<height>" },
-        { "threads", 't', POPT_ARG_INT, &argThreads, 0,
-            "Number of parallel threads (default = 1)", "<threads>" },
-        { "dim3", '3', POPT_ARG_VAL, &flavour, FLAVOUR_DIM3,
-            "Input is a 3-manifold signature (default)", nullptr },
-        { "dim4", '4', POPT_ARG_VAL, &flavour, FLAVOUR_DIM4,
-            "Input is a 4-manifold signature", nullptr },
-        { "knot", 'k', POPT_ARG_VAL, &flavour, FLAVOUR_KNOT,
-            "Input is a knot signature", nullptr },
-        { "anysig", 'a', POPT_ARG_NONE, &internalSig, 0,
-            "Output does not need to use classic signature(s)", nullptr },
-        { "version", 'v', POPT_ARG_NONE, &showVersion, 0,
-            "Show which version of Regina is being used.", nullptr },
-        POPT_AUTOHELP
-        { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
+int main(int argc, char* argv[]) {
+    // Parse the command-line arguments.
+    const char* shortOpt = ":h:t:34kav";
+    struct option longOpt[] = {
+        { "height", required_argument, nullptr, 'h' },
+        { "threads", required_argument, nullptr, 't' },
+        { "dim3", no_argument, nullptr, '3' },
+        { "dim4", no_argument, nullptr, '4' },
+        { "knot", no_argument, nullptr, 'k' },
+        { "anysig", no_argument, nullptr, 'a' },
+        { "version", no_argument, nullptr, 'v' },
+        { "help", no_argument, nullptr, '_' },
+        { nullptr, 0, nullptr, 0 }
     };
 
-    poptContext optCon = poptGetContext(nullptr, argc, argv, opts, 0);
-    poptSetOtherOptionHelp(optCon, "<isosig>");
-
-    // Parse the command-line arguments.
-    int rc = poptGetNextOpt(optCon);
-    if (rc != -1) {
-        std::cerr << poptBadOption(optCon, POPT_BADOPTION_NOALIAS)
-            << ": " << poptStrerror(rc) << "\n\n";
-        poptPrintHelp(optCon, stderr, 0);
-        poptFreeContext(optCon);
-        return 1;
+    int opt;
+    char* endptr;
+    while ((opt = getopt_long(argc, argv, shortOpt, longOpt, nullptr)) != -1) {
+        switch (opt) {
+            case 'h':
+                argHeight = strtol(optarg, &endptr, 10);
+                if (*endptr != 0) {
+                    std::cerr << "The height must be a non-negative "
+                        "integer.\n\n";
+                    help();
+                    return 1;
+                }
+                break;
+            case 't':
+                argThreads = strtol(optarg, &endptr, 10);
+                if (*endptr != 0) {
+                    std::cerr << "The number of threads must be a positive "
+                        "integer.\n\n";
+                    help();
+                    return 1;
+                }
+                break;
+            case '3':
+                flavour = FLAVOUR_DIM3;
+                break;
+            case '4':
+                flavour = FLAVOUR_DIM4;
+                break;
+            case 'k':
+                flavour = FLAVOUR_KNOT;
+                break;
+            case 'a':
+                internalSig = true;
+                break;
+            case 'v':
+                // If other arguments were passed, just silently ignore them
+                // for now.  Ideally we would give an error in this scenario.
+                std::cout << PACKAGE_BUILD_STRING << std::endl;
+                return 0;
+            case '_':
+                help();
+                return 0;
+            case '?':
+                if (optopt == 0) {
+                    // Unknown long option.
+                    std::cerr << "Unknown option: " << argv[optind - 1];
+                } else {
+                    // Unknown short option.
+                    std::cerr << "Unknown option: -" <<
+                        static_cast<char>(optopt);
+                }
+                std::cerr << "\n\n";
+                help();
+                return 1;
+            case ':':
+                // If an argument is missing, getopt_long() behaves as though
+                // the short option were passed, and there is no indication
+                // as to whether the user specified a long option instead.
+                // For now we will just use the short option in our error
+                // message, since the subsequent help text explains both the
+                // short and long options anyway.
+                std::cerr << "Missing argument: -" << static_cast<char>(optopt);
+                std::cerr << "\n\n";
+                help();
+                return 1;
+        }
     }
 
-    if (showVersion) {
-        // If other arguments were passed, just silently ignore them for now.
-        // Other (non-popt) command-line tools give an error in this scenario.
-        std::cout << PACKAGE_BUILD_STRING << std::endl;
-        poptFreeContext(optCon);
-        return 0;
-    }
-
-    const char** otherOpts = poptGetArgs(optCon);
-    if (otherOpts && otherOpts[0]) {
-        sig = otherOpts[0];
-        if (otherOpts[1]) {
+    std::string sig;
+    if (optind < argc) {
+        sig = argv[optind];
+        if (optind + 1 < argc) {
             std::cerr << "Too many arguments.\n\n";
-            poptPrintHelp(optCon, stderr, 0);
-            poptFreeContext(optCon);
+            help();
             return 1;
         }
     } else {
         std::cerr << "Please give an isomorphism/knot signature.\n\n";
-        poptPrintHelp(optCon, stderr, 0);
-        poptFreeContext(optCon);
+        help();
         return 1;
     }
 
@@ -257,11 +307,9 @@ int main(int argc, const char* argv[]) {
 
     if (broken) {
         std::cerr << '\n';
-        poptPrintHelp(optCon, stderr, 0);
-        poptFreeContext(optCon);
+        help();
         return 1;
     } else {
-        poptFreeContext(optCon);
         return 0;
     }
 }

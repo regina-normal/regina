@@ -1,9 +1,4 @@
 #!/bin/sh
 set -e
 
-# This filter adjusts the way that popt displays its standard help options,
-# since different popt installations appear to use different indenting styles
-# for options that only have a long form.
-
-sed -e 's#^  --\(\S\+\)    #      --\1#' \
-    -e 's#<regina engine="[^"]\{1,\}">#<regina engine="_">#g'
+sed -e 's#<regina engine="[^"]\{1,\}">#<regina engine="_">#g'

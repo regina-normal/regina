@@ -11,10 +11,7 @@ Usage: retriangulate <isosig>
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
   -v, --version               Show which version of Regina is being used.
-
-Help options:
-  -?, --help                  Show this help message
-      --usage                 Display brief usage message
+      --help                  Show this help message
 --------------------
 Exit code: 1
 ============================================================
@@ -30,10 +27,7 @@ Usage: retriangulate <isosig>
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
   -v, --version               Show which version of Regina is being used.
-
-Help options:
-  -?, --help                  Show this help message
-      --usage                 Display brief usage message
+      --help                  Show this help message
 --------------------
 Exit code: 1
 ============================================================
@@ -49,10 +43,7 @@ Usage: retriangulate <isosig>
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
   -v, --version               Show which version of Regina is being used.
-
-Help options:
-  -?, --help                  Show this help message
-      --usage                 Display brief usage message
+      --help                  Show this help message
 --------------------
 Exit code: 1
 ============================================================
@@ -68,10 +59,7 @@ Usage: retriangulate <isosig>
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
   -v, --version               Show which version of Regina is being used.
-
-Help options:
-  -?, --help                  Show this help message
-      --usage                 Display brief usage message
+      --help                  Show this help message
 --------------------
 Exit code: 1
 ============================================================
@@ -87,10 +75,7 @@ Usage: retriangulate <isosig>
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
   -v, --version               Show which version of Regina is being used.
-
-Help options:
-  -?, --help                  Show this help message
-      --usage                 Display brief usage message
+      --help                  Show this help message
 --------------------
 Exit code: 1
 ============================================================
@@ -106,10 +91,7 @@ Usage: retriangulate <isosig>
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
   -v, --version               Show which version of Regina is being used.
-
-Help options:
-  -?, --help                  Show this help message
-      --usage                 Display brief usage message
+      --help                  Show this help message
 --------------------
 Exit code: 1
 ============================================================

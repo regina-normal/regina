@@ -48,9 +48,31 @@ macro (CHECK_STDFS)
       MESSAGE(STATUS "Checking for C++17 std::filesystem -- requires ${STDFS_LIBRARY}")
     ELSE (_REGINA_STDFS_LIB)
       SET (STDFS_FOUND FALSE)
+      MESSAGE(STATUS "Checking for C++17 std::filesystem -- not found")
     ENDIF (_REGINA_STDFS_LIB)
   ENDIF (_REGINA_STDFS_RAW)
 endmacro (CHECK_STDFS)
+
+
+# Macro: CHECK_GETOPT
+#
+# Sets the boolean variable GETOPT_FOUND according to whether the GNU libc
+# function getopt_long is available via the header getopt.h.
+#
+macro (CHECK_GETOPT)
+  SET (_SRCFILE "${CMAKE_SOURCE_DIR}/cmake/modules/getopt.cpp")
+  SET (_BINDIR "${CMAKE_BINARY_DIR}/cmake/modules")
+
+  MESSAGE(STATUS "Checking for GNU getopt_long()")
+  try_compile(_REGINA_GETOPT ${_BINDIR} ${_SRCFILE})
+  IF (_REGINA_GETOPT)
+    SET (GETOPT_FOUND TRUE)
+    MESSAGE(STATUS "Checking for GNU getopt_long() -- found")
+  ELSE (_REGINA_GETOPT)
+    SET (GETOPT_FOUND FALSE)
+    MESSAGE(STATUS "Checking for GNU getopt_long() -- not found")
+  ENDIF (_REGINA_GETOPT)
+endmacro (CHECK_GETOPT)
 
 
 # Macro: CHECK_LSB_RELEASE

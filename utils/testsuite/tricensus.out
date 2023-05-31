@@ -4,12 +4,12 @@ TEST: tricensus
 An output file must be specified.
 
 Usage: tricensus <output-file>
-  -t, --tetrahedra=<tetrahedra>     Number of tetrahedra.
+  -t, --tetrahedra, --size=<num>    Number of tetrahedra.
   -b, --boundary                    Must have at least one boundary face.
   -i, --internal                    Must have all faces internal (no boundary
                                     faces).
   -B, --bdryfaces=<faces>           Must have fixed number (>= 1) of boundary
-                                    faces.
+                                    facets.
   -o, --orientable                  Must be orientable.
   -n, --nonorientable               Must be non-orientable.
   -f, --finite                      Must be finite (no ideal vertices).
@@ -50,10 +50,7 @@ Usage: tricensus <output-file>
                                     input.
       --threads=<threads>           Number of parallel threads (default = 1).
   -v, --version                     Show which version of Regina is being used.
-
-Help options:
-  -?, --help                        Show this help message
-      --usage                       Display brief usage message
+      --help                        Show this help message
 --------------------
 Exit code: 1
 ============================================================
@@ -62,12 +59,12 @@ TEST: tricensus --threads 2 -2 -t4 -i -p
 Multithreading options cannot be used with -p/--genpairs.
 
 Usage: tricensus <output-file>
-  -t, --tetrahedra=<tetrahedra>     Number of tetrahedra.
+  -t, --tetrahedra, --size=<num>    Number of tetrahedra.
   -b, --boundary                    Must have at least one boundary face.
   -i, --internal                    Must have all faces internal (no boundary
                                     faces).
   -B, --bdryfaces=<faces>           Must have fixed number (>= 1) of boundary
-                                    faces.
+                                    facets.
   -o, --orientable                  Must be orientable.
   -n, --nonorientable               Must be non-orientable.
   -f, --finite                      Must be finite (no ideal vertices).
@@ -108,10 +105,7 @@ Usage: tricensus <output-file>
                                     input.
       --threads=<threads>           Number of parallel threads (default = 1).
   -v, --version                     Show which version of Regina is being used.
-
-Help options:
-  -?, --help                        Show this help message
-      --usage                       Display brief usage message
+      --help                        Show this help message
 --------------------
 Exit code: 1
 ============================================================
@@ -120,12 +114,12 @@ TEST: tricensus --threads 0 -t2 -i -s @TESTOUT@
 The number of threads must be strictly positive.
 
 Usage: tricensus <output-file>
-  -t, --tetrahedra=<tetrahedra>     Number of tetrahedra.
+  -t, --tetrahedra, --size=<num>    Number of tetrahedra.
   -b, --boundary                    Must have at least one boundary face.
   -i, --internal                    Must have all faces internal (no boundary
                                     faces).
   -B, --bdryfaces=<faces>           Must have fixed number (>= 1) of boundary
-                                    faces.
+                                    facets.
   -o, --orientable                  Must be orientable.
   -n, --nonorientable               Must be non-orientable.
   -f, --finite                      Must be finite (no ideal vertices).
@@ -166,10 +160,7 @@ Usage: tricensus <output-file>
                                     input.
       --threads=<threads>           Number of parallel threads (default = 1).
   -v, --version                     Show which version of Regina is being used.
-
-Help options:
-  -?, --help                        Show this help message
-      --usage                       Display brief usage message
+      --help                        Show this help message
 --------------------
 Exit code: 1
 ============================================================

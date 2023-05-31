@@ -320,7 +320,6 @@
 		05199A3925C63BEA0006B8FA /* sageSetup.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05199A2D25C63B3C0006B8FA /* sageSetup.py */; };
 		05199A5C25C63CCE0006B8FA /* listview.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5A25C63CCE0006B8FA /* listview.h */; };
 		05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5B25C63CCE0006B8FA /* typeutils.h */; };
-		051A656C2594277900A52E30 /* popt.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		051B97F52321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
 		051B97F62321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
@@ -1083,8 +1082,6 @@
 		0567B4DF2581ABF00022EA5D /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		0567B4EF2581ABF20022EA5D /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
 		0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
-		0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
-		0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
 		0568742520C5D86B001C435B /* tangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 0568741F20C5D868001C435B /* tangle.h */; };
 		0568742620C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
 		0568742720C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
@@ -2365,7 +2362,6 @@
 				050302EF284DAE060050903D /* QtSvgWidgets.framework in Embed Frameworks */,
 				057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */,
 				057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */,
-				051A656C2594277900A52E30 /* popt.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3787,20 +3783,16 @@
 		0567B4AC2581ABA20022EA5D /* libgmp.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmp.xcframework; path = ../../Library/Frameworks/libgmp.xcframework; sourceTree = "<group>"; };
 		0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmpxx.xcframework; path = ../../Library/Frameworks/libgmpxx.xcframework; sourceTree = "<group>"; };
 		0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libtokyocabinet.xcframework; path = ../../Library/Frameworks/libtokyocabinet.xcframework; sourceTree = "<group>"; };
-		0567B5702581ACE50022EA5D /* popt.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = popt.xcframework; path = ../../Library/Frameworks/popt.xcframework; sourceTree = "<group>"; };
 		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
 		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
 		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
 		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685F6F1F970E6500085B44 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		05685F711F970F3600085B44 /* CheckCXX11Features.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CheckCXX11Features.cmake; sourceTree = "<group>"; };
 		05685F721F970F3600085B44 /* FindJansson.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindJansson.cmake; sourceTree = "<group>"; };
 		05685F731F970F3600085B44 /* ReginaMacros.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReginaMacros.cmake; sourceTree = "<group>"; };
-		05685F741F970F3600085B44 /* CheckCXX14Features.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CheckCXX14Features.cmake; sourceTree = "<group>"; };
 		05685F751F970F4100085B44 /* FindICONV.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindICONV.cmake; sourceTree = "<group>"; };
 		05685F761F970F4100085B44 /* MacroLogFeature.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = MacroLogFeature.cmake; sourceTree = "<group>"; };
-		05685F771F970F4100085B44 /* FindPOPT.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindPOPT.cmake; sourceTree = "<group>"; };
 		05685F781F970F4100085B44 /* FindGMP.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindGMP.cmake; sourceTree = "<group>"; };
 		05685F791F970F4100085B44 /* MacroEnsureVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = MacroEnsureVersion.cmake; sourceTree = "<group>"; };
 		05685F7A1F970F4100085B44 /* FindGMPXX.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindGMPXX.cmake; sourceTree = "<group>"; };
@@ -3958,6 +3950,7 @@
 		05721F181F97165000A83FFC /* testlink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testlink.h; sourceTree = "<group>"; };
 		05721F191F97165000A83FFC /* link.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = link.cpp; sourceTree = "<group>"; };
 		0573652229C3F40900EDC0DF /* regina.metainfo.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = regina.metainfo.xml; sourceTree = "<group>"; };
+		05753AAC2A26FD15005CB4B7 /* FindKVStore.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindKVStore.cmake; sourceTree = "<group>"; };
 		05754CC1258B38C100236ED7 /* laurent2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent2.cpp; sourceTree = "<group>"; };
 		05754CD3258B814D00236ED7 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		05754CE5258D7D6400236ED7 /* randutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = randutils.h; sourceTree = "<group>"; };
@@ -4868,7 +4861,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617AF51D9DC09500B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */,
 				057EDC332581EEE5004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F01D2582421200965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4997,7 +4989,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				058FC86B1FE188A0006D04B4 /* libregina-engine.dylib in Frameworks */,
-				0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */,
 				057EDC852581F0C2004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F05B2582422100965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -6916,7 +6907,6 @@
 				0567B4AC2581ABA20022EA5D /* libgmp.xcframework */,
 				0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */,
 				0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */,
-				0567B5702581ACE50022EA5D /* popt.xcframework */,
 				057EDEF82582370B004F0068 /* Python.xcframework */,
 				057EDF1925823779004F0068 /* XZ.xcframework */,
 				057ED8E82581B49E004F0068 /* QtCore.framework */,
@@ -7805,13 +7795,11 @@
 		05685F701F970F0500085B44 /* cmake */ = {
 			isa = PBXGroup;
 			children = (
-				05685F711F970F3600085B44 /* CheckCXX11Features.cmake */,
-				05685F741F970F3600085B44 /* CheckCXX14Features.cmake */,
 				05685F781F970F4100085B44 /* FindGMP.cmake */,
 				05685F7A1F970F4100085B44 /* FindGMPXX.cmake */,
 				05685F751F970F4100085B44 /* FindICONV.cmake */,
 				05685F721F970F3600085B44 /* FindJansson.cmake */,
-				05685F771F970F4100085B44 /* FindPOPT.cmake */,
+				05753AAC2A26FD15005CB4B7 /* FindKVStore.cmake */,
 				05685F7B1F970F4100085B44 /* FindSharedMimeInfo.cmake */,
 				05685F791F970F4100085B44 /* MacroEnsureVersion.cmake */,
 				05685F761F970F4100085B44 /* MacroLogFeature.cmake */,
