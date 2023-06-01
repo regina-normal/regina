@@ -36,7 +36,7 @@
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "utilities/typeutils.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 #include <cppunit/extensions/HelperMacros.h>
 
 using regina::Isomorphism;

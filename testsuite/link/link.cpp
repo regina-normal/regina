@@ -45,7 +45,7 @@
 #include "triangulation/dim3.h"
 
 #include "testsuite/link/testlink.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 
 using regina::Crossing;
 using regina::ExampleLink;

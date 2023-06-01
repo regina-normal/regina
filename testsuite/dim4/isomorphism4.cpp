@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/dim4.h"
 #include "testsuite/dim4/testdim4.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 
 using regina::Isomorphism;
 using regina::Perm;

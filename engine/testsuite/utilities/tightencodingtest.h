@@ -54,6 +54,7 @@ template <class T, bool hasDecoding = true>
 class TightEncodingTest {
     public:
         static void verifyTightEncoding(const T& obj) {
+            SCOPED_TRACE("obj = " + obj.str());
             std::string enc = obj.tightEncoding();
 
             {
@@ -79,11 +80,13 @@ class TightEncodingTest {
                     EXPECT_EQ(dec, obj);
                 });
 
+                // Strings being decoded cannot have trailing whitespace.
                 EXPECT_THROW({
-                    enc += ' ';
-                    T::tightDecoding(enc);
+                    T::tightDecoding(enc + ' ');
                 }, regina::InvalidArgument);
 
+                // Streams being decoded should ignore (and not consume)
+                // any trailing characters.
                 EXPECT_NO_THROW({
                     std::istringstream input(enc + "x y z");
                     T dec = T::tightDecode(input);

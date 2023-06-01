@@ -36,7 +36,7 @@
 #include "maths/laurent.h"
 #include "utilities/stringutils.h"
 #include "testsuite/maths/testmaths.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 
 using regina::Integer;
 using regina::Laurent;

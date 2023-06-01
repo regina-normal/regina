@@ -1,6 +1,7 @@
 # Files to compile
 SET ( FILES
   abeliangroup.cpp
+  covers.cpp
   )
 
 # Prepend folder name

@@ -36,7 +36,7 @@
 #include <type_traits>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 
 using regina::Perm;
 

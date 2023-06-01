@@ -32,7 +32,7 @@
 
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/facetpairing.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 
 using regina::FacetPairing;
 using regina::Isomorphism;

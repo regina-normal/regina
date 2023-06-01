@@ -37,7 +37,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 #include "testsuite/dim3/testdim3.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 
 using regina::AbelianGroup;
 using regina::Example;

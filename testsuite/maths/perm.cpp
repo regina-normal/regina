@@ -36,7 +36,7 @@
 #include "maths/perm.h"
 #include "testsuite/maths/permtest.h"
 #include "testsuite/maths/testmaths.h"
-#include "testsuite/utilities/tightencodingtest.h"
+#include "testsuite/utilities/tightencodingtest_old.h"
 
 static const int64_t increment[] = {
     // All of these increments are coprime with n.
