@@ -60,7 +60,6 @@ class AbelianGroupTest : public testing::Test,
         }
 };
 
-
 TEST_F(AbelianGroupTest, incrementalBuild) {
     AbelianGroup g;
 

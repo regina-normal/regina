@@ -111,195 +111,6 @@ class CoversTest : public testing::Test {
                 const std::vector<std::string>& expected, const char* name) {
             verifyResults<maxDegree>(link.complement(), expected, name);
         }
-
-        template <int index>
-        void verifyFreeAbelian(int rank) {
-            // Every finite index subgroup of a free abelian group of
-            // rank n is also a free abelian group of rank n.
-            //
-            // For rank 1, there is exactly one subgroup up to conjugacy.
-            // For ranks 2 and above, we can get the expected number of
-            // subgroups up to conjugacy from the OEIS.
-            //
-            // For index 1, 2, ..., 10:
-            //     rank 2 (A000203): 1, 3, 4, 7, 6, 12, 8, 15, 13, 18
-            //     rank 3 (A001001): 1, 7, 13, 35, 31, 91, 57, 155, 130, 217
-            //     rank 4 (A038991): 1, 15, 40, 155, 156,
-            //                       600, 400, 1395, 1210, 2340
-            //     rank 5 (A038992): 1, 31, 121, 651, 781,
-            //                       3751, 2801, 11811, 11011, 24211
-            //     rank 6 (A038993): 1, 63, 364, 2667, 3906,
-            //                       22932, 19608, 97155, 99463, 246078
-            //     rank 7 (A038994): 1, 127, 1093, 10795, 19531,
-            //                       138811, 137257, 788035, 896260, 2480437
-            //     rank 8 (A038995): 1, 255, 3280, 43435, 97656,
-            //                       836400, 960800, 6347715, 8069620, 24902280
-            //     rank 9 (A038996): 1, 511, 9841, 174251, 488281, 5028751,
-            //                       6725601, 50955971, 72636421, 249511591
-            //
-            // We just hard-code the expected results in an array,
-            // which is indexed as expected[rank - 1][index - 2].
-            static constexpr size_t maxIndex = 10;
-            static constexpr size_t maxRank = 6; // enough for our tests
-            static constexpr size_t expected[maxRank][maxIndex - 1] = {
-                { 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-                { 3, 4, 7, 6, 12, 8, 15, 13, 18 },
-                { 7, 13, 35, 31, 91, 57, 155, 130, 217 },
-                { 15, 40, 155, 156, 600, 400, 1395, 1210, 2340 },
-                { 31, 121, 651, 781, 3751, 2801, 11811, 11011, 24211 },
-                { 63, 364, 2667, 3906, 22932, 19608, 97155, 99463, 246078 }
-            };
-
-            SCOPED_TRACE("index = " + std::to_string(index));
-            SCOPED_TRACE("rank = " + std::to_string(rank));
-
-            // Prerequisites for us to actually use these tests:
-            ASSERT_GE(index, 2);
-            ASSERT_LE(index, maxIndex);
-            ASSERT_GE(rank, 1);
-            ASSERT_LE(rank, maxRank);
-
-            // Build the group presentation.
-            GroupPresentation freeAbelian(rank);
-            for (int i = 0; i < rank; ++i)
-                for (int j = i + 1; j < rank; ++j) {
-                    regina::GroupExpression reln;
-                    reln.addTermLast(i, 1);
-                    reln.addTermLast(j, 1);
-                    reln.addTermLast(i, -1);
-                    reln.addTermLast(j, -1);
-                    freeAbelian.addRelation(std::move(reln));
-                }
-
-            // Now: go compute.
-            size_t expectedCount = expected[rank - 1][index - 2];
-
-            size_t nFound = 0;
-            size_t ans = freeAbelian.enumerateCovers<index>([&](
-                    GroupPresentation&& g) {
-                g.intelligentSimplify();
-
-                // Of course the group itself should be free abelian, but we
-                // call abelianisation() since that is guaranteed to show
-                // the correct rank, whereas the presentation on its own
-                // could be too messy for Regina to recognise.
-                EXPECT_TRUE(g.abelianisation().isFree(rank));
-
-                ++nFound;
-            });
-
-            EXPECT_EQ(ans, nFound);
-            EXPECT_EQ(ans, expectedCount);
-        }
-
-        template <int index>
-        void verifyFree(int rank) {
-            // The Nielsen–Schreier formula says that every subgroup of g is
-            // free of rank 1 + index * (rank - 1).
-
-            // The number of conjugacy classes (at least for all our tests)
-            // can be found in the OEIS (sequence A057004):
-            //
-            // For ranks 1, 2, 3, ...:
-            //     index 2: 1, 3, 7, 15, 31, 63, 127, 255, 511
-            //     index 3: 1, 7, 41, 235, 1361, 7987, 47321, 281995
-            //     index 4: 1, 26, 604, 14120, 334576, 7987616, 191318464
-            //     index 5: 1, 97, 13753, 1712845, 207009649
-            //     index 6: 1, 624, 504243, 371515454
-            //     index 7: 1, 4163, 24824785
-            //     index 8: 1, 34470
-
-            // The formulae in terms of the rank r:
-            //     index 2:           2^r - 1
-            //     index 3 (A057009): 6^(r-1) + 3^(r-1) - 2^(r-1)
-            //     index 4 (A057010): 24^(r-1) + 8^(r-1) - 6^(r-1)
-            //     index 5 (A057011): 120^(r-1) - 24^(r-1) - 12^(r-1) +
-            //                        6^(r-1) + 5^(r-1) + 4^(r-1) - 2^(r-1)
-            //     index 6 (A057012): OEIS has PARI code online
-
-            // For now we just hard-code the expected results in an array,
-            // which is indexed as expected[index - 2][rank - 1].
-            // An array value of 0 means the result is beyond the end of
-            // our hard-coded list of results for that particular index.
-            static constexpr size_t maxIndex = 8;
-            static constexpr size_t maxRank = 9;
-            static constexpr size_t expected[maxIndex - 1][maxRank] = {
-                { 1, 3, 7, 15, 31, 63, 127, 255, 511 },
-                { 1, 7, 41, 235, 1361, 7987, 47321, 281995, 0 },
-                { 1, 26, 604, 14120, 334576, 7987616, 191318464, 0, 0 },
-                { 1, 97, 13753, 1712845, 207009649, 0, 0, 0, 0 },
-                { 1, 624, 504243, 371515454, 0, 0, 0, 0, 0 },
-                { 1, 4163, 24824785, 0, 0, 0, 0, 0, 0 },
-                { 1, 34470, 0, 0, 0, 0, 0, 0, 0 }
-            };
-
-            SCOPED_TRACE("index = " + std::to_string(index));
-            SCOPED_TRACE("rank = " + std::to_string(rank));
-
-            // Prerequisites for us to actually use these tests:
-            ASSERT_GE(index, 2);
-            ASSERT_LE(index, maxIndex);
-            ASSERT_LE(rank, maxRank);
-            if (rank > 0)
-                ASSERT_NE(expected[index - 2][rank - 1], 0);
-
-            // Now: go compute.
-
-            size_t expectedRank = (rank > 0 ? (1 + index * (rank - 1)) : 0);
-            size_t expectedCount = (rank > 0 ? expected[index - 2][rank - 1] :
-                0);
-
-            size_t nFound = 0;
-            size_t ans = GroupPresentation(rank).enumerateCovers<index>([&](
-                    GroupPresentation&& g) {
-                g.intelligentSimplify();
-
-                EXPECT_EQ(g.countGenerators(), expectedRank);
-                EXPECT_EQ(g.countRelations(), 0);
-
-                ++nFound;
-            });
-
-            EXPECT_EQ(ans, nFound);
-            EXPECT_EQ(ans, expectedCount);
-        }
-
-        template <int index>
-        static void verifyCyclic(long order) {
-            // If index divides order then we should have exactly one
-            // result, which must be Z_{order/index}.
-            // Otherwise we should have no results at all.
-
-            SCOPED_TRACE("index = " + std::to_string(index));
-            SCOPED_TRACE("order = " + std::to_string(order));
-
-            long expectedOrder = (order % index == 0 ? order / index : 0);
-            size_t nFound = 0;
-
-            GroupPresentation src(1);
-            src.addRelation(regina::GroupExpression(0, order));
-            size_t ans = src.enumerateCovers<index>([&](GroupPresentation&& g) {
-                g.intelligentSimplify();
-
-                if (expectedOrder == 1) {
-                    EXPECT_EQ(g.countGenerators(), 0);
-                } else {
-                    EXPECT_EQ(g.countGenerators(), 1);
-                    EXPECT_EQ(g.countRelations(), 1);
-                    EXPECT_EQ(std::abs(g.relation(0).terms().front().exponent),
-                        expectedOrder);
-                }
-
-                ++nFound;
-            });
-
-            if (order % index == 0) {
-                EXPECT_EQ(ans, nFound);
-                EXPECT_EQ(ans, 1);
-            } else {
-                EXPECT_EQ(ans, 0);
-            }
-        }
 };
 
 TEST_F(CoversTest, trivial) {
@@ -414,6 +225,86 @@ TEST_F(CoversTest, knots) {
         "20-crossing knot");
 }
 
+template <int index>
+static void verifyFreeAbelian(int rank) {
+    // Every finite index subgroup of a free abelian group of
+    // rank n is also a free abelian group of rank n.
+    //
+    // For rank 1, there is exactly one subgroup up to conjugacy.
+    // For ranks 2 and above, we can get the expected number of
+    // subgroups up to conjugacy from the OEIS.
+    //
+    // For index 1, 2, ..., 10:
+    //     rank 2 (A000203): 1, 3, 4, 7, 6, 12, 8, 15, 13, 18
+    //     rank 3 (A001001): 1, 7, 13, 35, 31, 91, 57, 155, 130, 217
+    //     rank 4 (A038991): 1, 15, 40, 155, 156,
+    //                       600, 400, 1395, 1210, 2340
+    //     rank 5 (A038992): 1, 31, 121, 651, 781,
+    //                       3751, 2801, 11811, 11011, 24211
+    //     rank 6 (A038993): 1, 63, 364, 2667, 3906,
+    //                       22932, 19608, 97155, 99463, 246078
+    //     rank 7 (A038994): 1, 127, 1093, 10795, 19531,
+    //                       138811, 137257, 788035, 896260, 2480437
+    //     rank 8 (A038995): 1, 255, 3280, 43435, 97656,
+    //                       836400, 960800, 6347715, 8069620, 24902280
+    //     rank 9 (A038996): 1, 511, 9841, 174251, 488281, 5028751,
+    //                       6725601, 50955971, 72636421, 249511591
+    //
+    // We just hard-code the expected results in an array,
+    // which is indexed as expected[rank - 1][index - 2].
+    static constexpr size_t maxIndex = 10;
+    static constexpr size_t maxRank = 6; // enough for our tests
+    static constexpr size_t expected[maxRank][maxIndex - 1] = {
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 3, 4, 7, 6, 12, 8, 15, 13, 18 },
+        { 7, 13, 35, 31, 91, 57, 155, 130, 217 },
+        { 15, 40, 155, 156, 600, 400, 1395, 1210, 2340 },
+        { 31, 121, 651, 781, 3751, 2801, 11811, 11011, 24211 },
+        { 63, 364, 2667, 3906, 22932, 19608, 97155, 99463, 246078 }
+    };
+
+    SCOPED_TRACE("index = " + std::to_string(index));
+    SCOPED_TRACE("rank = " + std::to_string(rank));
+
+    // Prerequisites for us to actually use these tests:
+    ASSERT_GE(index, 2);
+    ASSERT_LE(index, maxIndex);
+    ASSERT_GE(rank, 1);
+    ASSERT_LE(rank, maxRank);
+
+    // Build the group presentation.
+    GroupPresentation freeAbelian(rank);
+    for (int i = 0; i < rank; ++i)
+        for (int j = i + 1; j < rank; ++j) {
+            regina::GroupExpression reln;
+            reln.addTermLast(i, 1);
+            reln.addTermLast(j, 1);
+            reln.addTermLast(i, -1);
+            reln.addTermLast(j, -1);
+            freeAbelian.addRelation(std::move(reln));
+        }
+
+    // Now: go compute.
+    size_t expectedCount = expected[rank - 1][index - 2];
+
+    size_t nFound = 0;
+    size_t ans = freeAbelian.enumerateCovers<index>([&](
+            GroupPresentation&& g) {
+        g.intelligentSimplify();
+
+        // Of course the group itself should be free abelian, but we
+        // call abelianisation() since that is guaranteed to show
+        // the correct rank, whereas the presentation on its own
+        // could be too messy for Regina to recognise.
+        EXPECT_TRUE(g.abelianisation().isFree(rank));
+
+        ++nFound;
+    });
+
+    EXPECT_EQ(ans, nFound);
+    EXPECT_EQ(ans, expectedCount);
+}
+
 TEST_F(CoversTest, freeAbelian) {
     // The upper bounds on the ranks below were chosen according to
     // what would finish quickly enough to be part of the test suite.
@@ -437,6 +328,78 @@ TEST_F(CoversTest, freeAbelian) {
         verifyFreeAbelian<10>(rank);
 }
 
+template <int index>
+static void verifyFree(int rank) {
+    // The Nielsen–Schreier formula says that every subgroup of g is
+    // free of rank 1 + index * (rank - 1).
+
+    // The number of conjugacy classes (at least for all our tests)
+    // can be found in the OEIS (sequence A057004):
+    //
+    // For ranks 1, 2, 3, ...:
+    //     index 2: 1, 3, 7, 15, 31, 63, 127, 255, 511
+    //     index 3: 1, 7, 41, 235, 1361, 7987, 47321, 281995
+    //     index 4: 1, 26, 604, 14120, 334576, 7987616, 191318464
+    //     index 5: 1, 97, 13753, 1712845, 207009649
+    //     index 6: 1, 624, 504243, 371515454
+    //     index 7: 1, 4163, 24824785
+    //     index 8: 1, 34470
+
+    // The formulae in terms of the rank r:
+    //     index 2:           2^r - 1
+    //     index 3 (A057009): 6^(r-1) + 3^(r-1) - 2^(r-1)
+    //     index 4 (A057010): 24^(r-1) + 8^(r-1) - 6^(r-1)
+    //     index 5 (A057011): 120^(r-1) - 24^(r-1) - 12^(r-1) +
+    //                        6^(r-1) + 5^(r-1) + 4^(r-1) - 2^(r-1)
+    //     index 6 (A057012): OEIS has PARI code online
+
+    // For now we just hard-code the expected results in an array,
+    // which is indexed as expected[index - 2][rank - 1].
+    // An array value of 0 means the result is beyond the end of
+    // our hard-coded list of results for that particular index.
+    static constexpr size_t maxIndex = 8;
+    static constexpr size_t maxRank = 9;
+    static constexpr size_t expected[maxIndex - 1][maxRank] = {
+        { 1, 3, 7, 15, 31, 63, 127, 255, 511 },
+        { 1, 7, 41, 235, 1361, 7987, 47321, 281995, 0 },
+        { 1, 26, 604, 14120, 334576, 7987616, 191318464, 0, 0 },
+        { 1, 97, 13753, 1712845, 207009649, 0, 0, 0, 0 },
+        { 1, 624, 504243, 371515454, 0, 0, 0, 0, 0 },
+        { 1, 4163, 24824785, 0, 0, 0, 0, 0, 0 },
+        { 1, 34470, 0, 0, 0, 0, 0, 0, 0 }
+    };
+
+    SCOPED_TRACE("index = " + std::to_string(index));
+    SCOPED_TRACE("rank = " + std::to_string(rank));
+
+    // Prerequisites for us to actually use these tests:
+    ASSERT_GE(index, 2);
+    ASSERT_LE(index, maxIndex);
+    ASSERT_LE(rank, maxRank);
+    if (rank > 0)
+        ASSERT_NE(expected[index - 2][rank - 1], 0);
+
+    // Now: go compute.
+
+    size_t expectedRank = (rank > 0 ? (1 + index * (rank - 1)) : 0);
+    size_t expectedCount = (rank > 0 ? expected[index - 2][rank - 1] :
+        0);
+
+    size_t nFound = 0;
+    size_t ans = GroupPresentation(rank).enumerateCovers<index>([&](
+            GroupPresentation&& g) {
+        g.intelligentSimplify();
+
+        EXPECT_EQ(g.countGenerators(), expectedRank);
+        EXPECT_EQ(g.countRelations(), 0);
+
+        ++nFound;
+    });
+
+    EXPECT_EQ(ans, nFound);
+    EXPECT_EQ(ans, expectedCount);
+}
+
 TEST_F(CoversTest, free) {
     // The upper bounds on the ranks below were chosen according to
     // what would finish quickly enough to be part of the test suite.
@@ -454,6 +417,43 @@ TEST_F(CoversTest, free) {
         verifyFree<7>(rank);
     for (int rank = 0; rank <= 1; ++rank)
         verifyFree<8>(rank);
+}
+
+template <int index>
+static void verifyCyclic(long order) {
+    // If index divides order then we should have exactly one
+    // result, which must be Z_{order/index}.
+    // Otherwise we should have no results at all.
+
+    SCOPED_TRACE("index = " + std::to_string(index));
+    SCOPED_TRACE("order = " + std::to_string(order));
+
+    long expectedOrder = (order % index == 0 ? order / index : 0);
+    size_t nFound = 0;
+
+    GroupPresentation src(1);
+    src.addRelation(regina::GroupExpression(0, order));
+    size_t ans = src.enumerateCovers<index>([&](GroupPresentation&& g) {
+        g.intelligentSimplify();
+
+        if (expectedOrder == 1) {
+            EXPECT_EQ(g.countGenerators(), 0);
+        } else {
+            EXPECT_EQ(g.countGenerators(), 1);
+            EXPECT_EQ(g.countRelations(), 1);
+            EXPECT_EQ(std::abs(g.relation(0).terms().front().exponent),
+                expectedOrder);
+        }
+
+        ++nFound;
+    });
+
+    if (order % index == 0) {
+        EXPECT_EQ(ans, nFound);
+        EXPECT_EQ(ans, 1);
+    } else {
+        EXPECT_EQ(ans, 0);
+    }
 }
 
 TEST_F(CoversTest, cyclic) {
