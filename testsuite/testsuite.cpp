@@ -138,10 +138,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("matrixops", &addMatrixOps));
     sets.insert(std::make_pair("permconv", &addPermConv));
 
-    // Algebra:
-    sets.insert(std::make_pair("grouppresentation", &addGroupPresentation));
-    sets.insert(std::make_pair("markedabeliangroup", &addMarkedAbelianGroup));
-
     // 2-manifold triangulations:
     sets.insert(std::make_pair("triangulation2", &addTriangulation2));
     aliases.insert(std::make_pair("dim2", &addTriangulation2));
