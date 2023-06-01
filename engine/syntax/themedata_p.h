@@ -58,6 +58,12 @@
 
 #include <string>
 
+// As of Regina 7.4, we no longer require Jansson - instead of reading
+// default.theme in JSON format, we directly hard-code the theme in C++.
+// The old JSON code is kept around in case we ever want it back; this
+// can be found within the #ifdef USE_JANSSON markers.
+// #define USE_JANSSON
+
 namespace regina::syntax {
 
 /**
@@ -73,11 +79,18 @@ public:
      */
     ThemeData();
 
+#ifdef USE_JANSSON
     /**
      * Load the Theme data from the file @p filePath.
      * Note, that @p filePath either is a local file, or a qt resource location.
      */
     bool load(const std::string& filePath);
+#else
+    /**
+     * Load a hard-coded default theme that has been compiled into the software.
+     */
+    void loadDefault();
+#endif
 
     /**
      * Returns the unique name of this Theme.

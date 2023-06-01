@@ -2,6 +2,7 @@
 SET ( FILES
   context.cpp
   contextswitch.cpp
+  default_theme.cpp
   definition.cpp
   format.cpp
   keywordlist.cpp
@@ -21,10 +22,10 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 # Install syntax highlighting definitions
+# (Do not install default.theme, since its contents are now hard-coded)
 INSTALL(FILES
   alert.xml
   alert_indent.xml
-  default.theme
   modelines.xml
   python.xml
   DESTINATION "${PKGDATADIR}/syntax")

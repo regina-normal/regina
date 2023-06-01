@@ -312,14 +312,6 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
-FIND_PACKAGE(Jansson)
-INCLUDE_DIRECTORIES(${Jansson_INCLUDE_DIR})
-MACRO_LOG_FEATURE(Jansson_FOUND
-  "Jansson"
-  "Essential: JSON support"
-  "http://www.digip.org/jansson/"
-  TRUE)
-
 IF (NOT DISABLE_UTILS)
   CHECK_GETOPT()
   MACRO_LOG_FEATURE(GETOPT_FOUND

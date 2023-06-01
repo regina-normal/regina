@@ -1075,7 +1075,6 @@
 		05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D931DCB0E9A00C870C6 /* facetpairing3.h */; };
 		05669D971DCB0EA200C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
 		0566DC901F9893E60068ACAD /* Surfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0566DC921F9893E60068ACAD /* Surfaces.storyboard */; };
-		0567B49B2581AB9A0022EA5D /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
 		0567B4AD2581ABA20022EA5D /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		0567B4BE2581ABA60022EA5D /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
 		0567B4CF2581ABAA0022EA5D /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
@@ -1095,6 +1094,8 @@
 		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
+		056EC5502A288F2E006EE87A /* default_theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056EC54F2A288F2E006EE87A /* default_theme.cpp */; };
+		056EC5512A288F31006EE87A /* default_theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056EC54F2A288F2E006EE87A /* default_theme.cpp */; };
 		056F746B276754CD00F7EAC9 /* linkalgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056F746A276754CC00F7EAC9 /* linkalgebra.cpp */; };
 		056F746C2767551F00F7EAC9 /* linkalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 056F7469276754CC00F7EAC9 /* linkalgebra.h */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
@@ -1153,7 +1154,6 @@
 		05754D19258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
 		05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05754E73258F92CA00236ED7 /* Assets.xcassets */; };
 		05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
-		05754F662590F0A400236ED7 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
 		05754F762590F0A700236ED7 /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
 		05772EB7270CF97100D26D8A /* angleflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 05772EB6270CF97100D26D8A /* angleflags.h */; };
 		05772EC0270CF98F00D26D8A /* xmlsnappeawriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EB8270CF98E00D26D8A /* xmlsnappeawriter.cpp */; };
@@ -1257,8 +1257,6 @@
 		057EDBAE2581EA83004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDBBF2581EA9D004F0068 /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
 		057EDBC02581EA9D004F0068 /* libgmpxx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		057EDBD12581EAA4004F0068 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
-		057EDBD22581EAA4004F0068 /* jansson.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDC332581EEE5004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDC852581F0C2004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDCA72581F0CA004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
@@ -1272,8 +1270,6 @@
 		057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; };
 		057EDEAE2582363B004F0068 /* cppunit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDEAF2582363B004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
-		057EDEB12582363B004F0068 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
-		057EDEB22582363B004F0068 /* jansson.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDEB32582363B004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDEB42582363B004F0068 /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDEB52582363B004F0068 /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
@@ -2354,7 +2350,6 @@
 				057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */,
 				05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */,
 				057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */,
-				057EDBD22581EAA4004F0068 /* jansson.xcframework in Embed Frameworks */,
 				057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */,
 				057EDBAE2581EA83004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */,
 				057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */,
@@ -2376,7 +2371,6 @@
 				057EDEB82582363B004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */,
 				057EDEB42582363B004F0068 /* libgmp.xcframework in Embed Frameworks */,
 				057EDEAE2582363B004F0068 /* cppunit.xcframework in Embed Frameworks */,
-				057EDEB22582363B004F0068 /* jansson.xcframework in Embed Frameworks */,
 				057EDF1B25823779004F0068 /* XZ.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -3779,7 +3773,6 @@
 		05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
 		0566DC911F9893E60068ACAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Surfaces.storyboard; sourceTree = "<group>"; };
-		0567B49A2581AB9A0022EA5D /* jansson.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = jansson.xcframework; path = ../../Library/Frameworks/jansson.xcframework; sourceTree = "<group>"; };
 		0567B4AC2581ABA20022EA5D /* libgmp.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmp.xcframework; path = ../../Library/Frameworks/libgmp.xcframework; sourceTree = "<group>"; };
 		0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmpxx.xcframework; path = ../../Library/Frameworks/libgmpxx.xcframework; sourceTree = "<group>"; };
 		0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libtokyocabinet.xcframework; path = ../../Library/Frameworks/libtokyocabinet.xcframework; sourceTree = "<group>"; };
@@ -3789,7 +3782,6 @@
 		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
 		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685F6F1F970E6500085B44 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		05685F721F970F3600085B44 /* FindJansson.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindJansson.cmake; sourceTree = "<group>"; };
 		05685F731F970F3600085B44 /* ReginaMacros.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReginaMacros.cmake; sourceTree = "<group>"; };
 		05685F751F970F4100085B44 /* FindICONV.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindICONV.cmake; sourceTree = "<group>"; };
 		05685F761F970F4100085B44 /* MacroLogFeature.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = MacroLogFeature.cmake; sourceTree = "<group>"; };
@@ -3913,6 +3905,7 @@
 		0568742420C5D86B001C435B /* pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pass.cpp; sourceTree = "<group>"; };
 		0568742F20C5D8D3001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
+		056EC54F2A288F2E006EE87A /* default_theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = default_theme.cpp; sourceTree = "<group>"; };
 		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
 		056F746A276754CC00F7EAC9 /* linkalgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkalgebra.cpp; sourceTree = "<group>"; };
 		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -4820,7 +4813,6 @@
 				0567B4EF2581ABF20022EA5D /* libgmpxx.xcframework in Frameworks */,
 				0567B4DF2581ABF00022EA5D /* libgmp.xcframework in Frameworks */,
 				050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */,
-				05754F662590F0A400236ED7 /* jansson.xcframework in Frameworks */,
 				05754F762590F0A700236ED7 /* libtokyocabinet.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4844,7 +4836,6 @@
 				057EE01D2582416B004F0068 /* DBChooser.framework in Frameworks */,
 				057EDEB72582363B004F0068 /* libtokyocabinet.xcframework in Frameworks */,
 				057EDEB32582363B004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDEB12582363B004F0068 /* jansson.xcframework in Frameworks */,
 				057EDEAF2582363B004F0068 /* graphviz.xcframework in Frameworks */,
 				057EDEB52582363B004F0068 /* libgmpxx.xcframework in Frameworks */,
 				057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */,
@@ -4943,7 +4934,6 @@
 				057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */,
 				057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */,
 				05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */,
-				057EDBD12581EAA4004F0068 /* jansson.xcframework in Frameworks */,
 				057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */,
 				057EDBAD2581EA83004F0068 /* libtokyocabinet.xcframework in Frameworks */,
 				057ED9C42581BAAE004F0068 /* graphviz.xcframework in Frameworks */,
@@ -4967,7 +4957,6 @@
 				0567B4CF2581ABAA0022EA5D /* libtokyocabinet.xcframework in Frameworks */,
 				0567B4AD2581ABA20022EA5D /* libgmp.xcframework in Frameworks */,
 				0567B4BE2581ABA60022EA5D /* libgmpxx.xcframework in Frameworks */,
-				0567B49B2581AB9A0022EA5D /* jansson.xcframework in Frameworks */,
 				05E0F1CE2582428800965440 /* libiconv.tbd in Frameworks */,
 				05E0F1DE2582428C00965440 /* libxml2.tbd in Frameworks */,
 				05E0F1EE2582429000965440 /* libz.tbd in Frameworks */,
@@ -6903,7 +6892,6 @@
 				050302ED284DAE060050903D /* QtSvgWidgets.framework */,
 				057EDA312581BC97004F0068 /* cppunit.xcframework */,
 				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
-				0567B49A2581AB9A0022EA5D /* jansson.xcframework */,
 				0567B4AC2581ABA20022EA5D /* libgmp.xcframework */,
 				0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */,
 				0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */,
@@ -7187,6 +7175,7 @@
 				0542091F1DF28C990018AB24 /* contextswitch.h */,
 				054208541DF0D0B50018AB24 /* COPYING.LIB */,
 				054208551DF0D0B50018AB24 /* default.theme */,
+				056EC54F2A288F2E006EE87A /* default_theme.cpp */,
 				054208561DF0D0B50018AB24 /* definition_p.h */,
 				054208571DF0D0B50018AB24 /* definition.cpp */,
 				054208581DF0D0B50018AB24 /* definition.h */,
@@ -7798,7 +7787,6 @@
 				05685F781F970F4100085B44 /* FindGMP.cmake */,
 				05685F7A1F970F4100085B44 /* FindGMPXX.cmake */,
 				05685F751F970F4100085B44 /* FindICONV.cmake */,
-				05685F721F970F3600085B44 /* FindJansson.cmake */,
 				05753AAC2A26FD15005CB4B7 /* FindKVStore.cmake */,
 				05685F7B1F970F4100085B44 /* FindSharedMimeInfo.cmake */,
 				05685F791F970F4100085B44 /* MacroEnsureVersion.cmake */,
@@ -9367,7 +9355,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ninstall_name_tool -change @rpath/libgmp.dylib @loader_path/../../../Frameworks/libgmp.dylib \"${module}\"\ninstall_name_tool -change @rpath/libgmpxx.dylib @loader_path/../../../Frameworks/libgmpxx.dylib \"${module}\"\ninstall_name_tool -change @rpath/libjansson.dylib @loader_path/../../../Frameworks/libjansson.dylib \"${module}\"\ninstall_name_tool -change @rpath/libtokyocabinet.dylib @loader_path/../../../Frameworks/libtokyocabinet.dylib \"${module}\"\n\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
+			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ninstall_name_tool -change @rpath/libgmp.dylib @loader_path/../../../Frameworks/libgmp.dylib \"${module}\"\ninstall_name_tool -change @rpath/libgmpxx.dylib @loader_path/../../../Frameworks/libgmpxx.dylib \"${module}\"\ninstall_name_tool -change @rpath/libtokyocabinet.dylib @loader_path/../../../Frameworks/libtokyocabinet.dylib \"${module}\"\n\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
 		};
 		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9880,6 +9868,7 @@
 				05C0644F1C55A5C1006E6483 /* HyperCompat.mm in Sources */,
 				05A067521DFA68470047872E /* satannulus.cpp in Sources */,
 				05249F2E1DBC1711001FE29E /* perm.cpp in Sources */,
+				056EC5512A288F31006EE87A /* default_theme.cpp in Sources */,
 				05F0A0121DBF079600117BFC /* simplifyglobal.cpp in Sources */,
 				05277ACC25CF9D16001E4134 /* disctype.cpp in Sources */,
 				0512E09F26DF354500DDB222 /* matching.cpp in Sources */,
@@ -11042,6 +11031,7 @@
 				0542087C1DF0D0B50018AB24 /* keywordlist.cpp in Sources */,
 				059802FA26683C6D002D5D57 /* xmlalgebrareader.cpp in Sources */,
 				05B7FF8A25AC22AA003BAF5C /* options.cpp in Sources */,
+				056EC5502A288F2E006EE87A /* default_theme.cpp in Sources */,
 				0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */,
 				05B4D2CA229F376B00B7B11C /* output.cpp in Sources */,
 				052F9EA9180600FB00FAE4DF /* gluingpermsearcher3.cpp in Sources */,

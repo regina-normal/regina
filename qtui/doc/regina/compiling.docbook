@@ -85,8 +85,7 @@
   </para>
   <para>
    On some platforms you might also need development files for the
-   zlib compression library (<firstterm>libz</firstterm>), the
-   Jansson &json; library (<firstterm>libjansson</firstterm>), and
+   zlib compression library (<firstterm>libz</firstterm>), and
    a lightweight database library (which will be one of
    Tokyo Cabinet (<firstterm>libtokyocabinet</firstterm>),
    QDBM (<firstterm>libqdbm</firstterm>) or the
@@ -97,10 +96,6 @@
    <literal>zlib1g-dev</literal>,
    <literal>zlib1-devel</literal> or
    <literal>zlib-devel</literal>,
-   a package named
-   <literal>libjansson-dev</literal>,
-   <literal>libjansson-devel</literal> or
-   <literal>jansson-devel</literal>,
    and an appropriate option from
    <literal>libtokyocabinet-dev</literal>,
    <literal>libtokyocabinet-devel</literal>,

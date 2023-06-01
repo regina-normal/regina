@@ -38,7 +38,9 @@
 
 #include "syntax/themedata_p.h"
 
+#ifdef USE_JANSSON
 #include <jansson.h>
+#endif
 
 #include <cassert>
 #include <cstring>
@@ -58,6 +60,7 @@ ThemeData::ThemeData()
     memset(m_editorColors, 0, sizeof(m_editorColors));
 }
 
+#ifdef USE_JANSSON
 /**
  * Convert JSON object @p val into a color, if possible. Valid colors are only
  * in hex format: #rrggbb or #aarrggbb. On error, returns 0x00000000.
@@ -186,6 +189,7 @@ bool ThemeData::load(const std::string& filePath)
     json_decref(obj);
     return true;
 }
+#endif
 
 const std::string& ThemeData::name() const
 {

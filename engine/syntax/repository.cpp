@@ -120,9 +120,15 @@ void RepositoryPrivate::load(Repository *repo)
     }
 
     // load themes
+#ifdef USE_JANSSON
     auto themeData = std::unique_ptr<ThemeData>(new ThemeData);
     if (themeData->load(syntaxBase + "default.theme"))
         addTheme(Theme(themeData.release()));
+#else
+    auto themeData = new ThemeData;
+    themeData->loadDefault();
+    addTheme(Theme(themeData));
+#endif
 }
 
 void RepositoryPrivate::addDefinition(const Definition &def)
