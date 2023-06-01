@@ -2,6 +2,8 @@
 SET ( FILES
   abeliangroup.cpp
   covers.cpp
+  grouppresentation.cpp
+  markedabeliangroup.cpp
   )
 
 # Prepend folder name
