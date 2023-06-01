@@ -113,6 +113,7 @@
   <!ENTITY gnu "<acronym>GNU</acronym>">
   <!ENTITY graphviz "<application>Graphviz</application>">
   <!ENTITY graphvizurl "<ulink url='http://www.graphviz.org/'>&graphviz;</ulink>">
+  <!ENTITY gtest "<application>GoogleTest</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY gzip "<application>gzip</application>">
   <!ENTITY hom1 "H<subscript>1</subscript>">

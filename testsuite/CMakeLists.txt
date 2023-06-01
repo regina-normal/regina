@@ -5,8 +5,6 @@ SET ( SOURCES
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
-ADD_SUBDIRECTORY("compile-time")
-
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")

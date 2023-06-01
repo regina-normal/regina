@@ -223,6 +223,17 @@
      openclipart.org, which has been released into the public domain.
     </para>
    </sect3>
+
+   <sect3 id="license-gtest">
+    <title>GoogleTest</title>
+    <para>
+     &regina; includes a copy of &gtest;, which it uses as a framework
+     for the &cpp; test suite.  &gtest; is copyright by Google Inc.,
+     and is distributed under a &bsd;-style license that is shipped with
+     &regina;'s source code in the file
+     <filename>engine/testsuite/gtest/LICENSE</filename>.
+    </para>
+   </sect3>
   </sect2>
  </sect1>
 

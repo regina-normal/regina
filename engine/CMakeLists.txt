@@ -92,3 +92,4 @@ endif (${REGINA_INSTALL_DEV})
 
 # Miscellaneous extras:
 ADD_SUBDIRECTORY("doxygen")
+ADD_SUBDIRECTORY("testsuite")

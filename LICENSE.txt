@@ -127,6 +127,14 @@ Regina's die icon is based on an image from openclipart.org, which has been
 released into the public domain.
 
 
+GOOGLETEST:
+
+Regina includes a copy of GoogleTest, which it uses as a framework for the
+C++ test suite.  GoogleTest is copyright by Google Inc., and is distributed
+under a BSD-style license that is shipped with Regina's source code in the
+file engine/testsuite/gtest/LICENSE.
+
+
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991

@@ -1,5 +1,3 @@
-# compile-time
-
 # Files to compile
 SET ( FILES
   binom.cpp

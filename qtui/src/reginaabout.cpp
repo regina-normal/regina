@@ -146,7 +146,12 @@ const QString ReginaAbout::regLicense( tr(
     "licensed under the GNU General Public License version 2) and the Oxygen\n"
     "icon set (licensed under the GNU Lesser General Public License).\n"
     "Regina's die icon is based on an image from openclipart.org, which has\n"
-    "been released into the public domain.\n"
+    "been released into the public domain.\n\n"
+    "GOOGLETEST:\n\n"
+    "Regina includes a copy of GoogleTest, which it uses as a framework for\n"
+    "the C++ test suite.  GoogleTest is copyright by Google Inc., and is\n"
+    "distributed under a BSD-style license that is shipped with Regina's\n"
+    "source code in the file engine/testsuite/gtest/LICENSE.\n"
     ));
 
 ReginaAbout::ReginaAbout(QWidget* parent) : 
