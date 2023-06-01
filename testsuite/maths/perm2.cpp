@@ -62,6 +62,7 @@ class Perm2Test : public SmallPermTest<2> {
     // Tests specific to Perm<2>:
     CPPUNIT_TEST(productsViaPerm4);
     CPPUNIT_TEST(aliases);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -101,6 +102,64 @@ class Perm2Test : public SmallPermTest<2> {
             for (i = 0; i < 1; ++i)
                 if (Perm<2>::S1[i] != Perm<2>::Sn_1[i])
                     CPPUNIT_FAIL("Arrays S1 and Sn_1 disagree for Perm<2>.");
+        }
+
+        void contractFront() {
+            if (Perm<2>() !=
+                   Perm<2>::contractFront(Perm<3>(0,1,2))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<3>(0,1,2)) failed.");
+            }
+            if (Perm<2>(1,0) !=
+                   Perm<2>::contractFront(Perm<3>(0,2,1))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<3>(0,2,1)) failed.");
+            }
+
+            contractFrontChecks(Perm<2>(), Perm<4>());
+            contractFrontChecks(Perm<2>(1,0), Perm<4>(0,1,3,2));
+
+            contractFrontChecks(Perm<2>(), Perm<5>());
+            contractFrontChecks(Perm<2>(1,0), Perm<5>(0,1,2,4,3));
+
+            contractFrontChecks(Perm<2>(), Perm<6>());
+            contractFrontChecks(Perm<2>(1,0), Perm<6>(0,1,2,3,5,4));
+
+            contractFrontChecks(Perm<2>(), Perm<7>());
+            contractFrontChecks(Perm<2>(1,0), Perm<7>(0,1,2,3,4,6,5));
+
+            if (Perm<2>() !=
+                    Perm<2>::contractFront(Perm<8>())) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<8>()) failed.");
+            }
+            if (Perm<2>() !=
+                    Perm<2>::contractFront(Perm<8>(4,5))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<8>(4,5)) failed.");
+            }
+            if (Perm<2>(1,0) !=
+                    Perm<2>::contractFront(Perm<8>(6,7))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<8>(6,7)) failed.");
+            }
+            if (Perm<2>(1,0) !=
+                    Perm<2>::contractFront(Perm<8>(6,7)*Perm<8>(4,5))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<8>(6,7)*Perm<8>(4,5)) failed.");
+            }
+
+            if (Perm<2>() !=
+                    Perm<2>::contractFront(Perm<12>())) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<12>()) failed.");
+            }
+            if (Perm<2>() !=
+                    Perm<2>::contractFront(Perm<12>(7,8))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<12>(7,8)) failed.");
+            }
+            if (Perm<2>(1,0) !=
+                    Perm<2>::contractFront(Perm<12>(10,11))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<12>(10,11)) failed.");
+            }
+            if (Perm<2>(1,0) !=
+                Perm<2>::contractFront(Perm<12>(10,11)*Perm<12>(7,8))) {
+                CPPUNIT_FAIL("Perm<2>::contractFront(Perm<12>(10,11)*Perm<12>(7,8)) failed.");
+            }
+
         }
 };
 

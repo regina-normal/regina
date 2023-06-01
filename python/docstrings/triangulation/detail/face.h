@@ -535,6 +535,13 @@ Returns:
     for non-standard dimensions *dim*, returns ``True`` if and only if
     this face is valid according to condition (1).)doc";
 
+// Docstring regina::python::doc::detail::FaceBase_::link
+constexpr const char *link =
+R"doc(Returns the triangulation of the link of this face.
+
+Returns:
+    Triangulation of the link of this face.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase_::lock
 constexpr const char *lock =
 R"doc(Locks this codimension-1-face.

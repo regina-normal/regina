@@ -433,6 +433,33 @@ Parameter ``p``:
 Returns:
     the same permutation restricted to a permutation on 2 elements.)doc";
 
+// Docstring regina::python::doc::Perm_::contractFront
+static const char *contractFront =
+R"doc(Restricts a *k*-element permutation to an 2-element permutation, where
+*k* > 2.
+
+This is similar to Perm<n>::contract but is considering the last two
+elements of the *k*-element permutation rather than the first and
+ignores the "unused" images *p*[0], ..., *p*[*k* - 3].
+
+The resulting permutation maps 0 and 1 to *p*[*k* - 2] + 2 - *k* and
+*p*[*k* - 1] + 2 - *k*.
+
+Precondition:
+    The given permutation maps *k* - 2 and *k* - 1 to *k* - 2 and *k*
+    - 1 in some order.
+
+Template parameter ``k``:
+    the number of elements for the input permutation; this must be
+    strictly greater than 2.
+
+Parameter ``p``:
+    a permutation on *k* elements.
+
+Returns:
+    the same permutation restricted to a permutation on the last two
+    elements.)doc";
+
 // Docstring regina::python::doc::Perm_::fromPermCode
 static const char *fromPermCode =
 R"doc(Creates a permutation from the given internal code.
@@ -446,6 +473,11 @@ Parameter ``code``:
 
 Returns:
     the permutation represented by the given internal code.)doc";
+
+// Docstring regina::python::doc::Perm_::fromPermCode2
+static const char *fromPermCode2 =
+R"doc(Alias for fromPermCode so that generic code can use
+Perm<n>::fromPermCode2(c) for small n.)doc";
 
 // Docstring regina::python::doc::Perm_::hash
 static const char *hash =
@@ -557,6 +589,11 @@ isPermCode().
 
 Returns:
     the internal code.)doc";
+
+// Docstring regina::python::doc::Perm_::permCode2
+static const char *permCode2 =
+R"doc(Alias for permCode so that generic code can use Perm<n>::permCode2()
+for small n.)doc";
 
 // Docstring regina::python::doc::Perm_::pow
 static const char *pow =

@@ -22,6 +22,7 @@ if (${REGINA_INSTALL_DEV})
     facetpairing.h
     facetpairing-impl.h
     isosig-impl.h
+    linkbuilder.h
     retriangulate.h
     simplex.h
     strings.h

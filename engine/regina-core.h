@@ -77,6 +77,17 @@ constexpr int maxDim() {
 }
 
 /**
+ * Indicates the smallest dimension of triangulation that Regina can work with.
+ *
+ * \return Regina's minimum dimension of triangulation.
+ *
+ * \ingroup engine
+ */ 
+constexpr int minDim() {
+    return 2;
+}
+
+/**
  * Represents various classes of algorithms that Regina can use for
  * computations.  A function that takes an Algorithm argument need not
  * support all types of algorithm - if an unsupported algorithm is

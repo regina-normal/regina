@@ -1230,6 +1230,32 @@ class Perm<7> {
         static constexpr Perm<7> contract(Perm<k> p);
 
         /**
+         * Restricts a <i>k</i>-element permutation to a 7-element
+         * permutation, where \a k > 7.
+         *
+         * This is similar to Perm<n>::contract but is considering the last
+         * three elements of the <i>k</i>-element permutation rather than
+         * the first and ignores the "unused" images
+         * \a p[0], ...,\a p[<i>k</i> - 8].
+         *
+         * The resulting permutation maps 0,...,2 to
+         * \a p[<i>k</i> - 7] + 7 - <i>k</i>, ...,
+         * \a p[<i>k</i> - 1] + 7 - <i>k</i>.
+         *
+         * \pre The given permutation maps <i>k</i> - 7, ..., <i>k</i> - 1
+         * to <i>k</i> - 7, ..., <i>k</i> - 1 in some order.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be strictly greater than 7.
+         *
+         * \param p a permutation on \a k elements.
+         * \return the same permutation restricted to a permutation on
+         * the last three elements.
+         */
+        template <int k>
+        static constexpr Perm<7> contractFront(Perm<k> p);
+
+        /**
          * Is this permutation minimal in its conjugacy class?
          *
          * Here "minimal" means that, amongst all its conjugates, this

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Test Suite                                                            *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,60 +30,67 @@
  *                                                                        *
  **************************************************************************/
 
-#include "testsuite/maths/permtest.h"
-#include "testsuite/maths/testmaths.h"
+/*! \file triangulation/detail/linkbuilder.h
+ *  \brief Contains helper class that implements building the triangulation
+ *  of the link of a face. The methods are implemented in
+ *  linkbuilder-impl.h.
+ */
 
-using regina::Perm;
+#ifndef __REGINA_LINK_BUILDER_H
+#ifndef __DOXYGEN
+#define __REGINA_LINK_BUILDER_H
+#endif
 
-class Perm7Test : public SmallPermTest<7> {
-    CPPUNIT_TEST_SUITE(Perm7Test);
+#include "triangulation/forward.h"
 
-    // Generic inherited tests:
-    CPPUNIT_TEST(permCode);
-    CPPUNIT_TEST(sign);
-    CPPUNIT_TEST(index);
-    CPPUNIT_TEST(exhaustive);
-    CPPUNIT_TEST(swaps);
-    CPPUNIT_TEST(cachedInverse);
-    CPPUNIT_TEST(products);
-    CPPUNIT_TEST(cachedProducts);
-    CPPUNIT_TEST(conjugates);
-    CPPUNIT_TEST(cachedConjugates);
-    CPPUNIT_TEST(compareWith);
-    CPPUNIT_TEST(reverse);
-    CPPUNIT_TEST(clear);
-    CPPUNIT_TEST(order);
-    CPPUNIT_TEST(pow);
-    CPPUNIT_TEST(cachedPow);
-    CPPUNIT_TEST(rot);
-    CPPUNIT_TEST(conjugacyMinimal);
-    CPPUNIT_TEST(increment);
-    CPPUNIT_TEST(tightEncoding);
+#include <memory>
 
-    // Tests specific to Perm<7>:
-    CPPUNIT_TEST(aliases);
-    CPPUNIT_TEST(contractFront);
+namespace regina::detail {
 
-    CPPUNIT_TEST_SUITE_END();
+template<int dim, int subdim> class FaceBase;
 
-    public:
-        void aliases() {
-            for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
-                if (Perm<7>::S7[i] != Perm<7>::Sn[i])
-                    CPPUNIT_FAIL("Arrays S7 and Sn disagree for Perm<7>.");
-        }
+/** Helper class that implements building the triangulation of a link of a
+ * face Face<dim, subdim>.
+ */ 
+template<int dim, int subdim>
+struct LinkBuilder
+{
+    static constexpr int linkDimension = dim - subdim - 1;
+        /**< Gives the dimension of the triangulation of the link of
+             the face. */
 
-    void contractFront() {
-        if (Perm<7>(0,2,1,3,4,6,5) !=
-               Perm<7>::contractFront(Perm<8>(2,3) * Perm<8>(6,7))) {
-            CPPUNIT_FAIL("Perm<7>::contractFront(Perm<8>(2,3) * Perm<8>(6,7)) failed");
-        }
-        contractFrontChecks(Perm<7>(2,3), Perm<9>(4,5));
-        contractFrontChecks(Perm<7>(1,4), Perm<10>(4,7));
-    }
+    /**
+     * The type of triangulation of the link of the face.
+     */
+    using LinkTriangulation = Triangulation<linkDimension>;
+
+    /**
+     * A custom deleter simply calling the destructor of
+     * `LinkTriangulation` through delete.
+     *
+     * Note that the implementation is elsewhere so that files
+     * including LinkBuilder do not need to include the header
+     * definining the `Triangulation` class.
+     */
+    struct Deleter
+    {
+        void operator() (const LinkTriangulation * trig);
+    };
+
+    /**
+     * Clients can use this type to hold on to the link triangulation
+     * while only forward-declaring the `Triangulation` class.
+     */
+    using UniquePtr = std::unique_ptr<const LinkTriangulation, Deleter>;
+
+    /**
+     * Construct the triangulation of the link of the given face.
+     */
+    static
+    UniquePtr
+    build(const FaceBase<dim, subdim> &face);
 };
 
-void addPerm7(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Perm7Test::suite());
 }
 
+#endif

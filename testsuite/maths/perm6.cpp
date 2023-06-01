@@ -62,6 +62,7 @@ class Perm6Test : public SmallPermTest<6> {
 
     // Tests specific to Perm<6>:
     CPPUNIT_TEST(aliases);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -70,6 +71,27 @@ class Perm6Test : public SmallPermTest<6> {
             for (Perm<6>::Index i = 0; i < Perm<6>::nPerms; ++i)
                 if (Perm<6>::S6[i] != Perm<6>::Sn[i])
                     CPPUNIT_FAIL("Arrays S6 and Sn disagree for Perm<6>.");
+        }
+
+        void contractFront() {
+            if (Perm<6>(1,2,0,3,4,5) !=
+                   Perm<6>::contractFront(Perm<7>(0,2,3,1,4,5,6))) {
+                CPPUNIT_FAIL("Perm<6>::contractFront(Perm<7>(0,2,3,1,4,5,6))");
+            }
+            if (Perm<6>(1,2,0,3,5,4) !=
+                   Perm<6>::contractFront(Perm<7>(0,2,3,1,4,6,5))) {
+                CPPUNIT_FAIL("Perm<6>::contractFront(Perm<7>(0,2,3,1,4,6,5))");
+            }
+
+            contractFrontChecks(
+                Perm<6>(1,2,0,4,3,5), Perm<8>({0,1,3,4,2,6,5,7}));
+            contractFrontChecks(
+                Perm<6>(1,2,0,4,3,5), Perm<9>({0,1,2,4,5,3,7,6,8}));
+
+            if (Perm<6>(3,4) !=
+                   Perm<6>::contractFront(Perm<13>(10,11))) {
+                CPPUNIT_FAIL("Perm<6>::contractFront(Perm<13>(10,11))");
+            }
         }
 };
 

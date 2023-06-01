@@ -113,6 +113,7 @@ being reserved for a different purpose in a future release.)doc")
         }, rdoc::buildLink)
         .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion,
             rdoc::buildLinkInclusion)
+        .def("link", &Vertex<3>::link, rbase::link)
         .def("isLinkClosed", &Vertex<3>::isLinkClosed, rdoc::isLinkClosed)
         .def("isIdeal", &Vertex<3>::isIdeal, rdoc::isIdeal)
         .def("isBoundary", &Vertex<3>::isBoundary, rbase::isBoundary)

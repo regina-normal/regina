@@ -32,6 +32,9 @@
 
 #include "../pybind11/pybind11.h"
 #include "triangulation/generic.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
@@ -162,6 +165,8 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         c.def("inMaximalForest", &Face<dim, subdim>::inMaximalForest,
             rbase::inMaximalForest);
     }
+    if constexpr (Face<dim, subdim>::canBuildLink)
+        c.def("link", &Face<dim, subdim>::link, rbase::link);
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
