@@ -2,6 +2,7 @@
 SET ( FILES
   callbacks.cpp
   listeners.cpp
+  spans.cpp
   )
 
 # Prepend folder name
