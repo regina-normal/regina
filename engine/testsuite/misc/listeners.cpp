@@ -32,9 +32,9 @@
 
 #include <cstring>
 #include <string>
-#include <cppunit/extensions/HelperMacros.h>
-#include "testsuite/misc/testmisc.h"
 #include "packet/script.h"
+
+#include "gtest/gtest.h"
 
 namespace {
     struct Listener : public regina::PacketListener {
@@ -48,48 +48,31 @@ namespace {
     };
 }
 
-class ListenersTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(ListenersTest);
+TEST(ListenersTest, expiration) {
+    // This tests the logic used in the Qt user interface, in
+    // ScriptUI::packetBeingDestroyed().  See the more extensive
+    // comments there.  The short summary: the Qt UI code assumes the
+    // behaviour that we are testing here, but I don't think it's
+    // actually promised by the C++ standard (hence this test).
 
-    CPPUNIT_TEST(expiration);
+    Listener listener;
+    {
+        auto s = std::make_shared<regina::Script>();
+        listener.ptr_ = s;
 
-    CPPUNIT_TEST_SUITE_END();
+        s->listen(&listener);
 
-    public:
-        void setUp() override {
-        }
+        ASSERT_FALSE(listener.ptr_.expired());
+        ASSERT_FALSE(listener.expired_);
 
-        void tearDown() override {
-        }
-
-        void expiration() {
-            // This tests the logic used in the Qt user interface, in
-            // ScriptUI::packetBeingDestroyed().  See the more extensive
-            // comments there.  The short summary: the Qt UI code assumes the
-            // behaviour that we are testing here, but I don't think it's
-            // actually promised by the C++ standard (hence this test).
-
-            Listener listener;
-            {
-                auto s = std::make_shared<regina::Script>();
-                listener.ptr_ = s;
-
-                s->listen(&listener);
-
-                if (listener.expired_) {
-                    CPPUNIT_FAIL("Weak pointer expired prematurely.");
-                }
-            }
-            if (! listener.expired_) {
-                CPPUNIT_FAIL("Weak pointer did not expire in time.");
-            }
-            if (! listener.ptr_.expired()) {
-                CPPUNIT_FAIL("Weak pointer did not expire at all.");
-            }
-        }
-};
-
-void addListeners(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(ListenersTest::suite());
+        // The weak pointer to the Script managed by s should expire now, since
+        // the shared pointer s will go out of scope and destroy the Script that
+        // it manages.
+        //
+        // The behaviour we are testing is whether this expiry happens
+        // *before* the Script destructor is called (which means the expiry
+        // happens in time for our custom packetBeingDestroyed() to detect it).
+    }
+    EXPECT_TRUE(listener.expired_);
+    EXPECT_TRUE(listener.ptr_.expired());
 }
-

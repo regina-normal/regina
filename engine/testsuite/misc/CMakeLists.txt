@@ -1,5 +1,3 @@
-# misc
-
 # Files to compile
 SET ( FILES
   callbacks.cpp
