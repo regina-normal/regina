@@ -30,55 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-#include <cppunit/extensions/HelperMacros.h>
 #include "manifold/sfs.h"
-#include "testsuite/subcomplex/testsubcomplex.h"
+
+#include "gtest/gtest.h"
 
 using regina::SFSFibre;
 using regina::SFSpace;
 
-class SFSTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(SFSTest);
+void verifyName(SFSpace::ClassType c, size_t genus,
+        size_t punctures, size_t puncturesTwisted,
+        size_t reflectors, size_t reflectorsTwisted,
+        std::initializer_list<SFSFibre> fibres,
+        const char* expected) {
+    SFSpace s(c, genus, punctures, puncturesTwisted,
+        reflectors, reflectorsTwisted);
+    for (const auto& f : fibres)
+        s.insertFibre(f);
 
-    CPPUNIT_TEST(construct);
-
-    CPPUNIT_TEST_SUITE_END();
-
-    public:
-        void setUp() override {
-        }
-
-        void tearDown() override {
-        }
-
-        void verifyName(SFSpace::ClassType c, size_t genus,
-                size_t punctures, size_t puncturesTwisted,
-                size_t reflectors, size_t reflectorsTwisted,
-                std::initializer_list<SFSFibre> fibres,
-                const char* expected) {
-            SFSpace s(c, genus, punctures, puncturesTwisted,
-                reflectors, reflectorsTwisted);
-            for (const auto& f : fibres)
-                s.insertFibre(f);
-
-            std::string name = s.name();
-            if (name != expected) {
-                std::ostringstream msg;
-                msg << "A SFSpace was constructed, and its name was "
-                    "reported as " << name << " instead of "
-                    << expected << "." << std::endl;
-                CPPUNIT_FAIL(msg.str());
-            }
-        }
-
-        void construct() {
-            verifyName(SFSpace::o1, 0, 0, 0, 0, 0, {}, "S2 x S1");
-            verifyName(SFSpace::o1, 1, 0, 0, 0, 0, {}, "T x S1");
-            verifyName(SFSpace::bo1, 0, 1, 0, 0, 0, {}, "D x S1");
-        }
-};
-
-void addSFS(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(SFSTest::suite());
+    EXPECT_EQ(s.name(), expected);
 }
 
+TEST(SFSTest, construct) {
+    verifyName(SFSpace::o1, 0, 0, 0, 0, 0, {}, "S2 x S1");
+    verifyName(SFSpace::o1, 1, 0, 0, 0, 0, {}, "T x S1");
+    verifyName(SFSpace::bo1, 0, 1, 0, 0, 0, {}, "D x S1");
+}

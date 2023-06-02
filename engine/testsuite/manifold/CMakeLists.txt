@@ -1,5 +1,3 @@
-# manifold
-
 # Files to compile
 SET ( FILES
   sfs.cpp
