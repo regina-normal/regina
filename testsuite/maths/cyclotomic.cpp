@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/cyclotomic.h"
 #include "utilities/stringutils.h"
-#include "testsuite/utilities/testutilities.h"
+#include "testsuite/maths/testmaths.h"
 
 using regina::Cyclotomic;
 using regina::Rational;

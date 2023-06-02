@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/integer.h"
 #include "utilities/exception.h"
-#include "testsuite/utilities/testutilities.h"
+#include "testsuite/maths/testmaths.h"
 
 using regina::IntegerBase;
 using regina::Integer;

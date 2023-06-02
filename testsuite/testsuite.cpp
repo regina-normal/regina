@@ -39,7 +39,6 @@
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
-#include "testsuite/algebra/testalgebra.h"
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim2/testdim2.h"
@@ -53,7 +52,6 @@
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surface/testsurface.h"
-#include "testsuite/utilities/testutilities.h"
 
 namespace {
     static bool checkedParams = false;

@@ -35,7 +35,7 @@
 #include "maths/rational.h"
 #include "utilities/exception.h"
 #include "utilities/stringutils.h"
-#include "testsuite/utilities/testutilities.h"
+#include "testsuite/maths/testmaths.h"
 
 #define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
 

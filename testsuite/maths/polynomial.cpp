@@ -36,7 +36,7 @@
 #include "maths/polynomial.h"
 #include "maths/rational.h"
 #include "utilities/stringutils.h"
-#include "testsuite/utilities/testutilities.h"
+#include "testsuite/maths/testmaths.h"
 
 using regina::Integer;
 using regina::Polynomial;
