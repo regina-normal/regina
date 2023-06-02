@@ -26,20 +26,11 @@
 # MA 02110-1301, USA.
 #
 
-try:
-    # SageRegina has some weirdness where "import engine" gives
-    # an error if not preceeded by "import sage.all"
-    # Needs some investigation, doing this as work-around for now.
-    import sage.all
-    _within_sage = True
-except:
-    _within_sage = False
-
 import sys, os
 from . import engine
 from .engine import *
 
-if _within_sage:
+if 'sage' in sys.modules:
     # Typing "from regina import *" should not override certain
     # names. This always applies to the built-in "open".
     #
