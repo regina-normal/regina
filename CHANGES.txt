@@ -17,10 +17,8 @@ Version 7.4  [ (to be announced) ]
           in their respective docs); other routines now examine locks as part
           of their validity checks (e.g., local moves on triangulations).
         - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
-        - No longer requires jansson to build (syntax highlighting now uses a
-          hard-coded theme, instead of reading one from file in JSON format).
-        - No longer requires popt to build the command-line utilities (they
-          now use GNU getopt_long() instead).
+        - Several build dependencies are gone: Jansson, Popt, CppUnit.
+          See the individual sections below for details.
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.
@@ -141,6 +139,9 @@ Version 7.4  [ (to be announced) ]
           enum values will be treated as True by python.
     USER INTERFACE:
         - Now uses multithreading for those long computations that support it.
+        - No longer reads the syntax highlighting theme from file; instead
+          the theme is hard-coded into the executable.  This removes the
+          build dependency on the Jansson JSON library.
     UTILITIES:
         tricensus:
             - Renamed option --tetrahedra to --top, with aliases --triangles,
@@ -150,6 +151,13 @@ Version 7.4  [ (to be announced) ]
             - Fixed a race condition with --threads where the number of
               triangulations reported on the console could be wrong (although
               the actual list of triangulations in the output file was correct).
+        tricensus, retriangulate:
+            - Ported the handling of command-line options from Popt to
+              GNU getopt_long().  This removes the build dependency on Popt.
+    TEST SUITE:
+        - Ported the C++ test suite to use the GoogleTest framework (which is
+          included with Regina's sources).  This removes the build dependency
+          on CppUnit.
 
 Version 7.3  [ 18 March, 2023 ]
 
