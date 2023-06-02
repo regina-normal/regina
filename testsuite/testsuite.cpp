@@ -168,7 +168,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // Census:
     sets.insert(std::make_pair("census2", &addCensus2));
     sets.insert(std::make_pair("census3", &addCensus3));
-    sets.insert(std::make_pair("census4", &addCensus4));
 
     // SnapPea:
     sets.insert(std::make_pair("snappeatriangulation",

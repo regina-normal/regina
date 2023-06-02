@@ -97,9 +97,18 @@ inline const char* safeTypeName() {
  * the given variable in the trace.
  *
  * Here \a var should be one of Regina's types that provides a str() member
- * function.
+ * function returning a std::string.
  */
 #define SCOPED_TRACE_REGINA(var) SCOPED_TRACE(#var " = " + var.str())
+
+/**
+ * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
+ * the given variable in the trace.
+ *
+ * Here \a var should be of type regina::BoolSet.
+ */
+#define SCOPED_TRACE_BOOLSET(var) SCOPED_TRACE(std::string(#var " = ") + \
+    var.stringCode())
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the (possibly

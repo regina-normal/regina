@@ -46,10 +46,12 @@ Version 7.4  [ (to be announced) ]
             - New operator bool(), which tests for a non-empty flag set.
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
+            - New routine str(), which is an alias for stringValue().
         Class Isomorphism<dim>:
             - New routine hash(), which uses the tight encoding.
         Class LargeInteger:
             - New routine hash(), which hashes the integer down to a size_t.
+            - New routine str(), which is an alias for stringValue().
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
         Class Link:

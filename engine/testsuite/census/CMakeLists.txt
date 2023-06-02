@@ -1,9 +1,6 @@
-# census
-
 # Files to compile
 SET ( FILES
-  census2.cpp
-  census3.cpp
+  census.cpp
   )
 
 # Prepend folder name

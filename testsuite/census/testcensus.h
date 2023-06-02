@@ -42,10 +42,6 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addCensus3(CppUnit::TextUi::TestRunner& runner);
-void addFacetPairing3(CppUnit::TextUi::TestRunner& runner);
 void addCensus2(CppUnit::TextUi::TestRunner& runner);
-void addFacetPairing2(CppUnit::TextUi::TestRunner& runner);
-void addCensus4(CppUnit::TextUi::TestRunner& runner);
-void addFacetPairing4(CppUnit::TextUi::TestRunner& runner);
+void addCensus3(CppUnit::TextUi::TestRunner& runner);
 
