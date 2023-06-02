@@ -68,6 +68,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("stringValue", &Int::stringValue,
             pybind11::arg("base") = 10,
             rdoc::stringValue)
+        .def("str", &Int::str, rdoc::str)
         .def("pythonValue", [](const Int& i) {
             if (i.isNative())
                 return pybind11::int_(i.longValue());

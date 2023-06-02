@@ -1280,6 +1280,20 @@ Returns:
     +1, -1 or 0 according to whether this integer is positive,
     negative or zero.)doc";
 
+// Docstring regina::python::doc::IntegerBase_::str
+static const char *str =
+R"doc(Returns the value of this integer as a string in base 10.
+
+Calling str() is identical to calling stringValue() (though, unlike
+stringValue(), str() has no option to change the base). This alias
+str() is provided for consistency with the many other classes in
+Regina that provide a str() function.
+
+If this integer is infinity, the string returned will be ``inf``.
+
+Returns:
+    the value of this integer as a string in base 10.)doc";
+
 // Docstring regina::python::doc::IntegerBase_::stringValue
 static const char *stringValue =
 R"doc(Returns the value of this integer as a string in the given base. If

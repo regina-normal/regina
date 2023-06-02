@@ -523,14 +523,26 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Returns the value of this integer as a string in the given
          * base.  If not specified, the base defaults to 10.
          *
-         * If this integer is infinity, the string returned will be
-         * \c inf.
+         * If this integer is infinity, the string returned will be `inf`.
          *
          * \pre The given base is between 2 and 36 inclusive.
          *
          * \return the value of this integer as a string.
          */
         std::string stringValue(int base = 10) const;
+        /**
+         * Returns the value of this integer as a string in base 10.
+         *
+         * Calling str() is identical to calling stringValue() (though,
+         * unlike stringValue(), str() has no option to change the base).
+         * This alias str() is provided for consistency with the many other
+         * classes in Regina that provide a str() function.
+         *
+         * If this integer is infinity, the string returned will be `inf`.
+         *
+         * \return the value of this integer as a string in base 10.
+         */
+        std::string str() const;
 #ifdef __APIDOCS
         /**
          * Returns the value of this integer as a native Python integer.
@@ -2736,6 +2748,11 @@ inline void IntegerBase<false>::makeInfinite() {
 }
 
 #endif // __DOXYGEN
+
+template <bool supportInfinity>
+inline std::string IntegerBase<supportInfinity>::str() const {
+    return stringValue();
+}
 
 template <bool supportInfinity>
 inline long IntegerBase<supportInfinity>::longValue() const {
