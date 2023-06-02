@@ -30,18 +30,52 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include "subcomplex/txicore.h"
+#include "triangulation/dim3.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+#include "testhelper.h"
 
-void addStandardTriangulation(CppUnit::TextUi::TestRunner& runner);
-void addTxICore(CppUnit::TextUi::TestRunner& runner);
+using regina::TxICore;
+using regina::TxIDiagonalCore;
+using regina::TxIParallelCore;
 
+template <class Core>
+static void testCopyMove(const Core& core) {
+    SCOPED_TRACE("core = " + core.name());
+
+    // The main point of this test is to ensure that the move
+    // operations are *actually* move operations and not copies.
+
+    const regina::Simplex<3>* s = core.core().simplex(0);
+
+    Core a1(core);
+    const regina::Simplex<3>* s1 = a1.core().simplex(0);
+
+    EXPECT_EQ(a1.name(), core.name());
+    EXPECT_NE(s1, s); // copy construction should use different simplices
+
+    Core a2(std::move(a1));
+    const regina::Simplex<3>* s2 = a2.core().simplex(0);
+
+    EXPECT_EQ(a2.name(), core.name());
+    EXPECT_EQ(s2, s1); // move construction should use the same simplices
+
+    Core a3(a2);
+    a3 = core;
+    const regina::Simplex<3>* s3 = a3.core().simplex(0);
+
+    EXPECT_EQ(a3.name(), core.name());
+    EXPECT_NE(s3, s); // copy assignment should use different simplices
+
+    Core a4(a2);
+    a4 = std::move(a3);
+    const regina::Simplex<3>* s4 = a4.core().simplex(0);
+
+    EXPECT_EQ(a4.name(), core.name());
+    EXPECT_EQ(s4, s3); // move assignment should use the same simplices
+}
+
+TEST(TxICoreTest, copyMove) {
+    testCopyMove(TxIParallelCore());
+    testCopyMove(TxIDiagonalCore(7, 2));
+}

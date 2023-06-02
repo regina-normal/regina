@@ -48,7 +48,6 @@
 #include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
-#include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surface/testsurface.h"
 
 namespace {
@@ -158,11 +157,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
     aliases.insert(std::make_pair("generic", &addGenericTriangulation));
-
-    // Subcomplexes:
-    sets.insert(std::make_pair("standardtriangulation",
-        &addStandardTriangulation));
-    sets.insert(std::make_pair("txicore", &addTxICore));
 
     // Surfaces:
     sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));

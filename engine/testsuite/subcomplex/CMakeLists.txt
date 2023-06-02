@@ -1,5 +1,3 @@
-# subcomplex
-
 # Files to compile
 SET ( FILES
   standardtriangulation.cpp
