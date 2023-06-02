@@ -40,7 +40,6 @@
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/angle/testangle.h"
-#include "testsuite/census/testcensus.h"
 #include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim3/testdim3.h"
 #include "testsuite/dim4/testdim4.h"
@@ -164,10 +163,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Angle structures:
     sets.insert(std::make_pair("anglestructures", &addAngleStructures));
-
-    // Census:
-    sets.insert(std::make_pair("census2", &addCensus2));
-    sets.insert(std::make_pair("census3", &addCensus3));
 
     // SnapPea:
     sets.insert(std::make_pair("snappeatriangulation",

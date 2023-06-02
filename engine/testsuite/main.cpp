@@ -30,9 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
+#include "file/globaldirs.h"
+
 #include "gtest/gtest.h"
 
 int main(int argc, char** argv) {
+    // Make sure we know where to find the census data files.
+    regina::GlobalDirs::deduceDirs(argv[0]);
+
+    // Run the tests!
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
