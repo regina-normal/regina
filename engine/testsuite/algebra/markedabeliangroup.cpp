@@ -36,8 +36,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 
-#include <cmath>
-#include "gtest/gtest.h"
+#include "testhelper.h"
 
 using regina::Integer;
 using regina::MarkedAbelianGroup;
@@ -49,7 +48,7 @@ class MarkedAbelianGroupTest : public testing::Test {
     protected:
         static void verifyNonCycle(const MarkedAbelianGroup& g,
                 const VectorInt& v) {
-            SCOPED_TRACE("v = " + v.str());
+            SCOPED_TRACE_REGINA(v);
 
             EXPECT_FALSE(g.isCycle(v));
             EXPECT_FALSE(g.isBoundary(v));
@@ -64,7 +63,7 @@ class MarkedAbelianGroupTest : public testing::Test {
 
         static void verifyCycleNonBoundary(const MarkedAbelianGroup& g,
                 const VectorInt& v) {
-            SCOPED_TRACE("v = " + v.str());
+            SCOPED_TRACE_REGINA(v);
 
             EXPECT_TRUE(g.isCycle(v));
             EXPECT_FALSE(g.isBoundary(v));
@@ -78,7 +77,7 @@ class MarkedAbelianGroupTest : public testing::Test {
                 const VectorInt& v, const VectorInt& snf) {
             verifyCycleNonBoundary(g, v);
 
-            SCOPED_TRACE("v = " + v.str());
+            SCOPED_TRACE_REGINA(v);
             EXPECT_EQ(g.snfRep(v), snf);
         }
 
@@ -146,7 +145,7 @@ TEST_F(MarkedAbelianGroupTest, kleinBottle) {
     // complex coordinate to produce a cycle, though this
     // particular choice of adjustment is not guaranteed.
     for (int i = 0; i < 6; ++i) {
-        SCOPED_TRACE("edge = " + std::to_string(i));
+        SCOPED_TRACE_NAMED_NUMERIC("edge", i);
 
         auto p = g.cycleProjection(i);
         if (i == 1 || i == 3) {

@@ -1,5 +1,8 @@
 # Files to compile
 SET ( FILES
+  base64.cpp
+  bitmask.cpp
+  tightencoding.cpp
   )
 
 # Prepend folder name

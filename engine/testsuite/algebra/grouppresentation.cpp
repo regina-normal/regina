@@ -34,7 +34,7 @@
 #include "algebra/markedabeliangroup.h"
 #include "utilities/stringutils.h"
 
-#include "gtest/gtest.h"
+#include "testhelper.h"
 
 using regina::Integer;
 using regina::MarkedAbelianGroup;
@@ -202,13 +202,13 @@ TEST_F(GroupPresentationTest, homologicalAlignment) {
          * will be mapped to zero.
          */
         for (size_t j=0; j<tPres.countGenerators(); j++) {
-            SCOPED_TRACE("gen = " + std::to_string(j));
+            SCOPED_TRACE_NAMED_NUMERIC("gen", j);
 
             regina::Vector<Integer> temp = mab.snfRep(
                 regina::Vector<Integer>::unit(tPres.countGenerators(), j));
 
             for (size_t k=0; k<M; k++) {
-                SCOPED_TRACE("col = " + std::to_string(j));
+                SCOPED_TRACE_NAMED_NUMERIC("col", k);
 
                 // case 1: columns of torsion abelianisations
                 if (j<N) {

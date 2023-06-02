@@ -33,6 +33,7 @@
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 
+#include "testhelper.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Integer;
@@ -46,14 +47,14 @@ class AbelianGroupTest : public testing::Test,
     protected:
         void verifyGroup(const AbelianGroup& g,
                 size_t rank, std::initializer_list<int> torsion) {
-            SCOPED_TRACE("g = " + g.str());
+            SCOPED_TRACE_REGINA(g);
 
             EXPECT_EQ(g.rank(), rank);
             EXPECT_EQ(g.countInvariantFactors(), torsion.size());
 
             auto it = torsion.begin();
             for (size_t i = 0; i < torsion.size(); ++i) {
-                SCOPED_TRACE("i = " + std::to_string(i));
+                SCOPED_TRACE_NUMERIC(i);
                 EXPECT_EQ(g.invariantFactor(i), *it);
                 ++it;
             }

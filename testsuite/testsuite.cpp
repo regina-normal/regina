@@ -112,11 +112,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     std::map<std::string, TestSet> sets;
     std::map<std::string, TestSet> aliases;
 
-    // Utilities:
-    sets.insert(std::make_pair("base64", &addBase64));
-    sets.insert(std::make_pair("bitmask", &addBitmask));
-    sets.insert(std::make_pair("tightencoding", &addTightEncoding));
-
     // Maths:
     sets.insert(std::make_pair("binomial", &addBinomial));
     sets.insert(std::make_pair("integer", &addInteger));

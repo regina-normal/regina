@@ -5,7 +5,6 @@ SET ( SOURCES
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
-ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")
 ADD_SUBDIRECTORY("dim2")
@@ -19,7 +18,6 @@ ADD_SUBDIRECTORY("misc")
 ADD_SUBDIRECTORY("snappea")
 ADD_SUBDIRECTORY("subcomplex")
 ADD_SUBDIRECTORY("surface")
-ADD_SUBDIRECTORY("utilities")
 
 INCLUDE_DIRECTORIES(${ENGINE_INCLUDES})
 INCLUDE_DIRECTORIES(${CPPUNIT_INCLUDE_DIR})

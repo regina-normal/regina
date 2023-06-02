@@ -37,7 +37,7 @@
 #include "snappea/snappeatriangulation.h"
 #include "triangulation/example3.h"
 
-#include "gtest/gtest.h"
+#include "testhelper.h"
 
 using regina::AbelianGroup;
 using regina::GroupPresentation;
@@ -263,8 +263,8 @@ static void verifyFreeAbelian(int rank) {
         { 63, 364, 2667, 3906, 22932, 19608, 97155, 99463, 246078 }
     };
 
-    SCOPED_TRACE("index = " + std::to_string(index));
-    SCOPED_TRACE("rank = " + std::to_string(rank));
+    SCOPED_TRACE_NUMERIC(index);
+    SCOPED_TRACE_NUMERIC(rank);
 
     // Prerequisites for us to actually use these tests:
     ASSERT_GE(index, 2);
@@ -369,8 +369,8 @@ static void verifyFree(int rank) {
         { 1, 34470, 0, 0, 0, 0, 0, 0, 0 }
     };
 
-    SCOPED_TRACE("index = " + std::to_string(index));
-    SCOPED_TRACE("rank = " + std::to_string(rank));
+    SCOPED_TRACE_NUMERIC(index);
+    SCOPED_TRACE_NUMERIC(rank);
 
     // Prerequisites for us to actually use these tests:
     ASSERT_GE(index, 2);
@@ -425,8 +425,8 @@ static void verifyCyclic(long order) {
     // result, which must be Z_{order/index}.
     // Otherwise we should have no results at all.
 
-    SCOPED_TRACE("index = " + std::to_string(index));
-    SCOPED_TRACE("order = " + std::to_string(order));
+    SCOPED_TRACE_NUMERIC(index);
+    SCOPED_TRACE_NUMERIC(order);
 
     long expectedOrder = (order % index == 0 ? order / index : 0);
     size_t nFound = 0;
