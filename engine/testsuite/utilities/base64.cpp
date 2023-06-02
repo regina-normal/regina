@@ -43,7 +43,7 @@ static void verifyEncDec(const char* dat, size_t len) {
     char* dec;
 
     size_t encLen = regina::base64Encode(dat, len, &enc);
-    EXPECT_NE(enc, nullptr);
+    ASSERT_NE(enc, nullptr);
     EXPECT_EQ(strlen(enc), encLen);
 
     SCOPED_TRACE_CSTRING(enc);
