@@ -29,11 +29,11 @@ ADD_EXECUTABLE(regina-testsuite ${SOURCES})
 TARGET_LINK_LIBRARIES(regina-testsuite ${ENGINE_LIBRARY})
 
 ADD_TEST(cpp-test regina-testsuite)
-# IF (WIN32)
-#   # On Windows we need to add the engine DLL location to the runtime path.
-#   # The string replacement is to prevent cmake treating $ENV{PATH} as a list.
-#   string(REPLACE ";" "\\;" ESCAPED_PATH "$ENV{PATH}")
-#   SET_PROPERTY(TEST cpp-test PROPERTY ENVIRONMENT
-#     "PATH=${ESCAPED_PATH}\;${PROJECT_BINARY_DIR}/engine")
-# ENDIF (WIN32)
+IF (WIN32)
+  # On Windows we need to add the engine DLL location to the runtime path.
+  # The string replacement is to prevent cmake treating $ENV{PATH} as a list.
+  string(REPLACE ";" "\\;" ESCAPED_PATH "$ENV{PATH}")
+  SET_PROPERTY(TEST cpp-test PROPERTY ENVIRONMENT
+    "PATH=${ESCAPED_PATH}\;${PROJECT_BINARY_DIR}/engine")
+ENDIF (WIN32)
 
