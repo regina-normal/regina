@@ -692,7 +692,9 @@ TEST_F(SnapPeaTest, swapping) {
     }
 }
 
-static void testStability(const Triangulation<3>& tri, const char*) {
+static void testStability(const Triangulation<3>& tri, const char* sig) {
+    SCOPED_TRACE_CSTRING(sig);
+
     // Just make sure SnapPea can work with the triangulation without crashing.
     EXPECT_NO_THROW({
         try {

@@ -76,16 +76,6 @@ using regina::GluingPermSearcher;
 using regina::Triangulation;
 
 namespace {
-    void foundGluingPerms3(const GluingPerms<3>& perms,
-            Triangulation3TestFunction f, BoolSet finite, bool minimal) {
-        Triangulation<3> tri = perms.triangulate();
-        if (tri.isValid() &&
-                (! (finite == true && tri.isIdeal())) &&
-                (! (finite == false && ! tri.isIdeal()))) {
-            f(tri, tri.isoSig().c_str());
-        }
-    }
-
     void foundFacetPairing3(const FacetPairing<3>& pairing,
             FacetPairing<3>::IsoList autos,
             Triangulation3TestFunction f, BoolSet finite, bool minimal) {
@@ -95,17 +85,11 @@ namespace {
             (minimal ?
                 regina::PURGE_NON_MINIMAL_PRIME | regina::PURGE_P2_REDUCIBLE :
                 regina::PURGE_NONE),
-            &foundGluingPerms3, f, finite, minimal);
-    }
-
-    void foundGluingPerms4(const GluingPerms<4>& perms,
-            Triangulation4TestFunction f, BoolSet finite) {
-        Triangulation<4> tri = perms.triangulate();
-        if (tri.isValid() &&
-                (! (finite == true && tri.isIdeal())) &&
-                (! (finite == false && ! tri.isIdeal()))) {
-            f(tri, tri.isoSig().c_str());
-        }
+            [&f, finite](const GluingPerms<3>& perms) {
+                Triangulation<3> tri = perms.triangulate();
+                if (tri.isValid() && finite.contains(! tri.isIdeal()))
+                    f(tri, tri.isoSig().c_str());
+            });
     }
 
     void foundFacetPairing4(const FacetPairing<4>& pairing,
@@ -114,7 +98,11 @@ namespace {
         GluingPermSearcher<4>::findAllPerms(pairing, std::move(autos),
             false /* orientable only */,
             ! finite.hasFalse() /* finite only */,
-            &foundGluingPerms4, f, finite);
+            [&f, finite](const GluingPerms<4>& perms) {
+                Triangulation<4> tri = perms.triangulate();
+                if (tri.isValid() && finite.contains(! tri.isIdeal()))
+                    f(tri, tri.isoSig().c_str());
+            });
     }
 }
 
