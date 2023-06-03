@@ -46,7 +46,6 @@
 #include "testsuite/generic/testgeneric.h"
 #include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
-#include "testsuite/snappea/testsnappea.h"
 #include "testsuite/surface/testsurface.h"
 
 namespace {
@@ -163,11 +162,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Angle structures:
     sets.insert(std::make_pair("anglestructures", &addAngleStructures));
-
-    // SnapPea:
-    sets.insert(std::make_pair("snappeatriangulation",
-        &addSnapPeaTriangulation));
-    aliases.insert(std::make_pair("snappea", &addSnapPeaTriangulation));
 
     // Knots and links:
     sets.insert(std::make_pair("link", &addLink));

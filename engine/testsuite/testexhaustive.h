@@ -30,17 +30,37 @@
  *                                                                        *
  **************************************************************************/
 
+#ifndef __TESTEXHAUSTIVE_H
+#define __TESTEXHAUSTIVE_H
+
+#include "triangulation/forward.h"
+
 /**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
+ * The functions in this header allow you to run a test over all
+ * triangulations from a census.
  *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
+ * The \a small parameter indicates that a smaller census should be
+ * used; this is appropriate when the corresponding test is extremely slow.
+ *
+ * Each test function takes as arguments a triangulation and its
+ * human-readable name.
  */
 
-#include <cppunit/ui/text/TestRunner.h>
+using Triangulation2TestFunction = void (*)(const regina::Triangulation<2>&,
+    const char*);
+using Triangulation3TestFunction = void (*)(const regina::Triangulation<3>&,
+    const char*);
+using Triangulation4TestFunction = void (*)(const regina::Triangulation<4>&,
+    const char*);
 
-void addSnapPeaTriangulation(CppUnit::TextUi::TestRunner& runner);
+void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllClosed(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllBounded(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllIdeal(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllNoBdry(Triangulation3TestFunction f, bool small_ = false);
 
+void runCensusAllClosed(Triangulation4TestFunction f);
+void runCensusAllBounded(Triangulation4TestFunction f);
+void runCensusAllNoBdry(Triangulation4TestFunction f);
+
+#endif

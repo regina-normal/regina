@@ -39,6 +39,7 @@
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
+#include "testexhaustive.h"
 #include "testhelper.h"
 
 using regina::Example;
@@ -126,27 +127,6 @@ class SnapPeaTest : public testing::Test {
                 s->join(2, s, Perm<4>(0,2,3,1));
             }
         }
-
-#if 0
-    CPPUNIT_TEST(stability);
-
-        static void testStability(const Triangulation<3>& tri, const char*) {
-            // Just make sure SnapPea can work with the triangulation
-            // without crashing.
-            try {
-                SnapPeaTriangulation s(tri);
-                s.volume();
-                s.randomize();
-                s.volume();
-                Triangulation<3> t(s);
-            } catch (const regina::SnapPeaIsNull&) {
-            }
-        }
-
-        void stability() {
-            runCensusAllNoBdry(&testStability);
-        }
-#endif
 
         static void testVolume(const SnapPeaTriangulation& s,
                 double vol, int places, const char* name) {
@@ -710,4 +690,23 @@ TEST_F(SnapPeaTest, swapping) {
         EXPECT_TRUE(a.isNull());
         EXPECT_TRUE(b.isNull());
     }
+}
+
+static void testStability(const Triangulation<3>& tri, const char*) {
+    // Just make sure SnapPea can work with the triangulation without crashing.
+    EXPECT_NO_THROW({
+        try {
+            SnapPeaTriangulation s(tri);
+            s.volume();
+            s.randomize();
+            s.volume();
+            Triangulation<3> t(s);
+        } catch (const regina::SnapPeaIsNull&) {
+            // Null triangulations we are happy to deal with.
+        }
+    });
+}
+
+TEST_F(SnapPeaTest, stability) {
+    runCensusAllNoBdry(&testStability);
 }
