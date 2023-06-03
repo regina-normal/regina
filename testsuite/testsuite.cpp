@@ -151,7 +151,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("facetpairing4", &addFacetPairing4));
 
     // Higher-dimensional triangulations:
-    sets.insert(std::make_pair("facenumbering", &addFaceNumbering));
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
     aliases.insert(std::make_pair("generic", &addGenericTriangulation));
