@@ -30,67 +30,45 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/facetpairing.h"
 
-#include "testsuite/exhaustive.h"
-#include "testsuite/generic/facetpairingtest.h"
-#include "testsuite/dim2/testdim2.h"
+#include "generic/facetpairingtest.h"
 
-using regina::FacetPairing;
+TEST(FacetPairing2Test, isCanonical) {
+    FacetPairingTest<2>::isCanonicalAllClosed(0);
+    FacetPairingTest<2>::isCanonicalAllClosed(2);
+    FacetPairingTest<2>::isCanonicalAllClosed(4);
+    FacetPairingTest<2>::isCanonicalAllBounded(1);
+    FacetPairingTest<2>::isCanonicalAllBounded(2);
+    FacetPairingTest<2>::isCanonicalAllBounded(3);
+    FacetPairingTest<2>::isCanonicalAllBounded(4);
+}
 
-class FacetPairing2Test : public FacetPairingTest<2> {
-    CPPUNIT_TEST_SUITE(FacetPairing2Test);
+TEST(FacetPairing2Test, makeCanonical) {
+    FacetPairingTest<2>::makeCanonicalAllClosed(0);
+    FacetPairingTest<2>::makeCanonicalAllClosed(2);
+    FacetPairingTest<2>::makeCanonicalAllClosed(4);
+    FacetPairingTest<2>::makeCanonicalAllBounded(1);
+    FacetPairingTest<2>::makeCanonicalAllBounded(2);
+    FacetPairingTest<2>::makeCanonicalAllBounded(3);
+    FacetPairingTest<2>::makeCanonicalAllBounded(4);
+}
 
-    CPPUNIT_TEST(isCanonical);
-    CPPUNIT_TEST(makeCanonical);
-    CPPUNIT_TEST(rawCountsClosed);
-    CPPUNIT_TEST(tightEncoding);
+TEST(FacetPairing2Test, rawCountsClosed) {
+    // Figures taken from the OEIS sequence #A005967.
+    static const size_t nPairs[] = {
+        0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388, 0, 2592 };
 
-    CPPUNIT_TEST_SUITE_END();
+    for (size_t i = 0; i <= 12; ++i)
+        FacetPairingTest<2>::enumerateClosed(i, nPairs[i]);
+}
 
-    public:
-        void isCanonical() {
-            FacetPairingTest<2>::isCanonicalAllClosed(0);
-            FacetPairingTest<2>::isCanonicalAllClosed(2);
-            FacetPairingTest<2>::isCanonicalAllClosed(4);
-            FacetPairingTest<2>::isCanonicalAllBounded(1);
-            FacetPairingTest<2>::isCanonicalAllBounded(2);
-            FacetPairingTest<2>::isCanonicalAllBounded(3);
-            FacetPairingTest<2>::isCanonicalAllBounded(4);
-        }
-
-        void makeCanonical() {
-            FacetPairingTest<2>::makeCanonicalAllClosed(0);
-            FacetPairingTest<2>::makeCanonicalAllClosed(2);
-            FacetPairingTest<2>::makeCanonicalAllClosed(4);
-            FacetPairingTest<2>::makeCanonicalAllBounded(1);
-            FacetPairingTest<2>::makeCanonicalAllBounded(2);
-            FacetPairingTest<2>::makeCanonicalAllBounded(3);
-            FacetPairingTest<2>::makeCanonicalAllBounded(4);
-        }
-
-        void rawCountsClosed() {
-            // Figures taken from the online encyclopedia of integer
-            // sequences, #A005967.
-            size_t nPairs[] = { 0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388, 0, 2592 };
-
-            for (size_t i = 0; i <= 12; ++i)
-                FacetPairingTest<2>::enumerateClosed(i, nPairs[i]);
-        }
-
-        void tightEncoding() {
-            FacetPairingTest<2>::tightEncodingAllClosed(2);
-            FacetPairingTest<2>::tightEncodingAllClosed(4);
-            FacetPairingTest<2>::tightEncodingAllBounded(1);
-            FacetPairingTest<2>::tightEncodingAllBounded(2);
-            FacetPairingTest<2>::tightEncodingAllBounded(3);
-            FacetPairingTest<2>::tightEncodingAllBounded(4);
-        }
-};
-
-void addFacetPairing2(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(FacetPairing2Test::suite());
+TEST(FacetPairing2Test, tightEncoding) {
+    FacetPairingTest<2>::tightEncodingAllClosed(2);
+    FacetPairingTest<2>::tightEncodingAllClosed(4);
+    FacetPairingTest<2>::tightEncodingAllBounded(1);
+    FacetPairingTest<2>::tightEncodingAllBounded(2);
+    FacetPairingTest<2>::tightEncodingAllBounded(3);
+    FacetPairingTest<2>::tightEncodingAllBounded(4);
 }
 

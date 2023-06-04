@@ -130,7 +130,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("triangulation2", &addTriangulation2));
     aliases.insert(std::make_pair("dim2", &addTriangulation2));
     sets.insert(std::make_pair("isomorphism2", &addIsomorphism2));
-    sets.insert(std::make_pair("facetpairing2", &addFacetPairing2));
 
     // 3-manifold triangulations:
     sets.insert(std::make_pair("triangulation3", &addTriangulation3));
@@ -140,7 +139,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("isomorphism3", &addIsomorphism3));
     sets.insert(std::make_pair("linkingsurfaces", &addLinkingSurfaces));
     sets.insert(std::make_pair("homologicaldata", &addHomologicalData));
-    sets.insert(std::make_pair("facetpairing3", &addFacetPairing3));
     // We no longer build-depend on boost, so disable the boost.graph test.
     // sets.insert(std::make_pair("dualgraph3", &addDualGraph3));
 
@@ -148,7 +146,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
     aliases.insert(std::make_pair("dim4", &addTriangulation4));
     sets.insert(std::make_pair("isomorphism4", &addIsomorphism4));
-    sets.insert(std::make_pair("facetpairing4", &addFacetPairing4));
 
     // Higher-dimensional triangulations:
     sets.insert(std::make_pair("generictriangulation",

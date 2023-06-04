@@ -30,17 +30,60 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include "triangulation/facetpairing.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+#include "generic/facetpairingtest.h"
 
-void addTriangulation2(CppUnit::TextUi::TestRunner& runner);
-void addIsomorphism2(CppUnit::TextUi::TestRunner& runner);
+TEST(FacetPairing4Test, isCanonical) {
+    FacetPairingTest<4>::isCanonicalAllClosed(0);
+    FacetPairingTest<4>::isCanonicalAllClosed(2);
+    FacetPairingTest<4>::isCanonicalAllClosed(4);
+    FacetPairingTest<4>::isCanonicalAllBounded(1);
+    FacetPairingTest<4>::isCanonicalAllBounded(2);
+    FacetPairingTest<4>::isCanonicalAllBounded(3);
+    FacetPairingTest<4>::isCanonicalAllBounded(4);
+}
+
+TEST(FacetPairing4Test, makeCanonical) {
+    FacetPairingTest<4>::makeCanonicalAllClosed(0);
+    // Already too slow just for n=2. :/
+    // FacetPairingTest<4>::makeCanonicalAllClosed(2);
+    FacetPairingTest<4>::makeCanonicalAllBounded(1);
+    // FacetPairingTest<4>::makeCanonicalAllBounded(2);
+}
+
+TEST(FacetPairing4Test, rawCountsClosed) {
+    // Figures taken from OEIS sequence #A129430, as enumerated by
+    // Brendan McKay using the software Nauty.
+    static const size_t nPairs[] = { 0, 0, 3, 0, 26, 0, 639, 0, 40264 };
+
+    for (size_t i = 0; i <= 5; ++i)
+        FacetPairingTest<4>::enumerateClosed(i, nPairs[i]);
+}
+
+TEST(FacetPairing4Test, rawCountsBounded) {
+    // Figures based on enumeration under the 4-manifolds branch
+    // at the time of the Regina 4.93 release.
+    static const size_t nBdry[] = { 0, 3, 11, 61, 473, 4487 };
+    static const size_t nBdry1[] = { 0, 1, 0, 10, 0, 284, 0, 17761 };
+    static const size_t nBdry2[] = { 0, 0, 4, 0, 91, 0, 4665 };
+
+    for (size_t i = 0; i <= 6; ++i)
+        FacetPairingTest<4>::enumerateBounded(i, 1, nBdry1[i]);
+
+    for (size_t i = 0; i <= 5; ++i)
+        FacetPairingTest<4>::enumerateBounded(i, 2, nBdry2[i]);
+
+    for (size_t i = 0; i <= 4; ++i)
+        FacetPairingTest<4>::enumerateBounded(i, nBdry[i]);
+}
+
+TEST(FacetPairing4Test, tightEncoding) {
+    FacetPairingTest<4>::tightEncodingAllClosed(2);
+    FacetPairingTest<4>::tightEncodingAllClosed(4);
+    FacetPairingTest<4>::tightEncodingAllBounded(1);
+    FacetPairingTest<4>::tightEncodingAllBounded(2);
+    FacetPairingTest<4>::tightEncodingAllBounded(3);
+    FacetPairingTest<4>::tightEncodingAllBounded(4);
+}
+

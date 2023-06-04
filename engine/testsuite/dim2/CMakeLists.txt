@@ -1,9 +1,6 @@
-# dim2
-
 # Files to compile
 SET ( FILES
-  isomorphism2.cpp
-  triangulation2.cpp
+  facetpairing2.cpp
   )
 
 # Prepend folder name

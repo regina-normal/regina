@@ -36,25 +36,25 @@
 #include "gtest/gtest.h"
 
 /**
- * A class \a T that implements tight encodings (and optionally decodings) can
- * derive its test class from TightEncodingTest<T, ...>, which will give its
- * test class an inherited function verifyTightEncoding(const T&).
+ * Implements tests for tight encodings (and optionally decodings) of objects
+ * of type \a T.  This type \a T must provide equality tests and a str()
+ * function that returns a std::string.
  *
- * The derived test class will still need to inherit from testing::Test,
- * and will still need to set up a wrapper tightEncoding() test that calls
- * verifyTightEncoding(...) for an appropriate selection of test objects.
- *
- * There are several requirements on the type \a T, including:
- *
- * - a str() function;
- * - equality tests;
- * 
+ * Test suites can call these functions directly.  There is no need (or
+ * benefit) for using inheritance of test fixture classes, other than the
+ * minor convenience of not having to type out the template parameters for
+ * TightEncodingTest every time it is used.
  */
 template <class T, bool hasDecoding = true>
 class TightEncodingTest {
+    // Ensure that str() returns a std::string.
+    static_assert(
+        std::is_same_v<decltype(std::declval<T>().str()), std::string>,
+        "TightEncodingTest<T> requires T::str() to return a std::string.");
+
     public:
         static void verifyTightEncoding(const T& obj) {
-            SCOPED_TRACE("obj = " + obj.str());
+            SCOPED_TRACE_REGINA(obj);
             std::string enc = obj.tightEncoding();
 
             {
