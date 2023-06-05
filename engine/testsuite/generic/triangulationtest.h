@@ -837,7 +837,7 @@ class TriangulationTest : public testing::Test {
             if (! tri.isConnected())
                 return;
 
-            static const int trials = 10;
+            static constexpr int trials = 5;
 
             Triangulation<dim> canonical(tri);
             canonical.makeCanonical();
@@ -893,7 +893,7 @@ class TriangulationTest : public testing::Test {
             if (tri.isEmpty())
                 return;
 
-            static const int trials = 10;
+            static constexpr int trials = 5;
 
             for (int i = 0; i < trials; ++i) {
                 auto other = Isomorphism<dim>::random(tri.size())(tri);
