@@ -66,7 +66,7 @@ inline const char* safeTypeName() {
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
- * the given variable in the trace.
+ * the given numeric variable in the trace.
  *
  * Here \a var should be a native numeric C++ type that can be converted to a
  * std::string via std::to_string().
@@ -75,7 +75,7 @@ inline const char* safeTypeName() {
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
- * the given variable in the trace, using the given variable name.
+ * the given numeric variable in the trace, using the given variable name.
  *
  * Here \a name should be a C-style string, and \a var should be a native
  * numeric C++ type that can be converted to a std::string via std::to_string().
@@ -85,7 +85,15 @@ inline const char* safeTypeName() {
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
- * the given variable in the trace.
+ * the given C++ string variable in the trace.
+ *
+ * Here \a var should be a std::string.
+ */
+#define SCOPED_TRACE_STDSTRING(var) SCOPED_TRACE(#var " = " + var)
+
+/**
+ * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
+ * the given C string variable in the trace.
  *
  * Here \a var should be a pointer to a native C-style string; that is, \a var
  * should be of type (char*) or (const char*).
@@ -94,7 +102,7 @@ inline const char* safeTypeName() {
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
- * the given variable in the trace.
+ * the given Regina-style variable in the trace.
  *
  * Here \a var should be one of Regina's types that provides a str() member
  * function returning a std::string.
@@ -103,7 +111,7 @@ inline const char* safeTypeName() {
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
- * the given variable in the trace.
+ * the given BoolSet variable in the trace.
  *
  * Here \a var should be of type regina::BoolSet.
  */

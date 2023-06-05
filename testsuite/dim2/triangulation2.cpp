@@ -35,7 +35,7 @@
 #include "triangulation/example2.h"
 
 #include "testsuite/exhaustive.h"
-#include "testsuite/generic/triangulationtest.h"
+#include "testsuite/generic/triangulationtest_old.h"
 #include "testsuite/dim2/testdim2.h"
 
 using regina::Triangulation;

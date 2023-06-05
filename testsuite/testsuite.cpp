@@ -43,7 +43,6 @@
 #include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim3/testdim3.h"
 #include "testsuite/dim4/testdim4.h"
-#include "testsuite/generic/testgeneric.h"
 #include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/surface/testsurface.h"
@@ -146,11 +145,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
     aliases.insert(std::make_pair("dim4", &addTriangulation4));
     sets.insert(std::make_pair("isomorphism4", &addIsomorphism4));
-
-    // Higher-dimensional triangulations:
-    sets.insert(std::make_pair("generictriangulation",
-        &addGenericTriangulation));
-    aliases.insert(std::make_pair("generic", &addGenericTriangulation));
 
     // Surfaces:
     sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));

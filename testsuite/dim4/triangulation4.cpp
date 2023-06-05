@@ -44,7 +44,7 @@
 #include "triangulation/example4.h"
 
 #include "testsuite/exhaustive.h"
-#include "testsuite/generic/triangulationtest.h"
+#include "testsuite/generic/triangulationtest_old.h"
 #include "testsuite/dim4/testdim4.h"
 
 using regina::BoundaryComponent;
