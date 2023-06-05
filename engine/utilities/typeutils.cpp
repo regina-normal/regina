@@ -152,7 +152,7 @@ namespace {
                 std::string("regina.FacetPairing") +
                     regina::detail::Strings<i>::dim);
 
-            if constexpr (i.value == 2) {
+            if constexpr (i == 2) {
                 registerType(typeid(Triangle<2>), "regina.Triangle2");
                 registerType(
                     typeid(decltype(Triangulation<2>().simplices())),
@@ -169,7 +169,7 @@ namespace {
                     typeid(decltype(Triangulation<2>().boundaryComponent(0)->
                         vertices())),
                     "<internal>.ListView[regina.Vertex2]");
-            } else if constexpr (i.value == 3) {
+            } else if constexpr (i == 3) {
                 registerType(typeid(Tetrahedron<3>), "regina.Tetrahedron3");
                 registerType(
                     typeid(decltype(Triangulation<3>().simplices())),
@@ -190,7 +190,7 @@ namespace {
                     typeid(decltype(Triangulation<3>().boundaryComponent(0)->
                         vertices())),
                     "<internal>.ListView[regina.Vertex3]");
-            } else if constexpr (i.value == 4) {
+            } else if constexpr (i == 4) {
                 registerType(typeid(Pentachoron<4>), "regina.Pentachoron4");
                 registerType(
                     typeid(decltype(Triangulation<4>().simplices())),
@@ -228,7 +228,7 @@ namespace {
                         simplices())),
                     std::string("<internal>.ListView[regina.Simplex") +
                         regina::detail::Strings<i>::dim + ']');
-                if constexpr (i.value == 5) {
+                if constexpr (i == 5) {
                     registerType(
                         typeid(decltype(Triangulation<5>().
                             boundaryComponent(0)->facets())),
@@ -244,7 +244,7 @@ namespace {
             }
 
             for_constexpr<0, i>([i](auto j) {
-                if constexpr (j.value == 0) {
+                if constexpr (j == 0) {
                     registerType(
                         typeid(Vertex<i>),
                         std::string("regina.Vertex") +
@@ -259,7 +259,7 @@ namespace {
                         std::string(
                             "<internal>.ListView[regina.VertexEmbedding") +
                             regina::detail::Strings<i>::dim + ']');
-                } else if constexpr (j.value == 1) {
+                } else if constexpr (j == 1) {
                     registerType(
                         typeid(Edge<i>),
                         std::string("regina.Edge") +
@@ -274,7 +274,7 @@ namespace {
                         std::string(
                             "<internal>.ListView[regina.EdgeEmbedding") +
                             regina::detail::Strings<i>::dim + ']');
-                } else if constexpr (j.value == 2) {
+                } else if constexpr (j == 2) {
                     // Despite the fact that this code is only generated
                     // for 0 <= j < i, it is still being *parsed* for i == 2,
                     // thus generating compile errors (because
@@ -284,7 +284,7 @@ namespace {
                     // above does *not* fix it.  Is this a flaw in my compiler
                     // (clang / xcode 14), or a flaw in my understanding of
                     // how constexpr-if works?
-                    if constexpr (i.value > 2) {
+                    if constexpr (i > 2) {
                         registerType(
                             typeid(Triangle<i>),
                             std::string("regina.Triangle") +
@@ -301,9 +301,9 @@ namespace {
                                 "regina.TriangleEmbedding") +
                                 regina::detail::Strings<i>::dim + ']');
                     }
-                } else if constexpr (j.value == 3) {
+                } else if constexpr (j == 3) {
                     // See the j == 2 case for why we need this extra test on i.
-                    if constexpr (i.value > 3) {
+                    if constexpr (i > 3) {
                         registerType(
                             typeid(Tetrahedron<i>),
                             std::string("regina.Tetrahedron") +
@@ -322,9 +322,9 @@ namespace {
                                 "regina.TetrahedronEmbedding") +
                                 regina::detail::Strings<i>::dim + ']');
                     }
-                } else if constexpr (j.value == 4) {
+                } else if constexpr (j == 4) {
                     // See the j == 2 case for why we need this extra test on i.
-                    if constexpr (i.value > 4) {
+                    if constexpr (i > 4) {
                         registerType(
                             typeid(Pentachoron<i>),
                             std::string("regina.Pentachoron") +
