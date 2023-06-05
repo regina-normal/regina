@@ -49,7 +49,7 @@ void addFaceNumbering(pybind11::module_& m) {
                 regina::maxDim());
         return regina::select_constexpr<2, regina::maxDim() + 1, int>(dim,
                 [=](auto d) {
-            return regina::faceOppositeEdge<d.value>(i, j);
+            return regina::faceOppositeEdge<d>(i, j);
         });
     }, pybind11::arg("dim"), pybind11::arg("i"), pybind11::arg("j"),
         rdoc::faceOppositeEdge);

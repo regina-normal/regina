@@ -107,11 +107,10 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def_readonly_static("orderedSn", &Perm<n>::orderedSn)
     ;
     regina::for_constexpr<2, n>([&c](auto i) {
-        c.def_static("extend", &Perm<n>::template extend<i.value>,
-            rdoc::extend);
+        c.def_static("extend", &Perm<n>::template extend<i>, rdoc::extend);
     });
     regina::for_constexpr<n+1, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<n>::template contract<i.value>,
+        c.def_static("contract", &Perm<n>::template contract<i>,
             rdoc::contract);
     });
     regina::python::add_output_basic(c, rdoc::str);

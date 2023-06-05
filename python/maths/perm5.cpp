@@ -130,7 +130,7 @@ void addPerm5(pybind11::module_& m) {
         .def_readonly_static("S2", &Perm<5>::S2)
     ;
     regina::for_constexpr<6, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<5>::template contract<i.value>,
+        c.def_static("contract", &Perm<5>::template contract<i>,
             rdoc::contract);
     });
     regina::python::add_output_basic(c, rdoc::str);

@@ -719,8 +719,8 @@ void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
         auto you = src.simplices_.begin();
         for ( ; me != simplices_.end(); ++me, ++you) {
             for_constexpr<0, dim>([this, me, you](auto subdim) {
-                auto dest = std::get<subdim.value>((*me)->faces_).begin();
-                for (auto f : std::get<subdim.value>((*you)->faces_))
+                auto dest = std::get<subdim>((*me)->faces_).begin();
+                for (auto f : std::get<subdim>((*you)->faces_))
                     *dest++ = clonedFace(f);
             });
             (*me)->mappings_ = (*you)->mappings_;

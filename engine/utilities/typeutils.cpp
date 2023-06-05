@@ -104,54 +104,53 @@ namespace {
         // We use the hard-coded dimension strings to build names for
         // Perm2..Perm15.
         for_constexpr<2, 16>([](auto i) {
-            registerType(typeid(Perm<i.value>),
-                std::string("regina.Perm") +
-                    regina::detail::Strings<i.value>::dim);
+            registerType(typeid(Perm<i>),
+                std::string("regina.Perm") + regina::detail::Strings<i>::dim);
         });
         // Perm16 does not have a hard-coded dimension string, so do
         // this separately.
         registerType(typeid(Perm<16>), "regina.Perm16");
 
         for_constexpr<2, REGINA_MAXDIM + 1>([](auto i) {
-            registerType(typeid(Triangulation<i.value>),
+            registerType(typeid(Triangulation<i>),
                 std::string("regina.Triangulation") +
-                    regina::detail::Strings<i.value>::dim);
+                    regina::detail::Strings<i>::dim);
 
-            registerType(typeid(Component<i.value>),
+            registerType(typeid(Component<i>),
                 std::string("regina.Component") +
-                    regina::detail::Strings<i.value>::dim);
+                    regina::detail::Strings<i>::dim);
             registerType(
-                typeid(decltype(Triangulation<i.value>().components())),
+                typeid(decltype(Triangulation<i>().components())),
                 std::string("<internal>.ListView[regina.Component") +
-                    regina::detail::Strings<i.value>::dim + ']');
+                    regina::detail::Strings<i>::dim + ']');
 
-            registerType(typeid(BoundaryComponent<i.value>),
+            registerType(typeid(BoundaryComponent<i>),
                 std::string("regina.BoundaryComponent") +
-                    regina::detail::Strings<i.value>::dim);
+                    regina::detail::Strings<i>::dim);
             registerType(
-                typeid(decltype(Triangulation<i.value>().boundaryComponents())),
+                typeid(decltype(Triangulation<i>().boundaryComponents())),
                 std::string("<internal>.ListView[regina.BoundaryComponent") +
-                    regina::detail::Strings<i.value>::dim + ']');
+                    regina::detail::Strings<i>::dim + ']');
             registerType(
-                typeid(decltype(Triangulation<i.value>().component(0)->
+                typeid(decltype(Triangulation<i>().component(0)->
                     boundaryComponents())),
                 std::string("<internal>.ListView[regina.BoundaryComponent") +
-                    regina::detail::Strings<i.value>::dim + ']');
+                    regina::detail::Strings<i>::dim + ']');
 
-            registerType(typeid(Isomorphism<i.value>),
+            registerType(typeid(Isomorphism<i>),
                 std::string("regina.Isomorphism") +
-                    regina::detail::Strings<i.value>::dim);
-            registerType(typeid(FacetSpec<i.value>),
+                    regina::detail::Strings<i>::dim);
+            registerType(typeid(FacetSpec<i>),
                 std::string("regina.FacetSpec") +
-                    regina::detail::Strings<i.value>::dim);
-            registerType(typeid(FacetPairing<i.value>),
+                    regina::detail::Strings<i>::dim);
+            registerType(typeid(FacetPairing<i>),
                 std::string("regina.FacetPairing") +
-                    regina::detail::Strings<i.value>::dim);
+                    regina::detail::Strings<i>::dim);
             // We see FacetPairingBase show up in some swap() functions.
             registerType(
-                typeid(regina::detail::FacetPairingBase<i.value>),
+                typeid(regina::detail::FacetPairingBase<i>),
                 std::string("regina.FacetPairing") +
-                    regina::detail::Strings<i.value>::dim);
+                    regina::detail::Strings<i>::dim);
 
             if constexpr (i.value == 2) {
                 registerType(typeid(Triangle<2>), "regina.Triangle2");
@@ -217,18 +216,18 @@ namespace {
                         vertices())),
                     "<internal>.ListView[regina.Vertex4]");
             } else {
-                registerType(typeid(Face<i.value, i.value>),
+                registerType(typeid(Face<i, i>),
                     std::string("regina.Simplex") +
-                        regina::detail::Strings<i.value>::dim);
+                        regina::detail::Strings<i>::dim);
                 registerType(
-                    typeid(decltype(Triangulation<i.value>().simplices())),
+                    typeid(decltype(Triangulation<i>().simplices())),
                     std::string("<internal>.ListView[regina.Simplex") +
-                        regina::detail::Strings<i.value>::dim + ']');
+                        regina::detail::Strings<i>::dim + ']');
                 registerType(
-                    typeid(decltype(Triangulation<i.value>().component(0)->
+                    typeid(decltype(Triangulation<i>().component(0)->
                         simplices())),
                     std::string("<internal>.ListView[regina.Simplex") +
-                        regina::detail::Strings<i.value>::dim + ']');
+                        regina::detail::Strings<i>::dim + ']');
                 if constexpr (i.value == 5) {
                     registerType(
                         typeid(decltype(Triangulation<5>().
@@ -236,45 +235,45 @@ namespace {
                         "<internal>.ListView[regina.Pentachoron5]");
                 } else {
                     registerType(
-                        typeid(decltype(Triangulation<i.value>().
+                        typeid(decltype(Triangulation<i>().
                             boundaryComponent(0)->facets())),
                         std::string("<internal>.ListView[regina.Face") +
-                            regina::detail::Strings<i.value>::dim + '_' +
-                            regina::detail::Strings<i.value - 1>::dim + ']');
+                            regina::detail::Strings<i>::dim + '_' +
+                            regina::detail::Strings<i - 1>::dim + ']');
                 }
             }
 
-            for_constexpr<0, i.value>([i](auto j) {
+            for_constexpr<0, i>([i](auto j) {
                 if constexpr (j.value == 0) {
                     registerType(
-                        typeid(Vertex<i.value>),
+                        typeid(Vertex<i>),
                         std::string("regina.Vertex") +
-                            regina::detail::Strings<i.value>::dim);
+                            regina::detail::Strings<i>::dim);
                     registerType(
-                        typeid(decltype(Triangulation<i.value>().vertices())),
+                        typeid(decltype(Triangulation<i>().vertices())),
                         std::string("<internal>.ListView[regina.Vertex") +
-                            regina::detail::Strings<i.value>::dim + ']');
+                            regina::detail::Strings<i>::dim + ']');
                     registerType(
-                        typeid(decltype(Triangulation<i.value>().
+                        typeid(decltype(Triangulation<i>().
                             vertex(0)->embeddings())),
                         std::string(
                             "<internal>.ListView[regina.VertexEmbedding") +
-                            regina::detail::Strings<i.value>::dim + ']');
+                            regina::detail::Strings<i>::dim + ']');
                 } else if constexpr (j.value == 1) {
                     registerType(
-                        typeid(Edge<i.value>),
+                        typeid(Edge<i>),
                         std::string("regina.Edge") +
-                            regina::detail::Strings<i.value>::dim);
+                            regina::detail::Strings<i>::dim);
                     registerType(
-                        typeid(decltype(Triangulation<i.value>().edges())),
+                        typeid(decltype(Triangulation<i>().edges())),
                         std::string("<internal>.ListView[regina.Edge") +
-                            regina::detail::Strings<i.value>::dim + ']');
+                            regina::detail::Strings<i>::dim + ']');
                     registerType(
-                        typeid(decltype(Triangulation<i.value>().
+                        typeid(decltype(Triangulation<i>().
                             edge(0)->embeddings())),
                         std::string(
                             "<internal>.ListView[regina.EdgeEmbedding") +
-                            regina::detail::Strings<i.value>::dim + ']');
+                            regina::detail::Strings<i>::dim + ']');
                 } else if constexpr (j.value == 2) {
                     // Despite the fact that this code is only generated
                     // for 0 <= j < i, it is still being *parsed* for i == 2,
@@ -287,89 +286,89 @@ namespace {
                     // how constexpr-if works?
                     if constexpr (i.value > 2) {
                         registerType(
-                            typeid(Triangle<i.value>),
+                            typeid(Triangle<i>),
                             std::string("regina.Triangle") +
-                                regina::detail::Strings<i.value>::dim);
+                                regina::detail::Strings<i>::dim);
                         registerType(
-                            typeid(decltype(Triangulation<i.value>().
+                            typeid(decltype(Triangulation<i>().
                                 triangles())),
                             std::string("<internal>.ListView[regina.Triangle") +
-                                regina::detail::Strings<i.value>::dim + ']');
+                                regina::detail::Strings<i>::dim + ']');
                         registerType(
-                            typeid(decltype(Triangulation<i.value>().
+                            typeid(decltype(Triangulation<i>().
                                 triangle(0)->embeddings())),
                             std::string("<internal>.ListView["
                                 "regina.TriangleEmbedding") +
-                                regina::detail::Strings<i.value>::dim + ']');
+                                regina::detail::Strings<i>::dim + ']');
                     }
                 } else if constexpr (j.value == 3) {
                     // See the j == 2 case for why we need this extra test on i.
                     if constexpr (i.value > 3) {
                         registerType(
-                            typeid(Tetrahedron<i.value>),
+                            typeid(Tetrahedron<i>),
                             std::string("regina.Tetrahedron") +
-                                regina::detail::Strings<i.value>::dim);
+                                regina::detail::Strings<i>::dim);
                         registerType(
-                            typeid(decltype(Triangulation<i.value>().
+                            typeid(decltype(Triangulation<i>().
                                 tetrahedra())),
                             std::string(
                                 "<internal>.ListView[regina.Tetrahedron") +
-                                regina::detail::Strings<i.value>::dim + ']');
+                                regina::detail::Strings<i>::dim + ']');
                         registerType(
-                            typeid(decltype(Triangulation<i.value>().
+                            typeid(decltype(Triangulation<i>().
                                 tetrahedron(0)->embeddings())),
                             std::string(
                                 "<internal>.ListView["
                                 "regina.TetrahedronEmbedding") +
-                                regina::detail::Strings<i.value>::dim + ']');
+                                regina::detail::Strings<i>::dim + ']');
                     }
                 } else if constexpr (j.value == 4) {
                     // See the j == 2 case for why we need this extra test on i.
                     if constexpr (i.value > 4) {
                         registerType(
-                            typeid(Pentachoron<i.value>),
+                            typeid(Pentachoron<i>),
                             std::string("regina.Pentachoron") +
-                                regina::detail::Strings<i.value>::dim);
+                                regina::detail::Strings<i>::dim);
                         registerType(
-                            typeid(decltype(Triangulation<i.value>().
+                            typeid(decltype(Triangulation<i>().
                                 pentachora())),
                             std::string(
                                 "<internal>.ListView[regina.Pentachoron") +
-                                regina::detail::Strings<i.value>::dim + ']');
+                                regina::detail::Strings<i>::dim + ']');
                         registerType(
-                            typeid(decltype(Triangulation<i.value>().
+                            typeid(decltype(Triangulation<i>().
                                 pentachoron(0)->embeddings())),
                             std::string(
                                 "<internal>.ListView["
                                 "regina.PentachoronEmbedding") +
-                                regina::detail::Strings<i.value>::dim + ']');
+                                regina::detail::Strings<i>::dim + ']');
                     }
                 } else {
                     registerType(
-                        typeid(Face<i.value, j.value>),
+                        typeid(Face<i, j>),
                         std::string("regina.Face") +
-                            regina::detail::Strings<i.value>::dim + '_' +
-                            regina::detail::Strings<j.value>::dim);
+                            regina::detail::Strings<i>::dim + '_' +
+                            regina::detail::Strings<j>::dim);
                     registerType(
-                        typeid(decltype(Triangulation<i.value>().
-                            template faces<j.value>())),
+                        typeid(decltype(Triangulation<i>().
+                            template faces<j>())),
                         std::string("<internal>.ListView[regina.Face") +
-                            regina::detail::Strings<i.value>::dim + '_' +
-                            regina::detail::Strings<j.value>::dim + ']');
+                            regina::detail::Strings<i>::dim + '_' +
+                            regina::detail::Strings<j>::dim + ']');
                     registerType(
-                        typeid(decltype(Triangulation<i.value>().
-                            template face<j.value>(0)->embeddings())),
+                        typeid(decltype(Triangulation<i>().
+                            template face<j>(0)->embeddings())),
                         std::string(
                             "<internal>.ListView[regina.FaceEmbedding") +
-                            regina::detail::Strings<i.value>::dim + '_' +
-                            regina::detail::Strings<j.value>::dim + ']');
+                            regina::detail::Strings<i>::dim + '_' +
+                            regina::detail::Strings<j>::dim + ']');
                 }
             });
 
             registerType(
-                typeid(PacketOf<Triangulation<i.value>>),
+                typeid(PacketOf<Triangulation<i>>),
                 std::string("regina.PacketOfTriangulation") +
-                    regina::detail::Strings<i.value>::dim);
+                    regina::detail::Strings<i>::dim);
         });
 
         registerType(typeid(decltype(SnapPeaTriangulation().cusps())),
