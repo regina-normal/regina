@@ -40,7 +40,6 @@
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/angle/testangle.h"
-#include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim3/testdim3.h"
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/link/testlink.h"
@@ -125,11 +124,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("matrixops", &addMatrixOps));
     sets.insert(std::make_pair("permconv", &addPermConv));
 
-    // 2-manifold triangulations:
-    sets.insert(std::make_pair("triangulation2", &addTriangulation2));
-    aliases.insert(std::make_pair("dim2", &addTriangulation2));
-    sets.insert(std::make_pair("isomorphism2", &addIsomorphism2));
-
     // 3-manifold triangulations:
     sets.insert(std::make_pair("triangulation3", &addTriangulation3));
     aliases.insert(std::make_pair("dim3", &addTriangulation3));
@@ -144,7 +138,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
     aliases.insert(std::make_pair("dim4", &addTriangulation4));
-    sets.insert(std::make_pair("isomorphism4", &addIsomorphism4));
 
     // Surfaces:
     sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));

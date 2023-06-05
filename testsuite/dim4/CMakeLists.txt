@@ -2,7 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  isomorphism4.cpp
   triangulation4.cpp
   )
 

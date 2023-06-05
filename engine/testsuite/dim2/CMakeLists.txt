@@ -1,6 +1,8 @@
 # Files to compile
 SET ( FILES
   facetpairing2.cpp
+  isomorphism2.cpp
+  triangulation2.cpp
   )
 
 # Prepend folder name

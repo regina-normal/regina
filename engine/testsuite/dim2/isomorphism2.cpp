@@ -30,17 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include "triangulation/dim2.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+#include "generic/isomorphismtest.h"
 
-void addTriangulation2(CppUnit::TextUi::TestRunner& runner);
-void addIsomorphism2(CppUnit::TextUi::TestRunner& runner);
+TEST(Isomorphism2Test, tightEncoding) {
+    IsomorphismTest<2>::tightEncoding({ 1, 6, 72, 1296 });
+}

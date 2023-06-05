@@ -30,86 +30,64 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/dim4.h"
-#include "testsuite/dim4/testdim4.h"
-#include "testsuite/utilities/tightencodingtest_old.h"
+#include <initializer_list>
 
-using regina::Isomorphism;
-using regina::Perm;
-using regina::Triangulation;
+#include "testhelper.h"
+#include "utilities/tightencodingtest.h"
 
-class Isomorphism4Test :
-        public CppUnit::TestFixture, public TightEncodingTest<Isomorphism<4>> {
-    CPPUNIT_TEST_SUITE(Isomorphism4Test);
-
-    CPPUNIT_TEST(tightEncoding);
-
-    CPPUNIT_TEST_SUITE_END();
-
+/**
+ * Implements tests for isomorphisms in dimension \a dim.
+ *
+ * Test suites can call these functions directly.  There is no need (or
+ * benefit) for using inheritance of test fixture classes, other than the
+ * minor convenience of not having to type out all the template parameters for
+ * IsomorphismTest every time it is used.
+ */
+template <int dim>
+class IsomorphismTest {
     public:
-        void setUp() override {
-        }
+        /**
+         * The given array \a counts should list the total number of
+         * isomorphisms of size 0, 1, 2, etc., up to whatever size we are
+         * willing to enumerate programatically as the test suite runs.
+         *
+         * Specifically, `counts[k]` should be `k! * [(dim+1)!]^k`.
+         */
+        static void tightEncoding(std::initializer_list<size_t> counts) {
+            using Impl = TightEncodingTest<regina::Isomorphism<dim>>;
 
-        void tearDown() override {
-        }
-
-        void tightEncoding() {
-            // Cases where the isomorphism is empty:
-            verifyTightEncoding(Isomorphism<4>(0));
-
-            // Exhaustive run through all small isomorphisms (we need
+            // Exhaustive run through all small isomorphisms (we use
             // both odd and even sizes here since permutations are
             // encoded in pairs):
-            static constexpr size_t expect[] = { 1, 120, 28800 };
-            {
-                Isomorphism<4> iso = Isomorphism<4>::identity(1);
-                size_t count = 0;
-                do {
-                    verifyTightEncoding(iso);
-                    ++count;
-                    ++iso;
-                } while (! iso.isIdentity());
-                if (count != expect[1]) {
-                    std::ostringstream msg;
-                    msg << "Generated " << count << " isomorphisms "
-                        "of size 1 instead of the expected "
-                        << expect[1] << '.';
-                    CPPUNIT_FAIL(msg.str());
+            size_t n = 0;
+            for (size_t expect : counts) {
+                SCOPED_TRACE_NUMERIC(n);
+                if (n == 0) {
+                    // Special-case the (unique) empty isomorphism.
+                    EXPECT_EQ(expect, 1);
+                    Impl::verifyTightEncoding(regina::Isomorphism<dim>(0));
+                } else {
+                    auto iso = regina::Isomorphism<dim>::identity(n);
+                    size_t count = 0;
+                    do {
+                        Impl::verifyTightEncoding(iso);
+                        ++count;
+                        ++iso;
+                    } while (! iso.isIdentity());
+                    EXPECT_EQ(count, expect);
                 }
-            }
-            {
-                Isomorphism<4> iso = Isomorphism<4>::identity(2);
-                size_t count = 0;
-                do {
-                    verifyTightEncoding(iso);
-                    ++count;
-                    ++iso;
-                } while (! iso.isIdentity());
-                if (count != expect[2]) {
-                    std::ostringstream msg;
-                    msg << "Generated " << count << " isomorphisms "
-                        "of size 2 instead of the expected "
-                        << expect[2] << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
+                ++n;
             }
 
             // Cases where the isomorphism includes higher-numbered
             // simplex images, and also uninitialised simplex images:
             {
-                Isomorphism<4> iso(2);
+                regina::Isomorphism<dim> iso(2);
                 iso.simpImage(0) = -1;
                 iso.simpImage(1) = 3;
-                iso.facetPerm(0) = Perm<5>(3,1,4,2,0);
-                iso.facetPerm(1) = Perm<5>(2,4,0,1,3);
-                verifyTightEncoding(iso);
+                iso.facetPerm(0) = regina::Perm<dim+1>::rot(dim-1);
+                iso.facetPerm(1) = regina::Perm<dim+1>::rot(1);
+                Impl::verifyTightEncoding(iso);
             }
         }
 };
-
-void addIsomorphism4(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Isomorphism4Test::suite());
-}
-

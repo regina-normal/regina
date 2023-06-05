@@ -47,7 +47,11 @@ using regina::Triangulation;
 using regina::Vertex;
 
 /**
- * Inherited by the test classes for all dimensions.
+ * Implements several tests for triangulations in dimension \a dim.
+ *
+ * Test fixtures in each dimension should use TriangulationTest<dim>
+ * as a base class, since this base class provides example triangulations
+ * that can be shared between tests.
  */
 template <int dim>
 class TriangulationTest : public testing::Test {
@@ -232,9 +236,23 @@ class TriangulationTest : public testing::Test {
             verifyBoundaryCount(twistedSphereBundle, 0, 0, 0,
                 twistedSphereBundleName);
             verifyBoundaryCount(ball, 1, 0, 0, ballName);
-            verifyBoundaryCount(ballBundle, 1, 0, 0, ballBundleName);
+            if constexpr (dim == 2) {
+                verifyBoundaryCount(ballBundle, 2, 0, 0, ballBundleName);
+            } else {
+                verifyBoundaryCount(ballBundle, 1, 0, 0, ballBundleName);
+            }
             verifyBoundaryCount(twistedBallBundle, 1, 0, 0,
                 twistedBallBundleName);
+        }
+
+        static void verifyBoundaryEuler(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(regina::standardDim(dim));
+            static_assert(dim % 2 == 0);
+            SCOPED_TRACE_CSTRING(name);
+
+            for (auto bc : tri.boundaryComponents())
+                EXPECT_EQ(bc->eulerChar(), 0);
         }
 
         static void verifyOrient(const Triangulation<dim>& tri,
@@ -1052,6 +1070,30 @@ class TriangulationTest : public testing::Test {
             });
         }
 
+        static void verifyBarycentricSubdivision(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+
+            Triangulation<dim> subdiv(tri);
+            if (subdiv.isOrientable())
+                subdiv.orient();
+
+            subdiv.subdivide();
+            clearProperties(subdiv);
+
+            EXPECT_EQ(tri.hasBoundaryFacets(), subdiv.hasBoundaryFacets());
+            EXPECT_EQ(tri.isClosed(), subdiv.isClosed());
+            EXPECT_EQ(tri.isOrientable(), subdiv.isOrientable());
+            if (tri.isOrientable())
+                EXPECT_TRUE(subdiv.isOriented());
+            EXPECT_EQ(tri.isConnected(), subdiv.isConnected());
+            EXPECT_EQ(tri.countComponents(), subdiv.countComponents());
+            EXPECT_EQ(tri.countBoundaryComponents(),
+                subdiv.countBoundaryComponents());
+            EXPECT_EQ(tri.eulerCharTri(), subdiv.eulerCharTri());
+            EXPECT_EQ(tri.homology(), subdiv.homology());
+        }
+
         static void verifyTightEncoding(const Triangulation<dim>& tri,
                 const char* name) {
             SCOPED_TRACE_CSTRING(name);
@@ -1069,9 +1111,15 @@ class TriangulationTest : public testing::Test {
             verifyHomology<1>(empty, "0", emptyName);
             verifyHomology<1>(sphere, "0", sphereName);
             verifyHomology<1>(simpSphere, "0", simpSphereName);
-            verifyHomology<1>(sphereBundle, "Z", sphereBundleName);
-            verifyHomology<1>(twistedSphereBundle, "Z",
-                twistedSphereBundleName);
+            if constexpr (dim == 2) {
+                verifyHomology<1>(sphereBundle, "2 Z", sphereBundleName);
+                verifyHomology<1>(twistedSphereBundle, "Z + Z_2",
+                    twistedSphereBundleName);
+            } else {
+                verifyHomology<1>(sphereBundle, "Z", sphereBundleName);
+                verifyHomology<1>(twistedSphereBundle, "Z",
+                    twistedSphereBundleName);
+            }
             verifyHomology<1>(ball, "0", ballName);
             verifyHomology<1>(ballBundle, "Z", ballBundleName);
             verifyHomology<1>(twistedBallBundle, "Z", twistedBallBundleName);
@@ -1201,18 +1249,24 @@ class TriangulationTest : public testing::Test {
             verifyFundGroup(empty, "0", emptyName);
             verifyFundGroup(sphere, "0", sphereName);
             verifyFundGroup(simpSphere, "0", simpSphereName);
-            verifyFundGroup(sphereBundle, "Z", sphereBundleName);
-            verifyFundGroup(twistedSphereBundle, "Z", twistedSphereBundleName);
+            if constexpr (dim == 2) {
+                verifyFundGroup(sphereBundle, "2 Z", sphereBundleName);
+                verifyFundGroup(twistedSphereBundle, "Z~Z w/monodromy a ↦ a^-1",
+                    twistedSphereBundleName);
+            } else {
+                verifyFundGroup(sphereBundle, "Z", sphereBundleName);
+                verifyFundGroup(twistedSphereBundle, "Z",
+                    twistedSphereBundleName);
+            }
             verifyFundGroup(ball, "0", ballName);
             verifyFundGroup(ballBundle, "Z", ballBundleName);
             verifyFundGroup(twistedBallBundle, "Z", twistedBallBundleName);
         }
 
-#if 0
         template <int k>
-        static void verifyChainComplex(const Triangulation<dim>& tri,
-                const char* name) {
+        static void verifyChainComplexDetail(const Triangulation<dim>& tri) {
             static_assert(0 < k && k < dim);
+            SCOPED_TRACE_NUMERIC(k);
 
             // These tests use homology on the skeleton: invalid or empty
             // triangulations are explicitly disallowed, and ideal
@@ -1229,15 +1283,13 @@ class TriangulationTest : public testing::Test {
             ASSERT_EQ(m.columns(), n.rows());
             ASSERT_TRUE((m * n).isZero());
 
+            // Verify that homology with Z coefficients is correct:
             regina::AbelianGroup g1(m, n);
             regina::MarkedAbelianGroup g2 = tri.template markedHomology<k>();
             ASSERT_EQ(g1, g2.unmarked());
+            EXPECT_EQ(tri.template homology<k>(), g1);
 
-            if constexpr (k == 1)
-                EXPECT_EQ(tri.homology(), g1);
-            else if constexpr (k == 2 && (dim == 3 || dim == 4))
-                EXPECT_EQ(tri.template homology<2>(), g1);
-
+            // Verify that homology with Z_2 coefficients looks believable:
             regina::AbelianGroup g1z2(m, n, 2);
             regina::MarkedAbelianGroup g2z2(m, n, 2);
             EXPECT_EQ(g1z2, g2z2.unmarked());
@@ -1245,14 +1297,25 @@ class TriangulationTest : public testing::Test {
             size_t z2rank = g1z2.countInvariantFactors();
             for (size_t i = 0; i < z2rank; ++i)
                 EXPECT_EQ(g1z2.invariantFactor(i), 2);
-            if constexpr (k == 2 && dim == 3)
+            if constexpr (k == 2 && dim == 3) {
+                // For this special case, we can verify the group precisely.
                 EXPECT_EQ(tri.homologyH2Z2(), z2rank);
+            }
+        }
+
+        static void verifyChainComplex(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+            regina::for_constexpr<1, dim>([&tri](auto k) {
+                verifyChainComplexDetail<k>(tri);
+            });
         }
 
         template <int k>
-        static void verifyDualChainComplex(const Triangulation<dim>& tri,
-                const char* name) {
-            static_assert(1 <= k && k < dim);
+        static void verifyDualChainComplexDetail(
+                const Triangulation<dim>& tri) {
+            static_assert(0 < k && k < dim);
+            SCOPED_TRACE_NUMERIC(k);
 
             // These tests use homology on the dual skeleton: invalid or
             // empty triangulations are explicitly disallowed, but ideal
@@ -1266,24 +1329,33 @@ class TriangulationTest : public testing::Test {
             ASSERT_EQ(m.columns(), n.rows());
             ASSERT_TRUE((m * n).isZero());
 
+            // Verify that homology with Z coefficients is correct:
             regina::AbelianGroup g1(m, n);
             EXPECT_EQ(tri.template homology<k>(), g1);
 
+            // Verify that homology with Z_2 coefficients looks believable:
             regina::AbelianGroup g1z2(m, n, 2);
             EXPECT_EQ(g1z2.rank(), 0);
             size_t z2rank = g1z2.countInvariantFactors();
             for (size_t i = 0; i < z2rank; ++i)
                 EXPECT_EQ(g1z2.invariantFactor(i), 2);
-            if constexpr (k == 2 && dim == 3)
+            if constexpr (k == 2 && dim == 3) {
+                // For this special case, we can verify the group precisely.
                 EXPECT_EQ(tri.homologyH2Z2(), z2rank);
+            }
+        }
+
+        static void verifyDualChainComplex(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+            regina::for_constexpr<1, dim>([&tri](auto k) {
+                verifyDualChainComplexDetail<k>(tri);
+            });
         }
 
         template <int k>
-        static void verifyDualToPrimal(const Triangulation<dim>& tri,
-                const char* name) {
+        static void verifyDualToPrimalDetail(const Triangulation<dim>& tri) {
             static_assert(0 <= k && k < dim);
-
-            SCOPED_TRACE_CSTRING(name);
             SCOPED_TRACE_NUMERIC(k);
 
             // Do not try to work with triangulations that fail the
@@ -1344,13 +1416,20 @@ class TriangulationTest : public testing::Test {
                         tri.template boundaryMap<k+1>());
                     regina::HomMarkedAbelianGroup hom(homDual, homPrimal, map);
 
-                    EXPECT_EQ(hom.isCycleMap());
-                    EXPECT_EQ(hom.isEpic());
-                    EXPECT_EQ(hom.isMonic());
+                    EXPECT_TRUE(hom.isCycleMap());
+                    EXPECT_TRUE(hom.isEpic());
+                    EXPECT_TRUE(hom.isMonic());
                 }
             }
         }
-#endif
+
+        static void verifyDualToPrimal(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+            regina::for_constexpr<0, dim>([&tri](auto k) {
+                verifyDualToPrimalDetail<k>(tri);
+            });
+        }
 
         static bool looksIdentical(const Triangulation<dim>& a,
                 const Triangulation<dim>& b) {
