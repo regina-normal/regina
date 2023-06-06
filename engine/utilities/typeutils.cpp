@@ -326,8 +326,13 @@ namespace {
             }
             if constexpr (i > 5) {
                 // Make sure we can use i as a constexpr inside the lambda.
-                static constexpr int i_ = i;
-                for_constexpr<5, i>([](auto j) {
+                //
+                // Ideally the lambda would capture nothing, and we would
+                // declare the constexpr i_ out here.  However, this causes an
+                // ICE in gcc7.  Until we drop gcc7 support, we work around this
+                // by capturing i and declaring i_ inside the lambda instead.
+                for_constexpr<5, i>([i](auto j) {
+                    static constexpr int i_ = i.value;
                     registerType(
                         typeid(Face<i_, j>),
                         std::string("regina.Face") +
