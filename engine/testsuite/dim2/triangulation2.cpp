@@ -40,30 +40,25 @@ using regina::Example;
 
 class Dim2Test : public TriangulationTest<2> {
     protected:
-        // TODO: sort out the names drama
         // Closed orientable triangulations:
-        Triangulation<2> s2Oct { Example<2>::sphereOctahedron() };
-        static constexpr const char* s2OctName = "Octahedron boundary";
-        Triangulation<2> torus2 { Example<2>::orientable(2, 0) };
-        static constexpr const char* torus2Name = "Genus 2 torus";
+        TestCase s2Oct { Example<2>::sphereOctahedron(),
+            "Octahedron boundary" };
+        TestCase torus2 { Example<2>::orientable(2, 0), "Genus 2 torus" };
 
         // Closed non-orientable triangulations:
-        Triangulation<2> rp2 { Example<2>::rp2() };
-        static constexpr const char* rp2Name = "RP^2";
+        TestCase rp2 { Example<2>::rp2(), "RP^2" };
 
-        // Disconnected triangulations (we set these up in the constructor):
-        Triangulation<2> disjoint2;
-        static constexpr const char* disjoint2Name = "Torus U Mobius";
-        Triangulation<2> disjoint3;
-        static constexpr const char* disjoint3Name = "KB U Annulus U S^2";
+        // Disconnected triangulations (we build these in the constructor):
+        TestCase disjoint2 { {}, "Torus U Mobius" };
+        TestCase disjoint3 { {}, "KB U Annulus U S^2" };
 
         Dim2Test() {
-            disjoint2.insertTriangulation(sphereBundle);
-            disjoint2.insertTriangulation(twistedBallBundle);
+            disjoint2.tri.insertTriangulation(sphereBundle.tri);
+            disjoint2.tri.insertTriangulation(twistedBallBundle.tri);
 
-            disjoint3.insertTriangulation(twistedSphereBundle);
-            disjoint3.insertTriangulation(ballBundle);
-            disjoint3.insertTriangulation(sphere);
+            disjoint3.tri.insertTriangulation(twistedSphereBundle.tri);
+            disjoint3.tri.insertTriangulation(ballBundle.tri);
+            disjoint3.tri.insertTriangulation(sphere.tri);
         }
 
         /**
@@ -73,11 +68,11 @@ class Dim2Test : public TriangulationTest<2> {
         void testManualCases(void (*f)(const Triangulation<2>&, const char*)) {
             testGenericCases(f);
 
-            f(s2Oct, s2OctName);
-            f(torus2, torus2Name);
-            f(rp2, rp2Name);
-            f(disjoint2, disjoint2Name);
-            f(disjoint3, disjoint3Name);
+            f(s2Oct.tri, s2Oct.name);
+            f(torus2.tri, torus2.name);
+            f(rp2.tri, rp2.name);
+            f(disjoint2.tri, disjoint2.name);
+            f(disjoint3.tri, disjoint3.name);
         }
 };
 
@@ -96,38 +91,38 @@ TEST_F(Dim2Test, magic) {
 TEST_F(Dim2Test, validity) {
     TriangulationTest<2>::validityGenericCases();
 
-    verifyValidity(s2Oct, true, s2OctName);
-    verifyValidity(torus2, true, torus2Name);
-    verifyValidity(rp2, true, rp2Name);
-    verifyValidity(disjoint2, true, disjoint2Name);
-    verifyValidity(disjoint3, true, disjoint3Name);
+    verifyValidity(s2Oct, true);
+    verifyValidity(torus2, true);
+    verifyValidity(rp2, true);
+    verifyValidity(disjoint2, true);
+    verifyValidity(disjoint3, true);
 }
 TEST_F(Dim2Test, connectivity) {
     TriangulationTest<2>::connectivityGenericCases();
 
-    verifyConnectivity(s2Oct, true, s2OctName);
-    verifyConnectivity(torus2, true, torus2Name);
-    verifyConnectivity(rp2, true, rp2Name);
-    verifyConnectivity(disjoint2, false, disjoint2Name);
-    verifyConnectivity(disjoint3, false, disjoint3Name);
+    verifyConnectivity(s2Oct, true);
+    verifyConnectivity(torus2, true);
+    verifyConnectivity(rp2, true);
+    verifyConnectivity(disjoint2, false);
+    verifyConnectivity(disjoint3, false);
 }
 TEST_F(Dim2Test, orientability) {
     TriangulationTest<2>::orientabilityGenericCases();
 
-    verifyOrientability(s2Oct, true, s2OctName);
-    verifyOrientability(torus2, true, torus2Name);
-    verifyOrientability(rp2, false, rp2Name);
-    verifyOrientability(disjoint2, false, disjoint2Name);
-    verifyOrientability(disjoint3, false, disjoint3Name);
+    verifyOrientability(s2Oct, true);
+    verifyOrientability(torus2, true);
+    verifyOrientability(rp2, false);
+    verifyOrientability(disjoint2, false);
+    verifyOrientability(disjoint3, false);
 }
 TEST_F(Dim2Test, eulerCharTri) {
     TriangulationTest<2>::eulerCharTriGenericCases();
 
-    verifyEulerCharTri(s2Oct, 2, s2OctName);
-    verifyEulerCharTri(torus2, -2, torus2Name);
-    verifyEulerCharTri(rp2, 1, rp2Name);
-    verifyEulerCharTri(disjoint2, 0, disjoint2Name);
-    verifyEulerCharTri(disjoint3, 2, disjoint3Name);
+    verifyEulerCharTri(s2Oct, 2);
+    verifyEulerCharTri(torus2, -2);
+    verifyEulerCharTri(rp2, 1);
+    verifyEulerCharTri(disjoint2, 0);
+    verifyEulerCharTri(disjoint3, 2);
 }
 TEST_F(Dim2Test, boundaryCount) {
     TriangulationTest<2>::boundaryCountGenericCases();
