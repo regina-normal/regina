@@ -140,7 +140,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Surfaces:
     sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));
-    sets.insert(std::make_pair("incompressible", &addIncompressible));
 
     // Knots and links:
     sets.insert(std::make_pair("link", &addLink));

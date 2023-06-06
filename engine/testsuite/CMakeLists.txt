@@ -23,7 +23,7 @@ ADD_SUBDIRECTORY("manifold")
 ADD_SUBDIRECTORY("misc")
 ADD_SUBDIRECTORY("snappea")
 ADD_SUBDIRECTORY("subcomplex")
-# ADD_SUBDIRECTORY("surface")
+ADD_SUBDIRECTORY("surface")
 ADD_SUBDIRECTORY("utilities")
 
 ADD_EXECUTABLE(regina-testsuite ${SOURCES})

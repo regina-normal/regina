@@ -43,5 +43,4 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addNormalSurfaces(CppUnit::TextUi::TestRunner& runner);
-void addIncompressible(CppUnit::TextUi::TestRunner& runner);
 

@@ -1,8 +1,7 @@
-# surface
-
 # Files to compile
 SET ( FILES
-  normalsurfaces.cpp
+  incompressible.cpp
+  # normalsurfaces.cpp
   )
 
 # Prepend folder name
