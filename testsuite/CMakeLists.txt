@@ -5,7 +5,6 @@ SET ( SOURCES
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
-ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("dim3")
 ADD_SUBDIRECTORY("dim4")
 ADD_SUBDIRECTORY("link")

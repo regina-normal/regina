@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "angle/anglestructures.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
@@ -80,6 +81,10 @@ void addAngleStructures(pybind11::module_& m) {
             rdoc::__iter__)
         .def("spansStrict", &AngleStructures::spansStrict, rdoc::spansStrict)
         .def("spansTaut", &AngleStructures::spansTaut, rdoc::spansTaut)
+        .def("sort", &AngleStructures::sort<const std::function<
+            bool(const regina::AngleStructure&,
+                const regina::AngleStructure&)>&>,
+            rdoc::sort)
     ;
     regina::python::add_output(l);
     regina::python::packet_eq_operators(l, rdoc::__eq, rdoc::__ne);

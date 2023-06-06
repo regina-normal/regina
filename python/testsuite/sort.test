@@ -51,3 +51,10 @@ print(s.detail())
 s.sort(sortDec)
 print(s.detail())
 
+s = AngleStructures(Example3.figureEight())
+print(s.detail())
+s.sort(sortInc)
+print(s.detail())
+s.sort(sortDec)
+print(s.detail())
+

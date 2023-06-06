@@ -22,6 +22,8 @@ Version 7.4  [ (to be announced) ]
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.
+        Class AngleStructures:
+            - New routine sort().
         Class BitManipulator<T>:
             - New routine swapBits().
         Class BoolSet:

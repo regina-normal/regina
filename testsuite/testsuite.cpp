@@ -39,7 +39,6 @@
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
-#include "testsuite/angle/testangle.h"
 #include "testsuite/dim3/testdim3.h"
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/link/testlink.h"
@@ -142,9 +141,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // Surfaces:
     sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));
     sets.insert(std::make_pair("incompressible", &addIncompressible));
-
-    // Angle structures:
-    sets.insert(std::make_pair("anglestructures", &addAngleStructures));
 
     // Knots and links:
     sets.insert(std::make_pair("link", &addLink));

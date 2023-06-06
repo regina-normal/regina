@@ -49,7 +49,7 @@ and faster for ad-hoc use. The consequences of this are:
   AngleStructures interface.
 
 * If you are adding new functions to this class that edit the list,
-  you must still remember to create a ChangeEventSpan. This will
+  you must still remember to create a PacketChangeSpan. This will
   ensure that, if the list is being managed by a
   PacketOf<AngleStructures>, then the appropriate packet change events
   will be fired. All other events (aside from packetToBeChanged() and
@@ -280,6 +280,26 @@ Python:
 
 Returns:
     the number of angle structures.)doc";
+
+// Docstring regina::python::doc::AngleStructures_::sort
+static const char *sort =
+R"doc(Sorts the angle structures in this list according to the given
+criterion.
+
+This sort is stable, i.e., angle structures that are equivalent under
+the given criterion will remain in the same relative order.
+
+The implementation of this routine uses std::stable_sort.
+
+Python:
+    This is available in Python, and *comp* may be a pure Python
+    function.
+
+Parameter ``comp``:
+    a binary function (or other callable object) that accepts two
+    const AngleStructure references, and returns ``True`` if and only
+    if the first angle structure should appear before the second in
+    the sorted list.)doc";
 
 // Docstring regina::python::doc::AngleStructures_::spansStrict
 static const char *spansStrict =

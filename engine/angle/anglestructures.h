@@ -495,6 +495,26 @@ class AngleStructures :
          */
         void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Sorts the angle structures in this list according to the given
+         * criterion.
+         *
+         * This sort is stable, i.e., angle structures that are equivalent
+         * under the given criterion will remain in the same relative order.
+         *
+         * The implementation of this routine uses std::stable_sort.
+         *
+         * \python This is available in Python, and \a comp may be
+         * a pure Python function.
+         *
+         * \param comp a binary function (or other callable object) that
+         * accepts two const AngleStructure references, and returns \c true
+         * if and only if the first angle structure should appear before the
+         * second in the sorted list.
+         */
+        template <typename Comparison>
+        void sort(Comparison&& comp);
+
     protected:
         /**
          * Creates a new empty angle structure list.
@@ -669,6 +689,12 @@ inline bool AngleStructures::spansTaut() const {
 
 inline bool AngleStructures::operator != (const AngleStructures& other) const {
     return ! ((*this) == other);
+}
+
+template <typename Comparison>
+inline void AngleStructures::sort(Comparison&& comp) {
+    PacketChangeSpan span(*this);
+    std::stable_sort(structures_.begin(), structures_.end(), comp);
 }
 
 inline AngleStructures::AngleStructures(bool tautOnly, AngleAlg algHints,

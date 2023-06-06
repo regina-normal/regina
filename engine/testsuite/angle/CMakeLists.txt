@@ -1,5 +1,3 @@
-# angle
-
 # Files to compile
 SET ( FILES
   anglestructures.cpp
