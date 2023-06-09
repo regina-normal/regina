@@ -110,7 +110,7 @@ namespace regina {
  */
 class Layering : public ShortOutput<Layering> {
     private:
-        unsigned long size_;
+        size_t size_;
             /**< The number of tetrahedra that have been layered. */
 
         const Tetrahedron<3>* oldBdryTet_[2];
@@ -240,7 +240,7 @@ class Layering : public ShortOutput<Layering> {
          *
          * \return the number of layered tetrahedra.
          */
-        unsigned long size() const;
+        size_t size() const;
 
         /**
          * Returns the tetrahedra that provide the old boundary triangles.
@@ -254,7 +254,7 @@ class Layering : public ShortOutput<Layering> {
          * be either 0 or 1.
          * \return the requested tetrahedron of the old boundary.
          */
-        const Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
+        const Tetrahedron<3>* oldBoundaryTet(int which) const;
         /**
          * Returns the permutations that describe the old boundary triangles.
          * These refer to the original boundary before any layerings
@@ -267,7 +267,7 @@ class Layering : public ShortOutput<Layering> {
          * be either 0 or 1.
          * \return the requested permutation describing the old boundary.
          */
-        Perm<4> oldBoundaryRoles(unsigned which) const;
+        Perm<4> oldBoundaryRoles(int which) const;
         /**
          * Returns the tetrahedra that provide the new boundary triangles.
          * These belong to the final boundary after layerings have been
@@ -280,7 +280,7 @@ class Layering : public ShortOutput<Layering> {
          * be either 0 or 1.
          * \return the requested tetrahedron of the new boundary.
          */
-        const Tetrahedron<3>* newBoundaryTet(unsigned which) const;
+        const Tetrahedron<3>* newBoundaryTet(int which) const;
         /**
          * Returns the permutations that describe the new boundary triangles.
          * These refer to the final boundary after layerings have been
@@ -293,7 +293,7 @@ class Layering : public ShortOutput<Layering> {
          * be either 0 or 1.
          * \return the requested permutation describing the new boundary.
          */
-        Perm<4> newBoundaryRoles(unsigned which) const;
+        Perm<4> newBoundaryRoles(int which) const;
 
         /**
          * Returns a 2-by-2 matrix describing the relationship between
@@ -384,7 +384,7 @@ class Layering : public ShortOutput<Layering> {
          * \return the number of additional layered tetrahedra that were
          * discovered.
          */
-        unsigned long extend();
+        size_t extend();
 
         /**
          * Determines whether the new torus boundary of this structure
@@ -493,23 +493,23 @@ inline Layering::Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
         reln_(1, 0, 0, 1) {
 }
 
-inline unsigned long Layering::size() const {
+inline size_t Layering::size() const {
     return size_;
 }
 
-inline const Tetrahedron<3>* Layering::oldBoundaryTet(unsigned which) const {
+inline const Tetrahedron<3>* Layering::oldBoundaryTet(int which) const {
     return oldBdryTet_[which];
 }
 
-inline Perm<4> Layering::oldBoundaryRoles(unsigned which) const {
+inline Perm<4> Layering::oldBoundaryRoles(int which) const {
     return oldBdryRoles_[which];
 }
 
-inline const Tetrahedron<3>* Layering::newBoundaryTet(unsigned which) const {
+inline const Tetrahedron<3>* Layering::newBoundaryTet(int which) const {
     return newBdryTet_[which];
 }
 
-inline Perm<4> Layering::newBoundaryRoles(unsigned which) const {
+inline Perm<4> Layering::newBoundaryRoles(int which) const {
     return newBdryRoles_[which];
 }
 

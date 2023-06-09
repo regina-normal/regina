@@ -107,11 +107,11 @@ bool Layering::extendOne() {
     return false;
 }
 
-unsigned long Layering::extend() {
-    unsigned long added = 0;
+size_t Layering::extend() {
+    size_t added = 0;
 
     while (extendOne())
-        added++;
+        ++added;
 
     return added;
 }
