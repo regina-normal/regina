@@ -58,10 +58,10 @@ std::unique_ptr<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return nullptr;
 
-    unsigned long nTet = comp->size();
+    size_t nTet = comp->size();
     if (nTet == 0)
         return nullptr;
-    unsigned long nVertices = comp->countVertices();
+    size_t nVertices = comp->countVertices();
     if (nVertices > 2)
         return nullptr;
     bool twisted = (nVertices == 1);
@@ -74,34 +74,28 @@ std::unique_ptr<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
     Tetrahedron<3>* base = comp->tetrahedron(0);
 
     Tetrahedron<3>* tet = base;
-    Tetrahedron<3>* next;
-    int baseTop0, baseTop1, baseBottom0, baseBottom1;
-    int top0, top1, bottom0, bottom1;
     int adjTop0 = 0, adjTop1 = 0, adjBottom0 = 0, adjBottom1 = 0;
-    int hinge0, hinge1;
-    Perm<4> p;
-    bool ok;
 
     // Declare 0 to be a top face; find its partner.
-    baseTop0 = 0;
-    next = base->adjacentTetrahedron(0);
-    for (baseTop1 = 1; baseTop1 < 4; baseTop1++) {
+    int baseTop0 = 0;
+    Tetrahedron<3>* next = base->adjacentTetrahedron(0);
+    for (int baseTop1 = 1; baseTop1 < 4; baseTop1++) {
         if (base->adjacentTetrahedron(baseTop1) != next)
             continue;
 
         // Find the vertex joined to baseTop0 by a hinge.
-        for (baseBottom0 = 1; baseBottom0 < 4; baseBottom0++) {
+        for (int baseBottom0 = 1; baseBottom0 < 4; baseBottom0++) {
             if (baseBottom0 == baseTop1)
                 continue;
-            baseBottom1 = 6 - baseBottom0 - baseTop0 - baseTop1;
+            int baseBottom1 = 6 - baseBottom0 - baseTop0 - baseTop1;
 
             // Some basic property checks.
             if (base->adjacentTetrahedron(baseBottom0) !=
                     base->adjacentTetrahedron(baseBottom1))
                 continue;
 
-            hinge0 = Edge<3>::edgeNumber[baseTop0][baseBottom0];
-            hinge1 = Edge<3>::edgeNumber[baseTop1][baseBottom1];
+            int hinge0 = Edge<3>::edgeNumber[baseTop0][baseBottom0];
+            int hinge1 = Edge<3>::edgeNumber[baseTop1][baseBottom1];
             if (twisted) {
                 if (base->edge(hinge0) != base->edge(hinge1))
                     continue;
@@ -114,11 +108,13 @@ std::unique_ptr<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
                     continue;
             }
 
-            top0 = baseTop0; top1 = baseTop1;
-            bottom0 = baseBottom0; bottom1 = baseBottom1;
+            int top0 = baseTop0;
+            int top1 = baseTop1;
+            int bottom0 = baseBottom0;
+            int bottom1 = baseBottom1;
 
             // Follow the gluings up.
-            ok = true;
+            bool ok = true;
             while (true) {
                 // Already set: tet, next, topi, bottomi.
 
@@ -132,7 +128,7 @@ std::unique_ptr<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
                 }
 
                 // Check that the corresponding gluings are correct.
-                p = tet->adjacentGluing(top0);
+                Perm<4> p = tet->adjacentGluing(top0);
                 adjTop0 = p[bottom0];
                 adjTop1 = p[top1];
                 adjBottom0 = p[top0];

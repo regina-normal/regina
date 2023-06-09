@@ -82,7 +82,7 @@ namespace regina {
  */
 class LayeredLoop : public StandardTriangulation {
     private:
-        unsigned long length_;
+        size_t length_;
             /**< The length of this layered loop. */
         Edge<3>* hinge_[2];
             /**< The hinge edge(s) of this layered loop.  If the loop is
@@ -115,7 +115,7 @@ class LayeredLoop : public StandardTriangulation {
          *
          * \return the length of this layered loop.
          */
-        unsigned long length() const;
+        size_t length() const;
         /**
          * Determines if this layered loop contains a twist.
          * See the general class notes for further details.
@@ -199,7 +199,7 @@ class LayeredLoop : public StandardTriangulation {
         /**
          * Creates a new structure containing the given data.
          */
-        LayeredLoop(unsigned long length, Edge<3>* hinge0, Edge<3>* hinge1);
+        LayeredLoop(size_t length, Edge<3>* hinge0, Edge<3>* hinge1);
 };
 
 /**
@@ -217,7 +217,7 @@ void swap(LayeredLoop& a, LayeredLoop& b) noexcept;
 
 // Inline functions for LayeredLoop
 
-inline LayeredLoop::LayeredLoop(unsigned long length, Edge<3>* hinge0,
+inline LayeredLoop::LayeredLoop(size_t length, Edge<3>* hinge0,
         Edge<3>* hinge1) : length_(length), hinge_ { hinge0, hinge1 } {
 }
 
@@ -227,7 +227,7 @@ inline void LayeredLoop::swap(LayeredLoop& other) noexcept {
     std::swap(hinge_[1], other.hinge_[1]);
 }
 
-inline unsigned long LayeredLoop::length() const {
+inline size_t LayeredLoop::length() const {
     return length_;
 }
 inline bool LayeredLoop::isTwisted() const {
