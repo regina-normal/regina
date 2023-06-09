@@ -43,7 +43,6 @@
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
-#include "testsuite/surface/testsurface.h"
 
 namespace {
     static bool checkedParams = false;
@@ -137,9 +136,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
     aliases.insert(std::make_pair("dim4", &addTriangulation4));
-
-    // Surfaces:
-    sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));
 
     // Knots and links:
     sets.insert(std::make_pair("link", &addLink));

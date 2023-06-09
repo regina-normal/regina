@@ -62,9 +62,8 @@ TEST(AngleStructuresTest, empty) {
     EXPECT_TRUE(list.spansTaut());
 }
 
-TEST(AngleStructuresTest, oneTet) {
-    Triangulation<3> tri;
-    tri.newTetrahedron();
+TEST(AngleStructuresTest, singleTetrahedron) {
+    Triangulation<3> tri = Example<3>::ball();
 
     AngleStructures list(tri);
     EXPECT_EQ(list.size(), 3);
@@ -222,11 +221,7 @@ TEST(AngleStructuresTest, tautVsAll) {
     verifyTautVsAll("hepacdefegfggcurmsktu"); // y500
 
     verifyTautVsAll(Triangulation<3>(), "Empty triangulation");
-    {
-        Triangulation<3> tri;
-        tri.newTetrahedron();
-        verifyTautVsAll(tri, "Standalone tetrahedron");
-    }
+    verifyTautVsAll(Example<3>::ball(), "One-tetrahedron ball");
 }
 
 static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {

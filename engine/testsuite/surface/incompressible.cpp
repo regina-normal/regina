@@ -106,6 +106,7 @@ TEST(IncompressibleTest, hasCompressingDisc) {
     EXPECT_FALSE(Example<3>::ball().hasCompressingDisc());
     {
         // Snapped tetrahedron:
+        // TODO: fromGluings()
         Triangulation<3> tri;
         auto tet = tri.newTetrahedron();
         tet->join(0, tet, {3, 1, 2, 0});
@@ -113,6 +114,7 @@ TEST(IncompressibleTest, hasCompressingDisc) {
     }
     {
         // Triangular pillow:
+        // TODO: fromGluings()
         Triangulation<3> tri;
         auto tet = tri.newTetrahedra<2>();
         tet[0]->join(0, tet[1], {});
@@ -122,6 +124,7 @@ TEST(IncompressibleTest, hasCompressingDisc) {
     }
     {
         // A 4-tetrahedron ball:
+        // TODO: fromGluings()
         Triangulation<3> tri;
         auto tet = tri.newTetrahedra<4>();
         tet[0]->join(2, tet[0], {0,2});

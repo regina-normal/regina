@@ -99,6 +99,7 @@ class SnapPeaTest : public testing::Test {
             // exhaustive census of small ideal triangulations (they do not
             // appear in SnapPea's hyperbolic census).
             {
+                // TODO: fromGluings()
                 auto [t, s] = flatOr.newTetrahedra<2>();
                 t->join(0, s, Perm<4>(0,1,2,3));
                 t->join(1, s, Perm<4>(0,1,2,3));
@@ -106,6 +107,7 @@ class SnapPeaTest : public testing::Test {
                 t->join(3, s, Perm<4>(1,2,0,3));
             }
             {
+                // TODO: fromGluings()
                 auto [t, s] = flatNor.newTetrahedra<2>();
                 t->join(0, s, Perm<4>(0,1,2,3));
                 t->join(1, s, Perm<4>(2,1,0,3));
@@ -113,6 +115,7 @@ class SnapPeaTest : public testing::Test {
                 t->join(3, s, Perm<4>(2,1,0,3));
             }
             {
+                // TODO: fromGluings()
                 auto [t, s] = degenerateOr.newTetrahedra<2>();
                 t->join(0, t, Perm<4>(1,0,2,3));
                 t->join(2, s, Perm<4>(1,2,0,3));
@@ -120,6 +123,7 @@ class SnapPeaTest : public testing::Test {
                 s->join(2, s, Perm<4>(1,2,3,0));
             }
             {
+                // TODO: fromGluings()
                 auto [t, s] = degenerateNor.newTetrahedra<2>();
                 t->join(0, t, Perm<4>(1,0,2,3));
                 t->join(2, s, Perm<4>(1,2,0,3));
@@ -389,6 +393,7 @@ TEST_F(SnapPeaTest, incompatible) {
         // An orientable triangulation with a genus two torus cusp
         Triangulation<3> genusTwoTorusCusp;
 
+        // TODO: fromGluings()
         auto [t, s] = genusTwoTorusCusp.newTetrahedra<2>();
         t->join(0, s, Perm<4>(0,2,3,1));
         t->join(1, s, Perm<4>(2,1,3,0));
@@ -410,6 +415,7 @@ TEST_F(SnapPeaTest, incompatible) {
         // A non-orientable triangulation with two projective plane cusps
         Triangulation<3> projPlaneCusps;
 
+        // TODO: fromGluings()
         auto [t, s] = projPlaneCusps.newTetrahedra<2>();
         t->join(0, t, Perm<4>(1,0,2,3));
         t->join(2, s, Perm<4>(1,2,0,3));
@@ -431,6 +437,7 @@ TEST_F(SnapPeaTest, incompatible) {
         // A triangulation with a genus four non-orientable cusp
         Triangulation<3> genusFourNonOrCusp;
 
+        // TODO: fromGluings()
         auto [t, s] = genusFourNonOrCusp.newTetrahedra<2>();
         t->join(0, t, Perm<4>(1,2,0,3));
         t->join(2, s, Perm<4>(1,2,0,3));
@@ -453,6 +460,7 @@ TEST_F(SnapPeaTest, incompatible) {
         // 2-sphere links
         Triangulation<3> edgeInvalid;
 
+        // TODO: fromGluings()
         auto t = edgeInvalid.newTetrahedron();
         t->join(0, t, Perm<4>(1,0,3,2));
         t->join(2, t, Perm<4>(1,0,3,2));
