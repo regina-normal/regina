@@ -112,7 +112,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
             /**< The section of the SnapPea census to which this
                  triangulation belongs.  This must be one of the section
                  constants defined in this class. */
-        unsigned long index_;
+        size_t index_;
             /**< The index within the given section of this specific
                  triangulation.  Note that the first index in each section
                  is zero. */
@@ -154,7 +154,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          *
          * \return the index of this triangulation within its section.
          */
-        unsigned long index() const;
+        size_t index() const;
 
         /**
          * Determines whether this and the given structure represent
@@ -230,7 +230,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * Creates a new SnapPea census triangulation with the given
          * parameters.
          */
-        SnapPeaCensusTri(char section, unsigned long index);
+        SnapPeaCensusTri(char section, size_t index);
 
     friend class SnapPeaCensusManifold;
 };
@@ -251,7 +251,7 @@ void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept;
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
-inline SnapPeaCensusTri::SnapPeaCensusTri(char section, unsigned long index) :
+inline SnapPeaCensusTri::SnapPeaCensusTri(char section, size_t index) :
         section_(section), index_(index) {
 }
 
@@ -266,7 +266,7 @@ inline char SnapPeaCensusTri::section() const {
     return section_;
 }
 
-inline unsigned long SnapPeaCensusTri::index() const {
+inline size_t SnapPeaCensusTri::index() const {
     return index_;
 }
 

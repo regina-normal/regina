@@ -109,7 +109,7 @@ class SnapPeaCensusManifold : public Manifold {
             /**< The section of the SnapPea census to which this
                  manifold belongs.  This must be one of the section
                  constants defined in this class. */
-        unsigned long index_;
+        size_t index_;
             /**< The index within the given section of this specific
                  manifold.  Note that the first index in each section
                  is zero. */
@@ -127,7 +127,7 @@ class SnapPeaCensusManifold : public Manifold {
          * must be between 0 and <i>k</i>-1, where \a k is the total
          * number of manifolds in the given section.
          */
-        SnapPeaCensusManifold(char section, unsigned long index);
+        SnapPeaCensusManifold(char section, size_t index);
         /**
          * Creates a new copy of the given SnapPea census manifold.
          */
@@ -147,7 +147,7 @@ class SnapPeaCensusManifold : public Manifold {
          *
          * \return the index of this manifold within its section.
          */
-        unsigned long index() const;
+        size_t index() const;
         /**
          * Determines whether this and the given structure represent
          * the same 3-manifold from the SnapPea census.
@@ -217,12 +217,12 @@ void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept;
 // Inline functions for SnapPeaCensusManifold
 
 inline SnapPeaCensusManifold::SnapPeaCensusManifold(char section,
-        unsigned long index) : section_(section), index_(index) {
+        size_t index) : section_(section), index_(index) {
 }
 inline char SnapPeaCensusManifold::section() const {
     return section_;
 }
-inline unsigned long SnapPeaCensusManifold::index() const {
+inline size_t SnapPeaCensusManifold::index() const {
     return index_;
 }
 inline bool SnapPeaCensusManifold::operator == (

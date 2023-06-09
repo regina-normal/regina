@@ -112,7 +112,7 @@ Triangulation<3> SnapPeaCensusManifold::construct() const {
         throw regina::FileError("Cannot open SnapPea census database");
     char tri[30], hom[30]; /* Long enough to deal with the snappea census
                               files for <= 7 tetrahedra. */
-    for (unsigned i = 0; i <= index_; ++i) {
+    for (size_t i = 0; i <= index_; ++i) {
         if (fscanf(dat, "%s%s", tri, hom) != 2) {
             if (feof(dat))
                 throw regina::FileError("Attempted to read beyond the "
@@ -157,7 +157,7 @@ AbelianGroup SnapPeaCensusManifold::homology() const {
         throw regina::FileError("Cannot open SnapPea census database");
     char tri[30], hom[30]; /* Long enough to deal with the snappea census
                               files for <= 7 tetrahedra. */
-    for (unsigned i = 0; i <= index_; ++i) {
+    for (size_t i = 0; i <= index_; ++i) {
         if (fscanf(dat, "%s%s", tri, hom) != 2) {
             if (feof(dat))
                 throw regina::FileError("Attempted to read beyond the "
