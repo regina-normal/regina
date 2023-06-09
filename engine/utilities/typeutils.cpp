@@ -243,127 +243,116 @@ namespace {
                 }
             }
 
-            for_constexpr<0, i>([i](auto j) {
-                if constexpr (j == 0) {
+            registerType(
+                typeid(Vertex<i>),
+                std::string("regina.Vertex") + regina::detail::Strings<i>::dim);
+            registerType(
+                typeid(decltype(Triangulation<i>().vertices())),
+                std::string("<internal>.ListView[regina.Vertex") +
+                    regina::detail::Strings<i>::dim + ']');
+            registerType(
+                typeid(decltype(Triangulation<i>().
+                    vertex(0)->embeddings())),
+                std::string(
+                    "<internal>.ListView[regina.VertexEmbedding") +
+                    regina::detail::Strings<i>::dim + ']');
+            registerType(
+                typeid(Edge<i>),
+                std::string("regina.Edge") + regina::detail::Strings<i>::dim);
+            registerType(
+                typeid(decltype(Triangulation<i>().edges())),
+                std::string("<internal>.ListView[regina.Edge") +
+                    regina::detail::Strings<i>::dim + ']');
+            registerType(
+                typeid(decltype(Triangulation<i>().
+                    edge(0)->embeddings())),
+                std::string(
+                    "<internal>.ListView[regina.EdgeEmbedding") +
+                    regina::detail::Strings<i>::dim + ']');
+            if constexpr (i > 2) {
+                registerType(
+                    typeid(Triangle<i>),
+                    std::string("regina.Triangle") +
+                        regina::detail::Strings<i>::dim);
+                registerType(
+                    typeid(decltype(Triangulation<i>().
+                        triangles())),
+                    std::string("<internal>.ListView[regina.Triangle") +
+                        regina::detail::Strings<i>::dim + ']');
+                registerType(
+                    typeid(decltype(Triangulation<i>().
+                        triangle(0)->embeddings())),
+                    std::string("<internal>.ListView["
+                        "regina.TriangleEmbedding") +
+                        regina::detail::Strings<i>::dim + ']');
+            }
+            if constexpr (i > 3) {
+                registerType(
+                    typeid(Tetrahedron<i>),
+                    std::string("regina.Tetrahedron") +
+                        regina::detail::Strings<i>::dim);
+                registerType(
+                    typeid(decltype(Triangulation<i>().
+                        tetrahedra())),
+                    std::string(
+                        "<internal>.ListView[regina.Tetrahedron") +
+                        regina::detail::Strings<i>::dim + ']');
+                registerType(
+                    typeid(decltype(Triangulation<i>().
+                        tetrahedron(0)->embeddings())),
+                    std::string(
+                        "<internal>.ListView["
+                        "regina.TetrahedronEmbedding") +
+                        regina::detail::Strings<i>::dim + ']');
+            }
+            if constexpr (i > 4) {
+                registerType(
+                    typeid(Pentachoron<i>),
+                    std::string("regina.Pentachoron") +
+                        regina::detail::Strings<i>::dim);
+                registerType(
+                    typeid(decltype(Triangulation<i>().
+                        pentachora())),
+                    std::string(
+                        "<internal>.ListView[regina.Pentachoron") +
+                        regina::detail::Strings<i>::dim + ']');
+                registerType(
+                    typeid(decltype(Triangulation<i>().
+                        pentachoron(0)->embeddings())),
+                    std::string(
+                        "<internal>.ListView["
+                        "regina.PentachoronEmbedding") +
+                        regina::detail::Strings<i>::dim + ']');
+            }
+            if constexpr (i > 5) {
+                // Make sure we can use i as a constexpr inside the lambda.
+                //
+                // Ideally the lambda would capture nothing, and we would
+                // declare the constexpr i_ out here.  However, this causes an
+                // ICE in gcc7.  Until we drop gcc7 support, we work around this
+                // by capturing i and declaring i_ inside the lambda instead.
+                for_constexpr<5, i>([i](auto j) {
+                    static constexpr int i_ = i.value;
                     registerType(
-                        typeid(Vertex<i>),
-                        std::string("regina.Vertex") +
-                            regina::detail::Strings<i>::dim);
-                    registerType(
-                        typeid(decltype(Triangulation<i>().vertices())),
-                        std::string("<internal>.ListView[regina.Vertex") +
-                            regina::detail::Strings<i>::dim + ']');
-                    registerType(
-                        typeid(decltype(Triangulation<i>().
-                            vertex(0)->embeddings())),
-                        std::string(
-                            "<internal>.ListView[regina.VertexEmbedding") +
-                            regina::detail::Strings<i>::dim + ']');
-                } else if constexpr (j == 1) {
-                    registerType(
-                        typeid(Edge<i>),
-                        std::string("regina.Edge") +
-                            regina::detail::Strings<i>::dim);
-                    registerType(
-                        typeid(decltype(Triangulation<i>().edges())),
-                        std::string("<internal>.ListView[regina.Edge") +
-                            regina::detail::Strings<i>::dim + ']');
-                    registerType(
-                        typeid(decltype(Triangulation<i>().
-                            edge(0)->embeddings())),
-                        std::string(
-                            "<internal>.ListView[regina.EdgeEmbedding") +
-                            regina::detail::Strings<i>::dim + ']');
-                } else if constexpr (j == 2) {
-                    // Despite the fact that this code is only generated
-                    // for 0 <= j < i, it is still being *parsed* for i == 2,
-                    // thus generating compile errors (because
-                    // Triangle<2>::embeddings() does not exist).
-                    // Putting another constexpr-if check on i seems to fix it.
-                    // Strangely, combining this with the constexpr test on j
-                    // above does *not* fix it.  Is this a flaw in my compiler
-                    // (clang / xcode 14), or a flaw in my understanding of
-                    // how constexpr-if works?
-                    if constexpr (i > 2) {
-                        registerType(
-                            typeid(Triangle<i>),
-                            std::string("regina.Triangle") +
-                                regina::detail::Strings<i>::dim);
-                        registerType(
-                            typeid(decltype(Triangulation<i>().
-                                triangles())),
-                            std::string("<internal>.ListView[regina.Triangle") +
-                                regina::detail::Strings<i>::dim + ']');
-                        registerType(
-                            typeid(decltype(Triangulation<i>().
-                                triangle(0)->embeddings())),
-                            std::string("<internal>.ListView["
-                                "regina.TriangleEmbedding") +
-                                regina::detail::Strings<i>::dim + ']');
-                    }
-                } else if constexpr (j == 3) {
-                    // See the j == 2 case for why we need this extra test on i.
-                    if constexpr (i > 3) {
-                        registerType(
-                            typeid(Tetrahedron<i>),
-                            std::string("regina.Tetrahedron") +
-                                regina::detail::Strings<i>::dim);
-                        registerType(
-                            typeid(decltype(Triangulation<i>().
-                                tetrahedra())),
-                            std::string(
-                                "<internal>.ListView[regina.Tetrahedron") +
-                                regina::detail::Strings<i>::dim + ']');
-                        registerType(
-                            typeid(decltype(Triangulation<i>().
-                                tetrahedron(0)->embeddings())),
-                            std::string(
-                                "<internal>.ListView["
-                                "regina.TetrahedronEmbedding") +
-                                regina::detail::Strings<i>::dim + ']');
-                    }
-                } else if constexpr (j == 4) {
-                    // See the j == 2 case for why we need this extra test on i.
-                    if constexpr (i > 4) {
-                        registerType(
-                            typeid(Pentachoron<i>),
-                            std::string("regina.Pentachoron") +
-                                regina::detail::Strings<i>::dim);
-                        registerType(
-                            typeid(decltype(Triangulation<i>().
-                                pentachora())),
-                            std::string(
-                                "<internal>.ListView[regina.Pentachoron") +
-                                regina::detail::Strings<i>::dim + ']');
-                        registerType(
-                            typeid(decltype(Triangulation<i>().
-                                pentachoron(0)->embeddings())),
-                            std::string(
-                                "<internal>.ListView["
-                                "regina.PentachoronEmbedding") +
-                                regina::detail::Strings<i>::dim + ']');
-                    }
-                } else {
-                    registerType(
-                        typeid(Face<i, j>),
+                        typeid(Face<i_, j>),
                         std::string("regina.Face") +
-                            regina::detail::Strings<i>::dim + '_' +
+                            regina::detail::Strings<i_>::dim + '_' +
                             regina::detail::Strings<j>::dim);
                     registerType(
-                        typeid(decltype(Triangulation<i>().
+                        typeid(decltype(Triangulation<i_>().
                             template faces<j>())),
                         std::string("<internal>.ListView[regina.Face") +
-                            regina::detail::Strings<i>::dim + '_' +
+                            regina::detail::Strings<i_>::dim + '_' +
                             regina::detail::Strings<j>::dim + ']');
                     registerType(
-                        typeid(decltype(Triangulation<i>().
+                        typeid(decltype(Triangulation<i_>().
                             template face<j>(0)->embeddings())),
                         std::string(
                             "<internal>.ListView[regina.FaceEmbedding") +
-                            regina::detail::Strings<i>::dim + '_' +
+                            regina::detail::Strings<i_>::dim + '_' +
                             regina::detail::Strings<j>::dim + ']');
-                }
-            });
+                });
+            }
 
             registerType(
                 typeid(PacketOf<Triangulation<i>>),
