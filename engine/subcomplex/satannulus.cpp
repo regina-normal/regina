@@ -37,18 +37,17 @@
 namespace regina {
 
 int SatAnnulus::meetsBoundary() const {
-    unsigned ans = 0;
+    int ans = 0;
     if (! tet[0]->adjacentTetrahedron(roles[0][3]))
-        ans++;
+        ++ans;
     if (! tet[1]->adjacentTetrahedron(roles[1][3]))
-        ans++;
+        ++ans;
     return ans;
 }
 
 void SatAnnulus::switchSides() {
-    unsigned which, face;
-    for (which = 0; which < 2; which++) {
-        face = roles[which][3];
+    for (int which = 0; which < 2; which++) {
+        int face = roles[which][3];
         roles[which] = tet[which]->adjacentGluing(face) *
             roles[which];
         tet[which] = tet[which]->adjacentTetrahedron(face);
