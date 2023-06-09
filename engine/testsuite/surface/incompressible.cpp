@@ -104,37 +104,22 @@ TEST(IncompressibleTest, hasCompressingDisc) {
 
     // Balls:
     EXPECT_FALSE(Example<3>::ball().hasCompressingDisc());
-    {
-        // Snapped tetrahedron:
-        // TODO: fromGluings()
-        Triangulation<3> tri;
-        auto tet = tri.newTetrahedron();
-        tet->join(0, tet, {3, 1, 2, 0});
-        EXPECT_FALSE(tri.hasCompressingDisc());
-    }
-    {
-        // Triangular pillow:
-        // TODO: fromGluings()
-        Triangulation<3> tri;
-        auto tet = tri.newTetrahedra<2>();
-        tet[0]->join(0, tet[1], {});
-        tet[0]->join(1, tet[1], {});
-        tet[0]->join(2, tet[1], {});
-        EXPECT_FALSE(tri.hasCompressingDisc());
-    }
-    {
-        // A 4-tetrahedron ball:
-        // TODO: fromGluings()
-        Triangulation<3> tri;
-        auto tet = tri.newTetrahedra<4>();
-        tet[0]->join(2, tet[0], {0,2});
-        tet[0]->join(1, tet[1], {2,0,1,3});
-        tet[1]->join(2, tet[2], {});
-        tet[1]->join(1, tet[2], {2,0,1,3});
-        tet[2]->join(1, tet[3], {2,0,1,3});
-        tet[3]->join(2, tet[3], {1,2});
-        EXPECT_FALSE(tri.hasCompressingDisc());
-    }
+    // ... a snapped tetrahedron:
+    EXPECT_FALSE(Triangulation<3>::fromGluings(1, {
+        { 0, 0, 0, {3,1,2,0} }}).hasCompressingDisc());
+    // ... a triangular pillow:
+    EXPECT_FALSE(Triangulation<3>::fromGluings(2, {
+        { 0, 0, 1, {} },
+        { 0, 1, 1, {} },
+        { 0, 2, 1, {} }}).hasCompressingDisc());
+    // ... a 4-tetrahedron ball:
+    EXPECT_FALSE(Triangulation<3>::fromGluings(4, {
+        { 0, 2, 0, {0,2} },
+        { 0, 1, 1, {2,0,1,3} },
+        { 1, 2, 2, {} },
+        { 1, 1, 2, {2,0,1,3} },
+        { 2, 1, 3, {2,0,1,3} },
+        { 3, 2, 3, {1,2} }}).hasCompressingDisc());
 
     // Orientable handlebodies:
     EXPECT_TRUE(Example<3>::lst(1, 2).hasCompressingDisc());

@@ -86,50 +86,34 @@ class SnapPeaTest : public testing::Test {
         // The Weber-Seifert dodecahedral space:
         Triangulation<3> weberSeifert { Example<3>::weberSeifert() };
 
-        // Triangulations with flat and degenerate solutions (we build these
-        // explicitly in the constructor):
-        Triangulation<3> flatOr, flatNor, degenerateOr, degenerateNor;
+        // Triangulations with flat and degenerate solutions (found through an
+        // exhaustive census of small ideal triangulations - they do not
+        // appear in SnapPea's hyperbolic census):
+        Triangulation<3> flatOr = Triangulation<3>::fromGluings(2, {
+            { 0, 0, 1, {0,1,2,3} },
+            { 0, 1, 1, {0,1,2,3} },
+            { 0, 2, 1, {1,3,2,0} },
+            { 0, 3, 1, {1,2,0,3} }});
+        Triangulation<3> flatNor = Triangulation<3>::fromGluings(2, {
+            { 0, 0, 1, {0,1,2,3} },
+            { 0, 1, 1, {2,1,0,3} },
+            { 0, 2, 1, {1,3,2,0} },
+            { 0, 3, 1, {2,1,0,3} }});
+        Triangulation<3> degenerateOr = Triangulation<3>::fromGluings(2, {
+            { 0, 0, 0, {1,0,2,3} },
+            { 0, 2, 1, {1,2,0,3} },
+            { 0, 3, 1, {0,2,3,1} },
+            { 1, 2, 1, {1,2,3,0} }});
+        Triangulation<3> degenerateNor = Triangulation<3>::fromGluings(2, {
+            { 0, 0, 0, {1,0,2,3} },
+            { 0, 2, 1, {1,2,0,3} },
+            { 0, 3, 1, {0,3,2,1} },
+            { 1, 2, 1, {0,2,3,1} }});
 
         SnapPeaTest() {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
             SnapPeaTriangulation::disableKernelMessages();
-
-            // These flat and degenerate triangulations were found through an
-            // exhaustive census of small ideal triangulations (they do not
-            // appear in SnapPea's hyperbolic census).
-            {
-                // TODO: fromGluings()
-                auto [t, s] = flatOr.newTetrahedra<2>();
-                t->join(0, s, Perm<4>(0,1,2,3));
-                t->join(1, s, Perm<4>(0,1,2,3));
-                t->join(2, s, Perm<4>(1,3,2,0));
-                t->join(3, s, Perm<4>(1,2,0,3));
-            }
-            {
-                // TODO: fromGluings()
-                auto [t, s] = flatNor.newTetrahedra<2>();
-                t->join(0, s, Perm<4>(0,1,2,3));
-                t->join(1, s, Perm<4>(2,1,0,3));
-                t->join(2, s, Perm<4>(1,3,2,0));
-                t->join(3, s, Perm<4>(2,1,0,3));
-            }
-            {
-                // TODO: fromGluings()
-                auto [t, s] = degenerateOr.newTetrahedra<2>();
-                t->join(0, t, Perm<4>(1,0,2,3));
-                t->join(2, s, Perm<4>(1,2,0,3));
-                t->join(3, s, Perm<4>(0,2,3,1));
-                s->join(2, s, Perm<4>(1,2,3,0));
-            }
-            {
-                // TODO: fromGluings()
-                auto [t, s] = degenerateNor.newTetrahedra<2>();
-                t->join(0, t, Perm<4>(1,0,2,3));
-                t->join(2, s, Perm<4>(1,2,0,3));
-                t->join(3, s, Perm<4>(0,3,2,1));
-                s->join(2, s, Perm<4>(0,2,3,1));
-            }
         }
 
         static void testVolume(const SnapPeaTriangulation& s,
@@ -391,14 +375,11 @@ TEST_F(SnapPeaTest, incompatible) {
     }
     {
         // An orientable triangulation with a genus two torus cusp
-        Triangulation<3> genusTwoTorusCusp;
-
-        // TODO: fromGluings()
-        auto [t, s] = genusTwoTorusCusp.newTetrahedra<2>();
-        t->join(0, s, Perm<4>(0,2,3,1));
-        t->join(1, s, Perm<4>(2,1,3,0));
-        t->join(2, s, Perm<4>(1,3,2,0));
-        t->join(3, s, Perm<4>(2,0,1,3));
+        Triangulation<3> genusTwoTorusCusp = Triangulation<3>::fromGluings(2, {
+            { 0, 0, 1, {0,2,3,1} },
+            { 0, 1, 1, {2,1,3,0} },
+            { 0, 2, 1, {1,3,2,0} },
+            { 0, 3, 1, {2,0,1,3} }});
 
         EXPECT_TRUE(genusTwoTorusCusp.isValid());
         EXPECT_TRUE(genusTwoTorusCusp.isConnected());
@@ -413,14 +394,11 @@ TEST_F(SnapPeaTest, incompatible) {
     }
     {
         // A non-orientable triangulation with two projective plane cusps
-        Triangulation<3> projPlaneCusps;
-
-        // TODO: fromGluings()
-        auto [t, s] = projPlaneCusps.newTetrahedra<2>();
-        t->join(0, t, Perm<4>(1,0,2,3));
-        t->join(2, s, Perm<4>(1,2,0,3));
-        t->join(3, s, Perm<4>(3,2,0,1));
-        s->join(2, s, Perm<4>(0,2,3,1));
+        Triangulation<3> projPlaneCusps = Triangulation<3>::fromGluings(2, {
+            { 0, 0, 0, {1,0,2,3} },
+            { 0, 2, 1, {1,2,0,3} },
+            { 0, 3, 1, {3,2,0,1} },
+            { 1, 2, 1, {0,2,3,1} }});
 
         EXPECT_TRUE(projPlaneCusps.isValid());
         EXPECT_TRUE(projPlaneCusps.isConnected());
@@ -435,14 +413,11 @@ TEST_F(SnapPeaTest, incompatible) {
     }
     {
         // A triangulation with a genus four non-orientable cusp
-        Triangulation<3> genusFourNonOrCusp;
-
-        // TODO: fromGluings()
-        auto [t, s] = genusFourNonOrCusp.newTetrahedra<2>();
-        t->join(0, t, Perm<4>(1,2,0,3));
-        t->join(2, s, Perm<4>(1,2,0,3));
-        t->join(3, s, Perm<4>(0,2,3,1));
-        s->join(2, s, Perm<4>(0,2,3,1));
+        Triangulation<3> genusFourNonOrCusp = Triangulation<3>::fromGluings(2, {
+            { 0, 0, 0, {1,2,0,3} },
+            { 0, 2, 1, {1,2,0,3} },
+            { 0, 3, 1, {0,2,3,1} },
+            { 1, 2, 1, {0,2,3,1} }});
 
         EXPECT_TRUE(genusFourNonOrCusp.isValid());
         EXPECT_TRUE(genusFourNonOrCusp.isConnected());
@@ -458,12 +433,9 @@ TEST_F(SnapPeaTest, incompatible) {
     {
         // A triangulation with two invalid edges but whose vertices all have
         // 2-sphere links
-        Triangulation<3> edgeInvalid;
-
-        // TODO: fromGluings()
-        auto t = edgeInvalid.newTetrahedron();
-        t->join(0, t, Perm<4>(1,0,3,2));
-        t->join(2, t, Perm<4>(1,0,3,2));
+        Triangulation<3> edgeInvalid = Triangulation<3>::fromGluings(1, {
+            { 0, 0, 0, {1,0,3,2} },
+            { 0, 2, 0, {1,0,3,2} }});
 
         EXPECT_FALSE(edgeInvalid.isValid());
         EXPECT_TRUE(edgeInvalid.isConnected());
