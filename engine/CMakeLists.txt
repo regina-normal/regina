@@ -77,11 +77,17 @@ CONFIGURE_FILE (
   "${PROJECT_BINARY_DIR}/engine/regina-engine-config"
   @ONLY
 )
+CONFIGURE_FILE (
+  regina-helper.in
+  "${PROJECT_BINARY_DIR}/engine/regina-helper"
+  @ONLY
+)
 
 INSTALL(TARGETS regina-engine
   LIBRARY DESTINATION "${LIBDIR}"
   RUNTIME DESTINATION "${BINDIR}"
   COMPONENT Runtime)
+INSTALL(PROGRAMS "${PROJECT_BINARY_DIR}/engine/regina-helper" DESTINATION bin)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES ${HEADERS} DESTINATION "${INCLUDEDIR}" COMPONENT Development)
