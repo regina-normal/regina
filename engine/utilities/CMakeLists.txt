@@ -48,6 +48,7 @@ if (${REGINA_INSTALL_DEV})
     tableview.h
     tightencoding.h
     tightencoding-impl.h
+    topologylock.h
     trieset.h
     typeutils.h
     xmlutils.h
