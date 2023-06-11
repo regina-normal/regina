@@ -167,9 +167,8 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         /**
          * Return string representations of various items.
          */
-        static QString edgeString(unsigned long tetIndex, int edge1,
-            int edge2);
-        static QString edgeString(unsigned long tetIndex,
+        static QString edgeString(size_t tetIndex, int edge1, int edge2);
+        static QString edgeString(size_t tetIndex,
             const regina::Perm<4>& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::Matrix2& matrix);
 };
