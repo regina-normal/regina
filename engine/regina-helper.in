@@ -179,7 +179,7 @@ __END__
     if [ "$install_type" != Source ]; then
       regina_config='@BASH_MAKE_BINDIR@/regina-engine-config'
       if [ "$rpath" = 1 ]; then
-        rpath_flags="-Wl,-rpath "'@BASH_MAKE_LIBDIR@/engine'
+        rpath_flags="-Wl,-rpath "'@BASH_MAKE_LIBDIR@'
       else
         rpath_flags=
       fi
