@@ -72,7 +72,7 @@ done
 
 case "$action" in
   # -------------------- help ---------------------
-  help )
+  help | -h | --help )
     usage
     ;;
   test )
@@ -89,7 +89,7 @@ __END__
       echo
       "$progdir/testsuite/regina-testsuite"
     else
-      '@BASH_CMAKE_INSTALL_PREFIX@'/libexec/regina-testsuite
+      '@BASH_LIBEXECDIR@/regina-testsuite'
     fi
     ;;
   # -------------------- cpp ---------------------
@@ -125,11 +125,43 @@ __END__
     done
 
     filename="sample.$action"
-    echo "Writing $filename..."
-    if [ -e "$filename" -a -z "$force" ]; then
-      echo "ERROR: $filename already exists (use --force to overwrite)"
+
+    # If the installation does not support development then stop now.
+    if [ "$install_type" = Windows ]; then
+      cat <<__END__
+ERROR: The Windows app for Regina does not ship with development files
+       (i.e., Regina's C++ headers and related files).
+__END__
       exit 1
     fi
+    if [ "$install_type" = Bundle ]; then
+      cat <<__END__
+ERROR: The macOS app bundle for Regina does not ship with development files
+       (i.e., Regina's C++ headers and related files).
+__END__
+      exit 1
+    fi
+
+    # Unless told otherwise, do not overwrite files that already exist.
+    if [ -z "$force" ]; then
+      bad=
+      if [ -e "$filename" ]; then
+        echo "ERROR: $filename already exists."
+        bad=1
+      fi
+      if [ -e Makefile ]; then
+        echo "ERROR: Makefile already exists."
+        bad=1
+      fi
+      if [ -n "$bad" ]; then
+        echo
+        echo "Use --force to overwrite existing files."
+        exit 1
+      fi
+    fi
+
+    # Do it!
+    echo "Writing $filename..."
     cat > "$filename" <<__END__
 #include <iomanip>
 #include <iostream>
@@ -144,57 +176,43 @@ int main() {
 __END__
 
     echo "Preparing Makefile..."
-    if [ -e Makefile -a -z "$force" ]; then
-      echo "ERROR: Makefile already exists (use --force to overwrite)"
-      exit 1
-    fi
-    case "$install_type" in
-      Windows )
-        cat <<__END__
-ERROR: The Windows app for Regina does not ship with development files
-       (i.e., Regina's C++ headers and related files).
+    if [ "$install_type" != Source ]; then
+      regina_config='@BASH_MAKE_BINDIR@/regina-engine-config'
+      if [ "$rpath" = 1 ]; then
+        rpath_flags="-Wl,-rpath "'@BASH_MAKE_LIBDIR@/engine'
+      else
+        rpath_flags=
+      fi
+      cat > Makefile <<__END__
+# Compile C++ programs that use Regina.
+# This uses the installation of Regina beneath @CMAKE_INSTALL_PREFIX@/.
+
+% : %.$action
+	c++ -O3 '\$<' \`$regina_config --cflags --libs\` $rpath_flags -o '\$@'
 __END__
-        exit 1
-        ;;
-      Bundle )
-        cat <<__END__
-ERROR: The macOS app bundle for Regina does not ship with development files
-       (i.e., Regina's C++ headers and related files).
-__END__
-        exit 1
-        ;;
-      XDG | HPC )
-        regina_config='@BASH_CMAKE_INSTALL_PREFIX@/bin/regina-engine-config'
-        # TODO: do we quote $< and $@?  What about @...@ args?
-        if [ "$rpath" = 1 ]; then
-          rpath_flags="-Wl,-rpath "'@BASH_CMAKE_BINARY_DIR@/engine'
-        else
-          rpath_flags=
-        fi
-        cat > Makefile <<__END__
-% : %.cc
-	c++ -O3 \$< \`$regina_config --cflags --libs\` $rpath_flags -o \$@
-__END__
-        ;;
-      Source )
-        include_flags='@BASH_RECONFIG_INCLUDE_FLAGS@'
-        link_flags='@BASH_RECONFIG_LINK_FLAGS@'
-        cat > Makefile <<__END__
-% : %.cc
-	c++ '@CMAKE_CXX17_STANDARD_COMPILE_OPTION@' -O3 \$< \\
-		-I'@BASH_CMAKE_SOURCE_DIR@/engine' -I'@BASH_CMAKE_BINARY_DIR@/engine' \\
+    else
+      # When running directly from the source tree, we cannot trust
+      # regina-engine-config (since that outputs installation paths), and we
+      # must always use rpath (since the source tree should not be on the
+      # library path).
+      include_flags='@BASH_RECONFIG_INCLUDE_FLAGS@'
+      link_flags='@BASH_RECONFIG_LINK_FLAGS@'
+      bindir='@BASH_MAKE_CMAKE_BINARY_DIR@'
+      srcdir='@BASH_MAKE_CMAKE_SOURCE_DIR@'
+      cat > Makefile <<__END__
+# Compile C++ programs that use Regina.
+# This uses the build of Regina from @CMAKE_BINARY_DIR@/.
+
+% : %.$action
+	c++ @CMAKE_CXX17_STANDARD_COMPILE_OPTION@ -O3 '\$<' \\
+		-I$srcdir/engine -I$bindir/engine \\
 		$include_flags \\
-		'@BASH_CMAKE_BINARY_DIR@/engine/libregina-engine.so' \\
+		$bindir/engine/@ENGINE_FILENAME@ \\
 		$link_flags \\
-		-Wl,-rpath '@BASH_CMAKE_BINARY_DIR@/engine' \\
-		-o \$@
+		-Wl,-rpath $bindir/engine \\
+		-o '\$@'
 __END__
-        ;;
-      * )
-        echo "ERROR: Unrecognised Regina installation type ($install_type)."
-        exit 1
-        ;;
-    esac
+    fi
     echo 'Done.'
     ;;
   # -------------------- installtype ---------------------

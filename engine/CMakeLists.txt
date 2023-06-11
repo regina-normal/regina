@@ -59,6 +59,10 @@ TARGET_LINK_LIBRARIES(regina-engine
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES VERSION ${PACKAGE_VERSION})
 SET_TARGET_PROPERTIES(regina-engine PROPERTIES SOVERSION ${PACKAGE_VERSION})
 
+# Give regina-helper access to the library filename.
+SET ( ENGINE_FILENAME
+  "${CMAKE_SHARED_LIBRARY_PREFIX}regina-engine${CMAKE_SHARED_LIBRARY_SUFFIX}" )
+
 SET( HEADERS ${HEADERS} docs.h regina-core.h )
 SET( MANS ${MANS} regina-engine-config.1 )
 

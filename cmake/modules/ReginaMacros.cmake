@@ -129,6 +129,26 @@ macro (REGINA_ESCAPE_PERL _input)
 endmacro (REGINA_ESCAPE_PERL)
 
 
+# Macro: REGINA_ESCAPE_MAKE(input)
+#
+# Sets the variable MAKE_${input} to be a variant of the variable ${input}
+# that is properly escaped for use in a Makefile rule.  This means that
+# (i) it will be escaped for use in bash in an _unquoted_ context, and then
+# (ii) any dollar signs will be replaced with double dollar signs.
+#
+# As an exception, newlines will NOT be escaped.
+#
+# The input argument must be a variable name (not its value).
+#
+macro (REGINA_ESCAPE_MAKE _input)
+  string(REPLACE "\\" "\\\\" MAKE_${_input} "${${_input}}")
+  string(REGEX REPLACE "([#'\"`$*?;&!(){}<>[|~ \t])" "\\\\\\1"
+    MAKE_${_input} "${MAKE_${_input}}")
+  string(REPLACE "]" "\\]" MAKE_${_input} "${MAKE_${_input}}")
+  string(REPLACE "$" "$$" MAKE_${_input} "${MAKE_${_input}}")
+endmacro (REGINA_ESCAPE_MAKE)
+
+
 # Macro: REGINA_ESCAPE_C(input)
 #
 # Sets the variable C_${input} to be a variant of the variable ${input}
