@@ -36,5 +36,5 @@ if (${REGINA_INSTALL_DEV})
     treetraversal-impl.h
     typetrie.h
     validityconstraints.h
-    DESTINATION "${INCLUDEDIR}/enumerate" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/enumerate" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

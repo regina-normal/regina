@@ -50,5 +50,5 @@ if (FALSE AND ${REGINA_INSTALL_DEV})
     textstyledata_p.h
     theme.h
     themedata_p.h
-    DESTINATION "${INCLUDEDIR}/syntax" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/syntax" COMPONENT Development)
 endif (FALSE AND ${REGINA_INSTALL_DEV})

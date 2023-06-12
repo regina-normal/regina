@@ -20,6 +20,6 @@ foreach(UTIL ${UTILS})
   target_link_libraries(${UTIL} ${ENGINE_LIBRARY})
 endforeach(UTIL)
 
-install(TARGETS ${UTILS} DESTINATION "${BINDIR}" COMPONENT Runtime)
+install(TARGETS ${UTILS} DESTINATION "${CMAKE_INSTALL_FULL_BINDIR}" COMPONENT Runtime)
 
 ADD_SUBDIRECTORY("testsuite")

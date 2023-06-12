@@ -19,5 +19,5 @@ if (${REGINA_INSTALL_DEV})
     fileformat.h
     fileinfo.h
     globaldirs.h
-    DESTINATION "${INCLUDEDIR}/file" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/file" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -25,5 +25,5 @@ if (${REGINA_INSTALL_DEV})
     hyperflags.h
     normalhypersurface.h
     normalhypersurfaces.h
-    DESTINATION "${INCLUDEDIR}/hypersurface" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/hypersurface" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

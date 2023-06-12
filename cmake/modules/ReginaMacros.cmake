@@ -271,10 +271,10 @@ macro (REGINA_CREATE_HANDBOOK _lang)
   add_custom_target(${_handbook}-html ALL DEPENDS "${_doc}")
 
   file(GLOB _support *.png *.css *.html)
-  install(FILES ${_support} DESTINATION "${HTMLDIR}/${_lang}/${_handbook}")
+  install(FILES ${_support} DESTINATION "${PKGHTMLDIR}/${_lang}/${_handbook}")
   install(
     DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-    DESTINATION "${HTMLDIR}/${_lang}"
+    DESTINATION "${PKGHTMLDIR}/${_lang}"
     FILES_MATCHING
     PATTERN CMakeFiles EXCLUDE
     PATTERN "*.html"

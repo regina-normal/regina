@@ -15,5 +15,5 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     progresstracker.h
-    DESTINATION "${INCLUDEDIR}/progress" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/progress" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -44,5 +44,5 @@ if (${REGINA_INSTALL_DEV})
     modellinkgraph-impl.h
     pd-impl.h
     tangle.h
-    DESTINATION "${INCLUDEDIR}/link" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/link" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -3,5 +3,5 @@ if (${REGINA_INSTALL_DEV})
     face.h
     facenumber.h
     isomorphism.h
-    DESTINATION "${INCLUDEDIR}/triangulation/alias" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/triangulation/alias" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

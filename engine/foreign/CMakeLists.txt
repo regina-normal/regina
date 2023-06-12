@@ -18,5 +18,5 @@ if (${REGINA_INSTALL_DEV})
     fromsiglist-impl.h
     isosig.h
     orb.h
-    DESTINATION "${INCLUDEDIR}/foreign" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/foreign" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

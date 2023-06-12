@@ -39,5 +39,5 @@ if (${REGINA_INSTALL_DEV})
     primes.h
     rational.h
     vector.h
-    DESTINATION "${INCLUDEDIR}/maths" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/maths" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

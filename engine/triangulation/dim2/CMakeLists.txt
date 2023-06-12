@@ -17,5 +17,5 @@ if (${REGINA_INSTALL_DEV})
     component2.h
     triangle2.h
     triangulation2.h
-    DESTINATION "${INCLUDEDIR}/triangulation/dim2" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/triangulation/dim2" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

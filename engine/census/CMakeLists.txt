@@ -32,5 +32,5 @@ if (${REGINA_INSTALL_DEV})
     gluingpermsearcher3.h
     gluingpermsearcher4.h
     purgeflags.h
-    DESTINATION "${INCLUDEDIR}/census" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/census" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

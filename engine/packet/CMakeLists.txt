@@ -26,5 +26,5 @@ if (${REGINA_INSTALL_DEV})
     packettype.h
     script.h
     text.h
-    DESTINATION "${INCLUDEDIR}/packet" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/packet" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -15,5 +15,5 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     treedecomposition.h
     treedecomposition-impl.h
-    DESTINATION "${INCLUDEDIR}/treewidth" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/treewidth" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

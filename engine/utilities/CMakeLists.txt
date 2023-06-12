@@ -52,5 +52,5 @@ if (${REGINA_INSTALL_DEV})
     trieset.h
     typeutils.h
     xmlutils.h
-    DESTINATION "${INCLUDEDIR}/utilities" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/utilities" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -39,5 +39,5 @@ if (${REGINA_INSTALL_DEV})
     prism.h
     surfacefilter.h
     surfacefiltertype.h
-    DESTINATION "${INCLUDEDIR}/surface" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/surface" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

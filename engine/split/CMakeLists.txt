@@ -20,5 +20,5 @@ if (${REGINA_INSTALL_DEV})
     sigcensus.h
     sigisomorphism.h
     signature.h
-    DESTINATION "${INCLUDEDIR}/split" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/split" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

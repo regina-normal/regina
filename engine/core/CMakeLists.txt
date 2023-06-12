@@ -11,5 +11,5 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     engine.h
     output.h
-    DESTINATION "${INCLUDEDIR}/core" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/core" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

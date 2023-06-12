@@ -1,5 +1,5 @@
 
-SET(man1dir ${MANDIR}/man1)
+SET(man1dir ${CMAKE_INSTALL_FULL_MANDIR}/man1)
 
 SET(man1_files
   censuslookup.1

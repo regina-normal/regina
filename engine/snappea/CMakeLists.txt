@@ -25,6 +25,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     examplesnappea.h
     snappeatriangulation.h
-    DESTINATION "${INCLUDEDIR}/snappea" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/snappea" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
 

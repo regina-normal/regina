@@ -91,15 +91,15 @@ fi
 
 if test "$echo_cflags" = "yes"; then
 	includes='@BASH_RECONFIG_INCLUDE_FLAGS@'
-	includes='-I@BASH_INCLUDEDIR@'" $includes"
+	includes='-I@BASH_PKGINCLUDEDIR@'" $includes"
 	echo $includes
 fi
 
 if test "$echo_libs" = "yes"; then
-	libdirs='-L@BASH_LIBDIR@'
+	libdirs='-L@BASH_CMAKE_INSTALL_FULL_LIBDIR@'
 	my_regina_engine_libs=
 	for i in $regina_engine_libs ; do
-		if test "x$i" != 'x-L@BASH_LIBDIR@' ; then
+		if test "x$i" != 'x-L@BASH_CMAKE_INSTALL_FULL_LIBDIR@' ; then
 			if test -z "$my_regina_engine_libs" ; then
 				my_regina_engine_libs="$i"
 			else

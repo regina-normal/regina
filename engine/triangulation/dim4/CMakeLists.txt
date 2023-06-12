@@ -28,5 +28,5 @@ if (${REGINA_INSTALL_DEV})
     triangle4.h
     triangulation4.h
     vertex4.h
-    DESTINATION "${INCLUDEDIR}/triangulation/dim4" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/triangulation/dim4" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

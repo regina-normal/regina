@@ -23,5 +23,5 @@ if (${REGINA_INSTALL_DEV})
     intersectionform.h
     homgrouppresentation.h
     markedabeliangroup.h
-    DESTINATION "${INCLUDEDIR}/algebra" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/algebra" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

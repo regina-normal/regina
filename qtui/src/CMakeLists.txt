@@ -120,8 +120,8 @@ if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install XDG application icons.
   set (XDGSIZES 16 22 24 32 48 64 128 256)
   foreach (IMG_SIZE ${XDGSIZES})
-    INSTALL (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png" DESTINATION "${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps" RENAME regina.png)
-    INSTALL (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png" DESTINATION "${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes" RENAME application-x-regina.png)
+    INSTALL (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png" DESTINATION "${XDG_ICON_DIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps" RENAME regina.png)
+    INSTALL (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png" DESTINATION "${XDG_ICON_DIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes" RENAME application-x-regina.png)
   endforeach (IMG_SIZE ${XDGSIZES})
 endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
@@ -151,7 +151,7 @@ elseif (LIBGVC_FOUND AND ${GRAPHVIZ_TYPE} STREQUAL Library AND NOT WIN32)
     PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif ()
 
-INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION "${APPDIR}" COMPONENT Runtime)
+INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION "${CMAKE_INSTALL_FULL_BINDIR}" COMPONENT Runtime)
 
 # TODO: Use COMPONENT Runtime/Development throughout all install targets.
 
@@ -171,5 +171,5 @@ if (WIN32)
   # It seems that, to keep WiX happy, x-regina.ico needs to be in $BINDIR
   # to avoid an ICE69 error (mismatched components for the ProgId entry).
   # I'd love to hear any advice to the contrary.
-  install(FILES x-regina.ico DESTINATION "${BINDIR}" COMPONENT Runtime)
+  install(FILES x-regina.ico DESTINATION "${CMAKE_INSTALL_FULL_BINDIR}" COMPONENT Runtime)
 endif (WIN32)

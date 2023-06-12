@@ -17,5 +17,5 @@ if (${REGINA_INSTALL_DEV})
     angleflags.h
     anglestructure.h
     anglestructures.h
-    DESTINATION "${INCLUDEDIR}/angle" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/angle" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

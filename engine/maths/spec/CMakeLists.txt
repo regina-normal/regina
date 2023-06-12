@@ -25,5 +25,5 @@ if (${REGINA_INSTALL_DEV})
     perm5.h
     perm6.h
     perm7.h
-    DESTINATION "${INCLUDEDIR}/maths/spec" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/maths/spec" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

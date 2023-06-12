@@ -89,7 +89,7 @@ __END__
       echo
       "$progdir/testsuite/regina-testsuite"
     else
-      '@BASH_LIBEXECDIR@/regina-testsuite'
+      '@BASH_PKGLIBEXECDIR@/regina-testsuite'
     fi
     ;;
   # -------------------- cpp ---------------------
@@ -177,9 +177,9 @@ __END__
 
     echo "Preparing Makefile..."
     if [ "$install_type" != Source ]; then
-      regina_config='@BASH_MAKE_BINDIR@/regina-engine-config'
+      regina_config='@BASH_MAKE_CMAKE_INSTALL_FULL_BINDIR@/regina-engine-config'
       if [ "$rpath" = 1 ]; then
-        rpath_flags="-Wl,-rpath "'@BASH_MAKE_LIBDIR@'
+        rpath_flags="-Wl,-rpath "'@BASH_MAKE_CMAKE_INSTALL_FULL_LIBDIR@'
       else
         rpath_flags=
       fi

@@ -190,7 +190,7 @@ if ($ENV{REGINA_PYLIBDIR}) {
 my $prefix = '@PERL_CMAKE_INSTALL_PREFIX@';
 my $exec_prefix = '@PERL_CMAKE_INSTALL_PREFIX@';
 my $pkgdatadir = '@PERL_PKGDATADIR@';
-my $libdir = '@PERL_LIBDIR@';
+my $libdir = '@PERL_CMAKE_INSTALL_FULL_LIBDIR@';
 my $package = '@PACKAGE_NAME@';
 
 if (! $python_cmd) {

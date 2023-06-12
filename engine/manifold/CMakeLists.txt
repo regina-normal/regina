@@ -36,5 +36,5 @@ if (${REGINA_INSTALL_DEV})
     simplesurfacebundle.h
     snappeacensusmfd.h
     torusbundle.h
-    DESTINATION "${INCLUDEDIR}/manifold" COMPONENT Development)
+    DESTINATION "${PKGINCLUDEDIR}/manifold" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
