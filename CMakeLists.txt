@@ -175,11 +175,11 @@ ENDIF (NOT STDFS_FOUND)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Installation directories:
-INCLUDE(GNUInstallDirs)
 # The GNUInstallDirs module provides (amongst other things):
 # CMAKE_INSTALL_FULL_{BINDIR,LIBEXECDIR,LIBDIR,INCLUDEDIR,DATADIR,MANDIR}.
-#
-# Here we define some others that we will need:
+INCLUDE(GNUInstallDirs)
+
+# Here we define some other installation directories that we will need:
 SET (PKGLIBEXECDIR "${CMAKE_INSTALL_FULL_LIBEXECDIR}/${PACKAGE_NAME}")
 SET (PKGINCLUDEDIR "${CMAKE_INSTALL_FULL_INCLUDEDIR}/${PACKAGE_NAME}")
 SET (PKGDATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PACKAGE_NAME}")
@@ -193,6 +193,12 @@ SET (XDG_ICON_DIR "${CMAKE_INSTALL_FULL_DATADIR}/icons")
 SET (XDG_APPS_INSTALL_DIR "${CMAKE_INSTALL_FULL_DATADIR}/applications")
 SET (XDG_MIME_INSTALL_DIR "${CMAKE_INSTALL_FULL_DATADIR}/mime/packages")
 SET (XDG_METAINFO_DIR "${CMAKE_INSTALL_FULL_DATADIR}/metainfo")
+
+# Make sure nobody is still using the old LIB_SUFFIX (which is now ignored):
+IF (LIB_SUFFIX)
+  UNSET(LIB_SUFFIX CACHE)
+  MESSAGE(FATAL_ERROR "Regina no longer uses LIB_SUFFIX.  This should now be deduced automatically, but if you need to explicitly set the library installation directory then use CMAKE_INSTALL_LIBDIR instead.  For example, you might pass -DCMAKE_INSTALL_LIBDIR=lib64.")
+ENDIF (LIB_SUFFIX)
 
 # Useful build directories
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
