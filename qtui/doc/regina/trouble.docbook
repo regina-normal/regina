@@ -267,24 +267,22 @@
       the answers correct.
      </para>
      <para>
-      You can only run the test suite if you are
+      The test suite is split into several sections, including
+      simpler &python; and command-line utilities tests, as well as
+      rich and detailed &cpp; calculation engine tests.
+      The detailed &cpp; test suite is shipped with every full installation of
+      &regina;, whereas the other parts (&python; and command-line utilities
+      tests) are only available when
       <ulink url="http://regina-normal.github.io/source.html">building
-      &regina; from source</ulink> yourself.
-      If you download a ready-made package, the person who built the
-      package should have already verified that &regina; passes the
-      test suite (as all of the packages on the &regina; website do).
+      &regina; from source</ulink>.
      </para>
      <para>
-      You will also need
-      <ulink url="http://regina-normal.github.io/source.html#sysreq"><application>CppUnit</application> installed</ulink>.
-      Otherwise the test suite will run but only with the simpler &python;
-      and command-line utilities tests, not the rich and detailed &cpp;
-      calculation engine tests.
-     </para>
-     <para>
-      To run the test suite, move into your main build
-      directory and type <userinput>make test ARGS=-V</userinput>.
-      You should see the individual tests being run, as illustrated below.
+      If you have a full installation (e.g., you installed one of &regina;'s
+      binary packages), then you can run the &cpp; test suite by typing
+      <userinput>regina-helper test</userinput>.  If you are building &regina;
+      from source, you can run all sections of the test suite (&python;,
+      utilities and &cpp; tests) by moving into your main build directory and
+      typing <userinput>make test ARGS=-V</userinput>.
      </para>
 <screen>
 <prompt>example:~/source/regina/build&gt;</prompt> <userinput>make test ARGS=-V</userinput>
@@ -292,23 +290,39 @@ Running tests...
 ...
 ... (some initial output)
 ...
-1: ----------------------------------------------
-1: Test suite for Regina's command-line utilities
-1: ----------------------------------------------
+1: Test command: /home/bab/git/regina/build/engine/testsuite/regina-testsuite
+1: Test timeout computed to be: 10000000
+1: [==========] Running 201 tests from 29 test suites.
+1: [----------] Global test environment set-up.
+1: [----------] 2 tests from AbelianGroupTest
+1: [ RUN      ] AbelianGroupTest.incrementalBuild
+1: [       OK ] AbelianGroupTest.incrementalBuild (0 ms)
+1: [ RUN      ] AbelianGroupTest.tightEncoding
+1: [       OK ] AbelianGroupTest.tightEncoding (0 ms)
 1:
-1: Running censuslookup.test ... ok
-1: Running regconcat.test (with filter) ... ok
+1: [----------] 6 tests from CoversTest
+1: [ RUN      ] CoversTest.trivial
+1: [       OK ] CoversTest.trivial (7 ms)
 ...
 ... (more output)
 ...
-2: ---------------------------------------
-2: Test suite for Regina's python bindings
-2: ---------------------------------------
+2: ----------------------------------------------
+2: Test suite for Regina's command-line utilities
+2: ----------------------------------------------
 2:
-2: Running alltypes.test ... ok
-2: Running angles.test ... ok
+2: Running censuslookup.test ... ok
+2: Running regconcat.test (with filter) ... ok
 ...
-... (even more output)
+... (more output)
+...
+3: ---------------------------------------
+3: Test suite for Regina's python bindings
+3: ---------------------------------------
+3:
+3: Running alltypes.test ... ok
+3: Running angles.test ... ok
+...
+... (more output)
 ...
 3: Regina calculation engine test suite
 3:
@@ -318,7 +332,16 @@ Running tests...
 ...
 ... (lots and lots of output)
 ...
-100% tests passed, 0 tests failed out of 3
+4: ----------------------------------------------------------------
+4: Test suite for python bindings with a basic embedded interpreter
+4: ----------------------------------------------------------------
+4:
+4: Running alltypes.test ... ok
+4: Running angles.test ... ok
+...
+... (more output)
+...
+100% tests passed, 0 tests failed out of 4
 
 Total Test time (real) =  171.41 sec
 <prompt>example:~/source/regina/build&gt;</prompt>
