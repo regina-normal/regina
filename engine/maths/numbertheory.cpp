@@ -78,27 +78,36 @@ namespace {
         long vv = 1;
         while (b != 0) {
             // At each stage:
-            // a != b;
-            // u*(a_orig) + v*(b_orig) = a_curr;
-            // uu*(a_orig) + vv*(b_orig) = b_curr.
+            //   a != b;
+            //   u*(a_orig) + v*(b_orig) = a;
+            //   uu*(a_orig) + vv*(b_orig) = b;
+            //   u*vv - uu*v = ±1;
+            //   (u,v), (uu,vv), (u,uu), (v,vv) are all coprime pairs with opposite signs
+            //       (where we consider 0 to be negative for this purpose).
             long q = a / b;
 
+            // (u,uu) <- (uu, u - q*uu)
             long tmp = u;
             u = uu;
             uu = tmp - (q * uu);
 
+            // (v,vv) <- (vv, v - q*vv)
             tmp = v;
             v = vv;
             vv = tmp - (q * vv);
 
+            // (a,b) <- (b, a % b)
             tmp = a;
             a = b;
             b = tmp % b;
         }
 
-        // a is now our gcd.
+        // At this point:
+        //   a = gcd = u*(a_orig) + v*(b_orig);
+        //   (uu, vv) = ±(b_orig, -a_orig)/gcd.
 
-        // Put u and v in the correct range.
+        // Put u and v in the correct range. Recall that we need:
+        // -a_orig/gcd < v ≤ 0 < u ≤ b_orig/gcd
 
         // We are allowed to add (b_orig/d, -a_orig/d) to (u,v).
         // TODO: Check this, but I think that modulo sign it is guaranteed
