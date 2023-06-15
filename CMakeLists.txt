@@ -659,7 +659,7 @@ MACRO_LOG_FEATURE(CPPUNIT_FOUND
   "CppUnit"
   "Build the full test suite for Regina"
   "http://sourceforge.net/projects/cppunit/"
-  ${REGINA_MANDATORY})
+  FALSE)
 
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(timing)
