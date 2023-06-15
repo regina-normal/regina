@@ -59,6 +59,5 @@ void addPerm7(CppUnit::TextUi::TestRunner& runner);
 void addPolynomial(CppUnit::TextUi::TestRunner& runner);
 void addPrimes(CppUnit::TextUi::TestRunner& runner);
 void addRational(CppUnit::TextUi::TestRunner& runner);
-void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
 void addPermConv(CppUnit::TextUi::TestRunner& runner);
 

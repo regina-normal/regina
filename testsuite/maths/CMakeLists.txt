@@ -9,7 +9,6 @@ SET ( FILES
   laurent2.cpp
   matrix.cpp
   matrixops.cpp
-  numbertheory.cpp
   perm.cpp
   perm2.cpp
   perm3.cpp

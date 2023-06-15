@@ -46,10 +46,8 @@ std::unique_ptr<LayeredLensSpace> LayeredLensSpace::recognise(
     if (comp->countVertices() > 1)
         return nullptr;
 
-    unsigned long nTet = comp->size();
-    for (unsigned long i = 0; i < nTet; i++) {
-        auto torus = LayeredSolidTorus::recogniseFromBase(
-            comp->tetrahedron(i));
+    for (auto base : comp->tetrahedra()) {
+        auto torus = LayeredSolidTorus::recogniseFromBase(base);
         if (torus) {
             // We have found a layered solid torus; either this makes the
             // layered lens space or nothing makes the layered lens space.

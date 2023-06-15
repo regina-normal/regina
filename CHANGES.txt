@@ -123,6 +123,17 @@ Version 7.4  [ (to be announced) ]
         Class Vector<T>:
             - Added support for tight encodings and decodings.
             - New routine hash(), which uses the tight encoding.
+        Function gcdWithCoeffs():
+            - Fixed an overflow error that occurred in the case b == LONG_MAX
+              (and nowhere else), and highlighted in the docs that LONG_MIN
+              may not be handled correctly (due to the inability to negate).
+        Function modularInverse():
+            - Now checks its preconditions and throws an exception if they fail.
+            - Now explicitly allows (n,k) = (1,0); in the past this was
+              supported but technically a violation of the preconditions.
+            - Now takes arguments of type long (not unsigned long).
+        Function reducedMod():
+            - Now checks its preconditions and throws an exception if they fail.
         Constants is_cpp_integer_v<T>, is_unsigned_cpp_integer_v<T>:
             - New alternatives to using std::is_integeral_v<T> and
               std::is_unsigned_v<T> that allow for 128-bit integers also.

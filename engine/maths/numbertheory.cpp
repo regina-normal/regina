@@ -38,6 +38,10 @@
 namespace regina {
 
 long reducedMod(long k, long modBase) {
+    if (modBase <= 0)
+        throw InvalidArgument(
+            "reducedMod() requires modBase to be strictly positive");
+
     long ans = k % modBase;
     if (ans < 0) {
         if ((ans + modBase) <= (-ans))
@@ -48,9 +52,8 @@ long reducedMod(long k, long modBase) {
 }
 
 long gcd(long a, long b) {
-    long tmp;
     while (a != b && b != 0) {
-        tmp = a;
+        long tmp = a;
         a = b;
         b = tmp % b;
     }
@@ -59,45 +62,60 @@ long gcd(long a, long b) {
 
 namespace {
     long gcdWithCoeffsInternal(long a, long b, long& u, long& v) {
-        // This routine assumes a and b to be non-negative.
+        // PRE: a and b are non-negative.
+
+        // First get the trivial cases out of the way.
+        if (b == 0 || a == b) {
+            u = 1; v = 0;
+            return a;
+        }
+
         long a_orig = a;
         long b_orig = b;
         u = 1;
         v = 0;
         long uu = 0;
         long vv = 1;
-        long tmp1, tmp2, q;
-        while (a != b && b != 0) {
+        while (b != 0) {
             // At each stage:
+            // a != b;
             // u*(a_orig) + v*(b_orig) = a_curr;
             // uu*(a_orig) + vv*(b_orig) = b_curr.
-            tmp1 = u; tmp2 = v;
-            u = uu; v = vv;
-            q = a / b;
-            uu = tmp1 - (q * uu); vv = tmp2 - (q * vv);
+            long q = a / b;
 
-            tmp1 = a;
+            long tmp = u;
+            u = uu;
+            uu = tmp - (q * uu);
+
+            tmp = v;
+            v = vv;
+            vv = tmp - (q * vv);
+
+            tmp = a;
             a = b;
-            b = tmp1 % b;
+            b = tmp % b;
         }
 
         // a is now our gcd.
 
         // Put u and v in the correct range.
-        if (b_orig == 0)
-            return a;
 
         // We are allowed to add (b_orig/d, -a_orig/d) to (u,v).
+        // TODO: Check this, but I think that modulo sign it is guaranteed
+        // that the values we compute here are already stored in (vv,uu).
         a_orig = -(a_orig / a);
         b_orig = b_orig / a;
 
         // Now we are allowed to add (b_orig, a_orig), where b_orig >= 0.
         // Add enough copies to put u between 1 and b_orig inclusive.
+        // TODO: Check this also, but I think we can guarantee that if u > 0
+        // then u,v are already in the correct range, and if u <= 0 then
+        // we always just need to add k = 1 copy.
         long k;
         if (u > 0)
             k = -((u-1) / b_orig);
         else
-            k = (b_orig-u) / b_orig;
+            k = 1 - (u / b_orig);
         if (k) {
             u += k * b_orig;
             v += k * a_orig;
@@ -128,7 +146,10 @@ long lcm(long a, long b) {
     return (tmp >= 0 ? tmp : -tmp);
 }
 
-unsigned long modularInverse(unsigned long n, unsigned long k) {
+long modularInverse(long n, long k) {
+    if (n <= 0)
+        throw InvalidArgument(
+            "modularInverse(n, k) requires n to be strictly positive");
     if (n == 1)
         return 0;
 
@@ -136,9 +157,13 @@ unsigned long modularInverse(unsigned long n, unsigned long k) {
     auto ans = gcdWithCoeffs(n, k % n);
 
     // GCD should equal 1, so u*n + k*v = 1.
-    // Inverse is v; note that -n < v <= 0.
+    if (std::get<0>(ans) != 1)
+        throw InvalidArgument(
+            "modularInverse(n, k) requires n and k to be coprime");
+
+    // Inverse is v; note that -n < (+/-)v <= 0.
     // Since n >= 2 now and (n,k) = 1, we know v != 0.
-    return std::get<2>(ans) + n;
+    return (std::get<2>(ans) > 0 ? std::get<2>(ans) : std::get<2>(ans) + n);
 }
 
 } // namespace regina

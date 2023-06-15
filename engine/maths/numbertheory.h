@@ -59,6 +59,8 @@ namespace regina {
  *
  * \pre \a modBase is strictly positive.
  *
+ * \exception InvalidArgument The argument \a modBase is zero or negative.
+ *
  * \param k the number to reduce modulo \a modBase.
  * \param modBase the modular base in which to work.
  *
@@ -104,6 +106,9 @@ long reducedMod(long k, long modBase);
  * will be 1 or -1 so that `u⋅a + v⋅b = d` still holds.  If both
  * given integers are zero, both of the coefficients will be set to zero.
  *
+ * \warning This routine might give incorrect answers if a or b is precisely
+ * LONG_MIN, since this value cannot be correctly negated as a \c long.
+ *
  * \param a the first integer to compute the gcd of.
  * \param b the second integer to compute the gcd of.
  * \return a tuple containing: the greatest common divisor of \a a and \a b;
@@ -121,7 +126,7 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
  * If either of the arguments is zero, the return value will also be zero.
  *
  * Regarding possible overflow:  This routine does not create any temporary
- * integers that are larger than the final LCM.
+ * integers that are larger in magnitude than the final LCM.
  *
  * \deprecated Simply use std::lcm(), which was introduced with C++17.
  *
@@ -135,10 +140,16 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
 
 /**
  * Calculates the multiplicative inverse of one integer modulo another.
- * The inverse returned will be between 0 and <i>n</i>-1 inclusive.
+ * Specifically, this computes the inverse of \a k modulo \a n, and
+ * returns a result between 0 and `n - 1` inclusive.
  *
- * \pre \a n and \a k are both strictly positive;
- * \pre \a n and \a k have no common factors.
+ * Note that `n == 1` _is_ allowed, and will return 0 for any \a k.
+ *
+ * \pre \a n is strictly positive;
+ * \pre \a n and \a k are coprime.
+ *
+ * \exception InvalidArgument Either \a n is zero or negative, or the given
+ * arguments are not coprime.
  *
  * \param n the modular base in which to work.
  * \param k the number whose multiplicative inverse should be found.
@@ -146,7 +157,7 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
  *
  * \ingroup maths
  */
-unsigned long modularInverse(unsigned long n, unsigned long k);
+long modularInverse(long n, long k);
 
 } // namespace regina
 
