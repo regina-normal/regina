@@ -41,6 +41,8 @@ using regina::Rational;
 class CyclotomicTest : public testing::Test {
     protected:
         // We do all our tests in the field of order 5.
+        static constexpr size_t field = 5;
+
         // All polynomials are reduced mod x^4 + x^3 + x^2 + x + 1.
         // In particular, x^5 == 1.
         Cyclotomic zero { 5 };
@@ -52,7 +54,7 @@ class CyclotomicTest : public testing::Test {
         Cyclotomic xPlus1 { 5, { 1, 1 } };
         Cyclotomic xMinus1 { 5, { -1, 1 } };
 
-        static void verifyEqual(const Cyclotomic& result, size_t field,
+        static void verifyEqual(const Cyclotomic& result,
                 std::initializer_list<Rational> coeffs) {
             Cyclotomic expect(field, coeffs);
             EXPECT_EQ(result, expect);
@@ -61,217 +63,215 @@ class CyclotomicTest : public testing::Test {
         }
 
         void verifyPlus(const Cyclotomic& a, const Cyclotomic& b,
-                size_t field, std::initializer_list<Rational> coeffs) {
-            verifyEqual(a + b, field, coeffs);
-            verifyEqual((a + zero) + b, field, coeffs);
-            verifyEqual(a + (b + zero), field, coeffs);
-            verifyEqual((a + zero) + (b + zero), field, coeffs);
+                std::initializer_list<Rational> coeffs) {
+            verifyEqual(a + b, coeffs);
+            verifyEqual((a + zero) + b, coeffs);
+            verifyEqual(a + (b + zero), coeffs);
+            verifyEqual((a + zero) + (b + zero), coeffs);
 
-            verifyEqual(b + a, field, coeffs);
-            verifyEqual((b + zero) + a, field, coeffs);
-            verifyEqual(b + (a + zero), field, coeffs);
-            verifyEqual((b + zero) + (a + zero), field, coeffs);
+            verifyEqual(b + a, coeffs);
+            verifyEqual((b + zero) + a, coeffs);
+            verifyEqual(b + (a + zero), coeffs);
+            verifyEqual((b + zero) + (a + zero), coeffs);
 
             {
                 Cyclotomic x(a);
-                verifyEqual(x += b, field, coeffs);
+                verifyEqual(x += b, coeffs);
             }
             {
                 Cyclotomic x(a);
-                verifyEqual(x += (b + zero), field, coeffs);
+                verifyEqual(x += (b + zero), coeffs);
             }
             {
                 Cyclotomic x(b);
-                verifyEqual(x += a, field, coeffs);
+                verifyEqual(x += a, coeffs);
             }
             {
                 Cyclotomic x(b);
-                verifyEqual(x += (a + zero), field, coeffs);
+                verifyEqual(x += (a + zero), coeffs);
             }
         }
 
         void verifyMinus(const Cyclotomic& a, const Cyclotomic& b,
-                size_t field, std::initializer_list<Rational> coeffs) {
-            verifyEqual(a - b, field, coeffs);
-            verifyEqual((a + zero) - b, field, coeffs);
-            verifyEqual(a - (b + zero), field, coeffs);
-            verifyEqual((a + zero) - (b + zero), field, coeffs);
+                std::initializer_list<Rational> coeffs) {
+            verifyEqual(a - b, coeffs);
+            verifyEqual((a + zero) - b, coeffs);
+            verifyEqual(a - (b + zero), coeffs);
+            verifyEqual((a + zero) - (b + zero), coeffs);
 
             {
                 Cyclotomic x(a);
-                verifyEqual(x -= b, field, coeffs);
+                verifyEqual(x -= b, coeffs);
             }
             {
                 Cyclotomic x(a);
-                verifyEqual(x -= (b + zero), field, coeffs);
+                verifyEqual(x -= (b + zero), coeffs);
             }
 
-            verifyPlus(a, -b, field, coeffs);
+            verifyPlus(a, -b, coeffs);
             {
                 Cyclotomic x(b);
                 x.negate();
-                verifyPlus(a, x, field, coeffs);
+                verifyPlus(a, x, coeffs);
             }
         }
 
         void verifyMult(const Cyclotomic& a, const Rational& b,
-                size_t field, std::initializer_list<Rational> coeffs) {
-            verifyEqual(a * b, field, coeffs);
-            verifyEqual((a + zero) * b, field, coeffs);
-            verifyEqual(b * a, field, coeffs);
-            verifyEqual(b * (a + zero), field, coeffs);
+                std::initializer_list<Rational> coeffs) {
+            verifyEqual(a * b, coeffs);
+            verifyEqual((a + zero) * b, coeffs);
+            verifyEqual(b * a, coeffs);
+            verifyEqual(b * (a + zero), coeffs);
             {
                 Cyclotomic x(a);
-                verifyEqual(x *= b, field, coeffs);
+                verifyEqual(x *= b, coeffs);
             }
         }
 
         void verifyDiv(const Cyclotomic& a, const Rational& b,
-                size_t field, std::initializer_list<Rational> coeffs) {
-            verifyEqual(a / b, field, coeffs);
-            verifyEqual((a + zero) / b, field, coeffs);
+                std::initializer_list<Rational> coeffs) {
+            verifyEqual(a / b, coeffs);
+            verifyEqual((a + zero) / b, coeffs);
             {
                 Cyclotomic x(a);
-                verifyEqual(x /= b, field, coeffs);
+                verifyEqual(x /= b, coeffs);
             }
-            verifyMult(a, b.inverse(), field, coeffs);
+            verifyMult(a, b.inverse(), coeffs);
             {
                 Rational x(b);
                 x.invert();
-                verifyMult(a, x, field, coeffs);
+                verifyMult(a, x, coeffs);
             }
         }
 
         void verifyMult(const Cyclotomic& a, const Cyclotomic& b,
-                size_t field, std::initializer_list<Rational> coeffs) {
-            verifyEqual(a * b, field, coeffs);
-            verifyEqual((a + zero) * b, field, coeffs);
-            verifyEqual(a * (b + zero), field, coeffs);
-            verifyEqual((a + zero) * (b + zero), field, coeffs);
+                std::initializer_list<Rational> coeffs) {
+            verifyEqual(a * b, coeffs);
+            verifyEqual((a + zero) * b, coeffs);
+            verifyEqual(a * (b + zero), coeffs);
+            verifyEqual((a + zero) * (b + zero), coeffs);
 
-            verifyEqual(b * a, field, coeffs);
-            verifyEqual((b + zero) * a, field, coeffs);
-            verifyEqual(b * (a + zero), field, coeffs);
-            verifyEqual((b + zero) * (a + zero), field, coeffs);
+            verifyEqual(b * a, coeffs);
+            verifyEqual((b + zero) * a, coeffs);
+            verifyEqual(b * (a + zero), coeffs);
+            verifyEqual((b + zero) * (a + zero), coeffs);
 
             {
                 Cyclotomic x(a);
-                verifyEqual(x *= b, field, coeffs);
+                verifyEqual(x *= b, coeffs);
             }
             {
                 Cyclotomic x(a);
-                verifyEqual(x *= (b + zero), field, coeffs);
+                verifyEqual(x *= (b + zero), coeffs);
             }
             {
                 Cyclotomic x(b);
-                verifyEqual(x *= a, field, coeffs);
+                verifyEqual(x *= a, coeffs);
             }
             {
                 Cyclotomic x(b);
-                verifyEqual(x *= (a + zero), field, coeffs);
+                verifyEqual(x *= (a + zero), coeffs);
             }
         }
 
         void verifyDiv(const Cyclotomic& a, const Cyclotomic& b,
-                size_t field, std::initializer_list<Rational> coeffs) {
-            verifyEqual(a / b, field, coeffs);
-            verifyEqual((a + zero) / b, field, coeffs);
-            verifyEqual(a / (b + zero), field, coeffs);
-            verifyEqual((a + zero) / (b + zero), field, coeffs);
+                std::initializer_list<Rational> coeffs) {
+            verifyEqual(a / b, coeffs);
+            verifyEqual((a + zero) / b, coeffs);
+            verifyEqual(a / (b + zero), coeffs);
+            verifyEqual((a + zero) / (b + zero), coeffs);
 
             {
                 Cyclotomic x(a);
-                verifyEqual(x /= b, field, coeffs);
+                verifyEqual(x /= b, coeffs);
             }
             {
                 Cyclotomic x(a);
-                verifyEqual(x /= (b + zero), field, coeffs);
+                verifyEqual(x /= (b + zero), coeffs);
             }
 
-            verifyMult(a, b.inverse(), field, coeffs);
+            verifyMult(a, b.inverse(), coeffs);
             {
                 Cyclotomic x(b);
                 x.invert();
-                verifyMult(a, x, field, coeffs);
+                verifyMult(a, x, coeffs);
             }
         }
 };
 
 TEST_F(CyclotomicTest, arithmetic) {
-    verifyEqual(zero, 5, {});
+    verifyEqual(zero, {});
 
-    verifyEqual(-one, 5, { -1 });
-    verifyEqual(-x1, 5, { 0, -1 });
-    verifyEqual(-xMinus1, 5, { 1, -1 });
+    verifyEqual(-one, { -1 });
+    verifyEqual(-x1, { 0, -1 });
+    verifyEqual(-xMinus1, { 1, -1 });
 
-    verifyPlus(zero, zero, 5, {});
-    verifyPlus(xPlus1, zero, 5, { 1, 1 });
-    verifyPlus(xPlus1, xMinus1, 5, { 0, 2 });
+    verifyPlus(zero, zero, {});
+    verifyPlus(xPlus1, zero, { 1, 1 });
+    verifyPlus(xPlus1, xMinus1, { 0, 2 });
 
-    verifyMinus(zero, zero, 5, {});
-    verifyMinus(xPlus1, zero, 5, { 1, 1 });
-    verifyMinus(zero, xPlus1, 5, { -1, -1 });
-    verifyMinus(xPlus1, xMinus1, 5, { 2 });
+    verifyMinus(zero, zero, {});
+    verifyMinus(xPlus1, zero, { 1, 1 });
+    verifyMinus(zero, xPlus1, { -1, -1 });
+    verifyMinus(xPlus1, xMinus1, { 2 });
 
-    verifyMult(zero, 0, 5, {});
-    verifyMult(zero, 1, 5, {});
-    verifyMult(zero, 2, 5, {});
-    verifyMult(xMinus1, 0, 5, {});
-    verifyMult(xMinus1, 1, 5, { -1, 1 });
-    verifyMult(xMinus1, -1, 5, { 1, -1 });
-    verifyMult(xMinus1, 2, 5, { -2, 2 });
-    verifyMult(xMinus1, Rational(1, 2), 5,
-        { -Rational(1, 2), Rational(1, 2) });
+    verifyMult(zero, 0, {});
+    verifyMult(zero, 1, {});
+    verifyMult(zero, 2, {});
+    verifyMult(xMinus1, 0, {});
+    verifyMult(xMinus1, 1, { -1, 1 });
+    verifyMult(xMinus1, -1, { 1, -1 });
+    verifyMult(xMinus1, 2, { -2, 2 });
+    verifyMult(xMinus1, Rational(1, 2), { -Rational(1, 2), Rational(1, 2) });
 
-    verifyDiv(zero, 1, 5, {});
-    verifyDiv(zero, 2, 5, {});
-    verifyDiv(xMinus1, 1, 5, { -1, 1 });
-    verifyDiv(xMinus1, -1, 5, { 1, -1 });
-    verifyDiv(xMinus1, Rational(1, 2), 5, { -2, 2 });
-    verifyDiv(xMinus1, 2, 5,
-        { -Rational(1, 2), Rational(1, 2) });
+    verifyDiv(zero, 1, {});
+    verifyDiv(zero, 2, {});
+    verifyDiv(xMinus1, 1, { -1, 1 });
+    verifyDiv(xMinus1, -1, { 1, -1 });
+    verifyDiv(xMinus1, Rational(1, 2), { -2, 2 });
+    verifyDiv(xMinus1, 2, { -Rational(1, 2), Rational(1, 2) });
 
-    verifyMult(zero, zero, 5, {});
-    verifyMult(zero, xPlus1, 5, {});
-    verifyMult(xPlus1, xMinus1, 5, { -1, 0, 1});
-    verifyMult(x2, x3, 5, { 1 });
-    verifyMult(x3, x3, 5, { 0, 1 });
-    verifyMult(xPlus1, x3 + x2, 5, { -1, -1, 0, 1 });
+    verifyMult(zero, zero, {});
+    verifyMult(zero, xPlus1, {});
+    verifyMult(xPlus1, xMinus1, { -1, 0, 1});
+    verifyMult(x2, x3, { 1 });
+    verifyMult(x3, x3, { 0, 1 });
+    verifyMult(xPlus1, x3 + x2, { -1, -1, 0, 1 });
 
-    verifyDiv(zero, xPlus1, 5, {});
-    verifyDiv(zero, xPlus1, 5, {});
-    verifyDiv(xMinus1, one, 5, { -1, 1 });
-    verifyDiv(xMinus1, -one, 5, { 1, -1 });
-    verifyDiv(xMinus1, two, 5, { -Rational(1, 2), Rational(1, 2) });
-    verifyDiv(xMinus1, xMinus1, 5, { 1 });
-    verifyDiv(two, x2, 5, { 0, 0, 0, 2 });
-    verifyDiv(one, x3, 5, { 0, 0, 1 });
-    verifyDiv(x3, x2, 5, { 0, 1 });
-    verifyDiv(x2, x3, 5, { -1, -1, -1, -1 });
+    verifyDiv(zero, xPlus1, {});
+    verifyDiv(zero, xPlus1, {});
+    verifyDiv(xMinus1, one, { -1, 1 });
+    verifyDiv(xMinus1, -one, { 1, -1 });
+    verifyDiv(xMinus1, two, { -Rational(1, 2), Rational(1, 2) });
+    verifyDiv(xMinus1, xMinus1, { 1 });
+    verifyDiv(two, x2, { 0, 0, 0, 2 });
+    verifyDiv(one, x3, { 0, 0, 1 });
+    verifyDiv(x3, x2, { 0, 1 });
+    verifyDiv(x2, x3, { -1, -1, -1, -1 });
 
     {
         Cyclotomic x(xMinus1);
-        verifyEqual(x + x, 5, {-2, 2});
-        verifyEqual(x += x, 5, {-2, 2});
+        verifyEqual(x + x, {-2, 2});
+        verifyEqual(x += x, {-2, 2});
     }
     {
         Cyclotomic x(xMinus1);
-        verifyEqual(x - x, 5, {});
-        verifyEqual(x -= x, 5, {});
+        verifyEqual(x - x, {});
+        verifyEqual(x -= x, {});
     }
     {
         Cyclotomic x(xMinus1);
-        verifyEqual(x * x, 5, {1, -2, 1});
-        verifyEqual(x *= x, 5, {1, -2, 1});
+        verifyEqual(x * x, {1, -2, 1});
+        verifyEqual(x *= x, {1, -2, 1});
     }
     {
         Cyclotomic x(5, {1, 0, 1});
-        verifyEqual(x * x, 5, {0, -1, 1, -1});
-        verifyEqual(x *= x, 5, {0, -1, 1, -1});
+        verifyEqual(x * x, {0, -1, 1, -1});
+        verifyEqual(x *= x, {0, -1, 1, -1});
     }
     {
         Cyclotomic x(xMinus1);
-        verifyEqual(x / x, 5, {1});
-        verifyEqual(x /= x, 5, {1});
+        verifyEqual(x / x, {1});
+        verifyEqual(x /= x, {1});
     }
 }
