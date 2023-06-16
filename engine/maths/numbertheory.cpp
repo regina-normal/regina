@@ -69,6 +69,10 @@ namespace {
             u = 1; v = 0;
             return a;
         }
+        if (a == 0) {
+            u = 0; v = 1;
+            return b;
+        }
 
         long a_orig = a;
         long b_orig = b;
@@ -78,12 +82,16 @@ namespace {
         long vv = 1;
         while (b != 0) {
             // At each stage:
-            //   a != b;
+            //   a != b and a != 0;
             //   u*(a_orig) + v*(b_orig) = a;
             //   uu*(a_orig) + vv*(b_orig) = b;
             //   u*vv - uu*v = ±1;
-            //   (u,v), (uu,vv), (u,uu), (v,vv) are all coprime pairs with opposite signs
-            //       (where we consider 0 to be negative for this purpose).
+            //   (u,v), (uu,vv), (u,uu), (v,vv) are all coprime pairs with
+            //       opposite signs (we treat 0 as negative for this purpose).
+            //
+            // Moreover, if we treat magnitude as distance from 1/2 (so that
+            // ... > |-1| > |0| == |1| < |2| < ...), then at every stage
+            // we have |u| ≤ |uu| and |v| ≤ |vv|.
             long q = a / b;
 
             // (u,uu) <- (uu, u - q*uu)
@@ -105,29 +113,27 @@ namespace {
         // At this point:
         //   a = gcd = u*(a_orig) + v*(b_orig);
         //   (uu, vv) = ±(b_orig, -a_orig)/gcd.
+        //
+        // This means we have one of the following two scenarios:
+        //
+        // 1: (uu, vv) = (-b_orig, a_orig)/gcd.
+        //    The magnitude result above then gives
+        //    -a_orig/gcd < v ≤ 0 < u ≤ b_orig/gcd + 1,
+        //    and the relation u*a_orig + v*b_orig = gcd then forces
+        //    -a_orig/gcd < v ≤ 0 < u ≤ b_orig/gcd.
+        //
+        // 2: (uu, vv) = (b_orig, -a_orig)/gcd.
+        //    The magnitude result above then gives
+        //    -b_orig/gcd < u ≤ 0 < v ≤ a_orig/gcd + 1,
+        //    and the relation u*a_orig + v*b_orig = gcd then forces
+        //    -b_orig/gcd < u ≤ 0 < v ≤ a_orig/gcd.
+        //
+        // Our final aim is -a_orig/gcd < v ≤ 0 < u ≤ b_orig/gcd, which
+        // is easy from here:
 
-        // Put u and v in the correct range. Recall that we need:
-        // -a_orig/gcd < v ≤ 0 < u ≤ b_orig/gcd
-
-        // We are allowed to add (b_orig/d, -a_orig/d) to (u,v).
-        // TODO: Check this, but I think that modulo sign it is guaranteed
-        // that the values we compute here are already stored in (vv,uu).
-        a_orig = -(a_orig / a);
-        b_orig = b_orig / a;
-
-        // Now we are allowed to add (b_orig, a_orig), where b_orig >= 0.
-        // Add enough copies to put u between 1 and b_orig inclusive.
-        // TODO: Check this also, but I think we can guarantee that if u > 0
-        // then u,v are already in the correct range, and if u <= 0 then
-        // we always just need to add k = 1 copy.
-        long k;
-        if (u > 0)
-            k = -((u-1) / b_orig);
-        else
-            k = 1 - (u / b_orig);
-        if (k) {
-            u += k * b_orig;
-            v += k * a_orig;
+        if (u <= 0) {
+            u += uu; // adds (b_orig / gcd)
+            v += vv; // subtracts (a_orig / gcd)
         }
 
         return a;
