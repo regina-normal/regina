@@ -3,8 +3,6 @@
 # Files to compile
 SET ( FILES
   integer.cpp
-  laurent.cpp
-  laurent2.cpp
   matrix.cpp
   matrixops.cpp
   perm.cpp
@@ -15,7 +13,6 @@ SET ( FILES
   perm6.cpp
   perm7.cpp
   permconv.cpp
-  polynomial.cpp
   primes.cpp
   rational.cpp
   )

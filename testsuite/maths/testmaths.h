@@ -45,8 +45,6 @@
 void addMatrix(CppUnit::TextUi::TestRunner& runner);
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 void addInteger(CppUnit::TextUi::TestRunner& runner);
-void addLaurent(CppUnit::TextUi::TestRunner& runner);
-void addLaurent2(CppUnit::TextUi::TestRunner& runner);
 void addPerm(CppUnit::TextUi::TestRunner& runner);
 void addPerm2(CppUnit::TextUi::TestRunner& runner);
 void addPerm3(CppUnit::TextUi::TestRunner& runner);
@@ -54,7 +52,6 @@ void addPerm4(CppUnit::TextUi::TestRunner& runner);
 void addPerm5(CppUnit::TextUi::TestRunner& runner);
 void addPerm6(CppUnit::TextUi::TestRunner& runner);
 void addPerm7(CppUnit::TextUi::TestRunner& runner);
-void addPolynomial(CppUnit::TextUi::TestRunner& runner);
 void addPrimes(CppUnit::TextUi::TestRunner& runner);
 void addRational(CppUnit::TextUi::TestRunner& runner);
 void addPermConv(CppUnit::TextUi::TestRunner& runner);

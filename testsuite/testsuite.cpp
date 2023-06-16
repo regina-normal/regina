@@ -111,9 +111,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("perm6", &addPerm6));
     sets.insert(std::make_pair("perm7", &addPerm7));
     sets.insert(std::make_pair("perm", &addPerm));
-    sets.insert(std::make_pair("polynomial", &addPolynomial));
-    sets.insert(std::make_pair("laurent", &addLaurent));
-    sets.insert(std::make_pair("laurent2", &addLaurent2));
     sets.insert(std::make_pair("primes", &addPrimes));
     sets.insert(std::make_pair("matrix", &addMatrix));
     sets.insert(std::make_pair("matrixops", &addMatrixOps));

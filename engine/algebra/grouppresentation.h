@@ -670,6 +670,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          */
         void writeTeX(std::ostream& out) const;
 
+        // Make sure the compiler can see the zero-argument string output
+        // routines, since we declare alternative versions of these below.
         using ShortOutput<GroupExpression, true>::str;
         using ShortOutput<GroupExpression, true>::utf8;
 

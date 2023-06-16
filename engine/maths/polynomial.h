@@ -81,6 +81,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         using Coefficient = T;
             /**< The type of each coefficient of the polynomial. */
 
+        // Make sure the compiler can see the zero-argument string output
+        // routines, since we declare alternative versions of these below.
+        using ShortOutput<Polynomial<T>, true>::str;
+        using ShortOutput<Polynomial<T>, true>::utf8;
+
     private:
         size_t degree_;
             /**< The degree of the polynomial.  Here the zero polynomial

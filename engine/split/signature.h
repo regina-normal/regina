@@ -255,6 +255,8 @@ class Signature : public ShortOutput<Signature> {
          */
         Triangulation<3> triangulate() const;
 
+        // Make sure the compiler can see the zero-argument string output
+        // routine, since we declare an alternative version of this below.
         using ShortOutput<Signature>::str;
 
         /**

@@ -2,7 +2,10 @@
 SET ( FILES
   binom.cpp
   cyclotomic.cpp
+  laurent.cpp
+  laurent2.cpp
   numbertheory.cpp
+  polynomial.cpp
   )
 
 # Prepend folder name

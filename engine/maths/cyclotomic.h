@@ -85,6 +85,11 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
             /**< The type of each coefficient of the polynomial that is
                  used to store a field element. */
 
+        // Make sure the compiler can see the zero-argument string output
+        // routines, since we declare alternative versions of these below.
+        using ShortOutput<Cyclotomic, true>::str;
+        using ShortOutput<Cyclotomic, true>::utf8;
+
     private:
         size_t field_;
             /**< The order \a n of the underlying cyclotomic field.
@@ -623,10 +628,6 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \return this field element as a human-readable string.
          */
         std::string str(const char* variable) const;
-
-        // Ensure that the inherited output routines remain visible:
-        using ShortOutput<Cyclotomic, true>::str;
-        using ShortOutput<Cyclotomic, true>::utf8;
 
         /**
          * Returns this field element as a human-readable string using
