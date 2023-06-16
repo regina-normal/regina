@@ -30,61 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include <cppunit/extensions/HelperMacros.h>
 #include "maths/binom.h"
-#include "testsuite/maths/testmaths.h"
+
+#include "testhelper.h"
 
 using regina::binomSmall;
 using regina::binomMedium;
 
-class BinomialTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(BinomialTest);
+TEST(BinomialTest, consistency) {
+    static constexpr int maxSmall = 16;
 
-    CPPUNIT_TEST(consistency);
-    CPPUNIT_TEST(relations);
+    for (int n = 0; n <= maxSmall; ++n) {
+        SCOPED_TRACE_NUMERIC(n);
 
-    CPPUNIT_TEST_SUITE_END();
-
-    private:
-        static constexpr int maxSmall = 16;
-        static constexpr int maxMedium = 29;
-
-    public:
-        void setUp() override {
-        }
-
-        void tearDown() override {
-        }
-
-        void consistency() {
-            int n, k;
-            for (n = 0; n <= maxSmall; ++n)
-                for (k = 0; k <= n; ++k) {
-                    CPPUNIT_ASSERT_EQUAL(
-                        static_cast<long>(binomSmall(n, k)),
-                        binomMedium(n, k));
-                }
-        }
-
-        void relations() {
-            int n, k;
-            for (n = 0; n <= maxMedium; ++n) {
-                CPPUNIT_ASSERT_EQUAL(binomMedium(n, 0), long(1));
-                CPPUNIT_ASSERT_EQUAL(binomMedium(n, n), long(1));
-                if (n > 0) {
-                    CPPUNIT_ASSERT_EQUAL(binomMedium(n, 1), long(n));
-                    CPPUNIT_ASSERT_EQUAL(binomMedium(n, n-1), long(n));
-
-                    for (k = 1; k < n; ++k)
-                        CPPUNIT_ASSERT_EQUAL(binomMedium(n, k),
-                            binomMedium(n-1, k-1) + binomMedium(n-1, k));
-                }
-            }
-        }
-};
-
-void addBinomial(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(BinomialTest::suite());
+        for (int k = 0; k <= n; ++k)
+            EXPECT_EQ(static_cast<long>(binomSmall(n, k)), binomMedium(n, k));
+    }
 }
 
+TEST(BinomialTest, relations) {
+    static constexpr int maxMedium = 29;
+
+    for (int n = 0; n <= maxMedium; ++n) {
+        SCOPED_TRACE_NUMERIC(n);
+
+        EXPECT_EQ(binomMedium(n, 0), 1);
+        EXPECT_EQ(binomMedium(n, n), 1);
+        if (n > 0) {
+            EXPECT_EQ(binomMedium(n, 1), n);
+            EXPECT_EQ(binomMedium(n, n-1), n);
+
+            for (int k = 1; k < n; ++k)
+                EXPECT_EQ(binomMedium(n, k),
+                    binomMedium(n-1, k-1) + binomMedium(n-1, k));
+        }
+    }
+}

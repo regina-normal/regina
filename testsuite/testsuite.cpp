@@ -102,7 +102,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     std::map<std::string, TestSet> aliases;
 
     // Maths:
-    sets.insert(std::make_pair("binomial", &addBinomial));
     sets.insert(std::make_pair("integer", &addInteger));
     sets.insert(std::make_pair("rational", &addRational));
     sets.insert(std::make_pair("perm2", &addPerm2));
@@ -113,7 +112,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("perm7", &addPerm7));
     sets.insert(std::make_pair("perm", &addPerm));
     sets.insert(std::make_pair("polynomial", &addPolynomial));
-    sets.insert(std::make_pair("cyclotomic", &addCyclotomic));
     sets.insert(std::make_pair("laurent", &addLaurent));
     sets.insert(std::make_pair("laurent2", &addLaurent2));
     sets.insert(std::make_pair("primes", &addPrimes));

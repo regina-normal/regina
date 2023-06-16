@@ -624,6 +624,10 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          */
         std::string str(const char* variable) const;
 
+        // Ensure that the inherited output routines remain visible:
+        using ShortOutput<Cyclotomic, true>::str;
+        using ShortOutput<Cyclotomic, true>::utf8;
+
         /**
          * Returns this field element as a human-readable string using
          * unicode characters, using the given variable name instead of \c x.

@@ -2,8 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  binom.cpp
-  cyclotomic.cpp
   integer.cpp
   laurent.cpp
   laurent2.cpp

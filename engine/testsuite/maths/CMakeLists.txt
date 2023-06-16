@@ -1,5 +1,7 @@
 # Files to compile
 SET ( FILES
+  binom.cpp
+  cyclotomic.cpp
   numbertheory.cpp
   )
 

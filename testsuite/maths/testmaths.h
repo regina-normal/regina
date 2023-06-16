@@ -42,8 +42,6 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addBinomial(CppUnit::TextUi::TestRunner& runner);
-void addCyclotomic(CppUnit::TextUi::TestRunner& runner);
 void addMatrix(CppUnit::TextUi::TestRunner& runner);
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 void addInteger(CppUnit::TextUi::TestRunner& runner);
