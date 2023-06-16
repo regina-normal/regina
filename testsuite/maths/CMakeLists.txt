@@ -12,7 +12,6 @@ SET ( FILES
   perm5.cpp
   perm6.cpp
   perm7.cpp
-  permconv.cpp
   primes.cpp
   rational.cpp
   )

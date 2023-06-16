@@ -93,6 +93,7 @@ void addPerm2(pybind11::module_& m) {
         .def("orderedSnIndex", &Perm<2>::orderedSnIndex, rdoc::orderedSnIndex)
         .def("isConjugacyMinimal", &Perm<2>::isConjugacyMinimal,
             rdoc::isConjugacyMinimal)
+        .def_readonly_static("degree", &Perm<2>::degree)
         .def_readonly_static("codeType", &Perm<2>::codeType)
         .def_readonly_static("nPerms", &Perm<2>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<2>::nPerms_1)

@@ -98,6 +98,15 @@ template <>
 class Perm<6> {
     public:
         /**
+         * The degree of the underlying symmetric group; that is, the
+         * template parameter \a n.
+         *
+         * This compile-time constant allows the programmer to extract \a n
+         * from the type (e.g., when writing templated code).
+         */
+        static constexpr int degree = 6;
+
+        /**
          * Denotes a native signed integer type large enough to count all
          * permutations on six elements.  In other words, this is a
          * native signed integer type large enough to store (6!).

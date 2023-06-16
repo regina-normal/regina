@@ -114,7 +114,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("primes", &addPrimes));
     sets.insert(std::make_pair("matrix", &addMatrix));
     sets.insert(std::make_pair("matrixops", &addMatrixOps));
-    sets.insert(std::make_pair("permconv", &addPermConv));
 
     // 3-manifold triangulations:
     sets.insert(std::make_pair("triangulation3", &addTriangulation3));

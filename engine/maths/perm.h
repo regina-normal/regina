@@ -248,6 +248,15 @@ class Perm {
 
     public:
         /**
+         * The degree of the underlying symmetric group; that is, the
+         * template parameter \a n.
+         *
+         * This compile-time constant allows the programmer to extract \a n
+         * from the type (e.g., when writing templated code).
+         */
+        static constexpr int degree = n;
+
+        /**
          * Indicates the number of bits used in an image pack to store the
          * image of a single integer.
          *

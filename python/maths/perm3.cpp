@@ -97,6 +97,7 @@ void addPerm3(pybind11::module_& m) {
         .def("isConjugacyMinimal", &Perm<3>::isConjugacyMinimal,
             rdoc::isConjugacyMinimal)
         .def_static("extend", &Perm<3>::extend<2>, rdoc::extend)
+        .def_readonly_static("degree", &Perm<3>::degree)
         .def_readonly_static("codeType", &Perm<3>::codeType)
         .def_readonly_static("nPerms", &Perm<3>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<3>::nPerms_1)

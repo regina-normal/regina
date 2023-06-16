@@ -83,6 +83,7 @@ Version 7.4  [ (to be announced) ]
             - The inner ChangeEventSpan class has a new member function held().
         Class Perm<n>:
             - New routine hash().
+            - New class constant degree.
         Class SatAnnulus:
             - Routine attachLST() now checks its preconditions, and throws
               an exception if they fail.

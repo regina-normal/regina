@@ -112,6 +112,7 @@ void addPerm4(pybind11::module_& m) {
         .def("pairs", &Perm<4>::pairs, rdoc::pairs)
         .def_static("extend", &Perm<4>::extend<2>, rdoc::extend)
         .def_static("extend", &Perm<4>::extend<3>, rdoc::extend)
+        .def_readonly_static("degree", &Perm<4>::degree)
         .def_readonly_static("codeType", &Perm<4>::codeType)
         .def_readonly_static("imageBits", &Perm<4>::imageBits)
         .def_readonly_static("imageMask", &Perm<4>::imageMask)

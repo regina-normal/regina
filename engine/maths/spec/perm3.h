@@ -80,6 +80,15 @@ template <>
 class Perm<3> {
     public:
         /**
+         * The degree of the underlying symmetric group; that is, the
+         * template parameter \a n.
+         *
+         * This compile-time constant allows the programmer to extract \a n
+         * from the type (e.g., when writing templated code).
+         */
+        static constexpr int degree = 3;
+
+        /**
          * Denotes a native signed integer type large enough to count all
          * permutations on three elements.  In other words, this is a
          * native signed integer type large enough to store (3!).
