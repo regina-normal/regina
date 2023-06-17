@@ -46,14 +46,17 @@ If *d* is the gcd of *a* and *b*, then this routine returns the tuple
 
 * ``u⋅a + v⋅b = d``;
 
-* ``-abs(a)/d < v⋅sign(b) ≤ 0``; and
-
-* ``1 ≤ u⋅sign(a) ≤ abs(b)/d``.
+* ``-|a|/d < v⋅sign(b) ≤ 0 < u⋅sign(a) ≤ |b|/d``.
 
 In the special case where one of the given integers is zero, the
 corresponding coefficient will also be zero and the other coefficient
 will be 1 or -1 so that ``u⋅a + v⋅b = d`` still holds. If both given
 integers are zero, both of the coefficients will be set to zero.
+
+.. warning::
+    This routine might give incorrect answers if a or b is precisely
+    LONG_MIN, since this value cannot be correctly negated as a
+    ``long``.
 
 Parameter ``a``:
     the first integer to compute the gcd of.
@@ -75,7 +78,7 @@ If either of the arguments is zero, the return value will also be
 zero.
 
 Regarding possible overflow: This routine does not create any
-temporary integers that are larger than the final LCM.
+temporary integers that are larger in magnitude than the final LCM.
 
 .. deprecated::
     Simply use std::lcm(), which was introduced with C++17.
@@ -92,13 +95,20 @@ Returns:
 // Docstring regina::python::doc::modularInverse
 static const char *modularInverse =
 R"doc(Calculates the multiplicative inverse of one integer modulo another.
-The inverse returned will be between 0 and *n*-1 inclusive.
+Specifically, this computes the inverse of *k* modulo *n*, and returns
+a result between 0 and ``n - 1`` inclusive.
+
+Note that ``n == 1`` _is_ allowed, and will return 0 for any *k*.
 
 Precondition:
-    *n* and *k* are both strictly positive;
+    *n* is strictly positive;
 
 Precondition:
-    *n* and *k* have no common factors.
+    *n* and *k* are coprime.
+
+Exception ``InvalidArgument``:
+    Either *n* is zero or negative, or the given arguments are not
+    coprime.
 
 Parameter ``n``:
     the modular base in which to work.
@@ -117,6 +127,9 @@ value. For instance, ``reducedMod(4,10) = 4`` but ``reducedMod(6,10) =
 
 Precondition:
     *modBase* is strictly positive.
+
+Exception ``InvalidArgument``:
+    The argument *modBase* is zero or negative.
 
 Parameter ``k``:
     the number to reduce modulo *modBase*.
