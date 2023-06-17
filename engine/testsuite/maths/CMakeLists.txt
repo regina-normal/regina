@@ -5,6 +5,7 @@ SET ( FILES
   laurent.cpp
   laurent2.cpp
   numbertheory.cpp
+  perm2.cpp
   perm3.cpp
   permconv.cpp
   polynomial.cpp

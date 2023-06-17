@@ -46,7 +46,6 @@ void addMatrix(CppUnit::TextUi::TestRunner& runner);
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 void addInteger(CppUnit::TextUi::TestRunner& runner);
 void addPerm(CppUnit::TextUi::TestRunner& runner);
-void addPerm2(CppUnit::TextUi::TestRunner& runner);
 void addPerm4(CppUnit::TextUi::TestRunner& runner);
 void addPerm5(CppUnit::TextUi::TestRunner& runner);
 void addPerm6(CppUnit::TextUi::TestRunner& runner);

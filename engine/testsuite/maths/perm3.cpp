@@ -88,11 +88,11 @@ TEST_F(Perm3Test, pow) {
 TEST_F(Perm3Test, rot) {
     SmallPermTest<3>::rot();
 }
-TEST_F(Perm3Test, tightEncoding) {
-    SmallPermTest<3>::tightEncoding();
-}
 TEST_F(Perm3Test, conjugacyMinimal) {
     GeneralPermTest<3>::conjugacyMinimal();
+}
+TEST_F(Perm3Test, tightEncoding) {
+    SmallPermTest<3>::tightEncoding();
 }
 
 TEST_F(Perm3Test, productsViaPerm4) {
@@ -111,9 +111,8 @@ TEST_F(Perm3Test, productsViaPerm4) {
                     int f = 3 - d - e;
                     Perm<3> y(d, e, f);
 
-                    Perm<3> product3 = x * y;
-                    Perm<4> product4 =
-                        Perm<4>(a, b, c, 3) * Perm<4>(d, e, f, 3);
+                    auto product3 = x * y;
+                    auto product4 = Perm<4>(a, b, c, 3) * Perm<4>(d, e, f, 3);
 
                     EXPECT_EQ(product3[0], product4[0]);
                     EXPECT_EQ(product3[1], product4[1]);
