@@ -508,7 +508,8 @@ class Perm {
          * Performs the precomputation necessary for using the optimised
          * cachedInverse() routine.
          *
-         * This _must_ be called before calling cachedInverse().
+         * This _must_ be called before using _any_ of the optimised
+         * `cachedXXX()` functions.
          *
          * This only needs to be done once in the lifetime of the program.
          * If you do try to call precompute() a second time then it will

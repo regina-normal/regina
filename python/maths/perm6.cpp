@@ -84,6 +84,7 @@ void addPerm6(pybind11::module_& m) {
         .def("pow", &Perm<6>::pow, rdoc::pow)
         .def("cachedPow", &Perm<6>::cachedPow, rdoc::cachedPow)
         .def("order", &Perm<6>::order, rdoc::order)
+        .def("cachedOrder", &Perm<6>::cachedOrder, rdoc::cachedOrder)
         .def("reverse", &Perm<6>::reverse, rdoc::reverse)
         .def("sign", &Perm<6>::sign, rdoc::sign)
         .def("__getitem__", &Perm<6>::operator[], rdoc::__array)

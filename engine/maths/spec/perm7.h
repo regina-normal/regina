@@ -314,8 +314,8 @@ class Perm<7> {
          * Performs the precomputation necessary for using the optimised
          * cachedComp(), cachedPow() and cachedOrder() routines.
          *
-         * This _must_ be called before calling any of cachedComp(),
-         * cachedPow() or cachedOrder().
+         * This _must_ be called before using _any_ of the optimised
+         * `cachedXXX()` functions.
          *
          * This only needs to be done once in the lifetime of the program.
          * If you do try to call precompute() a second time then it will

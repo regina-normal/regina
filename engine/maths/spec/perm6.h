@@ -302,7 +302,8 @@ class Perm<6> {
          * Performs the precomputation necessary for using the optimised
          * cachedComp() and cachedPow() routines.
          *
-         * This _must_ be called before calling cachedComp() or cachedPow().
+         * This _must_ be called before using _any_ of the optimised
+         * `cachedXXX()` functions.
          *
          * This only needs to be done once in the lifetime of the program.
          * If you do try to call precompute() a second time then it will
@@ -778,6 +779,32 @@ class Perm<6> {
          * \return the order of this permutation.
          */
         constexpr int order() const;
+
+        /**
+         * An alias for order(), provided to assist with writing generic code.
+         *
+         * This specialised Perm<6> class does not use precomputation to
+         * optimise order calculations (though it _does_ use precomputation
+         * for some other tasks, such as products and exponentiation).
+         * The only point of having cachedOrder() in Perm<6> is to make it
+         * easier to write generic code that works with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with Perm<6>, you should just
+         *   call order() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedOrder().
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedOrder().  For
+         * Perm<6>, this will not affect the behaviour of cachedOrder();
+         * however, for other Perm<n> classes a failure to do this will
+         * almost certainly crash your program.
+         *
+         * \return the order of this permutation.
+         */
+        int cachedOrder() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -3405,6 +3432,10 @@ inline Perm<6> Perm<6>::cachedPow(long exp) const {
 }
 
 inline constexpr int Perm<6>::order() const {
+    return orderTable[code2_];
+}
+
+inline constexpr int Perm<6>::cachedOrder() const {
     return orderTable[code2_];
 }
 

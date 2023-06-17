@@ -396,6 +396,33 @@ Precondition:
 Returns:
     the inverse of this permutation.)doc";
 
+// Docstring regina::python::doc::Perm_::cachedOrder
+static const char *cachedOrder =
+R"doc(An alias for order(), provided to assist with writing generic code.
+
+This specialised Perm<6> class does not use precomputation to optimise
+order calculations (though it _does_ use precomputation for some other
+tasks, such as products and exponentiation). The only point of having
+cachedOrder() in Perm<6> is to make it easier to write generic code
+that works with Perm<n> for any *n*.
+
+* If you know you are only working with Perm<6>, you should just call
+  order() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedOrder().
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedOrder(). For Perm<6>, this
+    will not affect the behaviour of cachedOrder(); however, for other
+    Perm<n> classes a failure to do this will almost certainly crash
+    your program.
+
+Returns:
+    the order of this permutation.)doc";
+
 // Docstring regina::python::doc::Perm_::cachedPow
 static const char *cachedPow =
 R"doc(Computes the given power of this permutation, using fast precomputed
@@ -807,7 +834,8 @@ static const char *precompute =
 R"doc(Performs the precomputation necessary for using the optimised
 cachedComp() and cachedPow() routines.
 
-This _must_ be called before calling cachedComp() or cachedPow().
+This _must_ be called before using _any_ of the optimised
+``cachedXXX()`` functions.
 
 This only needs to be done once in the lifetime of the program. If you
 do try to call precompute() a second time then it will do nothing and
