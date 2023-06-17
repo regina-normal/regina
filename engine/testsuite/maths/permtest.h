@@ -590,18 +590,25 @@ class SmallPermTest : public GeneralPermTest<n> {
         }
 
         static void order() {
-            for (Index i = 0; i < nPerms; ++i) {
-                auto p = regina::Perm<n>::Sn[i];
-
+            regina::Perm<n> p;
+            do {
                 int j = 0;
                 regina::Perm<n> q;
                 do {
                     q = q * p;
                     ++j;
                 } while (! q.isIdentity());
-
                 EXPECT_EQ(j, p.order());
-            }
+                ++p;
+            } while (! p.isIdentity());
+        }
+
+        static void cachedOrder() {
+            regina::Perm<n> p;
+            do {
+                EXPECT_EQ(p.cachedOrder(), p.order());
+                ++p;
+            } while (! p.isIdentity());
         }
 
         static void pow() {

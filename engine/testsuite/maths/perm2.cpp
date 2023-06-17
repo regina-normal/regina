@@ -82,6 +82,9 @@ TEST_F(Perm2Test, clear) {
 TEST_F(Perm2Test, order) {
     SmallPermTest<2>::order();
 }
+TEST_F(Perm2Test, cachedOrder) {
+    SmallPermTest<2>::cachedOrder();
+}
 TEST_F(Perm2Test, pow) {
     SmallPermTest<2>::pow();
 }
