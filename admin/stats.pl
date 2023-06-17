@@ -75,6 +75,7 @@ my $snappea = `find engine/snappea/kernel $types | xargs cat | wc -l`;
 my $snappy = `find engine/snappea/snappy $types | xargs cat | wc -l`;
 my $normaliz = `find engine/libnormaliz $types | xargs cat | wc -l`;
 my $pybind11 = `find python/pybind11 $types | xargs cat | wc -l`;
+my $docstrings = `find python/docstrings $types | xargs cat | wc -l`;
 my $gtest = `find engine/testsuite/gtest $types | xargs cat | wc -l`;
 
 # Convert strings to integers:
@@ -83,9 +84,10 @@ $snappea = $snappea + 0;
 $snappy = $snappy + 0;
 $normaliz = $normaliz + 0;
 $pybind11 = $pybind11 + 0;
+$docstrings = $docstrings + 0;
 $gtest = $gtest + 0;
 
-my $regina = $all - $snappea - $snappy - $normaliz - $pybind11 - $gtest;
+my $regina = $all - $snappea - $snappy - $normaliz - $pybind11 - $docstrings - $gtest;
 
 print "Gross lines:  $all\n";
 print "- Regina:     $regina\n";
@@ -93,5 +95,6 @@ print "- SnapPea:    $snappea\n";
 print "- SnapPy:     $snappy\n";
 print "- Normaliz:   $normaliz\n";
 print "- pybind11:   $pybind11\n";
+print "- Docstrings: $docstrings\n";
 print "- GoogleTest: $gtest\n";
 exit 0;
