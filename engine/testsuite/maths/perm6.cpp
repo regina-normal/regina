@@ -30,50 +30,78 @@
  *                                                                        *
  **************************************************************************/
 
-#include "testsuite/maths/permtest_old.h"
-#include "testsuite/maths/testmaths.h"
+#include "maths/permtest.h"
 
 using regina::Perm;
 
 class Perm6Test : public SmallPermTest<6> {
-    CPPUNIT_TEST_SUITE(Perm6Test);
-
-    // Generic inherited tests:
-    CPPUNIT_TEST(permCode);
-    CPPUNIT_TEST(sign);
-    CPPUNIT_TEST(index);
-    CPPUNIT_TEST(exhaustive);
-    CPPUNIT_TEST(swaps);
-    CPPUNIT_TEST(cachedInverse);
-    CPPUNIT_TEST(products);
-    CPPUNIT_TEST(cachedProducts);
-    CPPUNIT_TEST(conjugates);
-    CPPUNIT_TEST(cachedConjugates);
-    CPPUNIT_TEST(compareWith);
-    CPPUNIT_TEST(reverse);
-    CPPUNIT_TEST(clear);
-    CPPUNIT_TEST(order);
-    CPPUNIT_TEST(pow);
-    CPPUNIT_TEST(cachedPow);
-    CPPUNIT_TEST(rot);
-    CPPUNIT_TEST(conjugacyMinimal);
-    CPPUNIT_TEST(increment);
-    CPPUNIT_TEST(tightEncoding);
-
-    // Tests specific to Perm<6>:
-    CPPUNIT_TEST(aliases);
-
-    CPPUNIT_TEST_SUITE_END();
-
-    public:
-        void aliases() {
-            for (Perm<6>::Index i = 0; i < Perm<6>::nPerms; ++i)
-                if (Perm<6>::S6[i] != Perm<6>::Sn[i])
-                    CPPUNIT_FAIL("Arrays S6 and Sn disagree for Perm<6>.");
-        }
 };
 
-void addPerm6(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Perm6Test::suite());
+TEST_F(Perm6Test, permCode) {
+    SmallPermTest<6>::permCode();
+}
+TEST_F(Perm6Test, sign) {
+    SmallPermTest<6>::sign();
+}
+TEST_F(Perm6Test, index) {
+    SmallPermTest<6>::index();
+}
+TEST_F(Perm6Test, exhaustive) {
+    SmallPermTest<6>::exhaustive();
+}
+TEST_F(Perm6Test, swaps) {
+    SmallPermTest<6>::swaps();
+}
+TEST_F(Perm6Test, increment) {
+    GeneralPermTest<6>::increment();
+}
+TEST_F(Perm6Test, products) {
+    SmallPermTest<6>::products();
+}
+TEST_F(Perm6Test, cachedProducts) {
+    SmallPermTest<6>::cachedProducts();
+}
+TEST_F(Perm6Test, conjugates) {
+    SmallPermTest<6>::conjugates();
+}
+TEST_F(Perm6Test, cachedConjugates) {
+    SmallPermTest<6>::cachedConjugates();
+}
+TEST_F(Perm6Test, cachedInverse) {
+    GeneralPermTest<6>::cachedInverse();
+}
+TEST_F(Perm6Test, compareWith) {
+    SmallPermTest<6>::compareWith();
+}
+TEST_F(Perm6Test, reverse) {
+    SmallPermTest<6>::reverse();
+}
+TEST_F(Perm6Test, clear) {
+    SmallPermTest<6>::clear();
+}
+TEST_F(Perm6Test, order) {
+    SmallPermTest<6>::order();
+}
+TEST_F(Perm6Test, cachedOrder) {
+    SmallPermTest<6>::cachedOrder();
+}
+TEST_F(Perm6Test, pow) {
+    SmallPermTest<6>::pow();
+}
+TEST_F(Perm6Test, cachedPow) {
+    SmallPermTest<6>::cachedPow();
+}
+TEST_F(Perm6Test, rot) {
+    SmallPermTest<6>::rot();
+}
+TEST_F(Perm6Test, conjugacyMinimal) {
+    GeneralPermTest<6>::conjugacyMinimal();
+}
+TEST_F(Perm6Test, tightEncoding) {
+    SmallPermTest<6>::tightEncoding();
 }
 
+TEST_F(Perm6Test, aliases) {
+    for (Perm<6>::Index i = 0; i < Perm<6>::nPerms; ++i)
+        EXPECT_EQ(Perm<6>::S6[i], Perm<6>::Sn[i]);
+}

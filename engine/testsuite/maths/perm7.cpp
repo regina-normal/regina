@@ -30,50 +30,78 @@
  *                                                                        *
  **************************************************************************/
 
-#include "testsuite/maths/permtest_old.h"
-#include "testsuite/maths/testmaths.h"
+#include "maths/permtest.h"
 
 using regina::Perm;
 
 class Perm7Test : public SmallPermTest<7> {
-    CPPUNIT_TEST_SUITE(Perm7Test);
-
-    // Generic inherited tests:
-    CPPUNIT_TEST(permCode);
-    CPPUNIT_TEST(sign);
-    CPPUNIT_TEST(index);
-    CPPUNIT_TEST(exhaustive);
-    CPPUNIT_TEST(swaps);
-    CPPUNIT_TEST(cachedInverse);
-    CPPUNIT_TEST(products);
-    CPPUNIT_TEST(cachedProducts);
-    CPPUNIT_TEST(conjugates);
-    CPPUNIT_TEST(cachedConjugates);
-    CPPUNIT_TEST(compareWith);
-    CPPUNIT_TEST(reverse);
-    CPPUNIT_TEST(clear);
-    CPPUNIT_TEST(order);
-    CPPUNIT_TEST(pow);
-    CPPUNIT_TEST(cachedPow);
-    CPPUNIT_TEST(rot);
-    CPPUNIT_TEST(conjugacyMinimal);
-    CPPUNIT_TEST(increment);
-    CPPUNIT_TEST(tightEncoding);
-
-    // Tests specific to Perm<7>:
-    CPPUNIT_TEST(aliases);
-
-    CPPUNIT_TEST_SUITE_END();
-
-    public:
-        void aliases() {
-            for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
-                if (Perm<7>::S7[i] != Perm<7>::Sn[i])
-                    CPPUNIT_FAIL("Arrays S7 and Sn disagree for Perm<7>.");
-        }
 };
 
-void addPerm7(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Perm7Test::suite());
+TEST_F(Perm7Test, permCode) {
+    SmallPermTest<7>::permCode();
+}
+TEST_F(Perm7Test, sign) {
+    SmallPermTest<7>::sign();
+}
+TEST_F(Perm7Test, index) {
+    SmallPermTest<7>::index();
+}
+TEST_F(Perm7Test, exhaustive) {
+    SmallPermTest<7>::exhaustive();
+}
+TEST_F(Perm7Test, swaps) {
+    SmallPermTest<7>::swaps();
+}
+TEST_F(Perm7Test, increment) {
+    GeneralPermTest<7>::increment();
+}
+TEST_F(Perm7Test, products) {
+    SmallPermTest<7>::products();
+}
+TEST_F(Perm7Test, cachedProducts) {
+    SmallPermTest<7>::cachedProducts();
+}
+TEST_F(Perm7Test, conjugates) {
+    SmallPermTest<7>::conjugates();
+}
+TEST_F(Perm7Test, cachedConjugates) {
+    SmallPermTest<7>::cachedConjugates();
+}
+TEST_F(Perm7Test, cachedInverse) {
+    GeneralPermTest<7>::cachedInverse();
+}
+TEST_F(Perm7Test, compareWith) {
+    SmallPermTest<7>::compareWith();
+}
+TEST_F(Perm7Test, reverse) {
+    SmallPermTest<7>::reverse();
+}
+TEST_F(Perm7Test, clear) {
+    SmallPermTest<7>::clear();
+}
+TEST_F(Perm7Test, order) {
+    SmallPermTest<7>::order();
+}
+TEST_F(Perm7Test, cachedOrder) {
+    SmallPermTest<7>::cachedOrder();
+}
+TEST_F(Perm7Test, pow) {
+    SmallPermTest<7>::pow();
+}
+TEST_F(Perm7Test, cachedPow) {
+    SmallPermTest<7>::cachedPow();
+}
+TEST_F(Perm7Test, rot) {
+    SmallPermTest<7>::rot();
+}
+TEST_F(Perm7Test, conjugacyMinimal) {
+    GeneralPermTest<7>::conjugacyMinimal();
+}
+TEST_F(Perm7Test, tightEncoding) {
+    SmallPermTest<7>::tightEncoding();
 }
 
+TEST_F(Perm7Test, aliases) {
+    for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
+        EXPECT_EQ(Perm<7>::S7[i], Perm<7>::Sn[i]);
+}

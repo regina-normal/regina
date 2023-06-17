@@ -88,6 +88,9 @@ TEST_F(Perm3Test, cachedOrder) {
 TEST_F(Perm3Test, pow) {
     SmallPermTest<3>::pow();
 }
+TEST_F(Perm3Test, cachedPow) {
+    SmallPermTest<3>::cachedPow();
+}
 TEST_F(Perm3Test, rot) {
     SmallPermTest<3>::rot();
 }

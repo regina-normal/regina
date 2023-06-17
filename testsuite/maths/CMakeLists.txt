@@ -6,10 +6,6 @@ SET ( FILES
   matrix.cpp
   matrixops.cpp
   perm.cpp
-  perm4.cpp
-  perm5.cpp
-  perm6.cpp
-  perm7.cpp
   primes.cpp
   rational.cpp
   )
