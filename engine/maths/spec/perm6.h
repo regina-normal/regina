@@ -3435,7 +3435,7 @@ inline constexpr int Perm<6>::order() const {
     return orderTable[code2_];
 }
 
-inline constexpr int Perm<6>::cachedOrder() const {
+inline int Perm<6>::cachedOrder() const {
     return orderTable[code2_];
 }
 
