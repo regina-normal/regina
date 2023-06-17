@@ -76,6 +76,7 @@ EXCLUDE = \
     "@PROJECT_SOURCE_DIR@/engine/surface/tons" \
     "@PROJECT_SOURCE_DIR@/engine/surfaces" \
     "@PROJECT_SOURCE_DIR@/engine/syntax" \
+    "@PROJECT_SOURCE_DIR@/engine/testsuite" \
     "@PROJECT_SOURCE_DIR@/engine/triangulation/graph.h" \
     "@PROJECT_SOURCE_DIR@/engine/utilities/zstr.h"
 EXCLUDE_PATTERNS = *-impl.h
