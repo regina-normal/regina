@@ -34,7 +34,6 @@
 #include "maths/laurent2.h"
 #include "utilities/stringutils.h"
 
-#include "testhelper.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Integer;

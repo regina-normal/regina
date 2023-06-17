@@ -33,7 +33,6 @@
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 
-#include "testhelper.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Integer;

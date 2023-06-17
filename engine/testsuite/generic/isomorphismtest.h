@@ -32,7 +32,6 @@
 
 #include <initializer_list>
 
-#include "testhelper.h"
 #include "utilities/tightencodingtest.h"
 
 /**

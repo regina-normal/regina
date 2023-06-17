@@ -105,7 +105,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("integer", &addInteger));
     sets.insert(std::make_pair("rational", &addRational));
     sets.insert(std::make_pair("perm2", &addPerm2));
-    sets.insert(std::make_pair("perm3", &addPerm3));
     sets.insert(std::make_pair("perm4", &addPerm4));
     sets.insert(std::make_pair("perm5", &addPerm5));
     sets.insert(std::make_pair("perm6", &addPerm6));

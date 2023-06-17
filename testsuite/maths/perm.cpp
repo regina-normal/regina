@@ -34,7 +34,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
-#include "testsuite/maths/permtest.h"
+#include "testsuite/maths/permtest_old.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/utilities/tightencodingtest_old.h"
 

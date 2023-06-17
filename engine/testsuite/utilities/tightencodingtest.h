@@ -33,7 +33,7 @@
 #ifndef __TIGHTENCODINGTEST_H
 #define __TIGHTENCODINGTEST_H
 
-#include "gtest/gtest.h"
+#include "testhelper.h"
 
 /**
  * Implements tests for tight encodings (and optionally decodings) of objects

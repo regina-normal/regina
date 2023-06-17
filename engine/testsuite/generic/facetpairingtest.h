@@ -33,7 +33,6 @@
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/facetpairing.h"
 
-#include "testhelper.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::FacetPairing;

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "testsuite/maths/permtest.h"
+#include "testsuite/maths/permtest_old.h"
 #include "testsuite/maths/testmaths.h"
 
 using regina::Perm;

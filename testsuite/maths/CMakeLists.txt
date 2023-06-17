@@ -7,7 +7,6 @@ SET ( FILES
   matrixops.cpp
   perm.cpp
   perm2.cpp
-  perm3.cpp
   perm4.cpp
   perm5.cpp
   perm6.cpp
