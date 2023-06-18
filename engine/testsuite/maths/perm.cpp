@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#include "triangulation/facenumbering.h"
+
 #include "testsuite/maths/permtest.h"
 
 using regina::Perm;
@@ -427,6 +429,185 @@ bool PermTestLargeImpl<n>::initialised = false;
 //
 // Note: n=8 uses 3-bit images with a 32-bit code, and n=9..16 use 4-bit
 // images with a 64-bit code.
+
+TEST(PermTestSmall, permCode) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::permCode();
+    });
+}
+TEST(PermTestSmall, sign) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::sign();
+    });
+}
+TEST(PermTestSmall, index) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::index();
+    });
+}
+TEST(PermTestSmall, exhaustive) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::exhaustive();
+    });
+}
+TEST(PermTestSmall, swaps) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::swaps();
+    });
+}
+TEST(PermTestSmall, increment) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::increment();
+    });
+}
+TEST(PermTestSmall, products) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::products();
+    });
+}
+TEST(PermTestSmall, cachedProducts) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::cachedProducts();
+    });
+}
+TEST(PermTestSmall, conjugates) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::conjugates();
+    });
+}
+TEST(PermTestSmall, cachedConjugates) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::cachedConjugates();
+    });
+}
+TEST(PermTestSmall, cachedInverse) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::cachedInverse();
+    });
+}
+TEST(PermTestSmall, compareWith) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::compareWith();
+    });
+}
+TEST(PermTestSmall, reverse) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::reverse();
+    });
+}
+TEST(PermTestSmall, clear) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::clear();
+    });
+}
+TEST(PermTestSmall, order) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::order();
+    });
+}
+TEST(PermTestSmall, cachedOrder) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::cachedOrder();
+    });
+}
+TEST(PermTestSmall, pow) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::pow();
+    });
+}
+TEST(PermTestSmall, cachedPow) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::cachedPow();
+    });
+}
+TEST(PermTestSmall, rot) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::rot();
+    });
+}
+TEST(PermTestSmall, conjugacyMinimal) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::conjugacyMinimal();
+    });
+}
+TEST(PermTestSmall, tightEncoding) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        SmallPermTest<n>::tightEncoding();
+    });
+}
+TEST(PermTestSmall, aliases) {
+    for (int i = 0; i < 2; ++i)
+        EXPECT_EQ(Perm<2>::S2[i], Perm<2>::Sn[i]);
+    EXPECT_EQ(Perm<2>::S1[0], Perm<2>::Sn_1[0]);
+
+    for (int i = 0; i < 6; ++i)
+        EXPECT_EQ(Perm<3>::S3[i], Perm<3>::Sn[i]);
+    for (int i = 0; i < 2; ++i)
+        EXPECT_EQ(Perm<3>::S2[i], Perm<3>::Sn_1[i]);
+
+    for (int i = 0; i < 24; ++i)
+        EXPECT_EQ(Perm<4>::S4[i], Perm<4>::Sn[i]);
+    for (int i = 0; i < 6; ++i)
+        EXPECT_EQ(Perm<4>::S3[i], Perm<4>::Sn_1[i]);
+
+    for (int i = 0; i < 120; ++i)
+        EXPECT_EQ(Perm<5>::S5[i], Perm<5>::Sn[i]);
+    for (int i = 0; i < 24; ++i)
+        EXPECT_EQ(Perm<5>::S4[i], Perm<5>::Sn_1[i]);
+
+    for (Perm<6>::Index i = 0; i < Perm<6>::nPerms; ++i)
+        EXPECT_EQ(Perm<6>::S6[i], Perm<6>::Sn[i]);
+
+    for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
+        EXPECT_EQ(Perm<7>::S7[i], Perm<7>::Sn[i]);
+}
+TEST(PermTestSmall, S2) {
+    regina::for_constexpr<3, 6>([](auto n) {
+        for (int i = 0; i < 2; ++i) {
+            EXPECT_EQ(Perm<n>::S2[i], Perm<n>::extend(Perm<2>::S2[i]));
+            EXPECT_EQ(Perm<2>::S2[i], Perm<2>::contract(Perm<n>::S2[i]));
+        }
+    });
+}
+TEST(PermTestSmall, S3) {
+    regina::for_constexpr<4, 6>([](auto n) {
+        for (int i = 0; i < 6; ++i) {
+            EXPECT_EQ(Perm<n>::S3[i], Perm<n>::extend(Perm<3>::S3[i]));
+            EXPECT_EQ(Perm<n>::orderedS3[i],
+                Perm<n>::extend(Perm<3>::orderedS3[i]));
+            EXPECT_EQ(Perm<3>::S3[i], Perm<3>::contract(Perm<n>::S3[i]));
+            EXPECT_EQ(Perm<3>::orderedS3[i],
+                Perm<3>::contract(Perm<n>::orderedS3[i]));
+        }
+    });
+}
+TEST(PermTestSmall, S4) {
+    regina::for_constexpr<5, 6>([](auto n) {
+        for (int i = 0; i < 24; ++i) {
+            EXPECT_EQ(Perm<n>::S4[i], Perm<n>::extend(Perm<4>::S4[i]));
+            EXPECT_EQ(Perm<n>::orderedS4[i],
+                    Perm<n>::extend(Perm<4>::orderedS4[i]));
+            EXPECT_EQ(Perm<4>::S4[i], Perm<4>::contract(Perm<n>::S4[i]));
+            EXPECT_EQ(Perm<4>::orderedS4[i],
+                Perm<4>::contract(Perm<n>::orderedS4[i]));
+        }
+    });
+}
+TEST(PermTestSmall, edgePairs) {
+    // This test is specific to Perm<4>.
+    for (int idx = 0; idx < 24; ++idx) {
+        Perm<4> p4 = Perm<4>::S4[idx];
+        Perm<6> p6 = p4.pairs();
+
+        for (int i = 0; i < 4; ++i)
+            for (int j = i + 1; j < 4; ++j) {
+                // Look at how p4 maps the pair {i,j}.
+                int e = regina::FaceNumbering<3,1>::edgeNumber[i][j];
+                int f = regina::FaceNumbering<3,1>::edgeNumber[p4[i]][p4[j]];
+                EXPECT_EQ(p6[e], f);
+            }
+    }
+}
 
 TEST(PermTestLarge, index) {
     regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {

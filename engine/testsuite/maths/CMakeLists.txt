@@ -6,12 +6,6 @@ SET ( FILES
   laurent2.cpp
   numbertheory.cpp
   perm.cpp
-  perm2.cpp
-  perm3.cpp
-  perm4.cpp
-  perm5.cpp
-  perm6.cpp
-  perm7.cpp
   permconv.cpp
   polynomial.cpp
   )
