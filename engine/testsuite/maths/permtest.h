@@ -102,11 +102,6 @@ class GeneralPermTest : public testing::Test {
         static constexpr bool usesCode2 = (n >= 4 && n <= 7);
         static constexpr bool iterationFeasible = (n <= 11);
 
-        GeneralPermTest() {
-            if constexpr (iterationFeasible)
-                regina::Perm<n>::precompute();
-        }
-
         static bool looksLikeIdentity(const regina::Perm<n>& p) {
             if ((! p.isIdentity()) || (! (p == regina::Perm<n>())))
                 return false;
@@ -159,6 +154,7 @@ class GeneralPermTest : public testing::Test {
             }
         }
 
+    public:
         static void increment() {
             static_assert(iterationFeasible);
 
@@ -178,6 +174,7 @@ class GeneralPermTest : public testing::Test {
 
         static void cachedInverse() {
             static_assert(iterationFeasible);
+            regina::Perm<n>::precompute();
 
             regina::Perm<n> p;
             do {
@@ -217,6 +214,14 @@ class GeneralPermTest : public testing::Test {
                 ++p;
             } while (! p.isIdentity());
         }
+
+        static void rot() {
+            for (int i = 0; i < n; ++i) {
+                auto p = regina::Perm<n>::rot(i);
+                for (int j = 0; j < n; ++j)
+                    EXPECT_EQ(p[j], (i + j) % n);
+            }
+        }
 };
 
 /**
@@ -235,6 +240,7 @@ class SmallPermTest : public GeneralPermTest<n> {
         using GeneralPermTest<n>::looksEqual;
         using GeneralPermTest<n>::looksDistinct;
 
+    public:
         static void permCode() {
             for (Index i = 0; i < nPerms; ++i) {
                 if constexpr (usesCode2)
@@ -334,12 +340,12 @@ class SmallPermTest : public GeneralPermTest<n> {
             // Setting permutations:
 
             {
-                regina::Perm<n> p4(miscPermImg<n>);
+                regina::Perm<n> q(miscPermImg<n>);
                 if (img != miscPermImg<n>)
-                    EXPECT_TRUE(looksDistinct(p4, p));
+                    EXPECT_TRUE(looksDistinct(q, p));
 
-                p4 = p;
-                EXPECT_TRUE(looksEqual(p4, p, name));
+                q = p;
+                EXPECT_TRUE(looksEqual(q, p, name));
             }
 
             if constexpr (usesCode2) {
@@ -469,6 +475,8 @@ class SmallPermTest : public GeneralPermTest<n> {
         }
 
         static void cachedProducts() {
+            regina::Perm<n>::precompute();
+
             for (Index i = 0; i < nPerms; ++i) {
                 auto p = regina::Perm<n>::Sn[i];
                 for (Index j = 0; j < nPerms; ++j) {
@@ -491,6 +499,8 @@ class SmallPermTest : public GeneralPermTest<n> {
         }
 
         static void cachedConjugates() {
+            regina::Perm<n>::precompute();
+
             for (Index i = 0; i < nPerms; ++i) {
                 auto p = regina::Perm<n>::Sn[i];
                 for (Index j = 0; j < nPerms; ++j) {
@@ -604,6 +614,8 @@ class SmallPermTest : public GeneralPermTest<n> {
         }
 
         static void cachedOrder() {
+            regina::Perm<n>::precompute();
+
             regina::Perm<n> p;
             do {
                 EXPECT_EQ(p.cachedOrder(), p.order());
@@ -638,6 +650,8 @@ class SmallPermTest : public GeneralPermTest<n> {
         }
 
         static void cachedPow() {
+            regina::Perm<n>::precompute();
+
             for (Index i = 0; i < nPerms; ++i) {
                 auto p = regina::Perm<n>::Sn[i];
 
@@ -660,14 +674,6 @@ class SmallPermTest : public GeneralPermTest<n> {
                         EXPECT_TRUE(looksEqual(pow, q));
                     } while (j > -2 * static_cast<int>(p.order()));
                 }
-            }
-        }
-
-        static void rot() {
-            for (int i = 0; i < n; ++i) {
-                auto p = regina::Perm<n>::rot(i);
-                for (int j = 0; j < n; ++j)
-                    EXPECT_EQ(p[j], (i + j) % n);
             }
         }
 

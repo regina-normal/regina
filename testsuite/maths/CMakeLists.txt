@@ -5,7 +5,6 @@ SET ( FILES
   integer.cpp
   matrix.cpp
   matrixops.cpp
-  perm.cpp
   primes.cpp
   rational.cpp
   )
