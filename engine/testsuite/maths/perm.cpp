@@ -117,7 +117,6 @@ template <int n>
 class PermTestImpl : public testing::Test {
     protected:
         using Index = typename Perm<n>::Index;
-        static constexpr Index nPerms = Perm<n>::nPerms;
         static constexpr bool usesCode2 = (n >= 4 && n <= 7);
         static constexpr bool iterationFeasible = (n <= 11);
 
@@ -198,7 +197,7 @@ class PermTestImpl : public testing::Test {
                 ++i; ++p; q++; // test both pre- and post-increments
             } while (! p.isIdentity());
 
-            EXPECT_EQ(i, nPerms);
+            EXPECT_EQ(i, Perm<n>::nPerms);
             EXPECT_TRUE(q.isIdentity());
         }
 
@@ -264,7 +263,6 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
     protected:
         using typename PermTestImpl<n>::Index;
-        using PermTestImpl<n>::nPerms;
         using PermTestImpl<n>::usesCode2;
         using PermTestImpl<n>::looksLikeIdentity;
         using PermTestImpl<n>::looksEqual;
@@ -272,7 +270,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
     public:
         static void permCode() {
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 if constexpr (usesCode2)
                     EXPECT_EQ(Perm<n>::Sn[i].permCode2(), i);
                 else
@@ -288,12 +286,12 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void sign() {
-            for (Index i = 0; i < nPerms; ++i)
+            for (Index i = 0; i < Perm<n>::nPerms; ++i)
                 EXPECT_EQ(Perm<n>::Sn[i].sign(), (i % 2 == 0 ? 1 : -1));
         }
 
         static void index() {
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto osn = Perm<n>::orderedSn[i];
                 auto sn = Perm<n>::Sn[i];
 
@@ -475,13 +473,13 @@ class PermTestSmallImpl : public PermTestImpl<n> {
                 ++tested;
             } while (std::next_permutation(img.begin(), img.end()));
 
-            EXPECT_EQ(tested, nPerms);
+            EXPECT_EQ(tested, Perm<n>::nPerms);
         }
 
         static void products() {
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
-                for (Index j = 0; j < nPerms; ++j) {
+                for (Index j = 0; j < Perm<n>::nPerms; ++j) {
                     auto q = Perm<n>::Sn[j];
                     auto r = p * q;
                     for (int x = 0; x < n; ++x)
@@ -493,9 +491,9 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         static void cachedProducts() {
             Perm<n>::precompute();
 
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
-                for (Index j = 0; j < nPerms; ++j) {
+                for (Index j = 0; j < Perm<n>::nPerms; ++j) {
                     auto q = Perm<n>::Sn[j];
                     auto r = p.cachedComp(q);
                     for (int x = 0; x < n; ++x)
@@ -505,9 +503,9 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void conjugates() {
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
-                for (Index j = 0; j < nPerms; ++j) {
+                for (Index j = 0; j < Perm<n>::nPerms; ++j) {
                     auto q = Perm<n>::Sn[j];
                     EXPECT_EQ(p.conjugate(q), q * p * q.inverse());
                 }
@@ -517,9 +515,9 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         static void cachedConjugates() {
             Perm<n>::precompute();
 
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
-                for (Index j = 0; j < nPerms; ++j) {
+                for (Index j = 0; j < Perm<n>::nPerms; ++j) {
                     auto q = Perm<n>::Sn[j];
                     EXPECT_EQ(p.cachedConjugate(q),
                         q.cachedComp(p).cachedComp(q.cachedInverse()));
@@ -528,14 +526,14 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void compareWith() {
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::orderedSn[i];
                 EXPECT_EQ(p.compareWith(p), 0);
             }
 
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::orderedSn[i];
-                for (Index j = i + 1; j < nPerms; ++j) {
+                for (Index j = i + 1; j < Perm<n>::nPerms; ++j) {
                     auto q = Perm<n>::orderedSn[j];
                     EXPECT_EQ(p.compareWith(q), -1);
                     EXPECT_EQ(q.compareWith(p), 1);
@@ -544,7 +542,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void reverse() {
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
                 auto r = p.reverse();
 
@@ -560,7 +558,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         static void clear() {
             auto rev = Perm<n>().reverse();
 
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
                 p.clear(n);
                 EXPECT_TRUE(looksEqual(p, Perm<n>::Sn[i]));
@@ -605,7 +603,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
                 id.clear(1);
                 EXPECT_TRUE(looksLikeIdentity(id));
             }
-            for (Index j = 0; j < nPerms; ++j) {
+            for (Index j = 0; j < Perm<n>::nPerms; ++j) {
                 auto p = Perm<n>::Sn[j];
                 p.clear(0);
                 EXPECT_TRUE(looksLikeIdentity(p));
@@ -637,7 +635,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void pow() {
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
 
                 EXPECT_TRUE(p.pow(0).isIdentity());
@@ -665,7 +663,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         static void cachedPow() {
             Perm<n>::precompute();
 
-            for (Index i = 0; i < nPerms; ++i) {
+            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
 
                 EXPECT_TRUE(p.cachedPow(0).isIdentity());
@@ -691,7 +689,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void tightEncoding() {
-            for (Index i = 0; i < nPerms; ++i)
+            for (Index i = 0; i < Perm<n>::nPerms; ++i)
                 TightEncodingTest<Perm<n>>::verifyTightEncoding(Perm<n>::Sn[i]);
         }
 };
