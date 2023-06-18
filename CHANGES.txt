@@ -126,6 +126,8 @@ Version 7.4  [ (to be announced) ]
         Class Vector<T>:
             - Added support for tight encodings and decodings.
             - New routine hash(), which uses the tight encoding.
+        Function foreach_constexpr():
+            - New function to provide compile-time loops over a set of integers.
         Function gcdWithCoeffs():
             - Fixed an overflow error that occurred in the case b == LONG_MAX
               (and nowhere else), and highlighted in the docs that LONG_MIN
