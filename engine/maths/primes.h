@@ -86,7 +86,7 @@ class Primes {
     private:
         static const size_t numPrimeSeeds;
             /**< The size of the hard-coded list of seed primes. */
-        static const unsigned long primeSeedList[];
+        static const int32_t primeSeedList[];
             /**< The full hard-coded list of seed primes. */
 
         static std::vector<Integer> largePrimes;

@@ -99,8 +99,8 @@ std::vector<Integer> Primes::primeDecomp(const Integer& n) {
     // ad-hoc since the current usage in Regina rarely demands the
     // factorization of even a 4-digit number.
 
-    unsigned long cpi=0; // current prime index.
-    unsigned long iterSinceDivision=0; // keeps track of how many iterations
+    size_t cpi=0; // current prime index.
+    size_t iterSinceDivision=0; // keeps track of how many iterations
                                        // since the last successful division
 
     while ( temp != 1 ) {
@@ -139,10 +139,10 @@ std::vector<Integer> Primes::primeDecomp(const Integer& n) {
                // that is... should consider importing it.
 }
 
-std::vector<std::pair<Integer, unsigned long> >
+std::vector<std::pair<Integer, unsigned long>>
         Primes::primePowerDecomp(const Integer& n) {
     std::vector<Integer> list1(primeDecomp(n));
-    std::vector< std::pair<Integer, unsigned long> > retlist;
+    std::vector<std::pair<Integer, unsigned long>> retlist;
 
     // go through list1, record number of each prime, put in retlist.
     if (! list1.empty()) {
