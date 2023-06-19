@@ -55,6 +55,9 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         static void verifyEqual(const Polynomial<T>& result,
                 const Polynomial<T>& expect) {
+            SCOPED_TRACE_REGINA(result);
+            SCOPED_TRACE_REGINA(expect);
+
             EXPECT_EQ(result, expect);
             EXPECT_FALSE(result != expect);
             EXPECT_EQ(result.str(), expect.str());
@@ -65,7 +68,11 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         static void verifyEqual(const Polynomial<T>& result,
                 std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(result);
+
             Polynomial<T> expect(coeffs);
+            SCOPED_TRACE_REGINA(expect);
+
             verifyEqual(result, expect);
             if (coeffs.size() == 0) {
                 EXPECT_TRUE(result.isZero());
@@ -79,6 +86,9 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         void verifyPlus(const Polynomial<T>& x, const Polynomial<T>& y,
                 std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x + y, coeffs);
             verifyEqual((x + zero) + y, coeffs);
             verifyEqual(x + (y + zero), coeffs);
@@ -110,6 +120,9 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         void verifyMinus(const Polynomial<T>& x, const Polynomial<T>& y,
                 std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x - y, coeffs);
             verifyEqual((x + zero) - y, coeffs);
             verifyEqual(x - (y + zero), coeffs);
@@ -135,6 +148,9 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         void verifyMult(const Polynomial<T>& x, const T& y,
                 std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x * y, coeffs);
             verifyEqual((x + zero) * y, coeffs);
             verifyEqual(y * x, coeffs);
@@ -148,6 +164,9 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         void verifyDiv(const Polynomial<T>& x, const T& y,
                 std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x / y, coeffs);
             verifyEqual((x + zero) / y, coeffs);
             {
@@ -159,6 +178,9 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         void verifyMult(const Polynomial<T>& x, const Polynomial<T>& y,
                 std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x * y, coeffs);
             verifyEqual((x + zero) * y, coeffs);
             verifyEqual(x * (y + zero), coeffs);
@@ -190,6 +212,9 @@ class PolynomialTest : public testing::Test {
         template <typename T>
         void verifyDiv(const Polynomial<T>& x, const Polynomial<T>& y,
                 std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x / y, coeffs);
             verifyEqual((x + zero) / y, coeffs);
             verifyEqual(x / (y + zero), coeffs);
@@ -207,7 +232,9 @@ class PolynomialTest : public testing::Test {
 
         static void verifyDivisionAlg(const Polynomial<Rational>& x,
                 const Polynomial<Rational>& divisor) {
-            // std::cerr << "Verify: " << x << ", " << divisor << std::endl;
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(divisor);
+
             auto [q, r] = x.divisionAlg(divisor);
 
             /* deprecated verison of divisionAlg():

@@ -172,6 +172,7 @@ class PermTestImpl : public testing::Test {
 
     public:
         static void swaps() {
+            SCOPED_TRACE_NUMERIC(n);
             for (int i = 0; i < n; ++i)
                 for (int j = 0; j < n; ++j) {
                     Perm<n> p(i, j);
@@ -186,6 +187,7 @@ class PermTestImpl : public testing::Test {
 
         static void increment() {
             static_assert(iterationFeasible);
+            SCOPED_TRACE_NUMERIC(n);
 
             Index i = 0;
             Perm<n> p;
@@ -203,6 +205,7 @@ class PermTestImpl : public testing::Test {
 
         static void cachedInverse() {
             static_assert(iterationFeasible);
+            SCOPED_TRACE_NUMERIC(n);
             Perm<n>::precompute();
 
             Perm<n> p;
@@ -214,6 +217,7 @@ class PermTestImpl : public testing::Test {
 
         static void conjugacyMinimal() {
             static_assert(iterationFeasible);
+            SCOPED_TRACE_NUMERIC(n);
 
             Perm<n> p;
             do {
@@ -245,6 +249,7 @@ class PermTestImpl : public testing::Test {
         }
 
         static void rot() {
+            SCOPED_TRACE_NUMERIC(n);
             for (int i = 0; i < n; ++i) {
                 auto p = Perm<n>::rot(i);
                 for (int j = 0; j < n; ++j)
@@ -270,6 +275,8 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
     public:
         static void permCode() {
+            SCOPED_TRACE_NUMERIC(n);
+
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 if constexpr (usesCode2)
                     EXPECT_EQ(Perm<n>::Sn[i].permCode2(), i);
@@ -286,11 +293,13 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void sign() {
+            SCOPED_TRACE_NUMERIC(n);
             for (Index i = 0; i < Perm<n>::nPerms; ++i)
                 EXPECT_EQ(Perm<n>::Sn[i].sign(), (i % 2 == 0 ? 1 : -1));
         }
 
         static void index() {
+            SCOPED_TRACE_NUMERIC(n);
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto osn = Perm<n>::orderedSn[i];
                 auto sn = Perm<n>::Sn[i];
@@ -458,6 +467,8 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void exhaustive() {
+            SCOPED_TRACE_NUMERIC(n);
+
             // Test the identity permutation.
             EXPECT_TRUE(looksLikeIdentity(Perm<n>()));
             for (int i = 0; i < n; ++i)
@@ -477,6 +488,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void products() {
+            SCOPED_TRACE_NUMERIC(n);
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
                 for (Index j = 0; j < Perm<n>::nPerms; ++j) {
@@ -489,6 +501,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void cachedProducts() {
+            SCOPED_TRACE_NUMERIC(n);
             Perm<n>::precompute();
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
@@ -503,6 +516,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void conjugates() {
+            SCOPED_TRACE_NUMERIC(n);
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
                 for (Index j = 0; j < Perm<n>::nPerms; ++j) {
@@ -513,6 +527,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void cachedConjugates() {
+            SCOPED_TRACE_NUMERIC(n);
             Perm<n>::precompute();
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
@@ -526,6 +541,8 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void compareWith() {
+            SCOPED_TRACE_NUMERIC(n);
+
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::orderedSn[i];
                 EXPECT_EQ(p.compareWith(p), 0);
@@ -542,6 +559,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void reverse() {
+            SCOPED_TRACE_NUMERIC(n);
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
                 auto r = p.reverse();
@@ -556,7 +574,8 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void clear() {
-            auto rev = Perm<n>().reverse();
+            SCOPED_TRACE_NUMERIC(n);
+            static constexpr Perm<n> rev = Perm<n>().reverse();
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
@@ -575,8 +594,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
                 if constexpr (n > 3) {
                     // Test clear<2..(n-2)>():
                     regina::for_constexpr<2, n-1>([](auto from) {
-                        auto rev = Perm<n>().reverse();
-
+                        SCOPED_TRACE_NUMERIC(from);
                         for (typename Perm<from>::Index i = 0;
                                 i < Perm<from>::nPerms; ++i)
                             for (typename Perm<n - from>::Index j = 0;
@@ -611,6 +629,8 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void order() {
+            SCOPED_TRACE_NUMERIC(n);
+
             Perm<n> p;
             do {
                 int j = 0;
@@ -625,6 +645,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void cachedOrder() {
+            SCOPED_TRACE_NUMERIC(n);
             Perm<n>::precompute();
 
             Perm<n> p;
@@ -635,6 +656,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void pow() {
+            SCOPED_TRACE_NUMERIC(n);
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
 
@@ -661,6 +683,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void cachedPow() {
+            SCOPED_TRACE_NUMERIC(n);
             Perm<n>::precompute();
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
@@ -689,6 +712,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         }
 
         static void tightEncoding() {
+            SCOPED_TRACE_NUMERIC(n);
             for (Index i = 0; i < Perm<n>::nPerms; ++i)
                 TightEncodingTest<Perm<n>>::verifyTightEncoding(Perm<n>::Sn[i]);
         }
@@ -731,6 +755,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
 
     public:
         static void index() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             for (int i = 0; i < nIdx; ++i) {
                 auto osn = Perm<n>::orderedSn[idx[i]];
@@ -849,6 +874,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void comprehensive() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
 
             // Test the identity permutation.
@@ -865,6 +891,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void products() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             for (int i = 0; i < nIdx; ++i) {
                 auto p = Perm<n>::orderedSn[idx[i]];
@@ -878,6 +905,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void conjugates() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             for (int i = 0; i < nIdx; ++i) {
                 auto p = Perm<n>::orderedSn[idx[i]];
@@ -889,6 +917,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void cachedConjugates() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             Perm<n>::precompute();
             for (int i = 0; i < nIdx; ++i) {
@@ -902,6 +931,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void compareWith() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
 
             for (int i = 0; i < nIdx; ++i) {
@@ -922,6 +952,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void lessThan() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
 
             for (int i = 0; i < nIdx; ++i) {
@@ -950,6 +981,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void reverse() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             for (int i = 0; i < nIdx; ++i) {
                 auto p = Perm<n>::orderedSn[idx[i]];
@@ -965,6 +997,8 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void clear() {
+            SCOPED_TRACE_NUMERIC(n);
+
             // We use increment[...] manually instead of the pre-filled array
             // idx[...], since we will be doing this with different values of n.
             static constexpr Perm<n> rev = Perm<n>().reverse();
@@ -982,6 +1016,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
                 EXPECT_TRUE(looksEqual(p, left));
             }
             regina::for_constexpr<2, n-1>([](auto from) {
+                SCOPED_TRACE_NUMERIC(from);
                 for (typename Perm<from>::Index i = 0; i < Perm<from>::nPerms;
                         i += increment[from])
                     for (typename Perm<n-from>::Index j = 0;
@@ -1008,6 +1043,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void order() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             for (int i = 0; i < nIdx; ++i) {
                 auto p = Perm<n>::orderedSn[idx[i]];
@@ -1023,6 +1059,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void pow() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             for (int i = 0; i < nIdx; ++i) {
                 auto p = Perm<n>::orderedSn[idx[i]];
@@ -1050,6 +1087,7 @@ class PermTestLargeImpl : public PermTestImpl<n> {
         }
 
         static void tightEncoding() {
+            SCOPED_TRACE_NUMERIC(n);
             initialise();
             for (int i = 0; i < nIdx; ++i)
                 TightEncodingTest<Perm<n>>::verifyTightEncoding(

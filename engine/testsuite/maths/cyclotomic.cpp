@@ -56,7 +56,11 @@ class CyclotomicTest : public testing::Test {
 
         static void verifyEqual(const Cyclotomic& result,
                 std::initializer_list<Rational> coeffs) {
+            SCOPED_TRACE_REGINA(result);
+
             Cyclotomic expect(field, coeffs);
+            SCOPED_TRACE_REGINA(expect);
+
             EXPECT_EQ(result, expect);
             EXPECT_FALSE(result != expect);
             EXPECT_EQ(result.str(), expect.str());
@@ -64,6 +68,9 @@ class CyclotomicTest : public testing::Test {
 
         void verifyPlus(const Cyclotomic& a, const Cyclotomic& b,
                 std::initializer_list<Rational> coeffs) {
+            SCOPED_TRACE_REGINA(a);
+            SCOPED_TRACE_REGINA(b);
+
             verifyEqual(a + b, coeffs);
             verifyEqual((a + zero) + b, coeffs);
             verifyEqual(a + (b + zero), coeffs);
@@ -94,6 +101,9 @@ class CyclotomicTest : public testing::Test {
 
         void verifyMinus(const Cyclotomic& a, const Cyclotomic& b,
                 std::initializer_list<Rational> coeffs) {
+            SCOPED_TRACE_REGINA(a);
+            SCOPED_TRACE_REGINA(b);
+
             verifyEqual(a - b, coeffs);
             verifyEqual((a + zero) - b, coeffs);
             verifyEqual(a - (b + zero), coeffs);
@@ -118,6 +128,9 @@ class CyclotomicTest : public testing::Test {
 
         void verifyMult(const Cyclotomic& a, const Rational& b,
                 std::initializer_list<Rational> coeffs) {
+            SCOPED_TRACE_REGINA(a);
+            SCOPED_TRACE_REGINA(b);
+
             verifyEqual(a * b, coeffs);
             verifyEqual((a + zero) * b, coeffs);
             verifyEqual(b * a, coeffs);
@@ -130,6 +143,9 @@ class CyclotomicTest : public testing::Test {
 
         void verifyDiv(const Cyclotomic& a, const Rational& b,
                 std::initializer_list<Rational> coeffs) {
+            SCOPED_TRACE_REGINA(a);
+            SCOPED_TRACE_REGINA(b);
+
             verifyEqual(a / b, coeffs);
             verifyEqual((a + zero) / b, coeffs);
             {
@@ -146,6 +162,9 @@ class CyclotomicTest : public testing::Test {
 
         void verifyMult(const Cyclotomic& a, const Cyclotomic& b,
                 std::initializer_list<Rational> coeffs) {
+            SCOPED_TRACE_REGINA(a);
+            SCOPED_TRACE_REGINA(b);
+
             verifyEqual(a * b, coeffs);
             verifyEqual((a + zero) * b, coeffs);
             verifyEqual(a * (b + zero), coeffs);
@@ -176,6 +195,9 @@ class CyclotomicTest : public testing::Test {
 
         void verifyDiv(const Cyclotomic& a, const Cyclotomic& b,
                 std::initializer_list<Rational> coeffs) {
+            SCOPED_TRACE_REGINA(a);
+            SCOPED_TRACE_REGINA(b);
+
             verifyEqual(a / b, coeffs);
             verifyEqual((a + zero) / b, coeffs);
             verifyEqual(a / (b + zero), coeffs);

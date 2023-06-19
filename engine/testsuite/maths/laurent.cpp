@@ -56,7 +56,11 @@ class LaurentTest : public testing::Test {
         template <typename T>
         static void verifyEqual(const Laurent<T>& result,
                 long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(result);
+
             Laurent<T> expect(minExp, coeffs);
+            SCOPED_TRACE_REGINA(expect);
+
             EXPECT_EQ(result, expect);
             EXPECT_FALSE(result != expect);
             EXPECT_EQ(result.str(), expect.str());
@@ -74,6 +78,9 @@ class LaurentTest : public testing::Test {
         template <typename T>
         void verifyPlus(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x + y, minExp, coeffs);
             verifyEqual((x + zero) + y, minExp, coeffs);
             verifyEqual(x + (y + zero), minExp, coeffs);
@@ -105,6 +112,9 @@ class LaurentTest : public testing::Test {
         template <typename T>
         void verifyMinus(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x - y, minExp, coeffs);
             verifyEqual((x + zero) - y, minExp, coeffs);
             verifyEqual(x - (y + zero), minExp, coeffs);
@@ -130,6 +140,9 @@ class LaurentTest : public testing::Test {
         template <typename T>
         void verifyMult(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x * y, minExp, coeffs);
             verifyEqual((x + zero) * y, minExp, coeffs);
             verifyEqual(y * x, minExp, coeffs);
@@ -143,6 +156,9 @@ class LaurentTest : public testing::Test {
         template <typename T>
         void verifyDiv(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x / y, minExp, coeffs);
             verifyEqual((x + zero) / y, minExp, coeffs);
             {
@@ -154,6 +170,9 @@ class LaurentTest : public testing::Test {
         template <typename T>
         void verifyMult(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
             verifyEqual(x * y, minExp, coeffs);
             verifyEqual((x + zero) * y, minExp, coeffs);
             verifyEqual(x * (y + zero), minExp, coeffs);
