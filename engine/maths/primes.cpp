@@ -37,7 +37,7 @@ namespace regina {
 std::vector<Integer> Primes::largePrimes;
 std::mutex Primes::largeMutex;
 
-Integer Primes::prime(unsigned long which, bool autoGrow) {
+Integer Primes::prime(size_t which, bool autoGrow) {
     // Can we grab it straight out of the hard-coded seed list?
     if (which < numPrimeSeeds)
         return primeSeedList[which];
@@ -57,7 +57,7 @@ Integer Primes::prime(unsigned long which, bool autoGrow) {
     return largePrimes[which - numPrimeSeeds];
 }
 
-void Primes::growPrimeList(unsigned long extras) {
+void Primes::growPrimeList(size_t extras) {
     Integer lastPrime = (largePrimes.empty() ?
         primeSeedList[numPrimeSeeds - 1] :
         largePrimes[largePrimes.size() - 1]);

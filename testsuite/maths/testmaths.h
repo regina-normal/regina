@@ -45,6 +45,5 @@
 void addMatrix(CppUnit::TextUi::TestRunner& runner);
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 void addInteger(CppUnit::TextUi::TestRunner& runner);
-void addPrimes(CppUnit::TextUi::TestRunner& runner);
 void addRational(CppUnit::TextUi::TestRunner& runner);
 

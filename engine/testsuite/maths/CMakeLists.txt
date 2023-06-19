@@ -8,6 +8,7 @@ SET ( FILES
   perm.cpp
   permconv.cpp
   polynomial.cpp
+  primes.cpp
   )
 
 # Prepend folder name
