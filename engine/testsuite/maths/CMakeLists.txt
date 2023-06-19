@@ -4,6 +4,7 @@ SET ( FILES
   cyclotomic.cpp
   laurent.cpp
   laurent2.cpp
+  matrixops.cpp
   numbertheory.cpp
   perm.cpp
   permconv.cpp

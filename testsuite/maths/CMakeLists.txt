@@ -3,8 +3,6 @@
 # Files to compile
 SET ( FILES
   integer.cpp
-  matrix.cpp
-  matrixops.cpp
   rational.cpp
   )
 
