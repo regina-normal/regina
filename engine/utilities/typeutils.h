@@ -118,6 +118,11 @@ constexpr void for_constexpr(Action&& action) {
  * be of type `std::integral_constant<int, i>`, which means that \a i
  * is accessible as a compile-time constant.
  *
+ * There are two versions of foreach_constexpr(): one that takes the list of
+ * values as individual template parameters (simpler for ad-hoc invocations),
+ * and one that takes the list of values as a std::integer_sequence (which
+ * allows you to reuse the list of values via a type alias).
+ *
  * \param action the body of the \c for loop; that is, the action to
  * perform for each integer \a i.  See above for the interface that
  * \a action should adhere to.
@@ -126,6 +131,35 @@ constexpr void for_constexpr(Action&& action) {
  */
 template <int... values, class Action>
 constexpr void foreach_constexpr(Action&& action) {
+    (action(std::integral_constant<int, values>()), ...);
+}
+
+/**
+ * Implements a compile-time \c for loop over a given set of integers.
+ *
+ * This function will call \a action for each integer \a i in the integer
+ * sequence \a values.
+ *
+ * The action should be a templated callable object (e.g., a generic lambda)
+ * that takes a single argument whose type depends on the value of \a i.
+ * Any return value will be ignored.  For each integer \a i, the argument will
+ * be of type `std::integral_constant<int, i>`, which means that \a i
+ * is accessible as a compile-time constant.
+ *
+ * There are two versions of foreach_constexpr(): one that takes the list of
+ * values as individual template parameters (simpler for ad-hoc invocations),
+ * and one that takes the list of values as a std::integer_sequence (which
+ * allows you to reuse the list of values via a type alias).
+ *
+ * \param action the body of the \c for loop; that is, the action to
+ * perform for each integer \a i.  See above for the interface that
+ * \a action should adhere to.
+ *
+ * \ingroup utilities
+ */
+template <int... values, class Action>
+constexpr void foreach_constexpr(std::integer_sequence<int, values...>,
+        Action&& action) {
     (action(std::integral_constant<int, values>()), ...);
 }
 

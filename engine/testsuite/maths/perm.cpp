@@ -206,7 +206,6 @@ class PermTestImpl {
         static void cachedInverse() {
             static_assert(iterationFeasible);
             SCOPED_TRACE_NUMERIC(n);
-            Perm<n>::precompute();
 
             Perm<n> p;
             do {
@@ -502,7 +501,6 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
         static void cachedProducts() {
             SCOPED_TRACE_NUMERIC(n);
-            Perm<n>::precompute();
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
@@ -528,7 +526,6 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
         static void cachedConjugates() {
             SCOPED_TRACE_NUMERIC(n);
-            Perm<n>::precompute();
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
@@ -646,7 +643,6 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
         static void cachedOrder() {
             SCOPED_TRACE_NUMERIC(n);
-            Perm<n>::precompute();
 
             Perm<n> p;
             do {
@@ -684,7 +680,6 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
         static void cachedPow() {
             SCOPED_TRACE_NUMERIC(n);
-            Perm<n>::precompute();
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
@@ -909,7 +904,6 @@ class PermTestLargeImpl : public PermTestImpl<n> {
 
         static void cachedConjugates() {
             SCOPED_TRACE_NUMERIC(n);
-            Perm<n>::precompute();
             for (int i = 0; i < nIdx; ++i) {
                 auto p = Perm<n>::orderedSn[idx[i]];
                 for (int j = 0; j < nIdx; ++j) {
@@ -1083,120 +1077,121 @@ template <int n>
 typename PermTestLargeImpl<n>::Index
     PermTestLargeImpl<n>::idx[PermTestLargeImpl<n>::nIdx];
 
-// The actual tests follow.
-//
-// Although our tests are defined for all n that use image packs as codes,
-// we only run them for a selection of some n.
-//
-// Note: n=8 uses 3-bit images with a 32-bit code, and n=9..16 use 4-bit
-// images with a 64-bit code.
+class PermTestSmall : public testing::Test {
+    protected:
+        static void SetUpTestSuite() {
+            regina::for_constexpr<2, 8>([](auto n) {
+                Perm<n>::precompute();
+            });
+        }
+};
 
-TEST(PermTestSmall, permCode) {
+TEST_F(PermTestSmall, permCode) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::permCode();
     });
 }
-TEST(PermTestSmall, sign) {
+TEST_F(PermTestSmall, sign) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::sign();
     });
 }
-TEST(PermTestSmall, index) {
+TEST_F(PermTestSmall, index) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::index();
     });
 }
-TEST(PermTestSmall, exhaustive) {
+TEST_F(PermTestSmall, exhaustive) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::exhaustive();
     });
 }
-TEST(PermTestSmall, swaps) {
+TEST_F(PermTestSmall, swaps) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestImpl<n>::swaps();
     });
 }
-TEST(PermTestSmall, increment) {
+TEST_F(PermTestSmall, increment) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::increment();
     });
 }
-TEST(PermTestSmall, products) {
+TEST_F(PermTestSmall, products) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::products();
     });
 }
-TEST(PermTestSmall, cachedProducts) {
+TEST_F(PermTestSmall, cachedProducts) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::cachedProducts();
     });
 }
-TEST(PermTestSmall, conjugates) {
+TEST_F(PermTestSmall, conjugates) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::conjugates();
     });
 }
-TEST(PermTestSmall, cachedConjugates) {
+TEST_F(PermTestSmall, cachedConjugates) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::cachedConjugates();
     });
 }
-TEST(PermTestSmall, cachedInverse) {
+TEST_F(PermTestSmall, cachedInverse) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::cachedInverse();
     });
 }
-TEST(PermTestSmall, compareWith) {
+TEST_F(PermTestSmall, compareWith) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::compareWith();
     });
 }
-TEST(PermTestSmall, reverse) {
+TEST_F(PermTestSmall, reverse) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::reverse();
     });
 }
-TEST(PermTestSmall, clear) {
+TEST_F(PermTestSmall, clear) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::clear();
     });
 }
-TEST(PermTestSmall, order) {
+TEST_F(PermTestSmall, order) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::order();
     });
 }
-TEST(PermTestSmall, cachedOrder) {
+TEST_F(PermTestSmall, cachedOrder) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::cachedOrder();
     });
 }
-TEST(PermTestSmall, pow) {
+TEST_F(PermTestSmall, pow) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::pow();
     });
 }
-TEST(PermTestSmall, cachedPow) {
+TEST_F(PermTestSmall, cachedPow) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::cachedPow();
     });
 }
-TEST(PermTestSmall, rot) {
+TEST_F(PermTestSmall, rot) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestImpl<n>::rot();
     });
 }
-TEST(PermTestSmall, conjugacyMinimal) {
+TEST_F(PermTestSmall, conjugacyMinimal) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::conjugacyMinimal();
     });
 }
-TEST(PermTestSmall, tightEncoding) {
+TEST_F(PermTestSmall, tightEncoding) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::tightEncoding();
     });
 }
-TEST(PermTestSmall, aliases) {
+TEST_F(PermTestSmall, aliases) {
     for (int i = 0; i < 2; ++i)
         EXPECT_EQ(Perm<2>::S2[i], Perm<2>::Sn[i]);
     EXPECT_EQ(Perm<2>::S1[0], Perm<2>::Sn_1[0]);
@@ -1222,7 +1217,7 @@ TEST(PermTestSmall, aliases) {
     for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
         EXPECT_EQ(Perm<7>::S7[i], Perm<7>::Sn[i]);
 }
-TEST(PermTestSmall, S2) {
+TEST_F(PermTestSmall, S2) {
     regina::for_constexpr<3, 6>([](auto n) {
         for (int i = 0; i < 2; ++i) {
             EXPECT_EQ(Perm<n>::S2[i], Perm<n>::extend(Perm<2>::S2[i]));
@@ -1230,7 +1225,7 @@ TEST(PermTestSmall, S2) {
         }
     });
 }
-TEST(PermTestSmall, S3) {
+TEST_F(PermTestSmall, S3) {
     regina::for_constexpr<4, 6>([](auto n) {
         for (int i = 0; i < 6; ++i) {
             EXPECT_EQ(Perm<n>::S3[i], Perm<n>::extend(Perm<3>::S3[i]));
@@ -1242,7 +1237,7 @@ TEST(PermTestSmall, S3) {
         }
     });
 }
-TEST(PermTestSmall, S4) {
+TEST_F(PermTestSmall, S4) {
     regina::for_constexpr<5, 6>([](auto n) {
         for (int i = 0; i < 24; ++i) {
             EXPECT_EQ(Perm<n>::S4[i], Perm<n>::extend(Perm<4>::S4[i]));
@@ -1254,7 +1249,7 @@ TEST(PermTestSmall, S4) {
         }
     });
 }
-TEST(PermTestSmall, edgePairs) {
+TEST_F(PermTestSmall, edgePairs) {
     // This test is specific to Perm<4>.
     for (int idx = 0; idx < 24; ++idx) {
         Perm<4> p4 = Perm<4>::S4[idx];
@@ -1272,99 +1267,112 @@ TEST(PermTestSmall, edgePairs) {
 
 class PermTestLarge : public testing::Test {
     protected:
+        // A sample of sizes to use for testing.
+        // These _must_ be sizes that use image packs as codes.
+        //
+        // Note: n=8 uses 3-bit images with a 32-bit code, and n=9..16 use
+        // 4-bit images with a 64-bit code.
+        using allSizes = std::integer_sequence<int, 8, 9, 10, 11, 13, 14, 16>;
+
+        // Exhaustive iteration takes too much time for larger n.
+        using iterableSizes = std::integer_sequence<int, 8, 9, 10, 11>;
+
+        // Precomputation consumes too much space for larger n.
+        using precomputableSizes = std::integer_sequence<int, 8, 9, 10, 11>;
+
         static void SetUpTestSuite() {
-            regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+            regina::foreach_constexpr(allSizes(), [](auto n) {
                 PermTestLargeImpl<n>::initialise();
+            });
+
+            regina::foreach_constexpr(precomputableSizes(), [](auto n) {
+                Perm<n>::precompute();
             });
         }
 };
 
 TEST_F(PermTestLarge, index) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::index();
     });
 }
 TEST_F(PermTestLarge, comprehensive) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::comprehensive();
     });
 }
 TEST_F(PermTestLarge, swaps) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestImpl<n>::swaps();
     });
 }
 TEST_F(PermTestLarge, increment) {
-    // This test iterates through all n! permutations, so we will stop at n=11.
-    regina::foreach_constexpr<8, 9, 10, 11>([](auto n) {
+    regina::foreach_constexpr(iterableSizes(), [](auto n) {
         PermTestImpl<n>::increment();
     });
 }
 TEST_F(PermTestLarge, products) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::products();
     });
 }
 TEST_F(PermTestLarge, conjugates) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::conjugates();
     });
 }
 TEST_F(PermTestLarge, cachedConjugates) {
-    // Precomputation requires a lot of space for larger n, so stop at n=11.
-    regina::foreach_constexpr<8, 9, 10, 11>([](auto n) {
+    regina::foreach_constexpr(precomputableSizes(), [](auto n) {
         PermTestLargeImpl<n>::cachedConjugates();
     });
 }
 TEST_F(PermTestLarge, cachedInverse) {
-    // This test iterates through all n! permutations, so we will stop at n=11.
-    regina::foreach_constexpr<8, 9, 10, 11>([](auto n) {
+    regina::foreach_constexpr(iterableSizes(), [](auto n) {
         PermTestImpl<n>::cachedInverse();
     });
 }
 TEST_F(PermTestLarge, compareWith) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::compareWith();
     });
 }
 TEST_F(PermTestLarge, lessThan) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::lessThan();
     });
 }
 TEST_F(PermTestLarge, reverse) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::reverse();
     });
 }
 TEST_F(PermTestLarge, clear) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::clear();
     });
 }
 TEST_F(PermTestLarge, order) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::order();
     });
 }
 TEST_F(PermTestLarge, pow) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::pow();
     });
 }
 TEST_F(PermTestLarge, rot) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestImpl<n>::rot();
     });
 }
 TEST_F(PermTestLarge, conjugacyMinimal) {
-    // This test iterates through all n! permutations, so we will stop at n=11.
-    regina::foreach_constexpr<8, 9, 10, 11>([](auto n) {
+    regina::foreach_constexpr(iterableSizes(), [](auto n) {
         PermTestImpl<n>::conjugacyMinimal();
     });
 }
 TEST_F(PermTestLarge, tightEncoding) {
-    regina::foreach_constexpr<8, 9, 10, 11, 13, 14, 16>([](auto n) {
+    regina::foreach_constexpr(allSizes(), [](auto n) {
         PermTestLargeImpl<n>::tightEncoding();
     });
 }
