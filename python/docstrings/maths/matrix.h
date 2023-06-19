@@ -857,6 +857,31 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
+// Docstring regina::python::doc::Matrix_::rank
+static const char *rank =
+R"doc(A non-destructive routine that returns the rank of this matrix whilst
+preserving the contents of the matrix.
+
+Normally, a rank computation would involve modifying the matrix
+directly (e.g., by converting it to row echelon form). In contrast,
+this routine will leave the matrix unchanged. The cost is an extra
+deep copy in the implementation.
+
+If your matrix is disposable (i.e., you will never need to use it
+again), then it is faster to use the rvalue reference version of this
+routine, which will avoid the extra overhead of the deep copy. To do
+this, replace ``matrix.rank()`` with ``std::move(matrix).rank()``.
+
+This routine is only available when *T* is one of Regina's own integer
+classes (Integer, LargeInteger, or NativeIntgeger).
+
+Python:
+    Only the const version of rank() (i.e., this version) is available
+    for Python users.
+
+Returns:
+    the rank of this matrix.)doc";
+
 // Docstring regina::python::doc::Matrix_::reduceCol
 static const char *reduceCol =
 R"doc(Reduces the given column by dividing all its elements by their

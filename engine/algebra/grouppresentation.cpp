@@ -340,8 +340,7 @@ unsigned long GroupPresentation::abelianRank() const {
         ++row;
     }
 
-    // Matrix::rowEchelonForm() returns the rank of the relations matrix.
-    return nGenerators_ - m.rowEchelonForm();
+    return nGenerators_ - std::move(m).rank();
 }
 
 MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {

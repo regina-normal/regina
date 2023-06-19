@@ -68,6 +68,8 @@ Version 7.4  [ (to be announced) ]
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
+        Class Matrix<T>:
+            - Added destructive and non-destructive rank() functions.
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old

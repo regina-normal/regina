@@ -195,6 +195,8 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
                 &Matrix::rowEchelonForm), rdoc::rowEchelonForm)
             .def("columnEchelonForm", static_cast<size_t (Matrix::*)()>(
                 &Matrix::columnEchelonForm), rdoc::columnEchelonForm)
+            .def("rank", static_cast<size_t (Matrix::*)() const>(
+                &Matrix::rank), rdoc::rank)
             .def("__mul__", [](const Matrix& m1, const Matrix& m2){
                 return m1 * m2;
             }, rdoc::__mul)

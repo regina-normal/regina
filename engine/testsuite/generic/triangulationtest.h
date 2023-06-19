@@ -1385,9 +1385,8 @@ class TriangulationTest : public testing::Test {
                             comb.entry(row, b.columns() + col) =
                                 dualBoundariesAsPrimal.entry(row, col);
                     }
-                    auto combRank = comb.columnEchelonForm();
 
-                    EXPECT_EQ(rank, combRank);
+                    EXPECT_EQ(rank, std::move(comb).rank());
                 }
 
                 if constexpr (0 < k) {

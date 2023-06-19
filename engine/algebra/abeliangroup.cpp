@@ -250,7 +250,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) {
     }
 
     // Finally, subtract the rank of M.
-    rank_ -= M.rowEchelonForm();
+    rank_ -= std::move(M).rank();
 }
 
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
