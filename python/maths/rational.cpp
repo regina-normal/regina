@@ -74,6 +74,7 @@ void addRational(pybind11::module_& m) {
         .def(pybind11::self <= pybind11::self, rdoc::__le)
         .def(pybind11::self >= pybind11::self, rdoc::__ge)
         .def("doubleApprox", &Rational::doubleApprox, rdoc::doubleApprox)
+        .def("str", &Rational::tex, rdoc::str)
         .def("tex", &Rational::tex, rdoc::tex)
         .def_readonly_static("zero", &Rational::zero)
         .def_readonly_static("one", &Rational::one)

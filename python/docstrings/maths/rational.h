@@ -345,6 +345,18 @@ stored as 1/0.
 Returns:
     the numerator.)doc";
 
+// Docstring regina::python::doc::Rational_::str
+static const char *str =
+R"doc(Returns a string representation of this rational.
+
+For infinity and undefined rationals, the result will be ``Inf`` or
+``Undef`` respectively. If this rational has denominator one then the
+result will simply be the string representation of the numerator.
+Otherwise the string returned will be in the form ``r/s``.
+
+Returns:
+    a string representation of this rational.)doc";
+
 // Docstring regina::python::doc::Rational_::swap
 static const char *swap =
 R"doc(Swaps the values of this and the given rational.

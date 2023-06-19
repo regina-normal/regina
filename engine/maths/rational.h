@@ -420,6 +420,18 @@ class Rational {
         double doubleApprox() const;
 
         /**
+         * Returns a string representation of this rational.
+         *
+         * For infinity and undefined rationals, the result will be `Inf` or
+         * `Undef` respectively.  If this rational has denominator one then
+         * the result will simply be the string representation of the numerator.
+         * Otherwise the string returned will be in the form `r/s`.
+         *
+         * \return a string representation of this rational.
+         */
+        std::string str() const;
+
+        /**
          * Returns this rational as written using TeX formatting.
          * No leading or trailing dollar signs will be included.
          *

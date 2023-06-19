@@ -86,6 +86,8 @@ Version 7.4  [ (to be announced) ]
             - New class constant degree.
             - Added an alias Perm<6>::cachedOrder(), for consistency with the
               other permutation classes Perm<2..15>.
+        Class Rational:
+            - New function str().
         Class SatAnnulus:
             - Routine attachLST() now checks its preconditions, and throws
               an exception if they fail.
