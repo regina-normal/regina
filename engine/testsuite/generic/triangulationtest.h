@@ -1476,17 +1476,17 @@ class TriangulationTest : public testing::Test {
                 Triangulation<dim> move(std::move(copy));
                 EXPECT_TRUE(looksIdentical(move, t));
 
-                // Move construction should use different vertices.
+                // Move construction should use the same vertices.
                 ASSERT_GT(move.countVertices(), 0);
                 Vertex<dim>* v2 = move.vertex(0);
                 EXPECT_EQ(v2, v1);
 
-                // Copy assignment should use different vertices.
                 Triangulation<dim> copyAss;
                 copyAss.newSimplex(); // Give it something to overwrite.
                 copyAss = t;
                 EXPECT_TRUE(looksIdentical(copyAss, t));
 
+                // Copy assignment should use different vertices.
                 ASSERT_GT(copyAss.countVertices(), 0);
                 Vertex<dim>* v3 = copyAss.vertex(0);
                 EXPECT_NE(v3, v0);
@@ -1496,7 +1496,7 @@ class TriangulationTest : public testing::Test {
                 moveAss = std::move(copyAss);
                 EXPECT_TRUE(looksIdentical(moveAss, t));
 
-                // Move assignment should use different vertices.
+                // Move assignment should use the same vertices.
                 ASSERT_GT(moveAss.countVertices(), 0);
                 Vertex<dim>* v4 = moveAss.vertex(0);
                 EXPECT_EQ(v4, v3);

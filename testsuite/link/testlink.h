@@ -42,6 +42,5 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addLink(CppUnit::TextUi::TestRunner& runner);
 void addLinkGraph(CppUnit::TextUi::TestRunner& runner);
 

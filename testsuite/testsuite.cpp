@@ -121,7 +121,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     aliases.insert(std::make_pair("dim4", &addTriangulation4));
 
     // Knots and links:
-    sets.insert(std::make_pair("link", &addLink));
     // We no longer build-depend on boost, so disable the boost.graph test.
     // sets.insert(std::make_pair("linkgraph", &addLinkGraph));
 

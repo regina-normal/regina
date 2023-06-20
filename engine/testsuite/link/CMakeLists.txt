@@ -1,8 +1,4 @@
-# link
-
 # Files to compile
-#
-# Currently we exclude graph.cpp, since we no longer build-depend on boost.
 SET ( FILES
   link.cpp
   )
