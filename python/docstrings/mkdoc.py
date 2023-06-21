@@ -7,6 +7,7 @@
 #
 
 import argparse
+import filecmp
 import os
 import sys
 import platform
@@ -947,14 +948,23 @@ def mkdoc(args, width, output=None):
         return
 
     if output:
+        # Only overwrite the output file if something has changed.
+        tmp = output + '.tmp'
         try:
             os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
-            with open(output, 'w') as out_file:
+            with open(tmp, 'w') as out_file:
                 write_header(comments, out_file)
+            if not os.path.exists(output):
+                os.replace(tmp, output)
+            elif filecmp.cmp(tmp, output, shallow = False):
+                os.unlink(tmp)
+            else:
+                os.replace(tmp, output)
         except:
             # In the event of an error, don't leave a partially-written
             # output file.
             try:
+                os.unlink(tmp)
                 os.unlink(output)
             except:
                 pass
