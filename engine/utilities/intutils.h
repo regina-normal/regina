@@ -181,6 +181,12 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  * own template arguments, and indeed the template parameter pack \a Args in
  * the implementation is there precisely to stop users from doing this.
  *
+ * \deprecated This macro is no longer used within Regina, since it makes code
+ * unnecessarily difficult to read (especially by automated documentation
+ * tools).  Regina's approach now is simply to implement the member function
+ * in the natural way and use a static_assert to ensure it is only
+ * instantiated with appropriate types.
+ *
  * \pre The member function this macro is applied to is _not_ a
  * template member function (though, as noted above, this macro will
  * silently make it one).

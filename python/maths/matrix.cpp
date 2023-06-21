@@ -165,6 +165,8 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
                     pybind11::arg("fromRow") = 0,
                 rdoc::combCols)
             .def("det", &Matrix::det, rdoc::det)
+            .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
+            .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
             .def("divRowExact", &Matrix::divRowExact, rdoc::divRowExact)
             .def("divColExact", &Matrix::divColExact, rdoc::divColExact)
             .def("gcdRow", &Matrix::gcdRow, rdoc::gcdRow)

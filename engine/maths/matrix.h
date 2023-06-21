@@ -1159,6 +1159,42 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Negates all elements in the given row.
+         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
+         * \pre The given row number is between 0 and rows()-1 inclusive.
+         *
+         * \param row the index of the row whose elements should be negated.
+         */
+        void negateRow(size_t row) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::negateRow() requires type T to be one of "
+                "Regina's own integer types.");
+
+            for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
+                x->negate();
+        }
+
+        /**
+         * Negates all elements in the given column.
+         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
+         * \pre The given column number is between 0 and columns()-1 inclusive.
+         *
+         * \param col the index of the column whose elements should be negated.
+         */
+        void negateCol(size_t col) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::negateCol() requires type T to be one of "
+                "Regina's own integer types.");
+
+            for (T** row = this->data_; row != this->data_ + rows_; ++row)
+                (*row)[col].negate();
+        }
+
+        /**
          * Divides all elements of the given row by the given integer.
          * This can only be used when the given integer divides into all
          * row elements exactly (with no remainder).  For the Integer class,

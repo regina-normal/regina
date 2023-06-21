@@ -70,6 +70,7 @@ Version 7.4  [ (to be announced) ]
               locked simplex or facet.
         Class Matrix<T>:
             - Added destructive and non-destructive rank() functions.
+            - New routines negateRow() and negateCol().
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old

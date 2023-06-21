@@ -192,8 +192,8 @@ resulting matrix will be deduced accordingly (specifically, it will be
 the type obtained by multiplying objects of types *T* and *U* using
 the binary multiplication operator).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The number of columns in this matrix equals the number of rows in
@@ -217,8 +217,8 @@ vector will be deduced accordingly (specifically, it will be the type
 obtained by multiplying objects of types *T* and *U* using the binary
 multiplication operator).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The length of the given vector is precisely the number of columns
@@ -259,15 +259,15 @@ Returns:
 static const char *addCol =
 R"doc(Adds the given source column to the given destination column.
 
-This routine is only available when the template argument *ring* is
-``True``.
-
 .. warning::
     If you only wish to add a portion of a column, be careful: you
     cannot just pass the usual *fromRow* argument, since this will be
     interpreted as a coefficient to be used with the other version of
     addCol() that adds _several_ copies of the source column. Instead
     you will need to call addColFrom().
+
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -291,8 +291,8 @@ If the optional argument *fromRow* is passed, then the operation will
 only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -323,8 +323,8 @@ This is similar to addCol(), except that the operation will only be
 performed for the elements from the row *fromRow* down to the bottom
 of the column (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -347,8 +347,8 @@ Parameter ``fromRow``:
 static const char *addRow =
 R"doc(Adds the given source row to the given destination row.
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -379,8 +379,8 @@ If the optional argument *fromCol* is passed, then the operation will
 only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -410,8 +410,8 @@ This is similar to addRow(), except that the operation will only be
 performed for the elements from the column *fromCol* to the rightmost
 end of the row (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -454,8 +454,9 @@ Our convention is that a matrix is in column echelon form if:
 
 * all the zero columns are at the right hand end of the matrix.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Returns:
     the rank of this matrix, i.e., the number of non-zero columns
@@ -486,8 +487,8 @@ If the optional argument *fromRow* is passed, then the operation will
 only be performed for the elements from that column down to the bottom
 of each column (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -540,8 +541,8 @@ If the optional argument *fromCol* is passed, then the operation will
 only be performed for the elements from that column to the rightmost
 end of each row (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -585,8 +586,8 @@ Although the Matrix class does not formally support empty matrices, if
 this _is_ found to be a 0-by-0 matrix then the determinant returned
 will be 1.
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     This is a square matrix.
@@ -604,8 +605,9 @@ can only be used when the given integer divides into all column
 elements exactly (with no remainder). For the Integer class, this may
 be much faster than ordinary division.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Precondition:
     The argument *divBy* is neither zero nor infinity, and none of the
@@ -632,8 +634,9 @@ only be used when the given integer divides into all row elements
 exactly (with no remainder). For the Integer class, this may be much
 faster than ordinary division.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Precondition:
     The argument *divBy* is neither zero nor infinity, and none of the
@@ -698,8 +701,9 @@ static const char *gcdCol =
 R"doc(Computes the greatest common divisor of all elements of the given
 column. The value returned is guaranteed to be non-negative.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Precondition:
     The given column number is between 0 and columns()-1 inclusive.
@@ -715,8 +719,9 @@ static const char *gcdRow =
 R"doc(Computes the greatest common divisor of all elements of the given row.
 The value returned is guaranteed to be non-negative.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Precondition:
     The given row number is between 0 and rows()-1 inclusive.
@@ -745,8 +750,8 @@ static const char *identity =
 R"doc(Returns an identity matrix of the given size. The matrix returned will
 have *size* rows and *size* columns.
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Parameter ``size``:
     the number of rows and columns of the matrix to build.
@@ -772,8 +777,8 @@ else.
 If this matrix is not square, isIdentity() will always return
 ``False`` (even if makeIdentity() was called earlier).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Returns:
     ``True`` if and only if this is a square identity matrix.)doc";
@@ -782,8 +787,8 @@ Returns:
 static const char *isZero =
 R"doc(Determines whether this is the zero matrix.
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Returns:
     ``True`` if and only if all entries in the matrix are zero.)doc";
@@ -794,8 +799,8 @@ R"doc(Turns this matrix into an identity matrix. This matrix need not be
 square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.
 
-This routine is only available when the template argument *ring* is
-``True``.)doc";
+Precondition:
+    The template argument *ring* is ``True``.)doc";
 
 // Docstring regina::python::doc::Matrix_::multCol
 static const char *multCol =
@@ -808,8 +813,8 @@ If the optional argument *fromRow* is passed, then the operation will
 only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The given column is between 0 and columns()-1 inclusive.
@@ -838,8 +843,8 @@ If the optional argument *fromCol* is passed, then the operation will
 only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
-This routine is only available when the template argument *ring* is
-``True``.
+Precondition:
+    The template argument *ring* is ``True``.
 
 Precondition:
     The given row is between 0 and rows()-1 inclusive.
@@ -857,6 +862,34 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
+// Docstring regina::python::doc::Matrix_::negateCol
+static const char *negateCol =
+R"doc(Negates all elements in the given column.
+
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
+
+Precondition:
+    The given column number is between 0 and columns()-1 inclusive.
+
+Parameter ``col``:
+    the index of the column whose elements should be negated.)doc";
+
+// Docstring regina::python::doc::Matrix_::negateRow
+static const char *negateRow =
+R"doc(Negates all elements in the given row.
+
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
+
+Precondition:
+    The given row number is between 0 and rows()-1 inclusive.
+
+Parameter ``row``:
+    the index of the row whose elements should be negated.)doc";
+
 // Docstring regina::python::doc::Matrix_::rank
 static const char *rank =
 R"doc(A non-destructive routine that returns the rank of this matrix whilst
@@ -872,8 +905,9 @@ again), then it is faster to use the rvalue reference version of this
 routine, which will avoid the extra overhead of the deep copy. To do
 this, replace ``matrix.rank()`` with ``std::move(matrix).rank()``.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Python:
     Only the const version of rank() (i.e., this version) is available
@@ -888,8 +922,9 @@ R"doc(Reduces the given column by dividing all its elements by their
 greatest common divisor. It is guaranteed that, if the column is
 changed at all, it will be divided by a _positive_ integer.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Precondition:
     The given column number is between 0 and columns()-1 inclusive.
@@ -903,8 +938,9 @@ R"doc(Reduces the given row by dividing all its elements by their greatest
 common divisor. It is guaranteed that, if the row is changed at all,
 it will be divided by a _positive_ integer.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Precondition:
     The given row number is between 0 and rows()-1 inclusive.
@@ -936,8 +972,9 @@ Our convention is that a matrix is in row echelon form if:
 
 * all the zero rows are at the bottom of the matrix.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeIntgeger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Returns:
     the rank of this matrix, i.e., the number of non-zero rows

@@ -354,8 +354,9 @@ smallest possible integer representation.
 This routine poses no problem for vectors containing infinite
 elements; such elements are simply ignored and left at infinity.
 
-This routine is only available when *T* is one of Regina's own integer
-classes (Integer, LargeInteger, or NativeInteger).
+Precondition:
+    Type *T* is one of Regina's own integer classes (Integer,
+    LargeInteger, or NativeIntgeger).
 
 Returns:
     the integer by which this vector was divided (i.e., the gcd of its
