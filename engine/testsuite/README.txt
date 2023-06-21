@@ -1,7 +1,7 @@
-Regina Command-Line Utilities Test Suite
-----------------------------------------
+Regina C++ Engine Test Suite
+----------------------------
 
-This directory tree contains the test suite for Regina's command-line utilities.
+This directory tree contains the test suite for Regina's C++ calculation engine.
 This test suite can be used to verify that Regina is operating correctly under
 different compilers or on different platforms.
 
