@@ -48,62 +48,6 @@
 #include "maths/integer.h"
 #include "utilities/intutils.h"
 
-#ifndef __APIDOCS
-// The following macros are used to conditionally enable member functions
-// of Matrix only for certain underlying types T.
-//
-// A side-effect is that every member function that uses these macros is
-// now a _template_ member function (this is so we can use SFINAE to
-// remove unwanted member functions without compile errors).  The user
-// should never specify their own template arguments, and indeed the template
-// parameter pack Args is there precisely to stop users from doing this.
-/**
- * Use this as the return type for a non-static Matrix member function that is
- * only available when working with matrices over rings.
- *
- * Equivalent to \a returnType if the Matrix template argument \a ring is
- * \c true, and removes the member function completey otherwise.
- *
- * This macro cannot be used with templated member functions.
- */
-#define REGINA_ENABLE_FOR_RING(returnType) \
-    template <typename... Args, typename Return = returnType> \
-    std::enable_if_t<ring, Return>
-/**
- * Use this as the return type for a static Matrix member function that is
- * only available when working with matrices over rings.
- *
- * Equivalent to `static returnType` if the Matrix template
- * argument \a ring is \c true, and removes the member function completey
- * otherwise.
- *
- * This macro cannot be used with templated member functions.
- */
-#define REGINA_ENABLE_FOR_RING_STATIC(returnType) \
-    template <typename... Args, typename Return = returnType> \
-    static std::enable_if_t<ring, Return>
-/**
- * Use this as the return type for a deprecated Matrix member function that is
- * only available when working with matrices over rings.
- *
- * Equivalent to `[[deprecated]] returnType` if the Matrix template
- * argument \a ring is \c true, and removes the member function completey
- * otherwise.
- *
- * This macro cannot be used with templated member functions.
- */
-#define REGINA_ENABLE_FOR_RING_DEPRECATED(returnType) \
-    template <typename... Args, typename Return = returnType> \
-    [[deprecated]] std::enable_if_t<ring, Return>
-#else
-  #ifdef __DOCSTRINGS
-    // Generate docstrings for all member functions.
-    #define REGINA_ENABLE_FOR_RING(r) r
-    #define REGINA_ENABLE_FOR_RING_STATIC(r) static r
-    #define REGINA_ENABLE_FOR_RING_DEPRECATED(r) [[deprecated]] r
-  #endif
-#endif
-
 namespace regina {
 
 class Rational;
@@ -674,13 +618,15 @@ class Matrix : public Output<Matrix<T>> {
          * Returns an identity matrix of the given size.
          * The matrix returned will have \a size rows and \a size columns.
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
+         * \pre The template argument \a ring is \c true.
          *
          * \param size the number of rows and columns of the matrix to build.
          * \return an identity matrix of the given size.
          */
-        REGINA_ENABLE_FOR_RING_STATIC(Matrix) identity(size_t size) {
+        static Matrix identity(size_t size) {
+            static_assert(ring, "Matrix<T>::identity() requires "
+                "type T to represent a ring.");
+
             Matrix ans(size, size);
             ans.initialise(0);
             for (size_t i = 0; i < size; ++i)
@@ -693,10 +639,12 @@ class Matrix : public Output<Matrix<T>> {
          * This matrix need not be square; after this routine it will have
          * `entry(r,c)` equal to 1 if `r == c` and 0 otherwise.
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
+         * \pre The template argument \a ring is \c true.
          */
-        REGINA_ENABLE_FOR_RING(void) makeIdentity() {
+        void makeIdentity() {
+            static_assert(ring, "Matrix<T>::makeIdentity() requires "
+                "type T to represent a ring.");
+
             this->initialise(0);
             for (size_t i = 0; i < this->rows_ && i < this->cols_; i++)
                 this->data_[i][i] = 1;
@@ -712,12 +660,14 @@ class Matrix : public Output<Matrix<T>> {
          * If this matrix is not square, isIdentity() will always return
          * \c false (even if makeIdentity() was called earlier).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
+         * \pre The template argument \a ring is \c true.
          *
          * \return \c true if and only if this is a square identity matrix.
          */
-        REGINA_ENABLE_FOR_RING(bool) isIdentity() const {
+        bool isIdentity() const {
+            static_assert(ring, "Matrix<T>::isIdentity() requires "
+                "type T to represent a ring.");
+
             if (this->rows_ != this->cols_)
                 return false;
 
@@ -736,12 +686,14 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Determines whether this is the zero matrix.
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
+         * \pre The template argument \a ring is \c true.
          *
          * \return \c true if and only if all entries in the matrix are zero.
          */
-        REGINA_ENABLE_FOR_RING(bool) isZero() const {
+        bool isZero() const {
+            static_assert(ring, "Matrix<T>::isZero() requires "
+                "type T to represent a ring.");
+
             for (size_t r=0; r<this->rows_; ++r)
                 for (size_t c=0; c<this->cols_; ++c)
                     if (this->data_[r][c] != 0)
@@ -752,9 +704,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Adds the given source row to the given destination row.
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
          *
@@ -767,7 +717,10 @@ class Matrix : public Output<Matrix<T>> {
          * \param source the row to add.
          * \param dest the row that will be added to.
          */
-        REGINA_ENABLE_FOR_RING(void) addRow(size_t source, size_t dest) {
+        void addRow(size_t source, size_t dest) {
+            static_assert(ring, "Matrix<T>::addRow() requires "
+                "type T to represent a ring.");
+
             for (size_t i = 0; i < this->cols_; i++)
                 this->data_[dest][i] += this->data_[source][i];
         }
@@ -778,9 +731,7 @@ class Matrix : public Output<Matrix<T>> {
          * only be performed for the elements from the column \a fromCol
          * to the rightmost end of the row (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
@@ -790,8 +741,10 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromCol the starting point in the row from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addRowFrom(size_t source, size_t dest,
-                size_t fromCol) {
+        void addRowFrom(size_t source, size_t dest, size_t fromCol) {
+            static_assert(ring, "Matrix<T>::addRowFrom() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromCol; i < this->cols_; i++)
                 this->data_[dest][i] += this->data_[source][i];
         }
@@ -806,9 +759,7 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column to the rightmost end of the row (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
@@ -819,16 +770,15 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromCol the starting point in the row from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addRow(size_t source, size_t dest,
-                T copies, size_t fromCol = 0) {
+        void addRow(size_t source, size_t dest, T copies, size_t fromCol = 0) {
+            static_assert(ring, "Matrix<T>::addRow() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromCol; i < this->cols_; i++)
                 this->data_[dest][i] += copies * this->data_[source][i];
         }
         /**
          * Adds the given source column to the given destination column.
-         *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
          *
          * \warning If you only wish to add a portion of a column, be careful:
          * you cannot just pass the usual \a fromRow argument, since this will
@@ -836,13 +786,17 @@ class Matrix : public Output<Matrix<T>> {
          * of addCol() that adds _several_ copies of the source column.
          * Instead you will need to call addColFrom().
          *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
          *
          * \param source the columns to add.
          * \param dest the column that will be added to.
          */
-        REGINA_ENABLE_FOR_RING(void) addCol(size_t source, size_t dest) {
+        void addCol(size_t source, size_t dest) {
+            static_assert(ring, "Matrix<T>::addCol() requires "
+                "type T to represent a ring.");
+
             for (size_t i = 0; i < this->rows_; i++)
                 this->data_[i][dest] += this->data_[i][source];
         }
@@ -854,9 +808,7 @@ class Matrix : public Output<Matrix<T>> {
          * only be performed for the elements from the row \a fromRow
          * down to the bottom of the column (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
@@ -866,8 +818,10 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromRow the starting point in the column from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addColFrom(size_t source, size_t dest,
-                size_t fromRow = 0) {
+        void addColFrom(size_t source, size_t dest, size_t fromRow = 0) {
+            static_assert(ring, "Matrix<T>::addColFrom() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromRow; i < this->rows_; i++)
                 this->data_[i][dest] += this->data_[i][source];
         }
@@ -882,9 +836,7 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * row down to the bottom of the column (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
@@ -895,8 +847,10 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromRow the starting point in the column from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addCol(size_t source, size_t dest,
-                T copies, size_t fromRow = 0) {
+        void addCol(size_t source, size_t dest, T copies, size_t fromRow = 0) {
+            static_assert(ring, "Matrix<T>::addCol() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromRow; i < this->rows_; i++)
                 this->data_[i][dest] += copies * this->data_[i][source];
         }
@@ -910,9 +864,7 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column to the rightmost end of the row (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The given row is between 0 and rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
@@ -921,8 +873,10 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromCol the starting point in the row from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) multRow(size_t row, T factor,
-                size_t fromCol = 0) {
+        void multRow(size_t row, T factor, size_t fromCol = 0) {
+            static_assert(ring, "Matrix<T>::multRow() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromCol; i < this->cols_; i++)
                 this->data_[row][i] *= factor;
         }
@@ -936,9 +890,7 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * row down to the bottom of the column (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The given column is between 0 and columns()-1 inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
@@ -947,8 +899,10 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromRow the starting point in the column from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) multCol(size_t column, T factor,
-                size_t fromRow = 0) {
+        void multCol(size_t column, T factor, size_t fromRow = 0) {
+            static_assert(ring, "Matrix<T>::multCol() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromRow; i < this->rows_; i++)
                 this->data_[i][column] *= factor;
         }
@@ -968,9 +922,7 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column to the rightmost end of each row (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
@@ -988,9 +940,11 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromCol the starting point in the rows from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) combRows(size_t row1, size_t row2,
-                T coeff11, T coeff12, T coeff21, T coeff22,
-                size_t fromCol = 0) {
+        void combRows(size_t row1, size_t row2, T coeff11, T coeff12,
+                T coeff21, T coeff22, size_t fromCol = 0) {
+            static_assert(ring, "Matrix<T>::combRows() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromCol; i < this->cols_; ++i) {
                 T tmp = coeff11 * this->data_[row1][i] +
                     coeff12 * this->data_[row2][i];
@@ -1015,9 +969,7 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column down to the bottom of each column (inclusive).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
@@ -1035,9 +987,11 @@ class Matrix : public Output<Matrix<T>> {
          * \param fromRow the starting point in the columns from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) combCols(size_t col1, size_t col2,
-                T coeff11, T coeff12, T coeff21, T coeff22,
-                size_t fromRow = 0) {
+        void combCols(size_t col1, size_t col2, T coeff11, T coeff12,
+                T coeff21, T coeff22, size_t fromRow = 0) {
+            static_assert(ring, "Matrix<T>::combCols() requires "
+                "type T to represent a ring.");
+
             for (size_t i = fromRow; i < this->rows_; ++i) {
                 T tmp = coeff11 * this->data_[i][col1] +
                     coeff12 * this->data_[i][col2];
@@ -1058,9 +1012,7 @@ class Matrix : public Output<Matrix<T>> {
          * (specifically, it will be the type obtained by multiplying objects
          * of types \a T and \a U using the binary multiplication operator).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
@@ -1099,9 +1051,7 @@ class Matrix : public Output<Matrix<T>> {
          * (specifically, it will be the type obtained by multiplying objects
          * of types \a T and \a U using the binary multiplication operator).
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre The length of the given vector is precisely the number of
          * columns in this matrix.
          *
@@ -1141,16 +1091,17 @@ class Matrix : public Output<Matrix<T>> {
          * if this _is_ found to be a 0-by-0 matrix then the determinant
          * returned will be 1.
          *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
+         * \pre The template argument \a ring is \c true.
          * \pre This is a square matrix.
          *
          * \exception FailedPrecondition This matrix is not square.
          *
          * \return the determinant of this matrix.
          */
-        REGINA_ENABLE_FOR_RING(T) det() const {
+        T det() const {
+            static_assert(ring, "Matrix<T>::det() requires "
+                "type T to represent a ring.");
+
             size_t n = this->rows_;
             if (n != this->cols_)
                 throw FailedPrecondition("Determinants can only be "

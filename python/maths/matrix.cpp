@@ -133,52 +133,41 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
         c
-            .def("isIdentity", static_cast<bool (Matrix::*)() const>(
-                &Matrix::template isIdentity<>), rdoc::isIdentity)
-            .def("isZero", static_cast<bool (Matrix::*)() const>(
-                &Matrix::template isZero<>), rdoc::isZero)
-            .def_static("identity", static_cast<Matrix (*)(size_t)>(
-                &Matrix::template identity<>), rdoc::identity)
-            .def("makeIdentity", static_cast<void (Matrix::*)()>(
-                &Matrix::template makeIdentity<>), rdoc::makeIdentity)
-            .def("addRow", static_cast<void (Matrix::*)(size_t, size_t)>(
-                &Matrix::template addRow<>), rdoc::addRow)
-            .def("addRowFrom", static_cast<void (Matrix::*)(size_t, size_t,
-                size_t)>(&Matrix::template addRowFrom<>), rdoc::addRowFrom)
-            .def("addRow", static_cast<void (Matrix::*)(size_t, size_t,
-                Value, size_t)>(&Matrix::template addRow<>),
+            .def("isIdentity", &Matrix::isIdentity, rdoc::isIdentity)
+            .def("isZero", &Matrix::isZero, rdoc::isZero)
+            .def_static("identity", &Matrix::identity, rdoc::identity)
+            .def("makeIdentity", &Matrix::makeIdentity, rdoc::makeIdentity)
+            .def("addRow", overload_cast<size_t, size_t>(&Matrix::addRow),
+                rdoc::addRow)
+            .def("addRowFrom", &Matrix::addRowFrom, rdoc::addRowFrom)
+            .def("addRow",
+                overload_cast<size_t, size_t, Value, size_t>(&Matrix::addRow),
                 pybind11::arg(), pybind11::arg(), pybind11::arg(),
                     pybind11::arg("fromCol") = 0, rdoc::addRow_2)
-            .def("addCol", static_cast<void (Matrix::*)(size_t, size_t)>(
-                &Matrix::template addCol<>), rdoc::addCol)
-            .def("addColFrom", static_cast<void (Matrix::*)(size_t, size_t,
-                size_t)>(&Matrix::template addColFrom<>), rdoc::addColFrom)
-            .def("addCol", static_cast<void (Matrix::*)(size_t, size_t,
-                Value, size_t)>(&Matrix::template addCol<>),
+            .def("addCol", overload_cast<size_t, size_t>(&Matrix::addCol),
+                rdoc::addCol)
+            .def("addColFrom", &Matrix::addColFrom, rdoc::addColFrom)
+            .def("addCol",
+                overload_cast<size_t, size_t, Value, size_t>(&Matrix::addCol),
                 pybind11::arg(), pybind11::arg(), pybind11::arg(),
                     pybind11::arg("fromRow") = 0, rdoc::addCol_2)
-            .def("multRow", static_cast<void (Matrix::*)(size_t, Value,
-                size_t)>(&Matrix::template multRow<>),
+            .def("multRow", &Matrix::multRow,
                 pybind11::arg(), pybind11::arg(), pybind11::arg("fromCol") = 0,
                 rdoc::multRow)
-            .def("multCol", static_cast<void (Matrix::*)(size_t, Value,
-                size_t)>(&Matrix::template multCol<>),
+            .def("multCol", &Matrix::multCol,
                 pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0,
                 rdoc::multCol)
-            .def("combRows", static_cast<void (Matrix::*)(size_t, size_t, Value,
-                Value, Value, Value, size_t)>(&Matrix::template combRows<>),
+            .def("combRows", &Matrix::combRows,
                 pybind11::arg(), pybind11::arg(), pybind11::arg(),
                     pybind11::arg(), pybind11::arg(), pybind11::arg(),
                     pybind11::arg("fromCol") = 0,
                 rdoc::combRows)
-            .def("combCols", static_cast<void (Matrix::*)(size_t, size_t, Value,
-                Value, Value, Value, size_t)>(&Matrix::template combCols<>),
+            .def("combCols", &Matrix::combCols,
                 pybind11::arg(), pybind11::arg(), pybind11::arg(),
                     pybind11::arg(), pybind11::arg(), pybind11::arg(),
                     pybind11::arg("fromRow") = 0,
                 rdoc::combCols)
-            .def("det", static_cast<Value (Matrix::*)() const>(
-                &Matrix::template det<>), rdoc::det)
+            .def("det", &Matrix::det, rdoc::det)
             .def("divRowExact", static_cast<void (Matrix::*)(size_t, Ref&)>(
                 &Matrix::template divRowExact<>), rdoc::divRowExact)
             .def("divColExact", static_cast<void (Matrix::*)(size_t, Ref&)>(
