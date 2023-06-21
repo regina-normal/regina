@@ -1242,7 +1242,6 @@
 		057ED9C42581BAAE004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
 		057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		057EDA322581BC98004F0068 /* cppunit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; };
 		057EDAE52581D83D004F0068 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */ = {isa = PBXBuildFile; fileRef = 057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		057EDAE72581D884004F0068 /* libqsvgicon.dylib in Copy Qt Plugins (iconengines) */ = {isa = PBXBuildFile; fileRef = 057EDAE62581D877004F0068 /* libqsvgicon.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		057EDAEC2581D8DF004F0068 /* libqgif.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 057EDAE82581D8BA004F0068 /* libqgif.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -1267,8 +1266,6 @@
 		057EDD042581F123004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDD262581F12A004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDE8B2581F5B3004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
-		057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; };
-		057EDEAE2582363B004F0068 /* cppunit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDEAF2582363B004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
 		057EDEB32582363B004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDEB42582363B004F0068 /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -2370,7 +2367,6 @@
 				057EDEB62582363B004F0068 /* libgmpxx.xcframework in Embed Frameworks */,
 				057EDEB82582363B004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */,
 				057EDEB42582363B004F0068 /* libgmp.xcframework in Embed Frameworks */,
-				057EDEAE2582363B004F0068 /* cppunit.xcframework in Embed Frameworks */,
 				057EDF1B25823779004F0068 /* XZ.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -4041,7 +4037,6 @@
 		057ED8EC2581B49E004F0068 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../Qt/6.4.0/macos/lib/QtGui.framework; sourceTree = "<group>"; };
 		057ED8ED2581B49E004F0068 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../Qt/6.4.0/macos/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		057ED9C32581BAAE004F0068 /* graphviz.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = graphviz.xcframework; path = ../../Library/Frameworks/graphviz.xcframework; sourceTree = "<group>"; };
-		057EDA312581BC97004F0068 /* cppunit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = cppunit.xcframework; path = ../../Library/Frameworks/cppunit.xcframework; sourceTree = "<group>"; };
 		057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = ../../Qt/6.4.0/macos/plugins/generic/libqtuiotouchplugin.dylib; sourceTree = "<group>"; };
 		057EDAE62581D877004F0068 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = ../../Qt/6.4.0/macos/plugins/iconengines/libqsvgicon.dylib; sourceTree = "<group>"; };
 		057EDAE82581D8BA004F0068 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = ../../Qt/6.4.0/macos/plugins/imageformats/libqgif.dylib; sourceTree = "<group>"; };
@@ -4822,7 +4817,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
-				057EDA322581BC98004F0068 /* cppunit.xcframework in Frameworks */,
 				057EDE8B2581F5B3004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F1912582427600965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4838,7 +4832,6 @@
 				057EDEB32582363B004F0068 /* libgmp.xcframework in Frameworks */,
 				057EDEAF2582363B004F0068 /* graphviz.xcframework in Frameworks */,
 				057EDEB52582363B004F0068 /* libgmpxx.xcframework in Frameworks */,
-				057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */,
 				057EDF1A25823779004F0068 /* XZ.xcframework in Frameworks */,
 				059D6197258866640011E905 /* libbz2.tbd in Frameworks */,
 				059D61A7258866670011E905 /* libsqlite3.tbd in Frameworks */,
@@ -6890,7 +6883,6 @@
 			isa = PBXGroup;
 			children = (
 				050302ED284DAE060050903D /* QtSvgWidgets.framework */,
-				057EDA312581BC97004F0068 /* cppunit.xcframework */,
 				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
 				0567B4AC2581ABA20022EA5D /* libgmp.xcframework */,
 				0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */,
