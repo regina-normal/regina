@@ -1092,6 +1092,7 @@
 		056AED912A431AE200EAF4FA /* abeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED542A431AE200EAF4FA /* abeliangroup.cpp */; };
 		056AED922A431AE200EAF4FA /* grouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED552A431AE200EAF4FA /* grouppresentation.cpp */; };
 		056AED972A43209D00EAF4FA /* regina-testsuite in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 052FA0C11806072900FAE4DF /* regina-testsuite */; };
+		056AED9A2A43286500EAF4FA /* regina-helper.in in Resources */ = {isa = PBXBuildFile; fileRef = 056AED992A4327C500EAF4FA /* regina-helper.in */; };
 		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
 		056EC5502A288F2E006EE87A /* default_theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056EC54F2A288F2E006EE87A /* default_theme.cpp */; };
 		056EC5512A288F31006EE87A /* default_theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056EC54F2A288F2E006EE87A /* default_theme.cpp */; };
@@ -2029,7 +2030,7 @@
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
 			runOncePerArchitecture = 0;
-			script = "# Use the bundled python3 framework.\n# Also, if sandboxed, use isolation mode; otherwise python\n# imports readline, which accesses /dev/tty... and deadlocks.\npyexec='$prog_dir'/../Frameworks/\"${REGINA_PYTHON_FRAMEWORK}\".framework/Versions/Current/Resources/Python.app/Contents/MacOS/Python\nif ( grep sandbox \"${SRCROOT}\"/utils/bundle/Utils.entitlements >/dev/null ); then\n  pysandboxed=1\nelse\n  pysandboxed=0\nfi\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#'@PERL_Python_EXECUTABLE@'#\\\"$pyexec\\\"#\" \\\n  -e \"s#@PYTHON_SANDBOXED@#$pysandboxed#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_PKGDATADIR@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
+			script = "# Use the bundled python3 framework.\n# Also, if sandboxed, use isolation mode; otherwise python\n# imports readline, which accesses /dev/tty... and deadlocks.\npyexec='$prog_dir'/../Frameworks/\"${REGINA_PYTHON_FRAMEWORK}\".framework/Versions/Current/Resources/Python.app/Contents/MacOS/Python\nif ( grep sandbox \"${SRCROOT}\"/utils/bundle/Utils.entitlements >/dev/null ); then\n  pysandboxed=1\nelse\n  pysandboxed=0\nfi\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#'@PERL_Python_EXECUTABLE@'#\\\"$pyexec\\\"#\" \\\n  -e \"s#@PYTHON_SANDBOXED@#$pysandboxed#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@ENGINE_FILENAME@#libregina-engine.dylib#\" \\\n  -e \"s#@CMAKE_CXX17_STANDARD_COMPILE_OPTION@#-std=c++17#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@BASH_PKGLIBEXECDIR@##\" \\\n  -e \"s#@BASH_MAKE_CMAKE_INSTALL_FULL_BINDIR@##\" \\\n  -e \"s#@BASH_MAKE_CMAKE_INSTALL_FULL_LIBDIR@##\" \\\n  -e \"s#@PERL_PKGDATADIR@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_LIBDIR@##\" \\\n  -e \"s#@CMAKE_BINARY_DIR@#_#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@#_#\" \\\n  -e \"s#@BASH_MAKE_CMAKE_BINARY_DIR@#_#\" \\\n  -e \"s#@BASH_MAKE_CMAKE_SOURCE_DIR@#_#\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
 		};
 /* End PBXBuildRule section */
 
@@ -9295,6 +9296,7 @@
 				051806D4181202BD008EBB01 /* icons in Resources */,
 				05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */,
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
+				056AED9A2A43286500EAF4FA /* regina-helper.in in Resources */,
 				05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9314,7 +9316,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\nln -f -s ../Resources/regina-helper \"${macosdir}\"/regina-helper\n\nfor i in __init__.py plainCompleter.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\nchmod a+x \"${macosdir}\"/../Resources/regina-helper\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;

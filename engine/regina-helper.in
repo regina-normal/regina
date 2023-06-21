@@ -88,6 +88,10 @@ __END__
       echo "Running C++ test suite directly from the source tree."
       echo
       "$progdir/testsuite/regina-testsuite"
+    elif [ "$install_type" = Bundle ]; then
+      echo "Running C++ test suite from the macOS app bundle."
+      echo
+      "$progdir/regina-testsuite"
     else
       '@BASH_PKGLIBEXECDIR@/regina-testsuite'
     fi
