@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  src/gtest.cc
   src/gtest-assertion-result.cc
   src/gtest-death-test.cc
   src/gtest-filepath.cc
@@ -8,7 +9,6 @@ SET ( FILES
   src/gtest-printers.cc
   src/gtest-test-part.cc
   src/gtest-typed-test.cc
-  src/gtest.cc
   )
 
 # Prepend folder name
