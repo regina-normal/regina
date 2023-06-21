@@ -201,19 +201,28 @@ __END__
       # library path).
       include_flags='@BASH_RECONFIG_INCLUDE_FLAGS@'
       link_flags='@BASH_RECONFIG_LINK_FLAGS@'
-      bindir='@BASH_MAKE_CMAKE_BINARY_DIR@'
-      srcdir='@BASH_MAKE_CMAKE_SOURCE_DIR@'
+      if [ -e "$progdir/../CMakeLists.txt" ]; then
+        srcdir="$progdir/.."
+      elif [ -e "$progdir/../../CMakeLists.txt" ]; then
+        srcdir="$progdir/../.."
+      else
+        echo "ERROR: I could not deduce the top-level source directory."
+        echo
+        echo "Tried: $progdir/.."
+        echo "       $progdir/../.."
+        exit 1
+      fi
       cat > Makefile <<__END__
 # Compile C++ programs that use Regina.
-# This uses the build of Regina from @CMAKE_BINARY_DIR@/.
+# This uses the build of Regina from $progdir/.
 
 % : %.$action
 	c++ @CMAKE_CXX17_STANDARD_COMPILE_OPTION@ -O3 '\$<' \\
-		-I$srcdir/engine -I$bindir/engine \\
+		-I$srcdir/engine -I'$progdir' \\
 		$include_flags \\
-		$bindir/engine/@ENGINE_FILENAME@ \\
+		'$progdir/@ENGINE_FILENAME@' \\
 		$link_flags \\
-		-Wl,-rpath $bindir/engine \\
+		-Wl,-rpath '$progdir' \\
 		-o '\$@'
 __END__
     fi
