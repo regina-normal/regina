@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/perl -w
 #
 # Regina - A Normal Surface Theory Calculator
 # Miscellaneous helper utility
@@ -28,23 +28,25 @@
 # License along with this program; if not, write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-#
-set -e
 
-progdir="`dirname "$0"`"
+use strict;
+use Cwd 'abs_path';
+use File::Basename;
+
+# The program name and directory.
+my $prog_name = $0;
+my $prog_dir = abs_path(dirname($prog_name));
 
 # Determine the installation type.
-install_type='@REGINA_INSTALL_TYPE@'
-if [ -f "$progdir/cmake_install.cmake" -a \
-    -f "$progdir/../CMakeCache.txt" ]; then
-  install_type=Source
-fi
+my $install_type = '@REGINA_INSTALL_TYPE@';
+if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
+    $install_type = 'Source';
+}
 
-usage()
-{
-  cat <<__END__
-Usage: $0 <action> [args...]
-       $0 <action> --help
+sub usage {
+  print STDERR <<__END__;
+Usage: $prog_name <action> [args...]
+       $prog_name <action> --help
 
 Available actions:
     test        : run Regina's C++ test suite
@@ -54,53 +56,82 @@ Available actions:
 __END__
 }
 
-if [ -z "$1" ]; then
-  usage
-  exit 1
-fi
-action="$1"
-shift
-args="$@"
+sub sanitise_for_makefile_recipe {
+  # Returns the argument sanitised for use in an _unquoted_ context within a
+  # Makefile recipe.
+  my $arg = shift;
+  $arg =~ s/\\/\\\\/g;
+  $arg =~ s/([#'"`\$*?;&!()\[\]{}<>|~ \t])/\\$1/g;
+  $arg =~ s/\$/\$\$/g;
+  return $arg;
+}
 
-has_help=
-for i in "$@"; do
-  if [ "$i" = "--help" ]; then
-    has_help=1
-    break
-  fi
-done
+my $action = shift;
+if (not defined $action) {
+  usage();
+  exit 1;
+}
 
-case "$action" in
+my $has_help;
+foreach (@ARGV) {
+  if ($_ eq '--help') {
+    $has_help = 1;
+    last;
+  }
+}
+
+if ($action eq 'help' || $action eq '-h' || $action eq '--help') {
   # -------------------- help ---------------------
-  help | -h | --help )
-    usage
-    ;;
-  test )
-    if [ "$has_help" = 1 ]; then
-      cat <<__END__
-Usage: $0 test
+  usage();
+} elsif ($action eq 'test') {
+  # -------------------- test ---------------------
+  if ($has_help) {
+    print STDERR <<__END__;
+Usage: $prog_name test [testsuite_args...]
 
 Runs Regina's C++ test suite.
+
+You can customise your test suite run by passing additional arguments that
+are understood by the Google Test framework.  The possible arguments are
+listed below.
+
+
 __END__
-      exit 0
-    fi
-    if [ "$install_type" = Source ]; then
-      echo "Running C++ test suite directly from the source tree."
-      echo
-      "$progdir/testsuite/regina-testsuite"
-    elif [ "$install_type" = Bundle ]; then
-      echo "Running C++ test suite from the macOS app bundle."
-      echo
-      "$progdir/regina-testsuite"
-    else
-      '@BASH_PKGLIBEXECDIR@/regina-testsuite'
-    fi
-    ;;
+    # Do not exit, since we want to run the test suite with --help.
+  }
+  my $srcDesc;
+  my $testsuite;
+  if ($install_type eq 'Source') {
+    $srcDesc = "Running C++ test suite directly from the source tree.";
+    $testsuite = "$prog_dir/testsuite/regina-testsuite";
+  } elsif ($install_type eq 'Bundle') {
+    $srcDesc = "Running C++ test suite from the macOS app bundle.";
+    $testsuite = "$prog_dir/regina-testsuite";
+  } else {
+    $srcDesc = 'Running C++ test suite from the installation beneath ' .
+      '@PERL_CMAKE_INSTALL_PREFIX@/.';
+    $testsuite = '@PERL_PKGLIBEXECDIR@' . '/regina-testsuite';
+  }
+  if (not -e $testsuite) {
+    print STDERR "ERROR: Could not find test suite at: $testsuite\n";
+    exit 1;
+  }
+  my @cmdline = ($testsuite);
+  if ($has_help) {
+    push @cmdline, '--help';
+  } else {
+    push @cmdline, @ARGV;
+    print "$srcDesc\n\n";
+  }
+  if (not exec @cmdline) {
+    print STDERR "ERROR: Could not execute test suite: $testsuite\n";
+    exit 1;
+  }
+} elsif ($action eq 'cpp' || $action eq 'cc') {
   # -------------------- cpp ---------------------
-  cpp | cc )
-    if [ "$has_help" = 1 ]; then
-      cat <<__END__
-Usage: $0 { cpp | cc } [-f, --force] [-r, --rpath]
+  if ($has_help) {
+    print STDERR <<__END__;
+Usage: $prog_name { cpp | cc } [-f, --force] [-r, --rpath]
 
 Writes a sample C++ program that uses Regina, as well as a corresponding
 Makefile, in the current directory.
@@ -114,59 +145,56 @@ Optional arguments:
                   By default, an rpath option will only be added if you are
                   running directly out of Regina's source tree.
 __END__
-      exit 0
-    fi
+    exit 0;
+  }
 
-    force=
-    rpath=
-    for i in "$@"; do
-      if [ "$i" = '-f' -o "$i" = '--force' ]; then
-        force=1
-      fi
-      if [ "$i" = '-r' -o "$i" = '--rpath' ]; then
-        rpath=1
-      fi
-    done
+  my ($force, $rpath);
+  foreach (@ARGV) {
+    ($_ eq '-f' || $_ eq '--force') and $force = 1;
+    ($_ eq '-r' || $_ eq '--rpath') and $rpath = 1;
+  }
 
-    filename="sample.$action"
+  my $filename = "sample.$action";
 
-    # If the installation does not support development then stop now.
-    if [ "$install_type" = Windows ]; then
-      cat <<__END__
+  # If the installation does not support development then stop now.
+  if ($install_type eq 'Windows') {
+    print STDERR <<__END__;
 ERROR: The Windows app for Regina does not ship with development files
        (i.e., Regina's C++ headers and related files).
 __END__
-      exit 1
-    fi
-    if [ "$install_type" = Bundle ]; then
-      cat <<__END__
+    exit 1;
+  } elsif ($install_type eq 'Bundle') {
+    print STDERR <<__END__;
 ERROR: The macOS app bundle for Regina does not ship with development files
        (i.e., Regina's C++ headers and related files).
 __END__
-      exit 1
-    fi
+    exit 1;
+  }
 
-    # Unless told otherwise, do not overwrite files that already exist.
-    if [ -z "$force" ]; then
-      bad=
-      if [ -e "$filename" ]; then
-        echo "ERROR: $filename already exists."
-        bad=1
-      fi
-      if [ -e Makefile ]; then
-        echo "ERROR: Makefile already exists."
-        bad=1
-      fi
-      if [ -n "$bad" ]; then
-        echo
-        echo "Use --force to overwrite existing files."
-        exit 1
-      fi
-    fi
+  # Unless told otherwise, do not overwrite files that already exist.
+  if (not $force) {
+    my $bad;
+    if (-e $filename) {
+      print STDERR "ERROR: $filename already exists.\n";
+      $bad = 1;
+    }
+    if (-e 'Makefile') {
+      print STDERR "ERROR: Makefile already exists.\n";
+      $bad = 1;
+    }
+    if ($bad) {
+      print STDERR "\nUse --force to overwrite existing files.\n";
+      exit 1;
+    }
+  }
 
-    # Do it!
-    echo "Writing $filename..."
-    cat > "$filename" <<__END__
+  # Do it!
+  if (not open(SOURCE, '>', $filename)) {
+    print STDERR "ERROR: Could not write to $filename.\n";
+    exit 1;
+  }
+  print STDERR "Writing $filename...\n";
+  print SOURCE <<__END__;
 #include <iomanip>
 #include <iostream>
 #include "triangulation/dim3.h"
@@ -178,61 +206,74 @@ int main() {
     return 0;
 }
 __END__
+  close SOURCE;
 
-    echo "Preparing Makefile..."
-    if [ "$install_type" != Source ]; then
-      regina_config='@BASH_MAKE_CMAKE_INSTALL_FULL_BINDIR@/regina-engine-config'
-      if [ "$rpath" = 1 ]; then
-        rpath_flags="-Wl,-rpath "'@BASH_MAKE_CMAKE_INSTALL_FULL_LIBDIR@'
-      else
-        rpath_flags=
-      fi
-      cat > Makefile <<__END__
+  if (not open(MAKEFILE, '>', 'Makefile')) {
+    print STDERR "ERROR: Could not write to Makefile.\n";
+    exit 1;
+  }
+  print STDERR "Preparing Makefile...\n";
+  if ($install_type ne 'Source') {
+    my $display_prefix = '@PERL_CMAKE_INSTALL_PREFIX@';
+    my $make_regina_config = sanitise_for_makefile_recipe('@PERL_CMAKE_INSTALL_FULL_BINDIR@/regina-engine-config');
+    my $rpath_flags = '';
+    if ($rpath) {
+      my $make_rpath_dir = sanitise_for_makefile_recipe('@PERL_CMAKE_INSTALL_FULL_LIBDIR@');
+      $rpath_flags = "-Wl,-rpath $make_rpath_dir";
+    }
+    print MAKEFILE <<__END__;
 # Compile C++ programs that use Regina.
-# This uses the installation of Regina beneath @CMAKE_INSTALL_PREFIX@/.
+# This uses the installation of Regina beneath $display_prefix/.
 
 % : %.$action
-	c++ -O3 '\$<' \`$regina_config --cflags --libs\` $rpath_flags -o '\$@'
+	c++ -O3 '\$<' \`$make_regina_config --cflags --libs\` $rpath_flags -o '\$\@'
 __END__
-    else
-      # When running directly from the source tree, we cannot trust
-      # regina-engine-config (since that outputs installation paths), and we
-      # must always use rpath (since the source tree should not be on the
-      # library path).
-      include_flags='@BASH_RECONFIG_INCLUDE_FLAGS@'
-      link_flags='@BASH_RECONFIG_LINK_FLAGS@'
-      if [ -e "$progdir/../CMakeLists.txt" ]; then
-        srcdir="$progdir/.."
-      elif [ -e "$progdir/../../CMakeLists.txt" ]; then
-        srcdir="$progdir/../.."
-      else
-        echo "ERROR: I could not deduce the top-level source directory."
-        echo
-        echo "Tried: $progdir/.."
-        echo "       $progdir/../.."
-        exit 1
-      fi
-      cat > Makefile <<__END__
+  } else {
+    # When running directly from the source tree, we cannot trust
+    # regina-engine-config (since that outputs installation paths), and we
+    # must always use rpath (since the source tree should not be on the
+    # library path).
+    # TODO: Sanitise include and link flags
+    my $include_flags = '@BASH_RECONFIG_INCLUDE_FLAGS@';
+    my $link_flags = '@BASH_RECONFIG_LINK_FLAGS@';
+
+    my $make_prog_dir = sanitise_for_makefile_recipe($prog_dir);
+    my $make_src_dir;
+    if (-e "$prog_dir/../CMakeLists.txt") {
+      $make_src_dir = "$make_prog_dir/..";
+    } elsif (-e "$prog_dir/../../CMakeLists.txt") {
+      $make_src_dir = "$make_prog_dir/../..";
+    } else {
+      print STDERR <<__END__;
+ERROR: I could not deduce the top-level source directory.
+
+Tried: $prog_dir/..
+       $prog_dir/../..
+__END__
+      exit 1;
+    }
+    print MAKEFILE <<__END__;
 # Compile C++ programs that use Regina.
-# This uses the build of Regina from $progdir/.
+# This uses the build of Regina from $prog_dir/.
 
 % : %.$action
 	c++ @CMAKE_CXX17_STANDARD_COMPILE_OPTION@ -O3 '\$<' \\
-		-I$srcdir/engine -I'$progdir' \\
+		-I$make_src_dir/engine -I$make_prog_dir \\
 		$include_flags \\
-		'$progdir/@ENGINE_FILENAME@' \\
+		$make_prog_dir/@ENGINE_FILENAME@ \\
 		$link_flags \\
-		-Wl,-rpath '$progdir' \\
-		-o '\$@'
+		-Wl,-rpath $make_prog_dir \\
+		-o '\$\@'
 __END__
-    fi
-    echo 'Done.'
-    ;;
+  }
+  close MAKEFILE;
+
+  print STDERR "Done.\n";
+} elsif ($action eq 'installtype') {
   # -------------------- installtype ---------------------
-  installtype )
-    if [ "$has_help" = 1 ]; then
-      cat <<__END__
-Usage: $0 installtype
+  if ($has_help) {
+      print STDERR <<__END__;
+Usage: $prog_name installtype
 
 Identifies the type of Regina installation.
 
@@ -252,15 +293,13 @@ Possible results:
     Source  : Running directly from Regina's source tree (i.e., a local build
               that has not been installed).
 __END__
-      exit 0
-    fi
-    echo "$install_type"
-    ;;
+    exit 0;
+  }
+  print "$install_type\n";
+} else {
   # -------------------- default ---------------------
-  * )
-    echo "ERROR: Unknown action ($action)."
-    usage
-    exit 1
-esac
+  print STDERR "ERROR: Unknown action ($action).\n\n";
+  usage();
+  exit 1;
+}
 
-exit 0
