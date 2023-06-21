@@ -129,9 +129,6 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
             rdoc::swapCols)
     ;
     if constexpr (Info::ring) {
-        // The static casts below are to avoid a compile error under gcc7
-        // (but not gcc8), where the compiler cannot determine the type of a
-        // template member function.
         c
             .def("isIdentity", &Matrix::isIdentity, rdoc::isIdentity)
             .def("isZero", &Matrix::isZero, rdoc::isZero)
@@ -168,22 +165,16 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
                     pybind11::arg("fromRow") = 0,
                 rdoc::combCols)
             .def("det", &Matrix::det, rdoc::det)
-            .def("divRowExact", static_cast<void (Matrix::*)(size_t, Ref&)>(
-                &Matrix::template divRowExact<>), rdoc::divRowExact)
-            .def("divColExact", static_cast<void (Matrix::*)(size_t, Ref&)>(
-                &Matrix::template divColExact<>), rdoc::divColExact)
-            .def("gcdRow", static_cast<Value (Matrix::*)(size_t)>(
-                &Matrix::template gcdRow<>), rdoc::gcdRow)
-            .def("gcdCol", static_cast<Value (Matrix::*)(size_t)>(
-                &Matrix::template gcdCol<>), rdoc::gcdCol)
-            .def("reduceRow", static_cast<void (Matrix::*)(size_t)>(
-                &Matrix::template reduceRow<>), rdoc::reduceRow)
-            .def("reduceCol", static_cast<void (Matrix::*)(size_t)>(
-                &Matrix::template reduceCol<>), rdoc::reduceCol)
-            .def("rowEchelonForm", static_cast<size_t (Matrix::*)()>(
-                &Matrix::rowEchelonForm), rdoc::rowEchelonForm)
-            .def("columnEchelonForm", static_cast<size_t (Matrix::*)()>(
-                &Matrix::columnEchelonForm), rdoc::columnEchelonForm)
+            .def("divRowExact", &Matrix::divRowExact, rdoc::divRowExact)
+            .def("divColExact", &Matrix::divColExact, rdoc::divColExact)
+            .def("gcdRow", &Matrix::gcdRow, rdoc::gcdRow)
+            .def("gcdCol", &Matrix::gcdCol, rdoc::gcdCol)
+            .def("reduceRow", &Matrix::reduceRow, rdoc::reduceRow)
+            .def("reduceCol", &Matrix::reduceCol, rdoc::reduceCol)
+            .def("rowEchelonForm", &Matrix::rowEchelonForm,
+                rdoc::rowEchelonForm)
+            .def("columnEchelonForm", &Matrix::columnEchelonForm,
+                rdoc::columnEchelonForm)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
             .def("__mul__", [](const Matrix& m1, const Matrix& m2){

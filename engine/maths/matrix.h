@@ -1164,9 +1164,8 @@ class Matrix : public Output<Matrix<T>> {
          * row elements exactly (with no remainder).  For the Integer class,
          * this may be much faster than ordinary division.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
-         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          * \pre The argument \a divBy is neither zero nor infinity, and
          * none of the elements of the given row are infinity.
          * \pre The argument \a divBy divides exactly into every element
@@ -1177,8 +1176,11 @@ class Matrix : public Output<Matrix<T>> {
          * divided by \a divBy.
          * \param divBy the integer to divide each row element by.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divRowExact(size_t row,
-                const T& divBy) {
+        void divRowExact(size_t row, const T& divBy) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::divRowExact() requires type T to be one of "
+                "Regina's own integer types.");
+
             for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
                 x->divByExact(divBy);
         }
@@ -1189,9 +1191,8 @@ class Matrix : public Output<Matrix<T>> {
          * column elements exactly (with no remainder).  For the Integer class,
          * this may be much faster than ordinary division.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
-         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          * \pre The argument \a divBy is neither zero nor infinity, and
          * none of the elements of the given column are infinity.
          * \pre The argument \a divBy divides exactly into every element
@@ -1202,8 +1203,11 @@ class Matrix : public Output<Matrix<T>> {
          * divided by \a divBy.
          * \param divBy the integer to divide each column element by.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divColExact(size_t col,
-                const T& divBy) {
+        void divColExact(size_t col, const T& divBy) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::divColExact() requires type T to be one of "
+                "Regina's own integer types.");
+
             for (T** row = this->data_; row != this->data_ + rows_; ++row)
                 (*row)[col].divByExact(divBy);
         }
@@ -1212,15 +1216,18 @@ class Matrix : public Output<Matrix<T>> {
          * Computes the greatest common divisor of all elements of the
          * given row.  The value returned is guaranteed to be non-negative.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
-         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
          * \param row the index of the row whose gcd should be computed.
          * \return the greatest common divisor of all elements of this row.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdRow(size_t row) {
+        T gcdRow(size_t row) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::gcdRow() requires type T to be one of "
+                "Regina's own integer types.");
+
             T* x = this->data_[row];
 
             T gcd = *x++;
@@ -1236,15 +1243,18 @@ class Matrix : public Output<Matrix<T>> {
          * Computes the greatest common divisor of all elements of the
          * given column.  The value returned is guaranteed to be non-negative.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
-         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
          * \param col the index of the column whose gcd should be computed.
          * \return the greatest common divisor of all elements of this column.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdCol(size_t col) {
+        T gcdCol(size_t col) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::gcdCol() requires type T to be one of "
+                "Regina's own integer types.");
+
             T** row = this->data_;
 
             T gcd = (*row++)[col];
@@ -1261,14 +1271,17 @@ class Matrix : public Output<Matrix<T>> {
          * greatest common divisor.  It is guaranteed that, if the row is
          * changed at all, it will be divided by a _positive_ integer.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
-         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
          * \param row the index of the row to reduce.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceRow(size_t row) {
+        void reduceRow(size_t row) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::reduceRow() requires type T to be one of "
+                "Regina's own integer types.");
+
             T gcd = gcdRow(row);
             if (gcd != 0 && gcd != 1)
                 divRowExact(row, gcd);
@@ -1279,14 +1292,17 @@ class Matrix : public Output<Matrix<T>> {
          * greatest common divisor.  It is guaranteed that, if the column is
          * changed at all, it will be divided by a _positive_ integer.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
-         *
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
          * \param col the index of the column to reduce.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceCol(size_t col) {
+        void reduceCol(size_t col) {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::reduceCol() requires type T to be one of "
+                "Regina's own integer types.");
+
             T gcd = gcdCol(col);
             if (gcd != 0 && gcd != 1)
                 divColExact(col, gcd);
@@ -1312,13 +1328,17 @@ class Matrix : public Output<Matrix<T>> {
          *   already zero by the previous condition);
          * - all the zero rows are at the bottom of the matrix.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          *
          * \return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) rowEchelonForm() {
+        size_t rowEchelonForm() {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::rowEchelonForm() requires type T to be one of "
+                "Regina's own integer types.");
+
             size_t i, j;
 
             // The current working row and column:
@@ -1403,13 +1423,17 @@ class Matrix : public Output<Matrix<T>> {
          *   right are already zero by the previous condition);
          * - all the zero columns are at the right hand end of the matrix.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          *
          * \return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) columnEchelonForm() {
+        size_t columnEchelonForm() {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::columnEchelonForm() requires type T to be one of "
+                "Regina's own integer types.");
+
             size_t i, j;
 
             // The current working row and column:
@@ -1488,15 +1512,19 @@ class Matrix : public Output<Matrix<T>> {
          * this routine, which will avoid the extra overhead of the deep copy.
          * To do this, replace `matrix.rank()` with `std::move(matrix).rank()`.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          *
          * \python Only the const version of rank() (i.e., this version)
          * is available for Python users.
          *
          * \return the rank of this matrix.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) rank() const& {
+        size_t rank() const& {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::rank() requires type T to be one of "
+                "Regina's own integer types.");
+
             // Make a deep copy, which we can modify as we compute rank.
             return Matrix(*this).rowEchelonForm();
         }
@@ -1518,15 +1546,19 @@ class Matrix : public Output<Matrix<T>> {
          * simply access as `matrix.rank()`.  The (minor) cost of this
          * constness will be the extra overhead of an internal deep copy.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          *
          * \nopython Only the const version of rank() is available for Python
          * users.
          *
          * \return the rank of this matrix.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) rank() && {
+        size_t rank() && {
+            static_assert(IsReginaInteger<T>::value,
+                "Matrix<T>::rank() requires type T to be one of "
+                "Regina's own integer types.");
+
             return rowEchelonForm();
         }
 };

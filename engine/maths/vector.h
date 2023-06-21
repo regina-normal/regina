@@ -748,13 +748,16 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * elements; such elements are simply ignored and left at
          * infinity.
          *
-         * This routine is only available when \a T is one of Regina's
-         * own integer classes (Integer, LargeInteger, or NativeInteger).
+         * \pre Type \a T is one of Regina's own integer classes (Integer,
+         * LargeInteger, or NativeIntgeger).
          *
          * \return the integer by which this vector was divided (i.e.,
          * the gcd of its original elements).  This will be strictly positive.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) scaleDown() {
+        T scaleDown() {
+            static_assert(IsReginaInteger<T>::value, "Vector<T>::scaleDown() "
+                "requires type T to be one of Regina's own integer types.");
+
             T gcd; // Initialised to 0.
             for (const T* e = elts_; e != end_; ++e) {
                 if (e->isInfinite() || (*e) == 0)
