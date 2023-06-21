@@ -49,7 +49,7 @@ faster for ad-hoc use. The consequences of this are:
   interface.
 
 * If you are adding new functions to this class that edit the list,
-  you must still remember to create a ChangeEventSpan. This will
+  you must still remember to create a PacketChangeSpan. This will
   ensure that, if the list is being managed by a
   PacketOf<NormalSurfaces>, then the appropriate packet change events
   will be fired. All other events (aside from packetToBeChanged() and

@@ -236,10 +236,10 @@ changes takes place. Some notes on this:
   SnapPeaTriangulation (so it is only intended for use within member
   functions).
 
-* SnapPeaChangeSpan _replaces_ the usual ChangeEventSpan (or
-  ChangeEventGroup) that would commonly be used with other packet
-  types. You should _not_ create a ChangeEventSpan or ChangeEventGroup
-  as well.
+* SnapPeaChangeSpan _replaces_ the usual PacketChangeSpan (or
+  PacketChangeGroup) that would commonly be used with other packet
+  types. You should _not_ create a PacketChangeSpan or
+  PacketChangeGroup as well.
 
 * The SnapPeaChangeSpan class takes an optional policy template
   argument. Do take care to ensure that you are using the correct

@@ -118,7 +118,7 @@ To create a new innate packet type:
   support reading from file;
 
 * For every routine in *C* that edits the packet contents, declare a
-  Packet::ChangeEventSpan on the stack while the modification takes
+  Packet::PacketChangeSpan on the stack while the modification takes
   place so that listeners are notified (see the discussion below on
   event listeners).
 
@@ -142,7 +142,7 @@ To create a new wrapped packet type that holds an object of type
   support reading from file;
 
 * For every routine in *Held* that edits the packet contents, declare
-  a Held::ChangeEventSpan on the stack while the modification takes
+  a Held::PacketChangeSpan on the stack while the modification takes
   place. This is again lightweight (if an object does not belong to a
   packet then the cost is just two integer comparisions), and it will
   ensure that if the object _does_ belong to a packet then listeners
