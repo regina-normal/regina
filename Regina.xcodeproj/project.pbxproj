@@ -3882,6 +3882,7 @@
 		056AED532A431AE200EAF4FA /* markedabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = markedabeliangroup.cpp; sourceTree = "<group>"; };
 		056AED542A431AE200EAF4FA /* abeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = abeliangroup.cpp; sourceTree = "<group>"; };
 		056AED552A431AE200EAF4FA /* grouppresentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = grouppresentation.cpp; sourceTree = "<group>"; };
+		056AED992A4327C500EAF4FA /* regina-helper.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "regina-helper.in"; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		056EC54F2A288F2E006EE87A /* default_theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = default_theme.cpp; sourceTree = "<group>"; };
 		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
@@ -6208,6 +6209,7 @@
 				052F9D17180600FA00FAE4DF /* regina-core.h */,
 				052F9D18180600FA00FAE4DF /* regina-engine-config.1 */,
 				052F9D19180600FA00FAE4DF /* regina-engine-config.in */,
+				056AED992A4327C500EAF4FA /* regina-helper.in */,
 				052F9D1C180600FA00FAE4DF /* snappea */,
 				052F9D9A180600FB00FAE4DF /* split */,
 				052F9DA2180600FB00FAE4DF /* subcomplex */,
@@ -7967,10 +7969,10 @@
 			children = (
 				059D01F625B6AA94004150F7 /* Timing.entitlements */,
 				052F9BFD180600FA00FAE4DF /* engine */,
-				052FA12F1806102F00FAE4DF /* ios */,
 				050F5CDE1B9BAAAA00C1F681 /* python */,
 				0564A2151811D91C002CC2AE /* qtui */,
 				05617ADE1D9DBFBF00B1E33B /* utils */,
+				052FA12F1806102F00FAE4DF /* ios */,
 				057118AF19B307A3009FEDC5 /* data */,
 				05A47F961809CB7500F86BFD /* examples */,
 				059D015A25B6A6E3004150F7 /* timing */,
