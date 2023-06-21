@@ -131,6 +131,9 @@ Version 7.4  [ (to be announced) ]
         Class Vector<T>:
             - Added support for tight encodings and decodings.
             - New routine hash(), which uses the tight encoding.
+        Function columnEchelonForm():
+            - Cleaned up and relaxed the preconditions.
+            - Now checks its preconditions and throws an exception if they fail.
         Function foreach_constexpr():
             - New pair of functions to provide compile-time loops over an
               arbitrary set of integers.
@@ -143,8 +146,20 @@ Version 7.4  [ (to be announced) ]
             - Now explicitly allows (n,k) = (1,0); in the past this was
               supported but technically a violation of the preconditions.
             - Now takes arguments of type long (not unsigned long).
+        Function preImageOfLattice():
+            - Now checks some of its preconditions and throws an exception
+              if they fail.
         Function reducedMod():
             - Now checks its preconditions and throws an exception if they fail.
+        Function rowBasisAndOrthComp():
+            - Now checks its preconditions and throws an exception if they fail.
+        Function torsionAutInverse():
+            - Now checks some of its preconditions and throws an exception
+              if they fail.
+        Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
+            - This is deprecated, and is no longer used within Regina.  The
+              suggested alternative is to use a static_assert to ensure that a
+              member function is only instantiated with appropriate types.
         Constants is_cpp_integer_v<T>, is_unsigned_cpp_integer_v<T>:
             - New alternatives to using std::is_integeral_v<T> and
               std::is_unsigned_v<T> that allow for 128-bit integers also.

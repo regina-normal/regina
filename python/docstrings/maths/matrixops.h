@@ -26,13 +26,15 @@ affected by the resulting column operations that take place.
 This routine also returns the corresponding change of coordinate
 matrices *R* and *Ri:*
 
-* If *R* and *Ri* are passed as identity matrices, the returned
-  matrices will be such that ``original_M * R = final_M`` and
-  ``final_M * Ri = original_M`` (and of course ``final_M`` is in
-  column echelon form with respect to the given row list).
+* The matrix *R* will have precisely the same column operations
+  applied to it as the matrix *M*. The matrix *Ri* will have the
+  inverse _row_ operations applied to it, thereby maintaining a
+  constant value of the product ``R * Ri`` as the algorithm runs.
 
-* If *R* and *Ri* are already non-trivial coordinate transformations,
-  they are modified appropriately by the algorithm.
+* In particular, if *R* and *Ri* are passed into this routine as
+  square identity matrices, then after the reduction is complete we
+  will have ``original_M * R = final_M`` and ``final_M * Ri =
+  original_M``.
 
 Our convention is that a matrix is in column echelon form if:
 
@@ -62,8 +64,12 @@ should call MatrixInt::columnEchelonForm() instead, which is simpler
 but also more streamlined.
 
 Precondition:
-    Both *R* and *Ri* are square matrices with side length
-    M.columns(), and these matrices are inverses of each other.
+    If *n* is the number of _columns_ in *M*, then *R* has precisely
+    *n* columns also, and *Ri* has precisely *n* rows.
+
+Exception ``InvalidArgument``:
+    Either ``R.columns() ≠ M.columns()``, and/or ``Ri.rows() ≠
+    M.columns()``.
 
 Parameter ``M``:
     the matrix to reduce.
@@ -76,10 +82,11 @@ Parameter ``Ri``:
 
 Parameter ``rowList``:
     the rows to pay attention to. This list must contain distinct
-    integers, all between 0 and M.rows()-1 inclusive. The integers may
-    appear in any order (though changing the order will change the
-    resulting column echelon form). For a "classical" column echelon
-    form, this would be the list of all rows: 0,...,(M.rows()-1).
+    integers, all between 0 and M.rows()-1 inclusive (though it need
+    not contain _all_ of these integers). The integers may appear in
+    any order (though changing the order will change the resulting
+    column echelon form). For a "classical" column echelon form, this
+    would be the list of all rows: ``0,...,(M.rows()-1)``.
 
 Author:
     Ryan Budney)doc";
@@ -156,6 +163,11 @@ The preimage of the sublattice (equivalently, the kernel described
 above) is some rank *n* lattice in Z^n. This algorithm finds and
 returns a basis for the lattice.
 
+Exception ``InvalidArgument``:
+    The length of *sublattice* is different from the number of rows of
+    *hom*. Note that the _contents_ of *sublattice* (specifically, the
+    signs of the integers it contains) are not checked.
+
 Parameter ``hom``:
     the matrix representing the homomorphism from Z^n to Z^k; this
     must be a *k* by *n* matrix.
@@ -225,6 +237,10 @@ to.
 Precondition:
     The matrix *complement* is a square matrix, whose size is equal to
     the number of columns in *input*.
+
+Exception ``InvalidArgument``:
+    The matrix *complement* is not square with side length equal to
+    ``input.columns()``.
 
 Parameter ``input``:
     the input matrix whose row space we will describe; this matrix
@@ -326,6 +342,12 @@ of a genuine automorphism of ``Z_p1 + ... + Z_pn``.
 Precondition:
     The list p1, p2, ..., pn is a list of invariant factors, which
     means that p1|p2, ..., p{n-1}|pn.
+
+Exception ``InvalidArgument``:
+    Either *input* is not a square matrix, and/or the length of *invF*
+    is different from the side length of *input*. Note that the
+    _contents_ of *invF* (specifically, the divisibility property) are
+    not checked.
 
 Parameter ``input``:
     the n-by-n matrix *A*, which must be a lift of a genuine

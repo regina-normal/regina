@@ -321,6 +321,10 @@ size_t rowBasis(MatrixInt& matrix) {
 size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     size_t n = input.columns();
 
+    if (complement.rows() != n || complement.columns() != n)
+        throw InvalidArgument("rowBasisAndOrthComp(input, complement) expects "
+            "complement to be square with side length input.columns()");
+
     // Make a copy of the input matrix, and reduce it to row echelon form.
     MatrixInt echelon(input);
 
@@ -415,7 +419,9 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
 
 void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<size_t> &rowList) {
-    size_t i,j;
+    if (R.columns() != M.columns() || Ri.rows() != M.columns())
+        throw InvalidArgument("columnEchelonForm(M, R, Ri, rowList) expects "
+            "M.columns() == R.columns() == Ri.rows()");
 
     size_t CR=0;
     size_t CC=0;
@@ -428,16 +434,13 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
                                    // list of column coordinates
                                    // for the non-zero entries.
 
-    Integer u,v,gcd, a,b; // for column operations u,v,a,b represent
-                          // a 2x2 matrix.
-    Integer tmp;
-
+    Integer u,v,a,b; // for column operations u,v,a,b represent a 2x2 matrix.
     // the algorithm will think of itself as working top to bottom.
     while ( (CR<rowList.size()) && (CC<M.columns())) {
         // build rowNZlist
         rowNZlist.clear();
 
-        for (i=CC;i<M.columns();i++)
+        for (size_t i=CC;i<M.columns();i++)
             if (M.entry(rowList[CR],i) != 0)
                 rowNZlist.push_back(i);
 
@@ -445,57 +448,33 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         if (rowNZlist.size() == 0) {
             // nothing to do.
             CR++;
-            continue;
         } else if (rowNZlist.size() == 1) {
             // let's move this entry to be the leading entry.
             if (rowNZlist[0]==CC) {
                 // step 1: ensure entry(CR,CC) is positive.
                 if (M.entry(rowList[CR],CC)<0) {
-                    // step 1: negate column CC.
-                    for (i=0;i<M.rows();i++)
-                        M.entry(i,CC)=(-M.entry(i,CC));
-                    // step 2: modify R, this is a right multiplication so a
-                    // column op.
-                    for (i=0;i<R.rows();i++)
-                        R.entry(i,CC)=(-R.entry(i,CC));
-                    // step 3: modify Ri, so this is a row op.
-                    for (i=0;i<Ri.columns();i++)
-                        Ri.entry(CC,i)=(-Ri.entry(CC,i));
-                    // done.
+                    M.negateCol(CC);
+                    R.negateCol(CC);
+                    Ri.negateRow(CC);
                 }
                 // step 2: reduce entries(CR,i) for i<CC
-                for (i=0;i<CC;i++) { // write entry(CR,i) as d*entry(CR,CC) + r.
+                for (size_t i=0;i<CC;i++) {
+                    // write entry(CR,i) as d*entry(CR,CC) + r.
                     auto [d, r] = M.entry(rowList[CR],i).divisionAlg(
                         M.entry(rowList[CR],CC) );
-                    // perform reduction on column i. this is subtracting
-                    // d times column CC from column i.
-                    for (j=0;j<M.rows();j++)
-                        M.entry(j,i) = M.entry(j,i) - d*M.entry(j,CC);
-                    // modify R
-                    for (j=0;j<R.rows();j++)
-                        R.entry(j,i) = R.entry(j,i) - d*R.entry(j,CC);
-                    // modify Ri -- the corresponding row op is addition of
-                    // d times row i to row CC
-                    for (j=0;j<Ri.columns();j++)
-                        Ri.entry(CC,j) = Ri.entry(CC,j) + d*Ri.entry(i,j);
-                    // done.
+                    // reduce column i: subtract d * column CC from column i.
+                    M.addCol(CC, i, -d);
+                    R.addCol(CC, i, -d);
+                    // corresponding update for Ri: add d * row i to row CC
+                    Ri.addRow(i, CC, d);
                 }
                 // done, move on.
                 CC++;
                 CR++;
-                continue;
             } else {
-                // permute column rowNZlist[0] with CC.
-                for (i=0;i<M.rows();i++)
-                    M.entry(i,CC).swap(M.entry(i,rowNZlist[0]));
-                // modify R
-                for (i=0;i<R.rows();i++)
-                    R.entry(i,CC).swap(R.entry(i,rowNZlist[0]));
-                // modify Ri
-                for (i=0;i<Ri.columns();i++)
-                    Ri.entry(CC,i).swap(Ri.entry(rowNZlist[0],i));
-                // done.
-                continue;
+                M.swapCols(CC, rowNZlist[0]);
+                R.swapCols(CC, rowNZlist[0]);
+                Ri.swapRows(CC, rowNZlist[0]);
             }
         } else {
             // there is at least 2 non-zero entries to deal with. we go
@@ -508,49 +487,30 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
                 // a and b from entry(CR, r[0]) and entry(CR, r[1])
                 // by dividing by their GCD, found with
                 // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
-                gcd = M.entry(rowList[CR], rowNZlist[0]).gcdWithCoeffs(
+                Integer gcd = M.entry(rowList[CR], rowNZlist[0]).gcdWithCoeffs(
                     M.entry(rowList[CR], rowNZlist[1]), u,v);
                 a = M.entry(rowList[CR], rowNZlist[0]).divExact(gcd);
                 b = M.entry(rowList[CR], rowNZlist[1]).divExact(gcd);
                 // so multiplication on the right by the above matrix
                 // corresponds to replacing column r[0] by u r[0] + v r[1]
                 // and column r[1] by -b r[0] + a r[1].
-                for (i=0;i<M.rows();i++) {
-                    tmp = u * M.entry( i, rowNZlist[0] ) +
-                        v * M.entry(i, rowNZlist[1] );
-                    M.entry(i,rowNZlist[1]) = a * M.entry( i, rowNZlist[1]) -
-                        b * M.entry( i, rowNZlist[0]);
-                    M.entry(i,rowNZlist[0]) = tmp;
-                }
-                // modify R
-                for (i=0;i<R.rows();i++) {
-                    tmp = u * R.entry( i, rowNZlist[0] ) +
-                        v * R.entry(i, rowNZlist[1] );
-                    R.entry(i,rowNZlist[1]) = a * R.entry( i, rowNZlist[1]) -
-                        b * R.entry( i, rowNZlist[0]);
-                    R.entry(i,rowNZlist[0]) = tmp;
-                }
-                // modify Ri
-                for (i=0;i<Ri.columns();i++) {
-                    tmp = a * Ri.entry( rowNZlist[0], i ) +
-                        b * Ri.entry( rowNZlist[1], i );
-                    Ri.entry( rowNZlist[1], i ) =
-                        u * Ri.entry( rowNZlist[1], i ) -
-                        v * Ri.entry( rowNZlist[0], i );
-                    Ri.entry( rowNZlist[0], i ) = tmp;
-                }
+                M.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
+                R.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
+                Ri.combRows(rowNZlist[0], rowNZlist[1], a, b, -v, u);
                 // modify rowNZlist by deleting the entry corresponding to
                 // rowNZlist[1]
                 rowNZlist.erase( rowNZlist.begin()+1 );
-                // done.
             }
-            continue;
         }
     }
 }
 
 MatrixInt preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& L) {
+    if (L.size() != hom.rows())
+        throw InvalidArgument("preImageOfLattice(hom, sublattice) expects "
+            "the length of sublattice to match the number of rows in hom");
+
     // there are two main steps to this algorithm.
     // 1) find a basis for the domain which splits into a) vectors sent to the
     //    complement of the primitive subspace generated by the range lattice
@@ -744,6 +704,12 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
 //          stuffed in there. 
 MatrixInt torsionAutInverse(const MatrixInt& input,
         const std::vector<Integer> &invF) {
+    if (input.rows() != input.columns())
+        throw InvalidArgument("torsionAutInverse() expects a square matrix");
+    if (invF.size() != input.rows())
+        throw InvalidArgument("torsionAutInverse(input, invF) expects "
+            "the length of invF to match the side length of input");
+
     // inductive step begins right away. Start at bottom row.
     MatrixInt workMat( input );
     MatrixInt colOps( input.rows(), input.columns() );

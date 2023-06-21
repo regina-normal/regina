@@ -210,6 +210,9 @@ size_t rowBasis(MatrixInt& matrix);
  * \pre The matrix \a complement is a square matrix, whose size is equal
  * to the number of columns in \a input.
  *
+ * \exception InvalidArgument The matrix \a complement is not square with side
+ * length equal to `input.columns()`.
+ *
  * \param input the input matrix whose row space we will describe; this
  * matrix will be changed (though only by swapping rows).
  * \param complement the square matrix that will be re-filled with the
@@ -233,23 +236,28 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * This routine also returns the corresponding change of coordinate
  * matrices \a R and \a Ri:
  *
- * - If \a R and \a Ri are passed as identity matrices, the returned
- *   matrices will be such that `original_M * R = final_M` and
- *   `final_M * Ri = original_M` (and of course `final_M` is
- *   in column echelon form with respect to the given row list).
- * - If \a R and \a Ri are already non-trivial coordinate transformations,
- *   they are modified appropriately by the algorithm.
+ * - The matrix \a R will have precisely the same column operations applied to
+ *   it as the matrix \a M.  The matrix \a Ri will have the inverse _row_
+ *   operations applied to it, thereby maintaining a constant value of the
+ *   product `R * Ri` as the algorithm runs.
+ *
+ * - In particular, if \a R and \a Ri are passed into this routine as
+ *   square identity matrices, then after the reduction is complete we will
+ *   have `original_M * R = final_M` and `final_M * Ri = original_M`.
  *
  * Our convention is that a matrix is in column echelon form if:
  *
  * - each column is either zero or there is a first non-zero entry which
  *   is positive (but see the note regarding \a rowList below);
+ *
  * - moving from the leftmost column to the rightmost column, the rows
  *   containing the first non-zero entries for these columns have strictly
  *   increasing indices in \a rowList;
+ *
  * - given a first non-zero column entry, in that row all the elements to
  *   the left are smaller and non-negative (all elements to the right are
  *   already zero by the previous condition);
+ *
  * - all the zero columns are on the right hand side of the matrix.
  *
  * By a "zero column" here we simply mean "zero for every row in \a
@@ -264,17 +272,21 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * call MatrixInt::columnEchelonForm() instead, which is simpler but also more
  * streamlined.
  *
- * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
- * and these matrices are inverses of each other.
+ * \pre If \a n is the number of _columns_ in \a M, then \a R has precisely
+ * \a n columns also, and \a Ri has precisely \a n rows.
+ *
+ * \exception InvalidArgument Either `R.columns() ≠ M.columns()`, and/or
+ * `Ri.rows() ≠ M.columns()`.
  *
  * \param M the matrix to reduce.
  * \param R used to return the row-reduction matrix, as described above.
  * \param Ri used to return the inverse of \a R.
  * \param rowList the rows to pay attention to.  This list must contain
- * distinct integers, all between 0 and M.rows()-1 inclusive.  The
- * integers may appear in any order (though changing the order will
- * change the resulting column echelon form).  For a "classical" column
- * echelon form, this would be the list of all rows: 0,...,(M.rows()-1).
+ * distinct integers, all between 0 and M.rows()-1 inclusive (though it
+ * need not contain _all_ of these integers).  The integers may appear in
+ * any order (though changing the order will change the resulting column
+ * echelon form).  For a "classical" column echelon form, this would be the
+ * list of all rows: `0,...,(M.rows()-1)`.
  *
  * \author Ryan Budney
  *
@@ -299,6 +311,10 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  * The preimage of the sublattice (equivalently, the kernel described
  * above) is some rank \a n lattice in Z^n.  This algorithm finds and
  * returns a basis for the lattice.
+ *
+ * \exception InvalidArgument The length of \a sublattice is different from
+ * the number of rows of \a hom.  Note that the _contents_ of \a sublattice
+ * (specifically, the signs of the integers it contains) are not checked.
  *
  * \param hom the matrix representing the homomorphism from Z^n to Z^k;
  * this must be a \a k by \a n matrix.
@@ -330,6 +346,11 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  *
  * \pre The list p1, p2, ..., pn is a list of invariant factors,
  * which means that p1|p2, ..., p{n-1}|pn.
+ *
+ * \exception InvalidArgument Either \a input is not a square matrix, and/or
+ * the length of \a invF is different from the side length of \a input.
+ * Note that the _contents_ of \a invF (specifically, the divisibility
+ * property) are not checked.
  *
  * \param input the n-by-n matrix \a A, which must be a lift of a genuine
  * automorphism as described above.
