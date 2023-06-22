@@ -1,7 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #
-# This script is based on gtk-config, whose documentation contains the
-# following notice:
+# This script was long ago based on gtk-config, but most of that has since
+# been stripped away, with the real work happening in CMake nowadays.
+#
+# The documentation for gtk-config contained the following notice:
 #
 #   Copyright (C)  1998 Owen Taylor
 #
@@ -14,20 +16,15 @@
 # Changes to this script were made by Ben Burton <bab@maths.uq.edu.au> and are
 # released under the same license as above.
 
-prefix='@BASH_CMAKE_INSTALL_PREFIX@'
-exec_prefix='@BASH_CMAKE_INSTALL_PREFIX@'
-exec_prefix_set=no
-
 usage()
 {
 	cat <<EOF
 Usage: regina-engine-config [OPTIONS]
 Options:
-	[--prefix[=DIR]]
-	[--exec-prefix[=DIR]]
+	[--prefix]
 	[--version]
-	[--libs]
 	[--cflags]
+	[--libs]
 EOF
 	exit $1
 }
@@ -38,26 +35,23 @@ fi
 
 while test $# -gt 0; do
   case "$1" in
-  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
-  *) optarg= ;;
-  esac
-
-  case $1 in
     --prefix=*)
-      prefix=$optarg
-      if test $exec_prefix_set = no ; then
-        exec_prefix=$optarg
-      fi
+      echo 'ERROR: --prefix=<DIR> is no longer supported.'
+      echo 'In the past, this never did anything useful anyway.'
+      exit 1
       ;;
     --prefix)
-      echo_prefix=yes
+      echo '@BASH_CMAKE_INSTALL_PREFIX@'
       ;;
     --exec-prefix=*)
-      exec_prefix=$optarg
-      exec_prefix_set=yes
+      echo 'ERROR: --exec-prefix=<DIR> is no longer supported.'
+      echo 'In the past, this never did anything useful anyway.'
+      exit 1
       ;;
     --exec-prefix)
-      echo_exec_prefix=yes
+      echo 'ERROR: --exec-prefix is no longer supported.'
+      echo 'Just use --prefix instead (which behaves identically).'
+      exit 1
       ;;
     --version)
       echo '@BASH_PACKAGE_BUILD_STRING@'
@@ -75,38 +69,14 @@ while test $# -gt 0; do
   shift
 done
 
-if test "$echo_prefix" = "yes"; then
-	echo $prefix
-fi
-
-if test "$echo_exec_prefix" = "yes"; then
-	echo $exec_prefix
-fi
-
-regina_engine_libs='-lregina-engine @BASH_RECONFIG_LINK_FLAGS@'
-
 if test "$echo_cflags" = "yes" -o "$echo_libs" = "yes"; then
 	echo '@CMAKE_CXX17_STANDARD_COMPILE_OPTION@'
 fi
 
 if test "$echo_cflags" = "yes"; then
-	includes='@BASH_RECONFIG_INCLUDE_FLAGS@'
-	includes='-I@BASH_PKGINCLUDEDIR@'" $includes"
-	echo $includes
+	echo '-I@BASH_PKGINCLUDEDIR@ @BASH_RECONFIG_INCLUDE_FLAGS@'
 fi
 
 if test "$echo_libs" = "yes"; then
-	libdirs='-L@BASH_CMAKE_INSTALL_FULL_LIBDIR@'
-	my_regina_engine_libs=
-	for i in $regina_engine_libs ; do
-		if test "x$i" != 'x-L@BASH_CMAKE_INSTALL_FULL_LIBDIR@' ; then
-			if test -z "$my_regina_engine_libs" ; then
-				my_regina_engine_libs="$i"
-			else
-				my_regina_engine_libs="$my_regina_engine_libs $i"
-			fi
-		fi
-	done
-
-	echo $libdirs $my_regina_engine_libs
+	echo '-L@BASH_CMAKE_INSTALL_FULL_LIBDIR@ -lregina-engine @BASH_RECONFIG_LINK_FLAGS@'
 fi

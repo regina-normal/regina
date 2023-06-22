@@ -1,13 +1,12 @@
-.TH REGINA-ENGINE-CONFIG 1 "12 March 2023" "" "Regina Development Files"
+.TH REGINA-ENGINE-CONFIG 1 "22 June 2023" "" "Regina Development Files"
 .SH NAME
 regina-engine-config - get information about the installed version of Regina
 .SH SYNOPSIS
 .B regina-engine-config
-[\fB\-\-prefix\fP[=\fIDIR\fP]]
-[\fB\-\-exec\-prefix\fP[=\fIDIR\fP]]
+[\fB\-\-prefix\fP]
 [\fB\-\-version\fP]
-[\fB\-\-libs\fP]
 [\fB\-\-cflags\fP]
+[\fB\-\-libs\fP]
 .SH DESCRIPTION
 .PP
 \fIregina-engine-config\fP tells you which compiler and linker flags should
@@ -28,38 +27,20 @@ compute knot polynomials, and work with several import/export formats.
 .SH OPTIONS
 \fIregina-engine-config\fP accepts the following options.
 .TP
-\fB\-\-prefix\fP=\fIDIR\fP
-Use DIR instead of the installation prefix that Regina
-was built with when computing the output for the \-\-cflags and
-\-\-libs options. This option is also used for the exec prefix
-if \-\-exec\-prefix is not specified.  This option must be specified
-before any \-\-libs or \-\-cflags options.
-If no DIR is specified then the current installation prefix will be
-written to standard output.
-
-Most people will not need this option.
-.TP
-\fB\-\-exec\-prefix\fP=\fIDIR\fP
-Use DIR instead of the installation exec prefix that
-Regina was built with when computing the output for the \-\-cflags
-and \-\-libs options.  This option must be specified before any
-\-\-libs or \-\-cflags options.
-If no DIR is specified then the current installation exec prefix will be
-written to standard output.
-
-Most people will not need this option.
+\fB\-\-prefix\fP
+Prints the installation prefix where Regina has been installed.
 .TP
 .B \-\-version
 Print the currently installed version of Regina.
 This will include any BUILD_INFO string that was set when Regina was built.
 .TP
-.B \-\-libs
-Print the linker flags that are required to link a program against
-the Regina calculation engine.
-.TP
 .B \-\-cflags
 Print the compiler flags that are required to compile a program that
 uses the Regina calculation engine.
+.TP
+.B \-\-libs
+Print the linker flags that are required to link a program against
+the Regina calculation engine.
 .SH SEE ALSO
 Regina includes a detailed users' handbook, which may be accessed
 through Regina's help menu or read online at
@@ -70,18 +51,7 @@ and is licensed under the GNU General Public License.
 Many people have been involved in the development of Regina; see the
 users' handbook for a full list of acknowledgements.
 .PP
-This script regina-engine-config and its manual page were modified from
-\fIgtk-config\fP, which contains the following notice:
-.PP
-.RS
-Copyright \(co  1998 Owen Taylor
-.PP
-Permission to use, copy, modify, and distribute this software and its
-documentation for any purpose and without fee is hereby granted,
-provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in
-supporting documentation.
-.RE
-.PP
-Note that the permission statement above applies only to regina-engine-config,
-and not to Regina as a whole.
+This script regina-engine-config and its manual page were long ago based on
+\fIgtk-config\fP, though very little of that remains nowadays.  The original
+\fIgtk-config\fP was Copyright \(co  1998 Owen Taylor and used an MIT-style
+license; see the regina-engine-config script for full details.

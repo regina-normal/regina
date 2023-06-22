@@ -66,8 +66,8 @@ SET ( ENGINE_FILENAME
 SET( HEADERS ${HEADERS} docs.h regina-core.h )
 SET( MANS ${MANS} regina-engine-config.1 )
 
-# Build space-separated lists of flags for regine-engine-config and
-# regina-helper.  Each variable should be a space-separated list of flags,
+# Build space-separated lists of flags for regine-engine-config (and also
+# regina-helper).  Each variable should be a space-separated list of flags,
 # suitable for passing on a bash command line in an unquoted context.
 GET_DIRECTORY_PROPERTY(ENGINE_INCLUDE_DIRECTORIES DIRECTORY .. INCLUDE_DIRECTORIES)
 foreach(arg ${ENGINE_INCLUDE_DIRECTORIES})
@@ -75,8 +75,12 @@ foreach(arg ${ENGINE_INCLUDE_DIRECTORIES})
   SET(RECONFIG_INCLUDE_FLAGS "${RECONFIG_INCLUDE_FLAGS} -I${BASH_BARE_arg}")
 endforeach(arg ${ENGINE_INCLUDE_DIRECTORIES})
 foreach(arg ${ENGINE_LINK_LIBRARIES})
-  REGINA_ESCAPE_BASH_BARE (arg)
-  SET(RECONFIG_LINK_FLAGS "${RECONFIG_LINK_FLAGS} ${BASH_BARE_arg}")
+  # Do not include our own installation library path, since regina-engine-config
+  # will write that separately at the front of the list of linker arguments.
+  if (NOT "${arg}" STREQUAL "-L${CMAKE_INSTALL_FULL_LIBDIR}")
+    REGINA_ESCAPE_BASH_BARE (arg)
+    SET(RECONFIG_LINK_FLAGS "${RECONFIG_LINK_FLAGS} ${BASH_BARE_arg}")
+  endif ()
 endforeach(arg ${ENGINE_LINK_LIBRARIES})
 REGINA_ESCAPE_BASH (RECONFIG_INCLUDE_FLAGS)
 REGINA_ESCAPE_PERL (RECONFIG_INCLUDE_FLAGS)
