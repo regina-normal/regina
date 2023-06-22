@@ -2128,7 +2128,12 @@ inline int Perm<7>::cachedOrder() const {
 
 inline constexpr Perm<7> Perm<7>::reverse() const {
     // p becomes p * 6543210 (which has second-generation code 5039).
-    return (*this) * Perm<7>(static_cast<Code2>(5039));
+    // return (*this) * Perm<7>(static_cast<Code2>(5039));
+
+    // Since multiplication without cachedComp() is not optimised, the following
+    // code short-circuits some of the work in computing the product above.
+    return Perm<7>((*this)[6], (*this)[5], (*this)[4], (*this)[3], (*this)[2],
+        (*this)[1], (*this)[0]);
 }
 
 inline constexpr int Perm<7>::sign() const {
