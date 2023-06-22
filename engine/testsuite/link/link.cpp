@@ -412,166 +412,129 @@ TEST_F(LinkTest, jones) {
     verifyJones(trefoil_unknot_overlap, {1, {-1,0,-1,0,-1,0,0,0,1}});
 }
 
-#if 0
-static void testHomflyAZ(const Link& l, bool reverse, const char* expected,
-        const char* name) {
+static void verifyHomflyAZ(const TestCase& test,
+        const regina::Laurent2<regina::Integer>& expected) {
+    SCOPED_TRACE_CSTRING(test.name);
+
     // Since we are computing the HOMFLY polynomial multiple times
-    // (using different algorithms), we work with clones of l
+    // (using different algorithms), we work with clones of the link
     // that do not clone any already-computed properties.
 
-    std::ostringstream s1;
-    {
-        Link use(l, false);
-        if (reverse)
-            use.reverse();
-        s1 << use.homflyAZ(regina::ALG_BACKTRACK);
-    }
+    EXPECT_EQ(Link(test.link, false).homflyAZ(regina::ALG_BACKTRACK), expected);
+    EXPECT_EQ(Link(test.link, false).homflyAZ(regina::ALG_TREEWIDTH), expected);
 
-    EXPECT_EQ(s1.str(), expected);
+    Link rev(test.link, false);
+    rev.reverse();
 
-    std::ostringstream s2;
-    {
-        Link use(l, false);
-        if (reverse)
-            use.reverse();
-        s2 << use.homflyAZ(regina::ALG_TREEWIDTH);
-    }
-
-    EXPECT_EQ(s2.str(), expected);
+    EXPECT_EQ(Link(rev, false).homflyAZ(regina::ALG_BACKTRACK), expected);
+    EXPECT_EQ(Link(rev, false).homflyAZ(regina::ALG_TREEWIDTH), expected);
 }
 
-static void testHomflyAZ(const Link& l, const char* expected,
-        const char* name) {
-    testHomflyAZ(l, false, expected, name);
-    testHomflyAZ(l, true, expected, name);
+static void verifyHomflyLM(const TestCase& test,
+        const regina::Laurent2<regina::Integer>& expected) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    // Since we are computing the HOMFLY polynomial multiple times
+    // (using different algorithms), we work with clones of the link
+    // that do not clone any already-computed properties.
+
+    EXPECT_EQ(Link(test.link, false).homflyLM(regina::ALG_BACKTRACK), expected);
+    EXPECT_EQ(Link(test.link, false).homflyLM(regina::ALG_TREEWIDTH), expected);
+
+    Link rev(test.link, false);
+    rev.reverse();
+
+    EXPECT_EQ(Link(rev, false).homflyLM(regina::ALG_BACKTRACK), expected);
+    EXPECT_EQ(Link(rev, false).homflyLM(regina::ALG_TREEWIDTH), expected);
 }
 
-static void testHomflyLM(const Link& l, bool reverse, const char* expected,
-        const char* name) {
-    std::ostringstream s1;
-    {
-        Link use(l, false);
-        if (reverse)
-            use.reverse();
-        s1 << use.homflyLM(regina::ALG_BACKTRACK);
-    }
+TEST_F(LinkTest, homfly) {
+    verifyHomflyAZ(empty, {});
+    verifyHomflyLM(empty, {});
 
-    EXPECT_EQ(s1.str(), expected);
+    verifyHomflyAZ(unknot0, {{0,0,1}});
+    verifyHomflyLM(unknot0, {{0,0,1}});
+    verifyHomflyAZ(unknot1, {{0,0,1}});
+    verifyHomflyLM(unknot1, {{0,0,1}});
+    verifyHomflyAZ(unknot3, {{0,0,1}});
+    verifyHomflyLM(unknot3, {{0,0,1}});
+    verifyHomflyAZ(unknotMonster, {{0,0,1}});
+    verifyHomflyLM(unknotMonster, {{0,0,1}});
+    // Let's not attempt this with the (enormous) Gordian unknot.
 
-    std::ostringstream s2;
-    {
-        Link use(l, false);
-        if (reverse)
-            use.reverse();
-        s2 << use.homflyLM(regina::ALG_TREEWIDTH);
-    }
+    verifyHomflyLM(trefoilLeft, {{4,0,-1}, {2,2,1}, {2,0,-2}});
+    verifyHomflyLM(trefoilRight, {{-2,2,1}, {-2,0,-2}, {-4,0,-1}});
+    verifyHomflyAZ(trefoilRight, {{-2,2,1}, {-2,0,2}, {-4,0,-1}});
+    verifyHomflyLM(trefoil_r1x2, {{-2,2,1}, {-2,0,-2}, {-4,0,-1}});
+    verifyHomflyLM(trefoil_r1x6, {{-2,2,1}, {-2,0,-2}, {-4,0,-1}});
+    verifyHomflyLM(figureEight, {{2,0,-1}, {0,2,1}, {0,0,-1}, {-2,0,-1}});
+    verifyHomflyLM(figureEight_r1x2, {{2,0,-1}, {0,2,1}, {0,0,-1}, {-2,0,-1}});
 
-    EXPECT_EQ(s2.str(), expected);
-}
+    // These two polynomials (which form a mutant pair) were computed using an
+    // old version of Regina, using Kauffman's algorithm (ALG_BACKTRACK).
+    verifyHomflyLM(conway,
+        {{4,4,1}, {4,2,-3}, {4,0,2}, {2,6,-1}, {2,4,6}, {2,2,-11}, {2,0,6},
+         {0,6,-1}, {0,4,6}, {0,2,-11}, {0,0,7}, {-2,4,1}, {-2,2,-3}, {-2,0,2}});
+    verifyHomflyLM(kinoshitaTerasaka,
+        {{4,4,1}, {4,2,-3}, {4,0,2}, {2,6,-1}, {2,4,6}, {2,2,-11}, {2,0,6},
+         {0,6,-1}, {0,4,6}, {0,2,-11}, {0,0,7}, {-2,4,1}, {-2,2,-3}, {-2,0,2}});
 
-static void testHomflyLM(const Link& l, const char* expected,
-        const char* name) {
-    testHomflyLM(l, false, expected, name);
-    testHomflyLM(l, true, expected, name);
-}
+    // Again, this was computed with an old Regina using Kauffman's algorithm.
+    // We skip the test here because (on my machine) it takes around 5s to run
+    // with ALG_TREEWIDTH and around 50s to run with ALG_NAIVE.
+#if 0
+    verifyHomflyLM(gst,
+        {{4,8,-1}, {4,6,6}, {4,4,-11}, {4,2,8}, {4,0,-2}, {2,12,-1}, {2,10,10},
+         {2,8,-35}, {2,6,49}, {2,4,-21}, {2,2,-7}, {2,0,5}, {0,14,1},
+         {0,12,-12}, {0,10,53}, {0,8,-102}, {0,6,67}, {0,4,36}, {0,2,-63},
+         {0,0,21}, {-2,16,-1}, {-2,14,16}, {-2,12,-104}, {-2,10,355},
+         {-2,8,-685}, {-2,6,744}, {-2,4,-422}, {-2,2,100}, {-2,0,-3},
+         {-4,18,1}, {-4,16,-18}, {-4,14,137}, {-4,12,-575}, {-4,10,1457},
+         {-4,8,-2296}, {-4,6,2233}, {-4,4,-1279}, {-4,2,385}, {-4,0,-45},
+         {-6,18,1}, {-6,16,-17}, {-6,14,122}, {-6,12,-484}, {-6,10,1168},
+         {-6,8,-1776}, {-6,6,1698}, {-6,4,-978}, {-6,2,304}, {-6,0,-38},
+         {-8,16,-1}, {-8,14,14}, {-8,12,-79}, {-8,10,233}, {-8,8,-393},
+         {-8,6,392}, {-8,4,-228}, {-8,2,71}, {-8,0,-9}});
+#endif
 
-void homfly() {
-    testHomflyAZ(empty, "0", "Empty");
-    testHomflyLM(empty, "0", "Empty");
+    verifyHomflyLM(rht_rht,
+        {{-4,4,1}, {-4,2,-4}, {-4,0,4}, {-6,2,-2}, {-6,0,4}, {-8,0,1}});
+    verifyHomflyLM(rht_lht,
+        {{2,2,-1}, {2,0,2}, {0,4,1}, {0,2,-4}, {0,0,5}, {-2,2,-1}, {-2,0,2}});
 
-    testHomflyAZ(unknot0, "1", "Unknot (0 crossings)");
-    testHomflyLM(unknot0, "1", "Unknot (0 crossings)");
-    testHomflyAZ(unknot1, "1", "Unknot (1 crossing)");
-    testHomflyLM(unknot1, "1", "Unknot (1 crossing)");
-    testHomflyAZ(unknot3, "1", "Unknot (3 crossings)");
-    testHomflyLM(unknot3, "1", "Unknot (3 crossings)");
-    testHomflyAZ(unknotMonster, "1", "Monster unknot");
-    testHomflyLM(unknotMonster, "1", "Monster unknot");
-    // The Gordian unknot is surely too large for this.
+    verifyHomflyLM(unlink2_0, {{1,-1,-1}, {-1,-1,-1}});
+    verifyHomflyLM(unlink3_0, {{2,-2,1}, {0,-2,2}, {-2,-2,1}});
+    verifyHomflyLM(unlink2_r2, {{1,-1,-1}, {-1,-1,-1}});
+    verifyHomflyLM(unlink2_r1r1, {{1,-1,-1}, {-1,-1,-1}});
 
-    testHomflyLM(unlink2_0, "-x y^-1 - x^-1 y^-1",
-        "Unlink (2 components)");
-    testHomflyLM(unlink3_0, "x^2 y^-2 + 2 y^-2 + x^-2 y^-2",
-        "Unlink (3 components)");
-    testHomflyLM(unlink2_r2, "-x y^-1 - x^-1 y^-1",
-        "Unlink (2 components via R2)");
-    testHomflyLM(unlink2_r1r1, "-x y^-1 - x^-1 y^-1",
-        "Unlink (2 components via R1+R1)");
+    verifyHomflyLM(hopf, {{-1,1,-1}, {-1,-1,1}, {-3,-1,1}});
 
-    testHomflyLM(trefoilLeft, "-x^4 + x^2 y^2 - 2 x^2",
-        "LH Trefoil");
-    testHomflyLM(trefoilRight, "x^-2 y^2 - 2 x^-2 - x^-4",
-        "RH Trefoil");
-    testHomflyAZ(trefoilRight, "x^-2 y^2 + 2 x^-2 - x^-4",
-        "RH Trefoil");
-    testHomflyLM(trefoil_r1x2, "x^-2 y^2 - 2 x^-2 - x^-4",
-        "Trefoil with 2 R1s");
-    testHomflyLM(trefoil_r1x6, "x^-2 y^2 - 2 x^-2 - x^-4",
-        "Trefoil with 6 R1s");
+    // Computed with old Regina using Kauffman's algorithm:
+    verifyHomflyLM(whitehead,
+        {{3,1,1}, {1,3,-1}, {1,1,2}, {1,-1,-1}, {-1,1,1}, {-1,-1,-1}});
+    verifyHomflyLM(borromean,
+        {{2,2,-1}, {2,-2,1}, {0,4,1}, {0,2,-2}, {0,-2,2},
+        {-2,2,-1}, {-2,-2,1}});
 
-    testHomflyLM(figureEight, "-x^2 + y^2 - 1 - x^-2", "Figure eight");
-    testHomflyLM(figureEight_r1x2, "-x^2 + y^2 - 1 - x^-2",
-        "Figure eight with 2 R1s");
+    verifyHomflyLM(trefoil_unknot0,
+        {{-1,1,-1}, {-1,-1,2}, {-3,1,-1}, {-3,-1,3}, {-5,-1,1}});
+    verifyHomflyLM(trefoil_unknot1,
+        {{-1,1,-1}, {-1,-1,2}, {-3,1,-1}, {-3,-1,3}, {-5,-1,1}});
+    verifyHomflyLM(trefoil_unknot_overlap,
+        {{-1,1,-1}, {-1,-1,2}, {-3,1,-1}, {-3,-1,3}, {-5,-1,1}});
 
-    testHomflyLM(hopf, "-x^-1 y + x^-1 y^-1 + x^-3 y^-1", "Hopf link");
+    // This is different from Adams' claim regarding the HOMFLY polynomial of
+    // this link.  But... Adams does get his arithmetic wrong elsewhere, and a
+    // calculation by hand using the Skein relation agrees with the polynomial
+    // below.
+    verifyHomflyLM(adams6_28,
+        {{1,1,1}, {-1,3,-1}, {-1,1,1}, {-3,1,2}, {-3,-1,-1}, {-5,-1,-1}});
 
-    testHomflyLM(trefoil_unknot0,
-        "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1",
-        "Trefoil U unknot (separate)");
-    testHomflyLM(trefoil_unknot1,
-        "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1",
-        "Trefoil U unknot (separate + twist)");
-    testHomflyLM(trefoil_unknot_overlap,
-        "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1",
-        "Trefoil U unknot (with R2)");
-
-    // This is different from Adams' claim regarding the HOMFLY
-    // polynomial of this link.  But... Adams does get his arithmetic
-    // wrong elsewhere, and a calculation by hand using the Skein
-    // relation agrees with the polynomial below.
-    testHomflyLM(adams6_28,
-        "x y - x^-1 y^3 + x^-1 y + 2 x^-3 y - x^-3 y^-1 - x^-5 y^-1",
-        "Adams Fig. 6.28");
-
-    testHomflyLM(rht_rht,
-        "x^-4 y^4 - 4 x^-4 y^2 + 4 x^-4 - 2 x^-6 y^2 + 4 x^-6 + x^-8",
-        "RH Trefoil # RH Trefoil");
-    testHomflyLM(rht_lht,
-        "-x^2 y^2 + 2 x^2 + y^4 - 4 y^2 + 5 - x^-2 y^2 + 2 x^-2",
-        "RH Trefoil # LH Trefoil");
-
-    // The following polynomials were computed using Regina,
-    // using Kauffman's skein template algorithm (ALG_BACKTRACK).
-    // This means that they have not been verified independently;
-    // here they are simply being used to ensure that different
-    // algorithms give the same results, and also that nothing breaks
-    // in a subsequent release.
-    testHomflyLM(whitehead,
-        "x^3 y - x y^3 + 2 x y - x y^-1 + x^-1 y - x^-1 y^-1",
-        "Whitehead link");
-    testHomflyLM(borromean,
-        "-x^2 y^2 + x^2 y^-2 + y^4 - 2 y^2 + 2 y^-2 - x^-2 y^2 + x^-2 y^-2",
-        "Borromean rings");
-    testHomflyLM(conway,
-        "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2",
-        "Conway knot");
-    testHomflyLM(kinoshitaTerasaka,
-        "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2",
-        "Kinoshita-Terasaka knot");
-
-    // On my machine, GST takes around 25 seconds for ALG_TREEWIDTH,
-    // and 88 seconds for ALG_NAIVE.  This is probably still a
-    // touch too slow to put in the test suite.
-    // testHomflyLM(gst,
-    //     "-x^4 y^8 + 6 x^4 y^6 - 11 x^4 y^4 + 8 x^4 y^2 - 2 x^4 - x^2 y^12 + 10 x^2 y^10 - 35 x^2 y^8 + 49 x^2 y^6 - 21 x^2 y^4 - 7 x^2 y^2 + 5 x^2 + y^14 - 12 y^12 + 53 y^10 - 102 y^8 + 67 y^6 + 36 y^4 - 63 y^2 + 21 - x^-2 y^16 + 16 x^-2 y^14 - 104 x^-2 y^12 + 355 x^-2 y^10 - 685 x^-2 y^8 + 744 x^-2 y^6 - 422 x^-2 y^4 + 100 x^-2 y^2 - 3 x^-2 + x^-4 y^18 - 18 x^-4 y^16 + 137 x^-4 y^14 - 575 x^-4 y^12 + 1457 x^-4 y^10 - 2296 x^-4 y^8 + 2233 x^-4 y^6 - 1279 x^-4 y^4 + 385 x^-4 y^2 - 45 x^-4 + x^-6 y^18 - 17 x^-6 y^16 + 122 x^-6 y^14 - 484 x^-6 y^12 + 1168 x^-6 y^10 - 1776 x^-6 y^8 + 1698 x^-6 y^6 - 978 x^-6 y^4 + 304 x^-6 y^2 - 38 x^-6 - x^-8 y^16 + 14 x^-8 y^14 - 79 x^-8 y^12 + 233 x^-8 y^10 - 393 x^-8 y^8 + 392 x^-8 y^6 - 228 x^-8 y^4 + 71 x^-8 y^2 - 9 x^-8");
-
-    // TODO: Verify that L # M means * for HOMFLY/Jones
-
+    // TODO: Verify that knot composition multiplies HOMFLY polynomials
     // TODO: Verify that HOMFLY gives Jones by:
     //   * l = it^-1, m = i(t^-1/2 - t^1/2)
     //   * a = t^-1, z = t^1/2 - t^-1/2
 }
-#endif
 
 static void verifyComplementBasic(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
