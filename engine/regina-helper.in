@@ -50,9 +50,9 @@ Usage: $prog_name <action> [args...]
        $prog_name <action> --help
 
 Available actions:
-    test        : run Regina's C++ test suite
-    cpp         : write a sample C++ program and Makefile
     installtype : identify the type of Regina installation
+    cpp | cc    : write a sample C++ program and Makefile
+    test        : run Regina's C++ test suite
     help        : display this help
 __END__
 }
