@@ -46,21 +46,16 @@ using regina::StrandRef;
 // A link size beneath which we declare it trivial to compute Jones polynomials:
 static constexpr int JONES_THRESHOLD = 20;
 
-static constexpr const char* FIG8_COMPLEMENT_SIG = "cPcbbbiht";
-
-static void EXPECT_CONSISTENCY(const Link& link) {
-    for (Crossing* c : link.crossings()) {
-        StrandRef lower(c, 0);
-        StrandRef upper(c, 1);
-        if (lower.next().prev() != lower ||
-                upper.next().prev() != upper) {
-            ADD_FAILURE() << "Inconsistent next/prev links";
-            return;
-        }
-    }
+// Recognition of specific link complements:
+static bool isFigureEightComplement(const Triangulation<3>& tri) {
+    // True means yes, this is the figure eight knot complement.
+    // False means we don't have a definitive answer.
+    return tri.isoSig() == "cPcbbbiht";
 }
 
-static void EXPECT_TREFOIL_COMPLEMENT(const Triangulation<3>& tri) {
+static bool isTrefoilComplement(const Triangulation<3>& tri) {
+    // True means yes, this is the trefoil complement.
+    // False means we don't have a definitive answer.
     std::string sig = tri.isoSig();
 
     // Regina's simplification heuristics have been found to produce these
@@ -70,12 +65,12 @@ static void EXPECT_TREFOIL_COMPLEMENT(const Triangulation<3>& tri) {
             "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "dLQabccbrwn",
             "eLAkbbcddainqv", "eLAkbcbddducqn", "eLAkbcbdddmcxj" })
         if (sig == s)
-            return;
+            return true;
 
-    ADD_FAILURE() << "Does not appear to be trefoil complement: " << sig;
+    return false;
 }
 
-static void EXPECT_CENSUS_MANIFOLD(const Triangulation<3>& tri,
+static bool isCensusManifold(const Triangulation<3>& tri,
         const std::string& name) {
     std::string sig = tri.isoSig();
     std::string altName = name + " : ";
@@ -84,9 +79,20 @@ static void EXPECT_CENSUS_MANIFOLD(const Triangulation<3>& tri,
     for (const auto& hit : hits)
         if (hit.name() == name ||
                 hit.name().substr(0, altName.size()) == altName)
-            return;
+            return true;
 
-    ADD_FAILURE() << "Does not appear to be " << name << ": " << sig;
+    return false;
+}
+
+// Consistency checks for low-level manipulation of links:
+static bool isConsistent(const Link& link) {
+    for (Crossing* c : link.crossings()) {
+        StrandRef lower(c, 0);
+        StrandRef upper(c, 1);
+        if (lower.next().prev() != lower || upper.next().prev() != upper)
+            return false;
+    }
+    return true;
 }
 
 struct TestCase {
@@ -559,6 +565,7 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
     SCOPED_TRACE_CSTRING(test.name);
 
     // Find a separating sphere in the complement.
+    bool foundSplit = false;
     regina::NormalSurfaces vtx(test.link.complement(), regina::NS_STANDARD);
     for (const regina::NormalSurface& s : vtx) {
         if (s.eulerChar() != 2)
@@ -574,17 +581,19 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
 
         if (comp[0].isIdeal() && comp[1].isIdeal()) {
             // This should be the sphere that separates the link components.
-            if (comp[0].isSolidTorus())
-                EXPECT_TREFOIL_COMPLEMENT(comp[1]);
-            else if (comp[1].isSolidTorus())
-                EXPECT_TREFOIL_COMPLEMENT(comp[0]);
+            // Note: there may be many such spheres, and _every_ one should
+            // produce the same two complements.
+            if ((comp[0].isSolidTorus() && isTrefoilComplement(comp[1])) ||
+                    (comp[1].isSolidTorus() && isTrefoilComplement(comp[0])))
+                foundSplit = true;
             else
-                ADD_FAILURE() << "Link splits into unexpected components";
-            return;
+                ADD_FAILURE() << "Link splits into unexpected components: "
+                    << comp[0].isoSig() << ' ' << comp[1].isoSig();
         }
     }
 
-    ADD_FAILURE() << "Link does not split";
+    if (! foundSplit)
+        ADD_FAILURE() << "Link does not split";
 }
 
 TEST_F(LinkTest, complement) {
@@ -611,16 +620,16 @@ TEST_F(LinkTest, complement) {
     // For some knots and links, it is reasonable to assume that
     // intelligentSimplify() will reach a minimal triangulation.
 
-    EXPECT_EQ(figureEight.link.complement().isoSig(), FIG8_COMPLEMENT_SIG);
-    EXPECT_EQ(figureEight_r1x2.link.complement().isoSig(), FIG8_COMPLEMENT_SIG);
+    EXPECT_TRUE(isFigureEightComplement(figureEight.link.complement()));
+    EXPECT_TRUE(isFigureEightComplement(figureEight_r1x2.link.complement()));
 
-    EXPECT_TREFOIL_COMPLEMENT(trefoilLeft.link.complement());
-    EXPECT_TREFOIL_COMPLEMENT(trefoilRight.link.complement());
-    EXPECT_TREFOIL_COMPLEMENT(trefoil_r1x2.link.complement());
-    EXPECT_TREFOIL_COMPLEMENT(trefoil_r1x6.link.complement());
+    EXPECT_TRUE(isTrefoilComplement(trefoilLeft.link.complement()));
+    EXPECT_TRUE(isTrefoilComplement(trefoilRight.link.complement()));
+    EXPECT_TRUE(isTrefoilComplement(trefoil_r1x2.link.complement()));
+    EXPECT_TRUE(isTrefoilComplement(trefoil_r1x6.link.complement()));
 
-    EXPECT_CENSUS_MANIFOLD(whitehead.link.complement(), "m129");
-    EXPECT_CENSUS_MANIFOLD(borromean.link.complement(), "t12067");
+    EXPECT_TRUE(isCensusManifold(whitehead.link.complement(), "m129"));
+    EXPECT_TRUE(isCensusManifold(borromean.link.complement(), "t12067"));
 
     // Some very specialised tests:
 
@@ -867,7 +876,7 @@ static void verifyR1Down(const Link& l, int crossing,
 
     ASSERT_TRUE(clone.r1(clone.crossing(crossing)));
 
-    EXPECT_CONSISTENCY(clone);
+    EXPECT_TRUE(isConsistent(clone));
     EXPECT_EQ(clone.brief(), briefResult);
 }
 
@@ -882,7 +891,7 @@ static void verifyR1Up(const Link& l, int crossing, int strand,
 
     ASSERT_TRUE(clone.r1(s, side, sign));
 
-    EXPECT_CONSISTENCY(clone);
+    EXPECT_TRUE(isConsistent(clone));
     EXPECT_EQ(clone.brief(), briefResult);
 }
 
@@ -892,7 +901,7 @@ static void verifyR2Down(const Link& l, int crossing,
 
     ASSERT_TRUE(clone.r2(clone.crossing(crossing)));
 
-    EXPECT_CONSISTENCY(clone);
+    EXPECT_TRUE(isConsistent(clone));
     EXPECT_EQ(clone.brief(), briefResult);
 }
 
@@ -902,7 +911,7 @@ static void verifyR2Down(const Link& l, int crossing, int strand,
 
     ASSERT_TRUE(clone.r2(clone.crossing(crossing)->strand(strand)));
 
-    EXPECT_CONSISTENCY(clone);
+    EXPECT_TRUE(isConsistent(clone));
     EXPECT_EQ(clone.brief(), briefResult);
 }
 
@@ -920,7 +929,7 @@ void verifyR2Up(const Link& l, int upperCrossing, int upperStrand,
 
     ASSERT_TRUE(clone.r2(upper, upperSide, lower, lowerSide));
 
-    EXPECT_CONSISTENCY(clone);
+    EXPECT_TRUE(isConsistent(clone));
     EXPECT_EQ(clone.brief(), briefResult);
 }
 
@@ -930,7 +939,7 @@ static void verifyR3(const Link& l, int crossing, int side,
 
     ASSERT_TRUE(clone.r3(clone.crossing(crossing), side));
 
-    EXPECT_CONSISTENCY(clone);
+    EXPECT_TRUE(isConsistent(clone));
     EXPECT_EQ(clone.brief(), briefResult);
 }
 
@@ -940,7 +949,7 @@ static void verifyR3(const Link& l, int crossing, int strand, int side,
 
     ASSERT_TRUE(clone.r3(clone.crossing(crossing)->strand(strand), side));
 
-    EXPECT_CONSISTENCY(clone);
+    EXPECT_TRUE(isConsistent(clone));
     EXPECT_EQ(clone.brief(), briefResult);
 }
 
@@ -1450,7 +1459,7 @@ static void verifyResolve(Link link, int crossing, const char* briefResult) {
 
     link.resolve(link.crossing(crossing));
 
-    EXPECT_CONSISTENCY(link);
+    EXPECT_TRUE(isConsistent(link));
     EXPECT_EQ(link.brief(), briefResult);
 }
 
