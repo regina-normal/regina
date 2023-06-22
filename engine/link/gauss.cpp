@@ -260,7 +260,7 @@ std::vector<std::string> Link::orientedGaussData() const {
         *result.ptr = 0;
 #else
         int result = snprintf(token + 2,
-            maxTokenLen - 1 /* includes null terminator */, "%d",
+            maxTokenLen - 1 /* includes null terminator */, "%zu",
             s.crossing()->index() + 1);
         if (result < 0 || result >= maxTokenLen - 1) {
             std::cerr << "ERROR: orientedGaussData(): could not convert "
