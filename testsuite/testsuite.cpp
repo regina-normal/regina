@@ -113,16 +113,10 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("isomorphism3", &addIsomorphism3));
     sets.insert(std::make_pair("linkingsurfaces", &addLinkingSurfaces));
     sets.insert(std::make_pair("homologicaldata", &addHomologicalData));
-    // We no longer build-depend on boost, so disable the boost.graph test.
-    // sets.insert(std::make_pair("dualgraph3", &addDualGraph3));
 
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
     aliases.insert(std::make_pair("dim4", &addTriangulation4));
-
-    // Knots and links:
-    // We no longer build-depend on boost, so disable the boost.graph test.
-    // sets.insert(std::make_pair("linkgraph", &addLinkGraph));
 
     if (argc <= 1)
         for (const auto& i : sets)
