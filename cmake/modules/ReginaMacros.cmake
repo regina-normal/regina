@@ -113,6 +113,24 @@ macro (REGINA_ESCAPE_BASH _input)
 endmacro (REGINA_ESCAPE_BASH)
 
 
+# Macro: REGINA_ESCAPE_BASH_BARE(input)
+#
+# Sets the variable BASH_BARE_${input} to be a variant of the variable ${input}
+# that is properly escaped for use in a bash script in an unquoted context.
+#
+# The input argument must be a variable name (not its value).
+#
+# This macro correctly handles characters that are special to cmake
+# as well as characters that are special to bash.
+#
+macro (REGINA_ESCAPE_BASH_BARE _input)
+  string(REPLACE "\\" "\\\\" BASH_BARE_${_input} "${${_input}}")
+  string(REGEX REPLACE "([#'\"`$*?;&!(){}<>[|~ \t])" "\\\\\\1"
+    BASH_BARE_${_input} "${BASH_BARE_${_input}}")
+  string(REPLACE "]" "\\]" BASH_BARE_${_input} "${BASH_BARE_${_input}}")
+endmacro (REGINA_ESCAPE_BASH_BARE)
+
+
 # Macro: REGINA_ESCAPE_PERL(input)
 #
 # Sets the variable PERL_${input} to be a variant of the variable ${input}

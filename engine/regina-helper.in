@@ -233,9 +233,10 @@ __END__
     # regina-engine-config (since that outputs installation paths), and we
     # must always use rpath (since the source tree should not be on the
     # library path).
-    # TODO: Sanitise include and link flags
-    my $include_flags = '@BASH_RECONFIG_INCLUDE_FLAGS@';
-    my $link_flags = '@BASH_RECONFIG_LINK_FLAGS@';
+    my $include_flags = '@PERL_RECONFIG_INCLUDE_FLAGS@';
+    my $link_flags = '@PERL_RECONFIG_LINK_FLAGS@';
+    $include_flags =~ s/\$/\$\$/g;
+    $link_flags =~ s/\$/\$\$/g;
 
     my $make_prog_dir = sanitise_for_makefile_recipe($prog_dir);
     my $make_src_dir;
