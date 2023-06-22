@@ -593,7 +593,7 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
     }
 
     if (! foundSplit)
-        ADD_FAILURE() << "Link does not split";
+        ADD_FAILURE() << "Link does not split as expected";
 }
 
 TEST_F(LinkTest, complement) {
@@ -869,587 +869,578 @@ TEST_F(LinkTest, r3Count) {
     verifyR3Count(adams6_28, 0);
 }
 
-#if 0
-static void verifyR1Down(const Link& l, int crossing,
-        const char* briefResult, const std::string& name) {
-    Link clone(l, false);
+// For each of the following Reimeister verification functions, we pass the
+// link by value (thus allowing for moves where possible), and modify it
+// directly.  For the trace we use briefResult since we already have this in
+// string form (the original link would be better but that's more expensive).
 
-    ASSERT_TRUE(clone.r1(clone.crossing(crossing)));
+static void verifyR1Down(Link link, int crossing, const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(crossing);
 
-    EXPECT_TRUE(isConsistent(clone));
-    EXPECT_EQ(clone.brief(), briefResult);
+    EXPECT_TRUE(link.r1(link.crossing(crossing)));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR1Up(const Link& l, int crossing, int strand,
-        int side, int sign, const char* briefResult,
-        const std::string& name) {
-    Link clone(l, false);
+static void verifyR1Up(Link link, int crossing, int strand, int side, int sign,
+        const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(crossing);
+    SCOPED_TRACE_NUMERIC(strand);
+    SCOPED_TRACE_NUMERIC(side);
+    SCOPED_TRACE_NUMERIC(sign);
 
     StrandRef s;
     if (crossing >= 0)
-        s = clone.crossing(crossing)->strand(strand);
+        s = link.crossing(crossing)->strand(strand);
 
-    ASSERT_TRUE(clone.r1(s, side, sign));
-
-    EXPECT_TRUE(isConsistent(clone));
-    EXPECT_EQ(clone.brief(), briefResult);
+    EXPECT_TRUE(link.r1(s, side, sign));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR2Down(const Link& l, int crossing,
-        const char* briefResult, const std::string& name) {
-    Link clone(l, false);
+static void verifyR2Down(Link link, int crossing, const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(crossing);
 
-    ASSERT_TRUE(clone.r2(clone.crossing(crossing)));
-
-    EXPECT_TRUE(isConsistent(clone));
-    EXPECT_EQ(clone.brief(), briefResult);
+    EXPECT_TRUE(link.r2(link.crossing(crossing)));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR2Down(const Link& l, int crossing, int strand,
-        const char* briefResult, const std::string& name) {
-    Link clone(l, false);
+static void verifyR2Down(Link link, int crossing, int strand,
+        const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(crossing);
+    SCOPED_TRACE_NUMERIC(strand);
 
-    ASSERT_TRUE(clone.r2(clone.crossing(crossing)->strand(strand)));
-
-    EXPECT_TRUE(isConsistent(clone));
-    EXPECT_EQ(clone.brief(), briefResult);
+    EXPECT_TRUE(link.r2(link.crossing(crossing)->strand(strand)));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
 }
 
-void verifyR2Up(const Link& l, int upperCrossing, int upperStrand,
-        int upperSide, int lowerCrossing, int lowerStrand,
-        int lowerSide, const char* briefResult,
-        const std::string& name) {
-    Link clone(l, false);
+static void verifyR2Up(Link link, int upperCrossing, int upperStrand,
+        int upperSide, int lowerCrossing, int lowerStrand, int lowerSide,
+        const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(upperCrossing);
+    SCOPED_TRACE_NUMERIC(upperStrand);
+    SCOPED_TRACE_NUMERIC(upperSide);
+    SCOPED_TRACE_NUMERIC(lowerCrossing);
+    SCOPED_TRACE_NUMERIC(lowerStrand);
+    SCOPED_TRACE_NUMERIC(lowerSide);
 
     StrandRef upper, lower;
     if (upperCrossing >= 0)
-        upper = clone.crossing(upperCrossing)->strand(upperStrand);
+        upper = link.crossing(upperCrossing)->strand(upperStrand);
     if (lowerCrossing >= 0)
-        lower = clone.crossing(lowerCrossing)->strand(lowerStrand);
+        lower = link.crossing(lowerCrossing)->strand(lowerStrand);
 
-    ASSERT_TRUE(clone.r2(upper, upperSide, lower, lowerSide));
-
-    EXPECT_TRUE(isConsistent(clone));
-    EXPECT_EQ(clone.brief(), briefResult);
+    EXPECT_TRUE(link.r2(upper, upperSide, lower, lowerSide));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR3(const Link& l, int crossing, int side,
-        const char* briefResult, const std::string& name) {
-    Link clone(l, false);
+static void verifyR3(Link link, int crossing, int side,
+        const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(crossing);
+    SCOPED_TRACE_NUMERIC(side);
 
-    ASSERT_TRUE(clone.r3(clone.crossing(crossing), side));
-
-    EXPECT_TRUE(isConsistent(clone));
-    EXPECT_EQ(clone.brief(), briefResult);
+    EXPECT_TRUE(link.r3(link.crossing(crossing), side));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR3(const Link& l, int crossing, int strand, int side,
-        const char* briefResult, const std::string& name) {
-    Link clone(l, false);
+static void verifyR3(Link link, int crossing, int strand, int side,
+        const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(crossing);
+    SCOPED_TRACE_NUMERIC(strand);
+    SCOPED_TRACE_NUMERIC(side);
 
-    ASSERT_TRUE(clone.r3(clone.crossing(crossing)->strand(strand), side));
-
-    EXPECT_TRUE(isConsistent(clone));
-    EXPECT_EQ(clone.brief(), briefResult);
+    EXPECT_TRUE(link.r3(link.crossing(crossing)->strand(strand), side));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
 }
 
-void r123Perform() {
-    Link l;
-    std::string label;
+TEST_F(LinkTest, reidemeister) {
+    // Single twist:
+    verifyR1Down(Link::fromData({ -1 }, { 1, -1 }), 0, "( )");
 
-    l = Link::fromData({ -1 }, { 1, -1 });
-    label = "One twist";
-    verifyR1Down(l, 0, "( )", label);
+    // Two twists:
+    {
+        Link link = Link::fromData({ 1, -1 }, { -1, 1, 2, -2 });
+        verifyR1Down(link, 0, "- ( ^0 _0 )");
+        verifyR2Down(link, 0, "( )");
+        verifyR2Down(link, 0, 1, "( )");
+        verifyR2Down(link, 1, 0, "( )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1 }, { 1, 2, -2, -1 });
+        verifyR1Down(link, 0, "- ( ^0 _0 )");
+        verifyR2Down(link, 0, "( )");
+        verifyR2Down(link, 0, 1, "( )");
+        verifyR2Down(link, 1, 0, "( )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1 }, { 2, -2, -1, 1 });
+        verifyR1Down(link, 0, "- ( ^0 _0 )");
+        verifyR2Down(link, 0, "( )");
+        verifyR2Down(link, 0, 1, "( )");
+        verifyR2Down(link, 1, 0, "( )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1 }, { -2, -1, 1, 2 });
+        verifyR1Down(link, 0, "- ( _0 ^0 )");
+        verifyR2Down(link, 0, "( )");
+        verifyR2Down(link, 0, 1, "( )");
+        verifyR2Down(link, 1, 0, "( )");
+    }
 
-    l = Link::fromData({ 1, -1 }, { -1, 1, 2, -2 });
-    label = "Two twists (a)";
-    verifyR1Down(l, 0, "- ( ^0 _0 )", label);
-    verifyR2Down(l, 0, "( )", label);
-    verifyR2Down(l, 0, 1, "( )", label);
-    verifyR2Down(l, 1, 0, "( )", label);
+    // Overlapping loops:
+    {
+        Link link = Link::fromData({ 1, -1 }, { 1, 2 }, { -2, -1 });
+        verifyR2Down(link, 0, "( ) ( )");
+        verifyR2Down(link, 1, "( ) ( )");
+        verifyR2Down(link, 0, 0, "( ) ( )");
+        verifyR2Down(link, 0, 1, "( ) ( )");
+        verifyR2Down(link, 1, 0, "( ) ( )");
+        verifyR2Down(link, 1, 1, "( ) ( )");
+    }
 
-    l = Link::fromData({ 1, -1 }, { 1, 2, -2, -1 });
-    label = "Two twists (b)";
-    verifyR1Down(l, 0, "- ( ^0 _0 )", label);
-    verifyR2Down(l, 0, "( )", label);
-    verifyR2Down(l, 0, 1, "( )", label);
-    verifyR2Down(l, 1, 0, "( )", label);
+    // Loop overlapping twist:
+    {
+        Link link = Link::fromData({ -1, 1, -1 }, { -1, 1, 3, 2 }, { -2, -3 });
+        verifyR2Down(link, 2, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 2, 1, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 1, 0, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 2, 0, "- ( _0 ^0 ) ( )");
+        verifyR3(link, 0, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+        verifyR3(link, 0, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+        verifyR3(link, 1, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+        verifyR3(link, 1, 0, 1, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1, -1 }, { 3, 2, -1, 1 }, { -2, -3 });
+        verifyR2Down(link, 2, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 2, 1, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 1, 0, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 2, 0, "- ( _0 ^0 ) ( )");
+        verifyR3(link, 0, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+        verifyR3(link, 0, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+        verifyR3(link, 1, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+        verifyR3(link, 1, 0, 1, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1, -1 }, { 2, -1, 1, 3 }, { -2, -3 });
+        verifyR2Down(link, 2, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 2, 1, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 1, 0, "- ( _0 ^0 ) ( )");
+        verifyR2Down(link, 2, 0, "- ( _0 ^0 ) ( )");
+        verifyR3(link, 0, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+        verifyR3(link, 0, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+        verifyR3(link, 1, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+        verifyR3(link, 1, 0, 1, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 1, -1, -3, -2 }, { 2, 3 });
+        verifyR2Down(link, 1, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, 0, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 1, 1, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, 1, "+ ( ^0 _0 ) ( )");
+        verifyR3(link, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+        verifyR3(link, 0, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+        verifyR3(link, 1, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+        verifyR3(link, 1, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { -3, -2, 1, -1 }, { 2, 3 });
+        verifyR2Down(link, 1, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, 0, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 1, 1, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, 1, "+ ( ^0 _0 ) ( )");
+        verifyR3(link, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+        verifyR3(link, 0, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+        verifyR3(link, 1, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+        verifyR3(link, 1, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { -2, 1, -1, -3 }, { 2, 3 });
+        verifyR2Down(link, 1, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, 0, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 1, 1, "+ ( ^0 _0 ) ( )");
+        verifyR2Down(link, 2, 1, "+ ( ^0 _0 ) ( )");
+        verifyR3(link, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+        verifyR3(link, 0, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+        verifyR3(link, 1, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+        verifyR3(link, 1, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+    }
 
-    l = Link::fromData({ 1, -1 }, { 2, -2, -1, 1 });
-    label = "Two twists (c)";
-    verifyR1Down(l, 0, "- ( ^0 _0 )", label);
-    verifyR2Down(l, 0, "( )", label);
-    verifyR2Down(l, 0, 1, "( )", label);
-    verifyR2Down(l, 1, 0, "( )", label);
+    // Three triangles:
+    {
+        Link link = Link::fromData({ 1, -1, 1, -1, 1, -1 }, { 5, 4 },
+            { 6, -6, -5, -3, 1, -1, -2, 2, 3, -4 });
+        verifyR3(link, 4, 1,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+        verifyR3(link, 4, 1, 1,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+        verifyR3(link, 5, 0, 1,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+        verifyR3(link, 3, 0, 1,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+        verifyR3(link, 4, 0,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+        verifyR3(link, 4, 1, 0,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+        verifyR3(link, 4, 0, 1,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+        verifyR3(link, 2, 1, 1,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+        verifyR3(link, 1, 0,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+        verifyR3(link, 1, 1, 0,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+        verifyR3(link, 2, 0, 0,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+        verifyR3(link, 0, 0, 0,
+            "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+    }
+    {
+        Link link = Link::fromData({ -1, +1, -1, +1, -1, +1 }, { -5, -4 },
+            { -6, 6, 5, 3, -1, 1, 2, -2, -3, 4 });
+        verifyR3(link, 5, 1,
+            "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+        verifyR3(link, 4, 0, 1,
+            "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+        verifyR3(link, 5, 1, 1,
+            "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+        verifyR3(link, 3, 1, 1,
+            "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+        verifyR3(link, 4, 1,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+        verifyR3(link, 4, 0, 0,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+        verifyR3(link, 4, 1, 1,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+        verifyR3(link, 2, 0, 1,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+        verifyR3(link, 0, 0,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+        verifyR3(link, 1, 0, 0,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+        verifyR3(link, 2, 1, 0,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+        verifyR3(link, 0, 1, 0,
+            "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+    }
 
-    l = Link::fromData({ 1, -1 }, { -2, -1, 1, 2 });
-    label = "Two twists (d)";
-    verifyR1Down(l, 0, "- ( _0 ^0 )", label);
-    verifyR2Down(l, 0, "( )", label);
-    verifyR2Down(l, 0, 1, "( )", label);
-    verifyR2Down(l, 1, 0, "( )", label);
+    // Bad trefoil:
+    {
+        Link link = Link::fromData({ 1, 1, -1 }, { 1, -2, -3, -1, 2, 3 });
+        verifyR2Down(link, 2, "+ ( _0 ^0 )");
+        verifyR2Down(link, 2, 1, "+ ( _0 ^0 )");
+        verifyR2Down(link, 2, 0, "+ ( _0 ^0 )");
+        verifyR3(link, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+        verifyR3(link, 1, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+        verifyR3(link, 2, 0, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+        verifyR3(link, 0, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+    }
+    {
+        Link link = Link::fromData({ 1, 1, -1 }, { -3, -1, 2, 3, 1, -2 });
+        verifyR2Down(link, 2, "+ ( ^0 _0 )");
+        verifyR2Down(link, 2, 1, "+ ( ^0 _0 )");
+        verifyR2Down(link, 2, 0, "+ ( ^0 _0 )");
+        verifyR3(link, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+        verifyR3(link, 1, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+        verifyR3(link, 2, 0, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+        verifyR3(link, 0, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+    }
+    {
+        Link link = Link::fromData({ -1, -1, 1 }, { 1, -2, -3, -1, 2, 3 });
+        verifyR2Down(link, 2, "- ( _0 ^0 )");
+        verifyR2Down(link, 2, 1, "- ( _0 ^0 )");
+        verifyR2Down(link, 2, 0, "- ( _0 ^0 )");
+        verifyR3(link, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+        verifyR3(link, 1, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+        verifyR3(link, 2, 0, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+        verifyR3(link, 0, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+    }
+    {
+        Link link = Link::fromData({ -1, -1, 1 }, { -3, -1, 2, 3, 1, -2 });
+        verifyR2Down(link, 2, "- ( ^0 _0 )");
+        verifyR2Down(link, 2, 1, "- ( ^0 _0 )");
+        verifyR2Down(link, 2, 0, "- ( ^0 _0 )");
+        verifyR3(link, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+        verifyR3(link, 1, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+        verifyR3(link, 2, 0, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+        verifyR3(link, 0, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+    }
 
-    l = Link::fromData({ 1, -1 }, { 1, 2 }, { -2, -1 });
-    label = "Overlapping loops";
-    verifyR2Down(l, 0, "( ) ( )", label);
-    verifyR2Down(l, 1, "( ) ( )", label);
-    verifyR2Down(l, 0, 0, "( ) ( )", label);
-    verifyR2Down(l, 0, 1, "( ) ( )", label);
-    verifyR2Down(l, 1, 0, "( ) ( )", label);
-    verifyR2Down(l, 1, 1, "( ) ( )", label);
+    // Bad figure eight:
+    {
+        Link link = Link::fromData({ -1, 1, 1, -1},
+            { 1, 2, -4, -3, -2, -1, 3, 4 });
+        verifyR2Down(link, 0, "+- ( _1 _0 ^0 ^1 )");
+        verifyR2Down(link, 0, 1, "+- ( _1 _0 ^0 ^1 )");
+        verifyR2Down(link, 1, 0, "+- ( _1 _0 ^0 ^1 )");
+        verifyR2Down(link, 2, "-+ ( ^0 ^1 _1 _0 )");
+        verifyR2Down(link, 2, 1, "-+ ( ^0 ^1 _1 _0 )");
+        verifyR2Down(link, 3, 0, "-+ ( ^0 ^1 _1 _0 )");
+        verifyR3(link, 0, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+        verifyR3(link, 0, 1, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+        verifyR3(link, 0, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+        verifyR3(link, 2, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1, 1, -1},
+            { 2, -4, -3, -2, -1, 3, 4, 1 });
+        verifyR2Down(link, 0, "+- ( _1 _0 ^0 ^1 )");
+        verifyR2Down(link, 0, 1, "+- ( _1 _0 ^0 ^1 )");
+        verifyR2Down(link, 1, 0, "+- ( _1 _0 ^0 ^1 )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1, 1, -1},
+            { -2, -1, 3, 4, 1, 2, -4, -3 });
+        verifyR2Down(link, 0, "+- ( ^0 ^1 _1 _0 )");
+        verifyR2Down(link, 0, 1, "+- ( ^0 ^1 _1 _0 )");
+        verifyR2Down(link, 1, 0, "+- ( ^0 ^1 _1 _0 )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1, 1, -1},
+            { -1, 3, 4, 1, 2, -4, -3, -2 });
+        verifyR2Down(link, 0, "+- ( ^0 ^1 _1 _0 )");
+        verifyR2Down(link, 0, 1, "+- ( ^0 ^1 _1 _0 )");
+        verifyR2Down(link, 1, 0, "+- ( ^0 ^1 _1 _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, -1, 1},
+            { -1, -2, 4, 3, 2, 1, -3, -4 });
+        verifyR2Down(link, 1, "-+ ( ^1 ^0 _0 _1 )");
+        verifyR2Down(link, 0, 0, "-+ ( ^1 ^0 _0 _1 )");
+        verifyR2Down(link, 1, 1, "-+ ( ^1 ^0 _0 _1 )");
+        verifyR2Down(link, 3, "+- ( _0 _1 ^1 ^0 )");
+        verifyR2Down(link, 2, 0, "+- ( _0 _1 ^1 ^0 )");
+        verifyR2Down(link, 3, 1, "+- ( _0 _1 ^1 ^0 )");
+        verifyR3(link, 2, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+        verifyR3(link, 0, 0, 1, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+        verifyR3(link, 0, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+        verifyR3(link, 2, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, -1, 1},
+            { -2, 4, 3, 2, 1, -3, -4, -1 });
+        verifyR2Down(link, 1, "-+ ( ^1 ^0 _0 _1 )");
+        verifyR2Down(link, 0, 0, "-+ ( ^1 ^0 _0 _1 )");
+        verifyR2Down(link, 1, 1, "-+ ( ^1 ^0 _0 _1 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, -1, 1},
+            { 2, 1, -3, -4, -1, -2, 4, 3 });
+        verifyR2Down(link, 1, "-+ ( _0 _1 ^1 ^0 )");
+        verifyR2Down(link, 0, 0, "-+ ( _0 _1 ^1 ^0 )");
+        verifyR2Down(link, 1, 1, "-+ ( _0 _1 ^1 ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, -1, 1},
+            { 1, -3, -4, -1, -2, 4, 3, 2 });
+        verifyR2Down(link, 1, "-+ ( _0 _1 ^1 ^0 )");
+        verifyR2Down(link, 0, 0, "-+ ( _0 _1 ^1 ^0 )");
+        verifyR2Down(link, 1, 1, "-+ ( _0 _1 ^1 ^0 )");
+    }
 
-    l = Link::fromData({ -1, 1, -1 }, { -1, 1, 3, 2 }, { -2, -3 });
-    label = "Loop overlapping twist (a)";
-    verifyR2Down(l, 2, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )", label);
-    verifyR3(l, 0, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
-    verifyR3(l, 0, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
-    verifyR3(l, 1, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
-    verifyR3(l, 1, 0, 1, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
+    // Excessive trefoil:
+    {
+        Link link = Link::fromData({ -1, 1, -1, -1, -1 },
+            { -2, -3, 4, -5, 1, 2, 3, -4, 5, -1 });
+        verifyR2Down(link, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )");
+        verifyR2Down(link, 0, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )");
+        verifyR2Down(link, 0, 1, "--- ( _0 ^1 _2 ^0 _1 ^2 )");
+        verifyR2Down(link, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )");
+        verifyR2Down(link, 1, 0, "--- ( ^1 _2 ^0 _1 ^2 _0 )");
+        verifyR2Down(link, 1, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1, 1, 1 },
+            { 2, 3, -4, 5, -1, -2, -3, 4, -5, 1 });
+        verifyR2Down(link, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )");
+        verifyR2Down(link, 0, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )");
+        verifyR2Down(link, 0, 1, "+++ ( ^0 _1 ^2 _0 ^1 _2 )");
+        verifyR2Down(link, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )");
+        verifyR2Down(link, 1, 0, "+++ ( _1 ^2 _0 ^1 _2 ^0 )");
+        verifyR2Down(link, 1, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )");
+    }
 
-    l = Link::fromData({ -1, 1, -1 }, { 3, 2, -1, 1 }, { -2, -3 });
-    label = "Loop overlapping twist (b)";
-    verifyR2Down(l, 2, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )", label);
-    verifyR3(l, 0, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
-    verifyR3(l, 0, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
-    verifyR3(l, 1, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
-    verifyR3(l, 1, 0, 1, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
+    // Dangling twists:
+    {
+        Link link = Link::fromData({ 1, -1, 1, -1, -1, 1, -1, -1 }, { -3, -4 },
+            { 1, -1, -2, 7, 6, 5, 4, 3, -5, -6, -7, 8, -8, 2 });
+        verifyR1Down(link, 0,
+            "-+--+-- ( _1 _2 ) ( _0 ^5 ^4 ^3 ^2 ^1 _3 _4 _5 ^6 _6 ^0 )");
+        verifyR1Down(link, 7,
+            "+-+--+- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^4 ^3 ^2 _4 _5 _6 ^1 )");
+        verifyR2Down(link, 1,
+            "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )");
+        verifyR2Down(link, 1, 1,
+            "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )");
+        verifyR2Down(link, 0, 0,
+            "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )");
+        verifyR2Down(link, 6,
+            "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 6, 1,
+            "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 5, 0,
+            "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 5,
+            "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 5, 1,
+            "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 4, 0,
+            "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 3,
+            "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 3, 1,
+            "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )");
+        verifyR2Down(link, 2, 0,
+            "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )");
+        verifyR3(link, 4, 0,
+            "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+        verifyR3(link, 4, 1, 0,
+            "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+        verifyR3(link, 2, 0, 1,
+            "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+        verifyR3(link, 2, 1, 0,
+            "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1, -1, -1, 1, -1, -1 }, { -3, -4 },
+            { 6, 5, 4, 3, -5, -6, -7, 8, -8, 2, 1, -1, -2, 7 });
+        verifyR2Down(link, 6,
+            "+-+--- ( _2 _3 ) ( ^4 ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 )");
+        verifyR2Down(link, 5,
+            "+-+--- ( _2 _3 ) ( ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 ^4 )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1, -1, 1, 1, -1, 1, 1 }, { 3, 4 },
+            { -1, 1, 2, -7, -6, -5, -4, -3, 5, 6, 7, -8, 8, -2 });
+        verifyR1Down(link, 0,
+            "+-++-++ ( ^1 ^2 ) ( ^0 _5 _4 _3 _2 _1 ^3 ^4 ^5 _6 ^6 _0 )");
+        verifyR1Down(link, 7,
+            "-+-++-+ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _4 _3 _2 ^4 ^5 ^6 _1 )");
+        verifyR2Down(link, 0,
+            "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )");
+        verifyR2Down(link, 0, 1,
+            "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )");
+        verifyR2Down(link, 1, 0,
+            "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )");
+        verifyR2Down(link, 5,
+            "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 5, 1,
+            "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 6, 0,
+            "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 4,
+            "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 4, 1,
+            "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 5, 0,
+            "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 2,
+            "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 2, 1,
+            "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )");
+        verifyR2Down(link, 3, 0,
+            "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )");
+        verifyR3(link, 2, 1,
+            "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+        verifyR3(link, 2, 1, 1,
+            "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+        verifyR3(link, 2, 0, 0,
+            "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+        verifyR3(link, 4, 0, 0,
+            "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1, -1, 1, 1, -1, 1, 1 }, { 3, 4 },
+            { -6, -5, -4, -3, 5, 6, 7, -8, 8, -2, -1, 1, 2, -7 });
+        verifyR2Down(link, 5,
+            "-+-+++ ( ^2 ^3 ) ( _4 _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 )");
+        verifyR2Down(link, 4,
+            "-+-+++ ( ^2 ^3 ) ( _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 _4 )");
+    }
 
-    l = Link::fromData({ -1, 1, -1 }, { 2, -1, 1, 3 }, { -2, -3 });
-    label = "Loop overlapping twist (c)";
-    verifyR2Down(l, 2, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )", label);
-    verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )", label);
-    verifyR3(l, 0, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
-    verifyR3(l, 0, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
-    verifyR3(l, 1, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
-    verifyR3(l, 1, 0, 1, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
-
-    l = Link::fromData({ 1, -1, 1 }, { 1, -1, -3, -2 }, { 2, 3 });
-    label = "Loop overlapping twist (d)";
-    verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR3(l, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
-    verifyR3(l, 0, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
-    verifyR3(l, 1, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
-    verifyR3(l, 1, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
-
-    l = Link::fromData({ 1, -1, 1 }, { -3, -2, 1, -1 }, { 2, 3 });
-    label = "Loop overlapping twist (e)";
-    verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR3(l, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
-    verifyR3(l, 0, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
-    verifyR3(l, 1, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
-    verifyR3(l, 1, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
-
-    l = Link::fromData({ 1, -1, 1 }, { -2, 1, -1, -3 }, { 2, 3 });
-    label = "Loop overlapping twist (f)";
-    verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )", label);
-    verifyR3(l, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
-    verifyR3(l, 0, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
-    verifyR3(l, 1, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
-    verifyR3(l, 1, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
-
-    l = Link::fromData({ 1, -1, 1, -1, 1, -1 }, { 5, 4 },
-        { 6, -6, -5, -3, 1, -1, -2, 2, 3, -4 });
-    label = "Three triangles (a)";
-    verifyR3(l, 4, 1,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
-    verifyR3(l, 4, 1, 1,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
-    verifyR3(l, 5, 0, 1,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
-    verifyR3(l, 3, 0, 1,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
-    verifyR3(l, 4, 0,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
-    verifyR3(l, 4, 1, 0,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
-    verifyR3(l, 4, 0, 1,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
-    verifyR3(l, 2, 1, 1,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
-    verifyR3(l, 1, 0,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
-    verifyR3(l, 1, 1, 0,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
-    verifyR3(l, 2, 0, 0,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
-    verifyR3(l, 0, 0, 0,
-        "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
-
-    l = Link::fromData({ -1, +1, -1, +1, -1, +1 }, { -5, -4 },
-        { -6, 6, 5, 3, -1, 1, 2, -2, -3, 4 });
-    label = "Three triangles (b)";
-    verifyR3(l, 5, 1,
-        "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
-    verifyR3(l, 4, 0, 1,
-        "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
-    verifyR3(l, 5, 1, 1,
-        "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
-    verifyR3(l, 3, 1, 1,
-        "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
-    verifyR3(l, 4, 1,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
-    verifyR3(l, 4, 0, 0,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
-    verifyR3(l, 4, 1, 1,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
-    verifyR3(l, 2, 0, 1,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
-    verifyR3(l, 0, 0,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
-    verifyR3(l, 1, 0, 0,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
-    verifyR3(l, 2, 1, 0,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
-    verifyR3(l, 0, 1, 0,
-        "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
-
-    l = Link::fromData({ 1, 1, -1 }, { 1, -2, -3, -1, 2, 3 });
-    label = "Bad trefoil (a)";
-    verifyR2Down(l, 2, "+ ( _0 ^0 )", label);
-    verifyR2Down(l, 2, 1, "+ ( _0 ^0 )", label);
-    verifyR2Down(l, 2, 0, "+ ( _0 ^0 )", label);
-    verifyR3(l, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
-    verifyR3(l, 1, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
-    verifyR3(l, 2, 0, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
-    verifyR3(l, 0, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
-
-    l = Link::fromData({ 1, 1, -1 }, { -3, -1, 2, 3, 1, -2 });
-    label = "Bad trefoil (b)";
-    verifyR2Down(l, 2, "+ ( ^0 _0 )", label);
-    verifyR2Down(l, 2, 1, "+ ( ^0 _0 )", label);
-    verifyR2Down(l, 2, 0, "+ ( ^0 _0 )", label);
-    verifyR3(l, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
-    verifyR3(l, 1, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
-    verifyR3(l, 2, 0, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
-    verifyR3(l, 0, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
-
-    l = Link::fromData({ -1, -1, 1 }, { 1, -2, -3, -1, 2, 3 });
-    label = "Bad trefoil (c)";
-    verifyR2Down(l, 2, "- ( _0 ^0 )", label);
-    verifyR2Down(l, 2, 1, "- ( _0 ^0 )", label);
-    verifyR2Down(l, 2, 0, "- ( _0 ^0 )", label);
-    verifyR3(l, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
-    verifyR3(l, 1, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
-    verifyR3(l, 2, 0, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
-    verifyR3(l, 0, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
-
-    l = Link::fromData({ -1, -1, 1 }, { -3, -1, 2, 3, 1, -2 });
-    label = "Bad trefoil (d)";
-    verifyR2Down(l, 2, "- ( ^0 _0 )", label);
-    verifyR2Down(l, 2, 1, "- ( ^0 _0 )", label);
-    verifyR2Down(l, 2, 0, "- ( ^0 _0 )", label);
-    verifyR3(l, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
-    verifyR3(l, 1, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
-    verifyR3(l, 2, 0, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
-    verifyR3(l, 0, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
-
-    l = Link::fromData({ -1, 1, 1, -1}, { 1, 2, -4, -3, -2, -1, 3, 4 });
-    label = "Bad figure eight (a)";
-    verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )", label);
-    verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )", label);
-    verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )", label);
-    verifyR2Down(l, 2, "-+ ( ^0 ^1 _1 _0 )", label);
-    verifyR2Down(l, 2, 1, "-+ ( ^0 ^1 _1 _0 )", label);
-    verifyR2Down(l, 3, 0, "-+ ( ^0 ^1 _1 _0 )", label);
-    verifyR3(l, 0, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
-    verifyR3(l, 0, 1, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
-    verifyR3(l, 0, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
-    verifyR3(l, 2, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
-
-    l = Link::fromData({ -1, 1, 1, -1}, { 2, -4, -3, -2, -1, 3, 4, 1 });
-    label = "Bad figure eight (b)";
-    verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )", label);
-    verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )", label);
-    verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )", label);
-
-    l = Link::fromData({ -1, 1, 1, -1}, { -2, -1, 3, 4, 1, 2, -4, -3 });
-    label = "Bad figure eight (c)";
-    verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )", label);
-    verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )", label);
-    verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )", label);
-
-    l = Link::fromData({ -1, 1, 1, -1}, { -1, 3, 4, 1, 2, -4, -3, -2 });
-    label = "Bad figure eight (d)";
-    verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )", label);
-    verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )", label);
-    verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )", label);
-
-    l = Link::fromData({ 1, -1, -1, 1}, { -1, -2, 4, 3, 2, 1, -3, -4 });
-    label = "Bad figure eight (e)";
-    verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )", label);
-    verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )", label);
-    verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )", label);
-    verifyR2Down(l, 3, "+- ( _0 _1 ^1 ^0 )", label);
-    verifyR2Down(l, 2, 0, "+- ( _0 _1 ^1 ^0 )", label);
-    verifyR2Down(l, 3, 1, "+- ( _0 _1 ^1 ^0 )", label);
-    verifyR3(l, 2, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
-    verifyR3(l, 0, 0, 1, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
-    verifyR3(l, 0, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
-    verifyR3(l, 2, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
-
-    l = Link::fromData({ 1, -1, -1, 1}, { -2, 4, 3, 2, 1, -3, -4, -1 });
-    label = "Bad figure eight (f)";
-    verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )", label);
-    verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )", label);
-    verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )", label);
-
-    l = Link::fromData({ 1, -1, -1, 1}, { 2, 1, -3, -4, -1, -2, 4, 3 });
-    label = "Bad figure eight (g)";
-    verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )", label);
-    verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )", label);
-    verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )", label);
-
-    l = Link::fromData({ 1, -1, -1, 1}, { 1, -3, -4, -1, -2, 4, 3, 2 });
-    label = "Bad figure eight (h)";
-    verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )", label);
-    verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )", label);
-    verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )", label);
-
-    l = Link::fromData({ -1, 1, -1, -1, -1 },
-        { -2, -3, 4, -5, 1, 2, 3, -4, 5, -1 });
-    label = "Excessive trefoil (a)";
-    verifyR2Down(l, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )", label);
-    verifyR2Down(l, 0, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )", label);
-    verifyR2Down(l, 0, 1, "--- ( _0 ^1 _2 ^0 _1 ^2 )", label);
-    verifyR2Down(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )", label);
-    verifyR2Down(l, 1, 0, "--- ( ^1 _2 ^0 _1 ^2 _0 )", label);
-    verifyR2Down(l, 1, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )", label);
-
-    l = Link::fromData({ 1, -1, 1, 1, 1 },
-        { 2, 3, -4, 5, -1, -2, -3, 4, -5, 1 });
-    label = "Excessive trefoil (b)";
-    verifyR2Down(l, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )", label);
-    verifyR2Down(l, 0, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )", label);
-    verifyR2Down(l, 0, 1, "+++ ( ^0 _1 ^2 _0 ^1 _2 )", label);
-    verifyR2Down(l, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )", label);
-    verifyR2Down(l, 1, 0, "+++ ( _1 ^2 _0 ^1 _2 ^0 )", label);
-    verifyR2Down(l, 1, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )", label);
-
-    l = Link::fromData({ 1, -1, 1, -1, -1, 1, -1, -1 }, { -3, -4 },
-        { 1, -1, -2, 7, 6, 5, 4, 3, -5, -6, -7, 8, -8, 2 });
-    label = "Dangling twists (a)";
-    verifyR1Down(l, 0,
-        "-+--+-- ( _1 _2 ) ( _0 ^5 ^4 ^3 ^2 ^1 _3 _4 _5 ^6 _6 ^0 )",
-        label);
-    verifyR1Down(l, 7,
-        "+-+--+- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^4 ^3 ^2 _4 _5 _6 ^1 )",
-        label);
-    verifyR2Down(l, 1,
-        "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )", label);
-    verifyR2Down(l, 1, 1,
-        "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )", label);
-    verifyR2Down(l, 0, 0,
-        "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )", label);
-    verifyR2Down(l, 6,
-        "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 6, 1,
-        "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 5, 0,
-        "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 5,
-        "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 5, 1,
-        "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 4, 0,
-        "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 3,
-        "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 3, 1,
-        "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )", label);
-    verifyR2Down(l, 2, 0,
-        "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )", label);
-    verifyR3(l, 4, 0,
-        "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
-        label);
-    verifyR3(l, 4, 1, 0,
-        "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
-        label);
-    verifyR3(l, 2, 0, 1,
-        "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
-        label);
-    verifyR3(l, 2, 1, 0,
-        "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
-        label);
-
-    l = Link::fromData({ 1, -1, 1, -1, -1, 1, -1, -1 }, { -3, -4 },
-        { 6, 5, 4, 3, -5, -6, -7, 8, -8, 2, 1, -1, -2, 7 });
-    label = "Dangling twists (b)";
-    verifyR2Down(l, 6,
-        "+-+--- ( _2 _3 ) ( ^4 ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 )", label);
-    verifyR2Down(l, 5,
-        "+-+--- ( _2 _3 ) ( ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 ^4 )", label);
-
-    l = Link::fromData({ -1, 1, -1, 1, 1, -1, 1, 1 }, { 3, 4 },
-        { -1, 1, 2, -7, -6, -5, -4, -3, 5, 6, 7, -8, 8, -2 });
-    label = "Dangling twists (c)";
-    verifyR1Down(l, 0,
-        "+-++-++ ( ^1 ^2 ) ( ^0 _5 _4 _3 _2 _1 ^3 ^4 ^5 _6 ^6 _0 )",
-        label);
-    verifyR1Down(l, 7,
-        "-+-++-+ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _4 _3 _2 ^4 ^5 ^6 _1 )",
-        label);
-    verifyR2Down(l, 0,
-        "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )", label);
-    verifyR2Down(l, 0, 1,
-        "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )", label);
-    verifyR2Down(l, 1, 0,
-        "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )", label);
-    verifyR2Down(l, 5,
-        "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 5, 1,
-        "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 6, 0,
-        "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 4,
-        "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 4, 1,
-        "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 5, 0,
-        "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 2,
-        "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 2, 1,
-        "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )", label);
-    verifyR2Down(l, 3, 0,
-        "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )", label);
-    verifyR3(l, 2, 1,
-        "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
-        label);
-    verifyR3(l, 2, 1, 1,
-        "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
-        label);
-    verifyR3(l, 2, 0, 0,
-        "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
-        label);
-    verifyR3(l, 4, 0, 0,
-        "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
-        label);
-
-    l = Link::fromData({ -1, 1, -1, 1, 1, -1, 1, 1 }, { 3, 4 },
-        { -6, -5, -4, -3, 5, 6, 7, -8, 8, -2, -1, 1, 2, -7 });
-    label = "Dangling twists (d)";
-    verifyR2Down(l, 5,
-        "-+-+++ ( ^2 ^3 ) ( _4 _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 )", label);
-    verifyR2Down(l, 4,
-        "-+-+++ ( ^2 ^3 ) ( _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 _4 )", label);
-
-    l = Link::fromData({ 1, 1, -1, -1, -1 },
-        { 0 }, { -1, 2, -4, 3, -2, 1, -3, 4, 5, -5 }, { 0 }, { 0 });
-    label = "Figure eight with twist and three unknots";
-    verifyR1Up(l, -1, 0, 0, -1,
-        "++---- ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, -1, 0, 0, 1,
-        "++---+ ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, -1, 0, 1, -1,
-        "++---- ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, -1, 0, 1, 1,
-        "++---+ ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 4, 1, 0, -1,
-        "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 4, 1, 0, 1,
-        "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 4, 1, 1, -1,
-        "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 4, 1, 1, 1,
-        "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 1, 0, 0, -1,
-        "++---- ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 1, 0, 0, 1,
-        "++---+ ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 1, 0, 1, -1,
-        "++---- ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR1Up(l, 1, 0, 1, 1,
-        "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    // Note: for R2, the implementation always adds the two new
-    // crossings in the order (+, -).
-    verifyR2Up(l, -1, 0, 0, -1, 0, 0, "++---+- "
-        "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )",
-        label);
-    verifyR2Up(l, -1, 0, 0, -1, 0, 1, "++---+- "
-        "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )",
-        label);
-    verifyR2Up(l, -1, 0, 1, -1, 0, 0, "++---+- "
-        "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )",
-        label);
-    verifyR2Up(l, -1, 0, 1, -1, 0, 1, "++---+- "
-        "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )",
-        label);
-    verifyR2Up(l, -1, 0, 0, 4, 0, 0, "++---+- "
-        "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _6 _5 ) ( ) ( )",
-        label);
-    verifyR2Up(l, -1, 0, 1, 4, 0, 0, "++---+- "
-        "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _5 _6 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 4, 0, 0, -1, 0, 0, "++---+- "
-        "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^5 ^6 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 4, 0, 0, -1, 0, 1, "++---+- "
-        "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^6 ^5 ) ( ) ( )",
-        label);
-    verifyR2Up(l, -1, 0, 0, 4, 1, 1, "++---+- "
-        "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ) ( ) ( )",
-        label);
-    verifyR2Up(l, -1, 0, 1, 4, 1, 1, "++---+- "
-        "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 4, 1, 1, -1, 0, 0, "++---+- "
-        "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 4, 1, 1, -1, 0, 1, "++---+- "
-        "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 4, 0, 0, 3, 1, 0, "++---+- "
-        "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^5 ^6 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 3, 1, 0, 4, 0, 0, "++---+- "
-        "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _6 _5 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 4, 1, 1, 1, 0, 1, "++---+- "
-        "( ) ( _0 ^1 _3 ^2 _1 _5 _6 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 1, 0, 1, 4, 1, 1, "++---+- "
-        "( ) ( _0 ^1 _3 ^2 _1 ^6 ^5 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 2, 0, 0, 1, 1, 1, "++---+- "
-        "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )",
-        label);
-    verifyR2Up(l, 1, 1, 1, 2, 0, 0, "++---+- "
-        "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )",
-        label);
+    // Figure eight with twist and three unknots:
+    {
+        Link link = Link::fromData({ 1, 1, -1, -1, -1 },
+            { 0 }, { -1, 2, -4, 3, -2, 1, -3, 4, 5, -5 }, { 0 }, { 0 });
+        verifyR1Up(link, -1, 0, 0, -1,
+            "++---- ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        verifyR1Up(link, -1, 0, 0, 1,
+            "++---+ ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        verifyR1Up(link, -1, 0, 1, -1,
+            "++---- ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        verifyR1Up(link, -1, 0, 1, 1,
+            "++---+ ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        verifyR1Up(link, 4, 1, 0, -1,
+            "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )");
+        verifyR1Up(link, 4, 1, 0, 1,
+            "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )");
+        verifyR1Up(link, 4, 1, 1, -1,
+            "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )");
+        verifyR1Up(link, 4, 1, 1, 1,
+            "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )");
+        verifyR1Up(link, 1, 0, 0, -1,
+            "++---- ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        verifyR1Up(link, 1, 0, 0, 1,
+            "++---+ ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        verifyR1Up(link, 1, 0, 1, -1,
+            "++---- ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        verifyR1Up(link, 1, 0, 1, 1,
+            "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+        // Note: for R2, the implementation always adds the two new
+        // crossings in the order (+, -).
+        verifyR2Up(link, -1, 0, 0, -1, 0, 0, "++---+- "
+            "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
+        verifyR2Up(link, -1, 0, 0, -1, 0, 1, "++---+- "
+            "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
+        verifyR2Up(link, -1, 0, 1, -1, 0, 0, "++---+- "
+            "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
+        verifyR2Up(link, -1, 0, 1, -1, 0, 1, "++---+- "
+            "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
+        verifyR2Up(link, -1, 0, 0, 4, 0, 0, "++---+- "
+            "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _6 _5 ) ( ) ( )");
+        verifyR2Up(link, -1, 0, 1, 4, 0, 0, "++---+- "
+            "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _5 _6 ) ( ) ( )");
+        verifyR2Up(link, 4, 0, 0, -1, 0, 0, "++---+- "
+            "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^5 ^6 ) ( ) ( )");
+        verifyR2Up(link, 4, 0, 0, -1, 0, 1, "++---+- "
+            "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^6 ^5 ) ( ) ( )");
+        verifyR2Up(link, -1, 0, 0, 4, 1, 1, "++---+- "
+            "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ) ( ) ( )");
+        verifyR2Up(link, -1, 0, 1, 4, 1, 1, "++---+- "
+            "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+        verifyR2Up(link, 4, 1, 1, -1, 0, 0, "++---+- "
+            "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 ) ( ) ( )");
+        verifyR2Up(link, 4, 1, 1, -1, 0, 1, "++---+- "
+            "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+        verifyR2Up(link, 4, 0, 0, 3, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^5 ^6 ) ( ) ( )");
+        verifyR2Up(link, 3, 1, 0, 4, 0, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _6 _5 ) ( ) ( )");
+        verifyR2Up(link, 4, 1, 1, 1, 0, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 _5 _6 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+        verifyR2Up(link, 1, 0, 1, 4, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^6 ^5 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+        verifyR2Up(link, 2, 0, 0, 1, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )");
+        verifyR2Up(link, 1, 1, 1, 2, 0, 0, "++---+- "
+            "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )");
+    }
 }
-#endif
 
 // Our links here will typically be temporaries, so allow them to be moved in.
 static void verifyResolve(Link link, int crossing, const char* briefResult) {
