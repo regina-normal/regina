@@ -352,83 +352,67 @@ TEST_F(LinkTest, parallel) {
     testManualCases(verifyParallel);
 }
 
-#if 0
-static void testJones(const Link& l, const char* expected, const char* name) {
+static void verifyJones(const TestCase& test,
+        const regina::Laurent<regina::Integer>& expected) {
+    SCOPED_TRACE_CSTRING(test.name);
+
     // Since we are computing the Jones polynomial multiple times
-    // (using different algorithms), we work with clones of l
+    // (using different algorithms), we work with clones of the link
     // that do not clone any already-computed properties.
 
-    if (l.size() <= 40) {
-        // The naive algorithm iterates through 2^n states.
-        // If n > 40 then we don't have a chance.
-        std::ostringstream s1;
-        s1 << Link(l, false).jones(regina::ALG_NAIVE);
+    // Always try the treewidth-based algorithm.
+    EXPECT_EQ(Link(test.link, false).jones(regina::ALG_TREEWIDTH), expected);
 
-        EXPECT_EQ(s1.str(), expected);
-    }
-
-    std::ostringstream s2;
-    s2 << Link(l, false).jones(regina::ALG_TREEWIDTH);
-
-    EXPECT_EQ(s2.str(), expected);
+    // Only try the naive algorithm if the link is small enough, since this
+    // algorithm iterates through 2^n states.
+    if (test.link.size() <= 40)
+        EXPECT_EQ(Link(test.link, false).jones(regina::ALG_NAIVE), expected);
 }
 
-void jones() {
-    testJones(empty, "0", "Empty");
-    testJones(unknot0, "1", "Unknot (0 crossings)");
-    testJones(unknot1, "1", "Unknot (1 crossing)");
-    testJones(unknot3, "1", "Unknot (3 crossings)");
-    testJones(unknotMonster, "1", "Monster unknot");
-    // The Gordian unknot is too large to compute V(link).
-    testJones(trefoilLeft, "x^-2 + x^-6 - x^-8", "LH Trefoil");
-    testJones(trefoilRight, "-x^8 + x^6 + x^2", "RH Trefoil");
-    testJones(trefoil_r1x2, "-x^8 + x^6 + x^2", "Trefoil with 2 R1s");
-    testJones(trefoil_r1x6, "-x^8 + x^6 + x^2", "Trefoil with 6 R1s");
-    testJones(figureEight, "x^4 - x^2 + 1 - x^-2 + x^-4",
-        "Figure eight");
-    testJones(figureEight_r1x2, "x^4 - x^2 + 1 - x^-2 + x^-4",
-        "Figure eight with 2 R1s");
-    testJones(unlink2_0, "-x - x^-1", "Unlink (2 components)");
-    testJones(unlink3_0, "x^2 + 2 + x^-2", "Unlink (3 components)");
-    testJones(unlink2_r2, "-x - x^-1", "Unlink (2 components via R2)");
-    testJones(unlink2_r1r1, "-x - x^-1",
-        "Unlink (2 components via R1+R1)");
-    testJones(hopf, "-x^5 - x", "Hopf link");
-    testJones(whitehead, "-x^3 + x - 2 x^-1 + x^-3 - 2 x^-5 + x^-7",
-        "Whitehead link");
-    testJones(borromean,
-        "-x^6 + 3 x^4 - 2 x^2 + 4 - 2 x^-2 + 3 x^-4 - x^-6",
-        "Borromean rings");
-    testJones(trefoil_unknot0, "x^9 - x^5 - x^3 - x",
-        "Trefoil U unknot (separate)");
-    testJones(trefoil_unknot1, "x^9 - x^5 - x^3 - x",
-        "Trefoil U unknot (separate + twist)");
-    testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x",
-        "Trefoil U unknot (with R2)");
-    testJones(rht_rht, "x^16 - 2 x^14 + x^12 - 2 x^10 + 2 x^8 + x^4",
-        "RH Trefoil # RH Trefoil");
-    testJones(rht_lht, "-x^6 + x^4 - x^2 + 3 - x^-2 + x^-4 - x^-6",
-        "RH Trefoil # LH Trefoil");
+TEST_F(LinkTest, jones) {
+    verifyJones(empty, {});
 
-    // The following polynomials were computed using Regina,
-    // using the naive algorithm (ALG_NAIVE).
-    // This means that they have not been verified independently;
-    // here they are simply being used to ensure that different
-    // algorithms give the same results, and also that nothing breaks
-    // in a subsequent release.
-    testJones(conway, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12",
-        "Conway knot");
-    testJones(kinoshitaTerasaka, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12",
-        "Kinoshita-Terasaka knot");
+    verifyJones(unknot0, {0, {1}});
+    verifyJones(unknot1, {0, {1}});
+    verifyJones(unknot3, {0, {1}});
+    verifyJones(unknotMonster, {0, {1}});
+    // Let's not attempt this with the (enormous) Gordian unknot.
 
-    // The following polynomials were computed using Regina,
-    // via the treewidth-based algorithm (ALG_TREEWIDTH).
-    // This is because they are too large for the naive
-    // algorithm to handle.
-    testJones(gst, "-x^32 + 3 x^30 - 4 x^28 + 3 x^26 - x^24 + x^22 - x^20 + x^18 - x^16 + 2 x^14 - 4 x^12 + 3 x^10 - x^8 - 3 x^6 + 5 x^4 - 5 x^2 + 5 - 3 x^-2 + 3 x^-4 - x^-6 + x^-12 - x^-14",
-        "GST");
+    verifyJones(trefoilLeft, {-8, {-1,0,1,0,0,0,1}});
+    verifyJones(trefoilRight, {2, {1,0,0,0,1,0,-1}});
+    verifyJones(trefoil_r1x2, {2, {1,0,0,0,1,0,-1}});
+    verifyJones(trefoil_r1x6, {2, {1,0,0,0,1,0,-1}});
+    verifyJones(figureEight, {-4, {1,0,-1,0,1,0,-1,0,1}});
+    verifyJones(figureEight_r1x2, {-4, {1,0,-1,0,1,0,-1,0,1}});
+
+    // These three polynomials were computed using an old version of Regina.
+    // For the mutant pair Conway and Kinoshita-Terasaka, the naive algorithm
+    // was used.  For Gompf-Scharlemann-Thompson, the treewidth algorithm was
+    // used (since this knot is too large for the naive algorithm to handle).
+    verifyJones(conway,
+        {-12, {1,0,-2,0,2,0,-2,0,1,0,0,0,0,0,2,0,-2,0,2,0,-1}});
+    verifyJones(kinoshitaTerasaka,
+        {-12, {1,0,-2,0,2,0,-2,0,1,0,0,0,0,0,2,0,-2,0,2,0,-1}});
+    verifyJones(gst,
+        {-14, {-1,0,1,0,0,0,0,0,-1,0,3,0,-3,0,5,0,-5,0,5,0,-3,0,-1,0,
+               3,0,-4,0,2,0,-1,0,1,0,-1,0,1,0,-1,0,3,0,-4,0,3,0,-1}});
+
+    verifyJones(rht_rht, {4, {1,0,0,0,2,0,-2,0,1,0,-2,0,1}});
+    verifyJones(rht_lht, {-6, {-1,0,1,0,-1,0,3,0,-1,0,1,0,-1}});
+
+    verifyJones(unlink2_0, {-1, {-1,0,-1}});
+    verifyJones(unlink3_0, {-2, {1,0,2,0,1}});
+    verifyJones(unlink2_r2, {-1, {-1,0,-1}});
+    verifyJones(unlink2_r1r1, {-1, {-1,0,-1}});
+    verifyJones(hopf, {1, {-1,0,0,0,-1}});
+    verifyJones(whitehead, {-7, {1,0,-2,0,1,0,-2,0,1,0,-1}});
+    verifyJones(borromean, {-6, {-1,0,3,0,-2,0,4,0,-2,0,3,0,-1}});
+    verifyJones(trefoil_unknot0, {1, {-1,0,-1,0,-1,0,0,0,1}});
+    verifyJones(trefoil_unknot1, {1, {-1,0,-1,0,-1,0,0,0,1}});
+    verifyJones(trefoil_unknot_overlap, {1, {-1,0,-1,0,-1,0,0,0,1}});
 }
 
+#if 0
 static void testHomflyAZ(const Link& l, bool reverse, const char* expected,
         const char* name) {
     // Since we are computing the HOMFLY polynomial multiple times
