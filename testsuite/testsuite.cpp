@@ -41,7 +41,6 @@
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/dim3/testdim3.h"
 #include "testsuite/dim4/testdim4.h"
-#include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
 
 namespace {
