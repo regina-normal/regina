@@ -184,6 +184,9 @@ Version 7.4  [ (to be announced) ]
           the theme is hard-coded into the executable.  This removes the
           build dependency on the Jansson JSON library.
     UTILITIES:
+        regina-engine-config:
+            - Made more robust, and removed obsolete options (--exec-prefix,
+              and the option to set --prefix to a custom directory).
         regina-helper:
             - New command-line tool for performing miscellaneous tasks.
         tricensus:
