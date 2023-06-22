@@ -3884,6 +3884,9 @@
 		056AED542A431AE200EAF4FA /* abeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = abeliangroup.cpp; sourceTree = "<group>"; };
 		056AED552A431AE200EAF4FA /* grouppresentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = grouppresentation.cpp; sourceTree = "<group>"; };
 		056AED992A4327C500EAF4FA /* regina-helper.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "regina-helper.in"; sourceTree = "<group>"; };
+		056AED9C2A44FD8E00EAF4FA /* link-graph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "link-graph.cpp"; sourceTree = "<group>"; };
+		056AED9D2A44FD8E00EAF4FA /* dim3-graph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "dim3-graph.cpp"; sourceTree = "<group>"; };
+		056AED9E2A44FD8E00EAF4FA /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		056EC54F2A288F2E006EE87A /* default_theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = default_theme.cpp; sourceTree = "<group>"; };
 		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
@@ -7607,6 +7610,7 @@
 			children = (
 				056AED502A431AE200EAF4FA /* algebra */,
 				056AECE52A431AE200EAF4FA /* angle */,
+				056AED9B2A44FD8E00EAF4FA /* boost */,
 				056AED3F2A431AE200EAF4FA /* census */,
 				056AECE02A431AE200EAF4FA /* CMakeLists.txt */,
 				056AED442A431AE200EAF4FA /* compile-time */,
@@ -7887,6 +7891,16 @@
 				056AED532A431AE200EAF4FA /* markedabeliangroup.cpp */,
 			);
 			path = algebra;
+			sourceTree = "<group>";
+		};
+		056AED9B2A44FD8E00EAF4FA /* boost */ = {
+			isa = PBXGroup;
+			children = (
+				056AED9C2A44FD8E00EAF4FA /* link-graph.cpp */,
+				056AED9D2A44FD8E00EAF4FA /* dim3-graph.cpp */,
+				056AED9E2A44FD8E00EAF4FA /* README.txt */,
+			);
+			path = boost;
 			sourceTree = "<group>";
 		};
 		057118AF19B307A3009FEDC5 /* data */ = {
