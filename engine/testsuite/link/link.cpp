@@ -1440,103 +1440,79 @@ void r123Perform() {
         "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )",
         label);
 }
-
-static void verifyResolve(const Link& l, int crossing,
-        const char* briefResult, const char* name) {
-    Link clone(l, false);
-
-    clone.resolve(clone.crossing(crossing));
-
-    EXPECT_CONSISTENCY(clone);
-    EXPECT_EQ(clone.brief(), briefResult);
-}
-
-void resolve() {
-    Link l;
-
-    l = Link::fromData({ +1 }, { 1, -1 });
-    verifyResolve(l, 0, "( ) ( )", "One twist (a)");
-
-    l = Link::fromData({ +1 }, { -1, 1 });
-    verifyResolve(l, 0, "( ) ( )", "One twist (b)");
-
-    l = Link::fromData({ -1 }, { 1, -1 });
-    verifyResolve(l, 0, "( ) ( )", "One twist (c)");
-
-    l = Link::fromData({ -1 }, { -1, 1 });
-    verifyResolve(l, 0, "( ) ( )", "One twist (d)");
-
-    l = Link::fromData({ -1, +1, -1, -1 },
-        { 4, -1, 2, -2, 3, -4, 1, -3 });
-    verifyResolve(l, 1, "--- ( ^2 _0 ^1 _2 ^0 _1 ) ( )",
-        "Trefoil with + twist (a)");
-
-    l = Link::fromData({ -1, +1, -1, -1 },
-        { 2, -2, 3, -4, 1, -3, 4, -1 });
-    verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
-        "Trefoil with + twist (b)");
-
-    l = Link::fromData({ -1, +1, -1, -1 },
-        { -2, 3, -4, 1, -3, 4, -1, 2 });
-    verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
-        "Trefoil with + twist (c)");
-
-    l = Link::fromData({ +1, -1, +1, +1 },
-        { 4, -1, -2, 2, 3, -4, 1, -3 });
-    verifyResolve(l, 1, "+++ ( ^2 _0 ^1 _2 ^0 _1 ) ( )",
-        "Trefoil with - twist (a)");
-
-    l = Link::fromData({ +1, -1, +1, +1 },
-        { -2, 2, 3, -4, 1, -3, 4, -1 });
-    verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
-        "Trefoil with - twist (b)");
-
-    l = Link::fromData({ +1, -1, +1, +1 },
-        { 2, 3, -4, 1, -3, 4, -1, -2 });
-    verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
-        "Trefoil with - twist (c)");
-
-    l = Link::fromData({ +1, +1, -1, -1 },
-        { 3, -1, 2, -3, 4, -2, 1, -4 });
-    verifyResolve(l, 2, "++- ( _0 ^1 ) ( ^2 _1 ^0 _2 )",
-        "Figure eight (a)");
-
-    l = Link::fromData({ +1, +1, -1, -1 },
-        { -3, 4, -2, 1, -4, 3, -1, 2 });
-    verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )",
-        "Figure eight (b)");
-
-    l = Link::fromData({ +1, +1, -1, -1 },
-        { 2, -3, 4, -2, 1, -4, 3, -1 });
-    verifyResolve(l, 2, "++- ( ^1 _0 ) ( ^2 _1 ^0 _2 )",
-        "Figure eight (c)");
-
-    l = Link::fromData({ +1, +1, -1, -1 },
-        { 4, -2, 1, -4, 3, -1, 2, -3 });
-    verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )",
-        "Figure eight (d)");
-
-    l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
-        { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { -3, 4 });
-    verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
-        "Figure eight with link (a)");
-
-    l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
-        { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { 4, -3 });
-    verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
-        "Figure eight with link (b)");
-
-    l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
-        { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { -3, 4 });
-    verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
-        "Figure eight with link (c)");
-
-    l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
-        { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { 4, -3 });
-    verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
-        "Figure eight with link (d)");
-}
 #endif
+
+// Our links here will typically be temporaries, so allow them to be moved in.
+static void verifyResolve(Link link, int crossing, const char* briefResult) {
+    // Ideally we'd put link in the trace, but this is a bit expensive and
+    // we already have briefResult in string form.
+    SCOPED_TRACE_CSTRING(briefResult);
+
+    link.resolve(link.crossing(crossing));
+
+    EXPECT_CONSISTENCY(link);
+    EXPECT_EQ(link.brief(), briefResult);
+}
+
+TEST_F(LinkTest, resolve) {
+    // Single twists:
+    verifyResolve(Link::fromData({ +1 }, { 1, -1 }), 0, "( ) ( )");
+    verifyResolve(Link::fromData({ +1 }, { -1, 1 }), 0, "( ) ( )");
+    verifyResolve(Link::fromData({ -1 }, { 1, -1 }), 0, "( ) ( )");
+    verifyResolve(Link::fromData({ -1 }, { -1, 1 }), 0, "( ) ( )");
+
+    // Trefoils with a single twist:
+    verifyResolve(
+        Link::fromData({ -1, +1, -1, -1 }, { 4, -1, 2, -2, 3, -4, 1, -3 }),
+        1, "--- ( ^2 _0 ^1 _2 ^0 _1 ) ( )");
+    verifyResolve(
+        Link::fromData({ -1, +1, -1, -1 }, { 2, -2, 3, -4, 1, -3, 4, -1 }),
+        1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+    verifyResolve(
+        Link::fromData({ -1, +1, -1, -1 }, { -2, 3, -4, 1, -3, 4, -1, 2 }),
+        1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+    verifyResolve(
+        Link::fromData({ +1, -1, +1, +1 }, { 4, -1, -2, 2, 3, -4, 1, -3 }),
+        1, "+++ ( ^2 _0 ^1 _2 ^0 _1 ) ( )");
+    verifyResolve(
+        Link::fromData({ +1, -1, +1, +1 }, { -2, 2, 3, -4, 1, -3, 4, -1 }),
+        1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+    verifyResolve(
+        Link::fromData({ +1, -1, +1, +1 }, { 2, 3, -4, 1, -3, 4, -1, -2 }),
+        1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+
+    // Figure eight knots:
+    verifyResolve(
+        Link::fromData({ +1, +1, -1, -1 }, { 3, -1, 2, -3, 4, -2, 1, -4 }),
+        2, "++- ( _0 ^1 ) ( ^2 _1 ^0 _2 )");
+    verifyResolve(
+        Link::fromData({ +1, +1, -1, -1 }, { -3, 4, -2, 1, -4, 3, -1, 2 }),
+        2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )");
+    verifyResolve(
+        Link::fromData({ +1, +1, -1, -1 }, { 2, -3, 4, -2, 1, -4, 3, -1 }),
+        2, "++- ( ^1 _0 ) ( ^2 _1 ^0 _2 )");
+    verifyResolve(
+        Link::fromData({ +1, +1, -1, -1 }, { 4, -2, 1, -4, 3, -1, 2, -3 }),
+        2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )");
+
+    // Figure eight knots with a link:
+    verifyResolve(
+        Link::fromData({ +1, +1, +1, +1, -1, -1 },
+            { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { -3, 4 }),
+        2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+    verifyResolve(
+        Link::fromData({ +1, +1, +1, +1, -1, -1 },
+            { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { 4, -3 }),
+        2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+    verifyResolve(
+        Link::fromData({ +1, +1, +1, +1, -1, -1 },
+            { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { -3, 4 }),
+        2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+    verifyResolve(
+        Link::fromData({ +1, +1, +1, +1, -1, -1 },
+            { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { 4, -3 }),
+        2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+}
 
 static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
     SCOPED_TRACE_NUMERIC(reflect);
