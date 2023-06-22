@@ -66,9 +66,9 @@ SET ( ENGINE_FILENAME
 SET( HEADERS ${HEADERS} docs.h regina-core.h )
 SET( MANS ${MANS} regina-engine-config.1 )
 
-# Build space-separated lists of flags for regine-engine-config (and also
-# regina-helper).  Each variable should be a space-separated list of flags,
-# suitable for passing on a bash command line in an unquoted context.
+# Build lists of flags for regine-engine-config (and also regina-helper).
+# Each variable should be a space-separated list of flags, suitable for passing
+# on a bash command line in an unquoted context.
 GET_DIRECTORY_PROPERTY(ENGINE_INCLUDE_DIRECTORIES DIRECTORY .. INCLUDE_DIRECTORIES)
 foreach(arg ${ENGINE_INCLUDE_DIRECTORIES})
   REGINA_ESCAPE_BASH_BARE (arg)
@@ -86,6 +86,11 @@ REGINA_ESCAPE_BASH (RECONFIG_INCLUDE_FLAGS)
 REGINA_ESCAPE_PERL (RECONFIG_INCLUDE_FLAGS)
 REGINA_ESCAPE_BASH (RECONFIG_LINK_FLAGS)
 REGINA_ESCAPE_PERL (RECONFIG_LINK_FLAGS)
+
+# On some platforms, regina-helper will also need to put GMP on the rpath.
+REGINA_ESCAPE_PERL (GMP_LIBRARIES)
+REGINA_ESCAPE_PERL (GMPXX_LIBRARIES)
+
 CONFIGURE_FILE (
   regina-engine-config.in
   "${PROJECT_BINARY_DIR}/engine/regina-engine-config"

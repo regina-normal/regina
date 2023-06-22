@@ -37,7 +37,8 @@ use File::Basename;
 my $prog_name = $0;
 my $prog_dir = abs_path(dirname($prog_name));
 
-# Determine the installation type.
+# Determine the operating system and installation type.
+my $os = '@CMAKE_SYSTEM_NAME@';
 my $install_type = '@REGINA_INSTALL_TYPE@';
 if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
     $install_type = 'Source';
@@ -266,6 +267,29 @@ __END__
 		-Wl,-rpath $make_prog_dir \\
 		-o '\$\@'
 __END__
+    if ($os eq 'Darwin') {
+      # We need to put GMP on the rpath also, since this will not be coming
+      # from a standard system installation.
+      my $gmp = '@PERL_GMP_LIBRARIES@';
+      my $gmpxx = '@PERL_GMPXX_LIBRARIES@';
+
+      my ($gmp_dir, $gmpxx_dir);
+      -e $gmp and $gmp_dir = abs_path(dirname($gmp));
+      -e $gmpxx and $gmpxx_dir = abs_path(dirname($gmpxx));
+
+      if ($gmp_dir) {
+        my $make_gmp_dir = sanitise_for_makefile_recipe($gmp_dir);
+        print MAKEFILE <<__END__;
+		install_name_tool -add_rpath $make_gmp_dir '\$\@'
+__END__
+      }
+      if ($gmpxx_dir and $gmpxx_dir ne $gmp_dir) {
+        my $make_gmpxx_dir = sanitise_for_makefile_recipe($gmpxx_dir);
+        print MAKEFILE <<__END__;
+		install_name_tool -add_rpath $make_gmpxx_dir '\$\@'
+__END__
+      }
+    }
   }
   close MAKEFILE;
 
