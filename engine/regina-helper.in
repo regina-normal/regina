@@ -378,6 +378,7 @@ if (not defined $action) {
     usage();
     exit 1;
 }
+$action =~ tr/A-Z/a-z/;
 
 my $retval = 0;
 if ($action eq 'help' || $action eq '-h' || $action eq '--help') {
