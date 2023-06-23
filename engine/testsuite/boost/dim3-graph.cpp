@@ -69,7 +69,7 @@ class DualGraph3Test : public testing::Test {
 
         Triangulation<3> weeks { Example<3>::weeks() };
 
-        Triangulation<3> ball { Triangulation<3>::fromGluings(1, {}) };
+        Triangulation<3> ball { Example<3>::ball() };
 
         // A disjoint union of a 6-tetrahedron loop and a 4-tetrahedron chain.
         Triangulation<3> disconnected;

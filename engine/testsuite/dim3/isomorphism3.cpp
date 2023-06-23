@@ -30,20 +30,37 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/example2.h"
+#include "triangulation/example3.h"
 
 #include "generic/isomorphismtest.h"
 
 using regina::Example;
 
-TEST(Isomorphism2Test, application) {
-    IsomorphismTest<2>::application(Example<2>::nonOrientable(3, 0));
+TEST(Isomorphism3Test, application) {
+    IsomorphismTest<3>::application(Example<3>::rp2xs1(), 11);
 }
 
-TEST(Isomorphism2Test, inverse) {
-    IsomorphismTest<2>::inverse(5);
+TEST(Isomorphism3Test, inverse) {
+    IsomorphismTest<3>::inverse(5);
 }
 
-TEST(Isomorphism2Test, tightEncoding) {
-    IsomorphismTest<2>::tightEncoding(3);
+TEST(Isomorphism3Test, automorphismsAndSubcomplexes) {
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::ball(), 24, "Ball");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::lens(8, 1), 4, "L(8,1)");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::lens(13, 3), 2, "L(13,3)");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::layeredLoop(5, true), 20, "C~(5)");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::layeredLoop(5, false), 20, "C(5)");
+
+    // A case with no non-trivial symmetries.
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::augTriSolidTorus(3, -1, 5, -3, 2, -1), 1, "A(3,-1 | 5,-3)");
+}
+
+TEST(Isomorphism3Test, tightEncoding) {
+    IsomorphismTest<3>::tightEncoding(3);
 }

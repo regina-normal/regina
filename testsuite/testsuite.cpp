@@ -109,7 +109,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     aliases.insert(std::make_pair("dim3", &addTriangulation3));
     sets.insert(std::make_pair("elementarymoves", &addElementaryMoves));
     sets.insert(std::make_pair("connectedsumdecomp", &addConnectedSumDecomp));
-    sets.insert(std::make_pair("isomorphism3", &addIsomorphism3));
     sets.insert(std::make_pair("linkingsurfaces", &addLinkingSurfaces));
     sets.insert(std::make_pair("homologicaldata", &addHomologicalData));
 

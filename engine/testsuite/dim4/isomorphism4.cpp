@@ -30,10 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/dim4.h"
+#include "triangulation/example4.h"
 
 #include "generic/isomorphismtest.h"
 
+using regina::Example;
+
+TEST(Isomorphism4Test, application) {
+    IsomorphismTest<4>::application(Example<4>::twistedSphereBundle(), 11);
+}
+
+TEST(Isomorphism4Test, inverse) {
+    IsomorphismTest<4>::inverse(5);
+}
+
 TEST(Isomorphism4Test, tightEncoding) {
-    IsomorphismTest<4>::tightEncoding({ 1, 120, 28800 });
+    IsomorphismTest<4>::tightEncoding(2);
 }
