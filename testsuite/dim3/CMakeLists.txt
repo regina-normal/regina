@@ -3,7 +3,6 @@
 # Files to compile
 #
 SET ( FILES
-  connectedsumdecomp.cpp
   eltmoves.cpp
   homologicaldata.cpp
   links.cpp

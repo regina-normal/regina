@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  decomposition.cpp
   facetpairing3.cpp
   isomorphism3.cpp
   )
