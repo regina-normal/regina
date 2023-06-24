@@ -10,6 +10,7 @@ SET ( FILES
   permconv.cpp
   polynomial.cpp
   primes.cpp
+  rational.cpp
   )
 
 # Prepend folder name

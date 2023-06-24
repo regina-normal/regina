@@ -43,5 +43,4 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addInteger(CppUnit::TextUi::TestRunner& runner);
-void addRational(CppUnit::TextUi::TestRunner& runner);
 

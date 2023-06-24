@@ -3,7 +3,6 @@
 # Files to compile
 SET ( FILES
   integer.cpp
-  rational.cpp
   )
 
 # Prepend folder name

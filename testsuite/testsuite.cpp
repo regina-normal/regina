@@ -102,7 +102,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Maths:
     sets.insert(std::make_pair("integer", &addInteger));
-    sets.insert(std::make_pair("rational", &addRational));
 
     // 3-manifold triangulations:
     sets.insert(std::make_pair("triangulation3", &addTriangulation3));
