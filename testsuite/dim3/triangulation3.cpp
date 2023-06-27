@@ -4333,10 +4333,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
                         // Randomly relabel the tetrahedra, but preserve
                         // orientation.
-                        Isomorphism<3> iso = Isomorphism<3>::random(
-                                newTri.size(), true );
-                        newTri = iso(newTri);
-                        clearProperties(newTri);
+                        Isomorphism<3> iso = newTri.randomiseLabelling(true);
 
                         // Test the inverse 2-0 move.
                         {
@@ -5369,8 +5366,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     // Apply a random isomorphism.
                     size_t idx = bdry->index();
 
-                    Isomorphism<3> iso = Isomorphism<3>::random(t.size());
-                    t = iso(t);
+                    Isomorphism<3> iso = t.randomiseLabelling(false);
 
                     Perm<4> p = iso.facetPerm(idx);
                     if (r1 <= 2) {
