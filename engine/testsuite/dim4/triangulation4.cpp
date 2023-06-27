@@ -183,7 +183,8 @@ class Dim4Test : public TriangulationTest<4> {
             f(cp2.tri, cp2.name);
             f(s2xs2.tri, s2xs2.name);
             f(s2xs2Twisted.tri, s2xs2Twisted.name);
-            // TODO: f(k3.tri, k3.name); -- still too large
+            if (includeLarge)
+                f(k3.tri, k3.name);
 
             f(rp4.tri, rp4.name);
 
