@@ -287,6 +287,9 @@ void addTriangulation4(pybind11::module_& m) {
             rdoc::intersectionForm)
         .def("reorderBFS", &Triangulation<4>::reorderBFS,
             pybind11::arg("reverse") = false, rbase::reorderBFS)
+        .def("randomiseLabelling", &Triangulation<4>::randomiseLabelling,
+            pybind11::arg("preserveOrientation") = true,
+            rbase::randomiseLabelling)
         .def("orient", &Triangulation<4>::orient, rbase::orient)
         .def("reflect", &Triangulation<4>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents,

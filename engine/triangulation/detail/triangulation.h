@@ -1977,6 +1977,28 @@ class TriangulationBase :
         void reorderBFS(bool reverse = false);
 
         /**
+         * Randomly relabels the top-dimensional simplices and their vertices.
+         *
+         * Essentially, this routine creates a random isomorphism of the
+         * correct size and applies it in-place to this triangulation.
+         *
+         * The advantage of using this routine instead of working directly
+         * through the Isomorphism class is that this routine preserves any
+         * computed topological properties of the triangulation (as opposed to
+         * the isomorphism bracket operator, which at the time of writing does
+         * not).
+         *
+         * \para preserveOrientation if \c true, then every top-dimensional
+         * simplex will have its vertices permuted with an even permutation.
+         * This means that, if this triangulation is oriented, then
+         * randomiseLabelling() will preserve the orientation.
+         * \return the random isomorphism that was applied; that is, the
+         * isomorphism from the original triangulation to the final
+         * triangulation.
+         */
+        Isomorphism<dim> randomiseLabelling(bool preserveOrientation = true);
+
+        /**
          * Checks the eligibility of and/or performs a
          * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
          * <i>k</i>-face.  This involves replacing the (\a dim + 1 - \a k)
@@ -4857,6 +4879,15 @@ void TriangulationBase<dim>::reflect() {
                     s->gluing_[f] * Perm<dim + 1>(dim - 1, dim);
             }
     }
+}
+
+template <int dim>
+inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
+        bool preserveOrientation) {
+    auto iso = Isomorphism<dim>::random(size(), preserveOrientation);
+    TopologyLock lock(*this);
+    *this = iso(static_cast<Triangulation<dim>&>(*this));
+    return iso;
 }
 
 template <int dim>

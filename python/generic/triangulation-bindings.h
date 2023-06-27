@@ -180,6 +180,9 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             rbase::isConnected)
         .def("reorderBFS", &Triangulation<dim>::reorderBFS,
             pybind11::arg("reverse") = false, rbase::reorderBFS)
+        .def("randomiseLabelling", &Triangulation<dim>::randomiseLabelling,
+            pybind11::arg("preserveOrientation") = true,
+            rbase::randomiseLabelling)
         .def("orient", &Triangulation<dim>::orient, rbase::orient)
         .def("reflect", &Triangulation<dim>::reflect, rbase::reflect)
         .def("triangulateComponents",

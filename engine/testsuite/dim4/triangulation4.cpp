@@ -958,8 +958,7 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
         }
 
         // Randomly relabel the pentachora, but preserve orientation.
-        Isomorphism<4> iso = Isomorphism<4>::random(tri.size(), true);
-        alt = iso(alt);
+        alt.randomiseLabelling(true);
 
         // Ensure that there exists an inverse 4-4 move.
         bool found = false;
@@ -1068,7 +1067,7 @@ static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
     for (unsigned i = 0; i < 2; ++i) {
         Triangulation<4> other(tri);
         if (i > 0)
-            other = Isomorphism<4>::random(other.size())(other);
+            other.randomiseLabelling(false);
 
         other.idealToFinite();
 

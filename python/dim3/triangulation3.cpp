@@ -555,6 +555,9 @@ void addTriangulation3(pybind11::module_& m) {
         .def("reorderTetrahedraBFS",
             &Triangulation<3>::reorderBFS, // deprecated
             pybind11::arg("reverse") = false, rdoc::reorderTetrahedraBFS)
+        .def("randomiseLabelling", &Triangulation<3>::randomiseLabelling,
+            pybind11::arg("preserveOrientation") = true,
+            rbase::randomiseLabelling)
         .def("orient", &Triangulation<3>::orient, rbase::orient)
         .def("reflect", &Triangulation<3>::reflect, rbase::reflect)
         .def("order", &Triangulation<3>::order,

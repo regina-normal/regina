@@ -108,6 +108,7 @@ Version 7.4  [ (to be announced) ]
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
+            - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
             - The two-argument copy constructor is now a three-argument

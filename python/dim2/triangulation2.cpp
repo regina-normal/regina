@@ -243,6 +243,9 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isBall", &Triangulation<2>::isBall, rdoc::isBall)
         .def("reorderBFS", &Triangulation<2>::reorderBFS,
             pybind11::arg("reverse") = false, rbase::reorderBFS)
+        .def("randomiseLabelling", &Triangulation<2>::randomiseLabelling,
+            pybind11::arg("preserveOrientation") = true,
+            rbase::randomiseLabelling)
         .def("orient", &Triangulation<2>::orient, rbase::orient)
         .def("reflect", &Triangulation<2>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents,

@@ -2056,6 +2056,28 @@ pentachoron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::randomiseLabelling
+constexpr const char *randomiseLabelling =
+R"doc(Randomly relabels the top-dimensional simplices and their vertices.
+
+Essentially, this routine creates a random isomorphism of the correct
+size and applies it in-place to this triangulation.
+
+The advantage of using this routine instead of working directly
+through the Isomorphism class is that this routine preserves any
+computed topological properties of the triangulation (as opposed to
+the isomorphism bracket operator, which at the time of writing does
+not).
+
+\para preserveOrientation if ``True``, then every top-dimensional
+simplex will have its vertices permuted with an even permutation. This
+means that, if this triangulation is oriented, then
+randomiseLabelling() will preserve the orientation.
+
+Returns:
+    the random isomorphism that was applied; that is, the isomorphism
+    from the original triangulation to the final triangulation.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::reflect
 constexpr const char *reflect =
 R"doc(Relabels the vertices of top-dimensional simplices in this

@@ -1145,9 +1145,7 @@ class TriangulationTest : public testing::Test {
                 }
 
                 // Randomly relabel the simplices, but preserve orientation.
-                Isomorphism<dim> iso = Isomorphism<dim>::random(result.size(),
-                    true);
-                result = iso(result);
+                Isomorphism<dim> iso = result.randomiseLabelling(true);
 
                 if constexpr (k == dim && (dim == 3 || dim == 4)) {
                     // For k == dim, we can undo the Pacher move with an edge
