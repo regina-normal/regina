@@ -91,44 +91,56 @@ TEST_F(Dim2Test, magic) {
 TEST_F(Dim2Test, validity) {
     TriangulationTest<2>::validityGenericCases();
 
-    verifyValidity(s2Oct, true);
-    verifyValidity(torus2, true);
-    verifyValidity(rp2, true);
-    verifyValidity(disjoint2, true);
-    verifyValidity(disjoint3, true);
+    verifyValid(s2Oct);
+    verifyValid(torus2);
+    verifyValid(rp2);
+    verifyValid(disjoint2);
+    verifyValid(disjoint3);
 }
 TEST_F(Dim2Test, connectivity) {
     TriangulationTest<2>::connectivityGenericCases();
 
-    verifyConnectivity(s2Oct, true);
-    verifyConnectivity(torus2, true);
-    verifyConnectivity(rp2, true);
-    verifyConnectivity(disjoint2, false);
-    verifyConnectivity(disjoint3, false);
+    EXPECT_TRUE(s2Oct.tri.isConnected());
+    EXPECT_TRUE(torus2.tri.isConnected());
+    EXPECT_TRUE(rp2.tri.isConnected());
+    EXPECT_FALSE(disjoint2.tri.isConnected());
+    EXPECT_FALSE(disjoint3.tri.isConnected());
 }
 TEST_F(Dim2Test, orientability) {
     TriangulationTest<2>::orientabilityGenericCases();
 
-    verifyOrientability(s2Oct, true);
-    verifyOrientability(torus2, true);
-    verifyOrientability(rp2, false);
-    verifyOrientability(disjoint2, false);
-    verifyOrientability(disjoint3, false);
+    EXPECT_TRUE(s2Oct.tri.isOrientable());
+    EXPECT_TRUE(torus2.tri.isOrientable());
+    EXPECT_FALSE(rp2.tri.isOrientable());
+    EXPECT_FALSE(disjoint2.tri.isOrientable());
+    EXPECT_FALSE(disjoint3.tri.isOrientable());
 }
-TEST_F(Dim2Test, eulerCharTri) {
-    TriangulationTest<2>::eulerCharTriGenericCases();
+TEST_F(Dim2Test, eulerChar) {
+    TriangulationTest<2>::eulerCharGenericCases();
 
-    verifyEulerCharTri(s2Oct, 2);
-    verifyEulerCharTri(torus2, -2);
-    verifyEulerCharTri(rp2, 1);
-    verifyEulerCharTri(disjoint2, 0);
-    verifyEulerCharTri(disjoint3, 2);
+    EXPECT_EQ(s2Oct.tri.eulerCharTri(), 2);
+    EXPECT_EQ(torus2.tri.eulerCharTri(), -2);
+    EXPECT_EQ(rp2.tri.eulerCharTri(), 1);
+    EXPECT_EQ(disjoint2.tri.eulerCharTri(), 0);
+    EXPECT_EQ(disjoint3.tri.eulerCharTri(), 2);
 }
-TEST_F(Dim2Test, boundaryCount) {
-    TriangulationTest<2>::boundaryCountGenericCases();
+TEST_F(Dim2Test, boundaryBasic) {
+    TriangulationTest<2>::boundaryBasicGenericCases();
+
+    verifyBoundaryBasic(s2Oct, {}, {}, {});
+    verifyBoundaryBasic(torus2, {}, {}, {});
+    verifyBoundaryBasic(rp2, {}, {}, {});
+    verifyBoundaryBasic(disjoint2, {0}, {}, {});
+    verifyBoundaryBasic(disjoint3, {0, 0}, {}, {});
 }
-TEST_F(Dim2Test, boundaryEuler) {
-    testManualCases(TriangulationTest<2>::verifyBoundaryEuler);
+TEST_F(Dim2Test, vertexLinksBasic) {
+    TriangulationTest<2>::vertexLinksBasicGenericCases();
+
+    verifyVertexLinksBasic(s2Oct, 6, 0);
+    verifyVertexLinksBasic(torus2, 1, 0);
+    verifyVertexLinksBasic(rp2, 2, 0);
+    verifyVertexLinksBasic(disjoint2, 1, 1);
+    verifyVertexLinksBasic(disjoint3, 4, 2);
 }
 TEST_F(Dim2Test, orient) {
     testManualCases(TriangulationTest<2>::verifyOrient);

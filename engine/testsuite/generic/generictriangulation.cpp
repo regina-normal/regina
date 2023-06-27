@@ -49,11 +49,14 @@ TEST_F(Dim5Test, connectivity) {
 TEST_F(Dim5Test, orientability) {
     TriangulationTest<5>::orientabilityGenericCases();
 }
-TEST_F(Dim5Test, eulerCharTri) {
-    TriangulationTest<5>::eulerCharTriGenericCases();
+TEST_F(Dim5Test, eulerChar) {
+    TriangulationTest<5>::eulerCharGenericCases();
 }
-TEST_F(Dim5Test, boundaryCount) {
-    TriangulationTest<5>::boundaryCountGenericCases();
+TEST_F(Dim5Test, boundaryBasic) {
+    TriangulationTest<5>::boundaryBasicGenericCases();
+}
+TEST_F(Dim5Test, vertexLinksBasic) {
+    TriangulationTest<5>::vertexLinksBasicGenericCases();
 }
 TEST_F(Dim5Test, orient) {
     testGenericCases(TriangulationTest<5>::verifyOrient);
@@ -116,11 +119,14 @@ TEST_F(Dim6Test, connectivity) {
 TEST_F(Dim6Test, orientability) {
     TriangulationTest<6>::orientabilityGenericCases();
 }
-TEST_F(Dim6Test, eulerCharTri) {
-    TriangulationTest<6>::eulerCharTriGenericCases();
+TEST_F(Dim6Test, eulerChar) {
+    TriangulationTest<6>::eulerCharGenericCases();
 }
-TEST_F(Dim6Test, boundaryCount) {
-    TriangulationTest<6>::boundaryCountGenericCases();
+TEST_F(Dim6Test, boundaryBasic) {
+    TriangulationTest<6>::boundaryBasicGenericCases();
+}
+TEST_F(Dim6Test, vertexLinksBasic) {
+    TriangulationTest<6>::vertexLinksBasicGenericCases();
 }
 TEST_F(Dim6Test, orient) {
     testGenericCases(TriangulationTest<6>::verifyOrient);
@@ -194,11 +200,14 @@ TEST_F(Dim8Test, connectivity) {
 TEST_F(Dim8Test, orientability) {
     TriangulationTest<8>::orientabilityGenericCases();
 }
-TEST_F(Dim8Test, eulerCharTri) {
-    TriangulationTest<8>::eulerCharTriGenericCases();
+TEST_F(Dim8Test, eulerChar) {
+    TriangulationTest<8>::eulerCharGenericCases();
 }
-TEST_F(Dim8Test, boundaryCount) {
-    TriangulationTest<8>::boundaryCountGenericCases();
+TEST_F(Dim8Test, boundaryBasic) {
+    TriangulationTest<8>::boundaryBasicGenericCases();
+}
+TEST_F(Dim8Test, vertexLinksBasic) {
+    TriangulationTest<8>::vertexLinksBasicGenericCases();
 }
 TEST_F(Dim8Test, orient) {
     testGenericCases(TriangulationTest<8>::verifyOrient);

@@ -40,7 +40,6 @@
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/dim3/testdim3.h"
-#include "testsuite/dim4/testdim4.h"
 #include "testsuite/maths/testmaths.h"
 
 namespace {
@@ -109,10 +108,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("elementarymoves", &addElementaryMoves));
     sets.insert(std::make_pair("linkingsurfaces", &addLinkingSurfaces));
     sets.insert(std::make_pair("homologicaldata", &addHomologicalData));
-
-    // 4-manifold triangulations:
-    sets.insert(std::make_pair("triangulation4", &addTriangulation4));
-    aliases.insert(std::make_pair("dim4", &addTriangulation4));
 
     if (argc <= 1)
         for (const auto& i : sets)

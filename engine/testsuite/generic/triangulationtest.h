@@ -46,6 +46,21 @@ using regina::Triangulation;
 using regina::Vertex;
 
 /**
+ * Clears all computed properties of the given triangulation.
+ *
+ * We allow the triangulation to be const, since the intent of this operation
+ * is to not change the triangulation, but just to force it to forget its
+ * cached properties.
+ */
+template <int dim>
+static void clearProperties(const Triangulation<dim>& tri) {
+    // Make and undo a trivial modification that will cause all
+    // computed properties to be flushed.
+    const_cast<Triangulation<dim>&>(tri).newSimplex();
+    const_cast<Triangulation<dim>&>(tri).removeSimplexAt(tri.size()-1);
+}
+
+/**
  * Implements several tests for triangulations in dimension \a dim.
  *
  * Test fixtures in each dimension should use TriangulationTest<dim>
@@ -54,12 +69,13 @@ using regina::Vertex;
  */
 template <int dim>
 class TriangulationTest : public testing::Test {
-    protected:
+    public:
         struct TestCase {
             Triangulation<dim> tri;
             const char* name;
         };
 
+    protected:
         // Trivial case:
         TestCase empty { {}, "Empty" };
 
@@ -83,20 +99,6 @@ class TriangulationTest : public testing::Test {
             "Twisted ball bundle" };
 
         /**
-         * Clear all computed properties of the given triangulation.
-         *
-         * We allow the triangulation to be const, since the intent of this
-         * operation is to not change the triangulation, but just to force it to
-         * forget its cached properties.
-         */
-        static void clearProperties(const Triangulation<dim>& tri) {
-            // Make and undo a trivial modification that will cause all
-            // computed properties to be flushed.
-            const_cast<Triangulation<dim>&>(tri).newSimplex();
-            const_cast<Triangulation<dim>&>(tri).removeSimplexAt(tri.size()-1);
-        }
-
-        /**
          * Run the given test over all of the example triangulations stored in
          * this generic test fixture.
          */
@@ -112,10 +114,10 @@ class TriangulationTest : public testing::Test {
             f(twistedBallBundle.tri, twistedBallBundle.name);
         }
 
-        static void verifyValidity(const TestCase& test, bool isValid) {
+        static void verifyValid(const TestCase& test) {
             SCOPED_TRACE_CSTRING(test.name);
 
-            EXPECT_EQ(test.tri.isValid(), isValid);
+            EXPECT_TRUE(test.tri.isValid());
 
             regina::for_constexpr<0, dim>([&test](auto subdim) {
                 SCOPED_TRACE_NUMERIC(subdim);
@@ -125,126 +127,244 @@ class TriangulationTest : public testing::Test {
                     auto f = test.tri.template face<subdim>(i);
 
                     EXPECT_TRUE(f->isValid());
-                    if constexpr (regina::standardDim(dim) && dim > 2)
+                    EXPECT_FALSE(f->hasBadIdentification());
+                    if constexpr (regina::standardDim(dim))
                         EXPECT_FALSE(f->hasBadLink());
-                    if constexpr (subdim > 0)
-                        EXPECT_FALSE(f->hasBadIdentification());
                 }
             });
         }
 
         void validityGenericCases() {
-            verifyValidity(empty, true);
-            verifyValidity(sphere, true);
-            verifyValidity(simpSphere, true);
-            verifyValidity(sphereBundle, true);
-            verifyValidity(twistedSphereBundle, true);
-            verifyValidity(ball, true);
-            verifyValidity(ballBundle, true);
-            verifyValidity(twistedBallBundle, true);
-        }
-
-        static void verifyConnectivity(const TestCase& test, bool isConnected) {
-            SCOPED_TRACE_CSTRING(test.name);
-
-            EXPECT_EQ(test.tri.isConnected(), isConnected);
+            verifyValid(empty);
+            verifyValid(sphere);
+            verifyValid(simpSphere);
+            verifyValid(sphereBundle);
+            verifyValid(twistedSphereBundle);
+            verifyValid(ball);
+            verifyValid(ballBundle);
+            verifyValid(twistedBallBundle);
         }
 
         void connectivityGenericCases() {
-            verifyConnectivity(empty, true);
-            verifyConnectivity(sphere, true);
-            verifyConnectivity(simpSphere, true);
-            verifyConnectivity(sphereBundle, true);
-            verifyConnectivity(twistedSphereBundle, true);
-            verifyConnectivity(ball, true);
-            verifyConnectivity(ballBundle, true);
-            verifyConnectivity(twistedBallBundle, true);
-        }
-
-        static void verifyOrientability(const TestCase& test,
-                bool isOrientable) {
-            SCOPED_TRACE_CSTRING(test.name);
-
-            EXPECT_EQ(test.tri.isOrientable(), isOrientable);
+            EXPECT_TRUE(empty.tri.isConnected());
+            EXPECT_TRUE(sphere.tri.isConnected());
+            EXPECT_TRUE(simpSphere.tri.isConnected());
+            EXPECT_TRUE(sphereBundle.tri.isConnected());
+            EXPECT_TRUE(twistedSphereBundle.tri.isConnected());
+            EXPECT_TRUE(ball.tri.isConnected());
+            EXPECT_TRUE(ballBundle.tri.isConnected());
+            EXPECT_TRUE(twistedBallBundle.tri.isConnected());
         }
 
         void orientabilityGenericCases() {
-            verifyOrientability(empty, true);
-            verifyOrientability(sphere, true);
-            verifyOrientability(simpSphere, true);
-            verifyOrientability(sphereBundle, true);
-            verifyOrientability(twistedSphereBundle, false);
-            verifyOrientability(ball, true);
-            verifyOrientability(ballBundle, true);
-            verifyOrientability(twistedBallBundle, false);
+            EXPECT_TRUE(empty.tri.isOrientable());
+            EXPECT_TRUE(sphere.tri.isOrientable());
+            EXPECT_TRUE(simpSphere.tri.isOrientable());
+            EXPECT_TRUE(sphereBundle.tri.isOrientable());
+            EXPECT_FALSE(twistedSphereBundle.tri.isOrientable());
+            EXPECT_TRUE(ball.tri.isOrientable());
+            EXPECT_TRUE(ballBundle.tri.isOrientable());
+            EXPECT_FALSE(twistedBallBundle.tri.isOrientable());
         }
 
-        static void verifyEulerCharTri(const TestCase& test,
-                long expectedEuler) {
-            SCOPED_TRACE_CSTRING(test.name);
+        void eulerCharGenericCases() {
+            EXPECT_EQ(empty.tri.eulerCharTri(), 0);
+            EXPECT_EQ(sphere.tri.eulerCharTri(), (dim % 2 ? 0 : 2));
+            EXPECT_EQ(simpSphere.tri.eulerCharTri(), (dim % 2 ? 0 : 2));
+            EXPECT_EQ(sphereBundle.tri.eulerCharTri(), 0);
+            EXPECT_EQ(twistedSphereBundle.tri.eulerCharTri(), 0);
+            EXPECT_EQ(ball.tri.eulerCharTri(), 1);
+            EXPECT_EQ(ballBundle.tri.eulerCharTri(), 0);
+            EXPECT_EQ(twistedBallBundle.tri.eulerCharTri(), 0);
 
-            EXPECT_EQ(test.tri.eulerCharTri(), expectedEuler);
+            if constexpr (regina::standardDim(dim) && dim > 2) {
+                // In these dimensions, Regina understands ideal triangulations
+                // and thus offers a separate function eulerCharManifold().
+                EXPECT_EQ(empty.tri.eulerCharManifold(), 0);
+                EXPECT_EQ(sphere.tri.eulerCharManifold(), (dim % 2 ? 0 : 2));
+                EXPECT_EQ(simpSphere.tri.eulerCharManifold(),
+                    (dim % 2 ? 0 : 2));
+                EXPECT_EQ(sphereBundle.tri.eulerCharManifold(), 0);
+                EXPECT_EQ(twistedSphereBundle.tri.eulerCharManifold(), 0);
+                EXPECT_EQ(ball.tri.eulerCharManifold(), 1);
+                EXPECT_EQ(ballBundle.tri.eulerCharManifold(), 0);
+                EXPECT_EQ(twistedBallBundle.tri.eulerCharManifold(), 0);
+            }
         }
 
-        void eulerCharTriGenericCases() {
-            verifyEulerCharTri(empty, 0);
-            verifyEulerCharTri(sphere, (dim % 2 ? 0 : 2));
-            verifyEulerCharTri(simpSphere, (dim % 2 ? 0 : 2));
-            verifyEulerCharTri(sphereBundle, 0);
-            verifyEulerCharTri(twistedSphereBundle, 0);
-            verifyEulerCharTri(ball, 1);
-            verifyEulerCharTri(ballBundle, 0);
-            verifyEulerCharTri(twistedBallBundle, 0);
-        }
-
-        static void verifyBoundaryCount(const TestCase& test,
-                size_t nReal, size_t nIdeal, size_t nInvalid) {
+        static void verifyBoundaryBasic(const TestCase& test,
+                std::initializer_list<long> expectReal,
+                std::initializer_list<long> expectIdeal,
+                std::initializer_list<long> expectInvalid) {
+            // Verifies boundary counts, types, and (where boundary face
+            // counts are available) Euler characteristics.
             SCOPED_TRACE_CSTRING(test.name);
 
             EXPECT_EQ(test.tri.countBoundaryComponents(),
-                nReal + nIdeal + nInvalid);
+                expectReal.size() + expectIdeal.size() + expectInvalid.size());
+            EXPECT_EQ(test.tri.hasBoundaryFacets(), (expectReal.size() > 0));
 
-            if constexpr (dim == 3 || dim == 4) {
-                // These dimensions support single-vertex boundary components.
-                size_t foundReal = 0, foundIdeal = 0, foundInvalid = 0;
-                for (auto bc : test.tri.boundaryComponents()) {
-                    if (bc->isIdeal())
-                        ++foundIdeal;
-                    if (bc->isInvalidVertex(bc))
-                        ++foundInvalid;
-                    if (bc->isReal())
-                        ++foundReal;
+            if constexpr (regina::standardDim(dim)) {
+                // These dimensions offer functions to query closedness and
+                // ideal boundary components.
+                EXPECT_EQ(test.tri.isClosed(), (expectReal.size() +
+                    expectIdeal.size() + expectInvalid.size() == 0));
+                if constexpr (dim < 4) {
+                    // Ideal invalid triangulations are allowed.
+                    EXPECT_EQ(test.tri.isIdeal(), expectIdeal.size() > 0);
+                } else {
+                    // To be considered ideal, a triangulation _must_ be valid.
+                    EXPECT_EQ(test.tri.isIdeal(),
+                        (test.tri.isValid() && expectIdeal.size() > 0));
                 }
-
-                EXPECT_EQ(foundReal, nReal);
-                EXPECT_EQ(foundIdeal, nIdeal);
-                EXPECT_EQ(foundInvalid, nInvalid);
-            }
-        }
-
-        void boundaryCountGenericCases() {
-            verifyBoundaryCount(empty, 0, 0, 0);
-            verifyBoundaryCount(sphere, 0, 0, 0);
-            verifyBoundaryCount(simpSphere, 0, 0, 0);
-            verifyBoundaryCount(sphereBundle, 0, 0, 0);
-            verifyBoundaryCount(twistedSphereBundle, 0, 0, 0);
-            verifyBoundaryCount(ball, 1, 0, 0);
-            if constexpr (dim == 2) {
-                verifyBoundaryCount(ballBundle, 2, 0, 0);
+                if constexpr (dim == 2)
+                    EXPECT_EQ(expectIdeal.size(), 0);
+                if constexpr (dim <= 3)
+                    EXPECT_EQ(expectInvalid.size(), 0);
             } else {
-                verifyBoundaryCount(ballBundle, 1, 0, 0);
+                // These dimensions only support real boundary components.
+                EXPECT_EQ(expectIdeal.size(), 0);
+                EXPECT_EQ(expectInvalid.size(), 0);
             }
-            verifyBoundaryCount(twistedBallBundle, 1, 0, 0);
+
+            auto nextReal = expectReal.begin();
+            auto nextIdeal = expectIdeal.begin();
+            auto nextInvalid = expectInvalid.begin();
+
+            for (auto b : test.tri.boundaryComponents()) {
+                if (b->isIdeal()) {
+                    EXPECT_FALSE(b->isReal());
+                    EXPECT_FALSE(b->isInvalidVertex());
+
+                    if (nextIdeal == expectIdeal.end())
+                        ADD_FAILURE() << "Too many ideal boundary components";
+                    else {
+                        if constexpr (regina::BoundaryComponent<dim>::allFaces)
+                            EXPECT_EQ(b->eulerChar(), *nextIdeal);
+                        ++nextIdeal;
+                    }
+                } else if (b->isInvalidVertex()) {
+                    EXPECT_FALSE(b->isReal());
+                    EXPECT_FALSE(b->isIdeal());
+
+                    if (nextInvalid == expectInvalid.end())
+                        ADD_FAILURE() << "Too many invalid boundary components";
+                    else {
+                        if constexpr (regina::BoundaryComponent<dim>::allFaces)
+                            EXPECT_EQ(b->eulerChar(), *nextInvalid);
+                        ++nextInvalid;
+                    }
+                } else {
+                    EXPECT_TRUE(b->isReal());
+                    EXPECT_FALSE(b->isIdeal());
+                    EXPECT_FALSE(b->isInvalidVertex());
+
+                    if (nextReal == expectReal.end())
+                        ADD_FAILURE() << "Too many real boundary components";
+                    else {
+                        if constexpr (regina::BoundaryComponent<dim>::allFaces)
+                            EXPECT_EQ(b->eulerChar(), *nextReal);
+                        ++nextReal;
+                    }
+                }
+            }
+
+            EXPECT_EQ(nextReal, expectReal.end());
+            EXPECT_EQ(nextIdeal, expectIdeal.end());
+            EXPECT_EQ(nextInvalid, expectInvalid.end());
         }
 
-        static void verifyBoundaryEuler(const Triangulation<dim>& tri,
-                const char* name) {
-            static_assert(regina::standardDim(dim));
-            static_assert(dim % 2 == 0);
-            SCOPED_TRACE_CSTRING(name);
+        void boundaryBasicGenericCases() {
+            verifyBoundaryBasic(empty, {}, {}, {});
+            verifyBoundaryBasic(sphere, {}, {}, {});
+            verifyBoundaryBasic(simpSphere, {}, {}, {});
+            verifyBoundaryBasic(sphereBundle, {}, {}, {});
+            verifyBoundaryBasic(twistedSphereBundle, {}, {}, {});
+            verifyBoundaryBasic(ball, {dim % 2 ? 2 : 0}, {}, {});
+            if constexpr (dim == 2) {
+                verifyBoundaryBasic(ballBundle, {0, 0}, {}, {});
+            } else {
+                verifyBoundaryBasic(ballBundle, {0}, {}, {});
+            }
+            verifyBoundaryBasic(twistedBallBundle, {0}, {}, {});
+        }
 
-            for (auto bc : tri.boundaryComponents())
-                EXPECT_EQ(bc->eulerChar(), 0);
+        static void verifyBoundaryPinching(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(dim > 2 && regina::BoundaryComponent<dim>::allFaces);
+
+            for (auto* bc : tri.boundaryComponents()) {
+                if (bc->size() == 0)
+                    continue;
+
+                // We have boundary facets.  Look for pinched faces.
+                long adjEuler = 0;
+                regina::for_constexpr<0, dim - 2>([bc, &adjEuler](auto subdim) {
+                    for (auto f : bc->template faces<subdim>())
+                        if (! f->isValid()) {
+                            // Beware: face links themselves can have both real
+                            // and ideal boundary components.
+                            size_t realBdries = 0;
+                            for (auto c : f->buildLink().boundaryComponents())
+                                if (c->size() > 0)
+                                    ++realBdries;
+                            if (realBdries > 1) {
+                                if constexpr (subdim % 2 == 0)
+                                    adjEuler -= (realBdries - 1);
+                                else
+                                    adjEuler += (realBdries - 1);
+                            }
+                        }
+                });
+
+                EXPECT_EQ(bc->eulerChar(),
+                    bc->build().eulerCharTri() + adjEuler);
+            }
+        }
+
+        static void verifyVertexLinksBasic(const TestCase& test,
+                size_t expectSphere, size_t expectBall,
+                size_t expectIdeal = 0, size_t expectInvalid = 0) {
+            // In higher (non-standard) dimensions regina cannot recognise
+            // ideal vertices, and so we treat expectSphere / expectBall as
+            // simply "not on real boundary" / "on real boundary".
+            SCOPED_TRACE_CSTRING(test.name);
+
+            size_t foundSphere = 0, foundBall = 0;
+            size_t foundIdeal = 0, foundInvalid = 0;
+            for (auto v : test.tri.vertices()) {
+                if constexpr (dim > 2 && regina::standardDim(dim)) {
+                    if (! v->isValid())
+                        ++foundInvalid;
+                    else if (v->isIdeal())
+                        ++foundIdeal;
+                    else if (v->isBoundary())
+                        ++foundBall;
+                    else
+                        ++foundSphere;
+                } else {
+                    if (v->isBoundary())
+                        ++foundBall;
+                    else
+                        ++foundSphere;
+                }
+            }
+
+            EXPECT_EQ(foundSphere, expectSphere);
+            EXPECT_EQ(foundBall, expectBall);
+            EXPECT_EQ(foundIdeal, expectIdeal);
+            EXPECT_EQ(foundInvalid, expectInvalid);
+        }
+
+        void vertexLinksBasicGenericCases() {
+            verifyVertexLinksBasic(empty, 0, 0);
+            verifyVertexLinksBasic(sphere, dim + 1, 0);
+            verifyVertexLinksBasic(simpSphere, dim + 2, 0);
+            verifyVertexLinksBasic(sphereBundle, 1, 0);
+            verifyVertexLinksBasic(twistedSphereBundle, 1, 0);
+            verifyVertexLinksBasic(ball, 0, dim + 1);
+            verifyVertexLinksBasic(ballBundle, 0, dim % 2 ? 1 : 2);
+            verifyVertexLinksBasic(twistedBallBundle, 0, dim % 2 ? 2 : 1);
         }
 
         static void verifyOrient(const Triangulation<dim>& tri,
@@ -640,7 +760,7 @@ class TriangulationTest : public testing::Test {
 
                 // There are no pinched faces; go ahead and verify the full
                 // labelling / ordering.
-                EXPECT_EQ(bc->template countFaces<subdim>(),
+                ASSERT_EQ(bc->template countFaces<subdim>(),
                         built.template countFaces<subdim>());
 
                 for (size_t i = 0; i < bc->size(); ++i) {
@@ -712,6 +832,23 @@ class TriangulationTest : public testing::Test {
                         assigned.newSimplex(); // junk for assignment to replace
                         assigned = built;
                         verifyBoundaryLabellingDetail(bc, assigned, "assigned");
+                    }
+
+                    // Verify the gluings between (dim-2)-faces.
+                    ASSERT_EQ(bc->size(), built.size());
+                    for (size_t i = 0; i < bc->size(); ++i) {
+                        const auto* innerSimp = built.simplex(i);
+                        const auto* outerSimp = bc->template face<dim-1>(i);
+
+                        for (int j = 0; j < dim; ++j) {
+                            auto innerAdj = innerSimp->adjacentSimplex(j);
+                            ASSERT_NE(innerAdj, nullptr);
+                            auto outerAdj = bc->template face<dim-1>(
+                                innerAdj->index());
+                            EXPECT_EQ(outerAdj->template face<dim-2>(
+                                    innerSimp->adjacentFacet(j)),
+                                outerSimp->template face<dim-2>(j));
+                        }
                     }
                 }
         }
@@ -1074,16 +1211,51 @@ class TriangulationTest : public testing::Test {
             clearProperties(subdiv);
 
             EXPECT_EQ(tri.hasBoundaryFacets(), subdiv.hasBoundaryFacets());
-            EXPECT_EQ(tri.isClosed(), subdiv.isClosed());
             EXPECT_EQ(tri.isOrientable(), subdiv.isOrientable());
             if (tri.isOrientable())
                 EXPECT_TRUE(subdiv.isOriented());
             EXPECT_EQ(tri.isConnected(), subdiv.isConnected());
             EXPECT_EQ(tri.countComponents(), subdiv.countComponents());
-            EXPECT_EQ(tri.countBoundaryComponents(),
-                subdiv.countBoundaryComponents());
-            EXPECT_EQ(tri.eulerCharTri(), subdiv.eulerCharTri());
-            EXPECT_EQ(tri.homology(), subdiv.homology());
+
+            // Subdivisions can turn invalid triangulations into valid
+            // triangulations (specifically when there are bad face
+            // identifications involved).  These wreaks havoc on several tests
+            // in cases where the incoming triangulation is not valid.
+            if (tri.isValid()) {
+                EXPECT_TRUE(subdiv.isValid());
+                EXPECT_EQ(tri.isClosed(), subdiv.isClosed());
+                EXPECT_EQ(tri.isIdeal(), subdiv.isIdeal());
+                EXPECT_EQ(tri.countBoundaryComponents(),
+                    subdiv.countBoundaryComponents());
+                EXPECT_EQ(tri.eulerCharTri(), subdiv.eulerCharTri());
+                if constexpr (regina::standardDim(dim) && dim > 2)
+                    EXPECT_EQ(tri.eulerCharManifold(),
+                        subdiv.eulerCharManifold());
+            } else {
+                // Subdivision can _create_ ideal vertices, but cannot remove
+                // them.
+                if (! tri.isClosed())
+                    EXPECT_FALSE(subdiv.isClosed());
+                if (tri.isIdeal())
+                    EXPECT_TRUE(subdiv.isIdeal());
+                EXPECT_LE(tri.countBoundaryComponents(),
+                    subdiv.countBoundaryComponents());
+            }
+
+            // Some tests that are better done _after_ simplification:
+            if constexpr (dim > 2)
+                subdiv.intelligentSimplify();
+
+            // Note: homology<k>() requires a valid triangulation for k > 1,
+            // and even with k == 1, bad face identifications can mess with
+            // the comparison (since these become ideal vertices after
+            // subdivision).
+            if (tri.isValid()) {
+                regina::for_constexpr<1, dim/2 + 1>([&tri, &subdiv](auto k) {
+                    EXPECT_EQ(tri.template homology<k>(),
+                        subdiv.template homology<k>());
+                });
+            }
         }
 
         static void verifyTightEncoding(const Triangulation<dim>& tri,
@@ -1092,113 +1264,125 @@ class TriangulationTest : public testing::Test {
             TightEncodingTest<Triangulation<dim>>::verifyTightEncoding(tri);
         }
 
-        template <int k = 1>
-        static void verifyHomology(const TestCase& test, const char* expect) {
-            SCOPED_TRACE_CSTRING(test.name);
-            EXPECT_EQ(test.tri.template homology<k>().str(), expect);
-        }
-
         void homologyH1GenericCases() {
-            verifyHomology<1>(empty, "0");
-            verifyHomology<1>(sphere, "0");
-            verifyHomology<1>(simpSphere, "0");
+            using regina::AbelianGroup;
+
+            EXPECT_EQ(empty.tri.template homology<1>(), AbelianGroup());
+            EXPECT_EQ(sphere.tri.template homology<1>(), AbelianGroup());
+            EXPECT_EQ(simpSphere.tri.template homology<1>(), AbelianGroup());
             if constexpr (dim == 2) {
-                verifyHomology<1>(sphereBundle, "2 Z");
-                verifyHomology<1>(twistedSphereBundle, "Z + Z_2");
+                EXPECT_EQ(sphereBundle.tri.template homology<1>(),
+                    AbelianGroup(2));
+                EXPECT_EQ(twistedSphereBundle.tri.template homology<1>(),
+                    AbelianGroup(1, {2}));
             } else {
-                verifyHomology<1>(sphereBundle, "Z");
-                verifyHomology<1>(twistedSphereBundle, "Z");
+                EXPECT_EQ(sphereBundle.tri.template homology<1>(),
+                    AbelianGroup(1));
+                EXPECT_EQ(twistedSphereBundle.tri.template homology<1>(),
+                    AbelianGroup(1));
             }
-            verifyHomology<1>(ball, "0");
-            verifyHomology<1>(ballBundle, "Z");
-            verifyHomology<1>(twistedBallBundle, "Z");
+            EXPECT_EQ(ball.tri.template homology<1>(), AbelianGroup());
+            EXPECT_EQ(ballBundle.tri.template homology<1>(), AbelianGroup(1));
+            EXPECT_EQ(twistedBallBundle.tri.template homology<1>(),
+                AbelianGroup(1));
         }
 
         void homologyH2GenericCases() {
             static_assert(dim > 3); // otherwise expected H2 groups are wrong
+            using regina::AbelianGroup;
 
             // It's a pity that almost all of these examples have trivial H2.
             // We need some more interesting generic constructions.
 
-            verifyHomology<2>(empty, "0");
-            verifyHomology<2>(sphere, "0");
-            verifyHomology<2>(simpSphere, "0");
-            verifyHomology<2>(sphereBundle, "0");
-            verifyHomology<2>(twistedSphereBundle, "0");
-            verifyHomology<2>(ball, "0");
-            verifyHomology<2>(ballBundle, "0");
-            verifyHomology<2>(twistedBallBundle, "0");
+            EXPECT_EQ(empty.tri.template homology<2>(), AbelianGroup());
+            EXPECT_EQ(sphere.tri.template homology<2>(), AbelianGroup());
+            EXPECT_EQ(simpSphere.tri.template homology<2>(), AbelianGroup());
+            EXPECT_EQ(sphereBundle.tri.template homology<2>(), AbelianGroup());
+            EXPECT_EQ(twistedSphereBundle.tri.template homology<2>(),
+                AbelianGroup());
+            EXPECT_EQ(ball.tri.template homology<2>(), AbelianGroup());
+            EXPECT_EQ(ballBundle.tri.template homology<2>(), AbelianGroup());
+            EXPECT_EQ(twistedBallBundle.tri.template homology<2>(),
+                AbelianGroup());
 
             if constexpr (dim == 5) {
                 using Example = regina::Example<dim>;
                 using LowDimExample = regina::Example<dim - 1>;
-                verifyHomology<2>({
-                    Example::singleCone(LowDimExample::sphereBundle()),
-                    "Real/ideal S3 x S1 x I" }, "0");
-                verifyHomology<2>({
-                    Example::doubleCone(LowDimExample::sphereBundle()),
-                    "Ideal S3 x S1 x I" }, "0");
+                EXPECT_EQ(Example::singleCone(LowDimExample::sphereBundle()).
+                    template homology<2>(), AbelianGroup());
+                EXPECT_EQ(Example::doubleCone(LowDimExample::sphereBundle()).
+                    template homology<2>(), AbelianGroup());
 
-                verifyHomology<2>({
-                    Example::singleCone(LowDimExample::twistedSphereBundle()),
-                    "Real/ideal S3 x~ S1 x I" }, "0");
-                verifyHomology<2>({
-                    Example::doubleCone(LowDimExample::twistedSphereBundle()),
-                    "Ideal S3 x~ S1 x I" }, "0");
+                EXPECT_EQ(
+                    Example::singleCone(LowDimExample::twistedSphereBundle()).
+                    template homology<2>(), AbelianGroup());
+                EXPECT_EQ(
+                    Example::doubleCone(LowDimExample::twistedSphereBundle()).
+                    template homology<2>(), AbelianGroup());
 
-                verifyHomology<2>({
-                    Example::singleCone(LowDimExample::s2xs2()),
-                    "Real/ideal S2 x S2 x I" }, "2 Z");
-                verifyHomology<2>({
-                    Example::doubleCone(LowDimExample::s2xs2()),
-                    "Ideal S2 x S2 x I" }, "2 Z");
+                EXPECT_EQ(
+                    Example::singleCone(LowDimExample::s2xs2()).
+                    template homology<2>(), AbelianGroup(2));
+                EXPECT_EQ(
+                    Example::doubleCone(LowDimExample::s2xs2()).
+                    template homology<2>(), AbelianGroup(2));
             }
         }
 
         void homologyH3GenericCases() {
-            static_assert(dim > 4); // otherwise expected H3 groups are wrong
+            static_assert(dim >= 4);
+            using regina::AbelianGroup;
 
             // It's a pity that almost all of these examples have trivial H3.
             // We need some more interesting generic constructions.
 
-            verifyHomology<3>(empty, "0");
-            verifyHomology<3>(sphere, "0");
-            verifyHomology<3>(simpSphere, "0");
-            verifyHomology<3>(sphereBundle, "0");
-            verifyHomology<3>(twistedSphereBundle, "0");
-            verifyHomology<3>(ball, "0");
-            verifyHomology<3>(ballBundle, "0");
-            verifyHomology<3>(twistedBallBundle, "0");
+            EXPECT_EQ(empty.tri.template homology<3>(), AbelianGroup());
+            EXPECT_EQ(sphere.tri.template homology<3>(), AbelianGroup());
+            EXPECT_EQ(simpSphere.tri.template homology<3>(), AbelianGroup());
+            if constexpr (dim == 4) {
+                EXPECT_EQ(sphereBundle.tri.template homology<3>(),
+                    AbelianGroup(1));
+                EXPECT_EQ(twistedSphereBundle.tri.template homology<3>(),
+                    AbelianGroup(0, {2}));
+            } else {
+                EXPECT_EQ(sphereBundle.tri.template homology<3>(),
+                    AbelianGroup());
+                EXPECT_EQ(twistedSphereBundle.tri.template homology<3>(),
+                    AbelianGroup());
+            }
+            EXPECT_EQ(ball.tri.template homology<3>(), AbelianGroup());
+            EXPECT_EQ(ballBundle.tri.template homology<3>(), AbelianGroup());
+            EXPECT_EQ(twistedBallBundle.tri.template homology<3>(),
+                AbelianGroup());
 
             if constexpr (dim == 5) {
                 using Example = regina::Example<dim>;
                 using LowDimExample = regina::Example<dim - 1>;
-                verifyHomology<3>({
-                    Example::singleCone(LowDimExample::sphereBundle()),
-                    "Real/ideal S3 x S1 x I" }, "Z");
-                verifyHomology<3>({
-                    Example::doubleCone(LowDimExample::sphereBundle()),
-                    "Ideal S3 x S1 x I" }, "Z");
+                EXPECT_EQ(Example::singleCone(LowDimExample::sphereBundle()).
+                    template homology<3>(), AbelianGroup(1));
+                EXPECT_EQ(Example::doubleCone(LowDimExample::sphereBundle()).
+                    template homology<3>(), AbelianGroup(1));
 
-                verifyHomology<3>({
-                    Example::singleCone(LowDimExample::twistedSphereBundle()),
-                    "Real/ideal S3 x~ S1 x I" }, "Z_2");
-                verifyHomology<3>({
-                    Example::doubleCone(LowDimExample::twistedSphereBundle()),
-                    "Ideal S3 x~ S1 x I" }, "Z_2");
+                EXPECT_EQ(
+                    Example::singleCone(LowDimExample::twistedSphereBundle()).
+                    template homology<3>(), AbelianGroup(0, {2}));
+                EXPECT_EQ(
+                    Example::doubleCone(LowDimExample::twistedSphereBundle()).
+                    template homology<3>(), AbelianGroup(0, {2}));
 
-                verifyHomology<3>({
-                    Example::singleCone(LowDimExample::s2xs2()),
-                    "Real/ideal S2 x S2 x I" }, "0");
-                verifyHomology<3>({
-                    Example::doubleCone(LowDimExample::s2xs2()),
-                    "Ideal S2 x S2 x I" }, "0");
+                EXPECT_EQ(Example::singleCone(LowDimExample::s2xs2()).
+                    template homology<3>(), AbelianGroup());
+                EXPECT_EQ(Example::doubleCone(LowDimExample::s2xs2()).
+                    template homology<3>(), AbelianGroup());
             }
         }
 
         static void verifyBoundaryH1(const TestCase& test,
-                size_t whichBdry, const char* h1) {
+                size_t whichBdry, const regina::AbelianGroup& expect) {
+            static_assert(dim > 2);
+
             SCOPED_TRACE_CSTRING(test.name);
+            ASSERT_LT(whichBdry, test.tri.countBoundaryComponents());
 
             // Calling homology() does not truncate ideal boundaries
             // at the centroids of invalid (dim-3)-faces that are
@@ -1213,39 +1397,35 @@ class TriangulationTest : public testing::Test {
             // So: for the time being, we perform this subdivision for
             // the cases dim ≤ 5 only.
             auto t = test.tri.boundaryComponent(whichBdry)->build();
-            if constexpr (regina::standardDim(dim - 1)) {
+            if constexpr (dim >= 4 && regina::standardDim(dim - 1)) {
                 t.subdivide();
                 t.intelligentSimplify();
             }
-            EXPECT_EQ(t.homology().str(), h1);
+            EXPECT_EQ(t.homology(), expect);
         }
 
         void boundaryHomologyGenericCases() {
-            verifyBoundaryH1(ball, 0, "0");
-            verifyBoundaryH1(ballBundle, 0, "Z");
-            verifyBoundaryH1(twistedBallBundle, 0, "Z");
-        }
-
-        static void verifyFundGroup(const TestCase& test, const char* expect) {
-            SCOPED_TRACE_CSTRING(test.name);
-            EXPECT_EQ(test.tri.group().recogniseGroup(), expect);
+            verifyBoundaryH1(ball, 0, {});
+            verifyBoundaryH1(ballBundle, 0, {1});
+            verifyBoundaryH1(twistedBallBundle, 0, {1});
         }
 
         void fundGroupGenericCases() {
-            verifyFundGroup(empty, "0");
-            verifyFundGroup(sphere, "0");
-            verifyFundGroup(simpSphere, "0");
+            EXPECT_EQ(empty.tri.group().recogniseGroup(), "0");
+            EXPECT_EQ(sphere.tri.group().recogniseGroup(), "0");
+            EXPECT_EQ(simpSphere.tri.group().recogniseGroup(), "0");
             if constexpr (dim == 2) {
-                verifyFundGroup(sphereBundle, "2 Z");
-                verifyFundGroup(twistedSphereBundle,
+                EXPECT_EQ(sphereBundle.tri.group().recogniseGroup(), "2 Z");
+                EXPECT_EQ(twistedSphereBundle.tri.group().recogniseGroup(),
                     "Z~Z w/monodromy a ↦ a^-1");
             } else {
-                verifyFundGroup(sphereBundle, "Z");
-                verifyFundGroup(twistedSphereBundle, "Z");
+                EXPECT_EQ(sphereBundle.tri.group().recogniseGroup(), "Z");
+                EXPECT_EQ(twistedSphereBundle.tri.group().recogniseGroup(),
+                    "Z");
             }
-            verifyFundGroup(ball, "0");
-            verifyFundGroup(ballBundle, "Z");
-            verifyFundGroup(twistedBallBundle, "Z");
+            EXPECT_EQ(ball.tri.group().recogniseGroup(), "0");
+            EXPECT_EQ(ballBundle.tri.group().recogniseGroup(), "Z");
+            EXPECT_EQ(twistedBallBundle.tri.group().recogniseGroup(), "Z");
         }
 
         template <int k>

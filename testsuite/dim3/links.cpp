@@ -43,7 +43,6 @@
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/dim3/testdim3.h"
-#include "testsuite/dim4/testdim4.h"
 
 using regina::Edge;
 using regina::NormalHypersurface;

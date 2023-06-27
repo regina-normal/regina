@@ -1832,6 +1832,8 @@ static void verifyRewrite(const TestCase& test, int height, int threads,
     // For now, this should only be called for knots that are
     // equivalent to their mirror image.
     SCOPED_TRACE_CSTRING(test.name);
+    SCOPED_TRACE_NUMERIC(height);
+    SCOPED_TRACE_NUMERIC(threads);
 
     size_t tot = 0;
     auto jones = test.link.jones();
