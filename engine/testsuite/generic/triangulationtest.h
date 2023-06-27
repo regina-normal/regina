@@ -45,6 +45,10 @@ using regina::Perm;
 using regina::Triangulation;
 using regina::Vertex;
 
+// A size above which we will omit homology checks, in settings where
+// operations are performed many times and speed is becoming a problem.
+static constexpr size_t HOMOLOGY_THRESHOLD = 40;
+
 /**
  * Clears all computed properties of the given triangulation.
  *
@@ -880,34 +884,36 @@ class TriangulationTest : public testing::Test {
                 const char* name) {
             SCOPED_TRACE_CSTRING(name);
 
+            // Note: we explicitly don't clear properties after reorderBFS().
+            // The reorder operation _preserves_ the skeleton despite
+            // reordering top-dimensional simplices, and we should work with
+            // this preserved skeleton because this is more likely to cause
+            // problems than a freshly computed skeleton.
+
             // Reordering the original:
             {
                 Triangulation<dim> a(t);
                 a.reorderBFS();
-                clearProperties(a);
                 EXPECT_TRUE(t.isIsomorphicTo(a));
             }
             {
                 Triangulation<dim> b(t);
                 b.reorderBFS(true);
-                clearProperties(b);
                 EXPECT_TRUE(t.isIsomorphicTo(b));
             }
 
             // Reordering a random relabelling of the original:
             Triangulation<dim> relabel = Isomorphism<dim>::random(t.size())(t);
-            clearProperties(relabel);
+            clearProperties(relabel); // recompute the skeleton here
             EXPECT_TRUE(t.isIsomorphicTo(relabel));
             {
                 Triangulation<dim> d(relabel);
                 d.reorderBFS();
-                clearProperties(d);
                 EXPECT_TRUE(t.isIsomorphicTo(d));
             }
             {
                 Triangulation<dim> e(relabel);
                 e.reorderBFS(true);
-                clearProperties(e);
                 EXPECT_TRUE(t.isIsomorphicTo(e));
             }
         }
@@ -988,7 +994,7 @@ class TriangulationTest : public testing::Test {
 
             Triangulation<dim> canonical(tri);
             canonical.makeCanonical();
-            clearProperties(canonical);
+            clearProperties(canonical); // recompute skeleton for detail()
             EXPECT_TRUE(canonical.isIsomorphicTo(tri));
 
             for (int i = 0; i < trials; ++i) {
@@ -996,7 +1002,7 @@ class TriangulationTest : public testing::Test {
                     Isomorphism<dim>::random(tri.size())(tri);
 
                 t.makeCanonical();
-                clearProperties(t);
+                clearProperties(t); // recompute skeleton for detail()
 
                 EXPECT_EQ(t, canonical);
                 EXPECT_EQ(t.detail(), canonical.detail());
@@ -1103,6 +1109,8 @@ class TriangulationTest : public testing::Test {
                     if (standardSimplex)
                         EXPECT_TRUE(performed);
                 }
+                // Ensure that properties we are about to verify have been
+                // explicitly recomputed.
                 clearProperties(result);
 
                 if (! performed) {
@@ -1127,7 +1135,7 @@ class TriangulationTest : public testing::Test {
                     EXPECT_EQ(result.isClosed(), tri.isClosed());
 
                 // Homology can only be tested for valid triangulations.
-                if (tri.isValid()) {
+                if (tri.size() <= HOMOLOGY_THRESHOLD && tri.isValid()) {
                     EXPECT_EQ(result.homology(), tri.homology());
                     // We only test H2 in small dimensions, since for higher
                     // dimensions this becomes too slow.
@@ -1140,25 +1148,25 @@ class TriangulationTest : public testing::Test {
                 Isomorphism<dim> iso = Isomorphism<dim>::random(result.size(),
                     true);
                 result = iso(result);
-                clearProperties(result);
 
                 if constexpr (k == dim && (dim == 3 || dim == 4)) {
                     // For k == dim, we can undo the Pacher move with an edge
                     // collapse (which is supported for dimensions 3 and 4).
-                    regina::Triangulation<dim> collapsed(result);
+                    regina::Triangulation<dim> inv(result);
 
-                    performed = collapsed.collapseEdge(
-                        collapsed.simplex(iso.simpImage(tri.size() + dim - 1))->
+                    performed = inv.collapseEdge(
+                        inv.simplex(iso.simpImage(tri.size() + dim - 1))->
                             edge(regina::Edge<dim>::edgeNumber
                                 [iso.facetPerm(tri.size() + dim - 1)[0]]
                                 [iso.facetPerm(tri.size() + dim - 1)[dim]]),
                         true, true);
-                    clearProperties(collapsed);
-
                     EXPECT_TRUE(performed);
-                    EXPECT_TRUE(collapsed.isIsomorphicTo(tri));
+
+                    // Don't clear properties from inv, since what we're about
+                    // to test does not rely on computed topological properties.
+                    EXPECT_TRUE(inv.isIsomorphicTo(tri));
                     if (tri.isOrientable())
-                        EXPECT_TRUE(collapsed.isOriented());
+                        EXPECT_TRUE(inv.isOriented());
                 }
 
                 // For all k, we can undo the original Pachner move by
@@ -1175,9 +1183,10 @@ class TriangulationTest : public testing::Test {
                                 iso.facetPerm(result.size() - 1)));
                     performed = inv.pachner(face, true, true);
                 }
-                clearProperties(inv);
-
                 EXPECT_TRUE(performed);
+
+                // Don't clear properties from inv, since what we're about to
+                // test does not rely on computed topological properties.
                 EXPECT_TRUE(inv.isIsomorphicTo(tri));
                 if (tri.isOrientable())
                     EXPECT_TRUE(inv.isOriented());
@@ -1208,6 +1217,8 @@ class TriangulationTest : public testing::Test {
                 subdiv.orient();
 
             subdiv.subdivide();
+            // Ensure that properties we are about to verify have been
+            // explicitly recomputed.
             clearProperties(subdiv);
 
             EXPECT_EQ(tri.hasBoundaryFacets(), subdiv.hasBoundaryFacets());

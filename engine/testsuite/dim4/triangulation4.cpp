@@ -566,7 +566,9 @@ TEST_F(Dim4Test, barycentricSubdivision) {
     {
         Triangulation<4> tri(pillow_twoCycle.tri);
         EXPECT_FALSE(tri.isValid());
-        tri.subdivide();
+        tri.subdivide(); // allow subdivide() to update validity, if it can
+        EXPECT_FALSE(tri.isValid());
+        clearProperties(tri); // force validity to be explicitly recomputed
         EXPECT_FALSE(tri.isValid());
     }
     // The following triangulations should change from invalid to valid
@@ -575,17 +577,17 @@ TEST_F(Dim4Test, barycentricSubdivision) {
     {
         Triangulation<4> tri(pillow_threeCycle.tri);
         EXPECT_FALSE(tri.isValid());
-        tri.subdivide();
+        tri.subdivide(); // allow subdivide() to update validity, if it can
         EXPECT_TRUE(tri.isValid());
-        clearProperties(tri);
+        clearProperties(tri); // force validity to be explicitly recomputed
         EXPECT_TRUE(tri.isValid());
     }
     {
         Triangulation<4> tri(pillow_fourCycle.tri);
         EXPECT_FALSE(tri.isValid());
-        tri.subdivide();
+        tri.subdivide(); // allow subdivide() to update validity, if it can
         EXPECT_TRUE(tri.isValid());
-        clearProperties(tri);
+        clearProperties(tri); // force validity to be explicitly recomputed
         EXPECT_TRUE(tri.isValid());
     }
 }
@@ -933,6 +935,9 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
         }
 
         // The move was performed.
+
+        // Ensure that properties we are about to verify are explicitly
+        // recomputed.
         clearProperties(alt);
 
         EXPECT_EQ(alt.size(), tri.size());
@@ -954,7 +959,6 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
         // Randomly relabel the pentachora, but preserve orientation.
         Isomorphism<4> iso = Isomorphism<4>::random(tri.size(), true);
         alt = iso(alt);
-        clearProperties(alt);
 
         // Ensure that there exists an inverse 4-4 move.
         bool found = false;
@@ -963,7 +967,9 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
                 Triangulation<4> inv(alt);
                 EXPECT_TRUE(inv.fourFourMove(inv.edge(e->index()),
                     false, true));
-                clearProperties(inv);
+
+                // Don't clear properties from inv, since what we're about to
+                // test does not rely on computed topological properties.
                 if (tri.isOrientable())
                     EXPECT_TRUE(inv.isOriented());
                 if (inv.isIsomorphicTo(tri)) {
@@ -1001,6 +1007,9 @@ static void verifySnapEdge(const Triangulation<4>& tri, const char* name) {
         }
 
         // The move was performed.
+
+        // Ensure that properties we are about to verify are explicitly
+        // recomputed.
         clearProperties(alt);
 
         EXPECT_EQ(alt.size(), tri.size() + 4);
@@ -1014,7 +1023,7 @@ static void verifySnapEdge(const Triangulation<4>& tri, const char* name) {
         EXPECT_EQ(alt.eulerCharTri(), tri.eulerCharTri());
         EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
 
-        if ( tri.isValid() ) {
+        if (tri.size() <= HOMOLOGY_THRESHOLD && tri.isValid()) {
             EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
             EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
         }
@@ -1061,6 +1070,9 @@ static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
             other = Isomorphism<4>::random(other.size())(other);
 
         other.idealToFinite();
+
+        // Ensure that properties we are about to verify are explicitly
+        // recomputed.
         clearProperties(other);
 
         EXPECT_NE(other, tri);
