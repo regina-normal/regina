@@ -5,7 +5,6 @@
 SET ( FILES
   eltmoves.cpp
   homologicaldata.cpp
-  links.cpp
   triangulation3.cpp
   )
 

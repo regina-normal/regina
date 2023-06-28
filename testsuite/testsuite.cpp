@@ -106,7 +106,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("triangulation3", &addTriangulation3));
     aliases.insert(std::make_pair("dim3", &addTriangulation3));
     sets.insert(std::make_pair("elementarymoves", &addElementaryMoves));
-    sets.insert(std::make_pair("linkingsurfaces", &addLinkingSurfaces));
     sets.insert(std::make_pair("homologicaldata", &addHomologicalData));
 
     if (argc <= 1)

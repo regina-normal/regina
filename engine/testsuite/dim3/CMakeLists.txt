@@ -3,6 +3,7 @@ SET ( FILES
   decomposition.cpp
   facetpairing3.cpp
   isomorphism3.cpp
+  links3.cpp
   )
 
 # Prepend folder name
