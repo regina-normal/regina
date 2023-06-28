@@ -3,7 +3,6 @@
 # Files to compile
 #
 SET ( FILES
-  eltmoves.cpp
   homologicaldata.cpp
   triangulation3.cpp
   )

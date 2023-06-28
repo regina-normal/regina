@@ -4,6 +4,7 @@ SET ( FILES
   facetpairing3.cpp
   isomorphism3.cpp
   links3.cpp
+  moves3.cpp
   )
 
 # Prepend folder name
