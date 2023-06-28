@@ -457,7 +457,8 @@ std::pair<const Triangle<3>*, const Triangle<3>*>
         }
     }
 
-    linkOf_ |= (ans.first ? IS_3D_TRIANGLE_LINK : NO_3D_TRIANGLE_LINK);
+    if (ans.first)
+        linkOf_ |= IS_3D_TRIANGLE_LINK;
     return ans;
 }
 

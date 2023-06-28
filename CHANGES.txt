@@ -71,6 +71,12 @@ Version 7.4  [ (to be announced) ]
         Class Matrix<T>:
             - Added destructive and non-destructive rank() functions.
             - New routines negateRow() and negateCol().
+        Class NormalSurface, NormalHypersurface:
+            - Fixed a bug where, if a surface was a normalised triangle link
+              but not a thin triangle link, then calling isThinTriangleLink()
+              _before_ isNormalTriangleLink() would make the latter return
+              an empty list of results.  Likewise with tetrahedron links in
+              4-dimensional triangulations.
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old
