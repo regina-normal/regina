@@ -324,7 +324,8 @@ std::pair<const Triangle<4>*, const Triangle<4>*>
         }
     }
 
-    linkOf_ |= (ans.first ? IS_4D_TRIANGLE_LINK : NO_4D_TRIANGLE_LINK);
+    if (ans.first)
+        linkOf_ |= IS_4D_TRIANGLE_LINK;
     return ans;
 }
 
@@ -433,7 +434,8 @@ std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
         }
     }
 
-    linkOf_ |= (ans.first ? IS_4D_TETRAHEDRON_LINK : NO_4D_TETRAHEDRON_LINK);
+    if (ans.first)
+        linkOf_ |= IS_4D_TETRAHEDRON_LINK;
     return ans;
 }
 
