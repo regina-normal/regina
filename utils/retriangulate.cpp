@@ -51,6 +51,7 @@ enum {
     FLAVOUR_KNOT = 100
 } flavour = FLAVOUR_NONE;
 bool internalSig = false;
+bool exhaustive = false;
 
 template <int dim>
 void process(const regina::Triangulation<dim>& tri) {
@@ -71,7 +72,8 @@ void process(const regina::Triangulation<dim>& tri) {
                 if (t.size() < tri.size()) {
                     nonMinimal = true;
                     simpler = sig;
-                    return true;
+					if (!exhaustive)
+						return true;
                 }
 
                 ++nSolns;
@@ -86,7 +88,8 @@ void process(const regina::Triangulation<dim>& tri) {
                 if (t.size() < tri.size()) {
                     nonMinimal = true;
                     simpler = std::move(classic);
-                    return true;
+					if (!exhaustive)
+						return true;
                 }
 
                 ++nSolns;
@@ -141,6 +144,7 @@ R"help(Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
   -a, --anysig                Output does not need to use classic signature(s)
+  -e, --exhaustive            Do not stop when encountering smaller signature
   -v, --version               Show which version of Regina is being used.
       --help                  Show this help message
 )help";
@@ -148,7 +152,7 @@ R"help(Usage: retriangulate <isosig>
 
 int main(int argc, char* argv[]) {
     // Parse the command-line arguments.
-    const char* shortOpt = ":h:t:34kav";
+    const char* shortOpt = ":h:t:34kave";
     struct option longOpt[] = {
         { "height", required_argument, nullptr, 'h' },
         { "threads", required_argument, nullptr, 't' },
@@ -156,6 +160,7 @@ int main(int argc, char* argv[]) {
         { "dim4", no_argument, nullptr, '4' },
         { "knot", no_argument, nullptr, 'k' },
         { "anysig", no_argument, nullptr, 'a' },
+		{ "exhaustive", no_argument, nullptr, 'e' },
         { "version", no_argument, nullptr, 'v' },
         { "help", no_argument, nullptr, '_' },
         { nullptr, 0, nullptr, 0 }
@@ -213,6 +218,9 @@ int main(int argc, char* argv[]) {
             case 'a':
                 internalSig = true;
                 break;
+		    case 'e' :
+				exhaustive = true;
+				break;
             case 'v':
                 // If other arguments were passed, just silently ignore them
                 // for now.  Ideally we would give an error in this scenario.
