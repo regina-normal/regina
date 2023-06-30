@@ -56,12 +56,14 @@ bool exhaustive = false;
 template <int dim>
 void process(const regina::Triangulation<dim>& tri) {
     unsigned long nSolns = 0;
+	unsigned long total = 0;
     bool nonMinimal = false;
     std::string simpler;
 
     tri.retriangulate(argHeight, argThreads, nullptr /* tracker */,
-        [&nSolns, &nonMinimal, &simpler, &tri](
+					  [&total, &nSolns, &nonMinimal, &simpler, &tri](
                 const std::string& sig, const regina::Triangulation<dim>& t) {
+			++total;
             if (t.size() > tri.size())
                 return false;
 
@@ -100,8 +102,10 @@ void process(const regina::Triangulation<dim>& tri) {
     if (nonMinimal) {
         std::cerr << "Triangulation is non-minimal!" << std::endl;
         std::cerr << "Smaller triangulation: " << simpler << std::endl;
-    } else
-        std::cerr << "Found " << nSolns << " triangulation(s)." << std::endl;
+    }
+	if (!nonMinimal || exhaustive)
+		std::cerr << "Found " << nSolns << " triangulation(s)." << std::endl;
+	std::cerr << "Considered " << total << " triangulations." << std::endl;
 }
 
 void process(const regina::Link& knot) {
