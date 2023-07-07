@@ -191,12 +191,6 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
             data_.prop_.H2_->writeXMLData(out_);
             out_ << "</H2>\n";
         }
-        if (data_.prop_.twoSphereBoundaryComponents_.has_value())
-            out_ << "  " << xmlValueTag("twosphereboundarycomponents",
-                *data_.prop_.twoSphereBoundaryComponents_) << '\n';
-        if (data_.prop_.negativeIdealBoundaryComponents_.has_value())
-            out_ << "  " << xmlValueTag("negativeidealboundarycomponents",
-                *data_.prop_.negativeIdealBoundaryComponents_) << '\n';
         if (data_.prop_.zeroEfficient_.has_value())
             out_ << "  " << xmlValueTag("zeroeff", *data_.prop_.zeroEfficient_)
                 << '\n';
