@@ -47,7 +47,7 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
-        strictAngleStructure_ = true; // confirmed: no solution
+        strictAngleStructure_ = AngleStructure(*this, { 1 });
         return true;
     }
 
@@ -110,8 +110,8 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
-        generalAngleStructure_ = true; // confirmed: no solution
-        return false;
+        generalAngleStructure_ = AngleStructure(*this, { 1 });
+        return true;
     }
 
     if (! hasBoundaryTriangles()) {

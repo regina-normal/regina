@@ -4,7 +4,6 @@
 #
 SET ( FILES
   homologicaldata.cpp
-  triangulation3.cpp
   )
 
 # Prepend folder name

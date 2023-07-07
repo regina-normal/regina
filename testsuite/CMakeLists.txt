@@ -1,5 +1,4 @@
 SET ( SOURCES
-  exhaustive.cpp
   runalltests.cpp
   testsuite.cpp
   )

@@ -334,18 +334,59 @@ class TriangulationTest : public testing::Test {
             // simply "not on real boundary" / "on real boundary".
             SCOPED_TRACE_CSTRING(test.name);
 
+            using regina::Vertex;
+
             size_t foundSphere = 0, foundBall = 0;
             size_t foundIdeal = 0, foundInvalid = 0;
             for (auto v : test.tri.vertices()) {
                 if constexpr (dim > 2 && regina::standardDim(dim)) {
-                    if (! v->isValid())
+                    if (! v->isValid()) {
                         ++foundInvalid;
-                    else if (v->isIdeal())
+                        if constexpr (dim == 3) {
+                            EXPECT_TRUE(v->isBoundary());
+                            EXPECT_FALSE(v->isLinkClosed());
+                            EXPECT_FALSE(v->isStandard());
+                            EXPECT_FALSE(v->isIdeal());
+                            EXPECT_EQ(v->linkType(), Vertex<dim>::INVALID);
+                        }
+                    } else if (v->isIdeal()) {
                         ++foundIdeal;
-                    else if (v->isBoundary())
+                        if constexpr (dim == 3) {
+                            EXPECT_TRUE(v->isBoundary());
+                            EXPECT_TRUE(v->isLinkClosed());
+                            if (v->isStandard()) {
+                                EXPECT_TRUE(
+                                    v->linkType() == Vertex<dim>::TORUS ||
+                                    v->linkType() == Vertex<dim>::KLEIN_BOTTLE);
+                                EXPECT_EQ(v->linkEulerChar(), 0);
+                                EXPECT_EQ(v->isLinkOrientable(),
+                                    v->linkType() == Vertex<dim>::TORUS);
+                            } else {
+                                EXPECT_EQ(v->linkType(),
+                                    Vertex<dim>::NON_STANDARD_CUSP);
+                                EXPECT_NE(v->linkEulerChar(), 2);
+                                EXPECT_NE(v->linkEulerChar(), 0);
+                            }
+                        }
+                    } else if (v->isBoundary()) {
                         ++foundBall;
-                    else
+                        if constexpr (dim == 3) {
+                            EXPECT_FALSE(v->isLinkClosed());
+                            EXPECT_TRUE(v->isLinkOrientable());
+                            EXPECT_TRUE(v->isStandard());
+                            EXPECT_EQ(v->linkType(), Vertex<dim>::DISC);
+                            EXPECT_EQ(v->linkEulerChar(), 1);
+                        }
+                    } else {
                         ++foundSphere;
+                        if constexpr (dim == 3) {
+                            EXPECT_TRUE(v->isLinkClosed());
+                            EXPECT_TRUE(v->isLinkOrientable());
+                            EXPECT_TRUE(v->isStandard());
+                            EXPECT_EQ(v->linkType(), Vertex<dim>::SPHERE);
+                            EXPECT_EQ(v->linkEulerChar(), 2);
+                        }
+                    }
                 } else {
                     if (v->isBoundary())
                         ++foundBall;
@@ -1252,8 +1293,12 @@ class TriangulationTest : public testing::Test {
             }
 
             // Some tests that are better done _after_ simplification:
-            if constexpr (dim > 2)
+            if constexpr (dim > 2) {
                 subdiv.intelligentSimplify();
+                // While we're here: simplification shouldn't break orientation.
+                if (tri.isOrientable())
+                    EXPECT_TRUE(subdiv.isOriented());
+            }
 
             // Note: homology<k>() requires a valid triangulation for k > 1,
             // and even with k == 1, bad face identifications can mess with
@@ -1297,7 +1342,7 @@ class TriangulationTest : public testing::Test {
         }
 
         void homologyH2GenericCases() {
-            static_assert(dim > 3); // otherwise expected H2 groups are wrong
+            static_assert(dim > 2);
             using regina::AbelianGroup;
 
             // It's a pity that almost all of these examples have trivial H2.
@@ -1306,9 +1351,17 @@ class TriangulationTest : public testing::Test {
             EXPECT_EQ(empty.tri.template homology<2>(), AbelianGroup());
             EXPECT_EQ(sphere.tri.template homology<2>(), AbelianGroup());
             EXPECT_EQ(simpSphere.tri.template homology<2>(), AbelianGroup());
-            EXPECT_EQ(sphereBundle.tri.template homology<2>(), AbelianGroup());
-            EXPECT_EQ(twistedSphereBundle.tri.template homology<2>(),
-                AbelianGroup());
+            if constexpr (dim == 3) {
+                EXPECT_EQ(sphereBundle.tri.template homology<2>(),
+                    AbelianGroup(1));
+                EXPECT_EQ(twistedSphereBundle.tri.template homology<2>(),
+                    AbelianGroup(0, {2}));
+            } else {
+                EXPECT_EQ(sphereBundle.tri.template homology<2>(),
+                    AbelianGroup());
+                EXPECT_EQ(twistedSphereBundle.tri.template homology<2>(),
+                    AbelianGroup());
+            }
             EXPECT_EQ(ball.tri.template homology<2>(), AbelianGroup());
             EXPECT_EQ(ballBundle.tri.template homology<2>(), AbelianGroup());
             EXPECT_EQ(twistedBallBundle.tri.template homology<2>(),
@@ -1414,9 +1467,16 @@ class TriangulationTest : public testing::Test {
         }
 
         void boundaryHomologyGenericCases() {
+            static_assert(dim > 2);
+
             verifyBoundaryH1(ball, 0, {});
-            verifyBoundaryH1(ballBundle, 0, {1});
-            verifyBoundaryH1(twistedBallBundle, 0, {1});
+            if constexpr (dim == 3) {
+                verifyBoundaryH1(ballBundle, 0, {2});
+                verifyBoundaryH1(twistedBallBundle, 0, {1, {2}});
+            } else {
+                verifyBoundaryH1(ballBundle, 0, {1});
+                verifyBoundaryH1(twistedBallBundle, 0, {1});
+            }
         }
 
         void fundGroupGenericCases() {

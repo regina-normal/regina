@@ -684,10 +684,12 @@ bool Triangulation<3>::zeroTwoMove(
         bool check, bool perform ) {
     size_t deg = e->degree();
     if ( check ) {
-        if ( e->isBoundary() and ( t0 > deg or t1 > deg ) ) {
-            return false;
-        } else if ( t0 >= deg or t1 >= deg ) {
-            return false;
+        if ( e->isBoundary() ) {
+            if ( t0 > deg or t1 > deg )
+                return false;
+        } else {
+            if ( t0 >= deg or t1 >= deg )
+                return false;
         }
     }
     size_t t[2] = {t0, t1};

@@ -133,6 +133,21 @@ Version 7.4  [ (to be announced) ]
               exception if their preconditions fail.
             - Routine reorderTetrahedraBFS() is now a deprecated alias for
               reorderBFS() (which is available in all dimensions).
+            - Routine idealToFinite() no longer subdivides the triangulation
+              if there are invalid edges but no vertices to truncate.
+            - Routines hasStrictAngleStructure(), hasGeneralAngleStructure(),
+              strictAngleStructure() and generalAngleStructure() have changed
+              their behaviour for the empty triangulation: they now return the
+              empty angle structure as a solution (since, strictly speaking,
+              the empty structure is both strict and taut).
+            - Fixed an issue with zeroTwoMove(edge, t0, t1) where: if the given
+              edge was valid and boundary, and if t0 and/or t1 was exactly the
+              edge degree, and if the routine was asked to check legality, then
+              the move would be incorrectly reported as illegal.  (This was
+              essentially harmless, since it effectively made the routine
+              over-cautious by not performing moves that it could have, and
+              since if the routine was _not_ asked to check legality then the
+              move was still being performed correctly.)
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
         Class Vector<T>:

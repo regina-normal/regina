@@ -165,8 +165,6 @@ TEST_F(Dim2Test, isomorphismSignature) {
 }
 TEST_F(Dim2Test, pachner) {
     testManualCases(TriangulationTest<2>::verifyPachner);
-}
-TEST_F(Dim2Test, pachnerSimplicial) {
     TriangulationTest<2>::verifyPachnerSimplicial();
 }
 TEST_F(Dim2Test, barycentricSubdivision) {
@@ -177,9 +175,21 @@ TEST_F(Dim2Test, tightEncoding) {
 }
 TEST_F(Dim2Test, homologyH1) {
     TriangulationTest<2>::homologyH1GenericCases();
+
+    EXPECT_EQ(s2Oct.tri.homology<1>(), regina::AbelianGroup());
+    EXPECT_EQ(torus2.tri.homology<1>(), regina::AbelianGroup(4));
+    EXPECT_EQ(rp2.tri.homology<1>(), regina::AbelianGroup(0, {2}));
+    EXPECT_EQ(disjoint2.tri.homology<1>(), regina::AbelianGroup(3));
+    EXPECT_EQ(disjoint3.tri.homology<1>(), regina::AbelianGroup(2, {2}));
 }
 TEST_F(Dim2Test, fundGroup) {
     TriangulationTest<2>::fundGroupGenericCases();
+
+    EXPECT_EQ(s2Oct.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(torus2.tri.group().recogniseGroup(), "");
+    EXPECT_EQ(rp2.tri.group().recogniseGroup(), "Z_2");
+
+    // We cannot call group() on disjoint triangulations.
 }
 TEST_F(Dim2Test, chainComplex) {
     testManualCases(TriangulationTest<2>::verifyChainComplex);

@@ -81,8 +81,6 @@ TEST_F(Dim5Test, isomorphismSignature) {
 }
 TEST_F(Dim5Test, pachner) {
     testGenericCases(TriangulationTest<5>::verifyPachner);
-}
-TEST_F(Dim5Test, pachnerSimplicial) {
     TriangulationTest<5>::verifyPachnerSimplicial();
 }
 TEST_F(Dim5Test, tightEncoding) {
@@ -151,8 +149,6 @@ TEST_F(Dim6Test, isomorphismSignature) {
 }
 TEST_F(Dim6Test, pachner) {
     testGenericCases(TriangulationTest<6>::verifyPachner);
-}
-TEST_F(Dim6Test, pachnerSimplicial) {
     TriangulationTest<6>::verifyPachnerSimplicial();
 }
 TEST_F(Dim6Test, tightEncoding) {

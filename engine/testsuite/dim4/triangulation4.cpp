@@ -214,6 +214,8 @@ class Dim4Test : public TriangulationTest<4> {
 TEST_F(Dim4Test, magic) {
     // Verify the "magic" string-based constructor.
     testManualCases([](const Triangulation<4>& t, const char* name) {
+        SCOPED_TRACE_CSTRING(name);
+
         std::string sig = t.isoSig();
         Triangulation<4> recon(sig);
         EXPECT_EQ(recon.isoSig(), sig);
@@ -519,6 +521,164 @@ TEST_F(Dim4Test, vertexLinksBasic) {
     verifyVertexLinksBasic(disjoint3, 4, 4, 2);
 }
 
+static void verifyVertexLinks(const Triangulation<4>& tri, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (auto v : tri.vertices()) {
+        const Triangulation<3>& link = v->buildLink();
+        Isomorphism<4> iso = v->buildLinkInclusion();
+
+        EXPECT_EQ(link.size(), v->degree());
+        EXPECT_TRUE(link.isConnected());
+
+        if (v->isValid()) {
+            if (v->isBoundary()) {
+                if (v->boundaryComponent()->size() > 0) {
+                    EXPECT_TRUE(link.isBall());
+                } else {
+                    EXPECT_TRUE(link.isClosed());
+                    EXPECT_TRUE(! link.isSphere());
+                }
+            } else
+                EXPECT_TRUE(link.isSphere());
+        } else {
+            // Invalid vertex.
+            if (! v->isBoundary()) {
+                ADD_FAILURE() << "Invalid vertex not marked as boundary";
+            } else if (v->boundaryComponent()->countTetrahedra() > 0) {
+                // Link should have boundary faces but not be a 3-ball.
+                EXPECT_TRUE(link.hasBoundaryTriangles());
+                EXPECT_FALSE(link.isBall());
+            } else {
+                // Link should have no boundary faces, but not
+                // be a closed 3-manifold.
+                EXPECT_FALSE(link.hasBoundaryTriangles());
+                EXPECT_FALSE(link.isClosed());
+            }
+        }
+
+        // Make sure the triangulated link is labelled correctly.
+        for (size_t j = 0; j < v->degree(); ++j) {
+            auto pent = tri.pentachoron(iso.pentImage(j));
+
+            regina::Perm<5> perm = iso.facetPerm(j);
+            int vNum = perm[4];
+            EXPECT_EQ(pent->vertex(vNum), v);
+            EXPECT_EQ(perm[0], pent->tetrahedronMapping(vNum)[0]);
+            EXPECT_EQ(perm[1], pent->tetrahedronMapping(vNum)[1]);
+            EXPECT_EQ(perm[2], pent->tetrahedronMapping(vNum)[2]);
+            EXPECT_EQ(perm[3], pent->tetrahedronMapping(vNum)[3]);
+
+            for (int k = 0; k < 4; ++k) {
+                auto tet = link.tetrahedron(j);
+                auto adj = tet->adjacentTetrahedron(k);
+                if (adj) {
+                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]),
+                        tri.pentachoron(iso.pentImage(adj->index())));
+                    EXPECT_EQ(pent->adjacentGluing(perm[k]),
+                        iso.facetPerm(adj->index()) *
+                            regina::Perm<5>::extend(tet->adjacentGluing(k)) *
+                            perm.inverse());
+                } else {
+                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]), nullptr);
+                }
+            }
+        }
+    }
+}
+
+TEST_F(Dim4Test, vertexLinks) {
+    testManualCases(verifyVertexLinks);
+    runCensusAllBounded(verifyVertexLinks);
+    runCensusAllNoBdry(verifyVertexLinks);
+}
+
+static void verifyEdgeLinks(const Triangulation<4>& tri, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (auto e : tri.edges()) {
+        const Triangulation<2>& link = e->buildLink();
+        Isomorphism<4> iso = e->buildLinkInclusion();
+
+        EXPECT_EQ(link.size(), e->degree());
+        EXPECT_TRUE(link.isConnected());
+        EXPECT_EQ(link.isClosed(), ! e->isBoundary());
+        if (e->isValid())
+            EXPECT_EQ(link.eulerChar(), (e->isBoundary() ? 1 : 2));
+
+        // Make sure the triangulated edge link is labelled correctly.
+        for (size_t j = 0; j < e->degree(); ++j) {
+            auto pent = tri.pentachoron(iso.pentImage(j));
+
+            regina::Perm<5> perm = iso.facetPerm(j);
+            int eNum = regina::Edge<4>::edgeNumber[perm[3]][perm[4]];
+            EXPECT_EQ(pent->edge(eNum), e);
+            EXPECT_EQ(perm[0], pent->triangleMapping(eNum)[0]);
+            EXPECT_EQ(perm[1], pent->triangleMapping(eNum)[1]);
+            EXPECT_EQ(perm[2], pent->triangleMapping(eNum)[2]);
+            EXPECT_EQ(perm[3], pent->edgeMapping(eNum)[0]);
+            EXPECT_EQ(perm[4], pent->edgeMapping(eNum)[1]);
+
+            for (int k = 0; k < 3; ++k) {
+                auto t = link.triangle(j);
+                auto adj = t->adjacentTriangle(k);
+                if (adj) {
+                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]),
+                        tri.pentachoron(iso.pentImage(adj->index())));
+                    // Note: we expect broken gluings with reverse
+                    // self-identifications.
+                    if (! e->hasBadIdentification())
+                        EXPECT_EQ(pent->adjacentGluing(perm[k]),
+                            iso.facetPerm(adj->index()) *
+                                Perm<5>::extend(t->adjacentGluing(k)) *
+                                perm.inverse());
+                } else {
+                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]), nullptr);
+                }
+            }
+        }
+
+        // Make sure the edge link matches what happens on the vertex links.
+        auto pent = e->front().pentachoron();
+        regina::Perm<5> perm = e->front().vertices();
+        for (int j = 0; j < 2; ++j) {
+
+            // In the vertex link at the jth end of this edge,
+            // find the vertex that this edge projects down to.
+            Vertex<4>* v = pent->vertex(perm[j]);
+            const Triangulation<3>& vLink = v->buildLink();
+
+            size_t k;
+            for (k = 0; k < v->degree(); ++k)
+                if (v->embedding(k).pentachoron() == pent &&
+                        v->embedding(k).vertex() == perm[j])
+                    break;
+            EXPECT_LT(k, v->degree());
+
+            Vertex<3>* match = vLink.tetrahedron(k)->vertex(
+                pent->tetrahedronMapping(perm[j]).pre(perm[1-j]));
+
+            if (! e->hasBadIdentification()) {
+                EXPECT_TRUE(match->buildLink().isIsomorphicTo(link));
+            } else {
+                // It's hard to guarantee much in this setting, sigh.
+                EXPECT_EQ(match->degree(), 2 * e->degree());
+            }
+        }
+
+    }
+}
+
+TEST_F(Dim4Test, edgeLinks) {
+    // Notes:
+    // - idealFigEightProduct -> has torus link
+    // - mixedFigEightProduct -> has torus link
+    // - pillow_fourCycle -> has PP link
+    testManualCases(verifyEdgeLinks);
+    runCensusAllBounded(verifyEdgeLinks);
+    runCensusAllNoBdry(verifyEdgeLinks);
+}
+
 TEST_F(Dim4Test, orient) {
     testManualCases(TriangulationTest<4>::verifyOrient);
 }
@@ -555,6 +715,7 @@ TEST_F(Dim4Test, pachner) {
     testManualCases(TriangulationTest<4>::verifyPachner);
     runCensusAllBounded(TriangulationTest<4>::verifyPachner);
     runCensusAllNoBdry(TriangulationTest<4>::verifyPachner);
+    TriangulationTest<4>::verifyPachnerSimplicial();
 }
 
 TEST_F(Dim4Test, barycentricSubdivision) {
@@ -761,164 +922,6 @@ TEST_F(Dim4Test, copyMove) {
     testManualCases(TriangulationTest<4>::verifyCopyMove);
 }
 
-static void verifyVertexLinks(const Triangulation<4>& tri, const char* name) {
-    SCOPED_TRACE_CSTRING(name);
-
-    for (auto v : tri.vertices()) {
-        const Triangulation<3>& link = v->buildLink();
-        Isomorphism<4> iso = v->buildLinkInclusion();
-
-        EXPECT_EQ(link.size(), v->degree());
-        EXPECT_TRUE(link.isConnected());
-
-        if (v->isValid()) {
-            if (v->isBoundary()) {
-                if (v->boundaryComponent()->size() > 0) {
-                    EXPECT_TRUE(link.isBall());
-                } else {
-                    EXPECT_TRUE(link.isClosed());
-                    EXPECT_TRUE(! link.isSphere());
-                }
-            } else
-                EXPECT_TRUE(link.isSphere());
-        } else {
-            // Invalid vertex.
-            if (! v->isBoundary()) {
-                ADD_FAILURE() << "Invalid vertex not marked as boundary";
-            } else if (v->boundaryComponent()->countTetrahedra() > 0) {
-                // Link should have boundary faces but not be a 3-ball.
-                EXPECT_TRUE(link.hasBoundaryTriangles());
-                EXPECT_FALSE(link.isBall());
-            } else {
-                // Link should have no boundary faces, but not
-                // be a closed 3-manifold.
-                EXPECT_FALSE(link.hasBoundaryTriangles());
-                EXPECT_FALSE(link.isClosed());
-            }
-        }
-
-        // Make sure the triangulated link is labelled correctly.
-        for (size_t j = 0; j < v->degree(); ++j) {
-            auto pent = tri.pentachoron(iso.pentImage(j));
-
-            regina::Perm<5> perm = iso.facetPerm(j);
-            int vNum = perm[4];
-            EXPECT_EQ(pent->vertex(vNum), v);
-            EXPECT_EQ(perm[0], pent->tetrahedronMapping(vNum)[0]);
-            EXPECT_EQ(perm[1], pent->tetrahedronMapping(vNum)[1]);
-            EXPECT_EQ(perm[2], pent->tetrahedronMapping(vNum)[2]);
-            EXPECT_EQ(perm[3], pent->tetrahedronMapping(vNum)[3]);
-
-            for (int k = 0; k < 4; ++k) {
-                auto tet = link.tetrahedron(j);
-                auto adj = tet->adjacentTetrahedron(k);
-                if (adj) {
-                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]),
-                        tri.pentachoron(iso.pentImage(adj->index())));
-                    EXPECT_EQ(pent->adjacentGluing(perm[k]),
-                        iso.facetPerm(adj->index()) *
-                            regina::Perm<5>::extend(tet->adjacentGluing(k)) *
-                            perm.inverse());
-                } else {
-                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]), nullptr);
-                }
-            }
-        }
-    }
-}
-
-TEST_F(Dim4Test, vertexLinks) {
-    testManualCases(verifyVertexLinks);
-    runCensusAllBounded(verifyVertexLinks);
-    runCensusAllNoBdry(verifyVertexLinks);
-}
-
-static void verifyEdgeLinks(const Triangulation<4>& tri, const char* name) {
-    SCOPED_TRACE_CSTRING(name);
-
-    for (auto e : tri.edges()) {
-        const Triangulation<2>& link = e->buildLink();
-        Isomorphism<4> iso = e->buildLinkInclusion();
-
-        EXPECT_EQ(link.size(), e->degree());
-        EXPECT_TRUE(link.isConnected());
-        EXPECT_EQ(link.isClosed(), ! e->isBoundary());
-        if (e->isValid())
-            EXPECT_EQ(link.eulerChar(), (e->isBoundary() ? 1 : 2));
-
-        // Make sure the triangulated edge link is labelled correctly.
-        for (size_t j = 0; j < e->degree(); ++j) {
-            auto pent = tri.pentachoron(iso.pentImage(j));
-
-            regina::Perm<5> perm = iso.facetPerm(j);
-            int eNum = regina::Edge<4>::edgeNumber[perm[3]][perm[4]];
-            EXPECT_EQ(pent->edge(eNum), e);
-            EXPECT_EQ(perm[0], pent->triangleMapping(eNum)[0]);
-            EXPECT_EQ(perm[1], pent->triangleMapping(eNum)[1]);
-            EXPECT_EQ(perm[2], pent->triangleMapping(eNum)[2]);
-            EXPECT_EQ(perm[3], pent->edgeMapping(eNum)[0]);
-            EXPECT_EQ(perm[4], pent->edgeMapping(eNum)[1]);
-
-            for (int k = 0; k < 3; ++k) {
-                auto t = link.triangle(j);
-                auto adj = t->adjacentTriangle(k);
-                if (adj) {
-                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]),
-                        tri.pentachoron(iso.pentImage(adj->index())));
-                    // Note: we expect broken gluings with reverse
-                    // self-identifications.
-                    if (! e->hasBadIdentification())
-                        EXPECT_EQ(pent->adjacentGluing(perm[k]),
-                            iso.facetPerm(adj->index()) *
-                                Perm<5>::extend(t->adjacentGluing(k)) *
-                                perm.inverse());
-                } else {
-                    EXPECT_EQ(pent->adjacentPentachoron(perm[k]), nullptr);
-                }
-            }
-        }
-
-        // Make sure the edge link matches what happens on the vertex links.
-        auto pent = e->front().pentachoron();
-        regina::Perm<5> perm = e->front().vertices();
-        for (int j = 0; j < 2; ++j) {
-
-            // In the vertex link at the jth end of this edge,
-            // find the vertex that this edge projects down to.
-            Vertex<4>* v = pent->vertex(perm[j]);
-            const Triangulation<3>& vLink = v->buildLink();
-
-            size_t k;
-            for (k = 0; k < v->degree(); ++k)
-                if (v->embedding(k).pentachoron() == pent &&
-                        v->embedding(k).vertex() == perm[j])
-                    break;
-            EXPECT_LT(k, v->degree());
-
-            Vertex<3>* match = vLink.tetrahedron(k)->vertex(
-                pent->tetrahedronMapping(perm[j]).pre(perm[1-j]));
-
-            if (! e->hasBadIdentification()) {
-                EXPECT_TRUE(match->buildLink().isIsomorphicTo(link));
-            } else {
-                // It's hard to guarantee much in this setting, sigh.
-                EXPECT_EQ(match->degree(), 2 * e->degree());
-            }
-        }
-
-    }
-}
-
-TEST_F(Dim4Test, edgeLinks) {
-    // Notes:
-    // - idealFigEightProduct -> has torus link
-    // - mixedFigEightProduct -> has torus link
-    // - pillow_fourCycle -> has PP link
-    testManualCases(verifyEdgeLinks);
-    runCensusAllBounded(verifyEdgeLinks);
-    runCensusAllNoBdry(verifyEdgeLinks);
-}
-
 static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
@@ -952,7 +955,7 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
         EXPECT_EQ(alt.eulerCharTri(), tri.eulerCharTri());
         EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
 
-        if ( tri.isValid() ) {
+        if (tri.isValid()) {
             EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
             EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
         }
@@ -1311,13 +1314,12 @@ TEST_F(Dim4Test, bundleWithMonodromy) {
     }), "Hand-coded L(3,1)");
 }
 
-static void verifyRetriangulate(const TriangulationTest<4>::TestCase& test,
+static void verifyRetriangulate(const Triangulation<4>& tri,
         int height, int threads, bool track, size_t count) {
     SCOPED_TRACE_NUMERIC(height);
     SCOPED_TRACE_NUMERIC(threads);
 
     size_t tot = 0;
-    const Triangulation<4>& tri = test.tri;
 
     std::unique_ptr<regina::ProgressTrackerOpen> tracker;
     if (track)
@@ -1344,15 +1346,14 @@ static void verifyRetriangulate(const TriangulationTest<4>::TestCase& test,
     SCOPED_TRACE_CSTRING(test.name);
 
     // Single-threaded, no tracker:
-    verifyRetriangulate(test, height, 1, false, count);
+    verifyRetriangulate(test.tri, height, 1, false, count);
     // Multi-threaded, with and without tracker:
-    verifyRetriangulate(test, height, 2, false, count);
-    verifyRetriangulate(test, height, 2, true, count);
+    verifyRetriangulate(test.tri, height, 2, false, count);
+    verifyRetriangulate(test.tri, height, 2, true, count);
 }
 
 TEST_F(Dim4Test, retriangulate) {
-    // The counts here were computed using Regina 6.0 in
-    // single-threaded mode.
+    // The counts here were computed using Regina 6.0 in single-threaded mode.
     //
     // The counts that are commented out are too slow, though they can be
     // brought back in again as the retriangulation code gets faster.

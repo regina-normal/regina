@@ -38,13 +38,28 @@
 namespace regina {
 
 bool Triangulation<3>::idealToFinite() {
-    // The call to isValid() ensures the skeleton has been calculated.
-    if (isValid() && ! isIdeal())
-        return false;
+    // The call to isIdeal() ensures the skeleton has been calculated.
+    if (! isIdeal()) {
+        // Note: this test also picks up the empty triangulation.
+        if (isValid())
+            return false; // Nothing to do.
+        else {
+            // We know all vertex links are 2-spheres or have boundary.
+            // Only subdivide if there are invalid _vertices_; that is,
+            // vertex links that have boundary but are not discs.
+            // In particular, invalid edges are not something we care about.
+            bool subdivide = false;
+            for (auto v : vertices())
+                if (! v->isValid()) {
+                    subdivide = true;
+                    break;
+                }
+            if (! subdivide)
+                return false;
+        }
+    }
 
     size_t numOldTet = simplices_.size();
-    if (! numOldTet)
-        return false;
 
     // Any simplex or facet locks at all will be a problem here.
     if (hasLocks())

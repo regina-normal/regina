@@ -1372,6 +1372,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * structure will be deleted, and any reference that was returned
          * before will become invalid.
          *
+         * As of Regina 7.4, this routine has changed its behaviour for the
+         * empty triangulation: it now returns the empty angle structure,
+         * which is (strictly speaking) both strict and taut.
+         *
          * \exception NoSolution No strict angle structure exists on
          * this triangulation.
          *
@@ -1399,6 +1403,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * The underlying algorithm runs a single linear program (it does
          * _not_ enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
+         *
+         * As of Regina 7.4, this routine has changed its behaviour for the
+         * empty triangulation: it now returns \c true, since the empty angle
+         * structure is (strictly speaking) both strict and taut.
          *
          * \return \c true if and only if a strict angle structure exists on
          * this triangulation.
@@ -1457,6 +1465,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * structure will be deleted, and any reference that was returned
          * before will become invalid.
          *
+         * As of Regina 7.4, this routine has changed its behaviour for the
+         * empty triangulation: it now returns the empty angle structure.
+         *
          * \note For a valid triangulation with no boundary faces, a
          * generalised angle structure exists if and only if every vertex link
          * is a torus or Klein bottle.  The "only if" direction is a simple
@@ -1492,6 +1503,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
+         *
+         * As of Regina 7.4, this routine has changed its behaviour for the
+         * empty triangulation: it now returns \c true, and caches the empty
+         * angle structure as its solution.
          *
          * \note For a valid triangulation with no boundary faces, a
          * generalised angle structure exists if and only if every vertex link
@@ -2304,7 +2319,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool zeroTwoMove(EdgeEmbedding<3> e0, int t0,
             EdgeEmbedding<3> e1, int t1,
-            bool check = true, bool perform = true );
+            bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles incident to \a e that are
@@ -3284,14 +3299,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Note that this operation is a loose converse of finiteToIdeal().
          *
+         * If this triangulation has any invalid edges, then these will remain
+         * invalid after this operation (in contrast to barycentric subdivision,
+         * which converts invalid edges into projective plane cusps).  As of
+         * Regina 7.4, the presence of invalid edges will no longer cause the
+         * triangulation to be subdivided if there are no vertices to truncate.
+         *
          * \warning Currently, this routine subdivides all tetrahedra as
          * if <i>all</i> vertices (not just some) were ideal.
          * This may lead to more tetrahedra than are necessary.
-         *
-         * \warning Currently, the presence of an invalid edge will force
-         * the triangulation to be subdivided even if there are no ideal
-         * vertices.  The final triangulation will still have the
-         * projective plane cusp caused by the invalid edge.
          *
          * \exception LockViolation This triangulation contains at least one
          * locked top-dimensional simplex and/or facet.  This exception will be

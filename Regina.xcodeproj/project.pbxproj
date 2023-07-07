@@ -1099,6 +1099,7 @@
 		056AEDBE2A46E5C300EAF4FA /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AEDBD2A46E5C300EAF4FA /* triangulation4.cpp */; };
 		056AEDC02A4BC65E00EAF4FA /* links4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AEDBF2A4BC65E00EAF4FA /* links4.cpp */; };
 		056AEDC22A4BC66A00EAF4FA /* links3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AEDC12A4BC66A00EAF4FA /* links3.cpp */; };
+		056AEDC42A4CFFDF00EAF4FA /* triangulation3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AEDC32A4CFFDE00EAF4FA /* triangulation3.cpp */; };
 		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
 		056EC5502A288F2E006EE87A /* default_theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056EC54F2A288F2E006EE87A /* default_theme.cpp */; };
 		056EC5512A288F31006EE87A /* default_theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056EC54F2A288F2E006EE87A /* default_theme.cpp */; };
@@ -3899,6 +3900,7 @@
 		056AEDBD2A46E5C300EAF4FA /* triangulation4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
 		056AEDBF2A4BC65E00EAF4FA /* links4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links4.cpp; sourceTree = "<group>"; };
 		056AEDC12A4BC66A00EAF4FA /* links3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links3.cpp; sourceTree = "<group>"; };
+		056AEDC32A4CFFDE00EAF4FA /* triangulation3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation3.cpp; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		056EC54F2A288F2E006EE87A /* default_theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = default_theme.cpp; sourceTree = "<group>"; };
 		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
@@ -7668,6 +7670,7 @@
 				056AECD52A431AE200EAF4FA /* facetpairing3.cpp */,
 				056AED9F2A45A22900EAF4FA /* isomorphism3.cpp */,
 				056AEDC12A4BC66A00EAF4FA /* links3.cpp */,
+				056AEDC32A4CFFDE00EAF4FA /* triangulation3.cpp */,
 			);
 			path = dim3;
 			sourceTree = "<group>";
@@ -9855,6 +9858,7 @@
 				056AED5E2A431AE200EAF4FA /* isomorphism2.cpp in Sources */,
 				056AED7E2A431AE200EAF4FA /* binom.cpp in Sources */,
 				056AED842A431AE200EAF4FA /* main.cpp in Sources */,
+				056AEDC42A4CFFDF00EAF4FA /* triangulation3.cpp in Sources */,
 				056AED5D2A431AE200EAF4FA /* triangulation2.cpp in Sources */,
 				056AED572A431AE200EAF4FA /* isomorphism4.cpp in Sources */,
 				056AED8F2A431AE200EAF4FA /* covers.cpp in Sources */,
