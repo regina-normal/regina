@@ -41,6 +41,8 @@ using regina::Example;
 using regina::Signature;
 using regina::Triangulation;
 
+// TODO: Move these tests into Dim3Test.
+
 /**
  * Determines whether the given triangulation is a minimal triangulation of
  * one of the three prime manifolds with no 0-efficient triangulation.

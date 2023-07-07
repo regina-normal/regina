@@ -39,6 +39,8 @@
 using regina::SimpleSurfaceBundle;
 using regina::Triangulation;
 
+// TODO: Move these tests into Dim3Test.
+
 static void verifyTwoZeroEdge(Triangulation<3> tri, size_t whichEdge,
         const Triangulation<3>& result, const char* name) {
     SCOPED_TRACE_CSTRING(name);
