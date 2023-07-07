@@ -846,6 +846,29 @@ TEST(NormalSurfacesTest, disjoint) {
     runCensusAllClosed(verifyDisjoint);
     runCensusAllBounded(verifyDisjoint);
     runCensusAllIdeal(verifyDisjoint);
+
+    // There was a bug in older versions of Regina where calling components()
+    // a second time on a disconnected surface s = (s1 u ... u sk) would return
+    // {s}, not {s1, ..., sk}, due to incorrect use of the cached connectedness
+    // property.  Make sure this bug does not return.
+    {
+        Triangulation<3> t = Example<3>::poincare();
+        auto s1 = t.vertex(0)->linkingSurface();
+        auto s2 = t.edge(0)->linkingSurface().first;
+        auto s = s1 + s2;
+
+        auto c = s.components();
+        ASSERT_EQ(c.size(), 2);
+        EXPECT_EQ(c[0], s1);
+        EXPECT_EQ(c[1], s2);
+
+        // Here's where it used to break - when components() was called for
+        // the second time.
+        c = s.components();
+        ASSERT_EQ(c.size(), 2);
+        EXPECT_EQ(c[0], s1);
+        EXPECT_EQ(c[1], s2);
+    }
 }
 
 /**

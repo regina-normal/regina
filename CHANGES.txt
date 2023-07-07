@@ -77,6 +77,11 @@ Version 7.4  [ (to be announced) ]
               _before_ isNormalTriangleLink() would make the latter return
               an empty list of results.  Likewise with tetrahedron links in
               4-dimensional triangulations.
+            - Fix a bug in components() when used on disconnected surfaces,
+              where if it were called _after_ connectedness has already been
+              established (i.e., after isOrientable(), isTwoSided(),
+              isConnected(), or an earlier call to components()), then it would
+              return the entire surface as a single component.
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old
