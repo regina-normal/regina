@@ -572,7 +572,15 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
         static void clear() {
             SCOPED_TRACE_NUMERIC(n);
+            // In gcc7, the constexpr rev seems to cause a linker error for
+            // the case n=7 because the lambda wants it to be instantiated.
+            // Therefore, under gcc7, we make it a stack variable and capture it
+            // in the lambda.  We can drop this hack when we drop gcc7 support.
+#if defined(__GNUC__) && __GNUC__ == 7
+            const Perm<n> rev = Perm<n>().reverse();
+#else
             static constexpr Perm<n> rev = Perm<n>().reverse();
+#endif
 
             for (Index i = 0; i < Perm<n>::nPerms; ++i) {
                 auto p = Perm<n>::Sn[i];
@@ -590,7 +598,11 @@ class PermTestSmallImpl : public PermTestImpl<n> {
 
                 if constexpr (n > 3) {
                     // Test clear<2..(n-2)>():
+#if defined(__GNUC__) && __GNUC__ == 7
+                    regina::for_constexpr<2, n-1>([rev](auto from) {
+#else
                     regina::for_constexpr<2, n-1>([](auto from) {
+#endif
                         SCOPED_TRACE_NUMERIC(from);
                         for (typename Perm<from>::Index i = 0;
                                 i < Perm<from>::nPerms; ++i)
