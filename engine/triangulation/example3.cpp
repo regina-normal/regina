@@ -576,19 +576,14 @@ Triangulation<3> Example<3>::gieseking() {
     return ans;
 }
 
-Triangulation<3> Example<3>::cuspedGenusTwoTorus() {
-    Triangulation<3> ans;
-
+Triangulation<3> Example<3>::idealGenusTwoHandlebody() {
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.
-    auto [r, s, t, u] = ans.newTetrahedra<4>();
-    r->join(0, s, Perm<4>());
-    r->join(1, t, Perm<4>(1, 2, 3, 0));
-    r->join(2, u, Perm<4>(1, 0, 3, 2));
-    s->join(3, t, Perm<4>());
-    t->join(1, u, Perm<4>());
+    Triangulation<3> ans = Triangulation<3>::fromGluings(4, {
+        { 0, 0, 1, {} }, { 0, 1, 2, {1,2,3,0} }, { 0, 2, 3, {1,0,3,2} },
+        { 1, 3, 2, {} }, { 2, 1, 3, {} }
+    });
     ans.finiteToIdeal();
-
     return ans;
 }
 

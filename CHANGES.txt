@@ -33,11 +33,11 @@ Version 7.4  [ (to be announced) ]
               whether or not a container is empty.
         Enum ChangeType:
             - New enum for internal use with triangulation change spans.
-        Class IntOfBits<k>:
-            - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Example<3>:
             - Routines lst(), lens(), augTriSolidTorus() and sfsOverSphere()
               now check their preconditions and throw an exception if they fail.
+            - Renamed cuspedGenusTwoTorus() to idealGenusTwoHandlebody().
+              The old name has been kept as a deprecated alias.
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
         Class FacetPairing<dim>:
@@ -49,6 +49,8 @@ Version 7.4  [ (to be announced) ]
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
+        Class IntOfBits<k>:
+            - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Isomorphism<dim>:
             - New routine hash(), which uses the tight encoding.
         Class LargeInteger:

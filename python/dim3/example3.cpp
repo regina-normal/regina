@@ -94,8 +94,10 @@ void addExample3(pybind11::module_& m) {
         .def_static("whiteheadLink", &Example<3>::whitehead, // deprecated
             rdoc::whiteheadLink)
         .def_static("gieseking", &Example<3>::gieseking, rdoc::gieseking)
-        .def_static("cuspedGenusTwoTorus",
-            &Example<3>::cuspedGenusTwoTorus, rdoc::cuspedGenusTwoTorus)
+        .def_static("idealGenusTwoHandlebody",
+            &Example<3>::idealGenusTwoHandlebody, rdoc::idealGenusTwoHandlebody)
+        .def_static("cuspedGenusTwoTorus", // deprecated
+            &Example<3>::idealGenusTwoHandlebody, rdoc::cuspedGenusTwoTorus)
     ;
     regina::python::no_eq_static(c);
 

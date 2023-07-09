@@ -404,13 +404,28 @@ class Example<3> : public detail::ExampleBase<3> {
         static Triangulation<3> gieseking();
 
         /**
-         * Returns a triangulation of a solid genus two torus with a
-         * cusped boundary.  This triangulation has one internal finite
-         * vertex and one genus two ideal vertex.
+         * Returns a triangulation of a solid genus two handlebody with ideal
+         * boundary.  This triangulation has one internal finite vertex and
+         * one genus two ideal vertex.
          *
-         * \return the solid genus two torus with cusped boundary.
+         * Prior to Regina 7.4, this routine was called cuspedGenusTwoTorus().
+         *
+         * \return the solid genus two handlebody with ideal boundary.
          */
-        static Triangulation<3> cuspedGenusTwoTorus();
+        static Triangulation<3> idealGenusTwoHandlebody();
+
+        /**
+         * Deprecated routine that returns a triangulation of a solid genus
+         * two handlebody with ideal boundary.
+         *
+         * \deprecated This has been renamed to idealGenusTwoHandlebody(),
+         * which is a little less loose with language.
+         *
+         * See idealGenusTwoHandlebody() for further details.
+         *
+         * \return the solid genus two handlebody with ideal boundary.
+         */
+        [[deprecated]] static Triangulation<3> cuspedGenusTwoTorus();
 
         /*@}*/
 };
@@ -429,6 +444,10 @@ inline Triangulation<3> Example<3>::solidKleinBottle() {
 
 inline Triangulation<3> Example<3>::whiteheadLink() {
     return whitehead();
+}
+
+inline Triangulation<3> Example<3>::cuspedGenusTwoTorus() {
+    return idealGenusTwoHandlebody();
 }
 
 } // namespace regina

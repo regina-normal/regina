@@ -117,7 +117,8 @@ class Dim3Test : public TriangulationTest<3> {
                 complement(),
             "18-crossing knot complement" };
         TestCase idealGenusTwoHandlebody {
-            Example<3>::cuspedGenusTwoTorus(), "Ideal genus two handlebody" };
+            Example<3>::idealGenusTwoHandlebody(),
+            "Ideal genus two handlebody" };
         TestCase figure8_bary {
             // We call subdivide() in the class constructor.
             Example<3>::figureEight(), "Figure eight (subdivided)" };

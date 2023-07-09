@@ -681,6 +681,9 @@ If the triangulation does change, however, then the cached angle
 structure will be deleted, and any reference that was returned before
 will become invalid.
 
+As of Regina 7.4, this routine has changed its behaviour for the empty
+triangulation: it now returns the empty angle structure.
+
 .. note::
     For a valid triangulation with no boundary faces, a generalised
     angle structure exists if and only if every vertex link is a torus
@@ -776,6 +779,10 @@ generalised angle structure exists, then this routine is faster:
 
 The underlying algorithm simply solves a system of linear equations,
 and so should be fast even for large triangulations.
+
+As of Regina 7.4, this routine has changed its behaviour for the empty
+triangulation: it now returns ``True``, and caches the empty angle
+structure as its solution.
 
 .. note::
     For a valid triangulation with no boundary faces, a generalised
@@ -942,6 +949,10 @@ The underlying algorithm runs a single linear program (it does _not_
 enumerate all vertex angle structures). This means that it is likely
 to be fast even for large triangulations.
 
+As of Regina 7.4, this routine has changed its behaviour for the empty
+triangulation: it now returns ``True``, since the empty angle
+structure is (strictly speaking) both strict and taut.
+
 Returns:
     ``True`` if and only if a strict angle structure exists on this
     triangulation.)doc";
@@ -1030,16 +1041,16 @@ boundary components made from unglued faces of tetrahedra.
 
 Note that this operation is a loose converse of finiteToIdeal().
 
+If this triangulation has any invalid edges, then these will remain
+invalid after this operation (in contrast to barycentric subdivision,
+which converts invalid edges into projective plane cusps). As of
+Regina 7.4, the presence of invalid edges will no longer cause the
+triangulation to be subdivided if there are no vertices to truncate.
+
 .. warning::
     Currently, this routine subdivides all tetrahedra as if *all*
     vertices (not just some) were ideal. This may lead to more
     tetrahedra than are necessary.
-
-.. warning::
-    Currently, the presence of an invalid edge will force the
-    triangulation to be subdivided even if there are no ideal
-    vertices. The final triangulation will still have the projective
-    plane cusp caused by the invalid edge.
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
@@ -3111,6 +3122,10 @@ every call after the first be essentially instantaneous.
 If the triangulation does change, however, then the cached angle
 structure will be deleted, and any reference that was returned before
 will become invalid.
+
+As of Regina 7.4, this routine has changed its behaviour for the empty
+triangulation: it now returns the empty angle structure, which is
+(strictly speaking) both strict and taut.
 
 Exception ``NoSolution``:
     No strict angle structure exists on this triangulation.
