@@ -89,12 +89,17 @@ Returns:
 
 // Docstring regina::python::doc::Example_::cuspedGenusTwoTorus
 static const char *cuspedGenusTwoTorus =
-R"doc(Returns a triangulation of a solid genus two torus with a cusped
-boundary. This triangulation has one internal finite vertex and one
-genus two ideal vertex.
+R"doc(Deprecated routine that returns a triangulation of a solid genus two
+handlebody with ideal boundary.
+
+.. deprecated::
+    This has been renamed to idealGenusTwoHandlebody(), which is a
+    little less loose with language.
+
+See idealGenusTwoHandlebody() for further details.
 
 Returns:
-    the solid genus two torus with cusped boundary.)doc";
+    the solid genus two handlebody with ideal boundary.)doc";
 
 // Docstring regina::python::doc::Example_::figureEight
 static const char *figureEight =
@@ -135,6 +140,17 @@ Returns:
 
 Author:
     Alex He)doc";
+
+// Docstring regina::python::doc::Example_::idealGenusTwoHandlebody
+static const char *idealGenusTwoHandlebody =
+R"doc(Returns a triangulation of a solid genus two handlebody with ideal
+boundary. This triangulation has one internal finite vertex and one
+genus two ideal vertex.
+
+Prior to Regina 7.4, this routine was called cuspedGenusTwoTorus().
+
+Returns:
+    the solid genus two handlebody with ideal boundary.)doc";
 
 // Docstring regina::python::doc::Example_::layeredLoop
 static const char *layeredLoop =

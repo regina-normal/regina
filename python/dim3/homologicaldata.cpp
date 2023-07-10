@@ -45,6 +45,9 @@ void addHomologicalData(pybind11::module_& m) {
     auto c = pybind11::class_<HomologicalData>(m, "HomologicalData", rdoc_scope)
         .def(pybind11::init<const Triangulation<3>&>(), rdoc::__init)
         .def(pybind11::init<const HomologicalData&>(), rdoc::__copy)
+        .def("triangulation", &HomologicalData::triangulation,
+            pybind11::return_value_policy::reference_internal,
+            rdoc::triangulation)
         .def("swap", &HomologicalData::swap, rdoc::swap)
         .def("homology", &HomologicalData::homology,
             pybind11::return_value_policy::reference_internal, rdoc::homology)

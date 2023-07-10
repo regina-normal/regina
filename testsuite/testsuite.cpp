@@ -39,7 +39,6 @@
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
-#include "testsuite/dim3/testdim3.h"
 #include "testsuite/maths/testmaths.h"
 
 namespace {
@@ -101,9 +100,6 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Maths:
     sets.insert(std::make_pair("integer", &addInteger));
-
-    // 3-manifold triangulations:
-    sets.insert(std::make_pair("homologicaldata", &addHomologicalData));
 
     if (argc <= 1)
         for (const auto& i : sets)

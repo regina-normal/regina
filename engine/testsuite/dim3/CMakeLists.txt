@@ -2,6 +2,7 @@
 SET ( FILES
   decomposition.cpp
   facetpairing3.cpp
+  homologicaldata.cpp
   isomorphism3.cpp
   links3.cpp
   moves3.cpp

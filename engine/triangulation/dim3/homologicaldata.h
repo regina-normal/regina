@@ -547,6 +547,32 @@ public:
     HomologicalData(HomologicalData&&) noexcept = default;
 
     /**
+     * Returns the triangulation that this object was initialised with.
+     *
+     * This will be a snapshot frozen in time of the triangulation
+     * that was originally passed to the HomologicalData constructor.
+     *
+     * This will return a correct result even if the original triangulation
+     * has since been modified or destroyed.  However, in order to ensure
+     * this behaviour, it is possible that at different points in time
+     * this function may return references to different C++ objects.
+     *
+     * The rules for using the triangulation() reference are:
+     *
+     * - Do not keep the resulting reference as a long-term reference or
+     *   pointer of your own, since in time you may find yourself referring
+     *   to the wrong object (see above).  Just call this function again.
+     *
+     * - You must respect the read-only nature of the result (i.e.,
+     *   you must not cast the constness away).  The snapshotting
+     *   process detects modifications, and modifying the frozen
+     *   snapshot may result in an exception being thrown.
+     *
+     * \return a reference to the underlying triangulation.
+     */
+    const Triangulation<3>& triangulation() const;
+
+    /**
      * Sets this to be a copy of the given object.
      *
      * This operator induces a deep copy of the given object; moreover,
@@ -998,6 +1024,9 @@ inline HomologicalData::HomologicalData(const Triangulation<3>& input):
     std::fill(numBdryCells, numBdryCells + 3, 0);
 }
 
+inline const Triangulation<3>& HomologicalData::triangulation() const {
+    return *tri_;
+}
 
 inline unsigned long HomologicalData::countStandardCells(unsigned dimension)
 {
