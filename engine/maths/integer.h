@@ -88,7 +88,7 @@ class python_int; // Represents a Python arbitrary-precision integer.
  *
  * \ingroup maths
  */
-template <bool supportInfinity>
+template <bool withInfinity>
 struct InfinityBase;
 
 #ifndef __DOXYGEN
@@ -149,7 +149,7 @@ namespace detail {
  * overflow is detected, this class switches to using the GNU multiple
  * precision arithmetic library (libgmp) instead.
  *
- * This class takes a single boolean argument \a supportInfinity.
+ * This class takes a single boolean argument \a withInfinity.
  * If this is \c true, then this class will support infinity as an allowed
  * value.  If this is \c false (the default), then infinity is not supported,
  * and any attempt to work with infinity will lead to undefined behaviour.
@@ -177,22 +177,28 @@ namespace detail {
  * instantiations for all possible template parameters.
  *
  * \python Both variants of this template are available through Python.
- * For \a supportInfinity = \c false, use the name Integer.
- * For \a supportInfinity = \c true, use the name LargeInteger.
+ * For \a withInfinity = \c false, use the name Integer.
+ * For \a withInfinity = \c true, use the name LargeInteger.
  *
  * \ingroup maths
  */
-template <bool supportInfinity = false>
-class IntegerBase : private InfinityBase<supportInfinity> {
+template <bool withInfinity = false>
+class IntegerBase : private InfinityBase<withInfinity> {
     public:
-        static const IntegerBase<supportInfinity> zero;
+        /**
+         * A compile-time constant indicating whether this integer type
+         * supports infinity.  This is provided to help with generic code.
+         */
+        static constexpr bool supportsInfinity = withInfinity;
+
+        static const IntegerBase zero;
             /**< Globally available zero. */
-        static const IntegerBase<supportInfinity> one;
+        static const IntegerBase one;
             /**< Globally available one. */
-        static const IntegerBase<supportInfinity> infinity;
+        static const IntegerBase infinity;
             /**< Globally available infinity.
-                 This is only defined if \a supportInfinity is \c true.
-                 Any attempt to use it when \a supportInfinity is \c false
+                 This is only defined if \a withInfinity is \c true.
+                 Any attempt to use it when \a withInfinity is \c false
                  should generate a linker error. */
 
     private:
@@ -273,7 +279,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \param value the new value of this integer.
          */
-        IntegerBase(const IntegerBase<supportInfinity>& value);
+        IntegerBase(const IntegerBase& value);
         /**
          * Initialises this integer to the given value.
          *
@@ -281,7 +287,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \param value the new value of this integer.
          */
-        IntegerBase(const IntegerBase<! supportInfinity>& value);
+        IntegerBase(const IntegerBase<! withInfinity>& value);
         /**
          * Moves the given integer into this new integer.
          * This is a fast (constant time) operation.
@@ -290,7 +296,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \param src the integer to move.
          */
-        IntegerBase(IntegerBase<supportInfinity>&& src) noexcept;
+        IntegerBase(IntegerBase&& src) noexcept;
         /**
          * Moves the given integer into this new integer.
          * This is a fast (constant time) operation.
@@ -301,7 +307,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \param src the integer to move.
          */
-        IntegerBase(IntegerBase<! supportInfinity>&& src) noexcept;
+        IntegerBase(IntegerBase<! withInfinity>&& src) noexcept;
         /**
          * Initialises this integer to the given value.
          *
@@ -352,7 +358,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
          *
-         * If the template argument \a supportInfinity is \c true, then
+         * If the template argument \a withInfinity is \c true, then
          * any string beginning with "inf" (after any initial whitesapce)
          * will be interpreted as infinity.
          *
@@ -386,7 +392,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
          *
-         * If the template argument \a supportInfinity is \c true, then
+         * If the template argument \a withInfinity is \c true, then
          * any string beginning with "inf" (after any initial whitesapce)
          * will be interpreted as infinity.
          *
@@ -456,7 +462,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Sets this integer to be infinity.
          *
-         * If the template parameter \a supportInfinity is \c false,
+         * If the template parameter \a withInfinity is \c false,
          * this routine safely does nothing.
          */
         inline void makeInfinite();
@@ -575,7 +581,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \param value the new value of this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator = (const IntegerBase<! supportInfinity>& value);
+        IntegerBase& operator = (const IntegerBase<! withInfinity>& value);
         /**
          * Moves the given integer into this integer.
          * This is a fast (constant time) operation.
@@ -597,7 +603,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \param src the integer to move.
          * \return a reference to this integer.
          */
-        IntegerBase& operator = (IntegerBase<! supportInfinity>&& src) noexcept;
+        IntegerBase& operator = (IntegerBase<! withInfinity>&& src) noexcept;
         /**
          * Sets this integer to the given value.
          *
@@ -647,7 +653,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Whitespace may be present at the beginning or end of the given
          * string and will simply be ignored.
          *
-         * If the template argument \a supportInfinity is \c true, then
+         * If the template argument \a withInfinity is \c true, then
          * any string beginning with "inf" (after any initial whitesapce)
          * will be interpreted as infinity.
          *
@@ -669,7 +675,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Whitespace may be present at the beginning or end of the given
          * string and will simply be ignored.
          *
-         * If the template argument \a supportInfinity is \c true, then
+         * If the template argument \a withInfinity is \c true, then
          * any string beginning with "inf" (after any initial whitesapce)
          * will be interpreted as infinity.
          *
@@ -706,7 +712,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(const IntegerBase<! supportInfinity>& rhs) const;
+        bool operator ==(const IntegerBase<! withInfinity>& rhs) const;
         /**
          * Determines if this is equal to the given integer.
          *
@@ -730,7 +736,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \return \c true if and only if this and the given integer are
          * not equal.
          */
-        bool operator !=(const IntegerBase<! supportInfinity>& rhs) const;
+        bool operator !=(const IntegerBase<! withInfinity>& rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
@@ -1359,7 +1365,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * the final coefficient of \a other.
          */
         std::tuple<IntegerBase, IntegerBase, IntegerBase> gcdWithCoeffs(
-            const IntegerBase<supportInfinity>& other) const;
+            const IntegerBase& other) const;
 
         /**
          * Determines the greatest common divisor of this and the given
@@ -1396,10 +1402,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * will be placed.  Any existing contents of \a v will be overwritten.
          * \return the greatest common divisor of \a this and \a other.
          */
-        IntegerBase<supportInfinity> gcdWithCoeffs(
-            const IntegerBase<supportInfinity>& other,
-            IntegerBase<supportInfinity>& u,
-            IntegerBase<supportInfinity>& v) const;
+        IntegerBase gcdWithCoeffs(const IntegerBase& other, IntegerBase& u,
+            IntegerBase& v) const;
 
         /**
          * Returns the Legendre symbol (\a a/\a p), where
@@ -1418,7 +1422,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \author Ryan Budney
          */
-        int legendre(const IntegerBase<supportInfinity>& p) const;
+        int legendre(const IntegerBase& p) const;
 
         /**
          * Generate a pseudo-random integer that is uniformly
@@ -1438,7 +1442,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \return a pseudo-random integer.
          */
-        IntegerBase<supportInfinity> randomBoundedByThis() const;
+        IntegerBase randomBoundedByThis() const;
 
         /**
          * Generate a pseudo-random integer that is uniformly
@@ -1452,7 +1456,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * integer.
          * \return a pseudo-random integer.
          */
-        static IntegerBase<supportInfinity> randomBinary(unsigned long n);
+        static IntegerBase randomBinary(unsigned long n);
 
         /**
          * Generate a pseudo-random integer that is distributed in the
@@ -1466,8 +1470,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \param n the maximum number of bits in the pseudo-random integer.
          * \return a pseudo-random integer.
          */
-        static IntegerBase<supportInfinity> randomCornerBinary(
-            unsigned long n);
+        static IntegerBase randomCornerBinary(unsigned long n);
 
         /**
          * Set this to a copy of the given raw GMP integer.
@@ -1590,7 +1593,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * invalid encoding (i.e., this routine will throw an exception).
          *
          * This routine does recognise infinity in the case where \a
-         * supportInfinity is \c true.
+         * withInfinity is \c true.
          *
          * This routine is identical to calling the global template routine
          * regina::tightDecoding() with this type as the template argument.
@@ -1615,7 +1618,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * after the encoding, without skipping any trailing whitespace.
          *
          * This routine does recognise infinity in the case where \a
-         * supportInfinity is \c true.
+         * withInfinity is \c true.
          *
          * This routine is identical to calling the global template routine
          * regina::tightDecode() with this type as the template argument.
@@ -1654,8 +1657,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Initialises this integer to infinity.
          * All parameters are ignored.
          *
-         * This constructor is only defined if \a supportInfinity is \c true.
-         * Any attempt to use it when \a supportInfinity is \c false
+         * This constructor is only defined if \a withInfinity is \c true.
+         * Any attempt to use it when \a withInfinity is \c false
          * will generate a linker error.
          */
         IntegerBase(bool, bool);
@@ -1665,7 +1668,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Its new value will be determined by the current contents of
          * \a small_ which will not be touched.
          *
-         * If the template parameter \a supportInfinity is \c false,
+         * If the template parameter \a withInfinity is \c false,
          * this routine safely does nothing.
          */
         inline void makeFinite();
@@ -1708,14 +1711,14 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          */
         void forceReduce();
 
-    friend class IntegerBase<! supportInfinity>; // For conversions.
+    friend class IntegerBase<! withInfinity>; // For conversions.
 
     template <int bytes>
     friend class NativeInteger; // For conversions.
 
-    template <bool supportInfinity_>
+    template <bool withInfinity_>
     friend std::ostream& operator << (std::ostream& out,
-        const IntegerBase<supportInfinity_>& large);
+        const IntegerBase<withInfinity_>& large);
 };
 
 /**
@@ -1737,18 +1740,16 @@ using Integer = IntegerBase<false>;
 /**
  * Swaps the contents of the given integers.
  *
- * This global routine simply calls IntegerBase<supportInfinity>::swap();
- * it is provided so that IntegerBase<supportInfinity> meets the C++ Swappable
- * requirements.
+ * This global routine simply calls IntegerBase<withInfinity>::swap();
+ * it is provided so that IntegerBase meets the C++ Swappable requirements.
  *
  * \param a the first integer whose contents should be swapped.
  * \param b the second integer whose contents should be swapped.
  *
  * \ingroup maths
  */
-template <bool supportInfinity>
-void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
-    noexcept;
+template <bool withInfinity>
+void swap(IntegerBase<withInfinity>& a, IntegerBase<withInfinity>& b) noexcept;
 
 /**
  * Writes the given integer to the given output stream.
@@ -1759,9 +1760,9 @@ void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
  *
  * \ingroup maths
  */
-template <bool supportInfinity>
+template <bool withInfinity>
 std::ostream& operator << (std::ostream& out,
-    const IntegerBase<supportInfinity>& i);
+    const IntegerBase<withInfinity>& i);
 
 /**
  * Adds the given native integer to the given large integer.
@@ -1773,9 +1774,9 @@ std::ostream& operator << (std::ostream& out,
  *
  * \ingroup maths
  */
-template <bool supportInfinity>
-IntegerBase<supportInfinity> operator + (long lhs,
-    const IntegerBase<supportInfinity>& rhs);
+template <bool withInfinity>
+IntegerBase<withInfinity> operator + (long lhs,
+    const IntegerBase<withInfinity>& rhs);
 
 /**
  * Multiplies the given native integer with the given large integer.
@@ -1787,9 +1788,9 @@ IntegerBase<supportInfinity> operator + (long lhs,
  *
  * \ingroup maths
  */
-template <bool supportInfinity>
-IntegerBase<supportInfinity> operator * (long lhs,
-    const IntegerBase<supportInfinity>& rhs);
+template <bool withInfinity>
+IntegerBase<withInfinity> operator * (long lhs,
+    const IntegerBase<withInfinity>& rhs);
 
 /**
  * Writes the tight encoding of the given arbitrary precision integer to the
@@ -1808,8 +1809,8 @@ IntegerBase<supportInfinity> operator * (long lhs,
  *
  * \ingroup maths
  */
-template <bool supportInfinity>
-void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
+template <bool withInfinity>
+void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
 
 /**
  * Returns the tight encoding of the given arbitrary precision integer.
@@ -1825,8 +1826,8 @@ void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
  *
  * \ingroup maths
  */
-template <bool supportInfinity>
-std::string tightEncoding(IntegerBase<supportInfinity> value);
+template <bool withInfinity>
+std::string tightEncoding(IntegerBase<withInfinity> value);
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
@@ -1912,8 +1913,8 @@ class NativeInteger {
          *
          * \param value the new value of this integer.
          */
-        template <bool supportInfinity>
-        explicit NativeInteger(const IntegerBase<supportInfinity>& value);
+        template <bool withInfinity>
+        explicit NativeInteger(const IntegerBase<withInfinity>& value);
 
         /**
          * Returns whether or not this integer is zero.
@@ -2486,26 +2487,40 @@ using NativeLong = NativeInteger<sizeof(long)>;
 
 // Inline functions for IntegerBase
 
-template <bool supportInfinity>
-inline const IntegerBase<supportInfinity> IntegerBase<supportInfinity>::zero;
+template <bool withInfinity>
+inline const IntegerBase<withInfinity> IntegerBase<withInfinity>::zero;
 
-template <bool supportInfinity>
-inline const IntegerBase<supportInfinity> IntegerBase<supportInfinity>::one = 1;
+template <bool withInfinity>
+inline const IntegerBase<withInfinity> IntegerBase<withInfinity>::one = 1;
 
 // We define infinity later, after the specialised infinity constructor.
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase() :
-        small_(0), large_(nullptr) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase() : small_(0), large_(nullptr) {
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(int value) :
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(int value) :
         small_(value), large_(nullptr) {
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(unsigned value) :
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(unsigned value) : small_(value) {
+    // Detect overflow.
+    if (small_ < 0) {
+        large_ = new __mpz_struct[1];
+        mpz_init_set_ui(large_, value);
+    } else
+        large_ = nullptr;
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(long value) :
+        small_(value), large_(nullptr) {
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(unsigned long value) :
         small_(value) {
     // Detect overflow.
     if (small_ < 0) {
@@ -2515,24 +2530,8 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned value) :
         large_ = nullptr;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(long value) :
-        small_(value), large_(nullptr) {
-}
-
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(unsigned long value) :
-        small_(value) {
-    // Detect overflow.
-    if (small_ < 0) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set_ui(large_, value);
-    } else
-        large_ = nullptr;
-}
-
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(long long value) :
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(long long value) :
         small_(static_cast<long>(value)), large_(nullptr) {
     // Detect overflow.
     if constexpr (sizeof(long) < sizeof(long long))
@@ -2540,8 +2539,8 @@ inline IntegerBase<supportInfinity>::IntegerBase(long long value) :
             large_ = regina::detail::mpz_from_ll(value);
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(unsigned long long value) :
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(unsigned long long value) :
         small_(static_cast<long>(value)), large_(nullptr) {
     // Detect overflow.
     // This could occur even if long and long long have the same size,
@@ -2550,9 +2549,8 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned long long value) :
         large_ = regina::detail::mpz_from_ull(value);
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(
-        const IntegerBase<supportInfinity>& value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(const IntegerBase& value) {
     if (value.isInfinite()) {
         large_ = nullptr;
         makeInfinite();
@@ -2565,9 +2563,9 @@ inline IntegerBase<supportInfinity>::IntegerBase(
     }
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(
-        const IntegerBase<! supportInfinity>& value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(
+        const IntegerBase<! withInfinity>& value) {
     // If value is infinite, we cannot make this infinite.
     // This is why we insist via preconditions that value is finite.
     if (value.large_) {
@@ -2579,25 +2577,24 @@ inline IntegerBase<supportInfinity>::IntegerBase(
     }
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(
-        IntegerBase<supportInfinity>&& src) noexcept :
-        InfinityBase<supportInfinity>(src),
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(IntegerBase&& src) noexcept :
+        InfinityBase<withInfinity>(src),
         small_(src.small_), large_(src.large_) {
     src.large_ = nullptr;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(
-        IntegerBase<! supportInfinity>&& src) noexcept :
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(
+        IntegerBase<! withInfinity>&& src) noexcept :
         small_(src.small_), large_(src.large_) {
     // The default InfinityBase constructor makes the integer finite.
     src.large_ = nullptr;
 }
 
-template <bool supportInfinity>
+template <bool withInfinity>
 template <int bytes>
-inline IntegerBase<supportInfinity>::IntegerBase(
+inline IntegerBase<withInfinity>::IntegerBase(
         const NativeInteger<bytes>& value) :
         // This cast may lose information, but we will fix this in a moment.
         small_(static_cast<long>(value.nativeValue())), large_(nullptr) {
@@ -2617,9 +2614,8 @@ inline IntegerBase<supportInfinity>::IntegerBase(
     }
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(double value) :
-        large_(nullptr) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(double value) : large_(nullptr) {
     // We start with a large representation, since we want to use GMP's
     // double-to-integer conversion.
     large_ = new __mpz_struct[1];
@@ -2629,10 +2625,9 @@ inline IntegerBase<supportInfinity>::IntegerBase(double value) :
     tryReduce();
 }
 
-template <bool supportInfinity>
+template <bool withInfinity>
 template <int bytes>
-typename IntOfSize<bytes>::type
-        IntegerBase<supportInfinity>::nativeValue() const {
+typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue() const {
     using Native = typename IntOfSize<bytes>::type;
     using UNative = typename IntOfSize<bytes>::utype;
 
@@ -2692,33 +2687,33 @@ typename IntOfSize<bytes>::type
     }
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::IntegerBase(
         const std::string& value, int base) :
         IntegerBase(value.c_str(), base) {
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::~IntegerBase() {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>::~IntegerBase() {
     if (large_) {
         mpz_clear(large_);
         delete[] large_;
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::isNative() const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::isNative() const {
     return (! isInfinite()) && (! large_);
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::isZero() const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::isZero() const {
     return (! isInfinite()) &&
         (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
 }
 
-template <bool supportInfinity>
-inline int IntegerBase<supportInfinity>::sign() const {
+template <bool withInfinity>
+inline int IntegerBase<withInfinity>::sign() const {
     return (isInfinite() ? 1 :
         large_ ? mpz_sgn(large_) :
         small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
@@ -2749,19 +2744,19 @@ inline void IntegerBase<false>::makeInfinite() {
 
 #endif // __DOXYGEN
 
-template <bool supportInfinity>
-inline std::string IntegerBase<supportInfinity>::str() const {
+template <bool withInfinity>
+inline std::string IntegerBase<withInfinity>::str() const {
     return stringValue();
 }
 
-template <bool supportInfinity>
-inline long IntegerBase<supportInfinity>::longValue() const {
+template <bool withInfinity>
+inline long IntegerBase<withInfinity>::longValue() const {
     return (large_ ? mpz_get_si(large_) : small_);
 }
 
-template <bool supportInfinity>
-inline long IntegerBase<supportInfinity>::safeLongValue() const {
-    if constexpr (supportInfinity)
+template <bool withInfinity>
+inline long IntegerBase<withInfinity>::safeLongValue() const {
+    if constexpr (withInfinity)
         if (isInfinite())
             throw NoSolution();
 
@@ -2775,10 +2770,9 @@ inline long IntegerBase<supportInfinity>::safeLongValue() const {
         return small_;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(
-        const IntegerBase<supportInfinity>& value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        const IntegerBase& value) {
     // We assume that mpz_set() is fine with self-assignment, since:
     // - the GMP docs state that output and input variables can be the same;
     // - the libgmpxx classes do not special-case self-assignment.
@@ -2803,10 +2797,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(
-        const IntegerBase<! supportInfinity>& value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        const IntegerBase<! withInfinity>& value) {
     makeFinite(); // Either this or src does not support infinity.
     if (value.large_) {
         if (large_)
@@ -2823,11 +2816,10 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(
-        IntegerBase<supportInfinity>&& src) noexcept {
-    if constexpr (supportInfinity)
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        IntegerBase&& src) noexcept {
+    if constexpr (withInfinity)
         InfinityBase<true>::infinite_ = src.infinite_;
     small_ = src.small_;
     std::swap(large_, src.large_);
@@ -2835,10 +2827,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(
-        IntegerBase<! supportInfinity>&& src) noexcept {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        IntegerBase<! withInfinity>&& src) noexcept {
     makeFinite(); // Either this or src does not support infinity.
     small_ = src.small_;
     std::swap(large_, src.large_);
@@ -2846,9 +2837,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(int value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        int value) {
     makeFinite();
     small_ = value;
     if (large_)
@@ -2856,9 +2847,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(unsigned value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        unsigned value) {
     makeFinite();
     small_ = value;
 
@@ -2879,9 +2870,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(long value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        long value) {
     makeFinite();
     small_ = value;
     if (large_)
@@ -2889,9 +2880,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(unsigned long value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        unsigned long value) {
     makeFinite();
     small_ = value;
 
@@ -2912,9 +2903,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(long long value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        long long value) {
     makeFinite();
     if (large_)
         clearLarge();
@@ -2929,9 +2920,9 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(unsigned long long value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        unsigned long long value) {
     makeFinite();
     if (large_)
         clearLarge();
@@ -2947,27 +2938,26 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(const std::string& value) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        const std::string& value) {
     // NOLINTNEXTLINE(misc-unconventional-assign-operator)
     return (*this) = value.c_str();
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::swap(
-        IntegerBase<supportInfinity>& other) noexcept {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::swap(IntegerBase& other) noexcept {
     // This should just work, since large_ is a pointer.
-    if constexpr (supportInfinity)
+    if constexpr (withInfinity)
         std::swap(InfinityBase<true>::infinite_,
             other.InfinityBase<true>::infinite_);
     std::swap(small_, other.small_);
     std::swap(large_, other.large_);
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator ==(
-        const IntegerBase<supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator ==(const IntegerBase& rhs)
+        const {
     if (isInfinite() && rhs.isInfinite())
         return true;
     else if (isInfinite() || rhs.isInfinite())
@@ -2985,9 +2975,9 @@ inline bool IntegerBase<supportInfinity>::operator ==(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator ==(
-        const IntegerBase<! supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator ==(
+        const IntegerBase<! withInfinity>& rhs) const {
     // The types are different, so both cannot be infinity.
     if (isInfinite() || rhs.isInfinite())
         return false;
@@ -3004,8 +2994,8 @@ inline bool IntegerBase<supportInfinity>::operator ==(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator ==(long rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator ==(long rhs) const {
     if (isInfinite())
         return false;
     else if (large_)
@@ -3014,9 +3004,9 @@ inline bool IntegerBase<supportInfinity>::operator ==(long rhs) const {
         return (small_ == rhs);
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator !=(
-        const IntegerBase<supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator !=(const IntegerBase& rhs)
+        const {
     if (isInfinite() && rhs.isInfinite())
         return false;
     else if (isInfinite() || rhs.isInfinite())
@@ -3034,9 +3024,9 @@ inline bool IntegerBase<supportInfinity>::operator !=(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator !=(
-        const IntegerBase<! supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator !=(
+        const IntegerBase<! withInfinity>& rhs) const {
     // The types are different, so both cannot be infinity.
     if (isInfinite() || rhs.isInfinite())
         return true;
@@ -3053,8 +3043,8 @@ inline bool IntegerBase<supportInfinity>::operator !=(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator !=(long rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator !=(long rhs) const {
     if (isInfinite())
         return true;
     else if (large_)
@@ -3063,9 +3053,9 @@ inline bool IntegerBase<supportInfinity>::operator !=(long rhs) const {
         return (small_ != rhs);
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator <(
-        const IntegerBase<supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator <(const IntegerBase& rhs)
+        const {
     if (isInfinite())
         return false;
     else if (rhs.isInfinite())
@@ -3083,8 +3073,8 @@ inline bool IntegerBase<supportInfinity>::operator <(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator <(long rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator <(long rhs) const {
     if (isInfinite())
         return false;
     else if (large_)
@@ -3093,9 +3083,9 @@ inline bool IntegerBase<supportInfinity>::operator <(long rhs) const {
         return (small_ < rhs);
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator >(
-        const IntegerBase<supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator >(const IntegerBase& rhs)
+        const {
     if (rhs.isInfinite())
         return false;
     else if (isInfinite())
@@ -3113,8 +3103,8 @@ inline bool IntegerBase<supportInfinity>::operator >(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator >(long rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator >(long rhs) const {
     if (isInfinite())
         return true;
     else if (large_)
@@ -3123,9 +3113,9 @@ inline bool IntegerBase<supportInfinity>::operator >(long rhs) const {
         return (small_ > rhs);
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator <=(
-        const IntegerBase<supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator <=(const IntegerBase& rhs)
+        const {
     if (rhs.isInfinite())
         return true;
     else if (isInfinite())
@@ -3143,8 +3133,8 @@ inline bool IntegerBase<supportInfinity>::operator <=(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator <=(long rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator <=(long rhs) const {
     if (isInfinite())
         return false;
     else if (large_)
@@ -3153,9 +3143,9 @@ inline bool IntegerBase<supportInfinity>::operator <=(long rhs) const {
         return (small_ <= rhs);
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator >=(
-        const IntegerBase<supportInfinity>& rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator >=(const IntegerBase& rhs)
+        const {
     if (isInfinite())
         return true;
     else if (rhs.isInfinite())
@@ -3173,8 +3163,8 @@ inline bool IntegerBase<supportInfinity>::operator >=(
     }
 }
 
-template <bool supportInfinity>
-inline bool IntegerBase<supportInfinity>::operator >=(long rhs) const {
+template <bool withInfinity>
+inline bool IntegerBase<withInfinity>::operator >=(long rhs) const {
     if (isInfinite())
         return true;
     else if (large_)
@@ -3183,9 +3173,8 @@ inline bool IntegerBase<supportInfinity>::operator >=(long rhs) const {
         return (small_ >= rhs);
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator ++() {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator ++() {
     if (! isInfinite()) {
         if (large_)
             mpz_add_ui(large_, large_, 1);
@@ -3200,22 +3189,20 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator ++(int) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
     if (isInfinite())
         return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     ++(*this);
     return ans;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator --() {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator --() {
     if (! isInfinite()) {
         if (large_)
             mpz_sub_ui(large_, large_, 1);
@@ -3230,189 +3217,180 @@ inline IntegerBase<supportInfinity>&
     return *this;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator --(int) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
     if (isInfinite())
         return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     --(*this);
     return ans;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator +(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
+        const IntegerBase& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return other;
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans += other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator +(long other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
+        long other) const {
     if (isInfinite())
         return *this;
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans += other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator -(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
+        const IntegerBase& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return other;
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans -= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator -(long other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
+        long other) const {
     if (isInfinite())
         return *this;
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans -= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator *(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
+        const IntegerBase& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return other;
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans *= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator *(long other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
+        long other) const {
     if (isInfinite())
         return *this;
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans *= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator /(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
+        const IntegerBase& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return (long)0;
     if (other.isZero()) {
-        IntegerBase<supportInfinity> ans;
+        IntegerBase ans;
         ans.makeInfinite();
         return ans;
     }
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans /= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator /(long other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
+        long other) const {
     if (isInfinite())
         return *this;
     if (other == 0) {
-        IntegerBase<supportInfinity> ans;
+        IntegerBase ans;
         ans.makeInfinite();
         return ans;
     }
 
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans /= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::divExact(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
+        const IntegerBase& other) const {
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans.divByExact(other);
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::divExact(long other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(long other)
+        const {
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans.divByExact(other);
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator %(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
+        const IntegerBase& other) const {
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans %= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator %(long other) const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
+        long other) const {
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     return ans %= other;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>
-        IntegerBase<supportInfinity>::operator -() const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() const {
     if (isInfinite())
         return *this;
     if (large_) {
-        IntegerBase<supportInfinity> ans;
+        IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
         mpz_init(ans.large_);
         mpz_neg(ans.large_, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        IntegerBase<supportInfinity> ans;
+        IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
         mpz_init_set_si(ans.large_, small_);
         mpz_neg(ans.large_, ans.large_);
         return ans;
     } else
-        return IntegerBase<supportInfinity>(-small_);
+        return IntegerBase(-small_);
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator +=(
-        const IntegerBase<supportInfinity>& other) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
+        const IntegerBase& other) {
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
@@ -3428,10 +3406,9 @@ inline IntegerBase<supportInfinity>&
         return (*this) += other.small_;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator -=(
-        const IntegerBase<supportInfinity>& other) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
+        const IntegerBase& other) {
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
@@ -3447,8 +3424,8 @@ inline IntegerBase<supportInfinity>&
         return (*this) -= other.small_;
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::negate() {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::negate() {
     if (isInfinite())
         return;
     if (large_)
@@ -3461,63 +3438,61 @@ inline void IntegerBase<supportInfinity>::negate() {
         small_ = -small_;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::abs()
-        const {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const {
     if (isInfinite())
         return *this;
     if (large_) {
-        IntegerBase<supportInfinity> ans;
+        IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
         mpz_init_set(ans.large_, large_);
         mpz_abs(ans.large_, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        IntegerBase<supportInfinity> ans;
+        IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
         mpz_init_set_si(ans.large_, small_);
         mpz_neg(ans.large_, ans.large_);
         return ans;
     } else
-        return IntegerBase<supportInfinity>(small_ >= 0 ? small_ : - small_);
+        return IntegerBase(small_ >= 0 ? small_ : - small_);
 }
 
-template <bool supportInfinity>
-IntegerBase<supportInfinity> IntegerBase<supportInfinity>::gcd(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::gcd(
+        const IntegerBase& other) const {
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     ans.gcdWith(other);
     return ans;
 }
 
-template <bool supportInfinity>
-IntegerBase<supportInfinity> IntegerBase<supportInfinity>::lcm(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::lcm(
+        const IntegerBase& other) const {
     // Do the standard thing for now.
-    IntegerBase<supportInfinity> ans(*this);
+    IntegerBase ans(*this);
     ans.lcmWith(other);
     return ans;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity> operator +(long lhs,
-        const IntegerBase<supportInfinity>& rhs) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> operator +(long lhs,
+        const IntegerBase<withInfinity>& rhs) {
     return rhs + lhs;
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity> operator *(long lhs,
-        const IntegerBase<supportInfinity>& rhs) {
+template <bool withInfinity>
+inline IntegerBase<withInfinity> operator *(long lhs,
+        const IntegerBase<withInfinity>& rhs) {
     return rhs * lhs;
 }
 
-template <bool supportInfinity>
-inline std::tuple<IntegerBase<supportInfinity>, IntegerBase<supportInfinity>,
-        IntegerBase<supportInfinity>>
-        IntegerBase<supportInfinity>::gcdWithCoeffs(
-        const IntegerBase<supportInfinity>& other) const {
+template <bool withInfinity>
+inline std::tuple<IntegerBase<withInfinity>, IntegerBase<withInfinity>,
+        IntegerBase<withInfinity>> IntegerBase<withInfinity>::gcdWithCoeffs(
+        const IntegerBase& other) const {
     // In the long term, this will eventually become the preferred
     // implementation.  For now though, just forward to the non-tuple variant.
     std::tuple<IntegerBase, IntegerBase, IntegerBase> ans;
@@ -3525,8 +3500,8 @@ inline std::tuple<IntegerBase<supportInfinity>, IntegerBase<supportInfinity>,
     return ans;
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::setRaw(mpz_srcptr fromData) {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::setRaw(mpz_srcptr fromData) {
     makeFinite();
     if (! large_) {
         large_ = new __mpz_struct[1];
@@ -3536,54 +3511,54 @@ inline void IntegerBase<supportInfinity>::setRaw(mpz_srcptr fromData) {
     }
 }
 
-template <bool supportInfinity>
-inline mpz_srcptr IntegerBase<supportInfinity>::rawData() const {
+template <bool withInfinity>
+inline mpz_srcptr IntegerBase<withInfinity>::rawData() const {
     // Cast away the const, since we are not changing the mathematical value.
     // We are, however, bulking up the representation.
-    const_cast<IntegerBase<supportInfinity>&>(*this).makeLarge();
+    const_cast<IntegerBase&>(*this).makeLarge();
     return large_;
 }
 
-template <bool supportInfinity>
-inline mpz_ptr IntegerBase<supportInfinity>::rawData() {
+template <bool withInfinity>
+inline mpz_ptr IntegerBase<withInfinity>::rawData() {
     makeLarge();
     return large_;
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::makeLarge() {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::makeLarge() {
     if (! large_)
         forceLarge();
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::tryReduce() {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::tryReduce() {
     if (large_ && mpz_cmp_si(large_, LONG_MAX) <= 0 &&
             mpz_cmp_si(large_, LONG_MIN) >= 0)
         forceReduce();
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::tightEncode(std::ostream& out) const {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeInteger(out, *this);
 }
 
-template <bool supportInfinity>
-inline std::string IntegerBase<supportInfinity>::tightEncoding() const {
+template <bool withInfinity>
+inline std::string IntegerBase<withInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
     return out.str();
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecoding(
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::tightDecoding(
         const std::string& enc) {
     return regina::detail::tightDecodeInteger<IntegerBase>(
         enc.begin(), enc.end(), true);
 }
 
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::tightDecode(
         std::istream& input) {
     try {
         return regina::detail::tightDecodeInteger<IntegerBase>(
@@ -3595,9 +3570,9 @@ inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
     }
 }
 
-template <bool supportInfinity>
-inline size_t IntegerBase<supportInfinity>::hash() const {
-    if constexpr (supportInfinity) {
+template <bool withInfinity>
+inline size_t IntegerBase<withInfinity>::hash() const {
+    if constexpr (withInfinity) {
         // For infinity, just return an arbitrary hard-coded constant.
         if (isInfinite())
             return 33651164;
@@ -3618,21 +3593,21 @@ inline size_t IntegerBase<supportInfinity>::hash() const {
         return static_cast<size_t>(small_);
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::forceLarge() {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::forceLarge() {
     large_ = new __mpz_struct[1];
     mpz_init_set_si(large_, small_);
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::clearLarge() {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::clearLarge() {
     mpz_clear(large_);
     delete[] large_;
     large_ = nullptr;
 }
 
-template <bool supportInfinity>
-inline void IntegerBase<supportInfinity>::forceReduce() {
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::forceReduce() {
     small_ = mpz_get_si(large_);
     mpz_clear(large_);
     delete[] large_;
@@ -3663,19 +3638,19 @@ inline const IntegerBase<true> IntegerBase<true>::infinity(false, false);
 
 #endif // __DOXYGEN
 
-template <bool supportInfinity>
-inline void swap(IntegerBase<supportInfinity>& a,
-        IntegerBase<supportInfinity>& b) noexcept {
+template <bool withInfinity>
+inline void swap(IntegerBase<withInfinity>& a, IntegerBase<withInfinity>& b)
+        noexcept {
     a.swap(b);
 }
 
-template <bool supportInfinity>
-void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value) {
+template <bool withInfinity>
+void tightEncode(std::ostream& out, IntegerBase<withInfinity> value) {
     regina::detail::tightEncodeInteger(out, std::move(value));
 }
 
-template <bool supportInfinity>
-std::string tightEncoding(IntegerBase<supportInfinity> value) {
+template <bool withInfinity>
+std::string tightEncoding(IntegerBase<withInfinity> value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, std::move(value));
     return out.str();
@@ -3698,9 +3673,9 @@ inline NativeInteger<bytes>::NativeInteger(
 }
 
 template <int bytes>
-template <bool supportInfinity>
+template <bool withInfinity>
 inline NativeInteger<bytes>::NativeInteger(
-        const IntegerBase<supportInfinity>& value) :
+        const IntegerBase<withInfinity>& value) :
         data_(value.template nativeValue<bytes>()) {
 }
 

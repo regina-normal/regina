@@ -1961,6 +1961,7 @@
 		05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1219C1305A005B53B5 /* NewAnglesController.mm */; };
 		05F23E1619C13432005B53B5 /* NewFilterController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1519C13432005B53B5 /* NewFilterController.mm */; };
 		05F23E1919C1418A005B53B5 /* NewSnapPeaController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */; };
+		05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */; };
 		05F6D3B91C52CD5F007307F0 /* NewTri4Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */; };
 		05F9561319B53E7900377BEC /* Tri3Recognition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F9561219B53E7900377BEC /* Tri3Recognition.mm */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
@@ -4721,6 +4722,7 @@
 		05F23E1519C13432005B53B5 /* NewFilterController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewFilterController.mm; sourceTree = "<group>"; };
 		05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSnapPeaController.h; sourceTree = "<group>"; };
 		05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSnapPeaController.mm; sourceTree = "<group>"; };
+		05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = integer.cpp; sourceTree = "<group>"; };
 		05F6D3B51C52CB9B007307F0 /* NewTri4Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTri4Controller.h; sourceTree = "<group>"; };
 		05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTri4Controller.mm; sourceTree = "<group>"; };
 		05F9561119B53E7900377BEC /* Tri3Recognition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Recognition.h; sourceTree = "<group>"; };
@@ -7849,6 +7851,7 @@
 				056AED332A431AE200EAF4FA /* binom.cpp */,
 				056AED2E2A431AE200EAF4FA /* CMakeLists.txt */,
 				056AED2D2A431AE200EAF4FA /* cyclotomic.cpp */,
+				05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */,
 				056AED2F2A431AE200EAF4FA /* laurent.cpp */,
 				056AED2A2A431AE200EAF4FA /* laurent2.cpp */,
 				056AED312A431AE200EAF4FA /* matrixops.cpp */,
@@ -9827,6 +9830,7 @@
 				056AED5B2A431AE200EAF4FA /* listeners.cpp in Sources */,
 				056AED8A2A431AE200EAF4FA /* binom.cpp in Sources */,
 				056AED852A431AE200EAF4FA /* snappea.cpp in Sources */,
+				05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */,
 				056AED622A431AE200EAF4FA /* testexhaustive.cpp in Sources */,
 				056AED632A431AE200EAF4FA /* incompressible.cpp in Sources */,
 				056AED7A2A431AE200EAF4FA /* laurent.cpp in Sources */,

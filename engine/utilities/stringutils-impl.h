@@ -74,8 +74,8 @@ std::string superscript(T value) {
     return ans;
 }
 
-template <bool supportInfinity>
-std::string superscript(const IntegerBase<supportInfinity>& value) {
+template <bool withInfinity>
+std::string superscript(const IntegerBase<withInfinity>& value) {
     std::string s = value.stringValue();
     std::string ans;
     for (auto c : s)
@@ -120,8 +120,8 @@ std::string subscript(T value) {
     return ans;
 }
 
-template <bool supportInfinity>
-std::string subscript(const IntegerBase<supportInfinity>& value) {
+template <bool withInfinity>
+std::string subscript(const IntegerBase<withInfinity>& value) {
     std::string s = value.stringValue();
     std::string ans;
     for (auto c : s)

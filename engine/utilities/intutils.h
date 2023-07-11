@@ -48,11 +48,8 @@
 
 namespace regina {
 
-template <bool supportInfinity>
-class IntegerBase;
-
-template <int bytes>
-class NativeInteger;
+template <bool> class IntegerBase;
+template <int> class NativeInteger;
 
 /**
  * A compile-time boolean constant that indicates whether the type \a T is a
@@ -135,8 +132,8 @@ template <typename T>
 struct IsReginaInteger : public std::false_type {};
 
 #ifndef __DOXYGEN
-template <bool supportInfinity>
-struct IsReginaInteger<IntegerBase<supportInfinity>> : public std::true_type {};
+template <bool withInfinity>
+struct IsReginaInteger<IntegerBase<withInfinity>> : public std::true_type {};
 
 template <int bytes>
 struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
@@ -159,8 +156,8 @@ template <typename T>
 struct IsReginaArbitraryPrecisionInteger : public std::false_type {};
 
 #ifndef __DOXYGEN
-template <bool supportInfinity>
-struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public std::true_type {};
+template <bool withInfinity>
+struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std::true_type {};
 #endif // __DOXYGEN
 
 #ifndef __DOCSTRINGS
@@ -469,12 +466,12 @@ template <bool a, bool b>
 struct FaithfulAssignment<IntegerBase<a>, IntegerBase<b>> :
     public std::integral_constant<bool, (b || ! a)> {};
 
-template <int bytes, bool supportInfinity>
-struct FaithfulAssignment<NativeInteger<bytes>, IntegerBase<supportInfinity>> :
+template <int bytes, bool withInfinity>
+struct FaithfulAssignment<NativeInteger<bytes>, IntegerBase<withInfinity>> :
     public std::true_type {};
 
-template <int bytes, bool supportInfinity>
-struct FaithfulAssignment<IntegerBase<supportInfinity>, NativeInteger<bytes>> :
+template <int bytes, bool withInfinity>
+struct FaithfulAssignment<IntegerBase<withInfinity>, NativeInteger<bytes>> :
     public std::false_type {};
 
 #endif // __DOXYGEN

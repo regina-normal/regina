@@ -2,6 +2,7 @@
 SET ( FILES
   binom.cpp
   cyclotomic.cpp
+  integer.cpp
   laurent.cpp
   laurent2.cpp
   matrixops.cpp

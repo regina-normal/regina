@@ -154,6 +154,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("tryReduce", &Int::tryReduce, rdoc::tryReduce)
         .def(long() + pybind11::self, rdoc_global::__add)
         .def(long() * pybind11::self, rdoc_global::__mul)
+        .def_readonly_static("supportsInfinity", &Int::supportsInfinity)
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)
     ;

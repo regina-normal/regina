@@ -51,6 +51,7 @@ Version 7.4  [ (to be announced) ]
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
+            - New class constant supportsInfinity, which is set to false.
         Class IntOfBits<k>:
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Isomorphism<dim>:
@@ -58,6 +59,7 @@ Version 7.4  [ (to be announced) ]
         Class LargeInteger:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
+            - New class constant supportsInfinity, which is set to true.
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
         Class Link:
