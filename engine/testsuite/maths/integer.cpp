@@ -290,17 +290,19 @@ class IntegerTest : public testing::Test {
             32767, 32768, LONG_MAX-2, LONG_MAX-1, LONG_MAX
         };
 
+#if 0
         // A set of test strings of the form 00...0, with length 2^k.
-        inline static const std::array<const char*, 5> zero2k {
+        inline static const std::array<std::string, 5> zero2k {
             "0000",
             "00000000",
             "0000000000000000",
             "00000000000000000000000000000000",
             "0000000000000000000000000000000000000000000000000000000000000000"
         };
+#endif
 
         // A set of test strings of the form 00...0, with length 2^k-1.
-        inline static const std::array<const char*, 5> zerk2kDec {
+        inline static const std::array<std::string, 5> zero2k_1 {
             "000",
             "0000000",
             "000000000000000",
@@ -309,7 +311,7 @@ class IntegerTest : public testing::Test {
         };
 
         // A set of test strings of the form FF...F, with length 2^k.
-        inline static const std::array<const char*, 5> f2k {
+        inline static const std::array<std::string, 5> f2k {
             "FFFF",
             "FFFFFFFF",
             "FFFFFFFFFFFFFFFF",
@@ -1677,35 +1679,45 @@ TYPED_TEST(IntegerTest, plusMinus) {
     }
 }
 
-#if 0
-template <typename IntType>
-static void testMultiply(const IntType& a, long b, const IntType& ans) {
-    shouldBeEqual(a * long(b), ans);
-    shouldBeEqual(long(b) * a, ans);
-    shouldBeEqual(a * IntType(b), ans);
-    shouldBeEqual(IntType(b) * a, ans);
+template <typename IntegerType>
+static void verifyProductNativeNative(long a, long b,
+        const IntegerType& expect) {
+    static_assert(
+        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
+    SCOPED_TRACE_NUMERIC(a);
+    SCOPED_TRACE_NUMERIC(b);
+
+    EXPECT_EQ(IntegerType(a) * b, expect);
+    EXPECT_EQ(b * IntegerType(a), expect);
+    EXPECT_EQ(a * IntegerType(b), expect);
+    EXPECT_EQ(IntegerType(b) * a, expect);
+    EXPECT_EQ(IntegerType(a) * IntegerType(b), expect);
+    EXPECT_EQ(IntegerType(b) * IntegerType(a), expect);
 }
 
-template <typename IntType>
-static void testMultiply(const IntType& a, long b, long ans) {
-    shouldBeEqual(a * long(b), ans);
-    shouldBeEqual(long(b) * a, ans);
-    shouldBeEqual(a * IntType(b), ans);
-    shouldBeEqual(IntType(b) * a, ans);
+template <typename IntegerType>
+static void verifyProductLargeNative(const IntegerType& a, long b,
+        const IntegerType& expect) {
+    static_assert(
+        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
+    SCOPED_TRACE_REGINA(a);
+    SCOPED_TRACE_NUMERIC(b);
+
+    EXPECT_EQ(a * b, expect);
+    EXPECT_EQ(b * a, expect);
+    EXPECT_EQ(a * IntegerType(b), expect);
+    EXPECT_EQ(IntegerType(b) * a, expect);
 }
-#endif
 
 TYPED_TEST(IntegerTest, multiply) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
-#if 0
-        testMultiply(x, 2, x + x);
-        testMultiply(x, 1, x);
-        testMultiply(x, 0, 0);
-        testMultiply(x, -1, -x);
-        testMultiply(x, -2, -x - x);
-#endif
+        verifyProductLargeNative(x, 2, x + x);
+        verifyProductLargeNative(x, 1, x);
+        verifyProductLargeNative(x, 0, TypeParam());
+        verifyProductLargeNative(x, -1, -x);
+        verifyProductLargeNative(x, -2, -x - x);
 
         for (const auto& y : this->cases) {
             if (y == 0)
@@ -1811,101 +1823,78 @@ TYPED_TEST(IntegerTest, multiply) {
         }
     }
 
-#if 0
     // Ad-hoc tests for native * native:
-    testMultiply(IntType(3), long(7), 21);
-    testMultiply(IntType(3), long(-7), -21);
-    testMultiply(IntType(-3), long(7), -21);
-    testMultiply(IntType(-3), long(-7), 21);
+    verifyProductNativeNative<TypeParam>(3, 7, 21);
+    verifyProductNativeNative<TypeParam>(3, -7, -21);
+    verifyProductNativeNative<TypeParam>(-3, 7, -21);
+    verifyProductNativeNative<TypeParam>(-3, -7, 21);
 
     // Ad-hoc tests for large * native and native * large:
-    testMultiply(IntType(ENORMOUS_INTEGER), long(100),
-        IntType(ENORMOUS_INTEGER "00"));
-    testMultiply(IntType("-" ENORMOUS_INTEGER), long(100),
-        IntType("-" ENORMOUS_INTEGER "00"));
-    testMultiply(IntType(ENORMOUS_INTEGER), long(-100),
-        IntType("-" ENORMOUS_INTEGER "00"));
-    testMultiply(IntType("-" ENORMOUS_INTEGER), long(-100),
-        IntType(ENORMOUS_INTEGER "00"));
+    verifyProductLargeNative<TypeParam>(ENORMOUS_INTEGER, 100,
+        ENORMOUS_INTEGER "00");
+    verifyProductLargeNative<TypeParam>(TypeParam(ENORMOUS_INTEGER), -100,
+        TypeParam("-" ENORMOUS_INTEGER "00"));
+    verifyProductLargeNative<TypeParam>(TypeParam("-" ENORMOUS_INTEGER), -100,
+        TypeParam(ENORMOUS_INTEGER "00"));
+    verifyProductLargeNative<TypeParam>(TypeParam("-" ENORMOUS_INTEGER), 100,
+        TypeParam("-" ENORMOUS_INTEGER "00"));
 
     // Ad-hoc tests for large * large:
-    shouldBeEqual(IntType("3" ZEROES) * IntType("7" ZEROES),
-        IntType("21" ZEROES ZEROES));
-    shouldBeEqual(IntType("3" ZEROES) * IntType("-7" ZEROES),
-        IntType("-21" ZEROES ZEROES));
-    shouldBeEqual(IntType("-3" ZEROES) * IntType("7" ZEROES),
-        IntType("-21" ZEROES ZEROES));
-    shouldBeEqual(IntType("-3" ZEROES) * IntType("-7" ZEROES),
-        IntType("21" ZEROES ZEROES));
+    EXPECT_EQ(TypeParam("3" ZEROES) * TypeParam("7" ZEROES),
+        TypeParam("21" ZEROES ZEROES));
+    EXPECT_EQ(TypeParam("3" ZEROES) * TypeParam("-7" ZEROES),
+        TypeParam("-21" ZEROES ZEROES));
+    EXPECT_EQ(TypeParam("-3" ZEROES) * TypeParam("7" ZEROES),
+        TypeParam("-21" ZEROES ZEROES));
+    EXPECT_EQ(TypeParam("-3" ZEROES) * TypeParam("-7" ZEROES),
+        TypeParam("21" ZEROES ZEROES));
 
     // Test around overflow points:
-    size_t i;
-    for (i = 0; i < nZero; ++i) {
-        testMultiply(
-            IntType(std::string("-1") + zero2k[i], 16), long(-1),
-            IntType(std::string("1") + zero2k[i], 16));
-        testMultiply(
-            IntType(std::string("1") + zero2k[i], 16), long(-1),
-            IntType(std::string("-1") + zero2k[i], 16));
-        testMultiply(
-            IntType(std::string("-8") + zero2kdec[i], 16), long(-2),
-            IntType(std::string("1") + zero2k[i], 16));
-        testMultiply(
-            IntType(std::string("-4") + zero2kdec[i], 16), long(4),
-            IntType(std::string("-1") + zero2k[i], 16));
-        testMultiply(
-            IntType(std::string("2") + zero2kdec[i], 16), long(-8),
-            IntType(std::string("-1") + zero2k[i], 16));
-        testMultiply(
-            IntType(std::string("1") + zero2kdec[i], 16), long(16),
-            IntType(std::string("1") + zero2k[i], 16));
+    for (const std::string& s : this->zero2k_1) {
+        // The following tests work in base 16.
+        // Here s is a sequence of 2^k-1 zeroes, for some k.
+        SCOPED_TRACE_CSTRING(s);
 
-        if (i == nZero - 1)
-            continue;
+        verifyProductLargeNative(TypeParam("-10" + s, 16), -1,
+            TypeParam("10" + s, 16));
+        verifyProductLargeNative(TypeParam("10" + s, 16), -1,
+            TypeParam("-10" + s, 16));
+        verifyProductLargeNative(TypeParam("-8" + s, 16), -2,
+            TypeParam("10" + s, 16));
+        verifyProductLargeNative(TypeParam("-4" + s, 16), 4,
+            TypeParam("-10" + s, 16));
+        verifyProductLargeNative(TypeParam("2" + s, 16), -8,
+            TypeParam("-10" + s, 16));
+        verifyProductLargeNative(TypeParam("1" + s, 16), 16,
+            TypeParam("10" + s, 16));
 
-        shouldBeEqual(
-            IntType(std::string("1") + zero2k[i], 16) *
-            IntType(std::string("1") + zero2k[i], 16),
-            IntType(std::string("1") + zero2k[i + 1], 16));
-        shouldBeEqual(
-            IntType(std::string("-1") + zero2k[i], 16) *
-            IntType(std::string("1") + zero2k[i], 16),
-            IntType(std::string("-1") + zero2k[i + 1], 16));
-        shouldBeEqual(
-            IntType(std::string("1") + zero2k[i], 16) *
-            IntType(std::string("-1") + zero2k[i], 16),
-            IntType(std::string("-1") + zero2k[i + 1], 16));
-        shouldBeEqual(
-            IntType(std::string("-1") + zero2k[i], 16) *
-            IntType(std::string("-1") + zero2k[i], 16),
-            IntType(std::string("1") + zero2k[i + 1], 16));
+        EXPECT_EQ(TypeParam("10" + s, 16) * TypeParam("10" + s, 16),
+            TypeParam("100" + s + s, 16));
+        EXPECT_EQ(TypeParam("-10" + s, 16) * TypeParam("10" + s, 16),
+            TypeParam("-100" + s + s, 16));
+        EXPECT_EQ(TypeParam("10" + s, 16) * TypeParam("-10" + s, 16),
+            TypeParam("-100" + s + s, 16));
+        EXPECT_EQ(TypeParam("-10" + s, 16) * TypeParam("-10" + s, 16),
+            TypeParam("100" + s + s, 16));
     }
 
-    testMultiply(d.longMin, long(-1), d.longMaxInc);
-    testMultiply(d.longMaxInc, long(-1), d.longMin);
+    TypeParam longMaxInc(LONG_MAX); ++longMaxInc;
+    TypeParam longMinDec(LONG_MIN); --longMinDec;
 
-    testMultiply(IntType((LONG_MAX-1)/3), long(3), LONG_MAX-1);
-    testMultiply(IntType((LONG_MAX-1)/3), long(-3), LONG_MIN+2);
-    testMultiply(IntType(-(LONG_MAX-1)/3), long(3), LONG_MIN+2);
-    testMultiply(IntType(-(LONG_MAX-1)/3), long(-3), LONG_MAX-1);
-    testMultiply(IntType(3), long((LONG_MAX-1)/3), LONG_MAX-1);
-    testMultiply(IntType(-3), long((LONG_MAX-1)/3), LONG_MIN+2);
-    testMultiply(IntType(3), long(-(LONG_MAX-1)/3), LONG_MIN+2);
-    testMultiply(IntType(-3), long(-(LONG_MAX-1)/3), LONG_MAX-1);
+    verifyProductNativeNative<TypeParam>(LONG_MIN, -1, longMaxInc);
+    verifyProductLargeNative(longMaxInc, -1, TypeParam(LONG_MIN));
 
-    testMultiply(IntType((LONG_MAX-1)/3 + 1), long(3),
-        IntType(str(static_cast<unsigned long>(LONG_MAX) + 2)));
-    testMultiply(IntType((LONG_MAX-1)/3 + 1), long(-3), d.longMinDec);
-    testMultiply(IntType(-(LONG_MAX-1)/3 - 1), long(3), d.longMinDec);
-    testMultiply(IntType(-(LONG_MAX-1)/3 - 1), long(-3),
-        IntType(str(static_cast<unsigned long>(LONG_MAX) + 2)));
-    testMultiply(IntType(3), long((LONG_MAX-1)/3 + 1),
-        IntType(str(static_cast<unsigned long>(LONG_MAX) + 2)));
-    testMultiply(IntType(-3), long((LONG_MAX-1)/3 + 1), d.longMinDec);
-    testMultiply(IntType(3), long(-(LONG_MAX-1)/3 - 1), d.longMinDec);
-    testMultiply(IntType(-3), long(-(LONG_MAX-1)/3 - 1),
-        IntType(str(static_cast<unsigned long>(LONG_MAX) + 2)));
-#endif
+    verifyProductNativeNative<TypeParam>((LONG_MAX-1)/3, 3, LONG_MAX-1);
+    verifyProductNativeNative<TypeParam>((LONG_MAX-1)/3, -3, LONG_MIN+2);
+    verifyProductNativeNative<TypeParam>(-(LONG_MAX-1)/3, 3, LONG_MIN+2);
+    verifyProductNativeNative<TypeParam>(-(LONG_MAX-1)/3, -3, LONG_MAX-1);
+
+    verifyProductNativeNative<TypeParam>((LONG_MAX-1)/3 + 1, 3,
+        (unsigned long)(LONG_MAX) + 2);
+    verifyProductNativeNative<TypeParam>((LONG_MAX-1)/3 + 1, -3, longMinDec);
+    verifyProductNativeNative<TypeParam>(-(LONG_MAX-1)/3 - 1, 3, longMinDec);
+    verifyProductNativeNative<TypeParam>(-(LONG_MAX-1)/3 - 1, -3,
+        (unsigned long)(LONG_MAX) + 2);
 
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam inf(TypeParam::infinity);
