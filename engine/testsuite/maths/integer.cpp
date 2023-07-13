@@ -1432,117 +1432,133 @@ static void testPlusMinus(const IntType& a, const IntType& b,
     shouldBeEqual(ans - b, a);
     shouldBeEqual(ans - a, b);
 }
+#endif
 
 TYPED_TEST(IntegerTest, plusMinus) {
-    unsigned a, b;
+    for (const auto& x : this->cases) {
+        SCOPED_TRACE_REGINA(x);
 
-    const Data<IntType>& d(data<IntType>());
+        EXPECT_EQ(x + 0L, x);
+        EXPECT_EQ(x - 0L, x);
+        EXPECT_EQ(0L + x, x);
+        EXPECT_EQ(x + TypeParam(), x);
+        EXPECT_EQ(x - TypeParam(), x);
+        EXPECT_EQ(TypeParam() + x, x);
+        EXPECT_EQ(TypeParam() - x, -x);
 
-    for (a = 0; a < d.nCases; ++a) {
-        for (b = 0; b < d.nCases; ++b) {
-            IntType x(d.cases[a]);
-            IntType y(d.cases[b]);
+        for (const auto& y : this->cases) {
+            if (y == 0)
+                continue;
 
-            shouldBeEqual(x + y, y + x);
-            shouldBeEqual(x - y, -(y - x));
+            SCOPED_TRACE_REGINA(y);
 
-            shouldBeEqual((x + y) - y, x);
-            shouldBeEqual((x - y) + y, x);
-            shouldBeEqual((x + y) - x, y);
-            shouldBeEqual((x - y) - x, -y);
-            shouldBeEqual(((x + y) - x) - y, 0L);
-            shouldBeEqual(((x + y) - y) - x, 0L);
-            shouldBeEqual(((x - y) - x) + y, 0L);
-            shouldBeEqual(((x - y) + y) - x, 0L);
+            EXPECT_EQ(x + y, y + x);
+            EXPECT_EQ(x - y, -(y - x));
 
-            IntType p(x);
-            shouldBeEqual(p += y, x + y);
-            IntType q(x);
-            shouldBeEqual(q -= y, x - y);
+            EXPECT_EQ((x + y) - y, x);
+            EXPECT_EQ((x - y) + y, x);
+            EXPECT_EQ((x + y) - x, y);
+            EXPECT_EQ((x - y) - x, -y);
+            EXPECT_EQ(((x + y) - x) - y, 0);
+            EXPECT_EQ(((x + y) - y) - x, 0);
+            EXPECT_EQ(((x - y) - x) + y, 0);
+            EXPECT_EQ(((x - y) + y) - x, 0);
+
+            {
+                TypeParam z = x;
+                EXPECT_EQ(z += y, x + y);
+                EXPECT_EQ(z, x + y);
+            }
+            {
+                TypeParam z = x;
+                EXPECT_EQ(z -= y, x - y);
+                EXPECT_EQ(z, x - y);
+            }
 
             if (y.sign() > 0) {
-                shouldBeGreater(x + y, x);
-                shouldBeLess(x - y, x);
+                EXPECT_GT(x + y, x);
+                EXPECT_LT(x - y, x);
             } else if (y.sign() < 0) {
-                shouldBeLess(x + y, x);
-                shouldBeGreater(x - y, x);
+                EXPECT_LT(x + y, x);
+                EXPECT_GT(x - y, x);
             } else {
-                shouldBeEqual(x + y, x);
-                shouldBeEqual(x - y, x);
+                EXPECT_EQ(x + y, x);
+                EXPECT_EQ(x - y, x);
             }
 
             if (x.sign() > 0) {
-                shouldBeGreater(x + y, y);
-                shouldBeGreater(x - y, -y);
+                EXPECT_GT(x + y, y);
+                EXPECT_GT(x - y, -y);
             } else if (x.sign() < 0) {
-                shouldBeLess(x + y, y);
-                shouldBeLess(x - y, -y);
+                EXPECT_LT(x + y, y);
+                EXPECT_LT(x - y, -y);
             } else {
-                shouldBeEqual(x + y, y);
-                shouldBeEqual(x - y, -y);
+                EXPECT_EQ(x + y, y);
+                EXPECT_EQ(x - y, -y);
             }
         }
 
-        for (b = 0; b < d.nLongCases; ++b) {
-            IntType x(d.cases[a]);
-            long y = d.longCases[b];
+        for (long y : this->longCases) {
+            if (y == 0)
+                continue;
 
-            shouldBeEqual(x + y, y + x);
+            SCOPED_TRACE_NUMERIC(y);
 
-            shouldBeEqual((x + y) - y, x);
-            shouldBeEqual((x - y) + y, x);
-            shouldBeEqual((x + y) - x, y);
-            shouldBeEqual(-((x - y) - x), y); // -y could overflow
-            shouldBeEqual(((x + y) - x) - y, 0L);
-            shouldBeEqual(((x + y) - y) - x, 0L);
-            shouldBeEqual(((x - y) - x) + y, 0L);
-            shouldBeEqual(((x - y) + y) - x, 0L);
+            EXPECT_EQ(x + y, y + x);
 
-            shouldBeEqual((y + x) - y, x);
-            shouldBeEqual((y + x) - x, y);
-            shouldBeEqual(((y + x) - x) - y, 0L);
-            shouldBeEqual(((y + x) - y) - x, 0L);
+            EXPECT_EQ((x + y) - y, x);
+            EXPECT_EQ((x - y) + y, x);
+            EXPECT_EQ((x + y) - x, y);
+            EXPECT_EQ(-((x - y) - x), y); // -y could overflow
+            EXPECT_EQ(((x + y) - x) - y, 0);
+            EXPECT_EQ(((x + y) - y) - x, 0);
+            EXPECT_EQ(((x - y) - x) + y, 0);
+            EXPECT_EQ(((x - y) + y) - x, 0);
 
-            IntType p(x);
-            shouldBeEqual(p += y, x + y);
-            IntType q(x);
-            shouldBeEqual(q -= y, x - y);
+            EXPECT_EQ((y + x) - y, x);
+            EXPECT_EQ((y + x) - x, y);
+            EXPECT_EQ(((y + x) - x) - y, 0);
+            EXPECT_EQ(((y + x) - y) - x, 0);
+
+            {
+                TypeParam z = x;
+                EXPECT_EQ(z += y, x + y);
+                EXPECT_EQ(z, x + y);
+            }
+            {
+                TypeParam z = x;
+                EXPECT_EQ(z -= y, x - y);
+                EXPECT_EQ(z, x - y);
+            }
 
             if (y > 0) {
-                shouldBeGreater(x + y, x);
-                shouldBeGreater(y + x, x);
-                shouldBeLess(x - y, x);
+                EXPECT_GT(x + y, x);
+                EXPECT_GT(y + x, x);
+                EXPECT_LT(x - y, x);
             } else if (y < 0) {
-                shouldBeLess(x + y, x);
-                shouldBeLess(y + x, x);
-                shouldBeGreater(x - y, x);
+                EXPECT_LT(x + y, x);
+                EXPECT_LT(y + x, x);
+                EXPECT_GT(x - y, x);
             } else {
-                shouldBeEqual(x + y, x);
-                shouldBeEqual(y + x, x);
-                shouldBeEqual(x - y, x);
+                EXPECT_EQ(x + y, x);
+                EXPECT_EQ(y + x, x);
+                EXPECT_EQ(x - y, x);
             }
 
             if (x.sign() > 0) {
-                shouldBeGreater(x + y, y);
-                shouldBeLess(-(x - y), y); // -y could overflow
+                EXPECT_GT(x + y, y);
+                EXPECT_LT(-(x - y), y); // -y could overflow
             } else if (x.sign() < 0) {
-                shouldBeLess(x + y, y);
-                shouldBeGreater(-(x - y), y); // -y could overflow
+                EXPECT_LT(x + y, y);
+                EXPECT_GT(-(x - y), y); // -y could overflow
             } else {
-                shouldBeEqual(x + y, y);
-                shouldBeEqual(-(x - y), y); // -y could overflow
+                EXPECT_EQ(x + y, y);
+                EXPECT_EQ(-(x - y), y); // -y could overflow
             }
         }
-
-        IntType z(d.cases[a]);
-        shouldBeEqual(z + 0L, z);
-        shouldBeEqual(z - 0L, z);
-        shouldBeEqual(0L + z, z);
-        shouldBeEqual(z + IntType::zero, z);
-        shouldBeEqual(z - IntType::zero, z);
-        shouldBeEqual(IntType::zero + z, z);
     }
 
+#if 0
     // Ad-hoc tests for native {+,-} native:
     testPlusMinus(long(3), long(7), IntType(10));
     testPlusMinus(long(-3), long(7), IntType(4));
@@ -1635,25 +1651,33 @@ TYPED_TEST(IntegerTest, plusMinus) {
             IntType(std::string("1") + zero2k[i], 16),
             IntType(-1));
     }
+#endif
 
-    // Tests for infinity are hard-coded to LargeInteger.
-    const LargeInteger& infinity(LargeInteger::infinity);
+    if constexpr (TypeParam::supportsInfinity) {
+        TypeParam inf(TypeParam::infinity);
+        EXPECT_EQ(inf + inf, inf);
+        EXPECT_EQ(inf - inf, inf);
 
-    shouldBeEqual(infinity + infinity, infinity);
-    shouldBeEqual(infinity - infinity, infinity);
-    for (a = 0; a < dataL.nCases; a++) {
-        shouldBeEqual(dataL.cases[a] + infinity, infinity);
-        shouldBeEqual(dataL.cases[a] - infinity, infinity);
-        shouldBeEqual(infinity + dataL.cases[a], infinity);
-        shouldBeEqual(infinity - dataL.cases[a], infinity);
-    }
-    for (a = 0; a < dataL.nLongCases; a++) {
-        shouldBeEqual(dataL.longCases[a] + infinity, infinity);
-        shouldBeEqual(infinity + dataL.longCases[a], infinity);
-        shouldBeEqual(infinity - dataL.longCases[a], infinity);
+        for (const auto& x : this->cases) {
+            SCOPED_TRACE_REGINA(x);
+
+            EXPECT_EQ(inf + x, inf);
+            EXPECT_EQ(inf - x, inf);
+            EXPECT_EQ(x + inf, inf);
+            EXPECT_EQ(x - inf, inf);
+        }
+
+        for (long x : this->longCases) {
+            SCOPED_TRACE_NUMERIC(x);
+
+            EXPECT_EQ(inf + x, inf);
+            EXPECT_EQ(inf - x, inf);
+            EXPECT_EQ(x + inf, inf);
+        }
     }
 }
 
+#if 0
 template <typename IntType>
 static void testMultiply(const IntType& a, long b, const IntType& ans) {
     shouldBeEqual(a * long(b), ans);
@@ -1669,119 +1693,125 @@ static void testMultiply(const IntType& a, long b, long ans) {
     shouldBeEqual(a * IntType(b), ans);
     shouldBeEqual(IntType(b) * a, ans);
 }
+#endif
 
 TYPED_TEST(IntegerTest, multiply) {
-    unsigned a, b;
+    for (const auto& x : this->cases) {
+        SCOPED_TRACE_REGINA(x);
 
-    const Data<IntType>& d(data<IntType>());
+#if 0
+        testMultiply(x, 2, x + x);
+        testMultiply(x, 1, x);
+        testMultiply(x, 0, 0);
+        testMultiply(x, -1, -x);
+        testMultiply(x, -2, -x - x);
+#endif
 
-    for (a = 0; a < d.nCases; ++a) {
-        for (b = 0; b < d.nCases; ++b) {
-            IntType x(d.cases[a]);
-            IntType y(d.cases[b]);
+        for (const auto& y : this->cases) {
+            if (y == 0)
+                continue;
+
+            SCOPED_TRACE_REGINA(y);
 
             // Test the commutative law.
-            shouldBeEqual(x * y, y * x);
+            EXPECT_EQ(x * y, y * x);
 
             // Test the distributive law.
-            shouldBeEqual(x * (y + 1), (x * y) + x);
-            shouldBeEqual(x * (y - 1), (x * y) - x);
-            shouldBeEqual(x * (y + IntType(HUGE_INTEGER)),
-                (x * y) + (x * IntType(HUGE_INTEGER)));
-            shouldBeEqual(x * (y - IntType(HUGE_INTEGER)),
-                (x * y) - (x * IntType(HUGE_INTEGER)));
+            EXPECT_EQ(x * (y + 1), (x * y) + x);
+            EXPECT_EQ(x * (y - 1), (x * y) - x);
+            EXPECT_EQ(x * (y + TypeParam(HUGE_INTEGER)),
+                (x * y) + (x * TypeParam(HUGE_INTEGER)));
+            EXPECT_EQ(x * (y - TypeParam(HUGE_INTEGER)),
+                (x * y) - (x * TypeParam(HUGE_INTEGER)));
 
             // Other simple arithmetic tests.
-            shouldBeEqual(x * (-y), -(x * y));
-            shouldBeEqual((-x) * (-y), x * y);
-            shouldBeEqual(x * (-y) + x * y, 0L);
+            EXPECT_EQ(x * (-y), -(x * y));
+            EXPECT_EQ((-x) * (-y), x * y);
+            EXPECT_EQ(x * (-y) + x * y, 0);
 
             // Test that *= behaves as it should.
             {
-                IntType p(x);
-                shouldBeEqual(p *= y, x * y);
+                TypeParam z = x;
+                EXPECT_EQ(z *= y, x * y);
+                EXPECT_EQ(z, x * y);
             }
 
             // Test signs and ordering.
             if (x.sign() > 0 && y.sign() > 0) {
-                shouldBeGreater(x * y, 0);
-                shouldBeGreater(x * y, x - 1);
-                shouldBeGreater(x * y, y - 1);
+                EXPECT_GT(x * y, 0);
+                EXPECT_GE(x * y, x);
+                EXPECT_GE(x * y, y);
             } else if (x.sign() > 0 && y.sign() < 0) {
-                shouldBeLess(x * y, 0);
-                shouldBeLess(x * y, (-x) + 1);
-                shouldBeLess(x * y, y + 1);
+                EXPECT_LT(x * y, 0);
+                EXPECT_LE(x * y, -x);
+                EXPECT_LE(x * y, y);
             } else if (x.sign() < 0 && y.sign() > 0) {
-                shouldBeLess(x * y, 0);
-                shouldBeLess(x * y, x + 1);
-                shouldBeLess(x * y, (-y) + 1);
+                EXPECT_LT(x * y, 0);
+                EXPECT_LE(x * y, x);
+                EXPECT_LE(x * y, -y);
             } else if (x.sign() < 0 && y.sign() < 0) {
-                shouldBeGreater(x * y, 0);
-                shouldBeGreater(x * y, (-x) - 1);
-                shouldBeGreater(x * y, (-y) - 1);
+                EXPECT_GT(x * y, 0);
+                EXPECT_GE(x * y, -x);
+                EXPECT_GE(x * y, -y);
             }
         }
 
-        for (b = 0; b < d.nLongCases; ++b) {
-            IntType x(d.cases[a]);
-            long y = d.longCases[b];
+        for (long y : this->longCases) {
+            if (y == 0)
+                continue;
+
+            SCOPED_TRACE_NUMERIC(y);
 
             // Test the commutative law.
-            shouldBeEqual(x * y, y * x);
+            EXPECT_EQ(x * y, y * x);
 
             // Test the distributive law.
-            shouldBeEqual(x * (IntType(y) + 1), (x * y) + x);
-            shouldBeEqual(x * (IntType(y) - 1), (x * y) - x);
-            shouldBeEqual(x * (y + IntType(HUGE_INTEGER)),
-                (x * y) + (x * IntType(HUGE_INTEGER)));
-            shouldBeEqual(x * (y + IntType("-" HUGE_INTEGER)),
-                (x * y) - (x * IntType(HUGE_INTEGER)));
+            EXPECT_EQ(x * (TypeParam(y) + 1), (x * y) + x);
+            EXPECT_EQ(x * (TypeParam(y) - 1), (x * y) - x);
+            EXPECT_EQ(x * (y + TypeParam(HUGE_INTEGER)),
+                (x * y) + (x * TypeParam(HUGE_INTEGER)));
+            EXPECT_EQ(x * (y + TypeParam("-" HUGE_INTEGER)),
+                (x * y) - (x * TypeParam(HUGE_INTEGER)));
 
             // Other simple arithmetic tests.
-            if (y == LONG_MIN) {
-                shouldBeEqual(x * d.longMaxInc, -(x * y));
-                shouldBeEqual((-x) * d.longMaxInc, x * y);
-                shouldBeEqual(x * d.longMaxInc + x * y, 0L);
-            } else {
-                shouldBeEqual(x * (-y), -(x * y));
-                shouldBeEqual((-x) * (-y), x * y);
-                shouldBeEqual(x * (-y) + x * y, 0L);
+            if (y != LONG_MIN) {
+                // For y == LONG_MIN, this test requires large integer
+                // representation which means we are already testing it above
+                // when we loop through this->cases.
+                EXPECT_EQ(x * (-y), -(x * y));
+                EXPECT_EQ((-x) * (-y), x * y);
+                EXPECT_EQ(x * (-y) + x * y, 0);
             }
 
             // Test that *= behaves as it should.
             {
-                IntType p(x);
-                shouldBeEqual(p *= y, x * y);
+                TypeParam z = x;
+                EXPECT_EQ(z *= y, x * y);
+                EXPECT_EQ(z, x * y);
             }
 
             // Test signs and ordering.
             if (x.sign() > 0 && y > 0) {
-                shouldBeGreater(x * y, 0);
-                shouldBeGreater(x * y, x - 1);
-                shouldBeGreater(x * y, y - 1);
+                EXPECT_GT(x * y, 0);
+                EXPECT_GE(x * y, x);
+                EXPECT_GE(x * y, y);
             } else if (x.sign() > 0 && y < 0) {
-                shouldBeLess(x * y, 0);
-                shouldBeLess(x * y, (-x) + 1);
-                shouldBeLess(x * y, y + 1);
+                EXPECT_LT(x * y, 0);
+                EXPECT_LE(x * y, -x);
+                EXPECT_LE(x * y, y);
             } else if (x.sign() < 0 && y > 0) {
-                shouldBeLess(x * y, 0);
-                shouldBeLess(x * y, x + 1);
-                shouldBeLess(x * y, (-y) + 1);
+                EXPECT_LT(x * y, 0);
+                EXPECT_LE(x * y, x);
+                EXPECT_LE(x * y, -y);
             } else if (x.sign() < 0 && y < 0) {
-                shouldBeGreater(x * y, 0);
-                shouldBeGreater(x * y, (-x) - 1);
-                shouldBeGreater(x * y, (-(y + 1)));
+                EXPECT_GT(x * y, 0);
+                EXPECT_GE(x * y, -x);
+                EXPECT_GT(x * y, -(y + 1)); // Note: -y could overflow.
             }
         }
-
-        IntType z(d.cases[a]);
-        testMultiply(z, 2, z + z);
-        testMultiply(z, 1, z);
-        testMultiply(z, 0, 0L);
-        testMultiply(z, -1, -z);
-        testMultiply(z, -2, -z - z);
     }
 
+#if 0
     // Ad-hoc tests for native * native:
     testMultiply(IntType(3), long(7), 21);
     testMultiply(IntType(3), long(-7), -21);
@@ -1875,21 +1905,27 @@ TYPED_TEST(IntegerTest, multiply) {
     testMultiply(IntType(3), long(-(LONG_MAX-1)/3 - 1), d.longMinDec);
     testMultiply(IntType(-3), long(-(LONG_MAX-1)/3 - 1),
         IntType(str(static_cast<unsigned long>(LONG_MAX) + 2)));
+#endif
 
-    // Tests for infinity are hard-coded to LargeInteger.
-    const LargeInteger& infinity(LargeInteger::infinity);
+    if constexpr (TypeParam::supportsInfinity) {
+        TypeParam inf(TypeParam::infinity);
+        EXPECT_EQ(inf * inf, inf);
 
-    shouldBeEqual(infinity * infinity, infinity);
-    for (a = 0; a < dataL.nCases; a++) {
-        shouldBeEqual(dataL.cases[a] * infinity, infinity);
-        shouldBeEqual(infinity * dataL.cases[a], infinity);
-    }
-    for (a = 0; a < dataL.nLongCases; a++) {
-        shouldBeEqual(dataL.longCases[a] * infinity, infinity);
-        shouldBeEqual(infinity * dataL.longCases[a], infinity);
+        for (const auto& x : this->cases) {
+            SCOPED_TRACE_REGINA(x);
+
+            EXPECT_EQ(inf * x, inf);
+            EXPECT_EQ(x * inf, inf);
+        }
+
+        for (long x : this->longCases) {
+            SCOPED_TRACE_NUMERIC(x);
+
+            EXPECT_EQ(inf * x, inf);
+            EXPECT_EQ(x * inf, inf);
+        }
     }
 }
-#endif
 
 TYPED_TEST(IntegerTest, divide) {
     // Rounding should always be towards zero.
@@ -2020,8 +2056,8 @@ TYPED_TEST(IntegerTest, divide) {
     EXPECT_EQ(longMax / -1, -LONG_MAX);
     EXPECT_EQ(longMin / 1, LONG_MIN);
     EXPECT_EQ(longMin / -1, longMaxInc);
-    EXPECT_EQ(longMax / longMin, 0L);
-    EXPECT_EQ((-longMax) / longMin, 0L);
+    EXPECT_EQ(longMax / longMin, 0);
+    EXPECT_EQ((-longMax) / longMin, 0);
     EXPECT_EQ(longMin / longMax, -1);
     EXPECT_EQ(longMin / (-longMax), 1);
     EXPECT_EQ(zero / longMax, 0);
