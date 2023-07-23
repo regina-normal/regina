@@ -291,35 +291,6 @@ class IntegerTest : public testing::Test {
         };
 
 #if 0
-        // A set of test strings of the form 00...0, with length 2^k.
-        inline static const std::array<std::string, 5> zero2k {
-            "0000",
-            "00000000",
-            "0000000000000000",
-            "00000000000000000000000000000000",
-            "0000000000000000000000000000000000000000000000000000000000000000"
-        };
-#endif
-
-        // A set of test strings of the form 00...0, with length 2^k-1.
-        inline static const std::array<std::string, 5> zero2k_1 {
-            "000",
-            "0000000",
-            "000000000000000",
-            "0000000000000000000000000000000",
-            "000000000000000000000000000000000000000000000000000000000000000"
-        };
-
-        // A set of test strings of the form FF...F, with length 2^k.
-        inline static const std::array<std::string, 5> f2k {
-            "FFFF",
-            "FFFFFFFF",
-            "FFFFFFFFFFFFFFFF",
-            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
-        };
-
-#if 0
     private:
         template <typename IntType>
         struct Data {
@@ -1400,41 +1371,55 @@ TYPED_TEST(IntegerTest, incDec) {
     }
 }
 
-#if 0
-template <typename IntType>
-static void testPlusMinus(long a, long b, const IntType& ans) {
-    shouldBeEqual(IntType(a) + long(b), ans);
-    shouldBeEqual(IntType(b) + long(a), ans);
-    shouldBeEqual(long(a) + IntType(b), ans);
-    shouldBeEqual(long(b) + IntType(a), ans);
-    shouldBeEqual(IntType(a) + IntType(b), ans);
-    shouldBeEqual(IntType(b) + IntType(a), ans);
-    shouldBeEqual(ans - long(a), b);
-    shouldBeEqual(ans - long(b), a);
-    shouldBeEqual(ans - IntType(a), b);
-    shouldBeEqual(ans - IntType(b), a);
+template <typename IntegerType>
+static void verifySumNativeNative(long a, long b, const IntegerType& expect) {
+    static_assert(
+        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
+    SCOPED_TRACE_NUMERIC(a);
+    SCOPED_TRACE_NUMERIC(b);
+
+    EXPECT_EQ(IntegerType(a) + b, expect);
+    EXPECT_EQ(b + IntegerType(a), expect);
+    EXPECT_EQ(a + IntegerType(b), expect);
+    EXPECT_EQ(IntegerType(b) + a, expect);
+    EXPECT_EQ(IntegerType(a) + IntegerType(b), expect);
+    EXPECT_EQ(IntegerType(b) + IntegerType(a), expect);
+    EXPECT_EQ(expect - a, b);
+    EXPECT_EQ(expect - b, a);
+    EXPECT_EQ(expect - IntegerType(a), b);
+    EXPECT_EQ(expect - IntegerType(b), a);
 }
 
-template <typename IntType>
-static void testPlusMinus(const IntType& a, long b, const IntType& ans) {
-    shouldBeEqual(a + long(b), ans);
-    shouldBeEqual(long(b) + a, ans);
-    shouldBeEqual(a + IntType(b), ans);
-    shouldBeEqual(IntType(b) + a, ans);
-    shouldBeEqual(ans - long(b), a);
-    shouldBeEqual(ans - a, IntType(b));
-    shouldBeEqual(ans - IntType(b), a);
+template <typename IntegerType>
+static void verifySumLargeNative(const IntegerType& a, long b,
+        const IntegerType& expect) {
+    static_assert(
+        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
+    SCOPED_TRACE_REGINA(a);
+    SCOPED_TRACE_NUMERIC(b);
+
+    EXPECT_EQ(a + b, expect);
+    EXPECT_EQ(b + a, expect);
+    EXPECT_EQ(a + IntegerType(b), expect);
+    EXPECT_EQ(IntegerType(b) + a, expect);
+    EXPECT_EQ(expect - a, b);
+    EXPECT_EQ(expect - b, a);
+    EXPECT_EQ(expect - IntegerType(b), a);
 }
 
-template <typename IntType>
-static void testPlusMinus(const IntType& a, const IntType& b,
-        const IntType& ans) {
-    shouldBeEqual(a + b, ans);
-    shouldBeEqual(b + a, ans);
-    shouldBeEqual(ans - b, a);
-    shouldBeEqual(ans - a, b);
+template <typename IntegerType>
+static void verifySumLargeLarge(const IntegerType& a, const IntegerType& b,
+        const IntegerType& expect) {
+    static_assert(
+        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
+    SCOPED_TRACE_REGINA(a);
+    SCOPED_TRACE_REGINA(b);
+
+    EXPECT_EQ(a + b, expect);
+    EXPECT_EQ(b + a, expect);
+    EXPECT_EQ(expect - a, b);
+    EXPECT_EQ(expect - b, a);
 }
-#endif
 
 TYPED_TEST(IntegerTest, plusMinus) {
     for (const auto& x : this->cases) {
@@ -1560,100 +1545,86 @@ TYPED_TEST(IntegerTest, plusMinus) {
         }
     }
 
-#if 0
     // Ad-hoc tests for native {+,-} native:
-    testPlusMinus(long(3), long(7), IntType(10));
-    testPlusMinus(long(-3), long(7), IntType(4));
-    testPlusMinus(long(3), long(-7), IntType(-4));
-    testPlusMinus(long(-3), long(-7), IntType(-10));
+    verifySumNativeNative<TypeParam>(3, 7, 10);
+    verifySumNativeNative<TypeParam>(-3, 7, 4);
+    verifySumNativeNative<TypeParam>(3, -7, -4);
+    verifySumNativeNative<TypeParam>(-3, -7, -10);
 
     // Ad-hoc tests for large {+,-} native and native {+,-} large:
-    testPlusMinus(IntType(ENORMOUS_INTEGER "0"), long(3),
-        IntType(ENORMOUS_INTEGER "3"));
-    testPlusMinus(IntType("-" ENORMOUS_INTEGER "10"), long(3),
-        IntType("-" ENORMOUS_INTEGER "07"));
-    testPlusMinus(IntType(ENORMOUS_INTEGER "10"), long(-3),
-        IntType(ENORMOUS_INTEGER "07"));
-    testPlusMinus(IntType("-" ENORMOUS_INTEGER "0"), long(-3),
-        IntType("-" ENORMOUS_INTEGER "3"));
+    verifySumLargeNative<TypeParam>(ENORMOUS_INTEGER "0", 3,
+        ENORMOUS_INTEGER "3");
+    verifySumLargeNative<TypeParam>("-" ENORMOUS_INTEGER "10", 3,
+        "-" ENORMOUS_INTEGER "07");
+    verifySumLargeNative<TypeParam>(ENORMOUS_INTEGER "10", -3,
+        ENORMOUS_INTEGER "07");
+    verifySumLargeNative<TypeParam>("-" ENORMOUS_INTEGER "0", -3,
+        "-" ENORMOUS_INTEGER "3");
 
-    testPlusMinus(IntType(ENORMOUS_INTEGER "10"),
-        IntType("-" ENORMOUS_INTEGER "07"), IntType(3));
-    testPlusMinus(IntType("-" ENORMOUS_INTEGER "10"),
-        IntType(ENORMOUS_INTEGER "07"), IntType(-3));
+    verifySumLargeLarge<TypeParam>(ENORMOUS_INTEGER "10",
+        "-" ENORMOUS_INTEGER "07", 3);
+    verifySumLargeLarge<TypeParam>("-" ENORMOUS_INTEGER "10",
+        ENORMOUS_INTEGER "07", -3);
 
     // Ad-hoc tests for large {+,-} large:
-    testPlusMinus(IntType("3" ZEROES), IntType("7" ZEROES),
-        IntType("10" ZEROES));
-    testPlusMinus(IntType("3" ZEROES), IntType("-7" ZEROES),
-        IntType("-4" ZEROES));
-    testPlusMinus(IntType("-3" ZEROES), IntType("7" ZEROES),
-        IntType("4" ZEROES));
-    testPlusMinus(IntType("-3" ZEROES), IntType("-7" ZEROES),
-        IntType("-10" ZEROES));
+    verifySumLargeLarge<TypeParam>("3" ZEROES, "7" ZEROES, "10" ZEROES);
+    verifySumLargeLarge<TypeParam>("3" ZEROES, "-7" ZEROES, "-4" ZEROES);
+    verifySumLargeLarge<TypeParam>("-3" ZEROES, "7" ZEROES, "4" ZEROES);
+    verifySumLargeLarge<TypeParam>("-3" ZEROES, "-7" ZEROES, "-10" ZEROES);
 
     // Test around overflow points:
-    testPlusMinus(long(LONG_MAX), long(1), d.longMaxInc);
-    testPlusMinus(long(LONG_MAX), long(0), d.longMax);
-    testPlusMinus(long(LONG_MIN), long(-1), d.longMinDec);
-    testPlusMinus(long(LONG_MIN), long(0), d.longMin);
-    testPlusMinus(long(LONG_MAX), long(LONG_MIN), IntType(-1));
-    testPlusMinus(d.longMaxInc, long(-1), d.longMax);
-    testPlusMinus(d.longMinDec, long(1), d.longMin);
-    testPlusMinus(d.longMaxInc, long(LONG_MIN), IntType(0));
-    testPlusMinus(d.longMaxInc, long(LONG_MAX), d.ulongMax);
-    testPlusMinus(d.longMaxInc, d.longMinDec, IntType(-1));
-    shouldBeEqual(d.longMax + d.longMax + IntType(1), d.ulongMax);
+    TypeParam longMaxInc(LONG_MAX); ++longMaxInc;
+    TypeParam longMinDec(LONG_MIN); --longMinDec;
 
-    size_t i;
-    for (i = 0; i < nZero; ++i) {
-        testPlusMinus(
-            IntType(f2k[i], 16), long(1),
-            IntType(std::string("1") + zero2k[i], 16));
-        testPlusMinus(
-            IntType(std::string("-") + f2k[i], 16), long(-1),
-            IntType(std::string("-1") + zero2k[i], 16));
-        testPlusMinus(
-            IntType(std::string("1") + zero2k[i], 16), long(-1),
-            IntType(f2k[i], 16));
-        testPlusMinus(
-            IntType(std::string("-1") + zero2k[i], 16), long(1),
-            IntType(std::string("-") + f2k[i], 16));
-        testPlusMinus(
-            IntType(std::string("-") + f2k[i], 16),
-            IntType(std::string("1") + zero2k[i], 16),
-            IntType(1));
-        testPlusMinus(
-            IntType(f2k[i], 16),
-            IntType(std::string("-1") + zero2k[i], 16),
-            IntType(-1));
+    verifySumNativeNative<TypeParam>(LONG_MAX, 1, longMaxInc);
+    verifySumNativeNative<TypeParam>(LONG_MAX, 0, LONG_MAX);
+    verifySumNativeNative<TypeParam>(LONG_MIN, -1, longMinDec);
+    verifySumNativeNative<TypeParam>(LONG_MIN, 0, LONG_MIN);
+    verifySumNativeNative<TypeParam>(LONG_MAX, LONG_MIN, -1);
+    verifySumLargeNative<TypeParam>(longMaxInc, -1, LONG_MAX);
+    verifySumLargeNative<TypeParam>(longMinDec, 1, LONG_MIN);
+    verifySumLargeNative<TypeParam>(longMaxInc, LONG_MIN, 0);
+    verifySumLargeNative<TypeParam>(longMaxInc, LONG_MAX, ULONG_MAX);
+    verifySumLargeLarge<TypeParam>(longMaxInc, longMinDec, -1);
+    EXPECT_EQ(TypeParam(LONG_MAX) + TypeParam(LONG_MAX) + 1,
+        TypeParam(ULONG_MAX));
 
-        testPlusMinus(
-            IntType(std::string("1") + zero2kdec[i] + "1", 16),
-            long(-1),
-            IntType(std::string("1") + zero2k[i], 16));
-        testPlusMinus(
-            IntType(std::string("-1") + zero2kdec[i] + "1", 16),
-            long(1),
-            IntType(std::string("-1") + zero2k[i], 16));
-        testPlusMinus(
-            IntType(std::string("1") + zero2k[i], 16),
-            long(1),
-            IntType(std::string("1") + zero2kdec[i] + "1", 16));
-        testPlusMinus(
-            IntType(std::string("-1") + zero2k[i], 16),
-            long(-1),
-            IntType(std::string("-1") + zero2kdec[i] + "1", 16));
-        testPlusMinus(
-            IntType(std::string("1") + zero2kdec[i] + "1", 16),
-            IntType(std::string("-1") + zero2k[i], 16),
-            IntType(1));
-        testPlusMinus(
-            IntType(std::string("-1") + zero2kdec[i] + "1", 16),
-            IntType(std::string("1") + zero2k[i], 16),
-            IntType(-1));
+    for (int k : {4, 8, 16, 32, 64, 128, 256}) {
+        // The following tests work in base 16.
+        SCOPED_TRACE_NUMERIC(k);
+
+        std::string z2k(k, '0');       // The string 00..0, of length k
+        std::string z2k_1(k - 1, '0'); // The string 00..0, of length k-1
+        std::string f2k(k, 'F');          // The string FF..F, of length k
+
+        verifySumLargeNative(TypeParam(f2k, 16), 1,
+            TypeParam("1" + z2k, 16));
+        verifySumLargeNative(TypeParam("-" + f2k, 16), -1,
+            TypeParam("-1" + z2k, 16));
+        verifySumLargeNative(TypeParam("1" + z2k, 16), -1,
+            TypeParam(f2k, 16));
+        verifySumLargeNative(TypeParam("-1" + z2k, 16), 1,
+            TypeParam("-" + f2k, 16));
+        verifySumLargeLarge(TypeParam("-" + f2k, 16), TypeParam("1" + z2k, 16),
+            TypeParam(1));
+        verifySumLargeLarge(TypeParam(f2k, 16), TypeParam("-1" + z2k, 16),
+            TypeParam(-1));
+
+        verifySumLargeNative(TypeParam("1" + z2k_1 + "1", 16), -1,
+            TypeParam("1" + z2k, 16));
+        verifySumLargeNative(TypeParam("-1" + z2k_1 + "1", 16), 1,
+            TypeParam("-1" + z2k, 16));
+        verifySumLargeNative(TypeParam("1" + z2k, 16), 1,
+            TypeParam("1" + z2k_1 + "1", 16));
+        verifySumLargeNative(TypeParam("-1" + z2k, 16), -1,
+            TypeParam("-1" + z2k_1 + "1", 16));
+        verifySumLargeLarge(TypeParam("1" + z2k_1 + "1", 16),
+            TypeParam("-1" + z2k, 16),
+            TypeParam(1));
+        verifySumLargeLarge(TypeParam("-1" + z2k_1 + "1", 16),
+            TypeParam("1" + z2k, 16),
+            TypeParam(-1));
     }
-#endif
 
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam inf(TypeParam::infinity);
@@ -1832,12 +1803,12 @@ TYPED_TEST(IntegerTest, multiply) {
     // Ad-hoc tests for large * native and native * large:
     verifyProductLargeNative<TypeParam>(ENORMOUS_INTEGER, 100,
         ENORMOUS_INTEGER "00");
-    verifyProductLargeNative<TypeParam>(TypeParam(ENORMOUS_INTEGER), -100,
-        TypeParam("-" ENORMOUS_INTEGER "00"));
-    verifyProductLargeNative<TypeParam>(TypeParam("-" ENORMOUS_INTEGER), -100,
-        TypeParam(ENORMOUS_INTEGER "00"));
-    verifyProductLargeNative<TypeParam>(TypeParam("-" ENORMOUS_INTEGER), 100,
-        TypeParam("-" ENORMOUS_INTEGER "00"));
+    verifyProductLargeNative<TypeParam>(ENORMOUS_INTEGER, -100,
+        "-" ENORMOUS_INTEGER "00");
+    verifyProductLargeNative<TypeParam>("-" ENORMOUS_INTEGER, -100,
+        ENORMOUS_INTEGER "00");
+    verifyProductLargeNative<TypeParam>("-" ENORMOUS_INTEGER, 100,
+        "-" ENORMOUS_INTEGER "00");
 
     // Ad-hoc tests for large * large:
     EXPECT_EQ(TypeParam("3" ZEROES) * TypeParam("7" ZEROES),
@@ -1850,32 +1821,34 @@ TYPED_TEST(IntegerTest, multiply) {
         TypeParam("21" ZEROES ZEROES));
 
     // Test around overflow points:
-    for (const std::string& s : this->zero2k_1) {
+    for (int k : {4, 8, 16, 32, 64, 128, 256}) {
         // The following tests work in base 16.
-        // Here s is a sequence of 2^k-1 zeroes, for some k.
-        SCOPED_TRACE_CSTRING(s);
+        SCOPED_TRACE_NUMERIC(k);
 
-        verifyProductLargeNative(TypeParam("-10" + s, 16), -1,
-            TypeParam("10" + s, 16));
-        verifyProductLargeNative(TypeParam("10" + s, 16), -1,
-            TypeParam("-10" + s, 16));
-        verifyProductLargeNative(TypeParam("-8" + s, 16), -2,
-            TypeParam("10" + s, 16));
-        verifyProductLargeNative(TypeParam("-4" + s, 16), 4,
-            TypeParam("-10" + s, 16));
-        verifyProductLargeNative(TypeParam("2" + s, 16), -8,
-            TypeParam("-10" + s, 16));
-        verifyProductLargeNative(TypeParam("1" + s, 16), 16,
-            TypeParam("10" + s, 16));
+        std::string z2k(k, '0');       // The string 00..0, of length k
+        std::string z2k_1(k - 1, '0'); // The string 00..0, of length k-1
 
-        EXPECT_EQ(TypeParam("10" + s, 16) * TypeParam("10" + s, 16),
-            TypeParam("100" + s + s, 16));
-        EXPECT_EQ(TypeParam("-10" + s, 16) * TypeParam("10" + s, 16),
-            TypeParam("-100" + s + s, 16));
-        EXPECT_EQ(TypeParam("10" + s, 16) * TypeParam("-10" + s, 16),
-            TypeParam("-100" + s + s, 16));
-        EXPECT_EQ(TypeParam("-10" + s, 16) * TypeParam("-10" + s, 16),
-            TypeParam("100" + s + s, 16));
+        verifyProductLargeNative(TypeParam("-1" + z2k, 16), -1,
+            TypeParam("1" + z2k, 16));
+        verifyProductLargeNative(TypeParam("1" + z2k, 16), -1,
+            TypeParam("-1" + z2k, 16));
+        verifyProductLargeNative(TypeParam("-8" + z2k_1, 16), -2,
+            TypeParam("1" + z2k, 16));
+        verifyProductLargeNative(TypeParam("-4" + z2k_1, 16), 4,
+            TypeParam("-1" + z2k, 16));
+        verifyProductLargeNative(TypeParam("2" + z2k_1, 16), -8,
+            TypeParam("-1" + z2k, 16));
+        verifyProductLargeNative(TypeParam("1" + z2k_1, 16), 16,
+            TypeParam("1" + z2k, 16));
+
+        EXPECT_EQ(TypeParam("1" + z2k, 16) * TypeParam("1" + z2k, 16),
+            TypeParam("1" + z2k + z2k, 16));
+        EXPECT_EQ(TypeParam("-1" + z2k, 16) * TypeParam("1" + z2k, 16),
+            TypeParam("-1" + z2k + z2k, 16));
+        EXPECT_EQ(TypeParam("1" + z2k, 16) * TypeParam("-1" + z2k, 16),
+            TypeParam("-1" + z2k + z2k, 16));
+        EXPECT_EQ(TypeParam("-1" + z2k, 16) * TypeParam("-1" + z2k, 16),
+            TypeParam("1" + z2k + z2k, 16));
     }
 
     TypeParam longMaxInc(LONG_MAX); ++longMaxInc;
