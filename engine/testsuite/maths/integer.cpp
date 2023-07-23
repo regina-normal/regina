@@ -120,113 +120,6 @@ static void verifyNative(const IntegerType& x, long expect) {
     }
 }
 
-#if 0
-    // TODO: This all used to be part of testLarge().
-    if (testCopy) {
-        // Test the copy constructor and copy assignment here also.
-        IntegerType y(x);
-        testLarge(y, expect, false);
-
-        IntegerType z(5);
-        EXPECT_TRUE(z.isNative());
-        z = x;
-        testLarge(z, expect, false);
-
-        IntegerType w(HUGE_INTEGER);
-        EXPECT_FALSE(w.isNative());
-        w = x;
-        testLarge(w, expect, false);
-
-        // Test self-assignment.
-        w = w;
-        testLarge(w, expect, false);
-
-        // Test raw GMP assignment.
-        ASSERT_FALSE(y.isNative());
-        IntegerType v(5);
-        v.setRaw(y.rawData());
-        EXPECT_TRUE(looksEqual(v, y));
-        testLarge(y, expect, false);
-        testLarge(v, expect, false);
-
-        IntegerType u(HUGE_INTEGER);
-        u.setRaw(y.rawData());
-        EXPECT_TRUE(looksEqual(u, x));
-        testLarge(y, expect, false);
-        testLarge(u, expect, false);
-    }
-
-    // TODO: This all used to be part of testNative().
-    if (testCopy) {
-        // Test the copy constructor and copy assignment here
-        // also.
-        IntType y(x);
-        testNative(y, "Native copy", value, sign, false);
-
-        IntType z(5);
-        if (! z.isNative())
-            CPPUNIT_FAIL("Hard-coded 5 is not native.");
-        z = x;
-        testNative(z, "Native = from native", value, sign, false);
-
-        IntType w(HUGE_INTEGER);
-        if (w.isNative())
-            CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is native.");
-        w = x;
-        testNative(w, "Native = from large", value, sign, false);
-
-        // Test raw GMP assignment.
-        IntType v(5);
-        v.setRaw(y.rawData());
-        shouldBeEqual(v, y);
-        testLarge(y, "Raw GMP assignment src", str(value), sign, false);
-        testLarge(v, "Raw GMP assignment dest", str(value), sign,
-            false);
-
-        IntType u(HUGE_INTEGER);
-        u.setRaw(y.rawData());
-        shouldBeEqual(u, y);
-        testLarge(y, "Raw GMP assignment src", str(value), sign, false);
-        testLarge(u, "Raw GMP assignment dest", str(value), sign,
-            false);
-    }
-
-    // TODO: This all used to be part of testInfinity().
-    if (testCopy) {
-        // Test the copy constructor and copy assignment here
-        // also.
-        LargeInteger y(x);
-        testInfinity(y, "Native copy", false);
-
-        LargeInteger z(5);
-        if (! z.isNative())
-            CPPUNIT_FAIL("Hard-coded 5 is not native.");
-        z = x;
-        testInfinity(z, "Native = from native", false);
-        z = 7;
-        testNative(z, "(5 = inf) = 7)", 7, 1);
-        z = x;
-        testInfinity(z, "Native = from native", false);
-        z = HUGE_INTEGER;
-        testLarge(z, "(7 = inf) = HUGE)", HUGE_INTEGER, 1);
-        z = x;
-        testInfinity(z, "Native = from large", false);
-        z = "-" HUGE_INTEGER;
-        testLarge(z, "(HUGE = inf) = -HUGE)", "-" HUGE_INTEGER, -1);
-        z = x;
-        testInfinity(z, "Native = from large", false);
-        z = 8;
-        testNative(z, "(-HUGE = inf) = 8)", 8, 1);
-
-        // Test raw GMP assignment.
-        z = x;
-        testInfinity(z, "Native = from native", false);
-        LargeInteger raw(HUGE_INTEGER);
-        z.setRaw(raw.rawData());
-        testLarge(z, "inf.setRaw()", HUGE_INTEGER, 1, false);
-    }
-#endif
-
 template <typename IntegerType>
 static void verifyInfinite(const IntegerType& x) {
     // Verifies that x appears to be self-consistent and equal to infinity.
@@ -242,6 +135,84 @@ static void verifyInfinite(const IntegerType& x) {
         std::ostringstream out;
         out << x;
         EXPECT_EQ(out.str(), "inf");
+    }
+}
+
+template <typename IntegerType>
+static void verifyIdentical(const IntegerType& x, const IntegerType& y) {
+    // Verifies that x and y appear to be equal, _and_ with identical internal
+    // representations.
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    EXPECT_EQ(x, y);
+    EXPECT_FALSE(x != y);
+    EXPECT_EQ(x.isNative(), y.isNative());
+    EXPECT_EQ(x.isInfinite(), y.isInfinite());
+    if (x.isNative()) {
+        EXPECT_EQ(x.longValue(), y.longValue());
+    }
+    EXPECT_EQ(x.str(), y.str());
+}
+
+template <typename IntegerType>
+static void verifyCopyAssign(const IntegerType& x) {
+    // Verify the copy constructor and self-assignment.
+    {
+        IntegerType y(x);
+        verifyIdentical(y, x);
+
+        y = y;
+        verifyIdentical(y, x);
+    }
+
+    // Verify assignment to and from x.
+    IntegerType z(5);
+    verifyNative(z, 5);
+    z = x;
+    verifyIdentical(z, x);
+    z = 7;
+    verifyNative(z, 7);
+    z = x;
+    verifyIdentical(z, x);
+    z = HUGE_INTEGER;
+    verifyLarge(z, HUGE_INTEGER);
+    z = x;
+    verifyIdentical(z, x);
+    z = "-" HUGE_INTEGER;
+    verifyLarge(z, "-" HUGE_INTEGER);
+    z = x;
+    verifyIdentical(z, x);
+    z = 8;
+    verifyNative(z, 8);
+
+    // Verify raw GMP assignment.
+    z = x;
+    verifyIdentical(z, x);
+    IntegerType raw(HUGE_INTEGER);
+    z.setRaw(raw.rawData());
+    verifyLarge(z, HUGE_INTEGER);
+
+    if (! x.isInfinite()) {
+        // Note: calling rawData() will force a GMP representation.
+        IntegerType large(x);
+        large.makeLarge();
+
+        IntegerType y(x);
+        {
+            IntegerType v(5);
+            v.setRaw(y.rawData());
+            verifyIdentical(v, large);
+        }
+        {
+            IntegerType v(HUGE_INTEGER);
+            v.setRaw(y.rawData());
+            verifyIdentical(v, large);
+        }
+
+        // Ensure that y is not broken after using its raw data.
+        verifyIdentical(y, large);
+        EXPECT_EQ(large, x);
     }
 }
 
@@ -641,8 +612,12 @@ TYPED_TEST(IntgegerTest, constructAssignCopyString) {
     testStringLarge<IntType>("-0X1" "0000000000000000000000000000000000",
         0, "-8711228593" "1760246646" "6238995025" "32662132736", -1);
 }
+#endif
 
-static void testInfinityFrom(const char* str) {
+static void verifyInfiniteFromString(const char* str) {
+    // Test construction and assignment from the given string, which should
+    // be a recognised string representation of infinity.
+    SCOPED_TRACE_CSTRING(str);
     std::string cppstr(str);
 
     {
@@ -656,42 +631,59 @@ static void testInfinityFrom(const char* str) {
     {
         LargeInteger x(5);
         EXPECT_TRUE(x.isNative());
+        EXPECT_FALSE(x.isInfinite());
         x = str;
         verifyInfinite(x);
     }
     {
         LargeInteger x(5);
         EXPECT_TRUE(x.isNative());
+        EXPECT_FALSE(x.isInfinite());
         x = cppstr;
         verifyInfinite(x);
     }
 }
 
 TYPED_TEST(IntegerTest, constructAssignCopyInfinity) {
-    verifyInfinite(LargeInteger::infinity);
+    if constexpr (TypeParam::supportsInfinity) {
+        verifyInfinite(TypeParam::infinity);
+        verifyCopyAssign(TypeParam::infinity);
 
-    LargeInteger x(5);
-    EXPECT_TRUE(x.isNative());
-    x.makeInfinite();
-    verifyInfinite(x);
+        // Ensure that makeInfinte() behaves correctly:
+        {
+            TypeParam x(5);
+            EXPECT_TRUE(x.isNative());
+            EXPECT_FALSE(x.isInfinite());
+            x.makeInfinite();
+            verifyInfinite(x);
+            verifyCopyAssign(x);
+        }
+        {
+            TypeParam x(HUGE_INTEGER);
+            EXPECT_FALSE(x.isNative());
+            EXPECT_FALSE(x.isInfinite());
+            x.makeInfinite();
+            verifyInfinite(x);
+            verifyCopyAssign(x);
+        }
+        {
+            TypeParam x(LargeInteger::infinity);
+            verifyInfinite(x);
+            x.makeInfinite();
+            verifyInfinite(x);
+            verifyCopyAssign(x);
+        }
 
-    LargeInteger y(HUGE_INTEGER);
-    EXPECT_FALSE(y.isNative());
-    y.makeInfinite();
-    verifyInfinite(y);
-
-    LargeInteger z(LargeInteger::infinity);
-    EXPECT_TRUE(z.isInfinite());
-    z.makeInfinite();
-    verifyInfinite(z);
-
-    testInfinityFrom("inf");
-    testInfinityFrom("infinity");
-    testInfinityFrom(" \tinf");
-    testInfinityFrom(" \tinfinity! ");
-    testInfinityFrom("  infimum");
+        // Test construction and assignment from strings:
+        verifyInfiniteFromString("inf");
+        verifyInfiniteFromString("infinity");
+        verifyInfiniteFromString(" \tinf");
+        verifyInfiniteFromString(" \tinfinity! ");
+        verifyInfiniteFromString("  infimum");
+    }
 }
 
+#if 0
 TYPED_TEST(IntegerTest, constructSpecial) {
     const Data<IntType>& d(data<IntType>());
 
@@ -719,178 +711,6 @@ TYPED_TEST(IntegerTest, constructSpecial) {
     verifyLarge(-d.hugeNeg, HUGE_INTEGER);
 }
 #endif
-
-template <typename IntegerType, typename NumericType>
-static void verifyNumeric(NumericType value) {
-    // Test construction and assignment from the given native C++ integer type.
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
-    static_assert(std::is_integral_v<NumericType>);
-
-    SCOPED_TRACE_NUMERIC(value);
-    std::string str = std::to_string(value);
-
-    IntegerType large(value);
-    EXPECT_EQ(large.str(), str);
-
-    IntegerType assigned = 1;
-    EXPECT_EQ(assigned.str(), "1");
-    assigned = value;
-    EXPECT_EQ(assigned.str(), str);
-}
-
-TYPED_TEST(IntegerTest, constructLongLong) {
-    verifyNumeric<TypeParam, long long>(0);
-    verifyNumeric<TypeParam, long long>(1);
-    verifyNumeric<TypeParam, long long>(-1);
-    verifyNumeric<TypeParam, long long>(INT_MAX);
-    verifyNumeric<TypeParam, long long>(INT_MIN);
-    verifyNumeric<TypeParam, long long>(LONG_MAX);
-    verifyNumeric<TypeParam, long long>(LONG_MIN);
-    verifyNumeric<TypeParam, long long>(LLONG_MAX);
-    verifyNumeric<TypeParam, long long>(LLONG_MIN);
-
-    verifyNumeric<TypeParam, unsigned long long>(0);
-    verifyNumeric<TypeParam, unsigned long long>(1);
-    verifyNumeric<TypeParam, unsigned long long>(INT_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(LONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(ULONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(LLONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(ULLONG_MAX);
-}
-
-#ifdef INT128_AVAILABLE
-static void verifyEqual128(const regina::NativeInteger<16>& x,
-        const regina::NativeInteger<16>& y) {
-    SCOPED_TRACE_REGINA(x);
-    SCOPED_TRACE_REGINA(y);
-
-    EXPECT_EQ(x, y);
-    EXPECT_EQ(x.nativeValue(), y.nativeValue());
-    EXPECT_EQ(x.str(), y.str());
-}
-
-
-template <typename IntegerType>
-static void verifyNative128(const regina::NativeInteger<16>& native,
-        const char* string) {
-    EXPECT_EQ(native.str(), string);
-    EXPECT_EQ(IntegerType(native).str(), string);
-
-    verifyEqual128(native, regina::NativeInteger<16>(IntegerType(string)));
-    verifyEqual128(native, IntegerType(string).template nativeValue<16>());
-    verifyEqual128(native, IntegerType(native).template nativeValue<16>());
-
-    // Make sure large-to-native conversion works even for numbers that do not
-    // enter the highest order long-sized block.  For most machines this means
-    // the integers fit into a single long, so here we force them into a large
-    // (GMP) representation regardless.
-    IntegerType large(string);
-    large.makeLarge();
-    verifyEqual128(native, regina::NativeInteger<16>(large));
-    verifyEqual128(native, large.template nativeValue<16>());
-}
-
-TYPED_TEST(IntegerTest, constructNative128) {
-    // Test conversion from native types that are larger than long.
-    regina::NativeInteger<16> pos62 = 1;
-    pos62 *= 1073741824; // 2^30
-    pos62 *= 1073741824; // 2^30
-    pos62 *= 4;
-    regina::NativeInteger<16> neg62 = -pos62;
-    regina::NativeInteger<16> pos63 = pos62 * 2;
-    regina::NativeInteger<16> neg63 = -pos63;
-    regina::NativeInteger<16> pos64 = pos63 * 2;
-    regina::NativeInteger<16> neg64 = -pos64;
-    regina::NativeInteger<16> pos126 = pos63 * pos63;
-    regina::NativeInteger<16> neg126 = -pos126;
-    regina::NativeInteger<16> pos127 = pos126 * 2; // Should overflow to -2^127
-    regina::NativeInteger<16> neg127 = neg126 * 2;
-
-    regina::NativeInteger<16> pos126_62 = pos126 + pos62;
-    regina::NativeInteger<16> pos126_63 = pos126 + pos63;
-    regina::NativeInteger<16> neg126_62 = neg126 + neg62;
-    regina::NativeInteger<16> neg126_63 = neg126 + neg63;
-
-    regina::NativeInteger<16> maxVal(
-        ~(regina::IntOfSize<16>::type(1) << 127));
-
-    verifyNative128<TypeParam>(pos62, "4611686018" "427387904");
-    verifyNative128<TypeParam>(neg62, "-4611686018" "427387904");
-    verifyNative128<TypeParam>(pos63, "9223372036" "854775808");
-    verifyNative128<TypeParam>(neg63, "-9223372036" "854775808");
-    verifyNative128<TypeParam>(pos64, "1844674407" "3709551616");
-    verifyNative128<TypeParam>(neg64, "-1844674407" "3709551616");
-    verifyNative128<TypeParam>(pos126,
-        "8507059173" "0234615865" "8436518579" "42052864");
-    verifyNative128<TypeParam>(neg126,
-        "-8507059173" "0234615865" "8436518579" "42052864");
-    verifyNative128<TypeParam>(pos126_62,
-        "8507059173" "0234615870" "4553378763" "69440768");
-    verifyNative128<TypeParam>(neg126_62,
-        "-8507059173" "0234615870" "4553378763" "69440768");
-    verifyNative128<TypeParam>(pos126_63,
-        "8507059173" "0234615875" "0670238947" "96828672");
-    verifyNative128<TypeParam>(neg126_63,
-        "-8507059173" "0234615875" "0670238947" "96828672");
-    // Recall that pos127 overflows.
-    verifyNative128<TypeParam>(pos127,
-        "-1701411834" "6046923173" "1687303715" "884105728");
-    verifyNative128<TypeParam>(neg127,
-        "-1701411834" "6046923173" "1687303715" "884105728");
-    verifyNative128<TypeParam>(maxVal,
-        "1701411834" "6046923173" "1687303715" "884105727");
-}
-#endif
-
-TYPED_TEST(IntegerTest, stringValue) {
-    // We've already tested stringValue() heavily with the default base of 10.
-    // Here we test other bases.
-
-    EXPECT_EQ(TypeParam(0).stringValue(2), "0");
-    EXPECT_EQ(TypeParam(0).stringValue(3), "0");
-    EXPECT_EQ(TypeParam(0).stringValue(21), "0");
-    EXPECT_EQ(TypeParam(0).stringValue(22), "0");
-    EXPECT_EQ(TypeParam(0).stringValue(36), "0");
-    EXPECT_EQ(TypeParam(42).stringValue(2), "101010");
-    EXPECT_EQ(TypeParam(42).stringValue(3), "1120");
-    EXPECT_EQ(TypeParam(42).stringValue(21), "20");
-    EXPECT_EQ(TypeParam(42).stringValue(22), "1k");
-    EXPECT_EQ(TypeParam(42).stringValue(36), "16");
-    EXPECT_EQ(TypeParam(71).stringValue(36), "1z");
-    EXPECT_EQ(TypeParam(-42).stringValue(2), "-101010");
-    EXPECT_EQ(TypeParam(-42).stringValue(3), "-1120");
-    EXPECT_EQ(TypeParam(-42).stringValue(21), "-20");
-    EXPECT_EQ(TypeParam(-42).stringValue(22), "-1k");
-    EXPECT_EQ(TypeParam(-42).stringValue(36), "-16");
-    EXPECT_EQ(TypeParam(-71).stringValue(36), "-1z");
-
-    // In the following tests, the hard-coded integer is 2^130.
-    // As before, we split the strings into chunks so that vim's syntax
-    // highlighting can cope.
-    TypeParam pos( "13611294676" "83753853853" "49842972707" "2845824");
-    TypeParam neg("-13611294676" "83753853853" "49842972707" "2845824");
-    EXPECT_EQ(pos.stringValue(2), "1" "000000000000000000000000000000"
-        "000000000000000000000000000000000000000000000000000000000000"
-        "0000000000000000000000000000000000000000");
-    EXPECT_EQ(pos.stringValue(4), "1" "000000000000000000000000000000"
-        "00000000000000000000000000000000000");
-    EXPECT_EQ(pos.stringValue(16), "4" "00000000000000000000000000000000");
-    EXPECT_EQ(pos.stringValue(32), "1" "00000000000000000000000000");
-    EXPECT_EQ(pos.stringValue(36), "1omfro7zwmumr3umxudzyj6scg");
-    EXPECT_EQ(neg.stringValue(2), "-1" "000000000000000000000000000000"
-        "000000000000000000000000000000000000000000000000000000000000"
-        "0000000000000000000000000000000000000000");
-    EXPECT_EQ(neg.stringValue(4), "-1" "000000000000000000000000000000"
-        "00000000000000000000000000000000000");
-    EXPECT_EQ(neg.stringValue(16), "-4" "00000000000000000000000000000000");
-    EXPECT_EQ(neg.stringValue(32), "-1" "00000000000000000000000000");
-    EXPECT_EQ(neg.stringValue(36), "-1omfro7zwmumr3umxudzyj6scg");
-
-    if constexpr (TypeParam::supportsInfinity)
-        for (int i = 2; i <= 36; ++i)
-            EXPECT_EQ(TypeParam::infinity.stringValue(i), "inf");
-}
 
 TYPED_TEST(IntegerTest, swap) {
     // Create LONG_MAX + 1 using direct string manipulation.
@@ -983,6 +803,180 @@ TYPED_TEST(IntegerTest, swap) {
 
         verifyInfinite(b);
     }
+}
+
+template <typename IntegerType, typename NumericType>
+static void verifyNumeric(NumericType value) {
+    // Test construction and assignment from the given native C++ integer type.
+    static_assert(
+        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
+    static_assert(std::is_integral_v<NumericType>);
+
+    SCOPED_TRACE_NUMERIC(value);
+    std::string str = std::to_string(value);
+
+    IntegerType large(value);
+    EXPECT_EQ(large.str(), str);
+
+    IntegerType assigned = 1;
+    EXPECT_EQ(assigned.str(), "1");
+    assigned = value;
+    EXPECT_EQ(assigned.str(), str);
+}
+
+TYPED_TEST(IntegerTest, constructLongLong) {
+    verifyNumeric<TypeParam, long long>(0);
+    verifyNumeric<TypeParam, long long>(1);
+    verifyNumeric<TypeParam, long long>(-1);
+    verifyNumeric<TypeParam, long long>(INT_MAX);
+    verifyNumeric<TypeParam, long long>(INT_MIN);
+    verifyNumeric<TypeParam, long long>(LONG_MAX);
+    verifyNumeric<TypeParam, long long>(LONG_MIN);
+    verifyNumeric<TypeParam, long long>(LLONG_MAX);
+    verifyNumeric<TypeParam, long long>(LLONG_MIN);
+
+    verifyNumeric<TypeParam, unsigned long long>(0);
+    verifyNumeric<TypeParam, unsigned long long>(1);
+    verifyNumeric<TypeParam, unsigned long long>(INT_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(LONG_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(ULONG_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(LLONG_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(ULLONG_MAX);
+}
+
+#ifdef INT128_AVAILABLE
+static void verifyEqual128(const regina::NativeInteger<16>& x,
+        const regina::NativeInteger<16>& y) {
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    EXPECT_EQ(x, y);
+    EXPECT_EQ(x.nativeValue(), y.nativeValue());
+    EXPECT_EQ(x.str(), y.str());
+}
+
+
+template <typename IntegerType>
+static void verifyNative128(const regina::NativeInteger<16>& native,
+        const char* string) {
+    EXPECT_EQ(native.str(), string);
+    EXPECT_EQ(IntegerType(native).str(), string);
+
+    verifyEqual128(native, regina::NativeInteger<16>(IntegerType(string)));
+    verifyEqual128(native, IntegerType(string).template nativeValue<16>());
+    verifyEqual128(native, IntegerType(native).template nativeValue<16>());
+
+    // Make sure large-to-native conversion works even for numbers that do not
+    // enter the highest order long-sized block.  For most machines this means
+    // the integers fit into a single long, so here we force them into a large
+    // (GMP) representation regardless.
+    IntegerType large(string);
+    large.makeLarge();
+    verifyEqual128(native, regina::NativeInteger<16>(large));
+    verifyEqual128(native, large.template nativeValue<16>());
+}
+
+TYPED_TEST(IntegerTest, constructNative128) {
+    // Test conversions involving native types that are larger than long.
+    regina::NativeInteger<16> pos62 = 1;
+    pos62 *= 1073741824; // 2^30
+    pos62 *= 1073741824; // 2^30
+    pos62 *= 4;
+    regina::NativeInteger<16> neg62 = -pos62;
+    regina::NativeInteger<16> pos63 = pos62 * 2;
+    regina::NativeInteger<16> neg63 = -pos63;
+    regina::NativeInteger<16> pos64 = pos63 * 2;
+    regina::NativeInteger<16> neg64 = -pos64;
+    regina::NativeInteger<16> pos126 = pos63 * pos63;
+    regina::NativeInteger<16> neg126 = -pos126;
+    regina::NativeInteger<16> pos127 = pos126 * 2; // Should overflow to -2^127
+    regina::NativeInteger<16> neg127 = neg126 * 2;
+
+    regina::NativeInteger<16> pos126_62 = pos126 + pos62;
+    regina::NativeInteger<16> pos126_63 = pos126 + pos63;
+    regina::NativeInteger<16> neg126_62 = neg126 + neg62;
+    regina::NativeInteger<16> neg126_63 = neg126 + neg63;
+
+    regina::NativeInteger<16> maxVal(
+        ~(regina::IntOfSize<16>::type(1) << 127));
+
+    // We split the strings below into chunks so that vim's syntax highlighting
+    // can cope.
+    verifyNative128<TypeParam>(pos62, "4611686018" "427387904");
+    verifyNative128<TypeParam>(neg62, "-4611686018" "427387904");
+    verifyNative128<TypeParam>(pos63, "9223372036" "854775808");
+    verifyNative128<TypeParam>(neg63, "-9223372036" "854775808");
+    verifyNative128<TypeParam>(pos64, "1844674407" "3709551616");
+    verifyNative128<TypeParam>(neg64, "-1844674407" "3709551616");
+    verifyNative128<TypeParam>(pos126,
+        "8507059173" "0234615865" "8436518579" "42052864");
+    verifyNative128<TypeParam>(neg126,
+        "-8507059173" "0234615865" "8436518579" "42052864");
+    verifyNative128<TypeParam>(pos126_62,
+        "8507059173" "0234615870" "4553378763" "69440768");
+    verifyNative128<TypeParam>(neg126_62,
+        "-8507059173" "0234615870" "4553378763" "69440768");
+    verifyNative128<TypeParam>(pos126_63,
+        "8507059173" "0234615875" "0670238947" "96828672");
+    verifyNative128<TypeParam>(neg126_63,
+        "-8507059173" "0234615875" "0670238947" "96828672");
+    // Recall that pos127 overflows.
+    verifyNative128<TypeParam>(pos127,
+        "-1701411834" "6046923173" "1687303715" "884105728");
+    verifyNative128<TypeParam>(neg127,
+        "-1701411834" "6046923173" "1687303715" "884105728");
+    verifyNative128<TypeParam>(maxVal,
+        "1701411834" "6046923173" "1687303715" "884105727");
+}
+#endif
+
+TYPED_TEST(IntegerTest, stringValue) {
+    // We've already tested stringValue() heavily with the default base of 10.
+    // Here we test other bases.
+
+    EXPECT_EQ(TypeParam(0).stringValue(2), "0");
+    EXPECT_EQ(TypeParam(0).stringValue(3), "0");
+    EXPECT_EQ(TypeParam(0).stringValue(21), "0");
+    EXPECT_EQ(TypeParam(0).stringValue(22), "0");
+    EXPECT_EQ(TypeParam(0).stringValue(36), "0");
+    EXPECT_EQ(TypeParam(42).stringValue(2), "101010");
+    EXPECT_EQ(TypeParam(42).stringValue(3), "1120");
+    EXPECT_EQ(TypeParam(42).stringValue(21), "20");
+    EXPECT_EQ(TypeParam(42).stringValue(22), "1k");
+    EXPECT_EQ(TypeParam(42).stringValue(36), "16");
+    EXPECT_EQ(TypeParam(71).stringValue(36), "1z");
+    EXPECT_EQ(TypeParam(-42).stringValue(2), "-101010");
+    EXPECT_EQ(TypeParam(-42).stringValue(3), "-1120");
+    EXPECT_EQ(TypeParam(-42).stringValue(21), "-20");
+    EXPECT_EQ(TypeParam(-42).stringValue(22), "-1k");
+    EXPECT_EQ(TypeParam(-42).stringValue(36), "-16");
+    EXPECT_EQ(TypeParam(-71).stringValue(36), "-1z");
+
+    // In the following tests, the hard-coded integer is 2^130.
+    // As before, we split the strings into chunks so that vim's syntax
+    // highlighting can cope.
+    TypeParam pos( "13611294676" "83753853853" "49842972707" "2845824");
+    TypeParam neg("-13611294676" "83753853853" "49842972707" "2845824");
+    EXPECT_EQ(pos.stringValue(2), "1" "000000000000000000000000000000"
+        "000000000000000000000000000000000000000000000000000000000000"
+        "0000000000000000000000000000000000000000");
+    EXPECT_EQ(pos.stringValue(4), "1" "000000000000000000000000000000"
+        "00000000000000000000000000000000000");
+    EXPECT_EQ(pos.stringValue(16), "4" "00000000000000000000000000000000");
+    EXPECT_EQ(pos.stringValue(32), "1" "00000000000000000000000000");
+    EXPECT_EQ(pos.stringValue(36), "1omfro7zwmumr3umxudzyj6scg");
+    EXPECT_EQ(neg.stringValue(2), "-1" "000000000000000000000000000000"
+        "000000000000000000000000000000000000000000000000000000000000"
+        "0000000000000000000000000000000000000000");
+    EXPECT_EQ(neg.stringValue(4), "-1" "000000000000000000000000000000"
+        "00000000000000000000000000000000000");
+    EXPECT_EQ(neg.stringValue(16), "-4" "00000000000000000000000000000000");
+    EXPECT_EQ(neg.stringValue(32), "-1" "00000000000000000000000000");
+    EXPECT_EQ(neg.stringValue(36), "-1omfro7zwmumr3umxudzyj6scg");
+
+    if constexpr (TypeParam::supportsInfinity)
+        for (int i = 2; i <= 36; ++i)
+            EXPECT_EQ(TypeParam::infinity.stringValue(i), "inf");
 }
 
 template <bool withInfinity>
