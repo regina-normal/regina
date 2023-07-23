@@ -718,55 +718,46 @@ TYPED_TEST(IntegerTest, constructSpecial) {
     EXPECT_LT(d.hugeNeg, LONG_MIN);
     verifyLarge(-d.hugeNeg, HUGE_INTEGER);
 }
+#endif
 
-template <typename IntType>
-static void testLongLong(long long value) {
-    std::ostringstream out;
-    out << value;
+template <typename IntegerType, typename NumericType>
+static void verifyNumeric(NumericType value) {
+    // Test construction and assignment from the given native C++ integer type.
+    static_assert(
+        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
+    static_assert(std::is_integral_v<NumericType>);
 
-    IntType large(value);
-    EXPECT_EQ(large.str(), out.str().c_str());
+    SCOPED_TRACE_NUMERIC(value);
+    std::string str = std::to_string(value);
 
-    IntType assigned = 1;
+    IntegerType large(value);
+    EXPECT_EQ(large.str(), str);
+
+    IntegerType assigned = 1;
     EXPECT_EQ(assigned.str(), "1");
     assigned = value;
-    EXPECT_EQ(assigned.str(), out.str().c_str());
-}
-
-template <typename IntType>
-static void testUnsignedLongLong(unsigned long long value) {
-    std::ostringstream out;
-    out << value;
-
-    IntType large(value);
-    EXPECT_EQ(large.str(), out.str().c_str());
-
-    IntType assigned = 1;
-    EXPECT_EQ(assigned.str(), "1");
-    assigned = value;
-    EXPECT_EQ(assigned.str(), out.str().c_str());
+    EXPECT_EQ(assigned.str(), str);
 }
 
 TYPED_TEST(IntegerTest, constructLongLong) {
-    testLongLong<IntType>(0);
-    testLongLong<IntType>(1);
-    testLongLong<IntType>(-1);
-    testLongLong<IntType>(INT_MAX);
-    testLongLong<IntType>(INT_MIN);
-    testLongLong<IntType>(LONG_MAX);
-    testLongLong<IntType>(LONG_MIN);
-    testLongLong<IntType>(LLONG_MAX);
-    testLongLong<IntType>(LLONG_MIN);
+    verifyNumeric<TypeParam, long long>(0);
+    verifyNumeric<TypeParam, long long>(1);
+    verifyNumeric<TypeParam, long long>(-1);
+    verifyNumeric<TypeParam, long long>(INT_MAX);
+    verifyNumeric<TypeParam, long long>(INT_MIN);
+    verifyNumeric<TypeParam, long long>(LONG_MAX);
+    verifyNumeric<TypeParam, long long>(LONG_MIN);
+    verifyNumeric<TypeParam, long long>(LLONG_MAX);
+    verifyNumeric<TypeParam, long long>(LLONG_MIN);
 
-    testUnsignedLongLong<IntType>(0);
-    testUnsignedLongLong<IntType>(1);
-    testUnsignedLongLong<IntType>(INT_MAX);
-    testUnsignedLongLong<IntType>(LONG_MAX);
-    testUnsignedLongLong<IntType>(ULONG_MAX);
-    testUnsignedLongLong<IntType>(LLONG_MAX);
-    testUnsignedLongLong<IntType>(ULLONG_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(0);
+    verifyNumeric<TypeParam, unsigned long long>(1);
+    verifyNumeric<TypeParam, unsigned long long>(INT_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(LONG_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(ULONG_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(LLONG_MAX);
+    verifyNumeric<TypeParam, unsigned long long>(ULLONG_MAX);
 }
-#endif
 
 #ifdef INT128_AVAILABLE
 static void verifyEqual128(const regina::NativeInteger<16>& x,
@@ -2265,7 +2256,7 @@ TYPED_TEST(IntegerTest, raiseToPower) {
         SCOPED_TRACE_REGINA(x);
 
         TypeParam ans = 1;
-        for (int exp = 0; exp < 32; ++exp) {
+        for (int exp = 0; exp < 64; ++exp) {
             SCOPED_TRACE_NUMERIC(exp);
 
             TypeParam pow = x;
