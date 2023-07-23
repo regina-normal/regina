@@ -441,69 +441,45 @@ static void testStringNative(const std::string& s, int base,
             std::ostringstream name;
             name << "C string \"" << str << "\"";
             IntType x(str.c_str(), base);
-            if (base > 0 && x.stringValue(base) != s) {
-                std::ostringstream msg;
-                msg << name.str() << " has incorrect stringValue(base).";
-                CPPUNIT_FAIL(msg.str());
-            }
-            testNative(x, name.str().c_str(), value, sign);
+            if (base > 0)
+                EXPECT_EQ(x.stringValue(base), s);
+            verifyNative(x, value);
         }
         {
             std::ostringstream name;
             name << "C++ string \"" << str << "\"";
             IntType x(str, base);
-            if (base > 0 && x.stringValue(base) != s) {
-                std::ostringstream msg;
-                msg << name.str() << " has incorrect stringValue(base).";
-                CPPUNIT_FAIL(msg.str());
-            }
-            testNative(x, name.str().c_str(), value, sign);
+            if (base > 0)
+                EXPECT_EQ(x.stringValue(base), s);
+            verifyNative(x, value);
         }
         if (base == 10) {
             {
                 std::ostringstream name;
                 name << "C string = \"" << str << "\"";
                 IntType x(5);
-                if (! x.isNative())
-                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                EXPECT_TRUE(x.isNative());
                 x = str.c_str();
-                testNative(x, name.str().c_str(), value, sign);
+                verifyNative(x, value);
             }
             {
                 std::ostringstream name;
                 name << "C++ string = \"" << str << "\"";
                 IntType y(5);
-                if (! y.isNative())
-                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                EXPECT_TRUE(y.isNative());
                 y = str;
-                testNative(y, name.str().c_str(), value, sign);
+                verifyNative(y, value);
             }
         }
     }
 
     // Try strings with errors.
-    {
-        str = s + "!";
-        try {
-            IntType x(str.c_str(), base);
-
-            std::ostringstream msg;
-            msg << "C string \"" << str << "\" should be invalid.";
-            CPPUNIT_FAIL(msg.str());
-        } catch (regina::InvalidArgument&) {
-        }
-    }
-    {
-        str = s + "!";
-        try {
-            IntType x(str, base);
-
-            std::ostringstream msg;
-            msg << "C++ string \"" << str << "\" should be invalid.";
-            CPPUNIT_FAIL(msg.str());
-        } catch (regina::InvalidArgument&) {
-        }
-    }
+    EXPECT_THROW({
+        TypeParam(s + "!", base);
+    }, regina::InvalidArgument);
+    EXPECT_THROW({
+        TypeParam((s + "!").c_str(), base);
+    }, regina::InvalidArgument);
 }
 
 template <typename IntType>
@@ -524,57 +500,35 @@ static void testStringLarge(const std::string& s, int sign) {
             std::ostringstream name;
             name << "C string \"" << str << "\"";
             IntType x(str.c_str(), 10);
-            testLarge(x, name.str().c_str(), s, sign);
+            verifyLarge(x, s);
         }
         {
             std::ostringstream name;
             name << "C++ string \"" << str << "\"";
             IntType x(str, 10);
-            testLarge(x, name.str().c_str(), s, sign);
+            verifyLarge(x, s);
         }
         {
             std::ostringstream name;
             name << "C string = \"" << str << "\"";
             IntType x(5);
-            if (! x.isNative())
-                CPPUNIT_FAIL("Hard-coded 5 is not native.");
+            EXPECT_TRUE(x.isNative());
             x = str.c_str();
-            testLarge(x, name.str().c_str(), s, sign);
+            verifyLarge(x, s);
         }
         {
             std::ostringstream name;
             name << "C++ string = \"" << str << "\"";
             IntType y(5);
-            if (! y.isNative())
-                CPPUNIT_FAIL("Hard-coded 5 is not native.");
+            EXPECT_TRUE(y.isNative());
             y = str;
-            testLarge(y, name.str().c_str(), s, sign);
+            verifyLarge(y, s);
         }
     }
 
     // Try strings with errors.
-    {
-        str = s + "!";
-        try {
-            IntType x(str.c_str(), 10);
-
-            std::ostringstream msg;
-            msg << "C string \"" << str << "\" should be invalid.";
-            CPPUNIT_FAIL(msg.str());
-        } catch (regina::InvalidArgument&) {
-        }
-    }
-    {
-        str = s + "!";
-        try {
-            IntType x(str, 10);
-
-            std::ostringstream msg;
-            msg << "C++ string \"" << str << "\" should be invalid.";
-            CPPUNIT_FAIL(msg.str());
-        } catch (regina::InvalidArgument&) {
-        }
-    }
+    EXPECT_THROW({ TypeParam(s + "!"); }, regina::InvalidArgument);
+    EXPECT_THROW({ TypeParam((s + "!").c_str()); }, regina::InvalidArgument);
 }
 
 template <typename IntType>
@@ -596,69 +550,45 @@ static void testStringLarge(const std::string& s, int base,
             std::ostringstream name;
             name << "C string \"" << str << "\"";
             IntType x(str.c_str(), base);
-            if (base > 0 && x.stringValue(base) != s) {
-                std::ostringstream msg;
-                msg << name.str() << " has incorrect stringValue(base).";
-                CPPUNIT_FAIL(msg.str());
-            }
-            testLarge(x, name.str().c_str(), valueBase10, sign);
+            if (base > 0)
+                EXPECT_EQ(x.stringValue(base), s);
+            verifyLarge(x, valueBase10);
         }
         {
             std::ostringstream name;
             name << "C++ string \"" << str << "\"";
             IntType x(str, base);
-            if (base > 0 && x.stringValue(base) != s) {
-                std::ostringstream msg;
-                msg << name.str() << " has incorrect stringValue(base).";
-                CPPUNIT_FAIL(msg.str());
-            }
-            testLarge(x, name.str().c_str(), valueBase10, sign);
+            if (base > 0)
+                EXPECT_EQ(x.stringValue(base), s);
+            verifyLarge(x, valueBase10);
         }
         if (base == 10) {
             {
                 std::ostringstream name;
                 name << "C string = \"" << str << "\"";
                 IntType x(5);
-                if (! x.isNative())
-                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                EXPECT_TRUE(x.isNative());
                 x = str.c_str();
-                testLarge(x, name.str().c_str(), s, sign);
+                verifyLarge(x, s);
             }
             {
                 std::ostringstream name;
                 name << "C++ string = \"" << str << "\"";
                 IntType y(5);
-                if (! y.isNative())
-                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                EXPECT_TRUE(y.isNative());
                 y = str;
-                testLarge(y, name.str().c_str(), s, sign);
+                verifyLarge(y, s);
             }
         }
     }
 
     // Try strings with errors.
-    {
-        str = s + "!";
-        try {
-            IntType x(str.c_str(), base);
-
-            std::ostringstream msg;
-            msg << "C string \"" << str << "\" should be invalid.";
-            CPPUNIT_FAIL(msg.str());
-        } catch (regina::InvalidArgument&) {
-        }
-    }
-    {
-        str = s + "!";
-        try {
-            IntType x(str, base);
-
-            std::ostringstream msg;
-            msg << "C++ string \"" << str << "\" should be invalid.";
-            CPPUNIT_FAIL(msg.str());
-        } catch (regina::InvalidArgument&) {
-        }
-    }
+    EXPECT_THROW({
+        TypeParam(s + "!", base);
+    }, regina::InvalidArgument);
+    EXPECT_THROW({
+        TypeParam((s + "!").c_str(), base);
+    }, regina::InvalidArgument);
 }
 
 TYPED_TEST(IntgegerTest, constructAssignCopyString) {
@@ -717,47 +647,43 @@ static void testInfinityFrom(const char* str) {
 
     {
         LargeInteger x(str);
-        testInfinity(x, (std::string("Copied infinity: ")
-            + str).c_str());
+        verifyInfinite(x);
     }
     {
         LargeInteger x(cppstr);
-        testInfinity(x, (std::string("Copied std::string infinity: ")
-            + str).c_str());
+        verifyInfinite(x);
     }
     {
         LargeInteger x(5);
         EXPECT_TRUE(x.isNative());
         x = str;
-        testInfinity(x, (std::string("Assigned infinity: ")
-            + str).c_str());
+        verifyInfinite(x);
     }
     {
         LargeInteger x(5);
         EXPECT_TRUE(x.isNative());
         x = cppstr;
-        testInfinity(x, (std::string("Assigned std::string infinity: ")
-            + str).c_str());
+        verifyInfinite(x);
     }
 }
 
 TYPED_TEST(IntegerTest, constructAssignCopyInfinity) {
-    testInfinity(LargeInteger::infinity, "Static infinity");
+    verifyInfinite(LargeInteger::infinity);
 
     LargeInteger x(5);
     EXPECT_TRUE(x.isNative());
     x.makeInfinite();
-    testInfinity(x, "5.makeInfinite()");
+    verifyInfinite(x);
 
     LargeInteger y(HUGE_INTEGER);
     EXPECT_FALSE(y.isNative());
     y.makeInfinite();
-    testInfinity(y, "HUGE_INTEGER.makeInfinite()");
+    verifyInfinite(y);
 
     LargeInteger z(LargeInteger::infinity);
     EXPECT_TRUE(z.isInfinite());
     z.makeInfinite();
-    testInfinity(z, "inf.makeInfinite()");
+    verifyInfinite(z);
 
     testInfinityFrom("inf");
     testInfinityFrom("infinity");
@@ -771,46 +697,26 @@ TYPED_TEST(IntegerTest, constructSpecial) {
 
     // Make sure that our "special case" data members look correct,
     // so we can use them with confidence throughout this class.
-    testNative(d.zero, "Special case 0", 0, 0);
-    testNative(d.one, "Special case 1", 1, 1);
-    testNative(d.two, "Special case 2", 2, 1);
-    testNative(d.negOne, "Special case -1", -1, -1);
-    testNative(d.negTwo, "Special case -2", -2, -1);
-    testNative(d.longMax, "Special case LONG_MAX", LONG_MAX, 1);
-    if ((d.longMax.longValue() + 1) >= zeroL)
-        CPPUNIT_FAIL("Special case LONG_MAX does not "
-            "wrap around correctly.");
-    testNative(d.longMin, "Special case LONG_MIN", LONG_MIN, -1);
-    if ((d.longMin.longValue() - 1) <= zeroL)
-        CPPUNIT_FAIL("Special case LONG_MIN does not "
-            "wrap around correctly.");
-    testLarge(d.longMaxInc, "Special case LONG_MAX+1", sLongMaxInc, 1);
-    if (d.longMaxInc <= LONG_MAX)
-        CPPUNIT_FAIL("Special case LONG_MAX+1 has overflowed.");
-    testLarge(d.longMinDec, "Special case LONG_MIN-1", sLongMinDec, -1);
-    if (d.longMinDec >= LONG_MIN)
-        CPPUNIT_FAIL("Special case LONG_MIN-1 has overflowed.");
-    testLarge(d.ulongMax, "Special case ULONG_MAX", sULongMax, 1);
-    if (d.ulongMax <= LONG_MAX)
-        CPPUNIT_FAIL("Special case ULONG_MAX has overflowed.");
-    testLarge(d.hugePos, "Special case HUGE", HUGE_INTEGER, 1);
-    if (d.hugePos <= LONG_MAX)
-        CPPUNIT_FAIL("Special case HUGE has overflowed.");
-    testLarge(d.hugeNeg, "Special case -HUGE", "-" HUGE_INTEGER, -1);
-    if (d.hugeNeg >= LONG_MIN)
-        CPPUNIT_FAIL("Special case -HUGE has overflowed.");
-    testLarge(-d.hugeNeg, "-(special case -HUGE)", HUGE_INTEGER, 1);
-}
-
-template <typename IntType>
-static void testStringValue(const IntType& x, int base, const char* value) {
-    std::string ans = x.stringValue(base);
-    if (ans != value) {
-        std::ostringstream msg;
-        msg << "Conversion of " << x << " to base " << base
-            << " is " << ans << ", not " << value << ".";
-        CPPUNIT_FAIL(msg.str());
-    }
+    verifyNative(d.zero, 0);
+    verifyNative(d.one, 1);
+    verifyNative(d.two, 2);
+    verifyNative(d.negOne, -1);
+    verifyNative(d.negTwo, -2);
+    verifyNative(d.longMax, LONG_MAX);
+    EXPECT_LT(d.longMax.longValue() + 1, zeroL);
+    verifyNative(d.longMin, LONG_MIN);
+    EXPECT_GT(d.longMin.longValue() - 1, zeroL);
+    verifyLarge(d.longMaxInc, sLongMaxInc);
+    EXPECT_GT(d.longMaxInc, LONG_MAX);
+    verifyLarge(d.longMinDec, sLongMinDec);
+    EXPECT_LT(d.longMinDec, LONG_MIN);
+    verifyLarge(d.ulongMax, sULongMax);
+    EXPECT_GT(d.ulongMax, LONG_MAX);
+    verifyLarge(d.hugePos, HUGE_INTEGER);
+    EXPECT_GT(d.hugePos, LONG_MAX);
+    verifyLarge(d.hugeNeg, "-" HUGE_INTEGER);
+    EXPECT_LT(d.hugeNeg, LONG_MIN);
+    verifyLarge(-d.hugeNeg, HUGE_INTEGER);
 }
 
 template <typename IntType>
@@ -819,12 +725,12 @@ static void testLongLong(long long value) {
     out << value;
 
     IntType large(value);
-    testStringValue(large, 10, out.str().c_str());
+    EXPECT_EQ(large.str(), out.str().c_str());
 
     IntType assigned = 1;
-    testStringValue(assigned, 10, "1");
+    EXPECT_EQ(assigned.str(), "1");
     assigned = value;
-    testStringValue(assigned, 10, out.str().c_str());
+    EXPECT_EQ(assigned.str(), out.str().c_str());
 }
 
 template <typename IntType>
@@ -833,12 +739,12 @@ static void testUnsignedLongLong(unsigned long long value) {
     out << value;
 
     IntType large(value);
-    testStringValue(large, 10, out.str().c_str());
+    EXPECT_EQ(large.str(), out.str().c_str());
 
     IntType assigned = 1;
-    testStringValue(assigned, 10, "1");
+    EXPECT_EQ(assigned.str(), "1");
     assigned = value;
-    testStringValue(assigned, 10, out.str().c_str());
+    EXPECT_EQ(assigned.str(), out.str().c_str());
 }
 
 TYPED_TEST(IntegerTest, constructLongLong) {
@@ -860,122 +766,90 @@ TYPED_TEST(IntegerTest, constructLongLong) {
     testUnsignedLongLong<IntType>(LLONG_MAX);
     testUnsignedLongLong<IntType>(ULLONG_MAX);
 }
+#endif
 
 #ifdef INT128_AVAILABLE
-template <typename IntType>
-static void test128Value(const regina::NativeInteger<16>& x,
+static void verifyEqual128(const regina::NativeInteger<16>& x,
         const regina::NativeInteger<16>& y) {
-    if (x != y) {
-        std::ostringstream msg;
-        msg << "128-bit integers " << x << " vs " << y
-            << " give different wrapped values.";
-        CPPUNIT_FAIL(msg.str());
-    }
-    if (x.nativeValue() != y.nativeValue()) {
-        std::ostringstream msg;
-        msg << "128-bit integers " << x << " vs " << y
-            << " give different native values.";
-        CPPUNIT_FAIL(msg.str());
-    }
-    if (str(x) != str(y)) {
-        std::ostringstream msg;
-        msg << "128-bit integers " << x << " vs " << y
-            << " give different string values.";
-        CPPUNIT_FAIL(msg.str());
-    }
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    EXPECT_EQ(x, y);
+    EXPECT_EQ(x.nativeValue(), y.nativeValue());
+    EXPECT_EQ(x.str(), y.str());
 }
 
 
-template <typename IntType>
-static void testNative128(const regina::NativeInteger<16>& native,
+template <typename IntegerType>
+static void verifyNative128(const regina::NativeInteger<16>& native,
         const char* string) {
-    if (str(native) != string) {
-        std::ostringstream msg;
-        msg << "128-bit integer " << native <<
-            " has incorrect string representation.";
-        CPPUNIT_FAIL(msg.str());
-    }
+    EXPECT_EQ(native.str(), string);
+    EXPECT_EQ(IntegerType(native).str(), string);
 
-    testStringValue(IntType(native), 10, string);
+    verifyEqual128(native, regina::NativeInteger<16>(IntegerType(string)));
+    verifyEqual128(native, IntegerType(string).template nativeValue<16>());
+    verifyEqual128(native, IntegerType(native).template nativeValue<16>());
 
-    test128Value<IntType>(native, regina::NativeInteger<16>(
-        IntType(string)));
-    test128Value<IntType>(native, regina::NativeInteger<16>(
-        IntType(string).template nativeValue<16>()));
-    test128Value<IntType>(native, regina::NativeInteger<16>(
-        IntType(native).template nativeValue<16>()));
-
-    // Make sure large-to-native conversion works even for
-    // numbers that do not enter the highest order long-sized
-    // block. For most machines this means the integers fit into
-    // a single long, so here we force them into a large (GMP)
-    // representation regardless.
-    IntType large(string);
+    // Make sure large-to-native conversion works even for numbers that do not
+    // enter the highest order long-sized block.  For most machines this means
+    // the integers fit into a single long, so here we force them into a large
+    // (GMP) representation regardless.
+    IntegerType large(string);
     large.makeLarge();
-    test128Value<IntType>(native, regina::NativeInteger<16>(large));
-    test128Value<IntType>(native,
-        regina::NativeInteger<16>(large.template nativeValue<16>()));
+    verifyEqual128(native, regina::NativeInteger<16>(large));
+    verifyEqual128(native, large.template nativeValue<16>());
 }
 
 TYPED_TEST(IntegerTest, constructNative128) {
     // Test conversion from native types that are larger than long.
     regina::NativeInteger<16> pos62 = 1;
-    regina::NativeInteger<16> pos63 = 1;
-    regina::NativeInteger<16> pos64 = 1;
-    regina::NativeInteger<16> pos126 = 1;
-    regina::NativeInteger<16> neg62 = 1;
-    regina::NativeInteger<16> neg63 = 1;
-    regina::NativeInteger<16> neg64 = 1;
-    regina::NativeInteger<16> neg126 = 1;
-    regina::NativeInteger<16> pos127 = 1;
-    regina::NativeInteger<16> neg127 = 1;
-    regina::NativeInteger<16> maxVal(
-        ~(regina::IntOfSize<16>::type(1) << 127));
     pos62 *= 1073741824; // 2^30
     pos62 *= 1073741824; // 2^30
     pos62 *= 4;
-    neg62 = -pos62;
-    pos63 = pos62 * 2;
-    neg63 = -pos63;
-    pos64 = pos63 * 2;
-    neg64 = -pos64;
-    pos126 = pos63 * pos63;
-    neg126 = -pos126;
-    pos127 = pos126 * 2; // Should overflow to -2^127
-    neg127 = neg126 * 2;
+    regina::NativeInteger<16> neg62 = -pos62;
+    regina::NativeInteger<16> pos63 = pos62 * 2;
+    regina::NativeInteger<16> neg63 = -pos63;
+    regina::NativeInteger<16> pos64 = pos63 * 2;
+    regina::NativeInteger<16> neg64 = -pos64;
+    regina::NativeInteger<16> pos126 = pos63 * pos63;
+    regina::NativeInteger<16> neg126 = -pos126;
+    regina::NativeInteger<16> pos127 = pos126 * 2; // Should overflow to -2^127
+    regina::NativeInteger<16> neg127 = neg126 * 2;
 
     regina::NativeInteger<16> pos126_62 = pos126 + pos62;
     regina::NativeInteger<16> pos126_63 = pos126 + pos63;
     regina::NativeInteger<16> neg126_62 = neg126 + neg62;
     regina::NativeInteger<16> neg126_63 = neg126 + neg63;
 
-    testNative128<IntType>(pos62, "4611686018" "427387904");
-    testNative128<IntType>(neg62, "-4611686018" "427387904");
-    testNative128<IntType>(pos63, "9223372036" "854775808");
-    testNative128<IntType>(neg63, "-9223372036" "854775808");
-    testNative128<IntType>(pos64, "1844674407" "3709551616");
-    testNative128<IntType>(neg64, "-1844674407" "3709551616");
-    testNative128<IntType>(pos126,
+    regina::NativeInteger<16> maxVal(
+        ~(regina::IntOfSize<16>::type(1) << 127));
+
+    verifyNative128<TypeParam>(pos62, "4611686018" "427387904");
+    verifyNative128<TypeParam>(neg62, "-4611686018" "427387904");
+    verifyNative128<TypeParam>(pos63, "9223372036" "854775808");
+    verifyNative128<TypeParam>(neg63, "-9223372036" "854775808");
+    verifyNative128<TypeParam>(pos64, "1844674407" "3709551616");
+    verifyNative128<TypeParam>(neg64, "-1844674407" "3709551616");
+    verifyNative128<TypeParam>(pos126,
         "8507059173" "0234615865" "8436518579" "42052864");
-    testNative128<IntType>(neg126,
+    verifyNative128<TypeParam>(neg126,
         "-8507059173" "0234615865" "8436518579" "42052864");
-    testNative128<IntType>(pos126_62,
+    verifyNative128<TypeParam>(pos126_62,
         "8507059173" "0234615870" "4553378763" "69440768");
-    testNative128<IntType>(neg126_62,
+    verifyNative128<TypeParam>(neg126_62,
         "-8507059173" "0234615870" "4553378763" "69440768");
-    testNative128<IntType>(pos126_63,
+    verifyNative128<TypeParam>(pos126_63,
         "8507059173" "0234615875" "0670238947" "96828672");
-    testNative128<IntType>(neg126_63,
+    verifyNative128<TypeParam>(neg126_63,
         "-8507059173" "0234615875" "0670238947" "96828672");
     // Recall that pos127 overflows.
-    testNative128<IntType>(pos127,
+    verifyNative128<TypeParam>(pos127,
         "-1701411834" "6046923173" "1687303715" "884105728");
-    testNative128<IntType>(neg127,
+    verifyNative128<TypeParam>(neg127,
         "-1701411834" "6046923173" "1687303715" "884105728");
-    testNative128<IntType>(maxVal,
+    verifyNative128<TypeParam>(maxVal,
         "1701411834" "6046923173" "1687303715" "884105727");
 }
-#endif
 #endif
 
 TYPED_TEST(IntegerTest, stringValue) {

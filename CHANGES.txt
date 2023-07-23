@@ -77,6 +77,8 @@ Version 7.4  [ (to be announced) ]
         Class Matrix<T>:
             - Added destructive and non-destructive rank() functions.
             - New routines negateRow() and negateCol().
+        Class NativeInteger<bytes>:
+            - New routine str().
         Class NormalSurface, NormalHypersurface:
             - Fixed a bug where, if a surface was a normalised triangle link
               but not a thin triangle link, then calling isThinTriangleLink()

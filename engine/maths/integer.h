@@ -1936,6 +1936,12 @@ class NativeInteger {
          * \return the value of this integer.
          */
         Native nativeValue() const;
+        /**
+         * Returns the string representation of this integer in base 10.
+         *
+         * \return the string representation of this integer.
+         */
+        std::string str() const;
 
         /**
          * Sets this integer to the given value.
@@ -3696,6 +3702,16 @@ inline typename NativeInteger<bytes>::Native NativeInteger<bytes>::
 }
 
 template <int bytes>
+inline std::string NativeInteger<bytes>::str() const {
+    // The standard library supports long long, but not necessarily 128-bit
+    // integers.  If we are beyond the realm of long long, go via Integer/GMP.
+    if constexpr (bytes <= sizeof(long long))
+        return std::to_string(data_);
+    else
+        return Integer(*this).str();
+}
+
+template <int bytes>
 inline NativeInteger<bytes>& NativeInteger<bytes>::operator =(
         const NativeInteger<bytes>& value) {
     data_ = value.data_;
@@ -4071,22 +4087,13 @@ inline void NativeInteger<bytes>::tryReduce() {
 template <int bytes>
 inline std::ostream& operator << (std::ostream& out,
         const NativeInteger<bytes>& i) {
-    return out << i.data_;
+    // The standard library supports long long, but not necessarily 128-bit
+    // integers.  If we are beyond the realm of long long, go via Integer/GMP.
+    if constexpr (bytes <= sizeof(long long))
+        return out << i.data_;
+    else
+        return out << Integer(i);
 }
-
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
-#ifdef INT128_AVAILABLE
-template <>
-inline std::ostream& operator << (std::ostream& out,
-        const NativeInteger<16>& i) {
-    // The standard library does not support 128-bit integers (at least not
-    // always).  Go through Integer and GMP instead (for now).
-    return out << Integer(i);
-}
-#endif
-
-#endif // __DOXYGEN
 
 template <int bytes>
 inline void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept {
