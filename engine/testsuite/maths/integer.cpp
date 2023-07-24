@@ -157,6 +157,8 @@ static void verifyIdentical(const IntegerType& x, const IntegerType& y) {
 
 template <typename IntegerType>
 static void verifyCopyAssign(const IntegerType& x) {
+    SCOPED_TRACE_REGINA(x);
+
     // Verify the copy constructor and self-assignment.
     {
         IntegerType y(x);
@@ -217,6 +219,25 @@ static void verifyCopyAssign(const IntegerType& x) {
 }
 
 template <typename IntegerType>
+static void verifyCopyAssignLarge(const IntegerType& x,
+        const std::string& expect) {
+    verifyLarge(x, expect);
+    verifyCopyAssign(x);
+}
+
+template <typename IntegerType>
+static void verifyCopyAssignNative(const IntegerType& x, long expect) {
+    verifyNative(x, expect);
+    verifyCopyAssign(x);
+}
+
+template <typename IntegerType>
+static void verifyCopyAssignInfinite(const IntegerType& x) {
+    verifyInfinite(x);
+    verifyCopyAssign(x);
+}
+
+template <typename IntegerType>
 class IntegerTest : public testing::Test {
     protected:
         // TODO: Perhaps make these non-static?
@@ -260,359 +281,262 @@ class IntegerTest : public testing::Test {
             1000, 3000, 4997, 4998, 4999, 5000,
             32767, 32768, LONG_MAX-2, LONG_MAX-1, LONG_MAX
         };
-
-#if 0
-    private:
-        template <typename IntType>
-        struct Data {
-            // Integers that use native long representation:
-            IntType zero { 0 };
-            IntType one { 1 };
-            IntType two { 2 };
-            IntType negOne { -1 };
-            IntType negTwo { -2 };
-            IntType longMax { LONG_MAX };
-            IntType longMin { LONG_MIN };
-
-            // Integers that use large (GMP) representation:
-            IntType longMaxInc;
-                /**< Special case (large): LONG_MAX + 1 */
-            IntType longMinDec;
-                /**< Special case (large): LONG_MIN - 1 */
-            IntType ulongMax;
-                /**< Special case (large): ULONG_MAX */
-            IntType hugePos;
-                /**< Special case (large): a huge positive integer */
-            IntType hugeNeg;
-                /**< Special case (large): a huge negative integer */
-
-            void setUp() {
-                longMaxInc = LONG_MAX; ++longMaxInc;
-                longMinDec = LONG_MIN; --longMinDec;
-                ulongMax = (unsigned long)(ULONG_MAX);
-                hugePos = HUGE_INTEGER;
-                hugeNeg = "-" HUGE_INTEGER;
-            }
-        };
-
-        long zeroL { 0 };
-            /** We need this so we can test things like (LONG_MAX + 1 < 0)
-                without compiler optimisations breaking the results. */
-
-        std::string sLongMax;
-        std::string sLongMaxInc;
-        std::string sLongMin;
-        std::string sLongMinDec;
-        std::string sULongMax;
-
-        void setUp() override {
-            dataL.setUp();
-            dataI.setUp();
-
-            sLongMax = str(LONG_MAX);
-            sLongMaxInc = incStrSimple(sLongMax);
-            sLongMin = str(LONG_MIN);
-            sLongMinDec = incStrSimple(sLongMin);
-            sULongMax = str(ULONG_MAX);
-        }
-
-    public:
-        template <typename T>
-        std::string str(T x) {
-            std::ostringstream ans;
-            ans << x;
-            return ans.str();
-        }
-
-        /**
-         * Convert the string for a positive integer n into the string
-         * for (n+1), or convert the string for a negative integer -n
-         * into the string for -(n+1).
-         *
-         * PRE: The last digit of s is not 9.
-         */
-        std::string incStrSimple(const std::string& s) {
-            std::string ans = s;
-            ans[ans.length() - 1]++;
-            return ans;
-        }
-
-        template <typename IntType>
-        std::string eltName(int whichSeries, int whichMember) {
-            std::ostringstream ans;
-            ans << data<IntType>().seriesName[whichSeries]
-                << '[' << whichMember << ']';
-            return ans.str();
-        }
-#endif
 };
 
 using IntegerTypes = ::testing::Types<regina::Integer, regina::LargeInteger>;
 TYPED_TEST_SUITE(IntegerTest, IntegerTypes);
 
-TYPED_TEST(IntegerTest, constructAssignCopyNative) {
+TYPED_TEST(IntegerTest, constructCopyAssignNative) {
     // Create some out-of-native-range integers using string manipulation.
     std::string sLongMaxInc = std::to_string(LONG_MAX);
     ++sLongMaxInc.back();
+    std::string sLongMinDec = std::to_string(LONG_MIN);
+    ++sLongMinDec.back();
     std::string sULongMax = std::to_string(ULONG_MAX);
 
-    verifyNative(TypeParam(), 0);
-    verifyNative(TypeParam(int(100)), 100);
-    verifyNative(TypeParam(int(-32768)), -32768);
-    verifyNative(TypeParam(unsigned(65535)), 65535);
-    verifyNative(TypeParam(long(2147483647)), 2147483647);
-    verifyNative(TypeParam(long(-2147483648)), -2147483648);
-    verifyNative(TypeParam(long(LONG_MAX)), LONG_MAX);
-    verifyNative(TypeParam(long(LONG_MIN)), LONG_MIN);
-    verifyNative(TypeParam((unsigned long)(LONG_MAX)), LONG_MAX);
-    verifyLarge(TypeParam(((unsigned long)(LONG_MAX)) + 1), sLongMaxInc);
-    verifyLarge(TypeParam((unsigned long)(ULONG_MAX)), sULongMax);
+    verifyCopyAssignNative(TypeParam(), 0);
+    verifyCopyAssignNative(TypeParam(1), 1);
+    verifyCopyAssignNative(TypeParam(2), 2);
+    verifyCopyAssignNative(TypeParam(-1), -1);
+    verifyCopyAssignNative(TypeParam(-2), -2);
+    verifyCopyAssignNative(TypeParam(int(100)), 100);
+    verifyCopyAssignNative(TypeParam(int(-32768)), -32768);
+    verifyCopyAssignNative(TypeParam(unsigned(65535)), 65535);
+    verifyCopyAssignNative(TypeParam(long(2147483647)), 2147483647);
+    verifyCopyAssignNative(TypeParam(long(-2147483648)), -2147483648);
+    verifyCopyAssignNative(TypeParam(long(LONG_MAX)), LONG_MAX);
+    verifyCopyAssignNative(TypeParam(long(LONG_MIN)), LONG_MIN);
+    verifyCopyAssignNative(TypeParam((unsigned long)(LONG_MAX)), LONG_MAX);
+    verifyCopyAssignLarge(TypeParam(((unsigned long)(LONG_MAX)) + 1),
+        sLongMaxInc);
+    verifyCopyAssignLarge(-TypeParam(((unsigned long)(LONG_MAX)) + 2),
+        sLongMinDec);
+    verifyCopyAssignLarge(TypeParam((unsigned long)(ULONG_MAX)), sULongMax);
 
     TypeParam x;
-    verifyNative(x, 0);
+    verifyCopyAssignNative(x, 0);
+    x = 1;
+    verifyCopyAssignNative(x, 1);
+    x = 2;
+    verifyCopyAssignNative(x, 2);
+    x = -1;
+    verifyCopyAssignNative(x, -1);
+    x = -2;
+    verifyCopyAssignNative(x, -2);
     x = int(100);
-    verifyNative(x, 100);
+    verifyCopyAssignNative(x, 100);
     x = int(-32768);
-    verifyNative(x, -32768);
+    verifyCopyAssignNative(x, -32768);
     x = unsigned(65535);
-    verifyNative(x, 65535);
+    verifyCopyAssignNative(x, 65535);
     x = long(2147483647);
-    verifyNative(x, 2147483647);
+    verifyCopyAssignNative(x, 2147483647);
     x = long(-2147483648);
-    verifyNative(x, -2147483648);
+    verifyCopyAssignNative(x, -2147483648);
     x = long(LONG_MAX);
-    verifyNative(x, LONG_MAX);
+    verifyCopyAssignNative(x, LONG_MAX);
     x = long(LONG_MIN);
-    verifyNative(x, LONG_MIN);
+    verifyCopyAssignNative(x, LONG_MIN);
     x = (unsigned long)(LONG_MAX);
-    verifyNative(x, LONG_MAX);
+    verifyCopyAssignNative(x, LONG_MAX);
     x = ((unsigned long)(LONG_MAX)) + 1;
-    verifyLarge(x, sLongMaxInc);
+    verifyCopyAssignLarge(x, sLongMaxInc);
+    x = ((unsigned long)(LONG_MAX)) + 2;
+    x.negate();
+    verifyCopyAssignLarge(x, sLongMinDec);
     x = (unsigned long)(ULONG_MAX);
-    verifyLarge(x, sULongMax);
+    verifyCopyAssignLarge(x, sULongMax);
 }
 
-#if 0
-template <typename IntType>
-static void testStringNative(const std::string& s, int base,
-        long value, int sign) {
-    std::string str;
-    for (int i = 0; i < 4; ++i) {
-        if (i < 2)
-            str = s;
-        else {
-            // Try with whitespace prepended.
-            str = " \t\r\n  ";
-            str += s;
-        }
-        if (i % 2)
-            str += " \t\r\n  "; // and whitespace appended.
+template <typename IntegerType>
+static void verifyNativeFromString(const std::string& s, int base, long value) {
+    std::string use[4] = { s, s + " \t\r\n  ", " \t\r\n  " + s,
+        " \t\r\n  " + s + " \t\r\n  " };
+
+    for (const std::string& str : use) {
+        SCOPED_TRACE_STDSTRING(str);
 
         {
-            std::ostringstream name;
-            name << "C string \"" << str << "\"";
-            IntType x(str.c_str(), base);
+            IntegerType x(str, base);
             if (base > 0)
                 EXPECT_EQ(x.stringValue(base), s);
-            verifyNative(x, value);
+            verifyCopyAssignNative(x, value);
         }
         {
-            std::ostringstream name;
-            name << "C++ string \"" << str << "\"";
-            IntType x(str, base);
+            IntegerType x(str.c_str(), base);
             if (base > 0)
                 EXPECT_EQ(x.stringValue(base), s);
-            verifyNative(x, value);
+            verifyCopyAssignNative(x, value);
         }
+
         if (base == 10) {
             {
-                std::ostringstream name;
-                name << "C string = \"" << str << "\"";
-                IntType x(5);
+                IntegerType x(5);
                 EXPECT_TRUE(x.isNative());
-                x = str.c_str();
-                verifyNative(x, value);
+                x = str;
+                EXPECT_EQ(x.str(), s);
+                verifyCopyAssignNative(x, value);
             }
             {
-                std::ostringstream name;
-                name << "C++ string = \"" << str << "\"";
-                IntType y(5);
-                EXPECT_TRUE(y.isNative());
-                y = str;
-                verifyNative(y, value);
+                IntegerType x(5);
+                EXPECT_TRUE(x.isNative());
+                x = str.c_str();
+                EXPECT_EQ(x.str(), s);
+                verifyCopyAssignNative(x, value);
             }
         }
     }
 
     // Try strings with errors.
     EXPECT_THROW({
-        TypeParam(s + "!", base);
+        IntegerType(s + "!", base);
     }, regina::InvalidArgument);
     EXPECT_THROW({
-        TypeParam((s + "!").c_str(), base);
+        IntegerType((s + "!").c_str(), base);
     }, regina::InvalidArgument);
 }
 
-template <typename IntType>
-static void testStringLarge(const std::string& s, int sign) {
-    std::string str;
-    for (int i = 0; i < 4; ++i) {
-        if (i < 2)
-            str = s;
-        else {
-            // Try with whitespace prepended.
-            str = " \t\r\n  ";
-            str += s;
-        }
-        if (i % 2)
-            str += " \t\r\n  "; // and whitespace appended.
+template <typename IntegerType>
+static void verifyLargeFromString(const std::string& s) {
+    std::string use[4] = { s, s + " \t\r\n  ", " \t\r\n  " + s,
+        " \t\r\n  " + s + " \t\r\n  " };
+
+    for (const std::string& str : use) {
+        SCOPED_TRACE_STDSTRING(str);
 
         {
-            std::ostringstream name;
-            name << "C string \"" << str << "\"";
-            IntType x(str.c_str(), 10);
-            verifyLarge(x, s);
+            IntegerType x(str, 10);
+            verifyCopyAssignLarge(x, s);
         }
         {
-            std::ostringstream name;
-            name << "C++ string \"" << str << "\"";
-            IntType x(str, 10);
-            verifyLarge(x, s);
+            IntegerType x(str.c_str(), 10);
+            verifyCopyAssignLarge(x, s);
         }
         {
-            std::ostringstream name;
-            name << "C string = \"" << str << "\"";
-            IntType x(5);
+            IntegerType x(5);
+            EXPECT_TRUE(x.isNative());
+            x = str;
+            verifyCopyAssignLarge(x, s);
+        }
+        {
+            IntegerType x(5);
             EXPECT_TRUE(x.isNative());
             x = str.c_str();
-            verifyLarge(x, s);
-        }
-        {
-            std::ostringstream name;
-            name << "C++ string = \"" << str << "\"";
-            IntType y(5);
-            EXPECT_TRUE(y.isNative());
-            y = str;
-            verifyLarge(y, s);
+            verifyCopyAssignLarge(x, s);
         }
     }
 
     // Try strings with errors.
-    EXPECT_THROW({ TypeParam(s + "!"); }, regina::InvalidArgument);
-    EXPECT_THROW({ TypeParam((s + "!").c_str()); }, regina::InvalidArgument);
+    EXPECT_THROW({ IntegerType(s + "!"); }, regina::InvalidArgument);
+    EXPECT_THROW({ IntegerType((s + "!").c_str()); }, regina::InvalidArgument);
 }
 
-template <typename IntType>
-static void testStringLarge(const std::string& s, int base,
-        const std::string& valueBase10, int sign) {
-    std::string str;
-    for (int i = 0; i < 4; ++i) {
-        if (i < 2)
-            str = s;
-        else {
-            // Try with whitespace prepended.
-            str = " \t\r\n  ";
-            str += s;
-        }
-        if (i % 2)
-            str += " \t\r\n  "; // and whitespace appended.
+template <typename IntegerType>
+static void verifyLargeFromString(const std::string& s, int base,
+        const std::string& valueBase10) {
+    std::string use[4] = { s, s + " \t\r\n  ", " \t\r\n  " + s,
+        " \t\r\n  " + s + " \t\r\n  " };
+
+    for (const std::string& str : use) {
+        SCOPED_TRACE_STDSTRING(str);
 
         {
-            std::ostringstream name;
-            name << "C string \"" << str << "\"";
-            IntType x(str.c_str(), base);
+            IntegerType x(str, base);
             if (base > 0)
                 EXPECT_EQ(x.stringValue(base), s);
-            verifyLarge(x, valueBase10);
+            verifyCopyAssignLarge(x, valueBase10);
         }
         {
-            std::ostringstream name;
-            name << "C++ string \"" << str << "\"";
-            IntType x(str, base);
+            IntegerType x(str.c_str(), base);
             if (base > 0)
                 EXPECT_EQ(x.stringValue(base), s);
-            verifyLarge(x, valueBase10);
+            verifyCopyAssignLarge(x, valueBase10);
         }
         if (base == 10) {
             {
-                std::ostringstream name;
-                name << "C string = \"" << str << "\"";
-                IntType x(5);
+                IntegerType x(5);
                 EXPECT_TRUE(x.isNative());
-                x = str.c_str();
-                verifyLarge(x, s);
+                x = str;
+                verifyCopyAssignLarge(x, s);
             }
             {
-                std::ostringstream name;
-                name << "C++ string = \"" << str << "\"";
-                IntType y(5);
-                EXPECT_TRUE(y.isNative());
-                y = str;
-                verifyLarge(y, s);
+                IntegerType x(5);
+                EXPECT_TRUE(x.isNative());
+                x = str.c_str();
+                verifyCopyAssignLarge(x, s);
             }
         }
     }
 
     // Try strings with errors.
     EXPECT_THROW({
-        TypeParam(s + "!", base);
+        IntegerType(s + "!", base);
     }, regina::InvalidArgument);
     EXPECT_THROW({
-        TypeParam((s + "!").c_str(), base);
+        IntegerType((s + "!").c_str(), base);
     }, regina::InvalidArgument);
 }
 
-TYPED_TEST(IntgegerTest, constructAssignCopyString) {
-    testStringNative<IntType>(sLongMax, 10, LONG_MAX, 1);
-    testStringNative<IntType>(sLongMin, 10, LONG_MIN, -1);
-    testStringLarge<IntType>(sLongMaxInc, 1);
-    testStringLarge<IntType>(sULongMax, 1);
-    testStringLarge<IntType>(HUGE_INTEGER, 1);
-    testStringLarge<IntType>("-" HUGE_INTEGER, -1);
+TYPED_TEST(IntegerTest, constructCopyAssignString) {
+    // Create some out-of-native-range integers using string manipulation.
+    std::string sLongMaxInc = std::to_string(LONG_MAX);
+    ++sLongMaxInc.back();
+    std::string sLongMinDec = std::to_string(LONG_MIN);
+    ++sLongMinDec.back();
+    std::string sULongMax = std::to_string(ULONG_MAX);
+
+    verifyNativeFromString<TypeParam>(std::to_string(LONG_MAX), 10, LONG_MAX);
+    verifyNativeFromString<TypeParam>(std::to_string(LONG_MIN), 10, LONG_MIN);
+    verifyLargeFromString<TypeParam>(sLongMaxInc);
+    verifyLargeFromString<TypeParam>(sLongMinDec);
+    verifyLargeFromString<TypeParam>(sULongMax);
+    verifyLargeFromString<TypeParam>(HUGE_INTEGER);
+    verifyLargeFromString<TypeParam>("-" HUGE_INTEGER);
 
     // Test string constructors in different bases.
-    testStringNative<IntType>("101", 2, 5, 1);
-    testStringNative<IntType>("-101", 2, -5, -1);
-    testStringNative<IntType>("121", 3, 16, 1);
-    testStringNative<IntType>("-121", 3, -16, -1);
-    testStringNative<IntType>("1af", 16, 431, 1);
-    testStringNative<IntType>("-1af", 16, -431, -1);
-    testStringNative<IntType>("201", 31, 1923, 1);
-    testStringNative<IntType>("-201", 31, -1923, -1);
-    testStringNative<IntType>("121", 0, 121, 1);
-    testStringNative<IntType>("-121", 0, -121, -1);
-    testStringNative<IntType>("034", 0, 28, 1);
-    testStringNative<IntType>("-034", 0, -28, -1);
-    testStringNative<IntType>("0x1af", 0, 431, 1);
-    testStringNative<IntType>("-0x1af", 0, -431, -1);
-    testStringNative<IntType>("0X1af", 0, 431, 1);
-    testStringNative<IntType>("-0X1af", 0, -431, -1);
-    testStringLarge<IntType>("1" "000000000000000000000000000000", 29,
-        "74462898441" "67512290229" "30182271994" "67668020601", 1);
-    testStringLarge<IntType>("-1" "000000000000000000000000000000", 29,
-        "-74462898441" "67512290229" "30182271994" "67668020601", -1);
-    testStringLarge<IntType>(
+    verifyNativeFromString<TypeParam>("101", 2, 5);
+    verifyNativeFromString<TypeParam>("-101", 2, -5);
+    verifyNativeFromString<TypeParam>("121", 3, 16);
+    verifyNativeFromString<TypeParam>("-121", 3, -16);
+    verifyNativeFromString<TypeParam>("1af", 16, 431);
+    verifyNativeFromString<TypeParam>("-1af", 16, -431);
+    verifyNativeFromString<TypeParam>("201", 31, 1923);
+    verifyNativeFromString<TypeParam>("-201", 31, -1923);
+    verifyNativeFromString<TypeParam>("121", 0, 121);
+    verifyNativeFromString<TypeParam>("-121", 0, -121);
+    verifyNativeFromString<TypeParam>("034", 0, 28);
+    verifyNativeFromString<TypeParam>("-034", 0, -28);
+    verifyNativeFromString<TypeParam>("0x1af", 0, 431);
+    verifyNativeFromString<TypeParam>("-0x1af", 0, -431);
+    verifyNativeFromString<TypeParam>("0X1af", 0, 431);
+    verifyNativeFromString<TypeParam>("-0X1af", 0, -431);
+    // We split the strings below into chunks so that vim's syntax highlighting
+    // can cope.
+    verifyLargeFromString<TypeParam>("1" "000000000000000000000000000000", 29,
+        "74462898441" "67512290229" "30182271994" "67668020601");
+    verifyLargeFromString<TypeParam>("-1" "000000000000000000000000000000", 29,
+        "-74462898441" "67512290229" "30182271994" "67668020601");
+    verifyLargeFromString<TypeParam>(
         "74462898441" "67512290229" "30182271994" "67668020601",
-        0, "74462898441" "67512290229" "30182271994" "67668020601", 1);
-    testStringLarge<IntType>(
+        0, "74462898441" "67512290229" "30182271994" "67668020601");
+    verifyLargeFromString<TypeParam>(
         "-74462898441" "67512290229" "30182271994" "67668020601",
-        0, "-74462898441" "67512290229" "30182271994" "67668020601", -1);
-    testStringLarge<IntType>(
+        0, "-74462898441" "67512290229" "30182271994" "67668020601");
+    verifyLargeFromString<TypeParam>(
         "01" "000000000000000000000000000000000000000000000",
-        0, "4355614296" "5880123323" "3119497512" "66331066368", 1);
-    testStringLarge<IntType>(
+        0, "4355614296" "5880123323" "3119497512" "66331066368");
+    verifyLargeFromString<TypeParam>(
         "-01" "000000000000000000000000000000000000000000000",
-        0, "-4355614296" "5880123323" "3119497512" "66331066368", -1);
-    testStringLarge<IntType>("0x1" "0000000000000000000000000000000000",
-        0, "8711228593" "1760246646" "6238995025" "32662132736", 1);
-    testStringLarge<IntType>("-0x1" "0000000000000000000000000000000000",
-        0, "-8711228593" "1760246646" "6238995025" "32662132736", -1);
-    testStringLarge<IntType>("0X1" "0000000000000000000000000000000000",
-        0, "8711228593" "1760246646" "6238995025" "32662132736", 1);
-    testStringLarge<IntType>("-0X1" "0000000000000000000000000000000000",
-        0, "-8711228593" "1760246646" "6238995025" "32662132736", -1);
+        0, "-4355614296" "5880123323" "3119497512" "66331066368");
+    verifyLargeFromString<TypeParam>("0x1" "0000000000000000000000000000000000",
+        0, "8711228593" "1760246646" "6238995025" "32662132736");
+    verifyLargeFromString<TypeParam>("-0x1" "0000000000000000000000000000000000",
+        0, "-8711228593" "1760246646" "6238995025" "32662132736");
+    verifyLargeFromString<TypeParam>("0X1" "0000000000000000000000000000000000",
+        0, "8711228593" "1760246646" "6238995025" "32662132736");
+    verifyLargeFromString<TypeParam>("-0X1" "0000000000000000000000000000000000",
+        0, "-8711228593" "1760246646" "6238995025" "32662132736");
 }
-#endif
 
 static void verifyInfiniteFromString(const char* str) {
     // Test construction and assignment from the given string, which should
@@ -644,10 +568,9 @@ static void verifyInfiniteFromString(const char* str) {
     }
 }
 
-TYPED_TEST(IntegerTest, constructAssignCopyInfinity) {
+TYPED_TEST(IntegerTest, constructCopyAssignInfinity) {
     if constexpr (TypeParam::supportsInfinity) {
-        verifyInfinite(TypeParam::infinity);
-        verifyCopyAssign(TypeParam::infinity);
+        verifyCopyAssignInfinite(TypeParam::infinity);
 
         // Ensure that makeInfinte() behaves correctly:
         {
@@ -655,23 +578,20 @@ TYPED_TEST(IntegerTest, constructAssignCopyInfinity) {
             EXPECT_TRUE(x.isNative());
             EXPECT_FALSE(x.isInfinite());
             x.makeInfinite();
-            verifyInfinite(x);
-            verifyCopyAssign(x);
+            verifyCopyAssignInfinite(x);
         }
         {
             TypeParam x(HUGE_INTEGER);
             EXPECT_FALSE(x.isNative());
             EXPECT_FALSE(x.isInfinite());
             x.makeInfinite();
-            verifyInfinite(x);
-            verifyCopyAssign(x);
+            verifyCopyAssignInfinite(x);
         }
         {
             TypeParam x(LargeInteger::infinity);
             verifyInfinite(x);
             x.makeInfinite();
-            verifyInfinite(x);
-            verifyCopyAssign(x);
+            verifyCopyAssignInfinite(x);
         }
 
         // Test construction and assignment from strings:
@@ -682,35 +602,6 @@ TYPED_TEST(IntegerTest, constructAssignCopyInfinity) {
         verifyInfiniteFromString("  infimum");
     }
 }
-
-#if 0
-TYPED_TEST(IntegerTest, constructSpecial) {
-    const Data<IntType>& d(data<IntType>());
-
-    // Make sure that our "special case" data members look correct,
-    // so we can use them with confidence throughout this class.
-    verifyNative(d.zero, 0);
-    verifyNative(d.one, 1);
-    verifyNative(d.two, 2);
-    verifyNative(d.negOne, -1);
-    verifyNative(d.negTwo, -2);
-    verifyNative(d.longMax, LONG_MAX);
-    EXPECT_LT(d.longMax.longValue() + 1, zeroL);
-    verifyNative(d.longMin, LONG_MIN);
-    EXPECT_GT(d.longMin.longValue() - 1, zeroL);
-    verifyLarge(d.longMaxInc, sLongMaxInc);
-    EXPECT_GT(d.longMaxInc, LONG_MAX);
-    verifyLarge(d.longMinDec, sLongMinDec);
-    EXPECT_LT(d.longMinDec, LONG_MIN);
-    verifyLarge(d.ulongMax, sULongMax);
-    EXPECT_GT(d.ulongMax, LONG_MAX);
-    verifyLarge(d.hugePos, HUGE_INTEGER);
-    EXPECT_GT(d.hugePos, LONG_MAX);
-    verifyLarge(d.hugeNeg, "-" HUGE_INTEGER);
-    EXPECT_LT(d.hugeNeg, LONG_MIN);
-    verifyLarge(-d.hugeNeg, HUGE_INTEGER);
-}
-#endif
 
 TYPED_TEST(IntegerTest, swap) {
     // Create LONG_MAX + 1 using direct string manipulation.
@@ -1192,6 +1083,8 @@ TYPED_TEST(IntegerTest, incDec) {
 
         TypeParam up = x + 1;
         TypeParam down = x - 1;
+        EXPECT_GT(up, x);
+        EXPECT_LT(down, x);
 
         TypeParam i = x;
 
@@ -1835,7 +1728,7 @@ TYPED_TEST(IntegerTest, divide) {
                     EXPECT_LT(x, recover - (y >= 0 ? -y : y));
                 } else {
                     // recover - |y| < x ≤ recover
-                    EXPECT_LT(recover, x - (y >= 0 ? -y : y)); // TODO
+                    EXPECT_LT(recover, x - (y >= 0 ? -y : y));
                     EXPECT_LE(x, recover);
                 }
             }
