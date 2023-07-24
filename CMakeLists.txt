@@ -637,22 +637,6 @@ ELSE(DISABLE_GUI)
     "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 ENDIF()
 
-# Test suite, continued
-FIND_PATH(CPPUNIT_INCLUDE_DIR cppunit/Test.h)
-FIND_LIBRARY(CPPUNIT_LIBRARY NAMES cppunit)
-IF (CPPUNIT_INCLUDE_DIR AND CPPUNIT_LIBRARY)
-  SET(CPPUNIT_FOUND TRUE)
-  MESSAGE(STATUS "Found CppUnit: ${CPPUNIT_LIBRARY}")
-  ADD_SUBDIRECTORY(testsuite)
-ELSE (CPPUNIT_INCLUDE_DIR AND CPPUNIT_LIBRARY)
-  MESSAGE(WARNING "Could not find CppUnit: test suite disabled.")
-ENDIF (CPPUNIT_INCLUDE_DIR AND CPPUNIT_LIBRARY)
-MACRO_LOG_FEATURE(CPPUNIT_FOUND
-  "CppUnit"
-  "Build the full test suite for Regina"
-  "http://sourceforge.net/projects/cppunit/"
-  FALSE)
-
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(timing)
 ADD_SUBDIRECTORY(docs)
