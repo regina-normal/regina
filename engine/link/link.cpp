@@ -1160,45 +1160,87 @@ Link Link::tightDecode(std::istream& input) {
     return ans;
 }
 
-std::string Link::dumpConstruction() const {
+std::string Link::dumpConstruction(Language language) const {
     std::ostringstream out;
 
-    out << "Link link = Link::fromData(";
+    char left, right;
+    switch (language) {
+        case LANGUAGE_CXX:
+            out << "Link link = Link::fromData(";
+            left = '{'; right = '}';
+            break;
+        case LANGUAGE_PYTHON:
+            out << "link = Link.fromData(";
+            left = '['; right = ']';
+            break;
+    }
 
-    out << "{ ";
+    out << left << ' ';
     if (crossings_.empty())
-        out << '}';
+        out << right;
     else {
         auto it = crossings_.begin();
         out << ((*it)->sign() > 0 ? "+1" : "-1");
 
         for (++it; it != crossings_.end(); ++it)
             out << ", " << ((*it)->sign() > 0 ? "+1" : "-1");
-        out << " }";
+        out << ' ' << right;
     }
 
-    StrandRef s;
-    for (StrandRef start : components_) {
-        out << ", { ";
-        if (! start)
-            out << '}';
-        else {
-            s = start;
-            if (s.strand() == 0)
-                out << '-';
-            out << (s.crossing()->index() + 1);
+    if (components_.empty()) {
+        if (language == LANGUAGE_PYTHON)
+            out << ", [ ]";
+    } else {
+        // In Python, we express multiple components as [[...], ..., [...]].
+        // However, for a _single_ component we can just use [...].
+        // A problem: this makes [] ambiguous, since it could represent either
+        // the empty link or the zero-crossing unknot, and so in the latter
+        // case we must still keep the outer list.
+        bool outerList = (language == LANGUAGE_PYTHON &&
+            (components_.size() > 1 || crossings_.empty()));
 
-            for (++s; s != start; ++s) {
+        out << ", ";
+        if (outerList)
+            out << left;
+
+        StrandRef s;
+        bool first = true;
+        for (StrandRef start : components_) {
+            if (first)
+                first = false;
+            else
                 out << ", ";
+            out << left << ' ';
+
+            if (! start) {
+                if (language == LANGUAGE_CXX)
+                    out << "0 ";
+                out << right;
+            } else {
+                s = start;
                 if (s.strand() == 0)
                     out << '-';
                 out << (s.crossing()->index() + 1);
+
+                for (++s; s != start; ++s) {
+                    out << ", ";
+                    if (s.strand() == 0)
+                        out << '-';
+                    out << (s.crossing()->index() + 1);
+                }
+                out << ' ' << right;
             }
-            out << " }";
         }
+
+        if (outerList)
+            out << right;
     }
 
-    out << ");\n";
+    out << ')';
+    if (language == LANGUAGE_CXX)
+        out << ';';
+    out << '\n';
+
     return out.str();
 }
 

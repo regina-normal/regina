@@ -3335,18 +3335,21 @@ class Link :
         std::string pace() const;
 
         /**
-         * Returns C++ code that can be used to reconstruct this link.
+         * Returns C++ or Python source code that can be used to reconstruct
+         * this link.
          *
          * This code will call Link::fromData(), passing a series of
-         * hard-coded C++ initialiser lists.
+         * hard-coded C++ initialiser lists or Python lists (depending on the
+         * requested language).
          *
          * The main purpose of this routine is to generate these hard-coded
-         * initialiser lists, which can be tedious and error-prone to write
-         * by hand.
+         * lists, which can be tedious and error-prone to write by hand.
          *
-         * \return the C++ code that was generated.
+         * \param language the language in which the source code should be
+         * written.
+         * \return the source code that was generated.
          */
-        std::string dumpConstruction() const;
+        std::string dumpConstruction(Language language = LANGUAGE_CXX) const;
 
         /**
          * Constructs the _signature_ for this knot diagram.

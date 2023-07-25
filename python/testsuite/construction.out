@@ -1,0 +1,40 @@
+----------
+Empty link
+
+Link link = Link::fromData({ });
+
+link = Link.fromData([ ], [ ])
+
+Empty link
+----------
+0-crossing knot: ( )
+
+Link link = Link::fromData({ }, { 0 });
+
+link = Link.fromData([ ], [[ ]])
+
+0-crossing knot: ( )
+----------
+0-crossing, 2-component link: ( ) ( )
+
+Link link = Link::fromData({ }, { 0 }, { 0 });
+
+link = Link.fromData([ ], [[ ], [ ]])
+
+0-crossing, 2-component link: ( ) ( )
+----------
+3-crossing knot: +++ ( ^0 _1 ^2 _0 ^1 _2 )
+
+Link link = Link::fromData({ +1, +1, +1 }, { 1, -2, 3, -1, 2, -3 });
+
+link = Link.fromData([ +1, +1, +1 ], [ 1, -2, 3, -1, 2, -3 ])
+
+3-crossing knot: +++ ( ^0 _1 ^2 _0 ^1 _2 )
+----------
+2-crossing, 2-component link: ++ ( ^0 _1 ) ( _0 ^1 )
+
+Link link = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
+
+link = Link.fromData([ +1, +1 ], [[ 1, -2 ], [ -1, 2 ]])
+
+2-crossing, 2-component link: ++ ( ^0 _1 ) ( _0 ^1 )

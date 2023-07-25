@@ -463,8 +463,8 @@ __init__(...)
     if the string begins with ``0``, the base will be assumed to be 8.
     Otherwise it will be taken as base 10.
     
-    If the template argument *supportInfinity* is ``True``, then any
-    string beginning with "inf" (after any initial whitesapce) will be
+    If the template argument *withInfinity* is ``True``, then any string
+    beginning with "inf" (after any initial whitesapce) will be
     interpreted as infinity.
     
     Whitespace may be present at the beginning or the end of the given
@@ -556,8 +556,8 @@ __init__(...)
     if the string begins with ``0``, the base will be assumed to be 8.
     Otherwise it will be taken as base 10.
     
-    If the template argument *supportInfinity* is ``True``, then any
-    string beginning with "inf" (after any initial whitesapce) will be
+    If the template argument *withInfinity* is ``True``, then any string
+    beginning with "inf" (after any initial whitesapce) will be
     interpreted as infinity.
     
     Whitespace may be present at the beginning or the end of the given

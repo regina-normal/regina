@@ -281,6 +281,7 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("useReversal") = true,
             rdoc::knotSig)
         .def("dumpConstruction", &Link::dumpConstruction,
+            pybind11::arg("language") = regina::LANGUAGE_CXX,
             rdoc::dumpConstruction)
         .def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
             pybind11::arg(),
