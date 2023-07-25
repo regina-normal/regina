@@ -33,13 +33,12 @@ wherever possible, whilst always testing for potential overflow. If a
 potential overflow is detected, this class switches to using the GNU
 multiple precision arithmetic library (libgmp) instead.
 
-This class takes a single boolean argument *supportInfinity*. If this
-is ``True``, then this class will support infinity as an allowed
-value. If this is ``False`` (the default), then infinity is not
-supported, and any attempt to work with infinity will lead to
-undefined behaviour. Supporting infinity is more flexible, but also
-comes with a slight performance cost (very roughly estimated at around
-10%-20%).
+This class takes a single boolean argument *withInfinity*. If this is
+``True``, then this class will support infinity as an allowed value.
+If this is ``False`` (the default), then infinity is not supported,
+and any attempt to work with infinity will lead to undefined
+behaviour. Supporting infinity is more flexible, but also comes with a
+slight performance cost (very roughly estimated at around 10%-20%).
 
 For the purposes of comparison, infinity is considered larger than any
 other integer but equal to itself.
@@ -58,8 +57,8 @@ possible, even when passing or returning objects by value.
 
 Python:
     Both variants of this template are available through Python. For
-    *supportInfinity* = ``False``, use the name Integer. For
-    *supportInfinity* = ``True``, use the name LargeInteger.)doc";
+    *withInfinity* = ``False``, use the name Integer. For
+    *withInfinity* = ``True``, use the name LargeInteger.)doc";
 
 // Docstring regina::python::doc::__add
 static const char *__add =
@@ -495,8 +494,8 @@ with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
 if the string begins with ``0``, the base will be assumed to be 8.
 Otherwise it will be taken as base 10.
 
-If the template argument *supportInfinity* is ``True``, then any
-string beginning with "inf" (after any initial whitesapce) will be
+If the template argument *withInfinity* is ``True``, then any string
+beginning with "inf" (after any initial whitesapce) will be
 interpreted as infinity.
 
 Whitespace may be present at the beginning or the end of the given
@@ -533,8 +532,8 @@ with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
 if the string begins with ``0``, the base will be assumed to be 8.
 Otherwise it will be taken as base 10.
 
-If the template argument *supportInfinity* is ``True``, then any
-string beginning with "inf" (after any initial whitesapce) will be
+If the template argument *withInfinity* is ``True``, then any string
+beginning with "inf" (after any initial whitesapce) will be
 interpreted as infinity.
 
 Whitespace may be present at the beginning or the end of the given
@@ -1021,9 +1020,8 @@ Returns:
 static const char *global_swap =
 R"doc(Swaps the contents of the given integers.
 
-This global routine simply calls IntegerBase<supportInfinity>::swap();
-it is provided so that IntegerBase<supportInfinity> meets the C++
-Swappable requirements.
+This global routine simply calls IntegerBase<withInfinity>::swap(); it
+is provided so that IntegerBase meets the C++ Swappable requirements.
 
 Parameter ``a``:
     the first integer whose contents should be swapped.
@@ -1152,7 +1150,7 @@ Returns:
 static const char *makeInfinite =
 R"doc(Sets this integer to be infinity.
 
-If the template parameter *supportInfinity* is ``False``, this routine
+If the template parameter *withInfinity* is ``False``, this routine
 safely does nothing.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::makeLarge
@@ -1324,8 +1322,8 @@ leading whitespace or any trailing characters at all (including
 trailing whitespace), then it will be treated as an invalid encoding
 (i.e., this routine will throw an exception).
 
-This routine does recognise infinity in the case where
-*supportInfinity* is ``True``.
+This routine does recognise infinity in the case where *withInfinity*
+is ``True``.
 
 This routine is identical to calling the global template routine
 regina::tightDecoding() with this type as the template argument.
