@@ -121,7 +121,23 @@ enum Algorithm {
      * experimentation.  Due to their slow performance, they are not
      * suitable for "real" applications.
      */
-    ALG_NAIVE = 3,
+    ALG_NAIVE = 3
+};
+
+/**
+ * Represents different programming languages that Regina supports.
+ *
+ * \ingroup engine
+ */
+enum Language {
+    /**
+     * The C++ programming language.
+     */
+    LANGUAGE_CXX = 1,
+    /**
+     * The Python programming language.
+     */
+    LANGUAGE_PYTHON = 2
 };
 
 /**

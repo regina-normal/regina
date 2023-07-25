@@ -295,6 +295,15 @@ Returns:
         .export_values();
         ;
 
+    RDOC_SCOPE_SWITCH(Language)
+
+    pybind11::enum_<regina::Language>(m, "Language", rdoc_scope)
+        .value("LANGUAGE_CXX", regina::LANGUAGE_CXX, rdoc::LANGUAGE_CXX)
+        .value("LANGUAGE_PYTHON", regina::LANGUAGE_PYTHON,
+            rdoc::LANGUAGE_PYTHON)
+        .export_values();
+        ;
+
     RDOC_SCOPE_END
 
     // Components from subdirectories, which appear in order of dependency:

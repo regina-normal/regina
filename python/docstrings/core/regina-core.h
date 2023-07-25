@@ -27,6 +27,9 @@ type is used instead. For example, see the NormalSurfaces class
 constructor, which uses the specialised algorithm types NormalAlg and
 NormalAlgFlags.)doc";
 
+// Docstring regina::python::doc::Language
+static const char *Language = R"doc(Represents different programming languages that Regina supports.)doc";
+
 // Docstring regina::python::doc::maxDim
 static const char *maxDim =
 R"doc(Indicates that largest dimension of triangulation that Regina can work
@@ -82,6 +85,16 @@ R"doc(A treewidth-based algorithm. Typically this uses dynamic programming
 over a tree decomposition of some underlying graph. Such algorithms
 are often fast for triangulations or links with small treewidth, but
 may require large amounts of memory.)doc";
+
+}
+
+namespace Language_ {
+
+// Docstring regina::python::doc::Language_::LANGUAGE_CXX
+static const char *LANGUAGE_CXX = R"doc(The C++ programming language.)doc";
+
+// Docstring regina::python::doc::Language_::LANGUAGE_PYTHON
+static const char *LANGUAGE_PYTHON = R"doc(The Python programming language.)doc";
 
 }
 

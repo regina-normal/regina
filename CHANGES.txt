@@ -56,6 +56,8 @@ Version 7.4  [ (to be announced) ]
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Isomorphism<dim>:
             - New routine hash(), which uses the tight encoding.
+        Enum Language:
+            - New enumeration that describes supported programming languages.
         Class LargeInteger:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
