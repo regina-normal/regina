@@ -823,6 +823,189 @@ TEST_F(Dim3Test, pachner) {
     verifyPachnerSimplicial();
 }
 
+static void verifyZeroTwoMove(const Triangulation<3>& tri, const char* name ) {
+    SCOPED_TRACE_CSTRING(name);
+
+    Triangulation<3> oriented(tri);
+    if (oriented.isOrientable())
+        oriented.orient();
+
+    for (size_t i = 0; i < tri.countEdges(); ++i) {
+        SCOPED_TRACE_NUMERIC(i);
+
+        size_t deg = oriented.edge(i)->degree();
+        for (size_t j = 0; j <= deg; ++j) {
+            SCOPED_TRACE_NUMERIC(j);
+
+            for (size_t jj = j; jj <= deg; ++jj) {
+                SCOPED_TRACE_NUMERIC(jj);
+
+                Triangulation<3> alt(oriented);
+                bool legal = alt.zeroTwoMove(alt.edge(i), j, jj);
+
+                // Check that different versions of zeroTwoMove give
+                // isomorphic results.
+                {
+                    Triangulation<3> alt2(oriented);
+                    size_t num[2] = {j, jj};
+                    regina::Triangle<3>* t[2];
+                    int e[2];
+                    for ( int k : {0, 1} ) {
+                        if ( num[k] == deg ) {
+                            auto emb = alt2.edge(i)->back();
+                            t[k] = emb.simplex()->triangle(emb.vertices()[2]);
+                            e[k] = emb.simplex()->faceMapping<2>(
+                                emb.vertices()[2]).pre(emb.vertices()[3]);
+                        } else {
+                            auto emb = alt2.edge(i)->embedding(num[k]);
+                            t[k] = emb.simplex()->triangle(emb.vertices()[3]);
+                            e[k] = emb.simplex()->faceMapping<2>(
+                                emb.vertices()[3]).pre(emb.vertices()[2]);
+                        }
+                    }
+
+                    // Note: this alternate form of the move is legal in more
+                    // settings (i.e., legal2 may be true but legal may be
+                    // false).  The discrepancy arises when the edge is
+                    // internal: in this case the first form of the move
+                    // (edge, int, int) cannot have j == deg or jj == deg.
+                    bool legal2 = alt2.zeroTwoMove(t[0], e[0], t[1], e[1]);
+
+                    regina::Edge<3>* edge = oriented.edge(i);
+                    if (edge->isBoundary() || (j < deg && jj < deg)) {
+                        EXPECT_EQ(legal2, legal);
+                    } else {
+                        EXPECT_FALSE(legal);
+                        EXPECT_EQ(legal2, edge->isValid());
+                    }
+
+                    if (legal)
+                        EXPECT_TRUE(alt.isIsomorphicTo(alt2));
+                }
+
+                if (! legal) {
+                    // Check that the move was _not_ performed.
+                    EXPECT_EQ(alt, oriented);
+                    continue;
+                }
+
+                // The move was performed (hopefully correctly).
+
+                // Ensure that properties we are about to verify are
+                // explicitly recomputed.
+                clearProperties(alt);
+
+                EXPECT_EQ(alt.size(), tri.size() + 2);
+                EXPECT_EQ(alt.countVertices(), tri.countVertices());
+                EXPECT_EQ(alt.isValid(), tri.isValid());
+                EXPECT_EQ(alt.isOrientable(), tri.isOrientable());
+                if (tri.isOrientable())
+                    EXPECT_TRUE(alt.isOriented());
+                EXPECT_EQ(alt.isClosed(), tri.isClosed());
+                EXPECT_EQ(alt.countBoundaryComponents(),
+                    tri.countBoundaryComponents());
+                EXPECT_EQ(alt.eulerCharTri(), tri.eulerCharTri());
+                EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
+
+                if (tri.isValid()) {
+                    EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
+                    EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
+                }
+
+                // Randomly relabel the tetrahedra, but preserve orientation.
+                Isomorphism<3> iso = alt.randomiseLabelling(true);
+
+                // Test the inverse 2-0 move.
+                regina::Triangulation<3> inv(alt);
+                EXPECT_TRUE(inv.twoZeroMove(
+                    inv.tetrahedron(iso.simpImage(inv.size() - 1))->edge(
+                        iso.facetPerm(inv.size() - 1)[2],
+                        iso.facetPerm(inv.size() - 1)[3])));
+
+                EXPECT_TRUE(inv.isIsomorphicTo(tri));
+                if (tri.isOrientable())
+                    EXPECT_TRUE(inv.isOriented());
+            }
+        }
+    }
+}
+
+TEST_F(Dim3Test, zeroTwoMove) {
+    testManualCases(verifyZeroTwoMove, false);
+    runCensusAllClosed(verifyZeroTwoMove, true);
+    runCensusAllBounded(verifyZeroTwoMove, true);
+    runCensusAllIdeal(verifyZeroTwoMove, true);
+}
+
+TEST_F(Dim3Test, pinchEdge) {
+    // Start with the snapped 1-tetrahedron triangulation of the 3-sphere.
+    // Edges 0 and 2 make a Hopf link, and edge 1 is just an interval.
+    {
+        Triangulation<3> snap = Triangulation<3>::fromGluings(1,
+            {{ 0, 0, 0, {0,1} }, { 0, 2, 0, {2,3} }});
+
+        {
+            Triangulation<3> tmp(snap);
+            tmp.pinchEdge(tmp.edge(0));
+            EXPECT_TRUE(tmp.isSolidTorus());
+            EXPECT_TRUE(tmp.isOriented());
+        }
+        {
+            Triangulation<3> tmp(snap);
+            tmp.pinchEdge(tmp.edge(1));
+            EXPECT_TRUE(tmp.isSphere());
+            EXPECT_TRUE(tmp.isOriented());
+        }
+        {
+            Triangulation<3> tmp(snap);
+            tmp.pinchEdge(tmp.edge(2));
+            EXPECT_TRUE(tmp.isSolidTorus());
+            EXPECT_TRUE(tmp.isOriented());
+        }
+    }
+
+    // Move on to the layered 1-tetrahedron triangulation of the 3-sphere.
+    // Edge 0 forms a trefoil, and edge 1 is unknotted.
+    {
+        Triangulation<3> layer = Triangulation<3>::fromGluings(1,
+            {{ 0, 0, 0, {1,2,3,0} }, { 0, 2, 0, {2,3} }});
+
+        {
+            Triangulation<3> tmp(layer);
+            tmp.pinchEdge(tmp.edge(0));
+            EXPECT_TRUE(tmp.isValid());
+            EXPECT_TRUE(tmp.isIdeal());
+            EXPECT_TRUE(tmp.isOriented());
+            EXPECT_EQ(tmp.homology(), AbelianGroup{1});
+            EXPECT_FALSE(tmp.isSolidTorus());
+            ASSERT_EQ(tmp.countBoundaryComponents(), 1);
+            EXPECT_TRUE(tmp.boundaryComponent(0)->isOrientable());
+            EXPECT_EQ(tmp.boundaryComponent(0)->eulerChar(), 0);
+        }
+        {
+            Triangulation<3> tmp(layer);
+            tmp.pinchEdge(tmp.edge(1));
+            EXPECT_TRUE(tmp.isSolidTorus());
+            EXPECT_TRUE(tmp.isOriented());
+        }
+    }
+
+    // Now try a 2-tetrahedron ball, where we pinch the internal edge between
+    // the two tetrahedra and then truncate the resulting invalid vertex.
+    // The result should be a solid torus.
+    {
+        Triangulation<3> ball = Triangulation<3>::fromGluings(2,
+            {{ 0, 0, 1, {2,3} }, { 0, 1, 1, {2,3} }});
+
+        // The internal edge joins vertices 2-3.
+        Triangulation<3> tmp(ball);
+        tmp.pinchEdge(tmp.tetrahedron(0)->edge(5));
+        EXPECT_TRUE(tmp.isOriented());
+        tmp.idealToFinite(); // truncate invalid vertex
+        EXPECT_TRUE(tmp.isSolidTorus());
+    }
+}
+
 TEST_F(Dim3Test, barycentricSubdivision) {
     testManualCases(TriangulationTest<3>::verifyBarycentricSubdivision);
 }
@@ -1060,189 +1243,6 @@ TEST_F(Dim3Test, dualToPrimal) {
 
 TEST_F(Dim3Test, copyMove) {
     testManualCases(TriangulationTest<3>::verifyCopyMove);
-}
-
-static void verifyZeroTwoMove(const Triangulation<3>& tri, const char* name ) {
-    SCOPED_TRACE_CSTRING(name);
-
-    Triangulation<3> oriented(tri);
-    if (oriented.isOrientable())
-        oriented.orient();
-
-    for (size_t i = 0; i < tri.countEdges(); ++i) {
-        SCOPED_TRACE_NUMERIC(i);
-
-        size_t deg = oriented.edge(i)->degree();
-        for (size_t j = 0; j <= deg; ++j) {
-            SCOPED_TRACE_NUMERIC(j);
-
-            for (size_t jj = j; jj <= deg; ++jj) {
-                SCOPED_TRACE_NUMERIC(jj);
-
-                Triangulation<3> alt(oriented);
-                bool legal = alt.zeroTwoMove(alt.edge(i), j, jj);
-
-                // Check that different versions of zeroTwoMove give
-                // isomorphic results.
-                {
-                    Triangulation<3> alt2(oriented);
-                    size_t num[2] = {j, jj};
-                    regina::Triangle<3>* t[2];
-                    int e[2];
-                    for ( int k : {0, 1} ) {
-                        if ( num[k] == deg ) {
-                            auto emb = alt2.edge(i)->back();
-                            t[k] = emb.simplex()->triangle(emb.vertices()[2]);
-                            e[k] = emb.simplex()->faceMapping<2>(
-                                emb.vertices()[2]).pre(emb.vertices()[3]);
-                        } else {
-                            auto emb = alt2.edge(i)->embedding(num[k]);
-                            t[k] = emb.simplex()->triangle(emb.vertices()[3]);
-                            e[k] = emb.simplex()->faceMapping<2>(
-                                emb.vertices()[3]).pre(emb.vertices()[2]);
-                        }
-                    }
-
-                    // Note: this alternate form of the move is legal in more
-                    // settings (i.e., legal2 may be true but legal may be
-                    // false).  The discrepancy arises when the edge is
-                    // internal: in this case the first form of the move
-                    // (edge, int, int) cannot have j == deg or jj == deg.
-                    bool legal2 = alt2.zeroTwoMove(t[0], e[0], t[1], e[1]);
-
-                    regina::Edge<3>* edge = oriented.edge(i);
-                    if (edge->isBoundary() || (j < deg && jj < deg)) {
-                        EXPECT_EQ(legal2, legal);
-                    } else {
-                        EXPECT_FALSE(legal);
-                        EXPECT_EQ(legal2, edge->isValid());
-                    }
-
-                    if (legal)
-                        EXPECT_TRUE(alt.isIsomorphicTo(alt2));
-                }
-
-                if (! legal) {
-                    // Check that the move was _not_ performed.
-                    EXPECT_EQ(alt, oriented);
-                    continue;
-                }
-
-                // The move was performed (hopefully correctly).
-
-                // Ensure that properties we are about to verify are
-                // explicitly recomputed.
-                clearProperties(alt);
-
-                EXPECT_EQ(alt.size(), tri.size() + 2);
-                EXPECT_EQ(alt.countVertices(), tri.countVertices());
-                EXPECT_EQ(alt.isValid(), tri.isValid());
-                EXPECT_EQ(alt.isOrientable(), tri.isOrientable());
-                if (tri.isOrientable())
-                    EXPECT_TRUE(alt.isOriented());
-                EXPECT_EQ(alt.isClosed(), tri.isClosed());
-                EXPECT_EQ(alt.countBoundaryComponents(),
-                    tri.countBoundaryComponents());
-                EXPECT_EQ(alt.eulerCharTri(), tri.eulerCharTri());
-                EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
-
-                if (tri.isValid()) {
-                    EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
-                    EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
-                }
-
-                // Randomly relabel the tetrahedra, but preserve orientation.
-                Isomorphism<3> iso = alt.randomiseLabelling(true);
-
-                // Test the inverse 2-0 move.
-                regina::Triangulation<3> inv(alt);
-                EXPECT_TRUE(inv.twoZeroMove(
-                    inv.tetrahedron(iso.simpImage(inv.size() - 1))->edge(
-                        iso.facetPerm(inv.size() - 1)[2],
-                        iso.facetPerm(inv.size() - 1)[3])));
-
-                EXPECT_TRUE(inv.isIsomorphicTo(tri));
-                if (tri.isOrientable())
-                    EXPECT_TRUE(inv.isOriented());
-            }
-        }
-    }
-}
-
-TEST_F(Dim3Test, zeroTwoMove) {
-    testManualCases(verifyZeroTwoMove, false);
-    runCensusAllClosed(verifyZeroTwoMove, true);
-    runCensusAllBounded(verifyZeroTwoMove, true);
-    runCensusAllIdeal(verifyZeroTwoMove, true);
-}
-
-TEST_F(Dim3Test, pinchEdge) {
-    // Start with the snapped 1-tetrahedron triangulation of the 3-sphere.
-    // Edges 0 and 2 make a Hopf link, and edge 1 is just an interval.
-    {
-        Triangulation<3> snap = Triangulation<3>::fromGluings(1,
-            {{ 0, 0, 0, {0,1} }, { 0, 2, 0, {2,3} }});
-
-        {
-            Triangulation<3> tmp(snap);
-            tmp.pinchEdge(tmp.edge(0));
-            EXPECT_TRUE(tmp.isSolidTorus());
-            EXPECT_TRUE(tmp.isOriented());
-        }
-        {
-            Triangulation<3> tmp(snap);
-            tmp.pinchEdge(tmp.edge(1));
-            EXPECT_TRUE(tmp.isSphere());
-            EXPECT_TRUE(tmp.isOriented());
-        }
-        {
-            Triangulation<3> tmp(snap);
-            tmp.pinchEdge(tmp.edge(2));
-            EXPECT_TRUE(tmp.isSolidTorus());
-            EXPECT_TRUE(tmp.isOriented());
-        }
-    }
-
-    // Move on to the layered 1-tetrahedron triangulation of the 3-sphere.
-    // Edge 0 forms a trefoil, and edge 1 is unknotted.
-    {
-        Triangulation<3> layer = Triangulation<3>::fromGluings(1,
-            {{ 0, 0, 0, {1,2,3,0} }, { 0, 2, 0, {2,3} }});
-
-        {
-            Triangulation<3> tmp(layer);
-            tmp.pinchEdge(tmp.edge(0));
-            EXPECT_TRUE(tmp.isValid());
-            EXPECT_TRUE(tmp.isIdeal());
-            EXPECT_TRUE(tmp.isOriented());
-            EXPECT_EQ(tmp.homology(), AbelianGroup{1});
-            EXPECT_FALSE(tmp.isSolidTorus());
-            ASSERT_EQ(tmp.countBoundaryComponents(), 1);
-            EXPECT_TRUE(tmp.boundaryComponent(0)->isOrientable());
-            EXPECT_EQ(tmp.boundaryComponent(0)->eulerChar(), 0);
-        }
-        {
-            Triangulation<3> tmp(layer);
-            tmp.pinchEdge(tmp.edge(1));
-            EXPECT_TRUE(tmp.isSolidTorus());
-            EXPECT_TRUE(tmp.isOriented());
-        }
-    }
-
-    // Now try a 2-tetrahedron ball, where we pinch the internal edge between
-    // the two tetrahedra and then truncate the resulting invalid vertex.
-    // The result should be a solid torus.
-    {
-        Triangulation<3> ball = Triangulation<3>::fromGluings(2,
-            {{ 0, 0, 1, {2,3} }, { 0, 1, 1, {2,3} }});
-
-        // The internal edge joins vertices 2-3.
-        Triangulation<3> tmp(ball);
-        tmp.pinchEdge(tmp.tetrahedron(0)->edge(5));
-        EXPECT_TRUE(tmp.isOriented());
-        tmp.idealToFinite(); // truncate invalid vertex
-        EXPECT_TRUE(tmp.isSolidTorus());
-    }
 }
 
 static void verifySimplificationName(const TriangulationTest<3>::TestCase& test,
