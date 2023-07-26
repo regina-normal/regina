@@ -5,7 +5,6 @@ SET ( FILES
   homologicaldata.cpp
   isomorphism3.cpp
   links3.cpp
-  moves3.cpp
   triangulation3.cpp
   )
 
