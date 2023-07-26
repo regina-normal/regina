@@ -648,6 +648,68 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 }
 
 template <int dim>
+std::string TriangulationBase<dim>::dumpConstruction(Language language) const {
+    std::ostringstream ans;
+
+    switch (language) {
+        case LANGUAGE_CXX:
+            ans << "Triangulation<" << dim << "> tri = Triangulation<" << dim
+                << ">::fromGluings(" << size() << ", {\n";
+            break;
+        case LANGUAGE_PYTHON:
+            ans << "tri = Triangulation" << dim << ".fromGluings("
+                << size() << ", [\n";
+            break;
+    }
+
+    size_t wrote = 0;
+    for (size_t i = 0; i < size(); ++i) {
+        Simplex<dim>* s = simplices_[i];
+        for (int j = 0; j <= dim; ++j) {
+            Simplex<dim>* adj = s->adjacentSimplex(j);
+            if (adj) {
+                Perm<dim + 1> g = s->adjacentGluing(j);
+                if (adj->index() > i || (adj->index() == i && g[j] > j)) {
+                    if (wrote == 0)
+                        ans << "    ";
+                    else if (wrote % 2 == 0)
+                        ans << ",\n    ";
+                    else
+                        ans << ", ";
+
+                    switch (language) {
+                        case LANGUAGE_CXX:
+                            ans << "{ " << i << ", " << j << ", "
+                                << adj->index() << ", {";
+                            break;
+                        case LANGUAGE_PYTHON:
+                            ans << "[ " << i << ", " << j << ", "
+                                << adj->index() << ", Perm" << (dim+1) << "([";
+                            break;
+                    }
+                    for (int k = 0; k <= dim; ++k) {
+                        if (k > 0)
+                            ans << ',';
+                        ans << g[k];
+                    }
+                    switch (language) {
+                        case LANGUAGE_CXX:    ans << "} }";  break;
+                        case LANGUAGE_PYTHON: ans << "]) ]"; break;
+                    }
+
+                    ++wrote;
+                }
+            }
+        }
+    }
+    switch (language) {
+        case LANGUAGE_CXX:    ans << "});\n"; break;
+        case LANGUAGE_PYTHON: ans << "])\n";  break;
+    }
+    return ans.str();
+}
+
+template <int dim>
 void TriangulationBase<dim>::writeDot(std::ostream& out, bool labels) const {
     // For a full visual list of named colours, see:
     // https://graphviz.org/doc/info/colors.html

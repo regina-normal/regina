@@ -136,6 +136,8 @@ Version 7.4  [ (to be announced) ]
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
+            - Routine dumpConstruction() can now produce both C++ and Python
+              code via an optional language argument.
             - The two-argument copy constructor is now a three-argument
               copy constructor, giving an additional boolean option for
               whether to clone simplex/facet locks.

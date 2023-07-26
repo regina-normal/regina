@@ -2744,22 +2744,25 @@ class TriangulationBase :
         void tightEncode(std::ostream& out) const;
 
         /**
-         * Returns C++ code that can be used to reconstruct this triangulation.
+         * Returns C++ or Python source code that can be used to reconstruct
+         * this triangulation.
          *
          * This code will call Triangulation<dim>::fromGluings(), passing
-         * a hard-coded C++ initialiser list.
+         * a hard-coded C++ initialiser list or Python list (depending on the
+         * requested language).
          *
          * The main purpose of this routine is to generate this hard-coded
-         * initialiser list, which can be tedious and error-prone to write
-         * by hand.
+         * list, which can be tedious and error-prone to write by hand.
          *
          * Note that the number of lines of code produced grows linearly
          * with the number of simplices.  If this triangulation is very
          * large, the returned string will be very large as well.
          *
-         * \return the C++ code that was generated.
+         * \param language the language in which the source code should be
+         * written.
+         * \return the source code that was generated.
          */
-        std::string dumpConstruction() const;
+        std::string dumpConstruction(Language language = LANGUAGE_CXX) const;
 
         /**
          * Writes the dual graph of this triangulation in the Graphviz DOT
@@ -4737,46 +4740,6 @@ inline Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
         std::initializer_list<std::tuple<size_t, int, size_t, Perm<dim+1>>>
         gluings) {
     return fromGluings(size, gluings.begin(), gluings.end());
-}
-
-template <int dim>
-std::string TriangulationBase<dim>::dumpConstruction() const {
-    std::ostringstream ans;
-
-    ans << "Triangulation<" << dim << "> tri = Triangulation<" << dim
-        << ">::fromGluings(" << size() << ", {\n";
-
-    size_t wrote = 0;
-    for (size_t i = 0; i < size(); ++i) {
-        Simplex<dim>* s = simplices_[i];
-        for (int j = 0; j <= dim; ++j) {
-            Simplex<dim>* adj = s->adjacentSimplex(j);
-            if (adj) {
-                Perm<dim + 1> g = s->adjacentGluing(j);
-                if (adj->index() > i || (adj->index() == i && g[j] > j)) {
-                    if (wrote == 0)
-                        ans << "    ";
-                    else if (wrote % 2 == 0)
-                        ans << ",\n    ";
-                    else
-                        ans << ", ";
-
-                    ans << "{ " << i << ", " << j << ", " << adj->index()
-                        << ", {";
-                    for (int k = 0; k <= dim; ++k) {
-                        if (k > 0)
-                            ans << ',';
-                        ans << g[k];
-                    }
-                    ans << "} }";
-
-                    ++wrote;
-                }
-            }
-        }
-    }
-    ans << "});\n";
-    return ans.str();
 }
 
 template <int dim>

@@ -109,6 +109,7 @@ template void TriangulationBase<9>::reorderBFS(bool);
 template void TriangulationBase<9>::makeDoubleCover();
 template bool TriangulationBase<9>::finiteToIdeal();
 
+template std::string TriangulationBase<9>::dumpConstruction(Language) const;
 template void TriangulationBase<9>::writeDot(std::ostream&, bool) const;
 
 } // namespace regina::detail

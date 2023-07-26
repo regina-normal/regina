@@ -680,6 +680,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def_static("isoSigComponentSize",
             &Triangulation<3>::isoSigComponentSize, rbase::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<3>::dumpConstruction,
+            pybind11::arg("language") = regina::LANGUAGE_CXX,
             rbase::dumpConstruction)
         .def("dot", &Triangulation<3>::dot,
             pybind11::arg("labels") = false, rbase::dot)

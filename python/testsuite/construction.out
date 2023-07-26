@@ -38,3 +38,73 @@ Link link = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
 link = Link.fromData([ +1, +1 ], [[ 1, -2 ], [ -1, 2 ]])
 
 2-crossing, 2-component link: ++ ( ^0 _1 ) ( _0 ^1 )
+----------
+Empty 3-D triangulation
+
+Triangulation<3> tri = Triangulation<3>::fromGluings(0, {
+});
+
+tri = Triangulation3.fromGluings(0, [
+])
+
+Empty 3-D triangulation
+----------
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
+
+Triangulation<3> tri = Triangulation<3>::fromGluings(1, {
+});
+
+tri = Triangulation3.fromGluings(1, [
+])
+
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
+----------
+Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
+
+Triangulation<3> tri = Triangulation<3>::fromGluings(5, {
+    { 0, 0, 1, {0,3,2,1} }, { 0, 1, 2, {3,0,1,2} },
+    { 0, 2, 3, {3,2,0,1} }, { 0, 3, 4, {3,1,2,0} },
+    { 1, 1, 2, {2,1,0,3} }, { 1, 2, 4, {2,3,1,0} },
+    { 1, 3, 3, {2,0,3,1} }, { 2, 2, 3, {1,2,3,0} },
+    { 2, 3, 4, {3,0,1,2} }, { 3, 2, 4, {1,2,3,0} }});
+
+tri = Triangulation3.fromGluings(5, [
+    [ 0, 0, 1, Perm4([0,3,2,1]) ], [ 0, 1, 2, Perm4([3,0,1,2]) ],
+    [ 0, 2, 3, Perm4([3,2,0,1]) ], [ 0, 3, 4, Perm4([3,1,2,0]) ],
+    [ 1, 1, 2, Perm4([2,1,0,3]) ], [ 1, 2, 4, Perm4([2,3,1,0]) ],
+    [ 1, 3, 3, Perm4([2,0,3,1]) ], [ 2, 2, 3, Perm4([1,2,3,0]) ],
+    [ 2, 3, 4, Perm4([3,0,1,2]) ], [ 3, 2, 4, Perm4([1,2,3,0]) ]])
+
+Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
+----------
+Ideal orientable 4-D triangulation, f = ( 1 1 4 5 2 )
+
+Triangulation<4> tri = Triangulation<4>::fromGluings(2, {
+    { 0, 0, 0, {3,0,1,2,4} }, { 0, 1, 1, {0,3,1,2,4} },
+    { 0, 2, 1, {1,2,0,3,4} }, { 0, 4, 1, {0,1,3,4,2} },
+    { 1, 1, 1, {0,4,1,2,3} }});
+
+tri = Triangulation4.fromGluings(2, [
+    [ 0, 0, 0, Perm5([3,0,1,2,4]) ], [ 0, 1, 1, Perm5([0,3,1,2,4]) ],
+    [ 0, 2, 1, Perm5([1,2,0,3,4]) ], [ 0, 4, 1, Perm5([0,1,3,4,2]) ],
+    [ 1, 1, 1, Perm5([0,4,1,2,3]) ]])
+
+Ideal orientable 4-D triangulation, f = ( 1 1 4 5 2 )
+----------
+Possibly closed orientable 8-D triangulation, f = ( 9 36 84 126 126 84 36 9 2 )
+
+Triangulation<8> tri = Triangulation<8>::fromGluings(2, {
+    { 0, 0, 1, {0,1,2,3,4,5,6,7,8} }, { 0, 1, 1, {0,1,2,3,4,5,6,7,8} },
+    { 0, 2, 1, {0,1,2,3,4,5,6,7,8} }, { 0, 3, 1, {0,1,2,3,4,5,6,7,8} },
+    { 0, 4, 1, {0,1,2,3,4,5,6,7,8} }, { 0, 5, 1, {0,1,2,3,4,5,6,7,8} },
+    { 0, 6, 1, {0,1,2,3,4,5,6,7,8} }, { 0, 7, 1, {0,1,2,3,4,5,6,7,8} },
+    { 0, 8, 1, {0,1,2,3,4,5,6,7,8} }});
+
+tri = Triangulation8.fromGluings(2, [
+    [ 0, 0, 1, Perm9([0,1,2,3,4,5,6,7,8]) ], [ 0, 1, 1, Perm9([0,1,2,3,4,5,6,7,8]) ],
+    [ 0, 2, 1, Perm9([0,1,2,3,4,5,6,7,8]) ], [ 0, 3, 1, Perm9([0,1,2,3,4,5,6,7,8]) ],
+    [ 0, 4, 1, Perm9([0,1,2,3,4,5,6,7,8]) ], [ 0, 5, 1, Perm9([0,1,2,3,4,5,6,7,8]) ],
+    [ 0, 6, 1, Perm9([0,1,2,3,4,5,6,7,8]) ], [ 0, 7, 1, Perm9([0,1,2,3,4,5,6,7,8]) ],
+    [ 0, 8, 1, Perm9([0,1,2,3,4,5,6,7,8]) ]])
+
+Possibly closed orientable 8-D triangulation, f = ( 9 36 84 126 126 84 36 9 2 )

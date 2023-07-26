@@ -278,6 +278,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::isoSigComponentSize,
             rbase::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction,
+            pybind11::arg("language") = regina::LANGUAGE_CXX,
             rbase::dumpConstruction)
         .def("dot", &Triangulation<dim>::dot,
             pybind11::arg("labels") = false, rbase::dot)
