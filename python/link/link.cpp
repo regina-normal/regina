@@ -177,6 +177,9 @@ void addLink(pybind11::module_& m) {
             }
             return Link::fromPD(tuples.begin(), tuples.end());
         }, pybind11::arg("tuples"), rdoc::fromPD_2)
+        // This vector-of-vectors variant of fromData() _must_ come before the
+        // simpler vector-of-ints variant, so that the ambiguity of [] is
+        // resolved the correct way (as an empty link, not a 0-crossing unknot).
         .def_static("fromData", [](const std::vector<int>& s,
                 const std::vector<std::vector<int>>& c) {
             return Link::fromData(s.begin(), s.end(), c.begin(), c.end());

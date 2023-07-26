@@ -3581,7 +3581,8 @@ class Link :
          * passed as a Python list of lists of integers (not an iterator pair).
          * In the case of a knot (which has only one component), you are
          * welcome to replace the list of lists `[[...]]` with a
-         * single list `[...]`.
+         * single list `[...]`; however, be aware that a single empty list `[ ]`
+         * will be interpreted as an empty link (not a zero-crossing unknot).
          *
          * \param beginSigns the beginning of the list of crossing signs.
          * \param endSigns a past-the-end iterator indicating the end of
