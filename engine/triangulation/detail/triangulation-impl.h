@@ -651,6 +651,9 @@ template <int dim>
 std::string TriangulationBase<dim>::dumpConstruction(Language language) const {
     std::ostringstream ans;
 
+    // Does Perm<dim+1> have a constructor that takes (dim+1) integers?
+    static constexpr bool hasSimplePermConstructor = (dim <= 6);
+
     switch (language) {
         case LANGUAGE_CXX:
             ans << "Triangulation<" << dim << "> tri = Triangulation<" << dim
@@ -684,7 +687,9 @@ std::string TriangulationBase<dim>::dumpConstruction(Language language) const {
                             break;
                         case LANGUAGE_PYTHON:
                             ans << "[ " << i << ", " << j << ", "
-                                << adj->index() << ", Perm" << (dim+1) << "([";
+                                << adj->index() << ", Perm" << (dim+1) << '(';
+                            if constexpr (! hasSimplePermConstructor)
+                                ans << '[';
                             break;
                     }
                     for (int k = 0; k <= dim; ++k) {
@@ -693,8 +698,14 @@ std::string TriangulationBase<dim>::dumpConstruction(Language language) const {
                         ans << g[k];
                     }
                     switch (language) {
-                        case LANGUAGE_CXX:    ans << "} }";  break;
-                        case LANGUAGE_PYTHON: ans << "]) ]"; break;
+                        case LANGUAGE_CXX:
+                            ans << "} }";
+                            break;
+                        case LANGUAGE_PYTHON:
+                            if constexpr (! hasSimplePermConstructor)
+                                ans << ']';
+                            ans << ") ]";
+                            break;
                     }
 
                     ++wrote;
