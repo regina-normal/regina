@@ -2762,7 +2762,21 @@ class TriangulationBase :
          * written.
          * \return the source code that was generated.
          */
-        std::string dumpConstruction(Language language = LANGUAGE_CXX) const;
+        std::string source(Language language = LANGUAGE_CURRENT) const;
+
+        /**
+         * Deprecated routine that returns C++ code to reconstruct this
+         * triangulation.
+         *
+         * \deprecated This is equivalent to calling `source(LANGUAGE_CXX)`,
+         * for compatibility with older versions of Regina.  In particular,
+         * it is _not_ equivalent to calling `source()` (which defaults to the
+         * programming language currently being used).  See source() for
+         * further details.
+         *
+         * \return the C++ code that was generated.
+         */
+        [[deprecated]] std::string dumpConstruction() const;
 
         /**
          * Writes the dual graph of this triangulation in the Graphviz DOT
@@ -2864,8 +2878,8 @@ class TriangulationBase :
          * \endcode
          *
          * \note If you have an existing triangulation that you would like to
-         * hard-code in this way, you can call dumpConstruction() to generate
-         * the corresponding C++ source code.
+         * hard-code in this way, you can call source() to generate
+         * the corresponding source code.
          *
          * \exception InvalidArgument The given list of gluings does not
          * correctly describe a triangulation with \a size top-dimensional
@@ -4615,6 +4629,11 @@ void TriangulationBase<dim>::insertTriangulation(
                 me->adj_[f] = nullptr;
         }
     }
+}
+
+template <int dim>
+std::string TriangulationBase<dim>::dumpConstruction() const {
+    return source(LANGUAGE_CXX);
 }
 
 template <int dim>

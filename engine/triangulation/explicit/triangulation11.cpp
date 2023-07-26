@@ -121,7 +121,7 @@ template void TriangulationBase<11>::reorderBFS(bool);
 template void TriangulationBase<11>::makeDoubleCover();
 template bool TriangulationBase<11>::finiteToIdeal();
 
-template std::string TriangulationBase<11>::dumpConstruction(Language) const;
+template std::string TriangulationBase<11>::source(Language) const;
 template void TriangulationBase<11>::writeDot(std::ostream&, bool) const;
 
 } // namespace regina::detail

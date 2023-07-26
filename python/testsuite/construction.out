@@ -49,6 +49,16 @@ tri = Triangulation3.fromGluings(0, [
 
 Empty 3-D triangulation
 ----------
+Bounded orientable 2-D triangulation, f = ( 2 4 2 )
+
+Triangulation<2> tri = Triangulation<2>::fromGluings(2, {
+    { 0, 0, 1, {2,0,1} }, { 0, 2, 1, {1,2,0} }});
+
+tri = Triangulation2.fromGluings(2, [
+    [ 0, 0, 1, Perm3(2,0,1) ], [ 0, 2, 1, Perm3(1,2,0) ]])
+
+Bounded orientable 2-D triangulation, f = ( 2 4 2 )
+----------
 Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
 
 Triangulation<3> tri = Triangulation<3>::fromGluings(1, {

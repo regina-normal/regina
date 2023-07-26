@@ -648,7 +648,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 }
 
 template <int dim>
-std::string TriangulationBase<dim>::dumpConstruction(Language language) const {
+std::string TriangulationBase<dim>::source(Language language) const {
     std::ostringstream ans;
 
     // Does Perm<dim+1> have a constructor that takes (dim+1) integers?

@@ -137,7 +137,20 @@ enum Language {
     /**
      * The Python programming language.
      */
-    LANGUAGE_PYTHON = 2
+    LANGUAGE_PYTHON = 2,
+    /**
+     * The programming language currently being used.
+     *
+     * When writing C++ code, this is equivalent to LANGUAGE_CXX.
+     * When using the Python bindings, this is equivalent to LANGUAGE_PYTHON.
+     *
+     * \warning For developers who are _writing_ the Python bindings, remember
+     * that your binding code (which is written in C++) will treat this as
+     * LANGUAGE_CXX, whereas your Python users will expect LANGUAGE_PYTHON.
+     * See the code for binding for Link::source() as an example of where this
+     * issue arises and how it is resolved.
+     */
+    LANGUAGE_CURRENT = LANGUAGE_CXX
 };
 
 /**

@@ -692,18 +692,15 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::dumpConstruction
 constexpr const char *dumpConstruction =
-R"doc(Returns C++ code that can be used to reconstruct this triangulation.
+R"doc(Deprecated routine that returns C++ code to reconstruct this
+triangulation.
 
-This code will call Triangulation<dim>::fromGluings(), passing a hard-
-coded C++ initialiser list.
-
-The main purpose of this routine is to generate this hard-coded
-initialiser list, which can be tedious and error-prone to write by
-hand.
-
-Note that the number of lines of code produced grows linearly with the
-number of simplices. If this triangulation is very large, the returned
-string will be very large as well.
+.. deprecated::
+    This is equivalent to calling ``source(LANGUAGE_CXX)``, for
+    compatibility with older versions of Regina. In particular, it is
+    _not_ equivalent to calling ``source()`` (which defaults to the
+    programming language currently being used). See source() for
+    further details.
 
 Returns:
     the C++ code that was generated.)doc";
@@ -2286,6 +2283,28 @@ R"doc(Returns the number of top-dimensional simplices in the triangulation.
 
 Returns:
     The number of top-dimensional simplices.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::source
+constexpr const char *source =
+R"doc(Returns C++ or Python source code that can be used to reconstruct this
+triangulation.
+
+This code will call Triangulation<dim>::fromGluings(), passing a hard-
+coded C++ initialiser list or Python list (depending on the requested
+language).
+
+The main purpose of this routine is to generate this hard-coded list,
+which can be tedious and error-prone to write by hand.
+
+Note that the number of lines of code produced grows linearly with the
+number of simplices. If this triangulation is very large, the returned
+string will be very large as well.
+
+Parameter ``language``:
+    the language in which the source code should be written.
+
+Returns:
+    the source code that was generated.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::subdivide
 constexpr const char *subdivide =

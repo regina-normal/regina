@@ -283,9 +283,17 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("useReflection") = true,
             pybind11::arg("useReversal") = true,
             rdoc::knotSig)
-        .def("dumpConstruction", &Link::dumpConstruction,
-            pybind11::arg("language") = regina::LANGUAGE_CXX,
-            rdoc::dumpConstruction)
+        .def("source", &Link::source,
+            // The default should be LANGUAGE_CURRENT, but in C++ that evaluates
+            // to LANGUAGE_CXX.  We need it to evaluate to LANGUAGE_PYTHON
+            // (i.e., the Python implementation of LANGUAGE_CURRENT), and so we
+            // explicitly use that as our default instead.
+            pybind11::arg("language") = regina::LANGUAGE_PYTHON,
+            rdoc::source)
+        .def("dumpConstruction", [](const Link& link) {
+            // Deprecated, so reimplement this ourselves.
+            return link.source(regina::LANGUAGE_CXX);
+        }, rdoc::dumpConstruction)
         .def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
             pybind11::arg(),
             pybind11::arg("check") = true,

@@ -437,9 +437,17 @@ void addTriangulation4(pybind11::module_& m) {
         .def_static("fromSig", &Triangulation<4>::fromSig, rbase::fromSig)
         .def_static("isoSigComponentSize",
             &Triangulation<4>::isoSigComponentSize, rbase::isoSigComponentSize)
-        .def("dumpConstruction", &Triangulation<4>::dumpConstruction,
-            pybind11::arg("language") = regina::LANGUAGE_CXX,
-            rbase::dumpConstruction)
+        .def("source", &Triangulation<4>::source,
+            // The default should be LANGUAGE_CURRENT, but in C++ that evaluates
+            // to LANGUAGE_CXX.  We need it to evaluate to LANGUAGE_PYTHON
+            // (i.e., the Python implementation of LANGUAGE_CURRENT), and so we
+            // explicitly use that as our default instead.
+            pybind11::arg("language") = regina::LANGUAGE_PYTHON,
+            rbase::source)
+        .def("dumpConstruction", [](const Triangulation<4>& tri) {
+            // Deprecated, so reimplement this ourselves.
+            return tri.source(regina::LANGUAGE_CXX);
+        }, rbase::dumpConstruction)
         .def("dot", &Triangulation<4>::dot,
             pybind11::arg("labels") = false, rbase::dot)
         .def_static("fromGluings", [](size_t size, const std::vector<

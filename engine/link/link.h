@@ -3349,7 +3349,20 @@ class Link :
          * written.
          * \return the source code that was generated.
          */
-        std::string dumpConstruction(Language language = LANGUAGE_CXX) const;
+        std::string source(Language language = LANGUAGE_CURRENT) const;
+
+        /**
+         * Deprecated routine that returns C++ code to reconstruct this link.
+         *
+         * \deprecated This is equivalent to calling `source(LANGUAGE_CXX)`,
+         * for compatibility with older versions of Regina.  In particular,
+         * it is _not_ equivalent to calling `source()` (which defaults to the
+         * programming language currently being used).  See source() for
+         * further details.
+         *
+         * \return the C++ code that was generated.
+         */
+        [[deprecated]] std::string dumpConstruction() const;
 
         /**
          * Constructs the _signature_ for this knot diagram.
@@ -3501,8 +3514,8 @@ class Link :
          * allowed, and it is currently up to the user to enforce this.
          *
          * \note If you have an existing link that you would like to
-         * hard-code, the routine dumpConstruction() will output C++ code
-         * that can reconstruct the link by calling this routine.
+         * hard-code, the routine source() will output source code that
+         * reconstructs the link by calling this routine.
          *
          * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
@@ -5043,6 +5056,10 @@ inline void Link::join(const StrandRef& s, const StrandRef& t) {
 
 inline Link Link::fromSig(const std::string& sig) {
     return Link::fromKnotSig(sig);
+}
+
+inline std::string Link::dumpConstruction() const {
+    return source(LANGUAGE_CXX);
 }
 
 inline void swap(Link& lhs, Link& rhs) {

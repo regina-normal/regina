@@ -37,9 +37,10 @@ def testDump(obj):
 	print()
 	
 	# For C++, just print the construction.
-	print(obj.dumpConstruction())
+	print(obj.source(LANGUAGE_CXX))
+	
 	# For Python, print it _and_ test that it works.
-	code = obj.dumpConstruction(LANGUAGE_PYTHON)
+	code = obj.source()
 	print(code)
 	exec(code, globals(), locals())
 	if obj.__class__ == regina.Link:
@@ -54,6 +55,7 @@ testDump(ExampleLink.trefoil())
 testDump(ExampleLink.hopf())
 
 testDump(Triangulation3())
+testDump(Example2.annulus())
 testDump(Example3.ball())
 testDump(Example3.poincare())
 testDump(Example4.cappellShaneson())

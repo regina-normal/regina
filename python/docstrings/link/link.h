@@ -810,14 +810,14 @@ Returns:
 
 // Docstring regina::python::doc::Link_::dumpConstruction
 static const char *dumpConstruction =
-R"doc(Returns C++ code that can be used to reconstruct this link.
+R"doc(Deprecated routine that returns C++ code to reconstruct this link.
 
-This code will call Link::fromData(), passing a series of hard-coded
-C++ initialiser lists.
-
-The main purpose of this routine is to generate these hard-coded
-initialiser lists, which can be tedious and error-prone to write by
-hand.
+.. deprecated::
+    This is equivalent to calling ``source(LANGUAGE_CXX)``, for
+    compatibility with older versions of Regina. In particular, it is
+    _not_ equivalent to calling ``source()`` (which defaults to the
+    programming language currently being used). See source() for
+    further details.
 
 Returns:
     the C++ code that was generated.)doc";
@@ -1023,7 +1023,8 @@ Python:
     as a Python list of lists of integers (not an iterator pair). In
     the case of a knot (which has only one component), you are welcome
     to replace the list of lists ``[[...]]`` with a single list
-    ``[...]``.
+    ``[...]``; however, be aware that a single empty list ``[ ]`` will
+    be interpreted as an empty link (not a zero-crossing unknot).
 
 Parameter ``beginSigns``:
     the beginning of the list of crossing signs.
@@ -3472,6 +3473,24 @@ contain additional zero-crossing unknot components).
 
 Returns:
     the number of crossings.)doc";
+
+// Docstring regina::python::doc::Link_::source
+static const char *source =
+R"doc(Returns C++ or Python source code that can be used to reconstruct this
+link.
+
+This code will call Link::fromData(), passing a series of hard-coded
+C++ initialiser lists or Python lists (depending on the requested
+language).
+
+The main purpose of this routine is to generate these hard-coded
+lists, which can be tedious and error-prone to write by hand.
+
+Parameter ``language``:
+    the language in which the source code should be written.
+
+Returns:
+    the source code that was generated.)doc";
 
 // Docstring regina::python::doc::Link_::strand
 static const char *strand =

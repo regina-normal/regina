@@ -1160,7 +1160,7 @@ Link Link::tightDecode(std::istream& input) {
     return ans;
 }
 
-std::string Link::dumpConstruction(Language language) const {
+std::string Link::source(Language language) const {
     std::ostringstream out;
 
     char left, right;

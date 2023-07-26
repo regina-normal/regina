@@ -73,10 +73,11 @@ Version 7.4  [ (to be announced) ]
             - Optimised so that computed topological properties (e.g., Jones
               and HOMFLY-PT polynomials) are preserved through operations that
               do not change the topology (e.g., Reidemeister moves).
-            - Routine dumpConstruction() can now produce both C++ and Python
-              code via an optional language argument.  Also, fixed a problem
-              where the C++ initialiser lists were empty (instead of containing
-              a single 0) for zero-crossing components.
+            - Renamed dumpConstruction() to source(), and extended it to produce
+              either C++ and Python code via an optional language argument.
+              The old C++-only dumpConstruction() is kept but deprecated.
+              Also fixed a problem where the C++ initialiser lists were empty
+              (instead of containing a single 0) for zero-crossing components.
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
@@ -136,8 +137,9 @@ Version 7.4  [ (to be announced) ]
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
-            - Routine dumpConstruction() can now produce both C++ and Python
-              code via an optional language argument.
+            - Renamed dumpConstruction() to source(), and extended it to produce
+              either C++ and Python code via an optional language argument.
+              The old C++-only dumpConstruction() is kept but deprecated.
             - The two-argument copy constructor is now a three-argument
               copy constructor, giving an additional boolean option for
               whether to clone simplex/facet locks.

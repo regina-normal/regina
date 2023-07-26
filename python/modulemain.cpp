@@ -301,6 +301,12 @@ Returns:
         .value("LANGUAGE_CXX", regina::LANGUAGE_CXX, rdoc::LANGUAGE_CXX)
         .value("LANGUAGE_PYTHON", regina::LANGUAGE_PYTHON,
             rdoc::LANGUAGE_PYTHON)
+        .value("LANGUAGE_CURRENT",
+            // In Python this should evaluate to LANGUAGE_PYTHON, but when
+            // writing C++ code (as we are here) it evaluates to LANGUAGE_CXX.
+            // We therefore hard-code its value as LANGUAGE_PYTHON below.
+            regina::LANGUAGE_PYTHON,
+            rdoc::LANGUAGE_CURRENT)
         .export_values();
         ;
 

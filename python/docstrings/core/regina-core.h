@@ -90,6 +90,13 @@ may require large amounts of memory.)doc";
 
 namespace Language_ {
 
+// Docstring regina::python::doc::Language_::LANGUAGE_CURRENT
+static const char *LANGUAGE_CURRENT =
+R"doc(The programming language currently being used.
+
+When writing C++ code, this is equivalent to LANGUAGE_CXX. When using
+the Python bindings, this is equivalent to LANGUAGE_PYTHON.)doc";
+
 // Docstring regina::python::doc::Language_::LANGUAGE_CXX
 static const char *LANGUAGE_CXX = R"doc(The C++ programming language.)doc";
 
