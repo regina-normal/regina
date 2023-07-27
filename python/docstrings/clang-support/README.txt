@@ -12,3 +12,7 @@ clang and python3-clang packages (and therefore the files here can be ignored).
 
 The intention is to have a subdirectory for each major version of clang, so
 that the python bindings can match the clang installation.
+
+To add support for a clang version N:
+  - copy <llvm_source_tree>/clang/bindings/python/clang/ into ./N/ ;
+  - copy <llvm_source_tree>/clang/LICENSE.TXT into ./N/clang/ .
