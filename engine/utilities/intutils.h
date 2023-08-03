@@ -357,7 +357,7 @@ struct IntOfMinSize {
  * Gives access to native integer types that hold _at least_ \a k bits,
  * where \a k may be any compile-time constant.
  *
- * \tparam bytes the minimum number of bits in the native integer types
+ * \tparam bits the minimum number of bits in the native integer types
  * (i.e., the integer \a k described above).
  *
  * \nopython
