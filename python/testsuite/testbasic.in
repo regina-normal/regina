@@ -63,7 +63,7 @@ testoutdir=`mktemp -d -t regina.XXX`
 export REGINA_HOME=../../engine
 
 # Cases that expect the python/testsuite directory as an argument:
-blacklist="file i18n memory1 orb pdf repr"
+blacklist="file i18n memory1 orb pdf repr snappea"
 
 echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
