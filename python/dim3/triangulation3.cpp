@@ -703,7 +703,8 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rdoc::saveRecogniser)
         .def("saveRecognizer", &Triangulation<3>::saveRecognizer,
             rdoc::saveRecognizer)
-        .def_static("fromSnapPea", &Triangulation<3>::fromSnapPea,
+        .def_static("fromSnapPea",
+            overload_cast<const std::string&>(&Triangulation<3>::fromSnapPea),
             rdoc::fromSnapPea)
         .def_readonly_static("dimension", &Triangulation<3>::dimension)
     ;

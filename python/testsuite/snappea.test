@@ -31,6 +31,14 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# Fetch the python/testsuite path in the source tree, since we will need
+# to access external files.
+import sys
+if (len(sys.argv) > 1):
+    testpath = sys.argv[1]
+else:
+    testpath = '.'
+
 class Watcher(PacketListener):
     def packetToBeChanged(self, packet):
         print('To be changed:')
@@ -105,3 +113,23 @@ dummy = t.fill(-3,7)
 print(t.str())
 print()
 print(t.detail())
+
+# Verify that both Regina's and SnapPea's import code does the right thing.
+# This includes data files written by SnapPea and also data files written by
+# other programs (and formatted a little differently).
+# It also includes both ideal triangulations (which both import routines
+# should handle the same way) and closed triangulations (where SnapPea drills
+# and fills, but Regina preserves the triangulation).
+
+def reginaImport(filename):
+    f = open(filename)
+    text = f.read()
+    f.close()
+    
+    print(Triangulation3.fromSnapPea(text))
+    print(Triangulation3.fromSnapPea(filename))
+    print(SnapPeaTriangulation(text))
+    print(SnapPeaTriangulation(filename))
+
+reginaImport(testpath + '/whitehead.tri')
+reginaImport(testpath + '/poincare.tri')

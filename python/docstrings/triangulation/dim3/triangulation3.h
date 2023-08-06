@@ -126,15 +126,15 @@ attempts to parse them in the following order):
 
 * dehydration strings (see rehydrate());
 
-* the contents of a SnapPea data file (see fromSnapPea()).
+* the filename or contents of a SnapPea data file (see fromSnapPea()).
 
 This list may grow in future versions of Regina.
 
 .. warning::
-    If you pass the contents of a SnapPea data file, then only the
-    tetrahedron gluings will be read; all other SnapPea-specific
-    information (such as peripheral curves) will be lost. See
-    fromSnapPea() for details, and for other alternatives that
+    If you pass the filename or contents of a SnapPea data file, then
+    only the tetrahedron gluings will be read; all other SnapPea-
+    specific information (such as peripheral curves) will be lost. See
+    fromSnapPea() for details, and for other alternatives that do
     preserve SnapPea-specific data.
 
 Exception ``InvalidArgument``:
@@ -159,7 +159,7 @@ the contents of a SnapPy/SnapPea data file.
 .. warning::
     Only the tetrahedron gluings will be copied; all other SnapPy-
     specific information (such as peripheral curves) will be lost. See
-    fromSnapPea() for details, and for other alternatives that
+    fromSnapPea() for details, and for other alternatives that do
     preserve SnapPy-specific data.
 
 Parameter ``m``:
@@ -609,8 +609,12 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::fromSnapPea
 static const char *fromSnapPea =
-R"doc(Extracts the tetrahedron gluings from a string that contains the full
-contents of a SnapPea data file. All other SnapPea-specific
+R"doc(Extracts the tetrahedron gluings from the contents of a SnapPea data
+file. The argument may be the _name_ of a SnapPea file, or it may also
+be the _contents_ of a SnapPea file (so the file itself need not
+actually exist on the filesystem).
+
+Aside from the tetrahedron gluings, all other SnapPea-specific
 information (such as peripheral curves, and the manifold name) will be
 ignored, since Regina's Triangulation<3> class does not track such
 information itself.
@@ -620,11 +624,13 @@ file, you should work with the SnapPeaTriangulation class instead
 (which uses the SnapPea kernel directly, and can therefore store
 anything that SnapPea can).
 
-If you wish to read a triangulation from a SnapPea _file_, you should
-likewise call the SnapPeaTriangulation constructor, giving the
-filename as argument. This will read all SnapPea-specific information
-(as described above), and also avoids constructing an enormous
-intermediate string.
+One reason for working with this function as opposed to using
+SnapPeaTriangulation is if you need to preserve the specific
+triangulation. For example, if the SnapPea data file describes a
+closed triangulation (where all vertices are finite), then the SnapPea
+kernel will convert this into an ideal triangulation with filling
+coefficients, whereas this routine will return the original closed
+triangulation.
 
 .. warning::
     This routine is "lossy", in that drops SnapPea-specific
@@ -635,11 +641,30 @@ intermediate string.
     file contents instead. See the string-based SnapPeaTriangulation
     constructor for how to do this.
 
-Exception ``InvalidArgument``:
-    The given SnapPea data was not in the correct format.
+.. warning::
+    If (for some reason) you pass a filename that begins with "%
+    Triangulation", then Regina will interpret this as the contents of
+    a SnapPea file (not a filename).
 
-Parameter ``snapPeaData``:
-    a string containing the full contents of a SnapPea data file.
+Internationalisation:
+    If the given argument is a filename, then this routine makes no
+    assumptions about the character encoding used in the filename, and
+    simply passes it through unchanged to low-level C/C++ file I/O
+    routines. This routine assumes that the file _contents_, however,
+    are in UTF-8 (the standard encoding used throughout Regina).
+
+Exception ``InvalidArgument``:
+    The given string does not provide either the filename or contents
+    of a correctly formatted SnapPea data file.
+
+Exception ``FileError``:
+    An error occurred with file I/O (such as testing whether the given
+    file exists, or reading its contents).
+
+Parameter ``filenameOrContents``:
+    either the name of a SnapPea data file, or the full contents of a
+    SnapPea data file (which need not actually exist on the
+    filesystem).
 
 Returns:
     a native Regina triangulation extracted from the given SnapPea

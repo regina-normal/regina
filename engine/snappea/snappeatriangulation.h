@@ -698,11 +698,11 @@ class SnapPeaTriangulation :
          * given file, or could not parse the file contents (which could
          * have been passed explicitly or could have been read from file).
          *
-         * \param fileNameOrContents either the name of a SnapPea data
-         * file, or the contents of a SnapPea data file (which need not
+         * \param filenameOrContents either the name of a SnapPea data
+         * file, or the full contents of a SnapPea data file (which need not
          * actually exist on the filesystem).
          */
-        SnapPeaTriangulation(const std::string& fileNameOrContents);
+        SnapPeaTriangulation(const std::string& filenameOrContents);
 
         /**
          * Creates a new copy of the given SnapPea triangulation.

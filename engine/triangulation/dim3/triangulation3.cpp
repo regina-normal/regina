@@ -62,6 +62,7 @@ Triangulation<3>::Triangulation(const std::string& description) {
         *this = fromSnapPea(description);
         return;
     } catch (const InvalidArgument&) {
+    } catch (const FileError&) {
     }
 
     throw InvalidArgument("The given string could not be interpreted "

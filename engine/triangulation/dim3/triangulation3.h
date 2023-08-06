@@ -319,15 +319,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - isomorphism signatures (see fromIsoSig());
          * - dehydration strings (see rehydrate());
-         * - the contents of a SnapPea data file (see fromSnapPea()).
+         * - the filename or contents of a SnapPea data file (see
+         *   fromSnapPea()).
          *
          * This list may grow in future versions of Regina.
          *
-         * \warning If you pass the contents of a SnapPea data file,
-         * then only the tetrahedron gluings will be read; all other
+         * \warning If you pass the filename or contents of a SnapPea data
+         * file, then only the tetrahedron gluings will be read; all other
          * SnapPea-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
-         * alternatives that preserve SnapPea-specific data.
+         * alternatives that do preserve SnapPea-specific data.
          *
          * \exception InvalidArgument Regina could not interpret the given
          * string as representing a triangulation using any of the supported
@@ -353,7 +354,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning Only the tetrahedron gluings will be copied; all other
          * SnapPy-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
-         * alternatives that preserve SnapPy-specific data.
+         * alternatives that do preserve SnapPy-specific data.
          *
          * \nocpp
          *
@@ -3950,8 +3951,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         static Triangulation<3> rehydrate(const std::string& dehydration);
 
         /**
-         * Extracts the tetrahedron gluings from a string that contains the
-         * full contents of a SnapPea data file.  All other SnapPea-specific
+         * Extracts the tetrahedron gluings from the contents of a SnapPea
+         * data file.  The argument may be the _name_ of a SnapPea file, or
+         * it may also be the _contents_ of a SnapPea file (so the file itself
+         * need not actually exist on the filesystem).
+         *
+         * Aside from the tetrahedron gluings, all other SnapPea-specific
          * information (such as peripheral curves, and the manifold name) will
          * be ignored, since Regina's Triangulation<3> class does not track
          * such information itself.
@@ -3961,11 +3966,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * instead (which uses the SnapPea kernel directly, and can therefore
          * store anything that SnapPea can).
          *
-         * If you wish to read a triangulation from a SnapPea _file_, you
-         * should likewise call the SnapPeaTriangulation constructor, giving
-         * the filename as argument.  This will read all SnapPea-specific
-         * information (as described above), and also avoids constructing an
-         * enormous intermediate string.
+         * One reason for working with this function as opposed to using
+         * SnapPeaTriangulation is if you need to preserve the specific
+         * triangulation.  For example, if the SnapPea data file describes a
+         * closed triangulation (where all vertices are finite), then the
+         * SnapPea kernel will convert this into an ideal triangulation with
+         * filling coefficients, whereas this routine will return the original
+         * closed triangulation.
          *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
@@ -3975,15 +3982,29 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
-         * \exception InvalidArgument The given SnapPea data was not in
-         * the correct format.
+         * \warning If (for some reason) you pass a filename that begins
+         * with "% Triangulation", then Regina will interpret this as
+         * the contents of a SnapPea file (not a filename).
          *
-         * \param snapPeaData a string containing the full contents of a
-         * SnapPea data file.
+         * \i18n If the given argument is a filename, then this routine makes
+         * no assumptions about the \ref i18n "character encoding" used in the
+         * filename, and simply passes it through unchanged to low-level C/C++
+         * file I/O routines.  This routine assumes that the file _contents_,
+         * however, are in UTF-8 (the standard encoding used throughout Regina).
+         *
+         * \exception InvalidArgument The given string does not provide either
+         * the filename or contents of a correctly formatted SnapPea data file.
+         * \exception FileError An error occurred with file I/O (such as
+         * testing whether the given file exists, or reading its contents).
+         *
+         * \param filenameOrContents either the name of a SnapPea data
+         * file, or the full contents of a SnapPea data file (which need not
+         * actually exist on the filesystem).
          * \return a native Regina triangulation extracted from the given
          * SnapPea data.
          */
-        static Triangulation<3> fromSnapPea(const std::string& snapPeaData);
+        static Triangulation<3> fromSnapPea(
+            const std::string& filenameOrContents);
 
         /*@}*/
 
@@ -4064,6 +4085,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Triangulation<3> data for the derived class SnapPeaTriangulation.
          */
         void snapPeaPostChange();
+
+        /**
+         * Implements fromSnapPea() where the contents of the SnapPea data
+         * file are to be read from the given input stream.
+         *
+         * See fromSnapPea(const std::string&) for further details.
+         *
+         * \exception InvalidArgument The given input stream does not contain
+         * the contents of a correctly formatted SnapPea data file.
+         * \exception FileError An error occurred in attempting to read data
+         * from the given input stream.
+         *
+         * \param in an input stream containing the full contents of a SnapPea
+         * data file.
+         * \return a native Regina triangulation extracted from the given
+         * SnapPea data.
+         */
+        static Triangulation<3> fromSnapPea(std::istream& in);
 
     friend class regina::Face<3, 3>;
     friend class regina::detail::SimplexBase<3>;

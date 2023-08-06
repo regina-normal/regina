@@ -171,6 +171,9 @@ Version 7.4  [ (to be announced) ]
               over-cautious by not performing moves that it could have, and
               since if the routine was _not_ asked to check legality then the
               move was still being performed correctly.)
+            - Routine from SnapPea() can now take either a filename or file
+              contents.  It can also now handle empty lines before the manifold
+              name (SnapPy does not write these, but some other tools do).
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
         Class Vector<T>:
