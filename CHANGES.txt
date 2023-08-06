@@ -123,6 +123,12 @@ Version 7.4  [ (to be announced) ]
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().
+        Class SnapPeaTriangulation:
+            - Construction from a SnapPea data file no longer crashes when the
+              triangulation in the file has finite vertices (which may be seen
+              if the file was created by some tool other than SnapPy).  The
+              manifold will however be retriangulated (drilled and filled) upon
+              creation since the SnapPea kernel requires an ideal triangulation.
         Class TightEncodable<T>:
             - Now provides a hash() function also, based on the tight encoding.
         Class TopologyLockable, TopologyLock:

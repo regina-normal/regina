@@ -97,16 +97,16 @@ void Cusp::writeTextShort(std::ostream& out) const {
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(
-        const std::string& fileNameOrContents) :
+        const std::string& filenameOrContents) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
-    bool isContents = startsWith(fileNameOrContents, "% Triangulation");
+    bool isContents = startsWith(filenameOrContents, "% Triangulation");
     try {
         if (isContents)
             data_ = regina::snappea::read_triangulation_from_string(
-                fileNameOrContents.c_str());
+                filenameOrContents.c_str());
         else
             data_ = regina::snappea::read_triangulation(
-                fileNameOrContents.c_str());
+                filenameOrContents.c_str());
     } catch (regina::SnapPeaFatalError& err) {
         // data_ will be left as null.
     }
@@ -119,6 +119,12 @@ SnapPeaTriangulation::SnapPeaTriangulation(
             throw regina::FileError("The SnapPea kernel could not open the "
                 "given file, and/or could not parse its contents");
     }
+
+    // SnapPea no longer removes finite vertices automatically - we need
+    // to do it here ourselves.  Otherwise snappea will crash within sync()
+    // when it tries to initialise the gluing equations.
+    if (data_->num_fake_cusps > 0)
+        regina::snappea::remove_finite_vertices(data_);
 
     sync();
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
