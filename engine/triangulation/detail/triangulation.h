@@ -2073,19 +2073,31 @@ class TriangulationBase :
         /*@{*/
 
         /**
-         * Converts this triangulation into its double cover.
+         * Returns the orientable double cover of this triangulation.
          *
          * Each orientable component will be duplicated, and each
          * non-orientable component will be converted into its orientable
          * double cover.
          *
          * If this triangulation has locks on any top-dimensional simplices
-         * and/or their facets, these will not prevent the double cover from
-         * taking place.  Instead, these locks will be duplicated alongside
+         * and/or their facets, then these locks will be duplicated alongside
          * their corresponding simplices and/or facets (i.e., they will appear
          * in both sheets of the double cover).
          */
-        void makeDoubleCover();
+        Triangulation<dim> doubleCover() const;
+
+        /**
+         * Deprecated routine that converts this triangulation into its
+         * orientable double cover.  This triangulation wll be modified
+         * directly.
+         *
+         * \deprecated This routine has been replaced by doubleCover(), which
+         * returns the result as a new triangulation and leaves the original
+         * triangulation untouched.
+         *
+         * See doubleCover() for further details.
+         */
+        [[deprecated]] void makeDoubleCover();
 
         /**
          * Does a barycentric subdivision of the triangulation.  This is done 
@@ -4870,6 +4882,11 @@ inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
     TopologyLock lock(*this);
     *this = iso(static_cast<Triangulation<dim>&>(*this));
     return iso;
+}
+
+template <int dim>
+void TriangulationBase<dim>::makeDoubleCover() {
+    *this = doubleCover();
 }
 
 template <int dim>

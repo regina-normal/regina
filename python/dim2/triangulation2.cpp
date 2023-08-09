@@ -284,8 +284,10 @@ void addTriangulation2(pybind11::module_& m) {
             rbase::pachner)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)
-        .def("makeDoubleCover", &Triangulation<2>::makeDoubleCover,
-            rbase::makeDoubleCover)
+        .def("doubleCover", &Triangulation<2>::doubleCover, rbase::doubleCover)
+        .def("makeDoubleCover", [](Triangulation<2>& tri) { // deprecated
+            tri = tri.doubleCover();
+        }, rbase::makeDoubleCover)
         .def("subdivide", &Triangulation<2>::subdivide, rbase::subdivide)
         .def("barycentricSubdivision", // deprecated
             &Triangulation<2>::subdivide, rbase::barycentricSubdivision)

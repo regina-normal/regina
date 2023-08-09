@@ -149,6 +149,9 @@ Version 7.4  [ (to be announced) ]
             - The two-argument copy constructor is now a three-argument
               copy constructor, giving an additional boolean option for
               whether to clone simplex/facet locks.
+            - Replaced makeDoubleCover() with doubleCover(), which returns the
+              result as a new triangulation.  The old routine is kept but
+              deprecated.
             - Renamed simplifiedFundamentalGroup to setGroupPresentation().
               The old name is deprecated but kept for backwards compatibility.
             - Overhaul of the internal change span classes, including a new

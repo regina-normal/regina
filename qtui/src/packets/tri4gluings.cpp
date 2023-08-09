@@ -511,12 +511,13 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
-        "Convert the triangulation to its orientable double cover"));
-    actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
-        "triangulation into an orientable double cover.  This triangulation "
-        "will be modified directly.<p>"
-        "If this triangulation is already orientable, it will simply be "
-        "duplicated, resulting in a disconnected triangulation."));
+        "Construct the orientable double cover of this triangulation"));
+    actDoubleCover->setWhatsThis(tr("Construct the orientable double cover "
+        "of this triangulation.  The original triangulation will not be "
+        "changed &ndash; the result will be added as a new triangulation "
+        "beneath it in the packet tree.<p>"
+        "If this triangulation is already orientable then the result will be "
+        "disconnected, containing two copies of the original triangulation."));
     triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
@@ -911,7 +912,9 @@ void Tri4GluingsUI::elementaryMove() {
 void Tri4GluingsUI::doubleCover() {
     endEdit();
 
-    tri->makeDoubleCover();
+    auto ans = regina::make_packet(tri->doubleCover(), "Double cover");
+    tri->append(ans);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
 void Tri4GluingsUI::boundaryComponents() {

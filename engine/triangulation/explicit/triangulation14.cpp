@@ -133,7 +133,7 @@ template void TriangulationBase<14>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<14>::writeTextLong(std::ostream&) const;
 
 template void TriangulationBase<14>::reorderBFS(bool);
-template void TriangulationBase<14>::makeDoubleCover();
+template Triangulation<14> TriangulationBase<14>::doubleCover() const;
 template bool TriangulationBase<14>::finiteToIdeal();
 
 template std::string TriangulationBase<14>::source(Language) const;

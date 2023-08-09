@@ -1838,7 +1838,7 @@
          These comments are provided for both orientable and
          non-orientable manifolds.  In the non-orientable case they may
          provide additional information about the embeddability of the
-         <link linkend="tri-orient">orientable double cover</link>.
+         <link linkend="tri-doublecover">orientable double cover</link>.
         </para>
        </glossdef>
       </glossentry>
@@ -2636,6 +2636,34 @@
     </inlinemediaobject>
    </para>
   </sect2>
+
+  <sect2 id="tri-doublecover">
+   <title>Orientable Double Cover (All Dimensions)</title>
+
+   <para>
+    If your triangulation is non-orientable, you can create the orientable
+    double cover by selecting
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Double Cover</guimenuitem>
+    </menuchoice>
+    from the menu.  If your triangulation has any orientable components,
+    they will simply be duplicated (i.e., the resulting triangulation will be
+    disconnected).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-doublecover"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    As of &regina;&nbsp;7.4, this does not change the original triangulation;
+    instead the result will appear as a new triangulation beneath the original
+    in the packet tree.
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="tri-modification">
@@ -3256,7 +3284,7 @@
   </sect2>
 
   <sect2 id="tri-orient">
-   <title>Orienting Triangulations and Double Covers (All Dimensions)</title>
+   <title>Orienting Triangulations (All Dimensions)</title>
 
    <para>
     If your triangulation is
@@ -3298,21 +3326,12 @@
     </inlinemediaobject>
    </para>
    <para>
-    To convert a non-orientable triangulation into its orientable double cover,
-    select
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Double Cover</guimenuitem>
-    </menuchoice>.
-    If your triangulation has any orientable components, they will
-    simply be duplicated.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata multires="tri-doublecover"/>
-     </imageobject>
-    </inlinemediaobject>
+    You can also create the
+    <link linkend="tri-doublecover">orientable double cover</link>
+    of a non-orientable triangulation.
+    Since &regina;&nbsp;7.4, this operation no longer changes the
+    triangulation directly; instead it creates a new triangulation beneath
+    the original in the packet tree.
    </para>
   </sect2>
 

@@ -248,9 +248,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
-         * properties as well as the skeleton of the given triangulation,
-         * or \c false if the new triangulation should have such properties
-         * and skeletal data marked as unknown.
+         * properties of the given triangulation, or \c false if the new
+         * triangulation should have such properties marked as unknown.
          * \param cloneLocks \c true if this should also clone any simplex
          * and/or facet locks from the given triangulation, or \c false if
          * the new triangulation should have no locks at all.

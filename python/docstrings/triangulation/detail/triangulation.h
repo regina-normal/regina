@@ -541,6 +541,18 @@ Parameter ``labels``:
 Returns:
     the output of writeDot(), as outlined above.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::doubleCover
+constexpr const char *doubleCover =
+R"doc(Returns the orientable double cover of this triangulation.
+
+Each orientable component will be duplicated, and each non-orientable
+component will be converted into its orientable double cover.
+
+If this triangulation has locks on any top-dimensional simplices
+and/or their facets, then these locks will be duplicated alongside
+their corresponding simplices and/or facets (i.e., they will appear in
+both sheets of the double cover).)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::dualBoundaryMap
 constexpr const char *dualBoundaryMap =
 R"doc(Returns the boundary map from dual *subdim*-faces to dual
@@ -1717,16 +1729,15 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::makeDoubleCover
 constexpr const char *makeDoubleCover =
-R"doc(Converts this triangulation into its double cover.
+R"doc(Deprecated routine that converts this triangulation into its
+orientable double cover. This triangulation wll be modified directly.
 
-Each orientable component will be duplicated, and each non-orientable
-component will be converted into its orientable double cover.
+.. deprecated::
+    This routine has been replaced by doubleCover(), which returns the
+    result as a new triangulation and leaves the original
+    triangulation untouched.
 
-If this triangulation has locks on any top-dimensional simplices
-and/or their facets, these will not prevent the double cover from
-taking place. Instead, these locks will be duplicated alongside their
-corresponding simplices and/or facets (i.e., they will appear in both
-sheets of the double cover).)doc";
+See doubleCover() for further details.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::markedHomology
 constexpr const char *markedHomology =

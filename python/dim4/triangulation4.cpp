@@ -395,8 +395,10 @@ void addTriangulation4(pybind11::module_& m) {
             rdoc::collapseEdge)
         .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal,
             rbase::finiteToIdeal)
-        .def("makeDoubleCover", &Triangulation<4>::makeDoubleCover,
-            rbase::makeDoubleCover)
+        .def("doubleCover", &Triangulation<4>::doubleCover, rbase::doubleCover)
+        .def("makeDoubleCover", [](Triangulation<4>& tri) { // deprecated
+            tri = tri.doubleCover();
+        }, rbase::makeDoubleCover)
         .def("subdivide", &Triangulation<4>::subdivide, rbase::subdivide)
         .def("barycentricSubdivision", // deprecated
             &Triangulation<4>::subdivide, rbase::barycentricSubdivision)

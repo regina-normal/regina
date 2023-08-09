@@ -1879,8 +1879,7 @@ void HomologicalData::computeEmbeddabilityString() {
     } else {
         // triangulation is NOT orientable, therefore can not embed in any
         // rational homology 3-sphere.  So we look at the orientation cover...
-        Triangulation<3> orTri(tri, false, false);
-        orTri.makeDoubleCover();
+        Triangulation<3> orTri = tri.doubleCover();
         HomologicalData covHomol(orTri);
         // break up into two cases, boundary and no boundary...
         if (covHomol.bdryHomology(0).isTrivial()) {

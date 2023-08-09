@@ -967,8 +967,7 @@ class TriangulationTest : public testing::Test {
             if (! tri.isConnected())
                 return;
 
-            Triangulation<dim> cover(tri, false, true);
-            cover.makeDoubleCover();
+            Triangulation<dim> cover = tri.doubleCover();
 
             if (tri.isEmpty()) {
                 EXPECT_TRUE(cover.isEmpty());

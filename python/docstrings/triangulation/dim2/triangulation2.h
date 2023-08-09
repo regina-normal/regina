@@ -79,10 +79,9 @@ Parameter ``src``:
     the triangulation to copy.
 
 Parameter ``cloneProps``:
-    ``True`` if this should also clone any computed properties as well
-    as the skeleton of the given triangulation, or ``False`` if the
-    new triangulation should have such properties and skeletal data
-    marked as unknown.
+    ``True`` if this should also clone any computed properties of the
+    given triangulation, or ``False`` if the new triangulation should
+    have such properties marked as unknown.
 
 Parameter ``cloneLocks``:
     ``True`` if this should also clone any simplex and/or facet locks

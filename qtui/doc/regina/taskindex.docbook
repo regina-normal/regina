@@ -1371,7 +1371,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-orient">orientable double
+  <primaryie><link linkend="tri-doublecover">orientable double
    cover</link></primaryie>
  </indexentry>
 
@@ -1386,6 +1386,8 @@
 
  <indexentry>
   <primaryie>orienting tetrahedra</primaryie>
+  <secondaryie><link linkend="tri-orient">orienting
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-orient">reflecting
    triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">testing for consistent
@@ -2079,8 +2081,9 @@
   <secondaryie><link linkend="tri-graphs-nice">nice tree
    decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
-  <secondaryie><link linkend="tri-orient">orientable double
+  <secondaryie><link linkend="tri-doublecover">orientable double
    cover</link></secondaryie>
+  <secondaryie><link linkend="tri-orient">orienting</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">puncturing</link></secondaryie>
   <secondaryie><link linkend="tri-identify">recognising the
    underlying 2-manifold</link></secondaryie>

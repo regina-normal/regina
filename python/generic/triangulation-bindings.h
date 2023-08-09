@@ -220,8 +220,11 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::dualToPrimal), rbase::dualToPrimal)
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal,
             rbase::finiteToIdeal)
-        .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover,
-            rbase::makeDoubleCover)
+        .def("doubleCover", &Triangulation<dim>::doubleCover,
+            rbase::doubleCover)
+        .def("makeDoubleCover", [](Triangulation<dim>& tri) { // deprecated
+            tri = tri.doubleCover();
+        }, rbase::makeDoubleCover)
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo,
             rbase::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn,

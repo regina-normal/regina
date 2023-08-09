@@ -611,8 +611,10 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("niceTreeDecomposition", &Triangulation<3>::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal,
             rdoc::niceTreeDecomposition)
-        .def("makeDoubleCover", &Triangulation<3>::makeDoubleCover,
-            rbase::makeDoubleCover)
+        .def("doubleCover", &Triangulation<3>::doubleCover, rbase::doubleCover)
+        .def("makeDoubleCover", [](Triangulation<3>& tri) { // deprecated
+            tri = tri.doubleCover();
+        }, rbase::makeDoubleCover)
         .def("idealToFinite", &Triangulation<3>::idealToFinite,
             rdoc::idealToFinite)
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal,
