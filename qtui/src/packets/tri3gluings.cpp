@@ -518,20 +518,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     triActionList.push_back(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
-    auto* actDoubleCover = new QAction(this);
-    actDoubleCover->setText(tr("&Double Cover"));
-    actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
-    actDoubleCover->setToolTip(tr(
-        "Construct the orientable double cover of this triangulation"));
-    actDoubleCover->setWhatsThis(tr("Construct the orientable double cover "
-        "of this triangulation.  The original triangulation will not be "
-        "changed &ndash; the result will be added as a new triangulation "
-        "beneath it in the packet tree.<p>"
-        "If this triangulation is already orientable then the result will be "
-        "disconnected, containing two copies of the original triangulation."));
-    triActionList.push_back(actDoubleCover);
-    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
-
     auto* actPuncture = new QAction(this);
     actPuncture->setText(tr("Puncture"));
     actPuncture->setIcon(ReginaSupport::regIcon("puncture"));
@@ -613,6 +599,20 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
     triActionList.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+
+    auto* actDoubleCover = new QAction(this);
+    actDoubleCover->setText(tr("&Double Cover"));
+    actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
+    actDoubleCover->setToolTip(tr(
+        "Construct the orientable double cover of this triangulation"));
+    actDoubleCover->setWhatsThis(tr("Construct the orientable double cover "
+        "of this triangulation.  The original triangulation will not be "
+        "changed &ndash; the result will be added as a new triangulation "
+        "beneath it in the packet tree.<p>"
+        "If this triangulation is already orientable then the result will be "
+        "disconnected, containing two copies of the original triangulation."));
+    triActionList.push_back(actDoubleCover);
+    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
     auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
