@@ -3160,6 +3160,8 @@
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0530FEFF284595580069B227 /* tightencoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tightencoding.h; sourceTree = "<group>"; };
+		05318CA22A84F9F200E89B9D /* org.computop.Regina.desktop */ = {isa = PBXFileReference; lastKnownFileType = text; path = org.computop.Regina.desktop; sourceTree = "<group>"; };
+		05318CA32A84F9F200E89B9D /* org.computop.regina.metainfo.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = org.computop.regina.metainfo.xml; sourceTree = "<group>"; };
 		0534FADF22DFDDA6000A96A3 /* memstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memstream.cpp; sourceTree = "<group>"; };
 		0534FAE022DFDDA7000A96A3 /* zstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
 		0534FAE122DFDDA7000A96A3 /* memstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memstream.h; sourceTree = "<group>"; };
@@ -3617,7 +3619,6 @@
 		0564A5DE1811D920002CC2AE /* recentfilesaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = recentfilesaction.cpp; sourceTree = "<group>"; };
 		0564A5DF1811D920002CC2AE /* recentfilesaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = recentfilesaction.h; sourceTree = "<group>"; };
 		0564A5E01811D920002CC2AE /* regevents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regevents.h; sourceTree = "<group>"; };
-		0564A5E11811D920002CC2AE /* regina.desktop */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = regina.desktop; sourceTree = "<group>"; };
 		0564A5E21811D920002CC2AE /* regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = regina.ico; sourceTree = "<group>"; };
 		0564A5E31811D920002CC2AE /* regina.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = regina.plist; sourceTree = "<group>"; };
 		0564A5E41811D920002CC2AE /* regina.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = regina.rc; sourceTree = "<group>"; };
@@ -3936,7 +3937,6 @@
 		05721F0B1F97162600A83FFC /* examplelink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplelink.cpp; sourceTree = "<group>"; };
 		05721F0C1F97162600A83FFC /* pylink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pylink.cpp; sourceTree = "<group>"; };
 		05721F0D1F97162600A83FFC /* link.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = link.cpp; sourceTree = "<group>"; };
-		0573652229C3F40900EDC0DF /* regina.metainfo.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = regina.metainfo.xml; sourceTree = "<group>"; };
 		05753AAC2A26FD15005CB4B7 /* FindKVStore.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindKVStore.cmake; sourceTree = "<group>"; };
 		05754CE5258D7D6400236ED7 /* randutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = randutils.h; sourceTree = "<group>"; };
 		05754CE6258D7D6400236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
@@ -7289,6 +7289,8 @@
 				0564A5761811D920002CC2AE /* newpacketdialog.cpp */,
 				0564A5771811D920002CC2AE /* newpacketdialog.h */,
 				0564A5781811D920002CC2AE /* newpackets.cpp */,
+				05318CA22A84F9F200E89B9D /* org.computop.Regina.desktop */,
+				05318CA32A84F9F200E89B9D /* org.computop.regina.metainfo.xml */,
 				0564A5791811D920002CC2AE /* packetchooser.cpp */,
 				0564A57A1811D920002CC2AE /* packetchooser.h */,
 				0564A57B1811D920002CC2AE /* packetcreator.cpp */,
@@ -7318,12 +7320,10 @@
 				0564A5DE1811D920002CC2AE /* recentfilesaction.cpp */,
 				0564A5DF1811D920002CC2AE /* recentfilesaction.h */,
 				0564A5E01811D920002CC2AE /* regevents.h */,
-				0564A5E11811D920002CC2AE /* regina.desktop */,
 				0564A5E21811D920002CC2AE /* regina.ico */,
 				0564A5E31811D920002CC2AE /* regina.plist */,
 				0564A5E41811D920002CC2AE /* regina.rc */,
 				0564A5E51811D920002CC2AE /* regina.xml */,
-				0573652229C3F40900EDC0DF /* regina.metainfo.xml */,
 				0564A5E61811D920002CC2AE /* reginaabout.cpp */,
 				0564A5E71811D920002CC2AE /* reginaabout.h */,
 				0564A5E81811D920002CC2AE /* reginafilter.h */,
