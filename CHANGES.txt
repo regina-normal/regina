@@ -65,6 +65,7 @@ Version 7.4  [ (to be announced) ]
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
         Class Link:
+            - New routine makeAlternating().
             - New routine hash(), which uses the tight encoding.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.

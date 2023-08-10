@@ -1214,6 +1214,23 @@ class Link :
         void reverse();
 
         /**
+         * Changes a subset of crossings to convert this into an alternating
+         * link diagram.  Here, "changing" a crossing means switching its
+         * upper and lower strands (so this operation may change this into
+         * a topologically different link).
+         *
+         * The empty diagram and any zero-crossing unknot components
+         * will be considered alternating.
+         *
+         * For each connected piece of the link diagram (which may incorporate
+         * several link components), there is a unique alternating diagram up
+         * to reflection through the plane in which the diagram is drawn.
+         * The reflection that is chosen will be the one that preserves the
+         * sign of the lowest-index crossing in that piece of the diagram.
+         */
+        void makeAlternating();
+
+        /**
          * Tests for and/or performs a type I Reidemeister move to remove a
          * crossing.
          *
@@ -2026,9 +2043,9 @@ class Link :
         /*@{*/
 
         /**
-         * Returns whether this knot diagram is alternating.
+         * Returns whether this link diagram is alternating.
          *
-         * Note that this routine cannot tell whether the _knot_ is
+         * Note that this routine cannot tell whether the _link_ is
          * alternating (i.e., whether there _exists_ an alternating diagram).
          * Instead, it simply returns whether this specific diagram is
          * alternating or not.

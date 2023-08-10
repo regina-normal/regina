@@ -255,6 +255,49 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     return ans;
 }
 
+void Link::makeAlternating() {
+    if (crossings_.empty())
+        return;
+
+    ChangeAndClearSpan<> span(*this);
+
+    // Run a breadth-first search through each connected piece of the diagram.
+    size_t n = crossings_.size();
+
+    auto* fixed = new bool[n];
+    std::fill(fixed, fixed + n, false);
+
+    auto* queue = new size_t[n];
+    size_t queueStart = 0, queueEnd = 0;
+
+    for (size_t i = 0; i < n; ++i) {
+        if (fixed[i])
+            continue;
+
+        // This crossing will be preserved, and will act as a starting point
+        // for the next breadth-first search.
+        queue[queueEnd++] = i;
+        fixed[i] = true;
+
+        while (queueStart < queueEnd) {
+            Crossing* from = crossings_[queue[queueStart++]];
+
+            // The search only needs to consider forward arrows, since this is
+            // enough to reach the entire connected piece of the diagram.
+            for (int j = 0; j < 2; ++j) {
+                StrandRef next = from->next_[j];
+                size_t nextIndex = next.crossing_->index();
+                if (! fixed[nextIndex]) {
+                    if (next.strand_ == j)
+                        change(next.crossing_);
+                    queue[queueEnd++] = nextIndex;
+                    fixed[nextIndex] = true;
+                }
+            }
+        }
+    }
+}
+
 bool Link::isAlternating() const {
     StrandRef s;
     int prev;

@@ -202,6 +202,7 @@ void addLink(pybind11::module_& m) {
         .def("changeAll", &Link::changeAll, rdoc::changeAll)
         .def("resolve", &Link::resolve, rdoc::resolve)
         .def("composeWith", &Link::composeWith, rdoc::composeWith)
+        .def("makeAlternating", &Link::makeAlternating, rdoc::makeAlternating)
         .def("isAlternating", &Link::isAlternating, rdoc::isAlternating)
         .def("linking", &Link::linking, rdoc::linking)
         .def("writhe", &Link::writhe, rdoc::writhe)
