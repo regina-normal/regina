@@ -157,6 +157,8 @@ Version 7.4  [ (to be announced) ]
               The old name is deprecated but kept for backwards compatibility.
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
+        Class Triangulation<2>:
+            - New routine twoZeroMove().
         Class Triangulation<3>:
             - Routine puncture() now takes an optional triangle, not an
               optional tetrahedron.  The old version is kept but deprecated.

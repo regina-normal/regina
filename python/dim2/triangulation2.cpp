@@ -282,6 +282,11 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner)
+        .def("twoZeroMove", &Triangulation<2>::twoZeroMove,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::twoZeroMove)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<2>::doubleCover, rbase::doubleCover)
