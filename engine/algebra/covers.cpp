@@ -767,7 +767,7 @@ namespace {
             // linear equations over Z_2.  If m.entry(r, g) is true then
             // this means relation #r uses generator #g when written over Z_2.
             Matrix<bool> m(g.countRelations(), nGen);
-            m.initialise(false);
+            m.fill(false);
 
             unsigned long row, col;
 

@@ -133,8 +133,7 @@ class Matrix : public Output<Matrix<T>> {
             /**< The number of columns in the matrix. */
         T** data_;
             /**< The actual entries in the matrix.
-             *   `data_[r][c]` is the element in row \a r,
-             *   column \a c. */
+             *   `data_[r][c]` is the element in row \a r, column \a c. */
 
     public:
         /**
@@ -148,7 +147,10 @@ class Matrix : public Output<Matrix<T>> {
          * - you can safely assign an uninitialised matrix to another matrix
          *   (either via an assignment operator or copy constructor), in which
          *   case the other matrix will become uninitialised also and subject
-         *   to similar constraints.
+         *   to similar constraints;
+         *
+         * - you can safely call initialised() to test whether a matrix is
+         *   initialised or not.
          *
          * \nopython This is because the C++ assignment operators are
          * not accessible to Python.
@@ -249,6 +251,41 @@ class Matrix : public Output<Matrix<T>> {
                     data_[r] = new T[cols_];
                     for (c = 0; c < cols_; c++)
                         data_[r][c] = src.data_[r][c];
+                }
+            } else {
+                data_ = nullptr;
+            }
+        }
+        /**
+         * Creates a new clone of the given matrix, which may hold objects of
+         * a different type.
+         *
+         * This constructor induces a deep copy of \a src.
+         *
+         * This routine is safe to call even if \a src is uninitialised
+         * (in which case this matrix will become uninitialised also).
+         *
+         * This constructor is marked as explicit in the hope of avoiding
+         * accidental (and unintentional) mixing of matrix classes.
+         *
+         * \nopython
+         *
+         * \tparam U the type of object held by the given matrix \a src.
+         * It must be possible to _assign_ an object of type \a U to an
+         * object of type \a T.
+         *
+         * \param src the matrix to clone.
+         */
+        template <typename U, bool U_ring>
+        explicit Matrix(const Matrix<U, U_ring>& src) :
+                rows_(src.rows()), cols_(src.columns()) {
+            if (src.initialised()) {
+                data_ = new T*[src.rows()];
+                size_t r, c;
+                for (r = 0; r < rows_; r++) {
+                    data_[r] = new T[cols_];
+                    for (c = 0; c < cols_; c++)
+                        data_[r][c] = src.entry(r, c);
                 }
             } else {
                 data_ = nullptr;
@@ -360,11 +397,24 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \param value the value to assign to each entry.
          */
-        void initialise(const T& value) {
+        void fill(const T& value) {
             size_t r, c;
             for (r = 0; r < rows_; r++)
                 for (c = 0; c < cols_; c++)
                     data_[r][c] = value;
+        }
+        /**
+         * Deprecated function that sets every entry in the matrix to the
+         * given value.
+         *
+         * \deprecated This routine has been renamed to fill(), to make it
+         * clear that it has nothing to do with initialised versus
+         * uninitialised matrices.
+         *
+         * \param value the value to assign to each entry.
+         */
+        [[deprecated]] void initialise(const T& value) {
+            fill(value);
         }
 
         /**
@@ -393,6 +443,23 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t columns() const {
             return cols_;
+        }
+        /**
+         * Determines whether this matrix is initialised or uninitialised.
+         *
+         * The only ways for a matrix to be _uninitialised_ are:
+         *
+         * - it was created using the default constructor, and has not yet been
+         *   initialised using the assignment operator;
+         *
+         * - it was the result of assignment or copy construction from some
+         *   other uninitialised matrix.
+         *
+         * \return \c true if this matrix is initialised, or \c false if it is
+         * uninitialised.
+         */
+        bool initialised() const {
+            return data_;
         }
 
         /**
@@ -458,8 +525,8 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \return the transpose.
          */
-        Matrix<T> transpose() const {
-            Matrix<T> ans(cols_, rows_);
+        Matrix transpose() const {
+            Matrix ans(cols_, rows_);
 
             size_t r, c;
             for (r = 0; r < rows_; r++)
@@ -628,7 +695,7 @@ class Matrix : public Output<Matrix<T>> {
                 "type T to represent a ring.");
 
             Matrix ans(size, size);
-            ans.initialise(0);
+            ans.fill(0);
             for (size_t i = 0; i < size; ++i)
                 ans.data_[i][i] = 1;
             return ans;
@@ -645,7 +712,7 @@ class Matrix : public Output<Matrix<T>> {
             static_assert(ring, "Matrix<T>::makeIdentity() requires "
                 "type T to represent a ring.");
 
-            this->initialise(0);
+            this->fill(0);
             for (size_t i = 0; i < this->rows_ && i < this->cols_; i++)
                 this->data_[i][i] = 1;
         }

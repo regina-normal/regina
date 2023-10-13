@@ -213,10 +213,31 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          *
          * \param src the vector to clone.
          */
-        inline Vector(const Vector<T>& src) :
+        inline Vector(const Vector& src) :
                 elts_(new T[src.end_ - src.elts_]),
                 end_(elts_ + (src.end_ - src.elts_)) {
             std::copy(src.elts_, src.end_, elts_);
+        }
+        /**
+         * Creates a new clone of the given vector, which may hold objects of
+         * a different type.
+         *
+         * This constructor is marked as explicit in the hope of avoiding
+         * accidental (and unintentional) mixing of vector classes.
+         *
+         * \python Using this constructor, Python allows you to construct a
+         * Vector<Integer> from a Vector<LargeInteger> or vice versa.
+         *
+         * \tparam U the type of object held by the given vector \a src.
+         * It must be possible to _assign_ an object of type \a U to an object
+         * of type \a T.
+         *
+         * \param src the vector to clone.
+         */
+        template <typename U>
+        inline explicit Vector(const Vector<U>& src) :
+                elts_(new T[src.size()]), end_(elts_ + src.size()) {
+            std::copy(src.begin(), src.end(), elts_);
         }
         /**
          * Moves the given vector into this new vector.
@@ -370,7 +391,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \return \c true if and only if the this and the given vector
          * are equal.
          */
-        inline bool operator == (const Vector<T>& compare) const {
+        inline bool operator == (const Vector& compare) const {
             return std::equal(elts_, end_, compare.elts_, compare.end_);
         }
         /**
@@ -383,7 +404,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \return \c true if and only if the this and the given vector
          * are not equal.
          */
-        inline bool operator != (const Vector<T>& compare) const {
+        inline bool operator != (const Vector& compare) const {
             return ! std::equal(elts_, end_, compare.elts_, compare.end_);
         }
         /**
@@ -395,7 +416,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param src the vector whose value shall be assigned to this
          * vector.
          */
-        inline Vector<T>& operator = (const Vector<T>& src) {
+        inline Vector& operator = (const Vector& src) {
             // std::copy() exhibits undefined behaviour with self-assignment.
             if (std::addressof(src) == this)
                 return *this;
@@ -448,7 +469,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param other the vector to add to this vector.
          * \return a reference to this vector.
          */
-        inline Vector& operator += (const Vector<T>& other) {
+        inline Vector& operator += (const Vector& other) {
             T* e = elts_;
             const T* o = other.elts_;
             for ( ; e < end_; ++e, ++o)
@@ -465,7 +486,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param other the vector to subtract from this vector.
          * \return a reference to this vector.
          */
-        inline Vector& operator -= (const Vector<T>& other) {
+        inline Vector& operator -= (const Vector& other) {
             T* e = elts_;
             const T* o = other.elts_;
             for ( ; e < end_; ++e, ++o)
@@ -495,7 +516,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param other the vector to add to this vector.
          * \return the sum `this + other`.
          */
-        inline Vector operator + (const Vector<T>& other) const {
+        inline Vector operator + (const Vector& other) const {
             Vector ans(size());
 
             const T* e = elts_;
@@ -516,7 +537,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param other the vector to subtract from this vector.
          * \return the difference `this - other`.
          */
-        inline Vector operator - (const Vector<T>& other) const {
+        inline Vector operator - (const Vector& other) const {
             Vector ans(size());
 
             const T* e = elts_;
@@ -557,7 +578,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param other the vector with which this will be multiplied.
          * \return the dot product of this and the given vector.
          */
-        inline T operator * (const Vector<T>& other) const {
+        inline T operator * (const Vector& other) const {
             T ans(0);
 
             const T* e = elts_;
@@ -614,7 +635,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param multiple the multiple of \a other to be added to this
          * vector.
          */
-        void addCopies(const Vector<T>& other, const T& multiple) {
+        void addCopies(const Vector& other, const T& multiple) {
             if (multiple == 0)
                 return;
             if (multiple == 1) {
@@ -641,7 +662,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param multiple the multiple of \a other to be subtracted
          * from this vector.
          */
-        void subtractCopies(const Vector<T>& other, const T& multiple) {
+        void subtractCopies(const Vector& other, const T& multiple) {
             if (multiple == 0)
                 return;
             if (multiple == 1) {

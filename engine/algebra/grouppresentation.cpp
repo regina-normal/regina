@@ -2260,7 +2260,7 @@ void GroupPresentation::proliferateRelators(unsigned long depth) {
 
 Matrix<bool> GroupPresentation::incidence() const {
     Matrix<bool> inc(relations_.size(), nGenerators_);
-    inc.initialise(false);
+    inc.fill(false);
 
     size_t row = 0;
     for (const auto& r : relations_) {

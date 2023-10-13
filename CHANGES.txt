@@ -83,8 +83,14 @@ Version 7.4  [ (to be announced) ]
             - New exception class used when the user attempts to change a
               locked simplex or facet.
         Class Matrix<T>:
+            - Added a copy constructor that takes a matrix whose elements are
+              of a different type.
             - Added destructive and non-destructive rank() functions.
             - New routines negateRow() and negateCol().
+            - New routine initialised().
+            - Renamed initialise() to fill(), to make it clear that this has
+              nothing to do with initialised vs uninitialised matrices.
+              The old name is kept but deprecated.
         Class NativeInteger<bytes>:
             - New routine str().
         Class NormalSurface, NormalHypersurface:
@@ -189,6 +195,8 @@ Version 7.4  [ (to be announced) ]
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
         Class Vector<T>:
+            - Added a copy constructor that takes a vector whose elements are
+              of a different type.
             - Added support for tight encodings and decodings.
             - New routine hash(), which uses the tight encoding.
         Function columnEchelonForm():
