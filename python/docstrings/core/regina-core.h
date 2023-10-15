@@ -95,7 +95,14 @@ static const char *LANGUAGE_CURRENT =
 R"doc(The programming language currently being used.
 
 When writing C++ code, this is equivalent to LANGUAGE_CXX. When using
-the Python bindings, this is equivalent to LANGUAGE_PYTHON.)doc";
+the Python bindings, this is equivalent to LANGUAGE_PYTHON.
+
+.. warning::
+    For developers who are _writing_ the Python bindings, remember
+    that your binding code (which is written in C++) will treat this
+    as LANGUAGE_CXX, whereas your Python users will expect
+    LANGUAGE_PYTHON. See the code for binding for Link::source() as an
+    example of where this issue arises and how it is resolved.)doc";
 
 // Docstring regina::python::doc::Language_::LANGUAGE_CXX
 static const char *LANGUAGE_CXX = R"doc(The C++ programming language.)doc";

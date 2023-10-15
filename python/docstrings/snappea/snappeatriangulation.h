@@ -539,8 +539,8 @@ Exception ``FileError``:
     parse the file contents (which could have been passed explicitly
     or could have been read from file).
 
-Parameter ``fileNameOrContents``:
-    either the name of a SnapPea data file, or the contents of a
+Parameter ``filenameOrContents``:
+    either the name of a SnapPea data file, or the full contents of a
     SnapPea data file (which need not actually exist on the
     filesystem).)doc";
 
