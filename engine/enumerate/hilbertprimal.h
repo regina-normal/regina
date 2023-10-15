@@ -137,18 +137,24 @@ class HilbertPrimal {
          * \exception UnsolvedCase Normaliz was unable to compute the
          * Hilbert basis for one or more maximal admissible faces.
          *
-         * \python There are two versions of this function available
-         * in Python.  The first version is
-         * `enumerate(action, rays, constraints, tracker)`, which
-         * mirrors the C++ function; here \a action may be a pure Python
-         * function.  The second version does not have an \a action argument;
-         * instead you call `enumerate(rays, constraints, tracker)`,
-         * and it returns a Python list containing all Hilbert basis elements.
-         * In both versions, the extremal rays must be passed as a Python list
-         * of VectorInt objects, and the output type \a RayClass is likewise
-         * fixed as VectorInt.
-         * The global interpreter lock will be released while this function
-         * runs, so you can use it with Python-based multithreading.
+         * \python There are two versions of this function available in Python:
+         * - `enumerate(action, rays, constraints, tracker)`, which
+         *   mirrors the C++ function; here \a action may be a pure Python
+         *   function.
+         * - `enumerate(rays, constraints, tracker)`, where the \a action
+         *   argument is missing, and instead the function returns a
+         *   Python list containing all Hilbert basis elements.
+         * \par
+         * In both versions, the extremal rays must be passed as either:
+         * - a Python list of VectorInt objects, which means the output type
+         *   \a RayClass will be VectorInt; or
+         * - a NormalSurfaces or NormalHypersurfaces object, which meams the
+         *   output type \a RayClass will be VectorLarge, and the input list
+         *   of extremal rays will be the range from `rays.beginVectors()` to
+         *   `rays.endVectors()`.
+         * \par
+         * The global interpreter lock will be released while this
+         * function runs, so you can use it with Python-based multithreading.
          *
          * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single

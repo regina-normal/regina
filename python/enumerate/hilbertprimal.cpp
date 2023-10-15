@@ -34,12 +34,15 @@
 #include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "enumerate/hilbertprimal.h"
+#include "hypersurface/normalhypersurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "../helpers.h"
 #include "../docstrings/enumerate/hilbertprimal.h"
 
 using regina::python::GILCallbackManager;
 using regina::HilbertPrimal;
 using regina::VectorInt;
+using regina::VectorLarge;
 
 void addHilbertPrimal(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HilbertPrimal)
@@ -64,6 +67,54 @@ void addHilbertPrimal(pybind11::module_& m) {
             HilbertPrimal::enumerate<VectorInt>([&ans](VectorInt&& v) {
                 ans.push_back(std::move(v));
             }, r.begin(), r.end(), c, p);
+            return ans;
+        }, pybind11::arg("rays"), pybind11::arg("constraints"),
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::enumerate)
+        .def_static("enumerate", [](const std::function<void(VectorLarge&&)>& a,
+                const regina::NormalSurfaces& r,
+                const regina::ValidityConstraints& c,
+                regina::ProgressTracker* p) {
+            GILCallbackManager<false> manager;
+            HilbertPrimal::enumerate<VectorLarge>([&](VectorLarge&& v) {
+                GILCallbackManager<false>::ScopedAcquire acquire(manager);
+                a(std::move(v));
+            }, r.beginVectors(), r.endVectors(), c, p);
+        }, pybind11::arg("action"), pybind11::arg("rays"),
+            pybind11::arg("constraints"), pybind11::arg("tracker") = nullptr,
+            rdoc::enumerate)
+        .def_static("enumerate", [](const regina::NormalSurfaces& r,
+                const regina::ValidityConstraints& c,
+                regina::ProgressTracker* p) {
+            std::vector<VectorLarge> ans;
+            HilbertPrimal::enumerate<VectorLarge>([&ans](VectorLarge&& v) {
+                ans.push_back(std::move(v));
+            }, r.beginVectors(), r.endVectors(), c, p);
+            return ans;
+        }, pybind11::arg("rays"), pybind11::arg("constraints"),
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::enumerate)
+        .def_static("enumerate", [](const std::function<void(VectorLarge&&)>& a,
+                const regina::NormalHypersurfaces& r,
+                const regina::ValidityConstraints& c,
+                regina::ProgressTracker* p) {
+            GILCallbackManager<false> manager;
+            HilbertPrimal::enumerate<VectorLarge>([&](VectorLarge&& v) {
+                GILCallbackManager<false>::ScopedAcquire acquire(manager);
+                a(std::move(v));
+            }, r.beginVectors(), r.endVectors(), c, p);
+        }, pybind11::arg("action"), pybind11::arg("rays"),
+            pybind11::arg("constraints"), pybind11::arg("tracker") = nullptr,
+            rdoc::enumerate)
+        .def_static("enumerate", [](const regina::NormalHypersurfaces& r,
+                const regina::ValidityConstraints& c,
+                regina::ProgressTracker* p) {
+            std::vector<VectorLarge> ans;
+            HilbertPrimal::enumerate<VectorLarge>([&ans](VectorLarge&& v) {
+                ans.push_back(std::move(v));
+            }, r.beginVectors(), r.endVectors(), c, p);
             return ans;
         }, pybind11::arg("rays"), pybind11::arg("constraints"),
             pybind11::arg("tracker") = nullptr,
