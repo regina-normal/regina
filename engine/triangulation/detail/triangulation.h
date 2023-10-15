@@ -1988,7 +1988,7 @@ class TriangulationBase :
          * the isomorphism bracket operator, which at the time of writing does
          * not).
          *
-         * \para preserveOrientation if \c true, then every top-dimensional
+         * \param preserveOrientation if \c true, then every top-dimensional
          * simplex will have its vertices permuted with an even permutation.
          * This means that, if this triangulation is oriented, then
          * randomiseLabelling() will preserve the orientation.

@@ -2077,10 +2077,11 @@ computed topological properties of the triangulation (as opposed to
 the isomorphism bracket operator, which at the time of writing does
 not).
 
-\para preserveOrientation if ``True``, then every top-dimensional
-simplex will have its vertices permuted with an even permutation. This
-means that, if this triangulation is oriented, then
-randomiseLabelling() will preserve the orientation.
+Parameter ``preserveOrientation``:
+    if ``True``, then every top-dimensional simplex will have its
+    vertices permuted with an even permutation. This means that, if
+    this triangulation is oriented, then randomiseLabelling() will
+    preserve the orientation.
 
 Returns:
     the random isomorphism that was applied; that is, the isomorphism
