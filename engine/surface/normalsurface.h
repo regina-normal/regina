@@ -420,8 +420,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \python Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \python The supported types for the template parameter \a U are
+         * regina::Integer and regina::LargeInteger.  You may also, if you
+         * prefer, pass \a vector as a Python list of integers.
+         *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal surface resides.
          * \param enc indicates precisely how the given vector encodes a normal
@@ -429,8 +433,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
+        template <typename U>
         NormalSurface(const Triangulation<3>& triang, NormalEncoding enc,
-            const Vector<LargeInteger>& vector);
+            const Vector<U>& vector);
 
         /**
          * Creates a new normal surface inside the given triangulation with the
@@ -482,6 +487,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
+         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * \param enc indicates precisely how the given vector encodes a normal
@@ -489,8 +497,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
+        template <typename U>
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
-            NormalEncoding enc, const Vector<LargeInteger>& vector);
+            NormalEncoding enc, const Vector<U>& vector);
 
         /**
          * Creates a new normal surface inside the given triangulation with the
@@ -546,8 +555,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the encoding
          * `NormalEncoding(coords)`.  This will not be checked!
          *
-         * \python Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \python The supported types for the template parameter \a U are
+         * regina::Integer and regina::LargeInteger.  You may also, if you
+         * prefer, pass \a vector as a Python list of integers.
+         *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal surface resides.
          * \param coords the coordinate system from which the vector
@@ -555,8 +568,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
+        template <typename U>
         NormalSurface(const Triangulation<3>& triang, NormalCoords coords,
-            const Vector<LargeInteger>& vector);
+            const Vector<U>& vector);
 
         /**
          * Creates a new normal surface inside the given triangulation with the
@@ -616,6 +630,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
+         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * \param coords the coordinate system from which the vector
@@ -623,8 +640,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
+        template <typename U>
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
-            NormalCoords coords, const Vector<LargeInteger>& vector);
+            NormalCoords coords, const Vector<U>& vector);
 
         /**
          * Creates a new normal surface inside the given triangulation with the
@@ -1933,8 +1951,9 @@ void swap(NormalSurface& a, NormalSurface& b) noexcept;
 
 // Inline functions for NormalSurface
 
+template <typename U>
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
-        NormalEncoding enc, const Vector<LargeInteger>& vector) :
+        NormalEncoding enc, const Vector<U>& vector) :
         enc_(enc), vector_(vector), triangulation_(tri) {
     // This call to storesTriangles() is unnecessary, but we'd like it
     // accessible to the inline version.  (Same goes for the similar
@@ -1950,9 +1969,10 @@ inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         enc_ = reconstructTriangles(tri, vector_, enc_);
 }
 
+template <typename U>
 inline NormalSurface::NormalSurface(
         const SnapshotRef<Triangulation<3>>& tri,
-        NormalEncoding enc, const Vector<LargeInteger>& vector) :
+        NormalEncoding enc, const Vector<U>& vector) :
         enc_(enc), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTriangles())
         enc_ = reconstructTriangles(*tri, vector_, enc_);
@@ -1966,8 +1986,9 @@ inline NormalSurface::NormalSurface(
         enc_ = reconstructTriangles(*tri, vector_, enc_);
 }
 
+template <typename U>
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
-        NormalCoords coords, const Vector<LargeInteger>& vector) :
+        NormalCoords coords, const Vector<U>& vector) :
         enc_(coords), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTriangles())
         enc_ = reconstructTriangles(tri, vector_, enc_);
@@ -1981,9 +2002,10 @@ inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         enc_ = reconstructTriangles(tri, vector_, enc_);
 }
 
+template <typename U>
 inline NormalSurface::NormalSurface(
         const SnapshotRef<Triangulation<3>>& tri,
-        NormalCoords coords, const Vector<LargeInteger>& vector) :
+        NormalCoords coords, const Vector<U>& vector) :
         enc_(coords), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTriangles())
         enc_ = reconstructTriangles(*tri, vector_, enc_);

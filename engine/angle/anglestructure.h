@@ -164,15 +164,20 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \python Instead of a Vector<Integer>, you may (if you prefer)
-         * pass a Python list of integers.
+         * \python The supported types for the template parameter \a U are
+         * regina::Integer and regina::LargeInteger.  You may also, if you
+         * prefer, pass \a vector as a Python list of integers.
+         *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::Integer.
          *
          * \param triang the triangulation on which this angle structure lies.
          * \param vector a vector containing the individual angles in the
          * angle structure.
          */
+        template <typename U>
         AngleStructure(const Triangulation<3>& triang,
-            const Vector<Integer>& vector);
+            const Vector<U>& vector);
 
         /**
          * Creates a new angle structure on the given triangulation with
@@ -206,13 +211,17 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::Integer.
+         *
          * \param triang a snapshot, frozen in time, of the triangulation on
          * which this angle structure lies.
          * \param vector a vector containing the individual angles in the
          * angle structure.
          */
+        template <typename U>
         AngleStructure(const SnapshotRef<Triangulation<3>>& triang,
-            const Vector<Integer>& vector);
+            const Vector<U>& vector);
 
         /**
          * Creates a new angle structure on the given triangulation with
@@ -510,8 +519,9 @@ void swap(AngleStructure& a, AngleStructure& b) noexcept;
 
 // Inline functions for AngleStructure
 
+template <typename U>
 inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
-        const Vector<Integer>& vector) :
+        const Vector<U>& vector) :
         vector_(vector), triangulation_(triang), flags_(0) {
 }
 
@@ -519,9 +529,10 @@ inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
         Vector<Integer>&& vector) :
         vector_(std::move(vector)), triangulation_(triang), flags_(0) {
 }
+
+template <typename U>
 inline AngleStructure::AngleStructure(
-        const SnapshotRef<Triangulation<3>>& triang,
-        const Vector<Integer>& vector) :
+        const SnapshotRef<Triangulation<3>>& triang, const Vector<U>& vector) :
         vector_(vector), triangulation_(triang), flags_(0) {
 }
 
@@ -530,7 +541,6 @@ inline AngleStructure::AngleStructure(
         Vector<Integer>&& vector) :
         vector_(std::move(vector)), triangulation_(triang), flags_(0) {
 }
-
 
 inline AngleStructure::AngleStructure(const AngleStructure& src,
         const Triangulation<3>& triangulation) :

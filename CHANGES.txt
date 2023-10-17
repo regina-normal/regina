@@ -22,6 +22,9 @@ Version 7.4  [ (to be announced) ]
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.
+        Class AngleStructure:
+            - The vector constructors are now templated, so that you can pass a
+              vector of some type other than regina::Integer.
         Class AngleStructures:
             - New routine sort().
         Class BitManipulator<T>:
@@ -104,6 +107,8 @@ Version 7.4  [ (to be announced) ]
               established (i.e., after isOrientable(), isTwoSided(),
               isConnected(), or an earlier call to components()), then it would
               return the entire surface as a single component.
+            - The vector constructors are now templated, so that you can pass a
+              vector of some type other than regina::LargeInteger.
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old
