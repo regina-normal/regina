@@ -824,6 +824,13 @@ TEST_F(Dim3Test, pachner) {
     verifyPachnerSimplicial();
 }
 
+TEST_F(Dim3Test, twoZeroVertexMove) {
+    testManualCases(TriangulationTest<3>::verifyTwoZeroVertex);
+    runCensusAllClosed(TriangulationTest<3>::verifyTwoZeroVertex);
+    runCensusAllBounded(TriangulationTest<3>::verifyTwoZeroVertex);
+    runCensusAllIdeal(TriangulationTest<3>::verifyTwoZeroVertex);
+}
+
 static void verifyTwoZeroEdgeMove(Triangulation<3> tri, size_t whichEdge,
         const Triangulation<3>& result, const char* name) {
     SCOPED_TRACE_CSTRING(name);

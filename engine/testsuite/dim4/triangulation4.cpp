@@ -718,6 +718,12 @@ TEST_F(Dim4Test, pachner) {
     TriangulationTest<4>::verifyPachnerSimplicial();
 }
 
+TEST_F(Dim4Test, twoZeroVertexMove) {
+    testManualCases(TriangulationTest<4>::verifyTwoZeroVertex);
+    runCensusAllBounded(TriangulationTest<4>::verifyTwoZeroVertex);
+    runCensusAllNoBdry(TriangulationTest<4>::verifyTwoZeroVertex);
+}
+
 TEST_F(Dim4Test, barycentricSubdivision) {
     testManualCases(TriangulationTest<4>::verifyBarycentricSubdivision,
         false /* small triangulations only */);

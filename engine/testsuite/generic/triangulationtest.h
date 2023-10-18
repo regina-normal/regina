@@ -42,6 +42,7 @@
 
 using regina::Isomorphism;
 using regina::Perm;
+using regina::Simplex;
 using regina::Triangulation;
 using regina::Vertex;
 
@@ -1244,6 +1245,77 @@ class TriangulationTest : public testing::Test {
             regina::for_constexpr<0, dim + 1>([this](auto subdim) {
                 verifyPachnerDetail<subdim>(simpSphere.tri, true);
             });
+        }
+
+        static void verifyTwoZeroVertex(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+
+            Triangulation<dim> oriented(tri);
+            if (oriented.isOrientable())
+                oriented.orient();
+
+            for (size_t i = 0; i < oriented.countVertices(); ++i) {
+                SCOPED_TRACE_NUMERIC(i);
+
+                Vertex<dim>* v = oriented.vertex(i);
+                if (v->degree() != 2 || v->isBoundary()) {
+                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    continue;
+                }
+
+                regina::VertexEmbedding<dim> emb0 = v->front();
+                regina::VertexEmbedding<dim> emb1 = v->back();
+                if (emb0.simplex() == emb1.simplex()) {
+                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    continue;
+                }
+
+                int v0 = emb0.face();
+                int v1 = emb1.face();
+                auto opp0 = emb0.simplex()->template face<dim-1>(v0);
+                auto opp1 = emb1.simplex()->template face<dim-1>(v1);
+                if (opp0 == opp1 ||
+                        (opp0->isBoundary() && opp1->isBoundary())) {
+                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    continue;
+                }
+
+                auto glue = emb0.simplex()->adjacentGluing(v0 != 0 ? 0 : 1);
+                bool correctLink = true;
+                for (int i = 0; i <= dim; ++i)
+                    if (i != v0 && ! (
+                            emb0.simplex()->adjacentSimplex(i) ==
+                                emb1.simplex() &&
+                            emb0.simplex()->adjacentGluing(i) == glue)) {
+                        correctLink = false;
+                        break;
+                    }
+                if (! correctLink) {
+                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    continue;
+                }
+
+                // The move should be legal.
+                Triangulation<dim> alt(oriented);
+                EXPECT_TRUE(alt.twoZeroMove(alt.vertex(i)));
+                EXPECT_EQ(alt.isOriented(), alt.isOrientable());
+
+                // Verify that the move did the right thing.
+                // Here the "right thing" is a 2-dim Pachner move followed by a
+                // (dim+1)-1 Pachner move.
+                Triangulation<dim> alt2(oriented);
+                Simplex<dim>* simp0 = alt2.simplex(emb0.simplex()->index());
+                Simplex<dim>* simp1 = alt2.simplex(emb1.simplex()->index());
+                if (simp0->adjacentSimplex(v0)) {
+                    EXPECT_TRUE(alt2.pachner(simp0->template face<dim-1>(v0)));
+                    EXPECT_TRUE(alt2.pachner(simp1->vertex(v1)));
+                } else {
+                    EXPECT_TRUE(alt2.pachner(simp1->template face<dim-1>(v1)));
+                    EXPECT_TRUE(alt2.pachner(simp0->vertex(v0)));
+                }
+                EXPECT_TRUE(alt.isIsomorphicTo(alt2));
+            }
         }
 
         static void verifyBarycentricSubdivision(const Triangulation<dim>& tri,
