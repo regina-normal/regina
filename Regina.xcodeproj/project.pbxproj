@@ -456,6 +456,11 @@
 		05249F801DBC174E001FE29E /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */; };
 		052774141C55744300140918 /* hypercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* hypercreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
+		0529094A2AE5EA090028990D /* ReginaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052909492AE5EA090028990D /* ReginaApp.swift */; };
+		0529094C2AE5EA090028990D /* ReginaDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0529094B2AE5EA090028990D /* ReginaDocument.swift */; };
+		0529094E2AE5EA090028990D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0529094D2AE5EA090028990D /* ContentView.swift */; };
+		052909502AE5EA0A0028990D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0529094F2AE5EA0A0028990D /* Assets.xcassets */; };
+		052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052909522AE5EA0A0028990D /* Preview Assets.xcassets */; };
 		052942DA1C5CDFBE0011C1E6 /* snappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* snappeaalgebra.h */; };
 		052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052AB7111C6304C500C44D54 /* facetspec.cpp */; };
 		052F9E93180600FB00FAE4DF /* closedprimemin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C13180600FA00FAE4DF /* closedprimemin.cpp */; };
@@ -2951,6 +2956,13 @@
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
 		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
 		052774161C55760B00140918 /* NewHypersurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewHypersurfacesController.mm; sourceTree = "<group>"; };
+		052909472AE5EA090028990D /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		052909492AE5EA090028990D /* ReginaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReginaApp.swift; sourceTree = "<group>"; };
+		0529094B2AE5EA090028990D /* ReginaDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReginaDocument.swift; sourceTree = "<group>"; };
+		0529094D2AE5EA090028990D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0529094F2AE5EA0A0028990D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		052909522AE5EA0A0028990D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		052909542AE5EA0A0028990D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C0B180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -4769,6 +4781,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		052909442AE5EA090028990D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		052FA0BE1806072900FAE4DF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -6201,6 +6220,27 @@
 				05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */,
 			);
 			path = python;
+			sourceTree = "<group>";
+		};
+		052909482AE5EA090028990D /* Regina */ = {
+			isa = PBXGroup;
+			children = (
+				052909492AE5EA090028990D /* ReginaApp.swift */,
+				0529094B2AE5EA090028990D /* ReginaDocument.swift */,
+				0529094D2AE5EA090028990D /* ContentView.swift */,
+				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
+				052909542AE5EA0A0028990D /* Info.plist */,
+				052909512AE5EA0A0028990D /* Preview Content */,
+			);
+			path = Regina;
+			sourceTree = "<group>";
+		};
+		052909512AE5EA0A0028990D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				052909522AE5EA0A0028990D /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		052F9BFD180600FA00FAE4DF /* engine */ = {
@@ -8011,6 +8051,7 @@
 				050F5CDE1B9BAAAA00C1F681 /* python */,
 				0564A2151811D91C002CC2AE /* qtui */,
 				05617ADE1D9DBFBF00B1E33B /* utils */,
+				052909482AE5EA090028990D /* Regina */,
 				052FA12F1806102F00FAE4DF /* ios */,
 				057118AF19B307A3009FEDC5 /* data */,
 				05A47F961809CB7500F86BFD /* examples */,
@@ -8042,6 +8083,7 @@
 				058FC8721FE188A0006D04B4 /* retriangulate */,
 				059D01A325B6A72C004150F7 /* Timing */,
 				057B0CC326A506B20017F5EA /* dgt */,
+				052909472AE5EA090028990D /* Regina.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -8887,6 +8929,23 @@
 			productReference = 050F5CDD1B9BAAAA00C1F681 /* engine.so */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		052909462AE5EA090028990D /* Regina */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 052909552AE5EA0A0028990D /* Build configuration list for PBXNativeTarget "Regina" */;
+			buildPhases = (
+				052909432AE5EA090028990D /* Sources */,
+				052909442AE5EA090028990D /* Frameworks */,
+				052909452AE5EA090028990D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Regina;
+			productName = Regina;
+			productReference = 052909472AE5EA090028990D /* Regina.app */;
+			productType = "com.apple.product-type.application";
+		};
 		052FA0C01806072900FAE4DF /* Test Suite */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 052FA0C91806072A00FAE4DF /* Build configuration list for PBXNativeTarget "Test Suite" */;
@@ -9197,11 +9256,15 @@
 		0575E6511805F36D009E3FC4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Regina Development Team";
 				TargetAttributes = {
 					050F5CDC1B9BAAAA00C1F681 = {
 						CreatedOnToolsVersion = 6.4;
+					};
+					052909462AE5EA090028990D = {
+						CreatedOnToolsVersion = 15.0;
 					};
 					052FA1271806102F00FAE4DF = {
 						DevelopmentTeam = 67JTSH67LZ;
@@ -9282,6 +9345,7 @@
 				05DADB04219256ED00DC80E1 /* Databases */,
 				05DADAFE2192535F00DC80E1 /* Handbook */,
 				0564A1DE1811D6F8002CC2AE /* Regina for macOS */,
+				052909462AE5EA090028990D /* Regina */,
 				052FA1271806102F00FAE4DF /* Regina for iOS (old) */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
 				05617B001D9DC51600B1E33B /* Utils - CensusLookup */,
@@ -9300,6 +9364,15 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		052909452AE5EA090028990D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */,
+				052909502AE5EA0A0028990D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		052FA1261806102F00FAE4DF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9795,6 +9868,16 @@
 				050F5DE01B9BAB9C00C1F681 /* triangle2.cpp in Sources */,
 				055001091C4D9EF900501C24 /* face5.cpp in Sources */,
 				050F5E131B9BAB9C00C1F681 /* signature.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		052909432AE5EA090028990D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0529094C2AE5EA090028990D /* ReginaDocument.swift in Sources */,
+				0529094A2AE5EA090028990D /* ReginaApp.swift in Sources */,
+				0529094E2AE5EA090028990D /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11377,6 +11460,108 @@
 			};
 			name = Release;
 		};
+		052909562AE5EA0A0028990D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"Regina/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Regina/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.computop.regina.ios.Regina;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		052909572AE5EA0A0028990D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Regina/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Regina/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.computop.regina.ios.Regina;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		052FA0C71806072900FAE4DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12528,6 +12713,15 @@
 			buildConfigurations = (
 				050F5CE51B9BAAAB00C1F681 /* Debug */,
 				050F5CE61B9BAAAB00C1F681 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		052909552AE5EA0A0028990D /* Build configuration list for PBXNativeTarget "Regina" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				052909562AE5EA0A0028990D /* Debug */,
+				052909572AE5EA0A0028990D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
