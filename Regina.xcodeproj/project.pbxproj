@@ -6222,7 +6222,7 @@
 			path = python;
 			sourceTree = "<group>";
 		};
-		052909482AE5EA090028990D /* Regina */ = {
+		052909482AE5EA090028990D /* swiftui */ = {
 			isa = PBXGroup;
 			children = (
 				052909492AE5EA090028990D /* ReginaApp.swift */,
@@ -6232,7 +6232,7 @@
 				052909542AE5EA0A0028990D /* Info.plist */,
 				052909512AE5EA0A0028990D /* Preview Content */,
 			);
-			path = Regina;
+			path = swiftui;
 			sourceTree = "<group>";
 		};
 		052909512AE5EA0A0028990D /* Preview Content */ = {
@@ -8051,7 +8051,7 @@
 				050F5CDE1B9BAAAA00C1F681 /* python */,
 				0564A2151811D91C002CC2AE /* qtui */,
 				05617ADE1D9DBFBF00B1E33B /* utils */,
-				052909482AE5EA090028990D /* Regina */,
+				052909482AE5EA090028990D /* swiftui */,
 				052FA12F1806102F00FAE4DF /* ios */,
 				057118AF19B307A3009FEDC5 /* data */,
 				05A47F961809CB7500F86BFD /* examples */,
@@ -8929,9 +8929,9 @@
 			productReference = 050F5CDD1B9BAAAA00C1F681 /* engine.so */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		052909462AE5EA090028990D /* Regina */ = {
+		052909462AE5EA090028990D /* Regina for iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 052909552AE5EA0A0028990D /* Build configuration list for PBXNativeTarget "Regina" */;
+			buildConfigurationList = 052909552AE5EA0A0028990D /* Build configuration list for PBXNativeTarget "Regina for iOS" */;
 			buildPhases = (
 				052909432AE5EA090028990D /* Sources */,
 				052909442AE5EA090028990D /* Frameworks */,
@@ -8941,7 +8941,7 @@
 			);
 			dependencies = (
 			);
-			name = Regina;
+			name = "Regina for iOS";
 			productName = Regina;
 			productReference = 052909472AE5EA090028990D /* Regina.app */;
 			productType = "com.apple.product-type.application";
@@ -9345,7 +9345,7 @@
 				05DADB04219256ED00DC80E1 /* Databases */,
 				05DADAFE2192535F00DC80E1 /* Handbook */,
 				0564A1DE1811D6F8002CC2AE /* Regina for macOS */,
-				052909462AE5EA090028990D /* Regina */,
+				052909462AE5EA090028990D /* Regina for iOS */,
 				052FA1271806102F00FAE4DF /* Regina for iOS (old) */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
 				05617B001D9DC51600B1E33B /* Utils - CensusLookup */,
@@ -11478,20 +11478,21 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"Regina/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"swiftui/Preview Content\"";
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Regina/Info.plist;
+				INFOPLIST_FILE = swiftui/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -11501,7 +11502,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = org.computop.regina.ios.Regina;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Regina;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -11529,20 +11530,21 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Regina/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"swiftui/Preview Content\"";
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Regina/Info.plist;
+				INFOPLIST_FILE = swiftui/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -11552,7 +11554,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = org.computop.regina.ios.Regina;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Regina;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -12717,7 +12719,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		052909552AE5EA0A0028990D /* Build configuration list for PBXNativeTarget "Regina" */ = {
+		052909552AE5EA0A0028990D /* Build configuration list for PBXNativeTarget "Regina for iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				052909562AE5EA0A0028990D /* Debug */,
