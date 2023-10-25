@@ -14,5 +14,6 @@ struct ReginaApp: App {
         DocumentGroup(newDocument: ReginaDocument()) { file in
             ContentView(document: file.$document)
         }
+        // TODO: To support multiple document types, add additional DocumentGroup scenes
     }
 }
