@@ -1620,6 +1620,12 @@
 		05A628282AE921790049739E /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD5283F0F8B00181D2D /* tightencoding.cpp */; };
 		05A628292AE9217D0049739E /* trieset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0512E0A026DF356300DDB222 /* trieset.cpp */; };
 		05A6282A2AE921820049739E /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
+		05A6282B2AE930630049739E /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		05A6282C2AE930630049739E /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05A6282E2AE930650049739E /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
+		05A6282F2AE930650049739E /* libgmpxx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05A628332AE932700049739E /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
+		05A628342AE932700049739E /* libtokyocabinet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C8419B2EEC50099C617 /* csv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8319B2EEC50099C617 /* csv.cpp */; };
@@ -2354,6 +2360,19 @@
 				057EDAF12581D932004F0068 /* libqmacstyle.dylib in Copy Qt plugins (styles) */,
 			);
 			name = "Copy Qt plugins (styles)";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05A6282D2AE930630049739E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				05A6282F2AE930650049739E /* libgmpxx.xcframework in Embed Frameworks */,
+				05A628342AE932700049739E /* libtokyocabinet.xcframework in Embed Frameworks */,
+				05A6282C2AE930630049739E /* libgmp.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */ = {
@@ -4811,6 +4830,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05A6282E2AE930650049739E /* libgmpxx.xcframework in Frameworks */,
+				05A628332AE932700049739E /* libtokyocabinet.xcframework in Frameworks */,
+				05A6282B2AE930630049739E /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8962,6 +8984,7 @@
 				052909432AE5EA090028990D /* Sources */,
 				052909442AE5EA090028990D /* Frameworks */,
 				052909452AE5EA090028990D /* Resources */,
+				05A6282D2AE930630049739E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -11537,6 +11560,7 @@
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -11590,6 +11614,7 @@
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
