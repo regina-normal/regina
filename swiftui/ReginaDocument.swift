@@ -10,9 +10,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 extension UTType {
-    static var reginaData: UTType {
-        UTType(importedAs: "org.computop.regina-data")
-    }
+    static let reginaData = UTType(exportedAs: "org.computop.regina-data")
 }
 
 struct ReginaDocument: FileDocument {
@@ -37,4 +35,6 @@ struct ReginaDocument: FileDocument {
         let data = text.data(using: .utf8)!
         return .init(regularFileWithContents: data)
     }
+    
+    // TODO: I guess we need a write() function?
 }
