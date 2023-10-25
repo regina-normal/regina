@@ -74,8 +74,6 @@ namespace {
             return b;
         }
 
-        long a_orig = a;
-        long b_orig = b;
         u = 1;
         v = 0;
         long uu = 0;
