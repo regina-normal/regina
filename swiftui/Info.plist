@@ -16,7 +16,7 @@
 				<string>org.computop.regina-data</string>
 			</array>
 			<key>NSUbiquitousDocumentUserActivityType</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER).regina-data</string>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER).regina-document</string>
 		</dict>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
