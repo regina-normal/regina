@@ -4427,6 +4427,7 @@
 		05A47F9B1809CB7600F86BFD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05A47F9C1809CB7600F86BFD /* gap-tests.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "gap-tests.rga"; sourceTree = "<group>"; };
 		05A47FA01809CB7600F86BFD /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05A6284F2AEA14820049739E /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hyperbolic.cpp; path = engine/census/hyperbolic.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C8319B2EEC50099C617 /* csv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csv.cpp; sourceTree = "<group>"; };
 		05A73C8619B2EF130099C617 /* fundgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fundgroup.cpp; path = engine/snappea/fundgroup.cpp; sourceTree = SOURCE_ROOT; };
@@ -6302,6 +6303,7 @@
 		052F9BFD180600FA00FAE4DF /* engine */ = {
 			isa = PBXGroup;
 			children = (
+				05A6284F2AEA14820049739E /* module.modulemap */,
 				052F9BFE180600FA00FAE4DF /* algebra */,
 				052F9C0A180600FA00FAE4DF /* angle */,
 				052F9C12180600FA00FAE4DF /* census */,
@@ -11597,6 +11599,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/engine";
 				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -11655,6 +11658,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/engine";
 				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

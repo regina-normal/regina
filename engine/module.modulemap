@@ -1,0 +1,11 @@
+module ReginaCore {
+    header "core/engine.h"
+    requires cplusplus
+}
+
+module ReginaMaths {
+    header "maths/cyclotomic.h"
+    header "maths/integer.h"
+    header "maths/polynomial.h"
+    requires cplusplus
+}

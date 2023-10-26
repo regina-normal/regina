@@ -8,6 +8,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import ReginaCore
 
 extension UTType {
     static let reginaData = UTType(exportedAs: "org.computop.regina-data")
@@ -17,7 +18,8 @@ struct ReginaDocument: FileDocument {
     var text: String
 
     init(text: String = "Hello, world!") {
-        self.text = text
+        let version = String(cString: regina.versionString())
+        self.text = text + " - version \(version)"
     }
 
     static var readableContentTypes: [UTType] { [.reginaData] }
