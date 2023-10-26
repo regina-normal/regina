@@ -1626,10 +1626,10 @@
 		05A6282F2AE930650049739E /* libgmpxx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05A628332AE932700049739E /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
 		05A628342AE932700049739E /* libtokyocabinet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		05A628452AE9FCC00049739E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A6283F2AE9FBFF0049739E /* libiconv.tbd */; };
-		05A628462AE9FCC20049739E /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A628402AE9FC120049739E /* libxml2.tbd */; };
-		05A628482AE9FCC60049739E /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A628472AE9FCC60049739E /* libbz2.tbd */; };
-		05A6284A2AE9FCC90049739E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A628492AE9FCC90049739E /* libz.tbd */; };
+		05A6284B2AE9FDA50049739E /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 059D6168258866370011E905 /* libbz2.tbd */; };
+		05A6284C2AE9FDA70049739E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEC258241E100965440 /* libiconv.tbd */; };
+		05A6284D2AE9FDAC0049739E /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05A6284E2AE9FDAF0049739E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C8419B2EEC50099C617 /* csv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8319B2EEC50099C617 /* csv.cpp */; };
@@ -4427,10 +4427,6 @@
 		05A47F9B1809CB7600F86BFD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05A47F9C1809CB7600F86BFD /* gap-tests.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "gap-tests.rga"; sourceTree = "<group>"; };
 		05A47FA01809CB7600F86BFD /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		05A6283F2AE9FBFF0049739E /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.0.sdk/usr/lib/libiconv.tbd; sourceTree = DEVELOPER_DIR; };
-		05A628402AE9FC120049739E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.0.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
-		05A628472AE9FCC60049739E /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.0.sdk/usr/lib/libbz2.tbd; sourceTree = DEVELOPER_DIR; };
-		05A628492AE9FCC90049739E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.0.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hyperbolic.cpp; path = engine/census/hyperbolic.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C8319B2EEC50099C617 /* csv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csv.cpp; sourceTree = "<group>"; };
 		05A73C8619B2EF130099C617 /* fundgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fundgroup.cpp; path = engine/snappea/fundgroup.cpp; sourceTree = SOURCE_ROOT; };
@@ -4841,10 +4837,10 @@
 				05A6282E2AE930650049739E /* libgmpxx.xcframework in Frameworks */,
 				05A628332AE932700049739E /* libtokyocabinet.xcframework in Frameworks */,
 				05A6282B2AE930630049739E /* libgmp.xcframework in Frameworks */,
-				05A628452AE9FCC00049739E /* libiconv.tbd in Frameworks */,
-				05A628462AE9FCC20049739E /* libxml2.tbd in Frameworks */,
-				05A6284A2AE9FCC90049739E /* libz.tbd in Frameworks */,
-				05A628482AE9FCC60049739E /* libbz2.tbd in Frameworks */,
+				05A6284B2AE9FDA50049739E /* libbz2.tbd in Frameworks */,
+				05A6284C2AE9FDA70049739E /* libiconv.tbd in Frameworks */,
+				05A6284D2AE9FDAC0049739E /* libxml2.tbd in Frameworks */,
+				05A6284E2AE9FDAF0049739E /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6929,8 +6925,7 @@
 				05B0E13B259AAC98000B62A3 /* Python.framework */,
 				05B0E139259AAC87000B62A3 /* Python3.framework */,
 				057EE01C2582416B004F0068 /* DBChooser.framework */,
-				05A6283D2AE9FBEA0049739E /* System iOS */,
-				05C65E781D9C7B1200877233 /* System macOS */,
+				05C65E781D9C7B1200877233 /* System */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -8375,17 +8370,6 @@
 			path = examples;
 			sourceTree = "<group>";
 		};
-		05A6283D2AE9FBEA0049739E /* System iOS */ = {
-			isa = PBXGroup;
-			children = (
-				05A628472AE9FCC60049739E /* libbz2.tbd */,
-				05A6283F2AE9FBFF0049739E /* libiconv.tbd */,
-				05A628402AE9FC120049739E /* libxml2.tbd */,
-				05A628492AE9FCC90049739E /* libz.tbd */,
-			);
-			name = "System iOS";
-			sourceTree = "<group>";
-		};
 		05AB5F041B942903007034C8 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
@@ -8513,7 +8497,7 @@
 			path = explicit;
 			sourceTree = "<group>";
 		};
-		05C65E781D9C7B1200877233 /* System macOS */ = {
+		05C65E781D9C7B1200877233 /* System */ = {
 			isa = PBXGroup;
 			children = (
 				059D6168258866370011E905 /* libbz2.tbd */,
@@ -8523,7 +8507,7 @@
 				05E0EFED258241E100965440 /* libxml2.tbd */,
 				05E0EFEE258241E100965440 /* libz.tbd */,
 			);
-			name = "System macOS";
+			name = System;
 			sourceTree = "<group>";
 		};
 		05CAE61A274470FF007C93F3 /* stl */ = {
