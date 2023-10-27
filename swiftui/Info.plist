@@ -10,6 +10,8 @@
 				<string>regina-doc-320</string>
 				<string>regina-doc-64</string>
 			</array>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>Regina Data File</string>
 			<key>CFBundleTypeRole</key>
@@ -29,6 +31,8 @@
 				<string>snappea-doc-320</string>
 				<string>snappea-doc-64</string>
 			</array>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>SnapPea Triangulation</string>
 			<key>CFBundleTypeRole</key>
@@ -58,6 +62,13 @@
 				<string>regina-doc-320</string>
 				<string>regina-doc-64</string>
 			</array>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>DocIcon-Regina</string>
+				<key>UTTypeIconText</key>
+				<string>Regina</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.computop.regina-data</string>
 			<key>UTTypeTagSpecification</key>
@@ -85,6 +96,13 @@
 				<string>snappea-doc-320</string>
 				<string>snappea-doc-64</string>
 			</array>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>DocIcon-SnapPea</string>
+				<key>UTTypeIconText</key>
+				<string>SnapPea</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>org.computop.snappea-triangulation</string>
 			<key>UTTypeTagSpecification</key>
