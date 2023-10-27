@@ -318,6 +318,10 @@
 		05199A3925C63BEA0006B8FA /* sageSetup.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05199A2D25C63B3C0006B8FA /* sageSetup.py */; };
 		05199A5C25C63CCE0006B8FA /* listview.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5A25C63CCE0006B8FA /* listview.h */; };
 		05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5B25C63CCE0006B8FA /* typeutils.h */; };
+		051AEB022AEB6F8F00960BBF /* regina-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */; };
+		051AEB032AEB6F8F00960BBF /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 051AEAFF2AEB6F8F00960BBF /* snappea-doc-320.png */; };
+		051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 051AEB002AEB6F8F00960BBF /* regina-doc-320.png */; };
+		051AEB052AEB6F8F00960BBF /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 051AEB012AEB6F8F00960BBF /* snappea-doc-64.png */; };
 		051B97F52321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
 		051B97F62321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
@@ -2989,6 +2993,10 @@
 		05199A8725C63D200006B8FA /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05199A8825C63D200006B8FA /* pytypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pytypes.h; sourceTree = "<group>"; };
 		05199A8925C63D200006B8FA /* complex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = complex.h; sourceTree = "<group>"; };
+		051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-64.png"; sourceTree = "<group>"; };
+		051AEAFF2AEB6F8F00960BBF /* snappea-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-320.png"; sourceTree = "<group>"; };
+		051AEB002AEB6F8F00960BBF /* regina-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-320.png"; sourceTree = "<group>"; };
+		051AEB012AEB6F8F00960BBF /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
 		051B97F42321C91A000A2DCA /* boundaries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundaries.cpp; sourceTree = "<group>"; };
 		051CEA8B1F98969500971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Hypersurfaces.storyboard; sourceTree = "<group>"; };
 		051CEA951F98995D00971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Link.storyboard; sourceTree = "<group>"; };
@@ -6266,6 +6274,17 @@
 			path = detail;
 			sourceTree = "<group>";
 		};
+		051AEAFD2AEB6F8F00960BBF /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				051AEB002AEB6F8F00960BBF /* regina-doc-320.png */,
+				051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */,
+				051AEAFF2AEB6F8F00960BBF /* snappea-doc-320.png */,
+				051AEB012AEB6F8F00960BBF /* snappea-doc-64.png */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 		05249E991DBB508E001FE29E /* python */ = {
 			isa = PBXGroup;
 			children = (
@@ -6287,6 +6306,7 @@
 				0529094D2AE5EA090028990D /* ContentView.swift */,
 				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
 				052909542AE5EA0A0028990D /* Info.plist */,
+				051AEAFD2AEB6F8F00960BBF /* Support */,
 				052909512AE5EA0A0028990D /* Preview Content */,
 			);
 			path = swiftui;
@@ -9430,6 +9450,10 @@
 			files = (
 				052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */,
 				052909502AE5EA0A0028990D /* Assets.xcassets in Resources */,
+				051AEB022AEB6F8F00960BBF /* regina-doc-64.png in Resources */,
+				051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */,
+				051AEB032AEB6F8F00960BBF /* snappea-doc-320.png in Resources */,
+				051AEB052AEB6F8F00960BBF /* snappea-doc-64.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,6 +5,11 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>regina-doc-320</string>
+				<string>regina-doc-64</string>
+			</array>
 			<key>CFBundleTypeName</key>
 			<string>Regina Data File</string>
 			<key>CFBundleTypeRole</key>
@@ -18,6 +23,25 @@
 			<key>NSUbiquitousDocumentUserActivityType</key>
 			<string>$(PRODUCT_BUNDLE_IDENTIFIER).regina-document</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>snappea-doc-320</string>
+				<string>snappea-doc-64</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>SnapPea Triangulation</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.computop.snappea-triangulation</string>
+			</array>
+			<key>NSUbiquitousDocumentUserActivityType</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER).snappea-triangulation</string>
+		</dict>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
@@ -30,7 +54,10 @@
 			<key>UTTypeDescription</key>
 			<string>Regina Data File</string>
 			<key>UTTypeIconFiles</key>
-			<array/>
+			<array>
+				<string>regina-doc-320</string>
+				<string>regina-doc-64</string>
+			</array>
 			<key>UTTypeIdentifier</key>
 			<string>org.computop.regina-data</string>
 			<key>UTTypeTagSpecification</key>
@@ -53,7 +80,10 @@
 			<key>UTTypeDescription</key>
 			<string>SnapPea Triangulation</string>
 			<key>UTTypeIconFiles</key>
-			<array/>
+			<array>
+				<string>snappea-doc-320</string>
+				<string>snappea-doc-64</string>
+			</array>
 			<key>UTTypeIdentifier</key>
 			<string>org.computop.snappea-triangulation</string>
 			<key>UTTypeTagSpecification</key>
