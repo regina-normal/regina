@@ -7,10 +7,26 @@ module ReginaEngine {
 //    header "angle/angleflags.h"
 //    header "angle/anglestructure.h"
 //    header "angle/anglestructures.h"
-    // TODO: census
+//    header "census/census.h"
+    header "census/gluingperms.h"
+    header "census/gluingpermsearcher.h"
+    header "census/gluingpermsearcher2.h"
+//    header "census/gluingpermsearcher3.h"
+//    header "census/gluingpermsearcher4.h"
+    header "census/purgeflags.h"
     header "core/engine.h"
     header "core/output.h"
-    // TODO: enumerate
+    header "enumerate/doubledescription.h"
+    header "enumerate/hilbertcd.h"
+    header "enumerate/hilbertdual.h"
+    header "enumerate/hilbertprimal.h"
+    header "enumerate/maxadmissible.h"
+    header "enumerate/ordering.h"
+//    header "enumerate/treeconstraint.h"
+//    header "enumerate/treelp.h"
+//    header "enumerate/treetraversal.h"
+    header "enumerate/typetrie.h"
+    header "enumerate/validityconstraints.h"
     header "file/fileformat.h"
     header "file/fileinfo.h"
     header "file/globaldirs.h"
@@ -44,7 +60,7 @@ module ReginaEngine {
     // TODO: split
     // TODO: subcomplex
     // TODO: surface
-    // TODO: treewidth
+    header "treewidth/treedecomposition.h"
     header "triangulation/cut.h"
     header "triangulation/dim2.h"
 //    header "triangulation/dim3.h"
