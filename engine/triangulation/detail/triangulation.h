@@ -1010,10 +1010,11 @@ class TriangulationBase :
          * simplex() in dimension \a dim = 2.
          *
          * This alias is available for all dimensions \a dim.
+         * It returns a non-const triangle pointer.
          *
          * See face() for further information.
          */
-        Face<dim, 2>* triangle(size_t index);
+        auto triangle(size_t index);
 
         /**
          * A dimension-specific alias for face<2>(), or an alias for
@@ -1032,10 +1033,11 @@ class TriangulationBase :
          * simplex() in dimension \a dim = 3.
          *
          * This alias is available for dimensions \a dim ≥ 3.
+         * It returns a non-const tetrahedron pointer.
          *
          * See face() for further information.
          */
-        Face<dim, 3>* tetrahedron(size_t index);
+        auto tetrahedron(size_t index);
 
         /**
          * A dimension-specific alias for face<3>(), or an alias for
@@ -1054,10 +1056,11 @@ class TriangulationBase :
          * simplex() in dimension \a dim = 4.
          *
          * This alias is available for dimensions \a dim ≥ 4.
+         * It returns a non-const pentachoron pointer.
          *
          * See face() for further information.
          */
-        Face<dim, 4>* pentachoron(size_t index);
+        auto pentachoron(size_t index);
 
         /**
          * A dimension-specific alias for face<4>(), or an alias for
@@ -4392,7 +4395,7 @@ inline Face<dim, 1>* TriangulationBase<dim>::edge(size_t index) const {
 }
 
 template <int dim>
-inline Face<dim, 2>* TriangulationBase<dim>::triangle(size_t index) {
+inline auto TriangulationBase<dim>::triangle(size_t index) {
     if constexpr (dim == 2) {
         return simplices_[index];
     } else {
@@ -4412,7 +4415,7 @@ inline auto TriangulationBase<dim>::triangle(size_t index) const {
 }
 
 template <int dim>
-inline Face<dim, 3>* TriangulationBase<dim>::tetrahedron(size_t index) {
+inline auto TriangulationBase<dim>::tetrahedron(size_t index) {
     static_assert(dim >= 3, "tetrahedron() is only available "
         "for triangulations of dimension >= 3.");
     if constexpr (dim == 3) {
@@ -4436,7 +4439,7 @@ inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
 }
 
 template <int dim>
-inline Face<dim, 4>* TriangulationBase<dim>::pentachoron(size_t index) {
+inline auto TriangulationBase<dim>::pentachoron(size_t index) {
     static_assert(dim >= 4, "pentachoron() is only available "
         "for triangulations of dimension >= 4.");
     if constexpr (dim == 4) {
