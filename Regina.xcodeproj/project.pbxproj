@@ -907,6 +907,14 @@
 		055115001DCDF63000EC753C /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F91DCDF63000EC753C /* isomorphism.h */; };
 		055115011DCDF63000EC753C /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FA1DCDF63000EC753C /* simplex.h */; };
 		055115021DCDF63000EC753C /* triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FB1DCDF63000EC753C /* triangulation.h */; };
+		0553FA672AEBDF5600BE89A7 /* homgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46DE1DD92D4A00BB00E5 /* homgrouppresentation.cpp */; };
+		0553FA682AEBDF5600BE89A7 /* covers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057B0CB526A5067B0017F5EA /* covers.cpp */; };
+		0553FA692AEBDF5600BE89A7 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261A5278D65B8006A55B1 /* intersectionform.cpp */; };
+		0553FA6A2AEBDF5600BE89A7 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */; };
+		0553FA6B2AEBDF5600BE89A7 /* grouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46DC1DD92D4A00BB00E5 /* grouppresentation.cpp */; };
+		0553FA6C2AEBDF5600BE89A7 /* abeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46DA1DD92D4A00BB00E5 /* abeliangroup.cpp */; };
+		0553FA6D2AEBE08D00BE89A7 /* fileinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64811DA1249600C9420F /* fileinfo.cpp */; };
+		0553FA6E2AEBE09000BE89A7 /* globaldirs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64831DA1249600C9420F /* globaldirs.cpp */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -9959,20 +9967,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0553FA6A2AEBDF5600BE89A7 /* markedabeliangroup.cpp in Sources */,
 				05A6281C2AE921580049739E /* cyclotomic.cpp in Sources */,
 				05A628222AE921580049739E /* primes.cpp in Sources */,
 				05A628182AE9214A0049739E /* perm6.cpp in Sources */,
 				05A6281E2AE921580049739E /* seedprimes.cpp in Sources */,
+				0553FA6B2AEBDF5600BE89A7 /* grouppresentation.cpp in Sources */,
+				0553FA682AEBDF5600BE89A7 /* covers.cpp in Sources */,
 				05A6281A2AE921580049739E /* rational.cpp in Sources */,
 				0529094C2AE5EA090028990D /* ReginaDocument.swift in Sources */,
 				05A628242AE921650049739E /* boolset.cpp in Sources */,
 				05A628112AE91FA70049739E /* engine.cpp in Sources */,
+				0553FA672AEBDF5600BE89A7 /* homgrouppresentation.cpp in Sources */,
 				05A628262AE921700049739E /* randutils.cpp in Sources */,
 				05A628142AE920510049739E /* memstream.cpp in Sources */,
 				05A628272AE921740049739E /* stringutils.cpp in Sources */,
 				05A6281F2AE921580049739E /* matrixops.cpp in Sources */,
 				05A6281B2AE921580049739E /* matrix2.cpp in Sources */,
 				0529094A2AE5EA090028990D /* ReginaApp.swift in Sources */,
+				0553FA692AEBDF5600BE89A7 /* intersectionform.cpp in Sources */,
 				05A628232AE921580049739E /* permgroup.cpp in Sources */,
 				05A628122AE91FDA0049739E /* base64.cpp in Sources */,
 				05A628292AE9217D0049739E /* trieset.cpp in Sources */,
@@ -9982,9 +9995,12 @@
 				05A628212AE921580049739E /* perm.cpp in Sources */,
 				05A628152AE9214A0049739E /* perm7.cpp in Sources */,
 				05A628282AE921790049739E /* tightencoding.cpp in Sources */,
+				0553FA6E2AEBE09000BE89A7 /* globaldirs.cpp in Sources */,
 				0529094E2AE5EA090028990D /* ContentView.swift in Sources */,
+				0553FA6D2AEBE08D00BE89A7 /* fileinfo.cpp in Sources */,
 				05A628172AE9214A0049739E /* perm4.cpp in Sources */,
 				05A628132AE920470049739E /* i18nutils.cpp in Sources */,
+				0553FA6C2AEBDF5600BE89A7 /* abeliangroup.cpp in Sources */,
 				05A628192AE9214A0049739E /* perm5.cpp in Sources */,
 				05A628202AE921580049739E /* numbertheory.cpp in Sources */,
 				05A6282A2AE921820049739E /* xmlutils.cpp in Sources */,
@@ -11596,6 +11612,11 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = swiftui/Info.plist;
@@ -11655,6 +11676,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = swiftui/Info.plist;

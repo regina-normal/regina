@@ -8,7 +8,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
-import ReginaCore
+import ReginaEngine
 
 extension UTType {
     static let reginaData = UTType(exportedAs: "org.computop.regina-data")

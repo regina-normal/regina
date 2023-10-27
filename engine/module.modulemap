@@ -1,11 +1,68 @@
-module ReginaCore {
+module ReginaEngine {
+    header "algebra/abeliangroup.h"
+    header "algebra/grouppresentation.h"
+    header "algebra/homgrouppresentation.h"
+    header "algebra/intersectionform.h"
+    header "algebra/markedabeliangroup.h"
+    // TODO: angle
+    // TODO: census
     header "core/engine.h"
-    requires cplusplus
-}
-
-module ReginaMaths {
+    header "core/output.h"
+    // TODO: enumerate
+    header "file/fileformat.h"
+    header "file/fileinfo.h"
+    header "file/globaldirs.h"
+    // TODO: foreign
+    // TODO: hypersurface
+    // TODO: link
+    // TODO: manifold
+    header "maths/binom.h"
     header "maths/cyclotomic.h"
     header "maths/integer.h"
+    header "maths/laurent.h"
+    header "maths/laurent2.h"
+    header "maths/matrix.h"
+    header "maths/matrix2.h"
+    header "maths/matrixops.h"
+    header "maths/numbertheory.h"
+    header "maths/perm.h"
+    header "maths/permgroup.h"
     header "maths/polynomial.h"
+    header "maths/primes.h"
+    header "maths/rational.h"
+    header "maths/vector.h"
+    // TODO: packet
+    header "progress/progresstracker.h"
+    // TODO: snappea
+    // TODO: split
+    // TODO: subcomplex
+    // TODO: surface
+    // TODO: treewidth
+    // TODO: triangulation
+    header "utilities/base64.h"
+    header "utilities/bitmanip.h"
+    header "utilities/bitmask.h"
+    header "utilities/boolset.h"
+    header "utilities/exception.h"
+    header "utilities/flags.h"
+    header "utilities/i18nutils.h"
+    header "utilities/intutils.h"
+    header "utilities/listview.h"
+    header "utilities/markedvector.h"
+    header "utilities/memstream.h"
+    header "utilities/osutils.h"
+    header "utilities/qitmask.h"
+    header "utilities/randutils.h"
+    header "utilities/sequence.h"
+    header "utilities/shortarray.h"
+    header "utilities/sigutils.h"
+    header "utilities/snapshot.h"
+    header "utilities/stringutils.h"
+    header "utilities/tableview.h"
+    header "utilities/tightencoding.h"
+    header "utilities/topologylock.h"
+    header "utilities/trieset.h"
+    // TODO: header "utilities/typeutils.h"
+    header "utilities/xmlutils.h"
     requires cplusplus
 }
