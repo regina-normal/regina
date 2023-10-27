@@ -40,7 +40,8 @@
 #endif
 
 #include <optional>
-#include "packet/packet.h"
+#include "core/output.h"
+#include "file/fileformat.h"
 
 namespace regina {
 
