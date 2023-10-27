@@ -1819,9 +1819,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * There is an alternate version of this function that avoids
          * creating spurious temporaries (which may help with performance).
          *
-         * \param the row of the requested entry; this must be between 0
+         * \param row the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * \param the column of the requested entry; this must be between 0
+         * \param col the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
          * \return the requested entry in this tableaux.
          */
@@ -1838,9 +1838,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * natural (it returns its answer), but creates an additional
          * temporary variable (which may hinder performance).
          *
-         * \param the row of the requested entry; this must be between 0
+         * \param row the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * \param the column of the requested entry; this must be between 0
+         * \param col the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
          * \param ans an integer that will be set to the requested entry
          * in this tableaux.
@@ -1854,9 +1854,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * computed on the fly.  However, this computation is fast
          * because the computations use sparse vector multiplication.
          *
-         * \param the row of the requested entry; this must be between 0
+         * \param row the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * \param the column of the requested entry; this must be between 0
+         * \param col the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
          * \return +1, -1 or 0 according to whether the requested entry
          * is positive, negative or zero.
