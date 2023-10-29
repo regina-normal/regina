@@ -155,5 +155,6 @@ module ReginaEngine {
     header "utilities/trieset.h"
     header "utilities/typeutils.h"
     header "utilities/xmlutils.h"
+    header "swift/packet.h"
     requires cplusplus
 }

@@ -12,7 +12,9 @@ struct ContentView: View {
     @Binding var document: ReginaDocument
 
     var body: some View {
-        TextEditor(text: $document.text)
+        Label(String(document.root.label()), systemImage: /*@START_MENU_TOKEN@*/"42.circle"/*@END_MENU_TOKEN@*/)
+        // TextEditor(text: $document.text)
+        // Label(title: document.data.label())
     }
 }
 
