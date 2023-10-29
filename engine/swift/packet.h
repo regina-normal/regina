@@ -86,6 +86,13 @@ struct SharedPacket {
             return packet_->firstChild();
         }
 
+        std::string save() {
+            // Always uncompressed.
+            std::ostringstream s;
+            packet_->save(s, false);
+            return s.str();
+        }
+
         static SharedPacket open(const char* buffer, size_t size) {
             mem_istream s(buffer, buffer + size);
             return regina::open(s);

@@ -15,9 +15,10 @@ extension UTType {
     static let snapPeaTriangulation = UTType(exportedAs: "org.computop.snappea-triangulation")
 }
 
-// TODO: Should we be using class ReferenceFileDocument instead?
-struct ReginaDocument: FileDocument {
-    // TODO: We need a way to observe changes to the packet and/or the packet tree
+// TODO: Remember whether the data file was compressed when opened, and write it the same way.
+class ReginaDocument: ReferenceFileDocument {
+    // TODO: We need a way to observe changes to the packet and/or the packet tree.
+    // This should happen via the ObservableObject protocol (which ReferenceFileDocument inherits).
     var root: regina.SharedPacket
 
     static var readableContentTypes: [UTType] { [.reginaData, .snapPeaTriangulation] }
@@ -29,7 +30,7 @@ struct ReginaDocument: FileDocument {
     
     // TODO: Add an action that opens sample-misc
 
-    init(configuration: ReadConfiguration) throws {
+    required init(configuration: ReadConfiguration) throws {
         guard let data = configuration.file.regularFileContents
         else {
             throw CocoaError(.fileReadCorruptFile)
@@ -54,11 +55,15 @@ struct ReginaDocument: FileDocument {
         }
     }
     
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        // TODO: We need a FileWrapper with a custom write()
-        // TODO: ensure that writing is done in a threadsafe manner
-//        let data = text.data(using: .utf8)!
-//        return .init(regularFileWithContents: data)
-        throw CocoaError(.fileWriteUnsupportedScheme)
+    typealias Snapshot = std.string
+    
+    func snapshot(contentType: UTType) throws -> Snapshot {
+        return root.save()
+    }
+    
+    func fileWrapper(snapshot: Snapshot, configuration: WriteConfiguration) throws -> FileWrapper {
+        // TODO: We are doing several deep copies here.
+        // TODO: Support compression
+        return .init(regularFileWithContents: String(snapshot).data(using: .utf8)!)
     }
 }
