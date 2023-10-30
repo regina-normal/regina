@@ -607,6 +607,7 @@ void TriangulationBase<dim>::clearBaseProperties() {
     // Clear properties.
     if (! topologyLocked()) {
         fundGroup_.reset();
+        simplifiedFundGroup_.reset();
         H1_.reset();
     }
 }
@@ -634,6 +635,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     faces_.swap(other.faces_);
     nBoundaryFaces_.swap(other.nBoundaryFaces_);
     fundGroup_.swap(other.fundGroup_);
+    simplifiedFundGroup_.swap(other.simplifiedFundGroup_);
     H1_.swap(other.H1_);
 }
 

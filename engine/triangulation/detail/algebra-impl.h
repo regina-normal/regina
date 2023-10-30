@@ -174,15 +174,27 @@ AbelianGroup TriangulationBase<dim>::homology() const {
 }
 
 template <int dim>
-const GroupPresentation& TriangulationBase<dim>::group() const {
-    if (fundGroup_.has_value())
-        return *fundGroup_;
-
+const GroupPresentation& TriangulationBase<dim>::group(bool simplify) const {
+    if (simplify) {
+        if (simplifiedFundGroup_)
+            return *simplifiedFundGroup_;
+        if (isEmpty())
+            return *(simplifiedFundGroup_ = GroupPresentation());
+        GroupPresentation ans =
+            fundGroup_ ? *fundGroup_ : unsimplifiedGroup();
+        ans.intelligentSimplify();
+        return *(simplifiedFundGroup_ = std::move(ans));
+    } else {
+        if (isEmpty())
+            return *(fundGroup_ = GroupPresentation());
+        return *(fundGroup_ = unsimplifiedGroup());
+    }
+}
+    
+template <int dim>
+GroupPresentation TriangulationBase<dim>::unsimplifiedGroup() const {
     GroupPresentation ans;
-
-    if (isEmpty())
-        return *(fundGroup_ = std::move(ans));
-
+    
     // Calculate a maximal forest in the dual 1-skeleton.
     ensureSkeleton();
 
@@ -199,7 +211,8 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
     ans.addGenerator(nGens);
 
     // Find out which (dim-1)-face corresponds to which generator.
-    long* genIndex = new long[countFaces<dim-1>()];
+    std::unique_ptr<long[]> genIndex =
+        std::make_unique<long[]>(countFaces<dim-1>());
     long i = 0;
     for (Face<dim, dim-1>* f : faces<dim-1>())
         if (! (f->isBoundary() || f->inMaximalForest()))
@@ -234,11 +247,7 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
         }
     }
 
-    // Tidy up.
-    delete[] genIndex;
-    ans.intelligentSimplify();
-
-    return *(fundGroup_ = std::move(ans));
+    return ans;
 }
 
 template <int dim>

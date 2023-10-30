@@ -256,8 +256,10 @@ void addTriangulation4(pybind11::module_& m) {
         .def("isConnected", &Triangulation<4>::isConnected,
             rbase::isConnected)
         .def("group", &Triangulation<4>::group,
+            pybind11::arg("simplify") = true,
             pybind11::return_value_policy::reference_internal, rbase::group)
         .def("fundamentalGroup", &Triangulation<4>::fundamentalGroup,
+            pybind11::arg("simplify") = true,
             pybind11::return_value_policy::reference_internal,
             rbase::fundamentalGroup)
         .def("setGroupPresentation",

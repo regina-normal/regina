@@ -116,6 +116,16 @@ g.relation(0).term(0).exponent = 7
 print(t)
 print()
 
+T = Example3.figureEight()
+g = T.group(simplify=False)
+# Ensure that python cannot modify a triangulations's group presentation.
+h = g.intelligentSimplify()
+g = T.group(simplify=False)
+for r in g.relations():
+	print(r)
+
+print()
+
 n = NormalSurfaces(Example3.figureEight(), NS_QUAD)
 
 for s in n:
