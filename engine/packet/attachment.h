@@ -74,7 +74,7 @@ namespace regina {
  * \ingroup packet
  */
 class Attachment : public Packet {
-    REGINA_PACKET(PACKET_ATTACHMENT, "Attachment")
+    REGINA_PACKET(PacketType::Attachment, "Attachment")
 
     public:
         /**

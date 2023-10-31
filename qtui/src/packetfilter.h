@@ -103,7 +103,7 @@ class TwoTypeFilter : public PacketFilter {
          * PacketFilter overrides.
          */
         bool accept(const regina::Packet& packet) override {
-            int type = packet.type();
+            regina::PacketType type = packet.type();
             return (type == S::typeID || type == T::typeID);
         }
 };

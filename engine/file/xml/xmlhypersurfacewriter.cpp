@@ -44,7 +44,7 @@ template <>
 void XMLWriter<NormalHypersurfaces>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
         out_ << R"(<packet type="Normal Hypersurface List" typeid=")"
-            << PACKET_NORMALHYPERSURFACES << '"';
+            << static_cast<int>(PacketType::NormalHypersurfaces) << '"';
     } else {
         out_ << R"(<hypersurfaces tri=")" << triID_
             << R"(" type=")" << data_.which_.intValue()

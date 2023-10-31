@@ -36,40 +36,70 @@
 #include "../helpers.h"
 #include "../docstrings/packet/packettype.h"
 
-#define WRAP_PACKET_TYPE(val) .value(#val, regina::val, rdoc::val)
+#define WRAP_PACKET_TYPE(val) .value(#val, regina::PacketType::val, rdoc::val)
 
 void addPacketType(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PacketType)
 
     pybind11::enum_<regina::PacketType>(m, "PacketType", rdoc_scope)
-        WRAP_PACKET_TYPE(PACKET_NONE)
-        WRAP_PACKET_TYPE(PACKET_CONTAINER)
-        WRAP_PACKET_TYPE(PACKET_TEXT)
-        WRAP_PACKET_TYPE(PACKET_SCRIPT)
-        WRAP_PACKET_TYPE(PACKET_ATTACHMENT)
-        WRAP_PACKET_TYPE(PACKET_ANGLESTRUCTURES)
-        WRAP_PACKET_TYPE(PACKET_NORMALSURFACES)
-        WRAP_PACKET_TYPE(PACKET_SURFACEFILTER)
-        WRAP_PACKET_TYPE(PACKET_NORMALHYPERSURFACES)
-        WRAP_PACKET_TYPE(PACKET_SNAPPEATRIANGULATION)
-        WRAP_PACKET_TYPE(PACKET_LINK)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION2)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION3)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION4)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION5)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION6)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION7)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION8)
+        WRAP_PACKET_TYPE(None)
+        WRAP_PACKET_TYPE(Container)
+        WRAP_PACKET_TYPE(Text)
+        WRAP_PACKET_TYPE(Script)
+        WRAP_PACKET_TYPE(Attachment)
+        WRAP_PACKET_TYPE(AngleStructures)
+        WRAP_PACKET_TYPE(NormalSurfaces)
+        WRAP_PACKET_TYPE(SurfaceFilter)
+        WRAP_PACKET_TYPE(NormalHypersurfaces)
+        WRAP_PACKET_TYPE(SnapPea)
+        WRAP_PACKET_TYPE(Link)
+        WRAP_PACKET_TYPE(Triangulation2)
+        WRAP_PACKET_TYPE(Triangulation3)
+        WRAP_PACKET_TYPE(Triangulation4)
+        WRAP_PACKET_TYPE(Triangulation5)
+        WRAP_PACKET_TYPE(Triangulation6)
+        WRAP_PACKET_TYPE(Triangulation7)
+        WRAP_PACKET_TYPE(Triangulation8)
 #ifdef REGINA_HIGHDIM
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION9)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION10)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION11)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION12)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION13)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION14)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION15)
+        WRAP_PACKET_TYPE(Triangulation9)
+        WRAP_PACKET_TYPE(Triangulation10)
+        WRAP_PACKET_TYPE(Triangulation11)
+        WRAP_PACKET_TYPE(Triangulation12)
+        WRAP_PACKET_TYPE(Triangulation13)
+        WRAP_PACKET_TYPE(Triangulation14)
+        WRAP_PACKET_TYPE(Triangulation15)
 #endif
-        .export_values();
+        ;
+
+    // Deprecated constants:
+    m.attr("PACKET_NONE") = regina::PacketType::None;
+    m.attr("PACKET_CONTAINER") = regina::PacketType::Container;
+    m.attr("PACKET_TEXT") = regina::PacketType::Text;
+    m.attr("PACKET_SCRIPT") = regina::PacketType::Script;
+    m.attr("PACKET_ATTACHMENT") = regina::PacketType::Attachment;
+    m.attr("PACKET_ANGLESTRUCTURES") = regina::PacketType::AngleStructures;
+    m.attr("PACKET_NORMALSURFACES") = regina::PacketType::NormalSurfaces;
+    m.attr("PACKET_SURFACEFILTER") = regina::PacketType::SurfaceFilter;
+    m.attr("PACKET_NORMALHYPERSURFACES") =
+        regina::PacketType::NormalHypersurfaces;
+    m.attr("PACKET_SNAPPEATRIANGULATION") = regina::PacketType::SnapPea;
+    m.attr("PACKET_LINK") = regina::PacketType::Link;
+    m.attr("PACKET_TRIANGULATION2") = regina::PacketType::Triangulation2;
+    m.attr("PACKET_TRIANGULATION3") = regina::PacketType::Triangulation3;
+    m.attr("PACKET_TRIANGULATION4") = regina::PacketType::Triangulation4;
+    m.attr("PACKET_TRIANGULATION5") = regina::PacketType::Triangulation5;
+    m.attr("PACKET_TRIANGULATION6") = regina::PacketType::Triangulation6;
+    m.attr("PACKET_TRIANGULATION7") = regina::PacketType::Triangulation7;
+    m.attr("PACKET_TRIANGULATION8") = regina::PacketType::Triangulation8;
+#ifdef REGINA_HIGHDIM
+    m.attr("PACKET_TRIANGULATION9") = regina::PacketType::Triangulation9;
+    m.attr("PACKET_TRIANGULATION10") = regina::PacketType::Triangulation10;
+    m.attr("PACKET_TRIANGULATION11") = regina::PacketType::Triangulation11;
+    m.attr("PACKET_TRIANGULATION12") = regina::PacketType::Triangulation12;
+    m.attr("PACKET_TRIANGULATION13") = regina::PacketType::Triangulation13;
+    m.attr("PACKET_TRIANGULATION14") = regina::PacketType::Triangulation14;
+    m.attr("PACKET_TRIANGULATION15") = regina::PacketType::Triangulation15;
+#endif
 
     RDOC_SCOPE_SWITCH(PacketInfo)
 

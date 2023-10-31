@@ -47,7 +47,7 @@ void XMLWriter<Triangulation<dim>>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
         out_ << R"(<packet type=")" << dim
             << R"(-Manifold Triangulation" typeid=")"
-            << PacketOf<Triangulation<dim>>::typeID << '"';
+            << static_cast<int>(PacketOf<Triangulation<dim>>::typeID) << '"';
     } else {
         out_ << R"(<tri dim=")" << dim << R"(" size=")" << data_.size()
             << R"(" perm=")" << (useSnIndex ? "index" : "imagepack") << '"';

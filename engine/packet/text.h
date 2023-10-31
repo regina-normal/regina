@@ -59,7 +59,7 @@ class Text;
  * \ingroup packet
  */
 class Text : public Packet {
-    REGINA_PACKET(PACKET_TEXT, "Text")
+    REGINA_PACKET(PacketType::Text, "Text")
 
     private:
         std::string text_;

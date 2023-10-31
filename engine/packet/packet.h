@@ -4182,7 +4182,7 @@ std::string PacketData<Held>::anonID() const {
 template <typename Held>
 inline PacketData<Held>::PacketChangeSpan::PacketChangeSpan(PacketData& data) :
         data_(data) {
-    static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
+    static_assert(PacketOf<Held>::typeID != PacketType::Triangulation3,
         "The generic PacketChangeSpan constructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
     if (data_.heldBy_ == HELD_BY_PACKET) {
@@ -4195,7 +4195,7 @@ inline PacketData<Held>::PacketChangeSpan::PacketChangeSpan(PacketData& data) :
 
 template <typename Held>
 inline PacketData<Held>::PacketChangeSpan::~PacketChangeSpan() {
-    static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
+    static_assert(PacketOf<Held>::typeID != PacketType::Triangulation3,
         "The generic PacketChangeSpan destructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
     if (data_.heldBy_ == HELD_BY_PACKET) {
@@ -4286,7 +4286,7 @@ void Packet::writeXMLHeader(std::ostream& out, const char* element,
         std::pair<const char*, Args>... args) const {
     if (format == REGINA_XML_GEN_2) {
         out << "<packet type=\"" << typeName()
-            << "\" typeid=\"" << type() << "\"\n\t";
+            << "\" typeid=\"" << static_cast<int>(type()) << "\"\n\t";
     } else {
         out << '<' << element << ' ';
         ((out << args.first << "=\"" << args.second << "\" "), ...);

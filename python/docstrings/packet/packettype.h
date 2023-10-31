@@ -52,66 +52,66 @@ Returns:
 
 namespace PacketType_ {
 
-// Docstring regina::python::doc::PacketType_::PACKET_ANGLESTRUCTURES
-static const char *PACKET_ANGLESTRUCTURES = R"doc(Represents an angle structure list, of class AngleStructures.)doc";
+// Docstring regina::python::doc::PacketType_::AngleStructures
+static const char *AngleStructures = R"doc(Represents an angle structure list, of class AngleStructures.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_ATTACHMENT
-static const char *PACKET_ATTACHMENT = R"doc(Represents an arbitrary file attachment, of class Attachment.)doc";
+// Docstring regina::python::doc::PacketType_::Attachment
+static const char *Attachment = R"doc(Represents an arbitrary file attachment, of class Attachment.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_CONTAINER
-static const char *PACKET_CONTAINER = R"doc(Represents a container packet, of class Container.)doc";
+// Docstring regina::python::doc::PacketType_::Container
+static const char *Container = R"doc(Represents a container packet, of class Container.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_LINK
-static const char *PACKET_LINK = R"doc(Represents a knot or link in the 3-sphere, of class Link.)doc";
+// Docstring regina::python::doc::PacketType_::Link
+static const char *Link = R"doc(Represents a knot or link in the 3-sphere, of class Link.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_NONE
-static const char *PACKET_NONE =
+// Docstring regina::python::doc::PacketType_::None
+static const char *None =
 R"doc(Does not represent any of Regina's packet types.
 
 This can be used (for example) for initialising a PacketType variable.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_NORMALHYPERSURFACES
-static const char *PACKET_NORMALHYPERSURFACES = R"doc(Represents a normal hypersurface list, of class NormalHypersurfaces.)doc";
+// Docstring regina::python::doc::PacketType_::NormalHypersurfaces
+static const char *NormalHypersurfaces = R"doc(Represents a normal hypersurface list, of class NormalHypersurfaces.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_NORMALSURFACES
-static const char *PACKET_NORMALSURFACES = R"doc(Represents a normal surface list, of class NormalSurfaces.)doc";
+// Docstring regina::python::doc::PacketType_::NormalSurfaces
+static const char *NormalSurfaces = R"doc(Represents a normal surface list, of class NormalSurfaces.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_SCRIPT
-static const char *PACKET_SCRIPT = R"doc(Represents a script packet, of class Script.)doc";
+// Docstring regina::python::doc::PacketType_::Script
+static const char *Script = R"doc(Represents a script packet, of class Script.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_SNAPPEATRIANGULATION
-static const char *PACKET_SNAPPEATRIANGULATION =
+// Docstring regina::python::doc::PacketType_::SnapPea
+static const char *SnapPea =
 R"doc(Represents a triangulation in the embedded SnapPea kernel, of class
 SnapPeaTriangulation.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_SURFACEFILTER
-static const char *PACKET_SURFACEFILTER =
+// Docstring regina::python::doc::PacketType_::SurfaceFilter
+static const char *SurfaceFilter =
 R"doc(Represents a normal surface filter, of class SurfaceFilter or one of
 its descendant classes.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TEXT
-static const char *PACKET_TEXT = R"doc(Represents a text packet, of class Text.)doc";
+// Docstring regina::python::doc::PacketType_::Text
+static const char *Text = R"doc(Represents a text packet, of class Text.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TRIANGULATION2
-static const char *PACKET_TRIANGULATION2 = R"doc(Represents a 2-dimensional triangulation, of class Triangulation<2>.)doc";
+// Docstring regina::python::doc::PacketType_::Triangulation2
+static const char *Triangulation2 = R"doc(Represents a 2-dimensional triangulation, of class Triangulation<2>.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TRIANGULATION3
-static const char *PACKET_TRIANGULATION3 = R"doc(Represents a 3-dimensional triangulation, of class Triangulation<3>.)doc";
+// Docstring regina::python::doc::PacketType_::Triangulation3
+static const char *Triangulation3 = R"doc(Represents a 3-dimensional triangulation, of class Triangulation<3>.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TRIANGULATION4
-static const char *PACKET_TRIANGULATION4 = R"doc(Represents a 4-dimensional triangulation, of class Triangulation<4>.)doc";
+// Docstring regina::python::doc::PacketType_::Triangulation4
+static const char *Triangulation4 = R"doc(Represents a 4-dimensional triangulation, of class Triangulation<4>.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TRIANGULATION5
-static const char *PACKET_TRIANGULATION5 = R"doc(Represents a 5-dimensional triangulation, of class Triangulation<5>.)doc";
+// Docstring regina::python::doc::PacketType_::Triangulation5
+static const char *Triangulation5 = R"doc(Represents a 5-dimensional triangulation, of class Triangulation<5>.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TRIANGULATION6
-static const char *PACKET_TRIANGULATION6 = R"doc(Represents a 6-dimensional triangulation, of class Triangulation<6>.)doc";
+// Docstring regina::python::doc::PacketType_::Triangulation6
+static const char *Triangulation6 = R"doc(Represents a 6-dimensional triangulation, of class Triangulation<6>.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TRIANGULATION7
-static const char *PACKET_TRIANGULATION7 = R"doc(Represents a 7-dimensional triangulation, of class Triangulation<7>.)doc";
+// Docstring regina::python::doc::PacketType_::Triangulation7
+static const char *Triangulation7 = R"doc(Represents a 7-dimensional triangulation, of class Triangulation<7>.)doc";
 
-// Docstring regina::python::doc::PacketType_::PACKET_TRIANGULATION8
-static const char *PACKET_TRIANGULATION8 = R"doc(Represents a 8-dimensional triangulation, of class Triangulation<8>.)doc";
+// Docstring regina::python::doc::PacketType_::Triangulation8
+static const char *Triangulation8 = R"doc(Represents a 8-dimensional triangulation, of class Triangulation<8>.)doc";
 
 }
 

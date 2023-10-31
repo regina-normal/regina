@@ -197,7 +197,7 @@ void FilterCombUI::refreshChildList() {
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
     for (auto p = filter->firstChild(); p; p = p->nextSibling())
-        if (p->type() == regina::PACKET_SURFACEFILTER) {
+        if (p->type() == regina::PacketType::SurfaceFilter) {
             new QListWidgetItem(PacketManager::icon(*p),
                 p->humanLabel().c_str(), children);
 

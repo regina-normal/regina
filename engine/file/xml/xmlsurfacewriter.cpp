@@ -44,7 +44,7 @@ template <>
 void XMLWriter<NormalSurfaces>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
         out_ << R"(<packet type="Normal Surface List" typeid=")"
-            << PACKET_NORMALSURFACES << '"';
+            << static_cast<int>(PacketType::NormalSurfaces) << '"';
     } else {
         out_ << R"(<surfaces tri=")" << triID_
             << R"(" type=")" << data_.which_.intValue()

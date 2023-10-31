@@ -443,7 +443,7 @@ void Triangulation<3>::snapPeaPostChange() {
 Triangulation<3>& static_triangulation3_cast(Packet& p) {
     // This is in the .cpp file so we can keep snappeatriangulation.h
     // out of the main Triangulation<3> headers.
-    if (p.type() == PACKET_SNAPPEATRIANGULATION)
+    if (p.type() == PacketType::SnapPea)
         return static_packet_cast<SnapPeaTriangulation>(p);
     else
         return static_packet_cast<Triangulation<3>>(p);
@@ -452,7 +452,7 @@ Triangulation<3>& static_triangulation3_cast(Packet& p) {
 const Triangulation<3>& static_triangulation3_cast(const Packet& p) {
     // This is in the .cpp file so we can keep snappeatriangulation.h
     // out of the main Triangulation<3> headers.
-    if (p.type() == PACKET_SNAPPEATRIANGULATION)
+    if (p.type() == PacketType::SnapPea)
         return static_packet_cast<const SnapPeaTriangulation>(p);
     else
         return static_packet_cast<const Triangulation<3>>(p);

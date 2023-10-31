@@ -122,6 +122,12 @@ Version 7.4  [ (to be announced) ]
             - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
             - The inner ChangeEventSpan class has a new member function held().
+        Enum PacketType:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., PACKET_TRIANGULATION3) have been
+              renamed as scoped enum values (e.g., PacketType::Triangulation3).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Perm<n>:
             - New routine hash().
             - New class constant degree.

@@ -44,7 +44,7 @@ template <>
 void XMLWriter<AngleStructures>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
         out_ << R"(<packet type="Angle Structure List" typeid=")"
-            << PACKET_ANGLESTRUCTURES << '"';
+            << static_cast<int>(PacketType::AngleStructures) << '"';
     } else {
         out_ << R"(<angles tri=")" << triID_
             << R"(" tautonly=")" << (data_.tautOnly_ ? 'T' : 'F')

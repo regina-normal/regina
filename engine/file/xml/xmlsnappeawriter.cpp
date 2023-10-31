@@ -43,7 +43,7 @@ template <>
 void XMLWriter<SnapPeaTriangulation>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
         out_ << R"(<packet type="SnapPea Triangulation" typeid=")"
-            << PACKET_SNAPPEATRIANGULATION << '"';
+            << static_cast<int>(PacketType::SnapPea) << '"';
     } else {
         out_ << "<snappeadata";
     }

@@ -53,114 +53,362 @@ namespace regina {
  *
  * \ingroup packet
  */
-enum PacketType {
+enum class PacketType {
     /**
      * Does not represent any of Regina's packet types.
      *
      * This can be used (for example) for initialising a PacketType variable.
      */
-    PACKET_NONE = 0,
+    None = 0,
     /**
      * Represents a container packet, of class Container.
      */
-    PACKET_CONTAINER = 1,
+    Container = 1,
     /**
      * Represents a text packet, of class Text.
      */
-    PACKET_TEXT = 2,
+    Text = 2,
     /**
      * Represents a normal surface list, of class NormalSurfaces.
      */
-    PACKET_NORMALSURFACES = 6,
+    NormalSurfaces = 6,
     /**
      * Represents a script packet, of class Script.
      */
-    PACKET_SCRIPT = 7,
+    Script = 7,
     /**
      * Represents a normal surface filter, of class SurfaceFilter or
      * one of its descendant classes.
      */
-    PACKET_SURFACEFILTER = 8,
+    SurfaceFilter = 8,
     /**
      * Represents an angle structure list, of class AngleStructures.
      */
-    PACKET_ANGLESTRUCTURES = 9,
+    AngleStructures = 9,
     /**
      * Represents an arbitrary file attachment, of class Attachment.
      */
-    PACKET_ATTACHMENT = 10,
+    Attachment = 10,
     /**
      * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
-    PACKET_NORMALHYPERSURFACES = 13,
+    NormalHypersurfaces = 13,
     /**
      * Represents a triangulation in the embedded SnapPea kernel, of
      * class SnapPeaTriangulation.
      */
-    PACKET_SNAPPEATRIANGULATION = 16,
+    SnapPea = 16,
     /**
      * Represents a knot or link in the 3-sphere, of class Link.
      */
-    PACKET_LINK = 17,
+    Link = 17,
     /**
      * Represents a 2-dimensional triangulation, of class Triangulation<2>.
      */
-    PACKET_TRIANGULATION2 = 15,
+    Triangulation2 = 15,
     /**
      * Represents a 3-dimensional triangulation, of class Triangulation<3>.
      */
-    PACKET_TRIANGULATION3 = 3,
+    Triangulation3 = 3,
     /**
      * Represents a 4-dimensional triangulation, of class Triangulation<4>.
      */
-    PACKET_TRIANGULATION4 = 11,
+    Triangulation4 = 11,
     /**
      * Represents a 5-dimensional triangulation, of class Triangulation<5>.
      */
-    PACKET_TRIANGULATION5 = 105,
+    Triangulation5 = 105,
     /**
      * Represents a 6-dimensional triangulation, of class Triangulation<6>.
      */
-    PACKET_TRIANGULATION6 = 106,
+    Triangulation6 = 106,
     /**
      * Represents a 7-dimensional triangulation, of class Triangulation<7>.
      */
-    PACKET_TRIANGULATION7 = 107,
+    Triangulation7 = 107,
     /**
      * Represents a 8-dimensional triangulation, of class Triangulation<8>.
      */
-    PACKET_TRIANGULATION8 = 108,
+    Triangulation8 = 108,
 #ifdef REGINA_HIGHDIM
     /**
      * Represents a 9-dimensional triangulation, of class Triangulation<9>.
      */
-    PACKET_TRIANGULATION9 = 109,
+    Triangulation9 = 109,
     /**
      * Represents a 10-dimensional triangulation, of class Triangulation<10>.
      */
-    PACKET_TRIANGULATION10 = 110,
+    Triangulation10 = 110,
     /**
      * Represents a 11-dimensional triangulation, of class Triangulation<11>.
      */
-    PACKET_TRIANGULATION11 = 111,
+    Triangulation11 = 111,
     /**
      * Represents a 12-dimensional triangulation, of class Triangulation<12>.
      */
-    PACKET_TRIANGULATION12 = 112,
+    Triangulation12 = 112,
     /**
      * Represents a 13-dimensional triangulation, of class Triangulation<13>.
      */
-    PACKET_TRIANGULATION13 = 113,
+    Triangulation13 = 113,
     /**
      * Represents a 14-dimensional triangulation, of class Triangulation<14>.
      */
-    PACKET_TRIANGULATION14 = 114,
+    Triangulation14 = 114,
     /**
      * Represents a 15-dimensional triangulation, of class Triangulation<15>.
      */
-    PACKET_TRIANGULATION15 = 115
+    Triangulation15 = 115
 #endif /* REGINA_HIGHDIM */
 };
+
+/**
+ * A deprecated constant that does not represent any of Regina's packet types.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::None instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_NONE = PacketType::None;
+/**
+ * A deprecated constant that represents a container packet.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Container instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_CONTAINER = PacketType::Container;
+/**
+ * A deprecated constant that represents a text packet.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Text instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TEXT = PacketType::Text;
+/**
+ * A deprecated constant that represents a normal surface list.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::NormalSurfaces instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_NORMALSURFACES =
+    PacketType::NormalSurfaces;
+/**
+ * A deprecated constant that represents a script packet.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Script instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_SCRIPT = PacketType::Script;
+/**
+ * A deprecated constant that represents a normal surface filter.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::SurfaceFilter instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_SURFACEFILTER =
+    PacketType::SurfaceFilter;
+/**
+ * A deprecated constant that represents an angle structure list.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::AngleStructures instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_ANGLESTRUCTURES =
+    PacketType::AngleStructures;
+/**
+ * A deprecated constant that represents an arbitrary file attachment.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Attachment instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_ATTACHMENT = PacketType::Attachment;
+/**
+ * A deprecated constant that represents a normal hypersurface list.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::NormalHypersurfaces instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_NORMALHYPERSURFACES =
+    PacketType::NormalHypersurfaces;
+/**
+ * A deprecated constant that represents a triangulation in the embedded
+ * SnapPea kernel.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::SnapPea instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_SNAPPEATRIANGULATION =
+    PacketType::SnapPea;
+/**
+ * A deprecated constant that represents a knot or link in the 3-sphere.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Link instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_LINK = PacketType::Link;
+/**
+ * A deprecated constant that represents a 2-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation2 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION2 =
+    PacketType::Triangulation2;
+/**
+ * A deprecated constant that represents a 3-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation3 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION3 =
+    PacketType::Triangulation3;
+/**
+ * A deprecated constant that represents a 4-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation4 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION4 =
+    PacketType::Triangulation4;
+/**
+ * A deprecated constant that represents a 5-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation5 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION5 =
+    PacketType::Triangulation5;
+/**
+ * A deprecated constant that represents a 6-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation6 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION6 =
+    PacketType::Triangulation6;
+/**
+ * A deprecated constant that represents a 7-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation7 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION7 =
+    PacketType::Triangulation7;
+/**
+ * A deprecated constant that represents a 8-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation8 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION8 =
+    PacketType::Triangulation8;
+#ifdef REGINA_HIGHDIM
+/**
+ * A deprecated constant that represents a 9-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation9 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION9 =
+    PacketType::Triangulation9;
+/**
+ * A deprecated constant that represents a 10-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation10 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION10 =
+    PacketType::Triangulation10;
+/**
+ * A deprecated constant that represents a 11-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation11 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION11 =
+    PacketType::Triangulation11;
+/**
+ * A deprecated constant that represents a 12-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation12 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION12 =
+    PacketType::Triangulation12;
+/**
+ * A deprecated constant that represents a 13-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation13 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION13 =
+    PacketType::Triangulation13;
+/**
+ * A deprecated constant that represents a 14-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation14 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION14 =
+    PacketType::Triangulation14;
+/**
+ * A deprecated constant that represents a 15-dimensional triangulation.
+ *
+ * \deprecated This was one of the old PacketType constants, back when
+ * PacketType was a unscoped enumeration.  Nowadays PacketType is a scoped
+ * enumeration (which offers better scoping and type safety), and you should
+ * access this constant as PacketType::Triangulation15 instead.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION15 =
+    PacketType::Triangulation15;
+#endif /* REGINA_HIGHDIM */
 
 /**
  * A class used to query general information about different packet types.
@@ -189,54 +437,54 @@ class PacketInfo {
          */
         constexpr static const char* name(PacketType packetType) {
             switch (packetType) {
-                case PACKET_CONTAINER:
+                case PacketType::Container:
                     return "Container";
-                case PACKET_TEXT:
+                case PacketType::Text:
                     return "Text";
-                case PACKET_NORMALSURFACES:
+                case PacketType::NormalSurfaces:
                     return "Normal surface list";
-                case PACKET_SCRIPT:
+                case PacketType::Script:
                     return "Script";
-                case PACKET_SURFACEFILTER:
+                case PacketType::SurfaceFilter:
                     return "Surface filter";
-                case PACKET_ANGLESTRUCTURES:
+                case PacketType::AngleStructures:
                     return "Angle structure list";
-                case PACKET_ATTACHMENT:
+                case PacketType::Attachment:
                     return "Attachment";
-                case PACKET_NORMALHYPERSURFACES:
+                case PacketType::NormalHypersurfaces:
                     return "Normal hypersurface list";
-                case PACKET_SNAPPEATRIANGULATION:
+                case PacketType::SnapPea:
                     return "SnapPea triangulation";
-                case PACKET_LINK:
+                case PacketType::Link:
                     return "Link";
-                case PACKET_TRIANGULATION2:
+                case PacketType::Triangulation2:
                     return "2-D triangulation";
-                case PACKET_TRIANGULATION3:
+                case PacketType::Triangulation3:
                     return "3-D triangulation";
-                case PACKET_TRIANGULATION4:
+                case PacketType::Triangulation4:
                     return "4-D triangulation";
-                case PACKET_TRIANGULATION5:
+                case PacketType::Triangulation5:
                     return "5-D triangulation";
-                case PACKET_TRIANGULATION6:
+                case PacketType::Triangulation6:
                     return "6-D triangulation";
-                case PACKET_TRIANGULATION7:
+                case PacketType::Triangulation7:
                     return "7-D triangulation";
-                case PACKET_TRIANGULATION8:
+                case PacketType::Triangulation8:
                     return "8-D triangulation";
             #ifdef REGINA_HIGHDIM
-                case PACKET_TRIANGULATION9:
+                case PacketType::Triangulation9:
                     return "9-D triangulation";
-                case PACKET_TRIANGULATION10:
+                case PacketType::Triangulation10:
                     return "10-D triangulation";
-                case PACKET_TRIANGULATION11:
+                case PacketType::Triangulation11:
                     return "11-D triangulation";
-                case PACKET_TRIANGULATION12:
+                case PacketType::Triangulation12:
                     return "12-D triangulation";
-                case PACKET_TRIANGULATION13:
+                case PacketType::Triangulation13:
                     return "13-D triangulation";
-                case PACKET_TRIANGULATION14:
+                case PacketType::Triangulation14:
                     return "14-D triangulation";
-                case PACKET_TRIANGULATION15:
+                case PacketType::Triangulation15:
                     return "15-D triangulation";
             #endif /* REGINA_HIGHDIM */
                 default:
@@ -253,15 +501,15 @@ class PacketInfo {
  * packet of type PacketOf<Held>.  Examples of such types include Link and
  * Triangulation<dim>.
  *
- * In all other cases, this variable will be PACKET_NONE.
+ * In all other cases, this variable will be PacketType::None.
  *
  * In particular, if \a Held is a full packet type itself (such as Container,
- * Script, or PacketOf<...>), then this template variable will be PACKET_NONE.
+ * Script, or PacketOf<...>), then this variable will be PacketType::None.
  *
  * \nopython
  */
 template <typename Held>
-static constexpr PacketType packetTypeHolds = PACKET_NONE;
+static constexpr PacketType packetTypeHolds = PacketType::None;
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
@@ -274,39 +522,39 @@ class SnapPeaTriangulation;
 template <int> class Triangulation;
 
 template <>
-inline constexpr PacketType packetTypeHolds<Link> = PACKET_LINK;
+inline constexpr PacketType packetTypeHolds<Link> = PacketType::Link;
 
 template <>
 inline constexpr PacketType packetTypeHolds<SnapPeaTriangulation> =
-    PACKET_SNAPPEATRIANGULATION;
+    PacketType::SnapPea;
 
 template <>
 inline constexpr PacketType packetTypeHolds<Triangulation<2>> =
-    PACKET_TRIANGULATION2;
+    PacketType::Triangulation2;
 
 template <>
 inline constexpr PacketType packetTypeHolds<Triangulation<3>> =
-    PACKET_TRIANGULATION3;
+    PacketType::Triangulation3;
 
 template <>
 inline constexpr PacketType packetTypeHolds<Triangulation<4>> =
-    PACKET_TRIANGULATION4;
+    PacketType::Triangulation4;
 
 template <int dim>
 inline constexpr PacketType packetTypeHolds<Triangulation<dim>> =
-    PacketType(100 + dim);
+    PacketType(100 + dim); // dimensions 5-15 use constants 105-115
 
 template <>
 inline constexpr PacketType packetTypeHolds<AngleStructures> =
-    PACKET_ANGLESTRUCTURES;
+    PacketType::AngleStructures;
 
 template <>
 inline constexpr PacketType packetTypeHolds<NormalSurfaces> =
-    PACKET_NORMALSURFACES;
+    PacketType::NormalSurfaces;
 
 template <>
 inline constexpr PacketType packetTypeHolds<NormalHypersurfaces> =
-    PACKET_NORMALHYPERSURFACES;
+    PacketType::NormalHypersurfaces;
 
 #endif // __DOXYGEN
 
