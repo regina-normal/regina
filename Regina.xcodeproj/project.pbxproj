@@ -1187,6 +1187,7 @@
 		0553FB952AEBE86300BE89A7 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F521C40F3C9009BC072 /* matrix.cpp */; };
 		0553FB962AEBE86300BE89A7 /* automorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8125AC22A9003BAF5C /* automorph.cpp */; };
 		0553FB972AEBE86300BE89A7 /* general.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8425AC22AA003BAF5C /* general.cpp */; };
+		0553FB992AEE91BB00BE89A7 /* PacketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FB982AEE91BB00BE89A7 /* PacketManager.swift */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -3775,6 +3776,7 @@
 		055114F91DCDF63000EC753C /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
 		055114FA1DCDF63000EC753C /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
 		055114FB1DCDF63000EC753C /* triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
+		0553FB982AEE91BB00BE89A7 /* PacketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketManager.swift; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
@@ -6581,9 +6583,10 @@
 		052909482AE5EA090028990D /* swiftui */ = {
 			isa = PBXGroup;
 			children = (
+				0529094D2AE5EA090028990D /* ContentView.swift */,
+				0553FB982AEE91BB00BE89A7 /* PacketManager.swift */,
 				052909492AE5EA090028990D /* ReginaApp.swift */,
 				0529094B2AE5EA090028990D /* ReginaDocument.swift */,
-				0529094D2AE5EA090028990D /* ContentView.swift */,
 				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
 				052909542AE5EA0A0028990D /* Info.plist */,
 				051AEAFD2AEB6F8F00960BBF /* Support */,
@@ -10424,6 +10427,7 @@
 				0553FB592AEBE7D400BE89A7 /* cusp_shapes.cpp in Sources */,
 				0553FA9F2AEBE3B500BE89A7 /* skeleton.cpp in Sources */,
 				0553FADC2AEBE6B500BE89A7 /* gluingperms2.cpp in Sources */,
+				0553FB992AEE91BB00BE89A7 /* PacketManager.swift in Sources */,
 				05A628162AE9214A0049739E /* perm3.cpp in Sources */,
 				0553FB282AEBE73A00BE89A7 /* layeredlensspace.cpp in Sources */,
 				0553FB902AEBE86300BE89A7 /* output.cpp in Sources */,

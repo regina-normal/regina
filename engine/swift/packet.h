@@ -77,6 +77,10 @@ struct SharedPacket {
             return ! packet_;
         }
 
+        PacketType type() const {
+            return packet_->type();
+        }
+
         // TODO: Can we return by reference at all?
         std::string label() const {
             return packet_->label();
