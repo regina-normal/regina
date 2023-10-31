@@ -127,7 +127,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(
         regina::snappea::remove_finite_vertices(data_);
 
     sync();
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+    Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
 }
 
 // We don't call the Triangulation<3> copy constructor, since sync()
@@ -139,7 +139,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
     }
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+    Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
 
     // Do not copy reginaPacketChangeSpans_; instead use the default
     // initialisation to zero.
@@ -158,7 +158,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(SnapPeaTriangulation&& src)
     src.shape_ = nullptr;
     src.cusp_ = nullptr;
 
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+    Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
 
     // Do not copy reginaPacketChangeSpans_; instead use the default
     // initialisation to zero.
@@ -214,7 +214,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
             regina::snappea::copy_triangulation(clone->data_, &data_);
             sync();
         }
-        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+        Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
         return;
     }
 
@@ -227,11 +227,11 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
             (! tri.isConnected()) ||
             (! tri.isValid()) ||
             (! tri.isStandard())) {
-        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+        Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
         return;
     }
     if (tri.size() >= INT_MAX) {
-        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+        Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
         return;
     }
 
@@ -282,7 +282,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     delete[] tData.tetrahedron_data;
 
     if (! data_) {
-        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+        Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
         return;
     }
 
@@ -319,7 +319,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
 
     sync();
 
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+    Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
@@ -422,7 +422,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
     delete[] proj.crossings;
 
     if (! data_) {
-        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+        Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
         return;
     }
 
@@ -438,7 +438,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
     regina::snappea::find_complete_hyperbolic_structure(data_);
 
     sync();
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+    Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
 }
 
 SnapPeaTriangulation::~SnapPeaTriangulation() {
@@ -999,7 +999,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(
         regina::snappea::Triangulation* data) :
         data_(data), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
     sync();
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+    Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
 }
 
 void SnapPeaTriangulation::sync() {

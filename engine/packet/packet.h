@@ -2015,34 +2015,34 @@ class Packet : public std::enable_shared_from_this<Packet>,
  * These constants only know about two types of relationships:
  *
  * - an object of type \a Held being part of a larger PacketOf<Held>
- *   (indicated by the constant HELD_BY_PACKET);
+ *   (indicated by the constant PacketHeldBy::Packet);
  *
  * - an object of type Triangulation<3> being part of a larger
- *   SnapPeaTriangulation (indicated by the constant HELD_BY_SNAPPEA).
+ *   SnapPeaTriangulation (indicated by the constant PacketHeldBy::SnapPea).
  *
- * Of course, a Triangulation<3> could belong to a SnapPeaTriangulation
- * which is then held by a PacketOf<SnapPeaTriangulation>.  In this case
- * the inherited PacketData<Triangulation<3>> will store HELD_BY_SNAPPEA, and
- * the inherited PacketData<SnapPeaTriangulation> will store HELD_BY_PACKET.
+ * Of course, a Triangulation<3> could belong to a SnapPeaTriangulation which is
+ * then held by a PacketOf<SnapPeaTriangulation>.  In this case the inherited
+ * PacketData<Triangulation<3>> will store PacketHeldBy::SnapPea, and the
+ * inherited PacketData<SnapPeaTriangulation> will store PacketHeldBy::Packet.
  *
  * \nopython
  */
-enum PacketHeldBy {
+enum class PacketHeldBy {
     /**
      * Indicates that the object is not held within either a wrapped packet or
      * a SnapPea triangulation.
      */
-    HELD_BY_NONE = 0,
+    None = 0,
     /**
      * Indicates that an object of type \a Held is in fact the inherited
      * data for a PacketOf<Held>.
      */
-    HELD_BY_PACKET = 1,
+    Packet = 1,
     /**
      * Indicates that a Triangulation<3> is in fact the inherited native
      * Regina data for a SnapPeaTriangulation.
      */
-    HELD_BY_SNAPPEA = 2
+    SnapPea = 2
 };
 
 /**
@@ -2098,7 +2098,7 @@ class PacketOf : public Packet, public Held {
          * will have an empty packet label.
          */
         PacketOf() {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Creates a new packet containing a deep copy of the given data.
@@ -2109,7 +2109,7 @@ class PacketOf : public Packet, public Held {
          * \param data the object to copy.
          */
         PacketOf(const Held& data) : Held(data) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Moves the given data into this new packet.
@@ -2124,7 +2124,7 @@ class PacketOf : public Packet, public Held {
          * \param data the object to move.
          */
         PacketOf(Held&& data) : Held(std::move(data)) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Creates a new packet using one of \a Held's own constructors.
@@ -2148,7 +2148,7 @@ class PacketOf : public Packet, public Held {
         template <typename... Args>
         explicit PacketOf(std::in_place_t, Args&&... args) :
                 Held(std::forward<Args>(args)...) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Creates a new copy of the given packet.
@@ -2161,7 +2161,7 @@ class PacketOf : public Packet, public Held {
          * \param src the packet whose contents should be copied.
          */
         PacketOf(const PacketOf<Held>& src) : Held(src) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Sets the content of this packet to be a copy of the given data.
@@ -2234,7 +2234,7 @@ class PacketOf : public Packet, public Held {
  *
  * This base class is extremely lightweight: the only data that it contains
  * is a single PacketHeldBy enumeration value.  All of the class constructors
- * set this value to HELD_BY_NONE; it is the responsibility of subclasses
+ * set this value to PacketHeldBy::None; it is the responsibility of subclasses
  * (e.g., PacketOf<Held>) to change this where necessary.
  *
  * \python Not present, but the routines anonID() and packet() will be
@@ -2243,7 +2243,7 @@ class PacketOf : public Packet, public Held {
 template <typename Held>
 class PacketData {
     protected:
-        PacketHeldBy heldBy_ { HELD_BY_NONE };
+        PacketHeldBy heldBy_ { PacketHeldBy::None };
             /**< Indicates whether this \a Held object is in fact the
                  inherited data for a PacketOf<Held>.  As a special case,
                  this field is also used to indicate when a Triangulation<3>
@@ -2253,12 +2253,12 @@ class PacketData {
 
     public:
         /**
-         * Default constructor that sets \a heldBy_ to HELD_BY_NONE.
+         * Default constructor that sets \a heldBy_ to PacketHeldBy::None.
          */
         PacketData() = default;
         /**
          * Copy constructor that ignores its argument, and instead sets
-         * \a heldBy_ to HELD_BY_NONE.  This is because \a heldBy_ stores
+         * \a heldBy_ to PacketHeldBy::None.  This is because \a heldBy_ stores
          * information about the C++ type of _this_ object, not the object
          * being copied.
          *
@@ -2309,7 +2309,7 @@ class PacketData {
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<PacketOf<Held>> packet() {
-            return heldBy_ == HELD_BY_PACKET ?
+            return heldBy_ == PacketHeldBy::Packet ?
                 std::static_pointer_cast<PacketOf<Held>>(
                     static_cast<PacketOf<Held>*>(this)->shared_from_this()) :
                 nullptr;
@@ -2325,7 +2325,7 @@ class PacketData {
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<const PacketOf<Held>> packet() const {
-            return heldBy_ == HELD_BY_PACKET ?
+            return heldBy_ == PacketHeldBy::Packet ?
                 std::static_pointer_cast<const PacketOf<Held>>(
                     static_cast<const PacketOf<Held>*>(this)->shared_from_this()) :
                 nullptr;
@@ -4185,7 +4185,7 @@ inline PacketData<Held>::PacketChangeSpan::PacketChangeSpan(PacketData& data) :
     static_assert(PacketOf<Held>::typeID != PacketType::Triangulation3,
         "The generic PacketChangeSpan constructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
-    if (data_.heldBy_ == HELD_BY_PACKET) {
+    if (data_.heldBy_ == PacketHeldBy::Packet) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
         if (! p.packetChangeSpans_)
             p.fireEvent(&PacketListener::packetToBeChanged);
@@ -4198,7 +4198,7 @@ inline PacketData<Held>::PacketChangeSpan::~PacketChangeSpan() {
     static_assert(PacketOf<Held>::typeID != PacketType::Triangulation3,
         "The generic PacketChangeSpan destructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
-    if (data_.heldBy_ == HELD_BY_PACKET) {
+    if (data_.heldBy_ == PacketHeldBy::Packet) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
         --p.packetChangeSpans_;
         if (! p.packetChangeSpans_)

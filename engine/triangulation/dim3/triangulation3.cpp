@@ -367,21 +367,21 @@ bool Triangulation<3>::saveRecogniser(const char* filename) const {
 }
 
 SnapPeaTriangulation* Triangulation<3>::isSnapPea() {
-    return (heldBy_ == HELD_BY_SNAPPEA ?
+    return (heldBy_ == PacketHeldBy::SnapPea ?
         static_cast<SnapPeaTriangulation*>(this) : nullptr);
 }
 
 const SnapPeaTriangulation* Triangulation<3>::isSnapPea() const {
-    return (heldBy_ == HELD_BY_SNAPPEA ?
+    return (heldBy_ == PacketHeldBy::SnapPea ?
         static_cast<const SnapPeaTriangulation*>(this) : nullptr);
 }
 
 std::shared_ptr<Packet> Triangulation<3>::inAnyPacket() {
     switch (heldBy_) {
-        case HELD_BY_PACKET:
+        case PacketHeldBy::Packet:
             return static_cast<PacketOf<Triangulation<3>>*>(this)->
                 shared_from_this();
-        case HELD_BY_SNAPPEA:
+        case PacketHeldBy::SnapPea:
             return static_cast<SnapPeaTriangulation*>(this)->
                 PacketData<SnapPeaTriangulation>::packet();
         default:
@@ -391,10 +391,10 @@ std::shared_ptr<Packet> Triangulation<3>::inAnyPacket() {
 
 std::shared_ptr<const Packet> Triangulation<3>::inAnyPacket() const {
     switch (heldBy_) {
-        case HELD_BY_PACKET:
+        case PacketHeldBy::Packet:
             return static_cast<const PacketOf<Triangulation<3>>*>(this)->
                 shared_from_this();
-        case HELD_BY_SNAPPEA:
+        case PacketHeldBy::SnapPea:
             return static_cast<const SnapPeaTriangulation*>(this)->
                 PacketData<SnapPeaTriangulation>::packet();
         default:

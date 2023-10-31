@@ -4171,11 +4171,11 @@ template <>
 inline PacketData<Triangulation<3>>::PacketChangeSpan::PacketChangeSpan(
         PacketData& data) : data_(data) {
     switch (data_.heldBy_) {
-        case HELD_BY_SNAPPEA: {
+        case PacketHeldBy::SnapPea: {
             static_cast<Triangulation<3>&>(data_).snapPeaPreChange();
             break;
         }
-        case HELD_BY_PACKET: {
+        case PacketHeldBy::Packet: {
             auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
             if (! p.packetChangeSpans_)
                 p.fireEvent(&PacketListener::packetToBeChanged);
@@ -4190,11 +4190,11 @@ inline PacketData<Triangulation<3>>::PacketChangeSpan::PacketChangeSpan(
 template <>
 inline PacketData<Triangulation<3>>::PacketChangeSpan::~PacketChangeSpan() {
     switch (data_.heldBy_) {
-        case HELD_BY_SNAPPEA: {
+        case PacketHeldBy::SnapPea: {
             static_cast<Triangulation<3>&>(data_).snapPeaPostChange();
             break;
         }
-        case HELD_BY_PACKET: {
+        case PacketHeldBy::Packet: {
             auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
             --p.packetChangeSpans_;
             if (! p.packetChangeSpans_)

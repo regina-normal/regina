@@ -122,6 +122,12 @@ Version 7.4  [ (to be announced) ]
             - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
             - The inner ChangeEventSpan class has a new member function held().
+        Enum PacketHeldBy:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., HELD_BY_PACKET) have been
+              renamed as scoped enum values (e.g., PacketHeldBy::Packet).
+              As this enumeration was for internal use, the old names have
+              been removed completely.
         Enum PacketType:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PACKET_TRIANGULATION3) have been
