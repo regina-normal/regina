@@ -43,6 +43,7 @@
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
 using regina::Crossing;
+using regina::Framing;
 using regina::StrandRef;
 using regina::Link;
 
@@ -50,12 +51,14 @@ void addLink(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Framing)
 
     pybind11::enum_<regina::Framing>(m, "Framing", rdoc_scope)
-        .value("FRAMING_SEIFERT", regina::FRAMING_SEIFERT,
-            rdoc::FRAMING_SEIFERT)
-        .value("FRAMING_BLACKBOARD", regina::FRAMING_BLACKBOARD,
-            rdoc::FRAMING_BLACKBOARD)
+        .value("Seifert", Framing::Seifert, rdoc::Seifert)
+        .value("Blackboard", Framing::Blackboard, rdoc::Blackboard)
         .export_values()
         ;
+
+    // Deprecated constants:
+    m.attr("FRAMING_SEIFERT") = Framing::Seifert;
+    m.attr("FRAMING_BLACKBOARD") = Framing::Blackboard;
 
     RDOC_SCOPE_SWITCH(StrandRef)
 
@@ -215,7 +218,7 @@ void addLink(pybind11::module_& m) {
         .def("complement", &Link::complement,
             pybind11::arg("simplify") = true, rdoc::complement)
         .def("parallel", &Link::parallel,
-            pybind11::arg(), pybind11::arg("framing") = regina::FRAMING_SEIFERT,
+            pybind11::arg(), pybind11::arg("framing") = Framing::Seifert,
             rdoc::parallel)
         .def("connected", &Link::connected, rdoc::connected)
         .def("bracket", &Link::bracket,

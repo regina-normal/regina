@@ -891,10 +891,10 @@ void ParallelDialog::slotOk() {
     regina::Framing f;
     switch (framing->currentIndex()) {
         case 1:
-            f = regina::FRAMING_BLACKBOARD;
+            f = regina::Framing::Blackboard;
             break;
         default:
-            f = regina::FRAMING_SEIFERT;
+            f = regina::Framing::Seifert;
             break;
     }
 

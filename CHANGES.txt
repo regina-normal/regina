@@ -33,6 +33,12 @@ Version 7.4  [ (to be announced) ]
               vector of some type other than regina::Integer.
         Class AngleStructures:
             - New routine sort().
+        Enum Attachment::OwnershipPolicy:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., OWN_MALLOC) have been
+              renamed as scoped enum values (e.g., OwnershipPolicy::OwnMalloc).
+              The old names have been kept as deprecated compile-time constants
+              in the Attachment class.
         Class BitManipulator<T>:
             - New routine swapBits().
         Class BoolSet:
@@ -61,6 +67,12 @@ Version 7.4  [ (to be announced) ]
               in the regina:: namespace.
         Class Flags<T>:
             - New operator bool(), which tests for a non-empty flag set.
+        Enum Framing:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., FRAMING_SEIFERT) have been
+              renamed as scoped enum values (e.g., Framing::Seifert).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class HomologicalData:
             - New routine triangulation().
         Class Integer:

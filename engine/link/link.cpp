@@ -1003,7 +1003,7 @@ Link Link::parallel(int k, Framing framing) const {
             ++s;
         } while (s != start);
 
-        if (writhe == 0 || framing == FRAMING_BLACKBOARD) {
+        if (writhe == 0 || framing == Framing::Blackboard) {
             // Close up the k new parallel link components.
             for (i = 0; i < k; ++i)
                 Link::join(

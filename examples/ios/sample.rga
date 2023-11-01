@@ -2468,11 +2468,11 @@ CS_unknown
 for t in tri.children():
 	print(t.label() + &quot;: &quot;, end='')
 
-	if t.type() == PACKET_TRIANGULATION3:
+	if t.type() == PacketType.Triangulation3:
 		print(t.homology())
-	elif t.type() == PACKET_SNAPPEATRIANGULATION:
+	elif t.type() == PacketType.SnapPea:
 		print(t.volume())
-	elif t.type() == PACKET_LINK:
+	elif t.type() == PacketType.Link:
 		print(t.homfly())
 	else:
 		print('Unknown packet type')

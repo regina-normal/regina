@@ -20,10 +20,10 @@ Routine identify() can be used to determine this information for a
 given file.
 
 As of Regina 4.94, the ancient first-generation binary files
-(REGINA_BINARY_GEN_1) are no longer supported, and this class cannot
-recognise them at all. These have not been in use since mid-2002. The
-only file formats that this class now recognises are Regina's newer
-XML-based (compressed or uncompressed) data files.
+(FileFormat::BinaryGen1) are no longer supported, and this class
+cannot recognise them at all. These have not been in use since
+mid-2002. The only file formats that this class now recognises are
+Regina's newer XML-based (compressed or uncompressed) data files.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement, though it does not implement (or need) its own

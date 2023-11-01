@@ -39,14 +39,10 @@ void addFileFormat(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(FileFormat)
 
     pybind11::enum_<regina::FileFormat>(m, "FileFormat", rdoc_scope)
-        .value("BinaryGen1", regina::FileFormat::BinaryGen1,
-            rdoc::REGINA_BINARY_GEN_1)
-        .value("XmlGen2", regina::FileFormat::XmlGen2,
-            rdoc::REGINA_XML_GEN_2)
-        .value("XmlGen3", regina::FileFormat::XmlGen3,
-            rdoc::REGINA_XML_GEN_3)
-        .value("Current", regina::FileFormat::Current,
-            rdoc::REGINA_CURRENT_FILE_FORMAT)
+        .value("BinaryGen1", regina::FileFormat::BinaryGen1, rdoc::BinaryGen1)
+        .value("XmlGen2", regina::FileFormat::XmlGen2, rdoc::XmlGen2)
+        .value("XmlGen3", regina::FileFormat::XmlGen3, rdoc::XmlGen3)
+        .value("Current", regina::FileFormat::Current, rdoc::Current)
         .export_values()
         ;
 

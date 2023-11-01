@@ -1420,7 +1420,7 @@ Parameter ``format``:
 
 Parameter ``list``:
     the enclosing normal surface list. Currently this is only relevant
-    when writing to the older REGINA_XML_GEN_2 format; it will be
+    when writing to the older FileFormat::XmlGen2 format; it will be
     ignored (and may be ``None``) for newer file formats.)doc";
 
 }

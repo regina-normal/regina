@@ -249,8 +249,8 @@ Returns:
 
 namespace Framing_ {
 
-// Docstring regina::python::doc::Framing_::FRAMING_BLACKBOARD
-static const char *FRAMING_BLACKBOARD =
+// Docstring regina::python::doc::Framing_::Blackboard
+static const char *Blackboard =
 R"doc(Indicates the _blackboard framing_, which is specific to the knot/link
 projection.
 
@@ -259,8 +259,8 @@ projection plane. Equivalently, the blackboard framing chooses
 longitudes whose projections do not intersect the original link
 diagram.)doc";
 
-// Docstring regina::python::doc::Framing_::FRAMING_SEIFERT
-static const char *FRAMING_SEIFERT =
+// Docstring regina::python::doc::Framing_::Seifert
+static const char *Seifert =
 R"doc(Indicates the _Seifert framing_, which is defined algebraically and is
 independent of the knot/link projection.
 

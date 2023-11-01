@@ -2166,9 +2166,9 @@ Parameter ``compressed``:
 
 Parameter ``format``:
     indicates which of Regina's XML file formats to write. You should
-    use the default (REGINA_CURRENT_FILE_FORMAT) unless you need your
-    file to be readable by older versions of Regina. This must not be
-    REGINA_BINARY_GEN_1, which is no longer supported.
+    use the default (FileFormat::Current) unless you need your file to
+    be readable by older versions of Regina. This must not be
+    FileFormat::BinaryGen1, which is no longer supported.
 
 Returns:
     ``True`` if and only if the file was successfully written.)doc";
@@ -2304,9 +2304,9 @@ Parameter ``out``:
 
 Parameter ``format``:
     indicates which of Regina's XML file formats to write. You should
-    use the default (REGINA_CURRENT_FILE_FORMAT) unless you need your
-    file to be readable by older versions of Regina. This must not be
-    REGINA_BINARY_GEN_1, which is no longer supported.)doc";
+    use the default (FileFormat::Current) unless you need your file to
+    be readable by older versions of Regina. This must not be
+    FileFormat::BinaryGen1, which is no longer supported.)doc";
 
 }
 

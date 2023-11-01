@@ -341,13 +341,13 @@ static void verifyParallel(const Link& link, const char* name) {
     for (int k = 0; k <= 3; ++k) {
         SCOPED_TRACE_NUMERIC(k);
 
-        Link p = link.parallel(k, regina::FRAMING_BLACKBOARD);
+        Link p = link.parallel(k, regina::Framing::Blackboard);
         EXPECT_EQ(p.countComponents(), k * link.countComponents());
         EXPECT_EQ(p.size(), k * k * link.size());
         EXPECT_EQ(p.writhe(), k * k * writhe);
         EXPECT_EQ(p.linking(), k * k * linking + (k * (k-1) * writheSame) / 2);
 
-        p = link.parallel(k, regina::FRAMING_SEIFERT);
+        p = link.parallel(k, regina::Framing::Seifert);
         EXPECT_EQ(p.countComponents(), k * link.countComponents());
         EXPECT_EQ(p.size(), k * k * link.size() + k * (k-1) * absWritheSame);
         EXPECT_EQ(p.writhe(), k * k * writhe - k * (k-1) * writheSame);

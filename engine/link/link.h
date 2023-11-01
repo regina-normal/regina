@@ -85,7 +85,7 @@ template <int> class Triangulation;
  *
  * \ingroup link
  */
-enum Framing {
+enum class Framing {
     /**
      * Indicates the _Seifert framing_, which is defined
      * algebraically and is independent of the knot/link projection.
@@ -99,7 +99,7 @@ enum Framing {
      * chooses the unique longitude for the corresponding knot that is
      * trivial in the homology of the knot complement.
      */
-    FRAMING_SEIFERT = 1,
+    Seifert = 1,
     /**
      * Indicates the _blackboard framing_, which is specific to the
      * knot/link projection.
@@ -108,8 +108,23 @@ enum Framing {
      * the projection plane.  Equivalently, the blackboard framing chooses
      * longitudes whose projections do not intersect the original link diagram.
      */
-    FRAMING_BLACKBOARD = 2
+    Blackboard = 2
 };
+
+/**
+ * A deprecated constant indicating one of the standard link framings.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Framing::Seifert.
+ */
+[[deprecated]] constexpr Framing FRAMING_SEIFERT = Framing::Seifert;
+/**
+ * A deprecated constant indicating one of the standard link framings.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Framing::Blackboard.
+ */
+[[deprecated]] constexpr Framing FRAMING_BLACKBOARD = Framing::Blackboard;
 
 /**
  * A reference to one of the two strands of a link that pass each other
@@ -2168,7 +2183,7 @@ class Link :
          * \param framing the framing under which these copies will be parallel.
          * \return \a k parallel copies of this link.
          */
-        Link parallel(int k, Framing framing = FRAMING_SEIFERT) const;
+        Link parallel(int k, Framing framing = Framing::Seifert) const;
 
         /**
          * Returns the Kauffman bracket polynomial of this link diagram.
