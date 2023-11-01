@@ -32,18 +32,17 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct TreeView: View {
     @ObservedObject var document: ReginaDocument
 
     var body: some View {
-        Label { Text(String(document.root.label())) } icon: { PacketManager.iconFor(document.root).resizable().frame(width: 24, height: 24) }
-        // TextEditor(text: $document.text)
-        // Label(title: document.data.label())
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            /*@START_MENU_TOKEN@*/Text("Content")/*@END_MENU_TOKEN@*/
+        }
     }
 }
 
-// TODO: Preview is broken:
-// error: value of type 'ReginaDocument' has no dynamic member 'root' using key path from root type 'ReginaDocument'
 #Preview {
-    ContentView(document: ReginaDocument())
+    TreeView(document: ReginaDocument())
 }

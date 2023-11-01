@@ -30,16 +30,53 @@
  *                                                                        *
  **************************************************************************/
 
+import SwiftUI
 import ReginaEngine
 
 struct PacketManager {
-    static func iconFor(_ packet: regina.SharedPacket) -> String {
+    /**
+     * Returns a 32-point image representing the type of the given packet.
+     */
+    static func iconFor(_ packet: regina.SharedPacket) -> Image {
         switch packet.type() {
-        // TODO: Why can we not access enum values??
+        case regina.PacketType.AngleStructures:
+            return Image("Angles")
+        case regina.PacketType.Attachment:
+            return Image("Attachment")
         case regina.PacketType.Container:
-            return "Container"
+            return Image("Container")
+        case regina.PacketType.Link:
+            return Image("Link")
+        case regina.PacketType.NormalHypersurfaces:
+            return Image("Hypersurfaces")
+        case regina.PacketType.NormalSurfaces:
+            return Image("Surfaces")
+        case regina.PacketType.Script:
+            return Image("Script")
+        case regina.PacketType.SnapPea:
+            return Image("SnapPea")
+        case regina.PacketType.SurfaceFilter:
+            return Image("Filter")
+        case regina.PacketType.Text:
+            return Image("Text")
+        case regina.PacketType.Triangulation2:
+            return Image("Triangulation2")
+        case regina.PacketType.Triangulation3:
+            return Image("Triangulation3")
+        case regina.PacketType.Triangulation4:
+            return Image("Triangulation4")
+        case regina.PacketType.Triangulation5:
+            return Image("Triangulation5")
+        case regina.PacketType.Triangulation6:
+            return Image("Triangulation6")
+        case regina.PacketType.Triangulation7:
+            return Image("Triangulation7")
+        case regina.PacketType.Triangulation8:
+            return Image("Triangulation8")
+        // TODO: Cases 9..15, conditionally compiled
         default:
-            return ""
+            // TODO: What do we return here?
+            return Image("")
         }
     }
 }

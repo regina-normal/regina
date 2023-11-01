@@ -1188,6 +1188,7 @@
 		0553FB962AEBE86300BE89A7 /* automorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8125AC22A9003BAF5C /* automorph.cpp */; };
 		0553FB972AEBE86300BE89A7 /* general.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8425AC22AA003BAF5C /* general.cpp */; };
 		0553FB992AEE91BB00BE89A7 /* PacketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FB982AEE91BB00BE89A7 /* PacketManager.swift */; };
+		0553FBA32AF2544E00BE89A7 /* TreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA22AF2544E00BE89A7 /* TreeView.swift */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -3785,6 +3786,7 @@
 		0553FB9F2AF2117300BE89A7 /* hash.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.test; sourceTree = "<group>"; };
 		0553FBA02AF2117300BE89A7 /* hash.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.out; sourceTree = "<group>"; };
 		0553FBA12AF2117300BE89A7 /* flags.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.test; sourceTree = "<group>"; };
+		0553FBA22AF2544E00BE89A7 /* TreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeView.swift; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
@@ -6603,6 +6605,7 @@
 				0553FB982AEE91BB00BE89A7 /* PacketManager.swift */,
 				052909492AE5EA090028990D /* ReginaApp.swift */,
 				0529094B2AE5EA090028990D /* ReginaDocument.swift */,
+				0553FBA22AF2544E00BE89A7 /* TreeView.swift */,
 				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
 				052909542AE5EA0A0028990D /* Info.plist */,
 				051AEAFD2AEB6F8F00960BBF /* Support */,
@@ -10527,6 +10530,7 @@
 				0553FAFE2AEBE6ED00BE89A7 /* homfly.cpp in Sources */,
 				0553FA892AEBE3AC00BE89A7 /* knot.cpp in Sources */,
 				0553FB8D2AEBE86300BE89A7 /* HilbertSeries.cpp in Sources */,
+				0553FBA32AF2544E00BE89A7 /* TreeView.swift in Sources */,
 				0553FB862AEBE86300BE89A7 /* chunk.cpp in Sources */,
 				0553FB4C2AEBE7CD00BE89A7 /* canonize.cpp in Sources */,
 				0553FA6D2AEBE08D00BE89A7 /* fileinfo.cpp in Sources */,
@@ -12190,13 +12194,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 7.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -12250,13 +12254,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 7.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
