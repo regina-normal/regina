@@ -65,7 +65,7 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
         else
             triPacket = this->triangulation().packet();
 
-        if (format == REGINA_XML_GEN_2)
+        if (format == FileFormat::XmlGen2)
             if (! (triPacket && triPacket == parent())) {
                 // The second-generation format required tri == parent(), and
                 // Regina <= 6.0.1 cannot handle lists *without* this property.

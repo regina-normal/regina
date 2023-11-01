@@ -98,7 +98,7 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     FileInfo ans;
     ans.compressed_ = compressed;
     ans.pathname_ = std::move(idPathname);
-    ans.format_ = REGINA_CURRENT_FILE_FORMAT;
+    ans.format_ = FileFormat::Current;
 
     // Note: we cannot use the idPathname argument from here on, since we moved its data out.
     // We must use ans.pathname_ instead.
@@ -150,9 +150,9 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
             return ans;
         in >> s;
         if (s == "<regina")
-            ans.format_ = REGINA_XML_GEN_3;
+            ans.format_ = FileFormat::XmlGen3;
         else if (s == "<reginadata")
-            ans.format_ = REGINA_XML_GEN_2;
+            ans.format_ = FileFormat::XmlGen2;
         else
             return ans;
 

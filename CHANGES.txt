@@ -53,6 +53,12 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which uses the tight encoding.
         Class FacetSpec<dim>:
             - New routine hash(), which uses the tight encoding.
+        Enum FileFormat:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., REGINA_XML_GEN_3) have been
+              renamed as scoped enum values (e.g., FileFormat::XmlGen3).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Flags<T>:
             - New operator bool(), which tests for a non-empty flag set.
         Class HomologicalData:

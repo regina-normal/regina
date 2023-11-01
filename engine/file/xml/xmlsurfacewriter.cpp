@@ -42,7 +42,7 @@ namespace regina {
 
 template <>
 void XMLWriter<NormalSurfaces>::openPre() {
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         out_ << R"(<packet type="Normal Surface List" typeid=")"
             << static_cast<int>(PacketType::NormalSurfaces) << '"';
     } else {
@@ -57,7 +57,7 @@ template <>
 void XMLWriter<NormalSurfaces>::writeContent() {
     using regina::xml::xmlValueTag;
 
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         // Write the enumeration parameters.
         out_ << "  <params "
             "type=\"" << data_.which_.intValue() << "\" "
@@ -76,7 +76,7 @@ void XMLWriter<NormalSurfaces>::writeContent() {
 
 template <>
 void XMLWriter<NormalSurfaces>::close() {
-    if (format_ == REGINA_XML_GEN_2)
+    if (format_ == FileFormat::XmlGen2)
         out_ << "</packet> <!-- Normal Surface List -->\n";
     else
         out_ << "</surfaces>\n";

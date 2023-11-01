@@ -1452,13 +1452,13 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
          * \param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
-         * need your file to be readable by older versions of Regina.
-         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
+         * You should use the default (FileFormat::Current) unless you need
+         * your file to be readable by older versions of Regina.  This must
+         * not be FileFormat::BinaryGen1, which is no longer supported.
          * \return \c true if and only if the file was successfully written.
          */
         bool save(const char* filename, bool compressed = true,
-            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
+            FileFormat format = FileFormat::Current) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1482,13 +1482,13 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
          * \param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
-         * need your file to be readable by older versions of Regina.
-         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
+         * You should use the default (FileFormat::Current) unless you need
+         * your file to be readable by older versions of Regina.  This must
+         * not be FileFormat::BinaryGen1, which is no longer supported.
          * \return \c true if and only if the data was successfully written.
          */
         bool save(std::ostream& s, bool compressed = true,
-            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
+            FileFormat format = FileFormat::Current) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1509,12 +1509,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param out the output stream to which the XML data file should
          * be written.
          * \param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
-         * need your file to be readable by older versions of Regina.
-         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
+         * You should use the default (FileFormat::Current) unless you need
+         * your file to be readable by older versions of Regina.  This must
+         * not be FileFormat::BinaryGen1, which is no longer supported.
          */
         void writeXMLFile(std::ostream& out,
-            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
+            FileFormat format = FileFormat::Current) const;
 
         /**
          * Returns a unique string ID that identifies this packet.
@@ -1712,12 +1712,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * The generic packet attributes (such as \c label, \c id if
          * required, and \c type / \c typeid if we are writing to the
-         * second-generation format REGINA_XML_GEN_2) will be included.
+         * second-generation format FileFormat::XmlGen2) will be included.
          *
          * If we are writing to the third-generation file format or newer,
          * then any additional attributes specified in \a attr will also be
          * included.  If we are writing to the second-generation format
-         * REGINA_XML_GEN_2, then \a attr will be ignored.
+         * FileFormat::XmlGen2, then \a attr will be ignored.
          *
          * If this packet appears as a key in the \a refs map, or if the
          * \a anon argument indicates that we are in an anonymous block,
@@ -1727,7 +1727,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param out the output stream to which the opening XML tag
          * should be written.
          * \param element the name of the XML tag.  If we are writing to
-         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
+         * the FileFormat::XmlGen2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * \param format indicates which of Regina's XML file formats to write.
          * \param anon \c true if this packet is being written within an
@@ -1740,7 +1740,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and the packet contents then you should pass \c false instead.
          * \param attr any additional attributes to write to the XML tag;
          * each attribute should a pair of the form (\a attribute, \a value).
-         * When writing to the REGINA_XML_GEN_2 format, this will be ignored.
+         * When writing to the FileFormat::XmlGen2 format, this will be ignored.
          */
         template <typename... Args>
         void writeXMLHeader(std::ostream& out, const char* element,
@@ -1780,7 +1780,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param out the output stream to which the closing XML tag
          * should be written.
          * \param element the name of the XML tag.  If we are writing to
-         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
+         * the FileFormat::XmlGen2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * \param format indicates which of Regina's XML file formats to write.
          */
@@ -4284,7 +4284,7 @@ template <typename... Args>
 void Packet::writeXMLHeader(std::ostream& out, const char* element,
         FileFormat format, bool anon, PacketRefs& refs, bool newline,
         std::pair<const char*, Args>... args) const {
-    if (format == REGINA_XML_GEN_2) {
+    if (format == FileFormat::XmlGen2) {
         out << "<packet type=\"" << typeName()
             << "\" typeid=\"" << static_cast<int>(type()) << "\"\n\t";
     } else {

@@ -42,7 +42,7 @@ namespace regina {
 
 template <>
 void XMLWriter<AngleStructures>::openPre() {
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         out_ << R"(<packet type="Angle Structure List" typeid=")"
             << static_cast<int>(PacketType::AngleStructures) << '"';
     } else {
@@ -56,7 +56,7 @@ template <>
 void XMLWriter<AngleStructures>::writeContent() {
     using regina::xml::xmlValueTag;
 
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         // Write the enumeration parameters in a separate angleparams element.
         out_ << "  <angleparams "
             "tautonly=\"" << (data_.tautOnly_ ? 'T' : 'F') << "\" "
@@ -77,7 +77,7 @@ void XMLWriter<AngleStructures>::writeContent() {
 
 template <>
 void XMLWriter<AngleStructures>::close() {
-    if (format_ == REGINA_XML_GEN_2)
+    if (format_ == FileFormat::XmlGen2)
         out_ << "</packet> <!-- Angle Structure List -->\n";
     else
         out_ << "</angles>\n";

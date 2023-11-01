@@ -64,7 +64,7 @@ namespace regina {
  *
  * \ingroup file
  */
-enum FileFormat {
+enum class FileFormat {
     /**
      * Indicates the old first-generation binary format used by Regina 2.4
      * and earlier.  This format was discontinued in mid-2002, when Regina
@@ -73,7 +73,7 @@ enum FileFormat {
      * Regina no longer supports this (ancient) binary format at all: since
      * version 4.94 in late 2013, Regina cannot read or write this format.
      */
-    REGINA_BINARY_GEN_1 = 1,
+    BinaryGen1 = 1,
     /**
      * Indicates the second-generation file format used from Regina 3.0
      * through to Regina 6.0.1 inclusive.  This was the first file format
@@ -82,7 +82,7 @@ enum FileFormat {
      * Regina can still transparently read second-generation data files,
      * and can write them when explicitly asked.
      */
-    REGINA_XML_GEN_2 = 2,
+    XmlGen2 = 2,
     /**
      * Indicates the third-generation file format used from Regina 7.0
      * onwards.  This format is both more streamlined and more human-readable.
@@ -91,14 +91,45 @@ enum FileFormat {
      * This is the current file format, and is used by default when
      * saving data files.
      */
-    REGINA_XML_GEN_3 = 3,
+    XmlGen3 = 3,
     /**
      * An alias for whichever file format is current.  The numerical
      * value of this constant may change in future releases of Regina,
      * if/when new generational changes to the file format occur.
      */
-    REGINA_CURRENT_FILE_FORMAT = REGINA_XML_GEN_3
+    Current = XmlGen3
 };
+
+/**
+ * A deprecated constant representing one of Regina's file formats.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * FileFormat::BinaryGen1.
+ */
+[[deprecated]] constexpr FileFormat REGINA_BINARY_GEN_1 =
+    FileFormat::BinaryGen1;
+/**
+ * A deprecated constant representing one of Regina's file formats.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * FileFormat::XmlGen2.
+ */
+[[deprecated]] constexpr FileFormat REGINA_XML_GEN_2 = FileFormat::XmlGen2;
+/**
+ * A deprecated constant representing one of Regina's file formats.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * FileFormat::XmlGen3.
+ */
+[[deprecated]] constexpr FileFormat REGINA_XML_GEN_3 = FileFormat::XmlGen3;
+/**
+ * A deprecated constant representing one of Regina's file formats.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * FileFormat::Current.
+ */
+[[deprecated]] constexpr FileFormat REGINA_CURRENT_FILE_FORMAT =
+    FileFormat::Current;
 
 } // namespace regina
 

@@ -196,7 +196,7 @@ void Attachment::writeXMLPacketData(std::ostream& out, FileFormat format,
         // Either we have an empty attachment, or the base64 conversion failed.
         writeXMLHeader(out, "attachment", format, anon, refs, true,
             std::pair("encoding", "null"), std::pair("filename", ""));
-        if (format == REGINA_XML_GEN_2)
+        if (format == FileFormat::XmlGen2)
             out << "  <pdf encoding=\"null\"></pdf>\n";
         if (! anon)
             writeXMLTreeData(out, format, refs);
@@ -207,7 +207,7 @@ void Attachment::writeXMLPacketData(std::ostream& out, FileFormat format,
     writeXMLHeader(out, "attachment", format, anon, refs, true,
         std::pair("encoding", "base64"),
         std::pair("filename", regina::xml::xmlEncodeSpecialChars(filename_)));
-    if (format == REGINA_XML_GEN_2)
+    if (format == FileFormat::XmlGen2)
         out << "  <pdf encoding=\"base64\">\n";
 
     const char* pos = base64;
@@ -223,7 +223,7 @@ void Attachment::writeXMLPacketData(std::ostream& out, FileFormat format,
         out << std::endl;
     }
 
-    if (format == REGINA_XML_GEN_2)
+    if (format == FileFormat::XmlGen2)
         out << "  </pdf>\n";
     if (! anon)
         writeXMLTreeData(out, format, refs);

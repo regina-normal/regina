@@ -70,7 +70,7 @@ void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
     writeXMLHeader(out, "filtercomb", format, anon, refs,
         true, std::pair("op", (usesAnd_ ? "and" : "or")));
-    if (format == REGINA_XML_GEN_2) {
+    if (format == FileFormat::XmlGen2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
             << "\" typeid=\"" << filterType() << "\">\n"
@@ -167,7 +167,7 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
     using regina::xml::xmlValueTag;
 
-    if (format == REGINA_XML_GEN_2) {
+    if (format == FileFormat::XmlGen2) {
         writeXMLHeader(out, "filterprop", format, anon, refs, true);
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())

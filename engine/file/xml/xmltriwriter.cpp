@@ -44,7 +44,7 @@ namespace regina {
 
 template <int dim>
 void XMLWriter<Triangulation<dim>>::openPre() {
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         out_ << R"(<packet type=")" << dim
             << R"(-Manifold Triangulation" typeid=")"
             << static_cast<int>(PacketOf<Triangulation<dim>>::typeID) << '"';
@@ -66,7 +66,7 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         "XMLWriter<Triangulation<dim>> requires permutation indices to be "
         "numeric types.");
 
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         if constexpr (dim == 2)
             out_ << "  <triangles ntriangles=\"" << data_.size() << "\">\n";
         else if constexpr (dim == 3)
@@ -224,7 +224,7 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
 
 template <int dim>
 void XMLWriter<Triangulation<dim>>::close() {
-    if (format_ == REGINA_XML_GEN_2)
+    if (format_ == FileFormat::XmlGen2)
         out_ << "</packet> <!-- Triangulation -->\n";
     else
         out_ << "</tri>\n";

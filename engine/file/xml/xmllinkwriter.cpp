@@ -41,7 +41,7 @@ namespace regina {
 
 template <>
 void XMLWriter<Link>::openPre() {
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         out_ << R"(<packet type="Link" typeid=")"
             << static_cast<int>(PacketType::Link) << '"';
     } else {
@@ -69,7 +69,7 @@ void XMLWriter<Link>::writeContent() {
 
 template <>
 void XMLWriter<Link>::close() {
-    if (format_ == REGINA_XML_GEN_2)
+    if (format_ == FileFormat::XmlGen2)
         out_ << "</packet> <!-- Link -->\n";
     else
         out_ << "</link>\n";

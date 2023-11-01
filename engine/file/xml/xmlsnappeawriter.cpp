@@ -41,7 +41,7 @@ namespace regina {
 
 template <>
 void XMLWriter<SnapPeaTriangulation>::openPre() {
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         out_ << R"(<packet type="SnapPea Triangulation" typeid=")"
             << static_cast<int>(PacketType::SnapPea) << '"';
     } else {
@@ -52,24 +52,24 @@ void XMLWriter<SnapPeaTriangulation>::openPre() {
 template <>
 void XMLWriter<SnapPeaTriangulation>::openPost() {
     out_ << '>';
-    if (format_ == REGINA_XML_GEN_2)
+    if (format_ == FileFormat::XmlGen2)
         out_ << '\n';
 }
 
 template <>
 void XMLWriter<SnapPeaTriangulation>::writeContent() {
     if (! data_.isNull()) {
-        if (format_ == REGINA_XML_GEN_2)
+        if (format_ == FileFormat::XmlGen2)
             out_ << "  <snappea>";
         out_ << regina::xml::xmlEncodeSpecialChars(data_.snapPea());
-        if (format_ == REGINA_XML_GEN_2)
+        if (format_ == FileFormat::XmlGen2)
             out_ << "</snappea>\n";
     }
 }
 
 template <>
 void XMLWriter<SnapPeaTriangulation>::close() {
-    if (format_ == REGINA_XML_GEN_2)
+    if (format_ == FileFormat::XmlGen2)
         out_ << "</packet> <!-- SnapPea Triangulation -->\n";
     else
         out_ << "</snappeadata>\n";
