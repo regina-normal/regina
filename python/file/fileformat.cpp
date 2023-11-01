@@ -43,7 +43,6 @@ void addFileFormat(pybind11::module_& m) {
         .value("XmlGen2", regina::FileFormat::XmlGen2, rdoc::XmlGen2)
         .value("XmlGen3", regina::FileFormat::XmlGen3, rdoc::XmlGen3)
         .value("Current", regina::FileFormat::Current, rdoc::Current)
-        .export_values()
         ;
 
     // Deprecated constants:

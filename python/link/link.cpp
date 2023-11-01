@@ -53,7 +53,6 @@ void addLink(pybind11::module_& m) {
     pybind11::enum_<regina::Framing>(m, "Framing", rdoc_scope)
         .value("Seifert", Framing::Seifert, rdoc::Seifert)
         .value("Blackboard", Framing::Blackboard, rdoc::Blackboard)
-        .export_values()
         ;
 
     // Deprecated constants:

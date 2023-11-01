@@ -51,23 +51,48 @@ namespace regina {
  * \a n elements for arbitrary \a n.  (In particular, you can pass them
  * to the PermGroup<n> constructor.)
  */
-enum NamedPermGroup {
+enum class NamedPermGroup {
     /**
      * Represents the trivial group on \a n elements, containing only the
      * identity permutation.
      */
-    PERM_GROUP_TRIVIAL = 0,
+    Trivial = 0,
     /**
      * Represents the symmetric group on \a n elements, containing all `n!`
      * possible permutations.
      */
-    PERM_GROUP_SYMMETRIC = 1,
+    Symmetric = 1,
     /**
      * Represents the alternating group on \a n elements, containing all `n!/2`
      * even permutations.
      */
-    PERM_GROUP_ALTERNATING = 2
+    Alternating = 2
 };
+
+/**
+ * A deprecated constant indicating a well-known class of permutation groups.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NamedPermGroup::Trivial.
+ */
+[[deprecated]] constexpr NamedPermGroup PERM_GROUP_TRIVIAL =
+    NamedPermGroup::Trivial;
+/**
+ * A deprecated constant indicating a well-known class of permutation groups.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NamedPermGroup::Symmetric.
+ */
+[[deprecated]] constexpr NamedPermGroup PERM_GROUP_SYMMETRIC =
+    NamedPermGroup::Symmetric;
+/**
+ * A deprecated constant indicating a well-known class of permutation groups.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NamedPermGroup::Alternating.
+ */
+[[deprecated]] constexpr NamedPermGroup PERM_GROUP_ALTERNATING =
+    NamedPermGroup::Alternating;
 
 /**
  * Represents a group of permutations on \a n elements.  This is a subgroup

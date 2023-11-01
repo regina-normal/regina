@@ -292,7 +292,6 @@ Returns:
         .value("Backtrack", regina::Algorithm::Backtrack, rdoc::Backtrack)
         .value("Treewidth", regina::Algorithm::Treewidth, rdoc::Treewidth)
         .value("Naive", regina::Algorithm::Naive, rdoc::Naive)
-        .export_values();
         ;
 
     // Deprecated constants:
@@ -312,7 +311,6 @@ Returns:
             // We therefore hard-code its value as Language::Python below.
             regina::Language::Python,
             rdoc::Current)
-        .export_values();
         ;
 
     RDOC_SCOPE_END

@@ -42,6 +42,7 @@
 using pybind11::overload_cast;
 using regina::Perm;
 using regina::PermClass;
+using regina::PermCodeType;
 
 template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
@@ -159,12 +160,13 @@ void addPerm(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(PermCodeType)
 
     pybind11::enum_<regina::PermCodeType>(m, "PermCodeType", rdoc_scope)
-        .value("PERM_CODE_IMAGES", regina::PERM_CODE_IMAGES,
-            rdoc::PERM_CODE_IMAGES)
-        .value("PERM_CODE_INDEX", regina::PERM_CODE_INDEX,
-            rdoc::PERM_CODE_INDEX)
-        .export_values()
+        .value("Images", PermCodeType::Images, rdoc::Images)
+        .value("Index", PermCodeType::Index, rdoc::Index)
         ;
+
+    // Deprecated constants:
+    m.attr("PERM_CODE_IMAGES") = PermCodeType::Images;
+    m.attr("PERM_CODE_INDEX") = PermCodeType::Index;
 
     RDOC_SCOPE_END
 

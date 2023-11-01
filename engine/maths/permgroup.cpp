@@ -144,7 +144,7 @@ PermGroup<n, cached>::PermGroup(NamedPermGroup group) {
     // Remember: all permutations not explicitly set here will be
     // initialised to the identity.
     switch (group) {
-        case PERM_GROUP_SYMMETRIC:
+        case NamedPermGroup::Symmetric:
             for (int k = 1; k < n; ++k)
                 for (int j = 0; j < k; ++j) {
                     // These terms are all self-inverse.
@@ -154,7 +154,7 @@ PermGroup<n, cached>::PermGroup(NamedPermGroup group) {
                 count_[i] = i + 1;
             // Each usable_[i] should be the identity.
             break;
-        case PERM_GROUP_ALTERNATING:
+        case NamedPermGroup::Alternating:
             for (int k = 2; k < n; ++k) {
                 // Each non-trivial term should be a 3-cycle.
                 if constexpr (cached) {

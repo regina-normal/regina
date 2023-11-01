@@ -118,6 +118,12 @@ Version 7.4  [ (to be announced) ]
             - Renamed initialise() to fill(), to make it clear that this has
               nothing to do with initialised vs uninitialised matrices.
               The old name is kept but deprecated.
+        Enum NamedPermGroup:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., PERM_GROUP_TRIVIAL) have been
+              renamed as scoped enum values (e.g., NamedPermGroup::Trivial).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class NativeInteger<bytes>:
             - New routine str().
         Class NormalSurface, NormalHypersurface:
@@ -163,6 +169,12 @@ Version 7.4  [ (to be announced) ]
             - New class constant degree.
             - Added an alias Perm<6>::cachedOrder(), for consistency with the
               other permutation classes Perm<2..15>.
+        Enum PermCodeType:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., PERM_CODE_IMAGES) have been
+              renamed as scoped enum values (e.g., PermCodeType::Images).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Rational:
             - New function str().
         Class SatAnnulus:

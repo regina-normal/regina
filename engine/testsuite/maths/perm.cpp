@@ -129,7 +129,7 @@ class PermTestImpl {
                 return (p.permCode1() == identityImagePack<n> &&
                     p.permCode2() == 0);
             } else if constexpr (Perm<n>::codeType ==
-                    regina::PERM_CODE_IMAGES) {
+                    regina::PermCodeType::Images) {
                 return p.permCode() == identityImagePack<n>;
             } else {
                 return p.permCode() == 0;
@@ -263,7 +263,7 @@ class PermTestImpl {
  */
 template <int n>
 class PermTestSmallImpl : public PermTestImpl<n> {
-    static_assert(Perm<n>::codeType == regina::PERM_CODE_INDEX);
+    static_assert(Perm<n>::codeType == regina::PermCodeType::Index);
 
     protected:
         using typename PermTestImpl<n>::Index;
@@ -734,7 +734,7 @@ class PermTestSmallImpl : public PermTestImpl<n> {
  */
 template <int n>
 class PermTestLargeImpl : public PermTestImpl<n> {
-    static_assert(Perm<n>::codeType == regina::PERM_CODE_IMAGES);
+    static_assert(Perm<n>::codeType == regina::PermCodeType::Images);
     static_assert(increment[n] > 1);
     static_assert((Perm<n>::nPerms % increment[n]) > 1);
 
