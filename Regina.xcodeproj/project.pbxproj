@@ -3777,6 +3777,14 @@
 		055114FA1DCDF63000EC753C /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
 		055114FB1DCDF63000EC753C /* triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
 		0553FB982AEE91BB00BE89A7 /* PacketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketManager.swift; sourceTree = "<group>"; };
+		0553FB9A2AF2117200BE89A7 /* construction.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = construction.out; sourceTree = "<group>"; };
+		0553FB9B2AF2117200BE89A7 /* lst.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = lst.out; sourceTree = "<group>"; };
+		0553FB9C2AF2117300BE89A7 /* construction.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = construction.test; sourceTree = "<group>"; };
+		0553FB9D2AF2117300BE89A7 /* lst.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = lst.test; sourceTree = "<group>"; };
+		0553FB9E2AF2117300BE89A7 /* flags.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.out; sourceTree = "<group>"; };
+		0553FB9F2AF2117300BE89A7 /* hash.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.test; sourceTree = "<group>"; };
+		0553FBA02AF2117300BE89A7 /* hash.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.out; sourceTree = "<group>"; };
+		0553FBA12AF2117300BE89A7 /* flags.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.test; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
@@ -6127,6 +6135,8 @@
 				0598027D2667067C002D5D57 /* clone.out */,
 				0598027A2667067B002D5D57 /* clone.test */,
 				050F5D851B9BAB9C00C1F681 /* CMakeLists.txt */,
+				0553FB9A2AF2117200BE89A7 /* construction.out */,
+				0553FB9C2AF2117300BE89A7 /* construction.test */,
 				05A0251E25D48E500091372D /* constructors.out */,
 				05A0251D25D48E500091372D /* constructors.test */,
 				050F5D861B9BAB9C00C1F681 /* cube.orb */,
@@ -6155,12 +6165,16 @@
 				050F5D8C1B9BAB9C00C1F681 /* file1.rga */,
 				050F5D8D1B9BAB9C00C1F681 /* file2.rga */,
 				05199A2F25C63B7F0006B8FA /* file3.rga */,
+				0553FB9E2AF2117300BE89A7 /* flags.out */,
+				0553FBA12AF2117300BE89A7 /* flags.test */,
 				05098B0A28FECBD9005E4716 /* flype.out */,
 				05098B0828FECBD9005E4716 /* flype.test */,
 				0577E6DD1F97087900CBDF15 /* generic.out */,
 				0577E6E81F97087F00CBDF15 /* generic.test */,
 				050F5D8E1B9BAB9C00C1F681 /* groups.out */,
 				050F5D8F1B9BAB9C00C1F681 /* groups.test */,
+				0553FBA02AF2117300BE89A7 /* hash.out */,
+				0553FB9F2AF2117300BE89A7 /* hash.test */,
 				0577E6E91F97087F00CBDF15 /* hypersurfaces.out */,
 				0577E6E51F97087D00CBDF15 /* hypersurfaces.test */,
 				050F5D901B9BAB9C00C1F681 /* i18n-latin1.rga */,
@@ -6183,6 +6197,8 @@
 				05CAE6972749F505007C93F3 /* listview.test */,
 				05CAE6862746878C007C93F3 /* lookup.out */,
 				05CAE6852746878C007C93F3 /* lookup.test */,
+				0553FB9B2AF2117200BE89A7 /* lst.out */,
+				0553FB9D2AF2117300BE89A7 /* lst.test */,
 				0577E6E11F97087B00CBDF15 /* memory1.out */,
 				0577E6E21F97087B00CBDF15 /* memory1.test */,
 				0577E6EC1F97088100CBDF15 /* memory2.out */,
