@@ -4302,7 +4302,6 @@
 		05754CE5258D7D6400236ED7 /* randutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = randutils.h; sourceTree = "<group>"; };
 		05754CE6258D7D6400236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
 		05754D17258D834E00236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
-		05754D77258EF07600236ED7 /* libpython2.7.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpython2.7.tbd; path = usr/lib/libpython2.7.tbd; sourceTree = SDKROOT; };
 		05754E73258F92CA00236ED7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		057720D82074CBCC007E9EA0 /* stats.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = stats.pl; sourceTree = "<group>"; };
@@ -8826,7 +8825,6 @@
 			children = (
 				059D6168258866370011E905 /* libbz2.tbd */,
 				05E0EFEC258241E100965440 /* libiconv.tbd */,
-				05754D77258EF07600236ED7 /* libpython2.7.tbd */,
 				059D61692588663B0011E905 /* libsqlite3.tbd */,
 				05E0EFED258241E100965440 /* libxml2.tbd */,
 				05E0EFEE258241E100965440 /* libz.tbd */,
