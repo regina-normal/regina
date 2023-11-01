@@ -3338,9 +3338,9 @@ Parameter ``parity``:
 
 Parameter ``alg``:
     the algorithm with which to compute the invariant. If you are not
-    sure, the default value (ALG_DEFAULT) is a safe choice. This
-    should be treated as a hint only: if the algorithm you choose is
-    not supported for the given parameters (*r* and *parity*), then
+    sure, the default value (Algorithm::Default) is a safe choice.
+    This should be treated as a hint only: if the algorithm you choose
+    is not supported for the given parameters (*r* and *parity*), then
     Regina will use another algorithm instead.
 
 Parameter ``tracker``:
@@ -3402,10 +3402,10 @@ Parameter ``whichRoot``:
 
 Parameter ``alg``:
     the algorithm with which to compute the invariant. If you are not
-    sure, the default value (ALG_DEFAULT) is a safe choice. This
-    should be treated as a hint only: if the algorithm you choose is
-    not supported for the given parameters (*r* and *whichRoot*), then
-    Regina will use another algorithm instead.
+    sure, the default value (Algorithm::Default) is a safe choice.
+    This should be treated as a hint only: if the algorithm you choose
+    is not supported for the given parameters (*r* and *whichRoot*),
+    then Regina will use another algorithm instead.
 
 Returns:
     the requested Turaev-Viro invariant.

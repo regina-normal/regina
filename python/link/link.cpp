@@ -220,31 +220,31 @@ void addLink(pybind11::module_& m) {
         .def("connected", &Link::connected, rdoc::connected)
         .def("bracket", &Link::bracket,
             pybind11::return_value_policy::reference_internal,
-            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::bracket)
         .def("jones", &Link::jones,
             pybind11::return_value_policy::reference_internal,
-            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::jones)
         .def("homfly", &Link::homfly,
             pybind11::return_value_policy::reference_internal,
-            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::homfly)
         .def("homflyAZ", &Link::homflyAZ,
             pybind11::return_value_policy::reference_internal,
-            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::homflyAZ)
         .def("homflyLM", &Link::homflyLM,
             pybind11::return_value_policy::reference_internal,
-            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::homflyLM)
@@ -285,15 +285,16 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("useReversal") = true,
             rdoc::knotSig)
         .def("source", &Link::source,
-            // The default should be LANGUAGE_CURRENT, but in C++ that evaluates
-            // to LANGUAGE_CXX.  We need it to evaluate to LANGUAGE_PYTHON
-            // (i.e., the Python implementation of LANGUAGE_CURRENT), and so we
-            // explicitly use that as our default instead.
-            pybind11::arg("language") = regina::LANGUAGE_PYTHON,
+            // The default should be Language::Current, but in C++ that
+            // evaluates to Language::Cxx.  We need it to evaluate to
+            // Language::Python (i.e., the Python implementation of
+            // Language::Current), and so we explicitly use that as our
+            // default instead.
+            pybind11::arg("language") = regina::Language::Python,
             rdoc::source)
         .def("dumpConstruction", [](const Link& link) {
             // Deprecated, so reimplement this ourselves.
-            return link.source(regina::LANGUAGE_CXX);
+            return link.source(regina::Language::Cxx);
         }, rdoc::dumpConstruction)
         .def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
             pybind11::arg(),

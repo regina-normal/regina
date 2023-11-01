@@ -326,7 +326,7 @@ void TriangulationBase<dim>::reorderBFS(bool reverse) {
     if (n == 0)
         return;
 
-    ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
 
     // Run a breadth-first search over all top-dimensional simplices.
     auto* ordered = new Simplex<dim>*[n];
@@ -646,11 +646,11 @@ std::string TriangulationBase<dim>::source(Language language) const {
     static constexpr bool hasSimplePermConstructor = (dim <= 6);
 
     switch (language) {
-        case LANGUAGE_CXX:
+        case Language::Cxx:
             ans << "Triangulation<" << dim << "> tri = Triangulation<" << dim
                 << ">::fromGluings(" << size() << ", {\n";
             break;
-        case LANGUAGE_PYTHON:
+        case Language::Python:
             ans << "tri = Triangulation" << dim << ".fromGluings("
                 << size() << ", [\n";
             break;
@@ -672,11 +672,11 @@ std::string TriangulationBase<dim>::source(Language language) const {
                         ans << ", ";
 
                     switch (language) {
-                        case LANGUAGE_CXX:
+                        case Language::Cxx:
                             ans << "{ " << i << ", " << j << ", "
                                 << adj->index() << ", {";
                             break;
-                        case LANGUAGE_PYTHON:
+                        case Language::Python:
                             ans << "[ " << i << ", " << j << ", "
                                 << adj->index() << ", Perm" << (dim+1) << '(';
                             if constexpr (! hasSimplePermConstructor)
@@ -689,10 +689,10 @@ std::string TriangulationBase<dim>::source(Language language) const {
                         ans << g[k];
                     }
                     switch (language) {
-                        case LANGUAGE_CXX:
+                        case Language::Cxx:
                             ans << "} }";
                             break;
-                        case LANGUAGE_PYTHON:
+                        case Language::Python:
                             if constexpr (! hasSimplePermConstructor)
                                 ans << ']';
                             ans << ") ]";
@@ -705,8 +705,8 @@ std::string TriangulationBase<dim>::source(Language language) const {
         }
     }
     switch (language) {
-        case LANGUAGE_CXX:    ans << "});\n"; break;
-        case LANGUAGE_PYTHON: ans << "])\n";  break;
+        case Language::Cxx:    ans << "});\n"; break;
+        case Language::Python: ans << "])\n";  break;
     }
     return ans.str();
 }

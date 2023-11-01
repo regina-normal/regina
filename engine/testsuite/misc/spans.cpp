@@ -231,7 +231,7 @@ TEST(SpansTest, preserveAllProperties) {
 }
 
 TEST(SpansTest, clearTopologyLock) {
-    // Verify that ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> actually
+    // Verify that ChangeAndClearSpan<ChangeType::PreserveTopology> actually
     // clears the topology lock when it is destroyed.
     {
         regina::Triangulation<3> t = regina::Example<3>::weeks();

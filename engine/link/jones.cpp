@@ -604,7 +604,7 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
 
     Laurent<Integer> ans;
     switch (alg) {
-        case ALG_NAIVE:
+        case Algorithm::Naive:
             ans = bracketNaive(tracker);
             break;
         default:

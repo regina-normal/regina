@@ -87,7 +87,7 @@ bool Triangulation<2>::twoZeroMove(Vertex<2>* v, bool check, bool perform) {
     // Actually perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     // Unglue edges from the doomed triangles and glue them to each other.
     Triangle<2>* top = simp[0]->adjacentSimplex(vertex[0]);

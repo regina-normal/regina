@@ -288,25 +288,28 @@ Returns:
     RDOC_SCOPE_SWITCH(Algorithm)
 
     pybind11::enum_<regina::Algorithm>(m, "Algorithm", rdoc_scope)
-        .value("ALG_DEFAULT", regina::ALG_DEFAULT, rdoc::ALG_DEFAULT)
-        .value("ALG_BACKTRACK", regina::ALG_BACKTRACK, rdoc::ALG_BACKTRACK)
-        .value("ALG_TREEWIDTH", regina::ALG_TREEWIDTH, rdoc::ALG_TREEWIDTH)
-        .value("ALG_NAIVE", regina::ALG_NAIVE, rdoc::ALG_NAIVE)
+        .value("Default", regina::Algorithm::Default, rdoc::Default)
+        .value("Backtrack", regina::Algorithm::Backtrack, rdoc::Backtrack)
+        .value("Treewidth", regina::Algorithm::Treewidth, rdoc::Treewidth)
+        .value("Naive", regina::Algorithm::Naive, rdoc::Naive)
         .export_values();
         ;
+    m.attr("ALG_DEFAULT") = regina::Algorithm::Default;
+    m.attr("ALG_BACKTRACK") = regina::Algorithm::Backtrack;
+    m.attr("ALG_TREEWIDTH") = regina::Algorithm::Treewidth;
+    m.attr("ALG_NAIVE") = regina::Algorithm::Naive;
 
     RDOC_SCOPE_SWITCH(Language)
 
     pybind11::enum_<regina::Language>(m, "Language", rdoc_scope)
-        .value("LANGUAGE_CXX", regina::LANGUAGE_CXX, rdoc::LANGUAGE_CXX)
-        .value("LANGUAGE_PYTHON", regina::LANGUAGE_PYTHON,
-            rdoc::LANGUAGE_PYTHON)
-        .value("LANGUAGE_CURRENT",
-            // In Python this should evaluate to LANGUAGE_PYTHON, but when
-            // writing C++ code (as we are here) it evaluates to LANGUAGE_CXX.
-            // We therefore hard-code its value as LANGUAGE_PYTHON below.
-            regina::LANGUAGE_PYTHON,
-            rdoc::LANGUAGE_CURRENT)
+        .value("Cxx", regina::Language::Cxx, rdoc::Cxx)
+        .value("Python", regina::Language::Python, rdoc::Python)
+        .value("Current",
+            // In Python this should evaluate to Language::Python, but when
+            // writing C++ code (as we are here) it evaluates to Language::Cxx.
+            // We therefore hard-code its value as Language::Python below.
+            regina::Language::Python,
+            rdoc::Current)
         .export_values();
         ;
 

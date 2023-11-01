@@ -2777,13 +2777,13 @@ class TriangulationBase :
          * written.
          * \return the source code that was generated.
          */
-        std::string source(Language language = LANGUAGE_CURRENT) const;
+        std::string source(Language language = Language::Current) const;
 
         /**
          * Deprecated routine that returns C++ code to reconstruct this
          * triangulation.
          *
-         * \deprecated This is equivalent to calling `source(LANGUAGE_CXX)`,
+         * \deprecated This is equivalent to calling `source(Language::Cxx)`,
          * for compatibility with older versions of Regina.  In particular,
          * it is _not_ equivalent to calling `source()` (which defaults to the
          * programming language currently being used).  See source() for
@@ -3647,11 +3647,11 @@ class TriangulationBase :
          *
          * - On destruction, this object also calls
          *   Triangulation<dim>::clearAllProperties(), _unless_ the template
-         *   argument \a changeType is CHANGE_PRESERVE_ALL_PROPERTIES.
+         *   argument \a changeType is ChangeType::PreserveAllProperties.
          *   This call will happen just before the final change event is fired.
          *
          * - Finally, if the template argument \a changeType is
-         *   CHANGE_PRESERVE_TOPOLOGY, then this object will effectively
+         *   ChangeType::PreserveTopology, then this object will effectively
          *   create a new TopologyLock for the triangulation that lasts for the
          *   full lifespan of this object, _excluding_ the firing of packet
          *   change events.  Specifically, the TopologyLock will be created in
@@ -3679,7 +3679,7 @@ class TriangulationBase :
          * and Triangulation<dim>::clearAllProperties() will be called
          * multiple times.  This is harmless but inefficient.
          *
-         * Likewise, if \a changeType is CHANGE_PRESERVE_TOPOLOGY then these
+         * Likewise, if \a changeType is ChangeType::PreserveTopology then these
          * objects will behave in the expected way when nested with other
          * TopologyLock objects (i.e., topological properties will be preserved
          * as long as any such object is alive).
@@ -3696,16 +3696,16 @@ class TriangulationBase :
          * clearAllProperties() upon destruction) to another object.
          *
          * \tparam changeType controls which computed properties of the
-         * triangulation will be cleared upon the destruction of this
-         * object (unless of course this object lives within a larger
-         * surrounding change span, in which case the outer span takes full
-         * responsibility for clearing computed properties).  See the notes
-         * above for details.  If unsure, the default value of CHANGE_GENERAL
-         * (which clears _all_ computed properties) is always safe to use.
+         * triangulation will be cleared upon the destruction of this object
+         * (unless of course this object lives within a larger surrounding
+         * change span, in which case the outer span takes full responsibility
+         * for clearing computed properties).  See the notes above for details.
+         * If unsure, the default value of ChangeType::General (which clears
+         * _all_ computed properties) is always safe to use.
          *
          * \nopython
          */
-        template <ChangeType changeType = CHANGE_GENERAL>
+        template <ChangeType changeType = ChangeType::General>
         class ChangeAndClearSpan : public PacketChangeSpan {
             public:
                 /**
@@ -3719,7 +3719,7 @@ class TriangulationBase :
                             static_cast<Triangulation<dim>&>(tri)) {
                     tri.Snapshottable<Triangulation<dim>>::takeSnapshot();
 
-                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                    if constexpr (changeType == ChangeType::PreserveTopology)
                         ++tri.topologyLock_;
                 }
 
@@ -3729,11 +3729,11 @@ class TriangulationBase :
                  * tasks are performed.
                  */
                 ~ChangeAndClearSpan() {
-                    if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
+                    if constexpr (changeType != ChangeType::PreserveAllProperties)
                         static_cast<Triangulation<dim>&>(
                             PacketChangeSpan::data_).clearAllProperties();
 
-                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                    if constexpr (changeType == ChangeType::PreserveTopology)
                         --static_cast<Triangulation<dim>&>(
                             PacketChangeSpan::data_).topologyLock_;
                 }
@@ -4165,7 +4165,7 @@ void TriangulationBase<dim>::unlockAll() {
 
     // There are actual locks to remove.  Set up the full machinery for
     // change events / snapshotting / etc.
-    ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
 
     // Our iterator is currently pointing to the first simplex for which
     // there is any kind of lock.
@@ -4648,7 +4648,7 @@ void TriangulationBase<dim>::insertTriangulation(
 
 template <int dim>
 std::string TriangulationBase<dim>::dumpConstruction() const {
-    return source(LANGUAGE_CXX);
+    return source(Language::Cxx);
 }
 
 template <int dim>
@@ -4821,7 +4821,7 @@ template <int dim>
 void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     int f;
     for (auto s : simplices_)
@@ -4857,7 +4857,7 @@ template <int dim>
 void TriangulationBase<dim>::reflect() {
     ensureSkeleton();
 
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     int f;
     for (auto s : simplices_) {

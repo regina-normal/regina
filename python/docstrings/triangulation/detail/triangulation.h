@@ -708,7 +708,7 @@ R"doc(Deprecated routine that returns C++ code to reconstruct this
 triangulation.
 
 .. deprecated::
-    This is equivalent to calling ``source(LANGUAGE_CXX)``, for
+    This is equivalent to calling ``source(Language::Cxx)``, for
     compatibility with older versions of Regina. In particular, it is
     _not_ equivalent to calling ``source()`` (which defaults to the
     programming language currently being used). See source() for
@@ -2049,7 +2049,8 @@ constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4.
+This alias is available for dimensions *dim* ≥ 4. It returns a non-
+const pentachoron pointer.
 
 See face() for further information.)doc";
 
@@ -2399,7 +2400,8 @@ constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3.
+This alias is available for dimensions *dim* ≥ 3. It returns a non-
+const tetrahedron pointer.
 
 See face() for further information.)doc";
 
@@ -2452,7 +2454,8 @@ constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
-This alias is available for all dimensions *dim*.
+This alias is available for all dimensions *dim*. It returns a non-
+const triangle pointer.
 
 See face() for further information.)doc";
 

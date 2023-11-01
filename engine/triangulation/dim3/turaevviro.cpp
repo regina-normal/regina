@@ -1351,10 +1351,10 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 
     InitialData<false>::TVType ans;
     switch (alg) {
-        case ALG_BACKTRACK:
+        case Algorithm::Backtrack:
             ans = turaevViroBacktrack(*this, init, nullptr);
             break;
-        case ALG_NAIVE:
+        case Algorithm::Naive:
             ans = turaevViroNaive(*this, init, nullptr);
             break;
         default:
@@ -1408,10 +1408,10 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
 
     InitialData<true>::TVType ans;
     switch (alg) {
-        case ALG_BACKTRACK:
+        case Algorithm::Backtrack:
             ans = turaevViroBacktrack(*this, init, tracker);
             break;
-        case ALG_NAIVE:
+        case Algorithm::Naive:
             ans = turaevViroNaive(*this, init, tracker);
             break;
         default:

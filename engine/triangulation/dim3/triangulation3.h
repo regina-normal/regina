@@ -896,10 +896,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param parity determines for odd \a r whether \a q₀ is a primitive
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
          * \param alg the algorithm with which to compute the invariant.  If
-         * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
-         * This should be treated as a hint only: if the algorithm you choose
-         * is not supported for the given parameters (\a r and \a parity),
-         * then Regina will use another algorithm instead.
+         * you are not sure, the default value (Algorithm::Default) is a safe
+         * choice.  This should be treated as a hint only: if the algorithm
+         * you choose is not supported for the given parameters (\a r and
+         * \a parity), then Regina will use another algorithm instead.
          * \param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
          * \return the requested Turaev-Viro invariant, or an uninitialised
@@ -909,7 +909,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
-            Algorithm alg = ALG_DEFAULT,
+            Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
@@ -953,16 +953,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param whichRoot specifies which root of unity is used for \a q₀,
          * as described above.
          * \param alg the algorithm with which to compute the invariant.  If
-         * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
-         * This should be treated as a hint only: if the algorithm you choose
-         * is not supported for the given parameters (\a r and \a whichRoot),
-         * then Regina will use another algorithm instead.
+         * you are not sure, the default value (Algorithm::Default) is a safe
+         * choice.  This should be treated as a hint only: if the algorithm
+         * you choose is not supported for the given parameters (\a r and
+         * \a whichRoot), then Regina will use another algorithm instead.
          * \return the requested Turaev-Viro invariant.
          *
          * \see allCalculatedTuraevViro
          */
         double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
-            Algorithm alg = ALG_DEFAULT) const;
+            Algorithm alg = Algorithm::Default) const;
         /**
          * Returns the cache of all Turaev-Viro state sum invariants that
          * have been calculated for this 3-manifold.

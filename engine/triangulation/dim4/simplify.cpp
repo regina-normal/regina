@@ -233,7 +233,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
     // Perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][3]);
@@ -363,7 +363,7 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
     // Perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][2]);
@@ -478,7 +478,7 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
     // Actually perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     // Unglue faces from the doomed pentachora and glue them to each other.
     Pentachoron<4>* top = pent[0]->adjacentPentachoron(vertex[0]);
@@ -773,7 +773,7 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
     // "raw" routine removeSimplexRaw() below.  This is because
     // the facets on the internal side of the shelling _are_ allowed
     // to be locked, and we do not want to throw an exception because of this.
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     removeSimplexRaw(p);
     return true;
@@ -1146,7 +1146,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     // Perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
@@ -1199,7 +1199,7 @@ bool Triangulation<4>::snapEdge(Edge<4>* e, bool check, bool perform) {
     // Actually perform the move.
     // The following ChangeAndClearSpan is essential, since we use
     // "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     // The four pentachora that we insert together form a "pinched 4-ball".
     // Combinatorially, the boundary of this pinched 4-ball is isomorphic to

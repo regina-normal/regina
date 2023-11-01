@@ -353,13 +353,13 @@ void addTriangulation3(pybind11::module_& m) {
             &Triangulation<3>::dualToPrimal), rbase::dualToPrimal)
         .def("turaevViro", &Triangulation<3>::turaevViro,
             pybind11::arg(), pybind11::arg("parity") = true,
-            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::turaevViro)
         .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
             pybind11::arg(), pybind11::arg("whichRoot") = 1,
-            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("alg") = regina::Algorithm::Default,
             rdoc::turaevViroApprox)
         .def("allCalculatedTuraevViro",
             &Triangulation<3>::allCalculatedTuraevViro,
@@ -682,15 +682,16 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def_static("isoSigComponentSize",
             &Triangulation<3>::isoSigComponentSize, rbase::isoSigComponentSize)
         .def("source", &Triangulation<3>::source,
-            // The default should be LANGUAGE_CURRENT, but in C++ that evaluates
-            // to LANGUAGE_CXX.  We need it to evaluate to LANGUAGE_PYTHON
-            // (i.e., the Python implementation of LANGUAGE_CURRENT), and so we
-            // explicitly use that as our default instead.
-            pybind11::arg("language") = regina::LANGUAGE_PYTHON,
+            // The default should be Language::Current, but in C++ that
+            // evaluates to Language::Cxx.  We need it to evaluate to
+            // Language::Python (i.e., the Python implementation of
+            // Language::Current), and so we explicitly use that as our
+            // default instead.
+            pybind11::arg("language") = regina::Language::Python,
             rbase::source)
         .def("dumpConstruction", [](const Triangulation<3>& tri) {
             // Deprecated, so reimplement this ourselves.
-            return tri.source(regina::LANGUAGE_CXX);
+            return tri.source(regina::Language::Cxx);
         }, rbase::dumpConstruction)
         .def("dot", &Triangulation<3>::dot,
             pybind11::arg("labels") = false, rbase::dot)

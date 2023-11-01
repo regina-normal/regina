@@ -164,7 +164,7 @@ class TopologyLockable {
          * The easiest way to create a TopologyLock is to have it automatically
          * rolled in to a Triangulation<dim>::ChangeAndClearSpan or a
          * Link::ChangeAndClearSpan, by declaring a local
-         * ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> on the stack
+         * ChangeAndClearSpan<ChangeType::PreserveTopology> on the stack
          * whose lifespan covers all of the modifications that you are making
          * to the triangulation or link.
          *

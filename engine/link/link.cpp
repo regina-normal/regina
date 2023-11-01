@@ -499,7 +499,7 @@ void Link::reverse() {
 }
 
 void Link::rotate() {
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -1208,11 +1208,11 @@ std::string Link::source(Language language) const {
 
     char left, right;
     switch (language) {
-        case LANGUAGE_CXX:
+        case Language::Cxx:
             out << "Link link = Link::fromData(";
             left = '{'; right = '}';
             break;
-        case LANGUAGE_PYTHON:
+        case Language::Python:
             out << "link = Link.fromData(";
             left = '['; right = ']';
             break;
@@ -1231,7 +1231,7 @@ std::string Link::source(Language language) const {
     }
 
     if (components_.empty()) {
-        if (language == LANGUAGE_PYTHON)
+        if (language == Language::Python)
             out << ", [ ]";
     } else {
         // In Python, we express multiple components as [[...], ..., [...]].
@@ -1239,7 +1239,7 @@ std::string Link::source(Language language) const {
         // A problem: this makes [] ambiguous, since it could represent either
         // the empty link or the zero-crossing unknot, and so in the latter
         // case we must still keep the outer list.
-        bool outerList = (language == LANGUAGE_PYTHON &&
+        bool outerList = (language == Language::Python &&
             (components_.size() > 1 || crossings_.empty()));
 
         out << ", ";
@@ -1256,7 +1256,7 @@ std::string Link::source(Language language) const {
             out << left << ' ';
 
             if (! start) {
-                if (language == LANGUAGE_CXX)
+                if (language == Language::Cxx)
                     out << "0 ";
                 out << right;
             } else {
@@ -1280,7 +1280,7 @@ std::string Link::source(Language language) const {
     }
 
     out << ')';
-    if (language == LANGUAGE_CXX)
+    if (language == Language::Cxx)
         out << ';';
     out << '\n';
 

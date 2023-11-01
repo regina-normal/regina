@@ -2993,8 +2993,8 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
 
     Laurent2<Integer> ans;
     switch (alg) {
-        case ALG_NAIVE:
-        case ALG_BACKTRACK:
+        case Algorithm::Naive:
+        case Algorithm::Backtrack:
             ans = homflyKauffman(tracker);
             break;
         default:

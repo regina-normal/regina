@@ -22,6 +22,12 @@ Version 7.4  [ (to be announced) ]
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.
+        Enum Algorithm:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., ALG_BACKTRACK) have been
+              renamed as scoped enum values (e.g., Algorithm::Backtrack).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class AngleStructure:
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::Integer.

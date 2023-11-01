@@ -421,10 +421,11 @@ call this routine in a new detached thread.
 
 .. warning::
     The naive algorithm can only handle a limited number of crossings
-    (currently at most 63). If you pass ALG_NAIVE and you have too
-    many crossings (which is not advised, since the naive algorithm
-    requires 2^*n* time), then this routine will ignore your choice of
-    algorithm and use the treewidth-based algorithm regardless.
+    (currently at most 63). If you pass Algorithm::Naive and you have
+    too many crossings (which is not advised, since the naive
+    algorithm requires 2^*n* time), then this routine will ignore your
+    choice of algorithm and use the treewidth-based algorithm
+    regardless.
 
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
@@ -439,11 +440,12 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_NAIVE is a slow algorithm that computes the Kauffman bracket
-    by resolving all crossings in all possible ways, and ALG_TREEWIDTH
-    uses a fixed-parameter tractable treewidth-based algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Naive is a slow algorithm that computes the
+    Kauffman bracket by resolving all crossings in all possible ways,
+    and Algorithm::Treewidth uses a fixed-parameter tractable
+    treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -813,7 +815,7 @@ static const char *dumpConstruction =
 R"doc(Deprecated routine that returns C++ code to reconstruct this link.
 
 .. deprecated::
-    This is equivalent to calling ``source(LANGUAGE_CXX)``, for
+    This is equivalent to calling ``source(Language::Cxx)``, for
     compatibility with older versions of Regina. In particular, it is
     _not_ equivalent to calling ``source()`` (which defaults to the
     programming language currently being used). See source() for
@@ -1806,11 +1808,11 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_BACKTRACK will use Kauffman's skein-template algorithm, and
-    ALG_TREEWIDTH will use a fixed-parameter tractable treewidth-based
-    algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Backtrack will use Kauffman's skein-template
+    algorithm, and Algorithm::Treewidth will use a fixed-parameter
+    tractable treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -1882,11 +1884,11 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_BACKTRACK will use Kauffman's skein-template algorithm, and
-    ALG_TREEWIDTH will use a fixed-parameter tractable treewidth-based
-    algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Backtrack will use Kauffman's skein-template
+    algorithm, and Algorithm::Treewidth will use a fixed-parameter
+    tractable treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -1977,11 +1979,11 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_BACKTRACK will use Kauffman's skein-template algorithm, and
-    ALG_TREEWIDTH will use a fixed-parameter tractable treewidth-based
-    algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Backtrack will use Kauffman's skein-template
+    algorithm, and Algorithm::Treewidth will use a fixed-parameter
+    tractable treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -2203,10 +2205,11 @@ call this routine in a new detached thread.
 
 .. warning::
     The naive algorithm can only handle a limited number of crossings
-    (currently at most 63). If you pass ALG_NAIVE and you have too
-    many crossings (which is not advised, since the naive algorithm
-    requires 2^*n* time), then this routine will ignore your choice of
-    algorithm and use the treewidth-based algorithm regardless.
+    (currently at most 63). If you pass Algorithm::Naive and you have
+    too many crossings (which is not advised, since the naive
+    algorithm requires 2^*n* time), then this routine will ignore your
+    choice of algorithm and use the treewidth-based algorithm
+    regardless.
 
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
@@ -2221,11 +2224,12 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_NAIVE is a slow algorithm that computes the Kauffman bracket
-    by resolving all crossings in all possible ways, and ALG_TREEWIDTH
-    uses a fixed-parameter tractable treewidth-based algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Naive is a slow algorithm that computes the
+    Kauffman bracket by resolving all crossings in all possible ways,
+    and Algorithm::Treewidth uses a fixed-parameter tractable
+    treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -3581,9 +3585,9 @@ R"doc(Instructs Regina to use the given tree decomposition as the starting
 point whenever it needs a tree decomposition for this link.
 
 For some link routines, including niceTreeDecomposition() as well as
-computations such as jones() that support the option ALG_TREEWIDTH,
-Regina needs a tree decomposition of the planar 4-valent multigraph
-formed by this link diagram.
+computations such as jones() that support the option
+Algorithm::Treewidth, Regina needs a tree decomposition of the planar
+4-valent multigraph formed by this link diagram.
 
 By default, Regina will compute (and then cache) such a tree
 decomposition itself, using in-built greedy heuristics. This routine

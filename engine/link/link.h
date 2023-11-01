@@ -2196,8 +2196,8 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
-         * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
+         * \warning The naive algorithm can only handle a limited number of
+         * crossings (currently at most 63).  If you pass Algorithm::Naive and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
@@ -2214,18 +2214,18 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_NAIVE is a slow algorithm that computes
-         * the Kauffman bracket by resolving all crossings in all possible
-         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
-         * treewidth-based algorithm.
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Naive is a slow algorithm that
+         * computes the Kauffman bracket by resolving all crossings in all
+         * possible ways, and Algorithm::Treewidth uses a fixed-parameter
+         * tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the bracket polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT,
+        const Laurent<Integer>& bracket(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Kauffman bracket polynomial of this link diagram
@@ -2286,8 +2286,8 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
-         * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
+         * \warning The naive algorithm can only handle a limited number of
+         * crossings (currently at most 63).  If you pass Algorithm::Naive and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
@@ -2304,18 +2304,18 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_NAIVE is a slow algorithm that computes
-         * the Kauffman bracket by resolving all crossings in all possible
-         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
-         * treewidth-based algorithm.
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Naive is a slow algorithm that
+         * computes the Kauffman bracket by resolving all crossings in all
+         * possible ways, and Algorithm::Treewidth uses a fixed-parameter
+         * tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the Jones polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT,
+        const Laurent<Integer>& jones(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Jones polynomial of this link diagram already known?
@@ -2388,17 +2388,17 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_BACKTRACK will use Kauffman's
-         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Backtrack will use Kauffman's
+         * skein-template algorithm, and Algorithm::Treewidth will use a
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT,
+        const Laurent2<Integer>& homflyAZ(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -2458,17 +2458,17 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_BACKTRACK will use Kauffman's
-         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Backtrack will use Kauffman's
+         * skein-template algorithm, and Algorithm::Treewidth will use a
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT,
+        const Laurent2<Integer>& homflyLM(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -2497,17 +2497,17 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_BACKTRACK will use Kauffman's
-         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Backtrack will use Kauffman's
+         * skein-template algorithm, and Algorithm::Treewidth will use a
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT,
+        const Laurent2<Integer>& homfly(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Is the HOMFLY polynomial of this link diagram already known?
@@ -2601,7 +2601,7 @@ class Link :
          *
          * For some link routines, including niceTreeDecomposition() as
          * well as computations such as jones() that support the option
-         * ALG_TREEWIDTH, Regina needs a tree decomposition of the
+         * Algorithm::Treewidth, Regina needs a tree decomposition of the
          * planar 4-valent multigraph formed by this link diagram.
          *
          * By default, Regina will compute (and then cache) such a tree
@@ -3366,12 +3366,12 @@ class Link :
          * written.
          * \return the source code that was generated.
          */
-        std::string source(Language language = LANGUAGE_CURRENT) const;
+        std::string source(Language language = Language::Current) const;
 
         /**
          * Deprecated routine that returns C++ code to reconstruct this link.
          *
-         * \deprecated This is equivalent to calling `source(LANGUAGE_CXX)`,
+         * \deprecated This is equivalent to calling `source(Language::Cxx)`,
          * for compatibility with older versions of Regina.  In particular,
          * it is _not_ equivalent to calling `source()` (which defaults to the
          * programming language currently being used).  See source() for
@@ -4581,7 +4581,7 @@ class Link :
          * This optimisation may involve compressing and/or rerooting the
          * given tree decomposition.  The aim is to minimise the estimated
          * processing time and memory consumption of calling
-         * `jones(ALG_TREEWIDTH)` and/or `bracket(ALG_TREEWIDTH)`.
+         * `jones(Algorithm::Treewidth)` and/or `bracket(Algorithm::Treewidth)`.
          *
          * The rerooting procedure essentially estimates the number of
          * partial solutions that are expected at each bag in the
@@ -4625,11 +4625,11 @@ class Link :
          *
          * - On destruction, this object also calls Link::clearAllProperties(),
          *   _unless_ the template argument \a changeType is
-         *   CHANGE_PRESERVE_ALL_PROPERTIES.  This call will happen just
+         *   ChangeType::PreserveAllProperties.  This call will happen just
          *   before the final change event is fired.
          *
          * - Finally, if the template argument \a changeType is
-         *   CHANGE_PRESERVE_TOPOLOGY, then this object will effectively
+         *   ChangeType::PreserveTopology, then this object will effectively
          *   create a new TopologyLock for the link that lasts for the
          *   full lifespan of this object, _excluding_ the firing of packet
          *   change events.  Specifically, the TopologyLock will be created in
@@ -4655,7 +4655,7 @@ class Link :
          * ChangeAndClearSpan objects then Link::clearAllProperties() will be
          * called multiple times.  This is harmless but inefficient.
          *
-         * Likewise, if \a changeType is CHANGE_PRESERVE_TOPOLOGY then these
+         * Likewise, if \a changeType is ChangeType::PreserveTopology then these
          * objects will behave in the expected way when nested with other
          * TopologyLock objects (i.e., topological properties will be preserved
          * as long as any such object is alive).
@@ -4676,14 +4676,14 @@ class Link :
          * course this object lives within a larger surrounding change span,
          * in which case the outer span takes full responsibility for clearing
          * computed properties).  See the notes above for details.  Currently
-         * CHANGE_PRESERVE_TOPOLOGY is not yet supported for links (this is
+         * ChangeType::PreserveTopology is not yet supported for links (this is
          * planned for a future release of Regina).  If unsure, the default
-         * value of CHANGE_GENERAL (which clears _all_ computed properties)
+         * value of ChangeType::General (which clears _all_ computed properties)
          * is always safe to use.
          *
          * \nopython
          */
-        template <ChangeType changeType = CHANGE_GENERAL>
+        template <ChangeType changeType = ChangeType::General>
         class ChangeAndClearSpan : public PacketData<Link>::PacketChangeSpan {
             public:
                 /**
@@ -4695,7 +4695,7 @@ class Link :
                  */
                 ChangeAndClearSpan(Link& link) :
                         PacketData<Link>::PacketChangeSpan(link) {
-                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                    if constexpr (changeType == ChangeType::PreserveTopology)
                         ++link.topologyLock_;
                 }
 
@@ -4705,10 +4705,10 @@ class Link :
                  * tasks are performed.
                  */
                 ~ChangeAndClearSpan() {
-                    if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
+                    if constexpr (changeType != ChangeType::PreserveAllProperties)
                         static_cast<Link&>(data_).clearAllProperties();
 
-                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                    if constexpr (changeType == ChangeType::PreserveTopology)
                         --static_cast<Link&>(data_).topologyLock_;
                 }
 
@@ -5076,7 +5076,7 @@ inline Link Link::fromSig(const std::string& sig) {
 }
 
 inline std::string Link::dumpConstruction() const {
-    return source(LANGUAGE_CXX);
+    return source(Language::Cxx);
 }
 
 inline void swap(Link& lhs, Link& rhs) {

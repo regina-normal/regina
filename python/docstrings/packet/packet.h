@@ -221,8 +221,9 @@ else must be implemented for each wrapped packet type.
 
 This base class is extremely lightweight: the only data that it
 contains is a single PacketHeldBy enumeration value. All of the class
-constructors set this value to HELD_BY_NONE; it is the responsibility
-of subclasses (e.g., PacketOf<Held>) to change this where necessary.
+constructors set this value to PacketHeldBy::None; it is the
+responsibility of subclasses (e.g., PacketOf<Held>) to change this
+where necessary.
 
 Python:
     Not present, but the routines anonID() and packet() will be
@@ -629,14 +630,14 @@ namespace PacketData_ {
 // Docstring regina::python::doc::PacketData_::__copy
 static const char *__copy =
 R"doc(Copy constructor that ignores its argument, and instead sets *heldBy_*
-to HELD_BY_NONE. This is because *heldBy_* stores information about
-the C++ type of _this_ object, not the object being copied.
+to PacketHeldBy::None. This is because *heldBy_* stores information
+about the C++ type of _this_ object, not the object being copied.
 
 This constructor is provided so that *Held* can (if it wants) use an
 implicitly-declared copy or move constructor.)doc";
 
 // Docstring regina::python::doc::PacketData_::__default
-static const char *__default = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
+static const char *__default = R"doc(Default constructor that sets *heldBy_* to PacketHeldBy::None.)doc";
 
 // Docstring regina::python::doc::PacketData_::anonID
 static const char *anonID =
