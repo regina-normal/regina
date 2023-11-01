@@ -82,25 +82,74 @@ class Attachment : public Packet {
          * of binary data.
          *
          * \nopython For Python users, blocks are always copied (i.e., the
-         * ownership policy is always DEEP_COPY).
+         * ownership policy is always DeepCopy).
          */
-        enum OwnershipPolicy {
+        enum class OwnershipPolicy {
             /**
              * The packet should claim ownership of the block, and
              * should assume that it was allocated using \a malloc().
              */
-            OWN_MALLOC,
+            OwnMalloc,
             /**
              * The packet should claim ownership of the block, and
              * should assume that it was allocated using \c new[].
              */
-            OWN_NEW,
+            OwnNew,
             /**
              * The packet should not claim ownership of the block, but
              * should instead make its own deep copy.
              */
-            DEEP_COPY
+            DeepCopy
         };
+
+        /**
+         * A deprecated constant indicating one of the available data
+         * ownership policies.
+         *
+         * \deprecated This was one of the old OwnershipPolicy constants, back
+         * when OwnershipPolicy was an unscoped enumeration.  Nowadays
+         * OwnershipPolicy is a scoped enumeration (which offers better scoping
+         * and type safety), and you should access this constant as
+         * OwnershipPolicy::OwnMalloc instead.
+         *
+         * \nopython The OwnershipPolicy enumeration is not available to
+         * Python, since for Python users the only available policy is
+         * OwnershipPolicy::DeepCopy.
+         */
+        [[deprecated]] inline static constexpr OwnershipPolicy OWN_MALLOC =
+            OwnershipPolicy::OwnMalloc;
+        /**
+         * A deprecated constant indicating one of the available data
+         * ownership policies.
+         *
+         * \deprecated This was one of the old OwnershipPolicy constants, back
+         * when OwnershipPolicy was an unscoped enumeration.  Nowadays
+         * OwnershipPolicy is a scoped enumeration (which offers better scoping
+         * and type safety), and you should access this constant as
+         * OwnershipPolicy::OwnNew instead.
+         *
+         * \nopython The OwnershipPolicy enumeration is not available to
+         * Python, since for Python users the only available policy is
+         * OwnershipPolicy::DeepCopy.
+         */
+        [[deprecated]] inline static constexpr OwnershipPolicy OWN_NEW =
+            OwnershipPolicy::OwnNew;
+        /**
+         * A deprecated constant indicating one of the available data
+         * ownership policies.
+         *
+         * \deprecated This was one of the old OwnershipPolicy constants, back
+         * when OwnershipPolicy was an unscoped enumeration.  Nowadays
+         * OwnershipPolicy is a scoped enumeration (which offers better scoping
+         * and type safety), and you should access this constant as
+         * OwnershipPolicy::DeepCopy instead.
+         *
+         * \nopython The OwnershipPolicy enumeration is not available to
+         * Python, since for Python users the only available policy is
+         * OwnershipPolicy::DeepCopy.
+         */
+        [[deprecated]] inline static constexpr OwnershipPolicy DEEP_COPY =
+            OwnershipPolicy::DeepCopy;
 
     private:
         char* data_;
@@ -111,7 +160,8 @@ class Attachment : public Packet {
                  is currently stored. */
         OwnershipPolicy alloc_;
             /**< Describes how the binary data (if any) was allocated; this
-                 must be either \a OWN_MALLOC or \a OWN_NEW. */
+                 must be either \a OwnershipPolicy::OwnMalloc or
+                 \a OwnershipPolicy::OwnNew. */
 
         std::string filename_;
             /**< The original filename of the attachment.  Regina's user
@@ -162,11 +212,11 @@ class Attachment : public Packet {
          * not need to be terminated by a null byte at the end.
          *
          * The \a alloc argument shows if/how this packet claims ownership of
-         * the data.  In particular, unless \a alloc is \a DEEP_COPY, this
-         * packet will claim ownership of the given data block and will
-         * deallocate it when the packet is destroyed.  If \a alloc is
-         * \a DEEP_COPY then the given block of data will not be modified in
-         * any way.
+         * the data.  In particular, unless \a alloc is \a
+         * OwnershipPolicy::DeepCopy, this packet will claim ownership of the
+         * given data block and will deallocate it when the packet is destroyed.
+         * If \a alloc is \a OwnershipPolicy::DeepCopy then the given block of
+         * data will not be modified in any way.
          *
          * It is possible to pass a null pointer as the data array, in
          * which case the new packet will have no attachment stored
@@ -428,30 +478,32 @@ void swap(Attachment& a, Attachment& b);
 
 // Inline functions for Attachment
 
-inline Attachment::Attachment() : data_(nullptr), size_(0), alloc_(OWN_NEW) {
+inline Attachment::Attachment() : data_(nullptr), size_(0),
+        alloc_(OwnershipPolicy::OwnNew) {
 }
 
 inline Attachment::Attachment(char* data, size_t size, OwnershipPolicy alloc,
         std::string filename) :
         data_(data), size_(size), alloc_(alloc),
         filename_(std::move(filename)) {
-    if (alloc_ == DEEP_COPY) {
+    if (alloc_ == OwnershipPolicy::DeepCopy) {
         if (data_) {
             data_ = static_cast<char*>(::malloc(size_));
             ::memcpy(data_, static_cast<const char*>(data), size_);
         }
-        alloc_ = OWN_MALLOC;
+        alloc_ = OwnershipPolicy::OwnMalloc;
     } else if (! data_)
         size_ = 0;
 }
 
 inline Attachment::Attachment(const Attachment& src) :
-        Attachment(src.data_, src.size_, DEEP_COPY, src.filename_) {
+        Attachment(src.data_, src.size_, OwnershipPolicy::DeepCopy,
+            src.filename_) {
 }
 
 inline Attachment::~Attachment() {
     if (data_) {
-        if (alloc_ == OWN_MALLOC)
+        if (alloc_ == OwnershipPolicy::OwnMalloc)
             ::free(data_);
         else
             delete[] data_;
@@ -463,7 +515,7 @@ inline Attachment& Attachment::operator = (const Attachment& src) {
     if (std::addressof(src) == this)
         return *this;
 
-    reset(src.data_, src.size_, DEEP_COPY, src.filename_);
+    reset(src.data_, src.size_, OwnershipPolicy::DeepCopy, src.filename_);
     return *this;
 }
 
@@ -516,7 +568,8 @@ inline void Attachment::writeTextShort(std::ostream& o) const {
 }
 
 inline std::shared_ptr<Packet> Attachment::internalClonePacket() const {
-    return std::make_shared<Attachment>(data_, size_, DEEP_COPY, filename_);
+    return std::make_shared<Attachment>(data_, size_,
+        OwnershipPolicy::DeepCopy, filename_);
 }
 
 inline void swap(Attachment& a, Attachment& b) {

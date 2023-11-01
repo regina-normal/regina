@@ -135,7 +135,8 @@ namespace {
         char* data;
         size_t dataLen;
         if (base64Decode(base64.c_str(), out - base64.begin(), &data, &dataLen))
-            att.reset(data, dataLen, Attachment::OWN_NEW, std::move(filename));
+            att.reset(data, dataLen, Attachment::OwnershipPolicy::OwnNew,
+                std::move(filename));
         else
             att.reset();
     }

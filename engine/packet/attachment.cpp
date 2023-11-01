@@ -52,7 +52,7 @@
 namespace regina {
 
 Attachment::Attachment(const char* pathname) :
-        data_(nullptr), size_(0), alloc_(OWN_NEW) {
+        data_(nullptr), size_(0), alloc_(OwnershipPolicy::OwnNew) {
     // Use FILE* so we can call fstat().
 
     // Open the file.
@@ -118,7 +118,7 @@ void Attachment::reset() {
     PacketChangeSpan span(*this);
 
     if (data_) {
-        if (alloc_ == OWN_MALLOC)
+        if (alloc_ == OwnershipPolicy::OwnMalloc)
             ::free(data_);
         else
             delete[] data_;
@@ -126,7 +126,7 @@ void Attachment::reset() {
 
     data_ = nullptr;
     size_ = 0;
-    alloc_ = OWN_NEW;
+    alloc_ = OwnershipPolicy::OwnNew;
     filename_.clear();
 }
 
@@ -136,7 +136,7 @@ void Attachment::reset(char* data, size_t size, OwnershipPolicy alloc,
 
     // Out with the old data.
     if (data_) {
-        if (alloc_ == OWN_MALLOC)
+        if (alloc_ == OwnershipPolicy::OwnMalloc)
             ::free(data_);
         else
             delete[] data_;
@@ -147,16 +147,16 @@ void Attachment::reset(char* data, size_t size, OwnershipPolicy alloc,
         data_ = data;
         size_ = size;
 
-        if (alloc == DEEP_COPY) {
+        if (alloc == OwnershipPolicy::DeepCopy) {
             data_ = static_cast<char*>(::malloc(size_));
             ::memcpy(data_, static_cast<const char*>(data), size_);
-            alloc_ = OWN_MALLOC;
+            alloc_ = OwnershipPolicy::OwnMalloc;
         } else
             alloc_ = alloc;
     } else {
         data_ = nullptr;
         size_ = 0;
-        alloc_ = OWN_NEW;
+        alloc_ = OwnershipPolicy::OwnNew;
     }
 
     filename_ = std::move(filename);
