@@ -163,248 +163,197 @@ enum class PacketType {
 };
 
 /**
- * A deprecated constant that does not represent any of Regina's packet types.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::None instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::None.
  */
 [[deprecated]] constexpr PacketType PACKET_NONE = PacketType::None;
 /**
- * A deprecated constant that represents a container packet.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Container instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Container.
  */
 [[deprecated]] constexpr PacketType PACKET_CONTAINER = PacketType::Container;
 /**
- * A deprecated constant that represents a text packet.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Text instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Text.
  */
 [[deprecated]] constexpr PacketType PACKET_TEXT = PacketType::Text;
 /**
- * A deprecated constant that represents a normal surface list.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::NormalSurfaces instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::NormalSurfaces.
  */
 [[deprecated]] constexpr PacketType PACKET_NORMALSURFACES =
     PacketType::NormalSurfaces;
 /**
- * A deprecated constant that represents a script packet.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Script instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Script.
  */
 [[deprecated]] constexpr PacketType PACKET_SCRIPT = PacketType::Script;
 /**
- * A deprecated constant that represents a normal surface filter.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::SurfaceFilter instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::SurfaceFilter.
  */
 [[deprecated]] constexpr PacketType PACKET_SURFACEFILTER =
     PacketType::SurfaceFilter;
 /**
- * A deprecated constant that represents an angle structure list.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::AngleStructures instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::AngleStructures.
  */
 [[deprecated]] constexpr PacketType PACKET_ANGLESTRUCTURES =
     PacketType::AngleStructures;
 /**
- * A deprecated constant that represents an arbitrary file attachment.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Attachment instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Attachment.
  */
 [[deprecated]] constexpr PacketType PACKET_ATTACHMENT = PacketType::Attachment;
 /**
- * A deprecated constant that represents a normal hypersurface list.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::NormalHypersurfaces instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::NormalHypersurfaces.
  */
 [[deprecated]] constexpr PacketType PACKET_NORMALHYPERSURFACES =
     PacketType::NormalHypersurfaces;
 /**
- * A deprecated constant that represents a triangulation in the embedded
- * SnapPea kernel.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::SnapPea instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::SnapPea.
  */
 [[deprecated]] constexpr PacketType PACKET_SNAPPEATRIANGULATION =
     PacketType::SnapPea;
 /**
- * A deprecated constant that represents a knot or link in the 3-sphere.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Link instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Link.
  */
 [[deprecated]] constexpr PacketType PACKET_LINK = PacketType::Link;
 /**
- * A deprecated constant that represents a 2-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation2 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation2.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION2 =
     PacketType::Triangulation2;
 /**
- * A deprecated constant that represents a 3-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation3 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation3.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION3 =
     PacketType::Triangulation3;
 /**
- * A deprecated constant that represents a 4-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation4 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation4.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION4 =
     PacketType::Triangulation4;
 /**
- * A deprecated constant that represents a 5-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation5 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation5.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION5 =
     PacketType::Triangulation5;
 /**
- * A deprecated constant that represents a 6-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation6 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation6.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION6 =
     PacketType::Triangulation6;
 /**
- * A deprecated constant that represents a 7-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation7 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation7.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION7 =
     PacketType::Triangulation7;
 /**
- * A deprecated constant that represents a 8-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation8 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation8.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION8 =
     PacketType::Triangulation8;
 #ifdef REGINA_HIGHDIM
 /**
- * A deprecated constant that represents a 9-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation9 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation9.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION9 =
     PacketType::Triangulation9;
 /**
- * A deprecated constant that represents a 10-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation10 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation10.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION10 =
     PacketType::Triangulation10;
 /**
- * A deprecated constant that represents a 11-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation11 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation11.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION11 =
     PacketType::Triangulation11;
 /**
- * A deprecated constant that represents a 12-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation12 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation12.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION12 =
     PacketType::Triangulation12;
 /**
- * A deprecated constant that represents a 13-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation13 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation13.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION13 =
     PacketType::Triangulation13;
 /**
- * A deprecated constant that represents a 14-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation14 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation14.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION14 =
     PacketType::Triangulation14;
 /**
- * A deprecated constant that represents a 15-dimensional triangulation.
+ * A deprecated constant representing one of the different types of packet.
  *
- * \deprecated This was one of the old PacketType constants, back when
- * PacketType was an unscoped enumeration.  Nowadays PacketType is a scoped
- * enumeration (which offers better scoping and type safety), and you should
- * access this constant as PacketType::Triangulation15 instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PacketType::Triangulation15.
  */
 [[deprecated]] constexpr PacketType PACKET_TRIANGULATION15 =
     PacketType::Triangulation15;

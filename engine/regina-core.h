@@ -125,39 +125,31 @@ enum class Algorithm {
 };
 
 /**
- * A deprecated constant that represents the default algorithm.
+ * A deprecated constant indicating one of the available classes of algorithm.
  *
- * \deprecated This was one of the old Algorithm constants, back when Algorithm
- * was an unscoped enumeration.  Nowadays Algorithm is a scoped enumeration
- * (which offers better scoping and type safety), and you should access this
- * constant as Algorithm::Default instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Default.
  */
 [[deprecated]] constexpr Algorithm ALG_DEFAULT = Algorithm::Default;
 /**
- * A deprecated constant that represents an optimised backtracking algorithm.
+ * A deprecated constant indicating one of the available classes of algorithm.
  *
- * \deprecated This was one of the old Algorithm constants, back when Algorithm
- * was an unscoped enumeration.  Nowadays Algorithm is a scoped enumeration
- * (which offers better scoping and type safety), and you should access this
- * constant as Algorithm::Backtrack instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Backtrack.
  */
 [[deprecated]] constexpr Algorithm ALG_BACKTRACK = Algorithm::Backtrack;
 /**
- * A deprecated constant that represents a treewidth-based algorithm.
+ * A deprecated constant indicating one of the available classes of algorithm.
  *
- * \deprecated This was one of the old Algorithm constants, back when Algorithm
- * was an unscoped enumeration.  Nowadays Algorithm is a scoped enumeration
- * (which offers better scoping and type safety), and you should access this
- * constant as Algorithm::Treewidth instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Treewidth.
  */
 [[deprecated]] constexpr Algorithm ALG_TREEWIDTH = Algorithm::Treewidth;
 /**
- * A deprecated constant that represents a naive algorithm.
+ * A deprecated constant indicating one of the available classes of algorithm.
  *
- * \deprecated This was one of the old Algorithm constants, back when Algorithm
- * was an unscoped enumeration.  Nowadays Algorithm is a scoped enumeration
- * (which offers better scoping and type safety), and you should access this
- * constant as Algorithm::Naive instead.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Naive.
  */
 [[deprecated]] constexpr Algorithm ALG_NAIVE = Algorithm::Naive;
 

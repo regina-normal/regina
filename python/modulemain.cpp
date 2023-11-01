@@ -294,6 +294,8 @@ Returns:
         .value("Naive", regina::Algorithm::Naive, rdoc::Naive)
         .export_values();
         ;
+
+    // Deprecated constants:
     m.attr("ALG_DEFAULT") = regina::Algorithm::Default;
     m.attr("ALG_BACKTRACK") = regina::Algorithm::Backtrack;
     m.attr("ALG_TREEWIDTH") = regina::Algorithm::Treewidth;

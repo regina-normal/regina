@@ -103,50 +103,32 @@ class Attachment : public Packet {
         };
 
         /**
-         * A deprecated constant indicating one of the available data
-         * ownership policies.
+         * A deprecated constant indicating one of the data ownership policies.
          *
-         * \deprecated This was one of the old OwnershipPolicy constants, back
-         * when OwnershipPolicy was an unscoped enumeration.  Nowadays
-         * OwnershipPolicy is a scoped enumeration (which offers better scoping
-         * and type safety), and you should access this constant as
-         * OwnershipPolicy::OwnMalloc instead.
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * OwnershipPolicy::OwnMalloc.
          *
-         * \nopython The OwnershipPolicy enumeration is not available to
-         * Python, since for Python users the only available policy is
-         * OwnershipPolicy::DeepCopy.
+         * \nopython The OwnershipPolicy enumeration is not available to Python.
          */
         [[deprecated]] inline static constexpr OwnershipPolicy OWN_MALLOC =
             OwnershipPolicy::OwnMalloc;
         /**
-         * A deprecated constant indicating one of the available data
-         * ownership policies.
+         * A deprecated constant indicating one of the data ownership policies.
          *
-         * \deprecated This was one of the old OwnershipPolicy constants, back
-         * when OwnershipPolicy was an unscoped enumeration.  Nowadays
-         * OwnershipPolicy is a scoped enumeration (which offers better scoping
-         * and type safety), and you should access this constant as
-         * OwnershipPolicy::OwnNew instead.
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * OwnershipPolicy::OwnNew.
          *
-         * \nopython The OwnershipPolicy enumeration is not available to
-         * Python, since for Python users the only available policy is
-         * OwnershipPolicy::DeepCopy.
+         * \nopython The OwnershipPolicy enumeration is not available to Python.
          */
         [[deprecated]] inline static constexpr OwnershipPolicy OWN_NEW =
             OwnershipPolicy::OwnNew;
         /**
-         * A deprecated constant indicating one of the available data
-         * ownership policies.
+         * A deprecated constant indicating one of the data ownership policies.
          *
-         * \deprecated This was one of the old OwnershipPolicy constants, back
-         * when OwnershipPolicy was an unscoped enumeration.  Nowadays
-         * OwnershipPolicy is a scoped enumeration (which offers better scoping
-         * and type safety), and you should access this constant as
-         * OwnershipPolicy::DeepCopy instead.
-         *
-         * \nopython The OwnershipPolicy enumeration is not available to
-         * Python, since for Python users the only available policy is
+         * \deprecated This has been renamed to the scoped enumeration constant
          * OwnershipPolicy::DeepCopy.
+         *
+         * \nopython The OwnershipPolicy enumeration is not available to Python.
          */
         [[deprecated]] inline static constexpr OwnershipPolicy DEEP_COPY =
             OwnershipPolicy::DeepCopy;
