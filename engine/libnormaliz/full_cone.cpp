@@ -3692,10 +3692,13 @@ void Full_Cone<Integer>::compute_multiplicity_or_integral_by_signed_dec() {
                 }
                 tri_out << "End" << endl;
                 tri_out.close();
+#if 0
                 string command = "gzip " + file_name;
                 int dummy = system(command.c_str());
                 if (dummy > 0)
                     throw NotComputableException("gzip can't be called");
+#endif
+                throw NotComputableException("gzip not supported");
             } catch (const std::exception&) {
                 tmp_exception = std::current_exception();
                 skip_remaining = true;
