@@ -4463,7 +4463,7 @@ inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
     if (prop_.niceTreeDecomposition_)
         return *prop_.niceTreeDecomposition_;
 
-    TreeDecomposition ans(*this, TD_UPPER);
+    TreeDecomposition ans(*this, TreeDecompositionAlg::Upper);
     ans.makeNice();
     prop_.niceTreeDecomposition_ = ans;
 

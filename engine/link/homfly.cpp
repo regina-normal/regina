@@ -275,8 +275,8 @@ namespace {
                 local(nullptr) {
             const TreeBag* b;
             for (b = d.first(); b; b = b->next())
-                if (b->type() == NICE_FORGET)
-                    forgetCrossing[b->children()->element(b->subtype())] =
+                if (b->niceType() == NiceType::Forget)
+                    forgetCrossing[b->children()->element(b->niceIndex())] =
                         b->index();
 
             for (int i = 0; i < static_cast<int>(2 * l->size()); ++i) {
@@ -298,7 +298,7 @@ namespace {
 
             b = d.root();
             StrandRef start(
-                link->crossing(b->children()->element(b->subtype())), 1);
+                link->crossing(b->children()->element(b->niceIndex())), 1);
 
             StrandRef s = start;
             int pos = 0;
@@ -1269,9 +1269,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     if (tracker) {
         // Estimate processing stages.
         for (bag = d.first(); bag; bag = bag->next()) {
-            switch (bag->type()) {
-                case NICE_FORGET:
-                case NICE_JOIN:
+            switch (bag->niceType()) {
+                case NiceType::Forget:
+                case NiceType::Join:
                     hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                     break;
                 default:
@@ -1341,7 +1341,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
             partial[index] = new SolnSet;
             partial[index]->emplace(Key(), Laurent2<Integer>(0, 0));
-        } else if (bag->type() == NICE_INTRODUCE) {
+        } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();
 #ifdef DUMP_STAGES
@@ -1362,7 +1362,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
             partial[index] = partial[child->index()];
             partial[child->index()] = nullptr;
-        } else if (bag->type() == NICE_FORGET) {
+        } else if (bag->niceType() == NiceType::Forget) {
             // Forget bag.
             child = bag->children();
 #ifdef DUMP_STAGES
@@ -1384,7 +1384,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                     increment = 100.0 / partial[child->index()]->size();
             }
 
-            Crossing* c = crossings_[child->element(bag->subtype())];
+            Crossing* c = crossings_[child->element(bag->niceIndex())];
 
             vData.initForgetBag(bag,
                 partial[child->index()]->begin()->first, c);

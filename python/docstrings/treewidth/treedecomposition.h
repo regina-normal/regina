@@ -29,9 +29,9 @@ TreeDecomposition::makeNice(). As a result:
 * every leaf bag will be an introduce bag, containing precisely one
   node.
 
-See TreeDecomposition::makeNice() for further details, including how
-TreeBag::type() and TreeBag::subtype() are defined for a nice tree
-decomposition.)doc";
+See TreeDecomposition::makeNice() for further details, and see
+TreeBag::niceType() and TreeBag::niceIndex() for how to access this
+information for each bag.)doc";
 
 // Docstring regina::python::doc::TreeBag
 static const char *TreeBag =
@@ -62,10 +62,10 @@ This class TreeBag represents a single bag in a tree decomposition.
 * You can iterate through all the bags in the tree decomposition with
   the help of member functions next(), nextPrefix() and index().
 
-* If the tree decomposition is of a special type (such as a _nice_
-  tree decomposition), then each bag may be adorned with some
-  additional information; you can access this through the member
-  functions type() and subtype().
+* If the underlying tree decomposition is a _nice_ tree decomposition
+  (and this nice structure has actually been computed, typically via
+  makeNice()), then you can call niceType() and niceIndex() to access
+  the specific role that each bag plays in the nice structure.
 
 To _build_ a tree decomposition of a graph, see the various
 TreeDecomposition class constructors.
@@ -172,30 +172,30 @@ Regina.)doc";
 
 namespace BagComparison_ {
 
-// Docstring regina::python::doc::BagComparison_::BAG_EQUAL
-static const char *BAG_EQUAL = R"doc(Indicates that the two bags have identical contents.)doc";
+// Docstring regina::python::doc::BagComparison_::Equal
+static const char *Equal = R"doc(Indicates that the two bags have identical contents.)doc";
 
-// Docstring regina::python::doc::BagComparison_::BAG_SUBSET
-static const char *BAG_SUBSET = R"doc(Indicates that the first bag is a strict subset of the second.)doc";
+// Docstring regina::python::doc::BagComparison_::Subset
+static const char *Subset = R"doc(Indicates that the first bag is a strict subset of the second.)doc";
 
-// Docstring regina::python::doc::BagComparison_::BAG_SUPERSET
-static const char *BAG_SUPERSET = R"doc(Indicates that the first bag is a strict superset of the second.)doc";
+// Docstring regina::python::doc::BagComparison_::Superset
+static const char *Superset = R"doc(Indicates that the first bag is a strict superset of the second.)doc";
 
-// Docstring regina::python::doc::BagComparison_::BAG_UNRELATED
-static const char *BAG_UNRELATED = R"doc(Indicates that neither bag is a subset of the other.)doc";
+// Docstring regina::python::doc::BagComparison_::Unrelated
+static const char *Unrelated = R"doc(Indicates that neither bag is a subset of the other.)doc";
 
 }
 
 namespace NiceType_ {
 
-// Docstring regina::python::doc::NiceType_::NICE_FORGET
-static const char *NICE_FORGET =
+// Docstring regina::python::doc::NiceType_::Forget
+static const char *Forget =
 R"doc(Indicates a forget bag. A _forget_ bag has only one child bag. It
 contains all of the nodes in this child bag except for exactly one
 missing node, and contains no other nodes besides these.)doc";
 
-// Docstring regina::python::doc::NiceType_::NICE_INTRODUCE
-static const char *NICE_INTRODUCE =
+// Docstring regina::python::doc::NiceType_::Introduce
+static const char *Introduce =
 R"doc(Indicates an introduce bag. An _introduce_ bag has only one child bag.
 It contains all of the nodes in this child bag plus exactly one new
 node, and contains no other nodes besides these.
@@ -204,10 +204,16 @@ As a special case, a leaf bag (which has no child bags at all) is also
 considered to be an introduce bag. In this case, the leaf bag contains
 exactly one node.)doc";
 
-// Docstring regina::python::doc::NiceType_::NICE_JOIN
-static const char *NICE_JOIN =
+// Docstring regina::python::doc::NiceType_::Join
+static const char *Join =
 R"doc(Indicates a join bag. A _join_ bag has exactly two child bags, where
 the join bag and both of its child bags are all identical.)doc";
+
+// Docstring regina::python::doc::NiceType_::None
+static const char *None =
+R"doc(Indicates that either the underlying tree decomposition is not nice,
+or the details of the nice tree decomposition have not yet been
+computed.)doc";
 
 }
 
@@ -235,13 +241,14 @@ Recall that, in a tree decomposition of a graph *G*, each bag is a set
 of nodes of *G*. This function will return one of the following
 constants:
 
-* BAG_EQUAL if this and *rhs* are equal;
+* BagComparison::Equal if this and *rhs* are equal;
 
-* BAG_SUBSET if this bag is a strict subset of *rhs*;
+* BagComparison::Subset if this bag is a strict subset of *rhs*;
 
-* BAG_SUPERSET if this bag is a strict superset of *rhs*;
+* BagComparison::Superset if this bag is a strict superset of *rhs*;
 
-* BAG_UNRELATED if neither this nor *rhs* is a subset of the other.
+* BagComparison::Unrelated if neither this nor *rhs* is a subset of
+  the other.
 
 Parameter ``rhs``:
     the bag to compare with this.
@@ -364,6 +371,60 @@ Returns:
     the next bag after this in a prefix iteration of all bags, or
     ``None`` if this is the final bag in such an iteration.)doc";
 
+// Docstring regina::python::doc::TreeBag_::niceIndex
+static const char *niceIndex =
+R"doc(Returns additional details on the role that an introduce or forget bag
+plays in a nice tree decomposition.
+
+This function is only relevant if niceType() returns either
+NiceType::Introduce or NiceType::Forget. That is, the underlying tree
+decomposition must be nice, _and_ this nice structure must have
+actually been computed, _and_ this bag must be an introduce bag or a
+forget bag.
+
+In this case, niceIndex() gives information on which specific node of
+the underyling graph has been added (in the case of an introduce bag)
+or removed (in the case of a forget bag). This information will be
+returned as an _index_ into either this bag or its child bag
+respectively.
+
+See TreeDecomposition::makeNice() for further information.
+
+Returns:
+    details on the role that an introduce or forget bag plays in a
+    nice tree decomposition, or undefined if this information is
+    unknown and/or irrelevant (i.e., niceType() does not return either
+    NiceType::Introduce or NiceType::Forget).)doc";
+
+// Docstring regina::python::doc::TreeBag_::niceType
+static const char *niceType =
+R"doc(Returns the role that this bag plays in a nice tree decomposition, if
+this information is known.
+
+This information is only available if the underlying tree
+decomposition is nice _and_ this nice structure has actually been
+computed. For this to happen, either:
+
+* TreeDecomposition::makeNice() must have been called upon this tree
+  decomposition; or
+
+* this tree decomposition must have been copied, moved or assigned
+  from some other nice tree decomposition for which this information
+  had likewise been computed.
+
+For introduce and forget bags (i.e., where niceType() returns either
+NiceType::Introduce or NiceType::Forget), the function niceIndex()
+returns additional information on the role that this bag plays within
+the overall nice tree decomposition.
+
+See TreeDecomposition::makeNice() for further information.
+
+Returns:
+    the role that this bag plays in a nice tree decomposition, or
+    NiceType::None if this information is not available (either
+    because the tree decomposition is not nice, or because its nice
+    structure has not been computed).)doc";
+
 // Docstring regina::python::doc::TreeBag_::parent
 static const char *parent =
 R"doc(Returns the parent of this bag in the underlying rooted tree.
@@ -400,77 +461,60 @@ Returns:
 
 // Docstring regina::python::doc::TreeBag_::subtype
 static const char *subtype =
-R"doc(Returns a secondary level of auxiliary information associated with
-bags in special classes of tree decompositions.
+R"doc(Deprecated function that returns additional details on the role that
+an introduce or forget bag plays in a nice tree decomposition.
 
-If the underlying tree decomposition is of a special type, then each
-bag may be adorned with some additional information indicating the
-particular role that the bag plays. This additional information can be
-accessed through the member functions type() and subtype().
-
-* If there is no type and/or subtype information stored for this bag,
-  then type() will return zero, and subtype() will be undefined.
-
-* If there is type and/or subtype information stored for this bag,
-  then type() will be non-zero, and the specific meaning of subtype()
-  (and indeed whether it is even defined) will depend on the value of
-  type().
-
-At present, types and subtypes are only stored for _nice_ tree
-decompositions. See TreeDecomposition::makeNice() for details on what
-type() and subtype() represent.
+.. deprecated::
+    This function has been renamed to niceIndex(). See niceIndex() for
+    further details.
 
 Returns:
-    additional information indicating the role that this bag plays in
-    this tree decomposition, or undefined if no additional subtype
-    information is stored for this bag.)doc";
+    details on the role that an introduce or forget bag plays in a
+    nice tree decomposition, or undefined if this information is
+    unknown and/or irrelevant (i.e., niceType() does not return either
+    NiceType::Introduce or NiceType::Forget).)doc";
 
 // Docstring regina::python::doc::TreeBag_::type
 static const char *type =
-R"doc(Returns auxiliary information associated with bags in special classes
-of tree decompositions.
+R"doc(Deprecated function that returns the role that this bag plays in a
+nice tree decomposition, if this information is known.
 
-If the underlying tree decomposition is of a special type, then each
-bag may be adorned with some additional information indicating the
-particular role that the bag plays. This additional information can be
-accessed through the member functions type() and subtype().
+.. deprecated::
+    This function has been named to niceType(), which returns a
+    properly-typed NiceType instead of an ``int``. See niceType() for
+    further details.
 
-* If there is no type and/or subtype information stored for this bag,
-  then type() will return zero, and subtype() will be undefined.
-
-* If there is type and/or subtype information stored for this bag,
-  then the return value of type() is guaranteed to be non-zero. The
-  specific meaning of subtype() (and indeed whether it is even
-  defined) will typically depend on the return value of type().
-
-At present, types and subtypes are only stored for _nice_ tree
-decompositions. See TreeDecomposition::makeNice() for details on what
-type() and subtype() represent.
+Python:
+    For Python users, this function returns a NiceType, not an
+    ``int``, so that comparisons with the NiceType constants works as
+    expected. This is because, now that NiceType is a scoped enum,
+    Python comparisons between _any_ integer and _any_ NiceType
+    constant will always return that the values are not equal.
 
 Returns:
-    a non-zero value indicating the role that this bag plays in this
-    tree decomposition, or zero if type and subtype information are
-    not stored.)doc";
+    the non-zero integer value of a NiceType constant indicating the
+    role that this bag plays in a nice tree decomposition, or zero if
+    this information is not available.)doc";
 
 }
 
 namespace TreeDecompositionAlg_ {
 
-// Docstring regina::python::doc::TreeDecompositionAlg_::TD_UPPER
-static const char *TD_UPPER =
+// Docstring regina::python::doc::TreeDecompositionAlg_::Upper
+static const char *Upper =
 R"doc(Indicates that a fast upper bound algorithm should be used.
 
 This does not promise to find a tree decomposition of smallest
 possible width (an NP-hard problem), but it does promise to run in
 small polynomial time.
 
-This constant *TD_UPPER* indicates that the "most appropriate" upper
-bound algorithm should be used. This is a good choice for users who
-just want a good tree decomposition and want it quickly, without
-needing to know the details of how it was produced.)doc";
+This constant *TreeDecompositionAlg::Upper* indicates that the "most
+appropriate" upper bound algorithm should be used. This is a good
+choice for users who just want a good tree decomposition and want it
+quickly, without needing to know the details of how it was produced.)doc";
 
-// Docstring regina::python::doc::TreeDecompositionAlg_::TD_UPPER_GREEDY_FILL_IN
-static const char *TD_UPPER_GREEDY_FILL_IN =
+// Docstring regina::python::doc::TreeDecompositionAlg_::UpperGreedyFillIn
+static const char *UpperGreedyFillIn =
 R"doc(Indicates that the greedy fill-in heuristic should be used.
 
 This does not promise to find a tree decomposition of smallest
@@ -872,22 +916,22 @@ node.
 This routine will also ensure that the root bag is a forget bag,
 containing no nodes at all.
 
-This routine will set TreeBag::type() and TreeBag::subtype() for each
-bag as follows:
+This routine will set TreeBag::niceType() and TreeBag::niceIndex() for
+each bag as follows:
 
-* TreeBag::type() will be one of the constants from the NiceType
-  enumeration, indicating whether the bag is an introduce, forget or
-  join bag.
+* TreeBag::niceType() will be one of the enumeration constants
+  NiceType::Introduce, NiceType::Forget or NiceType::Join, indicating
+  whether the bag is an introduce, forget or join bag respectively.
 
-* For an introduce bag *b*, TreeBag::subtype() will indicate which
+* For an introduce bag *b*, TreeBag::niceIndex() will indicate which
   "new" node was introduced. Specifically, the new node will be
-  ``b.element(b.subtype())``.
+  ``b.element(b.niceIndex())``.
 
-* For a forget bag *b*, TreeBag::subtype() will indicate which
+* For a forget bag *b*, TreeBag::niceIndex() will indicate which
   "missing" node was forgotten. Specifically, the missing node will be
-  ``b.children()->element(b.subtype())``.
+  ``b.children()->element(b.niceIndex())``.
 
-* For a join bag, TreeBag::subtype() will be undefined.
+* For a join bag, TreeBag::niceIndex() will be undefined.
 
 If the underlying graph is empty, then this routine will produce a
 tree decomposition with no bags at all.
@@ -902,7 +946,7 @@ only, in that their effect on the final tree decomposition might
 change in future versions of Regina.
 
 .. warning::
-    Note that TreeBag::subtype() is _not_ the number of the new or
+    Note that TreeBag::niceIndex() is _not_ the number of the new or
     missing node, but instead gives the _index_ of the new or missing
     node within the relevant bag.
 

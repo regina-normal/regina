@@ -5014,7 +5014,7 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
     if (niceTreeDecomposition_)
         return *niceTreeDecomposition_;
 
-    TreeDecomposition ans(*this, TD_UPPER);
+    TreeDecomposition ans(*this, TreeDecompositionAlg::Upper);
     prepareTreeDecomposition(ans);
     niceTreeDecomposition_ = ans;
 
