@@ -35,18 +35,23 @@
 #include "../helpers.h"
 #include "../docstrings/surface/surfacefiltertype.h"
 
+using regina::SurfaceFilterType;
+
 void addSurfaceFilterType(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SurfaceFilterType)
 
     pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType",
             rdoc_scope)
-        .value("NS_FILTER_LEGACY_DEFAULT", regina::NS_FILTER_LEGACY_DEFAULT,
-            rdoc::NS_FILTER_LEGACY_DEFAULT)
-        .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES,
-            rdoc::NS_FILTER_PROPERTIES)
-        .value("NS_FILTER_COMBINATION", regina::NS_FILTER_COMBINATION,
-            rdoc::NS_FILTER_COMBINATION)
-        .export_values();
+        .value("LegacyDefault", SurfaceFilterType::LegacyDefault,
+            rdoc::LegacyDefault)
+        .value("Properties", SurfaceFilterType::Properties, rdoc::Properties)
+        .value("Combination", SurfaceFilterType::Combination, rdoc::Combination)
+        ;
+
+    // Deprecated constants:
+    m.attr("NS_FILTER_LEGACY_DEFAULT") = SurfaceFilterType::LegacyDefault;
+    m.attr("NS_FILTER_PROPERTIES") = SurfaceFilterType::Properties;
+    m.attr("NS_FILTER_COMBINATION") = SurfaceFilterType::Combination;
 
     RDOC_SCOPE_END
 }

@@ -73,7 +73,7 @@ void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
     if (format == FileFormat::XmlGen2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
-            << "\" typeid=\"" << filterType() << "\">\n"
+            << "\" typeid=\"" << static_cast<int>(filterType()) << "\">\n"
                "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n"
                "  </filter>\n";
     }
@@ -171,7 +171,7 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
         writeXMLHeader(out, "filterprop", format, anon, refs, true);
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
-            << "\" typeid=\"" << filterType() << "\">\n";
+            << "\" typeid=\"" << static_cast<int>(filterType()) << "\">\n";
 
         if (! eulerChar_.empty()) {
             out << "    <euler> ";

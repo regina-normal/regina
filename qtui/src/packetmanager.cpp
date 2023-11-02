@@ -89,10 +89,10 @@ QIcon PacketManager::icon(const Packet& packet) {
             break;
         case PacketType::SurfaceFilter:
             switch (((const SurfaceFilter&)packet).filterType()) {
-                case NS_FILTER_COMBINATION:
+                case SurfaceFilterType::Combination:
                     id = IconCache::filter_comb;
                     break;
-                case NS_FILTER_PROPERTIES:
+                case SurfaceFilterType::Properties:
                     id = IconCache::filter_prop;
                     break;
                 default:
@@ -190,11 +190,11 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
                 enclosingPane);
         case PacketType::SurfaceFilter:
             switch (((SurfaceFilter&)packet).filterType()) {
-                case NS_FILTER_COMBINATION:
+                case SurfaceFilterType::Combination:
                     return new FilterCombUI(
                         static_cast<SurfaceFilterCombination*>(&packet),
                         enclosingPane);
-                case NS_FILTER_PROPERTIES:
+                case SurfaceFilterType::Properties:
                     return new FilterPropUI(
                         static_cast<SurfaceFilterProperties*>(&packet),
                         enclosingPane);
