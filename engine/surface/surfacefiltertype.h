@@ -79,7 +79,7 @@ enum class SurfaceFilterType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * SurfaceFilterType::LegacyDefault.
  */
-[[deprecated]] constexpr SurfaceFilterType NS_FILTER_LEGACY_DEFAULT =
+[[deprecated]] inline constexpr SurfaceFilterType NS_FILTER_LEGACY_DEFAULT =
     SurfaceFilterType::LegacyDefault;
 /**
  * A deprecated constant representing one of the different types of
@@ -88,7 +88,7 @@ enum class SurfaceFilterType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * SurfaceFilterType::Properties.
  */
-[[deprecated]] constexpr SurfaceFilterType NS_FILTER_PROPERTIES =
+[[deprecated]] inline constexpr SurfaceFilterType NS_FILTER_PROPERTIES =
     SurfaceFilterType::Properties;
 /**
  * A deprecated constant representing one of the different types of
@@ -97,7 +97,7 @@ enum class SurfaceFilterType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * SurfaceFilterType::Combination.
  */
-[[deprecated]] constexpr SurfaceFilterType NS_FILTER_COMBINATION =
+[[deprecated]] inline constexpr SurfaceFilterType NS_FILTER_COMBINATION =
     SurfaceFilterType::Combination;
 
 } // namespace regina

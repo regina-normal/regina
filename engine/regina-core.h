@@ -130,28 +130,28 @@ enum class Algorithm {
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Default.
  */
-[[deprecated]] constexpr Algorithm ALG_DEFAULT = Algorithm::Default;
+[[deprecated]] inline constexpr Algorithm ALG_DEFAULT = Algorithm::Default;
 /**
  * A deprecated constant indicating one of the available classes of algorithm.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Backtrack.
  */
-[[deprecated]] constexpr Algorithm ALG_BACKTRACK = Algorithm::Backtrack;
+[[deprecated]] inline constexpr Algorithm ALG_BACKTRACK = Algorithm::Backtrack;
 /**
  * A deprecated constant indicating one of the available classes of algorithm.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Treewidth.
  */
-[[deprecated]] constexpr Algorithm ALG_TREEWIDTH = Algorithm::Treewidth;
+[[deprecated]] inline constexpr Algorithm ALG_TREEWIDTH = Algorithm::Treewidth;
 /**
  * A deprecated constant indicating one of the available classes of algorithm.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Naive.
  */
-[[deprecated]] constexpr Algorithm ALG_NAIVE = Algorithm::Naive;
+[[deprecated]] inline constexpr Algorithm ALG_NAIVE = Algorithm::Naive;
 
 /**
  * Represents different programming languages that Regina supports.

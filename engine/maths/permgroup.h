@@ -75,7 +75,7 @@ enum class NamedPermGroup {
  * \deprecated This has been renamed to the scoped enumeration constant
  * NamedPermGroup::Trivial.
  */
-[[deprecated]] constexpr NamedPermGroup PERM_GROUP_TRIVIAL =
+[[deprecated]] inline constexpr NamedPermGroup PERM_GROUP_TRIVIAL =
     NamedPermGroup::Trivial;
 /**
  * A deprecated constant indicating a well-known class of permutation groups.
@@ -83,7 +83,7 @@ enum class NamedPermGroup {
  * \deprecated This has been renamed to the scoped enumeration constant
  * NamedPermGroup::Symmetric.
  */
-[[deprecated]] constexpr NamedPermGroup PERM_GROUP_SYMMETRIC =
+[[deprecated]] inline constexpr NamedPermGroup PERM_GROUP_SYMMETRIC =
     NamedPermGroup::Symmetric;
 /**
  * A deprecated constant indicating a well-known class of permutation groups.
@@ -91,7 +91,7 @@ enum class NamedPermGroup {
  * \deprecated This has been renamed to the scoped enumeration constant
  * NamedPermGroup::Alternating.
  */
-[[deprecated]] constexpr NamedPermGroup PERM_GROUP_ALTERNATING =
+[[deprecated]] inline constexpr NamedPermGroup PERM_GROUP_ALTERNATING =
     NamedPermGroup::Alternating;
 
 /**

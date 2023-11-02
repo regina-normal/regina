@@ -103,7 +103,7 @@ enum class TreeDecompositionAlg {
  * \deprecated This has been renamed to the scoped enumeration constant
  * TreeDecompositionAlg::Upper.
  */
-[[deprecated]] constexpr TreeDecompositionAlg TD_UPPER =
+[[deprecated]] inline constexpr TreeDecompositionAlg TD_UPPER =
     TreeDecompositionAlg::Upper;
 /**
  * A deprecated constant indicating an algorithm for computing tree
@@ -112,7 +112,7 @@ enum class TreeDecompositionAlg {
  * \deprecated This has been renamed to the scoped enumeration constant
  * TreeDecompositionAlg::UpperGreedyFillIn.
  */
-[[deprecated]] constexpr TreeDecompositionAlg TD_UPPER_GREEDY_FILL_IN =
+[[deprecated]] inline constexpr TreeDecompositionAlg TD_UPPER_GREEDY_FILL_IN =
     TreeDecompositionAlg::UpperGreedyFillIn;
 
 /**
@@ -146,7 +146,7 @@ enum class BagComparison {
  * \deprecated This has been renamed to the scoped enumeration constant
  * BagComparison::Equal.
  */
-[[deprecated]] constexpr BagComparison BAG_EQUAL = BagComparison::Equal;
+[[deprecated]] inline constexpr BagComparison BAG_EQUAL = BagComparison::Equal;
 /**
  * A deprecated constant indicating a relationship between bags in a tree
  * decomposition.
@@ -154,7 +154,8 @@ enum class BagComparison {
  * \deprecated This has been renamed to the scoped enumeration constant
  * BagComparison::Subset.
  */
-[[deprecated]] constexpr BagComparison BAG_SUBSET = BagComparison::Subset;
+[[deprecated]] inline constexpr BagComparison BAG_SUBSET =
+    BagComparison::Subset;
 /**
  * A deprecated constant indicating a relationship between bags in a tree
  * decomposition.
@@ -162,7 +163,8 @@ enum class BagComparison {
  * \deprecated This has been renamed to the scoped enumeration constant
  * BagComparison::Superset.
  */
-[[deprecated]] constexpr BagComparison BAG_SUPERSET = BagComparison::Superset;
+[[deprecated]] inline constexpr BagComparison BAG_SUPERSET =
+    BagComparison::Superset;
 /**
  * A deprecated constant indicating a relationship between bags in a tree
  * decomposition.
@@ -170,7 +172,8 @@ enum class BagComparison {
  * \deprecated This has been renamed to the scoped enumeration constant
  * BagComparison::Unrelated.
  */
-[[deprecated]] constexpr BagComparison BAG_UNRELATED = BagComparison::Unrelated;
+[[deprecated]] inline constexpr BagComparison BAG_UNRELATED =
+    BagComparison::Unrelated;
 
 /**
  * Used to indicate the type of each bag in a _nice_ tree decomposition.
@@ -227,21 +230,21 @@ enum class NiceType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * NiceType::Introduce.
  */
-[[deprecated]] constexpr NiceType NICE_INTRODUCE = NiceType::Introduce;
+[[deprecated]] inline constexpr NiceType NICE_INTRODUCE = NiceType::Introduce;
 /**
  * A deprecated constant indicating a type of bag in a nice tree decomposition.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * NiceType::Forget.
  */
-[[deprecated]] constexpr NiceType NICE_FORGET = NiceType::Forget;
+[[deprecated]] inline constexpr NiceType NICE_FORGET = NiceType::Forget;
 /**
  * A deprecated constant indicating a type of bag in a nice tree decomposition.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * NiceType::Join.
  */
-[[deprecated]] constexpr NiceType NICE_JOIN = NiceType::Join;
+[[deprecated]] inline constexpr NiceType NICE_JOIN = NiceType::Join;
 
 /**
  * Represents a single bag in a tree decomposition.

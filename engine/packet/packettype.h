@@ -165,28 +165,29 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::None.
  */
-[[deprecated]] constexpr PacketType PACKET_NONE = PacketType::None;
+[[deprecated]] inline constexpr PacketType PACKET_NONE = PacketType::None;
 /**
  * A deprecated constant representing one of the different types of packet.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Container.
  */
-[[deprecated]] constexpr PacketType PACKET_CONTAINER = PacketType::Container;
+[[deprecated]] inline constexpr PacketType PACKET_CONTAINER =
+    PacketType::Container;
 /**
  * A deprecated constant representing one of the different types of packet.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Text.
  */
-[[deprecated]] constexpr PacketType PACKET_TEXT = PacketType::Text;
+[[deprecated]] inline constexpr PacketType PACKET_TEXT = PacketType::Text;
 /**
  * A deprecated constant representing one of the different types of packet.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::NormalSurfaces.
  */
-[[deprecated]] constexpr PacketType PACKET_NORMALSURFACES =
+[[deprecated]] inline constexpr PacketType PACKET_NORMALSURFACES =
     PacketType::NormalSurfaces;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -194,14 +195,14 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Script.
  */
-[[deprecated]] constexpr PacketType PACKET_SCRIPT = PacketType::Script;
+[[deprecated]] inline constexpr PacketType PACKET_SCRIPT = PacketType::Script;
 /**
  * A deprecated constant representing one of the different types of packet.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::SurfaceFilter.
  */
-[[deprecated]] constexpr PacketType PACKET_SURFACEFILTER =
+[[deprecated]] inline constexpr PacketType PACKET_SURFACEFILTER =
     PacketType::SurfaceFilter;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -209,7 +210,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::AngleStructures.
  */
-[[deprecated]] constexpr PacketType PACKET_ANGLESTRUCTURES =
+[[deprecated]] inline constexpr PacketType PACKET_ANGLESTRUCTURES =
     PacketType::AngleStructures;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -217,14 +218,14 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Attachment.
  */
-[[deprecated]] constexpr PacketType PACKET_ATTACHMENT = PacketType::Attachment;
+[[deprecated]] inline constexpr PacketType PACKET_ATTACHMENT = PacketType::Attachment;
 /**
  * A deprecated constant representing one of the different types of packet.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::NormalHypersurfaces.
  */
-[[deprecated]] constexpr PacketType PACKET_NORMALHYPERSURFACES =
+[[deprecated]] inline constexpr PacketType PACKET_NORMALHYPERSURFACES =
     PacketType::NormalHypersurfaces;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -232,7 +233,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::SnapPea.
  */
-[[deprecated]] constexpr PacketType PACKET_SNAPPEATRIANGULATION =
+[[deprecated]] inline constexpr PacketType PACKET_SNAPPEATRIANGULATION =
     PacketType::SnapPea;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -240,14 +241,14 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Link.
  */
-[[deprecated]] constexpr PacketType PACKET_LINK = PacketType::Link;
+[[deprecated]] inline constexpr PacketType PACKET_LINK = PacketType::Link;
 /**
  * A deprecated constant representing one of the different types of packet.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation2.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION2 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION2 =
     PacketType::Triangulation2;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -255,7 +256,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation3.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION3 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION3 =
     PacketType::Triangulation3;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -263,7 +264,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation4.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION4 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION4 =
     PacketType::Triangulation4;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -271,7 +272,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation5.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION5 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION5 =
     PacketType::Triangulation5;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -279,7 +280,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation6.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION6 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION6 =
     PacketType::Triangulation6;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -287,7 +288,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation7.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION7 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION7 =
     PacketType::Triangulation7;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -295,7 +296,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation8.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION8 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION8 =
     PacketType::Triangulation8;
 #ifdef REGINA_HIGHDIM
 /**
@@ -304,7 +305,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation9.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION9 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION9 =
     PacketType::Triangulation9;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -312,7 +313,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation10.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION10 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION10 =
     PacketType::Triangulation10;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -320,7 +321,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation11.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION11 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION11 =
     PacketType::Triangulation11;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -328,7 +329,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation12.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION12 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION12 =
     PacketType::Triangulation12;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -336,7 +337,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation13.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION13 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION13 =
     PacketType::Triangulation13;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -344,7 +345,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation14.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION14 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION14 =
     PacketType::Triangulation14;
 /**
  * A deprecated constant representing one of the different types of packet.
@@ -352,7 +353,7 @@ enum class PacketType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation15.
  */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION15 =
+[[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION15 =
     PacketType::Triangulation15;
 #endif /* REGINA_HIGHDIM */
 

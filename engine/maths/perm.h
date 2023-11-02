@@ -132,14 +132,16 @@ enum class PermCodeType {
  * \deprecated This has been renamed to the scoped enumeration constant
  * PermCodeType::Images.
  */
-[[deprecated]] constexpr PermCodeType PERM_CODE_IMAGES = PermCodeType::Images;
+[[deprecated]] inline constexpr PermCodeType PERM_CODE_IMAGES =
+    PermCodeType::Images;
 /**
  * A deprecated constant indicating a type of internal permutation code.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PermCodeType::Index.
  */
-[[deprecated]] constexpr PermCodeType PERM_CODE_INDEX = PermCodeType::Index;
+[[deprecated]] inline constexpr PermCodeType PERM_CODE_INDEX =
+    PermCodeType::Index;
 
 namespace detail {
     /**

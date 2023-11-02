@@ -117,14 +117,15 @@ enum class Framing {
  * \deprecated This has been renamed to the scoped enumeration constant
  * Framing::Seifert.
  */
-[[deprecated]] constexpr Framing FRAMING_SEIFERT = Framing::Seifert;
+[[deprecated]] inline constexpr Framing FRAMING_SEIFERT = Framing::Seifert;
 /**
  * A deprecated constant indicating one of the standard link framings.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Framing::Blackboard.
  */
-[[deprecated]] constexpr Framing FRAMING_BLACKBOARD = Framing::Blackboard;
+[[deprecated]] inline constexpr Framing FRAMING_BLACKBOARD =
+    Framing::Blackboard;
 
 /**
  * A reference to one of the two strands of a link that pass each other

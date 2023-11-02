@@ -106,7 +106,7 @@ enum class FileFormat {
  * \deprecated This has been renamed to the scoped enumeration constant
  * FileFormat::BinaryGen1.
  */
-[[deprecated]] constexpr FileFormat REGINA_BINARY_GEN_1 =
+[[deprecated]] inline constexpr FileFormat REGINA_BINARY_GEN_1 =
     FileFormat::BinaryGen1;
 /**
  * A deprecated constant representing one of Regina's file formats.
@@ -114,21 +114,23 @@ enum class FileFormat {
  * \deprecated This has been renamed to the scoped enumeration constant
  * FileFormat::XmlGen2.
  */
-[[deprecated]] constexpr FileFormat REGINA_XML_GEN_2 = FileFormat::XmlGen2;
+[[deprecated]] inline constexpr FileFormat REGINA_XML_GEN_2 =
+    FileFormat::XmlGen2;
 /**
  * A deprecated constant representing one of Regina's file formats.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * FileFormat::XmlGen3.
  */
-[[deprecated]] constexpr FileFormat REGINA_XML_GEN_3 = FileFormat::XmlGen3;
+[[deprecated]] inline constexpr FileFormat REGINA_XML_GEN_3 =
+    FileFormat::XmlGen3;
 /**
  * A deprecated constant representing one of Regina's file formats.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * FileFormat::Current.
  */
-[[deprecated]] constexpr FileFormat REGINA_CURRENT_FILE_FORMAT =
+[[deprecated]] inline constexpr FileFormat REGINA_CURRENT_FILE_FORMAT =
     FileFormat::Current;
 
 } // namespace regina
