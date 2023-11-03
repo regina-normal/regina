@@ -36,7 +36,6 @@ import SwiftUI
 struct ReginaApp: App {
     var body: some Scene {
         DocumentGroup(newDocument: { ReginaDocument() }) { file in
-            // ContentView(document: file.document)
             TreeView(packet: PacketWrapper(packet: file.document.root))
         }
         // Note: To support multiple document types, add additional DocumentGroup scenes.

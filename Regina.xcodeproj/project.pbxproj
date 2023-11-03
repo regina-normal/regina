@@ -462,7 +462,6 @@
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
 		0529094A2AE5EA090028990D /* ReginaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052909492AE5EA090028990D /* ReginaApp.swift */; };
 		0529094C2AE5EA090028990D /* ReginaDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0529094B2AE5EA090028990D /* ReginaDocument.swift */; };
-		0529094E2AE5EA090028990D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0529094D2AE5EA090028990D /* ContentView.swift */; };
 		052909502AE5EA0A0028990D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0529094F2AE5EA0A0028990D /* Assets.xcassets */; };
 		052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052909522AE5EA0A0028990D /* Preview Assets.xcassets */; };
 		052942DA1C5CDFBE0011C1E6 /* snappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* snappeaalgebra.h */; };
@@ -3301,7 +3300,6 @@
 		052909472AE5EA090028990D /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		052909492AE5EA090028990D /* ReginaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReginaApp.swift; sourceTree = "<group>"; };
 		0529094B2AE5EA090028990D /* ReginaDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReginaDocument.swift; sourceTree = "<group>"; };
-		0529094D2AE5EA090028990D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0529094F2AE5EA0A0028990D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		052909522AE5EA0A0028990D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		052909542AE5EA0A0028990D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -6604,7 +6602,6 @@
 		052909482AE5EA090028990D /* swiftui */ = {
 			isa = PBXGroup;
 			children = (
-				0529094D2AE5EA090028990D /* ContentView.swift */,
 				0553FBA82AF50F0700BE89A7 /* PacketWrapper.swift */,
 				052909492AE5EA090028990D /* ReginaApp.swift */,
 				0529094B2AE5EA090028990D /* ReginaDocument.swift */,
@@ -10530,7 +10527,6 @@
 				0553FB2D2AEBE73A00BE89A7 /* standardtri.cpp in Sources */,
 				0553FAAA2AEBE3C000BE89A7 /* boundary4.cpp in Sources */,
 				0553FB0A2AEBE6FC00BE89A7 /* graphtriple.cpp in Sources */,
-				0529094E2AE5EA090028990D /* ContentView.swift in Sources */,
 				0553FAFE2AEBE6ED00BE89A7 /* homfly.cpp in Sources */,
 				0553FA892AEBE3AC00BE89A7 /* knot.cpp in Sources */,
 				0553FB8D2AEBE86300BE89A7 /* HilbertSeries.cpp in Sources */,
