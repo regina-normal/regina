@@ -248,8 +248,8 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Hypersurfaces");
     hypersurfacesCreationCoords = static_cast<regina::HyperCoords>(
-        settings.value("CreationCoordinates", regina::HyperCoords::Standard).
-        toInt());
+        settings.value("CreationCoordinates",
+            static_cast<int>(regina::HyperCoords::Standard)).toInt());
     hypersurfacesCreationList = regina::HyperList::fromInt(settings.value(
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
@@ -297,8 +297,9 @@ void ReginaPrefSet::readInternal() {
     settings.beginGroup("Surfaces");
     surfacesCompatThreshold = settings.value(
         "CompatibilityThreshold", 100).toInt();
-    surfacesCreationCoords = static_cast<regina::NormalCoords>(settings.value(
-        "CreationCoordinates", regina::NormalCoords::Standard).toInt());
+    surfacesCreationCoords = static_cast<regina::NormalCoords>(
+        settings.value("CreationCoordinates",
+            static_cast<int>(regina::NormalCoords::Standard)).toInt());
     surfacesCreationList = regina::NormalList::fromInt(settings.value(
         "CreationList", regina::NS_LIST_DEFAULT).toInt());
 
@@ -408,7 +409,8 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Hypersurfaces");
-    settings.setValue("CreationCoordinates", hypersurfacesCreationCoords);
+    settings.setValue("CreationCoordinates",
+        static_cast<int>(hypersurfacesCreationCoords));
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
     settings.beginGroup("Link");
@@ -458,7 +460,8 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Surfaces");
     settings.setValue("CompatibilityThreshold", surfacesCompatThreshold);
-    settings.setValue("CreationCoordinates", surfacesCreationCoords);
+    settings.setValue("CreationCoordinates",
+        static_cast<int>(surfacesCreationCoords));
     settings.setValue("CreationList", surfacesCreationList.intValue());
 
     switch (surfacesInitialCompat) {
