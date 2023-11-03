@@ -86,11 +86,15 @@ struct SharedPacket {
             return packet_->label();
         }
 
-        SharedPacket firstChild() {
+        SharedPacket firstChild() const {
             return packet_->firstChild();
         }
 
-        std::string save() {
+        SharedPacket nextSibling() const {
+            return packet_->nextSibling();
+        }
+
+        std::string save() const {
             // Always uncompressed.
             std::ostringstream s;
             packet_->save(s, false);
@@ -100,6 +104,11 @@ struct SharedPacket {
         static SharedPacket open(const char* buffer, size_t size) {
             mem_istream s(buffer, buffer + size);
             return regina::open(s);
+        }
+
+        // TODO: Make this the correct integer type.
+        int64_t id() const {
+            return reinterpret_cast<int64_t>(packet_.get());
         }
 };
 

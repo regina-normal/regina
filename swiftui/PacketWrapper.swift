@@ -33,11 +33,22 @@
 import SwiftUI
 import ReginaEngine
 
-struct PacketManager {
-    /**
-     * Returns a 32-point image representing the type of the given packet.
-     */
-    static func iconFor(_ packet: regina.SharedPacket) -> Image {
+struct PacketWrapper: Identifiable {
+    var packet: regina.SharedPacket
+    
+    var children: [PacketWrapper] {
+        var ans: [PacketWrapper] = []
+        var p = packet.firstChild()
+        while !p.isNull() {
+            ans.append(PacketWrapper(packet: p))
+            p = p.nextSibling()
+        }
+        return ans
+    }
+    
+    // TODO: Make this a lazy property so it is never recomputed?
+    /// A 32-point image representing the type of the given packet.
+    var icon: Image {
         switch packet.type() {
         case regina.PacketType.AngleStructures:
             return Image("Angles")
@@ -73,10 +84,13 @@ struct PacketManager {
             return Image("Triangulation7")
         case regina.PacketType.Triangulation8:
             return Image("Triangulation8")
-        // TODO: Cases 9..15, conditionally compiled
+            // TODO: Cases 9..15, conditionally compiled
         default:
             // TODO: What do we return here?
             return Image("")
         }
     }
+    
+    // TODO: This should be something other than Int64.
+    var id: Int64 { packet.id() }
 }

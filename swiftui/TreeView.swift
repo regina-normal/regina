@@ -33,16 +33,25 @@
 import SwiftUI
 
 struct TreeView: View {
-    @ObservedObject var document: ReginaDocument
+    // @ObservedObject var document: ReginaDocument
+    var packet: PacketWrapper
 
     var body: some View {
+        List {
+            // TODO: Why does this ForEach require an id?
+            // ForEach(packet.children, id: \.id) { child in
+            ForEach(packet.children) { child in
+                Label { Text(String(child.packet.label())) } icon: { child.icon.resizable().frame(width: 24, height: 24) }
+            }
+        }
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
         NavigationStack {
             /*@START_MENU_TOKEN@*/Text("Content")/*@END_MENU_TOKEN@*/
         }
     }
 }
-
+/*
 #Preview {
-    TreeView(document: ReginaDocument())
+    // TreeView(document: ReginaDocument())
 }
+*/

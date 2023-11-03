@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+// TODO: Eventually remove this file completely.
+
 import SwiftUI
 
 struct ContentView: View {
