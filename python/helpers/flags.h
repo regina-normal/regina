@@ -135,7 +135,7 @@ void add_flags(pybind11::module_& m,
         return Flags(lhs) | rhs;
     }, borDoc);
     e.def("__bool__", [](Enum val) {
-        return val != 0;
+        return static_cast<int>(val) != 0;
     }, doc::common::bool_enum_for_flags);
 
     // Type conversions:

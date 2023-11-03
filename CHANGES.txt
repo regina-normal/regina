@@ -74,7 +74,16 @@ Version 7.4  [ (to be announced) ]
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
         Class Flags<T>:
+            - Updated to support both scoped and unscoped enumerations.
             - New operator bool(), which tests for a non-empty flag set.
+            - Fixed an error in the 3- and 4-argument variants of ensureOne(),
+              which would clear out all unrelated flags if none of the 3 or 4
+              given flags were set.  This error was harmless in practice:
+              the only effect was that, when enumerating fundamental normal
+              surfaces with a non-trivial algorithm flag that did _not_ include
+              an explicit Hilbert basis algorithm, the algorithm flag could
+              have been ignored (thereby using the default vertex enumeration
+              algorithm as the first phase of the primal Hilbert basis method).
         Enum Framing:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., FRAMING_SEIFERT) have been
