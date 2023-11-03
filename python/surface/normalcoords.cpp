@@ -45,20 +45,30 @@ void addNormalCoords(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalCoords)
 
     pybind11::enum_<NormalCoords>(m, "NormalCoords", rdoc_scope)
-        .value("NS_STANDARD", regina::NS_STANDARD, rdoc::NS_STANDARD)
-        .value("NS_AN_STANDARD", regina::NS_AN_STANDARD, rdoc::NS_AN_STANDARD)
-        .value("NS_QUAD", regina::NS_QUAD, rdoc::NS_QUAD)
-        .value("NS_QUAD_CLOSED", regina::NS_QUAD_CLOSED, rdoc::NS_QUAD_CLOSED)
-        .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT, rdoc::NS_AN_QUAD_OCT)
-        .value("NS_AN_QUAD_OCT_CLOSED", regina::NS_AN_QUAD_OCT_CLOSED,
-            rdoc::NS_AN_QUAD_OCT_CLOSED)
-        .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT, rdoc::NS_EDGE_WEIGHT)
-        .value("NS_TRIANGLE_ARCS", regina::NS_TRIANGLE_ARCS,
-            rdoc::NS_TRIANGLE_ARCS)
-        .value("NS_AN_LEGACY", regina::NS_AN_LEGACY, rdoc::NS_AN_LEGACY)
-        .value("NS_ANGLE", regina::NS_ANGLE, rdoc::NS_ANGLE)
-        .export_values()
+        .value("Standard", NormalCoords::Standard, rdoc::Standard)
+        .value("Quad", NormalCoords::Quad, rdoc::Quad)
+        .value("QuadClosed", NormalCoords::QuadClosed, rdoc::QuadClosed)
+        .value("AlmostNormal", NormalCoords::AlmostNormal, rdoc::AlmostNormal)
+        .value("LegacyAlmostNormal", NormalCoords::LegacyAlmostNormal,
+            rdoc::LegacyAlmostNormal)
+        .value("QuadOct", NormalCoords::QuadOct, rdoc::QuadOct)
+        .value("QuadOctClosed", NormalCoords::QuadOctClosed,
+            rdoc::QuadOctClosed)
+        .value("Edge", NormalCoords::Edge, rdoc::Edge)
+        .value("Arc", NormalCoords::Arc, rdoc::Arc)
+        .value("Angle", NormalCoords::Angle, rdoc::Angle)
         ;
+
+    m.attr("NS_STANDARD") = NormalCoords::Standard;
+    m.attr("NS_QUAD") = NormalCoords::Quad;
+    m.attr("NS_QUAD_CLOSED") = NormalCoords::QuadClosed;
+    m.attr("NS_AN_STANDARD") = NormalCoords::AlmostNormal;
+    m.attr("NS_AN_LEGACY") = NormalCoords::LegacyAlmostNormal;
+    m.attr("NS_AN_QUAD_OCT") = NormalCoords::QuadOct;
+    m.attr("NS_AN_QUAD_OCT_CLOSED") = NormalCoords::QuadOctClosed;
+    m.attr("NS_EDGE_WEIGHT") = NormalCoords::Edge;
+    m.attr("NS_TRIANGLE_ARCS") = NormalCoords::Arc;
+    m.attr("NS_ANGLE") = NormalCoords::Angle;
 
     RDOC_SCOPE_SWITCH(NormalEncoding)
 

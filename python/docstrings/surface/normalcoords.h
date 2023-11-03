@@ -68,17 +68,24 @@ NormalEncoding class.)doc";
 
 namespace NormalCoords_ {
 
-// Docstring regina::python::doc::NormalCoords_::NS_ANGLE
-static const char *NS_ANGLE =
+// Docstring regina::python::doc::NormalCoords_::AlmostNormal
+static const char *AlmostNormal =
+R"doc(Represents standard triangle-quadrilateral-octagon coordinates for
+octagonal almost normal surfaces.
+
+Regina can both enumerate and view surfaces in this coordinate system.)doc";
+
+// Docstring regina::python::doc::NormalCoords_::Angle
+static const char *Angle =
 R"doc(Represents angle structure coordinates.
 
 This coordinate system is _not_ for use with normal surfaces: it
 cannot be used either to display them or enumerate them. Instead it is
 for use with angle structures on triangulations. Because the
 combinatorics and linear algebra of angle strutures are tightly
-related to those of normal surfaces, we include NS_ANGLE here so that
-angle structure routines can make use of some of Regina's existing
-normal surface machinery.
+related to those of normal surfaces, we include NormalCoords::Angle
+here so that angle structure routines can make use of some of Regina's
+existing normal surface machinery.
 
 For a triangulation with *n* tetrahedra, this system has 3*n*+1
 coordinates. The first 3*n* are analogous to quadrilateral coordinates
@@ -95,8 +102,24 @@ Precondition:
     This coordinate system must not be used with any of Regina's
     routines unless they explicitly declare that NS_ANGLE is allowed.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::NS_AN_LEGACY
-static const char *NS_AN_LEGACY =
+// Docstring regina::python::doc::NormalCoords_::Arc
+static const char *Arc =
+R"doc(Represents triangle arc coordinates for normal surfaces.
+
+This coordinate system is for display only: Regina can view surfaces
+in this coordinate system, but it cannot use it to enumerate or create
+surfaces.)doc";
+
+// Docstring regina::python::doc::NormalCoords_::Edge
+static const char *Edge =
+R"doc(Represents edge weight coordinates for normal surfaces.
+
+This coordinate system is for display only: Regina can view surfaces
+in this coordinate system, but it cannot use it to enumerate or create
+surfaces.)doc";
+
+// Docstring regina::python::doc::NormalCoords_::LegacyAlmostNormal
+static const char *LegacyAlmostNormal =
 R"doc(Indicates that a list of almost normal surfaces was created using
 Regina 4.5.1 or earlier, where surfaces with more than one octagon of
 the same type were stripped out of the final solution set. As of
@@ -109,74 +132,16 @@ is only used for reading legacy data files. If you have a list that
 uses this system, you can just view the surfaces in standard almost
 normal coordinates (NS_AN_STANDARD).)doc";
 
-// Docstring regina::python::doc::NormalCoords_::NS_AN_QUAD_OCT
-static const char *NS_AN_QUAD_OCT =
-R"doc(Represents quadrilateral-octagon coordinates for octagonal almost
-normal surfaces. For details, see "Quadrilateral-octagon coordinates
-for almost normal surfaces", Benjamin A. Burton, Experiment. Math. 19
-(2010), 285-315.
-
-Regina can both enumerate and view surfaces in this coordinate system.)doc";
-
-// Docstring regina::python::doc::NormalCoords_::NS_AN_QUAD_OCT_CLOSED
-static const char *NS_AN_QUAD_OCT_CLOSED =
-R"doc(Represents quadrilateral-octagon coordinates in ideal triangulations
-for enumerating closed surfaces only (thus excluding spun-almost
-normal surfaces). The coordinates themselves are identical to
-quadrilateral-octagon coordinates, as described by NS_AN_QUAD_OCT;
-however, the enumeration procedure introduces additional constraints.
-
-Note that, if a vertex surface in quad-oct coordinates is closed, it
-will always be a vertex surface in this system of "closed quad-oct
-coordinates". However, the converse is not true: a vertex surface in
-closed quad-oct coordinates need not be a vertex in "plain" quad-oct
-coordinates.
-
-Regina can enumerate surfaces in this coordinate system, but it is not
-for viewing. You can just view the surfaces in quad-oct coordinates
-(NS_AN_QUAD_OCT) instead.
-
-Precondition:
-    Regina can only create matching equations in this coordinate
-    system for a limited class of triangulations. Currently, such
-    triangulations _must_ be oriented and ideal, with precisely one
-    torus cusp and no other boundary components or internal vertices.
-    These conditions will be checked when building the matching
-    equations, and Regina will throw an InvalidArgument exception if
-    they are not met.
-
-Precondition:
-    SnapPea must be able to work with the underlying triangulation,
-    without retriangulating. This should follow from the previous
-    constraints; however, it will also be checked when building the
-    matching equations, and Regina will throw an UnsolvedCase
-    exception if this requirement is not met.)doc";
-
-// Docstring regina::python::doc::NormalCoords_::NS_AN_STANDARD
-static const char *NS_AN_STANDARD =
-R"doc(Represents standard triangle-quadrilateral-octagon coordinates for
-octagonal almost normal surfaces.
-
-Regina can both enumerate and view surfaces in this coordinate system.)doc";
-
-// Docstring regina::python::doc::NormalCoords_::NS_EDGE_WEIGHT
-static const char *NS_EDGE_WEIGHT =
-R"doc(Represents edge weight coordinates for normal surfaces.
-
-This coordinate system is for display only: Regina can view surfaces
-in this coordinate system, but it cannot use it to enumerate or create
-surfaces.)doc";
-
-// Docstring regina::python::doc::NormalCoords_::NS_QUAD
-static const char *NS_QUAD =
+// Docstring regina::python::doc::NormalCoords_::Quad
+static const char *Quad =
 R"doc(Represents quadrilateral coordinates for normal surfaces. For details,
 see "Normal surface Q-theory", Jeffrey L. Tollefson, Pacific J. Math.
 183 (1998), no. 2, 359--374.
 
 Regina can both enumerate and view surfaces in this coordinate system.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::NS_QUAD_CLOSED
-static const char *NS_QUAD_CLOSED =
+// Docstring regina::python::doc::NormalCoords_::QuadClosed
+static const char *QuadClosed =
 R"doc(Represents quadrilateral coordinates in ideal triangulations for
 enumerating closed surfaces only (thus excluding spun-normal
 surfaces). The coordinates themselves are identical to quadrilateral
@@ -213,20 +178,55 @@ Precondition:
     matching equations, and Regina will throw an UnsolvedCase
     exception if this requirement is not met.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::NS_STANDARD
-static const char *NS_STANDARD =
+// Docstring regina::python::doc::NormalCoords_::QuadOct
+static const char *QuadOct =
+R"doc(Represents quadrilateral-octagon coordinates for octagonal almost
+normal surfaces. For details, see "Quadrilateral-octagon coordinates
+for almost normal surfaces", Benjamin A. Burton, Experiment. Math. 19
+(2010), 285-315.
+
+Regina can both enumerate and view surfaces in this coordinate system.)doc";
+
+// Docstring regina::python::doc::NormalCoords_::QuadOctClosed
+static const char *QuadOctClosed =
+R"doc(Represents quadrilateral-octagon coordinates in ideal triangulations
+for enumerating closed surfaces only (thus excluding spun-almost
+normal surfaces). The coordinates themselves are identical to
+quadrilateral-octagon coordinates, as described by NS_AN_QUAD_OCT;
+however, the enumeration procedure introduces additional constraints.
+
+Note that, if a vertex surface in quad-oct coordinates is closed, it
+will always be a vertex surface in this system of "closed quad-oct
+coordinates". However, the converse is not true: a vertex surface in
+closed quad-oct coordinates need not be a vertex in "plain" quad-oct
+coordinates.
+
+Regina can enumerate surfaces in this coordinate system, but it is not
+for viewing. You can just view the surfaces in quad-oct coordinates
+(NS_AN_QUAD_OCT) instead.
+
+Precondition:
+    Regina can only create matching equations in this coordinate
+    system for a limited class of triangulations. Currently, such
+    triangulations _must_ be oriented and ideal, with precisely one
+    torus cusp and no other boundary components or internal vertices.
+    These conditions will be checked when building the matching
+    equations, and Regina will throw an InvalidArgument exception if
+    they are not met.
+
+Precondition:
+    SnapPea must be able to work with the underlying triangulation,
+    without retriangulating. This should follow from the previous
+    constraints; however, it will also be checked when building the
+    matching equations, and Regina will throw an UnsolvedCase
+    exception if this requirement is not met.)doc";
+
+// Docstring regina::python::doc::NormalCoords_::Standard
+static const char *Standard =
 R"doc(Represents standard triangle-quadrilateral coordinates for normal
 surfaces.
 
 Regina can both enumerate and view surfaces in this coordinate system.)doc";
-
-// Docstring regina::python::doc::NormalCoords_::NS_TRIANGLE_ARCS
-static const char *NS_TRIANGLE_ARCS =
-R"doc(Represents triangle arc coordinates for normal surfaces.
-
-This coordinate system is for display only: Regina can view surfaces
-in this coordinate system, but it cannot use it to enumerate or create
-surfaces.)doc";
 
 }
 

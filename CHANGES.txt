@@ -81,6 +81,12 @@ Version 7.4  [ (to be announced) ]
               in the regina:: namespace.
         Class HomologicalData:
             - New routine triangulation().
+        Enum HyperCoords:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., HS_STANDARD) have been
+              renamed as scoped enum values (e.g., HyperCoords::Standard).
+              The old names have been kept as compile-time constants in the
+              regina:: namespace (and are _not_ deprecated for the time being).
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
@@ -151,6 +157,12 @@ Version 7.4  [ (to be announced) ]
               return the entire surface as a single component.
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::LargeInteger.
+        Enum NormalCoords:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., NS_STANDARD) have been
+              renamed as scoped enum values (e.g., NormalCoords::Standard).
+              The old names have been kept as compile-time constants in the
+              regina:: namespace (and are _not_ deprecated for the time being).
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old

@@ -685,7 +685,7 @@ static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
 
 template <regina::NormalCoords coords>
 static void treeVsDDDetail() {
-    SCOPED_TRACE_NUMERIC(coords);
+    SCOPED_TRACE_NUMERIC(static_cast<int>(coords));
 
     runCensusMinClosed(verifyTreeVsDD<coords>);
     runCensusAllClosed(verifyTreeVsDD<coords>);
@@ -750,7 +750,7 @@ static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
 
 template <regina::NormalCoords coords>
 static void fundPrimalVsDualDetail() {
-    SCOPED_TRACE_NUMERIC(coords);
+    SCOPED_TRACE_NUMERIC(static_cast<int>(coords));
 
     runCensusMinClosed(verifyFundPrimalVsDual<coords>, true);
     runCensusAllClosed(verifyFundPrimalVsDual<coords>, true);
@@ -1122,7 +1122,7 @@ TEST(NormalSurfacesTest, cutAlong) {
 
 static void verifyRemoveOctsDetail(regina::NormalCoords coords,
         const Triangulation<3>& tri) {
-    SCOPED_TRACE_NUMERIC(coords);
+    SCOPED_TRACE_NUMERIC(static_cast<int>(coords));
 
     for (const NormalSurface& s : NormalSurfaces(tri, coords)) {
         NormalSurface noOct = s.removeOcts();

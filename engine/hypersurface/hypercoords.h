@@ -54,7 +54,7 @@ namespace regina {
  *
  * \ingroup hypersurface
  */
-enum HyperCoords {
+enum class HyperCoords {
     /**
      * Represents standard tetrahedron-prism coordinates for
      * normal hypersurfaces.
@@ -62,7 +62,7 @@ enum HyperCoords {
      * Regina can both enumerate and view hypersurfaces in this
      * coordinate system.
      */
-    HS_STANDARD = 0,
+    Standard = 0,
 
     /**
      * Represents prism coordinates for normal hypersurfaces.
@@ -70,7 +70,7 @@ enum HyperCoords {
      * Regina can both enumerate and view hypersurfaces in this
      * coordinate system.
      */
-    HS_PRISM = 1,
+    Prism = 1,
 
     /**
      * Represents edge weight coordinates for normal hypersurfaces.
@@ -79,8 +79,39 @@ enum HyperCoords {
      * in this coordinate system, but it cannot use it to enumerate or create
      * hypersurfaces.
      */
-    HS_EDGE_WEIGHT = 200
+    Edge = 200
 };
+
+/**
+ * An alias for standard tetrahedron-prism coordinates for normal
+ * hypersurfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * HyperCoords::Standard.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr HyperCoords HS_STANDARD = HyperCoords::Standard;
+
+/**
+ * An alias for prism coordinates for normal hypersurfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * HyperCoords::Prism.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr HyperCoords HS_PRISM = HyperCoords::Prism;
+
+/**
+ * An alias for edge weight coordinates for normal hypersurfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * HyperCoords::Edge.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr HyperCoords HS_EDGE_WEIGHT = HyperCoords::Edge;
 
 /**
  * Indicates precisely how a normal hypersurface within a 4-manifold

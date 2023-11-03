@@ -49,7 +49,7 @@ void XMLWriter<NormalHypersurfaces>::openPre() {
         out_ << R"(<hypersurfaces tri=")" << triID_
             << R"(" type=")" << data_.which_.intValue()
             << R"(" algorithm=")" << data_.algorithm_.intValue()
-            << R"(" coords=")" << data_.coords_ << '"';
+            << R"(" coords=")" << static_cast<int>(data_.coords_) << '"';
     }
 }
 
@@ -62,7 +62,7 @@ void XMLWriter<NormalHypersurfaces>::writeContent() {
         out_ << "  <params "
             "type=\"" << data_.which_.intValue() << "\" "
             "algorithm=\"" << data_.algorithm_.intValue() << "\" "
-            "flavourid=\"" << data_.coords_ << "\"\n";
+            "flavourid=\"" << static_cast<int>(data_.coords_) << "\"\n";
         out_ << "\tflavour=\""
             << regina::xml::xmlEncodeSpecialChars(HyperInfo::name(
                 data_.coords_))
