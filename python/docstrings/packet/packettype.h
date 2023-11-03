@@ -21,12 +21,7 @@ templated, and instead just offers a name() function that is
 accessible at both compile time and runtime.)doc";
 
 // Docstring regina::python::doc::PacketType
-static const char *PacketType =
-R"doc(Represents the different types of packet that are available in Regina.
-
-IDs 0-9999 are reserved for future use by Regina. If you are extending
-Regina to include your own packet type, you should choose an ID ≥
-10000.)doc";
+static const char *PacketType = R"doc(Represents the different types of packet that are available in Regina.)doc";
 
 namespace PacketInfo_ {
 

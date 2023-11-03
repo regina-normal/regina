@@ -38,10 +38,10 @@ surface cannot contain any vertex linking components).
 
 For convenience, there is also a special encoding that identifies an
 angle structure vector; this can be created via
-``NormalEncoding(NS_ANGLE)``, and can be recognised via
-storesAngles(). However, like NS_ANGLE itself, this special angle
-structure encoding does _not_ represent a normal surface, cannot be
-combined with other encodings, and must not be used with any of
+``NormalEncoding(NormalCoords::Angle)``, and can be recognised via
+storesAngles(). However, like NormalCoords::Angle itself, this special
+angle structure encoding does _not_ represent a normal surface, cannot
+be combined with other encodings, and must not be used with any of
 Regina's routines unless the documentation explicitly allows it.
 Specifically, any code that accepts a NormalEncoding argument may
 silently assume that the encoding is _not_ the special angle structure
@@ -100,7 +100,8 @@ angle (*x*/*s*)π.
 
 Precondition:
     This coordinate system must not be used with any of Regina's
-    routines unless they explicitly declare that NS_ANGLE is allowed.)doc";
+    routines unless they explicitly declare that NormalCoords::Angle
+    is allowed.)doc";
 
 // Docstring regina::python::doc::NormalCoords_::Arc
 static const char *Arc =
@@ -130,7 +131,7 @@ just the _vertex_ almost normal surfaces).
 Regina cannot enumerate or view surfaces in this coordinate system. It
 is only used for reading legacy data files. If you have a list that
 uses this system, you can just view the surfaces in standard almost
-normal coordinates (NS_AN_STANDARD).)doc";
+normal coordinates (NormalCoords::AlmostNormal).)doc";
 
 // Docstring regina::python::doc::NormalCoords_::Quad
 static const char *Quad =
@@ -145,12 +146,12 @@ static const char *QuadClosed =
 R"doc(Represents quadrilateral coordinates in ideal triangulations for
 enumerating closed surfaces only (thus excluding spun-normal
 surfaces). The coordinates themselves are identical to quadrilateral
-coordinates, as described by NS_QUAD; however, the enumeration
-procedure introduces additional constraints. The resulting solution
-space is the space Q_0 as described in "Computing closed essential
-surfaces in knot complements", by Burton, Coward and Tillmann, in SCG
-’13: Proceedings of the 29th Annual Symposium on Computational
-Geometry, ACM, 2013, pp. 405–414.
+coordinates, as described by NormalCoords::Quad; however, the
+enumeration procedure introduces additional constraints. The resulting
+solution space is the space Q_0 as described in "Computing closed
+essential surfaces in knot complements", by Burton, Coward and
+Tillmann, in SCG ’13: Proceedings of the 29th Annual Symposium on
+Computational Geometry, ACM, 2013, pp. 405–414.
 
 Note that, if a vertex surface in quad coordinates is closed, it will
 always be a vertex surface in this system of "closed quad
@@ -160,7 +161,7 @@ coordinates.
 
 Regina can enumerate surfaces in this coordinate system, but it is not
 for viewing. You can just view the surfaces in quad coordinates
-(NS_QUAD) instead.
+(NormalCoords::Quad) instead.
 
 Precondition:
     Regina can only create matching equations in this coordinate
@@ -192,8 +193,9 @@ static const char *QuadOctClosed =
 R"doc(Represents quadrilateral-octagon coordinates in ideal triangulations
 for enumerating closed surfaces only (thus excluding spun-almost
 normal surfaces). The coordinates themselves are identical to
-quadrilateral-octagon coordinates, as described by NS_AN_QUAD_OCT;
-however, the enumeration procedure introduces additional constraints.
+quadrilateral-octagon coordinates, as described by
+NormalCoords::QuadOct; however, the enumeration procedure introduces
+additional constraints.
 
 Note that, if a vertex surface in quad-oct coordinates is closed, it
 will always be a vertex surface in this system of "closed quad-oct
@@ -203,7 +205,7 @@ coordinates.
 
 Regina can enumerate surfaces in this coordinate system, but it is not
 for viewing. You can just view the surfaces in quad-oct coordinates
-(NS_AN_QUAD_OCT) instead.
+(NormalCoords::QuadOct) instead.
 
 Precondition:
     Regina can only create matching equations in this coordinate
@@ -278,20 +280,21 @@ different encoding. For example, when enumerating surfaces in quad or
 quad-oct coordinates, Regina computes and stores triangle coordinates
 also, and so for its own _internal_ choice of encoding,
 storesTriangles() will return ``True``. In contrast, if you simply
-create a ``NormalEncoding(NS_QUAD)``, then the resulting encoding will
-have storesTriangles() return ``False``.
+create a ``NormalEncoding(NormalCoords::Quad)``, then the resulting
+encoding will have storesTriangles() return ``False``.
 
 If *coords* is not one of the coordinate systems that Regina can use
-to enumerate or reconstruct surfaces (or NS_ANGLE, as discussed
-below), then the resulting encoding will be invalid, and valid() will
-return ``False``. (Here "reconstruct" refers to the special case of
-NS_AN_LEGACY, which is used only when reading surfaces from very old
-data files).
+to enumerate or reconstruct surfaces (or NormalCoords::Angle, as
+discussed below), then the resulting encoding will be invalid, and
+valid() will return ``False``. (Here "reconstruct" refers to the
+special case of NormalCoords::LegacyAlmostNormal, which is used only
+when reading surfaces from very old data files).
 
-As a special case, you may pass NS_ANGLE to this constructor; however,
-the resulting encoding does not represent a normal surface and must
-not be used anywhere in Regina unless the documentation explicitly
-allows it. See the class notes for further details.
+As a special case, you may pass NormalCoords::Angle to this
+constructor; however, the resulting encoding does not represent a
+normal surface and must not be used anywhere in Regina unless the
+documentation explicitly allows it. See the class notes for further
+details.
 
 Parameter ``coords``:
     one of Regina's normal or almost normal coordinate systems.)doc";
@@ -404,10 +407,10 @@ static const char *storesAngles =
 R"doc(Identifies whether this is the special angle structure encoding.
 
 This routine is used to recognise the "special case" encoding
-``NormalEncoding(NS_ANGLE)``. Such an encoding does not represent a
-normal surface, and cannot be used anywhere in Regina unless
-explicitly allowed in the documentation. See the class notes for
-further details.)doc";
+``NormalEncoding(NormalCoords::Angle)``. Such an encoding does not
+represent a normal surface, and cannot be used anywhere in Regina
+unless explicitly allowed in the documentation. See the class notes
+for further details.)doc";
 
 // Docstring regina::python::doc::NormalEncoding_::storesOctagons
 static const char *storesOctagons =

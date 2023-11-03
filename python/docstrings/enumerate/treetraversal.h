@@ -107,13 +107,13 @@ use the class TreeSingleSoln instead, which is optimised for this
 purpose.
 
 This tree traversal can only enumerate surfaces in quadrilateral
-normal coordinates (NS_QUAD), standard normal coordinates
-(NS_STANDARD), quadrilateral-octagon almost normal coordinates
-(NS_AN_QUAD_OCT), or standard almost normal coordinates
-(NS_AN_STANDARD). For almost normal surfaces, we allow any number of
-octagons (including zero), but we only allow at most one octagon
-_type_ in the entire triangulation. No coordinate systems other than
-these are supported.
+normal coordinates (NormalCoords::Quad), standard normal coordinates
+(NormalCoords::Standard), quadrilateral-octagon almost normal
+coordinates (NormalCoords::QuadOct), or standard almost normal
+coordinates (NormalCoords::AlmostNormal). For almost normal surfaces,
+we allow any number of octagons (including zero), but we only allow at
+most one octagon _type_ in the entire triangulation. No coordinate
+systems other than these are supported.
 
 By using appropriate template parameters *LPConstraint* and/or
 *BanConstraint*, it is possible to impose additional linear
@@ -240,13 +240,13 @@ triangulation (instead of finding just one), you should use the class
 TreeEnumeration instead.
 
 This tree traversal can only enumerate surfaces in quadrilateral
-normal coordinates (NS_QUAD), standard normal coordinates
-(NS_STANDARD), quadrilateral-octagon almost normal coordinates
-(NS_AN_QUAD_OCT), or standard almost normal coordinates
-(NS_AN_STANDARD). For almost normal surfaces, we allow any number of
-octagons (including zero), but we only allow at most one octagon
-_type_ in the entire triangulation. No coordinate systems other than
-these are supported.
+normal coordinates (NormalCoords::Quad), standard normal coordinates
+(NormalCoords::Standard), quadrilateral-octagon almost normal
+coordinates (NormalCoords::QuadOct), or standard almost normal
+coordinates (NormalCoords::AlmostNormal). For almost normal surfaces,
+we allow any number of octagons (including zero), but we only allow at
+most one octagon _type_ in the entire triangulation. No coordinate
+systems other than these are supported.
 
 The template argument *IntType* indicates the integer type that will
 be used throughout the underlying linear programming machinery. Unless
@@ -1023,7 +1023,7 @@ Precondition:
 Exception ``FailedPrecondition``:
     We are not working with angle structure coordinates (i.e., the
     coordinate system passed to the TreeTraversal constructor was not
-    NS_ANGLE).
+    NormalCoords::Angle).
 
 Returns:
     the taut angle structure that has been found at the current stage
@@ -1060,7 +1060,7 @@ Precondition:
 Exception ``FailedPrecondition``:
     We are not working with normal or almost normal surfaces (i.e.,
     the coordinate system passed to the TreeTraversal constructor was
-    NS_ANGLE).
+    NormalCoords::Angle).
 
 Returns:
     a normal surface that has been found at the current stage of the
