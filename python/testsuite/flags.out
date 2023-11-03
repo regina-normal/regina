@@ -26,7 +26,7 @@ SurfaceExportFields.surfaceExportNone -> False
 0x0000 -> False
 SurfaceExportFields.surfaceExportName -> True
 0x0001 -> True
-NormalCoords.NS_STANDARD -> True
-NormalCoords.NS_QUAD -> True
+NormalCoords.Standard -> True
+NormalCoords.Quad -> True
 Type.UNKNOWN_TYPE -> True
 Type.PARACHUTE -> True
