@@ -335,7 +335,8 @@ donePent:
         delete[] use4;
     }
 
-    return { NormalHypersurface(*this, HS_STANDARD, std::move(coords)), thin };
+    return { NormalHypersurface(*this, HyperCoords::Standard,
+        std::move(coords)), thin };
 }
 
 // Instantiate linkingSurface() for all possible template arguments,

@@ -63,7 +63,7 @@ void HyperModel::rebuildUnicode() {
         emit dataChanged(index(0, 2, QModelIndex()),
             index(surfaces_->size() - 1, 2, QModelIndex()));
 
-    if (coordSystem_ == regina::HS_EDGE_WEIGHT)
+    if (coordSystem_ == regina::HyperCoords::Edge)
         emit headerDataChanged(Qt::Horizontal, propertyColCount(),
             columnCount(QModelIndex()) - 1);
 }
@@ -281,7 +281,7 @@ QVariant HyperModel::headerData(int section, Qt::Orientation orientation,
             return Coordinates::columnName(coordSystem_, section - propCols,
                 surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        if (coordSystem_ == regina::HS_EDGE_WEIGHT)
+        if (coordSystem_ == regina::HyperCoords::Edge)
             if (section >= propertyColCount() && surfaces_->triangulation().
                     edge(section - propertyColCount())->isBoundary())
                 return QColor(Qt::darkYellow);

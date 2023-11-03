@@ -105,7 +105,8 @@ namespace {
      * just use the default LPConstraintNone.
      */
     inline constexpr bool useNonSpunConstraint(NormalCoords coords) {
-        return (coords == NS_QUAD_CLOSED || coords == NS_AN_QUAD_OCT_CLOSED);
+        return (coords == NormalCoords::QuadClosed ||
+            coords == NormalCoords::QuadOctClosed);
     }
 }
 
@@ -148,7 +149,8 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
     // For standard normal / almost normal coordinates, choose between
     // standard-direct vs standard-via-reduced.
-    if (list_->coords_ == NS_STANDARD || list_->coords_ == NS_AN_STANDARD) {
+    if (list_->coords_ == NormalCoords::Standard ||
+            list_->coords_ == NormalCoords::AlmostNormal) {
         list_->algorithm_.ensureOne(
             NS_VERTEX_VIA_REDUCED, NS_VERTEX_STD_DIRECT);
 
@@ -222,11 +224,11 @@ void NormalSurfaces::Enumerator::fillVertex() {
         //
         // If we reach this point, then (from the algorithm flag cleanup
         // above) it is guaranteed that list_->coords_ is either
-        // NS_STANDARD or NS_AN_STANDARD.
+        // NormalCoords::Standard or NormalCoords::AlmostNormal.
 
         // Enumerate in reduced (quad / quad-oct) form.
-        NormalCoords small = (list_->coords_ == NS_STANDARD ?  NS_QUAD :
-            NS_AN_QUAD_OCT);
+        NormalCoords small = (list_->coords_ == NormalCoords::Standard ?
+            NormalCoords::Quad : NormalCoords::QuadOct);
         Enumerator e(
             new NormalSurfaces(small, list_->which_,
                 list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED,
@@ -296,13 +298,12 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // maximum absolute value, and are always non-negative.
 
     // Here we use the fact that the coordinate system is known to be
-    // supported by the tree traversal algorithm, and therefore is one
-    // of NS_STANDARD, NS_QUAD, NS_QUAD_CLOSED, NS_AN_STANDARD,
-    // NS_AN_QUAD_OCT, or NS_AN_QUAD_OCT_CLOSED.
+    // supported by the tree traversal algorithm, and therefore is one of
+    // Standard, Quad, QuadClosed, AlmostNormal, QuadOct, or QuadOctClosed.
 
     // The matching equation matrix that will be used by the tree traversal
-    // tableaux, which is always based on NS_STANDARD or NSQUAD (even
-    // for almost normal surfaces):
+    // tableaux, which is always based on NormalCoords::Standard or
+    // NormalCoords::Quad (even for almost normal surfaces):
     MatrixInt eqns;
 
     // The maximum number of columns in the tableaux that could be added
@@ -311,26 +312,30 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     size_t maxColsRHS;
 
     switch (list_->coords_) {
-        case NS_STANDARD:
-            eqns = makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+        case NormalCoords::Standard:
+            eqns = makeMatchingEquations(*list_->triangulation_,
+                NormalCoords::Standard);
             maxColsRHS = list_->triangulation_->size() * 5;
             break;
-        case NS_QUAD:
-            eqns = makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+        case NormalCoords::Quad:
+            eqns = makeMatchingEquations(*list_->triangulation_,
+                NormalCoords::Quad);
             maxColsRHS = list_->triangulation_->size();
             break;
-        case NS_AN_STANDARD:
-            eqns = makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+        case NormalCoords::AlmostNormal:
+            eqns = makeMatchingEquations(*list_->triangulation_,
+                NormalCoords::Standard);
             maxColsRHS = list_->triangulation_->size() * 5 + 1;
             break;
-        case NS_AN_QUAD_OCT:
-            eqns = makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+        case NormalCoords::QuadOct:
+            eqns = makeMatchingEquations(*list_->triangulation_,
+                NormalCoords::Quad);
             maxColsRHS = list_->triangulation_->size() + 1;
             break;
-        // TODO: Support NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED here.
+        // TODO: Support QuadClosed and QuadOctClosed here.
         // When doing this, be careful about exceptions.
         default:
-            // NS_QUAD_CLOSED / NS_AN_QUAD_OCT_CLOSED fall through to here.
+            // QuadClosed / QuadOctClosed fall through to here.
             // Just use arbitrary precision arithmetic.
             fillVertexTreeWith<Integer>();
             return;
@@ -444,10 +449,10 @@ template <typename Integer>
 void NormalSurfaces::Enumerator::fillVertexTreeWith() {
     if (useNonSpunConstraint(list_->coords_)) {
         // LPConstraintNonSpun can fail to construct the tableaux constraints,
-        // but only in scenarios where NS_QUAD_CLOSED fails to construct the
-        // matching equations.  Since we explicitly constructed the matching
-        // equations as the first step of the enumeration process, we are
-        // assured that LPConstraintNonSpun can be used without problems.
+        // but only in scenarios where NormalCoords::QuadClosed fails to
+        // construct the matching equations.  Since we explicitly constructed
+        // the matching equations as the first step of the enumeration process,
+        // we are assured that LPConstraintNonSpun can be used without problems.
         // TODO: Convert TreeEnumeration to use SnapshotRef
         TreeEnumeration<LPConstraintNonSpun, BanNone, Integer> search(
             *list_->triangulation_, list_->coords_);

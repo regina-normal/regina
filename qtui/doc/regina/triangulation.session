@@ -70,7 +70,7 @@ Z
 False
 &gt;&gt;&gt;
 &gt;&gt;&gt; # Make our own list of vertex normal surfaces in standard coordinates.
-&gt;&gt;&gt; surfaces = NormalSurfaces(t, NS_STANDARD)
+&gt;&gt;&gt; surfaces = NormalSurfaces(t, NormalCoords.Standard)
 &gt;&gt;&gt;
 &gt;&gt;&gt; # Print the full list of vertex normal surfaces.
 &gt;&gt;&gt; print(surfaces.detail())

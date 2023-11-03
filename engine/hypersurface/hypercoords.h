@@ -210,11 +210,11 @@ class HyperEncoding {
          */
         constexpr HyperEncoding(HyperCoords coords) : flags_(INVALID) {
             switch (coords) {
-                case HS_STANDARD:
+                case HyperCoords::Standard:
                     flags_ = 15 | COULD_BE_VERTEX_LINK | STORES_TETRAHEDRA;
                     break;
 
-                case HS_PRISM:
+                case HyperCoords::Prism:
                     flags_ = 10 | COULD_BE_NON_COMPACT;
                     break;
 
@@ -434,11 +434,11 @@ class HyperInfo {
          */
         constexpr static const char* name(HyperCoords coordSystem) {
             switch (coordSystem) {
-                case HS_STANDARD:
+                case HyperCoords::Standard:
                     return "Standard normal (tet-prism)";
-                case HS_PRISM:
+                case HyperCoords::Prism:
                     return "Prism normal";
-                case HS_EDGE_WEIGHT:
+                case HyperCoords::Edge:
                     return "Edge weight";
                 default:
                     return "Unknown";

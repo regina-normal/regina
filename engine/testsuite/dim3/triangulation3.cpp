@@ -2212,7 +2212,7 @@ static void verifyZeroEfficiency(const Triangulation<3>& tri,
         expected = false;
     else {
         expected = true;
-        regina::NormalSurfaces s(tri, regina::NS_STANDARD);
+        regina::NormalSurfaces s(tri, regina::NormalCoords::Standard);
         for (const regina::NormalSurface& f : s) {
             if (! f.isVertexLinking()) {
                 if (f.eulerChar() == 2 && (! f.hasRealBoundary())) {

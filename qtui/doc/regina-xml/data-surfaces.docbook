@@ -156,7 +156,7 @@ surfaces ::= (&xml-surface;*,
      </para>
      <para>
       An example of such an integer might be 102, which is the
-      constant <literal>NS_AN_QUAD_OCT</literal> that represents
+      constant <literal>NormalCoords::QuadOct</literal> that represents
       standard coordinates for octagonal almost normal surfaces.
      </para>
     </listitem>

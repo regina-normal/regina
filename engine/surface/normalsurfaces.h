@@ -1058,7 +1058,8 @@ class NormalSurfaces :
          * file that needs it.
          *
          * \pre The coordinate system for this surface list is set to
-         * NS_STANDARD or NS_AN_STANDARD, and the embedded-only flag is \c true.
+         * NormalCoords::Standard or NormalCoords::AlmostNormal, and the
+         * embedded-only flag is \c true.
          * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *
@@ -1104,8 +1105,9 @@ class NormalSurfaces :
          * See NormalTransform::NS_CONV_STD_TO_REDUCED for full details
          * and preconditions for this procedure.
          *
-         * \pre The coordinate system for this surface list is set to NS_QUAD
-         * or NS_AN_QUAD_OCT, and the embedded-only flag is set to \c true.
+         * \pre The coordinate system for this surface list is set to
+         * NormalCoords::Quad or NormalCoords::QuadOct, and the embedded-only
+         * flag is set to \c true.
          * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *

@@ -567,7 +567,8 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
 
     // Find a separating sphere in the complement.
     bool foundSplit = false;
-    regina::NormalSurfaces vtx(test.link.complement(), regina::NS_STANDARD);
+    regina::NormalSurfaces vtx(test.link.complement(),
+        regina::NormalCoords::Standard);
     for (const regina::NormalSurface& s : vtx) {
         if (s.eulerChar() != 2)
             continue;

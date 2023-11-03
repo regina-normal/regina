@@ -224,7 +224,7 @@ True
    </para>
    <programlisting>
 &gt;&gt;&gt; t = Example3.poincare()
-&gt;&gt;&gt; s = NormalSurfaces(t, NS_STANDARD)
+&gt;&gt;&gt; s = NormalSurfaces(t, NormalCoords.Standard)
 &gt;&gt;&gt; print(s)
 7 embedded, vertex surfaces (Standard normal (tri-quad))</programlisting>
   </sect2>

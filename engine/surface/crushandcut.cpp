@@ -1449,7 +1449,7 @@ namespace {
                     }
 
                     TreeSingleSoln<LPConstraintEulerPositive, BanNone> search(
-                        *t_[side], NS_STANDARD);
+                        *t_[side], NormalCoords::Standard);
                     {
                         std::lock_guard<std::mutex> lock(searchMutex_[side]);
                         currSearch_[side] = &search;

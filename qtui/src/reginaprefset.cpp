@@ -75,7 +75,7 @@ ReginaPrefSet::ReginaPrefSet() :
         displayUnicode(true),
         fileImportExportCodec("UTF-8"),
         helpIntroOnStartup(true),
-        hypersurfacesCreationCoords(regina::HS_STANDARD),
+        hypersurfacesCreationCoords(regina::HyperCoords::Standard),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
         linkCodeType(Gauss),
         linkCreationType(0),
@@ -86,7 +86,7 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
         surfacesCompatThreshold(100),
-        surfacesCreationCoords(regina::NS_STANDARD),
+        surfacesCreationCoords(regina::NormalCoords::Standard),
         surfacesCreationList(regina::NS_LIST_DEFAULT),
         surfacesInitialCompat(LocalCompat),
         surfacesSupportOriented(false),
@@ -248,7 +248,8 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Hypersurfaces");
     hypersurfacesCreationCoords = static_cast<regina::HyperCoords>(
-        settings.value("CreationCoordinates", regina::HS_STANDARD).toInt());
+        settings.value("CreationCoordinates", regina::HyperCoords::Standard).
+        toInt());
     hypersurfacesCreationList = regina::HyperList::fromInt(settings.value(
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
@@ -297,7 +298,7 @@ void ReginaPrefSet::readInternal() {
     surfacesCompatThreshold = settings.value(
         "CompatibilityThreshold", 100).toInt();
     surfacesCreationCoords = static_cast<regina::NormalCoords>(settings.value(
-        "CreationCoordinates", regina::NS_STANDARD).toInt());
+        "CreationCoordinates", regina::NormalCoords::Standard).toInt());
     surfacesCreationList = regina::NormalList::fromInt(settings.value(
         "CreationList", regina::NS_LIST_DEFAULT).toInt());
 

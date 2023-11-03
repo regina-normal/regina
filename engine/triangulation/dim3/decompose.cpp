@@ -1053,7 +1053,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
                     // Fall back to a full vertex enumeration.
                     // This mirrors the code for non-orientable
                     // triangulations; see that later block for details.
-                    NormalSurfaces q(use, NS_STANDARD);
+                    NormalSurfaces q(use, NormalCoords::Standard);
 
                     for (const NormalSurface& s : q) {
                         if (s.isCompressingDisc(true))
@@ -1072,7 +1072,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
                 // original triangulation that might want to take a deep
                 // copy when we modify the triangulation later on.
                 TreeSingleSoln<LPConstraintEulerPositive> search(use,
-                    NS_STANDARD);
+                    NormalCoords::Standard);
                 if (! search.find()) {
                     // No compressing discs!
                     return *(prop_.compressingDisc_ = false);
@@ -1107,7 +1107,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
         // use standard coordinates.  Jaco, Letscher and Rubinstein mention
         // quad space, but don't give details (which I'd prefer to see).
         // Leave it in standard coordinates for now.
-        NormalSurfaces q(use, NS_STANDARD);
+        NormalSurfaces q(use, NormalCoords::Standard);
 
         // Run through all vertex surfaces looking for a compressing disc.
         for (const NormalSurface& s : q) {
@@ -1315,7 +1315,7 @@ bool Triangulation<3>::isHaken() const {
 
     // Enumerate vertex normal surfaces in quad coordinates.
     // std::cout << "Enumerating surfaces..." << std::endl;
-    NormalSurfaces list(t, NS_QUAD);
+    NormalSurfaces list(t, NormalCoords::Quad);
 
     // Run through each surface, one at a time.
     // Sort them first however, so we process the (easier) smaller genus

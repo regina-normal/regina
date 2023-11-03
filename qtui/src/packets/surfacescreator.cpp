@@ -129,8 +129,8 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
 
-    if ((coordSystem == regina::NS_QUAD_CLOSED ||
-                coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
+    if ((coordSystem == regina::NormalCoords::QuadClosed ||
+                coordSystem == regina::NormalCoords::QuadOctClosed) && ! (
             tri.countVertices() == 1 &&
             tri.vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
             tri.isOriented())) {
@@ -223,8 +223,8 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
                 .arg(sType)
                 .toStdString());
         } else {
-            if (coordSystem == regina::NS_QUAD_CLOSED ||
-                    coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
+            if (coordSystem == regina::NormalCoords::QuadClosed ||
+                    coordSystem == regina::NormalCoords::QuadOctClosed) {
                 ReginaSupport::info(parentWidget,
                     ui->tr("<qt>I could not enumerate %1 normal "
                     "surfaces in %2 coordinates.  This could be "

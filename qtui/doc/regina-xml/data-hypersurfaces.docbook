@@ -155,7 +155,7 @@ hypersurfaces ::= (&xml-hypersurface;*,
      </para>
      <para>
       An example of such an integer might be 1, which is the
-      constant <literal>HS_PRISM</literal> that represents
+      constant <literal>HyperCoords::Prism</literal> that represents
       prism coordinates for normal hypersurfaces.
      </para>
     </listitem>

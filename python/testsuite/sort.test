@@ -37,14 +37,14 @@ def sortInc(a, b):
 def sortDec(a, b):
 	return a.str() > b.str()
 
-s = NormalSurfaces(Example3.poincare(), NS_STANDARD)
+s = NormalSurfaces(Example3.poincare(), NormalCoords.Standard)
 print(s.detail())
 s.sort(sortInc)
 print(s.detail())
 s.sort(sortDec)
 print(s.detail())
 
-s = NormalHypersurfaces(Example4.s3xs1(), HS_PRISM)
+s = NormalHypersurfaces(Example4.s3xs1(), HyperCoords.Prism)
 print(s.detail())
 s.sort(sortInc)
 print(s.detail())

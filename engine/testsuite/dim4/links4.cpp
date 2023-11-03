@@ -62,7 +62,7 @@ static void verifyEdgeLinks(const Triangulation<4>& tri, const char* name) {
     // Verify that *all* edge links look reasonable.
 
     regina::MatrixInt matching = regina::makeMatchingEquations(
-        tri, regina::HS_STANDARD);
+        tri, regina::HyperCoords::Standard);
 
     for (auto e : tri.edges()) {
         SCOPED_TRACE_NUMERIC(e->index());
@@ -93,7 +93,7 @@ static void verifyEdgeLinks(const Triangulation<4>& tri, const char* name) {
     // Check the precise coordinates for all *thin* edge links, which
     // can be separately obtained via normal hypersurface enumeration.
 
-    NormalHypersurfaces list(tri, regina::HS_STANDARD);
+    NormalHypersurfaces list(tri, regina::HyperCoords::Standard);
     for (const auto& s : list) {
         SCOPED_TRACE_REGINA(s);
         const regina::Edge<4>* link = s.isThinEdgeLink();
@@ -114,7 +114,7 @@ static void verifyTriangleLinks(const Triangulation<4>& tri, const char* name) {
     // Verify that *all* triangle links look reasonable.
 
     regina::MatrixInt matching = regina::makeMatchingEquations(
-        tri, regina::HS_STANDARD);
+        tri, regina::HyperCoords::Standard);
 
     for (auto t : tri.triangles()) {
         SCOPED_TRACE_NUMERIC(t->index());
@@ -157,7 +157,7 @@ static void verifyTetrahedronLinks(const Triangulation<4>& tri,
     // Verify that *all* triangle links look reasonable.
 
     regina::MatrixInt matching = regina::makeMatchingEquations(
-        tri, regina::HS_STANDARD);
+        tri, regina::HyperCoords::Standard);
 
     for (auto t : tri.tetrahedra()) {
         SCOPED_TRACE_NUMERIC(t->index());

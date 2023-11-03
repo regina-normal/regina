@@ -43,22 +43,24 @@
 
 // #define SUPPORT_TONS
 
+using regina::HyperCoords;
+using regina::NormalCoords;
 using regina::NormalSurfaces;
 
-void CoordinateChooser::insertSystem(regina::NormalCoords coordSystem) {
+void CoordinateChooser::insertSystem(NormalCoords coordSystem) {
     addItem(tr(Coordinates::name(coordSystem)));
     systems.push_back(coordSystem);
 }
 
 void CoordinateChooser::insertAllCreators() {
-    insertSystem(regina::NS_STANDARD);
-    insertSystem(regina::NS_AN_STANDARD);
-    insertSystem(regina::NS_QUAD);
-    insertSystem(regina::NS_AN_QUAD_OCT);
-    // TODO: Only insert QUAD_CLOSED / QUAD_OCT_CLOSED for the right kind of
+    insertSystem(NormalCoords::Standard);
+    insertSystem(NormalCoords::AlmostNormal);
+    insertSystem(NormalCoords::Quad);
+    insertSystem(NormalCoords::QuadOct);
+    // TODO: Only insert QuadClosed / QuadOctClosed for the right kind of
     // ideal triangulations.
-    insertSystem(regina::NS_QUAD_CLOSED);
-    insertSystem(regina::NS_AN_QUAD_OCT_CLOSED);
+    insertSystem(NormalCoords::QuadClosed);
+    insertSystem(NormalCoords::QuadOctClosed);
 #ifdef SUPPORT_TONS
     if (ReginaPrefSet::global().surfacesSupportOriented) {
         insertSystem(regina::NS_ORIENTED);
@@ -72,15 +74,15 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
         // For lists created with Regina 4.5.1 or earlier, we have
         // already taken out surfaces with multiple octagons.  Make this
         // clear to the user.
-        if (surfaces->coords() == regina::NS_AN_LEGACY)
-            insertSystem(regina::NS_AN_LEGACY);
+        if (surfaces->coords() == NormalCoords::LegacyAlmostNormal)
+            insertSystem(NormalCoords::LegacyAlmostNormal);
         else {
-            insertSystem(regina::NS_AN_STANDARD);
-            insertSystem(regina::NS_AN_QUAD_OCT);
+            insertSystem(NormalCoords::AlmostNormal);
+            insertSystem(NormalCoords::QuadOct);
         }
     } else {
-        insertSystem(regina::NS_STANDARD);
-        insertSystem(regina::NS_QUAD);
+        insertSystem(NormalCoords::Standard);
+        insertSystem(NormalCoords::Quad);
 
 #ifdef SUPPORT_TONS
         if (surfaces->allowsOriented()) {
@@ -90,53 +92,56 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
 #endif
     }
 
-    insertSystem(regina::NS_EDGE_WEIGHT);
-    insertSystem(regina::NS_TRIANGLE_ARCS);
+    insertSystem(NormalCoords::Edge);
+    insertSystem(NormalCoords::Arc);
 }
 
-void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
+void CoordinateChooser::setCurrentSystem(NormalCoords newSystem) {
     auto it = std::find(systems.begin(), systems.end(), newSystem);
 
     if (it == systems.end()) {
         // Try to find a reasonable fallback.
-        if (newSystem == regina::NS_QUAD_CLOSED)
-            it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+        if (newSystem == NormalCoords::QuadClosed)
+            it = std::find(systems.begin(), systems.end(), NormalCoords::Quad);
 #ifdef SUPPORT_TONS
         else if (newSystem == regina::NS_ORIENTED_QUAD)
-            it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+            it = std::find(systems.begin(), systems.end(), NormalCoords::Quad);
 #endif
-        else if (newSystem == regina::NS_AN_QUAD_OCT_CLOSED)
-            it = std::find(systems.begin(), systems.end(), regina::NS_AN_QUAD_OCT);
+        else if (newSystem == NormalCoords::QuadOctClosed)
+            it = std::find(systems.begin(), systems.end(),
+                NormalCoords::QuadOct);
 #ifdef SUPPORT_TONS
         else if (newSystem == regina::NS_ORIENTED)
-            it = std::find(systems.begin(), systems.end(), regina::NS_STANDARD);
+            it = std::find(systems.begin(), systems.end(),
+                NormalCoords::Standard);
 #endif
-        else if (newSystem == regina::NS_AN_LEGACY)
-            it = std::find(systems.begin(), systems.end(), regina::NS_AN_STANDARD);
+        else if (newSystem == NormalCoords::LegacyAlmostNormal)
+            it = std::find(systems.begin(), systems.end(),
+                NormalCoords::AlmostNormal);
     }
 
     if (it != systems.end())
         setCurrentIndex(static_cast<int>(it - systems.begin()));
 }
 
-void HyperCoordinateChooser::insertSystem(regina::HyperCoords coordSystem) {
+void HyperCoordinateChooser::insertSystem(HyperCoords coordSystem) {
     addItem(tr(Coordinates::name(coordSystem)));
     systems.push_back(coordSystem);
 }
 
 void HyperCoordinateChooser::insertAllCreators() {
-    insertSystem(regina::HS_STANDARD);
-    insertSystem(regina::HS_PRISM);
+    insertSystem(HyperCoords::Standard);
+    insertSystem(HyperCoords::Prism);
 }
 
 void HyperCoordinateChooser::insertAllViewers(
         regina::NormalHypersurfaces*) {
-    insertSystem(regina::HS_STANDARD);
-    insertSystem(regina::HS_PRISM);
-    insertSystem(regina::HS_EDGE_WEIGHT);
+    insertSystem(HyperCoords::Standard);
+    insertSystem(HyperCoords::Prism);
+    insertSystem(HyperCoords::Edge);
 }
 
-void HyperCoordinateChooser::setCurrentSystem(regina::HyperCoords newSystem) {
+void HyperCoordinateChooser::setCurrentSystem(HyperCoords newSystem) {
     auto it = std::find(systems.begin(), systems.end(), newSystem);
 
     if (it != systems.end())

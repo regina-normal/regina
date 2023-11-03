@@ -613,11 +613,12 @@ struct LPCol {
  *   where the tableaux holds angle columns as well as a single scaling
  *   column.
  *
- * When working with almost normal coordinate systems, we represent octagons
- * as pairs of intersecting quadrilaterals; see the LPData class notes for
- * more information on how this works.  This means, for example, that the
- * coordinate system NS_AN_STANDARD will fall under the class of standard
- * encodings, and NS_AN_QUAD_OCT will fall under the class of quad encodings.
+ * When working with almost normal coordinate systems, we represent octagons as
+ * pairs of intersecting quadrilaterals; see the LPData class notes for more
+ * information on how this works.  This means, for example, that the coordinate
+ * system NormalCoords::AlmostNormal will fall under the class of standard
+ * encodings, and NormalCoords::QuadOct will fall under the class of quad
+ * encodings.
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.

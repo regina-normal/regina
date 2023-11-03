@@ -71,10 +71,10 @@ ValidityConstraints makeEmbeddedConstraints(
 MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
         NormalCoords coords) {
     switch (coords) {
-        case NS_STANDARD:
-        case NS_AN_STANDARD:
+        case NormalCoords::Standard:
+        case NormalCoords::AlmostNormal:
         {
-            const size_t block = (coords == NS_STANDARD ? 7 : 10);
+            const size_t block = (coords == NormalCoords::Standard ? 7 : 10);
             const size_t nCoords = block * triangulation.size();
             // Three equations per non-boundary triangle.
             // F_boundary + 2 F_internal = 4 T
@@ -101,7 +101,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                         --ans.entry(row, pos1 + 4 +
                             quadSeparating[perm1[i]][perm1[3]]);
                         // Octagons:
-                        if (coords == NS_AN_STANDARD) {
+                        if (coords == NormalCoords::AlmostNormal) {
                             ++ans.entry(row, pos0 + 7 +
                                 quadMeeting[perm0[i]][perm0[3]][0]);
                             --ans.entry(row, pos1 + 7 +
@@ -117,10 +117,10 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
             }
             return ans;
         }
-        case NS_QUAD:
-        case NS_AN_QUAD_OCT:
+        case NormalCoords::Quad:
+        case NormalCoords::QuadOct:
         {
-            const size_t block = (coords == NS_QUAD ? 3 : 6);
+            const size_t block = (coords == NormalCoords::Quad ? 3 : 6);
             const size_t nCoords = block * triangulation.size();
             // One equation per non-boundary edge.
             size_t nEquations = triangulation.countEdges();
@@ -141,7 +141,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                             quadSeparating[perm[0]][perm[2]]);
                         --ans.entry(row, pos +
                             quadSeparating[perm[0]][perm[3]]);
-                        if (coords == NS_AN_QUAD_OCT) {
+                        if (coords == NormalCoords::QuadOct) {
                             --ans.entry(row, pos + 3 +
                                 quadSeparating[perm[0]][perm[2]]);
                             ++ans.entry(row, pos + 3 +
@@ -153,8 +153,8 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
             }
             return ans;
         }
-        case NS_QUAD_CLOSED:
-        case NS_AN_QUAD_OCT_CLOSED:
+        case NormalCoords::QuadClosed:
+        case NormalCoords::QuadOctClosed:
         {
             // Enforce our basic preconditions.
             if (! (triangulation.isOriented() && triangulation.isIdeal() &&
@@ -162,7 +162,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                     triangulation.countVertices() == 1 &&
                     triangulation.vertex(0)->linkType() == Vertex<3>::TORUS))
                 throw InvalidArgument(
-                    "NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED "
+                    "NormalCoords::QuadClosed and NormalCoords::QuadOctClosed "
                     "require an oriented ideal triangulation with "
                     "precisely one torus cusp and no other vertices");
 
@@ -179,7 +179,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                 throw UnsolvedCase("SnapPea retriangulated "
                     "when attempting to build the matching equations");
 
-            const size_t block = (coords == NS_QUAD_CLOSED ? 3 : 6);
+            const size_t block = (coords == NormalCoords::QuadClosed ? 3 : 6);
             const size_t nCoords = block * triangulation.size();
             // One equation per edge, plus two per ideal vertex.
             // (This code is written a little more generically, in order to
@@ -200,7 +200,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                         quadSeparating[perm[0]][perm[2]]);
                     --ans.entry(row, pos +
                         quadSeparating[perm[0]][perm[3]]);
-                    if (coords == NS_AN_QUAD_OCT_CLOSED) {
+                    if (coords == NormalCoords::QuadOctClosed) {
                         --ans.entry(row, pos + 3 +
                             quadSeparating[perm[0]][perm[2]]);
                         ++ans.entry(row, pos + 3 +
@@ -217,7 +217,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                 // These two branches could be merged a bit better.
                 // Note: the cusp equations are always expressed in terms of
                 // quad coordinates.
-                if (coords == NS_QUAD_CLOSED) {
+                if (coords == NormalCoords::QuadClosed) {
                     for (size_t j = 0; j < 3 * triangulation.size(); ++j) {
                         ans.entry(row, j) = coeffs.entry(2 * i, j);
                         ans.entry(row + 1, j) = coeffs.entry(2 * i + 1, j);
