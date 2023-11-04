@@ -11,13 +11,72 @@ import ReginaEngine
 
 struct LinkView: View {
     let packet: regina.SharedLink
+    @State private var selection = 0
     
     init(packet: regina.SharedLink) {
         self.packet = packet
     }
 
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        // TODO: Packet header
+        // TODO: Ipad 11" portrait, tab icons jump around when selected??
+        TabView(selection: $selection) {
+            LinkCrossingsView(packet: packet).tabItem {
+                Image(selection == 1 ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
+                Text("Crossings")
+            }.tag(1)
+            LinkPolynomialsView(packet: packet).tabItem {
+                Image("Tab-Polynomials").renderingMode(.template)
+                Text("Polynomials")
+            }.tag(2)
+            LinkCodesView(packet: packet).tabItem {
+                Image("Tab-Codes").renderingMode(.template)
+                Text("Codes")
+            }.tag(3)
+            LinkGraphsView(packet: packet).tabItem {
+                Image(selection == 4 ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
+                Text("Graphs")
+            }.tag(4)
+        }
+    }
+}
+
+struct LinkCrossingsView: View {
+    let packet: regina.SharedLink
+
+    var body: some View {
+        Text("Hello")
+    }
+}
+
+struct LinkPolynomialsView: View {
+    let packet: regina.SharedLink
+
+    var body: some View {
+        // TODO: How to make the vstack fill?
+        VStack(alignment: .leading) {
+            Text("Jones").font(.headline)
+            // TODO: Get to Jones
+            Text(String(packet.sharedPtr().pointee.jenkins()))
+            Text("HOMFLY-PT").font(.headline)
+            Text("Kauffman bracket").font(.headline)
+        }
+    }
+}
+
+struct LinkCodesView: View {
+    let packet: regina.SharedLink
+
+    var body: some View {
+        Text("Nice")
+    }
+}
+
+struct LinkGraphsView: View {
+    let packet: regina.SharedLink
+
+    var body: some View {
+        Text("Day")
     }
 }
 
