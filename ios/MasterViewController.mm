@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "DBChooser/DBChooser.h"
+// #import "DBChooser/DBChooser.h"
 #import "MasterViewController.h"
 #import "MBProgressHUD.h"
 #import "ReginaDocument.h"
@@ -53,7 +53,7 @@ enum {
 
 enum DocSource {
     DOCSOURCE_NATIVE,
-    DOCSOURCE_DROPBOX
+    // DOCSOURCE_DROPBOX
 };
 
 @property (strong, nonatomic, readonly) NSURL* url;
@@ -216,7 +216,8 @@ enum DocSource {
     if (! [url isFileURL]) {
         if ([url.scheme hasPrefix:@"db-"]) {
             // Looks like a Dropbox URL.
-            return [[DBChooser defaultChooser] handleOpenURL:url];
+            // return [[DBChooser defaultChooser] handleOpenURL:url];
+            return NO;
         } else {
             // Download the contents of the URL, and save it to the local documents directory.
             NSURLSessionConfiguration* config = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -270,6 +271,7 @@ enum DocSource {
             // Create a new document.
             [self performSegueWithIdentifier:@"openNew" sender:self];
             break;
+        /*
         case DOCSOURCE_DROPBOX:
             // Import from Dropbox.
             [[DBChooser defaultChooser] openChooserForLinkType:DBChooserLinkTypeDirect fromViewController:self completion:^(NSArray *results) {
@@ -277,6 +279,7 @@ enum DocSource {
                     [self openURL:[results.firstObject link]];
             }];
             break;
+         */
     }
 }
 
@@ -288,11 +291,13 @@ enum DocSource {
                                             handler:^(UIAlertAction*) {
                                                         [self newDocumentFrom:DOCSOURCE_NATIVE];
                                                     }]];
+    /*
     [alert addAction:[UIAlertAction actionWithTitle:@"Import from Dropbox"
                                               style:UIAlertActionStyleDefault
                                             handler:^(UIAlertAction*) {
                                                         [self newDocumentFrom:DOCSOURCE_DROPBOX];
                                                     }]];
+     */
     [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                               style:UIAlertActionStyleCancel
                                             handler:nil]];
