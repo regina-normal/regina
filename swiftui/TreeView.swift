@@ -89,21 +89,21 @@ struct TreeView: View {
 
 struct TreeView_Previews: PreviewProvider {
     static var simpleTree: regina.SharedPacket {
-        var root = regina.SharedPacket.makeContainer()
+        var root = regina.SharedContainer.make().asPacket()
 
-        var x = regina.SharedPacket.makeContainer()
+        var x = regina.SharedContainer.make().asPacket()
         x.setLabel("First child")
         root.append(x)
 
-        var y = regina.SharedPacket.makeContainer()
+        var y = regina.SharedContainer.make().asPacket()
         y.setLabel("Second child")
         root.append(y)
 
-        var y1 = regina.SharedPacket.makeContainer()
+        var y1 = regina.SharedContainer.make().asPacket()
         y1.setLabel("Grandchild")
         y.append(y1)
 
-        let z = regina.SharedPacket.makeContainer()
+        let z = regina.SharedContainer.make().asPacket()
         root.append(z)
 
         return root

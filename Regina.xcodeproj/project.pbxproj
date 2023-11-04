@@ -1198,6 +1198,7 @@
 		0553FBAF2AF5F38F00BE89A7 /* cusped-hyp-or-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */; };
 		0553FBB02AF5F38F00BE89A7 /* knot-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 050EA59925A2BDF2000E94F5 /* knot-census.rga */; };
 		0553FBB12AF5F38F00BE89A7 /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B1B2771740800E9418B /* sample.rga */; };
+		0553FBB42AF680AE00BE89A7 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB32AF680AE00BE89A7 /* TextView.swift */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -3813,6 +3814,7 @@
 		0553FBA22AF2544E00BE89A7 /* TreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeView.swift; sourceTree = "<group>"; };
 		0553FBA42AF2BDA500BE89A7 /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		0553FBA82AF50F0700BE89A7 /* PacketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketWrapper.swift; sourceTree = "<group>"; };
+		0553FBB32AF680AE00BE89A7 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
@@ -6630,6 +6632,7 @@
 				052909492AE5EA090028990D /* ReginaApp.swift */,
 				0529094B2AE5EA090028990D /* ReginaDocument.swift */,
 				0553FBA22AF2544E00BE89A7 /* TreeView.swift */,
+				0553FBB22AF6808E00BE89A7 /* packets */,
 				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
 				052909542AE5EA0A0028990D /* Info.plist */,
 				051AEAFD2AEB6F8F00960BBF /* Support */,
@@ -7659,6 +7662,14 @@
 				054F7E2A180B96AC0090B1F3 /* welcome.html */,
 			);
 			name = HTML;
+			sourceTree = "<group>";
+		};
+		0553FBB22AF6808E00BE89A7 /* packets */ = {
+			isa = PBXGroup;
+			children = (
+				0553FBB32AF680AE00BE89A7 /* TextView.swift */,
+			);
+			path = packets;
 			sourceTree = "<group>";
 		};
 		05617ADE1D9DBFBF00B1E33B /* utils */ = {
@@ -10312,6 +10323,7 @@
 				0553FAB92AEBE3C700BE89A7 /* facetpairing7.cpp in Sources */,
 				0553FB0C2AEBE6FC00BE89A7 /* simplesurfacebundle.cpp in Sources */,
 				0553FA812AEBE36E00BE89A7 /* xmlanglestructwriter.cpp in Sources */,
+				0553FBB42AF680AE00BE89A7 /* TextView.swift in Sources */,
 				0553FB7B2AEBE7F700BE89A7 /* sl2c_matrices.cpp in Sources */,
 				0553FAAB2AEBE3C000BE89A7 /* boundary5.cpp in Sources */,
 				0553FAEE2AEBE6D800BE89A7 /* links.cpp in Sources */,
@@ -12210,6 +12222,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
+					"REGINA_SWIFTUI=1",
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -12271,7 +12284,10 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_XCODE_BUNDLE=1",
+					"REGINA_SWIFTUI=1",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = swiftui/Info.plist;

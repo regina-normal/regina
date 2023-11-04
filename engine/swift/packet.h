@@ -30,30 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file swift/packet.h
- *  \brief Provides glue to make packet-related classes and functions
- *  available to Swift.
- *
- *  The specific problems that we aim to address here are:
- *
- *  - Swift/C++ interoperability appears to offer only limited support
- *    for std::shared_ptr, and in particular does not seem able to access the
- *    members of the pointee.
- *
- *  - Swift/C++ appears to struggle with C++ inheritance trees that use
- *    abstract and/or non-copyable base classes (such as regina::Packet).
- *
- *  It is entirely possible that the Swift/C++ has clean solutions to these
- *  problems, in which case Ben would _really_ love an email to this effect.
- */
-
 #ifndef __REGINA_SWIFT_PACKET_H
 #ifndef __DOXYGEN
 #define __REGINA_SWIFT_PACKET_H
 #endif
 
 #include <sstream>
-#include "packet/container.h"
+#include "packet/packet.h"
 #include "utilities/memstream.h"
 
 namespace regina {
@@ -71,9 +54,20 @@ struct SharedPacket {
 
     public:
         SharedPacket() = default;
+        SharedPacket(const SharedPacket&) = default;
+        SharedPacket(SharedPacket&&) = default;
+        SharedPacket& operator = (const SharedPacket&) = default;
+        SharedPacket& operator = (SharedPacket&&) = default;
 
+        /**
+         * Creates a wrapper to the given packet, which may be null.
+         */
         SharedPacket(std::shared_ptr<Packet> packet) :
                 packet_(std::move(packet)) {
+        }
+
+        std::shared_ptr<Packet> sharedPtr() const {
+            return packet_;
         }
 
         // TODO: How to access bool() in swift?
@@ -113,10 +107,12 @@ struct SharedPacket {
             return packet_->countChildren();
         }
 
+        // TODO: Should child be passed as a const reference?
         void prepend(SharedPacket child) {
             packet_->prepend(child.packet_);
         }
 
+        // TODO: Should child be passed as a const reference?
         void append(SharedPacket child) {
             packet_->append(child.packet_);
         }
@@ -156,10 +152,6 @@ struct SharedPacket {
         int64_t id() const {
             static_assert(sizeof(Packet*) == sizeof(int64_t));
             return (packet_ ? reinterpret_cast<int64_t>(packet_.get()) : 0);
-        }
-
-        static SharedPacket makeContainer() {
-            return SharedPacket(std::make_shared<Container>());
         }
 };
 

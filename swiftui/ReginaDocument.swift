@@ -52,7 +52,7 @@ class ReginaDocument: ReferenceFileDocument {
 
     init() {
         // The root packet is not visible, and does not need a packet label.
-        root = regina.SharedPacket.makeContainer()
+        root = regina.SharedContainer.make().asPacket()
         
         // TODO: Add a helpful child text packet to explain what users should do.
     }
