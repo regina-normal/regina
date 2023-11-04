@@ -162,6 +162,8 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
             Text("Null packet")
         } else {
             switch (packet.type()) {
+            case .Link:
+                LinkView(packet: regina.SharedLink(packet))
             case .Text:
                 TextView(packet: regina.SharedText(packet))
             default:
