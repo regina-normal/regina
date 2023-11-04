@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -383,13 +383,6 @@
 		05249F801DBC174E001FE29E /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */; };
 		052774141C55744300140918 /* hypercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* hypercreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
-		052790B224BE5DB100ACDF03 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E81DF0D6860018AB24 /* jansson.framework */; };
-		052790B524BE5DB900ACDF03 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99C1C41DAC100FA81D3 /* cppunit.framework */; };
-		052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; };
-		052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
-		052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
-		052790BD24BE5EA200ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
-		052790BE24BE5EA200ACDF03 /* libtokyocabinet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD31DD295F3004DD4B6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
@@ -1181,6 +1174,15 @@
 		055115001DCDF63000EC753C /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F91DCDF63000EC753C /* isomorphism.h */; };
 		055115011DCDF63000EC753C /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FA1DCDF63000EC753C /* simplex.h */; };
 		055115021DCDF63000EC753C /* triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FB1DCDF63000EC753C /* triangulation.h */; };
+		05519A5B2AF5DAA1009139F3 /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A5A2AF5DAA1009139F3 /* libtokyocabinet.xcframework */; };
+		05519A5D2AF5DAC3009139F3 /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A5A2AF5DAA1009139F3 /* libtokyocabinet.xcframework */; };
+		05519A622AF5DAD8009139F3 /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A602AF5DAD7009139F3 /* libgmpxx.xcframework */; };
+		05519A642AF5DAD8009139F3 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A612AF5DAD7009139F3 /* libgmp.xcframework */; };
+		05519A682AF5DAFE009139F3 /* cppunit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A672AF5DAFE009139F3 /* cppunit.xcframework */; };
+		05519A6C2AF5DB03009139F3 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A6B2AF5DB03009139F3 /* graphviz.xcframework */; };
+		05519A6F2AF5DB05009139F3 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A6E2AF5DB05009139F3 /* jansson.xcframework */; };
+		05519A722AF5DD3F009139F3 /* Python.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A712AF5DD3F009139F3 /* Python.xcframework */; };
+		05519A762AF5DFD8009139F3 /* XZ.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05519A752AF5DFD8009139F3 /* XZ.xcframework */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -1339,7 +1341,6 @@
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
 		056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9991C41DA6900FA81D3 /* cppunit.framework */; };
 		056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
-		056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A01C41DDF400FA81D3 /* graphviz.framework */; };
 		056AA9A41C41DE8700FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A21C41DE8600FA81D3 /* libgmp.framework */; };
 		056AA9A51C41DE8700FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */; };
 		056AA9A61C41DE9100FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A21C41DE8600FA81D3 /* libgmp.framework */; };
@@ -2135,7 +2136,6 @@
 		05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1219C1305A005B53B5 /* NewAnglesController.mm */; };
 		05F23E1619C13432005B53B5 /* NewFilterController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1519C13432005B53B5 /* NewFilterController.mm */; };
 		05F23E1919C1418A005B53B5 /* NewSnapPeaController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */; };
-		05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4947B19BDDD5D00CD887C /* DBChooser.framework */; };
 		05F6D3B91C52CD5F007307F0 /* NewTri4Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */; };
 		05F904531F97F9F800893670 /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F904511F97F9F300893670 /* graph.cpp */; };
 		05F904541F97F9F900893670 /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F904511F97F9F300893670 /* graph.cpp */; };
@@ -2320,17 +2320,6 @@
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
 			name = "Copy Engine and Utilities";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		052790BF24BE5EA200ACDF03 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				052790BE24BE5EA200ACDF03 /* libtokyocabinet.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -3279,7 +3268,6 @@
 		054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = syntaxhighlighter.cpp; sourceTree = "<group>"; };
 		054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syntaxhighlighter.h; sourceTree = "<group>"; };
 		054208E61DF0D6590018AB24 /* jansson.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jansson.framework; path = ../../Library/Frameworks/osx/jansson.framework; sourceTree = "<group>"; };
-		054208E81DF0D6860018AB24 /* jansson.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jansson.framework; path = ../../Library/Frameworks/ios/jansson.framework; sourceTree = "<group>"; };
 		054208EA1DF0DA390018AB24 /* graphloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphloop.cpp; sourceTree = "<group>"; };
 		054208EB1DF0DA390018AB24 /* graphpair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphpair.cpp; sourceTree = "<group>"; };
 		054208EC1DF0DA390018AB24 /* graphtriple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphtriple.cpp; sourceTree = "<group>"; };
@@ -3452,6 +3440,14 @@
 		055114F91DCDF63000EC753C /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
 		055114FA1DCDF63000EC753C /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
 		055114FB1DCDF63000EC753C /* triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
+		05519A5A2AF5DAA1009139F3 /* libtokyocabinet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libtokyocabinet.xcframework; path = ../../Library/Frameworks/libtokyocabinet.xcframework; sourceTree = "<group>"; };
+		05519A602AF5DAD7009139F3 /* libgmpxx.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmpxx.xcframework; path = ../../Library/Frameworks/libgmpxx.xcframework; sourceTree = "<group>"; };
+		05519A612AF5DAD7009139F3 /* libgmp.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmp.xcframework; path = ../../Library/Frameworks/libgmp.xcframework; sourceTree = "<group>"; };
+		05519A672AF5DAFE009139F3 /* cppunit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = cppunit.xcframework; path = ../../Library/Frameworks/cppunit.xcframework; sourceTree = "<group>"; };
+		05519A6B2AF5DB03009139F3 /* graphviz.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = graphviz.xcframework; path = ../../Library/Frameworks/graphviz.xcframework; sourceTree = "<group>"; };
+		05519A6E2AF5DB05009139F3 /* jansson.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = jansson.xcframework; path = ../../Library/Frameworks/jansson.xcframework; sourceTree = "<group>"; };
+		05519A712AF5DD3F009139F3 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
+		05519A752AF5DFD8009139F3 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
@@ -3823,13 +3819,8 @@
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
 		056AA9991C41DA6900FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/osx/cppunit.framework; sourceTree = "<group>"; };
-		056AA99C1C41DAC100FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/ios/cppunit.framework; sourceTree = "<group>"; };
-		056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/ios/libtokyocabinet.framework; sourceTree = "<group>"; };
-		056AA9A01C41DDF400FA81D3 /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/ios/graphviz.framework; sourceTree = "<group>"; };
 		056AA9A21C41DE8600FA81D3 /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/osx/libgmp.framework; sourceTree = "<group>"; };
 		056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/osx/libgmpxx.framework; sourceTree = "<group>"; };
-		056AA9A81C41DE9D00FA81D3 /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/ios/libgmp.framework; sourceTree = "<group>"; };
-		056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/ios/libgmpxx.framework; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		057118B219B308F8009FEDC5 /* create-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-snappea-census-data.py"; sourceTree = "<group>"; };
@@ -4575,7 +4566,6 @@
 		05F23E1519C13432005B53B5 /* NewFilterController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewFilterController.mm; sourceTree = "<group>"; };
 		05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSnapPeaController.h; sourceTree = "<group>"; };
 		05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSnapPeaController.mm; sourceTree = "<group>"; };
-		05F4947B19BDDD5D00CD887C /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
 		05F6D3B51C52CB9B007307F0 /* NewTri4Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTri4Controller.h; sourceTree = "<group>"; };
 		05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTri4Controller.mm; sourceTree = "<group>"; };
 		05F904511F97F9F300893670 /* graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graph.cpp; sourceTree = "<group>"; };
@@ -4636,21 +4626,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				052790B224BE5DB100ACDF03 /* jansson.framework in Frameworks */,
 				0569F93219B3658200051091 /* libbz2.dylib in Frameworks */,
-				052790B524BE5DB900ACDF03 /* cppunit.framework in Frameworks */,
 				057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */,
 				057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */,
+				05519A5D2AF5DAC3009139F3 /* libtokyocabinet.xcframework in Frameworks */,
+				05519A622AF5DAD8009139F3 /* libgmpxx.xcframework in Frameworks */,
 				057FA754180615F6008E25F6 /* libz.dylib in Frameworks */,
+				05519A6F2AF5DB05009139F3 /* jansson.xcframework in Frameworks */,
+				05519A762AF5DFD8009139F3 /* XZ.xcframework in Frameworks */,
 				05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */,
-				056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */,
-				052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */,
 				052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */,
-				052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */,
+				05519A642AF5DAD8009139F3 /* libgmp.xcframework in Frameworks */,
 				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
+				05519A722AF5DD3F009139F3 /* Python.xcframework in Frameworks */,
+				05519A682AF5DAFE009139F3 /* cppunit.xcframework in Frameworks */,
+				05519A6C2AF5DB03009139F3 /* graphviz.xcframework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
-				052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */,
-				05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4788,7 +4779,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
-				052790BD24BE5EA200ACDF03 /* libtokyocabinet.framework in Frameworks */,
+				05519A5B2AF5DAA1009139F3 /* libtokyocabinet.xcframework in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6271,6 +6262,14 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05519A752AF5DFD8009139F3 /* XZ.xcframework */,
+				05519A712AF5DD3F009139F3 /* Python.xcframework */,
+				05519A6E2AF5DB05009139F3 /* jansson.xcframework */,
+				05519A6B2AF5DB03009139F3 /* graphviz.xcframework */,
+				05519A672AF5DAFE009139F3 /* cppunit.xcframework */,
+				05519A612AF5DAD7009139F3 /* libgmp.xcframework */,
+				05519A602AF5DAD7009139F3 /* libgmpxx.xcframework */,
+				05519A5A2AF5DAA1009139F3 /* libtokyocabinet.xcframework */,
 				05C65E771D9C7B0B00877233 /* iOS */,
 				05C65E781D9C7B1200877233 /* OSX */,
 			);
@@ -7715,13 +7714,6 @@
 		05C65E771D9C7B0B00877233 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				056AA99C1C41DAC100FA81D3 /* cppunit.framework */,
-				056AA9A01C41DDF400FA81D3 /* graphviz.framework */,
-				054208E81DF0D6860018AB24 /* jansson.framework */,
-				056AA9A81C41DE9D00FA81D3 /* libgmp.framework */,
-				056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */,
-				056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */,
-				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
 				0569F93119B3658200051091 /* libbz2.dylib */,
 				057FA74F180615F5008E25F6 /* libiconv.dylib */,
 				05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */,
@@ -8395,7 +8387,6 @@
 				05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */,
 				05B4D2A5229F31F100B7B11C /* Copy Python core */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
-				051B531724BEA9F600A25B75 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -8620,7 +8611,6 @@
 			buildPhases = (
 				05B14E9F19B423A0002138C0 /* Sources */,
 				05B14EA019B423A0002138C0 /* Frameworks */,
-				052790BF24BE5EA200ACDF03 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -8807,34 +8797,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
-		051B531724BEA9F600A25B75 /* Embed Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				/Users/bab/Library/Frameworks/ios/cppunit.framework,
-				/Users/bab/Library/Frameworks/ios/jansson.framework,
-				/Users/bab/Library/Frameworks/ios/libgmp.framework,
-				/Users/bab/Library/Frameworks/ios/libgmpxx.framework,
-				/Users/bab/Library/Frameworks/ios/libtokyocabinet.framework,
-			);
-			name = "Embed Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/cppunit.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/jansson.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libgmp.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libgmpxx.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libtokyocabinet.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This step requires you to have Carthage installed:\n# https://github.com/Carthage/Carthage\n#\n# Its main purpose is to strip out x86_64/i386 slices from\n# all hand-rolled embedded frameworks. For more detail:\n# http://www.openradar.me/radar?id=6409498411401216\n#\n/usr/local/bin/carthage copy-frameworks\n";
-		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -8893,7 +8855,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyframework=Python3.6\n    pyzip=python36.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" \"$resdir\"/python\n";
+			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/python38-*.zip \"$resdir\"/python\n";
 		};
 		05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10971,13 +10933,13 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python2.7.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.9;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Python2.7,
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 5.9;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -11022,13 +10984,13 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python2.7.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.9;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Python2.7,
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 5.9;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -12052,7 +12014,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -12085,7 +12046,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12266,6 +12226,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = "Python 3 Release";
@@ -12367,15 +12328,13 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python3.6.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.9;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Python3.6,
-					"-framework",
-					XZ,
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 5.9;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -12396,7 +12355,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12781,6 +12739,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -12790,6 +12749,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
