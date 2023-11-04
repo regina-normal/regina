@@ -1199,6 +1199,7 @@
 		0553FBB02AF5F38F00BE89A7 /* knot-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 050EA59925A2BDF2000E94F5 /* knot-census.rga */; };
 		0553FBB12AF5F38F00BE89A7 /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B1B2771740800E9418B /* sample.rga */; };
 		0553FBB42AF680AE00BE89A7 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB32AF680AE00BE89A7 /* TextView.swift */; };
+		0553FBB62AF6A4E700BE89A7 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB52AF6A4E700BE89A7 /* LinkView.swift */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -3815,6 +3816,7 @@
 		0553FBA42AF2BDA500BE89A7 /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		0553FBA82AF50F0700BE89A7 /* PacketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketWrapper.swift; sourceTree = "<group>"; };
 		0553FBB32AF680AE00BE89A7 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
+		0553FBB52AF6A4E700BE89A7 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
@@ -7667,6 +7669,7 @@
 		0553FBB22AF6808E00BE89A7 /* packets */ = {
 			isa = PBXGroup;
 			children = (
+				0553FBB52AF6A4E700BE89A7 /* LinkView.swift */,
 				0553FBB32AF680AE00BE89A7 /* TextView.swift */,
 			);
 			path = packets;
@@ -10394,6 +10397,7 @@
 				0553FB5C2AEBE7D400BE89A7 /* cusp_neighborhoods.cpp in Sources */,
 				0553FB852AEBE86300BE89A7 /* full_cone.cpp in Sources */,
 				0553FAE92AEBE6C400BE89A7 /* treetraversal.cpp in Sources */,
+				0553FBB62AF6A4E700BE89A7 /* LinkView.swift in Sources */,
 				0553FB162AEBE70F00BE89A7 /* uimessages.cpp in Sources */,
 				0553FB772AEBE7F700BE89A7 /* tables.cpp in Sources */,
 				0553FB1C2AEBE71C00BE89A7 /* signature.cpp in Sources */,
