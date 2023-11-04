@@ -29,14 +29,18 @@ struct LinkView: View {
                 Image("Tab-Polynomials").renderingMode(.template)
                 Text("Polynomials")
             }.tag(2)
+            LinkAlgebraView(packet: packet).tabItem {
+                Image("Tab-Algebra").renderingMode(.template)
+                Text("Algebra")
+            }.tag(4)
             LinkCodesView(packet: packet).tabItem {
                 Image("Tab-Codes").renderingMode(.template)
                 Text("Codes")
-            }.tag(3)
-            LinkGraphsView(packet: packet).tabItem {
-                Image(selection == 4 ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
-                Text("Graphs")
             }.tag(4)
+            LinkGraphsView(packet: packet).tabItem {
+                Image(selection == 5 ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
+                Text("Graphs")
+            }.tag(5)
         }
     }
 }
@@ -61,6 +65,14 @@ struct LinkPolynomialsView: View {
             Text("HOMFLY-PT").font(.headline)
             Text("Kauffman bracket").font(.headline)
         }
+    }
+}
+
+struct LinkAlgebraView: View {
+    let packet: regina.SharedLink
+
+    var body: some View {
+        Text("Very")
     }
 }
 
