@@ -41,9 +41,12 @@ struct PacketCell: View {
 
     var body: some View {
         HStack {
-            wrapper.icon.resizable().frame(width: PacketCell.iconSize, height: PacketCell.iconSize)
+            if let icon = wrapper.icon {
+                icon.resizable().frame(width: PacketCell.iconSize, height: PacketCell.iconSize)
+            }
             VStack(alignment: .leading) {
                 Text(String(wrapper.packet.humanLabel()))
+                // TODO: Should we display child counts or not?
                 let count = wrapper.packet.countChildren()
                 if (count == 1) {
                     Text("1 subpacket").font(.footnote)
@@ -55,22 +58,11 @@ struct PacketCell: View {
     }
 }
 
-struct SubtreeCell: View {
-    var wrapper: PacketWrapper
-    
-    var body: some View {
-        HStack {
-            Image("Subtree").resizable().frame(width: PacketCell.iconSize, height: PacketCell.iconSize)
-            Text("Browse subpackets")
-        }
-    }
-}
-
 struct TreeView: View {
     // @ObservedObject var document: ReginaDocument
     var wrapper: PacketWrapper
 
-    @State private var selected: Int64?
+    @State private var selected: PacketWrapper?
 
     init(packet: regina.SharedPacket) {
         wrapper = PacketWrapper(packet: packet)
@@ -78,16 +70,19 @@ struct TreeView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(wrapper.children, selection: $selected) { child in
-                PacketCell(wrapper: child)
+            // We should not display the root packet.
+            // Instead start directly with the list of top-level children.
+            List(wrapper.children!, children: \.children, selection: $selected) { item in
+                PacketCell(wrapper: item)
                 // TODO: .listRowSeparator(.visible, edges: .bottom)
             }
-            // TODO: Find a sensible list style to use here.
-            // .listStyle(.grouped)
-            .navigationTitle(String(wrapper.packet.humanLabel())) // TODO: Use filename?
+            // TODO: Use filename for navigation title
+            // .navigationTitle(String(wrapper.packet.humanLabel()))
         } detail: {
-            // TODO: push another TreeView(packet: child)
-            Text("Detail")
+            // TODO: Packet viewer!
+            if let s = selected {
+                s.packetViewer
+            }
         }
     }
 }
@@ -95,15 +90,22 @@ struct TreeView: View {
 struct TreeView_Previews: PreviewProvider {
     static var simpleTree: regina.SharedPacket {
         var root = regina.SharedPacket.makeContainer()
+
         var x = regina.SharedPacket.makeContainer()
         x.setLabel("First child")
+        root.append(x)
+
         var y = regina.SharedPacket.makeContainer()
         y.setLabel("Second child")
-        var z = regina.SharedPacket.makeContainer()
-        z.setLabel("Grandchild")
-        root.append(x)
         root.append(y)
-        y.append(z)
+
+        var y1 = regina.SharedPacket.makeContainer()
+        y1.setLabel("Grandchild")
+        y.append(y1)
+
+        let z = regina.SharedPacket.makeContainer()
+        root.append(z)
+
         return root
     }
     

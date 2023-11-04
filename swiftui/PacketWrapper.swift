@@ -33,10 +33,54 @@
 import SwiftUI
 import ReginaEngine
 
-struct PacketWrapper: Identifiable {
-    var packet: regina.SharedPacket
+/**
+ * A lightweight Swift wrapper around a packet pointer (which may be `null`).
+ *
+ * Specifically: this is a value-based Swift object that wraps a value-based C++ `std::shared_ptr`,
+ * which in turn wraps a raw packet pointer.
+ */
+struct PacketWrapper: Identifiable, Equatable, Hashable {
+    typealias ID = PacketWrapper
     
-    var children: [PacketWrapper] {
+    /// A lightweight value-based C++ wrapper around the underlying packet.
+    let packet: regina.SharedPacket
+
+    /**
+     * Creates a null packet wrapper.
+     */
+    init() {
+        self.packet = regina.SharedPacket()
+    }
+
+    /**
+     * Creates a wrapper around the given C++ packet in Regina's calculation engine.
+     *
+     * This is safe to use even if _packet_ holds a null pointer.
+     */
+    init(packet: regina.SharedPacket) {
+        self.packet = packet
+    }
+
+    /**
+     * Identifies whether the two given wrappers refer to the same underlying packet.
+     *
+     * All null packets are considerd equal to each other (but to nothing else).
+     */
+    static func == (lhs: PacketWrapper, rhs: PacketWrapper) -> Bool {
+        // By comparing IDs, we are effectively comparing the raw C++ Packet pointers.
+        return (lhs.packet.id() == rhs.packet.id())
+    }
+    
+    /**
+     * Returns a list of all immediate child packets of this packet.
+     *
+     * If this packet has no children or if this is a null packet, then this returns `nil`.
+     */
+    var children: [PacketWrapper]? {
+        if packet.isNull() || packet.firstChild().isNull() {
+            return nil
+        }
+
         var ans: [PacketWrapper] = []
         var p = packet.firstChild()
         while !p.isNull() {
@@ -46,50 +90,101 @@ struct PacketWrapper: Identifiable {
         return ans
     }
     
-    // TODO: Make this a lazy property so it is never recomputed?
-    /// A 32-point image representing the type of the given packet.
-    var icon: Image {
+    /**
+     * Returns a 32-point image representing the type of the given packet.
+     *
+     * If this packet has an unknown type or if this is a null packet, then this returns `nil`.
+     */
+    var icon: Image? {
+        if packet.isNull() {
+            return nil
+        }
+
         switch packet.type() {
-        case regina.PacketType.AngleStructures:
+        case .AngleStructures:
             return Image("Angles")
-        case regina.PacketType.Attachment:
+        case .Attachment:
             return Image("Attachment")
-        case regina.PacketType.Container:
+        case .Container:
             return Image("Container")
-        case regina.PacketType.Link:
+        case .Link:
             return Image("Link")
-        case regina.PacketType.NormalHypersurfaces:
+        case .NormalHypersurfaces:
             return Image("Hypersurfaces")
-        case regina.PacketType.NormalSurfaces:
+        case .NormalSurfaces:
             return Image("Surfaces")
-        case regina.PacketType.Script:
+        case .Script:
             return Image("Script")
-        case regina.PacketType.SnapPea:
+        case .SnapPea:
             return Image("SnapPea")
-        case regina.PacketType.SurfaceFilter:
+        case .SurfaceFilter:
             return Image("Filter")
-        case regina.PacketType.Text:
+        case .Text:
             return Image("Text")
-        case regina.PacketType.Triangulation2:
+        case .Triangulation2:
             return Image("Triangulation2")
-        case regina.PacketType.Triangulation3:
+        case .Triangulation3:
             return Image("Triangulation3")
-        case regina.PacketType.Triangulation4:
+        case .Triangulation4:
             return Image("Triangulation4")
-        case regina.PacketType.Triangulation5:
+        case .Triangulation5:
             return Image("Triangulation5")
-        case regina.PacketType.Triangulation6:
+        case .Triangulation6:
             return Image("Triangulation6")
-        case regina.PacketType.Triangulation7:
+        case .Triangulation7:
             return Image("Triangulation7")
-        case regina.PacketType.Triangulation8:
+        case .Triangulation8:
             return Image("Triangulation8")
-            // TODO: Cases 9..15, conditionally compiled
+#if REGINA_HIGHDIM
+        case .Triangulation9:
+            return Image("Triangulation9")
+        case .Triangulation10:
+            return Image("Triangulation10")
+        case .Triangulation11:
+            return Image("Triangulation11")
+        case .Triangulation12:
+            return Image("Triangulation12")
+        case .Triangulation13:
+            return Image("Triangulation13")
+        case .Triangulation14:
+            return Image("Triangulation14")
+        case .Triangulation15:
+            return Image("Triangulation15")
+#endif
         default:
-            // TODO: What do we return here?
-            return Image("")
+            return nil
         }
     }
     
-    var id: Int64 { packet.id() }
+    var packetViewer: some View {
+        if packet.isNull() {
+            // TODO: What do we return here? Probably this view should contain nothing.
+            return Text("Null packet")
+        }
+        
+        switch (packet.type()) {
+        case .Text:
+            return Text("Here is some text")
+        default:
+            // TODO: What to put here?
+            return Text("Unknown or unimplemented packet type")
+        }
+    }
+    
+    /**
+     * Returns a hashable ID that uniquely identifies the underlying packet in Regina's calculation engine.
+     *
+     * This is safe to use for null packets (and all null packets will receive equal IDs).
+     */
+    var id: ID { self }
+
+    /**
+     * Hashes this packet wrapper.
+     * Different wrappers around the same underlying packet in Regina's calculation engine are guaranteed to receive the same hash.
+     *
+     * This is safe to use for null packets (and all null packets will receive the same hash value).
+     */
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(packet.id())
+    }
 }

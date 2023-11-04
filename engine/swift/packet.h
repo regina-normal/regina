@@ -61,12 +61,17 @@ namespace regina {
 /**
  * A structure that holds a shared pointer to a packet, but where the packet
  * member functions are accessible directly (without dereferencing).
+ *
+ * The _only_ member functions that are safe to call on a null packet are
+ * isNull() and id().
  */
 struct SharedPacket {
     private:
         std::shared_ptr<Packet> packet_;
 
     public:
+        SharedPacket() = default;
+
         SharedPacket(std::shared_ptr<Packet> packet) :
                 packet_(std::move(packet)) {
         }
@@ -90,6 +95,14 @@ struct SharedPacket {
 
         SharedPacket firstChild() const {
             return packet_->firstChild();
+        }
+
+        SharedPacket lastChild() const {
+            return packet_->lastChild();
+        }
+
+        SharedPacket prevSibling() const {
+            return packet_->prevSibling();
         }
 
         SharedPacket nextSibling() const {
@@ -137,10 +150,12 @@ struct SharedPacket {
          * For now we hard-code the return type as int64_t, since in practice
          * the SwiftUI will only be built on 64-bit architectures (and there
          * is a static assert to ensure that 64 bits exactly what we need).
+         *
+         * If this is a null packet, then the ID returned will be 0.
          */
         int64_t id() const {
             static_assert(sizeof(Packet*) == sizeof(int64_t));
-            return reinterpret_cast<int64_t>(packet_.get());
+            return (packet_ ? reinterpret_cast<int64_t>(packet_.get()) : 0);
         }
 
         static SharedPacket makeContainer() {
