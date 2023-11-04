@@ -118,12 +118,6 @@ class Text : public Packet {
          */
         const std::string& text() const;
 
-#if REGINA_SWIFTUI
-        // A variant of text() that returns by value, since the
-        // Swift/C++ glue cannot handle internal references.
-        std::string textByValue() const { return text_; }
-#endif
-
         /**
          * Sets the packet data to the given string.
          *
