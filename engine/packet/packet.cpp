@@ -87,14 +87,14 @@ std::string Packet::adornedLabel(const std::string& adornment) const {
     return ans;
 }
 
-void Packet::setLabel(const std::string& label) {
+void Packet::setLabel(std::string label) {
     fireEvent(&PacketListener::packetToBeRenamed);
 
     auto parent = treeParent_.lock();
     if (parent)
         parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
-    label_ = label;
+    label_ = std::move(label);
 
     fireEvent(&PacketListener::packetWasRenamed);
     if (parent)
@@ -669,7 +669,7 @@ void Packet::internalCloneDescendants(Packet& parent) const {
     }
 }
 
-bool Packet::addTag(const std::string& tag) {
+bool Packet::addTag(std::string tag) {
     auto parent = treeParent_.lock();
 
     fireEvent(&PacketListener::packetToBeRenamed);
@@ -678,7 +678,7 @@ bool Packet::addTag(const std::string& tag) {
 
     if (! tags_.get())
         tags_ = std::make_unique<std::set<std::string>>();
-    bool ans = tags_->insert(tag).second;
+    bool ans = tags_->insert(std::move(tag)).second;
 
     fireEvent(&PacketListener::packetWasRenamed);
     if (parent)

@@ -335,7 +335,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \param label the new label to give this packet.
          */
-        void setLabel(const std::string& label);
+        void setLabel(std::string label);
 
         /**
          * Returns a descriptive text string for the packet.
@@ -405,7 +405,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \return \c true if the given tag was successfully added,
          * or \c false if the given tag was already present beforehand.
          */
-        bool addTag(const std::string& tag);
+        bool addTag(std::string tag);
 
         /**
          * Removes the association of the given tag with this packet.
