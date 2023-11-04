@@ -31,27 +31,83 @@
  **************************************************************************/
 
 import SwiftUI
+import ReginaEngine
 
-struct TreeView: View {
-    // @ObservedObject var document: ReginaDocument
-    var packet: PacketWrapper
+struct PacketCell: View {
+    static let iconSize = 36.0 // TODO: Choose the icon size properly
+    var wrapper: PacketWrapper
+    
+    @State var opened = false
 
     var body: some View {
-        List {
-            // TODO: Why does this ForEach require an id?
-            // ForEach(packet.children, id: \.id) { child in
-            ForEach(packet.children) { child in
-                Label { Text(String(child.packet.label())) } icon: { child.icon.resizable().frame(width: 24, height: 24) }
+        HStack {
+            wrapper.icon.resizable().frame(width: PacketCell.iconSize, height: PacketCell.iconSize)
+            VStack(alignment: .leading) {
+                Text(String(wrapper.packet.humanLabel()))
+                let count = wrapper.packet.countChildren()
+                if (count == 1) {
+                    Text("1 subpacket").font(.footnote)
+                } else if (count > 1) {
+                    Text("\(count) subpackets").font(.footnote)
+                }
             }
-        }
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-        NavigationStack {
-            /*@START_MENU_TOKEN@*/Text("Content")/*@END_MENU_TOKEN@*/
         }
     }
 }
-/*
-#Preview {
-    // TreeView(document: ReginaDocument())
+
+struct SubtreeCell: View {
+    var wrapper: PacketWrapper
+    
+    var body: some View {
+        HStack {
+            Image("Subtree").resizable().frame(width: PacketCell.iconSize, height: PacketCell.iconSize)
+            Text("Browse subpackets")
+        }
+    }
 }
-*/
+
+struct TreeView: View {
+    // @ObservedObject var document: ReginaDocument
+    var wrapper: PacketWrapper
+
+    @State private var selected: Int64?
+
+    init(packet: regina.SharedPacket) {
+        wrapper = PacketWrapper(packet: packet)
+    }
+
+    var body: some View {
+        NavigationSplitView {
+            List(wrapper.children, selection: $selected) { child in
+                PacketCell(wrapper: child)
+                // TODO: .listRowSeparator(.visible, edges: .bottom)
+            }
+            // TODO: Find a sensible list style to use here.
+            // .listStyle(.grouped)
+            .navigationTitle(String(wrapper.packet.humanLabel())) // TODO: Use filename?
+        } detail: {
+            // TODO: push another TreeView(packet: child)
+            Text("Detail")
+        }
+    }
+}
+
+struct TreeView_Previews: PreviewProvider {
+    static var simpleTree: regina.SharedPacket {
+        var root = regina.SharedPacket.makeContainer()
+        var x = regina.SharedPacket.makeContainer()
+        x.setLabel("First child")
+        var y = regina.SharedPacket.makeContainer()
+        y.setLabel("Second child")
+        var z = regina.SharedPacket.makeContainer()
+        z.setLabel("Grandchild")
+        root.append(x)
+        root.append(y)
+        y.append(z)
+        return root
+    }
+    
+    static var previews: some View {
+        TreeView(packet: simpleTree)
+    }
+}

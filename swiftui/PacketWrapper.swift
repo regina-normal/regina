@@ -91,6 +91,5 @@ struct PacketWrapper: Identifiable {
         }
     }
     
-    // TODO: This should be something other than Int64.
     var id: Int64 { packet.id() }
 }

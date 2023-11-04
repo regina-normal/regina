@@ -40,23 +40,41 @@ extension UTType {
 }
 
 // TODO: Remember whether the data file was compressed when opened, and write it the same way.
+// Currently we are saving uncompressed, always.
 class ReginaDocument: ReferenceFileDocument {
     // TODO: We need a way to observe changes to the packet and/or the packet tree.
-    // This should happen via the ObservableObject protocol (which ReferenceFileDocument inherits).
+    // This should happen via the ObservableObject protocol (which ReferenceFileDocument inherits),
+    // and it will need to somehow communicate with Regina's packet listener interface.
     var root: regina.SharedPacket
 
     static var readableContentTypes: [UTType] { [.reginaData, .snapPeaTriangulation] }
     static var writableContentTypes: [UTType] { [.reginaData] }
 
-    init(label: String = "New Regina data") {
-        root = regina.SharedPacket(std.string(label))
+    init() {
+        // The root packet is not visible, and does not need a packet label.
+        root = regina.SharedPacket.makeContainer()
+        
+        // TODO: Add a helpful child text packet to explain what users should do.
     }
     
-    // TODO: Add an action that opens sample-misc
+    init(example: String) throws {
+        // TODO: Work out how to make the example file read-only and the
+        // document treated as a new document with an appropriate filename.
+        guard let fileURL = Bundle.main.url(forResource: example, withExtension: "rga", subdirectory: "examples") else {
+            throw CocoaError(.fileNoSuchFile)
+        }
 
+        let data = try Data(contentsOf: fileURL)
+        root = data.withUnsafeBytes { bytes in
+            regina.SharedPacket.open(bytes.baseAddress, data.count)
+        }
+        if root.isNull() {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+    }
+    
     required init(configuration: ReadConfiguration) throws {
-        guard let data = configuration.file.regularFileContents
-        else {
+        guard let data = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
 
@@ -73,21 +91,18 @@ class ReginaDocument: ReferenceFileDocument {
             throw CocoaError(.fileReadUnsupportedScheme)
         }
 
-        // TODO: use bool conversion
         if root.isNull() {
             throw CocoaError(.fileReadCorruptFile)
         }
     }
     
-    typealias Snapshot = std.string
-    
-    func snapshot(contentType: UTType) throws -> Snapshot {
+    func snapshot(contentType: UTType) throws -> std.string {
         return root.save()
     }
     
-    func fileWrapper(snapshot: Snapshot, configuration: WriteConfiguration) throws -> FileWrapper {
-        // TODO: We are doing several deep copies here.
-        // TODO: Support compression
+    func fileWrapper(snapshot: std.string, configuration: WriteConfiguration) throws -> FileWrapper {
+        // TODO: Can we std::move() from snapshot into the new String?
+        // TODO: Check exactly when String.data() can return null.
         return .init(regularFileWithContents: String(snapshot).data(using: .utf8)!)
     }
 }

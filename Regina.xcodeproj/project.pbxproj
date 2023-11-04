@@ -1191,6 +1191,13 @@
 		0553FBA62AF2BDAD00BE89A7 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA42AF2BDA500BE89A7 /* simplify.cpp */; };
 		0553FBA72AF2BDAF00BE89A7 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA42AF2BDA500BE89A7 /* simplify.cpp */; };
 		0553FBA92AF50F0700BE89A7 /* PacketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA82AF50F0700BE89A7 /* PacketWrapper.swift */; };
+		0553FBAB2AF5F38F00BE89A7 /* closed-hyp-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECB19F9360200855238 /* closed-hyp-census.rga */; };
+		0553FBAC2AF5F38F00BE89A7 /* closed-nor-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECC19F9360200855238 /* closed-nor-census.rga */; };
+		0553FBAD2AF5F38F00BE89A7 /* closed-or-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECD19F9360200855238 /* closed-or-census.rga */; };
+		0553FBAE2AF5F38F00BE89A7 /* cusped-hyp-nor-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */; };
+		0553FBAF2AF5F38F00BE89A7 /* cusped-hyp-or-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */; };
+		0553FBB02AF5F38F00BE89A7 /* knot-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 050EA59925A2BDF2000E94F5 /* knot-census.rga */; };
+		0553FBB12AF5F38F00BE89A7 /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B1B2771740800E9418B /* sample.rga */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -2576,6 +2583,23 @@
 				0542091C1DF17ED90018AB24 /* modelines.xml in CopyFiles */,
 				0542091D1DF17ED90018AB24 /* python.xml in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0553FBAA2AF5F37900BE89A7 /* Copy Examples */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = examples;
+			dstSubfolderSpec = 7;
+			files = (
+				0553FBAB2AF5F38F00BE89A7 /* closed-hyp-census.rga in Copy Examples */,
+				0553FBAC2AF5F38F00BE89A7 /* closed-nor-census.rga in Copy Examples */,
+				0553FBAD2AF5F38F00BE89A7 /* closed-or-census.rga in Copy Examples */,
+				0553FBAE2AF5F38F00BE89A7 /* cusped-hyp-nor-census.rga in Copy Examples */,
+				0553FBAF2AF5F38F00BE89A7 /* cusped-hyp-or-census.rga in Copy Examples */,
+				0553FBB02AF5F38F00BE89A7 /* knot-census.rga in Copy Examples */,
+				0553FBB12AF5F38F00BE89A7 /* sample.rga in Copy Examples */,
+			);
+			name = "Copy Examples";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */ = {
@@ -9316,6 +9340,7 @@
 				052909432AE5EA090028990D /* Sources */,
 				052909442AE5EA090028990D /* Frameworks */,
 				052909452AE5EA090028990D /* Resources */,
+				0553FBAA2AF5F37900BE89A7 /* Copy Examples */,
 				05A6282D2AE930630049739E /* Embed Frameworks */,
 			);
 			buildRules = (
