@@ -33,6 +33,20 @@
 import SwiftUI
 import ReginaEngine
 
+/**
+ * A class that supports refreshing a view even if the underlying link has not changed.
+ *
+ * An example of where this is useful is, for instance, when the Jones polynomial has been
+ * computed (and so there is new information to display, even though the link itself did not change).
+ */
+class ObservedLink: ObservableObject {
+    let packet: regina.SharedLink
+    
+    init(packet: regina.SharedLink) {
+        self.packet = packet
+    }
+}
+
 struct LinkView: View {
     let packet: regina.SharedLink
     @State private var selection = 0
@@ -153,28 +167,69 @@ enum HomflyStyle {
 }
 
 struct LinkPolynomialsView: View {
-    let packet: regina.SharedLink
+    @ObservedObject var observed: ObservedLink
     // TODO: Make a persistent HOMFLY-PT selection
     @State private var homflyStyle: HomflyStyle = .az
+    static let maxAuto = 6;
 
+    init(packet: regina.SharedLink) {
+        observed = ObservedLink(packet: packet)
+    }
+    
     var body: some View {
-        // TODO: How to make the vstack fill?
+        let link = observed.packet.held()
+
+        // TODO: Add a "copy plain text" option on long press
         VStack(alignment: .leading) {
-            Text("Jones").font(.headline)
-            // TODO: Get to Jones
-            Text("TODO")
-            // TODO: Possibly put the HOMFLY-PT value inside the hstack also?
+            Text("Jones").font(.headline).padding(.vertical)
+            if link.knowsJones() || link.size() <= LinkPolynomialsView.maxAuto {
+                var jones = observed.packet.jones()
+                // TODO: Make utf-8 configurable
+                if jones.isZero() || jones.minExp() % 2 == 0 {
+                    let _: Void = jones.scaleDown(2)
+                    Text(String(jones.utf8("𝑡")))
+                } else {
+                    Text(String(jones.utf8("√𝑡")))
+                }
+            } else {
+                Button("Compute…", systemImage: "link") {
+                    // TODO: Use a progress tracker with cancellation
+                    observed.packet.jones()
+                    observed.objectWillChange.send()
+                }
+            }
             HStack {
-                Text("HOMFLY-PT").font(.headline)
+                Text("HOMFLY-PT").font(.headline).padding(.vertical)
                 Spacer()
                 Picker("HOMFLY-PT type", selection: $homflyStyle) {
                     Text("(𝛼, 𝑧)").tag(HomflyStyle.az)
                     Text("(ℓ, 𝑚)").tag(HomflyStyle.lm)
                 }.pickerStyle(.segmented).fixedSize().labelsHidden()
             }
-            Text("TODO")
-            Text("Kauffman bracket").font(.headline)
-            Text("TODO")
+            if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
+                if homflyStyle == .az {
+                    Text(String(observed.packet.homflyAZ().utf8("𝛼", "𝑧")))
+                } else {
+                    Text(String(observed.packet.homflyLM().utf8("ℓ", "𝑚")))
+                }
+            } else {
+                Button("Compute…", systemImage: "link") {
+                    // TODO: Use a progress tracker with cancellation
+                    observed.packet.homflyAZ()
+                    observed.objectWillChange.send()
+                }
+            }
+            Text("Kauffman bracket").font(.headline).padding(.vertical)
+            if link.knowsBracket() || link.size() <= LinkPolynomialsView.maxAuto {
+                Text(String(observed.packet.bracket().utf8("𝐴")))
+            } else {
+                Button("Compute…", systemImage: "link") {
+                    // TODO: Use a progress tracker with cancellation
+                    observed.packet.bracket()
+                    observed.objectWillChange.send()
+                }
+            }
+            Spacer()
         }.padding(.horizontal).textSelection(.enabled)
     }
 }

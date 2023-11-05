@@ -92,6 +92,22 @@ struct SharedLink {
         Link held() const {
             return *packet_;
         }
+
+        Laurent<Integer> bracket() const {
+            return packet_->bracket();
+        }
+
+        Laurent<Integer> jones() const {
+            return packet_->jones();
+        }
+
+        Laurent2<Integer> homflyAZ() const {
+            return packet_->homflyAZ();
+        }
+
+        Laurent2<Integer> homflyLM() const {
+            return packet_->homflyLM();
+        }
 };
 
 }
