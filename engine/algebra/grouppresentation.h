@@ -353,9 +353,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * consisting of three terms `g1^2`, `g3^-1` and
          * `g6^1` in that order.
          *
-         * \python The list itself is not returned by reference
-         * (instead this routine returns a new Python list).  However,
-         * the terms within this list are still returned by reference.
+         * \nopython In Python, this function is non-const (and in particular
+         * the returned list contains references that allow you to modify
+         * individual terms).  See the non-const function documentation for
+         * further details.
          *
          * \return the list of terms.
          */
@@ -928,21 +929,29 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this will be the expression `g1^2 g2`.
          */
         const GroupExpression& relation(size_t index) const;
+#ifndef REGINA_SWIFTUI
         /**
          * Returns the list of all relations in this group presentation.
          *
-         * \python This routine returns a python list of copied
-         * GroupExpression objects.  In particular, modifying this
-         * list or the relations within it will not modify the group
-         * presentation from which they came.
+         * \python The list itself is not returned by reference (instead this
+         * routine returns a new Python list).  However, the relations within
+         * this list are still returned by reference.  This means that in
+         * theory you could use the references in this list to modify each
+         * relation individually, although since this is a const function (which
+         * Python does not understand or respect), you should _not_ do this.
          *
-         * \python The list itself is not returned by reference
-         * (instead this routine returns a new Python list).  However,
-         * the relations within this list are still returned by reference.
+         * \swift In Swift, this function returns a deep copy by value.
+         * This means that the lifespan of the result is not tied to the
+         * lifespan of this group presentation, but it also means that the
+         * result will not be updated if this group presentation changes.
          *
          * \return the list of relations.
          */
         const std::vector<GroupExpression>& relations() const;
+#else
+        // Swift/C++ interop cannot handle returning an internal reference.
+        std::vector<GroupExpression> relations() const;
+#endif
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -2012,8 +2021,12 @@ inline const GroupExpression& GroupPresentation::relation(size_t index) const {
     return relations_[index];
 }
 
+#ifndef REGINA_SWIFTUI
 inline const std::vector<GroupExpression>& GroupPresentation::relations()
         const {
+#else
+inline std::vector<GroupExpression> GroupPresentation::relations() const {
+#endif
     return relations_;
 }
 

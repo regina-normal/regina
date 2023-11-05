@@ -36,6 +36,7 @@ ALIASES = \
     "nullopt=no value" \
     "cpp=\par C++^^" \
     "python=\par Python^^" \
+    "swift=\par Swift^^" \
     "nocpp=\par C++^^Not present." \
     "nopython=\par Python^^Not present." \
     "nodocstrings=" \

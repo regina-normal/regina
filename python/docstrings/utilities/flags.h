@@ -30,7 +30,13 @@ Python:
     enumeration type is typically the flag class name with the suffix
     ``Flags`` or ``Fields``; for instance, the flags classes NormalAlg
     and SurfaceExport work with the enum types NormalAlgFlags and
-    SurfaceExportFields respectively.)doc";
+    SurfaceExportFields respectively.
+
+Template parameter ``T``:
+    the enumeration type holding the individual flags that can be
+    combined. This may be a scoped or unscoped enumeration; however,
+    for now we do insist that the underlying native integer type is
+    ``int``.)doc";
 
 namespace Flags_ {
 

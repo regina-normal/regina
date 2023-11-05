@@ -264,6 +264,7 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'\\headerfile\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\cpp\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\nocpp\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\swift\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
 
     # Doxygen paragraphs that we will likewise ignore in Python:
     s = re.sub(r'[\\@]todo\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)

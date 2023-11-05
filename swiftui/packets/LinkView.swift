@@ -173,9 +173,30 @@ struct LinkView: View {
 
 struct LinkCrossingsView: View {
     let packet: regina.SharedLink
+    // TODO: Make a persistent default display type
+    @State private var pictures: Bool = true
 
     var body: some View {
-        Text("Crossings are not yet implemented.")
+        VStack(alignment: .leading) {
+            HStack {
+                Spacer()
+                Picker("Display crossings:", selection: $pictures) {
+                    Text("Pictures").tag(true)
+                    Text("Text").tag(false)
+                }.fixedSize()
+                Spacer()
+            }
+            .padding(.vertical)
+            
+            let link = packet.held()
+            
+            if (pictures) {
+                // TODO: implement
+            } else {
+                // TODO: implement
+            }
+            Spacer()
+        }.padding(.horizontal).textSelection(.enabled)
     }
 }
 
@@ -305,13 +326,16 @@ struct LinkAlgebraView: View {
                 Text("No relations").padding(.bottom)
             } else {
                 Text(nRel == 1 ? "1 relation:" : "\(nRel) relations:").padding(.bottom)
-                // let rels = group.relations()
+                // TODO: Should we put the relations inside a visible frame?
+                // TODO: Should we be using a List?
                 let rels = Array<regina.GroupExpression>(group.relations())
-                ScrollView {
+                List {
                     ForEach(rels, id: \.self) { rel in
                         Text(String(rel.utf8(alphabetic)))
                     }
-                }.padding(.horizontal)
+                }
+                .listStyle(.plain)
+                //.padding(.horizontal)
                 // TODO: Verify that the scrollable area works as it should
             }
             

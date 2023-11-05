@@ -69,14 +69,21 @@ struct TreeView: View {
     }
 
     var body: some View {
+        // TODO: When first opening a file, we should ensure the packet list
+        // is visible instead of being hidden away (iPad portrait).
+        // TODO: iPad portrait: enormous gap at the top of each side of the split view
+        // TODO: iPad landscape: two back arrows (one on each side of the split), which seems weird
         NavigationSplitView {
             // We should not display the root packet.
             // Instead start directly with the list of top-level children.
             // TODO: What to do if there are no child packets at all?
+            // TODO: This list does not animate nicely at all on iPad
             List(wrapper.children ?? [], children: \.children, selection: $selected) { item in
                 PacketCell(wrapper: item)
                 // TODO: .listRowSeparator(.visible, edges: .bottom)
             }
+            .navigationTitle("TODO: Title")
+            .navigationBarTitleDisplayMode(.inline)
             // TODO: Use filename for navigation title
             // .navigationTitle(String(wrapper.packet.humanLabel()))
             //.navigationTitle("Packets")
@@ -99,6 +106,11 @@ struct TreeView: View {
                     s.packetViewer
                     // Spacer()
                 }
+            } else {
+                // TODO: Something for the case of no selection.
+                // TODO: Do we want a navigation title also?
+                // Perhaps just in the case of no selection?
+                Text("No packet selected")
             }
         }
     }

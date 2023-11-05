@@ -572,21 +572,6 @@ Python:
 Returns:
     the list of terms.)doc";
 
-// Docstring regina::python::doc::GroupExpression_::terms_2
-static const char *terms_2 =
-R"doc(Returns a constant reference to the list of terms in this expression.
-
-For instance, the expression ``g1^2 g3^-1 g6`` has list consisting of
-three terms ``g1^2``, ``g3^-1`` and ``g6^1`` in that order.
-
-Python:
-    The list itself is not returned by reference (instead this routine
-    returns a new Python list). However, the terms within this list
-    are still returned by reference.
-
-Returns:
-    the list of terms.)doc";
-
 // Docstring regina::python::doc::GroupExpression_::tex
 static const char *tex =
 R"doc(Returns a TeX representation of this expression.
@@ -1331,15 +1316,12 @@ static const char *relations =
 R"doc(Returns the list of all relations in this group presentation.
 
 Python:
-    This routine returns a python list of copied GroupExpression
-    objects. In particular, modifying this list or the relations
-    within it will not modify the group presentation from which they
-    came.
-
-Python:
     The list itself is not returned by reference (instead this routine
     returns a new Python list). However, the relations within this
-    list are still returned by reference.
+    list are still returned by reference. This means that in theory
+    you could use the references in this list to modify each relation
+    individually, although since this is a const function (which
+    Python does not understand or respect), you should _not_ do this.
 
 Returns:
     the list of relations.)doc";
