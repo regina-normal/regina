@@ -42,6 +42,16 @@ extension regina.GroupExpression: Hashable {
     }
 }
 
+extension regina.GroupPresentation {
+    private borrowing func relationsCopy() -> [regina.GroupExpression] {
+        return Array<regina.GroupExpression>(__relationsUnsafe().pointee)
+    }
+    
+    var relations: [regina.GroupExpression] {
+        relationsCopy()
+    }
+}
+
 /**
  * A class that supports refreshing a view even if the underlying link has not changed.
  *
@@ -327,10 +337,9 @@ struct LinkAlgebraView: View {
             } else {
                 Text(nRel == 1 ? "1 relation:" : "\(nRel) relations:").padding(.bottom)
                 // TODO: Should we put the relations inside a visible frame?
-                // TODO: Should we be using a List?
-                let rels = Array<regina.GroupExpression>(group.relations())
+                // TODO: Should we be using a List or a ScrollView?
                 List {
-                    ForEach(rels, id: \.self) { rel in
+                    ForEach(group.relations, id: \.self) { rel in
                         Text(String(rel.utf8(alphabetic)))
                     }
                 }

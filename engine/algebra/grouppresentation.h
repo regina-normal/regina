@@ -929,7 +929,6 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this will be the expression `g1^2 g2`.
          */
         const GroupExpression& relation(size_t index) const;
-#ifndef REGINA_SWIFTUI
         /**
          * Returns the list of all relations in this group presentation.
          *
@@ -940,18 +939,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * relation individually, although since this is a const function (which
          * Python does not understand or respect), you should _not_ do this.
          *
-         * \swift In Swift, this function returns a deep copy by value.
-         * This means that the lifespan of the result is not tied to the
-         * lifespan of this group presentation, but it also means that the
-         * result will not be updated if this group presentation changes.
-         *
          * \return the list of relations.
          */
         const std::vector<GroupExpression>& relations() const;
-#else
-        // Swift/C++ interop cannot handle returning an internal reference.
-        std::vector<GroupExpression> relations() const;
-#endif
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -2021,12 +2011,8 @@ inline const GroupExpression& GroupPresentation::relation(size_t index) const {
     return relations_[index];
 }
 
-#ifndef REGINA_SWIFTUI
 inline const std::vector<GroupExpression>& GroupPresentation::relations()
         const {
-#else
-inline std::vector<GroupExpression> GroupPresentation::relations() const {
-#endif
     return relations_;
 }
 
