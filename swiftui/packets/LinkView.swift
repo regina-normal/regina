@@ -148,18 +148,34 @@ struct LinkCrossingsView: View {
     }
 }
 
+enum HomflyStyle {
+    case az, lm
+}
+
 struct LinkPolynomialsView: View {
     let packet: regina.SharedLink
+    // TODO: Make a persistent HOMFLY-PT selection
+    @State private var homflyStyle: HomflyStyle = .az
 
     var body: some View {
         // TODO: How to make the vstack fill?
         VStack(alignment: .leading) {
             Text("Jones").font(.headline)
             // TODO: Get to Jones
-            Text(String(packet.sharedPtr().pointee.jenkins()))
-            Text("HOMFLY-PT").font(.headline)
+            Text("TODO")
+            // TODO: Possibly put the HOMFLY-PT value inside the hstack also?
+            HStack {
+                Text("HOMFLY-PT").font(.headline)
+                Spacer()
+                Picker("HOMFLY-PT type", selection: $homflyStyle) {
+                    Text("(𝛼, 𝑧)").tag(HomflyStyle.az)
+                    Text("(ℓ, 𝑚)").tag(HomflyStyle.lm)
+                }.pickerStyle(.segmented).fixedSize().labelsHidden()
+            }
+            Text("TODO")
             Text("Kauffman bracket").font(.headline)
-        }
+            Text("TODO")
+        }.padding(.horizontal).textSelection(.enabled)
     }
 }
 
