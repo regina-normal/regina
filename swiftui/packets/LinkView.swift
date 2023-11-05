@@ -33,6 +33,15 @@
 import SwiftUI
 import ReginaEngine
 
+extension regina.GroupExpression: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        for i in 0..<countTerms() {
+            hasher.combine(generator(i))
+            hasher.combine(exponent(i))
+        }
+    }
+}
+
 /**
  * A class that supports refreshing a view even if the underlying link has not changed.
  *
@@ -45,11 +54,19 @@ class ObservedLink: ObservableObject {
     init(packet: regina.SharedLink) {
         self.packet = packet
     }
+    
+    func refresh() {
+        objectWillChange.send()
+    }
+}
+
+enum LinkTab {
+    case Crossings, Polynomials, Algebra, Codes, Graphs
 }
 
 struct LinkView: View {
     let packet: regina.SharedLink
-    @State private var selection = 0
+    @State private var selection: LinkTab = .Crossings
     @Environment(\.horizontalSizeClass) var sizeClass
     
     init(packet: regina.SharedLink) {
@@ -130,25 +147,25 @@ struct LinkView: View {
             // TODO: Make a persistent default tab
             TabView(selection: $selection) {
                 LinkCrossingsView(packet: packet).tabItem {
-                    Image(selection == 1 ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
+                    Image(selection == .Crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
                     Text("Crossings")
-                }.tag(1)
+                }.tag(LinkTab.Crossings)
                 LinkPolynomialsView(packet: packet).tabItem {
                     Image("Tab-Polynomials").renderingMode(.template)
                     Text("Polynomials")
-                }.tag(2)
+                }.tag(LinkTab.Polynomials)
                 LinkAlgebraView(packet: packet).tabItem {
                     Image("Tab-Algebra").renderingMode(.template)
                     Text("Algebra")
-                }.tag(3)
+                }.tag(LinkTab.Algebra)
                 LinkCodesView(packet: packet).tabItem {
                     Image("Tab-Codes").renderingMode(.template)
                     Text("Codes")
-                }.tag(4)
+                }.tag(LinkTab.Codes)
                 LinkGraphsView(packet: packet).tabItem {
-                    Image(selection == 5 ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
+                    Image(selection == .Graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
                     Text("Graphs")
-                }.tag(5)
+                }.tag(LinkTab.Graphs)
             }
         }
     }
@@ -158,7 +175,7 @@ struct LinkCrossingsView: View {
     let packet: regina.SharedLink
 
     var body: some View {
-        Text("Hello")
+        Text("Crossings are not yet implemented.")
     }
 }
 
@@ -180,6 +197,8 @@ struct LinkPolynomialsView: View {
         let link = observed.packet.held()
 
         // TODO: Add a "copy plain text" option on long press
+        // TODO: When computing, use progress trackers with cancellation
+        // TODO: When computing, can we disable the buttons???
         VStack(alignment: .leading) {
             Text("Jones").font(.headline).padding(.vertical)
             if link.knowsJones() || link.size() <= LinkPolynomialsView.maxAuto {
@@ -192,10 +211,9 @@ struct LinkPolynomialsView: View {
                     Text(String(jones.utf8("√𝑡")))
                 }
             } else {
-                Button("Compute…", systemImage: "link") {
-                    // TODO: Use a progress tracker with cancellation
+                Button("Compute…", systemImage: "gearshape") {
                     observed.packet.jones()
-                    observed.objectWillChange.send()
+                    observed.refresh()
                 }
             }
             HStack {
@@ -213,20 +231,18 @@ struct LinkPolynomialsView: View {
                     Text(String(observed.packet.homflyLM().utf8("ℓ", "𝑚")))
                 }
             } else {
-                Button("Compute…", systemImage: "link") {
-                    // TODO: Use a progress tracker with cancellation
+                Button("Compute…", systemImage: "gearshape") {
                     observed.packet.homflyAZ()
-                    observed.objectWillChange.send()
+                    observed.refresh()
                 }
             }
             Text("Kauffman bracket").font(.headline).padding(.vertical)
             if link.knowsBracket() || link.size() <= LinkPolynomialsView.maxAuto {
                 Text(String(observed.packet.bracket().utf8("𝐴")))
             } else {
-                Button("Compute…", systemImage: "link") {
-                    // TODO: Use a progress tracker with cancellation
+                Button("Compute…", systemImage: "gearshape") {
                     observed.packet.bracket()
-                    observed.objectWillChange.send()
+                    observed.refresh()
                 }
             }
             Spacer()
@@ -235,10 +251,85 @@ struct LinkPolynomialsView: View {
 }
 
 struct LinkAlgebraView: View {
-    let packet: regina.SharedLink
+    @ObservedObject var observed: ObservedLink
+    @State var simplifiedGroup: regina.GroupPresentation?
+    static let maxSimp = 50
+    static let maxRecognise = 50
+
+    init(packet: regina.SharedLink) {
+        observed = ObservedLink(packet: packet)
+    }
 
     var body: some View {
-        Text("Very")
+        let link = observed.packet.held()
+        let autoSimp = (link.size() <= LinkAlgebraView.maxSimp)
+        let group = simplifiedGroup ?? link.group(autoSimp)
+        
+        VStack(alignment: .leading) {
+            // TODO: Allow toggling unicode support in settings
+            HStack {
+                Spacer()
+                Text(link.countComponents() == 1 ? "Knot Group" : "Link Group").font(.headline).padding(.vertical)
+                Spacer()
+            }
+
+            if !autoSimp {
+                Text("Not automatically simplified").italic().padding(.bottom)
+            }
+            
+            if group.countRelations() <= LinkAlgebraView.maxRecognise {
+                let name = group.recogniseGroup(true /* utf8 */)
+                if name.length() > 0 {
+                    Text("Name: \(String(name))").padding(.bottom)
+                }
+            }
+
+            // TODO: Do we want to headline the line headings here?
+            let nGen = group.countGenerators()
+            let alphabetic = (nGen <= 26)
+            if nGen == 0 {
+                Text("No generators").padding(.bottom)
+            } else if nGen == 1 {
+                Text("1 generator: a").padding(.bottom)
+            } else if nGen == 2 {
+                Text("2 generators: a, b").padding(.bottom)
+            } else if alphabetic {
+                let lastGen = String(UnicodeScalar(96 + Int(nGen))!)
+                Text("\(nGen) generators: a … \(lastGen)").padding(.bottom)
+            } else {
+                Text("\(nGen) generators: g0 … g\(nGen - 1)").padding(.bottom)
+            }
+            
+            let nRel = group.countRelations()
+            if nRel == 0 {
+                Text("No relations").padding(.bottom)
+            } else {
+                Text(nRel == 1 ? "1 relation:" : "\(nRel) relations:").padding(.bottom)
+                // let rels = group.relations()
+                let rels = Array<regina.GroupExpression>(group.relations())
+                ScrollView {
+                    ForEach(rels, id: \.self) { rel in
+                        Text(String(rel.utf8(alphabetic)))
+                    }
+                }.padding(.horizontal)
+                // TODO: Verify that the scrollable area works as it should
+            }
+            
+            HStack {
+                Spacer()
+                Button("Try to simplify", systemImage: "rectangle.compress.vertical") {
+                    var working = group
+                    working.intelligentSimplify()
+                    // TODO: If we could not simplify, inform the user and do not update
+                    simplifiedGroup = working
+                    // Currently Regina's links do not have a way to receive
+                    // the simplified group, since link groups are not cached.
+                }
+                Spacer()
+            }.padding(.vertical)
+            
+            Spacer()
+        }.padding(.horizontal)
     }
 }
 
@@ -276,7 +367,7 @@ struct LinkCodesView: View {
                     Text("Knot signature").tag(LinkCode.signature)
                     Text("Planar diagram code").tag(LinkCode.pd)
                     Text("Jenkins format").tag(LinkCode.jenkins)
-                }
+                }.fixedSize()
                 Spacer()
             }
             .padding(.vertical)
@@ -328,7 +419,7 @@ struct LinkGraphsView: View {
     let packet: regina.SharedLink
 
     var body: some View {
-        Text("Day")
+        Text("Graphs are not yet implemented.")
     }
 }
 
