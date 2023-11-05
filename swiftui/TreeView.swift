@@ -72,7 +72,8 @@ struct TreeView: View {
         NavigationSplitView {
             // We should not display the root packet.
             // Instead start directly with the list of top-level children.
-            List(wrapper.children!, children: \.children, selection: $selected) { item in
+            // TODO: What to do if there are no child packets at all?
+            List(wrapper.children ?? [], children: \.children, selection: $selected) { item in
                 PacketCell(wrapper: item)
                 // TODO: .listRowSeparator(.visible, edges: .bottom)
             }
