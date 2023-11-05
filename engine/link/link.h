@@ -984,6 +984,13 @@ class Link :
         auto components() const;
 
         /**
+         * Returns the number of zero-crossing unknot components in this link.
+         *
+         * \return the number of zero-crossing unknot components.
+         */
+        size_t countTrivialComponents() const;
+
+        /**
          * Returns the strand in the link with the given integer ID.
          *
          * Each strand ID is of the form 2<i>c</i>+<i>s</i>, where \e c is the
@@ -3192,13 +3199,15 @@ class Link :
          * - They cannot encode zero-crossing unknot components (i.e.,
          *   components for which the component() function returns a null
          *   strand).  Any such components will simply be omitted from the code.
+         *   You can detect such components by calling countTrivialComponents().
          *
          * - If a link has any components that consist entirely of
          *   over-crossings (which must be unknots "placed on top of" the link
          *   diagram), a planar diagram code does not carry enough data to
          *   reconstruct the _orientation_ of these components.  The topology
          *   will be preserved, but in general the combinatorics of such a link
-         *   diagram cannot be reconstructed faithfully.
+         *   diagram cannot be reconstructed faithfully.  You can detect such
+         *   components by calling pdAmbiguous().
          *
          * If you need a text code that can work with these types of
          * link diagrams, you can always use Jenkins' format instead.
@@ -3304,6 +3313,25 @@ class Link :
          * \param out the output stream to which to write.
          */
         void pd(std::ostream& out) const;
+
+        /**
+         * Determines whether this link has any components whose orientations
+         * cannot be recovered from a planar diagram code.
+         *
+         * Such components must have at least one crossing, and must consist
+         * _entirely_ of over-crossings.  These are essentially unknotted
+         * loops that are "placed on top of" the remainder of the link diagram.
+         *
+         * Note that planar diagrams have another limitation, which is that
+         * they cannot represent zero-crossing components at all (any such
+         * components are omitted from planar diagram codes entirely).
+         * Zero-crossing components are _not_ recognised by this routine, but
+         * can be recognised instead by calling countTrivialComponents().
+         *
+         * \return \c true if and only if some component of this link has at
+         * least one crossing and consists entirely of over-crossings.
+         */
+        bool pdAmbiguous() const;
 
         /**
          * Outputs the underlying planar 4-valent multigraph using the

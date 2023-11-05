@@ -118,6 +118,8 @@ void addLink(pybind11::module_& m) {
         .def("component", &Link::component, rdoc::component)
         .def("components", &Link::components,
             pybind11::keep_alive<0, 1>(), rdoc::components)
+        .def("countTrivialComponents", &Link::countTrivialComponents,
+            rdoc::countTrivialComponents)
         .def("strand", &Link::strand, rdoc::strand)
         .def("translate", &Link::translate, rdoc::translate)
         .def("graph", &Link::graph, rdoc::graph)
@@ -281,6 +283,7 @@ void addLink(pybind11::module_& m) {
         .def("pdData", &Link::pdData, rdoc::pdData)
         .def("pd",
             overload_cast<>(&Link::pd, pybind11::const_), rdoc::pd)
+        .def("pdAmbiguous", &Link::pdAmbiguous, rdoc::pdAmbiguous)
         .def("pace", &Link::pace, rdoc::pace)
         .def("knotSig", &Link::knotSig,
             pybind11::arg("useReflection") = true,

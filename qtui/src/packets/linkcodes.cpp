@@ -166,6 +166,8 @@ void LinkCodesUI::refresh() {
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
 
+        // TODO: Change this code to use Link::countTrivialComponents() and
+        // Link::pdAmbiguous().
         bool hasAllOver = false;
         for (regina::StrandRef c : link->components()) {
             if (! c) {

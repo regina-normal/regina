@@ -229,5 +229,27 @@ void Link::pd(std::ostream& out) const {
     out << ']';
 }
 
+bool Link::pdAmbiguous() const {
+    for (StrandRef c : components_) {
+        if (! c)
+            continue;
+
+        bool allOver = true;
+        StrandRef s = c;
+        do {
+            if (s.strand() == 0) {
+                allOver = false;
+                break;
+            }
+            ++s;
+        } while (allOver && s != c);
+
+        if (allOver)
+            return true;
+    }
+
+    return false;
+}
+
 } // namespace regina
 

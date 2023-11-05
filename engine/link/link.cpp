@@ -255,6 +255,14 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     return ans;
 }
 
+size_t Link::countTrivialComponents() const {
+    size_t ans = 0;
+    for (StrandRef c : components_)
+        if (! c)
+            ++ans;
+    return ans;
+}
+
 void Link::makeAlternating() {
     if (crossings_.empty())
         return;
