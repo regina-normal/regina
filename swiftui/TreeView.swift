@@ -78,10 +78,26 @@ struct TreeView: View {
             }
             // TODO: Use filename for navigation title
             // .navigationTitle(String(wrapper.packet.humanLabel()))
+            //.navigationTitle("Packets")
         } detail: {
             // TODO: Packet viewer!
             if let s = selected {
-                s.packetViewer
+                VStack {
+                    /*
+                    HStack {
+                        if let icon = s.icon {
+                            // TODO: what icon size here?
+                            icon.resizable().frame(width: 36.0, height: 36.0)
+                        }
+                        Text(String(s.packet.humanLabel())).font(.title)
+                    }
+                     */
+                    Text(String(s.packet.humanLabel())).font(.headline)
+                    // TODO: Put back the spacers if we have a view that does not use full-window controls (e.g., text editor or tab view)
+                    // Spacer()
+                    s.packetViewer
+                    // Spacer()
+                }
             }
         }
     }

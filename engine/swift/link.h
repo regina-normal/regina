@@ -88,6 +88,10 @@ struct SharedLink {
         SharedPacket asPacket() const {
             return SharedPacket(packet_);
         }
+
+        Link held() const {
+            return *packet_;
+        }
 };
 
 }
