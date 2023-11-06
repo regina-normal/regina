@@ -61,7 +61,8 @@ LinkAlgebraUI::LinkAlgebraUI(regina::PacketOf<regina::Link>* packet,
     fgGroup = new GroupWidget(true, true);
     fgGroup->setWhatsThis(tr("A full set of generators and relations "
         "for the link group."));
-    connect(fgGroup, SIGNAL(simplified()), this, SLOT(fundGroupSimplified()));
+    // Currently links do not allow simplified groups to be passed back.
+    // connect(fgGroup, SIGNAL(simplified()), this, SLOT(groupSimplified()));
     fundLayout->addWidget(fgGroup, 1);
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
