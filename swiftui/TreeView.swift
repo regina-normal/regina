@@ -34,7 +34,16 @@ import SwiftUI
 import ReginaEngine
 
 struct PacketCell: View {
-    static let iconSize = 36.0 // TODO: Choose the icon size properly
+    // TODO: Split this out somewhere more central.
+    static let iconSize = {
+        #if os(macOS)
+        let body = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body).pointSize
+        #else
+        let body = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).pointSize
+        #endif
+        return body * 1.5
+    }()
+
     var wrapper: PacketWrapper
     
     @State var opened = false

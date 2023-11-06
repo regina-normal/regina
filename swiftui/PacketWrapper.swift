@@ -159,7 +159,11 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
     @ViewBuilder var packetViewer: some View {
         if packet.isNull() {
             // TODO: What do we return here? Probably this view should contain nothing.
-            Text("Null packet")
+            VStack {
+                Spacer()
+                Text("Null packet")
+                Spacer()
+            }
         } else {
             switch (packet.type()) {
             case .Link:
@@ -168,7 +172,11 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
                 TextView(packet: regina.SharedText(packet))
             default:
                 // TODO: What to put here?
-                Text("Unknown or unimplemented packet type")
+                VStack {
+                    Spacer()
+                    Text("Unknown or unimplemented packet type")
+                    Spacer()
+                }
             }
         }
     }
