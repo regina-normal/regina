@@ -440,7 +440,9 @@ struct LinkCodesView: View {
                     Text("Classical: ").font(.headline) + Text((String(link.gauss())))
                     (Text("Oriented: ").font(.headline) + Text(String(link.orientedGauss()))).padding(.top)
                 } else {
+                    Spacer()
                     onlyKnots(code: "Gauss codes", plural: true)
+                    Spacer()
                 }
             case .dt:
                 if link.countComponents() == 1 {
@@ -451,13 +453,17 @@ struct LinkCodesView: View {
                         Text(String(link.dt(false))).padding(.top)
                     }
                 } else {
+                    Spacer()
                     onlyKnots(code: "Dowker-Thistlethwaite notation", plural: false)
+                    Spacer()
                 }
             case .signature:
                 if link.countComponents() == 1 {
                     Text(String(link.knotSig(true, true)))
                 } else {
+                    Spacer()
                     onlyKnots(code: "knot signatures", plural: true)
+                    Spacer()
                 }
            case .pd:
                 Text(String(link.pd()))
