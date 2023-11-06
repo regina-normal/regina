@@ -78,49 +78,38 @@ struct TreeView: View {
     }
 
     var body: some View {
+        // TODO: Merge the DocumentGroup and NavigationSplitView toolbars
+        // If absolutely necessary, we can change to a three-column view and use fileImporter to open a file.
         // TODO: When first opening a file, we should ensure the packet list
         // is visible instead of being hidden away (iPad portrait).
+        // See the columnVisibility parameter for NavigationSplitView.
         // TODO: iPad portrait: enormous gap at the top of each side of the split view
         // TODO: iPad landscape: two back arrows (one on each side of the split), which seems weird
         NavigationSplitView {
             // We should not display the root packet.
             // Instead start directly with the list of top-level children.
             // TODO: What to do if there are no child packets at all?
-            // TODO: This list does not animate nicely at all on iPad
+            // TODO: This list does not animate nicely at all on iPad.
             List(wrapper.children ?? [], children: \.children, selection: $selected) { item in
+                // TODO: If this is a container, expand/collapse on selection.
                 PacketCell(wrapper: item)
-                // TODO: .listRowSeparator(.visible, edges: .bottom)
             }
-            .navigationTitle("TODO: Title")
-            // TODO: Display mode unavailable in macOS
-            // .navigationBarTitleDisplayMode(.inline)
-            // TODO: Use filename for navigation title
-            // .navigationTitle(String(wrapper.packet.humanLabel()))
-            //.navigationTitle("Packets")
+            // TODO: Choose a better navigation title
+            .navigationTitle("Packets")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
         } detail: {
-            // TODO: Packet viewer!
+            // TODO: We need to hide the back button on a non-compact layout.
             if let s = selected {
-                VStack {
-                    /*
-                    HStack {
-                        if let icon = s.icon {
-                            // TODO: what icon size here?
-                            icon.resizable().frame(width: 36.0, height: 36.0)
-                        }
-                        Text(String(s.packet.humanLabel())).font(.title)
-                    }
-                     */
-                    Text(String(s.packet.humanLabel())).font(.headline)
-                    // TODO: Put back the spacers if we have a view that does not use full-window controls (e.g., text editor or tab view)
-                    // Spacer()
-                    s.packetViewer
-                    // Spacer()
-                }
+                s.packetViewer
+                    .navigationTitle(String(s.packet.humanLabel()))
+                    .navigationBarTitleDisplayMode(.inline)
             } else {
                 // TODO: Something for the case of no selection.
                 // TODO: Do we want a navigation title also?
                 // Perhaps just in the case of no selection?
                 Text("No packet selected")
+                    .navigationBarTitleDisplayMode(.inline)
             }
         }
     }
