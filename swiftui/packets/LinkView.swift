@@ -215,10 +215,12 @@ enum HomflyStyle {
 }
 
 struct LinkPolynomialsView: View {
+    static let maxAuto = 6;
+
     @ObservedObject var observed: ObservedLink
     // TODO: Make a persistent HOMFLY-PT selection
     @State private var homflyStyle: HomflyStyle = .az
-    static let maxAuto = 6;
+    @AppStorage("displayUnicode") private var unicode = true
 
     init(packet: regina.SharedLink) {
         observed = ObservedLink(packet: packet)
@@ -237,9 +239,17 @@ struct LinkPolynomialsView: View {
                 // TODO: Make utf-8 configurable
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
-                    Text(String(jones.utf8("𝑡")))
+                    if unicode {
+                        Text(String(jones.utf8("𝑡")))
+                    } else {
+                        Text(String(jones.str("t")))
+                    }
                 } else {
-                    Text(String(jones.utf8("√𝑡")))
+                    if unicode {
+                        Text(String(jones.utf8("√𝑡")))
+                    } else {
+                        Text(String(jones.str("sqrt_t")))
+                    }
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
@@ -257,9 +267,17 @@ struct LinkPolynomialsView: View {
             }
             if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
                 if homflyStyle == .az {
-                    Text(String(observed.packet.homflyAZ().utf8("𝛼", "𝑧")))
+                    if unicode {
+                        Text(String(observed.packet.homflyAZ().utf8("𝛼", "𝑧")))
+                    } else {
+                        Text(String(observed.packet.homflyAZ().str("a", "z")))
+                    }
                 } else {
-                    Text(String(observed.packet.homflyLM().utf8("ℓ", "𝑚")))
+                    if unicode {
+                        Text(String(observed.packet.homflyLM().utf8("ℓ", "𝑚")))
+                    } else {
+                        Text(String(observed.packet.homflyLM().str("l", "m")))
+                    }
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
@@ -269,7 +287,11 @@ struct LinkPolynomialsView: View {
             }
             Text("Kauffman bracket").font(.headline).padding(.vertical)
             if link.knowsBracket() || link.size() <= LinkPolynomialsView.maxAuto {
-                Text(String(observed.packet.bracket().utf8("𝐴")))
+                if unicode {
+                    Text(String(observed.packet.bracket().utf8("𝐴")))
+                } else {
+                    Text(String(observed.packet.bracket().str("A")))
+                }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
                     observed.packet.bracket()
@@ -282,10 +304,12 @@ struct LinkPolynomialsView: View {
 }
 
 struct LinkAlgebraView: View {
-    @ObservedObject var observed: ObservedLink
-    @State var simplifiedGroup: regina.GroupPresentation?
     static let maxSimp = 50
     static let maxRecognise = 50
+
+    @ObservedObject var observed: ObservedLink
+    @State var simplifiedGroup: regina.GroupPresentation?
+    @AppStorage("displayUnicode") private var unicode = true
 
     init(packet: regina.SharedLink) {
         observed = ObservedLink(packet: packet)
@@ -297,7 +321,6 @@ struct LinkAlgebraView: View {
         let group = simplifiedGroup ?? link.group(autoSimp)
         
         VStack(alignment: .leading) {
-            // TODO: Allow toggling unicode support in settings
             HStack {
                 Spacer()
                 Text(link.countComponents() == 1 ? "Knot Group" : "Link Group").font(.headline).padding(.vertical)
@@ -309,7 +332,7 @@ struct LinkAlgebraView: View {
             }
             
             if group.countRelations() <= LinkAlgebraView.maxRecognise {
-                let name = group.recogniseGroup(true /* utf8 */)
+                let name = group.recogniseGroup(unicode)
                 if name.length() > 0 {
                     Text("Name: \(String(name))").padding(.bottom)
                 }
@@ -340,7 +363,11 @@ struct LinkAlgebraView: View {
                 // TODO: Should we be using a List or a ScrollView?
                 List {
                     ForEach(group.relations, id: \.self) { rel in
-                        Text(String(rel.utf8(alphabetic)))
+                        if unicode {
+                            Text(String(rel.utf8(alphabetic)))
+                        } else {
+                            Text(String(rel.str(alphabetic)))
+                        }
                     }
                 }
                 .listStyle(.plain)

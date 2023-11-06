@@ -32,17 +32,45 @@
 
 import SwiftUI
 
-@main
-struct ReginaApp: App {
-    var body: some Scene {
-        DocumentGroup(newDocument: { ReginaDocument() }) { file in
-            TreeView(packet: file.document.root)
+struct GeneralSettingsView: View {
+    @AppStorage("displayUnicode") private var unicode = true
+
+    var body: some View {
+        Form {
+            Toggle("Use unicode for mathematical symbols", isOn: $unicode)
         }
-        // Note: To support multiple document types, add additional DocumentGroup scenes.
-        #if os(macOS)
-        Settings {
-            SettingsView()
-        }
-        #endif
     }
+}
+
+struct PythonSettingsView: View {
+    @AppStorage("displayUnicode") private var unicode = true
+
+    var body: some View {
+        Form {
+            Text("Python support is not yet available.")
+        }
+    }
+}
+
+struct SettingsView: View {
+    @AppStorage("displayUnicode") private var unicode = true
+
+    var body: some View {
+        TabView {
+            GeneralSettingsView()
+                .tabItem {
+                    Label("General", systemImage: "gear")
+                }
+            PythonSettingsView()
+                .tabItem {
+                    Label("Python", systemImage: "apple.terminal")
+                }
+        }
+        .padding(.all)
+        .frame(width: 375.0, height: 150.0)
+    }
+}
+
+#Preview {
+    SettingsView()
 }
