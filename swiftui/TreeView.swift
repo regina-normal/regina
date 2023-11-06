@@ -83,7 +83,8 @@ struct TreeView: View {
                 // TODO: .listRowSeparator(.visible, edges: .bottom)
             }
             .navigationTitle("TODO: Title")
-            .navigationBarTitleDisplayMode(.inline)
+            // TODO: Display mode unavailable in macOS
+            // .navigationBarTitleDisplayMode(.inline)
             // TODO: Use filename for navigation title
             // .navigationTitle(String(wrapper.packet.humanLabel()))
             //.navigationTitle("Packets")
