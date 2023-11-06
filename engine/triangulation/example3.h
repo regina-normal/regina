@@ -355,6 +355,23 @@ class Example<3> : public detail::ExampleBase<3> {
          */
         static Triangulation<3> solidKleinBottle();
 
+        /**
+         * Returns a triangulation of the Martelli-Petronio brick B5.
+         *
+         * This is an 8-tetrahedron triangulation of a Seifert fibred space
+         * with torus boundary.  What makes B5 interesting is that, if we
+         * keep its boundary fixed, it uses one fewer tetrahedra than the
+         * usual prism-and-layered-solid-torus construction for this same
+         * Seifert fibred space.
+         *
+         * For more details on the brick B5, see "Complexity of geometric
+         * 3-manifolds", Bruno Martelli and Carlo Petronio, Geometriae Dedicata
+         * 108 (2004), pp. 15-69.
+         *
+         * \return the Martell-Petronio brick B5.
+         */
+        static Triangulation<3> b5();
+
         /*@}*/
         /**
          * \name Ideal Triangulations

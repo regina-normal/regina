@@ -88,6 +88,7 @@ void addExample3(pybind11::module_& m) {
         .def_static("handlebody", &Example<3>::handlebody, rdoc::handlebody)
         .def_static("solidKleinBottle", &Example<3>::solidKleinBottle,
             rdoc::solidKleinBottle)
+        .def_static("b5", &Example<3>::b5, rdoc::b5)
         .def_static("figureEight", &Example<3>::figureEight, rdoc::figureEight)
         .def_static("trefoil", &Example<3>::trefoil, rdoc::trefoil)
         .def_static("whitehead", &Example<3>::whitehead, rdoc::whitehead)
