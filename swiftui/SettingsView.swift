@@ -33,18 +33,18 @@
 import SwiftUI
 
 struct GeneralSettingsView: View {
-    @AppStorage("displayUnicode") private var unicode = true
+    @AppStorage("displayUnicode") private var displayUnicode = true
+    @AppStorage("graphvizLabels") private var graphvizLabels = true
 
     var body: some View {
         Form {
-            Toggle("Use unicode for mathematical symbols", isOn: $unicode)
+            Toggle("Use unicode for mathematical symbols", isOn: $displayUnicode)
+            Toggle("Labels on dual graphs and link graphs", isOn: $graphvizLabels)
         }
     }
 }
 
 struct PythonSettingsView: View {
-    @AppStorage("displayUnicode") private var unicode = true
-
     var body: some View {
         Form {
             Text("Python support is not yet available.")
@@ -53,8 +53,6 @@ struct PythonSettingsView: View {
 }
 
 struct SettingsView: View {
-    @AppStorage("displayUnicode") private var unicode = true
-
     var body: some View {
         TabView {
             GeneralSettingsView()
@@ -67,6 +65,7 @@ struct SettingsView: View {
                 }
         }
         .padding(.all)
+        // TODO: What is a reasonable size here?
         .frame(width: 375.0, height: 150.0)
     }
 }
