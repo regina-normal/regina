@@ -532,6 +532,26 @@ Triangulation<3> Example<3>::handlebody(size_t genus) {
     return ans;
 }
 
+Triangulation<3> Example<3>::b5() {
+    // This triangulation was extracted from the regina-generated census of
+    // minimal triangulations of closed prime 3-manifolds.  It appears as a
+    // subcomplex of the following closed Seifert fibred spaces:
+    // - SFS [S2: (2,1) (3,1) (11,-9)]
+    // - SFS [S2: (2,1) (3,1) (13,-11)]
+    // - SFS [S2: (2,1) (3,1) (16,-13)]
+    // - SFS [S2: (2,1) (3,1) (17,-14)]
+    return Triangulation<3>::fromGluings(8, {
+        { 0, 0, 1, {0,1,2,3} }, { 0, 1, 2, {0,1,2,3} },
+        { 0, 3, 3, {0,1,2,3} }, { 1, 1, 4, {0,1,2,3} },
+        { 1, 3, 2, {3,0,1,2} }, { 2, 0, 5, {0,1,2,3} },
+        { 2, 3, 6, {0,1,2,3} }, { 3, 0, 6, {2,0,1,3} },
+        { 3, 1, 7, {0,1,2,3} }, { 3, 2, 5, {1,0,3,2} },
+        { 4, 0, 5, {1,0,2,3} }, { 4, 2, 6, {2,1,0,3} },
+        { 4, 3, 7, {3,0,1,2} }, { 5, 2, 7, {2,1,0,3} },
+        { 6, 1, 7, {0,3,2,1} }
+    });
+}
+
 Triangulation<3> Example<3>::figureEight() {
     Triangulation<3> ans;
 
