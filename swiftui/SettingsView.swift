@@ -32,8 +32,6 @@
 
 import SwiftUI
 
-// TODO: Find a way to make these settings accessible on iOS.
-
 struct GeneralSettingsView: View {
     @AppStorage("displayUnicode") private var unicode = true
 
