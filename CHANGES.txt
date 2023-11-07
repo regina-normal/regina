@@ -242,6 +242,9 @@ Version 7.4  [ (to be announced) ]
             - Renamed type() and subtype() to niceType() and niceIndex()
               respectively.  Moreover, niceType() now returns a NiceType, not
               an int.  The old functions are kept but deprecated.
+        Class TreeDecomposition:
+            - Functions dot() and writeDot() now take an optional parameter to
+              support dark mode.
         Enum TreeDecompositionAlg:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., TD_UPPER) have been

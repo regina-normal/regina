@@ -606,8 +606,9 @@ enum LinkGraph: Int {
 struct LinkGraphsView: View {
     let packet: regina.SharedLink
     @State private var selected: LinkGraph = (LinkGraph(rawValue: UserDefaults.standard.integer(forKey: "linkGraph")) ?? .tree)
-
-    // TODO: Ensure the graphs are visible in dark mode also.
+    @Environment(\.colorScheme) var colorScheme
+    
+    // TODO: Ensure the graphs are visible in dark mode also. (***)
     
     var body: some View {
         VStack {
@@ -636,7 +637,7 @@ struct LinkGraphsView: View {
                 Text("\(tree.size()) bags, width \(tree.width())").padding(.bottom)
             }
 
-            SvgView(cxxString: regina.svgUsingDot(tree.dot()))
+            SvgView(cxxString: regina.svgUsingDot(tree.dot(colorScheme == .dark)))
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)
    }

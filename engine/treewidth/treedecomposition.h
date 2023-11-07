@@ -1355,10 +1355,14 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
+         * \param dark \c true if the graph is intended to be displayed in dark
+         * mode (in particular, with black or darkly coloured surroundings), or
+         * \c false (the default) if it is intended to be displayed in light
+         * mode (with white or lightly coloured surroundings).
          *
          * \see http://www.graphviz.org/
          */
-        void writeDot(std::ostream& out) const;
+        void writeDot(std::ostream& out, bool dark = false) const;
 
         /**
          * Returns a Graphviz DOT representation of this tree decomposition.
@@ -1378,10 +1382,15 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * If you are writing this text representation to an output stream
          * then you should call writeDot() instead, which is more efficient.
          *
+         * \param dark \c true if the graph is intended to be displayed in dark
+         * mode (in particular, with black or darkly coloured surroundings), or
+         * \c false (the default) if it is intended to be displayed in light
+         * mode (with white or lightly coloured surroundings).
+         *
          * \return the DOT representation of this tree decomposition,
          * as outlined above.
          */
-        std::string dot() const;
+        std::string dot(bool dark = false) const;
 
         /**
          * Outputs this tree decomposition using the PACE text format.
