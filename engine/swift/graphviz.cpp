@@ -62,7 +62,7 @@ std::string svgUsingDot(const std::string& dotFile) {
     gvFreeContext(gvc);
 
     std::string result(svg, svgLen);
-    // TODO: delete svg?
+    gvFreeRenderData(svg);
     return result;
 }
 
