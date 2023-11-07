@@ -35,6 +35,8 @@ import ReginaEngine
 
 // TODO: We need to BAN held() for shared packets. Deep copies are leading to dangling pointers/references.
 
+// TODO: Work out what parts of this interface need to be made scrollable for large links.
+
 extension regina.StrandRefAlt: Identifiable {
     public var id: Int { id() }
 }
@@ -591,12 +593,46 @@ struct LinkCodesView: View {
     }
 }
 
+enum LinkGraph {
+    case tree, nice
+}
+
 struct LinkGraphsView: View {
     let packet: regina.SharedLink
+    // TODO: Make a persistent default graph type
+    @State private var selected: LinkGraph = .tree
 
     var body: some View {
-        Text("Graphs are not yet implemented.")
-    }
+        VStack {
+            HStack {
+                Spacer()
+                Picker("Display graph:", selection: $selected) {
+                    Text("Tree decomposition").tag(LinkGraph.tree)
+                    Text("Nice tree decomposition").tag(LinkGraph.nice)
+                }.fixedSize()
+                Spacer()
+            }
+            .padding(.vertical)
+            
+            var tree = regina.TreeDecomposition(packet.held(), .Upper)
+            if selected == .nice {
+                let _ = tree.makeNice(nil)
+            }
+            if tree.size() == 1 {
+                Text("1 bag, width \(tree.width())").padding(.bottom)
+            } else {
+                Text("\(tree.size()) bags, width \(tree.width())").padding(.bottom)
+            }
+
+            let svg = regina.svgUsingDot(tree.dot())
+            Text(swiftString(svg))
+
+            // TODO: Implement
+            // TODO: Ensure the graphs are visible in dark mode also.
+            
+            Spacer()
+        }.padding(.horizontal).textSelection(.enabled)
+   }
 }
 
 struct LinkView_Previews: PreviewProvider {

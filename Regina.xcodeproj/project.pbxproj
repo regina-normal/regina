@@ -677,6 +677,8 @@
 		053CB70B28D0168D006B37B0 /* triangle4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70728D0168C006B37B0 /* triangle4.h */; };
 		054131092AF9E95A006AAD75 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054131082AF9E95A006AAD75 /* Utilities.swift */; };
 		054131122AF9F246006AAD75 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0541310F2AF9F246006AAD75 /* README.txt */; };
+		054131152AFA26E4006AAD75 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054131132AFA26E4006AAD75 /* graphviz.cpp */; };
+		054131162AFA2747006AAD75 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
 		0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
 		0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF491B8BE2F5002E166B /* cyclotomic.h */; };
 		0541AF4D1B8BE2F5002E166B /* polynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF4A1B8BE2F5002E166B /* polynomial.h */; };
@@ -3566,6 +3568,8 @@
 		0541310E2AF9F246006AAD75 /* packet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
 		0541310F2AF9F246006AAD75 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		054131102AF9F246006AAD75 /* link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = link.h; sourceTree = "<group>"; };
+		054131132AFA26E4006AAD75 /* graphviz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphviz.cpp; sourceTree = "<group>"; };
+		054131142AFA26E4006AAD75 /* graphviz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphviz.h; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		0541AF491B8BE2F5002E166B /* cyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
 		0541AF4A1B8BE2F5002E166B /* polynomial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polynomial.h; sourceTree = "<group>"; };
@@ -5182,6 +5186,7 @@
 				05A6284B2AE9FDA50049739E /* libbz2.tbd in Frameworks */,
 				05A6284C2AE9FDA70049739E /* libiconv.tbd in Frameworks */,
 				05A6284D2AE9FDAC0049739E /* libxml2.tbd in Frameworks */,
+				054131162AFA2747006AAD75 /* graphviz.xcframework in Frameworks */,
 				05A6284E2AE9FDAF0049739E /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7401,6 +7406,8 @@
 			children = (
 				0541310F2AF9F246006AAD75 /* README.txt */,
 				0541310D2AF9F246006AAD75 /* container.h */,
+				054131132AFA26E4006AAD75 /* graphviz.cpp */,
+				054131142AFA26E4006AAD75 /* graphviz.h */,
 				054131102AF9F246006AAD75 /* link.h */,
 				0541310E2AF9F246006AAD75 /* packet.h */,
 				0541310C2AF9F246006AAD75 /* text.h */,
@@ -10450,6 +10457,7 @@
 				0553FB842AEBE86300BE89A7 /* offload_handler.cpp in Sources */,
 				05A628142AE920510049739E /* memstream.cpp in Sources */,
 				05A628272AE921740049739E /* stringutils.cpp in Sources */,
+				054131152AFA26E4006AAD75 /* graphviz.cpp in Sources */,
 				0553FB6C2AEBE7E900BE89A7 /* positioned_tet.cpp in Sources */,
 				0553FB922AEBE86300BE89A7 /* signed_dec.cpp in Sources */,
 				0553FB8E2AEBE86300BE89A7 /* collection.cpp in Sources */,
