@@ -75,13 +75,13 @@ class ObservedLink: ObservableObject {
     }
 }
 
-enum LinkTab {
-    case Crossings, Polynomials, Algebra, Codes, Graphs
+enum LinkTab: Int {
+    case Crossings = 1, Polynomials = 2, Algebra = 3, Codes = 4, Graphs = 5
 }
 
 struct LinkView: View {
     let packet: regina.SharedLink
-    @State private var selection: LinkTab = .Crossings
+    @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .Crossings)
     @Environment(\.horizontalSizeClass) var sizeClass
     
     init(packet: regina.SharedLink) {
@@ -159,7 +159,6 @@ struct LinkView: View {
             }
             
             // TODO: Ipad 11" portrait, tab icons jump around when selected??
-            // TODO: Make a persistent default tab
             TabView(selection: $selection) {
                 LinkCrossingsView(packet: packet).tabItem {
                     Image(selection == .Crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
@@ -181,6 +180,8 @@ struct LinkView: View {
                     Image(selection == .Graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
                     Text("Graphs")
                 }.tag(LinkTab.Graphs)
+            }.onChange(of: selection) { newValue in
+                UserDefaults.standard.set(newValue.rawValue, forKey: "tabLink")
             }
         }
     }
