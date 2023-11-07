@@ -464,7 +464,6 @@ struct LinkAlgebraView: View {
             } else {
                 Text(nRel == 1 ? "1 relation:" : "\(nRel) relations:").padding(.bottom)
                 // TODO: Should we put the relations inside a visible frame?
-                // TODO: Should we be using a List or a ScrollView?
                 List {
                     // We are using internal pointers within group, so ensure that
                     // group survives this entire block:
@@ -480,8 +479,6 @@ struct LinkAlgebraView: View {
                     }
                 }
                 .listStyle(.plain)
-                //.padding(.horizontal)
-                // TODO: Verify that the scrollable area works as it should
             }
             
             HStack {
