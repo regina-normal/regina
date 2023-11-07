@@ -34,9 +34,36 @@ import SwiftUI
 import WebKit
 import CxxStdlib
 
-// TODO: Use NSViewRepresentable for macOS.
 // TODO: The SVG is miniscule on iPhone.
 
+// TODO: What to use as the base URL here?
+// TODO: Work out how to centre the content.
+
+// TODO: There is surely a better way of initialising the Data object. Also, do we need to manage the lifetime of cxxString?
+
+#if os(macOS)
+struct SvgView: NSViewRepresentable {
+    var svg: Data
+    
+    init(data: Data) {
+        self.svg = data
+    }
+    
+    init(cxxString: std.string) {
+        self.svg = Data(String(cString: cxxString.__c_strUnsafe()).utf8)
+    }
+
+    func makeNSView(context: Context) -> WKWebView {
+        var ans = WKWebView()
+        ans.allowsMagnification = true
+        return ans
+    }
+    
+    func updateNSView(_ webView: WKWebView, context: Context) {
+        webView.load(svg, mimeType: "image/svg+xml", characterEncodingName: "utf-8", baseURL: URL(string: "file:///")!)
+    }
+}
+#else
 struct SvgView: UIViewRepresentable {
     var svg: Data
     
@@ -45,21 +72,16 @@ struct SvgView: UIViewRepresentable {
     }
     
     init(cxxString: std.string) {
-        // TODO: There is surely a better way of initialising Data here.
-        // TODO: Do we need to manage the lifetime of cxxString?
-        // self.svg = Data(String(cString: cxxString.__c_strUnsafe()).utf8)
-        self.svg = Data(String(cxxString).utf8)
+        self.svg = Data(String(cString: cxxString.__c_strUnsafe()).utf8)
     }
 
     func makeUIView(context: Context) -> WKWebView {
+        // On iOS / iPadOS, magnification appears to be enabled by default.
         return WKWebView()
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
-        // TODO: What to use as the base URL here?
-        // TODO: Work out how to centre the content.
-        // TODO: Can we make it zoomable? Try webView.allowsMagnification = true
-        // TODO: Do we want to set WKWebView's scalesPageToFit property to yes?
         webView.load(svg, mimeType: "image/svg+xml", characterEncodingName: "utf-8", baseURL: URL(string: "file:///")!)
     }
 }
+#endif
