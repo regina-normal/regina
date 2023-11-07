@@ -413,6 +413,8 @@ struct LinkAlgebraView: View {
 
     @ObservedObject var observed: ObservedLink
     @State var simplifiedGroup: regina.GroupPresentation?
+    @State var didSimplify = false
+    @State var couldNotSimplify = false
     @AppStorage("displayUnicode") private var unicode = true
 
     init(packet: regina.SharedLink) {
@@ -431,7 +433,7 @@ struct LinkAlgebraView: View {
                 Spacer()
             }
 
-            if !autoSimp {
+            if !(autoSimp || didSimplify) {
                 Text("Not automatically simplified").italic().padding(.bottom)
             }
             
@@ -486,11 +488,20 @@ struct LinkAlgebraView: View {
                 Button("Try to simplify", systemImage: "rectangle.compress.vertical") {
                     // TODO: Use a cancellable progress box (maybe only when it's large).
                     var working = group
-                    working.intelligentSimplify()
-                    // TODO: If we could not simplify, inform the user and do not update
-                    simplifiedGroup = working
-                    // Currently Regina's links do not have a way to receive
-                    // the simplified group, since link groups are not cached.
+                    let hom = working.intelligentSimplify()
+                    if hom.hasValue {
+                        simplifiedGroup = working
+                        didSimplify = true
+                        // Currently Regina's links do not have a way to receive
+                        // the simplified group, since link groups are not cached.
+                    } else {
+                        couldNotSimplify = true
+                    }
+                }
+                .alert("Could not simplify", isPresented: $couldNotSimplify) {
+                    Button("OK") {}
+                } message: {
+                    Text("I could not simplify the group presentation any further.")
                 }
                 Spacer()
             }.padding(.vertical)
