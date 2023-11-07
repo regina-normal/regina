@@ -79,6 +79,7 @@ struct StrandRefAlt {
         StrandRefAlt next() const { return data_.next(); }
         StrandRefAlt prev() const { return data_.prev(); }
         bool isNull() const { return ! data_; }
+        ssize_t id() const { return data_.id(); }
 };
 
 /**

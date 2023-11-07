@@ -33,22 +33,23 @@
 import SwiftUI
 import ReginaEngine
 
-extension regina.GroupExpression: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        for i in 0..<countTerms() {
-            hasher.combine(generator(i))
-            hasher.combine(exponent(i))
-        }
-    }
+extension regina.StrandRefAlt: Identifiable {
+    public var id: Int { id() }
 }
 
-extension regina.GroupPresentation {
-    private borrowing func relationsCopy() -> [regina.GroupExpression] {
-        return Array<regina.GroupExpression>(__relationsUnsafe().pointee)
-    }
-    
-    var relations: [regina.GroupExpression] {
-        relationsCopy()
+extension regina.Link {
+    func strandsFor(component: regina.StrandRefAlt) -> [regina.StrandRefAlt] {
+        if component.isNull() {
+            return []
+        }
+        
+        var ans = [regina.StrandRefAlt]()
+        var s = component
+        repeat {
+            ans.append(s)
+            s = s.next()
+        } while !(s == component)
+        return ans
     }
 }
 
@@ -199,12 +200,25 @@ struct LinkCrossingsView: View {
             .padding(.vertical)
             
             let link = packet.held()
-            
-            if (pictures) {
-                // TODO: implement
-            } else {
-                // TODO: implement
-            }
+            List {
+                ForEach(0..<link.countComponents(), id: \.self) { i in
+                    let start = regina.StrandRefAlt(link.component(i))
+                    Section("Component \(i)") {
+                        if start.isNull() {
+                            Text("Unknot, no crossings")
+                        } else if (pictures) {
+                            // TODO: implement
+                            Text("Crossings ...")
+                        } else {
+                            // TODO: implement
+                            ForEach(link.strandsFor(component: start)) { strand in
+                                Text("\(strand.crossing().index())\(strand.strand())")
+                            }
+                        }
+                    }
+                }
+            }.listStyle(.plain)
+
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)
     }
@@ -362,7 +376,8 @@ struct LinkAlgebraView: View {
                 // TODO: Should we put the relations inside a visible frame?
                 // TODO: Should we be using a List or a ScrollView?
                 List {
-                    ForEach(group.relations, id: \.self) { rel in
+                    ForEach(0..<group.countRelations(), id: \.self) { i in
+                        let rel = group.__relationUnsafe(i).pointee
                         if unicode {
                             Text(swiftString(rel.utf8(alphabetic)))
                         } else {
