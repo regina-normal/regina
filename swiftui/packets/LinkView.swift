@@ -35,8 +35,6 @@ import ReginaEngine
 
 // TODO: We need to BAN held() for shared packets. Deep copies are leading to dangling pointers/references.
 
-// TODO: Work out what parts of this interface need to be made scrollable for large links.
-
 extension regina.StrandRefAlt: Identifiable {
     public var id: Int { id() }
 }
@@ -204,7 +202,6 @@ struct LinkCrossingsView: View {
      */
     func iconFor(_ s: regina.StrandRefAlt) -> Image {
         // TODO: Should we preload these?
-        // TODO: Re-render these at a larger size. We use then at 34pt but they are currently only rendered at 22pt.
         if s.crossing().sign() > 0 {
             if s.strand() == 1 {
                 return Image("Crossing+U")
@@ -336,7 +333,6 @@ struct LinkPolynomialsView: View {
             Text("Jones").font(.headline).padding(.vertical)
             if link.knowsJones() || link.size() <= LinkPolynomialsView.maxAuto {
                 var jones = observed.packet.jones()
-                // TODO: Make utf-8 configurable
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
                     if unicode {
@@ -483,6 +479,7 @@ struct LinkAlgebraView: View {
             HStack {
                 Spacer()
                 Button("Try to simplify", systemImage: "rectangle.compress.vertical") {
+                    // TODO: Use a cancellable progress box (maybe only when it's large).
                     var working = group
                     working.intelligentSimplify()
                     // TODO: If we could not simplify, inform the user and do not update
@@ -530,6 +527,7 @@ struct LinkCodesView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            // TODO: It's possible the text here needs to be scrollable.
             HStack {
                 Spacer()
                 Picker("Display code:", selection: $selected) {
@@ -570,6 +568,7 @@ struct LinkCodesView: View {
                 }
             case .signature:
                 if link.countComponents() == 1 {
+                    // TODO: Do not word wrap this.
                     Text(swiftString(link.knotSig(true, true)))
                 } else {
                     Spacer()
@@ -614,6 +613,8 @@ struct LinkGraphsView: View {
                 Spacer()
             }
             .padding(.vertical)
+            
+            // TODO: Give a "working on it" message, and build the graph in the background (maybe only when it's large)
             
             var tree = regina.TreeDecomposition(packet.held(), .Upper)
             if selected == .nice {
