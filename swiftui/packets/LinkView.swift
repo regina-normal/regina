@@ -76,12 +76,12 @@ class ObservedLink: ObservableObject {
 }
 
 enum LinkTab: Int {
-    case Crossings = 1, Polynomials = 2, Algebra = 3, Codes = 4, Graphs = 5
+    case crossings = 1, polynomials = 2, algebra = 3, codes = 4, graphs = 5
 }
 
 struct LinkView: View {
     let packet: regina.SharedLink
-    @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .Crossings)
+    @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
     @Environment(\.horizontalSizeClass) var sizeClass
     
     init(packet: regina.SharedLink) {
@@ -161,25 +161,25 @@ struct LinkView: View {
             // TODO: Ipad 11" portrait, tab icons jump around when selected??
             TabView(selection: $selection) {
                 LinkCrossingsView(packet: packet).tabItem {
-                    Image(selection == .Crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
+                    Image(selection == .crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
                     Text("Crossings")
-                }.tag(LinkTab.Crossings)
+                }.tag(LinkTab.crossings)
                 LinkPolynomialsView(packet: packet).tabItem {
                     Image("Tab-Polynomials").renderingMode(.template)
                     Text("Polynomials")
-                }.tag(LinkTab.Polynomials)
+                }.tag(LinkTab.polynomials)
                 LinkAlgebraView(packet: packet).tabItem {
                     Image("Tab-Algebra").renderingMode(.template)
                     Text("Algebra")
-                }.tag(LinkTab.Algebra)
+                }.tag(LinkTab.algebra)
                 LinkCodesView(packet: packet).tabItem {
                     Image("Tab-Codes").renderingMode(.template)
                     Text("Codes")
-                }.tag(LinkTab.Codes)
+                }.tag(LinkTab.codes)
                 LinkGraphsView(packet: packet).tabItem {
-                    Image(selection == .Graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
+                    Image(selection == .graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
                     Text("Graphs")
-                }.tag(LinkTab.Graphs)
+                }.tag(LinkTab.graphs)
             }.onChange(of: selection) { newValue in
                 UserDefaults.standard.set(newValue.rawValue, forKey: "tabLink")
             }
@@ -187,10 +187,13 @@ struct LinkView: View {
     }
 }
 
+enum LinkCrossingStyle: Int {
+    case pictorial = 1, text = 2
+}
+
 struct LinkCrossingsView: View {
     let packet: regina.SharedLink
-    // TODO: Make a persistent default display type
-    @State private var pictures: Bool = true
+    @State private var style: LinkCrossingStyle = (LinkCrossingStyle(rawValue: UserDefaults.standard.integer(forKey: "linkCrossings")) ?? .pictorial)
 
     // TODO: Check that these update when switching dark/light mode.
     static private var posColour = Color("Positive")
@@ -270,10 +273,13 @@ struct LinkCrossingsView: View {
         VStack(alignment: .leading) {
             HStack {
                 Spacer()
-                Picker("Display crossings:", selection: $pictures) {
-                    Text("Pictures").tag(true)
-                    Text("Text").tag(false)
+                Picker("Display crossings:", selection: $style) {
+                    Text("Pictures").tag(LinkCrossingStyle.pictorial)
+                    Text("Text").tag(LinkCrossingStyle.text)
                 }.fixedSize()
+                    .onChange(of: style) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkCrossings")
+                    }
                 Spacer()
             }
             .padding(.vertical)
@@ -284,7 +290,7 @@ struct LinkCrossingsView: View {
                         let strands = packet.strandsForComponent(index: i)
                         if strands.isEmpty {
                             Text("Unknot, no crossings")
-                        } else if pictures {
+                        } else if style == .pictorial {
                             // TODO: Fix sizes: 45 is about right for a 17-point font size
                             LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 45))]) {
                                 ForEach(strands) { s in
@@ -308,16 +314,15 @@ struct LinkCrossingsView: View {
     }
 }
 
-enum HomflyStyle {
-    case az, lm
+enum HomflyStyle: Int {
+    case az = 1, lm = 2
 }
 
 struct LinkPolynomialsView: View {
     static let maxAuto = 6;
 
     @ObservedObject var observed: ObservedLink
-    // TODO: Make a persistent HOMFLY-PT selection
-    @State private var homflyStyle: HomflyStyle = .az
+    @State private var homflyStyle: HomflyStyle = (HomflyStyle(rawValue: UserDefaults.standard.integer(forKey: "linkHomfly")) ?? .az)
     @AppStorage("displayUnicode") private var unicode = true
 
     init(packet: regina.SharedLink) {
@@ -361,6 +366,9 @@ struct LinkPolynomialsView: View {
                     Text("(𝛼, 𝑧)").tag(HomflyStyle.az)
                     Text("(ℓ, 𝑚)").tag(HomflyStyle.lm)
                 }.pickerStyle(.segmented).fixedSize().labelsHidden()
+                    .onChange(of: homflyStyle) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkHomfly")
+                    }
             }
             if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
                 if homflyStyle == .az {
@@ -496,14 +504,13 @@ struct LinkAlgebraView: View {
     }
 }
 
-enum LinkCode {
-    case gauss, dt, signature, pd, jenkins
+enum LinkCode: Int {
+    case gauss = 1, dt = 2, signature = 3, pd = 4, jenkins = 5
 }
 
 struct LinkCodesView: View {
     let packet: regina.SharedLink
-    // TODO: Make a persistent default code
-    @State private var selected: LinkCode = .gauss
+    @State private var selected: LinkCode = (LinkCode(rawValue: UserDefaults.standard.integer(forKey: "linkCode")) ?? .gauss)
 
     @ViewBuilder func onlyKnots(code: String, plural: Bool) -> some View {
         let capitalised = code.prefix(1).capitalized + code.dropFirst()
@@ -538,6 +545,9 @@ struct LinkCodesView: View {
                     Text("Planar diagram code").tag(LinkCode.pd)
                     Text("Jenkins format").tag(LinkCode.jenkins)
                 }.fixedSize()
+                    .onChange(of: selected) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkCode")
+                    }
                 Spacer()
             }
             .padding(.vertical)
@@ -592,14 +602,13 @@ struct LinkCodesView: View {
     }
 }
 
-enum LinkGraph {
-    case tree, nice
+enum LinkGraph: Int {
+    case tree = 1, nice = 2
 }
 
 struct LinkGraphsView: View {
     let packet: regina.SharedLink
-    // TODO: Make a persistent default graph type
-    @State private var selected: LinkGraph = .tree
+    @State private var selected: LinkGraph = (LinkGraph(rawValue: UserDefaults.standard.integer(forKey: "linkGraph")) ?? .tree)
 
     // TODO: Ensure the graphs are visible in dark mode also.
     
@@ -611,6 +620,9 @@ struct LinkGraphsView: View {
                     Text("Tree decomposition").tag(LinkGraph.tree)
                     Text("Nice tree decomposition").tag(LinkGraph.nice)
                 }.fixedSize()
+                    .onChange(of: selected) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkGraph")
+                    }
                 Spacer()
             }
             .padding(.vertical)
