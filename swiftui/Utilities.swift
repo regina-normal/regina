@@ -58,10 +58,12 @@ func cxxString(_ s: String) -> std.string {
 }
 #endif
 
-func fontSize(forTextStyle style: UIFont.TextStyle) -> CGFloat {
-    #if os(macOS)
+#if os(macOS)
+func fontSize(forTextStyle style: NSFont.TextStyle) -> CGFloat {
     return NSFontDescriptor.preferredFontDescriptor(forTextStyle: style).pointSize
-    #else
-    return UIFontDescriptor.preferredFontDescriptor(withTextStyle: style).pointSize
-    #endif
 }
+#else
+func fontSize(forTextStyle style: UIFont.TextStyle) -> CGFloat {
+    return UIFontDescriptor.preferredFontDescriptor(withTextStyle: style).pointSize
+}
+#endif

@@ -88,20 +88,26 @@ struct TreeView: View {
             }
             // TODO: Choose a better navigation title
             .navigationTitle("Packets")
-            .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
+            #if !os(macOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
         } detail: {
             // TODO: We need to hide the back button on a non-compact layout.
             if let s = selected {
                 s.packetViewer
                     .navigationTitle(swiftString(s.packet.humanLabel()))
+                    #if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
+                    #endif
             } else {
                 // TODO: Something for the case of no selection.
                 // TODO: Do we want a navigation title also?
                 // Perhaps just in the case of no selection?
                 Text("No packet selected")
+                    #if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
+                    #endif
             }
         }
     }
