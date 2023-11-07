@@ -56,6 +56,10 @@ struct CrossingPtr {
         CrossingPtr(const CrossingPtr&) = default;
         CrossingPtr& operator = (const CrossingPtr&) = default;
 
+        bool operator == (const CrossingPtr& rhs) const {
+            return data_ == rhs.data_;
+        }
+
         bool isNull() const { return ! data_; }
         size_t index() const { return data_->index(); }
         int sign() const { return data_->sign(); }
@@ -71,11 +75,13 @@ struct StrandRefAlt {
         StrandRefAlt(const StrandRefAlt&) = default;
         StrandRefAlt& operator = (const StrandRefAlt&) = default;
 
-        CrossingPtr crossing() const { return data_.crossing(); }
-        int strand() const { return data_.strand(); }
         bool operator == (const StrandRefAlt& rhs) const {
             return data_ == rhs.data_;
         }
+
+        CrossingPtr crossing() const { return data_.crossing(); }
+        size_t crossingIndex() const { return data_.crossing()->index(); }
+        int strand() const { return data_.strand(); }
         StrandRefAlt next() const { return data_.next(); }
         StrandRefAlt prev() const { return data_.prev(); }
         bool isNull() const { return ! data_; }
@@ -136,6 +142,10 @@ struct SharedLink {
 
         CrossingPtr crossing(size_t index) const {
             return packet_->crossing(index);
+        }
+
+        size_t countComponents() const {
+            return packet_->countComponents();
         }
 
         StrandRefAlt component(size_t index) const {

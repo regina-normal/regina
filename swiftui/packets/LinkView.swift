@@ -33,22 +33,26 @@
 import SwiftUI
 import ReginaEngine
 
+// TODO: We need to BAN held() for shared packets. Deep copies are leading to dangling pointers/references.
+
 extension regina.StrandRefAlt: Identifiable {
     public var id: Int { id() }
 }
 
-extension regina.Link {
-    func strandsFor(component: regina.StrandRefAlt) -> [regina.StrandRefAlt] {
-        if component.isNull() {
+extension regina.SharedLink {
+    func strandsForComponent(index: Int) -> [regina.StrandRefAlt] {
+        let start = component(index)
+
+        if start.isNull() {
             return []
         }
         
         var ans = [regina.StrandRefAlt]()
-        var s = component
+        var s = start
         repeat {
             ans.append(s)
             s = s.next()
-        } while !(s == component)
+        } while !(s == start)
         return ans
     }
 }
@@ -187,6 +191,81 @@ struct LinkCrossingsView: View {
     // TODO: Make a persistent default display type
     @State private var pictures: Bool = true
 
+    // TODO: Check that these update when switching dark/light mode.
+    static private var posColour = Color("Positive")
+    static private var negColour = Color("Negative")
+
+    @AppStorage("displayUnicode") private var unicode = true
+
+    /**
+     * Returns an image depicting the given crossing, without the crossing index.
+     */
+    func iconFor(_ s: regina.StrandRefAlt) -> Image {
+        // TODO: Should we preload these?
+        // TODO: Re-render these at a larger size. We use then at 34pt but they are currently only rendered at 22pt.
+        if s.crossing().sign() > 0 {
+            if s.strand() == 1 {
+                return Image("Crossing+U")
+            } else {
+                return Image("Crossing+L")
+            }
+        } else {
+            if s.strand() == 1 {
+                return Image("Crossing-U")
+            } else {
+                return Image("Crossing-L")
+            }
+        }
+    }
+    
+    func pictureFor(_ s: regina.StrandRefAlt) -> some View {
+        let textHeight = fontSize(forTextStyle: .body)
+        let iconSize = textHeight * 1.7
+        return ZStack {
+            iconFor(s).resizable().frame(width: iconSize, height: iconSize)
+            // TODO: Work out the x offset properly, using the text width.
+            Text("\(s.crossing().index())")
+                .offset(x: textHeight, y: -textHeight)
+        }
+        // TODO: Choose the padding dynamically.
+        .padding(.top, 10.0)
+    }
+
+    func textFor(_ s: regina.StrandRefAlt) -> Text {
+        let c = s.crossing()
+        let colour = (c.sign() > 0 ? LinkCrossingsView.posColour : LinkCrossingsView.negColour)
+        
+        if unicode {
+            if c.sign() > 0 {
+                if s.strand() == 1 {
+                    return Text("\(c.index())⁺").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())₊").foregroundColor(colour)
+                }
+            } else {
+                if s.strand() == 1 {
+                    return Text("\(c.index())⁻").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())₋").foregroundColor(colour)
+                }
+            }
+        } else {
+            if c.sign() > 0 {
+                if s.strand() == 1 {
+                    return Text("\(c.index())^+").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())_+").foregroundColor(colour)
+                }
+            } else {
+                if s.strand() == 1 {
+                    return Text("\(c.index())^-").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())_-").foregroundColor(colour)
+                }
+            }
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -198,21 +277,26 @@ struct LinkCrossingsView: View {
                 Spacer()
             }
             .padding(.vertical)
-            
-            let link = packet.held()
+
             List {
-                ForEach(0..<link.countComponents(), id: \.self) { i in
-                    let start = regina.StrandRefAlt(link.component(i))
+                ForEach(0..<packet.countComponents(), id: \.self) { i in
                     Section("Component \(i)") {
-                        if start.isNull() {
+                        let strands = packet.strandsForComponent(index: i)
+                        if strands.isEmpty {
                             Text("Unknot, no crossings")
-                        } else if (pictures) {
-                            // TODO: implement
-                            Text("Crossings ...")
+                        } else if pictures {
+                            // TODO: Fix sizes: 45 is about right for a 17-point font size
+                            LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 45))]) {
+                                ForEach(strands) { s in
+                                    pictureFor(s)
+                                }
+                            }
                         } else {
-                            // TODO: implement
-                            ForEach(link.strandsFor(component: start)) { strand in
-                                Text("\(strand.crossing().index())\(strand.strand())")
+                            // TODO: Fix sizes: 25 is about right for a 17-point font size with single digits.
+                            LazyVGrid(columns: [.init(.adaptive(minimum: 25, maximum: 25))]) {
+                                ForEach(strands) { s in
+                                    textFor(s)
+                                }
                             }
                         }
                     }
@@ -376,12 +460,16 @@ struct LinkAlgebraView: View {
                 // TODO: Should we put the relations inside a visible frame?
                 // TODO: Should we be using a List or a ScrollView?
                 List {
-                    ForEach(0..<group.countRelations(), id: \.self) { i in
-                        let rel = group.__relationUnsafe(i).pointee
-                        if unicode {
-                            Text(swiftString(rel.utf8(alphabetic)))
-                        } else {
-                            Text(swiftString(rel.str(alphabetic)))
+                    // We are using internal pointers within group, so ensure that
+                    // group survives this entire block:
+                    withExtendedLifetime(group) {
+                        ForEach(0..<group.countRelations(), id: \.self) { i in
+                            let rel = group.__relationUnsafe(i).pointee
+                            if unicode {
+                                Text(swiftString(rel.utf8(alphabetic)))
+                            } else {
+                                Text(swiftString(rel.str(alphabetic)))
+                            }
                         }
                     }
                 }
@@ -423,7 +511,14 @@ struct LinkCodesView: View {
         
         if #available(macOS 14.0, iOS 17.0, *) {
             ContentUnavailableView {
-                Label("No \(code)", systemImage: "link")
+                // Label("No \(code)", systemImage: "link")
+                Label {
+                    Text("No \(code)")
+                } icon: {
+                    // TODO: What size should we be using here?
+                    // TODO: Render a large (64pt) version of this icon
+                    Image("Link").renderingMode(.template).resizable().frame(width: 64, height: 64)
+                }
             } description: {
                 Text(detail)
             }
