@@ -513,13 +513,12 @@ struct LinkCodesView: View {
         
         if #available(macOS 14.0, iOS 17.0, *) {
             ContentUnavailableView {
-                // Label("No \(code)", systemImage: "link")
                 Label {
                     Text("No \(code)")
                 } icon: {
-                    // TODO: What size should we be using here?
-                    // TODO: Render a large (64pt) version of this icon
-                    Image("Link").renderingMode(.template).resizable().frame(width: 64, height: 64)
+                    // For now we use the native size of this icon (64pt).
+                    // Probably this is reasonable.
+                    Image("Link-Large").renderingMode(.template)
                 }
             } description: {
                 Text(detail)
