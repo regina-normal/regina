@@ -195,7 +195,6 @@ struct LinkCrossingsView: View {
     let packet: regina.SharedLink
     @State private var style: LinkCrossingStyle = (LinkCrossingStyle(rawValue: UserDefaults.standard.integer(forKey: "linkCrossings")) ?? .pictorial)
 
-    // TODO: Check that these update when switching dark/light mode.
     static private var posColour = Color("Positive")
     static private var negColour = Color("Negative")
 
