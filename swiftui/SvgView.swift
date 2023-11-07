@@ -34,6 +34,9 @@ import SwiftUI
 import WebKit
 import CxxStdlib
 
+// TODO: Use NSViewRepresentable for macOS.
+// TODO: The SVG is miniscule on iPhone.
+
 struct SvgView: UIViewRepresentable {
     var svg: Data
     
