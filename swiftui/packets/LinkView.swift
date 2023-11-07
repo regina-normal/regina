@@ -512,20 +512,24 @@ struct LinkCodesView: View {
         let capitalised = code.prefix(1).capitalized + code.dropFirst()
         let detail = "\(capitalised) \(plural ? "are" : "is") currently only available for knots, not multi-component links."
         
-        if #available(macOS 14.0, iOS 17.0, *) {
-            ContentUnavailableView {
-                Label {
-                    Text("No \(code)")
-                } icon: {
-                    // For now we use the native size of this icon (64pt).
-                    // Probably this is reasonable.
-                    Image("Link-Large").renderingMode(.template)
+        HStack {
+            Spacer()
+            if #available(macOS 14.0, iOS 17.0, *) {
+                ContentUnavailableView {
+                    Label {
+                        Text("No \(code)")
+                    } icon: {
+                        // For now we use the native size of this icon (64pt).
+                        // Probably this is reasonable.
+                        Image("Link-Large").renderingMode(.template)
+                    }
+                } description: {
+                    Text(detail)
                 }
-            } description: {
+            } else {
                 Text(detail)
             }
-        } else {
-            Text(detail)
+            Spacer()
         }
     }
     
