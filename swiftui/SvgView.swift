@@ -44,7 +44,8 @@ import CxxStdlib
 #if os(macOS)
 struct SvgView: NSViewRepresentable {
     var svg: Data
-    
+    @Environment(\.colorScheme) var colorScheme
+
     init(data: Data) {
         self.svg = data
     }
@@ -55,6 +56,7 @@ struct SvgView: NSViewRepresentable {
 
     func makeNSView(context: Context) -> WKWebView {
         var ans = WKWebView()
+        ans.setValue(false, forKey: "drawsBackground")
         ans.allowsMagnification = true
         return ans
     }
@@ -66,7 +68,8 @@ struct SvgView: NSViewRepresentable {
 #else
 struct SvgView: UIViewRepresentable {
     var svg: Data
-    
+    @Environment(\.colorScheme) var colorScheme
+
     init(data: Data) {
         self.svg = data
     }
@@ -77,7 +80,10 @@ struct SvgView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> WKWebView {
         // On iOS / iPadOS, magnification appears to be enabled by default.
-        return WKWebView()
+        var ans = WKWebView()
+        ans.isOpaque = false
+        ans.backgroundColor = UIColor.clear
+        return ans
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {

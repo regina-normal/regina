@@ -608,8 +608,6 @@ struct LinkGraphsView: View {
     @State private var selected: LinkGraph = (LinkGraph(rawValue: UserDefaults.standard.integer(forKey: "linkGraph")) ?? .tree)
     @Environment(\.colorScheme) var colorScheme
     
-    // TODO: Ensure the graphs are visible in dark mode also. (***)
-    
     var body: some View {
         VStack {
             HStack {
