@@ -107,14 +107,12 @@ struct SharedPacket {
             return packet_->countChildren();
         }
 
-        // TODO: Should child be passed as a const reference?
         void prepend(SharedPacket child) {
-            packet_->prepend(child.packet_);
+            packet_->prepend(std::move(child.packet_));
         }
 
-        // TODO: Should child be passed as a const reference?
         void append(SharedPacket child) {
-            packet_->append(child.packet_);
+            packet_->append(std::move(child.packet_));
         }
 
         /**
@@ -136,6 +134,7 @@ struct SharedPacket {
         std::string save() const {
             std::ostringstream s;
             packet_->save(s, false);
+            // Once we have C++20 we can use std::move(s).str() instead.
             return s.str();
         }
 

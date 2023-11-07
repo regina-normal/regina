@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Swift User Interface                                                  *
+ *  Swift User Interface
  *                                                                        *
  *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,22 +30,40 @@
  *                                                                        *
  **************************************************************************/
 
-import SwiftUI
+#include "swift/graphviz.h"
+#include "gvc.h"
 
-// TODO: Accent colour does not show when the app opens to the file browser.
-// TODO: Create a full set of dark mode assets.
+extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
+extern gvplugin_library_t gvplugin_core_LTX_library;
 
-@main
-struct ReginaApp: App {
-    var body: some Scene {
-        DocumentGroup(newDocument: { ReginaDocument() }) { file in
-            TreeView(packet: file.document.root).toolbarRole(.automatic)
-        }
-        // Note: To support multiple document types, add additional DocumentGroup scenes.
-        #if os(macOS)
-        Settings {
-            SettingsView()
-        }
-        #endif
-    }
+lt_symlist_t link_lt_preloaded_symbols[] = {
+    { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
+    { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
+    { nullptr, nullptr }
+};
+
+namespace regina {
+
+std::string svgUsingDot(const std::string& dotFile) {
+    char* svg;
+    unsigned svgLen;
+
+    // Manually specify our plugins to avoid on-demand loading.
+    GVC_t* gvc = gvContextPlugins(link_lt_preloaded_symbols, 0);
+
+    gvAddLibrary(gvc, &gvplugin_core_LTX_library);
+    gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
+
+    Agraph_t* g = agmemread(dotFile.c_str());
+    gvLayout(gvc, g, "dot");
+    gvRenderData(gvc, g, "svg", &svg, &svgLen);
+    gvFreeLayout(gvc, g);
+    agclose(g);
+    gvFreeContext(gvc);
+
+    std::string result(svg, svgLen);
+    gvFreeRenderData(svg);
+    return result;
+}
+
 }

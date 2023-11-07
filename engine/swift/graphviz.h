@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Swift User Interface                                                  *
+ *  Swift User Interface
  *                                                                        *
  *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,22 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-import SwiftUI
+#ifndef __REGINA_SWIFT_GRAPHVIZ_H
+#ifndef __DOXYGEN
+#define __REGINA_SWIFT_GRAPHVIZ_H
+#endif
 
-// TODO: Accent colour does not show when the app opens to the file browser.
-// TODO: Create a full set of dark mode assets.
+#include <string>
+#include "gvc.h"
 
-@main
-struct ReginaApp: App {
-    var body: some Scene {
-        DocumentGroup(newDocument: { ReginaDocument() }) { file in
-            TreeView(packet: file.document.root).toolbarRole(.automatic)
-        }
-        // Note: To support multiple document types, add additional DocumentGroup scenes.
-        #if os(macOS)
-        Settings {
-            SettingsView()
-        }
-        #endif
-    }
+namespace regina {
+
+std::string svgUsingDot(const std::string& dotFile);
+
 }
+
+#endif

@@ -881,10 +881,20 @@ void TreeDecomposition::reroot(TreeBag* newRoot) {
     reindex();
 }
 
-void TreeDecomposition::writeDot(std::ostream& out) const {
-    out << "digraph tree {\n"
-        "edge [color=black];\n"
-        "node [style=filled,fontsize=9,fontcolor=\"#751010\"];\n";
+void TreeDecomposition::writeDot(std::ostream& out, bool dark) const {
+    out << "digraph tree {\n";
+    if (dark)
+        out << "graph [bgcolor=\"black\" center=true]\n"
+            "edge [color=\"#b0b0b0\"];\n"
+            "node [color=\"#b0b0b0\",penwidth=0.8,"
+                "style=filled,fillcolor=\"#e0e0e0\","
+                "fontsize=9,fontname=\"Sans-Serif\",fontcolor=\"#751010\"];\n";
+    else
+        out << "graph [bgcolor=\"white\" center=true]\n"
+            "edge [color=black];\n"
+            "node [color=black,penwidth=0.8,"
+                "style=filled,fillcolor=lightgrey,"
+                "fontsize=9,fontname=\"Sans-Serif\",fontcolor=\"#751010\"];\n";
 
     TreeBag* b = root_;
     while (b) {
@@ -913,9 +923,9 @@ void TreeDecomposition::writeDot(std::ostream& out) const {
     out << "}" << std::endl;
 }
 
-std::string TreeDecomposition::dot() const {
+std::string TreeDecomposition::dot(bool dark) const {
     std::ostringstream out;
-    writeDot(out);
+    writeDot(out, dark);
     return out.str();
 }
 

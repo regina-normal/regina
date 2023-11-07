@@ -156,6 +156,7 @@ module ReginaEngine {
     header "utilities/typeutils.h"
     header "utilities/xmlutils.h"
     header "swift/container.h"
+    header "swift/graphviz.h"
     header "swift/link.h"
     header "swift/packet.h"
     header "swift/text.h"

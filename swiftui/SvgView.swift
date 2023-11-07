@@ -31,21 +31,63 @@
  **************************************************************************/
 
 import SwiftUI
+import WebKit
+import CxxStdlib
 
-// TODO: Accent colour does not show when the app opens to the file browser.
-// TODO: Create a full set of dark mode assets.
+// TODO: The SVG is miniscule on iPhone.
 
-@main
-struct ReginaApp: App {
-    var body: some Scene {
-        DocumentGroup(newDocument: { ReginaDocument() }) { file in
-            TreeView(packet: file.document.root).toolbarRole(.automatic)
-        }
-        // Note: To support multiple document types, add additional DocumentGroup scenes.
-        #if os(macOS)
-        Settings {
-            SettingsView()
-        }
-        #endif
+// TODO: What to use as the base URL here?
+// TODO: Work out how to centre the content.
+
+// TODO: There is surely a better way of initialising the Data object. Also, do we need to manage the lifetime of cxxString?
+
+#if os(macOS)
+struct SvgView: NSViewRepresentable {
+    var svg: Data
+    @Environment(\.colorScheme) var colorScheme
+
+    init(data: Data) {
+        self.svg = data
+    }
+    
+    init(cxxString: std.string) {
+        self.svg = Data(String(cString: cxxString.__c_strUnsafe()).utf8)
+    }
+
+    func makeNSView(context: Context) -> WKWebView {
+        var ans = WKWebView()
+        ans.setValue(false, forKey: "drawsBackground")
+        ans.allowsMagnification = true
+        return ans
+    }
+    
+    func updateNSView(_ webView: WKWebView, context: Context) {
+        webView.load(svg, mimeType: "image/svg+xml", characterEncodingName: "utf-8", baseURL: URL(string: "file:///")!)
     }
 }
+#else
+struct SvgView: UIViewRepresentable {
+    var svg: Data
+    @Environment(\.colorScheme) var colorScheme
+
+    init(data: Data) {
+        self.svg = data
+    }
+    
+    init(cxxString: std.string) {
+        self.svg = Data(String(cString: cxxString.__c_strUnsafe()).utf8)
+    }
+
+    func makeUIView(context: Context) -> WKWebView {
+        // On iOS / iPadOS, magnification appears to be enabled by default.
+        var ans = WKWebView()
+        ans.isOpaque = false
+        ans.backgroundColor = UIColor.clear
+        return ans
+    }
+    
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        webView.load(svg, mimeType: "image/svg+xml", characterEncodingName: "utf-8", baseURL: URL(string: "file:///")!)
+    }
+}
+#endif

@@ -34,15 +34,7 @@ import SwiftUI
 import ReginaEngine
 
 struct PacketCell: View {
-    // TODO: Split this out somewhere more central.
-    static let iconSize = {
-        #if os(macOS)
-        let body = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body).pointSize
-        #else
-        let body = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).pointSize
-        #endif
-        return body * 1.5
-    }()
+    static let iconSize = fontSize(forTextStyle: .body) * 1.5
 
     var wrapper: PacketWrapper
     
@@ -96,20 +88,26 @@ struct TreeView: View {
             }
             // TODO: Choose a better navigation title
             .navigationTitle("Packets")
-            .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
+            #if !os(macOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
         } detail: {
             // TODO: We need to hide the back button on a non-compact layout.
             if let s = selected {
                 s.packetViewer
                     .navigationTitle(swiftString(s.packet.humanLabel()))
+                    #if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
+                    #endif
             } else {
                 // TODO: Something for the case of no selection.
                 // TODO: Do we want a navigation title also?
                 // Perhaps just in the case of no selection?
                 Text("No packet selected")
+                    #if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
+                    #endif
             }
         }
     }

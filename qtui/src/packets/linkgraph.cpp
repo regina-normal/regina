@@ -243,6 +243,7 @@ void LinkGraphUI::refresh() {
     gvFreeContext(gvc);
 
     graph->load(QByteArray(svg, svgLen));
+    gvFreeRenderData(svg);
     graph->resize(graph->sizeHint());
 
     stack->setCurrentWidget(layerGraph);

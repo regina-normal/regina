@@ -675,6 +675,11 @@
 		053CB70928D0168D006B37B0 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
 		053CB70A28D0168D006B37B0 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
 		053CB70B28D0168D006B37B0 /* triangle4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70728D0168C006B37B0 /* triangle4.h */; };
+		054131092AF9E95A006AAD75 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054131082AF9E95A006AAD75 /* Utilities.swift */; };
+		054131122AF9F246006AAD75 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0541310F2AF9F246006AAD75 /* README.txt */; };
+		054131152AFA26E4006AAD75 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054131132AFA26E4006AAD75 /* graphviz.cpp */; };
+		054131162AFA2747006AAD75 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
+		054131192AFA2F6B006AAD75 /* SvgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054131182AFA2F6B006AAD75 /* SvgView.swift */; };
 		0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
 		0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF491B8BE2F5002E166B /* cyclotomic.h */; };
 		0541AF4D1B8BE2F5002E166B /* polynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF4A1B8BE2F5002E166B /* polynomial.h */; };
@@ -3558,6 +3563,15 @@
 		053CB70528D0168B006B37B0 /* tetrahedron4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetrahedron4.h; sourceTree = "<group>"; };
 		053CB70628D0168C006B37B0 /* hypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypersurfaces.cpp; sourceTree = "<group>"; };
 		053CB70728D0168C006B37B0 /* triangle4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
+		054131082AF9E95A006AAD75 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		0541310C2AF9F246006AAD75 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
+		0541310D2AF9F246006AAD75 /* container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = container.h; sourceTree = "<group>"; };
+		0541310E2AF9F246006AAD75 /* packet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
+		0541310F2AF9F246006AAD75 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		054131102AF9F246006AAD75 /* link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = link.h; sourceTree = "<group>"; };
+		054131132AFA26E4006AAD75 /* graphviz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphviz.cpp; sourceTree = "<group>"; };
+		054131142AFA26E4006AAD75 /* graphviz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphviz.h; sourceTree = "<group>"; };
+		054131182AFA2F6B006AAD75 /* SvgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SvgView.swift; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		0541AF491B8BE2F5002E166B /* cyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
 		0541AF4A1B8BE2F5002E166B /* polynomial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polynomial.h; sourceTree = "<group>"; };
@@ -5174,6 +5188,7 @@
 				05A6284B2AE9FDA50049739E /* libbz2.tbd in Frameworks */,
 				05A6284C2AE9FDA70049739E /* libiconv.tbd in Frameworks */,
 				05A6284D2AE9FDAC0049739E /* libxml2.tbd in Frameworks */,
+				054131162AFA2747006AAD75 /* graphviz.xcframework in Frameworks */,
 				05A6284E2AE9FDAF0049739E /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6639,7 +6654,9 @@
 				052909492AE5EA090028990D /* ReginaApp.swift */,
 				0529094B2AE5EA090028990D /* ReginaDocument.swift */,
 				0553FBB92AF8643D00BE89A7 /* SettingsView.swift */,
+				054131182AFA2F6B006AAD75 /* SvgView.swift */,
 				0553FBA22AF2544E00BE89A7 /* TreeView.swift */,
+				054131082AF9E95A006AAD75 /* Utilities.swift */,
 				0553FBB22AF6808E00BE89A7 /* packets */,
 				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
 				052909542AE5EA0A0028990D /* Info.plist */,
@@ -6689,6 +6706,7 @@
 				052F9D9A180600FB00FAE4DF /* split */,
 				052F9DA2180600FB00FAE4DF /* subcomplex */,
 				052F9DF3180600FB00FAE4DF /* surface */,
+				0541310A2AF9F246006AAD75 /* swift */,
 				0542084C1DF0D06F0018AB24 /* syntax */,
 				056AECCE2A431AE200EAF4FA /* testsuite */,
 				0541AF5B1B8BE3DC002E166B /* treewidth */,
@@ -7384,6 +7402,20 @@
 				0512E09426DF34E700DDB222 /* perm7.h */,
 			);
 			path = spec;
+			sourceTree = "<group>";
+		};
+		0541310A2AF9F246006AAD75 /* swift */ = {
+			isa = PBXGroup;
+			children = (
+				0541310F2AF9F246006AAD75 /* README.txt */,
+				0541310D2AF9F246006AAD75 /* container.h */,
+				054131132AFA26E4006AAD75 /* graphviz.cpp */,
+				054131142AFA26E4006AAD75 /* graphviz.h */,
+				054131102AF9F246006AAD75 /* link.h */,
+				0541310E2AF9F246006AAD75 /* packet.h */,
+				0541310C2AF9F246006AAD75 /* text.h */,
+			);
+			path = swift;
 			sourceTree = "<group>";
 		};
 		0541AF5B1B8BE3DC002E166B /* treewidth */ = {
@@ -9796,6 +9828,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */,
+				054131122AF9F246006AAD75 /* README.txt in Resources */,
 				052909502AE5EA0A0028990D /* Assets.xcassets in Resources */,
 				051AEB022AEB6F8F00960BBF /* regina-doc-64.png in Resources */,
 				051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */,
@@ -10427,6 +10460,7 @@
 				0553FB842AEBE86300BE89A7 /* offload_handler.cpp in Sources */,
 				05A628142AE920510049739E /* memstream.cpp in Sources */,
 				05A628272AE921740049739E /* stringutils.cpp in Sources */,
+				054131152AFA26E4006AAD75 /* graphviz.cpp in Sources */,
 				0553FB6C2AEBE7E900BE89A7 /* positioned_tet.cpp in Sources */,
 				0553FB922AEBE86300BE89A7 /* signed_dec.cpp in Sources */,
 				0553FB8E2AEBE86300BE89A7 /* collection.cpp in Sources */,
@@ -10609,7 +10643,9 @@
 				0553FAD12AEBE3E100BE89A7 /* cut.cpp in Sources */,
 				0553FB642AEBE7E100BE89A7 /* filling.cpp in Sources */,
 				0553FA952AEBE3AC00BE89A7 /* insertlayered.cpp in Sources */,
+				054131192AFA2F6B006AAD75 /* SvgView.swift in Sources */,
 				0553FB612AEBE7E100BE89A7 /* find_cusp.cpp in Sources */,
+				054131092AF9E95A006AAD75 /* Utilities.swift in Sources */,
 				0553FB1E2AEBE71C00BE89A7 /* sigisomorphism.cpp in Sources */,
 				05A6282A2AE921820049739E /* xmlutils.cpp in Sources */,
 				0553FAD22AEBE3E100BE89A7 /* example3.cpp in Sources */,

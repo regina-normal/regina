@@ -33,22 +33,27 @@
 import SwiftUI
 import ReginaEngine
 
-extension regina.GroupExpression: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        for i in 0..<countTerms() {
-            hasher.combine(generator(i))
-            hasher.combine(exponent(i))
-        }
-    }
+// TODO: We need to BAN held() for shared packets. Deep copies are leading to dangling pointers/references.
+
+extension regina.StrandRefAlt: Identifiable {
+    public var id: Int { id() }
 }
 
-extension regina.GroupPresentation {
-    private borrowing func relationsCopy() -> [regina.GroupExpression] {
-        return Array<regina.GroupExpression>(__relationsUnsafe().pointee)
-    }
-    
-    var relations: [regina.GroupExpression] {
-        relationsCopy()
+extension regina.SharedLink {
+    func strandsForComponent(index: Int) -> [regina.StrandRefAlt] {
+        let start = component(index)
+
+        if start.isNull() {
+            return []
+        }
+        
+        var ans = [regina.StrandRefAlt]()
+        var s = start
+        repeat {
+            ans.append(s)
+            s = s.next()
+        } while !(s == start)
+        return ans
     }
 }
 
@@ -70,13 +75,13 @@ class ObservedLink: ObservableObject {
     }
 }
 
-enum LinkTab {
-    case Crossings, Polynomials, Algebra, Codes, Graphs
+enum LinkTab: Int {
+    case crossings = 1, polynomials = 2, algebra = 3, codes = 4, graphs = 5
 }
 
 struct LinkView: View {
     let packet: regina.SharedLink
-    @State private var selection: LinkTab = .Crossings
+    @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
     @Environment(\.horizontalSizeClass) var sizeClass
     
     init(packet: regina.SharedLink) {
@@ -154,72 +159,169 @@ struct LinkView: View {
             }
             
             // TODO: Ipad 11" portrait, tab icons jump around when selected??
-            // TODO: Make a persistent default tab
             TabView(selection: $selection) {
                 LinkCrossingsView(packet: packet).tabItem {
-                    Image(selection == .Crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
+                    Image(selection == .crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
                     Text("Crossings")
-                }.tag(LinkTab.Crossings)
+                }.tag(LinkTab.crossings)
                 LinkPolynomialsView(packet: packet).tabItem {
                     Image("Tab-Polynomials").renderingMode(.template)
                     Text("Polynomials")
-                }.tag(LinkTab.Polynomials)
+                }.tag(LinkTab.polynomials)
                 LinkAlgebraView(packet: packet).tabItem {
                     Image("Tab-Algebra").renderingMode(.template)
                     Text("Algebra")
-                }.tag(LinkTab.Algebra)
+                }.tag(LinkTab.algebra)
                 LinkCodesView(packet: packet).tabItem {
                     Image("Tab-Codes").renderingMode(.template)
                     Text("Codes")
-                }.tag(LinkTab.Codes)
+                }.tag(LinkTab.codes)
                 LinkGraphsView(packet: packet).tabItem {
-                    Image(selection == .Graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
+                    Image(selection == .graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
                     Text("Graphs")
-                }.tag(LinkTab.Graphs)
+                }.tag(LinkTab.graphs)
+            }.onChange(of: selection) { newValue in
+                UserDefaults.standard.set(newValue.rawValue, forKey: "tabLink")
             }
         }
     }
 }
 
+enum LinkCrossingStyle: Int {
+    case pictorial = 1, text = 2
+}
+
 struct LinkCrossingsView: View {
     let packet: regina.SharedLink
-    // TODO: Make a persistent default display type
-    @State private var pictures: Bool = true
+    @State private var style: LinkCrossingStyle = (LinkCrossingStyle(rawValue: UserDefaults.standard.integer(forKey: "linkCrossings")) ?? .pictorial)
 
+    static private var posColour = Color("Positive")
+    static private var negColour = Color("Negative")
+
+    @AppStorage("displayUnicode") private var unicode = true
+
+    /**
+     * Returns an image depicting the given crossing, without the crossing index.
+     */
+    func iconFor(_ s: regina.StrandRefAlt) -> Image {
+        // TODO: Should we preload these?
+        if s.crossing().sign() > 0 {
+            if s.strand() == 1 {
+                return Image("Crossing+U")
+            } else {
+                return Image("Crossing+L")
+            }
+        } else {
+            if s.strand() == 1 {
+                return Image("Crossing-U")
+            } else {
+                return Image("Crossing-L")
+            }
+        }
+    }
+    
+    func pictureFor(_ s: regina.StrandRefAlt) -> some View {
+        let textHeight = fontSize(forTextStyle: .body)
+        let iconSize = textHeight * 1.7
+        return ZStack {
+            iconFor(s).resizable().frame(width: iconSize, height: iconSize)
+            // TODO: Work out the x offset properly, using the text width.
+            Text("\(s.crossing().index())")
+                .offset(x: textHeight, y: -textHeight)
+        }
+        // TODO: Choose the padding dynamically.
+        .padding(.top, 10.0)
+    }
+
+    func textFor(_ s: regina.StrandRefAlt) -> Text {
+        let c = s.crossing()
+        let colour = (c.sign() > 0 ? LinkCrossingsView.posColour : LinkCrossingsView.negColour)
+        
+        if unicode {
+            if c.sign() > 0 {
+                if s.strand() == 1 {
+                    return Text("\(c.index())⁺").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())₊").foregroundColor(colour)
+                }
+            } else {
+                if s.strand() == 1 {
+                    return Text("\(c.index())⁻").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())₋").foregroundColor(colour)
+                }
+            }
+        } else {
+            if c.sign() > 0 {
+                if s.strand() == 1 {
+                    return Text("\(c.index())^+").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())_+").foregroundColor(colour)
+                }
+            } else {
+                if s.strand() == 1 {
+                    return Text("\(c.index())^-").foregroundColor(colour)
+                } else {
+                    return Text("\(c.index())_-").foregroundColor(colour)
+                }
+            }
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Spacer()
-                Picker("Display crossings:", selection: $pictures) {
-                    Text("Pictures").tag(true)
-                    Text("Text").tag(false)
+                Picker("Display crossings:", selection: $style) {
+                    Text("Pictures").tag(LinkCrossingStyle.pictorial)
+                    Text("Text").tag(LinkCrossingStyle.text)
                 }.fixedSize()
+                    .onChange(of: style) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkCrossings")
+                    }
                 Spacer()
             }
             .padding(.vertical)
-            
-            let link = packet.held()
-            
-            if (pictures) {
-                // TODO: implement
-            } else {
-                // TODO: implement
-            }
+
+            List {
+                ForEach(0..<packet.countComponents(), id: \.self) { i in
+                    Section("Component \(i)") {
+                        let strands = packet.strandsForComponent(index: i)
+                        if strands.isEmpty {
+                            Text("Unknot, no crossings")
+                        } else if style == .pictorial {
+                            // TODO: Fix sizes: 45 is about right for a 17-point font size
+                            LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 45))]) {
+                                ForEach(strands) { s in
+                                    pictureFor(s)
+                                }
+                            }
+                        } else {
+                            // TODO: Fix sizes: 25 is about right for a 17-point font size with single digits.
+                            LazyVGrid(columns: [.init(.adaptive(minimum: 25, maximum: 25))]) {
+                                ForEach(strands) { s in
+                                    textFor(s)
+                                }
+                            }
+                        }
+                    }
+                }
+            }.listStyle(.plain)
+
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)
     }
 }
 
-enum HomflyStyle {
-    case az, lm
+enum HomflyStyle: Int {
+    case az = 1, lm = 2
 }
 
 struct LinkPolynomialsView: View {
     static let maxAuto = 6;
 
     @ObservedObject var observed: ObservedLink
-    // TODO: Make a persistent HOMFLY-PT selection
-    @State private var homflyStyle: HomflyStyle = .az
+    @State private var homflyStyle: HomflyStyle = (HomflyStyle(rawValue: UserDefaults.standard.integer(forKey: "linkHomfly")) ?? .az)
     @AppStorage("displayUnicode") private var unicode = true
 
     init(packet: regina.SharedLink) {
@@ -236,7 +338,6 @@ struct LinkPolynomialsView: View {
             Text("Jones").font(.headline).padding(.vertical)
             if link.knowsJones() || link.size() <= LinkPolynomialsView.maxAuto {
                 var jones = observed.packet.jones()
-                // TODO: Make utf-8 configurable
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
                     if unicode {
@@ -264,6 +365,9 @@ struct LinkPolynomialsView: View {
                     Text("(𝛼, 𝑧)").tag(HomflyStyle.az)
                     Text("(ℓ, 𝑚)").tag(HomflyStyle.lm)
                 }.pickerStyle(.segmented).fixedSize().labelsHidden()
+                    .onChange(of: homflyStyle) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkHomfly")
+                    }
             }
             if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
                 if homflyStyle == .az {
@@ -360,24 +464,27 @@ struct LinkAlgebraView: View {
             } else {
                 Text(nRel == 1 ? "1 relation:" : "\(nRel) relations:").padding(.bottom)
                 // TODO: Should we put the relations inside a visible frame?
-                // TODO: Should we be using a List or a ScrollView?
                 List {
-                    ForEach(group.relations, id: \.self) { rel in
-                        if unicode {
-                            Text(swiftString(rel.utf8(alphabetic)))
-                        } else {
-                            Text(swiftString(rel.str(alphabetic)))
+                    // We are using internal pointers within group, so ensure that
+                    // group survives this entire block:
+                    withExtendedLifetime(group) {
+                        ForEach(0..<group.countRelations(), id: \.self) { i in
+                            let rel = group.__relationUnsafe(i).pointee
+                            if unicode {
+                                Text(swiftString(rel.utf8(alphabetic)))
+                            } else {
+                                Text(swiftString(rel.str(alphabetic)))
+                            }
                         }
                     }
                 }
                 .listStyle(.plain)
-                //.padding(.horizontal)
-                // TODO: Verify that the scrollable area works as it should
             }
             
             HStack {
                 Spacer()
                 Button("Try to simplify", systemImage: "rectangle.compress.vertical") {
+                    // TODO: Use a cancellable progress box (maybe only when it's large).
                     var working = group
                     working.intelligentSimplify()
                     // TODO: If we could not simplify, inform the user and do not update
@@ -393,14 +500,13 @@ struct LinkAlgebraView: View {
     }
 }
 
-enum LinkCode {
-    case gauss, dt, signature, pd, jenkins
+enum LinkCode: Int {
+    case gauss = 1, dt = 2, signature = 3, pd = 4, jenkins = 5
 }
 
 struct LinkCodesView: View {
     let packet: regina.SharedLink
-    // TODO: Make a persistent default code
-    @State private var selected: LinkCode = .gauss
+    @State private var selected: LinkCode = (LinkCode(rawValue: UserDefaults.standard.integer(forKey: "linkCode")) ?? .gauss)
 
     @ViewBuilder func onlyKnots(code: String, plural: Bool) -> some View {
         let capitalised = code.prefix(1).capitalized + code.dropFirst()
@@ -408,7 +514,13 @@ struct LinkCodesView: View {
         
         if #available(macOS 14.0, iOS 17.0, *) {
             ContentUnavailableView {
-                Label("No \(code)", systemImage: "link")
+                Label {
+                    Text("No \(code)")
+                } icon: {
+                    // For now we use the native size of this icon (64pt).
+                    // Probably this is reasonable.
+                    Image("Link-Large").renderingMode(.template)
+                }
             } description: {
                 Text(detail)
             }
@@ -419,6 +531,7 @@ struct LinkCodesView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            // TODO: It's possible the text here needs to be scrollable.
             HStack {
                 Spacer()
                 Picker("Display code:", selection: $selected) {
@@ -428,6 +541,9 @@ struct LinkCodesView: View {
                     Text("Planar diagram code").tag(LinkCode.pd)
                     Text("Jenkins format").tag(LinkCode.jenkins)
                 }.fixedSize()
+                    .onChange(of: selected) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkCode")
+                    }
                 Spacer()
             }
             .padding(.vertical)
@@ -459,6 +575,8 @@ struct LinkCodesView: View {
                 }
             case .signature:
                 if link.countComponents() == 1 {
+                    // TODO: Find a way to disable word wrap..?
+                    // Not sure if SwiftUI makes this possible for Text.
                     Text(swiftString(link.knotSig(true, true)))
                 } else {
                     Spacer()
@@ -481,12 +599,46 @@ struct LinkCodesView: View {
     }
 }
 
+enum LinkGraph: Int {
+    case tree = 1, nice = 2
+}
+
 struct LinkGraphsView: View {
     let packet: regina.SharedLink
-
+    @State private var selected: LinkGraph = (LinkGraph(rawValue: UserDefaults.standard.integer(forKey: "linkGraph")) ?? .tree)
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
-        Text("Graphs are not yet implemented.")
-    }
+        VStack {
+            HStack {
+                Spacer()
+                Picker("Display graph:", selection: $selected) {
+                    Text("Tree decomposition").tag(LinkGraph.tree)
+                    Text("Nice tree decomposition").tag(LinkGraph.nice)
+                }.fixedSize()
+                    .onChange(of: selected) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkGraph")
+                    }
+                Spacer()
+            }
+            .padding(.vertical)
+            
+            // TODO: Give a "working on it" message, and build the graph in the background (maybe only when it's large)
+            
+            var tree = regina.TreeDecomposition(packet.held(), .Upper)
+            if selected == .nice {
+                let _ = tree.makeNice(nil)
+            }
+            if tree.size() == 1 {
+                Text("1 bag, width \(tree.width())").padding(.bottom)
+            } else {
+                Text("\(tree.size()) bags, width \(tree.width())").padding(.bottom)
+            }
+
+            SvgView(cxxString: regina.svgUsingDot(tree.dot(colorScheme == .dark)))
+            Spacer()
+        }.padding(.horizontal).textSelection(.enabled)
+   }
 }
 
 struct LinkView_Previews: PreviewProvider {

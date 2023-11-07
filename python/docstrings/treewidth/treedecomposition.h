@@ -751,6 +751,12 @@ instead of dumping it to an output stream.
 If you are writing this text representation to an output stream then
 you should call writeDot() instead, which is more efficient.
 
+Parameter ``dark``:
+    ``True`` if the graph is intended to be displayed in dark mode (in
+    particular, with black or darkly coloured surroundings), or
+    ``False`` (the default) if it is intended to be displayed in light
+    mode (with white or lightly coloured surroundings).
+
 Returns:
     the DOT representation of this tree decomposition, as outlined
     above.)doc";
