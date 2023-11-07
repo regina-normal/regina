@@ -84,7 +84,7 @@ class ReginaDocument: ReferenceFileDocument {
                 regina.SharedPacket.open(bytes.baseAddress, data.count)
             }
         case .snapPeaTriangulation:
-            // TODO: support this
+            // TODO: support reading SnapPea data files
             throw CocoaError(.fileReadUnsupportedScheme)
         default:
             // TODO: what *should* we be throwing here?

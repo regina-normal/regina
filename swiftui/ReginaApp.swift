@@ -32,6 +32,9 @@
 
 import SwiftUI
 
+// TODO: Accent colour does not show when the app opens to the file browser.
+// TODO: Create a full set of dark mode assets.
+
 @main
 struct ReginaApp: App {
     var body: some Scene {
