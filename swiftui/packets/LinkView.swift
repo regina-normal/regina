@@ -240,15 +240,15 @@ struct LinkPolynomialsView: View {
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
                     if unicode {
-                        Text(String(jones.utf8("𝑡")))
+                        Text(swiftString(jones.utf8("𝑡")))
                     } else {
-                        Text(String(jones.str("t")))
+                        Text(swiftString(jones.str("t")))
                     }
                 } else {
                     if unicode {
-                        Text(String(jones.utf8("√𝑡")))
+                        Text(swiftString(jones.utf8("√𝑡")))
                     } else {
-                        Text(String(jones.str("sqrt_t")))
+                        Text(swiftString(jones.str("sqrt_t")))
                     }
                 }
             } else {
@@ -268,15 +268,15 @@ struct LinkPolynomialsView: View {
             if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
                 if homflyStyle == .az {
                     if unicode {
-                        Text(String(observed.packet.homflyAZ().utf8("𝛼", "𝑧")))
+                        Text(swiftString(observed.packet.homflyAZ().utf8("𝛼", "𝑧")))
                     } else {
-                        Text(String(observed.packet.homflyAZ().str("a", "z")))
+                        Text(swiftString(observed.packet.homflyAZ().str("a", "z")))
                     }
                 } else {
                     if unicode {
-                        Text(String(observed.packet.homflyLM().utf8("ℓ", "𝑚")))
+                        Text(swiftString(observed.packet.homflyLM().utf8("ℓ", "𝑚")))
                     } else {
-                        Text(String(observed.packet.homflyLM().str("l", "m")))
+                        Text(swiftString(observed.packet.homflyLM().str("l", "m")))
                     }
                 }
             } else {
@@ -288,9 +288,9 @@ struct LinkPolynomialsView: View {
             Text("Kauffman bracket").font(.headline).padding(.vertical)
             if link.knowsBracket() || link.size() <= LinkPolynomialsView.maxAuto {
                 if unicode {
-                    Text(String(observed.packet.bracket().utf8("𝐴")))
+                    Text(swiftString(observed.packet.bracket().utf8("𝐴")))
                 } else {
-                    Text(String(observed.packet.bracket().str("A")))
+                    Text(swiftString(observed.packet.bracket().str("A")))
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
@@ -334,7 +334,7 @@ struct LinkAlgebraView: View {
             if group.countRelations() <= LinkAlgebraView.maxRecognise {
                 let name = group.recogniseGroup(unicode)
                 if name.length() > 0 {
-                    Text("Name: \(String(name))").padding(.bottom)
+                    Text("Name: \(swiftString(name))").padding(.bottom)
                 }
             }
 
@@ -364,9 +364,9 @@ struct LinkAlgebraView: View {
                 List {
                     ForEach(group.relations, id: \.self) { rel in
                         if unicode {
-                            Text(String(rel.utf8(alphabetic)))
+                            Text(swiftString(rel.utf8(alphabetic)))
                         } else {
-                            Text(String(rel.str(alphabetic)))
+                            Text(swiftString(rel.str(alphabetic)))
                         }
                     }
                 }
@@ -437,8 +437,8 @@ struct LinkCodesView: View {
             switch (selected) {
             case .gauss:
                 if link.countComponents() == 1 {
-                    Text("Classical: ").font(.headline) + Text((String(link.gauss())))
-                    (Text("Oriented: ").font(.headline) + Text(String(link.orientedGauss()))).padding(.top)
+                    Text("Classical: ").font(.headline) + Text((swiftString(link.gauss())))
+                    (Text("Oriented: ").font(.headline) + Text(swiftString(link.orientedGauss()))).padding(.top)
                 } else {
                     Spacer()
                     onlyKnots(code: "Gauss codes", plural: true)
@@ -447,10 +447,10 @@ struct LinkCodesView: View {
             case .dt:
                 if link.countComponents() == 1 {
                     if link.size() > 26 {
-                        Text(String(link.dt(false)))
+                        Text(swiftString(link.dt(false)))
                     } else {
-                        Text(String(link.dt(true)))
-                        Text(String(link.dt(false))).padding(.top)
+                        Text(swiftString(link.dt(true)))
+                        Text(swiftString(link.dt(false))).padding(.top)
                     }
                 } else {
                     Spacer()
@@ -459,14 +459,14 @@ struct LinkCodesView: View {
                 }
             case .signature:
                 if link.countComponents() == 1 {
-                    Text(String(link.knotSig(true, true)))
+                    Text(swiftString(link.knotSig(true, true)))
                 } else {
                     Spacer()
                     onlyKnots(code: "knot signatures", plural: true)
                     Spacer()
                 }
            case .pd:
-                Text(String(link.pd()))
+                Text(swiftString(link.pd()))
                 if link.countTrivialComponents() > 0 {
                     Text("This link includes one or more zero-crossing unknot components. These components are omitted entirely from the planar diagram code.").padding(.top)
                 }
@@ -474,7 +474,7 @@ struct LinkCodesView: View {
                     Text("This link includes at least one component that consists entirely of over-crossings. The planar diagram code does not carry enough information to reconstruct the orientation of such a component.").padding(.top)
                 }
             case .jenkins:
-                Text(String(link.jenkins()))
+                Text(swiftString(link.jenkins()))
             }
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)

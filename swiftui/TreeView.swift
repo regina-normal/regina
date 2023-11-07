@@ -54,7 +54,7 @@ struct PacketCell: View {
                 icon.resizable().frame(width: PacketCell.iconSize, height: PacketCell.iconSize)
             }
             VStack(alignment: .leading) {
-                Text(String(wrapper.packet.humanLabel()))
+                Text(swiftString(wrapper.packet.humanLabel()))
                 // TODO: Should we display child counts or not?
                 let count = wrapper.packet.countChildren()
                 if (count == 1) {
@@ -102,7 +102,7 @@ struct TreeView: View {
             // TODO: We need to hide the back button on a non-compact layout.
             if let s = selected {
                 s.packetViewer
-                    .navigationTitle(String(s.packet.humanLabel()))
+                    .navigationTitle(swiftString(s.packet.humanLabel()))
                     .navigationBarTitleDisplayMode(.inline)
             } else {
                 // TODO: Something for the case of no selection.
@@ -120,15 +120,15 @@ struct TreeView_Previews: PreviewProvider {
         var root = regina.SharedContainer.make().asPacket()
 
         var x = regina.SharedContainer.make().asPacket()
-        x.setLabel("First child")
+        x.setLabel(cxxString("First child"))
         root.append(x)
 
         var y = regina.SharedContainer.make().asPacket()
-        y.setLabel("Second child")
+        y.setLabel(cxxString("Second child"))
         root.append(y)
 
         var y1 = regina.SharedContainer.make().asPacket()
-        y1.setLabel("Grandchild")
+        y1.setLabel(cxxString("Grandchild"))
         y.append(y1)
 
         let z = regina.SharedContainer.make().asPacket()
