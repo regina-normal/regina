@@ -575,7 +575,8 @@ struct LinkCodesView: View {
                 }
             case .signature:
                 if link.countComponents() == 1 {
-                    // TODO: Do not word wrap this.
+                    // TODO: Find a way to disable word wrap..?
+                    // Not sure if SwiftUI makes this possible for Text.
                     Text(swiftString(link.knotSig(true, true)))
                 } else {
                     Spacer()
