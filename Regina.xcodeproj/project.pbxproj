@@ -679,6 +679,7 @@
 		054131122AF9F246006AAD75 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0541310F2AF9F246006AAD75 /* README.txt */; };
 		054131152AFA26E4006AAD75 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054131132AFA26E4006AAD75 /* graphviz.cpp */; };
 		054131162AFA2747006AAD75 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
+		054131192AFA2F6B006AAD75 /* SvgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054131182AFA2F6B006AAD75 /* SvgView.swift */; };
 		0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
 		0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF491B8BE2F5002E166B /* cyclotomic.h */; };
 		0541AF4D1B8BE2F5002E166B /* polynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF4A1B8BE2F5002E166B /* polynomial.h */; };
@@ -3570,6 +3571,7 @@
 		054131102AF9F246006AAD75 /* link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = link.h; sourceTree = "<group>"; };
 		054131132AFA26E4006AAD75 /* graphviz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphviz.cpp; sourceTree = "<group>"; };
 		054131142AFA26E4006AAD75 /* graphviz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphviz.h; sourceTree = "<group>"; };
+		054131182AFA2F6B006AAD75 /* SvgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SvgView.swift; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		0541AF491B8BE2F5002E166B /* cyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
 		0541AF4A1B8BE2F5002E166B /* polynomial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polynomial.h; sourceTree = "<group>"; };
@@ -6652,6 +6654,7 @@
 				052909492AE5EA090028990D /* ReginaApp.swift */,
 				0529094B2AE5EA090028990D /* ReginaDocument.swift */,
 				0553FBB92AF8643D00BE89A7 /* SettingsView.swift */,
+				054131182AFA2F6B006AAD75 /* SvgView.swift */,
 				0553FBA22AF2544E00BE89A7 /* TreeView.swift */,
 				054131082AF9E95A006AAD75 /* Utilities.swift */,
 				0553FBB22AF6808E00BE89A7 /* packets */,
@@ -10640,6 +10643,7 @@
 				0553FAD12AEBE3E100BE89A7 /* cut.cpp in Sources */,
 				0553FB642AEBE7E100BE89A7 /* filling.cpp in Sources */,
 				0553FA952AEBE3AC00BE89A7 /* insertlayered.cpp in Sources */,
+				054131192AFA2F6B006AAD75 /* SvgView.swift in Sources */,
 				0553FB612AEBE7E100BE89A7 /* find_cusp.cpp in Sources */,
 				054131092AF9E95A006AAD75 /* Utilities.swift in Sources */,
 				0553FB1E2AEBE71C00BE89A7 /* sigisomorphism.cpp in Sources */,

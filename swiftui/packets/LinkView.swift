@@ -602,6 +602,8 @@ struct LinkGraphsView: View {
     // TODO: Make a persistent default graph type
     @State private var selected: LinkGraph = .tree
 
+    // TODO: Ensure the graphs are visible in dark mode also.
+    
     var body: some View {
         VStack {
             HStack {
@@ -624,12 +626,7 @@ struct LinkGraphsView: View {
                 Text("\(tree.size()) bags, width \(tree.width())").padding(.bottom)
             }
 
-            let svg = regina.svgUsingDot(tree.dot())
-            Text(swiftString(svg))
-
-            // TODO: Implement
-            // TODO: Ensure the graphs are visible in dark mode also.
-            
+            SvgView(cxxString: regina.svgUsingDot(tree.dot()))
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)
    }
