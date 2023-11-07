@@ -42,6 +42,46 @@
 namespace regina {
 
 /**
+ * A structure that holds a raw pointer to a crossing.
+ *
+ * This pointer is allowed to be null.
+ */
+struct CrossingPtr {
+    private:
+        Crossing* data_;
+
+    public:
+        CrossingPtr() : data_(nullptr) {}
+        CrossingPtr(Crossing* data) : data_(data) {}
+        CrossingPtr(const CrossingPtr&) = default;
+        CrossingPtr& operator = (const CrossingPtr&) = default;
+
+        bool isNull() const { return ! data_; }
+        size_t index() const { return data_->index(); }
+        int sign() const { return data_->sign(); }
+};
+
+struct StrandRefAlt {
+    private:
+        StrandRef data_;
+
+    public:
+        StrandRefAlt() = default;
+        StrandRefAlt(StrandRef data) : data_(data) {}
+        StrandRefAlt(const StrandRefAlt&) = default;
+        StrandRefAlt& operator = (const StrandRefAlt&) = default;
+
+        CrossingPtr crossing() const { return data_.crossing(); }
+        int strand() const { return data_.strand(); }
+        bool operator == (const StrandRefAlt& rhs) const {
+            return data_ == rhs.data_;
+        }
+        StrandRefAlt next() const { return data_.next(); }
+        StrandRefAlt prev() const { return data_.prev(); }
+        bool isNull() const { return ! data_; }
+};
+
+/**
  * A structure that holds a shared pointer to a link packet.
  *
  * It can be assumed that such a packet is never null.
@@ -91,6 +131,14 @@ struct SharedLink {
 
         Link held() const {
             return *packet_;
+        }
+
+        CrossingPtr crossing(size_t index) const {
+            return packet_->crossing(index);
+        }
+
+        StrandRefAlt component(size_t index) const {
+            return packet_->component(index);
         }
 
         Laurent<Integer> bracket() const {

@@ -103,6 +103,6 @@ class ReginaDocument: ReferenceFileDocument {
     func fileWrapper(snapshot: std.string, configuration: WriteConfiguration) throws -> FileWrapper {
         // TODO: Can we std::move() from snapshot into the new String?
         // TODO: Check exactly when String.data() can return null.
-        return .init(regularFileWithContents: String(snapshot).data(using: .utf8)!)
+        return .init(regularFileWithContents: swiftString(snapshot).data(using: .utf8)!)
     }
 }

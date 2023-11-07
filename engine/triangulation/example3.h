@@ -364,6 +364,9 @@ class Example<3> : public detail::ExampleBase<3> {
          * usual prism-and-layered-solid-torus construction for this same
          * Seifert fibred space.
          *
+         * The manifold itself is `SFS [D: (2,1) (3,-2)]`, also known as the
+         * trefoil complement.
+         *
          * For more details on the brick B5, see "Complexity of geometric
          * 3-manifolds", Bruno Martelli and Carlo Petronio, Geometriae Dedicata
          * 108 (2004), pp. 15-69.

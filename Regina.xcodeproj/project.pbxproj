@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -1200,7 +1200,8 @@
 		0553FBB12AF5F38F00BE89A7 /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B1B2771740800E9418B /* sample.rga */; };
 		0553FBB42AF680AE00BE89A7 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB32AF680AE00BE89A7 /* TextView.swift */; };
 		0553FBB62AF6A4E700BE89A7 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB52AF6A4E700BE89A7 /* LinkView.swift */; };
-		0553FBBA2AF8643D00BE89A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB92AF8643D00BE89A7 /* SettingsView.swift */; };
+		0553FBBA2AF8643D00BE89A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB92AF8643D00BE89A7 /* SettingsView.swift */; platformFilters = (macos, ); };
+		0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0553FBBD2AF92A3700BE89A7 /* Settings.bundle */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
@@ -3819,6 +3820,7 @@
 		0553FBB32AF680AE00BE89A7 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		0553FBB52AF6A4E700BE89A7 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
 		0553FBB92AF8643D00BE89A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		0553FBBD2AF92A3700BE89A7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
@@ -6612,6 +6614,7 @@
 				051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */,
 				051AEAFF2AEB6F8F00960BBF /* snappea-doc-320.png */,
 				051AEB012AEB6F8F00960BBF /* snappea-doc-64.png */,
+				0553FBBD2AF92A3700BE89A7 /* Settings.bundle */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -9798,6 +9801,7 @@
 				051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */,
 				051AEB032AEB6F8F00960BBF /* snappea-doc-320.png in Resources */,
 				051AEB052AEB6F8F00960BBF /* snappea-doc-64.png in Resources */,
+				0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

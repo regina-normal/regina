@@ -139,14 +139,22 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
 void GroupWidget::refresh() {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
+    // Note: For links, simplification is attempted automatically only when
+    // the link has <= GROUP_SIMP_THRESHOLD crossings.
+    // For triangulations, simplification is attempted automatically always.
+
     if (group_.countRelations() <= MAX_RELATIONS_FOR_RECOGNITION) {
         std::string name = group_.recogniseGroup(unicode);
         if (name.length()) {
             name_->setText(tr("Name: %1").arg(name.c_str()));
             name_->show();
-        } else
+        } else {
+            // Recognition was not succesful.
             name_->hide();
+        }
     } else {
+        // Recognition was not attempted.
+        // TODO: Fix this label.
         name_->setText(tr("<qt><i>Not yet simplified<i></qt>"));
         name_->show();
     }
@@ -179,43 +187,12 @@ void GroupWidget::refresh() {
     }
 
     rels_->clear();
-    if (alphabetic) {
-        // Generators are a, b, ...
-        for (const auto& r : group_.relations()) {
-            QString rel;
-            const std::list<regina::GroupExpressionTerm>& terms(r.terms());
-            if (terms.empty())
-                rel = "1";
-            else {
-                for (auto it = terms.begin(); it != terms.end(); ++it) {
-                    if (it != terms.begin())
-                        rel += ' ';
-                    if (it->exponent == 0)
-                        rel += '1';
-                    else {
-                        rel += char('a' + it->generator);
-                        if (it->exponent != 1) {
-                            if (unicode)
-                                rel += regina::superscript(it->exponent).
-                                    c_str();
-                            else
-                                rel += QString("^%1").arg(it->exponent);
-                        }
-                    }
-                }
-            }
-            new QListWidgetItem(rel, rels_);
-        }
-    } else {
-        // Generators are g0, g1, ...
-        // This is the default text that comes from the calculation engine.
-        if (unicode)
-            for (const auto& r : group_.relations())
-                new QListWidgetItem(QString(r.utf8().c_str()), rels_);
-        else
-            for (const auto& r : group_.relations())
-                new QListWidgetItem(QString(r.str().c_str()), rels_);
-    }
+    if (unicode)
+        for (const auto& r : group_.relations())
+            new QListWidgetItem(QString(r.utf8(alphabetic).c_str()), rels_);
+    else
+        for (const auto& r : group_.relations())
+            new QListWidgetItem(QString(r.str(alphabetic).c_str()), rels_);
 }
 
 void GroupWidget::simplifyInternal() {
