@@ -59,7 +59,7 @@ void addSpatialLink(pybind11::module_& m) {
             rdoc::fromKnotPlot)
     ;
     regina::python::add_output(l);
-    regina::python::packet_disable_eq_operators(l);
+    regina::python::packet_eq_operators(l, rdoc::__eq, rdoc::__ne);
     regina::python::add_packet_data(l);
 
     RDOC_SCOPE_INNER_BEGIN(Node)
@@ -73,6 +73,7 @@ void addSpatialLink(pybind11::module_& m) {
         .def_readwrite("z", &SpatialLink::Node::z, rdoc_inner::z)
     ;
     regina::python::add_output_ostream(n);
+    regina::python::add_eq_operators(n, rdoc_inner::__eq, rdoc_inner::__ne);
 
     RDOC_SCOPE_INNER_END
 

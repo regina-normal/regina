@@ -60,11 +60,6 @@ data structures of the link, you must remember to surround these
 changes with a ChangeAndClearSpan. This manages bookkeeping, such as
 (if this link _does_ belong to a packet) firing packet change events.
 
-Unlike most value-based classes in Regina, SpatialLink objects
-_cannot_ be tested for equality/inequality. This is because they use
-floating-point arithmetic, and so such tests would necessarily be
-inexact.
-
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
@@ -85,6 +80,42 @@ static const char *__copy = R"doc(Constructs a new copy of the given link.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::__default
 static const char *__default = R"doc(Constructs an empty link. This will have zero components.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::__eq
+static const char *__eq =
+R"doc(Determines if this link is identical to the given link.
+
+Here "identical" means that both links follow exactly the same paths
+through 3-dimensional space, with their components and nodes stored in
+exactly the same order.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating point comparisons.
+
+Parameter ``other``:
+    the link to compare with this.
+
+Returns:
+    ``True`` if and only if the two links are identical.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::__ne
+static const char *__ne =
+R"doc(Determines if this link is not identical to the given link.
+
+Here "identical" means that both links follow exactly the same paths
+through 3-dimensional space, with their components and nodes stored in
+exactly the same order.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating point comparisons.
+
+Parameter ``other``:
+    the link to compare with this.
+
+Returns:
+    ``True`` if and only if the two links are not identical.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::component
 static const char *component =
@@ -262,6 +293,20 @@ static const char *__copy = R"doc(Creates a new copy of the given point.)doc";
 // Docstring regina::python::doc::SpatialLink_::Node_::__default
 static const char *__default = R"doc(Creates a new point whose coordinates are uninitialised.)doc";
 
+// Docstring regina::python::doc::SpatialLink_::Node_::__eq
+static const char *__eq =
+R"doc(Determines if this and the given point have the same coordinates.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating point comparisons.
+
+Parameter ``other``:
+    the point to compare with this.
+
+Returns:
+    ``True`` if and only if the two points are equal.)doc";
+
 // Docstring regina::python::doc::SpatialLink_::Node_::__init
 static const char *__init =
 R"doc(Creates a new point with the given 3-dimensional coordinates.
@@ -274,6 +319,20 @@ Parameter ``y``:
 
 Parameter ``z``:
     the third (z) coordinate.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::Node_::__ne
+static const char *__ne =
+R"doc(Determines if this and the given point have different coordinates.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating point comparisons.
+
+Parameter ``other``:
+    the point to compare with this.
+
+Returns:
+    ``True`` if and only if the two points are different.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::Node_::x
 static const char *x = R"doc(The first (x) coordinate of the point.)doc";

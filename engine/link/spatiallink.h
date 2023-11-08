@@ -93,10 +93,6 @@ namespace regina {
  * a ChangeAndClearSpan.  This manages bookkeeping, such as (if this link
  * _does_ belong to a packet) firing packet change events.
  *
- * Unlike most value-based classes in Regina, SpatialLink objects _cannot_ be
- * tested for equality/inequality.  This is because they use floating-point
- * arithmetic, and so such tests would necessarily be inexact.
- *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
@@ -152,6 +148,33 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              * \return a reference to this point.
              */
             Node& operator = (const Node&) = default;
+
+            /**
+             * Determines if this and the given point have the same coordinates.
+             *
+             * \warning Equality and inequailty testing, while supported, is
+             * extremely fragile, since it relies on floating point comparisons.
+             *
+             * \param other the point to compare with this.
+             * \return \c true if and only if the two points are equal.
+             */
+            bool operator == (const Node& other) const {
+                return (x == other.x && y == other.y && z == other.z);
+            }
+
+            /**
+             * Determines if this and the given point have different
+             * coordinates.
+             *
+             * \warning Equality and inequailty testing, while supported, is
+             * extremely fragile, since it relies on floating point comparisons.
+             *
+             * \param other the point to compare with this.
+             * \return \c true if and only if the two points are different.
+             */
+            bool operator != (const Node& other) const {
+                return (x != other.x || y != other.y || z != other.z);
+            }
         };
 
         /**
@@ -281,6 +304,36 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          */
         auto components() const;
 
+        /**
+         * Determines if this link is identical to the given link.
+         *
+         * Here "identical" means that both links follow exactly the same
+         * paths through 3-dimensional space, with their components and
+         * nodes stored in exactly the same order.
+         *
+         * \warning Equality and inequailty testing, while supported, is
+         * extremely fragile, since it relies on floating point comparisons.
+         *
+         * \param other the link to compare with this.
+         * \return \c true if and only if the two links are identical.
+         */
+        bool operator == (const SpatialLink& other) const;
+
+        /**
+         * Determines if this link is not identical to the given link.
+         *
+         * Here "identical" means that both links follow exactly the same
+         * paths through 3-dimensional space, with their components and
+         * nodes stored in exactly the same order.
+         *
+         * \warning Equality and inequailty testing, while supported, is
+         * extremely fragile, since it relies on floating point comparisons.
+         *
+         * \param other the link to compare with this.
+         * \return \c true if and only if the two links are not identical.
+         */
+        bool operator != (const SpatialLink& other) const;
+
         /*@}*/
         /**
          * \name Editing
@@ -405,11 +458,6 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         /*@}*/
 
     private:
-        // Explicitly disable equality testing, since we are working with
-        // floating point arithmetic.
-        bool operator == (const SpatialLink& other) const;
-        bool operator != (const SpatialLink& other) const;
-
         /**
          * An object that facilitates both firing change events.
          *
@@ -510,6 +558,14 @@ inline const SpatialLink::Component& SpatialLink::component(size_t index)
 
 inline auto SpatialLink::components() const {
     return ListView(components_);
+}
+
+inline bool SpatialLink::operator == (const SpatialLink& other) const {
+    return components_ == other.components_;
+}
+
+inline bool SpatialLink::operator != (const SpatialLink& other) const {
+    return components_ != other.components_;
 }
 
 inline void swap(SpatialLink& lhs, SpatialLink& rhs) {
