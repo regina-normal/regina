@@ -40,6 +40,7 @@
 #include "file/xml/xmlpacketreader.h"
 #include "file/xml/xmlpacketreaders.h"
 #include "file/xml/xmlsnappeareader.h"
+#include "file/xml/xmlspatiallinkreader.h"
 #include "file/xml/xmltreeresolver.h"
 #include "file/xml/xmltrireader.h"
 #include "utilities/stringutils.h"
@@ -95,6 +96,7 @@ const std::map<std::string, int> packetXMLTags = {
     { "link", static_cast<int>(PacketType::Link) },
     { "script", static_cast<int>(PacketType::Script) },
     { "snappeadata", XML_V7_SNAPPEA },
+    { "spatiallink", static_cast<int>(PacketType::SpatialLink) },
     { "surfaces", XML_V7_SURFACES },
     { "textdata", XML_V7_TEXT },
     { "tri", XML_V7_TRIANGULATION },
@@ -235,6 +237,9 @@ XMLElementReader* XMLPacketReader::startSubElement(
                     std::move(childLabel), std::move(childID));
             case static_cast<int>(PacketType::Link):
                 return new XMLLinkReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case static_cast<int>(PacketType::SpatialLink):
+                return new XMLSpatialLinkReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
             case static_cast<int>(PacketType::Text):
                 return new XMLLegacyTextReader(resolver_, packet_, anon_,
