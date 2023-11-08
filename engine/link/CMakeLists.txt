@@ -10,6 +10,7 @@ SET ( FILES
   homfly.cpp
   jenkins.cpp
   jones.cpp
+  knotplot.cpp
   link.cpp
   modellinkgraph.cpp
   pass.cpp
@@ -19,6 +20,7 @@ SET ( FILES
   rewrite.cpp
   sig.cpp
   simplify.cpp
+  spatiallink.cpp
   tangle.cpp
   )
 
@@ -43,6 +45,7 @@ if (${REGINA_INSTALL_DEV})
     modellinkgraph.h
     modellinkgraph-impl.h
     pd-impl.h
+    spatiallink.h
     tangle.h
     DESTINATION "${PKGINCLUDEDIR}/link" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

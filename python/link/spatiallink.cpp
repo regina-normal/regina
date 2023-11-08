@@ -30,19 +30,59 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
+#include "link/spatiallink.h"
+#include "../helpers.h"
+#include "../docstrings/link/spatiallink.h"
 
-void addExampleLink(pybind11::module_& m);
-void addLink(pybind11::module_& m);
-void addSpatialLink(pybind11::module_& m);
-void addModelLinkGraph(pybind11::module_& m);
-void addTangle(pybind11::module_& m);
+using pybind11::overload_cast;
+using regina::SpatialLink;
 
-void addLinkClasses(pybind11::module_& m) {
-    addExampleLink(m);
-    addLink(m);
-    addModelLinkGraph(m);
-    addSpatialLink(m);
-    addTangle(m);
+void addSpatialLink(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SpatialLink)
+
+    auto l = pybind11::class_<SpatialLink, std::shared_ptr<SpatialLink>>(
+            m, "SpatialLink", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const SpatialLink&>(), rdoc::__copy)
+        .def("size", &SpatialLink::size, rdoc::size)
+        .def("isEmpty", &SpatialLink::isEmpty, rdoc::isEmpty)
+        .def("countComponents", &SpatialLink::countComponents,
+            rdoc::countComponents)
+        .def("component", overload_cast<size_t>(&SpatialLink::component),
+            pybind11::return_value_policy::reference_internal, rdoc::component)
+        .def("components", &SpatialLink::components,
+            pybind11::keep_alive<0, 1>(), rdoc::components)
+        .def("swap", &SpatialLink::swap, rdoc::swap)
+        .def_static("fromKnotPlot", &SpatialLink::fromKnotPlot,
+            rdoc::fromKnotPlot)
+    ;
+    regina::python::add_output(l);
+    regina::python::packet_disable_eq_operators(l);
+    regina::python::add_packet_data(l);
+
+    RDOC_SCOPE_INNER_BEGIN(Node)
+
+    auto n = pybind11::class_<SpatialLink::Node>(l, "Node", rdoc_inner_scope)
+        .def(pybind11::init<>(), rdoc_inner::__default)
+        .def(pybind11::init<const SpatialLink::Node&>(), rdoc_inner::__copy)
+        .def(pybind11::init<double, double, double>(), rdoc_inner::__init)
+        .def_readwrite("x", &SpatialLink::Node::x, rdoc_inner::x)
+        .def_readwrite("y", &SpatialLink::Node::y, rdoc_inner::y)
+        .def_readwrite("z", &SpatialLink::Node::z, rdoc_inner::z)
+    ;
+    regina::python::add_output_ostream(n);
+
+    RDOC_SCOPE_INNER_END
+
+    regina::python::addListView<decltype(SpatialLink().components())>(m);
+
+    auto wrap = regina::python::add_packet_wrapper<SpatialLink>(m,
+        "PacketOfSpatialLink");
+    regina::python::add_packet_constructor<>(wrap, rdoc::__default);
+
+    regina::python::add_global_swap<SpatialLink>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
-

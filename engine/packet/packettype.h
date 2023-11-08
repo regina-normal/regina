@@ -96,9 +96,15 @@ enum class PacketType {
      */
     SnapPea = 16,
     /**
-     * Represents a knot or link in the 3-sphere, of class Link.
+     * Represents a combinatorial diagram of a knot or link in the 3-sphere,
+     * of class Link.
      */
     Link = 17,
+    /**
+     * Represents a specific embedding of a knot or link in 3-dimensional space,
+     * of class SpatialLink.
+     */
+    SpatialLink = 18,
     /**
      * Represents a 2-dimensional triangulation, of class Triangulation<2>.
      */
@@ -404,6 +410,8 @@ class PacketInfo {
                     return "SnapPea triangulation";
                 case PacketType::Link:
                     return "Link";
+                case PacketType::SpatialLink:
+                    return "Spatial Link";
                 case PacketType::Triangulation2:
                     return "2-D triangulation";
                 case PacketType::Triangulation3:
@@ -463,6 +471,7 @@ static constexpr PacketType packetTypeHolds = PacketType::None;
 
 class AngleStructures;
 class Link;
+class SpatialLink;
 class NormalHypersurfaces;
 class NormalSurfaces;
 class SnapPeaTriangulation;
@@ -470,6 +479,10 @@ template <int> class Triangulation;
 
 template <>
 inline constexpr PacketType packetTypeHolds<Link> = PacketType::Link;
+
+template <>
+inline constexpr PacketType packetTypeHolds<SpatialLink> =
+    PacketType::SpatialLink;
 
 template <>
 inline constexpr PacketType packetTypeHolds<SnapPeaTriangulation> =

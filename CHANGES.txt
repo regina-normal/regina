@@ -227,6 +227,10 @@ Version 7.4  [ (to be announced) ]
               if the file was created by some tool other than SnapPy).  The
               manifold will however be retriangulated (drilled and filled) upon
               creation since the SnapPea kernel requires an ideal triangulation.
+        Class SpatialLink:
+            - New packet class for specific embeddings of knots and links in
+              the 3-sphere.  Currently this offers very limited features, but
+              these should be expanded to become more useful over time.
         Enum SurfaceFilterType:
             - This is now a scoped enumeration, for better type safety.  The
               old enum constants (e.g., NS_FILTER_PROPERTIES) have been renamed

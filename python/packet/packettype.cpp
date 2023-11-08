@@ -55,6 +55,7 @@ void addPacketType(pybind11::module_& m) {
         WRAP_PACKET_TYPE(NormalHypersurfaces)
         WRAP_PACKET_TYPE(SnapPea)
         WRAP_PACKET_TYPE(Link)
+        WRAP_PACKET_TYPE(SpatialLink)
         WRAP_PACKET_TYPE(Triangulation2)
         WRAP_PACKET_TYPE(Triangulation3)
         WRAP_PACKET_TYPE(Triangulation4)

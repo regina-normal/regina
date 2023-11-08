@@ -16,6 +16,7 @@ SET ( FILES
   xmlreader.cpp
   xmlsnappeareader.cpp
   xmlsnappeawriter.cpp
+  xmlspatiallinkwriter.cpp
   xmlsurfacereader.cpp
   xmlsurfacewriter.cpp
   xmltreeresolver.cpp

@@ -57,7 +57,9 @@ static const char *Attachment = R"doc(Represents an arbitrary file attachment, o
 static const char *Container = R"doc(Represents a container packet, of class Container.)doc";
 
 // Docstring regina::python::doc::PacketType_::Link
-static const char *Link = R"doc(Represents a knot or link in the 3-sphere, of class Link.)doc";
+static const char *Link =
+R"doc(Represents a combinatorial diagram of a knot or link in the 3-sphere,
+of class Link.)doc";
 
 // Docstring regina::python::doc::PacketType_::None
 static const char *None =
@@ -78,6 +80,11 @@ static const char *Script = R"doc(Represents a script packet, of class Script.)d
 static const char *SnapPea =
 R"doc(Represents a triangulation in the embedded SnapPea kernel, of class
 SnapPeaTriangulation.)doc";
+
+// Docstring regina::python::doc::PacketType_::SpatialLink
+static const char *SpatialLink =
+R"doc(Represents a specific embedding of a knot or link in 3-dimensional
+space, of class SpatialLink.)doc";
 
 // Docstring regina::python::doc::PacketType_::SurfaceFilter
 static const char *SurfaceFilter =

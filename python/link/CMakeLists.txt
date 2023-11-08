@@ -6,6 +6,7 @@ SET ( FILES
   link.cpp
   modellinkgraph.cpp
   pylink.cpp
+  spatiallink.cpp
   tangle.cpp
   )
 
