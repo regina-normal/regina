@@ -30,48 +30,81 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include "regina-core.h"
-#include "file/fileformat.h"
-#include "file/xml/xmlwriter.h"
 #include "link/spatiallink.h"
-#include "packet/packet-impl.h"
-
-// Note: the format XmlGen2 does not support SpatialLink at all.
-// We will simply output the third-generation format, and a second-generation
-// reader will happily ignore it.
+#include "file/xml/xmlspatiallinkreader.h"
+#include <sstream>
 
 namespace regina {
 
-template <>
-void XMLWriter<SpatialLink>::openPre() {
-    out_ << "<spatiallink";
+XMLSpatialLinkReader::XMLSpatialLinkReader(XMLTreeResolver& res,
+        std::shared_ptr<Packet> parent, bool anon, std::string label,
+        std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        link_(make_packet<SpatialLink>()) {
 }
 
-template <>
-void XMLWriter<SpatialLink>::writeContent() {
-    // Temporarily enable hexfloat format, which should be lossless.
-    auto oldFlags = out_.flags();
-    out_ << std::hexfloat;
-    for (const auto& c : data_.components_) {
-        out_ << "  <component>\n";
-        for (const auto& node : c) {
-            out_ << "  <node> " << node.x << ' ' << node.y << ' ' << node.z
-                << " </node>\n";
-        }
-        out_ << "  </component>\n";
+std::shared_ptr<Packet> XMLSpatialLinkReader::packetToCommit() {
+    return link_;
+}
+
+XMLElementReader* XMLSpatialLinkReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (! link_)
+        return new XMLElementReader();
+
+    if (subTagName == "component") {
+        link_->components_.emplace_back();
+        return new XMLSpatialLinkComponentReader(std::addressof(
+            link_->components_.back()));
     }
-    out_.flags(oldFlags);
+
+    return new XMLElementReader();
 }
 
-template <>
-void XMLWriter<SpatialLink>::close() {
-    out_ << "</spatiallink>\n";
+void XMLSpatialLinkReader::endContentSubElement(const std::string& subTagName,
+        XMLElementReader* reader) {
+    if (! link_)
+        return;
+
+    if (subTagName == "component")
+        if (static_cast<XMLSpatialLinkComponentReader*>(reader)->broken())
+            link_.reset();
 }
 
-template void PacketOf<SpatialLink>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<SpatialLink>::writeXMLPacketData(std::ostream&,
-    FileFormat, bool, PacketRefs&) const;
+XMLElementReader* XMLSpatialLinkComponentReader::startSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (! component_)
+        return new XMLElementReader();
+
+    if (subTagName == "node") {
+        component_->emplace_back();
+        return new XMLSpatialLinkNodeReader(std::addressof(component_->back()));
+    }
+
+    return new XMLElementReader();
+}
+
+void XMLSpatialLinkComponentReader::endSubElement(
+        const std::string& subTagName, XMLElementReader* reader) {
+    if (! component_)
+        return;
+
+    if (subTagName == "node")
+        if (static_cast<XMLSpatialLinkNodeReader*>(reader)->broken())
+            component_ = nullptr;
+}
+
+void XMLSpatialLinkNodeReader::initialChars(const std::string& chars) {
+    if (! node_)
+        return;
+
+    std::istringstream in(chars);
+
+    in >> node_->x >> node_->y >> node_->z;
+    if (! in)
+        node_ = nullptr;
+}
 
 } // namespace regina
 
