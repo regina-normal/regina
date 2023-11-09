@@ -696,6 +696,13 @@ Parameter ``column``:
 Returns:
     a reference to the entry in the given row and column.)doc";
 
+// Docstring regina::python::doc::Matrix_::fill
+static const char *fill =
+R"doc(Sets every entry in the matrix to the given value.
+
+Parameter ``value``:
+    the value to assign to each entry.)doc";
+
 // Docstring regina::python::doc::Matrix_::gcdCol
 static const char *gcdCol =
 R"doc(Computes the greatest common divisor of all elements of the given
@@ -761,10 +768,31 @@ Returns:
 
 // Docstring regina::python::doc::Matrix_::initialise
 static const char *initialise =
-R"doc(Sets every entry in the matrix to the given value.
+R"doc(Deprecated function that sets every entry in the matrix to the given
+value.
+
+.. deprecated::
+    This routine has been renamed to fill(), to make it clear that it
+    has nothing to do with initialised versus uninitialised matrices.
 
 Parameter ``value``:
     the value to assign to each entry.)doc";
+
+// Docstring regina::python::doc::Matrix_::initialised
+static const char *initialised =
+R"doc(Determines whether this matrix is initialised or uninitialised.
+
+The only ways for a matrix to be _uninitialised_ are:
+
+* it was created using the default constructor, and has not yet been
+  initialised using the assignment operator;
+
+* it was the result of assignment or copy construction from some other
+  uninitialised matrix.
+
+Returns:
+    ``True`` if this matrix is initialised, or ``False`` if it is
+    uninitialised.)doc";
 
 // Docstring regina::python::doc::Matrix_::isIdentity
 static const char *isIdentity =

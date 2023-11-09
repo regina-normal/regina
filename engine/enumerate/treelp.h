@@ -613,11 +613,12 @@ struct LPCol {
  *   where the tableaux holds angle columns as well as a single scaling
  *   column.
  *
- * When working with almost normal coordinate systems, we represent octagons
- * as pairs of intersecting quadrilaterals; see the LPData class notes for
- * more information on how this works.  This means, for example, that the
- * coordinate system NS_AN_STANDARD will fall under the class of standard
- * encodings, and NS_AN_QUAD_OCT will fall under the class of quad encodings.
+ * When working with almost normal coordinate systems, we represent octagons as
+ * pairs of intersecting quadrilaterals; see the LPData class notes for more
+ * information on how this works.  This means, for example, that the coordinate
+ * system NormalCoords::AlmostNormal will fall under the class of standard
+ * encodings, and NormalCoords::QuadOct will fall under the class of quad
+ * encodings.
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
@@ -1819,9 +1820,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * There is an alternate version of this function that avoids
          * creating spurious temporaries (which may help with performance).
          *
-         * \param the row of the requested entry; this must be between 0
+         * \param row the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * \param the column of the requested entry; this must be between 0
+         * \param col the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
          * \return the requested entry in this tableaux.
          */
@@ -1838,9 +1839,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * natural (it returns its answer), but creates an additional
          * temporary variable (which may hinder performance).
          *
-         * \param the row of the requested entry; this must be between 0
+         * \param row the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * \param the column of the requested entry; this must be between 0
+         * \param col the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
          * \param ans an integer that will be set to the requested entry
          * in this tableaux.
@@ -1854,9 +1855,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * computed on the fly.  However, this computation is fast
          * because the computations use sparse vector multiplication.
          *
-         * \param the row of the requested entry; this must be between 0
+         * \param row the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
-         * \param the column of the requested entry; this must be between 0
+         * \param col the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
          * \return +1, -1 or 0 according to whether the requested entry
          * is positive, negative or zero.

@@ -253,14 +253,14 @@ void addPacket(pybind11::module_& m) {
                 &Packet::save, pybind11::const_),
             pybind11::arg(),
             pybind11::arg("compressed") = true,
-            pybind11::arg("format") = regina::REGINA_CURRENT_FILE_FORMAT,
+            pybind11::arg("format") = regina::FileFormat::Current,
             rdoc::save)
         .def("writeXMLFile", [](const Packet& p, pybind11::object file,
                 regina::FileFormat format) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
             p.writeXMLFile(std::cout, format);
         }, pybind11::arg(),
-            pybind11::arg("format") = regina::REGINA_CURRENT_FILE_FORMAT,
+            pybind11::arg("format") = regina::FileFormat::Current,
             rdoc::writeXMLFile)
         .def("internalID", &Packet::internalID, rdoc::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {

@@ -40,6 +40,7 @@
 #include "testexhaustive.h"
 
 using regina::Example;
+using regina::NormalCoords;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Triangulation;
@@ -78,10 +79,10 @@ TEST(NormalSurfacesTest, defaultArgs) {
 
     Triangulation<3> t = Example<3>::ball();
 
-    NormalSurfaces l1(t, regina::NS_QUAD);
+    NormalSurfaces l1(t, NormalCoords::Quad);
     EXPECT_EQ(l1.which(), (regina::NS_VERTEX | regina::NS_EMBEDDED_ONLY));
 
-    NormalSurfaces l2(t, regina::NS_QUAD, regina::NS_IMMERSED_SINGULAR);
+    NormalSurfaces l2(t, NormalCoords::Quad, regina::NS_IMMERSED_SINGULAR);
     EXPECT_EQ(l2.which(), (regina::NS_VERTEX | regina::NS_IMMERSED_SINGULAR));
 }
 
@@ -142,7 +143,7 @@ static void compareCompactProfiles(const Triangulation<3>& tri,
     std::copy(expectQuad.begin(), expectQuad.end(), dest);
     {
         SCOPED_TRACE("Quad coordinates");
-        NormalSurfaces list(tri, regina::NS_QUAD);
+        NormalSurfaces list(tri, NormalCoords::Quad);
         std::vector<CompactProfile> found = sortedCompactProfiles(list);
         EXPECT_EQ(found, expect);
     }
@@ -153,12 +154,12 @@ static void compareCompactProfiles(const Triangulation<3>& tri,
             std::copy(extraStd.begin(), extraStd.end(), dest);
             std::inplace_merge(expect.begin(), split, expect.end());
             {
-                NormalSurfaces list(tri, regina::NS_STANDARD);
+                NormalSurfaces list(tri, NormalCoords::Standard);
                 std::vector<CompactProfile> found = sortedCompactProfiles(list);
                 EXPECT_EQ(found, expect);
             }
         } else {
-            NormalSurfaces list(tri, regina::NS_STANDARD);
+            NormalSurfaces list(tri, NormalCoords::Standard);
             EXPECT_EQ(list.size(), expect.size() + extraStd);
         }
     }
@@ -169,12 +170,12 @@ static void compareCompactProfiles(const Triangulation<3>& tri,
             std::copy(extraANStd.begin(), extraANStd.end(), dest);
             std::inplace_merge(expect.begin(), split, expect.end());
             {
-                NormalSurfaces list(tri, regina::NS_AN_STANDARD);
+                NormalSurfaces list(tri, NormalCoords::AlmostNormal);
                 std::vector<CompactProfile> found = sortedCompactProfiles(list);
                 EXPECT_EQ(found, expect);
             }
         } else {
-            NormalSurfaces list(tri, regina::NS_AN_STANDARD);
+            NormalSurfaces list(tri, NormalCoords::AlmostNormal);
             if constexpr (individualStd)
                 EXPECT_EQ(list.size(), expect.size() + extraANStd);
             else
@@ -187,9 +188,9 @@ TEST(NormalSurfacesTest, empty) {
     SCOPED_TRACE("Empty triangulation");
 
     Triangulation<3> tri;
-    EXPECT_EQ(NormalSurfaces(tri, regina::NS_STANDARD).size(), 0);
-    EXPECT_EQ(NormalSurfaces(tri, regina::NS_QUAD).size(), 0);
-    EXPECT_EQ(NormalSurfaces(tri, regina::NS_AN_STANDARD).size(), 0);
+    EXPECT_EQ(NormalSurfaces(tri, NormalCoords::Standard).size(), 0);
+    EXPECT_EQ(NormalSurfaces(tri, NormalCoords::Quad).size(), 0);
+    EXPECT_EQ(NormalSurfaces(tri, NormalCoords::AlmostNormal).size(), 0);
 }
 
 TEST(NormalSurfacesTest, singleTetrahedron) {
@@ -419,7 +420,7 @@ static void compareNonCompactProfiles(const Triangulation<3>& tri,
         std::copy(expectQuad.begin(), expectQuad.end(), dest);
 
         SCOPED_TRACE("Quad coordinates");
-        NormalSurfaces list(tri, regina::NS_QUAD);
+        NormalSurfaces list(tri, NormalCoords::Quad);
         std::vector<NonCompactProfile> found = sortedNonCompactProfiles(list);
         EXPECT_EQ(found, expect);
     }
@@ -432,7 +433,7 @@ static void compareNonCompactProfiles(const Triangulation<3>& tri,
         std::copy(expectStd.begin(), expectStd.end(), dest);
         {
             SCOPED_TRACE("Standard coordinates");
-            NormalSurfaces list(tri, regina::NS_STANDARD);
+            NormalSurfaces list(tri, NormalCoords::Standard);
             std::vector<NonCompactProfile> found =
                 sortedNonCompactProfiles(list);
             EXPECT_EQ(found, expect);
@@ -443,7 +444,7 @@ static void compareNonCompactProfiles(const Triangulation<3>& tri,
         std::inplace_merge(expect.begin(), split, expect.end());
         {
             SCOPED_TRACE("Standard almost normal coordinates");
-            NormalSurfaces list(tri, regina::NS_AN_STANDARD);
+            NormalSurfaces list(tri, NormalCoords::AlmostNormal);
             std::vector<NonCompactProfile> found =
                 sortedNonCompactProfiles(list);
             EXPECT_EQ(found, expect);
@@ -493,7 +494,7 @@ static void verifyLoopCtw(size_t len) {
      * - 1 x splitting, edge-linking Klein bottle.
      */
     {
-        NormalSurfaces list(loop, regina::NS_QUAD);
+        NormalSurfaces list(loop, NormalCoords::Quad);
         EXPECT_EQ(list.size(), len + 1);
 
         bool foundKB = false;
@@ -557,11 +558,11 @@ static void verifyLoopCtw(size_t len) {
     delete[] fib;
 
     {
-        NormalSurfaces list(loop, regina::NS_STANDARD);
+        NormalSurfaces list(loop, NormalCoords::Standard);
         EXPECT_EQ(list.size(), expectStd);
     }
     {
-        NormalSurfaces list(loop, regina::NS_AN_STANDARD);
+        NormalSurfaces list(loop, NormalCoords::AlmostNormal);
         EXPECT_EQ(list.size(), expectStd + extraANStd);
     }
 }
@@ -582,10 +583,10 @@ template <bool almostNormal>
 static void verifyConversions(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    static constexpr regina::NormalCoords standardCoords = (almostNormal ?
-        regina::NS_AN_STANDARD : regina::NS_STANDARD);
-    static constexpr regina::NormalCoords reducedCoords = (almostNormal ?
-        regina::NS_AN_QUAD_OCT : regina::NS_QUAD);
+    static constexpr NormalCoords standardCoords = (almostNormal ?
+        NormalCoords::AlmostNormal : NormalCoords::Standard);
+    static constexpr NormalCoords reducedCoords = (almostNormal ?
+        NormalCoords::QuadOct : NormalCoords::Quad);
 
     bool conversionSupported = tri.isValid() && ! tri.isIdeal();
 
@@ -638,7 +639,7 @@ TEST(NormalSurfacesTest, standardANQuadOctConversions) {
     // runCensusAllIdeal(&verifyConversions<true>);
 }
 
-template <regina::NormalCoords coords>
+template <NormalCoords coords>
 static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
@@ -663,8 +664,8 @@ static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
     if (! dd) {
         // Enumeration failed.
         EXPECT_FALSE(tree);
-        if constexpr (coords != regina::NS_QUAD_CLOSED &&
-                coords != regina::NS_AN_QUAD_OCT_CLOSED)
+        if constexpr (coords != NormalCoords::QuadClosed &&
+                coords != NormalCoords::QuadOctClosed)
             ADD_FAILURE() << "Enumeration should not fail in this "
                 "coordinate system";
     } else {
@@ -683,9 +684,9 @@ static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
     }
 }
 
-template <regina::NormalCoords coords>
+template <NormalCoords coords>
 static void treeVsDDDetail() {
-    SCOPED_TRACE_NUMERIC(coords);
+    SCOPED_TRACE_NUMERIC(static_cast<int>(coords));
 
     runCensusMinClosed(verifyTreeVsDD<coords>);
     runCensusAllClosed(verifyTreeVsDD<coords>);
@@ -694,15 +695,15 @@ static void treeVsDDDetail() {
 }
 
 TEST(NormalSurfacesTest, treeVsDD) {
-    treeVsDDDetail<regina::NS_QUAD>();
-    treeVsDDDetail<regina::NS_STANDARD>();
-    treeVsDDDetail<regina::NS_AN_QUAD_OCT>();
-    treeVsDDDetail<regina::NS_AN_STANDARD>();
-    treeVsDDDetail<regina::NS_QUAD_CLOSED>();
-    treeVsDDDetail<regina::NS_AN_QUAD_OCT_CLOSED>();
+    treeVsDDDetail<NormalCoords::Quad>();
+    treeVsDDDetail<NormalCoords::Standard>();
+    treeVsDDDetail<NormalCoords::QuadOct>();
+    treeVsDDDetail<NormalCoords::AlmostNormal>();
+    treeVsDDDetail<NormalCoords::QuadClosed>();
+    treeVsDDDetail<NormalCoords::QuadOctClosed>();
 }
 
-template <regina::NormalCoords coords>
+template <NormalCoords coords>
 static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
         const char* name) {
     SCOPED_TRACE_CSTRING(name);
@@ -728,8 +729,8 @@ static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
     if (! primal) {
         // Enumeration failed.
         EXPECT_FALSE(dual);
-        if constexpr (coords != regina::NS_QUAD_CLOSED &&
-                coords != regina::NS_AN_QUAD_OCT_CLOSED)
+        if constexpr (coords != NormalCoords::QuadClosed &&
+                coords != NormalCoords::QuadOctClosed)
             ADD_FAILURE() << "Enumeration should not fail in this "
                 "coordinate system";
     } else {
@@ -748,9 +749,9 @@ static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
     }
 }
 
-template <regina::NormalCoords coords>
+template <NormalCoords coords>
 static void fundPrimalVsDualDetail() {
-    SCOPED_TRACE_NUMERIC(coords);
+    SCOPED_TRACE_NUMERIC(static_cast<int>(coords));
 
     runCensusMinClosed(verifyFundPrimalVsDual<coords>, true);
     runCensusAllClosed(verifyFundPrimalVsDual<coords>, true);
@@ -759,12 +760,12 @@ static void fundPrimalVsDualDetail() {
 }
 
 TEST(NormalSurfacesTest, fundPrimalVsDual) {
-    fundPrimalVsDualDetail<regina::NS_QUAD>();
-    fundPrimalVsDualDetail<regina::NS_STANDARD>();
-    fundPrimalVsDualDetail<regina::NS_AN_QUAD_OCT>();
-    fundPrimalVsDualDetail<regina::NS_AN_STANDARD>();
-    fundPrimalVsDualDetail<regina::NS_QUAD_CLOSED>();
-    fundPrimalVsDualDetail<regina::NS_AN_QUAD_OCT_CLOSED>();
+    fundPrimalVsDualDetail<NormalCoords::Quad>();
+    fundPrimalVsDualDetail<NormalCoords::Standard>();
+    fundPrimalVsDualDetail<NormalCoords::QuadOct>();
+    fundPrimalVsDualDetail<NormalCoords::AlmostNormal>();
+    fundPrimalVsDualDetail<NormalCoords::QuadClosed>();
+    fundPrimalVsDualDetail<NormalCoords::QuadOctClosed>();
 }
 
 static void verifyEulerConstraints(const Triangulation<3>& tri,
@@ -780,7 +781,7 @@ static void verifyEulerConstraints(const Triangulation<3>& tri,
     // chi=0 constraint.
     std::vector<NormalSurface> eulerZero;
     regina::TreeEnumeration<regina::LPConstraintEulerZero> tree(
-        tri, regina::NS_STANDARD);
+        tri, NormalCoords::Standard);
     while (tree.next()) {
         NormalSurface s = tree.buildSurface();
         EXPECT_EQ(s.eulerChar(), 0);
@@ -791,7 +792,7 @@ static void verifyEulerConstraints(const Triangulation<3>& tri,
     // Build all vertex surfaces with no constraints on Euler characteristic.
     // Every vertex surface with chi=0 should appear in eulerZero (but note
     // that eulerZero could contain some extra surfaces also).
-    NormalSurfaces noConstraints(tri, regina::NS_STANDARD);
+    NormalSurfaces noConstraints(tri, NormalCoords::Standard);
     for (const NormalSurface& s : noConstraints)
         if (s.eulerChar() == 0)
             EXPECT_TRUE(std::binary_search(
@@ -805,7 +806,7 @@ TEST(NormalSurfacesTest, eulerConstraints) {
 static void verifyDisjoint(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    NormalSurfaces list(tri, regina::NS_AN_STANDARD);
+    NormalSurfaces list(tri, NormalCoords::AlmostNormal);
 
     std::pair<const regina::Edge<3>*, const regina::Edge<3>*> edges;
     for (const auto& s : list) {
@@ -1006,7 +1007,7 @@ static void verifyCutAlong(const Triangulation<3>& tri, const char* name) {
     ASSERT_TRUE(tri.isValid());
     ASSERT_TRUE(tri.isConnected());
 
-    NormalSurfaces list(tri, regina::NS_AN_STANDARD);
+    NormalSurfaces list(tri, NormalCoords::AlmostNormal);
 
     // We use the fact that all vertex surfaces are connected.
     for (const NormalSurface& s : list) {
@@ -1120,9 +1121,9 @@ TEST(NormalSurfacesTest, cutAlong) {
     runCensusAllIdeal(verifyCutAlong, true);
 }
 
-static void verifyRemoveOctsDetail(regina::NormalCoords coords,
+static void verifyRemoveOctsDetail(NormalCoords coords,
         const Triangulation<3>& tri) {
-    SCOPED_TRACE_NUMERIC(coords);
+    SCOPED_TRACE_NUMERIC(static_cast<int>(coords));
 
     for (const NormalSurface& s : NormalSurfaces(tri, coords)) {
         NormalSurface noOct = s.removeOcts();
@@ -1133,7 +1134,7 @@ static void verifyRemoveOctsDetail(regina::NormalCoords coords,
         // Internally, the no-octagon variants should always be
         // stored using the standard matching equations.
         regina::MatrixInt matching = regina::makeMatchingEquations(
-            noOct.triangulation(), regina::NS_STANDARD);
+            noOct.triangulation(), NormalCoords::Standard);
         ASSERT_EQ(noOct.vector().size(), matching.columns());
         // For non-compact surfaces we should test the quad matching equations,
         // but for now we leave it.  The standard matching equations will fail
@@ -1177,8 +1178,8 @@ static void verifyRemoveOctsDetail(regina::NormalCoords coords,
 void verifyRemoveOcts(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    verifyRemoveOctsDetail(regina::NS_AN_STANDARD, tri);
-    verifyRemoveOctsDetail(regina::NS_AN_QUAD_OCT, tri);
+    verifyRemoveOctsDetail(NormalCoords::AlmostNormal, tri);
+    verifyRemoveOctsDetail(NormalCoords::QuadOct, tri);
 }
 
 TEST(NormalSurfacesTest, removeOcts) {
@@ -1202,7 +1203,7 @@ static void testCopyMove(const Triangulation<3>& tri, const char* name) {
     // and I can't think of a better (and still non-intrusive)
     // way to ensure that the move was a "real" move.
 
-    const NormalSurfaces a(tri, regina::NS_STANDARD);
+    const NormalSurfaces a(tri, NormalCoords::Standard);
     ASSERT_NE(a.size(), 0);
 
     NormalSurfaces a1(a);
@@ -1214,12 +1215,12 @@ static void testCopyMove(const Triangulation<3>& tri, const char* name) {
     // The std::vector move constructor promises to empty the source.
     EXPECT_EQ(a1.size(), 0);
 
-    NormalSurfaces a3(Example<3>::s2xs1(), regina::NS_STANDARD);
+    NormalSurfaces a3(Example<3>::s2xs1(), NormalCoords::Standard);
     a3 = a;
     EXPECT_EQ(a3.detail(), a.detail());
     EXPECT_NE(a.size(), 0);
 
-    NormalSurfaces a4(Example<3>::s2xs1(), regina::NS_STANDARD);
+    NormalSurfaces a4(Example<3>::s2xs1(), NormalCoords::Standard);
     a4 = std::move(a3);
     EXPECT_EQ(a4.detail(), a.detail());
     /*

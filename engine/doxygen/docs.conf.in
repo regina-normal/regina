@@ -36,6 +36,7 @@ ALIASES = \
     "nullopt=no value" \
     "cpp=\par C++^^" \
     "python=\par Python^^" \
+    "swift=\par Swift^^" \
     "nocpp=\par C++^^Not present." \
     "nopython=\par Python^^Not present." \
     "nodocstrings=" \
@@ -75,6 +76,7 @@ EXCLUDE = \
     "@PROJECT_SOURCE_DIR@/engine/snappea/kernel" \
     "@PROJECT_SOURCE_DIR@/engine/surface/tons" \
     "@PROJECT_SOURCE_DIR@/engine/surfaces" \
+    "@PROJECT_SOURCE_DIR@/engine/swift" \
     "@PROJECT_SOURCE_DIR@/engine/syntax" \
     "@PROJECT_SOURCE_DIR@/engine/testsuite" \
     "@PROJECT_SOURCE_DIR@/engine/triangulation/graph.h" \

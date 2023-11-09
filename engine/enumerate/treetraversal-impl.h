@@ -1064,7 +1064,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << " (" << idx << " -> " << (int)type_[idx]
                     << ")" << std::endl;
 
-                NormalSurface f(origTableaux_.tri(), NS_STANDARD,
+                NormalSurface f(origTableaux_.tri(), NormalCoords::Standard,
                     lpSlot_[level_ + 1]->
                         extractSolution<Vector<LargeInteger>>(type_));
                 std::cout << f.str() << std::endl;

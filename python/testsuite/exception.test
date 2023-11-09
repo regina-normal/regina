@@ -80,7 +80,7 @@ except NotImplemented:
     pass
 
 t = Example3.poincare()
-s = NormalSurfaces(t, NS_STANDARD)
+s = NormalSurfaces(t, NormalCoords.Standard)
 t = None
 print(s)
 try:

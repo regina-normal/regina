@@ -102,7 +102,7 @@ class Script;
  * \ingroup packet
  */
 class Script : public Packet {
-    REGINA_PACKET(PACKET_SCRIPT, "Script")
+    REGINA_PACKET(PacketType::Script, "Script")
 
     private:
         std::string text_;

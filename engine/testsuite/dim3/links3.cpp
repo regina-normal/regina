@@ -62,7 +62,7 @@ static void verifyEdgeLinks(const Triangulation<3>& tri, const char* name) {
     // Verify that *all* edge links look reasonable.
 
     regina::MatrixInt matching = regina::makeMatchingEquations(
-        tri, regina::NS_STANDARD);
+        tri, regina::NormalCoords::Standard);
 
     for (auto e : tri.edges()) {
         SCOPED_TRACE_NUMERIC(e->index());
@@ -96,7 +96,7 @@ static void verifyEdgeLinks(const Triangulation<3>& tri, const char* name) {
     // Check the precise coordinates for all *thin* edge links,
     // which can be separately obtained via normal surface enumeration.
 
-    NormalSurfaces list(tri, regina::NS_STANDARD);
+    NormalSurfaces list(tri, regina::NormalCoords::Standard);
     for (const auto& s : list) {
         SCOPED_TRACE_REGINA(s);
         auto link = s.isThinEdgeLink();
@@ -157,7 +157,7 @@ static void verifyTriangleLinks(const Triangulation<3>& tri, const char* name) {
     // Verify that *all* triangle links look reasonable.
 
     regina::MatrixInt matching = regina::makeMatchingEquations(
-        tri, regina::NS_STANDARD);
+        tri, regina::NormalCoords::Standard);
 
     for (auto t : tri.triangles()) {
         SCOPED_TRACE_NUMERIC(t->index());

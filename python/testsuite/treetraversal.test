@@ -40,7 +40,7 @@ def dumpStructure(tree):
 	return False
 
 t = Example3.rp3rp3()
-tree = TreeSingleSoln_EulerPositive(t, NS_STANDARD)
+tree = TreeSingleSoln_EulerPositive(t, NormalCoords.Standard)
 if tree.find():
 	print('Found:', tree.buildSurface())
 else:
@@ -58,7 +58,7 @@ print('Solutions:', tree.solutions())
 print()
 
 t = Example3.figureEight()
-tree = TreeEnumeration(t, NS_QUAD)
+tree = TreeEnumeration(t, NormalCoords.Quad)
 dummy = tree.run(dumpSurface)
 print('Visited:', tree.visited())
 print('Solutions:', tree.solutions())
@@ -66,7 +66,7 @@ print('Solutions:', tree.solutions())
 print()
 
 t = Example3.trefoil()
-tree = TreeEnumeration_NonSpun(t, NS_QUAD)
+tree = TreeEnumeration_NonSpun(t, NormalCoords.Quad)
 dummy = tree.run(dumpSurface)
 print('Visited:', tree.visited())
 print('Solutions:', tree.solutions())
@@ -74,7 +74,7 @@ print('Solutions:', tree.solutions())
 print()
 
 t = Example3.trefoil()
-tab = LPInitialTableaux_NonSpun(t, NS_QUAD)
+tab = LPInitialTableaux_NonSpun(t, NormalCoords.Quad)
 sys = tab.system()
 print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
 print('Columns:', tab.coordinateColumns(), '->', tab.columns())
@@ -117,17 +117,17 @@ else:
 print()
 
 t = Example3.rp3rp3()
-tab = LPInitialTableaux(t, NS_STANDARD)
+tab = LPInitialTableaux(t, NormalCoords.Standard)
 print(LPConstraintNone.addRows(tab))
-tab = LPInitialTableaux_EulerPositive(t, NS_STANDARD)
+tab = LPInitialTableaux_EulerPositive(t, NormalCoords.Standard)
 print(LPConstraintEulerPositive.addRows(tab))
-tab = LPInitialTableaux_EulerZero(t, NS_STANDARD)
+tab = LPInitialTableaux_EulerZero(t, NormalCoords.Standard)
 print(LPConstraintEulerZero.addRows(tab))
 
 print()
 
 t = Example3.lst(3,4)
-tab = LPInitialTableaux(t, NS_STANDARD)
+tab = LPInitialTableaux(t, NormalCoords.Standard)
 sys = tab.system()
 print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
 print('Columns:', tab.coordinateColumns(), '->', tab.columns())
@@ -157,7 +157,7 @@ print()
 
 t = Triangulation3.fromIsoSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
 print(t.nonTrivialSphereOrDisc())
-tab = LPInitialTableaux(t, NS_STANDARD)
+tab = LPInitialTableaux(t, NormalCoords.Standard)
 sys = tab.system()
 print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
 print('Columns:', tab.coordinateColumns(), '->', tab.columns())

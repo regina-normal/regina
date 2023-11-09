@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  simplify.cpp
   skeleton.cpp
   triangulation2.cpp
   )

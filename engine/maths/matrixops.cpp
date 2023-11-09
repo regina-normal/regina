@@ -379,7 +379,7 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     }
 
     // Now form the basis for the orthogonal complement.
-    complement.initialise(0);
+    complement.fill(0);
 
     Integer lcmLead = 1;
     for (r = 0; r < n; ++r) {

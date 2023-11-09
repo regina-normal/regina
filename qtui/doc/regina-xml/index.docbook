@@ -13,6 +13,7 @@
 
   <!ENTITY ascii "<acronym>ASCII</acronym>">
   <!ENTITY cpp "<application>C++</application>">
+  <!ENTITY knotplot "<application>KnotPlot</application>">
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY pdf "<acronym>PDF</acronym>">
   <!ENTITY python "<application>Python</application>">
@@ -43,13 +44,14 @@
      <member>&xml-link;</member>
      <member>&xml-script;</member>
      <member>&xml-snappeadata;</member>
+     <member>&xml-spatiallink;</member>
      <member>&xml-surfaces;</member>
      <member>&xml-textdata;</member>
      <member>&xml-tri;</member>
     </simplelist>.
     This list includes all of &regina;'s packet types.">
   <!ENTITY packetsyn1 "(&xml-container;|&xml-textdata;|&xml-script;|&xml-attachment;|">
-  <!ENTITY packetsyn2 " &xml-tri;|&xml-link;|&xml-snappeadata;|">
+  <!ENTITY packetsyn2 " &xml-tri;|&xml-link;|&xml-spatiallink;|&xml-snappeadata;|">
   <!ENTITY packetsyn3 " &xml-angles;|&xml-surfaces;|&xml-hypersurfaces;|">
   <!ENTITY packetsyn4 " &xml-filtercomb;|&xml-filterprop;|&xml-filtertrivial;|">
   <!ENTITY packetsyn5 " &xml-anon;|&xml-anonref;)">
@@ -68,6 +70,7 @@
      <member>&xml-link;</member>
      <member>&xml-script;</member>
      <member>&xml-snappeadata;</member>
+     <member>&xml-spatiallink;</member>
      <member>&xml-surfaces;</member>
      <member>&xml-tag;</member>
      <member>&xml-textdata;</member>
@@ -92,6 +95,7 @@
      <member>&xml-regina;</member>
      <member>&xml-script;</member>
      <member>&xml-snappeadata;</member>
+     <member>&xml-spatiallink;</member>
      <member>&xml-surfaces;</member>
      <member>&xml-textdata;</member>
      <member>&xml-tri;</member>

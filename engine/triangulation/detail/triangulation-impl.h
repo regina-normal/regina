@@ -326,7 +326,7 @@ void TriangulationBase<dim>::reorderBFS(bool reverse) {
     if (n == 0)
         return;
 
-    ChangeAndClearSpan<CHANGE_PRESERVE_ALL_PROPERTIES> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
 
     // Run a breadth-first search over all top-dimensional simplices.
     auto* ordered = new Simplex<dim>*[n];
@@ -379,109 +379,100 @@ void TriangulationBase<dim>::reorderBFS(bool reverse) {
 }
 
 template <int dim>
-void TriangulationBase<dim>::makeDoubleCover() {
+Triangulation<dim> TriangulationBase<dim>::doubleCover() const {
     size_t sheetSize = simplices_.size();
     if (sheetSize == 0)
-        return;
+        return {};
 
-    // Manage change events and snapshots manually, since we will be managing
-    // simplices and gluings manually also.  The reason for this manual work
-    // is so that we can do the right thing with simplex/facet locks.
+    Triangulation<dim> ans;
+
+    // Create two sheets of simplices, cloning simplex descriptions and locks.
+    for (size_t i = 0; i < sheetSize; i++)
+        ans.simplices_.push_back(new Simplex<dim>(*simplices_[i],
+            std::addressof(ans)));
+    for (size_t i = 0; i < sheetSize; i++)
+        ans.simplices_.push_back(new Simplex<dim>(*simplices_[i],
+            std::addressof(ans)));
+
+    // We will temporarily hijack the Simplex::orientation_ fields for our own
+    // purposes.  These will be reset/overwritten if/when we compute the
+    // skeleton at some later time.
     //
-    // We also clear all properties at the beginning (not the end), so that
-    // the skeleton will be deleted immediately - this means we can
-    // temporarily hijack the Simplex::orientation_ fields for our own purposes.
-    // For this we use a basic PacketChangeSpan (not a richer
-    // ChangeAndClearSpan), and just call takeSnapshot() and
-    // clearAllProperties() manually at the right time.
-    Snapshottable<Triangulation<dim>>::takeSnapshot();
-    PacketChangeSpan span(static_cast<Triangulation<dim>&>(*this));
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+    // We manage all simplex gluings manually at a low level, so we can do
+    // the right thing with simplex/facet locks.
 
-    // Create a second sheet of simplices.
-    auto* upper = new Simplex<dim>*[sheetSize];
-    for (size_t i = 0; i < sheetSize; i++) {
-        upper[i] = new Simplex<dim>(*simplices_[i],
-            static_cast<Triangulation<dim>*>(this));
-        simplices_.push_back(upper[i]);
-    }
+    // Mark all simplex orientations as unknown in both sheets.
+    for (auto s : ans.simplices_)
+        s->orientation_ = 0;
 
-    // Reset each simplex orientation.
-    auto sit = simplices_.begin();
-    for (size_t i = 0; i < sheetSize; i++) {
-        (*sit++)->orientation_ = 0;
-        upper[i]->orientation_ = 0;
-    }
-
-    // Run through the upper sheet and recreate the gluings as we
+    // Run through the original triangulation and recreate the gluings as we
     // propagate simplex orientations through components.
     //
     // We use a breadth-first search to propagate orientations.
     // The underlying queue is implemented using a plain C array - since each
     // simplex is processed only once, an array of size sheetSize is enough.
-    //
-    // We will ignore the requirement that the lowest-index simplex in each
-    // component must have orientation +1: this is because our new orientations
-    // are temporary only.  (We called clearAllProperties() above, which will
-    // force a full recomputation of the skeleton when next required.)
     auto* queue = new size_t[sheetSize];
     size_t queueStart = 0, queueEnd = 0;
 
     for (size_t i = 0; i < sheetSize; i++)
-        if (upper[i]->orientation_ == 0) {
+        if (ans.simplices_[i]->orientation_ == 0) {
             // We've found a new component.
             // Completely recreate the gluings for this component.
-            upper[i]->orientation_ = 1;
-            simplices_[i]->orientation_ = -1;
+            ans.simplices_[i]->orientation_ = 1;
+            ans.simplices_[i + sheetSize]->orientation_ = -1;
             queue[queueEnd++] = i;
 
             while (queueStart < queueEnd) {
-                size_t upperSimp = queue[queueStart++];
-                Simplex<dim>* lowerSimp = simplices_[upperSimp];
+                size_t pos = queue[queueStart++];
+                Simplex<dim>* orig = simplices_[pos];
+                Simplex<dim>* lowerSimp = ans.simplices_[pos];
+                Simplex<dim>* upperSimp = ans.simplices_[pos + sheetSize];
 
                 for (int facet = 0; facet <= dim; ++facet) {
-                    Simplex<dim>* lowerAdj = lowerSimp->adjacentSimplex(facet);
-
-                    // See if this simplex is glued to something in the
-                    // lower sheet.
-                    if (! lowerAdj)
+                    // See if this simplex is glued to something.
+                    Simplex<dim>* adj = orig->adjacentSimplex(facet);
+                    if (! adj)
                         continue;
+
+                    Simplex<dim>* lowerAdj = ans.simplices_[adj->index()];
+                    Simplex<dim>* upperAdj = ans.simplices_[
+                        adj->index() + sheetSize];
 
                     // Determine the expected orientation of the
                     // adjacent simplex in the lower sheet.
-                    Perm<dim + 1> gluing = lowerSimp->adjacentGluing(facet);
+                    Perm<dim + 1> gluing = orig->adjacentGluing(facet);
+                    lowerSimp->gluing_[facet] = gluing;
+                    upperSimp->gluing_[facet] = gluing;
+
                     int lowerAdjOrientation = (gluing.sign() == 1 ?
                         -lowerSimp->orientation_ : lowerSimp->orientation_);
 
-                    size_t upperAdj = lowerAdj->index();
                     if (lowerAdj->orientation_ == 0) {
                         // We haven't seen the adjacent simplex yet.
+                        // Stay within the same sheet.
                         lowerAdj->orientation_ = lowerAdjOrientation;
-                        upper[upperAdj]->orientation_ = -lowerAdjOrientation;
-                        upper[upperSimp]->adj_[facet] = upper[upperAdj];
-                        upper[upperSimp]->gluing_[facet] = gluing;
-                        queue[queueEnd++] = upperAdj;
+                        upperAdj->orientation_ = -lowerAdjOrientation;
+                        lowerSimp->adj_[facet] = lowerAdj;
+                        upperSimp->adj_[facet] = upperAdj;
+                        queue[queueEnd++] = lowerAdj->index();
                     } else if (lowerAdj->orientation_ == lowerAdjOrientation) {
-                        // The adjacent simplex already has the
-                        // correct orientation.
-                        upper[upperSimp]->adj_[facet] = upper[upperAdj];
-                        upper[upperSimp]->gluing_[facet] = gluing;
+                        // The adjacent simplex already has the correct
+                        // orientation.  Stay within the same sheet.
+                        lowerSimp->adj_[facet] = lowerAdj;
+                        upperSimp->adj_[facet] = upperAdj;
                     } else {
-                        // The adjacent simplex already has the
-                        // incorrect orientation.  Make a cross between
-                        // the two sheets.
-                        lowerSimp->adj_[facet] = upper[upperAdj];
-                        lowerSimp->gluing_[facet] = gluing;
-                        upper[upperSimp]->adj_[facet] = lowerAdj;
-                        upper[upperSimp]->gluing_[facet] = gluing;
+                        // The adjacent simplex already has the incorrect
+                        // orientation.  Make a cross between the two sheets.
+                        lowerSimp->adj_[facet] = upperAdj;
+                        upperSimp->adj_[facet] = lowerAdj;
                     }
                 }
             }
         }
 
     // Tidy up.
-    delete[] upper;
     delete[] queue;
+    return ans;
 }
 
 template <int dim>
@@ -655,11 +646,11 @@ std::string TriangulationBase<dim>::source(Language language) const {
     static constexpr bool hasSimplePermConstructor = (dim <= 6);
 
     switch (language) {
-        case LANGUAGE_CXX:
+        case Language::Cxx:
             ans << "Triangulation<" << dim << "> tri = Triangulation<" << dim
                 << ">::fromGluings(" << size() << ", {\n";
             break;
-        case LANGUAGE_PYTHON:
+        case Language::Python:
             ans << "tri = Triangulation" << dim << ".fromGluings("
                 << size() << ", [\n";
             break;
@@ -681,11 +672,11 @@ std::string TriangulationBase<dim>::source(Language language) const {
                         ans << ", ";
 
                     switch (language) {
-                        case LANGUAGE_CXX:
+                        case Language::Cxx:
                             ans << "{ " << i << ", " << j << ", "
                                 << adj->index() << ", {";
                             break;
-                        case LANGUAGE_PYTHON:
+                        case Language::Python:
                             ans << "[ " << i << ", " << j << ", "
                                 << adj->index() << ", Perm" << (dim+1) << '(';
                             if constexpr (! hasSimplePermConstructor)
@@ -698,10 +689,10 @@ std::string TriangulationBase<dim>::source(Language language) const {
                         ans << g[k];
                     }
                     switch (language) {
-                        case LANGUAGE_CXX:
+                        case Language::Cxx:
                             ans << "} }";
                             break;
-                        case LANGUAGE_PYTHON:
+                        case Language::Python:
                             if constexpr (! hasSimplePermConstructor)
                                 ans << ']';
                             ans << ") ]";
@@ -714,8 +705,8 @@ std::string TriangulationBase<dim>::source(Language language) const {
         }
     }
     switch (language) {
-        case LANGUAGE_CXX:    ans << "});\n"; break;
-        case LANGUAGE_PYTHON: ans << "])\n";  break;
+        case Language::Cxx:    ans << "});\n"; break;
+        case Language::Python: ans << "])\n";  break;
     }
     return ans.str();
 }

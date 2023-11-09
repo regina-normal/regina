@@ -39,16 +39,17 @@ void addFileFormat(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(FileFormat)
 
     pybind11::enum_<regina::FileFormat>(m, "FileFormat", rdoc_scope)
-        .value("REGINA_BINARY_GEN_1", regina::REGINA_BINARY_GEN_1,
-            rdoc::REGINA_BINARY_GEN_1)
-        .value("REGINA_XML_GEN_2", regina::REGINA_XML_GEN_2,
-            rdoc::REGINA_XML_GEN_2)
-        .value("REGINA_XML_GEN_3", regina::REGINA_XML_GEN_3,
-            rdoc::REGINA_XML_GEN_3)
-        .value("REGINA_CURRENT_FILE_FORMAT", regina::REGINA_CURRENT_FILE_FORMAT,
-            rdoc::REGINA_CURRENT_FILE_FORMAT)
-        .export_values()
+        .value("BinaryGen1", regina::FileFormat::BinaryGen1, rdoc::BinaryGen1)
+        .value("XmlGen2", regina::FileFormat::XmlGen2, rdoc::XmlGen2)
+        .value("XmlGen3", regina::FileFormat::XmlGen3, rdoc::XmlGen3)
+        .value("Current", regina::FileFormat::Current, rdoc::Current)
         ;
+
+    // Deprecated constants:
+    m.attr("REGINA_BINARY_GEN_1") = regina::FileFormat::BinaryGen1;
+    m.attr("REGINA_XML_GEN_2") = regina::FileFormat::XmlGen2;
+    m.attr("REGINA_XML_GEN_3") = regina::FileFormat::XmlGen3;
+    m.attr("REGINA_CURRENT_FILE_FORMAT") = regina::FileFormat::Current;
 
     RDOC_SCOPE_END
 }

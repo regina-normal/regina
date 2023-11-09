@@ -229,6 +229,8 @@ def process_comment(comment, preserveAmpersands):
     }.items():
         s = re.sub(r'[\\@]%s\s*' % in_, r'\n\n$%s:\n\n' % out_, s)
 
+    s = re.sub(r'[\\@]par\s*', r'\n\n$\n\n', s)
+
     s = re.sub(r'[\\@]details\s*', r'\n\n', s)
     s = re.sub(r'[\\@]brief\s*', r'', s)
     s = re.sub(r'[\\@]short\s*', r'', s)
@@ -262,6 +264,7 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'\\headerfile\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\cpp\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\nocpp\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\swift\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
 
     # Doxygen paragraphs that we will likewise ignore in Python:
     s = re.sub(r'[\\@]todo\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
@@ -323,6 +326,7 @@ def process_comment(comment, preserveAmpersands):
     wrapper.drop_whitespace = True
     wrapper.width = docstring_width
     wrapper.initial_indent = wrapper.subsequent_indent = ''
+    par_indent = ''
     last_indent = ''
 
     # TODO: In the following loop, any preformatted text *within* a list
@@ -398,7 +402,7 @@ def process_comment(comment, preserveAmpersands):
                     result += '\n'
 
                     wrapper.initial_indent = wrapper.subsequent_indent = ''
-                    last_indent = ''
+                    par_indent = last_indent = ''
                     continue
 
                 # Split out any list items in this paragraph.
@@ -448,9 +452,9 @@ def process_comment(comment, preserveAmpersands):
                         continue
 
                     if list_indents:
-                        wrapper.initial_indent = ' ' * sum( \
+                        wrapper.initial_indent = par_indent + ' ' * sum( \
                             (2 if i == None else 3) for i in list_index[:-1])
-                        wrapper.subsequent_indent = ' ' * sum( \
+                        wrapper.subsequent_indent = par_indent + ' ' * sum( \
                             (2 if i == None else 3) for i in list_index)
                         # Sphinx wants us to render numbered lists with: #.
                         # Here we will actually use real numbers.
@@ -468,13 +472,17 @@ def process_comment(comment, preserveAmpersands):
                         # we do not also have a list indent at this point,
                         # since special paragraphs and list items do not
                         # play well together.
-                        result += wrapped[1:] + '\n'
-                        wrapper.initial_indent = \
+                        if len(wrapped) > 1:
+                            result += wrapped[1:] + '\n'
+                        par_indent = wrapper.initial_indent = \
                             wrapper.subsequent_indent = ' ' * 4
                     else:
                         if len(wrapped) > 0:
                             result += wrapped + '\n\n'
                         wrapper.initial_indent = wrapper.subsequent_indent = ''
+                        # Leave par_indent untouched, so that list items
+                        # within a special paragraph maintain the extra
+                        # special paragraph indentation.
     return result.rstrip().lstrip('\n')
 
 

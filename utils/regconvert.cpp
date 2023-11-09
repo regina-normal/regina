@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
     if (! typeOpt)
         typeOpt = (newFile.empty() ? 'u' : 'x');
     regina::FileFormat version = (versionOpt == '2' ?
-        regina::REGINA_XML_GEN_2 : regina::REGINA_XML_GEN_3);
+        regina::FileFormat::XmlGen2 : regina::FileFormat::XmlGen3);
 
     // Check we're allowed to use stdout if we've asked for it.
     if (newFile.empty() && typeOpt != 'u')

@@ -50,7 +50,7 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
     if (usesAnd_) {
         // Combine all child filters using AND.
         for (auto child = firstChild(); child; child = child->nextSibling())
-            if (child->type() == PACKET_SURFACEFILTER)
+            if (child->type() == PacketType::SurfaceFilter)
                 if (! (std::static_pointer_cast<SurfaceFilter>(child)->accept(
                         surface)))
                     return false;
@@ -58,7 +58,7 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
     } else {
         // Combine all child filters using OR.
         for (auto child = firstChild(); child; child = child->nextSibling())
-            if (child->type() == PACKET_SURFACEFILTER)
+            if (child->type() == PacketType::SurfaceFilter)
                 if (std::static_pointer_cast<SurfaceFilter>(child)->accept(
                         surface))
                     return true;
@@ -70,10 +70,10 @@ void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
     writeXMLHeader(out, "filtercomb", format, anon, refs,
         true, std::pair("op", (usesAnd_ ? "and" : "or")));
-    if (format == REGINA_XML_GEN_2) {
+    if (format == FileFormat::XmlGen2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
-            << "\" typeid=\"" << filterType() << "\">\n"
+            << "\" typeid=\"" << static_cast<int>(filterType()) << "\">\n"
                "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n"
                "  </filter>\n";
     }
@@ -167,11 +167,11 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
     using regina::xml::xmlValueTag;
 
-    if (format == REGINA_XML_GEN_2) {
+    if (format == FileFormat::XmlGen2) {
         writeXMLHeader(out, "filterprop", format, anon, refs, true);
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
-            << "\" typeid=\"" << filterType() << "\">\n";
+            << "\" typeid=\"" << static_cast<int>(filterType()) << "\">\n";
 
         if (! eulerChar_.empty()) {
             out << "    <euler> ";

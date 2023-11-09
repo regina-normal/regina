@@ -698,11 +698,11 @@ class SnapPeaTriangulation :
          * given file, or could not parse the file contents (which could
          * have been passed explicitly or could have been read from file).
          *
-         * \param fileNameOrContents either the name of a SnapPea data
-         * file, or the contents of a SnapPea data file (which need not
+         * \param filenameOrContents either the name of a SnapPea data
+         * file, or the full contents of a SnapPea data file (which need not
          * actually exist on the filesystem).
          */
-        SnapPeaTriangulation(const std::string& fileNameOrContents);
+        SnapPeaTriangulation(const std::string& filenameOrContents);
 
         /**
          * Creates a new copy of the given SnapPea triangulation.
@@ -2174,16 +2174,16 @@ class SnapPeaTriangulation :
          * triangulation is being freshly created, a constructor would
          * typically not use change spans at all.
          *
-         * \note As a side-effect of resyncing the Regina triangulation,
-         * this routine will fire Triangulation<3> change events.  Therefore
-         * the caller must ensure that Triangulation<3>::heldBy_ is
-         * (temporarily) set to to HELD_BY_NONE when sync() is called so that
+         * \note As a side-effect of resyncing the Regina triangulation, this
+         * routine will fire Triangulation<3> change events.  Therefore the
+         * caller must ensure that Triangulation<3>::heldBy_ is (temporarily)
+         * set to to PacketHeldBy::None when sync() is called so that
          * this does not nullify the SnapPea triangulation.  You do not need
          * to worry about this if you are using a SnapPeaChangeSpan (as
          * recommended above), since SnapPeaChangeSpan manages the
          * Triangulation<3>::heldBy_ setting automatically.  If you are
          * writing a class constructor that calls sync() manually, then you
-         * should only set Triangulation<3>::heldBy_ to HELD_BY_SNAPPEA
+         * should only set Triangulation<3>::heldBy_ to PacketHeldBy::SnapPea
          * _after_ sync() has been called.
          */
         void sync();
@@ -2280,8 +2280,8 @@ class SnapPeaTriangulation :
          *
          * In summary, this SnapPeaChangeSpan will:
          *
-         * - temporarily set Triangulation<3>::heldBy_ to HELD_BY_NONE for
-         *   the lifetime of the SnapPeaChangeSpan, unless \a policy is
+         * - temporarily set Triangulation<3>::heldBy_ to PacketHeldBy::None
+         *   for the lifetime of the SnapPeaChangeSpan, unless \a policy is
          *   \c changeFillingsOnly (which means the inherited Triangulation<3>
          *   data does not change);
          *
@@ -2323,7 +2323,8 @@ class SnapPeaTriangulation :
                         // Temporarily ensure that syncing the regina
                         // triangulation will not cause the entire
                         // SnapPeaTriangulation to be nullified.
-                        span_.held().Triangulation<3>::heldBy_ = HELD_BY_NONE;
+                        span_.held().Triangulation<3>::heldBy_ =
+                            PacketHeldBy::None;
                     }
                 }
 
@@ -2346,7 +2347,7 @@ class SnapPeaTriangulation :
                         // with the SnapPea triangulation data, restore things
                         // to how they should be.
                         span_.held().Triangulation<3>::heldBy_ =
-                            HELD_BY_SNAPPEA;
+                            PacketHeldBy::SnapPea;
                     }
                 }
         };
@@ -2421,7 +2422,7 @@ inline bool Cusp::operator != (const Cusp& other) const {
 
 inline SnapPeaTriangulation::SnapPeaTriangulation() :
         data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+    Triangulation<3>::heldBy_ = PacketHeldBy::SnapPea;
 }
 
 inline bool SnapPeaTriangulation::isNull() const {

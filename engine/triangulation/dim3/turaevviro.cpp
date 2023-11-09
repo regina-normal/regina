@@ -872,18 +872,18 @@ namespace {
                 ++nEasyBags;
                 std::fill(seenDegree[index].begin(),
                     seenDegree[index].end(), 0);
-            } else if (bag->type() == NICE_INTRODUCE) {
+            } else if (bag->niceType() == NiceType::Introduce) {
                 // Introduce bag.
                 ++nEasyBags;
                 child = bag->children();
                 std::copy(seenDegree[child->index()].begin(),
                     seenDegree[child->index()].end(),
                     seenDegree[index].begin());
-            } else if (bag->type() == NICE_FORGET) {
+            } else if (bag->niceType() == NiceType::Forget) {
                 // Forget bag.
                 hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                 child = bag->children();
-                tet = tri.tetrahedron(child->element(bag->subtype()));
+                tet = tri.tetrahedron(child->element(bag->niceIndex()));
                 std::copy(seenDegree[child->index()].begin(),
                     seenDegree[child->index()].end(),
                     seenDegree[index].begin());
@@ -964,7 +964,7 @@ namespace {
 
                 partial[index] = new SolnSet;
                 partial[index]->emplace(std::move(seq), std::move(val));
-            } else if (bag->type() == NICE_INTRODUCE) {
+            } else if (bag->niceType() == NiceType::Introduce) {
                 // Introduce bag.
                 if (tracker) {
                     if (tracker->isCancelled())
@@ -978,7 +978,7 @@ namespace {
                 child = bag->children();
                 partial[index] = partial[child->index()];
                 partial[child->index()] = nullptr;
-            } else if (bag->type() == NICE_FORGET) {
+            } else if (bag->niceType() == NiceType::Forget) {
                 // Forget bag.
                 if (tracker) {
                     if (tracker->isCancelled())
@@ -990,7 +990,7 @@ namespace {
                 }
 
                 child = bag->children();
-                tet = tri.tetrahedron(child->element(bag->subtype()));
+                tet = tri.tetrahedron(child->element(bag->niceIndex()));
 
                 for (int i = 5; i >= 0; --i) {
                     tetEdge[i] = tet->edge(i)->index();
@@ -1351,10 +1351,10 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 
     InitialData<false>::TVType ans;
     switch (alg) {
-        case ALG_BACKTRACK:
+        case Algorithm::Backtrack:
             ans = turaevViroBacktrack(*this, init, nullptr);
             break;
-        case ALG_NAIVE:
+        case Algorithm::Naive:
             ans = turaevViroNaive(*this, init, nullptr);
             break;
         default:
@@ -1408,10 +1408,10 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
 
     InitialData<true>::TVType ans;
     switch (alg) {
-        case ALG_BACKTRACK:
+        case Algorithm::Backtrack:
             ans = turaevViroBacktrack(*this, init, tracker);
             break;
-        case ALG_NAIVE:
+        case Algorithm::Naive:
             ans = turaevViroNaive(*this, init, tracker);
             break;
         default:

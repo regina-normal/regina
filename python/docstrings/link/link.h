@@ -61,11 +61,26 @@ torus bounding each component of the link.)doc";
 
 // Docstring regina::python::doc::Link
 static const char *Link =
-R"doc(Represents a directed knot or link in the 3-sphere.
+R"doc(Represents a combinatorial diagram of a directed knot or link in the
+3-sphere.
 
-This class supports links with any number of components (including
-zero), and it also supports components with no crossings (which form
-additional unknot components of the overall link).
+This class Link is a "purely combinatorial" representation of a link,
+as it represents the combinatorics of a 2-dimensional link diagram,
+with no geometric information about the specific placement of strands
+or crossings. This is as opposed to the SpatialLink class, which is
+"purely geometric" (storing a specific embedding of the link in
+3-dimensional space).
+
+* For most purposes, you should use the Link class, which has a rich
+  set of mathematical features and uses exact discrete algorithms.
+
+* For visualisation, you may wish to use SpatialLink instead, with the
+  caveat that SpatialLink is based on floating-point arithmetic and is
+  therefore susceptible to floating point errors.
+
+This Link class supports links with any number of components
+(including zero), and it also supports components with no crossings
+(which form additional unknot components of the overall link).
 
 Since Regina 7.0, this is no longer a "packet type" that can be
 inserted directly into the packet tree. Instead a Link is now a
@@ -249,8 +264,8 @@ Returns:
 
 namespace Framing_ {
 
-// Docstring regina::python::doc::Framing_::FRAMING_BLACKBOARD
-static const char *FRAMING_BLACKBOARD =
+// Docstring regina::python::doc::Framing_::Blackboard
+static const char *Blackboard =
 R"doc(Indicates the _blackboard framing_, which is specific to the knot/link
 projection.
 
@@ -259,8 +274,8 @@ projection plane. Equivalently, the blackboard framing chooses
 longitudes whose projections do not intersect the original link
 diagram.)doc";
 
-// Docstring regina::python::doc::Framing_::FRAMING_SEIFERT
-static const char *FRAMING_SEIFERT =
+// Docstring regina::python::doc::Framing_::Seifert
+static const char *Seifert =
 R"doc(Indicates the _Seifert framing_, which is defined algebraically and is
 independent of the knot/link projection.
 
@@ -421,10 +436,11 @@ call this routine in a new detached thread.
 
 .. warning::
     The naive algorithm can only handle a limited number of crossings
-    (currently at most 63). If you pass ALG_NAIVE and you have too
-    many crossings (which is not advised, since the naive algorithm
-    requires 2^*n* time), then this routine will ignore your choice of
-    algorithm and use the treewidth-based algorithm regardless.
+    (currently at most 63). If you pass Algorithm::Naive and you have
+    too many crossings (which is not advised, since the naive
+    algorithm requires 2^*n* time), then this routine will ignore your
+    choice of algorithm and use the treewidth-based algorithm
+    regardless.
 
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
@@ -439,11 +455,12 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_NAIVE is a slow algorithm that computes the Kauffman bracket
-    by resolving all crossings in all possible ways, and ALG_TREEWIDTH
-    uses a fixed-parameter tractable treewidth-based algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Naive is a slow algorithm that computes the
+    Kauffman bracket by resolving all crossings in all possible ways,
+    and Algorithm::Treewidth uses a fixed-parameter tractable
+    treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -574,8 +591,8 @@ users should use ``auto`` (just like this declaration does).
 The returned object is guaranteed to be an instance of ListView, which
 means it offers basic container-like functions and supports range-
 based ``for`` loops. Each element of the list will be a starting
-strand for some components; more precisely, iterating through this
-list is equivalent to calling ``component(0)``, ``component(1)``, ...,
+strand for some component; more precisely, iterating through this list
+is equivalent to calling ``component(0)``, ``component(1)``, ...,
 ``component(countComponents()-1)`` in turn. As an example, your code
 might look like:
 
@@ -653,6 +670,13 @@ R"doc(Returns the number of components in this link.
 
 Returns:
     the number of components.)doc";
+
+// Docstring regina::python::doc::Link_::countTrivialComponents
+static const char *countTrivialComponents =
+R"doc(Returns the number of zero-crossing unknot components in this link.
+
+Returns:
+    the number of zero-crossing unknot components.)doc";
 
 // Docstring regina::python::doc::Link_::crossing
 static const char *crossing =
@@ -813,7 +837,7 @@ static const char *dumpConstruction =
 R"doc(Deprecated routine that returns C++ code to reconstruct this link.
 
 .. deprecated::
-    This is equivalent to calling ``source(LANGUAGE_CXX)``, for
+    This is equivalent to calling ``source(Language::Cxx)``, for
     compatibility with older versions of Regina. In particular, it is
     _not_ equivalent to calling ``source()`` (which defaults to the
     programming language currently being used). See source() for
@@ -1806,11 +1830,11 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_BACKTRACK will use Kauffman's skein-template algorithm, and
-    ALG_TREEWIDTH will use a fixed-parameter tractable treewidth-based
-    algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Backtrack will use Kauffman's skein-template
+    algorithm, and Algorithm::Treewidth will use a fixed-parameter
+    tractable treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -1882,11 +1906,11 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_BACKTRACK will use Kauffman's skein-template algorithm, and
-    ALG_TREEWIDTH will use a fixed-parameter tractable treewidth-based
-    algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Backtrack will use Kauffman's skein-template
+    algorithm, and Algorithm::Treewidth will use a fixed-parameter
+    tractable treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -1977,11 +2001,11 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_BACKTRACK will use Kauffman's skein-template algorithm, and
-    ALG_TREEWIDTH will use a fixed-parameter tractable treewidth-based
-    algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Backtrack will use Kauffman's skein-template
+    algorithm, and Algorithm::Treewidth will use a fixed-parameter
+    tractable treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -2046,9 +2070,9 @@ This routine will never reflect or reverse the link.
 
 // Docstring regina::python::doc::Link_::isAlternating
 static const char *isAlternating =
-R"doc(Returns whether this knot diagram is alternating.
+R"doc(Returns whether this link diagram is alternating.
 
-Note that this routine cannot tell whether the _knot_ is alternating
+Note that this routine cannot tell whether the _link_ is alternating
 (i.e., whether there _exists_ an alternating diagram). Instead, it
 simply returns whether this specific diagram is alternating or not.
 
@@ -2203,10 +2227,11 @@ call this routine in a new detached thread.
 
 .. warning::
     The naive algorithm can only handle a limited number of crossings
-    (currently at most 63). If you pass ALG_NAIVE and you have too
-    many crossings (which is not advised, since the naive algorithm
-    requires 2^*n* time), then this routine will ignore your choice of
-    algorithm and use the treewidth-based algorithm regardless.
+    (currently at most 63). If you pass Algorithm::Naive and you have
+    too many crossings (which is not advised, since the naive
+    algorithm requires 2^*n* time), then this routine will ignore your
+    choice of algorithm and use the treewidth-based algorithm
+    regardless.
 
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
@@ -2221,11 +2246,12 @@ Python:
 
 Parameter ``alg``:
     the algorithm with which to compute the polynomial. If you are not
-    sure, the default (ALG_DEFAULT) is a safe choice. If you wish to
-    specify a particular algorithm, there are currently two choices:
-    ALG_NAIVE is a slow algorithm that computes the Kauffman bracket
-    by resolving all crossings in all possible ways, and ALG_TREEWIDTH
-    uses a fixed-parameter tractable treewidth-based algorithm.
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Naive is a slow algorithm that computes the
+    Kauffman bracket by resolving all crossings in all possible ways,
+    and Algorithm::Treewidth uses a fixed-parameter tractable
+    treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -2322,6 +2348,22 @@ The algorithm to compute linking number is linear time.
 
 Returns:
     the linking number.)doc";
+
+// Docstring regina::python::doc::Link_::makeAlternating
+static const char *makeAlternating =
+R"doc(Changes a subset of crossings to convert this into an alternating link
+diagram. Here, "changing" a crossing means switching its upper and
+lower strands (so this operation may change this into a topologically
+different link).
+
+The empty diagram and any zero-crossing unknot components will be
+considered alternating.
+
+For each connected piece of the link diagram (which may incorporate
+several link components), there is a unique alternating diagram up to
+reflection through the plane in which the diagram is drawn. The
+reflection that is chosen will be the one that preserves the sign of
+the lowest-index crossing in that piece of the diagram.)doc";
 
 // Docstring regina::python::doc::Link_::niceTreeDecomposition
 static const char *niceTreeDecomposition =
@@ -2516,14 +2558,16 @@ restrictions:
 
 * They cannot encode zero-crossing unknot components (i.e., components
   for which the component() function returns a null strand). Any such
-  components will simply be omitted from the code.
+  components will simply be omitted from the code. You can detect such
+  components by calling countTrivialComponents().
 
 * If a link has any components that consist entirely of over-crossings
   (which must be unknots "placed on top of" the link diagram), a
   planar diagram code does not carry enough data to reconstruct the
   _orientation_ of these components. The topology will be preserved,
   but in general the combinatorics of such a link diagram cannot be
-  reconstructed faithfully.
+  reconstructed faithfully. You can detect such components by calling
+  pdAmbiguous().
 
 If you need a text code that can work with these types of link
 diagrams, you can always use Jenkins' format instead.
@@ -2588,6 +2632,25 @@ variant of pd() that writes directly to an output stream.
 
 Returns:
     the planar diagram code, as described above.)doc";
+
+// Docstring regina::python::doc::Link_::pdAmbiguous
+static const char *pdAmbiguous =
+R"doc(Determines whether this link has any components whose orientations
+cannot be recovered from a planar diagram code.
+
+Such components must have at least one crossing, and must consist
+_entirely_ of over-crossings. These are essentially unknotted loops
+that are "placed on top of" the remainder of the link diagram.
+
+Note that planar diagrams have another limitation, which is that they
+cannot represent zero-crossing components at all (any such components
+are omitted from planar diagram codes entirely). Zero-crossing
+components are _not_ recognised by this routine, but can be recognised
+instead by calling countTrivialComponents().
+
+Returns:
+    ``True`` if and only if some component of this link has at least
+    one crossing and consists entirely of over-crossings.)doc";
 
 // Docstring regina::python::doc::Link_::pdData
 static const char *pdData =
@@ -3565,9 +3628,9 @@ R"doc(Instructs Regina to use the given tree decomposition as the starting
 point whenever it needs a tree decomposition for this link.
 
 For some link routines, including niceTreeDecomposition() as well as
-computations such as jones() that support the option ALG_TREEWIDTH,
-Regina needs a tree decomposition of the planar 4-valent multigraph
-formed by this link diagram.
+computations such as jones() that support the option
+Algorithm::Treewidth, Regina needs a tree decomposition of the planar
+4-valent multigraph formed by this link diagram.
 
 By default, Regina will compute (and then cache) such a tree
 decomposition itself, using in-built greedy heuristics. This routine

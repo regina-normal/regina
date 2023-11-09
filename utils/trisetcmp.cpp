@@ -87,18 +87,18 @@ void runMatches(const Packet& tree1, const Packet& tree2, std::ostream& out) {
     long nMatches = 0;
 
     for (const Packet& p1 : tree1)
-        if (p1.type() == regina::PACKET_TRIANGULATION3) {
+        if (p1.type() == regina::PacketType::Triangulation3) {
             for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PACKET_TRIANGULATION3)
+                if (p2.type() == regina::PacketType::Triangulation3)
                     if (compare<3>(p1, p2)) {
                         out << "    " << p1.humanLabel()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
                             << p2.humanLabel() << std::endl;
                         nMatches++;
                     }
-        } else if (p1.type() == regina::PACKET_TRIANGULATION4) {
+        } else if (p1.type() == regina::PacketType::Triangulation4) {
             for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PACKET_TRIANGULATION4)
+                if (p2.type() == regina::PacketType::Triangulation4)
                     if (compare<4>(p1, p2)) {
                         out << "    " << p1.label()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
@@ -124,10 +124,10 @@ void runNonMatches(const std::string& file1, const Packet& tree1,
 
     bool matched;
     for (const Packet& p1 : tree1)
-        if (p1.type() == regina::PACKET_TRIANGULATION3) {
+        if (p1.type() == regina::PacketType::Triangulation3) {
             matched = false;
             for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PACKET_TRIANGULATION3)
+                if (p2.type() == regina::PacketType::Triangulation3)
                     if (compare<3>(p1, p2)) {
                         matched = true;
                         break;
@@ -136,10 +136,10 @@ void runNonMatches(const std::string& file1, const Packet& tree1,
                 out << "    " << p1.humanLabel() << std::endl;
                 nMissing++;
             }
-        } else if (p1.type() == regina::PACKET_TRIANGULATION4) {
+        } else if (p1.type() == regina::PacketType::Triangulation4) {
             matched = false;
             for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PACKET_TRIANGULATION4)
+                if (p2.type() == regina::PacketType::Triangulation4)
                     if (compare<4>(p1, p2)) {
                         matched = true;
                         break;

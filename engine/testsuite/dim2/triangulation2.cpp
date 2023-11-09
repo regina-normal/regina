@@ -167,6 +167,9 @@ TEST_F(Dim2Test, pachner) {
     testManualCases(TriangulationTest<2>::verifyPachner);
     TriangulationTest<2>::verifyPachnerSimplicial();
 }
+TEST_F(Dim2Test, twoZeroVertexMove) {
+    testManualCases(TriangulationTest<2>::verifyTwoZeroVertex);
+}
 TEST_F(Dim2Test, barycentricSubdivision) {
     testManualCases(TriangulationTest<2>::verifyBarycentricSubdivision);
 }

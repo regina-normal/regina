@@ -37,7 +37,7 @@ def testDump(obj):
 	print()
 	
 	# For C++, just print the construction.
-	print(obj.source(LANGUAGE_CXX))
+	print(obj.source(Language.Cxx))
 	
 	# For Python, print it _and_ test that it works.
 	code = obj.source()

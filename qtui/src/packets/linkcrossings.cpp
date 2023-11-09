@@ -384,6 +384,16 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actReverse);
     connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
 
+    actAlternating = new QAction(this);
+    actAlternating->setText(tr("Make &Alternating"));
+    actAlternating->setIcon(ReginaSupport::regIcon("alternating"));
+    actAlternating->setToolTip(tr("Make this an alternating link"));
+    actAlternating->setWhatsThis(tr("Switch the upper/lower strands on "
+        "crossings where necessary to convert this into an alternating link.  "
+        "This link will be modified directly."));
+    actionList.push_back(actAlternating);
+    connect(actAlternating, SIGNAL(triggered()), this, SLOT(alternating()));
+
     auto* actParallel = new QAction(this);
     actParallel->setText(tr("Parallel Ca&bles..."));
     actParallel->setIcon(ReginaSupport::regIcon("parallel"));
@@ -395,7 +405,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
     auto* actSelfFrame = new QAction(this);
-    actSelfFrame->setText(tr("Self Fr&ame"));
+    actSelfFrame->setText(tr("Self Frame"));
     actSelfFrame->setIcon(ReginaSupport::regIcon("selfframe"));
     actSelfFrame->setToolTip(tr("Self-frame by adding twists"));
     actSelfFrame->setWhatsThis(tr("Adds twists "
@@ -613,6 +623,8 @@ void LinkCrossingsUI::refresh() {
         auto* stretch = new QWidget();
         layout->addWidget(stretch, 1);
     }
+
+    actAlternating->setEnabled(! link->isAlternating());
 }
 
 void LinkCrossingsUI::simplify() {
@@ -691,6 +703,10 @@ void LinkCrossingsUI::rotate() {
 
 void LinkCrossingsUI::reverse() {
     link->reverse();
+}
+
+void LinkCrossingsUI::alternating() {
+    link->makeAlternating();
 }
 
 void LinkCrossingsUI::parallel() {
@@ -875,10 +891,10 @@ void ParallelDialog::slotOk() {
     regina::Framing f;
     switch (framing->currentIndex()) {
         case 1:
-            f = regina::FRAMING_BLACKBOARD;
+            f = regina::Framing::Blackboard;
             break;
         default:
-            f = regina::FRAMING_SEIFERT;
+            f = regina::Framing::Seifert;
             break;
     }
 

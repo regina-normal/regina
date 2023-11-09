@@ -13,6 +13,7 @@
 <!ENTITY data-code SYSTEM "data-code.docbook">
 <!ENTITY data-compact-filter SYSTEM "data-compact-filter.docbook">
 <!ENTITY data-compact-surface SYSTEM "data-compact-surface.docbook">
+<!ENTITY data-component SYSTEM "data-component.docbook">
 <!ENTITY data-components SYSTEM "data-components.docbook">
 <!ENTITY data-compressingdisc SYSTEM "data-compressingdisc.docbook">
 <!ENTITY data-container SYSTEM "data-container.docbook">
@@ -41,6 +42,7 @@
 <!ENTITY data-irreducible SYSTEM "data-irreducible.docbook">
 <!ENTITY data-line SYSTEM "data-line.docbook">
 <!ENTITY data-link SYSTEM "data-link.docbook">
+<!ENTITY data-node SYSTEM "data-node.docbook">
 <!ENTITY data-op SYSTEM "data-op.docbook">
 <!ENTITY data-orbl-filter SYSTEM "data-orbl-filter.docbook">
 <!ENTITY data-orbl-surface SYSTEM "data-orbl-surface.docbook">
@@ -76,6 +78,7 @@
 <!ENTITY data-solidtorus SYSTEM "data-solidtorus.docbook">
 <!ENTITY data-spanstrict SYSTEM "data-spanstrict.docbook">
 <!ENTITY data-spantaut SYSTEM "data-spantaut.docbook">
+<!ENTITY data-spatiallink SYSTEM "data-spatiallink.docbook">
 <!ENTITY data-splitsfce SYSTEM "data-splitsfce.docbook">
 <!ENTITY data-struct SYSTEM "data-struct.docbook">
 <!ENTITY data-surface SYSTEM "data-surface.docbook">
@@ -116,6 +119,8 @@
  '<link linkend="data-compact-filter"><sgmltag>compact</sgmltag> (filter)</link>'>
 <!ENTITY xml-compact-surface
  '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag></link>'>
+<!ENTITY xml-component
+ '<link linkend="data-component"><sgmltag>component</sgmltag></link>'>
 <!ENTITY xml-components
  '<link linkend="data-components"><sgmltag>components</sgmltag></link>'>
 <!ENTITY xml-compressingdisc
@@ -172,6 +177,8 @@
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
 <!ENTITY xml-link
  '<link linkend="data-link"><sgmltag>link</sgmltag></link>'>
+<!ENTITY xml-node
+ '<link linkend="data-node"><sgmltag>node</sgmltag></link>'>
 <!ENTITY xml-op
  '<link linkend="data-op"><sgmltag>op</sgmltag></link>'>
 <!ENTITY xml-orbl-filter
@@ -244,6 +251,8 @@
  '<link linkend="data-spanstrict"><sgmltag>spanstrict</sgmltag></link>'>
 <!ENTITY xml-spantaut
  '<link linkend="data-spantaut"><sgmltag>spantaut</sgmltag></link>'>
+<!ENTITY xml-spatiallink
+ '<link linkend="data-spatiallink"><sgmltag>spatiallink</sgmltag></link>'>
 <!ENTITY xml-splitsfce
  '<link linkend="data-splitsfce"><sgmltag>splitsfce</sgmltag></link>'>
 <!ENTITY xml-struct

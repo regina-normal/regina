@@ -214,6 +214,26 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     elements.)doc";
 
+// Docstring regina::python::doc::Vector_::__init_4
+static const char *__init_4 =
+R"doc(Creates a new clone of the given vector, which may hold objects of a
+different type.
+
+This constructor is marked as explicit in the hope of avoiding
+accidental (and unintentional) mixing of vector classes.
+
+Python:
+    Using this constructor, Python allows you to construct a
+    Vector<Integer> from a Vector<LargeInteger> or vice versa.
+
+Template parameter ``U``:
+    the type of object held by the given vector *src*. It must be
+    possible to _assign_ an object of type *U* to an object of type
+    *T*.
+
+Parameter ``src``:
+    the vector to clone.)doc";
+
 // Docstring regina::python::doc::Vector_::__isub
 static const char *__isub =
 R"doc(Subtracts the given vector from this vector. This vector will be

@@ -85,7 +85,7 @@ template <int> class Triangulation;
  *
  * \ingroup link
  */
-enum Framing {
+enum class Framing {
     /**
      * Indicates the _Seifert framing_, which is defined
      * algebraically and is independent of the knot/link projection.
@@ -99,7 +99,7 @@ enum Framing {
      * chooses the unique longitude for the corresponding knot that is
      * trivial in the homology of the knot complement.
      */
-    FRAMING_SEIFERT = 1,
+    Seifert = 1,
     /**
      * Indicates the _blackboard framing_, which is specific to the
      * knot/link projection.
@@ -108,8 +108,24 @@ enum Framing {
      * the projection plane.  Equivalently, the blackboard framing chooses
      * longitudes whose projections do not intersect the original link diagram.
      */
-    FRAMING_BLACKBOARD = 2
+    Blackboard = 2
 };
+
+/**
+ * A deprecated constant indicating one of the standard link framings.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Framing::Seifert.
+ */
+[[deprecated]] inline constexpr Framing FRAMING_SEIFERT = Framing::Seifert;
+/**
+ * A deprecated constant indicating one of the standard link framings.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Framing::Blackboard.
+ */
+[[deprecated]] inline constexpr Framing FRAMING_BLACKBOARD =
+    Framing::Blackboard;
 
 /**
  * A reference to one of the two strands of a link that pass each other
@@ -595,11 +611,25 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
 };
 
 /**
- * Represents a directed knot or link in the 3-sphere.
+ * Represents a combinatorial diagram of a directed knot or link in the
+ * 3-sphere.
  *
- * This class supports links with any number of components (including zero),
- * and it also supports components with no crossings (which form additional
- * unknot components of the overall link).
+ * This class Link is a "purely combinatorial" representation of a link, as
+ * it represents the combinatorics of a 2-dimensional link diagram, with no
+ * geometric information about the specific placement of strands or crossings.
+ * This is as opposed to the SpatialLink class, which is "purely geometric"
+ * (storing a specific embedding of the link in 3-dimensional space).
+ *
+ * - For most purposes, you should use the Link class, which has a rich
+ *   set of mathematical features and uses exact discrete algorithms.
+ *
+ * - For visualisation, you may wish to use SpatialLink instead, with the
+ *   caveat that SpatialLink is based on floating-point arithmetic and is
+ *   therefore susceptible to floating point errors.
+ *
+ * This Link class supports links with any number of components (including
+ * zero), and it also supports components with no crossings (which form
+ * additional unknot components of the overall link).
  *
  * Since Regina 7.0, this is no longer a "packet type" that can be
  * inserted directly into the packet tree.  Instead a Link is now a
@@ -948,7 +978,7 @@ class Link :
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
          * range-based \c for loops.  Each element of the list will be
-         * a starting strand for some components; more precisely, iterating
+         * a starting strand for some component; more precisely, iterating
          * through this list is equivalent to calling `component(0)`,
          * `component(1)`, ..., `component(countComponents()-1)`
          * in turn.  As an example, your code might look like:
@@ -966,6 +996,13 @@ class Link :
          * \return access to the list of all components.
          */
         auto components() const;
+
+        /**
+         * Returns the number of zero-crossing unknot components in this link.
+         *
+         * \return the number of zero-crossing unknot components.
+         */
+        size_t countTrivialComponents() const;
 
         /**
          * Returns the strand in the link with the given integer ID.
@@ -1212,6 +1249,23 @@ class Link :
          * becomes next()).
          */
         void reverse();
+
+        /**
+         * Changes a subset of crossings to convert this into an alternating
+         * link diagram.  Here, "changing" a crossing means switching its
+         * upper and lower strands (so this operation may change this into
+         * a topologically different link).
+         *
+         * The empty diagram and any zero-crossing unknot components
+         * will be considered alternating.
+         *
+         * For each connected piece of the link diagram (which may incorporate
+         * several link components), there is a unique alternating diagram up
+         * to reflection through the plane in which the diagram is drawn.
+         * The reflection that is chosen will be the one that preserves the
+         * sign of the lowest-index crossing in that piece of the diagram.
+         */
+        void makeAlternating();
 
         /**
          * Tests for and/or performs a type I Reidemeister move to remove a
@@ -2026,9 +2080,9 @@ class Link :
         /*@{*/
 
         /**
-         * Returns whether this knot diagram is alternating.
+         * Returns whether this link diagram is alternating.
          *
-         * Note that this routine cannot tell whether the _knot_ is
+         * Note that this routine cannot tell whether the _link_ is
          * alternating (i.e., whether there _exists_ an alternating diagram).
          * Instead, it simply returns whether this specific diagram is
          * alternating or not.
@@ -2151,7 +2205,7 @@ class Link :
          * \param framing the framing under which these copies will be parallel.
          * \return \a k parallel copies of this link.
          */
-        Link parallel(int k, Framing framing = FRAMING_SEIFERT) const;
+        Link parallel(int k, Framing framing = Framing::Seifert) const;
 
         /**
          * Returns the Kauffman bracket polynomial of this link diagram.
@@ -2179,8 +2233,8 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
-         * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
+         * \warning The naive algorithm can only handle a limited number of
+         * crossings (currently at most 63).  If you pass Algorithm::Naive and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
@@ -2197,18 +2251,18 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_NAIVE is a slow algorithm that computes
-         * the Kauffman bracket by resolving all crossings in all possible
-         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
-         * treewidth-based algorithm.
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Naive is a slow algorithm that
+         * computes the Kauffman bracket by resolving all crossings in all
+         * possible ways, and Algorithm::Treewidth uses a fixed-parameter
+         * tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the bracket polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT,
+        const Laurent<Integer>& bracket(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Kauffman bracket polynomial of this link diagram
@@ -2269,8 +2323,8 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
-         * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
+         * \warning The naive algorithm can only handle a limited number of
+         * crossings (currently at most 63).  If you pass Algorithm::Naive and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
@@ -2287,18 +2341,18 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_NAIVE is a slow algorithm that computes
-         * the Kauffman bracket by resolving all crossings in all possible
-         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
-         * treewidth-based algorithm.
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Naive is a slow algorithm that
+         * computes the Kauffman bracket by resolving all crossings in all
+         * possible ways, and Algorithm::Treewidth uses a fixed-parameter
+         * tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the Jones polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT,
+        const Laurent<Integer>& jones(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Jones polynomial of this link diagram already known?
@@ -2371,17 +2425,17 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_BACKTRACK will use Kauffman's
-         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Backtrack will use Kauffman's
+         * skein-template algorithm, and Algorithm::Treewidth will use a
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT,
+        const Laurent2<Integer>& homflyAZ(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -2441,17 +2495,17 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_BACKTRACK will use Kauffman's
-         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Backtrack will use Kauffman's
+         * skein-template algorithm, and Algorithm::Treewidth will use a
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT,
+        const Laurent2<Integer>& homflyLM(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -2480,17 +2534,17 @@ class Link :
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_BACKTRACK will use Kauffman's
-         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Backtrack will use Kauffman's
+         * skein-template algorithm, and Algorithm::Treewidth will use a
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT,
+        const Laurent2<Integer>& homfly(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Is the HOMFLY polynomial of this link diagram already known?
@@ -2584,7 +2638,7 @@ class Link :
          *
          * For some link routines, including niceTreeDecomposition() as
          * well as computations such as jones() that support the option
-         * ALG_TREEWIDTH, Regina needs a tree decomposition of the
+         * Algorithm::Treewidth, Regina needs a tree decomposition of the
          * planar 4-valent multigraph formed by this link diagram.
          *
          * By default, Regina will compute (and then cache) such a tree
@@ -3159,13 +3213,15 @@ class Link :
          * - They cannot encode zero-crossing unknot components (i.e.,
          *   components for which the component() function returns a null
          *   strand).  Any such components will simply be omitted from the code.
+         *   You can detect such components by calling countTrivialComponents().
          *
          * - If a link has any components that consist entirely of
          *   over-crossings (which must be unknots "placed on top of" the link
          *   diagram), a planar diagram code does not carry enough data to
          *   reconstruct the _orientation_ of these components.  The topology
          *   will be preserved, but in general the combinatorics of such a link
-         *   diagram cannot be reconstructed faithfully.
+         *   diagram cannot be reconstructed faithfully.  You can detect such
+         *   components by calling pdAmbiguous().
          *
          * If you need a text code that can work with these types of
          * link diagrams, you can always use Jenkins' format instead.
@@ -3273,6 +3329,25 @@ class Link :
         void pd(std::ostream& out) const;
 
         /**
+         * Determines whether this link has any components whose orientations
+         * cannot be recovered from a planar diagram code.
+         *
+         * Such components must have at least one crossing, and must consist
+         * _entirely_ of over-crossings.  These are essentially unknotted
+         * loops that are "placed on top of" the remainder of the link diagram.
+         *
+         * Note that planar diagrams have another limitation, which is that
+         * they cannot represent zero-crossing components at all (any such
+         * components are omitted from planar diagram codes entirely).
+         * Zero-crossing components are _not_ recognised by this routine, but
+         * can be recognised instead by calling countTrivialComponents().
+         *
+         * \return \c true if and only if some component of this link has at
+         * least one crossing and consists entirely of over-crossings.
+         */
+        bool pdAmbiguous() const;
+
+        /**
          * Outputs the underlying planar 4-valent multigraph using the
          * PACE text format.  This text format is described in detail at
          * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/,
@@ -3349,12 +3424,12 @@ class Link :
          * written.
          * \return the source code that was generated.
          */
-        std::string source(Language language = LANGUAGE_CURRENT) const;
+        std::string source(Language language = Language::Current) const;
 
         /**
          * Deprecated routine that returns C++ code to reconstruct this link.
          *
-         * \deprecated This is equivalent to calling `source(LANGUAGE_CXX)`,
+         * \deprecated This is equivalent to calling `source(Language::Cxx)`,
          * for compatibility with older versions of Regina.  In particular,
          * it is _not_ equivalent to calling `source()` (which defaults to the
          * programming language currently being used).  See source() for
@@ -4564,7 +4639,7 @@ class Link :
          * This optimisation may involve compressing and/or rerooting the
          * given tree decomposition.  The aim is to minimise the estimated
          * processing time and memory consumption of calling
-         * `jones(ALG_TREEWIDTH)` and/or `bracket(ALG_TREEWIDTH)`.
+         * `jones(Algorithm::Treewidth)` and/or `bracket(Algorithm::Treewidth)`.
          *
          * The rerooting procedure essentially estimates the number of
          * partial solutions that are expected at each bag in the
@@ -4608,11 +4683,11 @@ class Link :
          *
          * - On destruction, this object also calls Link::clearAllProperties(),
          *   _unless_ the template argument \a changeType is
-         *   CHANGE_PRESERVE_ALL_PROPERTIES.  This call will happen just
+         *   ChangeType::PreserveAllProperties.  This call will happen just
          *   before the final change event is fired.
          *
          * - Finally, if the template argument \a changeType is
-         *   CHANGE_PRESERVE_TOPOLOGY, then this object will effectively
+         *   ChangeType::PreserveTopology, then this object will effectively
          *   create a new TopologyLock for the link that lasts for the
          *   full lifespan of this object, _excluding_ the firing of packet
          *   change events.  Specifically, the TopologyLock will be created in
@@ -4638,7 +4713,7 @@ class Link :
          * ChangeAndClearSpan objects then Link::clearAllProperties() will be
          * called multiple times.  This is harmless but inefficient.
          *
-         * Likewise, if \a changeType is CHANGE_PRESERVE_TOPOLOGY then these
+         * Likewise, if \a changeType is ChangeType::PreserveTopology then these
          * objects will behave in the expected way when nested with other
          * TopologyLock objects (i.e., topological properties will be preserved
          * as long as any such object is alive).
@@ -4659,14 +4734,14 @@ class Link :
          * course this object lives within a larger surrounding change span,
          * in which case the outer span takes full responsibility for clearing
          * computed properties).  See the notes above for details.  Currently
-         * CHANGE_PRESERVE_TOPOLOGY is not yet supported for links (this is
+         * ChangeType::PreserveTopology is not yet supported for links (this is
          * planned for a future release of Regina).  If unsure, the default
-         * value of CHANGE_GENERAL (which clears _all_ computed properties)
+         * value of ChangeType::General (which clears _all_ computed properties)
          * is always safe to use.
          *
          * \nopython
          */
-        template <ChangeType changeType = CHANGE_GENERAL>
+        template <ChangeType changeType = ChangeType::General>
         class ChangeAndClearSpan : public PacketData<Link>::PacketChangeSpan {
             public:
                 /**
@@ -4678,7 +4753,7 @@ class Link :
                  */
                 ChangeAndClearSpan(Link& link) :
                         PacketData<Link>::PacketChangeSpan(link) {
-                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                    if constexpr (changeType == ChangeType::PreserveTopology)
                         ++link.topologyLock_;
                 }
 
@@ -4688,10 +4763,10 @@ class Link :
                  * tasks are performed.
                  */
                 ~ChangeAndClearSpan() {
-                    if constexpr (changeType != CHANGE_PRESERVE_ALL_PROPERTIES)
+                    if constexpr (changeType != ChangeType::PreserveAllProperties)
                         static_cast<Link&>(data_).clearAllProperties();
 
-                    if constexpr (changeType == CHANGE_PRESERVE_TOPOLOGY)
+                    if constexpr (changeType == ChangeType::PreserveTopology)
                         --static_cast<Link&>(data_).topologyLock_;
                 }
 
@@ -4982,7 +5057,7 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
     if (niceTreeDecomposition_)
         return *niceTreeDecomposition_;
 
-    TreeDecomposition ans(*this, TD_UPPER);
+    TreeDecomposition ans(*this, TreeDecompositionAlg::Upper);
     prepareTreeDecomposition(ans);
     niceTreeDecomposition_ = ans;
 
@@ -5059,7 +5134,7 @@ inline Link Link::fromSig(const std::string& sig) {
 }
 
 inline std::string Link::dumpConstruction() const {
-    return source(LANGUAGE_CXX);
+    return source(Language::Cxx);
 }
 
 inline void swap(Link& lhs, Link& rhs) {

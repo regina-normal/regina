@@ -39,7 +39,7 @@ root = Container()
 # 3-D surface test:
 
 tri = PacketOfTriangulation3(Example3.poincare())
-list = PacketOfNormalSurfaces(tri, NS_STANDARD)
+list = PacketOfNormalSurfaces(tri, NormalCoords.Standard)
 tri.append(list)
 root.append(tri)
 
@@ -60,7 +60,7 @@ print(not tri2.samePacket(s2.triangulation().packet()))
 # 4-D hypersurface test:
 
 tri = PacketOfTriangulation4(Example4.s3xs1())
-list = PacketOfNormalHypersurfaces(tri, HS_STANDARD)
+list = PacketOfNormalHypersurfaces(tri, HyperCoords.Standard)
 tri.append(list)
 root.append(tri)
 

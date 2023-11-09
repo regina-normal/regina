@@ -47,12 +47,9 @@ namespace regina {
  * Represents different types of filter classes that can be used to filter
  * lists of normal surfaces in 3-manifold triangulations.
  *
- * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own filter class, you should choose an ID ≥ 10000.
- *
  * \ingroup surfaces
  */
-enum SurfaceFilterType {
+enum class SurfaceFilterType {
     /**
      * A legacy constant representing a do-nothing filter that
      * accepts any normal surface.
@@ -62,18 +59,46 @@ enum SurfaceFilterType {
      * used in practice (in particular, filters of this type could not be
      * created through the GUI).
      */
-    NS_FILTER_LEGACY_DEFAULT = 0,
+    LegacyDefault = 0,
     /**
      * Represents the SurfaceFilterProperties subclass: a filter that
      * examines simple properties of a normal surface.
      */
-    NS_FILTER_PROPERTIES = 1,
+    Properties = 1,
     /**
      * Represents the SurfaceFilterCombination subclass: a filter that
      * combines other filters using boolean AND or OR.
      */
-    NS_FILTER_COMBINATION = 2
+    Combination = 2
 };
+
+/**
+ * A deprecated constant representing one of the different types of
+ * normal surface filter.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceFilterType::LegacyDefault.
+ */
+[[deprecated]] inline constexpr SurfaceFilterType NS_FILTER_LEGACY_DEFAULT =
+    SurfaceFilterType::LegacyDefault;
+/**
+ * A deprecated constant representing one of the different types of
+ * normal surface filter.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceFilterType::Properties.
+ */
+[[deprecated]] inline constexpr SurfaceFilterType NS_FILTER_PROPERTIES =
+    SurfaceFilterType::Properties;
+/**
+ * A deprecated constant representing one of the different types of
+ * normal surface filter.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceFilterType::Combination.
+ */
+[[deprecated]] inline constexpr SurfaceFilterType NS_FILTER_COMBINATION =
+    SurfaceFilterType::Combination;
 
 } // namespace regina
 

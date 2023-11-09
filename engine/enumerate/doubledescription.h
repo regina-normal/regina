@@ -379,7 +379,7 @@ class DoubleDescription {
          * already been intersected with the original cone to form the
          * current solution set.  This does not include the hyperplane
          * currently under consideration.
-         * \param constraintsMask the list of additional validity constraints
+         * \param constraintMasks the list of additional validity constraints
          * to impose.
          * \param tracker an optional progress tracker that will be polled
          * for cancellation (though no incremental progress will be reported

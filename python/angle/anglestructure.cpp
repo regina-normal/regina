@@ -50,6 +50,8 @@ void addAngleStructure(pybind11::module_& m) {
             const regina::Triangulation<3>&>(), rdoc::__init)
         .def(pybind11::init<const regina::Triangulation<3>&,
             const regina::Vector<regina::Integer>&>(), rdoc::__init_2)
+        .def(pybind11::init<const regina::Triangulation<3>&,
+            const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_2)
         .def(pybind11::init([](const regina::Triangulation<3>& t,
                 pybind11::list values) {
             regina::Vector<regina::Integer> v(3 * t.size() + 1);

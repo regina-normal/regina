@@ -170,7 +170,7 @@ params ::=</synopsis>
      </para>
      <para>
       An example of such an integer might be 102, which is the
-      3-dimensional constant <literal>NS_AN_QUAD_OCT</literal>
+      3-dimensional constant <literal>NormalCoords::QuadOct</literal>
       that represents standard coordinates for octagonal almost normal
       surfaces.
      </para>

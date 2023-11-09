@@ -287,8 +287,8 @@ Returns:
 
 namespace PermCodeType_ {
 
-// Docstring regina::python::doc::PermCodeType_::PERM_CODE_IMAGES
-static const char *PERM_CODE_IMAGES =
+// Docstring regina::python::doc::PermCodeType_::Images
+static const char *Images =
 R"doc(This is a permutation code that packs the images of 0,...,*n*-1 into a
 single native integer using a handful of bits per image. Such codes
 are easier to manipulate on an element-by-element basis.
@@ -297,8 +297,8 @@ Codes of this type can always be queried using Perm<n>::permCode(),
 and permutations can be recreated from them using
 Perm<n>::fromPermCode().)doc";
 
-// Docstring regina::python::doc::PermCodeType_::PERM_CODE_INDEX
-static const char *PERM_CODE_INDEX =
+// Docstring regina::python::doc::PermCodeType_::Index
+static const char *Index =
 R"doc(This is a permutation code that stores the index into the full
 permutation group *S_n*. Such codes typically require fewer bytes and
 are packed together, making them ideal for working with lookup tables.

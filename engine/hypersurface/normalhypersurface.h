@@ -248,8 +248,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \python Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \python The supported types for the template parameter \a U are
+         * regina::Integer and regina::LargeInteger.  You may also, if you
+         * prefer, pass \a vector as a Python list of integers.
+         *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal hypersurface
          * resides.
@@ -258,8 +262,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
+        template <typename U>
         NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
-            const Vector<LargeInteger>& vector);
+            const Vector<U>& vector);
 
         /**
          * Creates a new normal hypersurface inside the given triangulation
@@ -312,6 +317,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
+         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * \param enc indicates precisely how the given vector encodes a normal
@@ -319,8 +327,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
+        template <typename U>
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
-            HyperEncoding enc, const Vector<LargeInteger>& vector);
+            HyperEncoding enc, const Vector<U>& vector);
 
         /**
          * Creates a new normal hypersurface inside the given triangulation
@@ -376,8 +385,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the encoding
          * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \python Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \python The supported types for the template parameter \a U are
+         * regina::Integer and regina::LargeInteger.  You may also, if you
+         * prefer, pass \a vector as a Python list of integers.
+         *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal hypersurface
          * resides.
@@ -386,8 +399,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
+        template <typename U>
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
-            const Vector<LargeInteger>& vector);
+            const Vector<U>& vector);
 
         /**
          * Creates a new normal hypersurface inside the given triangulation
@@ -448,6 +462,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
+         * \tparam U the type of object held by the given vector.  It must be
+         * possible to assign an object of type \a U to a regina::LargeInteger.
+         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * \param coords the coordinate system from which the vector
@@ -455,8 +472,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
+        template <typename U>
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
-            HyperCoords coords, const Vector<LargeInteger>& vector);
+            HyperCoords coords, const Vector<U>& vector);
 
         /**
          * Creates a new normal hypersurface inside the given triangulation
@@ -716,8 +734,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param out the output stream to which the XML should be written.
          * \param format indicates which of Regina's XML file formats to write.
          * \param list the enclosing normal hypersurface list.  Currently this
-         * is only relevant when writing to the older REGINA_XML_GEN_2 format;
-         * it will be ignored (and may be \c null) for newer file formats.
+         * is only relevant when writing to the older FileFormat::XmlGen2
+         * format; it will be ignored (and may be \c null) for newer file
+         * formats.
          */
         void writeXMLData(std::ostream& out, FileFormat format,
             const NormalHypersurfaces* list) const;
@@ -1367,8 +1386,9 @@ void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept;
 
 // Inline functions for NormalHypersurface
 
+template <typename U>
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
-        HyperEncoding enc, const Vector<LargeInteger>& vector) :
+        HyperEncoding enc, const Vector<U>& vector) :
         enc_(enc), vector_(vector), triangulation_(tri) {
     // This call to storesTetrahedra() is unnecessary, but we'd like it
     // accessible to the inline version.  (Same goes for the similar
@@ -1384,9 +1404,10 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
+template <typename U>
 inline NormalHypersurface::NormalHypersurface(
         const SnapshotRef<Triangulation<4>>& tri,
-        HyperEncoding enc, const Vector<LargeInteger>& vector) :
+        HyperEncoding enc, const Vector<U>& vector) :
         enc_(enc), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTetrahedra())
         enc_ = reconstructTetrahedra(*tri, vector_, enc_);
@@ -1400,8 +1421,9 @@ inline NormalHypersurface::NormalHypersurface(
         enc_ = reconstructTetrahedra(*tri, vector_, enc_);
 }
 
+template <typename U>
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
-        HyperCoords coords, const Vector<LargeInteger>& vector) :
+        HyperCoords coords, const Vector<U>& vector) :
         enc_(coords), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTetrahedra())
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
@@ -1415,9 +1437,10 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
+template <typename U>
 inline NormalHypersurface::NormalHypersurface(
         const SnapshotRef<Triangulation<4>>& tri,
-        HyperCoords coords, const Vector<LargeInteger>& vector) :
+        HyperCoords coords, const Vector<U>& vector) :
         enc_(coords), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTetrahedra())
         enc_ = reconstructTetrahedra(*tri, vector_, enc_);

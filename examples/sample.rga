@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<regina engine="7.0">
+<regina engine="7.4">
 <container label="Sample Data File">
 <textdata label="Read Me">Welcome to Regina!
 
@@ -2168,6 +2168,57 @@ YW0KZW5kb2JqCnN0YXJ0eHJlZgo5ODk1OQolJUVPRgo=
   ^0 ^2 ^4
   </components>
 </link>
+<spatiallink label="3-D Trefoil">
+  <component>
+  <node> -0x1.404e48p+2 -0x1.19fb74p+1 0x1.57163p-1 </node>
+  <node> -0x1.387c38p+2 -0x1.8d0064p+1 -0x1.7c7952p-4 </node>
+  <node> -0x1.18f84cp+2 -0x1.eb60c2p+1 -0x1.c253fcp-1 </node>
+  <node> -0x1.ca6dc8p+1 -0x1.15a8f4p+2 -0x1.96cbb6p+0 </node>
+  <node> -0x1.459b5p+1 -0x1.2323a8p+2 -0x1.105cep+1 </node>
+  <node> -0x1.6468p+0 -0x1.1ce062p+2 -0x1.3542eap+1 </node>
+  <node> -0x1.0abe1ep-2 -0x1.042cccp+2 -0x1.32e8acp+1 </node>
+  <node> 0x1.70800ap-1 -0x1.ba7662p+1 -0x1.06e90cp+1 </node>
+  <node> 0x1.765124p+0 -0x1.5d5b8ep+1 -0x1.6a95d4p+0 </node>
+  <node> 0x1.fcc562p+0 -0x1.fa1aeap+0 -0x1.252774p-1 </node>
+  <node> 0x1.34737ep+1 -0x1.336efcp+0 0x1.50ba76p-2 </node>
+  <node> 0x1.613104p+1 -0x1.2e4a0cp-2 0x1.1aa44ap+0 </node>
+  <node> 0x1.788138p+1 0x1.987584p-1 0x1.9d06dp+0 </node>
+  <node> 0x1.6ec6dap+1 0x1.fdad0cp+0 0x1.c8e5e2p+0 </node>
+  <node> 0x1.40881cp+1 0x1.8fe904p+1 0x1.9ce642p+0 </node>
+  <node> 0x1.e3a294p+0 0x1.02a162p+2 0x1.259ec4p+0 </node>
+  <node> 0x1.173dbap+0 0x1.27d618p+2 0x1.e2b642p-2 </node>
+  <node> 0x1.9c9c3ap-3 0x1.32febp+2 -0x1.3bdfc6p-2 </node>
+  <node> -0x1.5ac062p-1 0x1.22c2a6p+2 -0x1.142814p+0 </node>
+  <node> -0x1.71b74cp+0 0x1.f219fep+1 -0x1.b9cedcp+0 </node>
+  <node> -0x1.0151e8p+1 0x1.760dbcp+1 -0x1.12c1fap+1 </node>
+  <node> -0x1.27d44ap+1 0x1.c37a4p+0 -0x1.215164p+1 </node>
+  <node> -0x1.29c206p+1 0x1.279f6cp-1 -0x1.034ebp+1 </node>
+  <node> -0x1.0c9dc4p+1 -0x1.ef6874p-2 -0x1.7607acp+0 </node>
+  <node> -0x1.bb21b4p+0 -0x1.5cc2fcp+0 -0x1.4e4532p-1 </node>
+  <node> -0x1.4d845p+0 -0x1.12755ap+1 0x1.ee6924p-3 </node>
+  <node> -0x1.7fe218p-1 -0x1.75596p+1 0x1.097986p+0 </node>
+  <node> 0x1.26081cp-5 -0x1.d31c66p+1 0x1.9a0f38p+0 </node>
+  <node> 0x1.0c8f36p+0 -0x1.0f2748p+2 0x1.dd3e7ep+0 </node>
+  <node> 0x1.1853acp+1 -0x1.252462p+2 0x1.ceca36p+0 </node>
+  <node> 0x1.a9cd4p+1 -0x1.27e3p+2 0x1.7648bep+0 </node>
+  <node> 0x1.1510bep+2 -0x1.16ad62p+2 0x1.c71342p-1 </node>
+  <node> 0x1.45b74cp+2 -0x1.e67602p+1 0x1.5a3916p-3 </node>
+  <node> 0x1.61abb6p+2 -0x1.826792p+1 -0x1.3599cp-1 </node>
+  <node> 0x1.65e62p+2 -0x1.0b81bep+1 -0x1.55db8ep+0 </node>
+  <node> 0x1.51ceap+2 -0x1.1ca1p+0 -0x1.ed23c2p+0 </node>
+  <node> 0x1.279ee4p+2 -0x1.8b0362p-3 -0x1.24e652p+1 </node>
+  <node> 0x1.d961cep+1 0x1.1fa762p-1 -0x1.2cd8fp+1 </node>
+  <node> 0x1.52bcbcp+1 0x1.120adp+0 -0x1.09d5c8p+1 </node>
+  <node> 0x1.9c97d8p+0 0x1.4ff886p+0 -0x1.7c01b4p+0 </node>
+  <node> 0x1.5def2ep-1 0x1.5d7e14p+0 -0x1.4dd8aep-1 </node>
+  <node> -0x1.84b048p-3 0x1.5bcc08p+0 0x1.12ac32p-2 </node>
+  <node> -0x1.21d0a4p+0 0x1.482be4p+0 0x1.13bb88p+0 </node>
+  <node> -0x1.16d4eep+1 0x1.012cp+0 0x1.a0b6ep+0 </node>
+  <node> -0x1.9ce216p+1 0x1.d93ce4p-2 0x1.d8f684p+0 </node>
+  <node> -0x1.07d5acp+2 -0x1.41f50ap-2 0x1.b9ef62p+0 </node>
+  <node> -0x1.2f779cp+2 -0x1.3d036p+0 0x1.4ee7eap+0 </node>
+  </component>
+</spatiallink>
 <snappeadata label="Whitehead Link Complement">% Triangulation
 m129
 geometric_solution  3.66386238
@@ -2346,11 +2397,11 @@ CS_unknown
 for t in tri.children():
 	print(t.label() + &quot;: &quot;, end='')
 
-	if t.type() == PACKET_TRIANGULATION3:
+	if t.type() == PacketType.Triangulation3:
 		print(t.homology())
-	elif t.type() == PACKET_SNAPPEATRIANGULATION:
+	elif t.type() == PacketType.SnapPea:
 		print(t.volume())
-	elif t.type() == PACKET_LINK:
+	elif t.type() == PacketType.Link:
 		print(t.homfly())
 	else:
 		print('Unknown packet type')

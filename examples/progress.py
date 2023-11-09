@@ -29,7 +29,7 @@ tracker = ProgressTracker()
 surfaces = None
 def run():
     global surfaces, tracker
-    surfaces = NormalSurfaces(tri, NS_STANDARD, NS_VERTEX,
+    surfaces = NormalSurfaces(tri, NormalCoords.Standard, NS_VERTEX,
         NS_ALG_DEFAULT, tracker)
 
 thread = threading.Thread(target = run)

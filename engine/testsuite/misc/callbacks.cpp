@@ -199,7 +199,7 @@ TEST(CallbacksTest, passByReference) {
         auto tri = regina::Example<3>::figureEight();
 
         Arg b;
-        regina::TreeEnumeration(tri, regina::NS_STANDARD).run(
+        regina::TreeEnumeration(tri, regina::NormalCoords::Standard).run(
                 [](const regina::TreeEnumeration<>&, Arg& arg) {
             arg.flag();
             return false;

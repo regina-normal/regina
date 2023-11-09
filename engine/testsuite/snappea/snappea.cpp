@@ -299,7 +299,7 @@ TEST_F(SnapPeaTest, link) {
 TEST_F(SnapPeaTest, spunBoundaries) {
     SnapPeaTriangulation t(Example<3>::figureEight());
 
-    regina::NormalSurfaces s(t, regina::NS_QUAD);
+    regina::NormalSurfaces s(t, regina::NormalCoords::Quad);
     ASSERT_EQ(s.size(), 4);
 
     bool found[4] = {}; // initialises to false

@@ -55,8 +55,12 @@ void addNormalSurface(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<3>&>(), rdoc::__init_2)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalEncoding,
             const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_3)
+        .def(pybind11::init<const Triangulation<3>&, regina::NormalEncoding,
+            const regina::Vector<regina::Integer>&>(), rdoc::__init_3)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
             const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_4)
+        .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
+            const regina::Vector<regina::Integer>&>(), rdoc::__init_4)
         .def(pybind11::init([](const Triangulation<3>& t,
                 regina::NormalEncoding enc, pybind11::list values) {
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());

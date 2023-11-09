@@ -60,7 +60,7 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
          * Constructor.
          */
         ReginaHandler(bool compressed = true,
-            regina::FileFormat format = regina::REGINA_CURRENT_FILE_FORMAT);
+            regina::FileFormat format = regina::FileFormat::Current);
 
         /**
          * PacketImporter overrides:

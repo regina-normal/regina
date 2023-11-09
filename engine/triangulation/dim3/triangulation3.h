@@ -248,9 +248,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
-         * properties as well as the skeleton of the given triangulation,
-         * or \c false if the new triangulation should have such properties
-         * and skeletal data marked as unknown.
+         * properties of the given triangulation, or \c false if the new
+         * triangulation should have such properties marked as unknown.
          * \param cloneLocks \c true if this should also clone any simplex
          * and/or facet locks from the given triangulation, or \c false if
          * the new triangulation should have no locks at all.
@@ -319,15 +318,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - isomorphism signatures (see fromIsoSig());
          * - dehydration strings (see rehydrate());
-         * - the contents of a SnapPea data file (see fromSnapPea()).
+         * - the filename or contents of a SnapPea data file (see
+         *   fromSnapPea()).
          *
          * This list may grow in future versions of Regina.
          *
-         * \warning If you pass the contents of a SnapPea data file,
-         * then only the tetrahedron gluings will be read; all other
+         * \warning If you pass the filename or contents of a SnapPea data
+         * file, then only the tetrahedron gluings will be read; all other
          * SnapPea-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
-         * alternatives that preserve SnapPea-specific data.
+         * alternatives that do preserve SnapPea-specific data.
          *
          * \exception InvalidArgument Regina could not interpret the given
          * string as representing a triangulation using any of the supported
@@ -353,7 +353,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning Only the tetrahedron gluings will be copied; all other
          * SnapPy-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
-         * alternatives that preserve SnapPy-specific data.
+         * alternatives that do preserve SnapPy-specific data.
          *
          * \nocpp
          *
@@ -896,10 +896,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param parity determines for odd \a r whether \a q₀ is a primitive
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
          * \param alg the algorithm with which to compute the invariant.  If
-         * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
-         * This should be treated as a hint only: if the algorithm you choose
-         * is not supported for the given parameters (\a r and \a parity),
-         * then Regina will use another algorithm instead.
+         * you are not sure, the default value (Algorithm::Default) is a safe
+         * choice.  This should be treated as a hint only: if the algorithm
+         * you choose is not supported for the given parameters (\a r and
+         * \a parity), then Regina will use another algorithm instead.
          * \param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
          * \return the requested Turaev-Viro invariant, or an uninitialised
@@ -909,7 +909,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
-            Algorithm alg = ALG_DEFAULT,
+            Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
@@ -953,16 +953,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param whichRoot specifies which root of unity is used for \a q₀,
          * as described above.
          * \param alg the algorithm with which to compute the invariant.  If
-         * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
-         * This should be treated as a hint only: if the algorithm you choose
-         * is not supported for the given parameters (\a r and \a whichRoot),
-         * then Regina will use another algorithm instead.
+         * you are not sure, the default value (Algorithm::Default) is a safe
+         * choice.  This should be treated as a hint only: if the algorithm
+         * you choose is not supported for the given parameters (\a r and
+         * \a whichRoot), then Regina will use another algorithm instead.
          * \return the requested Turaev-Viro invariant.
          *
          * \see allCalculatedTuraevViro
          */
         double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
-            Algorithm alg = ALG_DEFAULT) const;
+            Algorithm alg = Algorithm::Default) const;
         /**
          * Returns the cache of all Turaev-Viro state sum invariants that
          * have been calculated for this 3-manifold.
@@ -3950,8 +3950,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         static Triangulation<3> rehydrate(const std::string& dehydration);
 
         /**
-         * Extracts the tetrahedron gluings from a string that contains the
-         * full contents of a SnapPea data file.  All other SnapPea-specific
+         * Extracts the tetrahedron gluings from the contents of a SnapPea
+         * data file.  The argument may be the _name_ of a SnapPea file, or
+         * it may also be the _contents_ of a SnapPea file (so the file itself
+         * need not actually exist on the filesystem).
+         *
+         * Aside from the tetrahedron gluings, all other SnapPea-specific
          * information (such as peripheral curves, and the manifold name) will
          * be ignored, since Regina's Triangulation<3> class does not track
          * such information itself.
@@ -3961,11 +3965,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * instead (which uses the SnapPea kernel directly, and can therefore
          * store anything that SnapPea can).
          *
-         * If you wish to read a triangulation from a SnapPea _file_, you
-         * should likewise call the SnapPeaTriangulation constructor, giving
-         * the filename as argument.  This will read all SnapPea-specific
-         * information (as described above), and also avoids constructing an
-         * enormous intermediate string.
+         * One reason for working with this function as opposed to using
+         * SnapPeaTriangulation is if you need to preserve the specific
+         * triangulation.  For example, if the SnapPea data file describes a
+         * closed triangulation (where all vertices are finite), then the
+         * SnapPea kernel will convert this into an ideal triangulation with
+         * filling coefficients, whereas this routine will return the original
+         * closed triangulation.
          *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
@@ -3975,15 +3981,29 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
-         * \exception InvalidArgument The given SnapPea data was not in
-         * the correct format.
+         * \warning If (for some reason) you pass a filename that begins
+         * with "% Triangulation", then Regina will interpret this as
+         * the contents of a SnapPea file (not a filename).
          *
-         * \param snapPeaData a string containing the full contents of a
-         * SnapPea data file.
+         * \i18n If the given argument is a filename, then this routine makes
+         * no assumptions about the \ref i18n "character encoding" used in the
+         * filename, and simply passes it through unchanged to low-level C/C++
+         * file I/O routines.  This routine assumes that the file _contents_,
+         * however, are in UTF-8 (the standard encoding used throughout Regina).
+         *
+         * \exception InvalidArgument The given string does not provide either
+         * the filename or contents of a correctly formatted SnapPea data file.
+         * \exception FileError An error occurred with file I/O (such as
+         * testing whether the given file exists, or reading its contents).
+         *
+         * \param filenameOrContents either the name of a SnapPea data
+         * file, or the full contents of a SnapPea data file (which need not
+         * actually exist on the filesystem).
          * \return a native Regina triangulation extracted from the given
          * SnapPea data.
          */
-        static Triangulation<3> fromSnapPea(const std::string& snapPeaData);
+        static Triangulation<3> fromSnapPea(
+            const std::string& filenameOrContents);
 
         /*@}*/
 
@@ -4065,6 +4085,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         void snapPeaPostChange();
 
+        /**
+         * Implements fromSnapPea() where the contents of the SnapPea data
+         * file are to be read from the given input stream.
+         *
+         * See fromSnapPea(const std::string&) for further details.
+         *
+         * \exception InvalidArgument The given input stream does not contain
+         * the contents of a correctly formatted SnapPea data file.
+         * \exception FileError An error occurred in attempting to read data
+         * from the given input stream.
+         *
+         * \param in an input stream containing the full contents of a SnapPea
+         * data file.
+         * \return a native Regina triangulation extracted from the given
+         * SnapPea data.
+         */
+        static Triangulation<3> fromSnapPea(std::istream& in);
+
     friend class regina::Face<3, 3>;
     friend class regina::detail::SimplexBase<3>;
     friend class regina::detail::TriangulationBase<3>;
@@ -4133,11 +4171,11 @@ template <>
 inline PacketData<Triangulation<3>>::PacketChangeSpan::PacketChangeSpan(
         PacketData& data) : data_(data) {
     switch (data_.heldBy_) {
-        case HELD_BY_SNAPPEA: {
+        case PacketHeldBy::SnapPea: {
             static_cast<Triangulation<3>&>(data_).snapPeaPreChange();
             break;
         }
-        case HELD_BY_PACKET: {
+        case PacketHeldBy::Packet: {
             auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
             if (! p.packetChangeSpans_)
                 p.fireEvent(&PacketListener::packetToBeChanged);
@@ -4152,11 +4190,11 @@ inline PacketData<Triangulation<3>>::PacketChangeSpan::PacketChangeSpan(
 template <>
 inline PacketData<Triangulation<3>>::PacketChangeSpan::~PacketChangeSpan() {
     switch (data_.heldBy_) {
-        case HELD_BY_SNAPPEA: {
+        case PacketHeldBy::SnapPea: {
             static_cast<Triangulation<3>&>(data_).snapPeaPostChange();
             break;
         }
-        case HELD_BY_PACKET: {
+        case PacketHeldBy::Packet: {
             auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
             --p.packetChangeSpans_;
             if (! p.packetChangeSpans_)
@@ -4425,7 +4463,7 @@ inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
     if (prop_.niceTreeDecomposition_)
         return *prop_.niceTreeDecomposition_;
 
-    TreeDecomposition ans(*this, TD_UPPER);
+    TreeDecomposition ans(*this, TreeDecompositionAlg::Upper);
     ans.makeNice();
     prop_.niceTreeDecomposition_ = ans;
 

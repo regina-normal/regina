@@ -34,6 +34,7 @@ namespace pybind11 { class module_; }
 
 void addExampleLink(pybind11::module_& m);
 void addLink(pybind11::module_& m);
+void addSpatialLink(pybind11::module_& m);
 void addModelLinkGraph(pybind11::module_& m);
 void addTangle(pybind11::module_& m);
 
@@ -41,6 +42,7 @@ void addLinkClasses(pybind11::module_& m) {
     addExampleLink(m);
     addLink(m);
     addModelLinkGraph(m);
+    addSpatialLink(m);
     addTangle(m);
 }
 

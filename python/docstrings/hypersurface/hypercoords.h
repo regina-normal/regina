@@ -59,23 +59,23 @@ HyperEncoding class.)doc";
 
 namespace HyperCoords_ {
 
-// Docstring regina::python::doc::HyperCoords_::HS_EDGE_WEIGHT
-static const char *HS_EDGE_WEIGHT =
+// Docstring regina::python::doc::HyperCoords_::Edge
+static const char *Edge =
 R"doc(Represents edge weight coordinates for normal hypersurfaces.
 
 This coordinate system is for display only: Regina can view
 hypersurfaces in this coordinate system, but it cannot use it to
 enumerate or create hypersurfaces.)doc";
 
-// Docstring regina::python::doc::HyperCoords_::HS_PRISM
-static const char *HS_PRISM =
+// Docstring regina::python::doc::HyperCoords_::Prism
+static const char *Prism =
 R"doc(Represents prism coordinates for normal hypersurfaces.
 
 Regina can both enumerate and view hypersurfaces in this coordinate
 system.)doc";
 
-// Docstring regina::python::doc::HyperCoords_::HS_STANDARD
-static const char *HS_STANDARD =
+// Docstring regina::python::doc::HyperCoords_::Standard
+static const char *Standard =
 R"doc(Represents standard tetrahedron-prism coordinates for normal
 hypersurfaces.
 

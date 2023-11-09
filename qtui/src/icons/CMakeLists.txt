@@ -1,6 +1,7 @@
 set (IMG_FILES )
 
 set (IMGS
+  alternating
   barycentric
   boundaries
   canonical

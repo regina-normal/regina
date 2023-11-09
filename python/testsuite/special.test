@@ -35,7 +35,7 @@
 # between C++ types and Python types.
 
 t = Example3.poincare()
-s = NormalSurfaces(t, NS_STANDARD)
+s = NormalSurfaces(t, NormalCoords.Standard)
 
 print(len(s))
 print(s[1])

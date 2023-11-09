@@ -38,118 +38,220 @@
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
+#if __has_include(<filesystem>)
+  #include <filesystem>
+  namespace std_filesystem = std::filesystem;
+#elif __has_include(<experimental/filesystem>)
+  #include <experimental/filesystem>
+  #warning This compiler implements only an experimental std::filesystem.
+  namespace std_filesystem = std::experimental::filesystem;
+#else
+  #error This compiler does not implement std::filesystem from C++17.
+#endif
+
 namespace regina {
 
-Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
-    std::istringstream in(snapPeaData);
+Triangulation<3> Triangulation<3>::fromSnapPea(
+        const std::string& filenameOrContents) {
+    if (startsWith(filenameOrContents, "% Triangulation")) {
+        // Assume that we have the contents of a SnapPea data file.
+        std::istringstream in(filenameOrContents);
+        return fromSnapPea(in);
+    }
 
+    try {
+        auto status = std_filesystem::status(filenameOrContents);
+        switch (status.type()) {
+            case std_filesystem::file_type::regular:
+                // Attempt to read this as a SnapPea data file.
+                {
+                    std::ifstream in(filenameOrContents);
+                    if (in)
+                        return fromSnapPea(in);
+                    else
+                        throw FileError("fromSnapPea(): could not open the "
+                            "given file");
+                }
+                break;
+            case std_filesystem::file_type::unknown:
+                throw FileError("fromSnapPea(): could not query the "
+                    "attributes of the given file");
+            default:
+                // Includes file-not-found, as well as file types we are not
+                // interested in (directories, sockets, etc.).
+                break;
+        }
+    } catch (const std_filesystem::filesystem_error&) {
+        throw FileError("fromSnapPea(): could not test whether the "
+            "given file exists");
+    }
+
+    throw InvalidArgument("fromSnapPea(): argument is neither a filename "
+        "nor valid SnapPea data");
+}
+
+Triangulation<3> Triangulation<3>::fromSnapPea(std::istream& in) {
     // Check that this is a SnapPea triangulation.
     char name[1001];
     in.getline(name, 1000);
-    if (in.fail() || in.eof())
+    if (in.eof())
         throw InvalidArgument("fromSnapPea(): unexpected end of string");
+    if (in.fail())
+        throw FileError("fromSnapPea(): could not read file");
     // Allow junk on the same line following the triangulation marker.
     if (strncmp(name, "% Triangulation", 15) != 0 &&
             strncmp(name, "% triangulation", 15) != 0)
         throw InvalidArgument("fromSnapPea(): missing triangulation marker");
 
     // Read in the manifold name.
-    // Unfortunately Triangulation<3> has nowhere to put this, so for
-    // now we just read it and then forget about it.
-    in.getline(name, 1000);
-    if (in.fail() || in.eof())
-        throw InvalidArgument("fromSnapPea(): unexpected end of string");
-    size_t len;
-    if ((len = strlen(name)) > 0 && name[len - 1] == '\r')
-        name[len - 1] = 0;
+    // We skip any empty lines between here and the manifold name:
+    // whilst SnapPea does not write empty lines here, its read function does
+    // allow them, and some _other_ programs do write them.
+    while (true) {
+        in.getline(name, 1000);
+        if (in.eof())
+            throw InvalidArgument("fromSnapPea(): unexpected end of string");
+        if (in.fail())
+            throw FileError("fromSnapPea(): could not read file");
 
-    // Read in junk.
+        if (name[0] == 0)
+            continue; // empty line
+        if (name[0] == '\r' && name[1] == 0)
+            continue; // empty line with mismatched end-of-line conventions
+
+        // We have a manifold name.
+        break;
+    }
+
+    // Unfortunately Triangulation<3> has nowhere to put the manifold name,
+    // so for now we just forget it.
+    // If we ever decide to keep it at some point in the future, don't forget
+    // to check for and remove a possible trailing '\r' (which might occur
+    // via a mismatch between text file end-of-line conventions).
+
+    // Skip past things we don't care about.
+    // We do however check on the contents of the Chern-Simons line as a way
+    // of ensuring that we are where we expect to be in the data file.
     std::string tempStr;
     double tempDbl;
 
     in >> tempStr;         // Solution type
     in >> tempDbl;         // Volume
     in >> tempStr;         // Orientability
-    in >> tempStr;         // Chern-Simmon
-    if (tempStr[3] == 'k')
-        in >> tempDbl;     // Chern-Simmon is known
-
-    unsigned i,j,k;
+    in >> tempStr;         // Chern-Simons
+    if (tempStr == "CS_known")
+        in >> tempDbl;
+    else if (tempStr != "CS_unknown")
+        throw InvalidArgument("fromSnapPea(): invalid manifold summary");
 
     // Read in cusp details and ignore them.
-    unsigned numOrientCusps, numNonOrientCusps;
+    long numOrientCusps, numNonOrientCusps;
     in >> numOrientCusps >> numNonOrientCusps;
 
-    for (i=0; i<numOrientCusps+numNonOrientCusps; i++) {
+    for (long i = 0; i < numOrientCusps + numNonOrientCusps; ++i) {
         in >> tempStr;             // Cusp type
+        // Sanity-check the cusp type, again to ensure we are where we expect
+        // to be in the data file.
+        // The SnapPea kernel just checks the first letter, so we do the same.
+        if (tempStr.empty())
+            throw InvalidArgument("fromSnapPea(): empty cusp type");
+        switch (tempStr.front()) {
+            case 't':
+            case 'T':
+            case 'k':
+            case 'K':
+                break;
+            default:
+                throw InvalidArgument("fromSnapPea(): invalid cusp type");
+        }
+
         in >> tempDbl >> tempDbl;  // Filling information
     }
 
     // Create the new tetrahedra.
-    Triangulation<3> triang;
-
-    unsigned numTet;
+    long numTet;
     in >> numTet;
-    auto* tet = new Tetrahedron<3>*[numTet];
-    for (i=0; i<numTet; i++)
-        tet[i] = triang.newTetrahedron();
+    if (in.eof())
+        throw InvalidArgument("fromSnapPea(): unexpected end of string");
+    if (in.fail())
+        throw FileError("fromSnapPea(): could not read file");
+    if (numTet < 0)
+        throw InvalidArgument(
+            "fromSnapPea(): number of tetrahedra cannot be negative");
 
-    int g[4];
-    int p[4][4];
+    Triangulation<3> triang;
+    triang.newTetrahedra(numTet);
 
-    for (i=0; i<numTet; i++) {
-        // Test the state of the input stream.
-        if (! in.good()) {
-            delete[] tet;
-            throw InvalidArgument("fromSnapPea(): string not in the "
-                "correct format");
+    for (long i=0; i<numTet; i++) {
+        // Read in adjacent tetrahedra.
+        long g[4];
+        for (int j=0; j<4; j++) {
+            in >> g[j];
+            if (in.eof())
+                throw InvalidArgument(
+                    "fromSnapPea(): unexpected end of string");
+            if (in.fail())
+                throw FileError("fromSnapPea(): could not read file");
+            if (g[j] < 0 || g[j] >= numTet)
+                throw InvalidArgument(
+                    "fromSnapPea(): tetrahedron index out of range");
         }
 
-        // Read in adjacent tetrahedra.
-        for (j=0; j<4; j++)
-            in >> g[j];
-
         // Read in gluing permutations.
-        for (j=0; j<4; j++) {
+        std::array<int, 4> p[4];
+        for (int j=0; j<4; j++) {
             in >> tempStr;
-            for (k=0; k<4; k++)
-                switch( tempStr[k] ) {
-                    case '0': p[j][k] = 0; break;
-                    case '1': p[j][k] = 1; break;
-                    case '2': p[j][k] = 2; break;
-                    case '3': p[j][k] = 3; break;
-                    default:
-                        delete[] tet;
-                        throw InvalidArgument("fromSnapPea(): "
-                            "invalid permutation");
-                }
+            if (in.eof())
+                throw InvalidArgument(
+                    "fromSnapPea(): unexpected end of string");
+            if (in.fail())
+                throw FileError("fromSnapPea(): could not read file");
+            if (tempStr.size() != 4)
+                throw InvalidArgument(
+                    "fromSnapPea(): incorrectly formatted gluing permutation");
+
+            bool used[4] = { false, false, false, false };
+            for (int k=0; k<4; k++) {
+                if (tempStr[k] >= '0' && tempStr[k] < '4') {
+                    int image = tempStr[k] - '0';
+                    if (used[image])
+                        throw InvalidArgument(
+                            "fromSnapPea(): invalid permutation");
+                    p[j][k] = image;
+                    used[image] = true;
+                } else
+                    throw InvalidArgument(
+                        "fromSnapPea(): invalid permutation");
+            }
         }
 
         // Perform the gluings.
-        for (j=0; j<4; j++) {
-            Perm<4> gluing(p[j][0], p[j][1], p[j][2], p[j][3]);
-            if (auto adj = tet[i]->adjacentSimplex(j)) {
+        for (int j=0; j<4; j++) {
+            Perm<4> gluing(p[j]);
+            if (auto adj = triang.simplices_[i]->adjacentSimplex(j)) {
                 // This gluing has already been made from the other side.
-                if (adj != tet[g[j]] || tet[i]->adjacentGluing(j) != gluing) {
-                    delete[] tet;
-                    throw InvalidArgument("fromSnapPea(): "
-                        "inconsistent tetrahedron gluings");
+                if (adj != triang.simplices_[g[j]] ||
+                        triang.simplices_[i]->adjacentGluing(j) != gluing) {
+                    throw InvalidArgument(
+                        "fromSnapPea(): inconsistent tetrahedron gluings");
                 }
-            } else
-                tet[i]->join(j, tet[g[j]], gluing);
+            } else {
+                // Note: join() will check the validity of this gluing and
+                // throw an InvalidArgument if something is wrong.
+                triang.simplices_[i]->join(j, triang.simplices_[g[j]], gluing);
+            }
         }
 
         // Read in junk.
-        for (j=0; j<4; j++)
+        for (int j=0; j<4; j++)
             in >> tempStr;
-        for (j=0; j<64; j++)
+        for (int j=0; j<64; j++)
             in >> tempStr;
-        for (j=0; j<2; j++)
+        for (int j=0; j<2; j++)
             in >> tempStr;
     }
 
     // All done!
-    delete[] tet;
     return triang;
 }
 

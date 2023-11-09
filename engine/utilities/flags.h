@@ -59,6 +59,10 @@ namespace regina {
  * and SurfaceExport work with the enum types NormalAlgFlags and
  * SurfaceExportFields respectively.
  *
+ * \tparam T the enumeration type holding the individual flags that can be
+ * combined.  This may be a scoped or unscoped enumeration; however, for now
+ * we do insist that the underlying native integer type is \c int.
+ *
  * \ingroup utilities
  */
 template <typename T>
@@ -87,7 +91,7 @@ class Flags {
          *
          * \param init the initial value of this flag set.
          */
-        inline Flags(T init) : value_(init) {
+        inline Flags(T init) : value_(static_cast<int>(init)) {
         }
 
         /**
@@ -145,7 +149,7 @@ class Flags {
          * flag are set.
          */
         bool has(T flag) const {
-            return (value_ & flag) == flag;
+            return (value_ & static_cast<int>(flag)) == static_cast<int>(flag);
         }
 
         /**
@@ -170,7 +174,7 @@ class Flags {
          * \return \c true if and only if this and the given flag are identical.
          */
         inline bool operator == (T rhs) const {
-            return (value_ == rhs);
+            return (value_ == static_cast<int>(rhs));
         }
 
         /**
@@ -193,7 +197,7 @@ class Flags {
          * identical.
          */
         inline bool operator != (T rhs) const {
-            return (value_ != rhs);
+            return (value_ != static_cast<int>(rhs));
         }
 
         /**
@@ -214,7 +218,7 @@ class Flags {
          * \return a reference to this flag set.
          */
         inline Flags<T>& operator = (T rhs) {
-            value_ = rhs;
+            value_ = static_cast<int>(rhs);
             return *this;
         }
 
@@ -234,7 +238,7 @@ class Flags {
          * \return a reference to this flag set.
          */
         inline Flags<T>& operator |= (T rhs) {
-            value_ |= rhs;
+            value_ |= static_cast<int>(rhs);
             return *this;
         }
 
@@ -258,7 +262,7 @@ class Flags {
          * \return a reference to this flag set.
          */
         inline Flags<T>& operator &= (T rhs) {
-            value_ &= rhs;
+            value_ &= static_cast<int>(rhs);
             return *this;
         }
 
@@ -282,7 +286,7 @@ class Flags {
          * \return a reference to this flag set.
          */
         inline Flags<T>& operator ^= (T rhs) {
-            value_ ^= rhs;
+            value_ ^= static_cast<int>(rhs);
             return *this;
         }
 
@@ -306,7 +310,7 @@ class Flags {
          * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator | (T rhs) const {
-            return Flags(value_ | rhs);
+            return Flags(value_ | static_cast<int>(rhs));
         }
 
         /**
@@ -328,7 +332,7 @@ class Flags {
          * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator & (T rhs) const {
-            return Flags(value_ & rhs);
+            return Flags(value_ & static_cast<int>(rhs));
         }
 
         /**
@@ -350,7 +354,7 @@ class Flags {
          * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator ^ (T rhs) const {
-            return Flags(value_ ^ rhs);
+            return Flags(value_ ^ static_cast<int>(rhs));
         }
 
         /**
@@ -370,8 +374,8 @@ class Flags {
          * \param rhs the flag to clear from this set.
          */
         inline void clear(T rhs) {
-            value_ |= rhs;
-            value_ ^= rhs;
+            value_ |= static_cast<int>(rhs);
+            value_ ^= static_cast<int>(rhs);
         }
 
         /**
@@ -400,10 +404,12 @@ class Flags {
          * need to be made.
          */
         inline void ensureOne(T default_, T other) {
-            if (! ((value_ & default_) || (value_ & other)))
-                value_ |= default_;
-            else if ((value_ & default_) && (value_ & other))
-                value_ ^= other;
+            if (! ((value_ & static_cast<int>(default_)) ||
+                    (value_ & static_cast<int>(other))))
+                value_ |= static_cast<int>(default_);
+            else if ((value_ & static_cast<int>(default_)) &&
+                    (value_ & static_cast<int>(other)))
+                value_ ^= static_cast<int>(other);
         }
 
         /**
@@ -422,11 +428,12 @@ class Flags {
          */
         inline void ensureOne(T default_, T second, T last) {
             // Cast to int, because (T | T) is overloaded to return Flags<T>.
-            if (! (value_ & (static_cast<int>(default_) | second | last)))
-                value_ = default_;
-            else if (value_ & default_)
+            if (! (value_ & (static_cast<int>(default_) |
+                    static_cast<int>(second) | static_cast<int>(last))))
+                value_ |= static_cast<int>(default_);
+            else if (value_ & static_cast<int>(default_))
                 clear(second | last);
-            else if (value_ & second)
+            else if (value_ & static_cast<int>(second))
                 clear(last);
         }
 
@@ -447,13 +454,15 @@ class Flags {
          */
         inline void ensureOne(T default_, T second, T third, T last) {
             // Cast to int, because (T | T) is overloaded to return Flags<T>.
-            if (! (value_ & (static_cast<int>(default_) | second | third | last)))
-                value_ = default_;
-            else if (value_ & default_)
+            if (! (value_ & (static_cast<int>(default_) |
+                    static_cast<int>(second) | static_cast<int>(third) |
+                    static_cast<int>(last))))
+                value_ |= static_cast<int>(default_);
+            else if (value_ & static_cast<int>(default_))
                 clear(second | third | last);
-            else if (value_ & second)
+            else if (value_ & static_cast<int>(second))
                 clear(third | last);
-            else if (value_ & third)
+            else if (value_ & static_cast<int>(third))
                 clear(last);
         }
 

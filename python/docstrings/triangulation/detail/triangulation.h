@@ -541,6 +541,18 @@ Parameter ``labels``:
 Returns:
     the output of writeDot(), as outlined above.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::doubleCover
+constexpr const char *doubleCover =
+R"doc(Returns the orientable double cover of this triangulation.
+
+Each orientable component will be duplicated, and each non-orientable
+component will be converted into its orientable double cover.
+
+If this triangulation has locks on any top-dimensional simplices
+and/or their facets, then these locks will be duplicated alongside
+their corresponding simplices and/or facets (i.e., they will appear in
+both sheets of the double cover).)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::dualBoundaryMap
 constexpr const char *dualBoundaryMap =
 R"doc(Returns the boundary map from dual *subdim*-faces to dual
@@ -696,7 +708,7 @@ R"doc(Deprecated routine that returns C++ code to reconstruct this
 triangulation.
 
 .. deprecated::
-    This is equivalent to calling ``source(LANGUAGE_CXX)``, for
+    This is equivalent to calling ``source(Language::Cxx)``, for
     compatibility with older versions of Regina. In particular, it is
     _not_ equivalent to calling ``source()`` (which defaults to the
     programming language currently being used). See source() for
@@ -1717,16 +1729,15 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::makeDoubleCover
 constexpr const char *makeDoubleCover =
-R"doc(Converts this triangulation into its double cover.
+R"doc(Deprecated routine that converts this triangulation into its
+orientable double cover. This triangulation wll be modified directly.
 
-Each orientable component will be duplicated, and each non-orientable
-component will be converted into its orientable double cover.
+.. deprecated::
+    This routine has been replaced by doubleCover(), which returns the
+    result as a new triangulation and leaves the original
+    triangulation untouched.
 
-If this triangulation has locks on any top-dimensional simplices
-and/or their facets, these will not prevent the double cover from
-taking place. Instead, these locks will be duplicated alongside their
-corresponding simplices and/or facets (i.e., they will appear in both
-sheets of the double cover).)doc";
+See doubleCover() for further details.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::markedHomology
 constexpr const char *markedHomology =
@@ -2038,7 +2049,8 @@ constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4.
+This alias is available for dimensions *dim* ≥ 4. It returns a non-
+const pentachoron pointer.
 
 See face() for further information.)doc";
 
@@ -2066,10 +2078,11 @@ computed topological properties of the triangulation (as opposed to
 the isomorphism bracket operator, which at the time of writing does
 not).
 
-\para preserveOrientation if ``True``, then every top-dimensional
-simplex will have its vertices permuted with an even permutation. This
-means that, if this triangulation is oriented, then
-randomiseLabelling() will preserve the orientation.
+Parameter ``preserveOrientation``:
+    if ``True``, then every top-dimensional simplex will have its
+    vertices permuted with an even permutation. This means that, if
+    this triangulation is oriented, then randomiseLabelling() will
+    preserve the orientation.
 
 Returns:
     the random isomorphism that was applied; that is, the isomorphism
@@ -2387,7 +2400,8 @@ constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3.
+This alias is available for dimensions *dim* ≥ 3. It returns a non-
+const tetrahedron pointer.
 
 See face() for further information.)doc";
 
@@ -2440,7 +2454,8 @@ constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
-This alias is available for all dimensions *dim*.
+This alias is available for all dimensions *dim*. It returns a non-
+const triangle pointer.
 
 See face() for further information.)doc";
 

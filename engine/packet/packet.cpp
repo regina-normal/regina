@@ -87,14 +87,14 @@ std::string Packet::adornedLabel(const std::string& adornment) const {
     return ans;
 }
 
-void Packet::setLabel(const std::string& label) {
+void Packet::setLabel(std::string label) {
     fireEvent(&PacketListener::packetToBeRenamed);
 
     auto parent = treeParent_.lock();
     if (parent)
         parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
-    label_ = label;
+    label_ = std::move(label);
 
     fireEvent(&PacketListener::packetWasRenamed);
     if (parent)
@@ -669,7 +669,7 @@ void Packet::internalCloneDescendants(Packet& parent) const {
     }
 }
 
-bool Packet::addTag(const std::string& tag) {
+bool Packet::addTag(std::string tag) {
     auto parent = treeParent_.lock();
 
     fireEvent(&PacketListener::packetToBeRenamed);
@@ -678,7 +678,7 @@ bool Packet::addTag(const std::string& tag) {
 
     if (! tags_.get())
         tags_ = std::make_unique<std::set<std::string>>();
-    bool ans = tags_->insert(tag).second;
+    bool ans = tags_->insert(std::move(tag)).second;
 
     fireEvent(&PacketListener::packetWasRenamed);
     if (parent)
@@ -733,7 +733,7 @@ void Packet::writeXMLFile(std::ostream& out, FileFormat format) const {
         p.addPacketRefs(refs);
 
     // Now write the full packet tree.
-    if (format == REGINA_XML_GEN_2) {
+    if (format == FileFormat::XmlGen2) {
         out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
         writeXMLPacketData(out, format, false /* anon */, refs);
         out << "</reginadata>\n";
@@ -824,7 +824,7 @@ void Packet::writeXMLTreeData(std::ostream& out, FileFormat format,
 void Packet::writeXMLFooter(std::ostream& out, const char* element,
         FileFormat format) const {
     // Finish with the closing XML tag.
-    if (format != REGINA_XML_GEN_2) {
+    if (format != FileFormat::XmlGen2) {
         out << "</" << element << ">\n";
     } else {
         out << "</packet> <!-- " << regina::xml::xmlEncodeComment(label_)

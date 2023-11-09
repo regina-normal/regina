@@ -45,11 +45,14 @@ void addHyperCoords(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HyperCoords)
 
     pybind11::enum_<regina::HyperCoords>(m, "HyperCoords", rdoc_scope)
-        .value("HS_STANDARD", regina::HS_STANDARD, rdoc::HS_STANDARD)
-        .value("HS_PRISM", regina::HS_PRISM, rdoc::HS_PRISM)
-        .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT, rdoc::HS_EDGE_WEIGHT)
-        .export_values()
+        .value("Standard", HyperCoords::Standard, rdoc::Standard)
+        .value("Prism", HyperCoords::Prism, rdoc::Prism)
+        .value("Edge", HyperCoords::Edge, rdoc::Edge)
         ;
+
+    m.attr("HS_STANDARD") = HyperCoords::Standard;
+    m.attr("HS_PRISM") = HyperCoords::Prism;
+    m.attr("HS_EDGE_WEIGHT") = HyperCoords::Edge;
 
     RDOC_SCOPE_SWITCH(HyperEncoding)
 

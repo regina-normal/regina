@@ -80,7 +80,7 @@ constexpr int maxDim() {
  * Represents various classes of algorithms that Regina can use for
  * computations.  A function that takes an Algorithm argument need not
  * support all types of algorithm - if an unsupported algorithm is
- * passed then Regina will fall back to ALG_DEFAULT.
+ * passed then Regina will fall back to Algorithm::Default.
  *
  * This enumeration type does _not_ allow constants to be combined using
  * the OR operator.
@@ -92,26 +92,26 @@ constexpr int maxDim() {
  *
  * \ingroup engine
  */
-enum Algorithm {
+enum class Algorithm {
     /**
      * The default algorithm.  Here Regina will choose whichever
      * algorithm it thinks (rightly or wrongly) is most appropriate.
      */
-    ALG_DEFAULT = 0,
+    Default = 0,
     /**
      * An optimised backtracking algorithm.  This typically works over
      * some search tree (often of exponential size or worse), but
      * include significant optimisations to prune the search tree and/or
      * cache computations where possible.
      */
-    ALG_BACKTRACK = 1,
+    Backtrack = 1,
     /**
      * A treewidth-based algorithm.  Typically this uses dynamic
      * programming over a tree decomposition of some underlying graph.
      * Such algorithms are often fast for triangulations or links with
      * small treewidth, but may require large amounts of memory.
      */
-    ALG_TREEWIDTH = 2,
+    Treewidth = 2,
     /**
      * A naive algorithm.  This typically works directly with the
      * underlying definitions (e.g., computing Turaev-Viro as a state sum),
@@ -121,36 +121,65 @@ enum Algorithm {
      * experimentation.  Due to their slow performance, they are not
      * suitable for "real" applications.
      */
-    ALG_NAIVE = 3
+    Naive = 3
 };
+
+/**
+ * A deprecated constant indicating one of the available classes of algorithm.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Default.
+ */
+[[deprecated]] inline constexpr Algorithm ALG_DEFAULT = Algorithm::Default;
+/**
+ * A deprecated constant indicating one of the available classes of algorithm.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Backtrack.
+ */
+[[deprecated]] inline constexpr Algorithm ALG_BACKTRACK = Algorithm::Backtrack;
+/**
+ * A deprecated constant indicating one of the available classes of algorithm.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Treewidth.
+ */
+[[deprecated]] inline constexpr Algorithm ALG_TREEWIDTH = Algorithm::Treewidth;
+/**
+ * A deprecated constant indicating one of the available classes of algorithm.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * Algorithm::Naive.
+ */
+[[deprecated]] inline constexpr Algorithm ALG_NAIVE = Algorithm::Naive;
 
 /**
  * Represents different programming languages that Regina supports.
  *
  * \ingroup engine
  */
-enum Language {
+enum class Language {
     /**
      * The C++ programming language.
      */
-    LANGUAGE_CXX = 1,
+    Cxx = 1,
     /**
      * The Python programming language.
      */
-    LANGUAGE_PYTHON = 2,
+    Python = 2,
     /**
      * The programming language currently being used.
      *
-     * When writing C++ code, this is equivalent to LANGUAGE_CXX.
-     * When using the Python bindings, this is equivalent to LANGUAGE_PYTHON.
+     * When writing C++ code, this is equivalent to Language::Cxx.
+     * When using the Python bindings, this is equivalent to Language::Python.
      *
      * \warning For developers who are _writing_ the Python bindings, remember
      * that your binding code (which is written in C++) will treat this as
-     * LANGUAGE_CXX, whereas your Python users will expect LANGUAGE_PYTHON.
+     * Language::Cxx, whereas your Python users will expect Language::Python.
      * See the code for binding for Link::source() as an example of where this
      * issue arises and how it is resolved.
      */
-    LANGUAGE_CURRENT = LANGUAGE_CXX
+    Current = Cxx
 };
 
 /**
@@ -160,11 +189,11 @@ enum Language {
  * \nopython This enumeration is only used internally by private and/or
  * protected class templates, and is therefore not made available to Python.
  */
-enum ChangeType {
+enum class ChangeType {
     /**
      * Indicates a change that could potentially alter any aspect of the object.
      */
-    CHANGE_GENERAL = 0,
+    General = 0,
     /**
      * Indicates a change that could alter the representation of the object,
      * but will not alter its topology.  Examples of such changes could include
@@ -176,14 +205,14 @@ enum ChangeType {
      * particular type of object.  See the TopologyLockable class notes for
      * further details on what this means.
      */
-    CHANGE_PRESERVE_TOPOLOGY = 1,
+    PreserveTopology = 1,
     /**
      * Indicates a change that is cosmetic in nature, in that it will not alter
      * any computed properties of the object.  Examples of such changes include
      * modifying simplex locks in triangulations, or reordering the
      * top-dimensional simplices in a triangulation.
      */
-    CHANGE_PRESERVE_ALL_PROPERTIES = 2
+    PreserveAllProperties = 2
 };
 
 } // namespace regina

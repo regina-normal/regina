@@ -43,21 +43,25 @@ namespace {
         switch (t) {
             case NS_CONV_REDUCED_TO_STD:
                 switch (src) {
-                    case NS_QUAD: return NS_STANDARD;
-                    case NS_AN_QUAD_OCT: return NS_AN_STANDARD;
+                    case NormalCoords::Quad: return NormalCoords::Standard;
+                    case NormalCoords::QuadOct:
+                        return NormalCoords::AlmostNormal;
                     default:
                         throw FailedPrecondition("Reduced-to-standard "
                             "conversion is only available from coordinate "
-                            "systems NS_QUAD and NS_AN_QUAD_OCT");
+                            "systems NormalCoords::Quad and "
+                            "NormalCoords::QuadOct");
                 }
             case NS_CONV_STD_TO_REDUCED:
                 switch (src) {
-                    case NS_STANDARD: return NS_QUAD;
-                    case NS_AN_STANDARD: return NS_AN_QUAD_OCT;
+                    case NormalCoords::Standard: return NormalCoords::Quad;
+                    case NormalCoords::AlmostNormal:
+                        return NormalCoords::QuadOct;
                     default:
                         throw FailedPrecondition("Standard-to-reduced "
                             "conversion is only available from coordinate "
-                            "systems NS_STANDARD and NS_AN_STANDARD");
+                            "systems NormalCoords::Standard and "
+                            "NormalCoords::AlmostNormal");
                 }
             default:
                 return src;

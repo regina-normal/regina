@@ -381,7 +381,7 @@ class TreeTraversal : public ShortOutput<
          *
          * \exception FailedPrecondition We are not working with normal or
          * almost normal surfaces (i.e., the coordinate system passed to the
-         * TreeTraversal constructor was NS_ANGLE).
+         * TreeTraversal constructor was NormalCoords::Angle).
          *
          * \return a normal surface that has been found at the current stage
          * of the search.
@@ -408,7 +408,7 @@ class TreeTraversal : public ShortOutput<
          *
          * \exception FailedPrecondition We are not working with angle
          * structure coordinates (i.e., the coordinate system passed to the
-         * TreeTraversal constructor was not NS_ANGLE).
+         * TreeTraversal constructor was not NormalCoords::Angle).
          *
          * \return the taut angle structure that has been found at the
          * current stage of the search.
@@ -500,8 +500,8 @@ class TreeTraversal : public ShortOutput<
          *
          * \pre We are working in standard normal or almost normal
          * coordinates.  That is, the coordinate system passed to the
-         * TreeTraversal constructor was one of NS_STANDARD
-         * or NS_AN_STANDARD.
+         * TreeTraversal constructor was one of NormalCoords::Standard
+         * or NormalCoords::AlmostNormal.
          *
          * \pre The argument \a startFrom is at least \a nTets_ (i.e.,
          * it is at least as large as the index of the first triangle type).
@@ -579,11 +579,12 @@ class TreeTraversal : public ShortOutput<
  * additional constraints (such as positive Euler characteristic), then
  * use the class TreeSingleSoln instead, which is optimised for this purpose.
  *
- * This tree traversal can only enumerate surfaces in quadrilateral normal
- * coordinates (NS_QUAD), standard normal coordinates (NS_STANDARD),
- * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
- * standard almost normal coordinates (NS_AN_STANDARD).  For almost
- * normal surfaces, we allow any number of octagons (including zero),
+ * This tree traversal can only enumerate surfaces in
+ * quadrilateral normal coordinates (NormalCoords::Quad),
+ * standard normal coordinates (NormalCoords::Standard),
+ * quadrilateral-octagon almost normal coordinates (NormalCoords::QuadOct), or
+ * standard almost normal coordinates (NormalCoords::AlmostNormal).
+ * For almost normal surfaces, we allow any number of octagons (including zero),
  * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
@@ -1301,11 +1302,12 @@ class TautEnumeration :
  * triangulation (instead of finding just one), you should use the class
  * TreeEnumeration instead.
  *
- * This tree traversal can only enumerate surfaces in quadrilateral normal
- * coordinates (NS_QUAD), standard normal coordinates (NS_STANDARD),
- * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
- * standard almost normal coordinates (NS_AN_STANDARD).  For almost
- * normal surfaces, we allow any number of octagons (including zero),
+ * This tree traversal can only enumerate surfaces in
+ * quadrilateral normal coordinates (NormalCoords::Quad),
+ * standard normal coordinates (NormalCoords::Standard),
+ * quadrilateral-octagon almost normal coordinates (NormalCoords::QuadOct), or
+ * standard almost normal coordinates (NormalCoords::AlmostNormal).
+ * For almost normal surfaces, we allow any number of octagons (including zero),
  * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
@@ -1661,7 +1663,8 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 template <typename... BanArgs>
 inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
         const Triangulation<3>& tri, BanArgs&&... banArgs) :
-        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, NS_ANGLE,
+        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri,
+            NormalCoords::Angle,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
             true /* enumeration */,

@@ -42,14 +42,14 @@ namespace regina {
 
 template <>
 void XMLWriter<NormalHypersurfaces>::openPre() {
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         out_ << R"(<packet type="Normal Hypersurface List" typeid=")"
-            << PACKET_NORMALHYPERSURFACES << '"';
+            << static_cast<int>(PacketType::NormalHypersurfaces) << '"';
     } else {
         out_ << R"(<hypersurfaces tri=")" << triID_
             << R"(" type=")" << data_.which_.intValue()
             << R"(" algorithm=")" << data_.algorithm_.intValue()
-            << R"(" coords=")" << data_.coords_ << '"';
+            << R"(" coords=")" << static_cast<int>(data_.coords_) << '"';
     }
 }
 
@@ -57,12 +57,12 @@ template <>
 void XMLWriter<NormalHypersurfaces>::writeContent() {
     using regina::xml::xmlValueTag;
 
-    if (format_ == REGINA_XML_GEN_2) {
+    if (format_ == FileFormat::XmlGen2) {
         // Write the enumeration parameters.
         out_ << "  <params "
             "type=\"" << data_.which_.intValue() << "\" "
             "algorithm=\"" << data_.algorithm_.intValue() << "\" "
-            "flavourid=\"" << data_.coords_ << "\"\n";
+            "flavourid=\"" << static_cast<int>(data_.coords_) << "\"\n";
         out_ << "\tflavour=\""
             << regina::xml::xmlEncodeSpecialChars(HyperInfo::name(
                 data_.coords_))
@@ -76,7 +76,7 @@ void XMLWriter<NormalHypersurfaces>::writeContent() {
 
 template <>
 void XMLWriter<NormalHypersurfaces>::close() {
-    if (format_ == REGINA_XML_GEN_2)
+    if (format_ == FileFormat::XmlGen2)
         out_ << "</packet> <!-- Normal Hypersurface List -->\n";
     else
         out_ << "</hypersurfaces>\n";

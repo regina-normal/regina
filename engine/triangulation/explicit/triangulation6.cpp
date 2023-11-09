@@ -91,7 +91,7 @@ template void TriangulationBase<6>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<6>::writeTextLong(std::ostream&) const;
 
 template void TriangulationBase<6>::reorderBFS(bool);
-template void TriangulationBase<6>::makeDoubleCover();
+template Triangulation<6> TriangulationBase<6>::doubleCover() const;
 template bool TriangulationBase<6>::finiteToIdeal();
 
 template std::string TriangulationBase<6>::source(Language) const;

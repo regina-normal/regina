@@ -41,7 +41,7 @@ def process(tri):
 
 p = tree
 while p != None:
-    if p.type() == regina.PACKET_TRIANGULATION3:
+    if p.type() == regina.PacketType.Triangulation3:
         process(p)
     p = p.nextTreePacket()
 

@@ -43,6 +43,10 @@ template <typename T>
 void addVectorOf(pybind11::module_& m, const char* className) {
     using Vec = regina::Vector<T>;
 
+    // For now, T is one of Regina's arbitrary-precision integer classes.
+    // Fetch the _other_ integer type, for use with our constructors.
+    using T_Alt = regina::IntegerBase<! T::supportsInfinity>;
+
     RDOC_SCOPE_BEGIN(Vector)
 
     auto c = pybind11::class_<Vec>(m, className, rdoc_scope)
@@ -52,6 +56,7 @@ void addVectorOf(pybind11::module_& m, const char* className) {
         .def(pybind11::init([](const std::vector<T> v) {
             return new Vec(v.begin(), v.end());
         }), pybind11::arg("elements"), rdoc::__init_3)
+        .def(pybind11::init<const regina::Vector<T_Alt>&>(), rdoc::__init_4)
         .def("size", &Vec::size, rdoc::size)
         .def("__len__", &Vec::size, rdoc::size)
         .def("__getitem__", [](Vec& v, size_t index) -> T& {

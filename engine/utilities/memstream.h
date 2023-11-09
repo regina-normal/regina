@@ -51,7 +51,6 @@ namespace regina {
  * memory that is read, and the caller should ensure that this memory
  * remains allocated for at least as long as this input stream.
  *
- * End users should not use this class, but should use mem_istream instead.
  * The API for this class is subject to change in future versions of Regina.
  *
  * \nopython

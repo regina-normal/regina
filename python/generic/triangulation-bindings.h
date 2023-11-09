@@ -220,8 +220,11 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::dualToPrimal), rbase::dualToPrimal)
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal,
             rbase::finiteToIdeal)
-        .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover,
-            rbase::makeDoubleCover)
+        .def("doubleCover", &Triangulation<dim>::doubleCover,
+            rbase::doubleCover)
+        .def("makeDoubleCover", [](Triangulation<dim>& tri) { // deprecated
+            tri = tri.doubleCover();
+        }, rbase::makeDoubleCover)
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo,
             rbase::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn,
@@ -278,15 +281,16 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::isoSigComponentSize,
             rbase::isoSigComponentSize)
         .def("source", &Triangulation<dim>::source,
-            // The default should be LANGUAGE_CURRENT, but in C++ that evaluates
-            // to LANGUAGE_CXX.  We need it to evaluate to LANGUAGE_PYTHON
-            // (i.e., the Python implementation of LANGUAGE_CURRENT), and so we
-            // explicitly use that as our default instead.
-            pybind11::arg("language") = regina::LANGUAGE_PYTHON,
+            // The default should be Language::Current, but in C++ that
+            // evaluates to Language::Cxx.  We need it to evaluate to
+            // Language::Python (i.e., the Python implementation of
+            // Language::Current), and so we explicitly use that as our
+            // default instead.
+            pybind11::arg("language") = regina::Language::Python,
             rbase::source)
         .def("dumpConstruction", [](const Triangulation<dim>& tri) {
             // Deprecated, so reimplement this ourselves.
-            return tri.source(regina::LANGUAGE_CXX);
+            return tri.source(regina::Language::Cxx);
         }, rbase::dumpConstruction)
         .def("dot", &Triangulation<dim>::dot,
             pybind11::arg("labels") = false, rbase::dot)

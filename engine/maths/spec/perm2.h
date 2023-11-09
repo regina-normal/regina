@@ -110,7 +110,7 @@ class Perm<2> {
          * Indicates what type of internal permutation code is used by
          * this instance of the Perm class template.
          */
-        static constexpr PermCodeType codeType = PERM_CODE_INDEX;
+        static constexpr PermCodeType codeType = PermCodeType::Index;
 
         /**
          * The total number of permutations on two elements.

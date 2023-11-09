@@ -16,7 +16,7 @@ static const char *Algorithm =
 R"doc(Represents various classes of algorithms that Regina can use for
 computations. A function that takes an Algorithm argument need not
 support all types of algorithm - if an unsupported algorithm is passed
-then Regina will fall back to ALG_DEFAULT.
+then Regina will fall back to Algorithm::Default.
 
 This enumeration type does _not_ allow constants to be combined using
 the OR operator.
@@ -56,20 +56,20 @@ Returns:
 
 namespace Algorithm_ {
 
-// Docstring regina::python::doc::Algorithm_::ALG_BACKTRACK
-static const char *ALG_BACKTRACK =
+// Docstring regina::python::doc::Algorithm_::Backtrack
+static const char *Backtrack =
 R"doc(An optimised backtracking algorithm. This typically works over some
 search tree (often of exponential size or worse), but include
 significant optimisations to prune the search tree and/or cache
 computations where possible.)doc";
 
-// Docstring regina::python::doc::Algorithm_::ALG_DEFAULT
-static const char *ALG_DEFAULT =
+// Docstring regina::python::doc::Algorithm_::Default
+static const char *Default =
 R"doc(The default algorithm. Here Regina will choose whichever algorithm it
 thinks (rightly or wrongly) is most appropriate.)doc";
 
-// Docstring regina::python::doc::Algorithm_::ALG_NAIVE
-static const char *ALG_NAIVE =
+// Docstring regina::python::doc::Algorithm_::Naive
+static const char *Naive =
 R"doc(A naive algorithm. This typically works directly with the underlying
 definitions (e.g., computing Turaev-Viro as a state sum), without
 further optimisations.
@@ -79,8 +79,8 @@ further optimisations.
     experimentation. Due to their slow performance, they are not
     suitable for "real" applications.)doc";
 
-// Docstring regina::python::doc::Algorithm_::ALG_TREEWIDTH
-static const char *ALG_TREEWIDTH =
+// Docstring regina::python::doc::Algorithm_::Treewidth
+static const char *Treewidth =
 R"doc(A treewidth-based algorithm. Typically this uses dynamic programming
 over a tree decomposition of some underlying graph. Such algorithms
 are often fast for triangulations or links with small treewidth, but
@@ -90,18 +90,25 @@ may require large amounts of memory.)doc";
 
 namespace Language_ {
 
-// Docstring regina::python::doc::Language_::LANGUAGE_CURRENT
-static const char *LANGUAGE_CURRENT =
+// Docstring regina::python::doc::Language_::Current
+static const char *Current =
 R"doc(The programming language currently being used.
 
-When writing C++ code, this is equivalent to LANGUAGE_CXX. When using
-the Python bindings, this is equivalent to LANGUAGE_PYTHON.)doc";
+When writing C++ code, this is equivalent to Language::Cxx. When using
+the Python bindings, this is equivalent to Language::Python.
 
-// Docstring regina::python::doc::Language_::LANGUAGE_CXX
-static const char *LANGUAGE_CXX = R"doc(The C++ programming language.)doc";
+.. warning::
+    For developers who are _writing_ the Python bindings, remember
+    that your binding code (which is written in C++) will treat this
+    as Language::Cxx, whereas your Python users will expect
+    Language::Python. See the code for binding for Link::source() as
+    an example of where this issue arises and how it is resolved.)doc";
 
-// Docstring regina::python::doc::Language_::LANGUAGE_PYTHON
-static const char *LANGUAGE_PYTHON = R"doc(The Python programming language.)doc";
+// Docstring regina::python::doc::Language_::Cxx
+static const char *Cxx = R"doc(The C++ programming language.)doc";
+
+// Docstring regina::python::doc::Language_::Python
+static const char *Python = R"doc(The Python programming language.)doc";
 
 }
 

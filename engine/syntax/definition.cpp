@@ -417,7 +417,7 @@ void DefinitionData::loadGeneral(xmlTextReaderPtr reader)
                     auto it = std::unique(delimiters.begin(), delimiters.end());
                     delimiters.resize(std::distance(delimiters.begin(), it));
                     for (char c : regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"weakDeliminator")))
-                        std::remove(delimiters.begin(), delimiters.end(), c);
+                        delimiters.erase(std::remove(delimiters.begin(), delimiters.end(), c), delimiters.end());
                 } else {
                     // Skip current element.
                     if (xmlTextReaderNext(reader) != 1)

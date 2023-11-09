@@ -67,7 +67,7 @@ evalFlag(regina.surfaceExportName)
 
 # Some enum types that are NOT intended to be used as flags:
 
-evalObj(regina.NS_STANDARD)            # value is zero
-evalObj(regina.NS_QUAD)                # value is non-zero
+evalObj(regina.NormalCoords.Standard)            # value is zero
+evalObj(regina.NormalCoords.Quad)                # value is non-zero
 evalObj(regina.Triangle3.UNKNOWN_TYPE) # value is zero
 evalObj(regina.Triangle3.PARACHUTE)    # value is non-zero

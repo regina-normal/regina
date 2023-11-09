@@ -24,5 +24,5 @@ for sig in sigs:
     print sig
     t = Triangulation3.fromIsoSig(sig)
 
-    enum(t, NS_QUAD, NS_VERTEX, NS_ALG_DEFAULT)
-    enum(t, NS_QUAD, NS_VERTEX, NS_VERTEX_DD)
+    enum(t, NormalCoords.Quad, NS_VERTEX, NS_ALG_DEFAULT)
+    enum(t, NormalCoords.Quad, NS_VERTEX, NS_VERTEX_DD)

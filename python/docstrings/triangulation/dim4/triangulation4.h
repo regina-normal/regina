@@ -73,9 +73,9 @@ etc.) will _always_ be cloned. This is to ensure that the same
 numbering and labelling will be used for all skeletal objects in both
 triangulations.
 
-Regardless of the argument *cloneProps*, if it is known that all
-vertex links of *copy* are 3-sphere or 3-balls, this knowledge will be
-copied over to the new triangulation.
+Likewise, regardless of *cloneProps*, if it is known that all vertex
+links of *copy* are 3-sphere or 3-balls, this knowledge will be copied
+over to the new triangulation.
 
 If *cloneLocks* is ``True`` then any locks on the top-dimensional
 simplices and/or facets of *src* will be copied across. If
@@ -86,10 +86,9 @@ Parameter ``src``:
     the triangulation to copy.
 
 Parameter ``cloneProps``:
-    ``True`` if this should also clone any computed properties as well
-    as the skeleton of the given triangulation, or ``False`` if the
-    new triangulation should have such properties and skeletal data
-    marked as unknown.
+    ``True`` if this should also clone any computed properties of the
+    given triangulation, or ``False`` if the new triangulation should
+    have such properties marked as unknown.
 
 Parameter ``cloneLocks``:
     ``True`` if this should also clone any simplex and/or facet locks

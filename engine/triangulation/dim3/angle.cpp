@@ -70,7 +70,7 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
         return std::holds_alternative<AngleStructure>(strictAngleStructure_);
 
     // Run the full computation and cache the resulting structure, if any.
-    LPInitialTableaux<LPConstraintNone> eqns(*this, NS_ANGLE, false);
+    LPInitialTableaux<LPConstraintNone> eqns(*this, NormalCoords::Angle, false);
 
     LPData<LPConstraintNone, Integer> lp;
     lp.reserve(eqns);

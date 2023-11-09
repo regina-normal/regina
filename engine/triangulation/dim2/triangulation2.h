@@ -130,9 +130,8 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
-         * properties as well as the skeleton of the given triangulation,
-         * or \c false if the new triangulation should have such properties
-         * and skeletal data marked as unknown.
+         * properties of the given triangulation, or \c false if the new
+         * triangulation should have such properties marked as unknown.
          * \param cloneLocks \c true if this should also clone any simplex
          * and/or facet locks from the given triangulation, or \c false if
          * the new triangulation should have no locks at all.
@@ -440,6 +439,60 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * \return \c true if and only if this is a 2-ball triangulation.
          */
         bool isBall() const;
+
+        /*@}*/
+        /**
+         * \name Skeletal Transformations
+         */
+        /*@{*/
+
+        /**
+         * Checks the eligibility of and/or performs a 2-0 move about the
+         * given vertex of degree 2.  This involves taking the two triangles
+         * joined at that vertex and squashing them flat.  This can be done if:
+         *
+         * - the vertex is non-boundary;
+         *
+         * - the two triangles are distinct;
+         *
+         * - the edges opposite \a v in each triangle are distinct and
+         *   not both boundary.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on locks).
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (edges, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a v)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on how locks work and
+         * what their implications are.
+         *
+         * \param v the vertex about which to perform the move.
+         * \param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * \param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool twoZeroMove(Vertex<2>* v, bool check = true, bool perform = true);
 
         /*@}*/
 

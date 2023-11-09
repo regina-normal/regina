@@ -255,6 +255,57 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     return ans;
 }
 
+size_t Link::countTrivialComponents() const {
+    size_t ans = 0;
+    for (StrandRef c : components_)
+        if (! c)
+            ++ans;
+    return ans;
+}
+
+void Link::makeAlternating() {
+    if (crossings_.empty())
+        return;
+
+    ChangeAndClearSpan<> span(*this);
+
+    // Run a breadth-first search through each connected piece of the diagram.
+    size_t n = crossings_.size();
+
+    auto* fixed = new bool[n];
+    std::fill(fixed, fixed + n, false);
+
+    auto* queue = new size_t[n];
+    size_t queueStart = 0, queueEnd = 0;
+
+    for (size_t i = 0; i < n; ++i) {
+        if (fixed[i])
+            continue;
+
+        // This crossing will be preserved, and will act as a starting point
+        // for the next breadth-first search.
+        queue[queueEnd++] = i;
+        fixed[i] = true;
+
+        while (queueStart < queueEnd) {
+            Crossing* from = crossings_[queue[queueStart++]];
+
+            // The search only needs to consider forward arrows, since this is
+            // enough to reach the entire connected piece of the diagram.
+            for (int j = 0; j < 2; ++j) {
+                StrandRef next = from->next_[j];
+                size_t nextIndex = next.crossing_->index();
+                if (! fixed[nextIndex]) {
+                    if (next.strand_ == j)
+                        change(next.crossing_);
+                    queue[queueEnd++] = nextIndex;
+                    fixed[nextIndex] = true;
+                }
+            }
+        }
+    }
+}
+
 bool Link::isAlternating() const {
     StrandRef s;
     int prev;
@@ -456,7 +507,7 @@ void Link::reverse() {
 }
 
 void Link::rotate() {
-    ChangeAndClearSpan<CHANGE_PRESERVE_TOPOLOGY> span(*this);
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -960,7 +1011,7 @@ Link Link::parallel(int k, Framing framing) const {
             ++s;
         } while (s != start);
 
-        if (writhe == 0 || framing == FRAMING_BLACKBOARD) {
+        if (writhe == 0 || framing == Framing::Blackboard) {
             // Close up the k new parallel link components.
             for (i = 0; i < k; ++i)
                 Link::join(
@@ -1165,11 +1216,11 @@ std::string Link::source(Language language) const {
 
     char left, right;
     switch (language) {
-        case LANGUAGE_CXX:
+        case Language::Cxx:
             out << "Link link = Link::fromData(";
             left = '{'; right = '}';
             break;
-        case LANGUAGE_PYTHON:
+        case Language::Python:
             out << "link = Link.fromData(";
             left = '['; right = ']';
             break;
@@ -1188,7 +1239,7 @@ std::string Link::source(Language language) const {
     }
 
     if (components_.empty()) {
-        if (language == LANGUAGE_PYTHON)
+        if (language == Language::Python)
             out << ", [ ]";
     } else {
         // In Python, we express multiple components as [[...], ..., [...]].
@@ -1196,7 +1247,7 @@ std::string Link::source(Language language) const {
         // A problem: this makes [] ambiguous, since it could represent either
         // the empty link or the zero-crossing unknot, and so in the latter
         // case we must still keep the outer list.
-        bool outerList = (language == LANGUAGE_PYTHON &&
+        bool outerList = (language == Language::Python &&
             (components_.size() > 1 || crossings_.empty()));
 
         out << ", ";
@@ -1213,7 +1264,7 @@ std::string Link::source(Language language) const {
             out << left << ' ';
 
             if (! start) {
-                if (language == LANGUAGE_CXX)
+                if (language == Language::Cxx)
                     out << "0 ";
                 out << right;
             } else {
@@ -1237,7 +1288,7 @@ std::string Link::source(Language language) const {
     }
 
     out << ')';
-    if (language == LANGUAGE_CXX)
+    if (language == Language::Cxx)
         out << ';';
     out << '\n';
 

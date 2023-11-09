@@ -54,14 +54,14 @@ namespace regina {
  *
  * \ingroup surfaces
  */
-enum NormalCoords {
+enum class NormalCoords {
     /**
      * Represents standard triangle-quadrilateral coordinates for
      * normal surfaces.
      *
      * Regina can both enumerate and view surfaces in this coordinate system.
      */
-    NS_STANDARD = 0,
+    Standard = 0,
     /**
      * Represents quadrilateral coordinates for normal surfaces.
      * For details, see "Normal surface Q-theory", Jeffrey L. Tollefson,
@@ -69,12 +69,12 @@ enum NormalCoords {
      *
      * Regina can both enumerate and view surfaces in this coordinate system.
      */
-    NS_QUAD = 1,
+    Quad = 1,
     /**
      * Represents quadrilateral coordinates in ideal triangulations for
      * enumerating closed surfaces only (thus excluding spun-normal surfaces).
      * The coordinates themselves are identical to quadrilateral
-     * coordinates, as described by NS_QUAD; however, the enumeration
+     * coordinates, as described by NormalCoords::Quad; however, the enumeration
      * procedure introduces additional constraints.  The resulting
      * solution space is the space Q_0 as described in "Computing closed
      * essential surfaces in knot complements", by Burton, Coward and Tillmann,
@@ -88,7 +88,7 @@ enum NormalCoords {
      *
      * Regina can enumerate surfaces in this coordinate system, but it is not
      * for viewing.  You can just view the surfaces in quad coordinates
-     * (NS_QUAD) instead.
+     * (NormalCoords::Quad) instead.
      *
      * \pre Regina can only create matching equations in this coordinate system
      * for a limited class of triangulations.  Currently, such triangulations
@@ -103,7 +103,14 @@ enum NormalCoords {
      * matching equations, and Regina will throw an UnsolvedCase exception
      * if this requirement is not met.
      */
-    NS_QUAD_CLOSED = 10,
+    QuadClosed = 10,
+    /**
+     * Represents standard triangle-quadrilateral-octagon coordinates
+     * for octagonal almost normal surfaces.
+     *
+     * Regina can both enumerate and view surfaces in this coordinate system.
+     */
+    AlmostNormal = 102,
     /**
      * Indicates that a list of almost normal surfaces was created
      * using Regina 4.5.1 or earlier, where surfaces with more than
@@ -114,11 +121,11 @@ enum NormalCoords {
      * the _vertex_ almost normal surfaces).
      *
      * Regina cannot enumerate or view surfaces in this coordinate system.
-     * It is only used for reading legacy data files.
-     * If you have a list that uses this system, you can just view the
-     * surfaces in standard almost normal coordinates (NS_AN_STANDARD).
+     * It is only used for reading legacy data files.  If you have a list
+     * that uses this system, you can just view the surfaces in
+     * standard almost normal coordinates (NormalCoords::AlmostNormal).
      */
-    NS_AN_LEGACY = 100,
+    LegacyAlmostNormal = 100,
     /**
      * Represents quadrilateral-octagon coordinates for octagonal
      * almost normal surfaces.  For details, see
@@ -127,19 +134,12 @@ enum NormalCoords {
      *
      * Regina can both enumerate and view surfaces in this coordinate system.
      */
-    NS_AN_QUAD_OCT = 101,
-    /**
-     * Represents standard triangle-quadrilateral-octagon coordinates
-     * for octagonal almost normal surfaces.
-     *
-     * Regina can both enumerate and view surfaces in this coordinate system.
-     */
-    NS_AN_STANDARD = 102,
+    QuadOct = 101,
     /**
      * Represents quadrilateral-octagon coordinates in ideal triangulations for
      * enumerating closed surfaces only (thus excluding spun-almost normal
      * surfaces).  The coordinates themselves are identical to
-     * quadrilateral-octagon coordinates, as described by NS_AN_QUAD_OCT;
+     * quadrilateral-octagon coordinates, as described by NormalCoords::QuadOct;
      * however, the enumeration procedure introduces additional constraints.
      *
      * Note that, if a vertex surface in quad-oct coordinates is closed, it will
@@ -150,7 +150,7 @@ enum NormalCoords {
      *
      * Regina can enumerate surfaces in this coordinate system, but it is not
      * for viewing.  You can just view the surfaces in quad-oct coordinates
-     * (NS_AN_QUAD_OCT) instead.
+     * (NormalCoords::QuadOct) instead.
      *
      * \pre Regina can only create matching equations in this coordinate system
      * for a limited class of triangulations.  Currently, such triangulations
@@ -165,7 +165,7 @@ enum NormalCoords {
      * matching equations, and Regina will throw an UnsolvedCase exception
      * if this requirement is not met.
      */
-    NS_AN_QUAD_OCT_CLOSED = 110,
+    QuadOctClosed = 110,
     /**
      * Represents edge weight coordinates for normal surfaces.
      *
@@ -173,7 +173,7 @@ enum NormalCoords {
      * in this coordinate system, but it cannot use it to enumerate or create
      * surfaces.
      */
-    NS_EDGE_WEIGHT = 200,
+    Edge = 200,
     /**
      * Represents triangle arc coordinates for normal surfaces.
      *
@@ -181,7 +181,7 @@ enum NormalCoords {
      * in this coordinate system, but it cannot use it to enumerate or create
      * surfaces.
      */
-    NS_TRIANGLE_ARCS = 201,
+    Arc = 201,
     /**
      * Represents angle structure coordinates.
      *
@@ -190,8 +190,8 @@ enum NormalCoords {
      * Instead it is for use with angle structures on triangulations.
      * Because the combinatorics and linear algebra of angle strutures
      * are tightly related to those of normal surfaces, we include
-     * NS_ANGLE here so that angle structure routines can make use of
-     * some of Regina's existing normal surface machinery.
+     * NormalCoords::Angle here so that angle structure routines can make
+     * use of some of Regina's existing normal surface machinery.
      *
      * For a triangulation with \a n tetrahedra, this system has
      * 3<i>n</i>+1 coordinates.  The first 3<i>n</i> are analogous
@@ -206,10 +206,117 @@ enum NormalCoords {
      * (<i>x</i>/<i>s</i>)π.
      *
      * \pre This coordinate system must not be used with any of Regina's
-     * routines unless they explicitly declare that NS_ANGLE is allowed.
+     * routines unless they explicitly declare that NormalCoords::Angle is
+     * allowed.
      */
-    NS_ANGLE = 400
+    Angle = 400
 };
+
+/**
+ * An alias for standard triangle-quad coordinates for normal surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::Standard.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr NormalCoords NS_STANDARD = NormalCoords::Standard;
+
+/**
+ * An alias for quadrilateral coordinates for normal surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::Quad.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr NormalCoords NS_QUAD = NormalCoords::Quad;
+
+/**
+ * An alias for quadrilateral coordinates in ideal triangulations for
+ * closed (non-spun) normal surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::QuadClosed.  However, these old names for the coordinate
+ * system constants have been kept in the regina:: namespace for convenience
+ * and compatibility with older code.
+ */
+inline constexpr NormalCoords NS_QUAD_CLOSED = NormalCoords::QuadClosed;
+
+/**
+ * An alias for standard triangle-quadrilateral-octagon coordinates for
+ * octagonal almost normal surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::AlmostNormal.  However, these old names for the coordinate
+ * system constants have been kept in the regina:: namespace for convenience
+ * and compatibility with older code.
+ */
+inline constexpr NormalCoords NS_AN_STANDARD = NormalCoords::AlmostNormal;
+
+/**
+ * An alias for the "coordinate system" indicating almost normal surfaces that
+ * were enumerated using Regina 4.5.1 or earlier, where surfaces with more
+ * than one octagon of the same type were stripped from solution sets.
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::ANLegacy.  However, these old names for the coordinate
+ * system constants have been kept in the regina:: namespace for convenience
+ * and compatibility with older code.
+ */
+inline constexpr NormalCoords NS_AN_LEGACY = NormalCoords::LegacyAlmostNormal;
+
+/**
+ * An alias for quadrilateral-octagon coordinates for octagonal almost normal
+ * surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::QuadOct.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr NormalCoords NS_AN_QUAD_OCT = NormalCoords::QuadOct;
+
+/**
+ * An alias for quadrilateral-octagon coordinates in ideal triangulations for
+ * closed (non-spun) octagonal almost normal surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::QuadOctClosed.  However, these old names for the coordinate
+ * system constants have been kept in the regina:: namespace for convenience
+ * and compatibility with older code.
+ */
+inline constexpr NormalCoords NS_AN_QUAD_OCT_CLOSED =
+    NormalCoords::QuadOctClosed;
+
+/**
+ * An alias for edge weight coordinates for normal surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::Edge.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr NormalCoords NS_EDGE_WEIGHT = NormalCoords::Edge;
+
+/**
+ * An alias for triangle arc coordinates for normal surfaces.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::Arc.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr NormalCoords NS_TRIANGLE_ARCS = NormalCoords::Arc;
+
+/**
+ * An alias for angle structure coordinates.
+ *
+ * The preferred way to access this constant is using the scoped enum value
+ * NormalCoords::Angle.  However, these old names for the coordinate system
+ * constants have been kept in the regina:: namespace for convenience and
+ * compatibility with older code.
+ */
+inline constexpr NormalCoords NS_ANGLE = NormalCoords::Angle;
 
 /**
  * Indicates precisely how a normal surface is encoded by an integer vector.
@@ -225,10 +332,11 @@ enum NormalCoords {
  * knowledge that, even if the vector stores triangle coordinates, the
  * surface cannot contain any vertex linking components).
  *
- * For convenience, there is also a special encoding that identifies an angle
- * structure vector; this can be created via `NormalEncoding(NS_ANGLE)`,
- * and can be recognised via storesAngles().  However, like NS_ANGLE itself,
- * this special angle structure encoding does _not_ represent a normal surface,
+ * For convenience, there is also a special encoding that identifies an
+ * angle structure vector; this can be created via
+ * `NormalEncoding(NormalCoords::Angle)`, and can be recognised via
+ * storesAngles().  However, like NormalCoords::Angle itself, this special
+ * angle structure encoding does _not_ represent a normal surface,
  * cannot be combined with other encodings, and must not be used with any of
  * Regina's routines unless the documentation explicitly allows it.
  * Specifically, any code that accepts a NormalEncoding argument may silently
@@ -270,8 +378,8 @@ class NormalEncoding {
                  coordinates are included in the vector. */
 
         static constexpr int STORES_ANGLES = 0x0080;
-            /**< A bit of \a flags that, if \c true, indicates that this
-                 is the special encoding that corresponds to NS_ANGLE.
+            /**< A bit of \a flags that, if \c true, indicates that this is
+                 the special encoding that corresponds to NormalCoords::Angle.
                  See the NormalEncoding class notes for details. */
 
         static constexpr int COULD_BE_VERTEX_LINK = 0x0100;
@@ -317,47 +425,48 @@ class NormalEncoding {
          * in quad or quad-oct coordinates, Regina computes and stores
          * triangle coordinates also, and so for its own _internal_ choice of
          * encoding, storesTriangles() will return \c true.  In contrast,
-         * if you simply create a `NormalEncoding(NS_QUAD)`, then the
+         * if you simply create a `NormalEncoding(NormalCoords::Quad)`, then the
          * resulting encoding will have storesTriangles() return \c false.
          *
-         * If \a coords is not one of the coordinate systems that Regina
-         * can use to enumerate or reconstruct surfaces (or NS_ANGLE, as
+         * If \a coords is not one of the coordinate systems that Regina can
+         * use to enumerate or reconstruct surfaces (or NormalCoords::Angle, as
          * discussed below), then the resulting encoding will be invalid,
          * and valid() will return \c false.  (Here "reconstruct" refers
-         * to the special case of NS_AN_LEGACY, which is used only when
-         * reading surfaces from very old data files).
+         * to the special case of NormalCoords::LegacyAlmostNormal, which is
+         * used only when reading surfaces from very old data files).
          *
-         * As a special case, you may pass NS_ANGLE to this constructor;
-         * however, the resulting encoding does not represent a normal surface
-         * and must not be used anywhere in Regina unless the documentation
-         * explicitly allows it.  See the class notes for further details.
+         * As a special case, you may pass NormalCoords::Angle to this
+         * constructor; however, the resulting encoding does not represent a
+         * normal surface and must not be used anywhere in Regina unless the
+         * documentation explicitly allows it.  See the class notes for
+         * further details.
          *
          * \param coords one of Regina's normal or almost normal coordinate
          * systems.
          */
         constexpr NormalEncoding(NormalCoords coords) : flags_(INVALID) {
             switch (coords) {
-                case NS_STANDARD:
+                case NormalCoords::Standard:
                     flags_ = 7 | COULD_BE_VERTEX_LINK | STORES_TRIANGLES;
                     break;
-                case NS_QUAD:
+                case NormalCoords::Quad:
                     flags_ = 3 | COULD_BE_NON_COMPACT;
                     break;
-                case NS_QUAD_CLOSED:
+                case NormalCoords::QuadClosed:
                     flags_ = 3;
                     break;
-                case NS_AN_STANDARD:
-                case NS_AN_LEGACY:
+                case NormalCoords::AlmostNormal:
+                case NormalCoords::LegacyAlmostNormal:
                     flags_ = 10 | COULD_BE_VERTEX_LINK |
                         STORES_TRIANGLES | STORES_OCTAGONS;
                     break;
-                case NS_AN_QUAD_OCT:
+                case NormalCoords::QuadOct:
                     flags_ = 6 | COULD_BE_NON_COMPACT | STORES_OCTAGONS;
                     break;
-                case NS_AN_QUAD_OCT_CLOSED:
+                case NormalCoords::QuadOctClosed:
                     flags_ = 6 | STORES_OCTAGONS;
                     break;
-                case NS_ANGLE:
+                case NormalCoords::Angle:
                     flags_ = 3 | STORES_ANGLES;
                 default:
                     break;
@@ -444,7 +553,7 @@ class NormalEncoding {
          * Identifies whether this is the special angle structure encoding.
          *
          * This routine is used to recognise the "special case" encoding
-         * `NormalEncoding(NS_ANGLE)`.  Such an encoding does not
+         * `NormalEncoding(NormalCoords::Angle)`.  Such an encoding does not
          * represent a normal surface, and cannot be used anywhere in Regina
          * unless explicitly allowed in the documentation.  See the class
          * notes for further details.
@@ -692,25 +801,25 @@ class NormalInfo {
          */
         constexpr static const char* name(NormalCoords coordSystem) {
             switch (coordSystem) {
-                case NS_STANDARD:
+                case NormalCoords::Standard:
                     return "Standard normal (tri-quad)";
-                case NS_QUAD:
+                case NormalCoords::Quad:
                     return "Quad normal";
-                case NS_AN_STANDARD:
+                case NormalCoords::AlmostNormal:
                     return "Standard almost normal (tri-quad-oct)";
-                case NS_AN_QUAD_OCT:
+                case NormalCoords::QuadOct:
                     return "Quad-oct almost normal";
-                case NS_QUAD_CLOSED:
+                case NormalCoords::QuadClosed:
                     return "Closed quad (non-spun)";
-                case NS_AN_QUAD_OCT_CLOSED:
+                case NormalCoords::QuadOctClosed:
                     return "Closed quad-oct (non-spun)";
-                case NS_EDGE_WEIGHT:
+                case NormalCoords::Edge:
                     return "Edge weight";
-                case NS_TRIANGLE_ARCS:
+                case NormalCoords::Arc:
                     return "Triangle arc";
-                case NS_AN_LEGACY:
+                case NormalCoords::LegacyAlmostNormal:
                     return "Legacy almost normal (pruned tri-quad-oct)";
-                case NS_ANGLE:
+                case NormalCoords::Angle:
                     return "Angle structure";
                 default:
                     return "Unknown";

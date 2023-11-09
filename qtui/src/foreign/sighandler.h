@@ -128,7 +128,7 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
             QObject::tr("<qt>The selected file does "
             "not contain any %1.").arg(signatures) + explnSuffix);
         return nullptr;
-    } else if (last->type() == regina::PACKET_TEXT) {
+    } else if (last->type() == regina::PacketType::Text) {
         if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The import failed."),

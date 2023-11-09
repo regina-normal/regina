@@ -45,15 +45,15 @@ XMLElementReader* XMLLegacyFilterReader::startContentSubElement(
             // Run through all the filter types that the file format supports.
             if (valueOf(props.lookup("typeid"), type)) {
                 switch (static_cast<SurfaceFilterType>(type)) {
-                    case NS_FILTER_LEGACY_DEFAULT:
+                    case SurfaceFilterType::LegacyDefault:
                         return dataReader_ =
                             new XMLPlainFilterReader(resolver_,
                                 parent_, anon_, label_, id_);
-                    case NS_FILTER_PROPERTIES:
+                    case SurfaceFilterType::Properties:
                         return dataReader_ =
                             new XMLLegacyPropertiesFilterReader(resolver_,
                                 parent_, anon_, label_, id_);
-                    case NS_FILTER_COMBINATION:
+                    case SurfaceFilterType::Combination:
                         return dataReader_ =
                             new XMLLegacyCombinationFilterReader(resolver_,
                                 parent_, anon_, label_, id_);

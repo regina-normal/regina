@@ -79,7 +79,11 @@ void add_flags(pybind11::module_& m,
         // a non-static member function.
         e.value(std::get<0>(v), std::get<1>(v), std::get<2>(v));
     }
-    e.export_values();
+    if constexpr (std::is_convertible_v<Enum, int>) {
+        // Assume that Enum is _not_ a scoped enum.
+        // Whenever we move to C++23 we can use std::is_scoped_enum_v instead.
+        e.export_values();
+    }
 
     // We define some additional operators on the enum type later,
     // once we have bound Flags<Enum>.  (This means that docstrings will
@@ -135,7 +139,7 @@ void add_flags(pybind11::module_& m,
         return Flags(lhs) | rhs;
     }, borDoc);
     e.def("__bool__", [](Enum val) {
-        return val != 0;
+        return static_cast<int>(val) != 0;
     }, doc::common::bool_enum_for_flags);
 
     // Type conversions:

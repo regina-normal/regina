@@ -147,9 +147,9 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         // In both cases below we know that makeMatchingEquations() will
         // always succeed.
         if (system_.standard())
-            eqns_ = regina::makeMatchingEquations(tri, NS_STANDARD);
+            eqns_ = regina::makeMatchingEquations(tri, NormalCoords::Standard);
         else
-            eqns_ = regina::makeMatchingEquations(tri, NS_QUAD);
+            eqns_ = regina::makeMatchingEquations(tri, NormalCoords::Quad);
         scaling_ = 0;
     } else {
         eqns_ = regina::makeAngleEquations(tri);
@@ -272,9 +272,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         //
         // We remove our extra constraints here, since some constraints might
         // not be offered in quad coordinates.
-        // Note: NS_QUAD is always safe; the constructor call below will
-        // never throw.
-        LPInitialTableaux<LPConstraintNone> quad(*tri_, NS_QUAD,
+        // Note: NormalCoords::Quad is always safe; the constructor call below
+        // will never throw.
+        LPInitialTableaux<LPConstraintNone> quad(*tri_, NormalCoords::Quad,
             true /* enumeration */);
         for (size_t i = 0; i < n; ++i) {
             size_t k = quad.columnPerm()[3 * i] / 3;

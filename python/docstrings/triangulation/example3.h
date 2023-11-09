@@ -79,6 +79,25 @@ Parameter ``b3``:
     a parameter describing the third layered solid torus in the
     augmented triangular solid torus.)doc";
 
+// Docstring regina::python::doc::Example_::b5
+static const char *b5 =
+R"doc(Returns a triangulation of the Martelli-Petronio brick B5.
+
+This is an 8-tetrahedron triangulation of a Seifert fibred space with
+torus boundary. What makes B5 interesting is that, if we keep its
+boundary fixed, it uses one fewer tetrahedra than the usual prism-and-
+layered-solid-torus construction for this same Seifert fibred space.
+
+The manifold itself is ``SFS [D: (2,1) (3,-2)]``, also known as the
+trefoil complement.
+
+For more details on the brick B5, see "Complexity of geometric
+3-manifolds", Bruno Martelli and Carlo Petronio, Geometriae Dedicata
+108 (2004), pp. 15-69.
+
+Returns:
+    the Martell-Petronio brick B5.)doc";
+
 // Docstring regina::python::doc::Example_::bingsHouse
 static const char *bingsHouse =
 R"doc(Returns the two-tetrahedron triangulation of the 3-sphere that is dual

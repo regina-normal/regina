@@ -38,8 +38,8 @@ namespace regina {
 void Text::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
     writeXMLHeader(out, "textdata", format, anon, refs,
-        format == REGINA_XML_GEN_2);
-    if (format == REGINA_XML_GEN_2) {
+        format == FileFormat::XmlGen2);
+    if (format == FileFormat::XmlGen2) {
         out << "  <text>" << regina::xml::xmlEncodeSpecialChars(text_)
             << "</text>\n";
     } else {

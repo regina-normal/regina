@@ -40,7 +40,8 @@
 #endif
 
 #include <optional>
-#include "packet/packet.h"
+#include "core/output.h"
+#include "file/fileformat.h"
 
 namespace regina {
 
@@ -57,7 +58,7 @@ namespace regina {
  * given file.
  *
  * As of Regina 4.94, the ancient first-generation binary files
- * (REGINA_BINARY_GEN_1) are no longer supported, and this class cannot
+ * (FileFormat::BinaryGen1) are no longer supported, and this class cannot
  * recognise them at all.  These have not been in use since mid-2002.
  * The only file formats that this class now recognises are Regina's newer
  * XML-based (compressed or uncompressed) data files.
@@ -268,11 +269,11 @@ inline FileFormat FileInfo::format() const {
 
 inline std::string FileInfo::formatDescription() const {
     switch (format_) {
-        case REGINA_BINARY_GEN_1:
+        case FileFormat::BinaryGen1:
             return "First-generation binary format (Regina 2.4 and earlier)";
-        case REGINA_XML_GEN_2:
+        case FileFormat::XmlGen2:
             return "Second-generation XML format (Regina 3.0-6.0.1)";
-        case REGINA_XML_GEN_3:
+        case FileFormat::XmlGen3:
             return "Third-generation XML format (Regina 7.0+)";
         default:
             return "Unknown file format";

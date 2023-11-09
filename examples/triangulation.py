@@ -27,7 +27,7 @@ print(t.homologyBdry())
 print(t.isZeroEfficient())
 
 # Make our own list of vertex normal surfaces in standard coordinates.
-surfaces = NormalSurfaces(t, NS_STANDARD)
+surfaces = NormalSurfaces(t, NormalCoords.Standard)
 
 # Print the full list of vertex normal surfaces.
 print(surfaces.detail())

@@ -66,7 +66,7 @@ class TreeBag;
  *
  * \ingroup treewidth
  */
-enum TreeDecompositionAlg {
+enum class TreeDecompositionAlg {
     /**
      * Indicates that a fast upper bound algorithm should be used.
      *
@@ -74,12 +74,12 @@ enum TreeDecompositionAlg {
      * possible width (an NP-hard problem), but it does promise to run
      * in small polynomial time.
      *
-     * This constant \a TD_UPPER indicates that the "most appropriate"
-     * upper bound algorithm should be used.  This is a good choice for
-     * users who just want a good tree decomposition and want it quickly,
-     * without needing to know the details of how it was produced.
+     * This constant \a TreeDecompositionAlg::Upper indicates that the
+     * "most appropriate" upper bound algorithm should be used.  This is a good
+     * choice for users who just want a good tree decomposition and want it
+     * quickly, without needing to know the details of how it was produced.
      */
-    TD_UPPER = 0x0001,
+    Upper = 0x0001,
     /**
      * Indicates that the greedy fill-in heuristic should be used.
      *
@@ -93,32 +93,87 @@ enum TreeDecompositionAlg {
      * Experimentation within Regina also suggests that it performs well in
      * the setting of face pairing graphs of 3-manifold triangulations.
      */
-    TD_UPPER_GREEDY_FILL_IN = 0x0001
+    UpperGreedyFillIn = 0x0001
 };
+
+/**
+ * A deprecated constant indicating an algorithm for computing tree
+ * decompositions.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * TreeDecompositionAlg::Upper.
+ */
+[[deprecated]] inline constexpr TreeDecompositionAlg TD_UPPER =
+    TreeDecompositionAlg::Upper;
+/**
+ * A deprecated constant indicating an algorithm for computing tree
+ * decompositions.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * TreeDecompositionAlg::UpperGreedyFillIn.
+ */
+[[deprecated]] inline constexpr TreeDecompositionAlg TD_UPPER_GREEDY_FILL_IN =
+    TreeDecompositionAlg::UpperGreedyFillIn;
 
 /**
  * Indicates the relationship between two bags in a tree decomposition.
  *
  * \ingroup treewidth
  */
-enum BagComparison {
+enum class BagComparison {
     /**
      * Indicates that the two bags have identical contents.
      */
-    BAG_EQUAL = 0,
+    Equal = 0,
     /**
      * Indicates that the first bag is a strict subset of the second.
      */
-    BAG_SUBSET = -1,
+    Subset = -1,
     /**
      * Indicates that the first bag is a strict superset of the second.
      */
-    BAG_SUPERSET = 1,
+    Superset = 1,
     /**
      * Indicates that neither bag is a subset of the other.
      */
-    BAG_UNRELATED = 2
+    Unrelated = 2
 };
+
+/**
+ * A deprecated constant indicating a relationship between bags in a tree
+ * decomposition.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * BagComparison::Equal.
+ */
+[[deprecated]] inline constexpr BagComparison BAG_EQUAL = BagComparison::Equal;
+/**
+ * A deprecated constant indicating a relationship between bags in a tree
+ * decomposition.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * BagComparison::Subset.
+ */
+[[deprecated]] inline constexpr BagComparison BAG_SUBSET =
+    BagComparison::Subset;
+/**
+ * A deprecated constant indicating a relationship between bags in a tree
+ * decomposition.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * BagComparison::Superset.
+ */
+[[deprecated]] inline constexpr BagComparison BAG_SUPERSET =
+    BagComparison::Superset;
+/**
+ * A deprecated constant indicating a relationship between bags in a tree
+ * decomposition.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * BagComparison::Unrelated.
+ */
+[[deprecated]] inline constexpr BagComparison BAG_UNRELATED =
+    BagComparison::Unrelated;
 
 /**
  * Used to indicate the type of each bag in a _nice_ tree decomposition.
@@ -133,13 +188,19 @@ enum BagComparison {
  *
  * - every leaf bag will be an introduce bag, containing precisely one node.
  *
- * See TreeDecomposition::makeNice() for further details, including how
- * TreeBag::type() and TreeBag::subtype() are defined for a nice tree
- * decomposition.
+ * See TreeDecomposition::makeNice() for further details, and see
+ * TreeBag::niceType() and TreeBag::niceIndex() for how to access this
+ * information for each bag.
  *
  * \ingroup treewidth
  */
-enum NiceType {
+enum class NiceType {
+    /**
+     * Indicates that either the underlying tree decomposition is not nice,
+     * or the details of the nice tree decomposition have not yet been
+     * computed.
+     */
+    None = 0,
     /**
      * Indicates an introduce bag.  An _introduce_ bag has only one child bag.
      * It contains all of the nodes in this child bag plus exactly one
@@ -149,19 +210,41 @@ enum NiceType {
      * also considered to be an introduce bag.  In this case, the leaf bag
      * contains exactly one node.
      */
-    NICE_INTRODUCE = 1,
+    Introduce = 1,
     /**
      * Indicates a forget bag.  A _forget_ bag has only one child bag.
      * It contains all of the nodes in this child bag except for exactly one
      * missing node, and contains no other nodes besides these.
      */
-    NICE_FORGET = 2,
+    Forget = 2,
     /**
      * Indicates a join bag.  A _join_ bag has exactly two child bags,
      * where the join bag and both of its child bags are all identical.
      */
-    NICE_JOIN = 3
+    Join = 3
 };
+
+/**
+ * A deprecated constant indicating a type of bag in a nice tree decomposition.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NiceType::Introduce.
+ */
+[[deprecated]] inline constexpr NiceType NICE_INTRODUCE = NiceType::Introduce;
+/**
+ * A deprecated constant indicating a type of bag in a nice tree decomposition.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NiceType::Forget.
+ */
+[[deprecated]] inline constexpr NiceType NICE_FORGET = NiceType::Forget;
+/**
+ * A deprecated constant indicating a type of bag in a nice tree decomposition.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NiceType::Join.
+ */
+[[deprecated]] inline constexpr NiceType NICE_JOIN = NiceType::Join;
 
 /**
  * Represents a single bag in a tree decomposition.
@@ -190,10 +273,10 @@ enum NiceType {
  * - You can iterate through all the bags in the tree decomposition
  *   with the help of member functions next(), nextPrefix() and index().
  *
- * - If the tree decomposition is of a special type (such as a _nice_
- *   tree decomposition), then each bag may be adorned with some additional
- *   information; you can access this through the member functions type()
- *   and subtype().
+ * - If the underlying tree decomposition is a _nice_ tree decomposition (and
+ *   this nice structure has actually been computed, typically via makeNice()),
+ *   then you can call niceType() and niceIndex() to access the specific role
+ *   that each bag plays in the nice structure.
  *
  * To _build_ a tree decomposition of a graph, see the various
  * TreeDecomposition class constructors.
@@ -225,13 +308,13 @@ class TreeBag : public ShortOutput<TreeBag> {
         TreeBag* children_;
             /**< The first child of this bag in the underlying tree \a T,
                  or \c null if this bag is a leaf of the tree. */
-        int type_;
-            /**< Used where necessary to indicate the role that this bag
-                 plays in the tree decomposition.  See type() for details. */
-        ssize_t subtype_;
-            /**< Used where necessary to give more precise information
-                 (in addition to \a type_) on the role that this bag plays
-                 in the tree decomposition.  See subtype() for details. */
+        NiceType niceType_;
+            /**< Used where relevant to indicate the role that this bag plays
+                 in a nice tree decomposition.  See niceType() for details. */
+        ssize_t niceIndex_;
+            /**< Used where relevant to give more precise information (in
+                 addition to \a niceType_) on the role that this bag plays
+                 in a nice tree decomposition.  See niceIndex() for details. */
         size_t index_;
             /**< Indicates the index of this bag within the underlying
                  tree decomposition, following a leaves-to-root, left-to-right
@@ -304,59 +387,89 @@ class TreeBag : public ShortOutput<TreeBag> {
         size_t index() const;
 
         /**
-         * Returns auxiliary information associated with bags in special
-         * classes of tree decompositions.
+         * Returns the role that this bag plays in a nice tree decomposition,
+         * if this information is known.
          *
-         * If the underlying tree decomposition is of a special type,
-         * then each bag may be adorned with some additional information
-         * indicating the particular role that the bag plays.  This
-         * additional information can be accessed through the member
-         * functions type() and subtype().
+         * This information is only available if the underlying tree
+         * decomposition is nice _and_ this nice structure has actually
+         * been computed.  For this to happen, either:
          *
-         * - If there is no type and/or subtype information stored for this
-         *   bag, then type() will return zero, and subtype() will be undefined.
+         * - TreeDecomposition::makeNice() must have been called upon this
+         *   tree decomposition; or
          *
-         * - If there is type and/or subtype information stored for this
-         *   bag, then the return value of type() is guaranteed to be non-zero.
-         *   The specific meaning of subtype() (and indeed whether it is even
-         *   defined) will typically depend on the return value of type().
+         * - this tree decomposition must have been copied, moved or assigned
+         *   from some other nice tree decomposition for which this information
+         *   had likewise been computed.
          *
-         * At present, types and subtypes are only stored for
-         * _nice_ tree decompositions.  See TreeDecomposition::makeNice()
-         * for details on what type() and subtype() represent.
+         * For introduce and forget bags (i.e., where niceType() returns either
+         * NiceType::Introduce or NiceType::Forget), the function niceIndex()
+         * returns additional information on the role that this bag plays
+         * within the overall nice tree decomposition.
          *
-         * \return a non-zero value indicating the role that this bag plays
-         * in this tree decomposition, or zero if type and subtype information
-         * are not stored.
+         * See TreeDecomposition::makeNice() for further information.
+         *
+         * \return the role that this bag plays in a nice tree decomposition,
+         * or NiceType::None if this information is not available (either
+         * because the tree decomposition is not nice, or because its nice
+         * structure has not been computed).
          */
-        int type() const;
+        NiceType niceType() const;
         /**
-         * Returns a secondary level of auxiliary information associated with
-         * bags in special classes of tree decompositions.
+         * Deprecated function that returns the role that this bag plays in a
+         * nice tree decomposition, if this information is known.
          *
-         * If the underlying tree decomposition is of a special type,
-         * then each bag may be adorned with some additional information
-         * indicating the particular role that the bag plays.  This
-         * additional information can be accessed through the member
-         * functions type() and subtype().
+         * \deprecated This function has been named to niceType(), which
+         * returns a properly-typed NiceType instead of an \c int.
+         * See niceType() for further details.
          *
-         * - If there is no type and/or subtype information stored for this
-         *   bag, then type() will return zero, and subtype() will be undefined.
+         * \python For Python users, this function returns a NiceType, not an
+         * \c int, so that comparisons with the NiceType constants works as
+         * expected.  This is because, now that NiceType is a scoped enum,
+         * Python comparisons between _any_ integer and _any_ NiceType constant
+         * will always return that the values are not equal.
          *
-         * - If there is type and/or subtype information stored for this
-         *   bag, then type() will be non-zero, and the specific meaning of
-         *   subtype() (and indeed whether it is even defined) will depend
-         *   on the value of type().
-         *
-         * At present, types and subtypes are only stored for
-         * _nice_ tree decompositions.  See TreeDecomposition::makeNice()
-         * for details on what type() and subtype() represent.
-         *
-         * \return additional information indicating the role that this
-         * bag plays in this tree decomposition, or undefined if no
-         * additional subtype information is stored for this bag.
+         * \return the non-zero integer value of a NiceType constant indicating
+         * the role that this bag plays in a nice tree decomposition, or zero
+         * if this information is not available.
          */
-        ssize_t subtype() const;
+        [[deprecated]] int type() const;
+        /**
+         * Returns additional details on the role that an introduce or forget
+         * bag plays in a nice tree decomposition.
+         *
+         * This function is only relevant if niceType() returns either
+         * NiceType::Introduce or NiceType::Forget.  That is, the underlying
+         * tree decomposition must be nice, _and_ this nice structure must have
+         * actually been computed, _and_ this bag must be an introduce bag or
+         * a forget bag.
+         *
+         * In this case, niceIndex() gives information on which specific node
+         * of the underyling graph has been added (in the case of an introduce
+         * bag) or removed (in the case of a forget bag).  This information
+         * will be returned as an _index_ into either this bag or its child bag
+         * respectively.
+         *
+         * See TreeDecomposition::makeNice() for further information.
+         *
+         * \return details on the role that an introduce or forget bag plays
+         * in a nice tree decomposition, or undefined if this information is
+         * unknown and/or irrelevant (i.e., niceType() does not return either
+         * NiceType::Introduce or NiceType::Forget).
+         */
+        ssize_t niceIndex() const;
+        /**
+         * Deprecated function that returns additional details on the role
+         * that an introduce or forget bag plays in a nice tree decomposition.
+         *
+         * \deprecated This function has been renamed to niceIndex().
+         * See niceIndex() for further details.
+         *
+         * \return details on the role that an introduce or forget bag plays
+         * in a nice tree decomposition, or undefined if this information is
+         * unknown and/or irrelevant (i.e., niceType() does not return either
+         * NiceType::Introduce or NiceType::Forget).
+         */
+        [[deprecated]] ssize_t subtype() const;
 
         /**
          * Determines if there is a subset/superset relationship between
@@ -366,10 +479,11 @@ class TreeBag : public ShortOutput<TreeBag> {
          * bag is a set of nodes of \a G.  This function will return one
          * of the following constants:
          *
-         * - BAG_EQUAL if this and \a rhs are equal;
-         * - BAG_SUBSET if this bag is a strict subset of \a rhs;
-         * - BAG_SUPERSET if this bag is a strict superset of \a rhs;
-         * - BAG_UNRELATED if neither this nor \a rhs is a subset of the other.
+         * - BagComparison::Equal if this and \a rhs are equal;
+         * - BagComparison::Subset if this bag is a strict subset of \a rhs;
+         * - BagComparison::Superset if this bag is a strict superset of \a rhs;
+         * - BagComparison::Unrelated if neither this nor \a rhs is a subset
+         *   of the other.
          *
          * \param rhs the bag to compare with this.
          * \return the relationship between the two bags, as outlined above.
@@ -737,7 +851,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         template <int dim>
         TreeDecomposition(
             const Triangulation<dim>& triangulation,
-            TreeDecompositionAlg alg = TD_UPPER);
+            TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
         /**
          * Builds a tree decomposition of the given facet pairing graph.
@@ -762,7 +876,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         template <int dim>
         TreeDecomposition(
             const FacetPairing<dim>& pairing,
-            TreeDecompositionAlg alg = TD_UPPER);
+            TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
         /**
          * Builds a tree decomposition of the planar multigraph
@@ -777,7 +891,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * use a slow exact algorithm or a fast greedy algorithm.
          */
         TreeDecomposition(const Link& link,
-            TreeDecompositionAlg alg = TD_UPPER);
+            TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
         /**
          * Builds a tree decomposition of an arbitrary graph.
@@ -803,7 +917,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          */
         template <typename T>
         TreeDecomposition(const Matrix<T>& graph,
-            TreeDecompositionAlg alg = TD_UPPER);
+            TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
         /**
          * Builds a tree decomposition of an arbitrary graph.
@@ -838,7 +952,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          */
         template <typename Row>
         TreeDecomposition(const std::vector<Row>& graph,
-            TreeDecompositionAlg alg = TD_UPPER);
+            TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
         /**
          * Destroys this tree decomposition and all of its bags.
@@ -1051,22 +1165,23 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This routine will also ensure that the root bag is a forget bag,
          * containing no nodes at all.
          *
-         * This routine will set TreeBag::type() and TreeBag::subtype()
+         * This routine will set TreeBag::niceType() and TreeBag::niceIndex()
          * for each bag as follows:
          *
-         * - TreeBag::type() will be one of the constants from the
-         *   NiceType enumeration, indicating whether the bag is an
-         *   introduce, forget or join bag.
+         * - TreeBag::niceType() will be one of the enumeration constants
+         *   NiceType::Introduce, NiceType::Forget or NiceType::Join,
+         *   indicating whether the bag is an introduce, forget or join bag
+         *   respectively.
          *
-         * - For an introduce bag \a b, TreeBag::subtype() will indicate
+         * - For an introduce bag \a b, TreeBag::niceIndex() will indicate
          *   which "new" node was introduced.  Specifically, the new node
-         *   will be `b.element(b.subtype())`.
+         *   will be `b.element(b.niceIndex())`.
          *
-         * - For a forget bag \a b, TreeBag::subtype() will indicate
+         * - For a forget bag \a b, TreeBag::niceIndex() will indicate
          *   which "missing" node was forgotten.  Specifically, the missing
-         *   node will be `b.children()->element(b.subtype())`.
+         *   node will be `b.children()->element(b.niceIndex())`.
          *
-         * - For a join bag, TreeBag::subtype() will be undefined.
+         * - For a join bag, TreeBag::niceIndex() will be undefined.
          *
          * If the underlying graph is empty, then this routine will
          * produce a tree decomposition with no bags at all.
@@ -1080,7 +1195,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * These should be considered hints only, in that their effect on the
          * final tree decomposition might change in future versions of Regina.
          *
-         * \warning Note that TreeBag::subtype() is _not_ the number of
+         * \warning Note that TreeBag::niceIndex() is _not_ the number of
          * the new or missing node, but instead gives the _index_ of the
          * new or missing node within the relevant bag.
          *
@@ -1240,10 +1355,14 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
+         * \param dark \c true if the graph is intended to be displayed in dark
+         * mode (in particular, with black or darkly coloured surroundings), or
+         * \c false (the default) if it is intended to be displayed in light
+         * mode (with white or lightly coloured surroundings).
          *
          * \see http://www.graphviz.org/
          */
-        void writeDot(std::ostream& out) const;
+        void writeDot(std::ostream& out, bool dark = false) const;
 
         /**
          * Returns a Graphviz DOT representation of this tree decomposition.
@@ -1263,10 +1382,15 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * If you are writing this text representation to an output stream
          * then you should call writeDot() instead, which is more efficient.
          *
+         * \param dark \c true if the graph is intended to be displayed in dark
+         * mode (in particular, with black or darkly coloured surroundings), or
+         * \c false (the default) if it is intended to be displayed in light
+         * mode (with white or lightly coloured surroundings).
+         *
          * \return the DOT representation of this tree decomposition,
          * as outlined above.
          */
-        std::string dot() const;
+        std::string dot(bool dark = false) const;
 
         /**
          * Outputs this tree decomposition using the PACE text format.
@@ -1487,8 +1611,8 @@ inline TreeBag::TreeBag(size_t size) :
         parent_(nullptr),
         sibling_(nullptr),
         children_(nullptr),
-        type_(0),
-        subtype_(0) {
+        niceType_(NiceType::None),
+        niceIndex_(0) {
 }
 
 inline TreeBag::TreeBag(const TreeBag& src) :
@@ -1497,8 +1621,8 @@ inline TreeBag::TreeBag(const TreeBag& src) :
         parent_(nullptr),
         sibling_(nullptr),
         children_(nullptr),
-        type_(0),
-        subtype_(0) {
+        niceType_(NiceType::None),
+        niceIndex_(0) {
     std::copy(src.elements_, src.elements_ + size_, elements_);
 }
 
@@ -1524,12 +1648,20 @@ inline size_t TreeBag::index() const {
     return index_;
 }
 
+inline NiceType TreeBag::niceType() const {
+    return niceType_;
+}
+
 inline int TreeBag::type() const {
-    return type_;
+    return static_cast<int>(niceType_);
+}
+
+inline ssize_t TreeBag::niceIndex() const {
+    return niceIndex_;
 }
 
 inline ssize_t TreeBag::subtype() const {
-    return subtype_;
+    return niceIndex_;
 }
 
 inline const TreeBag* TreeBag::parent() const {

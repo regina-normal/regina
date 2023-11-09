@@ -116,7 +116,7 @@ g.relation(0).term(0).exponent = 7
 print(t)
 print()
 
-n = NormalSurfaces(Example3.figureEight(), NS_QUAD)
+n = NormalSurfaces(Example3.figureEight(), NormalCoords.Quad)
 
 for s in n:
 	s.setName('foo')

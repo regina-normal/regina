@@ -101,7 +101,7 @@ inline constexpr int64_t factorial(int n) {
  *
  * \ingroup maths
  */
-enum PermCodeType {
+enum class PermCodeType {
     /**
      * This is a permutation code that packs the images of 0,...,<i>n</i>-1
      * into a single native integer using a handful of bits per image.
@@ -110,7 +110,7 @@ enum PermCodeType {
      * Codes of this type can always be queried using Perm<n>::permCode(), and
      * permutations can be recreated from them using Perm<n>::fromPermCode().
      */
-    PERM_CODE_IMAGES = 1,
+    Images = 1,
     /**
      * This is a permutation code that stores the index into the full
      * permutation group \a S_n.  Such codes typically require fewer bytes and
@@ -123,8 +123,25 @@ enum PermCodeType {
      * will still be present, but in some classes (e.g., Perm<4> and Perm<5>),
      * these are legacy routines that refer to different types of codes.
      */
-    PERM_CODE_INDEX = 2
+    Index = 2
 };
+
+/**
+ * A deprecated constant indicating a type of internal permutation code.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PermCodeType::Images.
+ */
+[[deprecated]] inline constexpr PermCodeType PERM_CODE_IMAGES =
+    PermCodeType::Images;
+/**
+ * A deprecated constant indicating a type of internal permutation code.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * PermCodeType::Index.
+ */
+[[deprecated]] inline constexpr PermCodeType PERM_CODE_INDEX =
+    PermCodeType::Index;
 
 namespace detail {
     /**
@@ -311,7 +328,7 @@ class Perm {
          * Indicates what type of internal permutation code is used by
          * this instance of the Perm class template.
          */
-        static constexpr PermCodeType codeType = PERM_CODE_IMAGES;
+        static constexpr PermCodeType codeType = PermCodeType::Images;
 
         /**
          * The total number of permutations on \a n elements.

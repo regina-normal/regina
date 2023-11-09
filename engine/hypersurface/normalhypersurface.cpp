@@ -107,7 +107,7 @@ void NormalHypersurface::writeXMLData(std::ostream& out, FileFormat format,
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    bool stripTetrahedra = (format == REGINA_XML_GEN_2 && list &&
+    bool stripTetrahedra = (format == FileFormat::XmlGen2 && list &&
         enc_.storesTetrahedra() &&
         ! HyperEncoding(list->coords()).storesTetrahedra());
 
@@ -115,10 +115,10 @@ void NormalHypersurface::writeXMLData(std::ostream& out, FileFormat format,
         // Write the opening tag including vector length.
         size_t vecLen = vector_.size();
         out << "  <hypersurface";
-        if (format != REGINA_XML_GEN_2)
+        if (format != FileFormat::XmlGen2)
             out << " enc=\"" << enc_.intValue() << '\"';
         out << " len=\"" << vecLen << '\"';
-        if (format == REGINA_XML_GEN_2 || ! name_.empty())
+        if (format == FileFormat::XmlGen2 || ! name_.empty())
             out << " name=\"" << xmlEncodeSpecialChars(name_) << '\"';
         out << '>';
 
@@ -129,7 +129,7 @@ void NormalHypersurface::writeXMLData(std::ostream& out, FileFormat format,
                 out << ' ' << i << ' ' << entry;
         }
     } else {
-        // We know this is REGINA_XML_GEN_2.
+        // We know this is FileFormat::XmlGen2.
         int oldBlock = enc_.block();
         int newBlock = oldBlock - 5;
         size_t nBlocks = vector_.size() / oldBlock;

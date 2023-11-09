@@ -112,7 +112,7 @@ class SurfaceFilterProperties;
  * \ingroup surfaces
  */
 class SurfaceFilter : public Packet {
-    REGINA_PACKET(PACKET_SURFACEFILTER, "Surface filter")
+    REGINA_PACKET(PacketType::SurfaceFilter, "Surface filter")
 
     public:
         /**
@@ -177,7 +177,7 @@ class SurfaceFilter : public Packet {
  * \ingroup surfaces
  */
 class SurfaceFilterCombination : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(NS_FILTER_COMBINATION, "Combination filter")
+    REGINA_SURFACE_FILTER(SurfaceFilterType::Combination, "Combination filter")
 
     private:
         bool usesAnd_;
@@ -304,7 +304,8 @@ void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b);
  * \ingroup surfaces
  */
 class SurfaceFilterProperties : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(NS_FILTER_PROPERTIES, "Filter by basic properties")
+    REGINA_SURFACE_FILTER(SurfaceFilterType::Properties,
+        "Filter by basic properties")
 
     private:
         std::set<LargeInteger> eulerChar_;

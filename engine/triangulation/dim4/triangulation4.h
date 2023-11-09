@@ -184,7 +184,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * the same numbering and labelling will be used for all skeletal
          * objects in both triangulations.
          *
-         * Regardless of the argument \a cloneProps, if it is known that
+         * Likewise, regardless of \a cloneProps, if it is known that
          * all vertex links of \a copy are 3-sphere or 3-balls, this
          * knowledge will be copied over to the new triangulation.
          *
@@ -195,9 +195,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
-         * properties as well as the skeleton of the given triangulation,
-         * or \c false if the new triangulation should have such properties
-         * and skeletal data marked as unknown.
+         * properties of the given triangulation, or \c false if the new
+         * triangulation should have such properties marked as unknown.
          * \param cloneLocks \c true if this should also clone any simplex
          * and/or facet locks from the given triangulation, or \c false if
          * the new triangulation should have no locks at all.

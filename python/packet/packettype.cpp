@@ -36,40 +36,72 @@
 #include "../helpers.h"
 #include "../docstrings/packet/packettype.h"
 
-#define WRAP_PACKET_TYPE(val) .value(#val, regina::val, rdoc::val)
+using regina::PacketType;
+
+#define WRAP_PACKET_TYPE(val) .value(#val, PacketType::val, rdoc::val)
 
 void addPacketType(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PacketType)
 
-    pybind11::enum_<regina::PacketType>(m, "PacketType", rdoc_scope)
-        WRAP_PACKET_TYPE(PACKET_NONE)
-        WRAP_PACKET_TYPE(PACKET_CONTAINER)
-        WRAP_PACKET_TYPE(PACKET_TEXT)
-        WRAP_PACKET_TYPE(PACKET_SCRIPT)
-        WRAP_PACKET_TYPE(PACKET_ATTACHMENT)
-        WRAP_PACKET_TYPE(PACKET_ANGLESTRUCTURES)
-        WRAP_PACKET_TYPE(PACKET_NORMALSURFACES)
-        WRAP_PACKET_TYPE(PACKET_SURFACEFILTER)
-        WRAP_PACKET_TYPE(PACKET_NORMALHYPERSURFACES)
-        WRAP_PACKET_TYPE(PACKET_SNAPPEATRIANGULATION)
-        WRAP_PACKET_TYPE(PACKET_LINK)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION2)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION3)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION4)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION5)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION6)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION7)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION8)
+    pybind11::enum_<PacketType>(m, "PacketType", rdoc_scope)
+        WRAP_PACKET_TYPE(None)
+        WRAP_PACKET_TYPE(Container)
+        WRAP_PACKET_TYPE(Text)
+        WRAP_PACKET_TYPE(Script)
+        WRAP_PACKET_TYPE(Attachment)
+        WRAP_PACKET_TYPE(AngleStructures)
+        WRAP_PACKET_TYPE(NormalSurfaces)
+        WRAP_PACKET_TYPE(SurfaceFilter)
+        WRAP_PACKET_TYPE(NormalHypersurfaces)
+        WRAP_PACKET_TYPE(SnapPea)
+        WRAP_PACKET_TYPE(Link)
+        WRAP_PACKET_TYPE(SpatialLink)
+        WRAP_PACKET_TYPE(Triangulation2)
+        WRAP_PACKET_TYPE(Triangulation3)
+        WRAP_PACKET_TYPE(Triangulation4)
+        WRAP_PACKET_TYPE(Triangulation5)
+        WRAP_PACKET_TYPE(Triangulation6)
+        WRAP_PACKET_TYPE(Triangulation7)
+        WRAP_PACKET_TYPE(Triangulation8)
 #ifdef REGINA_HIGHDIM
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION9)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION10)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION11)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION12)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION13)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION14)
-        WRAP_PACKET_TYPE(PACKET_TRIANGULATION15)
+        WRAP_PACKET_TYPE(Triangulation9)
+        WRAP_PACKET_TYPE(Triangulation10)
+        WRAP_PACKET_TYPE(Triangulation11)
+        WRAP_PACKET_TYPE(Triangulation12)
+        WRAP_PACKET_TYPE(Triangulation13)
+        WRAP_PACKET_TYPE(Triangulation14)
+        WRAP_PACKET_TYPE(Triangulation15)
 #endif
-        .export_values();
+        ;
+
+    // Deprecated constants:
+    m.attr("PACKET_NONE") = PacketType::None;
+    m.attr("PACKET_CONTAINER") = PacketType::Container;
+    m.attr("PACKET_TEXT") = PacketType::Text;
+    m.attr("PACKET_SCRIPT") = PacketType::Script;
+    m.attr("PACKET_ATTACHMENT") = PacketType::Attachment;
+    m.attr("PACKET_ANGLESTRUCTURES") = PacketType::AngleStructures;
+    m.attr("PACKET_NORMALSURFACES") = PacketType::NormalSurfaces;
+    m.attr("PACKET_SURFACEFILTER") = PacketType::SurfaceFilter;
+    m.attr("PACKET_NORMALHYPERSURFACES") = PacketType::NormalHypersurfaces;
+    m.attr("PACKET_SNAPPEATRIANGULATION") = PacketType::SnapPea;
+    m.attr("PACKET_LINK") = PacketType::Link;
+    m.attr("PACKET_TRIANGULATION2") = PacketType::Triangulation2;
+    m.attr("PACKET_TRIANGULATION3") = PacketType::Triangulation3;
+    m.attr("PACKET_TRIANGULATION4") = PacketType::Triangulation4;
+    m.attr("PACKET_TRIANGULATION5") = PacketType::Triangulation5;
+    m.attr("PACKET_TRIANGULATION6") = PacketType::Triangulation6;
+    m.attr("PACKET_TRIANGULATION7") = PacketType::Triangulation7;
+    m.attr("PACKET_TRIANGULATION8") = PacketType::Triangulation8;
+#ifdef REGINA_HIGHDIM
+    m.attr("PACKET_TRIANGULATION9") = PacketType::Triangulation9;
+    m.attr("PACKET_TRIANGULATION10") = PacketType::Triangulation10;
+    m.attr("PACKET_TRIANGULATION11") = PacketType::Triangulation11;
+    m.attr("PACKET_TRIANGULATION12") = PacketType::Triangulation12;
+    m.attr("PACKET_TRIANGULATION13") = PacketType::Triangulation13;
+    m.attr("PACKET_TRIANGULATION14") = PacketType::Triangulation14;
+    m.attr("PACKET_TRIANGULATION15") = PacketType::Triangulation15;
+#endif
 
     RDOC_SCOPE_SWITCH(PacketInfo)
 

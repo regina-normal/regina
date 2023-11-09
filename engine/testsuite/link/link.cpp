@@ -37,6 +37,7 @@
 
 #include "utilities/tightencodingtest.h"
 
+using regina::Algorithm;
 using regina::Crossing;
 using regina::ExampleLink;
 using regina::Link;
@@ -340,13 +341,13 @@ static void verifyParallel(const Link& link, const char* name) {
     for (int k = 0; k <= 3; ++k) {
         SCOPED_TRACE_NUMERIC(k);
 
-        Link p = link.parallel(k, regina::FRAMING_BLACKBOARD);
+        Link p = link.parallel(k, regina::Framing::Blackboard);
         EXPECT_EQ(p.countComponents(), k * link.countComponents());
         EXPECT_EQ(p.size(), k * k * link.size());
         EXPECT_EQ(p.writhe(), k * k * writhe);
         EXPECT_EQ(p.linking(), k * k * linking + (k * (k-1) * writheSame) / 2);
 
-        p = link.parallel(k, regina::FRAMING_SEIFERT);
+        p = link.parallel(k, regina::Framing::Seifert);
         EXPECT_EQ(p.countComponents(), k * link.countComponents());
         EXPECT_EQ(p.size(), k * k * link.size() + k * (k-1) * absWritheSame);
         EXPECT_EQ(p.writhe(), k * k * writhe - k * (k-1) * writheSame);
@@ -367,12 +368,12 @@ static void verifyJones(const TestCase& test,
     // that do not clone any already-computed properties.
 
     // Always try the treewidth-based algorithm.
-    EXPECT_EQ(Link(test.link, false).jones(regina::ALG_TREEWIDTH), expected);
+    EXPECT_EQ(Link(test.link, false).jones(Algorithm::Treewidth), expected);
 
     // Only try the naive algorithm if the link is small enough, since this
     // algorithm iterates through 2^n states.
     if (test.link.size() <= 40)
-        EXPECT_EQ(Link(test.link, false).jones(regina::ALG_NAIVE), expected);
+        EXPECT_EQ(Link(test.link, false).jones(Algorithm::Naive), expected);
 }
 
 TEST_F(LinkTest, jones) {
@@ -426,14 +427,14 @@ static void verifyHomflyAZ(const TestCase& test,
     // (using different algorithms), we work with clones of the link
     // that do not clone any already-computed properties.
 
-    EXPECT_EQ(Link(test.link, false).homflyAZ(regina::ALG_BACKTRACK), expected);
-    EXPECT_EQ(Link(test.link, false).homflyAZ(regina::ALG_TREEWIDTH), expected);
+    EXPECT_EQ(Link(test.link, false).homflyAZ(Algorithm::Backtrack), expected);
+    EXPECT_EQ(Link(test.link, false).homflyAZ(Algorithm::Treewidth), expected);
 
     Link rev(test.link, false);
     rev.reverse();
 
-    EXPECT_EQ(Link(rev, false).homflyAZ(regina::ALG_BACKTRACK), expected);
-    EXPECT_EQ(Link(rev, false).homflyAZ(regina::ALG_TREEWIDTH), expected);
+    EXPECT_EQ(Link(rev, false).homflyAZ(Algorithm::Backtrack), expected);
+    EXPECT_EQ(Link(rev, false).homflyAZ(Algorithm::Treewidth), expected);
 }
 
 static void verifyHomflyLM(const TestCase& test,
@@ -444,14 +445,14 @@ static void verifyHomflyLM(const TestCase& test,
     // (using different algorithms), we work with clones of the link
     // that do not clone any already-computed properties.
 
-    EXPECT_EQ(Link(test.link, false).homflyLM(regina::ALG_BACKTRACK), expected);
-    EXPECT_EQ(Link(test.link, false).homflyLM(regina::ALG_TREEWIDTH), expected);
+    EXPECT_EQ(Link(test.link, false).homflyLM(Algorithm::Backtrack), expected);
+    EXPECT_EQ(Link(test.link, false).homflyLM(Algorithm::Treewidth), expected);
 
     Link rev(test.link, false);
     rev.reverse();
 
-    EXPECT_EQ(Link(rev, false).homflyLM(regina::ALG_BACKTRACK), expected);
-    EXPECT_EQ(Link(rev, false).homflyLM(regina::ALG_TREEWIDTH), expected);
+    EXPECT_EQ(Link(rev, false).homflyLM(Algorithm::Backtrack), expected);
+    EXPECT_EQ(Link(rev, false).homflyLM(Algorithm::Treewidth), expected);
 }
 
 TEST_F(LinkTest, homfly) {
@@ -477,7 +478,7 @@ TEST_F(LinkTest, homfly) {
     verifyHomflyLM(figureEight_r1x2, {{2,0,-1}, {0,2,1}, {0,0,-1}, {-2,0,-1}});
 
     // These two polynomials (which form a mutant pair) were computed using an
-    // old version of Regina, using Kauffman's algorithm (ALG_BACKTRACK).
+    // old version of Regina, using Kauffman's algorithm (Algorithm::Backtrack).
     verifyHomflyLM(conway,
         {{4,4,1}, {4,2,-3}, {4,0,2}, {2,6,-1}, {2,4,6}, {2,2,-11}, {2,0,6},
          {0,6,-1}, {0,4,6}, {0,2,-11}, {0,0,7}, {-2,4,1}, {-2,2,-3}, {-2,0,2}});
@@ -487,7 +488,7 @@ TEST_F(LinkTest, homfly) {
 
     // Again, this was computed with an old Regina using Kauffman's algorithm.
     // We skip the test here because (on my machine) it takes around 5s to run
-    // with ALG_TREEWIDTH and around 50s to run with ALG_NAIVE.
+    // with Algorithm::Treewidth and around 50s to run with Algorithm::Naive.
 #if 0
     verifyHomflyLM(gst,
         {{4,8,-1}, {4,6,6}, {4,4,-11}, {4,2,8}, {4,0,-2}, {2,12,-1}, {2,10,10},
@@ -566,7 +567,8 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
 
     // Find a separating sphere in the complement.
     bool foundSplit = false;
-    regina::NormalSurfaces vtx(test.link.complement(), regina::NS_STANDARD);
+    regina::NormalSurfaces vtx(test.link.complement(),
+        regina::NormalCoords::Standard);
     for (const regina::NormalSurface& s : vtx) {
         if (s.eulerChar() != 2)
             continue;

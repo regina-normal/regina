@@ -54,8 +54,12 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<4>&>(), rdoc::__init_2)
         .def(pybind11::init<const Triangulation<4>&, regina::HyperEncoding,
             const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_3)
+        .def(pybind11::init<const Triangulation<4>&, regina::HyperEncoding,
+            const regina::Vector<regina::Integer>&>(), rdoc::__init_3)
         .def(pybind11::init<const Triangulation<4>&, regina::HyperCoords,
             const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_4)
+        .def(pybind11::init<const Triangulation<4>&, regina::HyperCoords,
+            const regina::Vector<regina::Integer>&>(), rdoc::__init_4)
         .def(pybind11::init([](const Triangulation<4>& t,
                 regina::HyperEncoding enc, pybind11::list values) {
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());

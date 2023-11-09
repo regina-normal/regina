@@ -45,7 +45,7 @@ def dump():
 
 tri = Example3.lens(3, 1)
 n = tri.size()
-m = makeMatchingEquations(tri, NS_STANDARD)
+m = makeMatchingEquations(tri, NormalCoords.Standard)
 
 # Build a looser set of validity constraints, that give more solutions.
 c = ValidityConstraints(7, n)

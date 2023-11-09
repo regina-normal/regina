@@ -111,10 +111,12 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
 
             return m;
         }), rdoc::__init_3)
-        .def("initialise", &Matrix::initialise, rdoc::initialise)
+        .def("fill", &Matrix::fill, rdoc::fill)
+        .def("initialise", &Matrix::fill, rdoc::initialise) // deprecated
         .def("swap", &Matrix::swap, rdoc::swap)
         .def("rows", &Matrix::rows, rdoc::rows)
         .def("columns", &Matrix::columns, rdoc::columns)
+        .def("initialised", &Matrix::initialised, rdoc::initialised)
         .def("set", [](Matrix& m, size_t row, size_t col, Ref value) {
             m.entry(row, col) = value;
         }, rdoc::set)

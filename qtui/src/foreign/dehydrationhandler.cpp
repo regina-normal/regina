@@ -71,7 +71,7 @@ std::shared_ptr<regina::Packet> DehydrationHandler::importData(
             QObject::tr("<qt>The selected file does not contain any "
                 "dehydration strings.") + explnSuffix);
         return nullptr;
-    } else if (last->type() == regina::PACKET_TEXT) {
+    } else if (last->type() == regina::PacketType::Text) {
         if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The import failed."),

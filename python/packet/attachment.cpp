@@ -61,7 +61,8 @@ void addAttachment(pybind11::module_& m) {
                     "bytes contents in Attachment constructor");
             }
 
-            return new Attachment(in, inlen, Attachment::DEEP_COPY, filename);
+            return new Attachment(in, inlen,
+                Attachment::OwnershipPolicy::DeepCopy, filename);
         }), pybind11::arg("data"), pybind11::arg("filename"), rdoc::__init_2)
         .def(pybind11::init<const Attachment&>(), rdoc::__copy)
         .def("swap", &Attachment::swap, rdoc::swap)
@@ -87,7 +88,7 @@ void addAttachment(pybind11::module_& m) {
                     "bytes contents in Attachment constructor");
             }
 
-            a.reset(in, inlen, Attachment::DEEP_COPY, filename);
+            a.reset(in, inlen, Attachment::OwnershipPolicy::DeepCopy, filename);
         }, pybind11::arg("data"), pybind11::arg("filename"), rdoc::reset_2)
         .def("save", &Attachment::save, rdoc::save)
         .def_readonly_static("typeID", &Attachment::typeID)

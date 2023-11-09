@@ -62,18 +62,18 @@ Template parameter ``cached``:
 
 namespace NamedPermGroup_ {
 
-// Docstring regina::python::doc::NamedPermGroup_::PERM_GROUP_ALTERNATING
-static const char *PERM_GROUP_ALTERNATING =
+// Docstring regina::python::doc::NamedPermGroup_::Alternating
+static const char *Alternating =
 R"doc(Represents the alternating group on *n* elements, containing all
 ``n!/2`` even permutations.)doc";
 
-// Docstring regina::python::doc::NamedPermGroup_::PERM_GROUP_SYMMETRIC
-static const char *PERM_GROUP_SYMMETRIC =
+// Docstring regina::python::doc::NamedPermGroup_::Symmetric
+static const char *Symmetric =
 R"doc(Represents the symmetric group on *n* elements, containing all ``n!``
 possible permutations.)doc";
 
-// Docstring regina::python::doc::NamedPermGroup_::PERM_GROUP_TRIVIAL
-static const char *PERM_GROUP_TRIVIAL =
+// Docstring regina::python::doc::NamedPermGroup_::Trivial
+static const char *Trivial =
 R"doc(Represents the trivial group on *n* elements, containing only the
 identity permutation.)doc";
 

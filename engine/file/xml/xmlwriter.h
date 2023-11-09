@@ -238,7 +238,7 @@ class XMLWriter<Triangulation<dim>> {
 
     private:
         static constexpr bool useSnIndex =
-            (Perm<dim + 1>::codeType == PERM_CODE_INDEX);
+            (Perm<dim + 1>::codeType == PermCodeType::Index);
 
         const Triangulation<dim>& data_;
         std::ostream& out_;

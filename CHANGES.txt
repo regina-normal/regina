@@ -17,13 +17,36 @@ Version 7.4  [ (to be announced) ]
           in their respective docs); other routines now examine locks as part
           of their validity checks (e.g., local moves on triangulations).
         - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
+        - All global enumerations are now C++11 scoped enumerations, with the
+          old names kept as deprecated constants in the regina:: namespace.
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.
+        Enum Algorithm:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., ALG_BACKTRACK) have been
+              renamed as scoped enum values (e.g., Algorithm::Backtrack).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
+        Class AngleStructure:
+            - The vector constructors are now templated, so that you can pass a
+              vector of some type other than regina::Integer.
         Class AngleStructures:
             - New routine sort().
+        Enum Attachment::OwnershipPolicy:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., OWN_MALLOC) have been
+              renamed as scoped enum values (e.g., OwnershipPolicy::OwnMalloc).
+              The old names have been kept as deprecated compile-time constants
+              in the Attachment class.
+        Enum BagComparison:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., BAG_EQUAL) have been
+              renamed as scoped enum values (e.g., BagComparison::Equal).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class BitManipulator<T>:
             - New routine swapBits().
         Class BoolSet:
@@ -34,6 +57,7 @@ Version 7.4  [ (to be announced) ]
         Enum ChangeType:
             - New enum for internal use with triangulation change spans.
         Class Example<3>:
+            - New routine b5().
             - Routines lst(), lens(), augTriSolidTorus() and sfsOverSphere()
               now check their preconditions and throw an exception if they fail.
             - Renamed cuspedGenusTwoTorus() to idealGenusTwoHandlebody().
@@ -44,10 +68,37 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which uses the tight encoding.
         Class FacetSpec<dim>:
             - New routine hash(), which uses the tight encoding.
+        Enum FileFormat:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., REGINA_XML_GEN_3) have been
+              renamed as scoped enum values (e.g., FileFormat::XmlGen3).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Flags<T>:
+            - Updated to support both scoped and unscoped enumerations.
             - New operator bool(), which tests for a non-empty flag set.
+            - Fixed an error in the 3- and 4-argument variants of ensureOne(),
+              which would clear out all unrelated flags if none of the 3 or 4
+              given flags were set.  This error was harmless in practice:
+              the only effect was that, when enumerating fundamental normal
+              surfaces with a non-trivial algorithm flag that did _not_ include
+              an explicit Hilbert basis algorithm, the algorithm flag could
+              have been ignored (thereby using the default vertex enumeration
+              algorithm as the first phase of the primal Hilbert basis method).
+        Enum Framing:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., FRAMING_SEIFERT) have been
+              renamed as scoped enum values (e.g., Framing::Seifert).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class HomologicalData:
             - New routine triangulation().
+        Enum HyperCoords:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., HS_STANDARD) have been
+              renamed as scoped enum values (e.g., HyperCoords::Standard).
+              The old names have been kept as compile-time constants in the
+              regina:: namespace (and are _not_ deprecated for the time being).
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
@@ -65,6 +116,9 @@ Version 7.4  [ (to be announced) ]
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
         Class Link:
+            - New routine makeAlternating().
+            - New routines countTrivialComponents() and pdAmbiguous(), to help
+              understand the limitations of planar diagram codes.
             - New routine hash(), which uses the tight encoding.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
@@ -82,10 +136,28 @@ Version 7.4  [ (to be announced) ]
             - New exception class used when the user attempts to change a
               locked simplex or facet.
         Class Matrix<T>:
+            - Added a copy constructor that takes a matrix whose elements are
+              of a different type.
             - Added destructive and non-destructive rank() functions.
             - New routines negateRow() and negateCol().
+            - New routine initialised().
+            - Renamed initialise() to fill(), to make it clear that this has
+              nothing to do with initialised vs uninitialised matrices.
+              The old name is kept but deprecated.
+        Enum NamedPermGroup:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., PERM_GROUP_TRIVIAL) have been
+              renamed as scoped enum values (e.g., NamedPermGroup::Trivial).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class NativeInteger<bytes>:
             - New routine str().
+        Enum NiceType:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., NICE_INTRODUCE) have been
+              renamed as scoped enum values (e.g., NiceType::INTRODUCE).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class NormalSurface, NormalHypersurface:
             - Fixed a bug where, if a surface was a normalised triangle link
               but not a thin triangle link, then calling isThinTriangleLink()
@@ -97,6 +169,14 @@ Version 7.4  [ (to be announced) ]
               established (i.e., after isOrientable(), isTwoSided(),
               isConnected(), or an earlier call to components()), then it would
               return the entire surface as a single component.
+            - The vector constructors are now templated, so that you can pass a
+              vector of some type other than regina::LargeInteger.
+        Enum NormalCoords:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., NS_STANDARD) have been
+              renamed as scoped enum values (e.g., NormalCoords::Standard).
+              The old names have been kept as compile-time constants in the
+              regina:: namespace (and are _not_ deprecated for the time being).
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old
@@ -110,11 +190,29 @@ Version 7.4  [ (to be announced) ]
             - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
             - The inner ChangeEventSpan class has a new member function held().
+        Enum PacketHeldBy:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., HELD_BY_PACKET) have been
+              renamed as scoped enum values (e.g., PacketHeldBy::Packet).
+              As this enumeration was for internal use, the old names have
+              been removed completely.
+        Enum PacketType:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., PACKET_TRIANGULATION3) have been
+              renamed as scoped enum values (e.g., PacketType::Triangulation3).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Perm<n>:
             - New routine hash().
             - New class constant degree.
             - Added an alias Perm<6>::cachedOrder(), for consistency with the
               other permutation classes Perm<2..15>.
+        Enum PermCodeType:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., PERM_CODE_IMAGES) have been
+              renamed as scoped enum values (e.g., PermCodeType::Images).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Rational:
             - New function str().
         Class SatAnnulus:
@@ -123,11 +221,40 @@ Version 7.4  [ (to be announced) ]
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().
+        Class SnapPeaTriangulation:
+            - Construction from a SnapPea data file no longer crashes when the
+              triangulation in the file has finite vertices (which may be seen
+              if the file was created by some tool other than SnapPy).  The
+              manifold will however be retriangulated (drilled and filled) upon
+              creation since the SnapPea kernel requires an ideal triangulation.
+        Class SpatialLink:
+            - New packet class for specific embeddings of knots and links in
+              the 3-sphere.  Currently this offers very limited features, but
+              these should be expanded to become more useful over time.
+        Enum SurfaceFilterType:
+            - This is now a scoped enumeration, for better type safety.  The
+              old enum constants (e.g., NS_FILTER_PROPERTIES) have been renamed
+              as scoped enum values (e.g., SurfaceFilterType::Properties).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class TightEncodable<T>:
             - Now provides a hash() function also, based on the tight encoding.
         Class TopologyLockable, TopologyLock:
             - Split out the old Triangulation::TopologyLock machinery into
               new standalone classes, which are now used with Link as well.
+        Class TreeBag:
+            - Renamed type() and subtype() to niceType() and niceIndex()
+              respectively.  Moreover, niceType() now returns a NiceType, not
+              an int.  The old functions are kept but deprecated.
+        Class TreeDecomposition:
+            - Functions dot() and writeDot() now take an optional parameter to
+              support dark mode.
+        Enum TreeDecompositionAlg:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., TD_UPPER) have been
+              renamed as scoped enum values (e.g., TreeDecompositionAlg::Upper).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.
@@ -143,10 +270,15 @@ Version 7.4  [ (to be announced) ]
             - The two-argument copy constructor is now a three-argument
               copy constructor, giving an additional boolean option for
               whether to clone simplex/facet locks.
+            - Replaced makeDoubleCover() with doubleCover(), which returns the
+              result as a new triangulation.  The old routine is kept but
+              deprecated.
             - Renamed simplifiedFundamentalGroup to setGroupPresentation().
               The old name is deprecated but kept for backwards compatibility.
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
+        Class Triangulation<2>:
+            - New routine twoZeroMove().
         Class Triangulation<3>:
             - Routine puncture() now takes an optional triangle, not an
               optional tetrahedron.  The old version is kept but deprecated.
@@ -171,9 +303,14 @@ Version 7.4  [ (to be announced) ]
               over-cautious by not performing moves that it could have, and
               since if the routine was _not_ asked to check legality then the
               move was still being performed correctly.)
+            - Routine from SnapPea() can now take either a filename or file
+              contents.  It can also now handle empty lines before the manifold
+              name (SnapPy does not write these, but some other tools do).
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
         Class Vector<T>:
+            - Added a copy constructor that takes a vector whose elements are
+              of a different type.
             - Added support for tight encodings and decodings.
             - New routine hash(), which uses the tight encoding.
         Function columnEchelonForm():

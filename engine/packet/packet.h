@@ -335,7 +335,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \param label the new label to give this packet.
          */
-        void setLabel(const std::string& label);
+        void setLabel(std::string label);
 
         /**
          * Returns a descriptive text string for the packet.
@@ -405,7 +405,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \return \c true if the given tag was successfully added,
          * or \c false if the given tag was already present beforehand.
          */
-        bool addTag(const std::string& tag);
+        bool addTag(std::string tag);
 
         /**
          * Removes the association of the given tag with this packet.
@@ -1452,13 +1452,13 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
          * \param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
-         * need your file to be readable by older versions of Regina.
-         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
+         * You should use the default (FileFormat::Current) unless you need
+         * your file to be readable by older versions of Regina.  This must
+         * not be FileFormat::BinaryGen1, which is no longer supported.
          * \return \c true if and only if the file was successfully written.
          */
         bool save(const char* filename, bool compressed = true,
-            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
+            FileFormat format = FileFormat::Current) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1482,13 +1482,13 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
          * \param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
-         * need your file to be readable by older versions of Regina.
-         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
+         * You should use the default (FileFormat::Current) unless you need
+         * your file to be readable by older versions of Regina.  This must
+         * not be FileFormat::BinaryGen1, which is no longer supported.
          * \return \c true if and only if the data was successfully written.
          */
         bool save(std::ostream& s, bool compressed = true,
-            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
+            FileFormat format = FileFormat::Current) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1509,12 +1509,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param out the output stream to which the XML data file should
          * be written.
          * \param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
-         * need your file to be readable by older versions of Regina.
-         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
+         * You should use the default (FileFormat::Current) unless you need
+         * your file to be readable by older versions of Regina.  This must
+         * not be FileFormat::BinaryGen1, which is no longer supported.
          */
         void writeXMLFile(std::ostream& out,
-            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
+            FileFormat format = FileFormat::Current) const;
 
         /**
          * Returns a unique string ID that identifies this packet.
@@ -1712,12 +1712,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * The generic packet attributes (such as \c label, \c id if
          * required, and \c type / \c typeid if we are writing to the
-         * second-generation format REGINA_XML_GEN_2) will be included.
+         * second-generation format FileFormat::XmlGen2) will be included.
          *
          * If we are writing to the third-generation file format or newer,
          * then any additional attributes specified in \a attr will also be
          * included.  If we are writing to the second-generation format
-         * REGINA_XML_GEN_2, then \a attr will be ignored.
+         * FileFormat::XmlGen2, then \a attr will be ignored.
          *
          * If this packet appears as a key in the \a refs map, or if the
          * \a anon argument indicates that we are in an anonymous block,
@@ -1727,7 +1727,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param out the output stream to which the opening XML tag
          * should be written.
          * \param element the name of the XML tag.  If we are writing to
-         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
+         * the FileFormat::XmlGen2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * \param format indicates which of Regina's XML file formats to write.
          * \param anon \c true if this packet is being written within an
@@ -1740,7 +1740,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and the packet contents then you should pass \c false instead.
          * \param attr any additional attributes to write to the XML tag;
          * each attribute should a pair of the form (\a attribute, \a value).
-         * When writing to the REGINA_XML_GEN_2 format, this will be ignored.
+         * When writing to the FileFormat::XmlGen2 format, this will be ignored.
          */
         template <typename... Args>
         void writeXMLHeader(std::ostream& out, const char* element,
@@ -1780,7 +1780,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \param out the output stream to which the closing XML tag
          * should be written.
          * \param element the name of the XML tag.  If we are writing to
-         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
+         * the FileFormat::XmlGen2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * \param format indicates which of Regina's XML file formats to write.
          */
@@ -2015,34 +2015,34 @@ class Packet : public std::enable_shared_from_this<Packet>,
  * These constants only know about two types of relationships:
  *
  * - an object of type \a Held being part of a larger PacketOf<Held>
- *   (indicated by the constant HELD_BY_PACKET);
+ *   (indicated by the constant PacketHeldBy::Packet);
  *
  * - an object of type Triangulation<3> being part of a larger
- *   SnapPeaTriangulation (indicated by the constant HELD_BY_SNAPPEA).
+ *   SnapPeaTriangulation (indicated by the constant PacketHeldBy::SnapPea).
  *
- * Of course, a Triangulation<3> could belong to a SnapPeaTriangulation
- * which is then held by a PacketOf<SnapPeaTriangulation>.  In this case
- * the inherited PacketData<Triangulation<3>> will store HELD_BY_SNAPPEA, and
- * the inherited PacketData<SnapPeaTriangulation> will store HELD_BY_PACKET.
+ * Of course, a Triangulation<3> could belong to a SnapPeaTriangulation which is
+ * then held by a PacketOf<SnapPeaTriangulation>.  In this case the inherited
+ * PacketData<Triangulation<3>> will store PacketHeldBy::SnapPea, and the
+ * inherited PacketData<SnapPeaTriangulation> will store PacketHeldBy::Packet.
  *
  * \nopython
  */
-enum PacketHeldBy {
+enum class PacketHeldBy {
     /**
      * Indicates that the object is not held within either a wrapped packet or
      * a SnapPea triangulation.
      */
-    HELD_BY_NONE = 0,
+    None = 0,
     /**
      * Indicates that an object of type \a Held is in fact the inherited
      * data for a PacketOf<Held>.
      */
-    HELD_BY_PACKET = 1,
+    Packet = 1,
     /**
      * Indicates that a Triangulation<3> is in fact the inherited native
      * Regina data for a SnapPeaTriangulation.
      */
-    HELD_BY_SNAPPEA = 2
+    SnapPea = 2
 };
 
 /**
@@ -2098,7 +2098,7 @@ class PacketOf : public Packet, public Held {
          * will have an empty packet label.
          */
         PacketOf() {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Creates a new packet containing a deep copy of the given data.
@@ -2109,7 +2109,7 @@ class PacketOf : public Packet, public Held {
          * \param data the object to copy.
          */
         PacketOf(const Held& data) : Held(data) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Moves the given data into this new packet.
@@ -2124,7 +2124,7 @@ class PacketOf : public Packet, public Held {
          * \param data the object to move.
          */
         PacketOf(Held&& data) : Held(std::move(data)) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Creates a new packet using one of \a Held's own constructors.
@@ -2148,7 +2148,7 @@ class PacketOf : public Packet, public Held {
         template <typename... Args>
         explicit PacketOf(std::in_place_t, Args&&... args) :
                 Held(std::forward<Args>(args)...) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Creates a new copy of the given packet.
@@ -2161,7 +2161,7 @@ class PacketOf : public Packet, public Held {
          * \param src the packet whose contents should be copied.
          */
         PacketOf(const PacketOf<Held>& src) : Held(src) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+            PacketData<Held>::heldBy_ = PacketHeldBy::Packet;
         }
         /**
          * Sets the content of this packet to be a copy of the given data.
@@ -2234,7 +2234,7 @@ class PacketOf : public Packet, public Held {
  *
  * This base class is extremely lightweight: the only data that it contains
  * is a single PacketHeldBy enumeration value.  All of the class constructors
- * set this value to HELD_BY_NONE; it is the responsibility of subclasses
+ * set this value to PacketHeldBy::None; it is the responsibility of subclasses
  * (e.g., PacketOf<Held>) to change this where necessary.
  *
  * \python Not present, but the routines anonID() and packet() will be
@@ -2243,7 +2243,7 @@ class PacketOf : public Packet, public Held {
 template <typename Held>
 class PacketData {
     protected:
-        PacketHeldBy heldBy_ { HELD_BY_NONE };
+        PacketHeldBy heldBy_ { PacketHeldBy::None };
             /**< Indicates whether this \a Held object is in fact the
                  inherited data for a PacketOf<Held>.  As a special case,
                  this field is also used to indicate when a Triangulation<3>
@@ -2253,12 +2253,12 @@ class PacketData {
 
     public:
         /**
-         * Default constructor that sets \a heldBy_ to HELD_BY_NONE.
+         * Default constructor that sets \a heldBy_ to PacketHeldBy::None.
          */
         PacketData() = default;
         /**
          * Copy constructor that ignores its argument, and instead sets
-         * \a heldBy_ to HELD_BY_NONE.  This is because \a heldBy_ stores
+         * \a heldBy_ to PacketHeldBy::None.  This is because \a heldBy_ stores
          * information about the C++ type of _this_ object, not the object
          * being copied.
          *
@@ -2309,7 +2309,7 @@ class PacketData {
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<PacketOf<Held>> packet() {
-            return heldBy_ == HELD_BY_PACKET ?
+            return heldBy_ == PacketHeldBy::Packet ?
                 std::static_pointer_cast<PacketOf<Held>>(
                     static_cast<PacketOf<Held>*>(this)->shared_from_this()) :
                 nullptr;
@@ -2325,7 +2325,7 @@ class PacketData {
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<const PacketOf<Held>> packet() const {
-            return heldBy_ == HELD_BY_PACKET ?
+            return heldBy_ == PacketHeldBy::Packet ?
                 std::static_pointer_cast<const PacketOf<Held>>(
                     static_cast<const PacketOf<Held>*>(this)->shared_from_this()) :
                 nullptr;
@@ -4182,10 +4182,10 @@ std::string PacketData<Held>::anonID() const {
 template <typename Held>
 inline PacketData<Held>::PacketChangeSpan::PacketChangeSpan(PacketData& data) :
         data_(data) {
-    static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
+    static_assert(PacketOf<Held>::typeID != PacketType::Triangulation3,
         "The generic PacketChangeSpan constructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
-    if (data_.heldBy_ == HELD_BY_PACKET) {
+    if (data_.heldBy_ == PacketHeldBy::Packet) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
         if (! p.packetChangeSpans_)
             p.fireEvent(&PacketListener::packetToBeChanged);
@@ -4195,10 +4195,10 @@ inline PacketData<Held>::PacketChangeSpan::PacketChangeSpan(PacketData& data) :
 
 template <typename Held>
 inline PacketData<Held>::PacketChangeSpan::~PacketChangeSpan() {
-    static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
+    static_assert(PacketOf<Held>::typeID != PacketType::Triangulation3,
         "The generic PacketChangeSpan destructor should not be "
         "used with Triangulation<3>, which uses its own specialisation.");
-    if (data_.heldBy_ == HELD_BY_PACKET) {
+    if (data_.heldBy_ == PacketHeldBy::Packet) {
         auto& p = static_cast<PacketOf<Held>&>(data_);
         --p.packetChangeSpans_;
         if (! p.packetChangeSpans_)
@@ -4284,9 +4284,9 @@ template <typename... Args>
 void Packet::writeXMLHeader(std::ostream& out, const char* element,
         FileFormat format, bool anon, PacketRefs& refs, bool newline,
         std::pair<const char*, Args>... args) const {
-    if (format == REGINA_XML_GEN_2) {
+    if (format == FileFormat::XmlGen2) {
         out << "<packet type=\"" << typeName()
-            << "\" typeid=\"" << type() << "\"\n\t";
+            << "\" typeid=\"" << static_cast<int>(type()) << "\"\n\t";
     } else {
         out << '<' << element << ' ';
         ((out << args.first << "=\"" << args.second << "\" "), ...);

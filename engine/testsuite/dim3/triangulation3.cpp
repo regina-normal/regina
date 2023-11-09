@@ -824,6 +824,13 @@ TEST_F(Dim3Test, pachner) {
     verifyPachnerSimplicial();
 }
 
+TEST_F(Dim3Test, twoZeroVertexMove) {
+    testManualCases(TriangulationTest<3>::verifyTwoZeroVertex);
+    runCensusAllClosed(TriangulationTest<3>::verifyTwoZeroVertex);
+    runCensusAllBounded(TriangulationTest<3>::verifyTwoZeroVertex);
+    runCensusAllIdeal(TriangulationTest<3>::verifyTwoZeroVertex);
+}
+
 static void verifyTwoZeroEdgeMove(Triangulation<3> tri, size_t whichEdge,
         const Triangulation<3>& result, const char* name) {
     SCOPED_TRACE_CSTRING(name);
@@ -2205,7 +2212,7 @@ static void verifyZeroEfficiency(const Triangulation<3>& tri,
         expected = false;
     else {
         expected = true;
-        regina::NormalSurfaces s(tri, regina::NS_STANDARD);
+        regina::NormalSurfaces s(tri, regina::NormalCoords::Standard);
         for (const regina::NormalSurface& f : s) {
             if (! f.isVertexLinking()) {
                 if (f.eulerChar() == 2 && (! f.hasRealBoundary())) {

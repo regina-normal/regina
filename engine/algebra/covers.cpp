@@ -68,7 +68,7 @@ namespace {
     static constexpr int precomputeAutGroupsFrom = 8;
 
     static_assert(Perm<precomputeAutGroupsFrom - 1>::codeType ==
-        PERM_CODE_INDEX, "The threshold for precomputing automorphism "
+        PermCodeType::Index, "The threshold for precomputing automorphism "
         "groups should be <= the threshold for precomputing Sn.");
 
     // The precomputed Sn tables, for those n where Perm<n> stores image packs
@@ -96,7 +96,7 @@ namespace {
         if (precomputed<n>)
             return;
 
-        if constexpr (Perm<n>::codeType == PERM_CODE_IMAGES) {
+        if constexpr (Perm<n>::codeType == PermCodeType::Images) {
             // Precompute the Sn index -> permutation map.
             precompSn<n> = new Perm<n>[Perm<n>::nPerms];
 
@@ -444,7 +444,7 @@ namespace {
 
         // Give an easy way to convert rep[i] from an Sn index to a permutation.
         inline Perm<index> perm(unsigned long gen) const {
-            if constexpr (Perm<index>::codeType == PERM_CODE_INDEX)
+            if constexpr (Perm<index>::codeType == PermCodeType::Index)
                 return Perm<index>::Sn[rep[gen]];
             else
                 return precompSn<index>[rep[gen]];
@@ -767,7 +767,7 @@ namespace {
             // linear equations over Z_2.  If m.entry(r, g) is true then
             // this means relation #r uses generator #g when written over Z_2.
             Matrix<bool> m(g.countRelations(), nGen);
-            m.initialise(false);
+            m.fill(false);
 
             unsigned long row, col;
 
@@ -1047,7 +1047,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                                 // In this regime we also assume that
                                 // Perm<index>::Sn[...] is fast.
                                 static_assert(Perm<index>::codeType ==
-                                    PERM_CODE_INDEX);
+                                    PermCodeType::Index);
                                 while (minimalAutGroup<index>[cls][nAut[pos]]
                                         >= 0) {
                                     aut[pos][nAut[pos]] = Perm<index>::Sn[
@@ -1072,7 +1072,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                         Perm<index> p = aut[pos - 1][a];
                         conj = scheme.perm(pos).cachedConjugate(p);
                         if constexpr (Perm<index>::codeType ==
-                                PERM_CODE_INDEX) {
+                                PermCodeType::Index) {
                             // Here SnIndex() is extremely cheap.
                             if (conj.SnIndex() < scheme.rep[pos]) {
                                 // Not conjugacy minimal.

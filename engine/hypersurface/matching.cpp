@@ -68,7 +68,7 @@ ValidityConstraints makeEmbeddedConstraints(
 MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
         HyperCoords coords) {
     switch (coords) {
-        case HS_STANDARD:
+        case HyperCoords::Standard:
         {
             const size_t nCoords = 15 * triangulation.size();
 
@@ -120,7 +120,7 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
             }
             return ans;
         }
-        case HS_PRISM:
+        case HyperCoords::Prism:
         {
             const size_t nCoords = 10 * triangulation.size();
 

@@ -36,6 +36,7 @@
 #include "../helpers.h"
 #include "../docstrings/maths/permgroup.h"
 
+using regina::NamedPermGroup;
 using regina::Perm;
 using regina::PermGroup;
 
@@ -89,14 +90,15 @@ void addPermGroup(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NamedPermGroup)
 
     pybind11::enum_<regina::NamedPermGroup>(m, "NamedPermGroup", rdoc_scope)
-        .value("PERM_GROUP_TRIVIAL", regina::PERM_GROUP_TRIVIAL,
-            rdoc::PERM_GROUP_TRIVIAL)
-        .value("PERM_GROUP_SYMMETRIC", regina::PERM_GROUP_SYMMETRIC,
-            rdoc::PERM_GROUP_SYMMETRIC)
-        .value("PERM_GROUP_ALTERNATING", regina::PERM_GROUP_ALTERNATING,
-            rdoc::PERM_GROUP_ALTERNATING)
-        .export_values()
+        .value("Trivial", NamedPermGroup::Trivial, rdoc::Trivial)
+        .value("Symmetric", NamedPermGroup::Symmetric, rdoc::Symmetric)
+        .value("Alternating", NamedPermGroup::Alternating, rdoc::Alternating)
         ;
+
+    // Deprecated constants:
+    m.attr("PERM_GROUP_TRIVIAL") = regina::NamedPermGroup::Trivial;
+    m.attr("PERM_GROUP_SYMMETRIC") = regina::NamedPermGroup::Symmetric;
+    m.attr("PERM_GROUP_ALTERNATING") = regina::NamedPermGroup::Alternating;
 
     RDOC_SCOPE_END
 

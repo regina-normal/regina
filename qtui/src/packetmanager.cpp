@@ -74,25 +74,25 @@ QIcon PacketManager::icon(const Packet& packet) {
     IconCache::IconID id;
 
     switch (packet.type()) {
-        case PACKET_ANGLESTRUCTURES :
+        case PacketType::AngleStructures:
             id = IconCache::packet_angles;
             break;
-        case PACKET_CONTAINER :
+        case PacketType::Container:
             id = (packet.parent() ? IconCache::packet_container :
                 IconCache::regina);
             break;
-        case PACKET_LINK:
+        case PacketType::Link:
             id = IconCache::packet_link;
             break;
-        case PACKET_ATTACHMENT:
+        case PacketType::Attachment:
             id = IconCache::packet_attachment;
             break;
-        case PACKET_SURFACEFILTER :
+        case PacketType::SurfaceFilter:
             switch (((const SurfaceFilter&)packet).filterType()) {
-                case NS_FILTER_COMBINATION :
+                case SurfaceFilterType::Combination:
                     id = IconCache::filter_comb;
                     break;
-                case NS_FILTER_PROPERTIES :
+                case SurfaceFilterType::Properties:
                     id = IconCache::filter_prop;
                     break;
                 default:
@@ -100,53 +100,53 @@ QIcon PacketManager::icon(const Packet& packet) {
                     break;
                 }
             break;
-        case PACKET_SCRIPT :
+        case PacketType::Script:
             id = IconCache::packet_script;
             break;
-        case PACKET_SNAPPEATRIANGULATION :
+        case PacketType::SnapPea:
             id = IconCache::packet_snappea;
             break;
-        case PACKET_NORMALSURFACES :
+        case PacketType::NormalSurfaces:
             id = IconCache::packet_surfaces;
             break;
-        case PACKET_NORMALHYPERSURFACES :
+        case PacketType::NormalHypersurfaces:
             id = IconCache::packet_hypersurfaces;
             break;
-        case PACKET_TEXT :
+        case PacketType::Text:
             id = IconCache::packet_text;
             break;
-        case PACKET_TRIANGULATION2 :
+        case PacketType::Triangulation2:
             id = IconCache::packet_triangulation2;
             break;
-        case PACKET_TRIANGULATION3 :
+        case PacketType::Triangulation3:
             id = IconCache::packet_triangulation3;
             break;
-        case PACKET_TRIANGULATION4 :
+        case PacketType::Triangulation4:
             id = IconCache::packet_triangulation4;
             break;
         // For generic dimensions, we don't cache the icons.
-        case PACKET_TRIANGULATION5 :
+        case PacketType::Triangulation5:
             return ReginaSupport::regIcon("packet_triangulation5");
-        case PACKET_TRIANGULATION6 :
+        case PacketType::Triangulation6:
             return ReginaSupport::regIcon("packet_triangulation6");
-        case PACKET_TRIANGULATION7 :
+        case PacketType::Triangulation7:
             return ReginaSupport::regIcon("packet_triangulation7");
-        case PACKET_TRIANGULATION8 :
+        case PacketType::Triangulation8:
             return ReginaSupport::regIcon("packet_triangulation8");
 #ifdef REGINA_HIGHDIM
-        case PACKET_TRIANGULATION9 :
+        case PacketType::Triangulation9:
             return ReginaSupport::regIcon("packet_triangulation9");
-        case PACKET_TRIANGULATION10 :
+        case PacketType::Triangulation10:
             return ReginaSupport::regIcon("packet_triangulation10");
-        case PACKET_TRIANGULATION11 :
+        case PacketType::Triangulation11:
             return ReginaSupport::regIcon("packet_triangulation11");
-        case PACKET_TRIANGULATION12 :
+        case PacketType::Triangulation12:
             return ReginaSupport::regIcon("packet_triangulation12");
-        case PACKET_TRIANGULATION13 :
+        case PacketType::Triangulation13:
             return ReginaSupport::regIcon("packet_triangulation13");
-        case PACKET_TRIANGULATION14 :
+        case PacketType::Triangulation14:
             return ReginaSupport::regIcon("packet_triangulation14");
-        case PACKET_TRIANGULATION15 :
+        case PacketType::Triangulation15:
             return ReginaSupport::regIcon("packet_triangulation15");
 #endif /* REGINA_HIGHDIM */
         default:
@@ -160,104 +160,104 @@ QIcon PacketManager::icon(const Packet& packet) {
 PacketUI* PacketManager::createUI(regina::Packet& packet,
         PacketPane* enclosingPane) {
     switch (packet.type()) {
-        case PACKET_ANGLESTRUCTURES:
+        case PacketType::AngleStructures:
             return new AngleStructureUI(
                 static_cast<regina::PacketOf<AngleStructures>*>(&packet),
                     enclosingPane);
-        case PACKET_ATTACHMENT:
+        case PacketType::Attachment:
             return new AttachmentUI(
                 static_cast<Attachment*>(&packet), enclosingPane);
-        case PACKET_CONTAINER:
+        case PacketType::Container:
             return new ContainerUI(
                 static_cast<Container*>(&packet), enclosingPane);
-        case PACKET_LINK:
+        case PacketType::Link:
             return new LinkUI(
                 static_cast<regina::PacketOf<Link>*>(&packet), enclosingPane);
-        case PACKET_NORMALSURFACES:
+        case PacketType::NormalSurfaces:
             return new SurfacesUI(
                 static_cast<regina::PacketOf<NormalSurfaces>*>(&packet),
                     enclosingPane);
-        case PACKET_NORMALHYPERSURFACES:
+        case PacketType::NormalHypersurfaces:
             return new HyperUI(
                 static_cast<regina::PacketOf<NormalHypersurfaces>*>(&packet),
                     enclosingPane);
-        case PACKET_SCRIPT:
+        case PacketType::Script:
             return new ScriptUI(
                 static_cast<Script*>(&packet), enclosingPane);
-        case PACKET_SNAPPEATRIANGULATION:
+        case PacketType::SnapPea:
             return new SnapPeaUI(
                 static_cast<regina::PacketOf<SnapPeaTriangulation>*>(&packet),
                 enclosingPane);
-        case PACKET_SURFACEFILTER:
+        case PacketType::SurfaceFilter:
             switch (((SurfaceFilter&)packet).filterType()) {
-                case NS_FILTER_COMBINATION:
+                case SurfaceFilterType::Combination:
                     return new FilterCombUI(
                         static_cast<SurfaceFilterCombination*>(&packet),
                         enclosingPane);
-                case NS_FILTER_PROPERTIES:
+                case SurfaceFilterType::Properties:
                     return new FilterPropUI(
                         static_cast<SurfaceFilterProperties*>(&packet),
                         enclosingPane);
                 default:
                     return new DefaultPacketUI(&packet, enclosingPane);
             }
-        case PACKET_TEXT:
+        case PacketType::Text:
             return new TextUI(
                 static_cast<Text*>(&packet), enclosingPane);
-        case PACKET_TRIANGULATION2:
+        case PacketType::Triangulation2:
             return new Tri2UI(
                 static_cast<regina::PacketOf<Triangulation<2>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION3:
+        case PacketType::Triangulation3:
             return new Tri3UI(
                 static_cast<regina::PacketOf<Triangulation<3>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION4:
+        case PacketType::Triangulation4:
             return new Tri4UI(
                 static_cast<regina::PacketOf<Triangulation<4>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION5:
+        case PacketType::Triangulation5:
             return new GenericTriangulationUI<5>(
                 static_cast<regina::PacketOf<Triangulation<5>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION6:
+        case PacketType::Triangulation6:
             return new GenericTriangulationUI<6>(
                 static_cast<regina::PacketOf<Triangulation<6>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION7:
+        case PacketType::Triangulation7:
             return new GenericTriangulationUI<7>(
                 static_cast<regina::PacketOf<Triangulation<7>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION8:
+        case PacketType::Triangulation8:
             return new GenericTriangulationUI<8>(
                 static_cast<regina::PacketOf<Triangulation<8>>*>(&packet),
                 enclosingPane);
 #ifdef REGINA_HIGHDIM
-        case PACKET_TRIANGULATION9:
+        case PacketType::Triangulation9:
             return new GenericTriangulationUI<9>(
                 static_cast<regina::PacketOf<Triangulation<9>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION10:
+        case PacketType::Triangulation10:
             return new GenericTriangulationUI<10>(
                 static_cast<regina::PacketOf<Triangulation<10>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION11:
+        case PacketType::Triangulation11:
             return new GenericTriangulationUI<11>(
                 static_cast<regina::PacketOf<Triangulation<11>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION12:
+        case PacketType::Triangulation12:
             return new GenericTriangulationUI<12>(
                 static_cast<regina::PacketOf<Triangulation<12>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION13:
+        case PacketType::Triangulation13:
             return new GenericTriangulationUI<13>(
                 static_cast<regina::PacketOf<Triangulation<13>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION14:
+        case PacketType::Triangulation14:
             return new GenericTriangulationUI<14>(
                 static_cast<regina::PacketOf<Triangulation<14>>*>(&packet),
                 enclosingPane);
-        case PACKET_TRIANGULATION15:
+        case PacketType::Triangulation15:
             return new GenericTriangulationUI<15>(
                 static_cast<regina::PacketOf<Triangulation<15>>*>(&packet),
                 enclosingPane);

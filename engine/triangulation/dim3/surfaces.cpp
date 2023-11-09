@@ -82,7 +82,8 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
         // For now, just use the safe arbitrary-precision Integer type.
-        TreeSingleSoln<LPConstraintEulerPositive> tree(*this, NS_STANDARD);
+        TreeSingleSoln<LPConstraintEulerPositive> tree(*this,
+            NormalCoords::Standard);
         if (tree.find()) {
             NormalSurface s = tree.buildSurface();
             if (! ((! s.hasRealBoundary()) &&
@@ -98,8 +99,8 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
     // For valid, non-ideal triangulations we can do this in quad
     // coordinates (where a non-trivial sphere or disc is guaranteed to
     // appear as a vertex surface).  Otherwise fall back to standard coords.
-    NormalSurfaces surfaces(*this,
-        (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
+    NormalSurfaces surfaces(*this, (isValid() && ! isIdeal()) ?
+        NormalCoords::Quad : NormalCoords::Standard);
     for (const NormalSurface& s : surfaces) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
@@ -141,7 +142,8 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere()
     // ones we need to be more fussy about.
     if (countVertices() == 1) {
         // For now, just use the safe arbitrary-precision Integer type.
-        TreeSingleSoln<LPConstraintEulerPositive> tree(*this, NS_AN_STANDARD);
+        TreeSingleSoln<LPConstraintEulerPositive> tree(*this,
+            NormalCoords::AlmostNormal);
         if (tree.find()) {
             // Since our preconditions ensure the triangulation is
             // closed, orientable and 0-efficient, there are no
@@ -159,7 +161,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere()
     // Given our preconditions, we can do this in quadrilateral-octagon
     // coordinates; for details see "Quadrilateral-octagon coordinates for
     // almost normal surfaces", B.B., Experiment. Math. 19 (2010), 285-315.
-    NormalSurfaces surfaces(*this, NS_AN_QUAD_OCT);
+    NormalSurfaces surfaces(*this, NormalCoords::QuadOct);
 
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.
@@ -538,7 +540,8 @@ doneTet:
         delete[] use3;
     }
 
-    return { NormalSurface(*this, NS_STANDARD, std::move(coords)), thin };
+    return { NormalSurface(*this, NormalCoords::Standard, std::move(coords)),
+        thin };
 }
 
 // Instantiate linkingSurface() for all possible template arguments,

@@ -251,9 +251,9 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     if (tracker) {
         // Estimate processing stages.
         for (bag = d.first(); bag; bag = bag->next()) {
-            switch (bag->type()) {
-                case NICE_FORGET:
-                case NICE_JOIN:
+            switch (bag->niceType()) {
+                case NiceType::Forget:
+                case NiceType::Join:
                     hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                     break;
                 default:
@@ -325,7 +325,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
 
             partial[index]->emplace(std::move(k),
                 Laurent<Integer>(0) /* x^0 = 1 */);
-        } else if (bag->type() == NICE_INTRODUCE) {
+        } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();
 
@@ -347,7 +347,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
 
             partial[index] = partial[child->index()];
             partial[child->index()] = nullptr;
-        } else if (bag->type() == NICE_FORGET) {
+        } else if (bag->niceType() == NiceType::Forget) {
             // Forget bag.
             child = bag->children();
 
@@ -370,7 +370,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
                 std::cerr << "FORGET -> 2 x " <<
                     partial[child->index()]->size() << std::endl;
 #endif
-            Crossing* forget = crossings_[child->element(bag->subtype())];
+            Crossing* forget = crossings_[child->element(bag->niceIndex())];
 
             // The A resolution connects strands conn[0][0][0-1], and
             // connects strands conn[0][1][0-1].
@@ -604,7 +604,7 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
 
     Laurent<Integer> ans;
     switch (alg) {
-        case ALG_NAIVE:
+        case Algorithm::Naive:
             ans = bracketNaive(tracker);
             break;
         default:

@@ -40,6 +40,7 @@
 #include "file/xml/xmlpacketreader.h"
 #include "file/xml/xmlpacketreaders.h"
 #include "file/xml/xmlsnappeareader.h"
+#include "file/xml/xmlspatiallinkreader.h"
 #include "file/xml/xmltreeresolver.h"
 #include "file/xml/xmltrireader.h"
 #include "utilities/stringutils.h"
@@ -47,42 +48,63 @@
 namespace regina {
 
 // These XML tags can appear beneath all packet types.
-// We map them to strings here to allow for real compiler-optimised
+// We map them to integers here to allow for real compiler-optimised
 // switch statements instead of long if/else lists.
-constexpr int PACKET_LEGACY_CHILD = -1;
-constexpr int PACKET_TAG = -2;
-constexpr int PACKET_ANON = -3;
-constexpr int PACKET_ANONREF = -4;
-constexpr int PACKET_TRIANGULATION_ANY = -5;
-constexpr int PACKET_V7_TEXT = -16;
-constexpr int PACKET_V7_ATTACHMENT = -17;
-constexpr int PACKET_V7_SNAPPEA = -18;
-constexpr int PACKET_V7_SURFACES = -19;
-constexpr int PACKET_V7_HYPERSURFACES = -20;
-constexpr int PACKET_V7_ANGLES = -21;
-constexpr int PACKET_V7_FILTER_PROPERTIES = -32;
-constexpr int PACKET_V7_FILTER_COMBINATION = -33;
-constexpr int PACKET_V7_FILTER_PLAIN = -34;
+//
+// The integer constants that we allow include:
+//
+// - All of the (positive) integer PacketType constants that were used with
+//   the older second-generation XML file format, which were stored numerically
+//   in second-generation XML files via <packet typeid=...>.  These are
+//   extracted at runtime from the typeid attribute, and so are not all
+//   included in the packetXMLTags map below.
+//
+// - Constants for packets in third-generation XML files, which use different
+//   XML tags for different packet types.  In cases where the same reader can
+//   be used for second-generation and third-generation formats, we use the
+//   same integer constants as above (i.e., the numerical PacketType values);
+//   in cases where different readers are required, we introduce separate
+//   XML_V7_... constants to denote this (which are negative to avoid clashing
+//   with the numerical PacketType constants).
+//
+// - Some additional (negative) integer constants that do not refer to named
+//   packets (e.g., constants for anonymous packets and packet tags).
+//
+constexpr int XML_LEGACY_CHILD = -1;
+constexpr int XML_TAG = -2;
+constexpr int XML_ANON = -3;
+constexpr int XML_ANONREF = -4;
+constexpr int XML_V7_TRIANGULATION = -5;
+constexpr int XML_V7_TEXT = -16;
+constexpr int XML_V7_ATTACHMENT = -17;
+constexpr int XML_V7_SNAPPEA = -18;
+constexpr int XML_V7_SURFACES = -19;
+constexpr int XML_V7_HYPERSURFACES = -20;
+constexpr int XML_V7_ANGLES = -21;
+constexpr int XML_V7_FILTER_PROPERTIES = -32;
+constexpr int XML_V7_FILTER_COMBINATION = -33;
+constexpr int XML_V7_FILTER_PLAIN = -34;
+
 const std::map<std::string, int> packetXMLTags = {
-    { "angles", PACKET_V7_ANGLES },
-    { "attachment", PACKET_V7_ATTACHMENT },
-    { "container", PACKET_CONTAINER },
-    { "filtercomb", PACKET_V7_FILTER_COMBINATION },
-    { "filterplain", PACKET_V7_FILTER_PLAIN },
-    { "filterprop", PACKET_V7_FILTER_PROPERTIES },
-    { "hypersurfaces", PACKET_V7_HYPERSURFACES },
-    { "link", PACKET_LINK },
-    { "script", PACKET_SCRIPT },
-    { "snappeadata", PACKET_V7_SNAPPEA },
-    { "surfaces", PACKET_V7_SURFACES },
-    { "textdata", PACKET_V7_TEXT },
+    { "angles", XML_V7_ANGLES },
+    { "attachment", XML_V7_ATTACHMENT },
+    { "container", static_cast<int>(PacketType::Container) },
+    { "filtercomb", XML_V7_FILTER_COMBINATION },
+    { "filterplain", XML_V7_FILTER_PLAIN },
+    { "filterprop", XML_V7_FILTER_PROPERTIES },
+    { "hypersurfaces", XML_V7_HYPERSURFACES },
+    { "link", static_cast<int>(PacketType::Link) },
+    { "script", static_cast<int>(PacketType::Script) },
+    { "snappeadata", XML_V7_SNAPPEA },
+    { "spatiallink", static_cast<int>(PacketType::SpatialLink) },
+    { "surfaces", XML_V7_SURFACES },
+    { "textdata", XML_V7_TEXT },
+    { "tri", XML_V7_TRIANGULATION },
 
-    { "tri", PACKET_TRIANGULATION_ANY },
-
-    { "anon", PACKET_ANON },
-    { "anonref", PACKET_ANONREF },
-    { "packet", PACKET_LEGACY_CHILD },
-    { "tag", PACKET_TAG }
+    { "anon", XML_ANON },
+    { "anonref", XML_ANONREF },
+    { "packet", XML_LEGACY_CHILD },
+    { "tag", XML_TAG }
 };
 
 XMLElementReader* XMLPacketReader::startSubElement(
@@ -104,7 +126,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
         commit();
 
         int xmlTagType = xmlTag->second;
-        if (xmlTagType == PACKET_TAG) {
+        if (xmlTagType == XML_TAG) {
             // We have <tag name="..."/>.
             std::string packetTag = subTagProps.lookup("name");
             if (packet_ && ! packetTag.empty())
@@ -121,17 +143,21 @@ XMLElementReader* XMLPacketReader::startSubElement(
         // We will need to fetch and store the following two properties
         // for triangulations.
         long size = 0;
-        bool permIndex = (xmlTagType == PACKET_TRIANGULATION2);
+        bool permIndex = false;
 
-        if (xmlTagType == PACKET_LEGACY_CHILD) {
+        if (xmlTagType == XML_LEGACY_CHILD) {
             // This is a <packet typeid=...>...</packet> element from the
             // older second-generation file format.
             auto prop = subTagProps.find("typeid");
             if (prop == subTagProps.end())
                 return new XMLElementReader();
+            // Reset xmlTagType to the value of typeid, which is the integer
+            // value of the corresponding PacketType constant.
             if (! valueOf(prop->second, xmlTagType))
                 return new XMLElementReader();
-        } else if (xmlTagType == PACKET_TRIANGULATION_ANY) {
+            if (xmlTagType == static_cast<int>(PacketType::Triangulation2))
+                permIndex = true;
+        } else if (xmlTagType == XML_V7_TRIANGULATION) {
             // This is a new <tri dim="...">...</tri> element from the
             // newer third-generation file format.
             int dim;
@@ -142,11 +168,22 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return new XMLElementReader();
             if (dim < 2 || dim > 15)
                 return new XMLElementReader();
+
+            // Reset xmlTagType to the integer value of the PacketType constant
+            // for the specific dimension of triangulation that we have.
             switch (dim) {
-                case 2: xmlTagType = PACKET_TRIANGULATION2; break;
-                case 3: xmlTagType = PACKET_TRIANGULATION3; break;
-                case 4: xmlTagType = PACKET_TRIANGULATION4; break;
-                default: xmlTagType = 100 + dim; /* 105 .. 115 */ break;
+                case 2:
+                    xmlTagType = static_cast<int>(PacketType::Triangulation2);
+                    break;
+                case 3:
+                    xmlTagType = static_cast<int>(PacketType::Triangulation3);
+                    break;
+                case 4:
+                    xmlTagType = static_cast<int>(PacketType::Triangulation4);
+                    break;
+                default:
+                    xmlTagType = 100 + dim; /* 105 .. 115 */
+                    break;
             }
 
             // Fetch the number of top-dimensional simplices.
@@ -174,78 +211,81 @@ XMLElementReader* XMLPacketReader::startSubElement(
 
         // Run through all the packet types that our file format understands.
         switch (xmlTagType) {
-            case PACKET_ANON:
+            case XML_ANON:
                 return new XMLPacketReader(resolver_, packet_, true,
                     std::move(childLabel), std::move(childID));
-            case PACKET_ANONREF:
+            case XML_ANONREF:
                 return new XMLAnonRefReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_CONTAINER:
+            case static_cast<int>(PacketType::Container):
                 return new XMLContainerReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_TRIANGULATION2:
+            case static_cast<int>(PacketType::Triangulation2):
                 return new XMLTriangulationReader<2>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION3:
+            case static_cast<int>(PacketType::Triangulation3):
                 return new XMLTriangulationReader<3>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION4:
+            case static_cast<int>(PacketType::Triangulation4):
                 return new XMLTriangulationReader<4>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_SNAPPEATRIANGULATION:
+            case static_cast<int>(PacketType::SnapPea):
                 return new XMLLegacySnapPeaReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_V7_SNAPPEA:
+            case XML_V7_SNAPPEA:
                 return new XMLSnapPeaReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_LINK:
+            case static_cast<int>(PacketType::Link):
                 return new XMLLinkReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_TEXT:
+            case static_cast<int>(PacketType::SpatialLink):
+                return new XMLSpatialLinkReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case static_cast<int>(PacketType::Text):
                 return new XMLLegacyTextReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_V7_TEXT:
+            case XML_V7_TEXT:
                 return new XMLTextReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_SCRIPT:
+            case static_cast<int>(PacketType::Script):
                 return new XMLScriptReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_SURFACEFILTER:
+            case static_cast<int>(PacketType::SurfaceFilter):
                 return new XMLLegacyFilterReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_V7_FILTER_PROPERTIES:
+            case XML_V7_FILTER_PROPERTIES:
                 return new XMLPropertiesFilterReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
-            case PACKET_V7_FILTER_COMBINATION:
+            case XML_V7_FILTER_COMBINATION:
                 return new XMLCombinationFilterReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
-            case PACKET_V7_FILTER_PLAIN:
+            case XML_V7_FILTER_PLAIN:
                 return new XMLPlainFilterReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_ATTACHMENT:
+            case static_cast<int>(PacketType::Attachment):
                 return new XMLLegacyPDFReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_V7_ATTACHMENT:
+            case XML_V7_ATTACHMENT:
                 return new XMLAttachmentReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
-            case PACKET_V7_SURFACES:
+            case XML_V7_SURFACES:
                 return new XMLNormalSurfacesReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
-            case PACKET_V7_HYPERSURFACES:
+            case XML_V7_HYPERSURFACES:
                 return new XMLNormalHypersurfacesReader(resolver_, packet_,
                     anon_, std::move(childLabel), std::move(childID),
                     subTagProps);
-            case PACKET_V7_ANGLES:
+            case XML_V7_ANGLES:
                 return new XMLAngleStructuresReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
-            case PACKET_NORMALSURFACES:
+            case static_cast<int>(PacketType::NormalSurfaces):
                 if (auto tri = std::dynamic_pointer_cast<Triangulation<3>>(
                         packet_))
                     return new XMLLegacyNormalSurfacesReader(resolver_, packet_,
                         anon_, std::move(childLabel), std::move(childID), *tri);
                 else
                     return new XMLElementReader();
-            case PACKET_NORMALHYPERSURFACES:
+            case static_cast<int>(PacketType::NormalHypersurfaces):
                 if (auto tri = std::dynamic_pointer_cast<Triangulation<4>>(
                         packet_))
                     return new XMLLegacyNormalHypersurfacesReader(resolver_,
@@ -253,7 +293,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
                         std::move(childID), *tri);
                 else
                     return new XMLElementReader();
-            case PACKET_ANGLESTRUCTURES:
+            case static_cast<int>(PacketType::AngleStructures):
                 if (auto tri = std::dynamic_pointer_cast<Triangulation<3>>(
                         packet_))
                     return new XMLLegacyAngleStructuresReader(resolver_,
@@ -261,38 +301,38 @@ XMLElementReader* XMLPacketReader::startSubElement(
                         std::move(childID), *tri);
                 else
                     return new XMLElementReader();
-            case PACKET_TRIANGULATION5:
+            case static_cast<int>(PacketType::Triangulation5):
                 return new XMLTriangulationReader<5>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION6:
+            case static_cast<int>(PacketType::Triangulation6):
                 return new XMLTriangulationReader<6>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION7:
+            case static_cast<int>(PacketType::Triangulation7):
                 return new XMLTriangulationReader<7>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION8:
+            case static_cast<int>(PacketType::Triangulation8):
                 return new XMLTriangulationReader<8>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
 #ifdef REGINA_HIGHDIM
-            case PACKET_TRIANGULATION9:
+            case static_cast<int>(PacketType::Triangulation9):
                 return new XMLTriangulationReader<9>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION10:
+            case static_cast<int>(PacketType::Triangulation10):
                 return new XMLTriangulationReader<10>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION11:
+            case static_cast<int>(PacketType::Triangulation11):
                 return new XMLTriangulationReader<11>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION12:
+            case static_cast<int>(PacketType::Triangulation12):
                 return new XMLTriangulationReader<12>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION13:
+            case static_cast<int>(PacketType::Triangulation13):
                 return new XMLTriangulationReader<13>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION14:
+            case static_cast<int>(PacketType::Triangulation14):
                 return new XMLTriangulationReader<14>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-            case PACKET_TRIANGULATION15:
+            case static_cast<int>(PacketType::Triangulation15):
                 return new XMLTriangulationReader<15>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
 #endif /* REGINA_HIGHDIM */

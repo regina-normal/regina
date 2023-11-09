@@ -116,10 +116,11 @@ null bytes within it, and does not need to be terminated by a null
 byte at the end.
 
 The *alloc* argument shows if/how this packet claims ownership of the
-data. In particular, unless *alloc* is *DEEP_COPY*, this packet will
-claim ownership of the given data block and will deallocate it when
-the packet is destroyed. If *alloc* is *DEEP_COPY* then the given
-block of data will not be modified in any way.
+data. In particular, unless *alloc* is *OwnershipPolicy::DeepCopy*,
+this packet will claim ownership of the given data block and will
+deallocate it when the packet is destroyed. If *alloc* is
+*OwnershipPolicy::DeepCopy* then the given block of data will not be
+modified in any way.
 
 It is possible to pass a null pointer as the data array, in which case
 the new packet will have no attachment stored (so isNull() will return

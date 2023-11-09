@@ -51,31 +51,44 @@ void addTreeDecomposition(pybind11::module_& m) {
 
     pybind11::enum_<regina::TreeDecompositionAlg>(m, "TreeDecompositionAlg",
             rdoc_scope)
-        .value("TD_UPPER", regina::TD_UPPER, rdoc::TD_UPPER)
-        .value("TD_UPPER_GREEDY_FILL_IN", regina::TD_UPPER_GREEDY_FILL_IN,
-            rdoc::TD_UPPER_GREEDY_FILL_IN)
-        .export_values()
+        .value("Upper", regina::TreeDecompositionAlg::Upper, rdoc::Upper)
+        .value("UpperGreedyFillIn",
+            regina::TreeDecompositionAlg::UpperGreedyFillIn,
+            rdoc::UpperGreedyFillIn)
         ;
+
+    // Deprecated constants:
+    m.attr("TD_UPPER") = regina::TreeDecompositionAlg::Upper;
+    m.attr("TD_UPPER_GREEDY_FILL_IN") =
+        regina::TreeDecompositionAlg::UpperGreedyFillIn;
 
     RDOC_SCOPE_SWITCH(BagComparison)
 
     pybind11::enum_<regina::BagComparison>(m, "BagComparison", rdoc_scope)
-        .value("BAG_EQUAL", regina::BAG_EQUAL, rdoc::BAG_EQUAL)
-        .value("BAG_SUBSET", regina::BAG_SUBSET, rdoc::BAG_SUBSET)
-        .value("BAG_SUPERSET", regina::BAG_SUPERSET, rdoc::BAG_SUPERSET)
-        .value("BAG_UNRELATED", regina::BAG_UNRELATED, rdoc::BAG_UNRELATED)
-        .export_values()
+        .value("Equal", regina::BagComparison::Equal, rdoc::Equal)
+        .value("Subset", regina::BagComparison::Subset, rdoc::Subset)
+        .value("Superset", regina::BagComparison::Superset, rdoc::Superset)
+        .value("Unrelated", regina::BagComparison::Unrelated, rdoc::Unrelated)
         ;
+
+    // Deprecated constants:
+    m.attr("BAG_EQUAL") = regina::BagComparison::Equal;
+    m.attr("BAG_SUBSET") = regina::BagComparison::Subset;
+    m.attr("BAG_SUPERSET") = regina::BagComparison::Superset;
+    m.attr("BAG_UNRELATED") = regina::BagComparison::Unrelated;
 
     RDOC_SCOPE_SWITCH(NiceType)
 
     pybind11::enum_<regina::NiceType>(m, "NiceType", rdoc_scope)
-        .value("NICE_INTRODUCE", regina::NICE_INTRODUCE, rdoc::NICE_INTRODUCE)
-        .value("NICE_FORGET", regina::NICE_FORGET, rdoc::NICE_FORGET)
-        .value("NICE_JOIN", regina::NICE_JOIN, rdoc::NICE_JOIN)
-        .export_values()
+        .value("Introduce", regina::NiceType::Introduce, rdoc::Introduce)
+        .value("Forget", regina::NiceType::Forget, rdoc::Forget)
+        .value("Join", regina::NiceType::Join, rdoc::Join)
         ;
 
+    // Deprecated constants:
+    m.attr("NICE_INTRODUCE") = regina::NiceType::Introduce;
+    m.attr("NICE_FORGET") = regina::NiceType::Forget;
+    m.attr("NICE_JOIN") = regina::NiceType::Join;
     RDOC_SCOPE_SWITCH(TreeBag)
 
     auto tb = pybind11::class_<TreeBag>(m, "TreeBag", rdoc_scope)
@@ -83,8 +96,10 @@ void addTreeDecomposition(pybind11::module_& m) {
         .def("element", &TreeBag::element, rdoc::element)
         .def("contains", &TreeBag::contains, rdoc::contains)
         .def("index", &TreeBag::index, rdoc::index)
-        .def("type", &TreeBag::type, rdoc::type)
-        .def("subtype", &TreeBag::subtype, rdoc::subtype)
+        .def("niceType", &TreeBag::niceType, rdoc::niceType)
+        .def("type", &TreeBag::niceType, rdoc::type) // deprecated
+        .def("niceIndex", &TreeBag::niceIndex, rdoc::niceIndex)
+        .def("subtype", &TreeBag::niceIndex, rdoc::subtype) // deprecated
         .def("compare", &TreeBag::compare, rdoc::compare)
         .def("next", &TreeBag::next,
             pybind11::return_value_policy::reference, rdoc::next)
@@ -202,7 +217,8 @@ void addTreeDecomposition(pybind11::module_& m) {
 
             t.reroot(costSame.data(), costReverse.data(), costRoot.data());
         }, rdoc::reroot_2)
-        .def("dot", &TreeDecomposition::dot, rdoc::dot)
+        .def("dot", &TreeDecomposition::dot,
+            pybind11::arg("dark") = false, rdoc::dot)
         .def("pace", &TreeDecomposition::pace, rdoc::pace)
         .def_static("fromPACE",
             overload_cast<const std::string&>(&TreeDecomposition::fromPACE),

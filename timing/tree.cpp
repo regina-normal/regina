@@ -114,10 +114,10 @@ int main(int argc, char* argv[]) {
 
         std::cout << "PROCESSING: " << argv[i] << std::endl;
         if (mode == 's' || mode == 'q' || mode == 'a' || mode == 'o') {
-            NormalCoords coords = (mode == 's' ? NS_STANDARD :
-                mode == 'q' ? NS_QUAD :
-                mode == 'a' ? NS_AN_STANDARD :
-                NS_AN_QUAD_OCT);
+            NormalCoords coords = (mode == 's' ? NormalCoords::Standard :
+                mode == 'q' ? NormalCoords::Quad :
+                mode == 'a' ? NormalCoords::AlmostNormal :
+                NormalCoords::QuadOct);
             try {
                 TreeEnumeration<> search(t, coords);
                 search.run([](const auto& /* tree */) {
@@ -139,7 +139,8 @@ int main(int argc, char* argv[]) {
         } else {
             try {
                 TreeSingleSoln<LPConstraintEulerPositive>
-                    search(t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
+                    search(t, mode == '3' ? NormalCoords::AlmostNormal :
+                        NormalCoords::Standard);
                 if (search.find()) {
                     std::cout << "Found non-trivial Euler > 0:"
                         << std::endl;

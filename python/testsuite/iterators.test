@@ -83,15 +83,15 @@ for a in AngleStructures(Example3.figureEight()):
     print(a)
 
 print('Normal surface iteration:')
-for s in NormalSurfaces(Example3.figureEight(), NS_QUAD):
+for s in NormalSurfaces(Example3.figureEight(), NormalCoords.Quad):
     print(s)
 
 print('Normal disc iteration:')
-for d in DiscSetSurface(NormalSurfaces(Example3.poincare(), NS_STANDARD).surface(0)):
+for d in DiscSetSurface(NormalSurfaces(Example3.poincare(), NormalCoords.Standard).surface(0)):
     print(d)
 
 print('Normal hypersurface iteration:')
-for s in NormalHypersurfaces(Example4.rp4(), HS_STANDARD):
+for s in NormalHypersurfaces(Example4.rp4(), HyperCoords.Standard):
     print(s)
 
 print('Model link graph cell arc iteration:')

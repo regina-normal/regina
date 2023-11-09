@@ -79,21 +79,23 @@ BagComparison TreeBag::compare(const TreeBag& rhs) const {
         } else if (elements_[p1] < rhs.elements_[p2]) {
             ++p1;
             if (extraInRHS)
-                return BAG_UNRELATED;
+                return BagComparison::Unrelated;
             extraInLHS = true;
         } else {
             ++p2;
             if (extraInLHS)
-                return BAG_UNRELATED;
+                return BagComparison::Unrelated;
             extraInRHS = true;
         }
     }
 
     if (p1 < size_)
-        return (extraInRHS ? BAG_UNRELATED : BAG_SUPERSET);
+        return (extraInRHS ? BagComparison::Unrelated :
+            BagComparison::Superset);
     if (p2 < rhs.size_)
-        return (extraInLHS ? BAG_UNRELATED : BAG_SUBSET);
-    return (extraInLHS ? BAG_SUPERSET : extraInRHS ? BAG_SUBSET : BAG_EQUAL);
+        return (extraInLHS ? BagComparison::Unrelated : BagComparison::Subset);
+    return (extraInLHS ? BagComparison::Superset :
+        extraInRHS ? BagComparison::Subset : BagComparison::Equal);
 }
 
 const TreeBag* TreeBag::nextPrefix() const {
@@ -145,8 +147,8 @@ TreeDecomposition::TreeDecomposition(const TreeDecomposition& cloneMe) :
     yourPrev = nullptr;
     while (true) {
         me = new TreeBag(*you);
-        me->type_ = you->type_;
-        me->subtype_ = you->subtype_;
+        me->niceType_ = you->niceType_;
+        me->niceIndex_ = you->niceIndex_;
         me->index_ = you->index_;
 
         // myPrev / yourPrev either points to the previous sibling or,
@@ -200,7 +202,7 @@ bool TreeDecomposition::operator == (const TreeDecomposition& other) const {
     while (true) {
         if (me->index_ != you->index_)
             return false;
-        if (me->compare(*you) != BAG_EQUAL)
+        if (me->compare(*you) != BagComparison::Equal)
             return false;
 
         // myPrev / yourPrev either points to the previous sibling or,
@@ -318,7 +320,7 @@ TreeDecomposition TreeDecomposition::fromPACE(std::istream& in) {
             // We don't set bags[idx]->index_, since we will reindex later.
             bags[idx]->parent_ = bags[idx]->sibling_ = bags[idx]->children_ =
                 nullptr;
-            bags[idx]->type_ = 0;
+            bags[idx]->niceType_ = NiceType::None;
 
             std::sort(bags[idx]->elements_,
                 bags[idx]->elements_ + bags[idx]->size_);
@@ -412,7 +414,7 @@ void TreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     }
 
     switch (alg) {
-        case TD_UPPER_GREEDY_FILL_IN:
+        case TreeDecompositionAlg::UpperGreedyFillIn:
         default:
             greedyFillIn(graph);
     }
@@ -630,9 +632,9 @@ bool TreeDecomposition::compress() {
 
         // Now see if we need to merge b with b->parent_.
         BagComparison compare = b->compare(*b->parent_);
-        if (compare != BAG_UNRELATED) {
+        if (compare != BagComparison::Unrelated) {
             // We will merge b with b->parent_, and then remove b.
-            if (compare == BAG_SUPERSET)
+            if (compare == BagComparison::Superset)
                 b->swapNodes(*b->parent_);
 
             if (b->children_) {
@@ -739,8 +741,8 @@ void TreeDecomposition::makeNice(const int* heightHint) {
         root_->parent_ = tmp;
         root_ = tmp;
 
-        tmp->type_ = NICE_FORGET;
-        tmp->subtype_ = forget;
+        tmp->niceType_ = NiceType::Forget;
+        tmp->niceIndex_ = forget;
     }
 
     while (b) {
@@ -749,8 +751,8 @@ void TreeDecomposition::makeNice(const int* heightHint) {
         // - everything before b in a prefix ordering has been made nice.
         if (b->children_ && b->children_->sibling_) {
             // b is a branching node.
-            b->type_ = NICE_JOIN;
-            b->subtype_ = 0;
+            b->niceType_ = NiceType::Join;
+            b->niceIndex_ = 0;
 
             tmp = new TreeBag(*b);
             tmp2 = new TreeBag(*b);
@@ -786,8 +788,8 @@ void TreeDecomposition::makeNice(const int* heightHint) {
                         (p1 < tmp->size_ &&
                          tmp->elements_[p1] < tmp2->elements_[p2])) {
                     // Introduce tmp->elements_[p1].
-                    tmp->type_ = NICE_INTRODUCE;
-                    tmp->subtype_ = p1;
+                    tmp->niceType_ = NiceType::Introduce;
+                    tmp->niceIndex_ = p1;
 
                     tmp3 = new TreeBag(tmp->size_ - 1);
                     std::copy(tmp->elements_,
@@ -810,8 +812,8 @@ void TreeDecomposition::makeNice(const int* heightHint) {
                     std::copy(tmp2->elements_ + p2 + 1,
                         tmp2->elements_ + tmp2->size_, tmp3->elements_ + p2);
 
-                    tmp3->type_ = NICE_FORGET;
-                    tmp3->subtype_ = p2;
+                    tmp3->niceType_ = NiceType::Forget;
+                    tmp3->niceIndex_ = p2;
 
                     tmp3->parent_ = tmp;
                     tmp3->children_ = tmp2;
@@ -844,8 +846,8 @@ void TreeDecomposition::makeNice(const int* heightHint) {
             // Build a series of introduce nodes.
             auto* next = const_cast<TreeBag*>(b->nextPrefix());
 
-            b->type_ = NICE_INTRODUCE;
-            b->subtype_ = b->size_ - 1;
+            b->niceType_ = NiceType::Introduce;
+            b->niceIndex_ = b->size_ - 1;
 
             tmp = b;
             for (size_t i = b->size_ - 1; i > 0; --i) {
@@ -855,8 +857,8 @@ void TreeDecomposition::makeNice(const int* heightHint) {
                 tmp2->parent_ = tmp;
                 tmp = tmp2;
 
-                tmp->type_ = NICE_INTRODUCE;
-                tmp->subtype_ = i - 1;
+                tmp->niceType_ = NiceType::Introduce;
+                tmp->niceIndex_ = i - 1;
             }
 
             b = next;
@@ -874,15 +876,25 @@ void TreeDecomposition::reroot(TreeBag* newRoot) {
     root_ = newRoot;
 
     for (const TreeBag* b = first(); b; b = b->next())
-        const_cast<TreeBag*>(b)->type_ = 0;
+        const_cast<TreeBag*>(b)->niceType_ = NiceType::None;
 
     reindex();
 }
 
-void TreeDecomposition::writeDot(std::ostream& out) const {
-    out << "digraph tree {\n"
-        "edge [color=black];\n"
-        "node [style=filled,fontsize=9,fontcolor=\"#751010\"];\n";
+void TreeDecomposition::writeDot(std::ostream& out, bool dark) const {
+    out << "digraph tree {\n";
+    if (dark)
+        out << "graph [bgcolor=\"black\" center=true]\n"
+            "edge [color=\"#b0b0b0\"];\n"
+            "node [color=\"#b0b0b0\",penwidth=0.8,"
+                "style=filled,fillcolor=\"#e0e0e0\","
+                "fontsize=9,fontname=\"Sans-Serif\",fontcolor=\"#751010\"];\n";
+    else
+        out << "graph [bgcolor=\"white\" center=true]\n"
+            "edge [color=black];\n"
+            "node [color=black,penwidth=0.8,"
+                "style=filled,fillcolor=lightgrey,"
+                "fontsize=9,fontname=\"Sans-Serif\",fontcolor=\"#751010\"];\n";
 
     TreeBag* b = root_;
     while (b) {
@@ -911,9 +923,9 @@ void TreeDecomposition::writeDot(std::ostream& out) const {
     out << "}" << std::endl;
 }
 
-std::string TreeDecomposition::dot() const {
+std::string TreeDecomposition::dot(bool dark) const {
     std::ostringstream out;
-    writeDot(out);
+    writeDot(out, dark);
     return out.str();
 }
 
