@@ -1963,6 +1963,22 @@
 		05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
 		05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */; };
 		05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
+		05ACC9EA2AFC6714000CF07F /* xmlspatiallinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9E72AFC6714000CF07F /* xmlspatiallinkreader.cpp */; };
+		05ACC9EB2AFC6714000CF07F /* xmlspatiallinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9E72AFC6714000CF07F /* xmlspatiallinkreader.cpp */; };
+		05ACC9EC2AFC6714000CF07F /* xmlspatiallinkwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9E82AFC6714000CF07F /* xmlspatiallinkwriter.cpp */; };
+		05ACC9ED2AFC6714000CF07F /* xmlspatiallinkwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9E82AFC6714000CF07F /* xmlspatiallinkwriter.cpp */; };
+		05ACC9EE2AFC6714000CF07F /* xmlspatiallinkreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 05ACC9E92AFC6714000CF07F /* xmlspatiallinkreader.h */; };
+		05ACC9EF2AFC6730000CF07F /* xmlspatiallinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9E72AFC6714000CF07F /* xmlspatiallinkreader.cpp */; };
+		05ACC9F02AFC6733000CF07F /* xmlspatiallinkwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9E82AFC6714000CF07F /* xmlspatiallinkwriter.cpp */; };
+		05ACC9F42AFC674C000CF07F /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F12AFC674B000CF07F /* spatiallink.cpp */; };
+		05ACC9F52AFC674C000CF07F /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F12AFC674B000CF07F /* spatiallink.cpp */; };
+		05ACC9F62AFC674C000CF07F /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F12AFC674B000CF07F /* spatiallink.cpp */; };
+		05ACC9F72AFC674C000CF07F /* knotplot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F22AFC674C000CF07F /* knotplot.cpp */; };
+		05ACC9F82AFC674C000CF07F /* knotplot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F22AFC674C000CF07F /* knotplot.cpp */; };
+		05ACC9F92AFC674C000CF07F /* knotplot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F22AFC674C000CF07F /* knotplot.cpp */; };
+		05ACC9FA2AFC674C000CF07F /* spatiallink.h in Headers */ = {isa = PBXBuildFile; fileRef = 05ACC9F32AFC674C000CF07F /* spatiallink.h */; };
+		05ACC9FE2AFC676A000CF07F /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9FB2AFC676A000CF07F /* spatiallink.cpp */; };
+		05ACC9FF2AFC676D000CF07F /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9FB2AFC676A000CF07F /* spatiallink.cpp */; };
 		05AF8FD327F66B4E00D3A383 /* hilbertprimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AF8FD227F66B4E00D3A383 /* hilbertprimal.cpp */; };
 		05AF8FD427F66B5100D3A383 /* hilbertprimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AF8FD227F66B4E00D3A383 /* hilbertprimal.cpp */; };
 		05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; };
@@ -4808,6 +4824,13 @@
 		05AA71ED1FB17DFF00186E30 /* flype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flype.cpp; sourceTree = "<group>"; };
 		05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredtorusbundle.cpp; sourceTree = "<group>"; };
 		05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredtorusbundle.h; sourceTree = "<group>"; };
+		05ACC9E72AFC6714000CF07F /* xmlspatiallinkreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlspatiallinkreader.cpp; sourceTree = "<group>"; };
+		05ACC9E82AFC6714000CF07F /* xmlspatiallinkwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlspatiallinkwriter.cpp; sourceTree = "<group>"; };
+		05ACC9E92AFC6714000CF07F /* xmlspatiallinkreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlspatiallinkreader.h; sourceTree = "<group>"; };
+		05ACC9F12AFC674B000CF07F /* spatiallink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallink.cpp; sourceTree = "<group>"; };
+		05ACC9F22AFC674C000CF07F /* knotplot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knotplot.cpp; sourceTree = "<group>"; };
+		05ACC9F32AFC674C000CF07F /* spatiallink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spatiallink.h; sourceTree = "<group>"; };
+		05ACC9FB2AFC676A000CF07F /* spatiallink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallink.cpp; sourceTree = "<group>"; };
 		05AF8FD227F66B4E00D3A383 /* hilbertprimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertprimal.cpp; sourceTree = "<group>"; };
 		05B0E139259AAC87000B62A3 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		05B0E13B259AAC98000B62A3 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = /Library/Frameworks/Python.framework; sourceTree = "<absolute>"; };
@@ -8467,6 +8490,7 @@
 				05721ECE1F97153C00A83FFC /* jenkins.cpp */,
 				052121BE2662F50A0041FD89 /* jenkins-impl.h */,
 				05721ED41F97153C00A83FFC /* jones.cpp */,
+				05ACC9F22AFC674C000CF07F /* knotplot.cpp */,
 				05721EE01F97153C00A83FFC /* link.cpp */,
 				05721EDF1F97153C00A83FFC /* link.h */,
 				05870CB11FAD250900835F9E /* modellinkgraph.cpp */,
@@ -8480,6 +8504,8 @@
 				0588C2A11FD8D1340093C2C9 /* rewrite.cpp */,
 				0588C2A21FD8D1340093C2C9 /* sig.cpp */,
 				05721ED71F97153C00A83FFC /* simplify.cpp */,
+				05ACC9F12AFC674B000CF07F /* spatiallink.cpp */,
+				05ACC9F32AFC674C000CF07F /* spatiallink.h */,
 				0568742220C5D86A001C435B /* tangle.cpp */,
 				0568741F20C5D868001C435B /* tangle.h */,
 			);
@@ -8494,6 +8520,7 @@
 				05721F0D1F97162600A83FFC /* link.cpp */,
 				05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */,
 				05721F0C1F97162600A83FFC /* pylink.cpp */,
+				05ACC9FB2AFC676A000CF07F /* spatiallink.cpp */,
 				0568742F20C5D8D3001C435B /* tangle.cpp */,
 			);
 			path = link;
@@ -8710,6 +8737,9 @@
 				059802C426683C6D002D5D57 /* xmlsnappeareader.cpp */,
 				059802BD26683C6D002D5D57 /* xmlsnappeareader.h */,
 				05772EB8270CF98E00D26D8A /* xmlsnappeawriter.cpp */,
+				05ACC9E72AFC6714000CF07F /* xmlspatiallinkreader.cpp */,
+				05ACC9E92AFC6714000CF07F /* xmlspatiallinkreader.h */,
+				05ACC9E82AFC6714000CF07F /* xmlspatiallinkwriter.cpp */,
 				059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */,
 				059802DA26683C6D002D5D57 /* xmlsurfacereader.h */,
 				05772EBE270CF98F00D26D8A /* xmlsurfacewriter.cpp */,
@@ -9286,6 +9316,7 @@
 				054208801DF0D0B50018AB24 /* repository.h in Headers */,
 				052F9ED0180600FB00FAE4DF /* maxadmissible.h in Headers */,
 				052F9F9E180600FB00FAE4DF /* tables.h in Headers */,
+				05ACC9EE2AFC6714000CF07F /* xmlspatiallinkreader.h in Headers */,
 				053CAB2C1DA710FE00A92F98 /* perm2.h in Headers */,
 				059802F526683C6D002D5D57 /* xmlalgebrareader.h in Headers */,
 				053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */,
@@ -9338,6 +9369,7 @@
 				056E071F1F994D9000DF136B /* graph.h in Headers */,
 				059BC6681DC7F77F00AB4206 /* boundarycomponent.h in Headers */,
 				05431F821C40F3C9009BC072 /* simplex.h in Headers */,
+				05ACC9FA2AFC674C000CF07F /* spatiallink.h in Headers */,
 				052FA09D180600FB00FAE4DF /* stringutils-impl.h in Headers */,
 				052F9F69180600FB00FAE4DF /* regina-core.h in Headers */,
 				052FA032180600FB00FAE4DF /* normalflags.h in Headers */,
@@ -10193,6 +10225,7 @@
 				050F5DDE1B9BAB9C00C1F681 /* example2.cpp in Sources */,
 				051261AB278D65D8006A55B1 /* intersectionform.cpp in Sources */,
 				057EE4D61C600A3600C4D155 /* isomorphism8.cpp in Sources */,
+				05ACC9FF2AFC676D000CF07F /* spatiallink.cpp in Sources */,
 				05772EE1270CFAD200D26D8A /* exception.cpp in Sources */,
 				050F5DDA1B9BAB9C00C1F681 /* pyangle.cpp in Sources */,
 				05A066AC1DFA67D40047872E /* snappedtwosphere.cpp in Sources */,
@@ -10367,6 +10400,7 @@
 				0553FB0C2AEBE6FC00BE89A7 /* simplesurfacebundle.cpp in Sources */,
 				0553FA812AEBE36E00BE89A7 /* xmlanglestructwriter.cpp in Sources */,
 				0553FBB42AF680AE00BE89A7 /* TextView.swift in Sources */,
+				05ACC9EB2AFC6714000CF07F /* xmlspatiallinkreader.cpp in Sources */,
 				0553FB7B2AEBE7F700BE89A7 /* sl2c_matrices.cpp in Sources */,
 				0553FAAB2AEBE3C000BE89A7 /* boundary5.cpp in Sources */,
 				0553FAEE2AEBE6D800BE89A7 /* links.cpp in Sources */,
@@ -10419,6 +10453,7 @@
 				0529094C2AE5EA090028990D /* ReginaDocument.swift in Sources */,
 				05A628242AE921650049739E /* boolset.cpp in Sources */,
 				0553FB6B2AEBE7E900BE89A7 /* peripheral_curves.cpp in Sources */,
+				05ACC9ED2AFC6714000CF07F /* xmlspatiallinkwriter.cpp in Sources */,
 				0553FAC92AEBE3C700BE89A7 /* facetpairing3.cpp in Sources */,
 				05A628112AE91FA70049739E /* engine.cpp in Sources */,
 				0553FAFF2AEBE6ED00BE89A7 /* reidemeister-tangle.cpp in Sources */,
@@ -10494,6 +10529,7 @@
 				0553FB892AEBE86300BE89A7 /* simplex.cpp in Sources */,
 				05A628232AE921580049739E /* permgroup.cpp in Sources */,
 				0553FB6A2AEBE7E100BE89A7 /* hyperbolic_structure.cpp in Sources */,
+				05ACC9F52AFC674C000CF07F /* spatiallink.cpp in Sources */,
 				0553FA8F2AEBE3AC00BE89A7 /* angle.cpp in Sources */,
 				0553FB072AEBE6FC00BE89A7 /* graphloop.cpp in Sources */,
 				05A628122AE91FDA0049739E /* base64.cpp in Sources */,
@@ -10510,6 +10546,7 @@
 				0553FAC62AEBE3C700BE89A7 /* facetpairing4.cpp in Sources */,
 				0553FA822AEBE36E00BE89A7 /* xmlsnappeawriter.cpp in Sources */,
 				0553FA9C2AEBE3AC00BE89A7 /* turaevviro.cpp in Sources */,
+				05ACC9F82AFC674C000CF07F /* knotplot.cpp in Sources */,
 				0553FB572AEBE7D100BE89A7 /* complex.cpp in Sources */,
 				0553FB492AEBE74B00BE89A7 /* normalsurface.cpp in Sources */,
 				0553FB322AEBE73A00BE89A7 /* blockedsfstriple.cpp in Sources */,
@@ -10737,6 +10774,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05ACC9FE2AFC676A000CF07F /* spatiallink.cpp in Sources */,
 				0542090C1DF0DA450018AB24 /* lensspace.cpp in Sources */,
 				05249F6E1DBC1747001FE29E /* boundarycomponent3.cpp in Sources */,
 				05C0644F1C55A5C1006E6483 /* HyperCompat.mm in Sources */,
@@ -10947,6 +10985,7 @@
 				05249EB81DBC16C4001FE29E /* isomorphism2.cpp in Sources */,
 				05249EB11DBC16BE001FE29E /* census.cpp in Sources */,
 				05249F3F1DBC171D001FE29E /* pyprogress.cpp in Sources */,
+				05ACC9F02AFC6733000CF07F /* xmlspatiallinkwriter.cpp in Sources */,
 				05249ECC1DBC16D6001FE29E /* isosig.cpp in Sources */,
 				05A0675C1DFA68470047872E /* trisolidtorus.cpp in Sources */,
 				05B7FFA825AC22D2003BAF5C /* cone_property.cpp in Sources */,
@@ -11116,6 +11155,7 @@
 				055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */,
 				05C265BD282C948F00232420 /* facetpairing2.cpp in Sources */,
 				05772ED5270CFA1F00D26D8A /* transform.cpp in Sources */,
+				05ACC9F62AFC674C000CF07F /* spatiallink.cpp in Sources */,
 				0518B9C929D595490020ADC1 /* cusp_cross_sections.cpp in Sources */,
 				05249F731DBC1747001FE29E /* facetpairing3.cpp in Sources */,
 				0586427119DA258E0019E056 /* SurfacesCoords.mm in Sources */,
@@ -11201,6 +11241,7 @@
 				05A067461DFA68470047872E /* blockedsfstriple.cpp in Sources */,
 				05CAE6762745256E007C93F3 /* gluingperms6.cpp in Sources */,
 				05A0674B1DFA68470047872E /* layeredloop.cpp in Sources */,
+				05ACC9F92AFC674C000CF07F /* knotplot.cpp in Sources */,
 				05C064731C56E460006E6483 /* Tri4Skeleton.mm in Sources */,
 				05A0674F1DFA68470047872E /* pillowtwosphere.cpp in Sources */,
 				05721EF31F97156600A83FFC /* jenkins.cpp in Sources */,
@@ -11262,6 +11303,7 @@
 				05431F911C40F40E009BC072 /* offload_handler.cpp in Sources */,
 				05CAE60827427A8A007C93F3 /* maxadmissible.cpp in Sources */,
 				0542088D1DF0D0CF0018AB24 /* definition.cpp in Sources */,
+				05ACC9EF2AFC6730000CF07F /* xmlspatiallinkreader.cpp in Sources */,
 				0598030526683C9F002D5D57 /* xmllinkreader.cpp in Sources */,
 				0518BA1E29D595B00020ADC1 /* simplify_triangulation.cpp in Sources */,
 				05C064551C55C811006E6483 /* HyperSummary.mm in Sources */,
@@ -11664,6 +11706,7 @@
 				0518BA0829D595940020ADC1 /* orient.cpp in Sources */,
 				052F9F46180600FB00FAE4DF /* perm5.cpp in Sources */,
 				0518B9DF29D595680020ADC1 /* finite_vertices.cpp in Sources */,
+				05ACC9F42AFC674C000CF07F /* spatiallink.cpp in Sources */,
 				05C1BED41DCA89DA007C946B /* triangulation2.cpp in Sources */,
 				05C265B7282C948700232420 /* facetpairing6.cpp in Sources */,
 				050C64871DA1249600C9420F /* globaldirs.cpp in Sources */,
@@ -11914,10 +11957,12 @@
 				05A067381DFA68190047872E /* spiralsolidtorus.cpp in Sources */,
 				05A067401DFA68190047872E /* txicore.cpp in Sources */,
 				0518BA3929D595DB0020ADC1 /* unix_file_io.cpp in Sources */,
+				05ACC9EA2AFC6714000CF07F /* xmlspatiallinkreader.cpp in Sources */,
 				0518B9A729D5943D0020ADC1 /* volume.cpp in Sources */,
 				05772ED4270CFA1900D26D8A /* transform.cpp in Sources */,
 				0518B9B529D5952A0020ADC1 /* close_cusps.cpp in Sources */,
 				054208C31DF0D2740018AB24 /* snappeacensusmfd.cpp in Sources */,
+				05ACC9EC2AFC6714000CF07F /* xmlspatiallinkwriter.cpp in Sources */,
 				052FA054180600FB00FAE4DF /* stdtoquad.cpp in Sources */,
 				05B7FFC125AC22D3003BAF5C /* sublattice_representation.cpp in Sources */,
 				05431F8C1C40F40D009BC072 /* offload_handler.cpp in Sources */,
@@ -11953,6 +11998,7 @@
 				05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */,
 				0518B9BC29D595380020ADC1 /* complex.cpp in Sources */,
 				05CAE65427450D89007C93F3 /* gluingperms8.cpp in Sources */,
+				05ACC9F72AFC674C000CF07F /* knotplot.cpp in Sources */,
 				052F9F5B180600FB00FAE4DF /* script.cpp in Sources */,
 				05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */,
 				0518B9E529D595680020ADC1 /* homology.cpp in Sources */,
