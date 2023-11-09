@@ -35,6 +35,7 @@ import WebKit
 import CxxStdlib
 
 // TODO: The SVG is miniscule on iPhone.
+// TODO: The black background is very distracting on visionOS.
 
 // TODO: What to use as the base URL here?
 // TODO: Work out how to centre the content.
