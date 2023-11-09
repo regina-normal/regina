@@ -67,9 +67,19 @@ void XMLSpatialLinkReader::endContentSubElement(const std::string& subTagName,
     if (! link_)
         return;
 
-    if (subTagName == "component")
-        if (static_cast<XMLSpatialLinkComponentReader*>(reader)->broken())
+    if (subTagName == "component") {
+        if (static_cast<XMLSpatialLinkComponentReader*>(reader)->broken()) {
             link_.reset();
+            return;
+        }
+
+        // Some basic sanity checking: to be embedded, each component must
+        // have at least three nodes.
+        if (link_->components_.back().size() < 3) {
+            link_.reset();
+            return;
+        }
+    }
 }
 
 XMLElementReader* XMLSpatialLinkComponentReader::startSubElement(

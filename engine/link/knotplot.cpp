@@ -426,6 +426,13 @@ SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
         throw InvalidInput("fromKnotPlot(): no coordinates could be read");
     }
 
+    // A final basic sanity check: to be embedded, each component must have at
+    // least three nodes.
+    for (const auto& c : ans.components_)
+        if (c.size() < 3)
+            throw InvalidInput("fromKnotPlot(): read a component with "
+                "< 3 nodes");
+
     return ans;
 }
 
