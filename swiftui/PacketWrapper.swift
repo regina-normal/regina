@@ -117,6 +117,9 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
             return Image("Script")
         case .SnapPea:
             return Image("SnapPea")
+        case .SpatialLink:
+            // TODO: This needs its own icon.
+            return Image("Link")
         case .SurfaceFilter:
             return Image("Filter")
         case .Text:
@@ -168,6 +171,8 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
             switch (packet.type()) {
             case .Link:
                 LinkView(packet: regina.SharedLink(packet))
+            case .SpatialLink:
+                SpatialLinkView(packet: regina.SharedSpatialLink(packet))
             case .Text:
                 TextView(packet: regina.SharedText(packet))
             default:

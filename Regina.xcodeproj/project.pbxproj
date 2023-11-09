@@ -1446,6 +1446,7 @@
 		05ACC9F82AFC674C000CF07F /* knotplot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F22AFC674C000CF07F /* knotplot.cpp */; };
 		05ACC9FA2AFC674C000CF07F /* spatiallink.h in Headers */ = {isa = PBXBuildFile; fileRef = 05ACC9F32AFC674C000CF07F /* spatiallink.h */; };
 		05ACC9FF2AFC676D000CF07F /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9FB2AFC676A000CF07F /* spatiallink.cpp */; };
+		05ACCA012AFC775B000CF07F /* SpatialLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05ACCA002AFC775B000CF07F /* SpatialLinkView.swift */; };
 		05AF8FD327F66B4E00D3A383 /* hilbertprimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AF8FD227F66B4E00D3A383 /* hilbertprimal.cpp */; };
 		05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; };
 		05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -4076,6 +4077,7 @@
 		05ACC9F22AFC674C000CF07F /* knotplot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knotplot.cpp; sourceTree = "<group>"; };
 		05ACC9F32AFC674C000CF07F /* spatiallink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spatiallink.h; sourceTree = "<group>"; };
 		05ACC9FB2AFC676A000CF07F /* spatiallink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallink.cpp; sourceTree = "<group>"; };
+		05ACCA002AFC775B000CF07F /* SpatialLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialLinkView.swift; sourceTree = "<group>"; };
 		05AF8FD227F66B4E00D3A383 /* hilbertprimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertprimal.cpp; sourceTree = "<group>"; };
 		05B0E139259AAC87000B62A3 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		05B0E13B259AAC98000B62A3 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = /Library/Frameworks/Python.framework; sourceTree = "<absolute>"; };
@@ -6958,6 +6960,7 @@
 			isa = PBXGroup;
 			children = (
 				0553FBB52AF6A4E700BE89A7 /* LinkView.swift */,
+				05ACCA002AFC775B000CF07F /* SpatialLinkView.swift */,
 				0553FBB32AF680AE00BE89A7 /* TextView.swift */,
 			);
 			path = packets;
@@ -9536,6 +9539,7 @@
 				0553FB952AEBE86300BE89A7 /* matrix.cpp in Sources */,
 				0553FAEF2AEBE6D800BE89A7 /* triangulate.cpp in Sources */,
 				0553FA8D2AEBE3AC00BE89A7 /* crushtri.cpp in Sources */,
+				05ACCA012AFC775B000CF07F /* SpatialLinkView.swift in Sources */,
 				05A6281C2AE921580049739E /* cyclotomic.cpp in Sources */,
 				0553FB912AEBE86300BE89A7 /* reduction.cpp in Sources */,
 				0553FA8E2AEBE3AC00BE89A7 /* skeleton.cpp in Sources */,
