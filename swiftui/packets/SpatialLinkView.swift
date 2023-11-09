@@ -74,6 +74,8 @@ struct SpatialLink3D: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> some UIView {
+        // TODO: Background is still white in dark mode.
+        // TODO: Change foreground colour in dark mode also.
         let view = SCNView()
         view.scene = SCNScene()
         view.allowsCameraControl = true
