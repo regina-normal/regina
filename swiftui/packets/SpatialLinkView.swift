@@ -44,7 +44,7 @@ struct SpatialLink3D: UIViewRepresentable {
     // TODO: Use a deep copy here?
     let packet: regina.SharedSpatialLink
     // TODO: Choose the radius properly.
-    static let radius = 0.1
+    static let radius = 0.2
     // TODO: Support custom colours in the data file
     static let colour = UIColor.blue
     
@@ -60,6 +60,16 @@ struct SpatialLink3D: UIViewRepresentable {
         let node = SCNNode(geometry: c)
         node.position = SCNVector3(node: regina.SpatialLink.Node((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2))
         node.look(at: SCNVector3(node: a), up: scene.rootNode.worldUp, localFront: node.worldUp)
+        return node
+    }
+    
+    func ball(_ p: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
+        let s = SCNSphere(radius: SpatialLink3D.radius)
+        s.segmentCount = 5
+        s.firstMaterial?.diffuse.contents = SpatialLink3D.colour
+        
+        let node = SCNNode(geometry: s)
+        node.position = SCNVector3(node: p)
         return node
     }
     
@@ -80,6 +90,8 @@ struct SpatialLink3D: UIViewRepresentable {
             var prev: regina.SpatialLink.Node?
             
             for n in c {
+                view.scene?.rootNode.addChildNode(ball(n, scene: view.scene!))
+                
                 if let p = prev {
                     // TODO: There are lots of bangs here.
                     view.scene?.rootNode.addChildNode(arc(p, n, scene: view.scene!))
@@ -109,6 +121,7 @@ struct SpatialLinkView: View {
 
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
+        // TODO: Check that handedness is actually preserved.
         SpatialLink3D(packet: packet)
     }
 }
