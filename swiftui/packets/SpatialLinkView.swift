@@ -46,7 +46,7 @@ struct SpatialLink3D: UIViewRepresentable {
     // TODO: Choose the radius properly.
     static let radius = 0.2
     // TODO: Support custom colours in the data file
-    static let colour = UIColor.blue
+    static let colour = UIColor.systemTeal
     
     func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
         let diff = regina.SpatialLink.Node(b.x - a.x, b.y - a.y, b.z - a.z)
@@ -74,13 +74,15 @@ struct SpatialLink3D: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> some UIView {
-        // TODO: Background is still white in dark mode.
-        // TODO: Change foreground colour in dark mode also.
         let view = SCNView()
         view.scene = SCNScene()
         view.allowsCameraControl = true
         view.autoenablesDefaultLighting = true
+        view.backgroundColor = UIColor.clear
 
+        // TODO: When we change the let to var, the diagram vanishes.
+        // I suspect this is some Swift incompatibility with ListView.
+        // Perhaps audit all use of ListView and replace it with integer loops.
         let link = packet.held()
         
         for c in link.components() {
@@ -122,6 +124,8 @@ struct SpatialLinkView: View {
 
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
+        // Note: it does seem that SceneKit is automatically scaling the image to fill the screen,
+        // but on iPhone it fills vertically and overfills horizontally.
         // TODO: Check that handedness is actually preserved.
         SpatialLink3D(packet: packet)
     }
