@@ -40,6 +40,7 @@ module ReginaEngine {
     header "link/examplelink.h"
     header "link/link.h"
     header "link/modellinkgraph.h"
+    header "link/spatiallink.h"
     header "link/tangle.h"
     header "manifold/graphloop.h"
     header "manifold/graphpair.h"
@@ -159,6 +160,7 @@ module ReginaEngine {
     header "swift/graphviz.h"
     header "swift/link.h"
     header "swift/packet.h"
+    header "swift/spatiallink.h"
     header "swift/text.h"
     requires cplusplus
 }

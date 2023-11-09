@@ -61,11 +61,26 @@ torus bounding each component of the link.)doc";
 
 // Docstring regina::python::doc::Link
 static const char *Link =
-R"doc(Represents a directed knot or link in the 3-sphere.
+R"doc(Represents a combinatorial diagram of a directed knot or link in the
+3-sphere.
 
-This class supports links with any number of components (including
-zero), and it also supports components with no crossings (which form
-additional unknot components of the overall link).
+This class Link is a "purely combinatorial" representation of a link,
+as it represents the combinatorics of a 2-dimensional link diagram,
+with no geometric information about the specific placement of strands
+or crossings. This is as opposed to the SpatialLink class, which is
+"purely geometric" (storing a specific embedding of the link in
+3-dimensional space).
+
+* For most purposes, you should use the Link class, which has a rich
+  set of mathematical features and uses exact discrete algorithms.
+
+* For visualisation, you may wish to use SpatialLink instead, with the
+  caveat that SpatialLink is based on floating-point arithmetic and is
+  therefore susceptible to floating point errors.
+
+This Link class supports links with any number of components
+(including zero), and it also supports components with no crossings
+(which form additional unknot components of the overall link).
 
 Since Regina 7.0, this is no longer a "packet type" that can be
 inserted directly into the packet tree. Instead a Link is now a
@@ -576,8 +591,8 @@ users should use ``auto`` (just like this declaration does).
 The returned object is guaranteed to be an instance of ListView, which
 means it offers basic container-like functions and supports range-
 based ``for`` loops. Each element of the list will be a starting
-strand for some components; more precisely, iterating through this
-list is equivalent to calling ``component(0)``, ``component(1)``, ...,
+strand for some component; more precisely, iterating through this list
+is equivalent to calling ``component(0)``, ``component(1)``, ...,
 ``component(countComponents()-1)`` in turn. As an example, your code
 might look like:
 

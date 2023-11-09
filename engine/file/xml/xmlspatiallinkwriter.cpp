@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2023, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,19 +30,48 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include <sstream>
+#include "regina-core.h"
+#include "file/fileformat.h"
+#include "file/xml/xmlwriter.h"
+#include "link/spatiallink.h"
+#include "packet/packet-impl.h"
 
-void addExampleLink(pybind11::module_& m);
-void addLink(pybind11::module_& m);
-void addSpatialLink(pybind11::module_& m);
-void addModelLinkGraph(pybind11::module_& m);
-void addTangle(pybind11::module_& m);
+// Note: the format XmlGen2 does not support SpatialLink at all.
+// We will simply output the third-generation format, and a second-generation
+// reader will happily ignore it.
 
-void addLinkClasses(pybind11::module_& m) {
-    addExampleLink(m);
-    addLink(m);
-    addModelLinkGraph(m);
-    addSpatialLink(m);
-    addTangle(m);
+namespace regina {
+
+template <>
+void XMLWriter<SpatialLink>::openPre() {
+    out_ << "<spatiallink";
 }
+
+template <>
+void XMLWriter<SpatialLink>::writeContent() {
+    // Temporarily enable hexfloat format, which should be lossless.
+    auto oldFlags = out_.flags();
+    out_ << std::hexfloat;
+    for (const auto& c : data_.components_) {
+        out_ << "  <component>\n";
+        for (const auto& node : c) {
+            out_ << "  <node> " << node.x << ' ' << node.y << ' ' << node.z
+                << " </node>\n";
+        }
+        out_ << "  </component>\n";
+    }
+    out_.flags(oldFlags);
+}
+
+template <>
+void XMLWriter<SpatialLink>::close() {
+    out_ << "</spatiallink>\n";
+}
+
+template void PacketOf<SpatialLink>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<SpatialLink>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+
+} // namespace regina
 
