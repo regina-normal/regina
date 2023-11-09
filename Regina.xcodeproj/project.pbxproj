@@ -1446,7 +1446,7 @@
 		05ACC9F82AFC674C000CF07F /* knotplot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9F22AFC674C000CF07F /* knotplot.cpp */; };
 		05ACC9FA2AFC674C000CF07F /* spatiallink.h in Headers */ = {isa = PBXBuildFile; fileRef = 05ACC9F32AFC674C000CF07F /* spatiallink.h */; };
 		05ACC9FF2AFC676D000CF07F /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05ACC9FB2AFC676A000CF07F /* spatiallink.cpp */; };
-		05ACCA012AFC775B000CF07F /* SpatialLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05ACCA002AFC775B000CF07F /* SpatialLinkView.swift */; };
+		05ACCA012AFC775B000CF07F /* SpatialLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05ACCA002AFC775B000CF07F /* SpatialLinkView.swift */; platformFilters = (ios, macos, ); };
 		05AF8FD327F66B4E00D3A383 /* hilbertprimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AF8FD227F66B4E00D3A383 /* hilbertprimal.cpp */; };
 		05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; };
 		05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };

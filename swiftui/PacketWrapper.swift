@@ -171,8 +171,10 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
             switch (packet.type()) {
             case .Link:
                 LinkView(packet: regina.SharedLink(packet))
+            #if !os(visionOS)
             case .SpatialLink:
                 SpatialLinkView(packet: regina.SharedSpatialLink(packet))
+            #endif
             case .Text:
                 TextView(packet: regina.SharedText(packet))
             default:
