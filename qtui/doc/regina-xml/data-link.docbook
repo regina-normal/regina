@@ -56,7 +56,9 @@ link ::= (&xml-crossings;, &xml-connections;, &xml-components;,
   </para>
   <para>
    A knot/link packet stores the diagram of an oriented link in
-   3-dimensional space.
+   3-dimensional space.  Whereas &xml-spatiallink; stores purely geometric data
+   (encoding specific paths through 3-space), this knot/link packet stores
+   purely combinatorial data (encoding the combinatorics of a link diagram).
   </para>
   <para>
    The number of crossings in the diagram and the signs of these
