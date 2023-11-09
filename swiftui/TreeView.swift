@@ -64,6 +64,7 @@ struct TreeView: View {
     var wrapper: PacketWrapper
 
     @State private var selected: PacketWrapper?
+    @Environment(\.horizontalSizeClass) var sizeClass
 
     init(packet: regina.SharedPacket) {
         wrapper = PacketWrapper(packet: packet)
@@ -80,23 +81,25 @@ struct TreeView: View {
         NavigationSplitView {
             // We should not display the root packet.
             // Instead start directly with the list of top-level children.
+            // TODO: Consider using a navigation stack here instead of a tree.
             // TODO: What to do if there are no child packets at all?
             // TODO: This list does not animate nicely at all on iPad.
             List(wrapper.children ?? [], children: \.children, selection: $selected) { item in
                 // TODO: If this is a container, expand/collapse on selection.
                 PacketCell(wrapper: item)
             }
-            // TODO: Choose a better navigation title
-            .navigationTitle("Packets")
-            .navigationBarBackButtonHidden()
+            // TODO: Use file URL as title
+            .navigationTitle("File URL")
             #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
         } detail: {
-            // TODO: We need to hide the back button on a non-compact layout.
+            // TODO: When transitioning from compact to non-compact,
+            // the back button on the detail view seems to stay
             if let s = selected {
                 s.packetViewer
                     .navigationTitle(swiftString(s.packet.humanLabel()))
+                    .navigationBarBackButtonHidden(sizeClass != .compact)
                     #if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
                     #endif
@@ -105,11 +108,15 @@ struct TreeView: View {
                 // TODO: Do we want a navigation title also?
                 // Perhaps just in the case of no selection?
                 Text("No packet selected")
+                    .navigationBarBackButtonHidden(sizeClass != .compact)
                     #if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
                     #endif
             }
         }
+        // Hide the DocumentGroup navigation bar, since we want the bar that
+        // comes with the inner NavigationSplitView.
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 

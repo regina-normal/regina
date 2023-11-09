@@ -108,6 +108,7 @@ struct SpatialLinkView: View {
     }
 
     var body: some View {
+        // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
         SpatialLink3D(packet: packet)
     }
 }
