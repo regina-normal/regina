@@ -54,7 +54,12 @@ void addSpatialLink(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rdoc::component)
         .def("components", &SpatialLink::components,
             pybind11::keep_alive<0, 1>(), rdoc::components)
+        .def("range", &SpatialLink::range, rdoc::range)
         .def("swap", &SpatialLink::swap, rdoc::swap)
+        .def("scale", &SpatialLink::scale, rdoc::scale)
+        .def("translate", &SpatialLink::translate, rdoc::translate)
+        .def("reflect", &SpatialLink::reflect,
+            pybind11::arg("axis") = 2, rdoc::reflect)
         .def_static("fromKnotPlot", &SpatialLink::fromKnotPlot,
             rdoc::fromKnotPlot)
     ;

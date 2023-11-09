@@ -334,6 +334,19 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          */
         bool operator != (const SpatialLink& other) const;
 
+        /**
+         * Returns the range of coordinates that this link occupies.
+         *
+         * Specifically, this routine returns a pair `(min, max)`, where
+         * \a min contains the minimum \a x, \a y and \a z coordinates
+         * over all nodes, and \a max contains the maximum \a x, \a y and \a z
+         * coordinates over all nodes.
+         *
+         * \return the range of coordinates.  If this link contains no nodes
+         * at all then this routine will return `((0,0,0), (0,0,0))`.
+         */
+        std::pair<Node, Node> range() const;
+
         /*@}*/
         /**
          * \name Editing
@@ -380,6 +393,45 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * \param other the link whose contents should be swapped with this.
          */
         void swap(SpatialLink& other);
+
+        /**
+         * Scales the entire link by the given factor.
+         *
+         * Specifically, all coordinates of all nodes will be multiplied by
+         * \a factor.
+         *
+         * \param factor the scaling factor; this must not be zero.
+         */
+        void scale(double factor);
+
+        /**
+         * Translates the entire link by the given vector.
+         *
+         * Specifically, the \a x, \a y and \a z coordinates of all nodes
+         * will be incremented by `vector.x`, `vector.y` and `vector.z`
+         * respectively.
+         *
+         * \param vector holds the three constants that should be added to the
+         * \a x, \a y and \a z coordinates of every node.
+         */
+        void translate(const Node& vector);
+
+        /**
+         * Reflects the link in plane perpendicular to the given axis.
+         *
+         * Specifically:
+         *
+         * - if \a axis is 0 then all \a x coordinates will be negated;
+         *
+         * - if \a axis is 1 then all \a y coordinates will be negated;
+         *
+         * - if \a axis is 2 then all \a z coordinates will be negated.
+         *
+         * \exception InvalidInput The argument \a axis was not 0, 1 or 2.
+         *
+         * \param axis indicates the axis of reflection, as described above.
+         */
+        void reflect(int axis = 2);
 
         /*@}*/
         /**

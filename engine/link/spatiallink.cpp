@@ -30,7 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "spatiallink.h"
+#include "link/spatiallink.h"
+#include "utilities/exception.h"
 #include <fstream>
 
 namespace regina {
@@ -56,6 +57,38 @@ SpatialLink& SpatialLink::operator = (SpatialLink&& src) {
 
     components_ = std::move(src.components_);
     return *this;
+}
+
+std::pair<SpatialLink::Node, SpatialLink::Node> SpatialLink::range()
+        const {
+    std::pair<SpatialLink::Node, SpatialLink::Node> ans;
+
+    bool found = false;
+    for (const auto& c : components_)
+        for (const auto& n : c) {
+            if (! found) {
+                ans.first = ans.second = n;
+                found = true;
+            } else {
+                if (n.x < ans.first.x)
+                    ans.first.x = n.x;
+                if (n.y < ans.first.y)
+                    ans.first.y = n.y;
+                if (n.z < ans.first.z)
+                    ans.first.z = n.z;
+                if (n.x > ans.second.x)
+                    ans.second.x = n.x;
+                if (n.y > ans.second.y)
+                    ans.second.y = n.y;
+                if (n.z > ans.second.z)
+                    ans.second.z = n.z;
+            }
+        }
+
+    if (found)
+        return ans;
+    else
+        return {{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }};
 }
 
 void SpatialLink::writeTextShort(std::ostream& out) const {
@@ -106,6 +139,46 @@ void SpatialLink::swap(SpatialLink& other) {
     PacketChangeSpan span2(other);
 
     components_.swap(other.components_);
+}
+
+void SpatialLink::scale(double factor) {
+    for (auto& c : components_)
+        for (auto& n : c) {
+            n.x *= factor;
+            n.y *= factor;
+            n.z *= factor;
+        }
+}
+
+void SpatialLink::translate(const Node& vector) {
+    for (auto& c : components_)
+        for (auto& n : c) {
+            n.x += vector.x;
+            n.y += vector.y;
+            n.z += vector.z;
+        }
+}
+
+void SpatialLink::reflect(int axis) {
+    switch (axis) {
+        case 0:
+            for (auto& c : components_)
+                for (auto& n : c)
+                    n.x = -n.x;
+            break;
+        case 1:
+            for (auto& c : components_)
+                for (auto& n : c)
+                    n.y = -n.y;
+            break;
+        case 2:
+            for (auto& c : components_)
+                for (auto& n : c)
+                    n.z = -n.z;
+            break;
+        default:
+            throw InvalidInput("reflect(): the given axis must be 0, 1 or 2");
+    }
 }
 
 } // namespace regina

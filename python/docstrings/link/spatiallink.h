@@ -255,6 +255,47 @@ components at all.
 Returns:
     ``True`` if and only if this link is empty.)doc";
 
+// Docstring regina::python::doc::SpatialLink_::range
+static const char *range =
+R"doc(Returns the range of coordinates that this link occupies.
+
+Specifically, this routine returns a pair ``(min, max)``, where *min*
+contains the minimum *x*, *y* and *z* coordinates over all nodes, and
+*max* contains the maximum *x*, *y* and *z* coordinates over all
+nodes.
+
+Returns:
+    the range of coordinates. If this link contains no nodes at all
+    then this routine will return ``((0,0,0), (0,0,0))``.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::reflect
+static const char *reflect =
+R"doc(Reflects the link in plane perpendicular to the given axis.
+
+Specifically:
+
+* if *axis* is 0 then all *x* coordinates will be negated;
+
+* if *axis* is 1 then all *y* coordinates will be negated;
+
+* if *axis* is 2 then all *z* coordinates will be negated.
+
+Exception ``InvalidInput``:
+    The argument *axis* was not 0, 1 or 2.
+
+Parameter ``axis``:
+    indicates the axis of reflection, as described above.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::scale
+static const char *scale =
+R"doc(Scales the entire link by the given factor.
+
+Specifically, all coordinates of all nodes will be multiplied by
+*factor*.
+
+Parameter ``factor``:
+    the scaling factor; this must not be zero.)doc";
+
 // Docstring regina::python::doc::SpatialLink_::size
 static const char *size =
 R"doc(Returns the total number of nodes in this spatial link.
@@ -282,6 +323,18 @@ This routine will behave correctly if *other* is in fact this link.
 
 Parameter ``other``:
     the link whose contents should be swapped with this.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::translate
+static const char *translate =
+R"doc(Translates the entire link by the given vector.
+
+Specifically, the *x*, *y* and *z* coordinates of all nodes will be
+incremented by ``vector.x``, ``vector.y`` and ``vector.z``
+respectively.
+
+Parameter ``vector``:
+    holds the three constants that should be added to the *x*, *y* and
+    *z* coordinates of every node.)doc";
 
 }
 
