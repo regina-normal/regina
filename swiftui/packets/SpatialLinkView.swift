@@ -54,7 +54,7 @@ struct SpatialLink3D: UIViewRepresentable {
 
         let c = SCNCylinder(radius: SpatialLink3D.radius, height: length)
         // These cylinders are very thin; they do not need to be very smooth.
-        c.radialSegmentCount = 5
+        c.radialSegmentCount = 12
         c.firstMaterial?.diffuse.contents = SpatialLink3D.colour
 
         let node = SCNNode(geometry: c)
@@ -65,7 +65,7 @@ struct SpatialLink3D: UIViewRepresentable {
     
     func ball(_ p: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
         let s = SCNSphere(radius: SpatialLink3D.radius)
-        s.segmentCount = 5
+        s.segmentCount = 12
         s.firstMaterial?.diffuse.contents = SpatialLink3D.colour
         
         let node = SCNNode(geometry: s)
@@ -81,7 +81,6 @@ struct SpatialLink3D: UIViewRepresentable {
 
         let link = packet.held()
         
-        // TODO: The corners between cylinders are _very_ visible.
         for c in link.components() {
             if (c.isEmpty) {
                 continue
