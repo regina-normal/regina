@@ -118,8 +118,7 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
         case .SnapPea:
             return Image("SnapPea")
         case .SpatialLink:
-            // TODO: This needs its own icon.
-            return Image("Link")
+            return Image("SpatialLink")
         case .SurfaceFilter:
             return Image("Filter")
         case .Text:

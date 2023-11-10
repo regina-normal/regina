@@ -34,6 +34,8 @@ import SwiftUI
 
 // TODO: Accent colour does not show when the app opens to the file browser.
 // TODO: Create a full set of dark mode assets.
+// In particular, the attachment icon is almost invisible on visionOS.
+// In dark mode, the crossing arrows need to be brighter to help visionOS.
 
 @main
 struct ReginaApp: App {
