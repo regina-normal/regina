@@ -876,6 +876,9 @@ Equality type : EqualityType.BY_VALUE
 PacketOfSnapPeaTriangulation : class
 Equality type : EqualityType.BY_VALUE
 
+PacketOfSpatialLink : class
+Equality type : EqualityType.BY_VALUE
+
 PacketOfTriangulation2 : class
 Equality type : EqualityType.BY_VALUE
 
@@ -1259,6 +1262,9 @@ Equality type : EqualityType.BY_VALUE
 
 SnapshotWriteError : class
 Exception type
+
+SpatialLink : class
+Equality type : EqualityType.BY_VALUE
 
 SpiralSolidTorus : class
 Equality type : EqualityType.BY_VALUE
