@@ -49,16 +49,13 @@ struct SpatialLink3D: UIViewRepresentable {
     static let colour = UIColor.systemTeal
     
     func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
-        let diff = regina.SpatialLink.Node(b.x - a.x, b.y - a.y, b.z - a.z)
-        let length = CGFloat(sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z))
-
-        let c = SCNCylinder(radius: SpatialLink3D.radius, height: length)
+        let c = SCNCylinder(radius: SpatialLink3D.radius, height: a.distance(b))
         // These cylinders are very thin; they do not need to be very smooth.
         c.radialSegmentCount = 12
         c.firstMaterial?.diffuse.contents = SpatialLink3D.colour
 
         let node = SCNNode(geometry: c)
-        node.position = SCNVector3(node: regina.SpatialLink.Node((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2))
+        node.position = SCNVector3(node: a.midpoint(b))
         node.look(at: SCNVector3(node: a), up: scene.rootNode.worldUp, localFront: node.worldUp)
         return node
     }

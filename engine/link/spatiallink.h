@@ -175,6 +175,94 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
             bool operator != (const Node& other) const {
                 return (x != other.x || y != other.y || z != other.z);
             }
+
+            /**
+             * Returns the sum of this and the given node.
+             *
+             * Here we use vector arithmetic: the resulting point will be the
+             * fourth vertex of the parallelogram whose other vertices are the
+             * this node, the origin, and the given node.
+             *
+             * \param rhs the node to add to this node.
+             * \return the sum of this and the given node.
+             */
+            Node operator + (const Node& rhs) const {
+                return { x + rhs.x, y + rhs.y, z + rhs.z };
+            };
+
+            /**
+             * Returns a copy of this node rescaled by the given factor.
+             * Specifically, the coordinates of the node that is returned will
+             * be the coordinates of this node multiplied by \a scale.
+             *
+             * \param scale the scaling factor to apply.
+             * \return a rescaled copy of this node.
+             */
+            Node operator * (double scale) const {
+                return { x * scale, y * scale, z * scale };
+            }
+
+            /**
+             * Adds the coordinates of the given node to this node.
+             *
+             * Here we use vector arithmetic: the new value of this node will
+             * be the fourth vertex of the parallelogram whose other vertices
+             * are the given node, the origin, and the original value of this
+             * node.
+             *
+             * \param rhs the node whose coordinates should be added to this
+             * node.
+             * \return a reference to this node.
+             */
+            Node& operator += (const Node& rhs) {
+                x += rhs.x; y += rhs.y; z += rhs.z;
+                return *this;
+            }
+
+            /**
+             * Scales this node by the given factor.
+             * Specifically, all coordinates of this node will be multiplied
+             * by \a scale.
+             *
+             * \param scale the scaling factor to apply.
+             * \return a reference to this node.
+             */
+            Node& operator *= (double scale) {
+                x *= scale; y *= scale; z *= scale;
+                return *this;
+            }
+
+            /**
+             * Returns the distance from this node to the origin.
+             *
+             * \return the distance from this node to the origin.
+             */
+            double length() const {
+                return sqrt(x * x + y * y + z * z);
+            }
+
+            /**
+             * Returns the distance between this and the given node.
+             *
+             * \return the distance between this and the given node.
+             */
+            double distance(const Node& other) const {
+                double dx = x - other.x;
+                double dy = y - other.y;
+                double dz = z - other.z;
+                return sqrt(dx * dx + dy * dy + dz * dz);
+            }
+
+            /**
+             * Returns the midpoint between this and the given node.
+             *
+             * \return the midpoint between this and the given node.
+             */
+            Node midpoint(const Node& other) const {
+                return { (x + other.x) / 2,
+                         (y + other.y) / 2,
+                         (z + other.z) / 2};
+            }
         };
 
         /**
@@ -257,16 +345,6 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         /**
          * Returns a reference to the component at the given index within
          * this link.
-         *
-         * \param index the index of the requested component.  This must
-         * be between 0 and countComponents()-1 inclusive.
-         * \return the component at the given index.
-         */
-        Component& component(size_t index);
-
-        /**
-         * Returns a constant reference to the component at the given index
-         * within this link.
          *
          * \param index the index of the requested component.  This must
          * be between 0 and countComponents()-1 inclusive.
@@ -433,6 +511,23 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          */
         void reflect(int axis = 2);
 
+        /**
+         * Adds additional nodes to make the embedding appear smoother.
+         *
+         * Specifically, each adjacent pair of nodes will have a new node
+         * inserted between them.  The new node is _not_ added at the
+         * midpoint (which would not help with smoothing); instead it is
+         * calculated to lie on the Catmull-Rom spline defined by the
+         * existing nodes.  The spline is configured to have tension τ=0.5.
+         *
+         * \warning In the current implementation, there is no guarantee that
+         * this operation will not inadvertently pass one strand through
+         * another.  (This could happen, for instance, if two parts of the link
+         * with very tight curvature pass very close to one another).  The hope
+         * is to explicitly prevent this in a later implementation.
+         */
+        void refine();
+
         /*@}*/
         /**
          * \name Exporting Links
@@ -597,10 +692,6 @@ inline bool SpatialLink::isEmpty() const {
 
 inline size_t SpatialLink::countComponents() const {
     return components_.size();
-}
-
-inline SpatialLink::Component& SpatialLink::component(size_t index) {
-    return components_[index];
 }
 
 inline const SpatialLink::Component& SpatialLink::component(size_t index)
