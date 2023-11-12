@@ -74,6 +74,8 @@ namespace regina {
  * This is _not_ checked, and indeed the use of floating point arithmetic
  * makes it difficult to check this precisely.
  *
+ * It is assumed that the underlying coordinate system is right-handed.
+ *
  * Like the regular Link and Triangulation classes, SpatialLink is not a packet
  * type that can be inserted directly into the packet tree.  Instead it is a
  * standalone mathematatical object, which makes it slimmer and faster
