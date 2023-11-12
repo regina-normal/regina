@@ -36,6 +36,17 @@
 
 namespace regina {
 
+SpatialLink::SpatialLink(std::initializer_list<std::initializer_list<Node>>
+        components) {
+    for (auto c : components) {
+        auto& next = components_.emplace_back();
+        next.reserve(c.size());
+        for (auto n : c) {
+            next.push_back(n);
+        }
+    }
+}
+
 SpatialLink& SpatialLink::operator = (const SpatialLink& src) {
     if (std::addressof(src) == this)
         return *this;
@@ -59,8 +70,7 @@ SpatialLink& SpatialLink::operator = (SpatialLink&& src) {
     return *this;
 }
 
-std::pair<SpatialLink::Node, SpatialLink::Node> SpatialLink::range()
-        const {
+std::pair<SpatialLink::Node, SpatialLink::Node> SpatialLink::range() const {
     std::pair<SpatialLink::Node, SpatialLink::Node> ans;
 
     bool found = false;
@@ -142,6 +152,8 @@ void SpatialLink::swap(SpatialLink& other) {
 }
 
 void SpatialLink::scale(double factor) {
+    ChangeAndClearSpan span(*this);
+
     for (auto& c : components_)
         for (auto& n : c) {
             n.x *= factor;
@@ -151,6 +163,8 @@ void SpatialLink::scale(double factor) {
 }
 
 void SpatialLink::translate(const Node& vector) {
+    ChangeAndClearSpan span(*this);
+
     for (auto& c : components_)
         for (auto& n : c) {
             n.x += vector.x;
@@ -160,6 +174,8 @@ void SpatialLink::translate(const Node& vector) {
 }
 
 void SpatialLink::reflect(int axis) {
+    ChangeAndClearSpan span(*this);
+
     switch (axis) {
         case 0:
             for (auto& c : components_)
@@ -178,6 +194,78 @@ void SpatialLink::reflect(int axis) {
             break;
         default:
             throw InvalidInput("reflect(): the given axis must be 0, 1 or 2");
+    }
+}
+
+void SpatialLink::refine() {
+    ChangeAndClearSpan span(*this);
+
+    // See the comments in the implementation of refine(int) for where these
+    // coefficients 9/16 and -1/16 come from (they just fix u = 1/2).
+    static constexpr double inner = 9.0 / 16.0;
+    static constexpr double outer = -1.0 / 16.0;
+
+    for (auto& c : components_) {
+        Component refined;
+        refined.reserve(c.size() * 2);
+
+        for (size_t i = 0; i < c.size(); ++i) {
+            const Node& n1 = c[i == 0 ? c.size() - 1 : i - 1];
+            const Node& n2 = c[i];
+            const Node& n3 = c[i < c.size() - 1 ? i + 1 : 0];
+            const Node& n4 = c[i < c.size() - 2 ? i + 2 : i + 2 - c.size()];
+
+            refined.push_back(n2);
+            refined.push_back((n2 + n3) * inner + (n1 + n4) * outer);
+        }
+
+        c.swap(refined);
+    }
+}
+
+void SpatialLink::refine(int sub) {
+    ChangeAndClearSpan span(*this);
+
+    for (auto& c : components_) {
+        Component refined;
+        refined.reserve(c.size() * sub);
+
+        for (size_t i = 0; i < c.size(); ++i) {
+            const Node& n1 = c[i == 0 ? c.size() - 1 : i - 1];
+            const Node& n2 = c[i];
+            const Node& n3 = c[i < c.size() - 1 ? i + 1 : 0];
+            const Node& n4 = c[i < c.size() - 2 ? i + 2 : i + 2 - c.size()];
+
+            // In general, the Catmull-Rom spline with tension τ=0.5 follows
+            // the following path where 0 ≤ u ≤ 1:
+            //
+            // - n1 * u * (1-u)^2 / 2 +
+            // n2 * (1-u) * (-2 u^2 - (1-u)^2 + 3) / 2 +
+            // n3 * u * (-2 (1-u)^2 - u^2 + 3) / 2 +
+            // - n4 * u^2 * (1-u) / 2
+            //
+            // There is a simple write-up of this by Christopher Twigg at:
+            // http://www.cs.cmu.edu/~fp/courses/graphics/asst5/catmullRom.pdf
+            //
+            // For u = 1/2, these coefficients become -1/16, 9/16, 9/16, -1/16,
+            // hence the values of the inner and outer constants above.
+
+            refined.push_back(n2);
+
+            for (int i = 1; i < sub; ++i) {
+                double u = double(i) / double(sub);
+                double coeff[4] = {
+                    -u * (1-u) * (1-u) / 2.0,
+                    (1-u) * (3 - 2 * u * u - (1-u) * (1-u)) / 2.0,
+                    u * (3 - 2 * (1-u) * (1-u) - u * u) / 2.0,
+                    -u * u * (1-u) / 2.0
+                };
+                refined.push_back(n1 * coeff[0] + n2 * coeff[1] +
+                    n3 * coeff[2] + n4 * coeff[3]);
+            }
+        }
+
+        c.swap(refined);
     }
 }
 

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "link/spatiallink.h"
 #include "../helpers.h"
@@ -46,11 +47,19 @@ void addSpatialLink(pybind11::module_& m) {
             m, "SpatialLink", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const SpatialLink&>(), rdoc::__copy)
+        .def(pybind11::init([](
+                const std::vector<std::vector<std::array<double, 3>>>& nodes) {
+            return new SpatialLink(nodes.begin(), nodes.end());
+        }), pybind11::arg("components"), RDOC_TODO)
+        .def(pybind11::init([](
+                const std::vector<std::vector<SpatialLink::Node>>& nodes) {
+            return new SpatialLink(nodes.begin(), nodes.end());
+        }), pybind11::arg("components"), RDOC_TODO)
         .def("size", &SpatialLink::size, rdoc::size)
         .def("isEmpty", &SpatialLink::isEmpty, rdoc::isEmpty)
         .def("countComponents", &SpatialLink::countComponents,
             rdoc::countComponents)
-        .def("component", overload_cast<size_t>(&SpatialLink::component),
+        .def("component", &SpatialLink::component,
             pybind11::return_value_policy::reference_internal, rdoc::component)
         .def("components", &SpatialLink::components,
             pybind11::keep_alive<0, 1>(), rdoc::components)
@@ -60,6 +69,10 @@ void addSpatialLink(pybind11::module_& m) {
         .def("translate", &SpatialLink::translate, rdoc::translate)
         .def("reflect", &SpatialLink::reflect,
             pybind11::arg("axis") = 2, rdoc::reflect)
+        .def("refine", overload_cast<>(&SpatialLink::refine),
+            RDOC_TODO)
+        .def("refine", overload_cast<int>(&SpatialLink::refine),
+            RDOC_TODO)
         .def_static("fromKnotPlot", &SpatialLink::fromKnotPlot,
             rdoc::fromKnotPlot)
     ;
@@ -73,6 +86,14 @@ void addSpatialLink(pybind11::module_& m) {
         .def(pybind11::init<>(), rdoc_inner::__default)
         .def(pybind11::init<const SpatialLink::Node&>(), rdoc_inner::__copy)
         .def(pybind11::init<double, double, double>(), rdoc_inner::__init)
+        .def(pybind11::init<std::array<double, 3>>(), RDOC_TODO)
+        .def(pybind11::self + pybind11::self, RDOC_TODO)
+        .def(pybind11::self * double(), RDOC_TODO)
+        .def(pybind11::self += pybind11::self, RDOC_TODO)
+        .def(pybind11::self *= double(), RDOC_TODO)
+        .def("length", &SpatialLink::Node::length, RDOC_TODO)
+        .def("distance", &SpatialLink::Node::distance, RDOC_TODO)
+        .def("midpoint", &SpatialLink::Node::midpoint, RDOC_TODO)
         .def_readwrite("x", &SpatialLink::Node::x, rdoc_inner::x)
         .def_readwrite("y", &SpatialLink::Node::y, rdoc_inner::y)
         .def_readwrite("z", &SpatialLink::Node::z, rdoc_inner::z)

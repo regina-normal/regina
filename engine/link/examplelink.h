@@ -44,6 +44,7 @@
 namespace regina {
 
 class Link;
+class SpatialLink;
 
 /**
  * This class offers routines for constructing ready-made examples of
@@ -181,6 +182,14 @@ class ExampleLink {
          * \return the Gompf-Scharlemann-Thompson knot.
          */
         static Link gst();
+
+        /**
+         * Returns a simple and symmetric embedding in 3-space of the
+         * right-hand trefoil.
+         *
+         * \return the right-hand trefoil.
+         */
+        static SpatialLink spatialTrefoil();
 
         // Make this class non-constructible.
         ExampleLink() = delete;

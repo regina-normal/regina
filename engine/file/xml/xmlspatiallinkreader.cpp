@@ -54,9 +54,8 @@ XMLElementReader* XMLSpatialLinkReader::startContentSubElement(
         return new XMLElementReader();
 
     if (subTagName == "component") {
-        link_->components_.emplace_back();
-        return new XMLSpatialLinkComponentReader(std::addressof(
-            link_->components_.back()));
+        auto& next = link_->components_.emplace_back();
+        return new XMLSpatialLinkComponentReader(std::addressof(next));
     }
 
     return new XMLElementReader();
@@ -88,8 +87,8 @@ XMLElementReader* XMLSpatialLinkComponentReader::startSubElement(
         return new XMLElementReader();
 
     if (subTagName == "node") {
-        component_->emplace_back();
-        return new XMLSpatialLinkNodeReader(std::addressof(component_->back()));
+        auto& next = component_->emplace_back();
+        return new XMLSpatialLinkNodeReader(std::addressof(next));
     }
 
     return new XMLElementReader();

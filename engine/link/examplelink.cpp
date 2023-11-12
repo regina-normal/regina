@@ -32,6 +32,7 @@
 
 #include "link/examplelink.h"
 #include "link/link.h"
+#include "link/spatiallink.h"
 
 namespace regina {
 
@@ -140,6 +141,18 @@ Link ExampleLink::gst() {
           -39, -11, -19, -25, 40, -41, -42, 43, 44, 31, -30, -24,
           -16, 3, -6, 39, 12, 20, 26, -40, 45, 46, -43, -36,
           37, 42, -46, -47, 48, -44, -35, 38, 41, -45, 47, -48 });
+}
+
+SpatialLink ExampleLink::spatialTrefoil() {
+    // Note: we could happily remove the second and fourth columns; the
+    // reason we keep them is to add a bend to the arcs and make everything
+    // look less "sticky".
+    SpatialLink ans({{
+        //  CORNER          INNER ARC          CORNER         OUTER ARC
+        {0.0, 2.0, 2.0}, {2.5, 1.5, 1.5}, {5.0, 2.0, 2.0}, {4.2, 4.2, 2.5},
+        {2.0, 5.0, 3.0}, {1.5, 2.5, 3.5}, {2.0, 0.0, 3.0}, {2.5, 0.8, 0.8},
+        {3.0, 3.0, 0.0}, {3.5, 3.5, 2.5}, {3.0, 3.0, 5.0}, {0.8, 2.5, 4.2}}});
+    return ans;
 }
 
 } // namespace regina
