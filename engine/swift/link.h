@@ -136,7 +136,14 @@ struct SharedLink {
             return SharedPacket(packet_);
         }
 
-        Link held() const {
+        /**
+         * The heldCopy() function has two purposes:
+         * - it returns a Link, thus giving access to the full Link API;
+         * - it returns a deep copy of the packet's data, which is useful
+         *   when you need a stable snapshot of an object in a multithreaded
+         *   scenario.
+         */
+        Link heldCopy() const {
             return *packet_;
         }
 
