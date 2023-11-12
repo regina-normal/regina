@@ -33,7 +33,7 @@
 import SwiftUI
 import ReginaEngine
 
-// TODO: We need to BAN held() for shared packets. Deep copies are leading to dangling pointers/references.
+// TODO: We need to BAN heldCopy() for shared packets. Deep copies are leading to dangling pointers/references.
 
 extension regina.StrandRefAlt: Identifiable {
     public var id: Int { id() }
@@ -89,7 +89,7 @@ struct LinkView: View {
     }
 
     var body: some View {
-        let link = packet.held()
+        let link = packet.heldCopy()
         
         VStack {
             switch link.size() {
@@ -329,7 +329,7 @@ struct LinkPolynomialsView: View {
     }
     
     var body: some View {
-        let link = observed.packet.held()
+        let link = observed.packet.heldCopy()
 
         // TODO: Add a "copy plain text" option on long press
         // TODO: When computing, use progress trackers with cancellation
@@ -422,7 +422,7 @@ struct LinkAlgebraView: View {
     }
 
     var body: some View {
-        let link = observed.packet.held()
+        let link = observed.packet.heldCopy()
         let autoSimp = (link.size() <= LinkAlgebraView.maxSimp)
         let group = simplifiedGroup ?? link.group(autoSimp)
         
@@ -566,7 +566,7 @@ struct LinkCodesView: View {
             }
             .padding(.vertical)
             
-            let link = packet.held()
+            let link = packet.heldCopy()
             
             switch (selected) {
             case .gauss:
@@ -643,7 +643,7 @@ struct LinkGraphsView: View {
             
             // TODO: Give a "working on it" message, and build the graph in the background (maybe only when it's large)
             
-            var tree = regina.TreeDecomposition(packet.held(), .Upper)
+            var tree = regina.TreeDecomposition(packet.heldCopy(), .Upper)
             if selected == .nice {
                 let _ = tree.makeNice(nil)
             }

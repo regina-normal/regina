@@ -462,6 +462,33 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         auto components() const;
 
         /**
+         * Returns the number of nodes that are stored for the given component
+         * of this link.
+         *
+         * This is equivalent to calling `component[componentIndex].size()`.
+         *
+         * \param componentIndex indicates the link component to query; this
+         * must be between 0 and `countComponents() - 1` inclusive.
+         * \return the number of nodes stored for the requested component.
+         */
+        size_t componentSize(size_t componentIndex) const;
+
+        /**
+         * Returns a particular node belong to a particular component of this
+         * link.
+         *
+         * This is equivalent to calling `component[componentIndex][nodeIndex]`.
+         *
+         * \param componentIndex indicates the component of the link to which
+         * the requested node belongs; this must be between 0 and
+         * `countComponents() - 1` inclusive.
+         * \param nodeIndex indicates which node to return from the given
+         * component; this must be between 0 and
+         * `componentSize(componentIndex) - 1` inclusive.
+         */
+        const Node& node(size_t componentIndex, size_t nodeIndex) const;
+
+        /**
          * Determines if this link is identical to the given link.
          *
          * Here "identical" means that both links follow exactly the same
@@ -829,6 +856,15 @@ inline const SpatialLink::Component& SpatialLink::component(size_t index)
 
 inline auto SpatialLink::components() const {
     return ListView(components_);
+}
+
+inline size_t SpatialLink::componentSize(size_t componentIndex) const {
+    return components_[componentIndex].size();
+}
+
+inline const SpatialLink::Node& SpatialLink::node(size_t componentIndex,
+        size_t nodeIndex) const {
+    return components_[componentIndex][nodeIndex];
 }
 
 inline bool SpatialLink::operator == (const SpatialLink& other) const {

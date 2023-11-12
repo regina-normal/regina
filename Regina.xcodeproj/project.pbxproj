@@ -4067,6 +4067,7 @@
 		05A73CD719B2F2180099C617 /* cuspchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cuspchooser.h; sourceTree = "<group>"; };
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
+		05A9A1922B00FDC900508F17 /* spatiallink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spatiallink.h; sourceTree = "<group>"; };
 		05AA71ED1FB17DFF00186E30 /* flype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flype.cpp; sourceTree = "<group>"; };
 		05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredtorusbundle.cpp; sourceTree = "<group>"; };
 		05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredtorusbundle.h; sourceTree = "<group>"; };
@@ -6665,6 +6666,7 @@
 				054131142AFA26E4006AAD75 /* graphviz.h */,
 				054131102AF9F246006AAD75 /* link.h */,
 				0541310E2AF9F246006AAD75 /* packet.h */,
+				05A9A1922B00FDC900508F17 /* spatiallink.h */,
 				0541310C2AF9F246006AAD75 /* text.h */,
 			);
 			path = swift;

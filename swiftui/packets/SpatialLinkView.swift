@@ -41,18 +41,17 @@ extension SCNVector3 {
 }
 
 struct SpatialLink3D: UIViewRepresentable {
-    // TODO: Use a deep copy here?
-    let packet: regina.SharedSpatialLink
-    // TODO: Choose the radius properly.
-    static let radius = 0.2
-    // TODO: Support custom colours in the data file
-    static let colour = UIColor.systemTeal
+    typealias UIViewType = SCNView
+    
+    @Binding var packet: regina.SharedSpatialLink
+    @Binding var radius: CGFloat
+    @Binding var colour: UIColor
     
     func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
-        let c = SCNCylinder(radius: SpatialLink3D.radius, height: a.distance(b))
+        let c = SCNCylinder(radius: radius, height: a.distance(b))
         // These cylinders are very thin; they do not need to be very smooth.
         c.radialSegmentCount = 12
-        c.firstMaterial?.diffuse.contents = SpatialLink3D.colour
+        c.firstMaterial?.diffuse.contents = colour
 
         let node = SCNNode(geometry: c)
         node.position = SCNVector3(node: a.midpoint(b))
@@ -61,77 +60,114 @@ struct SpatialLink3D: UIViewRepresentable {
     }
     
     func ball(_ p: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
-        let s = SCNSphere(radius: SpatialLink3D.radius)
+        let s = SCNSphere(radius: radius)
         s.segmentCount = 12
-        s.firstMaterial?.diffuse.contents = SpatialLink3D.colour
+        s.firstMaterial?.diffuse.contents = colour
         
         let node = SCNNode(geometry: s)
         node.position = SCNVector3(node: p)
         return node
     }
     
-    func makeUIView(context: Context) -> some UIView {
+    func fillScene(scene: SCNScene) {
+        // I suspect this is some Swift incompatibility with ListView.
+        // Perhaps audit all use of ListView and replace it with integer loops.
+        let link = packet.heldCopy()
+
+        // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
+        withExtendedLifetime(link) {
+            // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
+            for i in 0..<link.countComponents() {
+                let nodes = link.componentSize(i)
+                if nodes == 0 {
+                    continue
+                }
+                
+                var prev: regina.SpatialLink.Node?
+                
+                for j in 0..<nodes {
+                    let n = link.__nodeUnsafe(i, j).pointee
+                    scene.rootNode.addChildNode(ball(n, scene: scene))
+                    
+                    if let p = prev {
+                        scene.rootNode.addChildNode(arc(p, n, scene: scene))
+                    }
+                    prev = n
+                }
+                
+                let n = link.__nodeUnsafe(i, 0).pointee
+                scene.rootNode.addChildNode(arc(prev!, n, scene: scene))
+            }
+        }
+
+    }
+    
+    func makeUIView(context: Context) -> SCNView {
         let view = SCNView()
         view.scene = SCNScene()
         view.allowsCameraControl = true
         view.autoenablesDefaultLighting = true
         view.backgroundColor = UIColor.clear
 
-        // TODO: When we change the let to var, the diagram vanishes.
-        // I suspect this is some Swift incompatibility with ListView.
-        // Perhaps audit all use of ListView and replace it with integer loops.
-        let link = packet.held()
-        
-        for c in link.components() {
-            if (c.isEmpty) {
-                continue
-            }
-
-            var prev: regina.SpatialLink.Node?
-            
-            for n in c {
-                view.scene?.rootNode.addChildNode(ball(n, scene: view.scene!))
-                
-                if let p = prev {
-                    // TODO: There are lots of bangs here.
-                    view.scene?.rootNode.addChildNode(arc(p, n, scene: view.scene!))
-                }
-                prev = n
-            }
-            
-            let n = c[0]
-            // TODO: There are lots of bangs here.
-            view.scene?.rootNode.addChildNode(arc(prev!, n, scene: view.scene!))
+        if let scene = view.scene {
+            fillScene(scene: scene)
         }
-
+        
         return view
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        // TODO: what to put here?
+        // TODO: For a change in radius or colour, just update existing elements.
+        if let scene = uiView.scene {
+            scene.rootNode.enumerateChildNodes { (node, stop) in
+                node.removeFromParentNode()
+            }
+            fillScene(scene: scene)
+        }
     }
 }
 
 struct SpatialLinkView: View {
-    let packet: regina.SharedSpatialLink
-    
-    init(packet: regina.SharedSpatialLink) {
-        self.packet = packet
-    }
+    // TODO: Choose the radius properly.
+    // TODO: Support custom colours in the data file
 
+    @State var packet: regina.SharedSpatialLink
+    @State var radius: CGFloat = 0.2
+    @State var colour = UIColor.systemTeal
+    
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
         // Note: it does seem that SceneKit is automatically scaling the image to fill the screen,
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
-        SpatialLink3D(packet: packet)
+        ZStack(alignment: .topTrailing) {
+            SpatialLink3D(packet: $packet, radius: $radius, colour: $colour)
+            // TODO: Make this action panel pretty
+            // TODO: Make these edits actually change the file.
+            // TODO: RESPOND TO PACKET CHANGES
+            VStack(alignment: .leading) {
+                Button("Refine") {
+                    packet.refine()
+                    packet = packet.modified()
+                }
+                Button("Thinner") {
+                    radius /= 1.2
+                }
+                Button("Thicker") {
+                    radius *= 1.2
+                }
+                Button("Reset") {
+                    radius = 0.2
+                    colour = UIColor.systemTeal
+                }
+            }.padding([.top, .trailing])
+        }
     }
 }
 
 struct SpatialLinkView_Previews: PreviewProvider {
     static var previews: some View {
-        var link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
-        let tmp: Void = link.refine(16)
+        let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
         SpatialLinkView(packet: link)
     }
 }
