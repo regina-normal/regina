@@ -81,29 +81,35 @@ struct SpatialLink3D: UIViewRepresentable {
         // I suspect this is some Swift incompatibility with ListView.
         // Perhaps audit all use of ListView and replace it with integer loops.
         let link = packet.held()
-        
-        for c in link.components() {
-            if (c.isEmpty) {
-                continue
-            }
 
-            var prev: regina.SpatialLink.Node?
-            
-            for n in c {
-                view.scene?.rootNode.addChildNode(ball(n, scene: view.scene!))
-                
-                if let p = prev {
-                    // TODO: There are lots of bangs here.
-                    view.scene?.rootNode.addChildNode(arc(p, n, scene: view.scene!))
+        // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
+        withExtendedLifetime(link) {
+            // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
+            for i in 0..<link.countComponents() {
+                let nodes = link.componentSize(i)
+                if nodes == 0 {
+                    continue
                 }
-                prev = n
+                
+                var prev: regina.SpatialLink.Node?
+                
+                for j in 0..<nodes {
+                    let n = link.__nodeUnsafe(i, j).pointee
+                    view.scene?.rootNode.addChildNode(ball(n, scene: view.scene!))
+                    
+                    if let p = prev {
+                        // TODO: There are lots of bangs here.
+                        view.scene?.rootNode.addChildNode(arc(p, n, scene: view.scene!))
+                    }
+                    prev = n
+                }
+                
+                let n = link.__nodeUnsafe(i, 0).pointee
+                // TODO: There are lots of bangs here.
+                view.scene?.rootNode.addChildNode(arc(prev!, n, scene: view.scene!))
             }
-            
-            let n = c[0]
-            // TODO: There are lots of bangs here.
-            view.scene?.rootNode.addChildNode(arc(prev!, n, scene: view.scene!))
         }
-
+        
         return view
     }
     
