@@ -36,6 +36,17 @@
 
 namespace regina {
 
+SpatialLink::SpatialLink(std::initializer_list<std::initializer_list<Node>>
+        components) {
+    for (auto c : components) {
+        auto& next = components_.emplace_back();
+        next.reserve(c.size());
+        for (auto n : c) {
+            next.push_back(n);
+        }
+    }
+}
+
 SpatialLink& SpatialLink::operator = (const SpatialLink& src) {
     if (std::addressof(src) == this)
         return *this;
@@ -189,12 +200,35 @@ void SpatialLink::reflect(int axis) {
 void SpatialLink::refine() {
     ChangeAndClearSpan span(*this);
 
+    // See the comments in the implementation of refine(int) for where these
+    // coefficients 9/16 and -1/16 come from (they just fix u = 1/2).
     static constexpr double inner = 9.0 / 16.0;
     static constexpr double outer = -1.0 / 16.0;
 
     for (auto& c : components_) {
         Component refined;
         refined.reserve(c.size() * 2);
+
+        for (size_t i = 0; i < c.size(); ++i) {
+            const Node& n1 = c[i == 0 ? c.size() - 1 : i - 1];
+            const Node& n2 = c[i];
+            const Node& n3 = c[i < c.size() - 1 ? i + 1 : 0];
+            const Node& n4 = c[i < c.size() - 2 ? i + 2 : i + 2 - c.size()];
+
+            refined.push_back(n2);
+            refined.push_back((n2 + n3) * inner + (n1 + n4) * outer);
+        }
+
+        c.swap(refined);
+    }
+}
+
+void SpatialLink::refine(int sub) {
+    ChangeAndClearSpan span(*this);
+
+    for (auto& c : components_) {
+        Component refined;
+        refined.reserve(c.size() * sub);
 
         for (size_t i = 0; i < c.size(); ++i) {
             const Node& n1 = c[i == 0 ? c.size() - 1 : i - 1];
@@ -217,7 +251,18 @@ void SpatialLink::refine() {
             // hence the values of the inner and outer constants above.
 
             refined.push_back(n2);
-            refined.push_back((n2 + n3) * inner + (n1 + n4) * outer);
+
+            for (int i = 1; i < sub; ++i) {
+                double u = double(i) / double(sub);
+                double coeff[4] = {
+                    -u * (1-u) * (1-u) / 2.0,
+                    (1-u) * (3 - 2 * u * u - (1-u) * (1-u)) / 2.0,
+                    u * (3 - 2 * (1-u) * (1-u) - u * u) / 2.0,
+                    -u * u * (1-u) / 2.0
+                };
+                refined.push_back(n1 * coeff[0] + n2 * coeff[1] +
+                    n3 * coeff[2] + n4 * coeff[3]);
+            }
         }
 
         c.swap(refined);

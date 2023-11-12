@@ -143,6 +143,16 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
             Node(double x, double y, double z) : x(x), y(y), z(z) {}
 
             /**
+             * Creates a new point with the given 3-dimensional coordinates.
+             *
+             * \param coordinates array whose three elements are the \z x,
+             * \a y and \a z coordinate respectively.
+             */
+            Node(const std::array<double, 3>& coordinates) :
+                    x(coordinates[0]), y(coordinates[1]), z(coordinates[2]) {
+            }
+
+            /**
              * Sets this to be a copy of the given point.
              *
              * \return a reference to this point.
@@ -310,6 +320,73 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * action that _will_ fire a packet destruction event).
          */
         SpatialLink(SpatialLink&&) noexcept = default;
+
+        /**
+         * Creates a new link whose components are supplied by the given
+         * sequences of points in 3-space.
+         *
+         * Each element of the given sequence should represent a separate link
+         * component.  Each component should be given as a sequence of points
+         * in 3-space (any reasonable container type will do; see the
+         * requirements for the \a iterator type below).  These are the points
+         * that will be stored directly in the Component structure, which
+         * means that to form the actual geometry of the link component:
+         *
+         * - each node in the sequence is joined by a straight line segment
+         *   to the node that follows it (and likewise, the last node is
+         *   joined to the first);
+         *
+         * - the orientation of the link component follows the path in order
+         *   from the first node to the last (and then cycling back to the
+         *   front of the sequence again).
+         *
+         * This constructor induces a deep copy of the given data.
+         *
+         * \python Instead of the iterators \a begin and \a end, this routine
+         * takes either (i) a Python list of lists of triples of real numbers,
+         * or (ii) a Python list of lists of SpatialLink::Node objects.
+         *
+         * \tparam iterator the iterator type used to access the full sequence
+         * of nodes in each link component.  This must satisfy the following
+         * requirements: (i) when dereferenced, the resulting object (which
+         * represents a single link component) has appropriate `begin()` and
+         * `end()` functions; and (ii) when _those_ iterators are dereferenced,
+         * the resulting object (which represents an individual point along
+         * some link component) is convertible to a SpatialLink::Node object.
+         *
+         * \param begin the beginning of the sequence of link components.
+         * \param end a past-the-end iterator indicating the end of the
+         * sequence of components.
+         */
+        template <typename iterator>
+        SpatialLink(iterator begin, iterator end);
+
+        /**
+         * Creates a new link whose components are given by hard-coded
+         * sequences of points in 3-space.
+         *
+         * Each element of the given list should represent a separate link
+         * component.  Each component should be given as a sequence of points
+         * in 3-space.  These are the points that will be stored directly in
+         * the Component structure, which means that to form the actual
+         * geometry of the link component:
+         *
+         * - each node in the sequence is joined by a straight line segment
+         *   to the node that follows it (and likewise, the last node is
+         *   joined to the first);
+         *
+         * - the orientation of the link component follows the path in order
+         *   from the first node to the last (and then cycling back to the
+         *   front of the sequence again).
+         *
+         * \nopython Instead, use the Python construtor that takes either a
+         * Python list of lists of triples of reals, or a Python list of
+         * lists of SpatialLink::Node objects.
+         *
+         * \param components the full sequences of nodes in each link component.
+         */
+        SpatialLink(std::initializer_list<std::initializer_list<Node>>
+            components);
 
         /*@}*/
         /**
@@ -514,11 +591,18 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         /**
          * Adds additional nodes to make the embedding appear smoother.
          *
-         * Specifically, each adjacent pair of nodes will have a new node
-         * inserted between them.  The new node is _not_ added at the
-         * midpoint (which would not help with smoothing); instead it is
-         * calculated to lie on the Catmull-Rom spline defined by the
-         * existing nodes.  The spline is configured to have tension τ=0.5.
+         * Specifically, each adjacent pair of nodes will have one new node
+         * inserted between them (thereby doubling the number of nodes and
+         * arcs overall).  This new node is _not_ added at the midpoint of
+         * line segment between the two original nodes (which would not help
+         * with smoothing); instead it is calculated to lie on a Catmull-Rom
+         * spline defined by the original nodes.  This spline is configured to
+         * have tension τ=0.5.
+         *
+         * See also refine(int), which allows for many new nodes to be
+         * inserted between each adjacent pair of original nodes.  Calling
+         * `refine()` is equivalent to calling `refine(2)` (but uses a more
+         * streamlined implementation).
          *
          * \warning In the current implementation, there is no guarantee that
          * this operation will not inadvertently pass one strand through
@@ -527,6 +611,34 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * is to explicitly prevent this in a later implementation.
          */
         void refine();
+
+        /**
+         * Adds a configurable number of additional nodes to make the
+         * embedding appear smoother.
+         *
+         * Specifically, each adjacent pair of nodes will have `sub - 1` new
+         * nodes inserted between them (thereby multiplying the number of
+         * nodes and arcs by \a sub overall).  The new nodes are _not_ added
+         * along the line segments joining the original nodes (since this would
+         * not help with smoothing); instead they are calculated to lie on
+         * Catmull-Rom splines defined by the original nodes.  These splines
+         * are configured to have tension τ=0.5.
+         *
+         * See also refine(), which allows for many new nodes to be
+         * inserted between each adjacent pair of original nodes.  Calling
+         * `refine()` is equivalent to calling `refine(2)` (but uses a more
+         * streamlined implementation).
+         *
+         * \warning In the current implementation, there is no guarantee that
+         * this operation will not inadvertently pass one strand through
+         * another.  (This could happen, for instance, if two parts of the link
+         * with very tight curvature pass very close to one another).  The hope
+         * is to explicitly prevent this in a later implementation.
+         *
+         * \param sub the number of pieces that each original arc (i.e.,
+         * line segment) should be subdivided into.  This must be at least 2.
+         */
+        void refine(int sub);
 
         /*@}*/
         /**
@@ -678,6 +790,20 @@ void swap(SpatialLink& lhs, SpatialLink& rhs);
 std::ostream& operator << (std::ostream& out, const SpatialLink::Node& node);
 
 // Inline functions for SpatialLink
+
+template <typename iterator>
+SpatialLink::SpatialLink(iterator begin, iterator end) {
+    static_assert(std::is_convertible_v<decltype(*(begin->begin())), Node>,
+        "The SpatialLink iterator constructor requires each inner list element "
+        "to be convertible to a SpatialLink::Node.");
+
+    while (begin != end) {
+        auto& comp = components_.emplace_back();
+        for (auto it = begin->begin(); it != begin->end(); ++it)
+            comp.push_back(*it);
+        ++begin;
+    }
+}
 
 inline size_t SpatialLink::size() const {
     size_t ans = 0;

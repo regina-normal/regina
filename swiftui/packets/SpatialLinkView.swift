@@ -123,15 +123,16 @@ struct SpatialLinkView: View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
         // Note: it does seem that SceneKit is automatically scaling the image to fill the screen,
         // but on iPhone it fills vertically and overfills horizontally.
+        // Note: the camera looks down from above (from high z value down onto the plane).
         // TODO: Check that handedness is actually preserved.
         SpatialLink3D(packet: packet)
     }
 }
-/*
+
 struct SpatialLinkView_Previews: PreviewProvider {
     static var previews: some View {
-        // TODO: How to get data for the preview?
-        SpatialLinkView()
+        var link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+        let tmp: Void = link.refine(16)
+        SpatialLinkView(packet: link)
     }
 }
-*/

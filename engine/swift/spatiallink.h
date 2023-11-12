@@ -94,6 +94,14 @@ struct SharedSpatialLink {
         SpatialLink held() const {
             return *packet_;
         }
+
+        void refine() {
+            packet_->refine();
+        }
+
+        void refine(int sub) {
+            packet_->refine(sub);
+        }
 };
 
 }
