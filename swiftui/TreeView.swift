@@ -61,13 +61,16 @@ struct PacketCell: View {
 
 struct TreeView: View {
     // @ObservedObject var document: ReginaDocument
-    var wrapper: PacketWrapper
+    var root: PacketWrapper
+    // TODO: Should the title be a binding?
+    let title: String
 
     @State private var selected: PacketWrapper?
     @Environment(\.horizontalSizeClass) var sizeClass
 
-    init(packet: regina.SharedPacket) {
-        wrapper = PacketWrapper(packet: packet)
+    init(packet: regina.SharedPacket, title: String) {
+        root = PacketWrapper(packet: packet)
+        self.title = title
     }
 
     var body: some View {
@@ -84,12 +87,11 @@ struct TreeView: View {
             // TODO: Consider using a navigation stack here instead of a tree.
             // TODO: What to do if there are no child packets at all?
             // TODO: This list does not animate nicely at all on iPad.
-            List(wrapper.children ?? [], children: \.children, selection: $selected) { item in
+            List(root.children ?? [], children: \.children, selection: $selected) { item in
                 // TODO: If this is a container, expand/collapse on selection.
                 PacketCell(wrapper: item)
             }
-            // TODO: Use file URL as title
-            .navigationTitle("File URL")
+            .navigationTitle(title)
             #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
@@ -143,6 +145,6 @@ struct TreeView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        TreeView(packet: simpleTree)
+        TreeView(packet: simpleTree, title: "Sample")
     }
 }

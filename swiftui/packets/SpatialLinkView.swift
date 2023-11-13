@@ -153,17 +153,17 @@ struct SpatialLinkView: View {
             // TODO: Make these edits actually change the file.
             // TODO: RESPOND TO PACKET CHANGES
             VStack(alignment: .leading) {
-                Button("Refine") {
+                Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
                     packet.refine()
                     packet = packet.modified()
                 }
-                Button("Thinner") {
+                Button("Thinner", systemImage: "arrow.down.forward.and.arrow.up.backward") {
                     radius /= 1.2
                 }
-                Button("Thicker") {
+                Button("Thicker", systemImage: "arrow.up.backward.and.arrow.down.forward") {
                     radius *= 1.2
                 }
-                Button("Reset") {
+                Button("Reset", systemImage: "smallcircle.filled.circle") {
                     radius = 0.2
                     colour = UIColor.systemTeal
                 }
