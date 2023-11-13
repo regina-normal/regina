@@ -63,6 +63,18 @@ std::string svgUsingDot(const std::string& dotFile) {
 
     std::string result(svg, svgLen);
     gvFreeRenderData(svg);
+
+    // Graphviz cannot handle transparent backgrounds with SVG output.
+    // However, we know that the first polygon element will be the background fill.
+    // Find it and remove it.
+    size_t start = result.find("<polygon");
+    if (start != std::string::npos) {
+        size_t end = result.find("/>", start);
+        if (end != std::string::npos) {
+            result.erase(start, end + 2 - start);
+        }
+    }
+
     return result;
 }
 
