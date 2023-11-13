@@ -73,13 +73,12 @@ struct SpatialLink3D: UIViewRepresentable {
     }
     
     func fillScene(scene: SCNScene) {
-        // I suspect this is some Swift incompatibility with ListView.
-        // Perhaps audit all use of ListView and replace it with integer loops.
         let link = packet.heldCopy()
 
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
         withExtendedLifetime(link) {
             // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
+            // TODO: Audit all use of ListView
             for i in 0..<link.countComponents() {
                 let nodes = link.componentSize(i)
                 if nodes == 0 {
@@ -102,7 +101,6 @@ struct SpatialLink3D: UIViewRepresentable {
                 scene.rootNode.addChildNode(arc(prev!, n, scene: scene))
             }
         }
-
     }
     
     func makeUIView(context: Context) -> SCNView {
@@ -131,8 +129,8 @@ struct SpatialLink3D: UIViewRepresentable {
 }
 
 struct SpatialLinkView: View {
+    // TODO: Tie the radius and colour to the packet
     // TODO: Choose the radius properly.
-    // TODO: Support custom colours in the data file
 
     @State var packet: regina.SharedSpatialLink
     @State var radius: CGFloat = 0.2
@@ -168,7 +166,7 @@ struct SpatialLinkView: View {
                     colour = UIColor.systemTeal
                 }
                 #if os(visionOS)
-                Button("3-D") {
+                Button("3-D", systemImage: "move.3d") {
                     openWindow(id: "spatiallink-volume")
                 }
                 #endif
@@ -178,37 +176,139 @@ struct SpatialLinkView: View {
 }
 
 #if os(visionOS)
+// TODO: How do we manage _closing_ the volume?
 struct SpatialLinkVolume: View {
-    var body: some View {
-        GeometryReader3D { geometry in
-            RealityView { content in
-                if let model = try? await Entity.init(named: "Scene") {
-                    model.position = [0, 0, 0]
-                    content.add(model)
+    // TODO: Tie the radius and colour to the packet
+
+    @State var packet: regina.SharedSpatialLink
+    @State var radius: Float = 0.2
+    @State var colour = UIColor.systemTeal
+    
+    // TODO: Can we just apply the material once, to everything?
+    func ball(_ p: regina.SpatialLink.Node, material: RealityKit.Material) -> ModelEntity {
+        let sphere = MeshResource.generateSphere(radius: radius)
+        let entity = ModelEntity(mesh: sphere, materials: [material])
+        // TODO: Extend classes to make this easier
+        entity.position = [Float(p.x), Float(p.y), Float(p.z)]
+        return entity
+    }
+    
+    func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, material: RealityKit.Material) -> Entity {
+        let len = Float(a.distance(b))
+        let cylinder = MeshResource.generateCylinder(height: len, radius: radius)
+        let entity = ModelEntity(mesh: cylinder, materials: [material])
+        
+        let m = a.midpoint(b)
+        entity.position = [Float(m.x), Float(m.y), Float(m.z)]
+        // Cylinders initially point along the y axis.
+        // TODO: Clean this up a bit.
+        entity.transform.rotation = simd_quatf(from: [0,1,0], to: [Float(a.x - b.x), Float(a.y - b.y), Float(a.z - b.z)] * (1 / len))
+        return entity
+    }
+
+    func buildLink(material: RealityKit.Material) -> ModelEntity {
+        let link = packet.heldCopy()
+        let root = ModelEntity()
+        
+        // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
+        withExtendedLifetime(link) {
+            // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
+            for i in 0..<link.countComponents() {
+                let nodes = link.componentSize(i)
+                if nodes == 0 {
+                    continue
                 }
                 
-                let material = SimpleMaterial(color: .red, roughness: 0, isMetallic: true)
-                let sphere = MeshResource.generateSphere(radius: 1)
-                let entity = ModelEntity(mesh: sphere, materials: [material])
-                entity.components[OpacityComponent.self] = .init(opacity: 0.5)
-                content.add(entity)
-
-                // Get the smallest dimension of the volume.
-                let volumeBounds = content.convert(geometry.frame(in: .local), from: .local, to: content)
-                let minExtent = volumeBounds.extents.min()
+                var prev: regina.SpatialLink.Node?
                 
-                // Get the size of the entity that we are displaying.
-                let modelBounds = sphere.bounds
+                for j in 0..<nodes {
+                    let n = link.__nodeUnsafe(i, j).pointee
+                    root.addChild(ball(n, material: material))
+                    
+                    if let p = prev {
+                        root.addChild(arc(p, n, material: material))
+                    }
+                    prev = n
+                }
                 
-                // TODO: Centre this also.
-                
-                // Ensure that the model will fit inside the volume, with a little wiggle room to spare.
-                let factor = minExtent * 0.95 / modelBounds.extents.max()
-                let _ = print("Scaling factor: \(factor)")
-
-                entity.scale = [factor, factor, factor]
+                let n = link.__nodeUnsafe(i, 0).pointee
+                root.addChild(arc(prev!, n, material: material))
             }
         }
+
+        return root
+    }
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            GeometryReader3D { geometry in
+                RealityView { content in
+                    let material = SimpleMaterial(color: .systemTeal, isMetallic: false)
+                    let entity = buildLink(material: material)
+                    content.add(entity)
+
+                    // Get the smallest dimension of the volume.
+                    let volumeBounds = content.convert(geometry.frame(in: .local), from: .local, to: content)
+                    let minExtent = volumeBounds.extents.min()
+                    
+                    // Get the size of the entity that we are displaying.
+                    let modelBounds = entity.visualBounds(relativeTo: nil)
+                    
+                    // Ensure that the model will fit inside the volume, with a little wiggle room to spare.
+                    let factor = minExtent * 0.95 / modelBounds.extents.max()
+
+                    entity.position = modelBounds.center * (-factor)
+                    entity.scale = [factor, factor, factor]
+                } update: { content in
+                    // TODO: Fix the duplicated code
+                    if let orig = content.entities.first {
+                        content.remove(orig)
+                    }
+                    
+                    let material = SimpleMaterial(color: .systemTeal, isMetallic: false)
+                    let entity = buildLink(material: material)
+                    content.add(entity)
+
+                    // Get the smallest dimension of the volume.
+                    let volumeBounds = content.convert(geometry.frame(in: .local), from: .local, to: content)
+                    let minExtent = volumeBounds.extents.min()
+                    
+                    // Get the size of the entity that we are displaying.
+                    let modelBounds = entity.visualBounds(relativeTo: nil)
+                    
+                    // Ensure that the model will fit inside the volume, with a little wiggle room to spare.
+                    let factor = minExtent * 0.95 / modelBounds.extents.max()
+
+                    entity.position = modelBounds.center * (-factor)
+                    entity.scale = [factor, factor, factor]
+                }
+            }
+        }
+        // TODO: Zstack puts controls halfway back
+        // TODO: Flashing on updates
+        HStack {
+            Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
+                // TODO: This does not trigger an update
+                packet.refine()
+                packet = packet.modified()
+            }
+            Button("Thinner", systemImage: "arrow.down.forward.and.arrow.up.backward") {
+                radius /= 1.2
+            }
+            Button("Thicker", systemImage: "arrow.up.backward.and.arrow.down.forward") {
+                radius *= 1.2
+            }
+            Button("Reset", systemImage: "smallcircle.filled.circle") {
+                radius = 0.2
+                colour = UIColor.systemTeal
+                // TODO: Remove this
+                packet = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+            }
+        }
+        //.buttonStyle(.borderless)
+        .labelStyle(.iconOnly)
+        .padding()
+        .glassBackgroundEffect()
     }
 }
 #endif
@@ -223,7 +323,8 @@ struct SpatialLinkView_Previews: PreviewProvider {
 #if os(visionOS)
 struct SpatialLinkVolume_Previews: PreviewProvider {
     static var previews: some View {
-        SpatialLinkVolume()
+        let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+        SpatialLinkVolume(packet: link)
     }
 }
 #endif

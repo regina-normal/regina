@@ -31,6 +31,8 @@
  **************************************************************************/
 
 import SwiftUI
+// TODO: Remove this import once the nasty openWindow hack is gone.
+import ReginaEngine
 
 // TODO: Update the SpatialLink icon to thicken the axes, remove the knot, and dark the axes in light mode.
 // TODO: Accent colour does not show when the app opens to the file browser.
@@ -56,8 +58,18 @@ struct ReginaApp: App {
         }
         // Note: To support multiple document types, add additional DocumentGroup scenes.
         #if os(visionOS)
+        /*
+        WindowGroup(for: PacketWrapper.ID.self) { link in
+            SpatialLinkVolume(packet: link)
+        }
+        .windowStyle(.volumetric)
+        .defaultSize(width: 0.5, height: 0.5, depth: 0.5, in: .meters)
+         */
         WindowGroup(id: "spatiallink-volume") {
-            SpatialLinkVolume()
+            // TODO: Bloody hell. There must be some way to get the actual link data into the new window.
+            // TODO: When opening a fresh window, the packet does not get reset.
+            let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+            SpatialLinkVolume(packet: link)
         }
         .windowStyle(.volumetric)
         .defaultSize(width: 0.5, height: 0.5, depth: 0.5, in: .meters)
