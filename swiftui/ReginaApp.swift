@@ -45,6 +45,13 @@ struct ReginaApp: App {
             TreeView(packet: file.document.root).toolbarRole(.automatic)
         }
         // Note: To support multiple document types, add additional DocumentGroup scenes.
+        #if os(visionOS)
+        WindowGroup(id: "spatiallink-volume") {
+            SpatialLinkVolume()
+        }
+        .windowStyle(.volumetric)
+        .defaultSize(width: 0.5, height: 0.5, depth: 0.5, in: .meters)
+        #endif
         #if os(macOS)
         Settings {
             SettingsView()

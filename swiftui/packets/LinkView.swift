@@ -296,6 +296,11 @@ struct LinkCrossingsView: View {
                                     pictureFor(s)
                                 }
                             }
+                            #if os(visionOS)
+                            // TODO: Where does the magic radius 12 come from?
+                            .padding()
+                            .background(.regularMaterial, in: .rect(cornerRadius: 12))
+                            #endif
                         } else {
                             // TODO: Fix sizes: 25 is about right for a 17-point font size with single digits.
                             LazyVGrid(columns: [.init(.adaptive(minimum: 25, maximum: 25))]) {

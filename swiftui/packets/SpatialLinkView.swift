@@ -32,6 +32,9 @@
 
 import SwiftUI
 import SceneKit
+#if os(visionOS)
+import RealityKit
+#endif
 import ReginaEngine
 
 extension SCNVector3 {
@@ -135,6 +138,10 @@ struct SpatialLinkView: View {
     @State var radius: CGFloat = 0.2
     @State var colour = UIColor.systemTeal
     
+    #if os(visionOS)
+    @Environment(\.openWindow) private var openWindow
+    #endif
+    
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
         // Note: it does seem that SceneKit is automatically scaling the image to fill the screen,
@@ -160,10 +167,51 @@ struct SpatialLinkView: View {
                     radius = 0.2
                     colour = UIColor.systemTeal
                 }
+                #if os(visionOS)
+                Button("3-D") {
+                    openWindow(id: "spatiallink-volume")
+                }
+                #endif
             }.padding([.top, .trailing])
         }
     }
 }
+
+#if os(visionOS)
+struct SpatialLinkVolume: View {
+    var body: some View {
+        GeometryReader3D { geometry in
+            RealityView { content in
+                if let model = try? await Entity.init(named: "Scene") {
+                    model.position = [0, 0, 0]
+                    content.add(model)
+                }
+                
+                let material = SimpleMaterial(color: .red, roughness: 0, isMetallic: true)
+                let sphere = MeshResource.generateSphere(radius: 1)
+                let entity = ModelEntity(mesh: sphere, materials: [material])
+                entity.components[OpacityComponent.self] = .init(opacity: 0.5)
+                content.add(entity)
+
+                // Get the smallest dimension of the volume.
+                let volumeBounds = content.convert(geometry.frame(in: .local), from: .local, to: content)
+                let minExtent = volumeBounds.extents.min()
+                
+                // Get the size of the entity that we are displaying.
+                let modelBounds = sphere.bounds
+                
+                // TODO: Centre this also.
+                
+                // Ensure that the model will fit inside the volume, with a little wiggle room to spare.
+                let factor = minExtent * 0.95 / modelBounds.extents.max()
+                let _ = print("Scaling factor: \(factor)")
+
+                entity.scale = [factor, factor, factor]
+            }
+        }
+    }
+}
+#endif
 
 struct SpatialLinkView_Previews: PreviewProvider {
     static var previews: some View {
@@ -171,3 +219,11 @@ struct SpatialLinkView_Previews: PreviewProvider {
         SpatialLinkView(packet: link)
     }
 }
+
+#if os(visionOS)
+struct SpatialLinkVolume_Previews: PreviewProvider {
+    static var previews: some View {
+        SpatialLinkVolume()
+    }
+}
+#endif
