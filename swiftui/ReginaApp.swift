@@ -41,8 +41,18 @@ import SwiftUI
 @main
 struct ReginaApp: App {
     var body: some Scene {
+        /* TODO: Return to a plain old new document, and find a better way to open example files.
         DocumentGroup(newDocument: { ReginaDocument() }) { file in
             TreeView(packet: file.document.root).toolbarRole(.automatic)
+        */
+        DocumentGroup() { () -> ReginaDocument in
+            do {
+                return try ReginaDocument(example: "sample", title: "Introductory Examples")
+            } catch {
+                return ReginaDocument()
+            }
+        } editor: { file in
+            TreeView(packet: file.document.root, title: file.document.title).toolbarRole(.automatic)
         }
         // Note: To support multiple document types, add additional DocumentGroup scenes.
         #if os(macOS)

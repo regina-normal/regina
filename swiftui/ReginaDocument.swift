@@ -46,6 +46,7 @@ class ReginaDocument: ReferenceFileDocument {
     // This should happen via the ObservableObject protocol (which ReferenceFileDocument inherits),
     // and it will need to somehow communicate with Regina's packet listener interface.
     var root: regina.SharedPacket
+    var title: String
 
     static var readableContentTypes: [UTType] { [.reginaData, .snapPeaTriangulation] }
     static var writableContentTypes: [UTType] { [.reginaData] }
@@ -55,14 +56,18 @@ class ReginaDocument: ReferenceFileDocument {
         root = regina.SharedContainer.make().asPacket()
         
         // TODO: Add a helpful child text packet to explain what users should do.
+        
+        // This should never appear, since a new document gets saved and then opened under its real filename (e.g., "Untitled.rga").
+        title = "New Document"
     }
     
-    init(example: String) throws {
+    init(example: String, title: String) throws {
         // TODO: Work out how to make the example file read-only and the
         // document treated as a new document with an appropriate filename.
         guard let fileURL = Bundle.main.url(forResource: example, withExtension: "rga", subdirectory: "examples") else {
             throw CocoaError(.fileNoSuchFile)
         }
+        self.title = title
 
         let data = try Data(contentsOf: fileURL)
         root = data.withUnsafeBytes { bytes in
@@ -76,6 +81,11 @@ class ReginaDocument: ReferenceFileDocument {
     required init(configuration: ReadConfiguration) throws {
         guard let data = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
+        }
+        if let filename = configuration.file.filename {
+            self.title = URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent
+        } else {
+            self.title = "Regina Document"
         }
 
         switch configuration.contentType {
@@ -103,6 +113,10 @@ class ReginaDocument: ReferenceFileDocument {
     func fileWrapper(snapshot: std.string, configuration: WriteConfiguration) throws -> FileWrapper {
         // TODO: Can we std::move() from snapshot into the new String?
         // TODO: Check exactly when String.data() can return null.
+        // TODO: update file URL
+        if let filename = configuration.existingFile?.filename {
+            self.title = URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent
+        }
         return .init(regularFileWithContents: swiftString(snapshot).data(using: .utf8)!)
     }
 }
