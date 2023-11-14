@@ -128,7 +128,7 @@ struct SharedLink {
         SharedLink(Link link) : packet_(make_packet(std::move(link))) {
         }
 
-        std::shared_ptr<Link> sharedPtr() const {
+        std::shared_ptr<PacketOf<Link>> sharedPtr() const {
             return packet_;
         }
 

@@ -57,39 +57,18 @@ extension regina.SharedLink {
     }
 }
 
-/**
- * A class that supports refreshing a view even if the underlying link has not changed.
- *
- * An example of where this is useful is, for instance, when the Jones polynomial has been
- * computed (and so there is new information to display, even though the link itself did not change).
- */
-class ObservedLink: ObservableObject {
-    let packet: regina.SharedLink
-    
-    init(packet: regina.SharedLink) {
-        self.packet = packet
-    }
-    
-    func refresh() {
-        objectWillChange.send()
-    }
-}
-
 enum LinkTab: Int {
     case crossings = 1, polynomials = 2, algebra = 3, codes = 4, graphs = 5
 }
 
 struct LinkView: View {
-    let packet: regina.SharedLink
+    @StateObject var wrapper: Wrapper<regina.SharedLink>
+    
     @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
     @Environment(\.horizontalSizeClass) var sizeClass
     
-    init(packet: regina.SharedLink) {
-        self.packet = packet
-    }
-
     var body: some View {
-        let link = packet.heldCopy()
+        let link = wrapper.readonly().heldCopy()
         
         VStack {
             switch link.size() {
@@ -160,23 +139,23 @@ struct LinkView: View {
             
             // TODO: Ipad 11" portrait, tab icons jump around when selected??
             TabView(selection: $selection) {
-                LinkCrossingsView(packet: packet).tabItem {
+                LinkCrossingsView(wrapper: wrapper).tabItem {
                     Image(selection == .crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
                     Text("Crossings")
                 }.tag(LinkTab.crossings)
-                LinkPolynomialsView(packet: packet).tabItem {
+                LinkPolynomialsView(wrapper: wrapper).tabItem {
                     Image("Tab-Polynomials").renderingMode(.template)
                     Text("Polynomials")
                 }.tag(LinkTab.polynomials)
-                LinkAlgebraView(packet: packet).tabItem {
+                LinkAlgebraView(wrapper: wrapper).tabItem {
                     Image("Tab-Algebra").renderingMode(.template)
                     Text("Algebra")
                 }.tag(LinkTab.algebra)
-                LinkCodesView(packet: packet).tabItem {
+                LinkCodesView(wrapper: wrapper).tabItem {
                     Image("Tab-Codes").renderingMode(.template)
                     Text("Codes")
                 }.tag(LinkTab.codes)
-                LinkGraphsView(packet: packet).tabItem {
+                LinkGraphsView(wrapper: wrapper).tabItem {
                     Image(selection == .graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
                     Text("Graphs")
                 }.tag(LinkTab.graphs)
@@ -192,7 +171,7 @@ enum LinkCrossingStyle: Int {
 }
 
 struct LinkCrossingsView: View {
-    let packet: regina.SharedLink
+    @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var style: LinkCrossingStyle = (LinkCrossingStyle(rawValue: UserDefaults.standard.integer(forKey: "linkCrossings")) ?? .pictorial)
 
     static private var posColour = Color("Positive")
@@ -284,9 +263,9 @@ struct LinkCrossingsView: View {
             .padding(.vertical)
 
             List {
-                ForEach(0..<packet.countComponents(), id: \.self) { i in
+                ForEach(0..<wrapper.readonly().countComponents(), id: \.self) { i in
                     Section("Component \(i)") {
-                        let strands = packet.strandsForComponent(index: i)
+                        let strands = wrapper.readonly().strandsForComponent(index: i)
                         if strands.isEmpty {
                             Text("Unknot, no crossings")
                         } else if style == .pictorial {
@@ -320,16 +299,15 @@ enum HomflyStyle: Int {
 struct LinkPolynomialsView: View {
     static let maxAuto = 6;
 
-    @ObservedObject var observed: ObservedLink
+    @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var homflyStyle: HomflyStyle = (HomflyStyle(rawValue: UserDefaults.standard.integer(forKey: "linkHomfly")) ?? .az)
     @AppStorage("displayUnicode") private var unicode = true
 
-    init(packet: regina.SharedLink) {
-        observed = ObservedLink(packet: packet)
-    }
-    
+    // TODO: The compute buttons use wrapper.modifying().
+    // This refreshes the view, but will also have the side-effect of re-saving the file.
+    // See if we can find a way around this.
     var body: some View {
-        let link = observed.packet.heldCopy()
+        let link = wrapper.readonly().heldCopy()
 
         // TODO: Add a "copy plain text" option on long press
         // TODO: When computing, use progress trackers with cancellation
@@ -337,7 +315,7 @@ struct LinkPolynomialsView: View {
         VStack(alignment: .leading) {
             Text("Jones").font(.headline).padding(.vertical)
             if link.knowsJones() || link.size() <= LinkPolynomialsView.maxAuto {
-                var jones = observed.packet.jones()
+                var jones = wrapper.readonly().jones()
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
                     if unicode {
@@ -354,8 +332,7 @@ struct LinkPolynomialsView: View {
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
-                    observed.packet.jones()
-                    observed.refresh()
+                    wrapper.modifying().jones()
                 }
             }
             HStack {
@@ -372,34 +349,32 @@ struct LinkPolynomialsView: View {
             if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
                 if homflyStyle == .az {
                     if unicode {
-                        Text(swiftString(observed.packet.homflyAZ().utf8("𝛼", "𝑧")))
+                        Text(swiftString(wrapper.readonly().homflyAZ().utf8("𝛼", "𝑧")))
                     } else {
-                        Text(swiftString(observed.packet.homflyAZ().str("a", "z")))
+                        Text(swiftString(wrapper.readonly().homflyAZ().str("a", "z")))
                     }
                 } else {
                     if unicode {
-                        Text(swiftString(observed.packet.homflyLM().utf8("ℓ", "𝑚")))
+                        Text(swiftString(wrapper.readonly().homflyLM().utf8("ℓ", "𝑚")))
                     } else {
-                        Text(swiftString(observed.packet.homflyLM().str("l", "m")))
+                        Text(swiftString(wrapper.readonly().homflyLM().str("l", "m")))
                     }
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
-                    observed.packet.homflyAZ()
-                    observed.refresh()
+                    wrapper.modifying().homflyAZ()
                 }
             }
             Text("Kauffman bracket").font(.headline).padding(.vertical)
             if link.knowsBracket() || link.size() <= LinkPolynomialsView.maxAuto {
                 if unicode {
-                    Text(swiftString(observed.packet.bracket().utf8("𝐴")))
+                    Text(swiftString(wrapper.readonly().bracket().utf8("𝐴")))
                 } else {
-                    Text(swiftString(observed.packet.bracket().str("A")))
+                    Text(swiftString(wrapper.readonly().bracket().str("A")))
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
-                    observed.packet.bracket()
-                    observed.refresh()
+                    wrapper.modifying().bracket()
                 }
             }
             Spacer()
@@ -411,18 +386,14 @@ struct LinkAlgebraView: View {
     static let maxSimp = 50
     static let maxRecognise = 50
 
-    @ObservedObject var observed: ObservedLink
+    @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State var simplifiedGroup: regina.GroupPresentation?
     @State var didSimplify = false
     @State var couldNotSimplify = false
     @AppStorage("displayUnicode") private var unicode = true
 
-    init(packet: regina.SharedLink) {
-        observed = ObservedLink(packet: packet)
-    }
-
     var body: some View {
-        let link = observed.packet.heldCopy()
+        let link = wrapper.readonly().heldCopy()
         let autoSimp = (link.size() <= LinkAlgebraView.maxSimp)
         let group = simplifiedGroup ?? link.group(autoSimp)
         
@@ -519,7 +490,7 @@ enum LinkCode: Int {
 }
 
 struct LinkCodesView: View {
-    let packet: regina.SharedLink
+    @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selected: LinkCode = (LinkCode(rawValue: UserDefaults.standard.integer(forKey: "linkCode")) ?? .gauss)
 
     @ViewBuilder func onlyKnots(code: String, plural: Bool) -> some View {
@@ -566,7 +537,7 @@ struct LinkCodesView: View {
             }
             .padding(.vertical)
             
-            let link = packet.heldCopy()
+            let link = wrapper.readonly().heldCopy()
             
             switch (selected) {
             case .gauss:
@@ -622,7 +593,7 @@ enum LinkGraph: Int {
 }
 
 struct LinkGraphsView: View {
-    let packet: regina.SharedLink
+    @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selected: LinkGraph = (LinkGraph(rawValue: UserDefaults.standard.integer(forKey: "linkGraph")) ?? .tree)
     @Environment(\.colorScheme) var colorScheme
     
@@ -643,7 +614,7 @@ struct LinkGraphsView: View {
             
             // TODO: Give a "working on it" message, and build the graph in the background (maybe only when it's large)
             
-            var tree = regina.TreeDecomposition(packet.heldCopy(), .Upper)
+            var tree = regina.TreeDecomposition(wrapper.readonly().heldCopy(), .Upper)
             if selected == .nice {
                 let _ = tree.makeNice(nil)
             }
@@ -661,6 +632,7 @@ struct LinkGraphsView: View {
 
 struct LinkView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkView(packet: regina.SharedLink(regina.ExampleLink.whitehead()))
+        let link = regina.SharedLink(regina.ExampleLink.whitehead())
+        LinkView(wrapper: Wrapper<regina.SharedLink>(packet: link))
     }
 }

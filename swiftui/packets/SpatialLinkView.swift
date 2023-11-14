@@ -43,7 +43,7 @@ extension SCNVector3 {
 struct SpatialLink3D: UIViewRepresentable {
     typealias UIViewType = SCNView
     
-    @Binding var packet: regina.SharedSpatialLink
+    @ObservedObject var wrapper: Wrapper<regina.SharedSpatialLink>
     @Binding var radius: CGFloat
     @Binding var colour: UIColor
     
@@ -70,7 +70,7 @@ struct SpatialLink3D: UIViewRepresentable {
     }
     
     func fillScene(scene: SCNScene) {
-        let link = packet.heldCopy()
+        let link = wrapper.readonly().heldCopy()
 
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
         withExtendedLifetime(link) {
@@ -129,7 +129,7 @@ struct SpatialLinkView: View {
     // TODO: Tie the radius and colour to the packet
     // TODO: Choose the radius properly.
 
-    @State var packet: regina.SharedSpatialLink
+    @StateObject var wrapper: Wrapper<regina.SharedSpatialLink>
     @State var radius: CGFloat = 0.2
     @State var colour = UIColor.systemTeal
     
@@ -139,14 +139,14 @@ struct SpatialLinkView: View {
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
         ZStack(alignment: .topTrailing) {
-            SpatialLink3D(packet: $packet, radius: $radius, colour: $colour)
+            SpatialLink3D(wrapper: wrapper, radius: $radius, colour: $colour)
             // TODO: Make this action panel pretty
             // TODO: Make these edits actually change the file.
             // TODO: RESPOND TO PACKET CHANGES
             VStack(alignment: .leading) {
                 Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
-                    packet.refine()
-                    packet = packet.modified()
+                    var p = wrapper.modifying()
+                    p.refine()
                 }
                 Button("Thinner", systemImage: "arrow.down.forward.and.arrow.up.backward") {
                     radius /= 1.2
@@ -166,6 +166,6 @@ struct SpatialLinkView: View {
 struct SpatialLinkView_Previews: PreviewProvider {
     static var previews: some View {
         let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
-        SpatialLinkView(packet: link)
+        SpatialLinkView(wrapper: Wrapper<regina.SharedSpatialLink>(packet: link))
     }
 }

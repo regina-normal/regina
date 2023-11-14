@@ -34,7 +34,90 @@ import SwiftUI
 import ReginaEngine
 
 /**
+ * Indidates one of the C++ classes designed for Swift that holds a packet of a particular type.
+ *
+ * Examples include regina.SharedContainer and regina.SharedLink.
+ */
+protocol SharedPacketClass {
+    /**
+     * A C++ shared pointer to the underlying packet type, such as `std::shared_ptr<regina::Container>` or
+     * `std::shared_ptr<regina::PacketOf<regina::Link>>`.
+     */
+    associatedtype SharedPtr
+    
+    init(_: SharedPtr)
+    init(_: regina.SharedPacket)
+    func sharedPtr() -> SharedPtr
+    func asPacket() -> regina.SharedPacket
+}
+
+/**
+ * A SharedPacketClass where the underlying packet type holds some non-packet, value-based mathematical data.
+ * Specifically, the C++ packet type here should be of the form `regina::PacketOf<...>`.
+ *
+ * Examples include regina.SharedLink, but _not_ regina.SharedContainer.
+ */
+protocol SharedHeldPacketClass: SharedPacketClass {
+    /**
+     * The C++ type holding the underlying mathematical data, such as `regina::Link`.
+     */
+    associatedtype Held
+    
+    init(_: Held)
+    func heldCopy() -> Held
+}
+
+extension regina.SharedContainer: SharedPacketClass {}
+extension regina.SharedText: SharedPacketClass {}
+
+extension regina.SharedLink: SharedHeldPacketClass {}
+extension regina.SharedSpatialLink: SharedHeldPacketClass {}
+
+/**
+ * A lightweight Swift wrapper around a C++ shared pointer to a packet of a specific type, which must _not_ be `null`.
+ *
+ * For read-only access to the underlying packet, use the readonly() member function.
+ *
+ * If you plan to modify the underlying packet, access it via modifying(). This will publish changes to the object
+ * via the ObservableObject machinery, which will ensure that any view that use it will be refreshed.
+ *
+ * Ideally there would be no need to distinguish readonly() from modifying(); however, at present the
+ * Swift connection to Regina's PacketListener class is not yet working, and so changes must be published
+ * manually by calling modifying(), as described above.
+ *
+ * TODO: Get the PacketListener connection working.
+ */
+class Wrapper<T: SharedPacketClass>: ObservableObject {
+    private let packet: T
+    
+    /**
+     * PRE: \a packet is not a null pointer.
+     */
+    init(packet: T) {
+        self.packet = packet
+    }
+    
+    /**
+     * PRE: \a wrapper is not a null pointer.
+     * PRE: \a wrapper is a packet of the correct class.
+     */
+    init(wrapper: PacketWrapper) {
+        self.packet = T(wrapper.packet)
+    }
+
+    func readonly() -> T {
+        return packet
+    }
+    
+    func modifying() -> T {
+        objectWillChange.send()
+        return packet
+    }
+}
+
+/**
  * A lightweight Swift wrapper around a packet pointer (which may be `null`).
+ * The underlying packet may be of any packet type.
  *
  * Specifically: this is a value-based Swift object that wraps a value-based C++ `std::shared_ptr`,
  * which in turn wraps a raw packet pointer.
@@ -169,9 +252,9 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
         } else {
             switch (packet.type()) {
             case .Link:
-                LinkView(packet: regina.SharedLink(packet))
+                LinkView(wrapper: Wrapper<regina.SharedLink>(wrapper: self))
             case .SpatialLink:
-                SpatialLinkView(packet: regina.SharedSpatialLink(packet))
+                SpatialLinkView(wrapper: Wrapper<regina.SharedSpatialLink>(wrapper: self))
             case .Text:
                 TextView(packet: regina.SharedText(packet))
             default:

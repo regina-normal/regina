@@ -49,7 +49,6 @@ namespace regina {
 struct SharedSpatialLink {
     private:
         std::shared_ptr<PacketOf<SpatialLink>> packet_;
-        int distinguisher_ = 0; /**< See modified() for why this is here. */
 
     public:
         SharedSpatialLink(const SharedSpatialLink&) = default;
@@ -84,7 +83,7 @@ struct SharedSpatialLink {
                 packet_(make_packet(std::move(link))) {
         }
 
-        std::shared_ptr<SpatialLink> sharedPtr() const {
+        std::shared_ptr<PacketOf<SpatialLink>> sharedPtr() const {
             return packet_;
         }
 
@@ -102,21 +101,6 @@ struct SharedSpatialLink {
          */
         SpatialLink heldCopy() const {
             return *packet_;
-        }
-
-        /**
-         * Returns a new wrapper around the same packet.  In Swift, you can
-         * set `wrapper = wrapper.modified()` to convince SwiftUI that the
-         * packet has been modified (e.g., to force a refresh of the UI).
-         *
-         * Note: without the \a distinguisher data member, this does not work
-         * (i.e., SwiftUI does _not_ refresh the UI after such a call).
-         * With \a distinguisher it does work, even though \a distinguisher
-         * holds the same value (the original plan was to increment it in
-         * this function).  I have no idea what criterion SwiftUI is using here.
-         */
-        SharedSpatialLink modified() const {
-            return SharedSpatialLink(packet_);
         }
 
         void refine() {
