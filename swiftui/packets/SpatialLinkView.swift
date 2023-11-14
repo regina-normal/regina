@@ -70,13 +70,12 @@ struct SpatialLink3D: UIViewRepresentable {
     }
     
     func fillScene(scene: SCNScene) {
-        // I suspect this is some Swift incompatibility with ListView.
-        // Perhaps audit all use of ListView and replace it with integer loops.
         let link = packet.heldCopy()
 
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
         withExtendedLifetime(link) {
             // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
+            // TODO: Audit all use of ListView
             for i in 0..<link.countComponents() {
                 let nodes = link.componentSize(i)
                 if nodes == 0 {
@@ -99,7 +98,6 @@ struct SpatialLink3D: UIViewRepresentable {
                 scene.rootNode.addChildNode(arc(prev!, n, scene: scene))
             }
         }
-
     }
     
     func makeUIView(context: Context) -> SCNView {
@@ -128,8 +126,8 @@ struct SpatialLink3D: UIViewRepresentable {
 }
 
 struct SpatialLinkView: View {
+    // TODO: Tie the radius and colour to the packet
     // TODO: Choose the radius properly.
-    // TODO: Support custom colours in the data file
 
     @State var packet: regina.SharedSpatialLink
     @State var radius: CGFloat = 0.2
