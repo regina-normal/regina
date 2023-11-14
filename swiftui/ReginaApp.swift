@@ -65,14 +65,17 @@ struct ReginaApp: App {
         .windowStyle(.volumetric)
         .defaultSize(width: 0.5, height: 0.5, depth: 0.5, in: .meters)
          */
-        WindowGroup(id: "spatiallink-volume") {
+        WindowGroup(id: "spatiallink-volume", for: Date.self) { value in
             // TODO: Bloody hell. There must be some way to get the actual link data into the new window.
-            // TODO: When opening a fresh window, the packet does not get reset.
+            // We need to send _some_ data, and it appears this data needs to be different each time;
+            // otherwise when opening a fresh window the packet does not get reset.
+            // For the moment we pass the current date/time to ensure uniqueness.
             let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
-            SpatialLinkVolume(packet: link)
+            // TODO: SpatialLinkVolume(packet: link)
+            SpatialLinkVolume()
         }
         .windowStyle(.volumetric)
-        .defaultSize(width: 0.5, height: 0.5, depth: 0.5, in: .meters)
+        .defaultSize(width: 0.7, height: 0.7, depth: 0.7, in: .meters)
         #endif
         #if os(macOS)
         Settings {

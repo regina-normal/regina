@@ -146,7 +146,9 @@ struct SpatialLinkView: View {
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
         ZStack(alignment: .topTrailing) {
+            #if !os(visionOS)
             SpatialLink3D(packet: $packet, radius: $radius, colour: $colour)
+            #endif
             // TODO: Make this action panel pretty
             // TODO: Make these edits actually change the file.
             // TODO: RESPOND TO PACKET CHANGES
@@ -167,10 +169,14 @@ struct SpatialLinkView: View {
                 }
                 #if os(visionOS)
                 Button("3-D", systemImage: "move.3d") {
-                    openWindow(id: "spatiallink-volume")
+                    // TODO: open next to, not in front of
+                    openWindow(id: "spatiallink-volume", value: Date.now)
                 }
                 #endif
             }.padding([.top, .trailing])
+            #if os(visionOS)
+            SpatialLinkVolume(packet: packet)
+            #endif
         }
     }
 }
@@ -180,9 +186,14 @@ struct SpatialLinkView: View {
 struct SpatialLinkVolume: View {
     // TODO: Tie the radius and colour to the packet
 
-    @State var packet: regina.SharedSpatialLink
+    // TODO: Use an example packet until we figure out how to get the real data in.
+    @State var packet = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+    // @State var packet: regina.SharedSpatialLink
     @State var radius: Float = 0.2
     @State var colour = UIColor.systemTeal
+    // TODO: Rotation3D.zero is deprecated.
+    @State var rotation: Rotation3D = Rotation3D.zero
+    @State var rotationInProgress: Rotation3D = Rotation3D.zero
     
     // TODO: Can we just apply the material once, to everything?
     func ball(_ p: regina.SpatialLink.Node, material: RealityKit.Material) -> ModelEntity {
@@ -235,16 +246,20 @@ struct SpatialLinkVolume: View {
                 root.addChild(arc(prev!, n, material: material))
             }
         }
+        
+        root.generateCollisionShapes(recursive: true)
+        root.components.set(InputTargetComponent())
 
         return root
     }
 
     var body: some View {
+        let material = SimpleMaterial(color: .systemTeal, isMetallic: false)
+        let entity = buildLink(material: material)
+
         ZStack(alignment: .bottom) {
             GeometryReader3D { geometry in
                 RealityView { content in
-                    let material = SimpleMaterial(color: .systemTeal, isMetallic: false)
-                    let entity = buildLink(material: material)
                     content.add(entity)
 
                     // Get the smallest dimension of the volume.
@@ -260,6 +275,13 @@ struct SpatialLinkVolume: View {
                     entity.position = modelBounds.center * (-factor)
                     entity.scale = [factor, factor, factor]
                 } update: { content in
+                    if let root = content.entities.first {
+                        // root.orientation = simd_quatf(rotation * rotationInProgress)
+                        root.orientation = simd_quatf(rotationInProgress * rotation)
+                    }
+
+                    // TODO: Fix this update.
+                    /*
                     // TODO: Fix the duplicated code
                     if let orig = content.entities.first {
                         content.remove(orig)
@@ -281,34 +303,51 @@ struct SpatialLinkVolume: View {
 
                     entity.position = modelBounds.center * (-factor)
                     entity.scale = [factor, factor, factor]
+                     */
+                    
+                }.gesture(RotateGesture3D()
+                          // TODO: Rotations are falling out of the volume bounds
+                          // TODO: Pinch to scale?
+                          // TODO: The rotation angles and origin are all wrong.
+                          // Possibly we need to change coordinate system, and also update entity.position.
+                    .targetedToAnyEntity()
+                    .onChanged { value in
+                        rotationInProgress = value.rotation
+                    }
+                    .onEnded { value in
+                        rotationInProgress = Rotation3D.zero
+                        // rotation = rotation * value.rotation
+                        rotation = value.rotation * rotation
+                    }
+                )
+            }
+            /*
+            // TODO: Fix flashing on updates
+            HStack {
+                Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
+                    // TODO: This does not trigger an update
+                    packet.refine()
+                    packet = packet.modified()
+                }
+                Button("Thinner", systemImage: "arrow.down.forward.and.arrow.up.backward") {
+                    radius /= 1.2
+                }
+                Button("Thicker", systemImage: "arrow.up.backward.and.arrow.down.forward") {
+                    radius *= 1.2
+                }
+                Button("Reset", systemImage: "smallcircle.filled.circle") {
+                    radius = 0.2
+                    colour = UIColor.systemTeal
+                    // TODO: Remove this
+                    packet = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
                 }
             }
+            //.buttonStyle(.borderless)
+            .labelStyle(.iconOnly)
+            .padding()
+            .glassBackgroundEffect()
+             */
         }
-        // TODO: Zstack puts controls halfway back
-        // TODO: Flashing on updates
-        HStack {
-            Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
-                // TODO: This does not trigger an update
-                packet.refine()
-                packet = packet.modified()
-            }
-            Button("Thinner", systemImage: "arrow.down.forward.and.arrow.up.backward") {
-                radius /= 1.2
-            }
-            Button("Thicker", systemImage: "arrow.up.backward.and.arrow.down.forward") {
-                radius *= 1.2
-            }
-            Button("Reset", systemImage: "smallcircle.filled.circle") {
-                radius = 0.2
-                colour = UIColor.systemTeal
-                // TODO: Remove this
-                packet = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
-            }
-        }
-        //.buttonStyle(.borderless)
-        .labelStyle(.iconOnly)
-        .padding()
-        .glassBackgroundEffect()
     }
 }
 #endif

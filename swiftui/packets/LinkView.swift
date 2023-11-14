@@ -298,6 +298,7 @@ struct LinkCrossingsView: View {
                             }
                             #if os(visionOS)
                             // TODO: Where does the magic radius 12 come from?
+                            // (Propagate this decision)
                             .padding()
                             .background(.regularMaterial, in: .rect(cornerRadius: 12))
                             #endif
@@ -308,6 +309,10 @@ struct LinkCrossingsView: View {
                                     textFor(s)
                                 }
                             }
+                            #if os(visionOS)
+                            .padding()
+                            .background(.regularMaterial, in: .rect(cornerRadius: 12))
+                            #endif
                         }
                     }
                 }
@@ -486,6 +491,10 @@ struct LinkAlgebraView: View {
                     }
                 }
                 .listStyle(.plain)
+                #if os(visionOS)
+                .padding()
+                .background(.regularMaterial, in: .rect(cornerRadius: 12))
+                #endif
             }
             
             HStack {
@@ -658,6 +667,8 @@ struct LinkGraphsView: View {
                 Text("\(tree.size()) bags, width \(tree.width())").padding(.bottom)
             }
 
+            // TODO: Do we want to make this float in visionOS?
+            // Suggestion: .offset(z: 10), or maybe it's a 3-D offset property.
             SvgView(cxxString: regina.svgUsingDot(tree.dot(colorScheme == .dark)))
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)
