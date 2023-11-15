@@ -138,11 +138,10 @@ struct SpatialLinkView: View {
         // Note: it does seem that SceneKit is automatically scaling the image to fill the screen,
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
-        ZStack(alignment: .topTrailing) {
-            SpatialLink3D(wrapper: wrapper, radius: $radius, colour: $colour)
-            // TODO: Make these edits actually save the file.
-        }
+        SpatialLink3D(wrapper: wrapper, radius: $radius, colour: $colour)
         .toolbar {
+            // TODO: On the toolbar, buttons are far apart. Is this correct?
+            // TODO: Make these edits actually save the file.
             ToolbarItem {
                 Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
                     var p = wrapper.modifying()
