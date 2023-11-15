@@ -140,25 +140,25 @@ struct SpatialLinkView: View {
         // Note: the camera looks down from above (from high z value down onto the plane).
         ZStack(alignment: .topTrailing) {
             SpatialLink3D(wrapper: wrapper, radius: $radius, colour: $colour)
-            // TODO: Make this action panel pretty
-            // TODO: Make these edits actually change the file.
-            // TODO: RESPOND TO PACKET CHANGES
-            VStack(alignment: .leading) {
-                Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
+            // TODO: Make these edits actually save the file.
+        }
+        .toolbar {
+            ToolbarItem {
+                Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
                     var p = wrapper.modifying()
                     p.refine()
                 }
-                Button("Thinner", systemImage: "arrow.down.forward.and.arrow.up.backward") {
+            }
+            ToolbarItem {
+                Button("Thinner", systemImage: "smallcircle.fill.circle") {
                     radius /= 1.2
                 }
-                Button("Thicker", systemImage: "arrow.up.backward.and.arrow.down.forward") {
+            }
+            ToolbarItem {
+                Button("Thicker", systemImage: "largecircle.fill.circle") {
                     radius *= 1.2
                 }
-                Button("Reset", systemImage: "smallcircle.filled.circle") {
-                    radius = 0.2
-                    colour = UIColor.systemTeal
-                }
-            }.padding([.top, .trailing])
+            }
         }
     }
 }
