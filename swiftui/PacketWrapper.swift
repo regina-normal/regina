@@ -73,6 +73,8 @@ extension regina.SharedText: SharedPacketClass {}
 extension regina.SharedLink: SharedHeldPacketClass {}
 extension regina.SharedSpatialLink: SharedHeldPacketClass {}
 
+// TODO: Get the PacketListener connection working.
+
 /**
  * A lightweight Swift wrapper around a C++ shared pointer to a packet of a specific type, which must _not_ be `null`.
  *
@@ -85,7 +87,10 @@ extension regina.SharedSpatialLink: SharedHeldPacketClass {}
  * Swift connection to Regina's PacketListener class is not yet working, and so changes must be published
  * manually by calling modifying(), as described above.
  *
- * TODO: Get the PacketListener connection working.
+ * Note: if view updates ever stop working, check out this note:
+ * https://forums.swift.org/t/question-about-valid-uses-of-observableobject-s-synthesized-objectwillchange/31141
+ * In particular, it may be necessary to cache a single publisher, e.g., via:
+ * `let objectWillChange = ObservableObjectPublisher()`
  */
 class Wrapper<T: SharedPacketClass>: ObservableObject {
     private let packet: T
@@ -243,10 +248,19 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
     
     @ViewBuilder var packetViewer: some View {
         if packet.isNull() {
-            // TODO: What do we return here? Probably this view should contain nothing.
-            VStack {
+            let msg = "Null packet"
+            let detail = "This is a null packet, which should never occur.\nPlease report this to the Regina developers."
+            HStack {
                 Spacer()
-                Text("Null packet")
+                if #available(macOS 14.0, iOS 17.0, *) {
+                    ContentUnavailableView {
+                        Label(msg, systemImage: "exclamationmark.triangle")
+                    } description: {
+                        Text(detail)
+                    }
+                } else {
+                    Text(detail)
+                }
                 Spacer()
             }
         } else {
@@ -258,10 +272,19 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
             case .Text:
                 TextView(packet: regina.SharedText(packet))
             default:
-                // TODO: What to put here?
-                VStack {
+                let msg = "No viewer available"
+                let detail = "I am not able to view packets of type \(swiftString(packet.typeName())) (yet).\nYou can, however, work with this packet through Regina's Python interface instead."
+                HStack {
                     Spacer()
-                    Text("Unknown or unimplemented packet type")
+                    if #available(macOS 14.0, iOS 17.0, *) {
+                        ContentUnavailableView {
+                            Label(msg, systemImage: "info.circle")
+                        } description: {
+                            Text(detail)
+                        }
+                    } else {
+                        Text(detail)
+                    }
                     Spacer()
                 }
             }

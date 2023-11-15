@@ -79,6 +79,10 @@ struct SharedPacket {
             return packet_->type();
         }
 
+        std::string typeName() const {
+            return packet_->typeName();
+        }
+
         std::string humanLabel() const {
             return packet_->humanLabel();
         }
