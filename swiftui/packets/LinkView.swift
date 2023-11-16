@@ -67,6 +67,8 @@ struct LinkView: View {
     @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
     @Environment(\.horizontalSizeClass) var sizeClass
     
+    @State var couldNotSimplify = false
+    
     var body: some View {
         let link = wrapper.readonly().heldCopy()
         
@@ -162,7 +164,51 @@ struct LinkView: View {
             }.onChange(of: selection) { newValue in
                 UserDefaults.standard.set(newValue.rawValue, forKey: "tabLink")
             }
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        var p = wrapper.modifying()
+                        p.reflect()
+                    } label: {
+                        Label("Reflect", image: "Act-Reflect")
+                    }
+                }
+                ToolbarItem {
+                    Button {
+                        var p = wrapper.modifying()
+                        p.rotate()
+                    } label: {
+                        Label("Rotate", image: "Act-Rotate")
+                    }
+                }
+                ToolbarItem {
+                    Button {
+                        var p = wrapper.modifying()
+                        p.reverse()
+                    } label: {
+                        Label("Reverse", image: "Act-Reverse")
+                    }
+                }
+                ToolbarItem {
+                    Button {
+                        var p = wrapper.modifying()
+                        if !p.intelligentSimplify() {
+                            couldNotSimplify = true
+                        }
+                    } label: {
+                        Label("Simplify", image: "Act-SimplifyLink")
+                    }
+                    .alert("Could not simplify", isPresented: $couldNotSimplify) {
+                        Button("OK") {}
+                    } message: {
+                        Text("I could not simplify the link diagram any further.")
+                    }
+                }
+            }
         }
+        #if os(macOS)
+            .padding(.vertical)
+        #endif
     }
 }
 
@@ -505,6 +551,7 @@ struct LinkCodesView: View {
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selected: LinkCode = (LinkCode(rawValue: UserDefaults.standard.integer(forKey: "linkCode")) ?? .gauss)
 
+    // TODO: Split this into a separate view class.
     @ViewBuilder func onlyKnots(code: String, plural: Bool) -> some View {
         let capitalised = code.prefix(1).capitalized + code.dropFirst()
         let detail = "\(capitalised) \(plural ? "are" : "is") currently only available for knots, not multi-component links."

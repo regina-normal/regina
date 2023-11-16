@@ -171,6 +171,22 @@ struct SharedLink {
                 packet_->resolve(packet_->crossing(idx));
         }
 
+        void reflect() {
+            packet_->reflect();
+        }
+
+        void rotate() {
+            packet_->rotate();
+        }
+
+        void reverse() {
+            packet_->reverse();
+        }
+
+        bool intelligentSimplify() {
+            packet_->intelligentSimplify();
+        }
+
         Laurent<Integer> bracket() const {
             return packet_->bracket();
         }

@@ -116,6 +116,7 @@ struct TreeView: View {
                     #endif
             }
         }
+        // TODO: On macOS we get the DocumentGroup's navigation title, not the packet's.
         #if !os(macOS)
         // Hide the DocumentGroup navigation bar, since we want the bar that
         // comes with the inner NavigationSplitView.
