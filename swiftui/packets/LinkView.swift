@@ -192,6 +192,22 @@ struct LinkView: View {
                 ToolbarItem {
                     Button {
                         var p = wrapper.modifying()
+                        p.makeAlternating()
+                    } label: {
+                        Label("Make Alternating", image: "Act-Alternating")
+                    }
+                }
+                ToolbarItem {
+                    Button {
+                        var p = wrapper.modifying()
+                        p.selfFrame()
+                    } label: {
+                        Label("Self-Frame", image: "Act-SelfFrame")
+                    }
+                }
+                ToolbarItem {
+                    Button {
+                        var p = wrapper.modifying()
                         if !p.intelligentSimplify() {
                             couldNotSimplify = true
                         }
