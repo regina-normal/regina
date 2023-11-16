@@ -73,6 +73,8 @@ struct LinkView: View {
         let link = wrapper.readonly().heldCopy()
         
         VStack {
+            // TODO: Somehow improve the look of this header.
+            // In particular, distinguish it from the navigation title.
             switch link.size() {
             case 0:
                 switch link.countComponents() {
@@ -191,6 +193,8 @@ struct LinkView: View {
                 }
                 ToolbarItem {
                     Button {
+                        // TODO: Is it already alternating?
+                        // If so give a message.
                         var p = wrapper.modifying()
                         p.makeAlternating()
                     } label: {
@@ -199,6 +203,8 @@ struct LinkView: View {
                 }
                 ToolbarItem {
                     Button {
+                        // TODO: Is it already self-framed?
+                        // If so give a message.
                         var p = wrapper.modifying()
                         p.selfFrame()
                     } label: {
@@ -206,20 +212,24 @@ struct LinkView: View {
                     }
                 }
                 ToolbarItem {
+                    // TODO: Empty? Give error.
                     Button {
                         var p = wrapper.modifying()
-                        if !p.intelligentSimplify() {
-                            couldNotSimplify = true
-                        }
+                        couldNotSimplify = !p.intelligentSimplify()
                     } label: {
                         Label("Simplify", image: "Act-SimplifyLink")
                     }
                     .alert("Could not simplify", isPresented: $couldNotSimplify) {
+                        // TODO: Offer a "try harder" option here.
                         Button("OK") {}
                     } message: {
                         Text("I could not simplify the link diagram any further.")
                     }
                 }
+                // TODO: Parallel (including MAX_CABLES), alter directly
+                // TODO: Reidemeister moves
+                // TODO: Compose with
+                // TODO: When we have triangulations: SnapPea and complement.
             }
         }
         #if os(macOS)
@@ -686,6 +696,9 @@ struct LinkGraphsView: View {
                 Spacer()
             }
             .padding(.vertical)
+            
+            // TODO: Refuse for enormous links
+            // "This link contains over 500 crossings.\nRegina does not display graphs for such large links."
             
             // TODO: Give a "working on it" message, and build the graph in the background (maybe only when it's large)
             
