@@ -116,9 +116,11 @@ struct TreeView: View {
                     #endif
             }
         }
+        #if !os(macOS)
         // Hide the DocumentGroup navigation bar, since we want the bar that
         // comes with the inner NavigationSplitView.
         .toolbar(.hidden, for: .navigationBar)
+        #endif
     }
 }
 

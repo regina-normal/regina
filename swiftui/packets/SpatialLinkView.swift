@@ -36,16 +36,30 @@ import ReginaEngine
 
 extension SCNVector3 {
     init(node n: regina.SpatialLink.Node) {
+        #if os(macOS)
+        self.init(x: CGFloat(n.x), y: CGFloat(n.y), z: CGFloat(n.z))
+        #else
         self.init(x: Float(n.x), y: Float(n.y), z: Float(n.z))
+        #endif
     }
 }
 
-struct SpatialLink3D: UIViewRepresentable {
+#if os(macOS)
+typealias ViewRepresentable = NSViewRepresentable
+#else
+typealias ViewRepresentable = UIViewRepresentable
+#endif
+
+struct SpatialLink3D: ViewRepresentable {
     typealias UIViewType = SCNView
     
     @ObservedObject var wrapper: Wrapper<regina.SharedSpatialLink>
     @Binding var radius: CGFloat
+    #if os(macOS)
+    @Binding var colour: NSColor
+    #else
     @Binding var colour: UIColor
+    #endif
     
     func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
         let c = SCNCylinder(radius: radius, height: a.distance(b))
@@ -100,6 +114,20 @@ struct SpatialLink3D: UIViewRepresentable {
         }
     }
     
+    #if os(macOS)
+    func makeNSView(context: Context) -> SCNView {
+        let view = SCNView()
+        view.scene = SCNScene()
+        view.allowsCameraControl = true
+        view.autoenablesDefaultLighting = true
+        view.backgroundColor = NSColor.clear
+
+        if let scene = view.scene {
+            fillScene(scene: scene)
+        }
+        return view
+    }
+    #else
     func makeUIView(context: Context) -> SCNView {
         let view = SCNView()
         view.scene = SCNScene()
@@ -110,12 +138,22 @@ struct SpatialLink3D: UIViewRepresentable {
         if let scene = view.scene {
             fillScene(scene: scene)
         }
-        
         return view
     }
-    
+    #endif
+
+    // TODO: For a change in radius or colour, just update existing elements.
+    #if os(macOS)
+    func updateNSView(_ nsView: NSViewType, context: Context) {
+        if let scene = nsView.scene {
+            scene.rootNode.enumerateChildNodes { (node, stop) in
+                node.removeFromParentNode()
+            }
+            fillScene(scene: scene)
+        }
+    }
+    #else
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        // TODO: For a change in radius or colour, just update existing elements.
         if let scene = uiView.scene {
             scene.rootNode.enumerateChildNodes { (node, stop) in
                 node.removeFromParentNode()
@@ -123,6 +161,7 @@ struct SpatialLink3D: UIViewRepresentable {
             fillScene(scene: scene)
         }
     }
+    #endif
 }
 
 struct SpatialLinkView: View {
@@ -131,7 +170,11 @@ struct SpatialLinkView: View {
 
     @StateObject var wrapper: Wrapper<regina.SharedSpatialLink>
     @State var radius: CGFloat = 0.2
+    #if os(macOS)
+    @State var colour = NSColor.systemTeal
+    #else
     @State var colour = UIColor.systemTeal
+    #endif
     
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
