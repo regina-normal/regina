@@ -49,12 +49,22 @@ func cxxString(_ s: String) -> std.string {
         std.string(c)
     }
 }
+extension std.string {
+    func swiftString() -> String {
+        return String(cString: s.__c_strUnsafe())
+    }
+}
 #else
 func swiftString(_ s: std.string) -> String {
     return String(s)
 }
 func cxxString(_ s: String) -> std.string {
     return std.string(s)
+}
+extension std.string {
+    func swiftString() -> String {
+        return String(self)
+    }
 }
 #endif
 
