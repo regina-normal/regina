@@ -159,6 +159,18 @@ struct SharedLink {
             return packet_->component(index);
         }
 
+        void change(StrandRefAlt strand) {
+            size_t idx = strand.crossingIndex();
+            if (idx < packet_->size())
+                packet_->change(packet_->crossing(idx));
+        }
+
+        void resolve(StrandRefAlt strand) {
+            size_t idx = strand.crossingIndex();
+            if (idx < packet_->size())
+                packet_->resolve(packet_->crossing(idx));
+        }
+
         Laurent<Integer> bracket() const {
             return packet_->bracket();
         }

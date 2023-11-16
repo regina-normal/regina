@@ -262,7 +262,7 @@ struct LinkCrossingsView: View {
             }
             .padding(.vertical)
 
-            List {
+            //List {
                 ForEach(0..<wrapper.readonly().countComponents(), id: \.self) { i in
                     Section("Component \(i)") {
                         let strands = wrapper.readonly().strandsForComponent(index: i)
@@ -273,6 +273,18 @@ struct LinkCrossingsView: View {
                             LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 45))]) {
                                 ForEach(strands) { s in
                                     pictureFor(s)
+                                        .contextMenu {
+                                            Group {
+                                                Button("Change crossing \(s.crossingIndex())") {
+                                                    var packet = wrapper.modifying()
+                                                    packet.change(s)
+                                                }
+                                                Button("Resolve crossing \(s.crossingIndex())") {
+                                                    var packet = wrapper.modifying()
+                                                    packet.resolve(s)
+                                                }
+                                            }
+                                        }
                                 }
                             }
                         } else {
@@ -285,7 +297,7 @@ struct LinkCrossingsView: View {
                         }
                     }
                 }
-            }.listStyle(.plain)
+            //}.listStyle(.plain)
 
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)
