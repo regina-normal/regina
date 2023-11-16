@@ -530,7 +530,7 @@ struct LinkAlgebraView: View {
             
             HStack {
                 Spacer()
-                Button("Try to simplify", systemImage: "rectangle.compress.vertical") {
+                Button("Simplify presentation", systemImage: "rectangle.compress.vertical") {
                     // TODO: Use a cancellable progress box (maybe only when it's large).
                     var working = group
                     let hom = working.intelligentSimplify()
