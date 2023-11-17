@@ -92,7 +92,7 @@ extension regina.SharedSpatialLink: SharedHeldPacketClass {}
  * In particular, it may be necessary to cache a single publisher, e.g., via:
  * `let objectWillChange = ObservableObjectPublisher()`
  */
-class Wrapper<T: SharedPacketClass>: ObservableObject {
+class Wrapper<T: SharedPacketClass>: ObservableObject, Equatable {
     private let packet: T
     
     /**
@@ -102,6 +102,13 @@ class Wrapper<T: SharedPacketClass>: ObservableObject {
         self.packet = packet
     }
     
+    /**
+     * PRE: \a packet is not a null pointer.
+     */
+    init(packet: regina.SharedPacket) {
+        self.packet = T(packet)
+    }
+
     /**
      * PRE: \a wrapper is not a null pointer.
      * PRE: \a wrapper is a packet of the correct class.
@@ -113,10 +120,18 @@ class Wrapper<T: SharedPacketClass>: ObservableObject {
     func readonly() -> T {
         return packet
     }
-    
+
     func modifying() -> T {
         objectWillChange.send()
         return packet
+    }
+
+    /**
+     * Identifies whether the two given wrappers refer to the same underlying packet.
+     */
+    static func == (lhs: Wrapper<T>, rhs: Wrapper<T>) -> Bool {
+        // By comparing IDs, we are effectively comparing the raw C++ Packet pointers.
+        return (lhs.packet.asPacket().id() == rhs.packet.asPacket().id())
     }
 }
 
@@ -268,7 +283,7 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
             case .Link:
                 LinkView(wrapper: Wrapper<regina.SharedLink>(wrapper: self))
             case .SpatialLink:
-                SpatialLinkView(wrapper: Wrapper<regina.SharedSpatialLink>(wrapper: self))
+                SpatialLinkView(wrapper: Wrapper<regina.SharedSpatialLink>(packet: packet))
             case .Text:
                 TextView(packet: regina.SharedText(packet))
             default:
