@@ -34,6 +34,18 @@
 #include "link/link.h"
 #include "link/spatiallink.h"
 
+// An orthogonal basis in R^3 that breaks symmetry.
+// All three basis elements have the same length.
+// We use this to build spatial links whose structure is easily visible when
+// seen from any of the "pure" axis directions.
+//
+// TODO: Check that this is a right-handed system also.
+static constexpr regina::SpatialLink::Node orth[3] = {
+    regina::SpatialLink::Node{ -2.0, 6.0, 3.0 },
+    regina::SpatialLink::Node{ 6.0, 3.0, -2.0 },
+    regina::SpatialLink::Node{ 3.0, -2.0, 6.0 }
+};
+
 namespace regina {
 
 Link ExampleLink::unknot() {
@@ -185,23 +197,21 @@ SpatialLink ExampleLink::spatialHopf() {
 }
 
 SpatialLink ExampleLink::spatialBorromean() {
-    // TODO: Rotate the axes so it is visible out of the box.
     SpatialLink ans({
-        { {2.0, 1.0, 0.0}, {-2.0, 1.0, 0.0},
-          {-2.0, -1.0, 0.0}, {2.0, -1.0, 0.0} },
-        { {1.0, 0.0, 2.0}, {-1.0, 0.0, 2.0},
-          {-1.0, 0.0, -2.0}, {1.0, 0.0, -2.0} },
-        { {0.0, 2.0, 1.0}, {0.0, -2.0, 1.0},
-          {0.0, -2.0, -1.0}, {0.0, 2.0, -1.0} }});
+        { orth[0] * 2.0 + orth[1], orth[0] * -2.0 + orth[1],
+          orth[0] * -2.0 + orth[1] * -1.0, orth[0] * 2.0  + orth[1] * -1.0 },
+        { orth[1] * 2.0 + orth[2], orth[1] * -2.0 + orth[2],
+          orth[1] * -2.0 + orth[2] * -1.0, orth[1] * 2.0  + orth[2] * -1.0 },
+        { orth[2] * 2.0 + orth[0], orth[2] * -2.0 + orth[0],
+          orth[2] * -2.0 + orth[0] * -1.0, orth[2] * 2.0  + orth[0] * -1.0 }});
     ans.refine(4);
     return ans;
 }
 
 SpatialLink ExampleLink::cubicalUnknot() {
-    // TODO: Rotate the cube (and update the docs).
     return SpatialLink({{
-        {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {1.0, 1.0, 0.0},
-        {1.0, 1.0, 1.0}, {0.0, 1.0, 1.0}, {0.0, 0.0, 1.0}}});
+        {0.0, 0.0, 0.0}, orth[0], orth[0] + orth[1],
+        orth[0] + orth[1] + orth[2], orth[1] + orth[2], orth[2] }});
 }
 
 } // namespace regina

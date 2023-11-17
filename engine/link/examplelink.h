@@ -208,12 +208,12 @@ class ExampleLink {
 
         /**
          * Returns a 3-dimensional embedding of the unknot that follows the
-         * edges of the unit cube.
+         * edges of a cube.
          *
          * This is not a planar embedding: instead it follows a cycle through
-         * 6 of the 12 edges of the cube, using all three dimensions.
+         * 6 of the 12 edges of the cube, making use of all three dimensions.
          *
-         * \return an unknot embedded in the edges of the unit cube.
+         * \return an unknot embedded in the edges of a cube.
          */
         static SpatialLink cubicalUnknot();
 

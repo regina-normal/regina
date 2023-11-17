@@ -207,7 +207,7 @@ struct SpatialLinkView: View {
 
 struct SpatialLinkView_Previews: PreviewProvider {
     static var previews: some View {
-        let link = regina.SharedSpatialLink(regina.ExampleLink.spatialHopf())
+        let link = regina.SharedSpatialLink(regina.ExampleLink.spatialBorromean())
         SpatialLinkView(wrapper: Wrapper<regina.SharedSpatialLink>(packet: link))
     }
 }

@@ -133,7 +133,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
             /**
              * Creates a new copy of the given point.
              */
-            Node(const Node&) = default;
+            constexpr Node(const Node&) = default;
 
             /**
              * Creates a new point with the given 3-dimensional coordinates.
@@ -142,7 +142,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              * \param y the second (y) coordinate.
              * \param z the third (z) coordinate.
              */
-            Node(double x, double y, double z) : x(x), y(y), z(z) {}
+            constexpr Node(double x, double y, double z) : x(x), y(y), z(z) {}
 
             /**
              * Creates a new point with the given 3-dimensional coordinates.
@@ -150,7 +150,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              * \param coordinates array whose three elements are the \z x,
              * \a y and \a z coordinate respectively.
              */
-            Node(const std::array<double, 3>& coordinates) :
+            constexpr Node(const std::array<double, 3>& coordinates) :
                     x(coordinates[0]), y(coordinates[1]), z(coordinates[2]) {
             }
 
@@ -170,7 +170,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              * \param other the point to compare with this.
              * \return \c true if and only if the two points are equal.
              */
-            bool operator == (const Node& other) const {
+            constexpr bool operator == (const Node& other) const {
                 return (x == other.x && y == other.y && z == other.z);
             }
 
@@ -184,7 +184,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              * \param other the point to compare with this.
              * \return \c true if and only if the two points are different.
              */
-            bool operator != (const Node& other) const {
+            constexpr bool operator != (const Node& other) const {
                 return (x != other.x || y != other.y || z != other.z);
             }
 
@@ -198,7 +198,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              * \param rhs the node to add to this node.
              * \return the sum of this and the given node.
              */
-            Node operator + (const Node& rhs) const {
+            constexpr Node operator + (const Node& rhs) const {
                 return { x + rhs.x, y + rhs.y, z + rhs.z };
             };
 
@@ -210,7 +210,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              * \param scale the scaling factor to apply.
              * \return a rescaled copy of this node.
              */
-            Node operator * (double scale) const {
+            constexpr Node operator * (double scale) const {
                 return { x * scale, y * scale, z * scale };
             }
 
@@ -249,7 +249,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              *
              * \return the distance from this node to the origin.
              */
-            double length() const {
+            constexpr double length() const {
                 return sqrt(x * x + y * y + z * z);
             }
 
@@ -258,7 +258,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              *
              * \return the distance between this and the given node.
              */
-            double distance(const Node& other) const {
+            constexpr double distance(const Node& other) const {
                 double dx = x - other.x;
                 double dy = y - other.y;
                 double dz = z - other.z;
@@ -270,7 +270,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
              *
              * \return the midpoint between this and the given node.
              */
-            Node midpoint(const Node& other) const {
+            constexpr Node midpoint(const Node& other) const {
                 return { (x + other.x) / 2,
                          (y + other.y) / 2,
                          (z + other.z) / 2};
