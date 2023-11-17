@@ -208,8 +208,8 @@ SpatialLink ExampleLink::spatialBorromean() {
 
 SpatialLink ExampleLink::cubicalUnknot() {
     return SpatialLink({{
-        {0.0, 0.0, 0.0}, orth[0], orth[0] + orth[1],
-        orth[0] + orth[1] + orth[2], orth[1] + orth[2], orth[2] }});
+        {0.0, 0.0, 0.0}, orth[1], orth[0] + orth[1],
+        orth[0] + orth[1] + orth[2], orth[0] + orth[2], orth[2] }});
 }
 
 } // namespace regina
