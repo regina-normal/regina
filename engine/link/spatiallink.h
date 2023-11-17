@@ -531,6 +531,26 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          */
         std::pair<Node, Node> range() const;
 
+        /**
+         * Returns a sensible radius to use when rendering the link.
+         * Specifically, this is the radius to use for the balls and cylinders
+         * used in the 3-D model.
+         *
+         * Currently this routine makes a "barely educated" decision: it looks
+         * only at the scale of the embedding, without studying the complexity
+         * of the knot or the closeness of the strands.  Specifically, it
+         * chooses some fixed fraction of the minimum range amongst the
+         * \a x, \a y and \a z dimensions.
+         *
+         * Eventually this will be replaced with something intelligent that
+         * factors in how far apart the strands are, and will (as a result)
+         * guarantee that the renderings of no-adjacent strands will not
+         * collide.
+         *
+         * \return a sensible radius to use for rendering.
+         */
+        double defaultRadius() const;
+
         /*@}*/
         /**
          * \name Editing

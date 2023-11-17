@@ -101,6 +101,14 @@ std::pair<SpatialLink::Node, SpatialLink::Node> SpatialLink::range() const {
         return {{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }};
 }
 
+double SpatialLink::defaultRadius() const {
+    auto r = range();
+
+    auto min = std::min(std::min(r.second.x - r.first.x,
+        r.second.y - r.first.y), r.second.z - r.first.z);
+    return min / 20;
+}
+
 void SpatialLink::writeTextShort(std::ostream& out) const {
     if (components_.empty()) {
         out << "Empty spatial link";

@@ -43,13 +43,13 @@ Returns:
 // Docstring regina::python::doc::ExampleLink_::cubicalUnknot
 static const char *cubicalUnknot =
 R"doc(Returns a 3-dimensional embedding of the unknot that follows the edges
-of the unit cube.
+of a cube.
 
 This is not a planar embedding: instead it follows a cycle through 6
-of the 12 edges of the cube, using all three dimensions.
+of the 12 edges of the cube, making use of all three dimensions.
 
 Returns:
-    an unknot embedded in the edges of the unit cube.)doc";
+    an unknot embedded in the edges of a cube.)doc";
 
 // Docstring regina::python::doc::ExampleLink_::figureEight
 static const char *figureEight =
@@ -115,9 +115,6 @@ Returns:
 // Docstring regina::python::doc::ExampleLink_::spatialHopf
 static const char *spatialHopf =
 R"doc(Returns a simple embedding in 3-space of the Hopf link.
-
-This is the variant with positive linking number (i.e., the same link
-returned by hopf()).
 
 Returns:
     the Hopf link.)doc";

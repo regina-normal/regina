@@ -86,6 +86,10 @@ struct SpatialLink3D: ViewRepresentable {
     func fillScene(scene: SCNScene) {
         let link = wrapper.readonly().heldCopy()
 
+        if radius == 0.0 {
+            radius = link.defaultRadius()
+        }
+
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
         withExtendedLifetime(link) {
             // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
@@ -169,7 +173,7 @@ struct SpatialLinkView: View {
     // TODO: Choose the radius properly.
 
     @StateObject var wrapper: Wrapper<regina.SharedSpatialLink>
-    @State var radius: CGFloat = 0.2
+    @State var radius: CGFloat = 0.0
     #if os(macOS)
     @State var colour = [ NSColor.systemTeal, NSColor.systemYellow, NSColor.systemRed ]
     #else

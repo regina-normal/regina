@@ -225,6 +225,25 @@ R"doc(Returns the number of components in this link.
 Returns:
     the number of components.)doc";
 
+// Docstring regina::python::doc::SpatialLink_::defaultRadius
+static const char *defaultRadius =
+R"doc(Returns a sensible radius to use when rendering the link.
+Specifically, this is the radius to use for the balls and cylinders
+used in the 3-D model.
+
+Currently this routine makes a "barely educated" decision: it looks
+only at the scale of the embedding, without studying the complexity of
+the knot or the closeness of the strands. Specifically, it chooses
+some fixed fraction of the minimum range amongst the *x*, *y* and *z*
+dimensions.
+
+Eventually this will be replaced with something intelligent that
+factors in how far apart the strands are, and will (as a result)
+guarantee that the renderings of no-adjacent strands will not collide.
+
+Returns:
+    a sensible radius to use for rendering.)doc";
+
 // Docstring regina::python::doc::SpatialLink_::fromKnotPlot
 static const char *fromKnotPlot =
 R"doc(Creates a new link from a KnotPlot data file. Since KnotPlot files are

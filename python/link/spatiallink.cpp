@@ -67,6 +67,7 @@ void addSpatialLink(pybind11::module_& m) {
         .def("node", &SpatialLink::node,
             pybind11::return_value_policy::reference_internal, rdoc::node)
         .def("range", &SpatialLink::range, rdoc::range)
+        .def("defaultRadius", &SpatialLink::defaultRadius, rdoc::defaultRadius)
         .def("swap", &SpatialLink::swap, rdoc::swap)
         .def("scale", &SpatialLink::scale, rdoc::scale)
         .def("translate", &SpatialLink::translate, rdoc::translate)
