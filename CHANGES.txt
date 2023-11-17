@@ -62,6 +62,9 @@ Version 7.4  [ (to be announced) ]
               now check their preconditions and throw an exception if they fail.
             - Renamed cuspedGenusTwoTorus() to idealGenusTwoHandlebody().
               The old name has been kept as a deprecated alias.
+        Class ExampleLink:
+            - Added several new routines that return 3-dimensional embeddings
+              of links (i.e., SpatialLink objects).
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
         Class FacetPairing<dim>:

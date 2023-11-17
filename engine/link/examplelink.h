@@ -191,6 +191,32 @@ class ExampleLink {
          */
         static SpatialLink spatialTrefoil();
 
+        /**
+         * Returns a simple embedding in 3-space of the Hopf link.
+         *
+         * \return the Hopf link.
+         */
+        static SpatialLink spatialHopf();
+
+        /**
+         * Returns a simple and symmetric embedding in 3-space of the
+         * Borromean rings.
+         *
+         * \return the Borromean rings.
+         */
+        static SpatialLink spatialBorromean();
+
+        /**
+         * Returns a 3-dimensional embedding of the unknot that follows the
+         * edges of the unit cube.
+         *
+         * This is not a planar embedding: instead it follows a cycle through
+         * 6 of the 12 edges of the cube, using all three dimensions.
+         *
+         * \return an unknot embedded in the edges of the unit cube.
+         */
+        static SpatialLink cubicalUnknot();
+
         // Make this class non-constructible.
         ExampleLink() = delete;
 };

@@ -40,6 +40,8 @@ beyond the expect cases of two adjacent segments touching at their
 common endpoint). This is _not_ checked, and indeed the use of
 floating point arithmetic makes it difficult to check this precisely.
 
+It is assumed that the underlying coordinate system is right-handed.
+
 Like the regular Link and Triangulation classes, SpatialLink is not a
 packet type that can be inserted directly into the packet tree.
 Instead it is a standalone mathematatical object, which makes it
@@ -99,6 +101,49 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two links are identical.)doc";
 
+// Docstring regina::python::doc::SpatialLink_::__init
+static const char *__init =
+R"doc(Creates a new link whose components are supplied by the given
+sequences of points in 3-space.
+
+Each element of the given sequence should represent a separate link
+component. Each component should be given as a sequence of points in
+3-space (any reasonable container type will do; see the requirements
+for the *iterator* type below). These are the points that will be
+stored directly in the Component structure, which means that to form
+the actual geometry of the link component:
+
+* each node in the sequence is joined by a straight line segment to
+  the node that follows it (and likewise, the last node is joined to
+  the first);
+
+* the orientation of the link component follows the path in order from
+  the first node to the last (and then cycling back to the front of
+  the sequence again).
+
+This constructor induces a deep copy of the given data.
+
+Python:
+    Instead of the iterators *begin* and *end*, this routine takes
+    either (i) a Python list of lists of triples of real numbers, or
+    (ii) a Python list of lists of SpatialLink::Node objects.
+
+Template parameter ``iterator``:
+    the iterator type used to access the full sequence of nodes in
+    each link component. This must satisfy the following requirements:
+    (i) when dereferenced, the resulting object (which represents a
+    single link component) has appropriate ``begin()`` and ``end()``
+    functions; and (ii) when _those_ iterators are dereferenced, the
+    resulting object (which represents an individual point along some
+    link component) is convertible to a SpatialLink::Node object.
+
+Parameter ``begin``:
+    the beginning of the sequence of link components.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the sequence of
+    components.)doc";
+
 // Docstring regina::python::doc::SpatialLink_::__ne
 static const char *__ne =
 R"doc(Determines if this link is not identical to the given link.
@@ -129,17 +174,19 @@ Parameter ``index``:
 Returns:
     the component at the given index.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::component_2
-static const char *component_2 =
-R"doc(Returns a constant reference to the component at the given index
-within this link.
+// Docstring regina::python::doc::SpatialLink_::componentSize
+static const char *componentSize =
+R"doc(Returns the number of nodes that are stored for the given component of
+this link.
 
-Parameter ``index``:
-    the index of the requested component. This must be between 0 and
-    countComponents()-1 inclusive.
+This is equivalent to calling ``component[componentIndex].size()``.
+
+Parameter ``componentIndex``:
+    indicates the link component to query; this must be between 0 and
+    ``countComponents() - 1`` inclusive.
 
 Returns:
-    the component at the given index.)doc";
+    the number of nodes stored for the requested component.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::components
 static const char *components =
@@ -255,6 +302,23 @@ components at all.
 Returns:
     ``True`` if and only if this link is empty.)doc";
 
+// Docstring regina::python::doc::SpatialLink_::node
+static const char *node =
+R"doc(Returns a particular node belong to a particular component of this
+link.
+
+This is equivalent to calling
+``component[componentIndex][nodeIndex]``.
+
+Parameter ``componentIndex``:
+    indicates the component of the link to which the requested node
+    belongs; this must be between 0 and ``countComponents() - 1``
+    inclusive.
+
+Parameter ``nodeIndex``:
+    indicates which node to return from the given component; this must
+    be between 0 and ``componentSize(componentIndex) - 1`` inclusive.)doc";
+
 // Docstring regina::python::doc::SpatialLink_::range
 static const char *range =
 R"doc(Returns the range of coordinates that this link occupies.
@@ -267,6 +331,58 @@ nodes.
 Returns:
     the range of coordinates. If this link contains no nodes at all
     then this routine will return ``((0,0,0), (0,0,0))``.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::refine
+static const char *refine =
+R"doc(Adds additional nodes to make the embedding appear smoother.
+
+Specifically, each adjacent pair of nodes will have one new node
+inserted between them (thereby doubling the number of nodes and arcs
+overall). This new node is _not_ added at the midpoint of line segment
+between the two original nodes (which would not help with smoothing);
+instead it is calculated to lie on a Catmull-Rom spline defined by the
+original nodes. This spline is configured to have tension τ=0.5.
+
+See also refine(int), which allows for many new nodes to be inserted
+between each adjacent pair of original nodes. Calling ``refine()`` is
+equivalent to calling ``refine(2)`` (but uses a more streamlined
+implementation).
+
+.. warning::
+    In the current implementation, there is no guarantee that this
+    operation will not inadvertently pass one strand through another.
+    (This could happen, for instance, if two parts of the link with
+    very tight curvature pass very close to one another). The hope is
+    to explicitly prevent this in a later implementation.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::refine_2
+static const char *refine_2 =
+R"doc(Adds a configurable number of additional nodes to make the embedding
+appear smoother.
+
+Specifically, each adjacent pair of nodes will have ``sub - 1`` new
+nodes inserted between them (thereby multiplying the number of nodes
+and arcs by *sub* overall). The new nodes are _not_ added along the
+line segments joining the original nodes (since this would not help
+with smoothing); instead they are calculated to lie on Catmull-Rom
+splines defined by the original nodes. These splines are configured to
+have tension τ=0.5.
+
+See also refine(), which allows for many new nodes to be inserted
+between each adjacent pair of original nodes. Calling ``refine()`` is
+equivalent to calling ``refine(2)`` (but uses a more streamlined
+implementation).
+
+.. warning::
+    In the current implementation, there is no guarantee that this
+    operation will not inadvertently pass one strand through another.
+    (This could happen, for instance, if two parts of the link with
+    very tight curvature pass very close to one another). The hope is
+    to explicitly prevent this in a later implementation.
+
+Parameter ``sub``:
+    the number of pieces that each original arc (i.e., line segment)
+    should be subdivided into. This must be at least 2.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::reflect
 static const char *reflect =
@@ -340,6 +456,20 @@ Parameter ``vector``:
 
 namespace SpatialLink_::Node_ {
 
+// Docstring regina::python::doc::SpatialLink_::Node_::__add
+static const char *__add =
+R"doc(Returns the sum of this and the given node.
+
+Here we use vector arithmetic: the resulting point will be the fourth
+vertex of the parallelogram whose other vertices are the this node,
+the origin, and the given node.
+
+Parameter ``rhs``:
+    the node to add to this node.
+
+Returns:
+    the sum of this and the given node.)doc";
+
 // Docstring regina::python::doc::SpatialLink_::Node_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given point.)doc";
 
@@ -360,6 +490,31 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two points are equal.)doc";
 
+// Docstring regina::python::doc::SpatialLink_::Node_::__iadd
+static const char *__iadd =
+R"doc(Adds the coordinates of the given node to this node.
+
+Here we use vector arithmetic: the new value of this node will be the
+fourth vertex of the parallelogram whose other vertices are the given
+node, the origin, and the original value of this node.
+
+Parameter ``rhs``:
+    the node whose coordinates should be added to this node.
+
+Returns:
+    a reference to this node.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::Node_::__imul
+static const char *__imul =
+R"doc(Scales this node by the given factor. Specifically, all coordinates of
+this node will be multiplied by *scale*.
+
+Parameter ``scale``:
+    the scaling factor to apply.
+
+Returns:
+    a reference to this node.)doc";
+
 // Docstring regina::python::doc::SpatialLink_::Node_::__init
 static const char *__init =
 R"doc(Creates a new point with the given 3-dimensional coordinates.
@@ -372,6 +527,26 @@ Parameter ``y``:
 
 Parameter ``z``:
     the third (z) coordinate.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::Node_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new point with the given 3-dimensional coordinates.
+
+Parameter ``coordinates``:
+    array whose three elements are the \z x, *y* and *z* coordinate
+    respectively.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::Node_::__mul
+static const char *__mul =
+R"doc(Returns a copy of this node rescaled by the given factor.
+Specifically, the coordinates of the node that is returned will be the
+coordinates of this node multiplied by *scale*.
+
+Parameter ``scale``:
+    the scaling factor to apply.
+
+Returns:
+    a rescaled copy of this node.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::Node_::__ne
 static const char *__ne =
@@ -386,6 +561,27 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if the two points are different.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::Node_::distance
+static const char *distance =
+R"doc(Returns the distance between this and the given node.
+
+Returns:
+    the distance between this and the given node.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::Node_::length
+static const char *length =
+R"doc(Returns the distance from this node to the origin.
+
+Returns:
+    the distance from this node to the origin.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::Node_::midpoint
+static const char *midpoint =
+R"doc(Returns the midpoint between this and the given node.
+
+Returns:
+    the midpoint between this and the given node.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::Node_::x
 static const char *x = R"doc(The first (x) coordinate of the point.)doc";

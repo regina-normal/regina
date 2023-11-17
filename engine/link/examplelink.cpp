@@ -147,12 +147,61 @@ SpatialLink ExampleLink::spatialTrefoil() {
     // Note: we could happily remove the second and fourth columns; the
     // reason we keep them is to add a bend to the arcs and make everything
     // look less "sticky".
-    SpatialLink ans({{
+    return SpatialLink({{
         //  CORNER          INNER ARC          CORNER         OUTER ARC
         {0.0, 2.0, 2.0}, {2.5, 1.5, 1.5}, {5.0, 2.0, 2.0}, {4.2, 4.2, 2.5},
         {2.0, 5.0, 3.0}, {1.5, 2.5, 3.5}, {2.0, 0.0, 3.0}, {2.5, 0.8, 0.8},
         {3.0, 3.0, 0.0}, {3.5, 3.5, 2.5}, {3.0, 3.0, 5.0}, {0.8, 2.5, 4.2}}});
+}
+
+SpatialLink ExampleLink::spatialHopf() {
+    // TODO: Is this the positive or negative linking number variant?
+    // Work this out, and document it.
+    static const double r = std::sqrt(double(6.0));
+
+    // We build the two components from equilateral triangles.
+    // The first component has centroid (2,2,2) and side length 6*sqrt(2).
+    // The second component has centroid (0,3,3).
+    //
+    // We add intermediate points to make each component into a regular hexagon
+    // (but these are not actually necessary; they're just for aesthetics).
+    //
+    // Finally: we shift the second component by (-1,0.5,0.5) so the
+    // two components are a little further apart.
+    SpatialLink ans({
+        { {6.0, 0.0, 0.0},    // a
+          {4.0, 4.0, -2.0},   // (2a+2b-c)/3
+          {0.0, 6.0, 0.0},    // b
+          {-2.0, 4.0, 4.0},   // (2b+2c-a)/3
+          {0.0, 0.0, 6.0},    // c
+          {4.0, -2.0, 4.0} }, // (2a+2c-b)/3
+        { {1.0+r, 2.5+r, 2.5+r},
+          {3.0, 1.5, 1.5},
+          {1.0-r, 2.5-r, 2.5-r},
+          {-3.0-r, 4.5-r, 4.5-r},
+          {-5.0, 5.5, 5.5},
+          {-3.0+r, 4.5+r, 4.5+r} }});
     return ans;
+}
+
+SpatialLink ExampleLink::spatialBorromean() {
+    // TODO: Rotate the axes so it is visible out of the box.
+    SpatialLink ans({
+        { {2.0, 1.0, 0.0}, {-2.0, 1.0, 0.0},
+          {-2.0, -1.0, 0.0}, {2.0, -1.0, 0.0} },
+        { {1.0, 0.0, 2.0}, {-1.0, 0.0, 2.0},
+          {-1.0, 0.0, -2.0}, {1.0, 0.0, -2.0} },
+        { {0.0, 2.0, 1.0}, {0.0, -2.0, 1.0},
+          {0.0, -2.0, -1.0}, {0.0, 2.0, -1.0} }});
+    ans.refine(4);
+    return ans;
+}
+
+SpatialLink ExampleLink::cubicalUnknot() {
+    // TODO: Rotate the cube (and update the docs).
+    return SpatialLink({{
+        {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {1.0, 1.0, 0.0},
+        {1.0, 1.0, 1.0}, {0.0, 1.0, 1.0}, {0.0, 0.0, 1.0}}});
 }
 
 } // namespace regina

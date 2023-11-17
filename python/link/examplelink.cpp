@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "link/examplelink.h"
 #include "link/link.h"
+#include "link/spatiallink.h"
 #include "../helpers.h"
 #include "../docstrings/link/examplelink.h"
 
@@ -58,6 +59,13 @@ void addExampleLink(pybind11::module_& m) {
             rdoc::kinoshitaTerasaka)
         .def_static("torus", &ExampleLink::torus, rdoc::torus)
         .def_static("gst", &ExampleLink::gst, rdoc::gst)
+        .def_static("spatialTrefoil", &ExampleLink::spatialTrefoil,
+            rdoc::spatialTrefoil)
+        .def_static("spatialHopf", &ExampleLink::spatialHopf, rdoc::spatialHopf)
+        .def_static("spatialBorromean", &ExampleLink::spatialBorromean,
+            rdoc::spatialBorromean)
+        .def_static("cubicalUnknot", &ExampleLink::cubicalUnknot,
+            rdoc::cubicalUnknot)
     ;
     regina::python::no_eq_static(c);
 

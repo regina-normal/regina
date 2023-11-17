@@ -40,6 +40,17 @@ of the Kinoshita-Terasaka knot.
 Returns:
     the Conway knot.)doc";
 
+// Docstring regina::python::doc::ExampleLink_::cubicalUnknot
+static const char *cubicalUnknot =
+R"doc(Returns a 3-dimensional embedding of the unknot that follows the edges
+of the unit cube.
+
+This is not a planar embedding: instead it follows a cycle through 6
+of the 12 edges of the cube, using all three dimensions.
+
+Returns:
+    an unknot embedded in the edges of the unit cube.)doc";
+
 // Docstring regina::python::doc::ExampleLink_::figureEight
 static const char *figureEight =
 R"doc(Returns a four-crossing diagram of the figure eight knot.
@@ -92,6 +103,32 @@ is difficult to untangle.
 
 Returns:
     the monster unknot.)doc";
+
+// Docstring regina::python::doc::ExampleLink_::spatialBorromean
+static const char *spatialBorromean =
+R"doc(Returns a simple and symmetric embedding in 3-space of the Borromean
+rings.
+
+Returns:
+    the Borromean rings.)doc";
+
+// Docstring regina::python::doc::ExampleLink_::spatialHopf
+static const char *spatialHopf =
+R"doc(Returns a simple embedding in 3-space of the Hopf link.
+
+This is the variant with positive linking number (i.e., the same link
+returned by hopf()).
+
+Returns:
+    the Hopf link.)doc";
+
+// Docstring regina::python::doc::ExampleLink_::spatialTrefoil
+static const char *spatialTrefoil =
+R"doc(Returns a simple and symmetric embedding in 3-space of the right-hand
+trefoil.
+
+Returns:
+    the right-hand trefoil.)doc";
 
 // Docstring regina::python::doc::ExampleLink_::torus
 static const char *torus =

@@ -2363,7 +2363,11 @@ For each connected piece of the link diagram (which may incorporate
 several link components), there is a unique alternating diagram up to
 reflection through the plane in which the diagram is drawn. The
 reflection that is chosen will be the one that preserves the sign of
-the lowest-index crossing in that piece of the diagram.)doc";
+the lowest-index crossing in that piece of the diagram.
+
+Returns:
+    ``True`` if the link diagram was changed, or *false* if it was
+    already alternating to begin with.)doc";
 
 // Docstring regina::python::doc::Link_::niceTreeDecomposition
 static const char *niceTreeDecomposition =
@@ -3403,7 +3407,11 @@ signs of all crossings at which *c* crosses itself.
 
 Any component(s) that already have zero writhe will be left unchanged.
 
-This link will be modified directly.)doc";
+This link will be modified directly.
+
+Returns:
+    ``True`` if the link diagram was changed, or ``False`` if every
+    component already had zero writhe to begin with.)doc";
 
 // Docstring regina::python::doc::Link_::simplifyExhaustive
 static const char *simplifyExhaustive =
