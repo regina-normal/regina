@@ -56,16 +56,16 @@ struct SpatialLink3D: ViewRepresentable {
     @ObservedObject var wrapper: Wrapper<regina.SharedSpatialLink>
     @Binding var radius: CGFloat
     #if os(macOS)
-    @Binding var colour: NSColor
+    @Binding var colour: [NSColor]
     #else
-    @Binding var colour: UIColor
+    @Binding var colour: [UIColor]
     #endif
     
-    func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
+    func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, component: Int, scene: SCNScene) -> SCNNode {
         let c = SCNCylinder(radius: radius, height: a.distance(b))
         // These cylinders are very thin; they do not need to be very smooth.
         c.radialSegmentCount = 12
-        c.firstMaterial?.diffuse.contents = colour
+        c.firstMaterial?.diffuse.contents = colour[component % colour.count]
 
         let node = SCNNode(geometry: c)
         node.position = SCNVector3(node: a.midpoint(b))
@@ -73,11 +73,11 @@ struct SpatialLink3D: ViewRepresentable {
         return node
     }
     
-    func ball(_ p: regina.SpatialLink.Node, scene: SCNScene) -> SCNNode {
+    func ball(_ p: regina.SpatialLink.Node, component: Int, scene: SCNScene) -> SCNNode {
         let s = SCNSphere(radius: radius)
         s.segmentCount = 12
-        s.firstMaterial?.diffuse.contents = colour
-        
+        s.firstMaterial?.diffuse.contents = colour[component % colour.count]
+
         let node = SCNNode(geometry: s)
         node.position = SCNVector3(node: p)
         return node
@@ -100,16 +100,16 @@ struct SpatialLink3D: ViewRepresentable {
                 
                 for j in 0..<nodes {
                     let n = link.__nodeUnsafe(i, j).pointee
-                    scene.rootNode.addChildNode(ball(n, scene: scene))
+                    scene.rootNode.addChildNode(ball(n, component: i, scene: scene))
                     
                     if let p = prev {
-                        scene.rootNode.addChildNode(arc(p, n, scene: scene))
+                        scene.rootNode.addChildNode(arc(p, n, component: i, scene: scene))
                     }
                     prev = n
                 }
                 
                 let n = link.__nodeUnsafe(i, 0).pointee
-                scene.rootNode.addChildNode(arc(prev!, n, scene: scene))
+                scene.rootNode.addChildNode(arc(prev!, n, component: i, scene: scene))
             }
         }
     }
@@ -171,9 +171,9 @@ struct SpatialLinkView: View {
     @StateObject var wrapper: Wrapper<regina.SharedSpatialLink>
     @State var radius: CGFloat = 0.2
     #if os(macOS)
-    @State var colour = NSColor.systemTeal
+    @State var colour = [ NSColor.systemTeal, NSColor.systemYellow, NSColor.systemRed ]
     #else
-    @State var colour = UIColor.systemTeal
+    @State var colour = [ UIColor.systemTeal, UIColor.systemYellow, UIColor.systemRed ]
     #endif
     
     var body: some View {
