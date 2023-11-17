@@ -263,9 +263,9 @@ size_t Link::countTrivialComponents() const {
     return ans;
 }
 
-void Link::makeAlternating() {
+bool Link::makeAlternating() {
     if (crossings_.empty())
-        return;
+        return false;
 
     ChangeAndClearSpan<> span(*this);
 
@@ -278,6 +278,7 @@ void Link::makeAlternating() {
     auto* queue = new size_t[n];
     size_t queueStart = 0, queueEnd = 0;
 
+    bool changed = false;
     for (size_t i = 0; i < n; ++i) {
         if (fixed[i])
             continue;
@@ -296,14 +297,17 @@ void Link::makeAlternating() {
                 StrandRef next = from->next_[j];
                 size_t nextIndex = next.crossing_->index();
                 if (! fixed[nextIndex]) {
-                    if (next.strand_ == j)
+                    if (next.strand_ == j) {
                         change(next.crossing_);
+                        changed = true;
+                    }
                     queue[queueEnd++] = nextIndex;
                     fixed[nextIndex] = true;
                 }
             }
         }
     }
+    return changed;
 }
 
 bool Link::isAlternating() const {
@@ -394,7 +398,7 @@ long Link::writheOfComponent(StrandRef strand) const {
     return ans;
 }
 
-void Link::selfFrame() {
+bool Link::selfFrame() {
     // Some notes:
     //
     // We arbitrarily decide to put all twists on the left.
@@ -405,20 +409,24 @@ void Link::selfFrame() {
     // since r1 does not change the components_ array and does not invalidate
     // existing strand references.
 
+    bool changed = false;
     for (StrandRef c : components_) {
         long w = writheOfComponent(c);
         if (w > 0) {
+            changed = true;
             do {
                 r1(c, 0 /* left */, -1, false, true);
                 --w;
             } while (w != 0);
         } else if (w < 0) {
+            changed = true;
             do {
                 r1(c, 0 /* left */, 1, false, true);
                 ++w;
             } while (w != 0);
         }
     }
+    return changed;
 }
 
 void Link::writeTextShort(std::ostream& out) const {

@@ -184,15 +184,15 @@ struct SharedLink {
         }
 
         bool intelligentSimplify() {
-            packet_->intelligentSimplify();
+            return packet_->intelligentSimplify();
         }
 
-        void makeAlternating() {
-            packet_->makeAlternating();
+        bool makeAlternating() {
+            return packet_->makeAlternating();
         }
 
-        void selfFrame() {
-            packet_->selfFrame();
+        bool selfFrame() {
+            return packet_->selfFrame();
         }
 
         Laurent<Integer> bracket() const {

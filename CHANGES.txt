@@ -132,6 +132,8 @@ Version 7.4  [ (to be announced) ]
               The old C++-only dumpConstruction() is kept but deprecated.
               Also fixed a problem where the C++ initialiser lists were empty
               (instead of containing a single 0) for zero-crossing components.
+            - Routine selfFrame() now returns a boolean indicating whether
+              anything changed.
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.

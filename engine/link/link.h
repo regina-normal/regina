@@ -1264,8 +1264,11 @@ class Link :
          * to reflection through the plane in which the diagram is drawn.
          * The reflection that is chosen will be the one that preserves the
          * sign of the lowest-index crossing in that piece of the diagram.
+         *
+         * \return \c true if the link diagram was changed, or \a false if it
+         * was already alternating to begin with.
          */
-        void makeAlternating();
+        bool makeAlternating();
 
         /**
          * Tests for and/or performs a type I Reidemeister move to remove a
@@ -1787,8 +1790,11 @@ class Link :
          * unchanged.
          *
          * This link will be modified directly.
+         *
+         * \return \c true if the link diagram was changed, or \c false if
+         * every component already had zero writhe to begin with.
          */
-        void selfFrame();
+        bool selfFrame();
 
         /**
          * Attempts to simplify the link diagram using fast and greedy

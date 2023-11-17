@@ -68,6 +68,8 @@ struct LinkView: View {
     @Environment(\.horizontalSizeClass) var sizeClass
     
     @State var couldNotSimplify = false
+    @State var alreadyAlternating = false
+    @State var alreadySelfFramed = false
     
     var body: some View {
         let link = wrapper.readonly().heldCopy()
@@ -193,26 +195,33 @@ struct LinkView: View {
                 }
                 ToolbarItem {
                     Button {
-                        // TODO: Is it already alternating?
-                        // If so give a message.
                         var p = wrapper.modifying()
-                        p.makeAlternating()
+                        alreadyAlternating = !p.makeAlternating()
                     } label: {
                         Label("Make Alternating", image: "Act-Alternating")
+                    }
+                    .alert("Already alternating", isPresented: $alreadyAlternating) {
+                        Button("OK") {}
+                    } message: {
+                        // TODO: Fix this in the Qt UI also.
+                        Text("This link diagram is already alternating.")
                     }
                 }
                 ToolbarItem {
                     Button {
-                        // TODO: Is it already self-framed?
-                        // If so give a message.
                         var p = wrapper.modifying()
-                        p.selfFrame()
+                        alreadySelfFramed = !p.selfFrame()
                     } label: {
                         Label("Self-Frame", image: "Act-SelfFrame")
                     }
+                    .alert("Already self-framed", isPresented: $alreadySelfFramed) {
+                        Button("OK") {}
+                    } message: {
+                        // TODO: Fix this in the Qt UI also.
+                        Text("Every component already has zero writhe.")
+                    }
                 }
                 ToolbarItem {
-                    // TODO: Empty? Give error.
                     Button {
                         var p = wrapper.modifying()
                         couldNotSimplify = !p.intelligentSimplify()
@@ -228,7 +237,7 @@ struct LinkView: View {
                 }
                 // TODO: Parallel (including MAX_CABLES), alter directly
                 // TODO: Reidemeister moves
-                // TODO: Compose with
+                // TODO: When we have a packet picker: compose with
                 // TODO: When we have triangulations: SnapPea and complement.
             }
         }
