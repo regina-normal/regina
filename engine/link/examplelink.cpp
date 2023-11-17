@@ -34,15 +34,13 @@
 #include "link/link.h"
 #include "link/spatiallink.h"
 
-// An orthogonal basis in R^3 that breaks symmetry.
+// An right-handed orthogonal basis in R^3 that breaks symmetry.
 // All three basis elements have the same length.
 // We use this to build spatial links whose structure is easily visible when
 // seen from any of the "pure" axis directions.
-//
-// TODO: Check that this is a right-handed system also.
 static constexpr regina::SpatialLink::Node orth[3] = {
-    regina::SpatialLink::Node{ -2.0, 6.0, 3.0 },
     regina::SpatialLink::Node{ 6.0, 3.0, -2.0 },
+    regina::SpatialLink::Node{ -2.0, 6.0, 3.0 },
     regina::SpatialLink::Node{ 3.0, -2.0, 6.0 }
 };
 
