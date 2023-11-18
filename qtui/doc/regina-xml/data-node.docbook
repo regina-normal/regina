@@ -43,7 +43,7 @@ node ::= (#PCDATA)</synopsis>
    <replaceable>z</replaceable> coordinates of the point.
   </para>
   <para>
-   &regina; writes the individual coordinates using hexidecimal floating point
+   &regina; writes the individual coordinates using hexadecimal floating point
    format to ensure no loss of precision; however, any standard
    floating point format may be used.
   </para>

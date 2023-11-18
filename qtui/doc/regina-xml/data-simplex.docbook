@@ -187,7 +187,7 @@ simplex ::= (#PCDATA)</synopsis>
     <term><sgmltag>lock</sgmltag></term>
     <listitem>
      <para>
-      A hexidecimal bitmask indicating whether this top-dimensional simplex
+      A hexadecimal bitmask indicating whether this top-dimensional simplex
       and/or any of its facets are locked.  Essentially, locking a simplex or
       facet means that the simplex or facet must not change; see &regina;'s
       <acronym>API</acronym> documentation for full details.
