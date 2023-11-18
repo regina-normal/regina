@@ -326,7 +326,7 @@ void TriangulationBase<dim>::reorderBFS(bool reverse) {
     if (n == 0)
         return;
 
-    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
+    ChangeAndClearSpan<ChangeType::Cosmetic> span(*this);
 
     // Run a breadth-first search over all top-dimensional simplices.
     auto* ordered = new Simplex<dim>*[n];

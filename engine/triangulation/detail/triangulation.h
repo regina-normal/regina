@@ -3647,8 +3647,8 @@ class TriangulationBase :
          *
          * - On destruction, this object also calls
          *   Triangulation<dim>::clearAllProperties(), _unless_ the template
-         *   argument \a changeType is ChangeType::PreserveAllProperties.
-         *   This call will happen just before the final change event is fired.
+         *   argument \a changeType is ChangeType::Cosmetic.  This call will
+         *   happen just before the final change event is fired.
          *
          * - Finally, if the template argument \a changeType is
          *   ChangeType::PreserveTopology, then this object will effectively
@@ -3727,7 +3727,7 @@ class TriangulationBase :
                  * tasks are performed.
                  */
                 ~ChangeAndClearSpan() {
-                    if constexpr (changeType != ChangeType::PreserveAllProperties)
+                    if constexpr (changeType != ChangeType::Cosmetic)
                         static_cast<Triangulation<dim>&>(
                             PacketChangeSpan::data_).clearAllProperties();
 
@@ -4163,7 +4163,7 @@ void TriangulationBase<dim>::unlockAll() {
 
     // There are actual locks to remove.  Set up the full machinery for
     // change events / snapshotting / etc.
-    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
+    ChangeAndClearSpan<ChangeType::Cosmetic> span(*this);
 
     // Our iterator is currently pointing to the first simplex for which
     // there is any kind of lock.

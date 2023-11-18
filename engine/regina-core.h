@@ -210,9 +210,10 @@ enum class ChangeType {
      * Indicates a change that is cosmetic in nature, in that it will not alter
      * any computed properties of the object.  Examples of such changes include
      * modifying simplex locks in triangulations, or reordering the
-     * top-dimensional simplices in a triangulation.
+     * top-dimensional simplices in a triangulation, or changing the rendering
+     * radius of a spatial link.
      */
-    PreserveAllProperties = 2
+    Cosmetic = 2
 };
 
 } // namespace regina

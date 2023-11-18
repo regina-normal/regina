@@ -847,8 +847,8 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          *
          * - On destruction, this object also clears any calculated properties
          *   of the link, _unless_ the template argument \a changeType is
-         *   ChangeType::PreserveAllProperties.  This call will happen just
-         *   before the final change event is fired.
+         *   ChangeType::Cosmetic.  This call will happen just before the
+         *   final change event is fired.
          *
          * The use of ChangeAndClearSpan is similar to Packet::PacketChangeSpan
          * (and indeed, this class is intended to _replace_ PacketChangeSpan
@@ -905,8 +905,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
                  * performed.
                  */
                 ~ChangeAndClearSpan() {
-                    if constexpr (changeType !=
-                            ChangeType::PreserveAllProperties) {
+                    if constexpr (changeType != ChangeType::Cosmetic) {
                         // Clear all computed properties.
                         static_cast<SpatialLink&>(data_).defaultRadius_ = -1.0;
                     }
@@ -1015,12 +1014,12 @@ inline double SpatialLink::radius() const {
 }
 
 inline void SpatialLink::setRadius(double useRadius) {
-    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
+    ChangeAndClearSpan<ChangeType::Cosmetic> span(*this);
     radius_ = useRadius;
 }
 
 inline void SpatialLink::clearRadius() {
-    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
+    ChangeAndClearSpan<ChangeType::Cosmetic> span(*this);
     radius_ = -1.0;
 }
 

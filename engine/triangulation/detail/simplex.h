@@ -1173,7 +1173,7 @@ inline const std::string& SimplexBase<dim>::description() const {
 
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
-    typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*tri_);
+    typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
     description_ = desc;
 }
 
@@ -1349,7 +1349,7 @@ template <int dim>
 inline void SimplexBase<dim>::lock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (! (locks_ & mask)) {
-        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*tri_);
+        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
         locks_ |= mask;
     }
 }
@@ -1358,7 +1358,7 @@ template <int dim>
 void SimplexBase<dim>::lockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (! (locks_ & mask)) {
-        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*tri_);
+        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
         locks_ |= mask;
 
         if (adj_[facet]) {
@@ -1377,7 +1377,7 @@ template <int dim>
 inline void SimplexBase<dim>::unlock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (locks_ & mask) {
-        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*tri_);
+        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
         locks_ &= ~mask;
     }
 }
@@ -1386,7 +1386,7 @@ template <int dim>
 void SimplexBase<dim>::unlockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (locks_ & mask) {
-        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*tri_);
+        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
         locks_ &= ~mask;
 
         if (adj_[facet]) {
@@ -1404,7 +1404,7 @@ inline void SimplexBase<dim>::unlockFacetRaw(int facet) {
 template <int dim>
 void SimplexBase<dim>::unlockAll() {
     if (locks_) {
-        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*tri_);
+        typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
         locks_ = 0;
 
         for (int facet = 0; facet <= dim; ++facet)

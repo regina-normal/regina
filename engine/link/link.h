@@ -4689,8 +4689,8 @@ class Link :
          *
          * - On destruction, this object also calls Link::clearAllProperties(),
          *   _unless_ the template argument \a changeType is
-         *   ChangeType::PreserveAllProperties.  This call will happen just
-         *   before the final change event is fired.
+         *   ChangeType::Cosmetic.  This call will happen just before the
+         *   final change event is fired.
          *
          * - Finally, if the template argument \a changeType is
          *   ChangeType::PreserveTopology, then this object will effectively
@@ -4765,7 +4765,7 @@ class Link :
                  * tasks are performed.
                  */
                 ~ChangeAndClearSpan() {
-                    if constexpr (changeType != ChangeType::PreserveAllProperties)
+                    if constexpr (changeType != ChangeType::Cosmetic)
                         static_cast<Link&>(data_).clearAllProperties();
 
                     if constexpr (changeType == ChangeType::PreserveTopology)
