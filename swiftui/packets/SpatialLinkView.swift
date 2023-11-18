@@ -34,7 +34,7 @@ import SwiftUI
 import SceneKit
 import ReginaEngine
 
-// TODO: Enforce a maximum number of nodes when using the refine function.
+// TODO: Choose the default radius properly.
 
 extension SCNVector3 {
     init(node n: regina.SpatialLink.Node) {
@@ -146,7 +146,7 @@ struct SpatialLink3D: ViewRepresentable {
     }
     #endif
 
-    // TODO: For a change in radius or colour, just update existing elements.
+    // TODO: For a change in radius, just update existing elements.
     #if os(macOS)
     func updateNSView(_ nsView: NSViewType, context: Context) {
         if let scene = nsView.scene {
@@ -195,10 +195,11 @@ struct SpatialLink3D: ViewRepresentable {
 }
 
 struct SpatialLinkView: View {
-    // TODO: Tie the radius and colour to the packet
-    // TODO: Choose the radius properly.
+    let maxNodes = 500
 
     var wrapper: Wrapper<regina.SharedSpatialLink>
+    
+    @State var tooManyNodes = false
 
     // TODO: Not state.
     #if os(macOS)
@@ -218,8 +219,17 @@ struct SpatialLinkView: View {
             // TODO: Make these edits actually save the file.
             ToolbarItem {
                 Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
-                    var p = wrapper.modifying()
-                    p.refine()
+                    if wrapper.readonly().size() * 2 > maxNodes {
+                        tooManyNodes = true
+                    } else {
+                        var p = wrapper.modifying()
+                        p.refine()
+                    }
+                }
+                .alert("Too detailed", isPresented: $tooManyNodes) {
+                    Button("OK") {}
+                } message: {
+                    Text("I am not brave enough to create a spatial link with more than \(maxNodes) nodes.")
                 }
             }
             ToolbarItem {
