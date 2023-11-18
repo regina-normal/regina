@@ -59,8 +59,9 @@ slimmer and faster for ad-hoc use. Therefore:
 
 If you are adding new functions to this class that edit the internal
 data structures of the link, you must remember to surround these
-changes with a ChangeAndClearSpan. This manages bookkeeping, such as
-(if this link _does_ belong to a packet) firing packet change events.
+changes with a ChangeAndClearSpan. This manages bookkeeping such as
+clearing computed properties, and (if this link _does_ belong to a
+packet) firing packet change events.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -90,6 +91,9 @@ R"doc(Determines if this link is identical to the given link.
 Here "identical" means that both links follow exactly the same paths
 through 3-dimensional space, with their components and nodes stored in
 exactly the same order.
+
+If any rendering radii have been fixed (e.g., via setRadius()), these
+will be ignored for the purpose of this comparison.
 
 .. warning::
     Equality and inequailty testing, while supported, is extremely
@@ -152,6 +156,9 @@ Here "identical" means that both links follow exactly the same paths
 through 3-dimensional space, with their components and nodes stored in
 exactly the same order.
 
+If any rendering radii have been fixed (e.g., via setRadius()), these
+will be ignored for the purpose of this comparison.
+
 .. warning::
     Equality and inequailty testing, while supported, is extremely
     fragile, since it relies on floating point comparisons.
@@ -161,6 +168,13 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if the two links are not identical.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::clearRadius
+static const char *clearRadius =
+R"doc(Removes any user-specified radius to use when rendering this link.
+
+Any subsequent calls to radius() will return a sensible default, as
+computed by defaultRadius().)doc";
 
 // Docstring regina::python::doc::SpatialLink_::component
 static const char *component =
@@ -227,7 +241,7 @@ Returns:
 
 // Docstring regina::python::doc::SpatialLink_::defaultRadius
 static const char *defaultRadius =
-R"doc(Returns a sensible radius to use when rendering the link.
+R"doc(Returns a sensible default radius to use when rendering the link.
 Specifically, this is the radius to use for the balls and cylinders
 used in the 3-D model.
 
@@ -241,8 +255,13 @@ Eventually this will be replaced with something intelligent that
 factors in how far apart the strands are, and will (as a result)
 guarantee that the renderings of no-adjacent strands will not collide.
 
+This function is expensive to call the first time, but it caches its
+value and so subsesquent calls are essentially instantaneous (until
+the embedding of the link changes, at which point the cached value
+will be cleared).
+
 Returns:
-    a sensible radius to use for rendering.)doc";
+    a sensible default radius to use for rendering.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::fromKnotPlot
 static const char *fromKnotPlot =
@@ -313,6 +332,16 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the spatial link whose contents should be swapped with *lhs*.)doc";
 
+// Docstring regina::python::doc::SpatialLink_::hasRadius
+static const char *hasRadius =
+R"doc(Indicates whether the user has set their own custom radius to use when
+rendering this link.
+
+Returns:
+    ``True`` if a custom radius has been set (e.g., via setRadius()),
+    or ``False`` if the default radius should be used (as computed by
+    defaultRadius()).)doc";
+
 // Docstring regina::python::doc::SpatialLink_::isEmpty
 static const char *isEmpty =
 R"doc(Determines whether this link is empty. An empty link is one with no
@@ -337,6 +366,19 @@ Parameter ``componentIndex``:
 Parameter ``nodeIndex``:
     indicates which node to return from the given component; this must
     be between 0 and ``componentSize(componentIndex) - 1`` inclusive.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::radius
+static const char *radius =
+R"doc(Returns the radius that should be used when rendering this link.
+Specifically, this is the radius to use for the balls and cylinders
+used in the 3-D model.
+
+If the user has fixed their own radius (e.g., via setRadius()), then
+that radius will be returned. Otherwise a sensible default (as
+computed by defaultRadius()) will be returned.
+
+Returns:
+    the radius to use when rendering this link.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::range
 static const char *range =
@@ -428,8 +470,21 @@ R"doc(Scales the entire link by the given factor.
 Specifically, all coordinates of all nodes will be multiplied by
 *factor*.
 
+The rendering radius, if this has been fixed, will be scaled also.
+
 Parameter ``factor``:
     the scaling factor; this must not be zero.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::setRadius
+static const char *setRadius =
+R"doc(Indicates that the given radius should be used when rendering this
+link.
+
+The given value will be returned by any subsequent calls to radius().
+
+Parameter ``useRadius``:
+    the radius to use when rendering this link; this must be strictly
+    positive.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::size
 static const char *size =

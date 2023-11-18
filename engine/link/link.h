@@ -4736,14 +4736,11 @@ class Link :
          * clearAllProperties() upon destruction) to another object.
          *
          * \tparam changeType controls which computed properties of the link
-         * will be cleared upon the destruction of this object (unless of
-         * course this object lives within a larger surrounding change span,
-         * in which case the outer span takes full responsibility for clearing
-         * computed properties).  See the notes above for details.  Currently
-         * ChangeType::PreserveTopology is not yet supported for links (this is
-         * planned for a future release of Regina).  If unsure, the default
-         * value of ChangeType::General (which clears _all_ computed properties)
-         * is always safe to use.
+         * will be cleared upon the destruction of this object.  See the notes
+         * above for details.  Currently ChangeType::PreserveTopology is not
+         * yet supported for links (this is planned for a future release of
+         * Regina).  If unsure, the default value of ChangeType::General
+         * (which clears _all_ computed properties) is always safe to use.
          *
          * \nopython
          */
@@ -4751,9 +4748,8 @@ class Link :
         class ChangeAndClearSpan : public PacketData<Link>::PacketChangeSpan {
             public:
                 /**
-                 * Performs all initial tasks before the link is
-                 * modified.  See the class notes for precisely what tasks
-                 * are performed.
+                 * Performs all initial tasks before the link is modified.
+                 * See the class notes for precisely what tasks are performed.
                  *
                  * \param link the link whose data is about to change.
                  */

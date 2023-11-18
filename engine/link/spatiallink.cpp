@@ -57,6 +57,11 @@ SpatialLink& SpatialLink::operator = (const SpatialLink& src) {
     PacketChangeSpan span(*this);
 
     components_ = src.components_;
+    radius_ = src.radius_;
+
+    // Clone properties:
+    defaultRadius_ = src.defaultRadius_;
+
     return *this;
 }
 
@@ -67,6 +72,11 @@ SpatialLink& SpatialLink::operator = (SpatialLink&& src) {
     PacketChangeSpan span(*this);
 
     components_ = std::move(src.components_);
+    radius_ = src.radius_;
+
+    // Move properties:
+    defaultRadius_ = src.defaultRadius_;
+
     return *this;
 }
 
@@ -101,12 +111,15 @@ std::pair<SpatialLink::Node, SpatialLink::Node> SpatialLink::range() const {
         return {{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }};
 }
 
-double SpatialLink::defaultRadius() const {
+void SpatialLink::computeDefaultRadius() {
+    if (isEmpty())
+        defaultRadius_ = 1.0; /* The actual value is irrelevant. */
+
     auto r = range();
 
     auto min = std::min(std::min(r.second.x - r.first.x,
         r.second.y - r.first.y), r.second.z - r.first.z);
-    return min / 20;
+    defaultRadius_ = min / 20;
 }
 
 void SpatialLink::writeTextShort(std::ostream& out) const {
@@ -132,6 +145,10 @@ void SpatialLink::writeTextLong(std::ostream& out) const {
         out << components_.front().size() << "-crossing spatial knot";
     else
         out << components_.size() << "-component spatial link";
+
+    if (hasRadius())
+        out << "\nRendering radius: " << radius_;
+
     out << "\n\n";
 
     int comp = 0;
@@ -157,10 +174,14 @@ void SpatialLink::swap(SpatialLink& other) {
     PacketChangeSpan span2(other);
 
     components_.swap(other.components_);
+    std::swap(radius_, other.radius_);
+
+    // Swap properties:
+    std::swap(defaultRadius_, other.defaultRadius_);
 }
 
 void SpatialLink::scale(double factor) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (auto& c : components_)
         for (auto& n : c) {
@@ -168,10 +189,13 @@ void SpatialLink::scale(double factor) {
             n.y *= factor;
             n.z *= factor;
         }
+
+    if (hasRadius())
+        radius_ *= factor;
 }
 
 void SpatialLink::translate(const Node& vector) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (auto& c : components_)
         for (auto& n : c) {
@@ -182,7 +206,7 @@ void SpatialLink::translate(const Node& vector) {
 }
 
 void SpatialLink::reflect(int axis) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     switch (axis) {
         case 0:
@@ -206,7 +230,7 @@ void SpatialLink::reflect(int axis) {
 }
 
 void SpatialLink::refine() {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     // See the comments in the implementation of refine(int) for where these
     // coefficients 9/16 and -1/16 come from (they just fix u = 1/2).
@@ -232,7 +256,7 @@ void SpatialLink::refine() {
 }
 
 void SpatialLink::refine(int sub) {
-    ChangeAndClearSpan span(*this);
+    ChangeAndClearSpan<> span(*this);
 
     for (auto& c : components_) {
         Component refined;

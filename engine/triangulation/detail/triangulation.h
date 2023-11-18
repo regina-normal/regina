@@ -3696,12 +3696,10 @@ class TriangulationBase :
          * clearAllProperties() upon destruction) to another object.
          *
          * \tparam changeType controls which computed properties of the
-         * triangulation will be cleared upon the destruction of this object
-         * (unless of course this object lives within a larger surrounding
-         * change span, in which case the outer span takes full responsibility
-         * for clearing computed properties).  See the notes above for details.
-         * If unsure, the default value of ChangeType::General (which clears
-         * _all_ computed properties) is always safe to use.
+         * triangulation will be cleared upon the destruction of this object.
+         * See the notes above for details.  If unsure, the default value of
+         * ChangeType::General (which clears _all_ computed properties) is
+         * always safe to use.
          *
          * \nopython
          */

@@ -40,6 +40,7 @@
 #define __REGINA_SPATIALLINK_H
 #endif
 
+#include <cmath>
 #include <vector>
 #include "regina-core.h"
 #include "packet/packet.h"
@@ -92,8 +93,9 @@ namespace regina {
  *
  * If you are adding new functions to this class that edit the internal data
  * structures of the link, you must remember to surround these changes with
- * a ChangeAndClearSpan.  This manages bookkeeping, such as (if this link
- * _does_ belong to a packet) firing packet change events.
+ * a ChangeAndClearSpan.  This manages bookkeeping such as clearing computed
+ * properties, and (if this link _does_ belong to a packet) firing packet
+ * change events.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -295,6 +297,16 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         std::vector<Component> components_;
             /**< The components of the underlying link. */
 
+        double radius_ = -1.0;
+            /**< The preferred radius to use when rendering the link.
+                 A negative number indicates that we should use the default,
+                 as computed by defaultRadius(). */
+
+        double defaultRadius_ = -1.0;
+            /**< A cached copy of the default radius, as computed by
+                 defaultRadius().  A negative number indicates that this
+                 has not been computed yet. */
+
     public:
         /**
          * \name Constructors and Destructors
@@ -489,11 +501,81 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         const Node& node(size_t componentIndex, size_t nodeIndex) const;
 
         /**
+         * Returns the radius that should be used when rendering this link.
+         * Specifically, this is the radius to use for the balls and cylinders
+         * used in the 3-D model.
+         *
+         * If the user has fixed their own radius (e.g., via setRadius()), then
+         * that radius will be returned.  Otherwise a sensible default (as
+         * computed by defaultRadius()) will be returned.
+         *
+         * \return the radius to use when rendering this link.
+         */
+        double radius() const;
+
+        /**
+         * Indicates that the given radius should be used when rendering this
+         * link.
+         *
+         * The given value will be returned by any subsequent calls to radius().
+         *
+         * \param useRadius the radius to use when rendering this link; this
+         * must be strictly positive.
+         */
+        void setRadius(double useRadius);
+
+        /**
+         * Removes any user-specified radius to use when rendering this link.
+         *
+         * Any subsequent calls to radius() will return a sensible default, as
+         * computed by defaultRadius().
+         */
+        void clearRadius();
+
+        /**
+         * Indicates whether the user has set their own custom radius to use
+         * when rendering this link.
+         *
+         * \return \c true if a custom radius has been set (e.g., via
+         * setRadius()), or \c false if the default radius should be used
+         * (as computed by defaultRadius()).
+         */
+        bool hasRadius() const;
+
+        /**
+         * Returns a sensible default radius to use when rendering the link.
+         * Specifically, this is the radius to use for the balls and cylinders
+         * used in the 3-D model.
+         *
+         * Currently this routine makes a "barely educated" decision: it looks
+         * only at the scale of the embedding, without studying the complexity
+         * of the knot or the closeness of the strands.  Specifically, it
+         * chooses some fixed fraction of the minimum range amongst the
+         * \a x, \a y and \a z dimensions.
+         *
+         * Eventually this will be replaced with something intelligent that
+         * factors in how far apart the strands are, and will (as a result)
+         * guarantee that the renderings of no-adjacent strands will not
+         * collide.
+         *
+         * This function is expensive to call the first time, but it caches
+         * its value and so subsesquent calls are essentially instantaneous
+         * (until the embedding of the link changes, at which point the cached
+         * value will be cleared).
+         *
+         * \return a sensible default radius to use for rendering.
+         */
+        double defaultRadius() const;
+
+        /**
          * Determines if this link is identical to the given link.
          *
          * Here "identical" means that both links follow exactly the same
          * paths through 3-dimensional space, with their components and
          * nodes stored in exactly the same order.
+         *
+         * If any rendering radii have been fixed (e.g., via setRadius()),
+         * these will be ignored for the purpose of this comparison.
          *
          * \warning Equality and inequailty testing, while supported, is
          * extremely fragile, since it relies on floating point comparisons.
@@ -509,6 +591,9 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * Here "identical" means that both links follow exactly the same
          * paths through 3-dimensional space, with their components and
          * nodes stored in exactly the same order.
+         *
+         * If any rendering radii have been fixed (e.g., via setRadius()),
+         * these will be ignored for the purpose of this comparison.
          *
          * \warning Equality and inequailty testing, while supported, is
          * extremely fragile, since it relies on floating point comparisons.
@@ -530,26 +615,6 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * at all then this routine will return `((0,0,0), (0,0,0))`.
          */
         std::pair<Node, Node> range() const;
-
-        /**
-         * Returns a sensible radius to use when rendering the link.
-         * Specifically, this is the radius to use for the balls and cylinders
-         * used in the 3-D model.
-         *
-         * Currently this routine makes a "barely educated" decision: it looks
-         * only at the scale of the embedding, without studying the complexity
-         * of the knot or the closeness of the strands.  Specifically, it
-         * chooses some fixed fraction of the minimum range amongst the
-         * \a x, \a y and \a z dimensions.
-         *
-         * Eventually this will be replaced with something intelligent that
-         * factors in how far apart the strands are, and will (as a result)
-         * guarantee that the renderings of no-adjacent strands will not
-         * collide.
-         *
-         * \return a sensible radius to use for rendering.
-         */
-        double defaultRadius() const;
 
         /*@}*/
         /**
@@ -603,6 +668,8 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          *
          * Specifically, all coordinates of all nodes will be multiplied by
          * \a factor.
+         *
+         * The rendering radius, if this has been fixed, will be scaled also.
          *
          * \param factor the scaling factor; this must not be zero.
          */
@@ -767,7 +834,8 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
 
     private:
         /**
-         * An object that facilitates both firing change events.
+         * An object that facilitates both firing change events and clearing
+         * any calculated properties.
          *
          * An object of type SpatialLink::ChangeAndClearSpan has the following
          * effects upon the link that is passed to its constructor:
@@ -776,6 +844,11 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          *   packet events PacketListener::packetToBeChanged() and
          *   PacketListener::packetWasChanged() will be fired upon this
          *   object's construction and destruction respectively.
+         *
+         * - On destruction, this object also clears any calculated properties
+         *   of the link, _unless_ the template argument \a changeType is
+         *   ChangeType::PreserveAllProperties.  This call will happen just
+         *   before the final change event is fired.
          *
          * The use of ChangeAndClearSpan is similar to Packet::PacketChangeSpan
          * (and indeed, this class is intended to _replace_ PacketChangeSpan
@@ -786,22 +859,71 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          *
          * Like PacketChangeSpan, these objects can be safely nested with other
          * ChangeAndClearSpan and/or PacketChangeSpan objects, and only the
-         * outermost object will fire packet change events.
+         * outermost object will fire packet change events.  However, unlike
+         * PacketChangeSpan, this comes with a cost: as always, only one
+         * set of change events will be fired; however, if there are multiple
+         * ChangeAndClearSpan objects then the link's computed properties will
+         * be cleared multiple times.  This is harmless but inefficient.
          *
-         * For now, this is simply a type alias to the appropriate
-         * PacketChangeSpan template class.  However, you should use this
-         * ChangeAndClearSpan instead of PacketChangeSpan, since it is
-         * anticipated that eventually this may become a separate class with
-         * additional responsibilities (such as clearing computed properties).
+         * Note: we would normally use a deduction guide so that, for the
+         * default case, you can just write `ChangeAndClearSpan` instead of
+         * `ChangeAndClearSpan<>`.  Unfortunately this is not possible due to
+         * a gcc bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=79501),
+         * which affects gcc versions 11 and earlier (but not clang).
          *
          * ChangeAndClearSpan objects are not copyable, movable or swappable.
          * In particular, Regina does not offer any way for a ChangeAndClearSpan
-         * to transfer its outstanding duties (e.g., firing events) to another
-         * object.
+         * to transfer its outstanding duties (i.e., firing events and clearing
+         * computed properties) to another object.
+         *
+         * \tparam changeType controls which computed properties of the link
+         * will be cleared upon the destruction of this object.  See the notes
+         * above for details.  The value ChangeType::PreserveTopology is not
+         * supported for spatial links.  If unsure, the default value of
+         * ChangeType::General (which clears _all_ computed properties)
+         * is always safe to use.
          *
          * \nopython
          */
-        using ChangeAndClearSpan = PacketData<SpatialLink>::PacketChangeSpan;
+        template <ChangeType changeType = ChangeType::General>
+        class ChangeAndClearSpan:
+                public PacketData<SpatialLink>::PacketChangeSpan {
+            public:
+                /**
+                 * Performs all initial tasks before the link is modified.
+                 * See the class notes for precisely what tasks are performed.
+                 *
+                 * \param link the link whose data is about to change.
+                 */
+                ChangeAndClearSpan(SpatialLink& link) :
+                        PacketData<SpatialLink>::PacketChangeSpan(link) {
+                }
+
+                /**
+                 * Performs all follow-up tasks after the link has been
+                 * modified.  See the class notes for precisely what tasks are
+                 * performed.
+                 */
+                ~ChangeAndClearSpan() {
+                    if constexpr (changeType !=
+                            ChangeType::PreserveAllProperties) {
+                        // Clear all computed properties.
+                        static_cast<SpatialLink&>(data_).defaultRadius_ = -1.0;
+                    }
+                }
+
+                // Make this class non-copyable.
+                ChangeAndClearSpan(const ChangeAndClearSpan&) = delete;
+                ChangeAndClearSpan& operator = (const ChangeAndClearSpan&) =
+                    delete;
+        };
+
+        /**
+         * Computes and caches the default rendering radius.
+         *
+         * This function is internal to defaultRadius().
+         */
+        void computeDefaultRadius();
 
     friend class XMLSpatialLinkReader;
     friend class XMLWriter<SpatialLink>;
@@ -885,6 +1007,33 @@ inline size_t SpatialLink::componentSize(size_t componentIndex) const {
 inline const SpatialLink::Node& SpatialLink::node(size_t componentIndex,
         size_t nodeIndex) const {
     return components_[componentIndex][nodeIndex];
+}
+
+inline double SpatialLink::radius() const {
+    // Should we just be testing whether radius_ < 0 ?
+    return (std::signbit(radius_) ? defaultRadius() : radius_);
+}
+
+inline void SpatialLink::setRadius(double useRadius) {
+    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
+    radius_ = useRadius;
+}
+
+inline void SpatialLink::clearRadius() {
+    ChangeAndClearSpan<ChangeType::PreserveAllProperties> span(*this);
+    radius_ = -1.0;
+}
+
+inline bool SpatialLink::hasRadius() const {
+    return ! std::signbit(radius_);
+}
+
+inline double SpatialLink::defaultRadius() const {
+    if (std::signbit(defaultRadius_)) {
+        // This has not yet been computed.
+        const_cast<SpatialLink*>(this)->computeDefaultRadius();
+    }
+    return defaultRadius_;
 }
 
 inline bool SpatialLink::operator == (const SpatialLink& other) const {
