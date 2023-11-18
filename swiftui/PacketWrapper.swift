@@ -116,6 +116,19 @@ class Wrapper<T: SharedPacketClass>: ObservableObject, Equatable {
     init(wrapper: PacketWrapper) {
         self.packet = T(wrapper.packet)
     }
+    
+    /**
+     * An integer that uniquely identifies this packet in the engine.
+     *
+     * Note that this is _not_ the same type used by PacketWrapper.id. Instead it is a plain 64-bit integer.
+     * The C++ code in `engine/swift` includes a compile-time assertion to ensure that 64 bits is the correct size.
+     *
+     * If we ever need the ability to convert IDs back into packet wrappers then the type of this
+     * property might need to change (to match for instance how PacketWrapper does things).
+     */
+    var id: Int64 {
+        packet.asPacket().id()
+    }
 
     func readonly() -> T {
         return packet

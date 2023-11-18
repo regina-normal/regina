@@ -114,22 +114,6 @@ struct SpatialLink3D: ViewRepresentable {
                 scene.rootNode.addChildNode(arc(prev!, n, component: i, radius: radius, scene: scene))
             }
         }
-
-        // TODO: Now when switching directly from one spatial link to another on iPadOS, the scene does not reset its position/scale to fit the new model.
-        /* TODO: What to do about all this?
-        let bounds = link.range()
-        let dx = bounds.second.x - bounds.first.x
-        let dy = bounds.second.y - bounds.first.y
-        let dz = bounds.second.z - bounds.first.z
-        let min = min(dx, dy, dz)
-        #if os(macOS)
-        let scale = CGFloat(1.0 / min)
-        #else
-        let scale = Float(1.0 / min)
-        #endif
-        // TODO: What if min == 0?
-        scene.rootNode.scale = SCNVector3(scale, scale, scale)
-         */
     }
     
     #if os(macOS)
@@ -142,6 +126,7 @@ struct SpatialLink3D: ViewRepresentable {
 
         if let scene = view.scene {
             fillScene(scene: scene)
+            scene.rootNode.name = String(wrapper.id)
         }
         return view
     }
@@ -155,6 +140,7 @@ struct SpatialLink3D: ViewRepresentable {
 
         if let scene = view.scene {
             fillScene(scene: scene)
+            scene.rootNode.name = String(wrapper.id)
         }
         return view
     }
@@ -164,20 +150,46 @@ struct SpatialLink3D: ViewRepresentable {
     #if os(macOS)
     func updateNSView(_ nsView: NSViewType, context: Context) {
         if let scene = nsView.scene {
-            scene.rootNode.enumerateChildNodes { (node, stop) in
-                node.removeFromParentNode()
+            if scene.rootNode.name == String(wrapper.id) {
+                // There has been a change to the packet already being displayed.
+                // Update the geometry of the scene but do not change the scene object, which controls the camera angle / zoom / etc.
+                scene.rootNode.enumerateChildNodes { (node, stop) in
+                    node.removeFromParentNode()
+                }
+                fillScene(scene: scene)
+                return
             }
-            fillScene(scene: scene)
         }
+        
+        // We are reusing the same view to display a different spatial link.
+        // Put in a completely new scene, which will recompute a new camera angle / zoom / etc.
+        // to reflect the new geometry.
+        let scene = SCNScene()
+        fillScene(scene: scene)
+        scene.rootNode.name = String(wrapper.id)
+        nsView.scene = scene
     }
     #else
     func updateUIView(_ uiView: UIViewType, context: Context) {
         if let scene = uiView.scene {
-            scene.rootNode.enumerateChildNodes { (node, stop) in
-                node.removeFromParentNode()
+            if scene.rootNode.name == String(wrapper.id) {
+                // There has been a change to the packet already being displayed.
+                // Update the geometry of the scene but do not change the scene object, which controls the camera angle / zoom / etc.
+                scene.rootNode.enumerateChildNodes { (node, stop) in
+                    node.removeFromParentNode()
+                }
+                fillScene(scene: scene)
+                return
             }
-            fillScene(scene: scene)
         }
+        
+        // We are reusing the same view to display a different spatial link.
+        // Put in a completely new scene, which will recompute a new camera angle / zoom / etc.
+        // to reflect the new geometry.
+        let scene = SCNScene()
+        fillScene(scene: scene)
+        scene.rootNode.name = String(wrapper.id)
+        uiView.scene = scene
     }
     #endif
 }
