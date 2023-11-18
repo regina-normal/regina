@@ -115,6 +115,7 @@ struct SpatialLink3D: ViewRepresentable {
             }
         }
 
+        // TODO: Now when switching directly from one spatial link to another on iPadOS, the scene does not reset its position/scale to fit the new model.
         /* TODO: What to do about all this?
         let bounds = link.range()
         let dx = bounds.second.x - bounds.first.x
