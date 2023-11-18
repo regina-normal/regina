@@ -46,6 +46,13 @@ namespace regina {
 template <>
 void XMLWriter<SpatialLink>::openPre() {
     out_ << "<spatiallink";
+    if (data_.hasRadius()) {
+        // Temporarily enable hexfloat format, which should be lossless.
+        auto oldFlags = out_.flags();
+        out_ << std::hexfloat;
+        out_ << R"( radius=")" << data_.radius() << '"';
+        out_.flags(oldFlags);
+    }
 }
 
 template <>

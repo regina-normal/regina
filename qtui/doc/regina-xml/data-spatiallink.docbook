@@ -39,6 +39,10 @@ spatiallink ::= (&xml-component;*,
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
      </row>
+     <row>
+      <entry><sgmltag>radius</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
      &packetattrlist2col;
     </tbody>
    </tgroup>
@@ -86,6 +90,22 @@ spatiallink ::= (&xml-component;*,
 
  <refsect1>
   <title>Attributes</title>
+  <para>
+   The following attributes are specific to spatial link packets:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>radius</sgmltag></term>
+    <listitem><para>
+     Indicates the preferred radius to use when rendering the link.
+     This is a floating point number, and must be strictly positive.
+    </para><para>
+     &regina; writes the radius using hexadecimal floating point format to
+     ensure no loss of precision; however, any standard floating point format
+     may be used.
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
   &packetattrdesc;
  </refsect1>
 

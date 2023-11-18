@@ -240,7 +240,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
                     std::move(childLabel), std::move(childID));
             case static_cast<int>(PacketType::SpatialLink):
                 return new XMLSpatialLinkReader(resolver_, packet_, anon_,
-                    std::move(childLabel), std::move(childID));
+                    std::move(childLabel), std::move(childID), subTagProps);
             case static_cast<int>(PacketType::Text):
                 return new XMLLegacyTextReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));

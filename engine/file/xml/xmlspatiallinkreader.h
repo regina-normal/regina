@@ -60,11 +60,14 @@ class XMLSpatialLinkReader : public XMLPacketReader {
         /**
          * Creates a new spatial link reader.
          *
-         * All parameters are the same as for the parent class XMLPacketReader.
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * \param props the attributes of the \c spatiallink XML element.
          */
         XMLSpatialLinkReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
-            std::string id);
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
         std::shared_ptr<Packet> packetToCommit() override;
         XMLElementReader* startContentSubElement(const std::string& subTagName,

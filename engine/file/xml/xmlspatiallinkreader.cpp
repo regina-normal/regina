@@ -32,16 +32,21 @@
 
 #include "link/spatiallink.h"
 #include "file/xml/xmlspatiallinkreader.h"
+#include "utilities/stringutils.h"
 #include <sstream>
 
 namespace regina {
 
 XMLSpatialLinkReader::XMLSpatialLinkReader(XMLTreeResolver& res,
         std::shared_ptr<Packet> parent, bool anon, std::string label,
-        std::string id) :
+        std::string id, const regina::xml::XMLPropertyDict& props) :
         XMLPacketReader(res, std::move(parent), anon, std::move(label),
             std::move(id)),
         link_(make_packet<SpatialLink>()) {
+    double radius;
+    if (valueOf(props.lookup("radius"), radius))
+        if (radius > 0)
+            link_->radius_ = radius;
 }
 
 std::shared_ptr<Packet> XMLSpatialLinkReader::packetToCommit() {
