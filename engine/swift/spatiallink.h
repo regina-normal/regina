@@ -103,6 +103,14 @@ struct SharedSpatialLink {
             return *packet_;
         }
 
+        double radius() const {
+            return packet_->radius();
+        }
+
+        void setRadius(double useRadius) {
+            packet_->setRadius(useRadius);
+        }
+
         void refine() {
             packet_->refine();
         }

@@ -62,6 +62,7 @@ enum LinkTab: Int {
 }
 
 struct LinkView: View {
+    // TODO: Not state.
     @StateObject var wrapper: Wrapper<regina.SharedLink>
     
     @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
@@ -480,6 +481,7 @@ struct LinkAlgebraView: View {
     static let maxRecognise = 50
 
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
+    // TODO: Not state.
     @State var simplifiedGroup: regina.GroupPresentation?
     @State var didSimplify = false
     @State var couldNotSimplify = false
