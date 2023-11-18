@@ -36,13 +36,13 @@ tri ::= (&xml-simplex;*,
          &packetsyn4;
          &packetsyn5;*)</synopsis>
      </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
      </row>
-     <row><entry namest="c1" nameend="c2">
-      <emphasis role="bold">Attributes</emphasis>
-     </entry></row>
      <row>
       <entry><sgmltag>dim</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
