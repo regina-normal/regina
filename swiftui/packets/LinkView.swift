@@ -170,7 +170,7 @@ struct LinkView: View {
                 UserDefaults.standard.set(newValue.rawValue, forKey: "tabLink")
             }
             .toolbar {
-                ToolbarItem {
+                ToolbarItem(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.modifying()
                         p.reflect()
@@ -178,7 +178,7 @@ struct LinkView: View {
                         Label("Reflect", image: "Act-Reflect")
                     }
                 }
-                ToolbarItem {
+                ToolbarItem(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.modifying()
                         p.rotate()
@@ -186,7 +186,7 @@ struct LinkView: View {
                         Label("Rotate", image: "Act-Rotate")
                     }
                 }
-                ToolbarItem {
+                ToolbarItem(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.modifying()
                         p.reverse()
@@ -194,7 +194,7 @@ struct LinkView: View {
                         Label("Reverse", image: "Act-Reverse")
                     }
                 }
-                ToolbarItem {
+                ToolbarItem(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.modifying()
                         alreadyAlternating = !p.makeAlternating()
@@ -208,7 +208,7 @@ struct LinkView: View {
                         Text("This link diagram is already alternating.")
                     }
                 }
-                ToolbarItem {
+                ToolbarItem(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.modifying()
                         alreadySelfFramed = !p.selfFrame()
@@ -222,7 +222,7 @@ struct LinkView: View {
                         Text("Every component already has zero writhe.")
                     }
                 }
-                ToolbarItem {
+                ToolbarItem(placement: .primaryAction) {
                     Button {
                         var p = wrapper.modifying()
                         couldNotSimplify = !p.intelligentSimplify()

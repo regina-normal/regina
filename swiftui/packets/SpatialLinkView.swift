@@ -56,17 +56,18 @@ struct SpatialLink3D: ViewRepresentable {
     typealias UIViewType = SCNView
     
     @ObservedObject var wrapper: Wrapper<regina.SharedSpatialLink>
+    
     #if os(macOS)
-    @Binding var colour: [NSColor]
+    static let compColours = [ NSColor.systemTeal, NSColor.systemYellow, NSColor.systemRed ]
     #else
-    @Binding var colour: [UIColor]
+    static let compColours = [ UIColor.systemTeal, UIColor.systemYellow, UIColor.systemRed ]
     #endif
     
     func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, component: Int, radius: CGFloat, scene: SCNScene) -> SCNNode {
         let c = SCNCylinder(radius: radius, height: a.distance(b))
         // These cylinders are very thin; they do not need to be very smooth.
         c.radialSegmentCount = 12
-        c.firstMaterial?.diffuse.contents = colour[component % colour.count]
+        c.firstMaterial?.diffuse.contents = SpatialLink3D.compColours[component % SpatialLink3D.compColours.count]
 
         let node = SCNNode(geometry: c)
         node.position = SCNVector3(node: a.midpoint(b))
@@ -77,7 +78,7 @@ struct SpatialLink3D: ViewRepresentable {
     func ball(_ p: regina.SpatialLink.Node, component: Int, radius: CGFloat, scene: SCNScene) -> SCNNode {
         let s = SCNSphere(radius: radius)
         s.segmentCount = 12
-        s.firstMaterial?.diffuse.contents = colour[component % colour.count]
+        s.firstMaterial?.diffuse.contents = SpatialLink3D.compColours[component % SpatialLink3D.compColours.count]
 
         let node = SCNNode(geometry: s)
         node.position = SCNVector3(node: p)
@@ -201,21 +202,14 @@ struct SpatialLinkView: View {
     
     @State var tooManyNodes = false
 
-    // TODO: Not state.
-    #if os(macOS)
-    @State var colour = [ NSColor.systemTeal, NSColor.systemYellow, NSColor.systemRed ]
-    #else
-    @State var colour = [ UIColor.systemTeal, UIColor.systemYellow, UIColor.systemRed ]
-    #endif
-    
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
         // Note: it does seem that SceneKit is automatically scaling the image to fill the screen,
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
-        SpatialLink3D(wrapper: wrapper, colour: $colour)
+        SpatialLink3D(wrapper: wrapper)
+        // TODO: When we have more buttons, start using (placement: ...).
         .toolbar {
-            // TODO: On the toolbar, buttons are far apart. Is this correct?
             // TODO: Make these edits actually save the file.
             ToolbarItem {
                 Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
@@ -226,7 +220,7 @@ struct SpatialLinkView: View {
                         p.refine()
                     }
                 }
-                .alert("Too detailed", isPresented: $tooManyNodes) {
+                .alert("Too much detail", isPresented: $tooManyNodes) {
                     Button("OK") {}
                 } message: {
                     Text("I am not brave enough to create a spatial link with more than \(maxNodes) nodes.")
