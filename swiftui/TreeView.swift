@@ -38,8 +38,6 @@ struct PacketCell: View {
 
     var wrapper: PacketWrapper
     
-    @State var opened = false
-
     var body: some View {
         HStack {
             if let icon = wrapper.icon {
