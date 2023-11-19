@@ -67,7 +67,7 @@ struct SpatialLink3D: ViewRepresentable {
         let c = SCNCylinder(radius: radius, height: a.distance(b))
         // These cylinders are very thin; they do not need to be very smooth.
         c.radialSegmentCount = 12
-        c.firstMaterial?.diffuse.contents = SpatialLink3D.compColours[component % SpatialLink3D.compColours.count]
+        c.firstMaterial?.diffuse.contents = Self.compColours[component % Self.compColours.count]
 
         let node = SCNNode(geometry: c)
         node.position = SCNVector3(node: a.midpoint(b))
@@ -78,7 +78,7 @@ struct SpatialLink3D: ViewRepresentable {
     func ball(_ p: regina.SpatialLink.Node, component: Int, radius: CGFloat, scene: SCNScene) -> SCNNode {
         let s = SCNSphere(radius: radius)
         s.segmentCount = 12
-        s.firstMaterial?.diffuse.contents = SpatialLink3D.compColours[component % SpatialLink3D.compColours.count]
+        s.firstMaterial?.diffuse.contents = Self.compColours[component % Self.compColours.count]
 
         let node = SCNNode(geometry: s)
         node.position = SCNVector3(node: p)
@@ -196,7 +196,7 @@ struct SpatialLink3D: ViewRepresentable {
 }
 
 struct SpatialLinkView: View {
-    let maxNodes = 500
+    static let maxNodes = 500
 
     var wrapper: Wrapper<regina.SharedSpatialLink>
     
@@ -213,7 +213,7 @@ struct SpatialLinkView: View {
             // TODO: Make these edits actually save the file.
             ToolbarItem {
                 Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
-                    if wrapper.packet.size() * 2 > maxNodes {
+                    if wrapper.packet.size() * 2 > Self.maxNodes {
                         tooManyNodes = true
                     } else {
                         var p = wrapper.packet
@@ -223,7 +223,7 @@ struct SpatialLinkView: View {
                 .alert("Too much detail", isPresented: $tooManyNodes) {
                     Button("OK") {}
                 } message: {
-                    Text("I am not brave enough to create a spatial link with more than \(maxNodes) nodes.")
+                    Text("I am not brave enough to create a spatial link with more than \(Self.maxNodes) nodes.")
                 }
             }
             ToolbarItem {

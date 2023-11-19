@@ -43,7 +43,7 @@ struct PacketCell: View {
     var body: some View {
         HStack {
             if let icon = wrapper.icon {
-                icon.resizable().frame(width: PacketCell.iconSize, height: PacketCell.iconSize)
+                icon.resizable().frame(width: Self.iconSize, height: Self.iconSize)
             }
             VStack(alignment: .leading) {
                 Text(swiftString(wrapper.packet.humanLabel()))

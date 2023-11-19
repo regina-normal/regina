@@ -62,10 +62,9 @@ enum LinkTab: Int {
 }
 
 struct LinkView: View {
-    // TODO: Not state.
-    @StateObject var wrapper: Wrapper<regina.SharedLink>
-    
+    @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
+
     @Environment(\.horizontalSizeClass) var sizeClass
     
     @State var couldNotSimplify = false
@@ -296,7 +295,7 @@ struct LinkCrossingsView: View {
 
     func textFor(_ s: regina.StrandRefAlt) -> Text {
         let c = s.crossing()
-        let colour = (c.sign() > 0 ? LinkCrossingsView.posColour : LinkCrossingsView.negColour)
+        let colour = (c.sign() > 0 ? Self.posColour : Self.negColour)
         
         if unicode {
             if c.sign() > 0 {
@@ -395,6 +394,7 @@ struct LinkPolynomialsView: View {
 
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var homflyStyle: HomflyStyle = (HomflyStyle(rawValue: UserDefaults.standard.integer(forKey: "linkHomfly")) ?? .az)
+
     @AppStorage("displayUnicode") private var unicode = true
 
     // TODO: The compute buttons use wrapper.modifying().
@@ -408,7 +408,7 @@ struct LinkPolynomialsView: View {
         // TODO: When computing, can we disable the buttons???
         VStack(alignment: .leading) {
             Text("Jones").font(.headline).padding(.vertical)
-            if link.knowsJones() || link.size() <= LinkPolynomialsView.maxAuto {
+            if link.knowsJones() || link.size() <= Self.maxAuto {
                 var jones = wrapper.packet.jones()
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
@@ -440,7 +440,7 @@ struct LinkPolynomialsView: View {
                         UserDefaults.standard.set(newValue.rawValue, forKey: "linkHomfly")
                     }
             }
-            if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
+            if link.knowsHomfly() || link.size() <= Self.maxAuto {
                 if homflyStyle == .az {
                     if unicode {
                         Text(swiftString(wrapper.packet.homflyAZ().utf8("𝛼", "𝑧")))
@@ -460,7 +460,7 @@ struct LinkPolynomialsView: View {
                 }
             }
             Text("Kauffman bracket").font(.headline).padding(.vertical)
-            if link.knowsBracket() || link.size() <= LinkPolynomialsView.maxAuto {
+            if link.knowsBracket() || link.size() <= Self.maxAuto {
                 if unicode {
                     Text(swiftString(wrapper.packet.bracket().utf8("𝐴")))
                 } else {
@@ -483,13 +483,15 @@ struct LinkAlgebraView: View {
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     // TODO: Not state.
     @State var simplifiedGroup: regina.GroupPresentation?
+
     @State var didSimplify = false
     @State var couldNotSimplify = false
+
     @AppStorage("displayUnicode") private var unicode = true
 
     var body: some View {
         let link = wrapper.packet.heldCopy()
-        let autoSimp = (link.size() <= LinkAlgebraView.maxSimp)
+        let autoSimp = (link.size() <= Self.maxSimp)
         let group = simplifiedGroup ?? link.group(autoSimp)
         
         VStack(alignment: .leading) {
@@ -503,7 +505,7 @@ struct LinkAlgebraView: View {
                 Text("Not automatically simplified").italic().padding(.bottom)
             }
             
-            if group.countRelations() <= LinkAlgebraView.maxRecognise {
+            if group.countRelations() <= Self.maxRecognise {
                 let name = group.recogniseGroup(unicode)
                 if name.length() > 0 {
                     Text("Name: \(swiftString(name))").padding(.bottom)
@@ -691,6 +693,7 @@ enum LinkGraph: Int {
 struct LinkGraphsView: View {
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selected: LinkGraph = (LinkGraph(rawValue: UserDefaults.standard.integer(forKey: "linkGraph")) ?? .tree)
+
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
