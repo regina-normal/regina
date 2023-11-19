@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  3d.cpp
   binom.cpp
   laurent.cpp
   laurent2.cpp

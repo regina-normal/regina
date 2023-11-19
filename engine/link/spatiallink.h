@@ -40,9 +40,9 @@
 #define __REGINA_SPATIALLINK_H
 #endif
 
-#include <cmath>
 #include <vector>
 #include "regina-core.h"
+#include "maths/3d.h"
 #include "packet/packet.h"
 #include "utilities/listview.h"
 
@@ -64,9 +64,9 @@ namespace regina {
  * computations (for example, of link invariants), use the Link class instead.
  *
  * This class supports links with any number of components (including zero).
- * Each component is made up of a sequence of points in 3-dimensional space,
- * each represented by a SpatialLink::Node, which are connected by straight
- * line segments to form a closed loop.
+ * Each component is made up of a sequence of nodes, which are points in
+ * 3-dimensional space represented by objects of type Vector3D.  The nodes in
+ * each component are connected by straight line segments to form a closed loop.
  *
  * It is assumed that this indeed forms an embedding (i.e., no two nodes are
  * equal, no node meets any other line segment beyond the two that it sits
@@ -108,176 +108,8 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         /**
          * Represents a single point on the path that a link component takes
          * through three-dimensional space.
-         *
-         * These objects are small enough to pass by value and swap with
-         * std::swap(), with no need for any specialised move operations or
-         * swap functions.
          */
-        struct Node {
-            /**
-             * The first (x) coordinate of the point.
-             */
-            double x;
-            /**
-             * The second (y) coordinate of the point.
-             */
-            double y;
-            /**
-             * The third (z) coordinate of the point.
-             */
-            double z;
-
-            /**
-             * Creates a new point whose coordinates are uninitialised.
-             */
-            Node() = default;
-
-            /**
-             * Creates a new copy of the given point.
-             */
-            constexpr Node(const Node&) = default;
-
-            /**
-             * Creates a new point with the given 3-dimensional coordinates.
-             *
-             * \param x the first (x) coordinate.
-             * \param y the second (y) coordinate.
-             * \param z the third (z) coordinate.
-             */
-            constexpr Node(double x, double y, double z) : x(x), y(y), z(z) {}
-
-            /**
-             * Creates a new point with the given 3-dimensional coordinates.
-             *
-             * \param coordinates array whose three elements are the \z x,
-             * \a y and \a z coordinate respectively.
-             */
-            constexpr Node(const std::array<double, 3>& coordinates) :
-                    x(coordinates[0]), y(coordinates[1]), z(coordinates[2]) {
-            }
-
-            /**
-             * Sets this to be a copy of the given point.
-             *
-             * \return a reference to this point.
-             */
-            Node& operator = (const Node&) = default;
-
-            /**
-             * Determines if this and the given point have the same coordinates.
-             *
-             * \warning Equality and inequailty testing, while supported, is
-             * extremely fragile, since it relies on floating point comparisons.
-             *
-             * \param other the point to compare with this.
-             * \return \c true if and only if the two points are equal.
-             */
-            constexpr bool operator == (const Node& other) const {
-                return (x == other.x && y == other.y && z == other.z);
-            }
-
-            /**
-             * Determines if this and the given point have different
-             * coordinates.
-             *
-             * \warning Equality and inequailty testing, while supported, is
-             * extremely fragile, since it relies on floating point comparisons.
-             *
-             * \param other the point to compare with this.
-             * \return \c true if and only if the two points are different.
-             */
-            constexpr bool operator != (const Node& other) const {
-                return (x != other.x || y != other.y || z != other.z);
-            }
-
-            /**
-             * Returns the sum of this and the given node.
-             *
-             * Here we use vector arithmetic: the resulting point will be the
-             * fourth vertex of the parallelogram whose other vertices are the
-             * this node, the origin, and the given node.
-             *
-             * \param rhs the node to add to this node.
-             * \return the sum of this and the given node.
-             */
-            constexpr Node operator + (const Node& rhs) const {
-                return { x + rhs.x, y + rhs.y, z + rhs.z };
-            };
-
-            /**
-             * Returns a copy of this node rescaled by the given factor.
-             * Specifically, the coordinates of the node that is returned will
-             * be the coordinates of this node multiplied by \a scale.
-             *
-             * \param scale the scaling factor to apply.
-             * \return a rescaled copy of this node.
-             */
-            constexpr Node operator * (double scale) const {
-                return { x * scale, y * scale, z * scale };
-            }
-
-            /**
-             * Adds the coordinates of the given node to this node.
-             *
-             * Here we use vector arithmetic: the new value of this node will
-             * be the fourth vertex of the parallelogram whose other vertices
-             * are the given node, the origin, and the original value of this
-             * node.
-             *
-             * \param rhs the node whose coordinates should be added to this
-             * node.
-             * \return a reference to this node.
-             */
-            Node& operator += (const Node& rhs) {
-                x += rhs.x; y += rhs.y; z += rhs.z;
-                return *this;
-            }
-
-            /**
-             * Scales this node by the given factor.
-             * Specifically, all coordinates of this node will be multiplied
-             * by \a scale.
-             *
-             * \param scale the scaling factor to apply.
-             * \return a reference to this node.
-             */
-            Node& operator *= (double scale) {
-                x *= scale; y *= scale; z *= scale;
-                return *this;
-            }
-
-            /**
-             * Returns the distance from this node to the origin.
-             *
-             * \return the distance from this node to the origin.
-             */
-            constexpr double length() const {
-                return sqrt(x * x + y * y + z * z);
-            }
-
-            /**
-             * Returns the distance between this and the given node.
-             *
-             * \return the distance between this and the given node.
-             */
-            constexpr double distance(const Node& other) const {
-                double dx = x - other.x;
-                double dy = y - other.y;
-                double dz = z - other.z;
-                return sqrt(dx * dx + dy * dy + dz * dz);
-            }
-
-            /**
-             * Returns the midpoint between this and the given node.
-             *
-             * \return the midpoint between this and the given node.
-             */
-            constexpr Node midpoint(const Node& other) const {
-                return { (x + other.x) / 2,
-                         (y + other.y) / 2,
-                         (z + other.z) / 2};
-            }
-        };
+        using Node = Vector3D<double>;
 
         /**
          * Represents a single link component.  This is stored as a sequence
@@ -358,7 +190,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          *
          * \python Instead of the iterators \a begin and \a end, this routine
          * takes either (i) a Python list of lists of triples of real numbers,
-         * or (ii) a Python list of lists of SpatialLink::Node objects.
+         * or (ii) a Python list of lists of Vector3D objects.
          *
          * \tparam iterator the iterator type used to access the full sequence
          * of nodes in each link component.  This must satisfy the following
@@ -366,7 +198,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * represents a single link component) has appropriate `begin()` and
          * `end()` functions; and (ii) when _those_ iterators are dereferenced,
          * the resulting object (which represents an individual point along
-         * some link component) is convertible to a SpatialLink::Node object.
+         * some link component) is convertible to a Vector3D<double>.
          *
          * \param begin the beginning of the sequence of link components.
          * \param end a past-the-end iterator indicating the end of the
@@ -395,7 +227,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          *
          * \nopython Instead, use the Python construtor that takes either a
          * Python list of lists of triples of reals, or a Python list of
-         * lists of SpatialLink::Node objects.
+         * lists of Vector3D objects.
          *
          * \param components the full sequences of nodes in each link component.
          */
@@ -685,7 +517,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * \param vector holds the three constants that should be added to the
          * \a x, \a y and \a z coordinates of every node.
          */
-        void translate(const Node& vector);
+        void translate(const Vector3D<double>& vector);
 
         /**
          * Reflects the link in plane perpendicular to the given axis.
@@ -947,25 +779,13 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
  */
 void swap(SpatialLink& lhs, SpatialLink& rhs);
 
-/**
- * Writes the given point to the given output stream.
- * The point will be written as a triple `(x, y, z)`.
- *
- * \param out the output stream to which to write.
- * \param node the point to write.
- * \return a reference to \a out.
- *
- * \ingroup link
- */
-std::ostream& operator << (std::ostream& out, const SpatialLink::Node& node);
-
 // Inline functions for SpatialLink
 
 template <typename iterator>
 SpatialLink::SpatialLink(iterator begin, iterator end) {
     static_assert(std::is_convertible_v<decltype(*(begin->begin())), Node>,
         "The SpatialLink iterator constructor requires each inner list element "
-        "to be convertible to a SpatialLink::Node.");
+        "to be convertible to a SpatialLink::Node (i.e., Vector3D<double>).");
 
     while (begin != end) {
         auto& comp = components_.emplace_back();
@@ -1045,11 +865,6 @@ inline bool SpatialLink::operator != (const SpatialLink& other) const {
 
 inline void swap(SpatialLink& lhs, SpatialLink& rhs) {
     lhs.swap(rhs);
-}
-
-inline std::ostream& operator << (std::ostream& out,
-        const SpatialLink::Node& node) {
-    return out << '(' << node.x << ", " << node.y << ", " << node.z << ')';
 }
 
 } // namespace regina

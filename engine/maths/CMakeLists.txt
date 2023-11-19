@@ -24,6 +24,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
+    3d.h
     binom.h
     cyclotomic.h
     integer.h

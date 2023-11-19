@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "link/spatiallink.h"
 #include "../helpers.h"
@@ -87,29 +86,6 @@ void addSpatialLink(pybind11::module_& m) {
     regina::python::add_output(l);
     regina::python::packet_eq_operators(l, rdoc::__eq, rdoc::__ne);
     regina::python::add_packet_data(l);
-
-    RDOC_SCOPE_INNER_BEGIN(Node)
-
-    auto n = pybind11::class_<SpatialLink::Node>(l, "Node", rdoc_inner_scope)
-        .def(pybind11::init<>(), rdoc_inner::__default)
-        .def(pybind11::init<const SpatialLink::Node&>(), rdoc_inner::__copy)
-        .def(pybind11::init<double, double, double>(), rdoc_inner::__init)
-        .def(pybind11::init<std::array<double, 3>>(), rdoc_inner::__init_2)
-        .def(pybind11::self + pybind11::self, rdoc_inner::__add)
-        .def(pybind11::self * double(), rdoc_inner::__mul)
-        .def(pybind11::self += pybind11::self, rdoc_inner::__iadd)
-        .def(pybind11::self *= double(), rdoc_inner::__imul)
-        .def("length", &SpatialLink::Node::length, rdoc_inner::length)
-        .def("distance", &SpatialLink::Node::distance, rdoc_inner::distance)
-        .def("midpoint", &SpatialLink::Node::midpoint, rdoc_inner::midpoint)
-        .def_readwrite("x", &SpatialLink::Node::x, rdoc_inner::x)
-        .def_readwrite("y", &SpatialLink::Node::y, rdoc_inner::y)
-        .def_readwrite("z", &SpatialLink::Node::z, rdoc_inner::z)
-    ;
-    regina::python::add_output_ostream(n);
-    regina::python::add_eq_operators(n, rdoc_inner::__eq, rdoc_inner::__ne);
-
-    RDOC_SCOPE_INNER_END
 
     regina::python::addListView<decltype(SpatialLink().components())>(m);
 

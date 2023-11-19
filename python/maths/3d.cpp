@@ -30,56 +30,40 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
+#include "maths/3d.h"
+#include "../helpers.h"
+#include "../docstrings/maths/3d.h"
 
-void add3D(pybind11::module_& m);
-void addBinom(pybind11::module_& m);
-void addMatrixOps(pybind11::module_& m);
-void addCyclotomic(pybind11::module_& m);
-void addInteger(pybind11::module_& m);
-void addLaurent(pybind11::module_& m);
-void addLaurent2(pybind11::module_& m);
-void addVector(pybind11::module_& m);
-void addMatrix2(pybind11::module_& m);
-void addMatrix(pybind11::module_& m);
-void addPerm2(pybind11::module_& m);
-void addPerm3(pybind11::module_& m);
-void addPerm4(pybind11::module_& m);
-void addPerm5(pybind11::module_& m);
-void addPerm6(pybind11::module_& m);
-void addPerm7(pybind11::module_& m);
-void addPerm(pybind11::module_& m);
-void addPermGroup(pybind11::module_& m);
-void addPolynomial(pybind11::module_& m);
-void addPrimes(pybind11::module_& m);
-void addRational(pybind11::module_& m);
-void addNumberTheory(pybind11::module_& m);
+using regina::Vector3D;
 
-void addMathsClasses(pybind11::module_& m) {
-    // These types come first, so that the docstrings for later classes
-    // can use the abbreviated names Integer, LargeInteger, etc.
-    addInteger(m);
-    addRational(m);
-    addVector(m);
-    addMatrix2(m);
-    addMatrix(m);
+void add3D(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Vector3D)
 
-    add3D(m);
-    addBinom(m);
-    addMatrixOps(m);
-    addPrimes(m);
-    addNumberTheory(m);
-    addPerm2(m);
-    addPerm3(m);
-    addPerm4(m);
-    addPerm5(m);
-    addPerm6(m);
-    addPerm7(m);
-    addPerm(m);
-    addPermGroup(m);
-    addPolynomial(m);
-    addCyclotomic(m);
-    addLaurent(m);
-    addLaurent2(m);
+    auto v = pybind11::class_<Vector3D<double>>(m, "Vector3D", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const Vector3D<double>&>(), rdoc::__copy)
+        .def(pybind11::init<double, double, double>(), rdoc::__init)
+        .def(pybind11::init<std::array<double, 3>>(), rdoc::__init_2)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub)
+        .def(pybind11::self * double(), rdoc::__mul)
+        .def(pybind11::self / double(), rdoc::__div)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= double(), rdoc::__imul)
+        .def(pybind11::self /= double(), rdoc::__idiv)
+        .def("length", &Vector3D<double>::length, rdoc::length)
+        .def("distance", &Vector3D<double>::distance, rdoc::distance)
+        .def("midpoint", &Vector3D<double>::midpoint, rdoc::midpoint)
+        .def_readwrite("x", &Vector3D<double>::x, rdoc::x)
+        .def_readwrite("y", &Vector3D<double>::y, rdoc::y)
+        .def_readwrite("z", &Vector3D<double>::z, rdoc::z)
+    ;
+    regina::python::add_output_ostream(v);
+    regina::python::add_eq_operators(v, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
-

@@ -53,6 +53,7 @@ module ReginaEngine {
     header "manifold/simplesurfacebundle.h"
     header "manifold/snappeacensusmfd.h"
     header "manifold/torusbundle.h"
+    header "maths/3d.h"
     header "maths/binom.h"
     header "maths/cyclotomic.h"
     header "maths/integer.h"

@@ -233,6 +233,26 @@ namespace regina {
  *  eventually be removed.
  */
 
+/*! \page 3d 3-D geometry
+ *
+ *  Regina supplies some 3-D geometry classes, such as Vector3D.
+ *  These are intended for visualisation, not exact arithmetic, and they
+ *  come with the following notes and caveats:
+ *
+ *  - They use floating-point arithmetic, which makes them susceptible to
+ *    floating-point errors.  There is no rigorous management of error bounds,
+ *    and so any results that use these classes (such as, for example, the
+ *    projection from a floating-point 3-D spatial link to an exact
+ *    combinatorial link diagram) should be treated as _inexact_.
+ *
+ *  - Further to this: equality testing (e.g., testing whether two points
+ *    coincide, or whether a given point lies on a given line, or whether
+ *    two lines are parallel) is especially difficult, and should be avoided
+ *    where possible.
+ *
+ *  - Regina uses a right-handed coordinate system.
+ */
+
 /*! \page bgl Boost Graph Library interface
  *
  * The namespace regina::graph provides an interface for various types of

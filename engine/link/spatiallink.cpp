@@ -194,7 +194,7 @@ void SpatialLink::scale(double factor) {
         radius_ *= factor;
 }
 
-void SpatialLink::translate(const Node& vector) {
+void SpatialLink::translate(const Vector3D<double>& vector) {
     ChangeAndClearSpan<> span(*this);
 
     for (auto& c : components_)

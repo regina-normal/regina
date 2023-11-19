@@ -318,6 +318,8 @@ Version 7.4  [ (to be announced) ]
               of a different type.
             - Added support for tight encodings and decodings.
             - New routine hash(), which uses the tight encoding.
+        Class Vector3D:
+            - New class to support floating-point 3-D geometry.
         Function columnEchelonForm():
             - Cleaned up and relaxed the preconditions.
             - Now checks its preconditions and throws an exception if they fail.
