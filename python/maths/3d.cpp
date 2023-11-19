@@ -37,6 +37,7 @@
 #include "../helpers.h"
 #include "../docstrings/maths/3d.h"
 
+using regina::Rotation3D;
 using regina::Vector3D;
 
 void add3D(pybind11::module_& m) {
@@ -64,6 +65,19 @@ void add3D(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(v);
     regina::python::add_eq_operators(v, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_SWITCH(Rotation3D)
+
+    auto r = pybind11::class_<Rotation3D<double>>(m, "Rotation3D", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const Rotation3D<double>&>(), rdoc::__copy)
+        .def(pybind11::init<double, double, double, double>(), rdoc::__init)
+        .def("__getitem__", [](const Rotation3D<double>& r, int i) -> double {
+            return r[i];
+        }, rdoc::__array)
+    ;
+    regina::python::add_output_ostream(r);
+    regina::python::add_eq_operators(r, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_END
 }

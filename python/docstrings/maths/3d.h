@@ -11,6 +11,38 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::Rotation3D
+static const char *Rotation3D =
+R"doc(Represents a rotation about the origin in real three-dimensional
+space.
+
+Regina stores a rotation using a _quaternion_, which consists of four
+real numbers. We refer to these four numbers as the _quaternion
+coordinates_.
+
+Specifically, suppose we rotate by an angle of θ around the axis
+pointing from the origin to the unit vector ``(x,y,z)``, and this
+rotation follows a right-hand rule (the thumb of the right hand points
+from the origin out towards ``(x,y,z)``, and the fingers follow the
+direction of the rotation). Then the four real numbers that make up
+the quaternion are ``(cos θ/2, x sin θ/2, y sin θ/2, z sin θ/2)``.
+Since the axis vector ``(x,y,z)`` is a unit vector, it follows that
+these four real numbers form a unit vector also.
+
+See Regina's notes on 3-D geometry for importing information,
+including the inexact floating-point nature of the Vector3D class, and
+the right-handedness of Regina's coordinate system.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Python:
+    The template parameter *Real* is ``double``.
+
+Template parameter ``Real``:
+    the floating-point type to use for all storage and computation.)doc";
+
 // Docstring regina::python::doc::Vector3D
 static const char *Vector3D =
 R"doc(Represents a vector in real three-dimensional space. This class is
@@ -29,6 +61,85 @@ Python:
 
 Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
+
+namespace Rotation3D_ {
+
+// Docstring regina::python::doc::Rotation3D_::__array
+static const char *__array =
+R"doc(Returns the given quaternion coordinate for this rotation.
+
+Parameter ``index``:
+    indicates which coordinate to return; this must be between 0 and 3
+    inclusive.
+
+Returns:
+    the corresponding quaternion coordinate.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given rotation.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::__default
+static const char *__default =
+R"doc(Creates the identity rotation. This is the operation that does not
+rotate at all.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::__eq
+static const char *__eq =
+R"doc(Determines if this and the given rotation have the same quaternion
+coordinates.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating-point comparisons.
+
+Parameter ``other``:
+    the rotation to compare with this.
+
+Returns:
+    ``True`` if and only if the two rotations have the same quaternion
+    coordinates.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::__init
+static const char *__init =
+R"doc(Creates a new rotation from the given quaternion coordinates.
+
+Precondition:
+    The given coordinates are normalised; that is, ``a^2 + b^2 + c^2 +
+    d^2 = 1``.
+
+Parameter ``a``:
+    the first quaternion coordinate; that is, ``cos θ/2`` from the
+    discussion in the class notes.
+
+Parameter ``b``:
+    the second quaternion coordinate; that is, ``x sin θ/2`` from the
+    discussion in the class notes.
+
+Parameter ``c``:
+    the third quaternion coordinate; that is, ``y sin θ/2`` from the
+    discussion in the class notes.
+
+Parameter ``d``:
+    the fourth quaternion coordinate; that is, ``z sin θ/2`` from the
+    discussion in the class notes.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::__ne
+static const char *__ne =
+R"doc(Determines if this and the given rotation have different quaternion
+coordinates.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating-point comparisons.
+
+Parameter ``other``:
+    the rotation to compare with this.
+
+Returns:
+    ``True`` if and only if the two rotations have different
+    quaternion coordinates.)doc";
+
+}
 
 namespace Vector3D_ {
 

@@ -284,7 +284,7 @@ struct Vector3D {
  * The vector will be written as a triple `(x, y, z)`.
  *
  * \param out the output stream to which to write.
- * \param vector the vector to write.
+ * \param v the vector to write.
  * \return a reference to \a out.
  *
  * \ingroup maths
@@ -292,6 +292,136 @@ struct Vector3D {
 template <typename Real>
 std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
     return out << '(' << v.x << ", " << v.y << ", " << v.z << ')';
+}
+
+/**
+ * Represents a rotation about the origin in real three-dimensional space.
+ *
+ * Regina stores a rotation using a _quaternion_, which consists of four real
+ * numbers.  We refer to these four numbers as the _quaternion coordinates_.
+ *
+ * Specifically, suppose we rotate by an angle of θ around the axis pointing
+ * from the origin to the unit vector `(x,y,z)`, and this rotation follows a
+ * right-hand rule (the thumb of the right hand points from the origin out
+ * towards `(x,y,z)`, and the fingers follow the direction of the rotation).
+ * Then the four real numbers that make up the quaternion are
+ * `(cos θ/2, x sin θ/2, y sin θ/2, z sin θ/2)`.  Since the axis vector
+ * `(x,y,z)` is a unit vector, it follows that these four real numbers form
+ * a unit vector also.
+ *
+ * See Regina's \ref 3d "notes on 3-D geometry" for importing information,
+ * including the inexact floating-point nature of the Vector3D class, and the
+ * right-handedness of Regina's coordinate system.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \python The template parameter \a Real is \c double.
+ *
+ * \tparam Real the floating-point type to use for all storage and computation.
+ *
+ * \ingroup maths
+ */
+template <typename Real = double>
+class Rotation3D {
+    private:
+        Real q_[4] { 1.0, 0.0, 0.0, 0.0 };
+            /**< The four quaternion coordinates. */
+
+    public:
+        /**
+         * Creates the identity rotation.  This is the operation that does not
+         * rotate at all.
+         */
+        Rotation3D() = default;
+
+        /**
+         * Creates a new copy of the given rotation.
+         */
+        constexpr Rotation3D(const Rotation3D&) = default;
+
+        /**
+         * Creates a new rotation from the given quaternion coordinates.
+         *
+         * \pre The given coordinates are normalised; that is,
+         * `a^2 + b^2 + c^2 + d^2 = 1`.
+         *
+         * \param a the first quaternion coordinate; that is, `cos θ/2`
+         * from the discussion in the class notes.
+         * \param b the second quaternion coordinate; that is, `x sin θ/2`
+         * from the discussion in the class notes.
+         * \param c the third quaternion coordinate; that is, `y sin θ/2`
+         * from the discussion in the class notes.
+         * \param d the fourth quaternion coordinate; that is, `z sin θ/2`
+         * from the discussion in the class notes.
+         */
+        constexpr Rotation3D(Real a, Real b, Real c, Real d) : q_{a, b, c, d} {
+        }
+
+        /**
+         * Sets this to be a copy of the given rotation.
+         *
+         * \return a reference to this rotation.
+         */
+        Rotation3D& operator = (const Rotation3D&) = default;
+
+        /**
+         * Returns the given quaternion coordinate for this rotation.
+         *
+         * \param index indicates which coordinate to return; this must be
+         * between 0 and 3 inclusive.
+         * \return the corresponding quaternion coordinate.
+         */
+        constexpr double operator[] (int index) const {
+            return q_[index];
+        }
+
+        /**
+         * Determines if this and the given rotation have the same quaternion
+         * coordinates.
+         *
+         * \warning Equality and inequailty testing, while supported, is
+         * extremely fragile, since it relies on floating-point comparisons.
+         *
+         * \param other the rotation to compare with this.
+         * \return \c true if and only if the two rotations have the same
+         * quaternion coordinates.
+         */
+        constexpr bool operator == (const Rotation3D& other) const {
+            return std::equal(q_, q_ + 4, other.q_);
+        }
+
+        /**
+         * Determines if this and the given rotation have different quaternion
+         * coordinates.
+         *
+         * \warning Equality and inequailty testing, while supported, is
+         * extremely fragile, since it relies on floating-point comparisons.
+         *
+         * \param other the rotation to compare with this.
+         * \return \c true if and only if the two rotations have different
+         * quaternion coordinates.
+         */
+        constexpr bool operator != (const Rotation3D& other) const {
+            return ! std::equal(q_, q_ + 4, other.q_);
+        }
+};
+
+/**
+ * Writes the given rotation to the given output stream.
+ * The rotation will be written using its quaternion coordinates, as a
+ * tuple `(a, b, c, d)`.
+ *
+ * \param out the output stream to which to write.
+ * \param rot the rotation to write.
+ * \return a reference to \a out.
+ *
+ * \ingroup maths
+ */
+template <typename Real>
+std::ostream& operator << (std::ostream& out, const Rotation3D<Real>& r) {
+    return out << '(' << r[0] << ", " << r[1] << ", " << r[2] << ", "
+        << r[3] << ')';
 }
 
 } // namespace regina

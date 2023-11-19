@@ -220,6 +220,8 @@ Version 7.4  [ (to be announced) ]
               in the regina:: namespace.
         Class Rational:
             - New function str().
+        Class Rotation3D:
+            - New class to support floating-point 3-D geometry.
         Class SatAnnulus:
             - Routine attachLST() now checks its preconditions, and throws
               an exception if they fail.
