@@ -58,9 +58,9 @@ struct SpatialLink3D: ViewRepresentable {
     @ObservedObject var wrapper: Wrapper<regina.SharedSpatialLink>
     
     #if os(macOS)
-    static let compColours = [ NSColor.systemTeal, NSColor.systemYellow, NSColor.systemRed ]
+    static let compColours = [ NSColor.systemTeal, NSColor.systemYellow, NSColor.systemRed, NSColor.systemPurple, NSColor.systemGreen, NSColor.systemBrown, NSColor.systemBlue, NSColor.systemPink, NSColor.systemOrange, NSColor.systemIndigo ]
     #else
-    static let compColours = [ UIColor.systemTeal, UIColor.systemYellow, UIColor.systemRed ]
+    static let compColours = [ UIColor.systemTeal, UIColor.systemYellow, UIColor.systemRed, UIColor.systemPurple, UIColor.systemGreen, UIColor.systemBrown, UIColor.systemBlue, UIColor.systemPink, UIColor.systemOrange, UIColor.systemIndigo ]
     #endif
     
     func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, component: Int, radius: CGFloat, scene: SCNScene) -> SCNNode {
