@@ -625,7 +625,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
  *
  * - For visualisation, you may wish to use SpatialLink instead, with the
  *   caveat that SpatialLink is based on floating-point arithmetic and is
- *   therefore susceptible to floating point errors.
+ *   therefore susceptible to floating-point errors.
  *
  * This Link class supports links with any number of components (including
  * zero), and it also supports components with no crossings (which form

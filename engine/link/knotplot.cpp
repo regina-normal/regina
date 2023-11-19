@@ -122,8 +122,8 @@ double KPFloat64(const char c[], bool bigEndian) {
 namespace regina {
 
 SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
-    // When we move to C++23, I think we get access to fixed-size floating
-    // point types.  I should check this.
+    // When we move to C++23, I think we get access to fixed-size floating-point
+    // types.  I should check this.
     if (sizeof(float) != 4 || sizeof(double) != 8)
         throw NotImplemented("fromKnotPlot(): binary file format requires "
             "a platform with 32-bit floats and 64-bit doubles");
@@ -135,7 +135,7 @@ SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
         floatBigEndian = true;
     else
         throw NotImplemented("fromKnotPlot(): could not determine the "
-            "endianness for floating point numbers on the current platform");
+            "endianness for floating-point numbers on the current platform");
 
     std::ifstream in(filename, std::ios::binary);
     if (! in)

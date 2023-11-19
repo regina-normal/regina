@@ -59,7 +59,7 @@ namespace regina {
  * `deg(Φ_n) = φ(n)`, where `φ` denotes Euler's totient function.
  * This class stores field elements using such a polynomial representation,
  * and does _not_ store complex numbers directly.  If you require the
- * complex value of a field element (as a floating point approximation),
+ * complex value of a field element (as a floating-point approximation),
  * you can call evaluate().
  *
  * Each object of this class stores both the value of the field element
@@ -348,8 +348,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * a non-default constructor, an assignment operator, or by
          * calling init()).
          *
-         * \warning This routine uses floating point arithmetic, and so the
-         * value that it returns is subject to the usual floating point error.
+         * \warning This routine uses floating-point arithmetic, and so the
+         * value that it returns is subject to the usual floating-point error.
          *
          * \param whichRoot indicates which root of unity will be used
          * to convert the polynomial representation of this field
