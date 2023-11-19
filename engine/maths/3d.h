@@ -39,9 +39,9 @@
 #define __REGINA_3D
 #endif
 
+#include <array>
 #include <cmath>
 #include <iostream>
-#include <maths/matrix.h>
 
 namespace regina {
 
@@ -296,6 +296,152 @@ std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
 }
 
 /**
+ * Represents a linear transformation in three-dimensional space, as
+ * represented by a real 3-by-3 matrix.
+ *
+ * If you are interested specifically in rotations, then you should use the
+ * Rotation3D class instead, which uses a more compact and numerically stable
+ * representation (quaternions).
+ *
+ * See Regina's \ref 3d "notes on 3-D geometry" for importing information,
+ * including the inexact floating-point nature of the Vector3D class, and the
+ * right-handedness of Regina's coordinate system.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \python The template parameter \a Real is \c double.
+ *
+ * \tparam Real the floating-point type to use for all storage and computation.
+ *
+ * \ingroup maths
+ */
+template <typename Real = double>
+class Matrix3D {
+    private:
+        std::array<std::array<Real, 3>, 3> m_ {
+                std::array<Real, 3>{ 1.0, 0.0, 0.0 },
+                std::array<Real, 3>{ 0.0, 1.0, 0.0 },
+                std::array<Real, 3>{ 0.0, 0.0, 1.0 } };
+            /**< The individual matrix elements, indexed by row and then by
+                 column. */
+
+    public:
+        /**
+         * Creates the identity matrix.
+         */
+        Matrix3D() = default;
+
+        /**
+         * Creates a new copy of the given matrix.
+         */
+        constexpr Matrix3D(const Matrix3D&) = default;
+
+        /**
+         * Creates a new matrix containin the given entries.
+         *
+         * \param m00 the entry in row 0, column 0.
+         * \param m01 the entry in row 0, column 1.
+         * \param m02 the entry in row 0, column 2.
+         * \param m10 the entry in row 1, column 0.
+         * \param m11 the entry in row 1, column 1.
+         * \param m12 the entry in row 1, column 2.
+         * \param m20 the entry in row 2, column 0.
+         * \param m21 the entry in row 2, column 1.
+         * \param m22 the entry in row 2, column 2.
+         */
+        constexpr Matrix3D(Real m00, Real m01, Real m02,
+            Real m10, Real m11, Real m12, Real m20, Real m21, Real m22) : m_{
+                std::array<Real, 3>{ m00, m01, m02 },
+                std::array<Real, 3>{ m10, m11, m12 },
+                std::array<Real, 3>{ m20, m21, m22 }} {
+        }
+
+        /**
+         * Sets this to be a copy of the given matrix.
+         *
+         * \return a reference to this matrix.
+         */
+        Matrix3D& operator = (const Matrix3D&) = default;
+
+        /**
+         * Gives read-write access to a single row of this matrix.
+         *
+         * This means that the entry in row \a r, column \a c can be accessed
+         * as `matrix[r][c]` (where \a r and \a c are each 0, 1 or 2).
+         *
+         * \param row the index of the requested row; this must be 0, 1 or 2.
+         * \return a reference to the three-element array containing the
+         * elements of the requested row.
+         */
+        std::array<Real, 3>& operator [] (int row) {
+            return m_[row];
+        }
+
+        /**
+         * Gives read-only access to a single row of this matrix.
+         *
+         * This means that the entry in row \a r, column \a c can be accessed
+         * as `matrix[r][c]` (where \a r and \a c are each 0, 1 or 2).
+         *
+         * \param row the index of the requested row; this must be 0, 1 or 2.
+         * \return a three-element array containing the elements of the
+         * requested row.
+         */
+        constexpr const std::array<Real, 3>& operator [] (int row) const {
+            return m_[row];
+        }
+
+        /**
+         * Determines if this and the given matrix are equal.
+         *
+         * \warning Equality and inequailty testing, while supported, is
+         * extremely fragile, since it relies on floating-point comparisons.
+         *
+         * \param other the matrix to compare with this.
+         * \return \c true if and only if the two matrices are equal.
+         */
+        constexpr bool operator == (const Matrix3D& other) const {
+            return m_ == other.m_;
+        }
+
+        /**
+         * Determines if this and the given matrix are different.
+         *
+         * \warning Equality and inequailty testing, while supported, is
+         * extremely fragile, since it relies on floating-point comparisons.
+         *
+         * \param other the matrix to compare with this.
+         * \return \c true if and only if the two matrices are not equal.
+         */
+        constexpr bool operator != (const Matrix3D& other) const {
+            return m_ != other.m_;
+        }
+
+        // TODO: * and *=
+        // TODO: Inverse
+        // TODO: Swaps (local and global)
+};
+
+/**
+ * Writes the given matrix to the given output stream.
+ * The matrix will be written row by row, in the form
+ * `[[ m00 m01 m02 ] [ m10 m11 m12 ] [ m20 m21 m22 ]]`.
+ *
+ * \param out the output stream to which to write.
+ * \param m the matrix to write.
+ * \return a reference to \a out.
+ *
+ * \ingroup maths
+ */
+template <typename Real>
+std::ostream& operator << (std::ostream& out, const Matrix3D<Real>& m) {
+    return out << "[[ " << m[0][0] << ' ' << m[0][1] << ' ' << m[0][2]
+        << " ] [ " << m[1][0] << ' ' << m[1][1] << ' ' << m[1][2]
+        << " ] [ " << m[2][0] << ' ' << m[2][1] << ' ' << m[2][2] << " ]]";
+}
+
+/**
  * Represents a rotation about the origin in real three-dimensional space.
  *
  * Regina stores a rotation using a _quaternion_, which consists of four real
@@ -341,7 +487,7 @@ std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
 template <typename Real = double>
 class Rotation3D {
     private:
-        Real q_[4] { 1.0, 0.0, 0.0, 0.0 };
+        std::array<Real, 4> q_ { 1.0, 0.0, 0.0, 0.0 };
             /**< The four quaternion coordinates. */
 
     public:
@@ -390,7 +536,7 @@ class Rotation3D {
          * between 0 and 3 inclusive.
          * \return the corresponding quaternion coordinate.
          */
-        constexpr double operator[] (int index) const {
+        constexpr Real operator[] (int index) const {
             return q_[index];
         }
 
@@ -406,7 +552,7 @@ class Rotation3D {
          * quaternion coordinates.
          */
         constexpr bool operator == (const Rotation3D& other) const {
-            return std::equal(q_, q_ + 4, other.q_);
+            return q_ == other.q_;
         }
 
         /**
@@ -421,7 +567,7 @@ class Rotation3D {
          * quaternion coordinates.
          */
         constexpr bool operator != (const Rotation3D& other) const {
-            return ! std::equal(q_, q_ + 4, other.q_);
+            return q_ != other.q_;
         }
 
         /**
@@ -502,7 +648,7 @@ class Rotation3D {
          *
          * \return the corresponding 3-dimensional rotation matrix.
          */
-        Matrix<Real> matrix() const {
+        Matrix3D<Real> matrix() const {
             // Here we follow the formula from Wikipedia, taken from Watt and
             // Watt (1992), ISBN 978-0201544121, which optimises the number of
             // floating-point operations.
@@ -512,17 +658,10 @@ class Rotation3D {
             Real ab = q_[0] * bs; Real ac = q_[0] * cs; Real ad = q_[0] * ds;
             Real bb = q_[1] * bs; Real bc = q_[1] * cs; Real bd = q_[1] * ds;
             Real cc = q_[2] * cs; Real cd = q_[2] * ds; Real dd = q_[3] * ds;
-            Matrix<Real> ans(3);
-            ans.entry(0, 0) = 1 - cc - dd;
-            ans.entry(0, 1) = bc - ad;
-            ans.entry(0, 2) = bd + ac;
-            ans.entry(1, 0) = bc + ad;
-            ans.entry(1, 1) = 1 - bb - dd;
-            ans.entry(1, 2) = cd - ab;
-            ans.entry(2, 0) = bd - ac;
-            ans.entry(2, 1) = cd + ab;
-            ans.entry(2, 2) = 1 - bb - cc;
-            return ans;
+            return Matrix3D {
+                1 - cc - dd, bc - ad, bd + ac,
+                bc + ad, 1 - bb - dd, cd - ab,
+                bd - ac, cd + ab, 1 - bb - cc };
         }
 };
 

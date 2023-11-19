@@ -11,6 +11,29 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::Matrix3D
+static const char *Matrix3D =
+R"doc(Represents a linear transformation in three-dimensional space, as
+represented by a real 3-by-3 matrix.
+
+If you are interested specifically in rotations, then you should use
+the Rotation3D class instead, which uses a more compact and
+numerically stable representation (quaternions).
+
+See Regina's notes on 3-D geometry for importing information,
+including the inexact floating-point nature of the Vector3D class, and
+the right-handedness of Regina's coordinate system.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Python:
+    The template parameter *Real* is ``double``.
+
+Template parameter ``Real``:
+    the floating-point type to use for all storage and computation.)doc";
+
 // Docstring regina::python::doc::Rotation3D
 static const char *Rotation3D =
 R"doc(Represents a rotation about the origin in real three-dimensional
@@ -78,6 +101,103 @@ Python:
 
 Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
+
+namespace Matrix3D_ {
+
+// Docstring regina::python::doc::Matrix3D_::__array
+static const char *__array =
+R"doc(Gives read-write access to a single row of this matrix.
+
+This means that the entry in row *r*, column *c* can be accessed as
+``matrix[r][c]`` (where *r* and *c* are each 0, 1 or 2).
+
+Parameter ``row``:
+    the index of the requested row; this must be 0, 1 or 2.
+
+Returns:
+    a reference to the three-element array containing the elements of
+    the requested row.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::__array_2
+static const char *__array_2 =
+R"doc(Gives read-only access to a single row of this matrix.
+
+This means that the entry in row *r*, column *c* can be accessed as
+``matrix[r][c]`` (where *r* and *c* are each 0, 1 or 2).
+
+Parameter ``row``:
+    the index of the requested row; this must be 0, 1 or 2.
+
+Returns:
+    a three-element array containing the elements of the requested
+    row.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given matrix.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::__default
+static const char *__default = R"doc(Creates the identity matrix.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::__eq
+static const char *__eq =
+R"doc(Determines if this and the given matrix are equal.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating-point comparisons.
+
+Parameter ``other``:
+    the matrix to compare with this.
+
+Returns:
+    ``True`` if and only if the two matrices are equal.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::__init
+static const char *__init =
+R"doc(Creates a new matrix containin the given entries.
+
+Parameter ``m00``:
+    the entry in row 0, column 0.
+
+Parameter ``m01``:
+    the entry in row 0, column 1.
+
+Parameter ``m02``:
+    the entry in row 0, column 2.
+
+Parameter ``m10``:
+    the entry in row 1, column 0.
+
+Parameter ``m11``:
+    the entry in row 1, column 1.
+
+Parameter ``m12``:
+    the entry in row 1, column 2.
+
+Parameter ``m20``:
+    the entry in row 2, column 0.
+
+Parameter ``m21``:
+    the entry in row 2, column 1.
+
+Parameter ``m22``:
+    the entry in row 2, column 2.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::__ne
+static const char *__ne =
+R"doc(Determines if this and the given matrix are different.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating-point comparisons.
+
+Parameter ``other``:
+    the matrix to compare with this.
+
+Returns:
+    ``True`` if and only if the two matrices are not equal.)doc";
+
+}
 
 namespace Rotation3D_ {
 

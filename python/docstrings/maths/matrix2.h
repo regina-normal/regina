@@ -86,7 +86,7 @@ Returns:
 
 // Docstring regina::python::doc::Matrix2_::__array
 static const char *__array =
-R"doc(Returns a single row of this matrix.
+R"doc(Gives read-only access to a single row of this matrix.
 
 This means that the integer in row *r*, column *c* can be accessed as
 ``myMatrix[r][c]`` (where *r* and *c* are each 0 or 1).
@@ -99,7 +99,7 @@ Returns:
 
 // Docstring regina::python::doc::Matrix2_::__array_2
 static const char *__array_2 =
-R"doc(Returns a single row of this matrix.
+R"doc(Gives read-write access to a single row of this matrix.
 
 This means that the integer in row *r*, column *c* can be accessed as
 ``myMatrix[r][c]`` (where *r* and *c* are each 0 or 1). Each such
@@ -109,7 +109,8 @@ Parameter ``row``:
     the index of the requested row; this must be 0 or 1.
 
 Returns:
-    a two-integer array containing the elements of the requested row.)doc";
+    a reference to the two-integer array containing the elements of
+    the requested row.)doc";
 
 // Docstring regina::python::doc::Matrix2_::__copy
 static const char *__copy = R"doc(Initialises to a copy of the given matrix.)doc";

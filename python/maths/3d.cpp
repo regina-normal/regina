@@ -37,8 +37,53 @@
 #include "../helpers.h"
 #include "../docstrings/maths/3d.h"
 
+using regina::Matrix3D;
 using regina::Rotation3D;
 using regina::Vector3D;
+
+namespace regina {
+    /**
+     * A utility class that provides access to a single row of a 3-D matrix.
+     * This allows us to write m[i][j] in Python for a 3-D matrix m.
+     */
+    class Matrix3DRow {
+        private:
+            std::array<double, 3>& row_;
+
+        public:
+            Matrix3DRow(Matrix3D<double>& m, int row) : row_(m[row]) {
+            }
+
+            double getItem(int col) {
+                if (col < 0 || col > 2)
+                    throw pybind11::index_error(
+                        "Matrix3D column index out of range");
+                return row_[col];
+            }
+
+            void setItem(int col, double value) {
+                if (col < 0 || col > 2)
+                    throw pybind11::index_error(
+                        "Matrix3D column index out of range");
+                row_[col] = value;
+            }
+
+            bool operator == (const Matrix3DRow& other) const {
+                return row_ == other.row_;
+            }
+
+            bool operator != (const Matrix3DRow& other) const {
+                return row_ != other.row_;
+            }
+
+        friend std::ostream& operator << (std::ostream&, const Matrix3DRow&);
+    };
+
+    inline std::ostream& operator << (std::ostream& out, const Matrix3DRow& r) {
+        return out << "[ " << r.row_[0] << ' ' << r.row_[1] << ' '
+            << r.row_[2] << " ]";
+    }
+}
 
 void add3D(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Vector3D)
@@ -65,6 +110,62 @@ void add3D(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(v);
     regina::python::add_eq_operators(v, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_SWITCH(Matrix3D)
+
+    auto mat = pybind11::class_<Matrix3D<double>>(m, "Matrix3D", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const Matrix3D<double>&>(), rdoc::__copy)
+        .def(pybind11::init<double, double, double, double, double, double,
+            double, double, double>(), rdoc::__init)
+        .def("__getitem__", [](Matrix3D<double>& m, int row) {
+            if (row < 0 || row > 2)
+                throw pybind11::index_error(
+                    "Matrix3D row index out of range");
+            return new regina::Matrix3DRow(m, row);
+        }, pybind11::keep_alive<0, 1>(), rdoc::__array)
+        .def("__len__", [](const Matrix3D<double>&) {
+            return 3;
+        }, "Returns the number of rows in this matrix. This will always be 3.")
+    ;
+    regina::python::add_output_ostream(mat);
+    regina::python::add_eq_operators(mat, rdoc::__eq, rdoc::__ne);
+
+    auto row = pybind11::class_<regina::Matrix3DRow>(mat, "_Row",
+R"doc(Gives access to a single row of a 3-D matrix.
+
+See the main class Matrix3D for further details.)doc")
+        .def("__getitem__", &regina::Matrix3DRow::getItem,
+R"doc(Returns the entry at the given index in this row.
+
+The given index must be either 0, 1 or 2.
+
+You should not need to call this directly.  To access the (*i*, *j*)
+entry of a 3-D matrix *M*, you can call ``M[i][j]``.
+
+See the main class Matrix3D for further details.)doc")
+        .def("__setitem__", &regina::Matrix3DRow::setItem,
+R"doc(Sets the entry at the given index in this row to the given value.
+
+The given index must be either 0, 1 or 2.
+
+You should not need to call this directly.  To set the (*i*, *j*)
+entry of a 3-D matrix *M*, you can use ``M[i][j] = value``.
+
+See the main class Matrix3D for further details.)doc")
+        .def("__len__", [](const regina::Matrix3DRow&) {
+            return 3;
+        },
+"Returns the number of entries in this row. This will always be 3.")
+        ;
+    regina::python::add_eq_operators(row,
+R"doc(Tests whether this and the given row contain the same entries.
+
+Be aware of the inherent risks of floating-point comparisons.)doc",
+R"doc(Tests whether this and the given row contain different entries.
+
+Be aware of the inherent risks of floating-point comparisons.)doc");
+    regina::python::add_output_ostream(row);
 
     RDOC_SCOPE_SWITCH(Rotation3D)
 
