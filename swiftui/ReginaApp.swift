@@ -32,7 +32,6 @@
 
 import SwiftUI
 
-// TODO: Update the SpatialLink icon to thicken the axes, remove the knot, and dark the axes in light mode.
 // TODO: Accent colour does not show when the app opens to the file browser.
 // TODO: Create a full set of dark mode assets.
 // In particular, the attachment icon is almost invisible on visionOS.
