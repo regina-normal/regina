@@ -16,9 +16,19 @@ static const char *Matrix3D =
 R"doc(Represents a linear transformation in three-dimensional space, as
 represented by a real 3-by-3 matrix.
 
+These matrices act on _column_ vectors. Specifically, a transformation
+represented by the 3-by-3 matrix ``M`` will transform the column
+vector ``v`` into the vector ``M * v``.
+
 If you are interested specifically in rotations, then you should use
 the Rotation3D class instead, which uses a more compact and
 numerically stable representation (quaternions).
+
+This class is designed specifically to work with transformations, and
+so it focuses more on operations such as composition and inverse, and
+less on other more general matrix operations. For a general numerical
+matrix class you can always use ``Matrix<double>`` (or ``MatrixReal``
+in Python) instead.
 
 See Regina's notes on 3-D geometry for importing information,
 including the inexact floating-point nature of the Vector3D class, and
@@ -152,6 +162,25 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two matrices are equal.)doc";
 
+// Docstring regina::python::doc::Matrix3D_::__imul
+static const char *__imul =
+R"doc(Composes this with the given transformation, which is to be applied
+first. This transformation will be changed directly.
+
+Composition of transformations is _not_ commutative. Here we follow
+the same convention as used elsewhere in Regina (e.g., by Regina's
+permutation classes): writing ``s *= t`` indicates that we should
+apply transformation ``t`` first, followed by transformation ``s``,
+and then change ``s`` to store the resulting composition. This is
+consistent with the order in which we multiply the underlying 3-by-3
+matrices.
+
+Parameter ``rhs``:
+    the transformation to apply before this.
+
+Returns:
+    a reference to this transformation.)doc";
+
 // Docstring regina::python::doc::Matrix3D_::__init
 static const char *__init =
 R"doc(Creates a new matrix containin the given entries.
@@ -183,6 +212,38 @@ Parameter ``m21``:
 Parameter ``m22``:
     the entry in row 2, column 2.)doc";
 
+// Docstring regina::python::doc::Matrix3D_::__mul
+static const char *__mul =
+R"doc(Returns the composition of this and the given transformation.
+
+Composition of transformations is _not_ commutative. Here we follow
+the same convention as used elsewhere in Regina (e.g., by Regina's
+permutation classes): the product ``s * t`` indicates that we should
+apply transformation ``t`` first, followed by transformation ``s``.
+This is also consistent with the order in which we multiply the
+underlying 3-by-3 matrices.
+
+Parameter ``rhs``:
+    the transformation to apply before this.
+
+Returns:
+    the composition of this and the given transformation.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::__mul_2
+static const char *__mul_2 =
+R"doc(Returns the image of the given vector under this transformation.
+
+Recall that vectors are treated as _column_ vectors. That is, if this
+transformation has matrix ``M`` and the given vector represents the
+column vector ``v``, then the result will be the column vector ``M *
+v``.
+
+Parameter ``vector``:
+    the 3-D vector to rotate.
+
+Returns:
+    the result of applying this transformation to the given vector.)doc";
+
 // Docstring regina::python::doc::Matrix3D_::__ne
 static const char *__ne =
 R"doc(Determines if this and the given matrix are different.
@@ -196,6 +257,17 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if the two matrices are not equal.)doc";
+
+// Docstring regina::python::doc::Matrix3D_::inverse
+static const char *inverse =
+R"doc(Returns the inverse of this transformation.
+
+Precondition:
+    This transformation is invertible; that is, the underlying 3-by-3
+    matrix does not have determinant zero.
+
+Returns:
+    the inverse transformation.)doc";
 
 }
 
@@ -235,6 +307,31 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two rotations have the same quaternion
     coordinates.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::__imul
+static const char *__imul =
+R"doc(Composes this with the given rotation, which is to be applied first.
+This rotation will be changed directly.
+
+Composition of 3-D rotations is _not_ commutative. Here we follow the
+same convention as used elsewhere in Regina (e.g., by Regina's
+permutation classes): writing ``q *= r`` indicates that we should
+apply rotation ``r`` first, followed by rotation ``q``, and then
+change ``q`` to store the resulting composition. This is also
+consistent with the matrix() function, which produces matrices that
+act on column vectors (``matrix * vector``), and which therefore
+compose using the same convention.
+
+This function does not require the quaternion coordinates of either
+this or *rhs* to be normalised. If the two original rotations have
+coordinates scaled by λ and μ respectively, then the resulting
+composition will have its coordinates scaled by λμ.
+
+Parameter ``rhs``:
+    the rotation to apply before this.
+
+Returns:
+    a reference to this rotation.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__init
 static const char *__init =
@@ -280,11 +377,32 @@ compose using the same convention.
 
 This function does not require the quaternion coordinates of either
 this or *rhs* to be normalised. If the two rotations have coordinates
-scaled by λ and μ respectively, then the resulting rotation will have
-its coordinates scaled by λμ.
+scaled by λ and μ respectively, then the resulting composition will
+have its coordinates scaled by λμ.
+
+Parameter ``rhs``:
+    the rotation to apply before this.
 
 Returns:
     the composition of this and the given rotation.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::__mul_2
+static const char *__mul_2 =
+R"doc(Returns the image of the given vector under this rotation.
+
+.. warning::
+    This operator is only recommended for occasional ad-hoc
+    calculations. If you need to transform a large number of points
+    using the same rotation matrix, it is faster to call matrix() once
+    and then multiply each vector by the resulting matrix in turn.
+    (The implementation of this operator does exactly this, but does
+    not allow for caching the transformation matrix.)
+
+Parameter ``vector``:
+    the 3-D vector to rotate.
+
+Returns:
+    the result of applying this rotation to the given vector.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__ne
 static const char *__ne =

@@ -124,6 +124,10 @@ void add3D(pybind11::module_& m) {
                     "Matrix3D row index out of range");
             return new regina::Matrix3DRow(m, row);
         }, pybind11::keep_alive<0, 1>(), rdoc::__array)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul)
+        .def(pybind11::self * Vector3D(), rdoc::__mul_2)
+        .def("inverse", &Matrix3D<double>::inverse, rdoc::inverse)
         .def("__len__", [](const Matrix3D<double>&) {
             return 3;
         }, "Returns the number of rows in this matrix. This will always be 3.")
@@ -178,6 +182,8 @@ Be aware of the inherent risks of floating-point comparisons.)doc");
         }, rdoc::__array)
         .def("normalise", &Rotation3D<double>::normalise, rdoc::normalise)
         .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul)
+        .def(pybind11::self * Vector3D(), rdoc::__mul_2)
         .def("inverse", &Rotation3D<double>::inverse, rdoc::inverse)
         .def("matrix", &Rotation3D<double>::matrix, rdoc::matrix)
     ;

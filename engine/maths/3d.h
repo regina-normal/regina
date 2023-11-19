@@ -299,9 +299,18 @@ std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
  * Represents a linear transformation in three-dimensional space, as
  * represented by a real 3-by-3 matrix.
  *
+ * These matrices act on _column_ vectors.  Specifically, a transformation
+ * represented by the 3-by-3 matrix `M` will transform the column vector
+ * `v` into the vector `M * v`.
+ *
  * If you are interested specifically in rotations, then you should use the
  * Rotation3D class instead, which uses a more compact and numerically stable
  * representation (quaternions).
+ *
+ * This class is designed specifically to work with transformations, and so it
+ * focuses more on operations such as composition and inverse, and less on
+ * other more general matrix operations.  For a general numerical matrix class
+ * you can always use `Matrix<double>` (or `MatrixReal` in Python) instead.
  *
  * See Regina's \ref 3d "notes on 3-D geometry" for importing information,
  * including the inexact floating-point nature of the Vector3D class, and the
@@ -418,9 +427,107 @@ class Matrix3D {
             return m_ != other.m_;
         }
 
-        // TODO: * and *=
-        // TODO: Inverse
-        // TODO: Swaps (local and global)
+        /**
+         * Returns the composition of this and the given transformation.
+         *
+         * Composition of transformations is _not_ commutative.  Here we follow
+         * the same convention as used elsewhere in Regina (e.g., by Regina's
+         * permutation classes): the product `s * t` indicates that we should
+         * apply transformation `t` first, followed by transformation `s`.
+         * This is also consistent with the order in which we multiply the
+         * underlying 3-by-3 matrices.
+         *
+         * \param rhs the transformation to apply before this.
+         * \return the composition of this and the given transformation.
+         */
+        constexpr Matrix3D operator * (const Matrix3D& rhs) const {
+            // Maybe this should be in a loop. *shrug*
+            return Matrix3D {
+                m_[0][0]*rhs[0][0] + m_[0][1]*rhs[1][0] + m_[0][2]*rhs[2][0],
+                m_[0][0]*rhs[0][1] + m_[0][1]*rhs[1][1] + m_[0][2]*rhs[2][1],
+                m_[0][0]*rhs[0][2] + m_[0][1]*rhs[1][2] + m_[0][2]*rhs[2][2],
+                m_[1][0]*rhs[0][0] + m_[1][1]*rhs[1][0] + m_[1][2]*rhs[2][0],
+                m_[1][0]*rhs[0][1] + m_[1][1]*rhs[1][1] + m_[1][2]*rhs[2][1],
+                m_[1][0]*rhs[0][2] + m_[1][1]*rhs[1][2] + m_[1][2]*rhs[2][2],
+                m_[2][0]*rhs[0][0] + m_[2][1]*rhs[1][0] + m_[2][2]*rhs[2][0],
+                m_[2][0]*rhs[0][1] + m_[2][1]*rhs[1][1] + m_[2][2]*rhs[2][1],
+                m_[2][0]*rhs[0][2] + m_[2][1]*rhs[1][2] + m_[2][2]*rhs[2][2]
+            };
+        }
+
+        /**
+         * Composes this with the given transformation, which is to be applied
+         * first.  This transformation will be changed directly.
+         *
+         * Composition of transformations is _not_ commutative.  Here we follow
+         * the same convention as used elsewhere in Regina (e.g., by Regina's
+         * permutation classes): writing `s *= t` indicates that we should
+         * apply transformation `t` first, followed by transformation `s`,
+         * and then change `s` to store the resulting composition.  This is
+         * consistent with the order in which we multiply the underlying
+         * 3-by-3 matrices.
+         *
+         * \param rhs the transformation to apply before this.
+         * \return a reference to this transformation.
+         */
+        Matrix3D& operator *= (const Matrix3D& rhs) {
+            // No particular optimisations to perform here.
+            return (*this = (*this) * rhs);
+        }
+
+        /**
+         * Returns the image of the given vector under this transformation.
+         *
+         * Recall that vectors are treated as _column_ vectors.  That is, if
+         * this transformation has matrix `M` and the given vector represents
+         * the column vector `v`, then the result will be the column vector
+         * `M * v`.
+         *
+         * \param vector the 3-D vector to rotate.
+         * \return the result of applying this transformation to the given
+         * vector.
+         */
+        constexpr Vector3D<Real> operator * (const Vector3D<Real>& vector)
+                const {
+            return Vector3D<Real> {
+                m_[0][0]*vector.x + m_[0][1]*vector.y + m_[0][2]*vector.z,
+                m_[1][0]*vector.x + m_[1][1]*vector.y + m_[1][2]*vector.z,
+                m_[2][0]*vector.x + m_[2][1]*vector.y + m_[2][2]*vector.z
+            };
+        }
+
+        /**
+         * Returns the inverse of this transformation.
+         *
+         * \pre This transformation is invertible; that is, the underlying
+         * 3-by-3 matrix does not have determinant zero.
+         *
+         * \return the inverse transformation.
+         */
+        constexpr Matrix3D inverse() const {
+            Real det = (
+                  m_[0][0] * m_[1][1] * m_[2][2]
+                + m_[0][1] * m_[1][2] * m_[2][0]
+                + m_[0][2] * m_[1][0] * m_[2][1]
+                - m_[0][0] * m_[1][2] * m_[2][1]
+                - m_[0][1] * m_[1][0] * m_[2][2]
+                - m_[0][2] * m_[1][1] * m_[2][0]
+            );
+
+            // This will be the _transpose_ of the inverse matrix.
+            Real a[3][3];
+            for (int i = 0; i < 3; ++i)
+                for (int j = 0; j < 3; ++j)
+                    a[i][j] = (
+                            m_[(i+1)%3][(j+1)%3] * m_[(i+2)%3][(j+2)%3] -
+                            m_[(i+2)%3][(j+1)%3] * m_[(i+1)%3][(j+2)%3]
+                        ) / det;
+
+            return Matrix3D(
+                a[0][0], a[1][0], a[2][0],
+                a[0][1], a[1][1], a[2][1],
+                a[0][2], a[1][2], a[2][2]);
+        }
 };
 
 /**
@@ -603,8 +710,9 @@ class Rotation3D {
          * This function does not require the quaternion coordinates of either
          * this or \a rhs to be normalised.  If the two rotations have
          * coordinates scaled by λ and μ respectively, then the resulting
-         * rotation will have its coordinates scaled by λμ.
+         * composition will have its coordinates scaled by λμ.
          *
+         * \param rhs the rotation to apply before this.
          * \return the composition of this and the given rotation.
          */
         constexpr Rotation3D operator * (const Rotation3D& rhs) const {
@@ -618,6 +726,50 @@ class Rotation3D {
                 q_[0] * rhs.q_[3] + q_[3] * rhs.q_[0] +
                     q_[1] * rhs.q_[2] - q_[2] * rhs.q_[1]
             };
+        }
+
+        /**
+         * Composes this with the given rotation, which is to be applied first.
+         * This rotation will be changed directly.
+         *
+         * Composition of 3-D rotations is _not_ commutative.  Here we follow
+         * the same convention as used elsewhere in Regina (e.g., by Regina's
+         * permutation classes): writing `q *= r` indicates that we should
+         * apply rotation `r` first, followed by rotation `q`, and then change
+         * `q` to store the resulting composition.  This is also consistent
+         * with the matrix() function, which produces matrices that act on
+         * column vectors (`matrix * vector`), and which therefore compose
+         * using the same convention.
+         *
+         * This function does not require the quaternion coordinates of either
+         * this or \a rhs to be normalised.  If the two original rotations have
+         * coordinates scaled by λ and μ respectively, then the resulting
+         * composition will have its coordinates scaled by λμ.
+         *
+         * \param rhs the rotation to apply before this.
+         * \return a reference to this rotation.
+         */
+        Rotation3D& operator *= (const Rotation3D& rhs) {
+            // No particular optimisations to perform here.
+            return (*this = (*this) * rhs);
+        }
+
+        /**
+         * Returns the image of the given vector under this rotation.
+         *
+         * \warning This operator is only recommended for occasional ad-hoc
+         * calculations.  If you need to transform a large number of points
+         * using the same rotation matrix, it is faster to call matrix() once
+         * and then multiply each vector by the resulting matrix in turn.
+         * (The implementation of this operator does exactly this, but does
+         * not allow for caching the transformation matrix.)
+         *
+         * \param vector the 3-D vector to rotate.
+         * \return the result of applying this rotation to the given vector.
+         */
+        constexpr Vector3D<Real> operator * (const Vector3D<Real>& vector)
+                const {
+            return matrix() * vector;
         }
 
         /**
@@ -648,7 +800,7 @@ class Rotation3D {
          *
          * \return the corresponding 3-dimensional rotation matrix.
          */
-        Matrix3D<Real> matrix() const {
+        constexpr Matrix3D<Real> matrix() const {
             // Here we follow the formula from Wikipedia, taken from Watt and
             // Watt (1992), ISBN 978-0201544121, which optimises the number of
             // floating-point operations.
