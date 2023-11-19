@@ -73,7 +73,7 @@ struct LinkView: View {
     @State var alreadySelfFramed = false
     
     var body: some View {
-        let link = wrapper.readonly().heldCopy()
+        let link = wrapper.packet.heldCopy()
         
         VStack {
             // TODO: Somehow improve the look of this header.
@@ -172,7 +172,7 @@ struct LinkView: View {
             .toolbar {
                 ToolbarItem(placement: .secondaryAction) {
                     Button {
-                        var p = wrapper.modifying()
+                        var p = wrapper.packet
                         p.reflect()
                     } label: {
                         Label("Reflect", image: "Act-Reflect")
@@ -180,7 +180,7 @@ struct LinkView: View {
                 }
                 ToolbarItem(placement: .secondaryAction) {
                     Button {
-                        var p = wrapper.modifying()
+                        var p = wrapper.packet
                         p.rotate()
                     } label: {
                         Label("Rotate", image: "Act-Rotate")
@@ -188,7 +188,7 @@ struct LinkView: View {
                 }
                 ToolbarItem(placement: .secondaryAction) {
                     Button {
-                        var p = wrapper.modifying()
+                        var p = wrapper.packet
                         p.reverse()
                     } label: {
                         Label("Reverse", image: "Act-Reverse")
@@ -196,7 +196,7 @@ struct LinkView: View {
                 }
                 ToolbarItem(placement: .secondaryAction) {
                     Button {
-                        var p = wrapper.modifying()
+                        var p = wrapper.packet
                         alreadyAlternating = !p.makeAlternating()
                     } label: {
                         Label("Make Alternating", image: "Act-Alternating")
@@ -210,7 +210,7 @@ struct LinkView: View {
                 }
                 ToolbarItem(placement: .secondaryAction) {
                     Button {
-                        var p = wrapper.modifying()
+                        var p = wrapper.packet
                         alreadySelfFramed = !p.selfFrame()
                     } label: {
                         Label("Self-Frame", image: "Act-SelfFrame")
@@ -224,7 +224,7 @@ struct LinkView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        var p = wrapper.modifying()
+                        var p = wrapper.packet
                         couldNotSimplify = !p.intelligentSimplify()
                     } label: {
                         Label("Simplify", image: "Act-SimplifyLink")
@@ -345,9 +345,9 @@ struct LinkCrossingsView: View {
             .padding(.vertical)
 
             //List {
-                ForEach(0..<wrapper.readonly().countComponents(), id: \.self) { i in
+                ForEach(0..<wrapper.packet.countComponents(), id: \.self) { i in
                     Section("Component \(i)") {
-                        let strands = wrapper.readonly().strandsForComponent(index: i)
+                        let strands = wrapper.packet.strandsForComponent(index: i)
                         if strands.isEmpty {
                             Text("Unknot, no crossings")
                         } else if style == .pictorial {
@@ -358,11 +358,11 @@ struct LinkCrossingsView: View {
                                         .contextMenu {
                                             Group {
                                                 Button("Change crossing \(s.crossingIndex())") {
-                                                    var packet = wrapper.modifying()
+                                                    var packet = wrapper.packet
                                                     packet.change(s)
                                                 }
                                                 Button("Resolve crossing \(s.crossingIndex())") {
-                                                    var packet = wrapper.modifying()
+                                                    var packet = wrapper.packet
                                                     packet.resolve(s)
                                                 }
                                             }
@@ -401,7 +401,7 @@ struct LinkPolynomialsView: View {
     // This refreshes the view, but will also have the side-effect of re-saving the file.
     // See if we can find a way around this.
     var body: some View {
-        let link = wrapper.readonly().heldCopy()
+        let link = wrapper.packet.heldCopy()
 
         // TODO: Add a "copy plain text" option on long press
         // TODO: When computing, use progress trackers with cancellation
@@ -409,7 +409,7 @@ struct LinkPolynomialsView: View {
         VStack(alignment: .leading) {
             Text("Jones").font(.headline).padding(.vertical)
             if link.knowsJones() || link.size() <= LinkPolynomialsView.maxAuto {
-                var jones = wrapper.readonly().jones()
+                var jones = wrapper.packet.jones()
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
                     if unicode {
@@ -426,7 +426,7 @@ struct LinkPolynomialsView: View {
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
-                    wrapper.modifying().jones()
+                    wrapper.packet.jones()
                 }
             }
             HStack {
@@ -443,32 +443,32 @@ struct LinkPolynomialsView: View {
             if link.knowsHomfly() || link.size() <= LinkPolynomialsView.maxAuto {
                 if homflyStyle == .az {
                     if unicode {
-                        Text(swiftString(wrapper.readonly().homflyAZ().utf8("𝛼", "𝑧")))
+                        Text(swiftString(wrapper.packet.homflyAZ().utf8("𝛼", "𝑧")))
                     } else {
-                        Text(swiftString(wrapper.readonly().homflyAZ().str("a", "z")))
+                        Text(swiftString(wrapper.packet.homflyAZ().str("a", "z")))
                     }
                 } else {
                     if unicode {
-                        Text(swiftString(wrapper.readonly().homflyLM().utf8("ℓ", "𝑚")))
+                        Text(swiftString(wrapper.packet.homflyLM().utf8("ℓ", "𝑚")))
                     } else {
-                        Text(swiftString(wrapper.readonly().homflyLM().str("l", "m")))
+                        Text(swiftString(wrapper.packet.homflyLM().str("l", "m")))
                     }
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
-                    wrapper.modifying().homflyAZ()
+                    wrapper.packet.homflyAZ()
                 }
             }
             Text("Kauffman bracket").font(.headline).padding(.vertical)
             if link.knowsBracket() || link.size() <= LinkPolynomialsView.maxAuto {
                 if unicode {
-                    Text(swiftString(wrapper.readonly().bracket().utf8("𝐴")))
+                    Text(swiftString(wrapper.packet.bracket().utf8("𝐴")))
                 } else {
-                    Text(swiftString(wrapper.readonly().bracket().str("A")))
+                    Text(swiftString(wrapper.packet.bracket().str("A")))
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {
-                    wrapper.modifying().bracket()
+                    wrapper.packet.bracket()
                 }
             }
             Spacer()
@@ -488,7 +488,7 @@ struct LinkAlgebraView: View {
     @AppStorage("displayUnicode") private var unicode = true
 
     var body: some View {
-        let link = wrapper.readonly().heldCopy()
+        let link = wrapper.packet.heldCopy()
         let autoSimp = (link.size() <= LinkAlgebraView.maxSimp)
         let group = simplifiedGroup ?? link.group(autoSimp)
         
@@ -633,7 +633,7 @@ struct LinkCodesView: View {
             }
             .padding(.vertical)
             
-            let link = wrapper.readonly().heldCopy()
+            let link = wrapper.packet.heldCopy()
             
             switch (selected) {
             case .gauss:
@@ -713,7 +713,7 @@ struct LinkGraphsView: View {
             
             // TODO: Give a "working on it" message, and build the graph in the background (maybe only when it's large)
             
-            var tree = regina.TreeDecomposition(wrapper.readonly().heldCopy(), .Upper)
+            var tree = regina.TreeDecomposition(wrapper.packet.heldCopy(), .Upper)
             if selected == .nice {
                 let _ = tree.makeNice(nil)
             }

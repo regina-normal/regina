@@ -86,7 +86,7 @@ struct SpatialLink3D: ViewRepresentable {
     }
     
     func fillScene(scene: SCNScene) {
-        let link = wrapper.readonly().heldCopy()
+        let link = wrapper.packet.heldCopy()
         let radius = link.radius()
 
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
@@ -213,10 +213,10 @@ struct SpatialLinkView: View {
             // TODO: Make these edits actually save the file.
             ToolbarItem {
                 Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
-                    if wrapper.readonly().size() * 2 > maxNodes {
+                    if wrapper.packet.size() * 2 > maxNodes {
                         tooManyNodes = true
                     } else {
-                        var p = wrapper.modifying()
+                        var p = wrapper.packet
                         p.refine()
                     }
                 }
@@ -228,13 +228,13 @@ struct SpatialLinkView: View {
             }
             ToolbarItem {
                 Button("Thinner", systemImage: "smallcircle.fill.circle") {
-                    var p = wrapper.modifying()
+                    var p = wrapper.packet
                     p.setRadius(p.radius() / 1.2)
                 }
             }
             ToolbarItem {
                 Button("Thicker", systemImage: "largecircle.fill.circle") {
-                    var p = wrapper.modifying()
+                    var p = wrapper.packet
                     p.setRadius(p.radius() * 1.2)
                 }
             }

@@ -73,48 +73,70 @@ extension regina.SharedText: SharedPacketClass {}
 extension regina.SharedLink: SharedHeldPacketClass {}
 extension regina.SharedSpatialLink: SharedHeldPacketClass {}
 
-// TODO: Get the PacketListener connection working.
+/**
+ * An observable object that takes a packet upon initialisation, and then publishes
+ * an "object will change" message every time that packet is about to change.
+ *
+ * Note: this class can only work with fixed types such as regina.SharedPacket or
+ * PacketWrapper, not types that use generic parameters such as Wrapper<T>.
+ * This is because Swift does not allow C callbacks to capture generic type arguments.
+ */
+class SwiftPacketChangeListener: ObservableObject {
+    private var listener: regina.PacketChangeCallback
+    
+    init(packet: regina.SharedPacket) {
+        self.listener = regina.PacketChangeCallback(packet.sharedPtr())
+
+        // Unretained raw pointers to this object are fine here,
+        // since this object's deinit() disables the callback.
+        listener.enableCallbacks(Unmanaged<SwiftPacketChangeListener>.passUnretained(self).toOpaque())
+        listener.callbackPacketToBeChanged = { context in
+            Unmanaged<SwiftPacketChangeListener>.fromOpaque(context!).takeUnretainedValue().objectWillChange.send()
+        }
+    }
+    
+    deinit {
+        listener.disableCallbacks()
+    }
+}
 
 /**
  * A lightweight Swift wrapper around a C++ shared pointer to a packet of a specific type, which must _not_ be `null`.
  *
- * For read-only access to the underlying packet, use the readonly() member function.
- *
- * If you plan to modify the underlying packet, access it via modifying(). This will publish changes to the object
- * via the ObservableObject machinery, which will ensure that any view that use it will be refreshed.
- *
- * Ideally there would be no need to distinguish readonly() from modifying(); however, at present the
- * Swift connection to Regina's PacketListener class is not yet working, and so changes must be published
- * manually by calling modifying(), as described above.
+ * This is an ObservableObject, and it uses Regina's C++ PacketListener machinery to publish changes
+ * to the object whenever the packet is about to change.
  *
  * Note: if view updates ever stop working, check out this note:
  * https://forums.swift.org/t/question-about-valid-uses-of-observableobject-s-synthesized-objectwillchange/31141
  * In particular, it may be necessary to cache a single publisher, e.g., via:
  * `let objectWillChange = ObservableObjectPublisher()`
  */
-class Wrapper<T: SharedPacketClass>: ObservableObject, Equatable {
-    private let packet: T
+class Wrapper<T: SharedPacketClass>: SwiftPacketChangeListener, Equatable {
+    let packet: T
     
     /**
      * PRE: \a packet is not a null pointer.
      */
     init(packet: T) {
         self.packet = packet
+        super.init(packet: packet.asPacket())
     }
     
     /**
      * PRE: \a packet is not a null pointer.
      */
-    init(packet: regina.SharedPacket) {
+    override init(packet: regina.SharedPacket) {
         self.packet = T(packet)
+        super.init(packet: packet)
     }
-
+    
     /**
      * PRE: \a wrapper is not a null pointer.
      * PRE: \a wrapper is a packet of the correct class.
      */
     init(wrapper: PacketWrapper) {
         self.packet = T(wrapper.packet)
+        super.init(packet: wrapper.packet)
     }
     
     /**
@@ -128,15 +150,6 @@ class Wrapper<T: SharedPacketClass>: ObservableObject, Equatable {
      */
     var id: Int64 {
         packet.asPacket().id()
-    }
-
-    func readonly() -> T {
-        return packet
-    }
-
-    func modifying() -> T {
-        objectWillChange.send()
-        return packet
     }
 
     /**

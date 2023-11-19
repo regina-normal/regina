@@ -161,6 +161,7 @@ module ReginaEngine {
     header "swift/graphviz.h"
     header "swift/link.h"
     header "swift/packet.h"
+    header "swift/packetlistener.h"
     header "swift/spatiallink.h"
     header "swift/text.h"
     requires cplusplus
