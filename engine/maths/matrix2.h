@@ -100,7 +100,7 @@ class Matrix2 {
         void swap(Matrix2& other) noexcept;
 
         /**
-         * Returns a single row of this matrix.
+         * Gives read-only access to a single row of this matrix.
          *
          * This means that the integer in row \a r, column \a c can be
          * accessed as `myMatrix[r][c]` (where \a r and \a c are
@@ -110,19 +110,19 @@ class Matrix2 {
          * \return a two-integer array containing the elements of the
          * requested row.
          */
-        const std::array<long, 2>& operator [] (unsigned row) const;
+        const std::array<long, 2>& operator [] (int row) const;
         /**
-         * Returns a single row of this matrix.
+         * Gives read-write access to a single row of this matrix.
          *
          * This means that the integer in row \a r, column \a c can be
          * accessed as `myMatrix[r][c]` (where \a r and \a c are
          * each 0 or 1).  Each such element may be modified directly.
          *
          * \param row the index of the requested row; this must be 0 or 1.
-         * \return a two-integer array containing the elements of the
-         * requested row.
+         * \return a reference to the two-integer array containing the
+         * elements of the requested row.
          */
-        std::array<long, 2>& operator [] (unsigned row);
+        std::array<long, 2>& operator [] (int row);
 
         /**
          * Calculates the matrix product of this and the given matrix.
@@ -348,11 +348,11 @@ inline void Matrix2::swap(Matrix2& other) noexcept {
     data_.swap(other.data_);
 }
 
-inline const std::array<long, 2>& Matrix2::operator [] (unsigned row) const {
+inline const std::array<long, 2>& Matrix2::operator [] (int row) const {
     return data_[row];
 }
 
-inline std::array<long, 2>& Matrix2::operator [] (unsigned row) {
+inline std::array<long, 2>& Matrix2::operator [] (int row) {
     return data_[row];
 }
 
