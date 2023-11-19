@@ -353,6 +353,7 @@ struct LinkCrossingsView: View {
                             // TODO: Fix sizes: 45 is about right for a 17-point font size
                             LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 45))]) {
                                 ForEach(strands) { s in
+                                    // TODO: Context menu grabs the wrong size box.
                                     pictureFor(s)
                                         .contextMenu {
                                             Group {
@@ -373,6 +374,7 @@ struct LinkCrossingsView: View {
                             LazyVGrid(columns: [.init(.adaptive(minimum: 25, maximum: 25))]) {
                                 ForEach(strands) { s in
                                     textFor(s)
+                                    // TODO: Context menu
                                 }
                             }
                         }
