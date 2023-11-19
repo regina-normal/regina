@@ -75,6 +75,7 @@ void add3D(pybind11::module_& m) {
         .def("__getitem__", [](const Rotation3D<double>& r, int i) -> double {
             return r[i];
         }, rdoc::__array)
+        .def("normalise", &Rotation3D<double>::normalise, rdoc::normalise)
     ;
     regina::python::add_output_ostream(r);
     regina::python::add_eq_operators(r, rdoc::__eq, rdoc::__ne);

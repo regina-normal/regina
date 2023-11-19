@@ -306,8 +306,27 @@ std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
  * towards `(x,y,z)`, and the fingers follow the direction of the rotation).
  * Then the four real numbers that make up the quaternion are
  * `(cos θ/2, x sin θ/2, y sin θ/2, z sin θ/2)`.  Since the axis vector
- * `(x,y,z)` is a unit vector, it follows that these four real numbers form
- * a unit vector also.
+ *
+ * Regarding normalisation:
+ *
+ * - In theory, a quaternion that describes a rotation must be _normalised_;
+ *   that is, its four real quaternion coordinates must form a unit vector in
+ *   4-D.  This follows immediately from the discussion above, using the fact
+ *   that the axis vector `(x,y,z)` is a unit vector in 3-D.
+ *
+ * - In this class, however, we do _not_ require the quaternion coordinates to
+ *   be normalised, since this may allow quaternions to be constructed more
+ *   easily.  Instead we allow the quaternion coordinates `(λa, λb, λc, λd)`
+ *   to represent the same rotation as `(a,b,c,d)` for any positive λ (and,
+ *   if we ignore the _direction_ of rotation and just consider its endpoint,
+ *   then for any negative λ also).
+ *
+ * - Geometric operations, such as matrix(), will produce the same results as
+ *   though this quaternion had been normalised beforehand.  This is explicitly
+ *   noted in the documentation for each relevant function.
+ *
+ * - If you wish (though this is not actually necessary), you can normalise
+ *   the coordinates yourself by calling normalise().
  *
  * See Regina's \ref 3d "notes on 3-D geometry" for importing information,
  * including the inexact floating-point nature of the Vector3D class, and the
@@ -343,17 +362,19 @@ class Rotation3D {
         /**
          * Creates a new rotation from the given quaternion coordinates.
          *
-         * \pre The given coordinates are normalised; that is,
-         * `a^2 + b^2 + c^2 + d^2 = 1`.
+         * As described in the class notes, these coordinates do not need to
+         * be normalised.
          *
-         * \param a the first quaternion coordinate; that is, `cos θ/2`
-         * from the discussion in the class notes.
-         * \param b the second quaternion coordinate; that is, `x sin θ/2`
-         * from the discussion in the class notes.
-         * \param c the third quaternion coordinate; that is, `y sin θ/2`
-         * from the discussion in the class notes.
-         * \param d the fourth quaternion coordinate; that is, `z sin θ/2`
-         * from the discussion in the class notes.
+         * \pre The given coordinates are not all zero.
+         *
+         * \param a the first quaternion coordinate; that is, the coordinate
+         * corresponding to `cos θ/2` from the discussion in the class notes.
+         * \param b the second quaternion coordinate; that is, the coordinate
+         * corresponding to `x sin θ/2` from the discussion in the class notes.
+         * \param c the third quaternion coordinate; that is, the coordinate
+         * corresponding to `y sin θ/2` from the discussion in the class notes.
+         * \param d the fourth quaternion coordinate; that is, the coordinate
+         * corresponding to `z sin θ/2` from the discussion in the class notes.
          */
         constexpr Rotation3D(Real a, Real b, Real c, Real d) : q_{a, b, c, d} {
         }
@@ -404,6 +425,25 @@ class Rotation3D {
          */
         constexpr bool operator != (const Rotation3D& other) const {
             return ! std::equal(q_, q_ + 4, other.q_);
+        }
+
+        /**
+         * Rescales all four quaternion coordinates by the same positive
+         * constant so that the quaternion coordinates become normalised.
+         *
+         * Specifically, after this operation:
+         *
+         * - each quaternion coordinate will have the same sign as it did
+         *   before this operation;
+         *
+         * - the four quaternion coordinates `(a,b,c,d)` will satisfy
+         *   `a^2 + b^2 + c^2 + d^2 = 1`.
+         */
+        void normalise() {
+            Real scale = 1.0 / std::sqrt(q_[0] * q_[0] + q_[1] * q_[1] +
+                q_[2] * q_[2] + q_[3] * q_[3]);
+            for (int i = 0; i < 4; ++i)
+                q_[i] *= scale;
         }
 };
 

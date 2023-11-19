@@ -26,8 +26,30 @@ rotation follows a right-hand rule (the thumb of the right hand points
 from the origin out towards ``(x,y,z)``, and the fingers follow the
 direction of the rotation). Then the four real numbers that make up
 the quaternion are ``(cos θ/2, x sin θ/2, y sin θ/2, z sin θ/2)``.
-Since the axis vector ``(x,y,z)`` is a unit vector, it follows that
-these four real numbers form a unit vector also.
+Since the axis vector
+
+Regarding normalisation:
+
+* In theory, a quaternion that describes a rotation must be
+  _normalised_; that is, its four real quaternion coordinates must
+  form a unit vector in 4-D. This follows immediately from the
+  discussion above, using the fact that the axis vector ``(x,y,z)`` is
+  a unit vector in 3-D.
+
+* In this class, however, we do _not_ require the quaternion
+  coordinates to be normalised, since this may allow quaternions to be
+  constructed more easily. Instead we allow the quaternion coordinates
+  ``(λa, λb, λc, λd)`` to represent the same rotation as ``(a,b,c,d)``
+  for any positive λ (and, if we ignore the _direction_ of rotation
+  and just consider its endpoint, then for any negative λ also).
+
+* Geometric operations, such as matrix(), will produce the same
+  results as though this quaternion had been normalised beforehand.
+  This is explicitly noted in the documentation for each relevant
+  function.
+
+* If you wish (though this is not actually necessary), you can
+  normalise the coordinates yourself by calling normalise().
 
 See Regina's notes on 3-D geometry for importing information,
 including the inexact floating-point nature of the Vector3D class, and
@@ -103,25 +125,31 @@ Returns:
 static const char *__init =
 R"doc(Creates a new rotation from the given quaternion coordinates.
 
+As described in the class notes, these coordinates do not need to be
+normalised.
+
 Precondition:
-    The given coordinates are normalised; that is, ``a^2 + b^2 + c^2 +
-    d^2 = 1``.
+    The given coordinates are not all zero.
 
 Parameter ``a``:
-    the first quaternion coordinate; that is, ``cos θ/2`` from the
-    discussion in the class notes.
+    the first quaternion coordinate; that is, the coordinate
+    corresponding to ``cos θ/2`` from the discussion in the class
+    notes.
 
 Parameter ``b``:
-    the second quaternion coordinate; that is, ``x sin θ/2`` from the
-    discussion in the class notes.
+    the second quaternion coordinate; that is, the coordinate
+    corresponding to ``x sin θ/2`` from the discussion in the class
+    notes.
 
 Parameter ``c``:
-    the third quaternion coordinate; that is, ``y sin θ/2`` from the
-    discussion in the class notes.
+    the third quaternion coordinate; that is, the coordinate
+    corresponding to ``y sin θ/2`` from the discussion in the class
+    notes.
 
 Parameter ``d``:
-    the fourth quaternion coordinate; that is, ``z sin θ/2`` from the
-    discussion in the class notes.)doc";
+    the fourth quaternion coordinate; that is, the coordinate
+    corresponding to ``z sin θ/2`` from the discussion in the class
+    notes.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__ne
 static const char *__ne =
@@ -138,6 +166,19 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two rotations have different
     quaternion coordinates.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::normalise
+static const char *normalise =
+R"doc(Rescales all four quaternion coordinates by the same positive constant
+so that the quaternion coordinates become normalised.
+
+Specifically, after this operation:
+
+* each quaternion coordinate will have the same sign as it did before
+  this operation;
+
+* the four quaternion coordinates ``(a,b,c,d)`` will satisfy ``a^2 +
+  b^2 + c^2 + d^2 = 1``.)doc";
 
 }
 
