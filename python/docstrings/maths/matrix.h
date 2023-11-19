@@ -27,7 +27,10 @@ defaults to ``True`` (thereby enabling member functions designed for
 matrices over rings) when *T* is one of the following types:
 
 * native C++ integer types (i.e., where std::is_integral_v<T> is
-  ``True`` and *T* is not bool); or
+  ``True`` and *T* is not bool);
+
+* native C++ floating-point types (i.e., where
+  std::is_floating_point_v<T> is ``True``); or
 
 * Regina's own types Integer, LargeInteger, NativeInteger<...>, and
   Rational.
@@ -64,8 +67,9 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
 
 Python:
-    Only the specific types Matrix<Integer> and Matrix<bool> are
-    available, under the names MatrixInt and MatrixBool respectively.
+    Only the specific types Matrix<Integer>, Matrix<bool> and
+    Matrix<double> are available, under the names MatrixInt,
+    MatrixBool and MatrixReal respectively.
 
 Template parameter ``T``:
     the type of each individual matrix element.

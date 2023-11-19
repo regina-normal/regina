@@ -149,6 +149,9 @@ Version 7.4  [ (to be announced) ]
             - Renamed initialise() to fill(), to make it clear that this has
               nothing to do with initialised vs uninitialised matrices.
               The old name is kept but deprecated.
+            - The ring template argument now defaults to true for matrices over
+              native C++ floating-point types, and Python now has a new binding
+              MatrixReal to represent the C++ type Matrix<double>.
         Enum NamedPermGroup:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_GROUP_TRIVIAL) have been

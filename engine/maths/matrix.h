@@ -68,7 +68,10 @@ template <class> class Vector;
  * when \a T is one of the following types:
  *
  * - native C++ integer types (i.e., where std::is_integral_v<T>
- *   is \c true and \a T is not bool); or
+ *   is \c true and \a T is not bool);
+ *
+ * - native C++ floating-point types (i.e., where std::is_floating_point_v<T>
+ *   is \c true); or
  *
  * - Regina's own types Integer, LargeInteger, NativeInteger<...>, and Rational.
  *
@@ -103,8 +106,9 @@ template <class> class Vector;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \python Only the specific types Matrix<Integer> and Matrix<bool>
- * are available, under the names MatrixInt and MatrixBool respectively.
+ * \python Only the specific types Matrix<Integer>, Matrix<bool> and
+ * Matrix<double> are available, under the names MatrixInt, MatrixBool and
+ * MatrixReal respectively.
  *
  * \tparam T the type of each individual matrix element.
  * \tparam ring \c true if we should enable member functions that only
@@ -113,9 +117,10 @@ template <class> class Vector;
  *
  * \ingroup maths
  */
-template <class T, bool ring =
-        ((std::is_integral_v<T> && ! std::is_same_v<T, bool>) ||
-        IsReginaInteger<T>::value || std::is_same_v<T, Rational>)>
+template <class T, bool ring = (
+        (std::is_integral_v<T> && ! std::is_same_v<T, bool>) ||
+        std::is_floating_point_v<T> || IsReginaInteger<T>::value ||
+        std::is_same_v<T, Rational>)>
 class Matrix : public Output<Matrix<T>> {
     static_assert(ring || ! IsReginaInteger<T>::value,
         "Using Matrix with Regina's own integer types requires ring=true.");

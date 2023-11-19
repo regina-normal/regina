@@ -42,6 +42,7 @@ namespace {
     struct MatrixBoolInfo {
         using Matrix = regina::Matrix<bool>;
         static constexpr bool ring = false;
+        static constexpr bool integer = false;
         using Value = bool;
         using Ref = bool; // this class never passes bool args by reference
         static constexpr const char* castError =
@@ -51,10 +52,21 @@ namespace {
     struct MatrixIntInfo {
         using Matrix = regina::MatrixInt;
         static constexpr bool ring = true;
+        static constexpr bool integer = true;
         using Value = regina::Integer;
         using Ref = const regina::Integer&;
         static constexpr const char* castError =
             "Matrix element not convertible to Integer";
+    };
+
+    struct MatrixRealInfo {
+        using Matrix = regina::Matrix<double>;
+        static constexpr bool ring = true;
+        static constexpr bool integer = false;
+        using Value = double;
+        using Ref = double; // this class never passes real args by reference
+        static constexpr const char* castError =
+            "Matrix element not convertible to a floating-point number";
     };
 }
 
@@ -167,6 +179,13 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
                     pybind11::arg("fromRow") = 0,
                 rdoc::combCols)
             .def("det", &Matrix::det, rdoc::det)
+            .def("__mul__", [](const Matrix& m1, const Matrix& m2){
+                return m1 * m2;
+            }, rdoc::__mul)
+        ;
+    }
+    if constexpr (Info::integer) {
+        c
             .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
             .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
             .def("divRowExact", &Matrix::divRowExact, rdoc::divRowExact)
@@ -181,9 +200,6 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
                 rdoc::columnEchelonForm)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
-            .def("__mul__", [](const Matrix& m1, const Matrix& m2){
-                return m1 * m2;
-            }, rdoc::__mul)
             .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){
                 return m * v;
             }, rdoc::__mul_2)
@@ -203,5 +219,6 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
 void addMatrix(pybind11::module_& m) {
     addMatrixInfo<MatrixBoolInfo>(m, "MatrixBool");
     addMatrixInfo<MatrixIntInfo>(m, "MatrixInt");
+    addMatrixInfo<MatrixRealInfo>(m, "MatrixReal");
 }
 

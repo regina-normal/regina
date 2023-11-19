@@ -3307,7 +3307,7 @@ numerical real value). The numerical value obtained by calling
 ``True`` or ``False`` according to whether *whichRoot* is odd or even
 respectively. Of course in practice the numerical values might be very
 different, since turaevViroApprox() performs significantly more
-floating point operations, and so is subject to a much larger
+floating-point operations, and so is subject to a much larger
 potential numerical error.
 
 If the requested Turaev-Viro invariant has already been computed, then
@@ -3379,8 +3379,8 @@ according to whether *whichRoot* is odd or even respectively. Calling
 turaevViroApprox() is significantly faster (since it avoids the
 overhead of working in cyclotomic fields), but may also lead to a much
 larger numerical error (since this routine might perform an
-exponential number of floating point operations, whereas the
-alternative only uses floating point for the final call to
+exponential number of floating-point operations, whereas the
+alternative only uses floating-point for the final call to
 Cyclotomic::evaluate()).
 
 These invariants, although computed in the complex field, should all

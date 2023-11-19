@@ -29,9 +29,10 @@ exact computations (for example, of link invariants), use the Link
 class instead.
 
 This class supports links with any number of components (including
-zero). Each component is made up of a sequence of points in
-3-dimensional space, each represented by a SpatialLink::Node, which
-are connected by straight line segments to form a closed loop.
+zero). Each component is made up of a sequence of nodes, which are
+points in 3-dimensional space represented by objects of type Vector3D.
+The nodes in each component are connected by straight line segments to
+form a closed loop.
 
 It is assumed that this indeed forms an embedding (i.e., no two nodes
 are equal, no node meets any other line segment beyond the two that it
@@ -68,15 +69,6 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 namespace SpatialLink_ {
-
-// Docstring regina::python::doc::SpatialLink_::Node
-static const char *Node =
-R"doc(Represents a single point on the path that a link component takes
-through three-dimensional space.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::__copy
 static const char *__copy = R"doc(Constructs a new copy of the given link.)doc";
@@ -130,7 +122,7 @@ This constructor induces a deep copy of the given data.
 Python:
     Instead of the iterators *begin* and *end*, this routine takes
     either (i) a Python list of lists of triples of real numbers, or
-    (ii) a Python list of lists of SpatialLink::Node objects.
+    (ii) a Python list of lists of Vector3D objects.
 
 Template parameter ``iterator``:
     the iterator type used to access the full sequence of nodes in
@@ -139,7 +131,7 @@ Template parameter ``iterator``:
     single link component) has appropriate ``begin()`` and ``end()``
     functions; and (ii) when _those_ iterators are dereferenced, the
     resulting object (which represents an individual point along some
-    link component) is convertible to a SpatialLink::Node object.
+    link component) is convertible to a Vector3D<double>.
 
 Parameter ``begin``:
     the beginning of the sequence of link components.
@@ -525,146 +517,6 @@ respectively.
 Parameter ``vector``:
     holds the three constants that should be added to the *x*, *y* and
     *z* coordinates of every node.)doc";
-
-}
-
-namespace SpatialLink_::Node_ {
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__add
-static const char *__add =
-R"doc(Returns the sum of this and the given node.
-
-Here we use vector arithmetic: the resulting point will be the fourth
-vertex of the parallelogram whose other vertices are the this node,
-the origin, and the given node.
-
-Parameter ``rhs``:
-    the node to add to this node.
-
-Returns:
-    the sum of this and the given node.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given point.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__default
-static const char *__default = R"doc(Creates a new point whose coordinates are uninitialised.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__eq
-static const char *__eq =
-R"doc(Determines if this and the given point have the same coordinates.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating point comparisons.
-
-Parameter ``other``:
-    the point to compare with this.
-
-Returns:
-    ``True`` if and only if the two points are equal.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__iadd
-static const char *__iadd =
-R"doc(Adds the coordinates of the given node to this node.
-
-Here we use vector arithmetic: the new value of this node will be the
-fourth vertex of the parallelogram whose other vertices are the given
-node, the origin, and the original value of this node.
-
-Parameter ``rhs``:
-    the node whose coordinates should be added to this node.
-
-Returns:
-    a reference to this node.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__imul
-static const char *__imul =
-R"doc(Scales this node by the given factor. Specifically, all coordinates of
-this node will be multiplied by *scale*.
-
-Parameter ``scale``:
-    the scaling factor to apply.
-
-Returns:
-    a reference to this node.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__init
-static const char *__init =
-R"doc(Creates a new point with the given 3-dimensional coordinates.
-
-Parameter ``x``:
-    the first (x) coordinate.
-
-Parameter ``y``:
-    the second (y) coordinate.
-
-Parameter ``z``:
-    the third (z) coordinate.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new point with the given 3-dimensional coordinates.
-
-Parameter ``coordinates``:
-    array whose three elements are the \z x, *y* and *z* coordinate
-    respectively.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__mul
-static const char *__mul =
-R"doc(Returns a copy of this node rescaled by the given factor.
-Specifically, the coordinates of the node that is returned will be the
-coordinates of this node multiplied by *scale*.
-
-Parameter ``scale``:
-    the scaling factor to apply.
-
-Returns:
-    a rescaled copy of this node.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given point have different coordinates.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating point comparisons.
-
-Parameter ``other``:
-    the point to compare with this.
-
-Returns:
-    ``True`` if and only if the two points are different.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::distance
-static const char *distance =
-R"doc(Returns the distance between this and the given node.
-
-Returns:
-    the distance between this and the given node.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::length
-static const char *length =
-R"doc(Returns the distance from this node to the origin.
-
-Returns:
-    the distance from this node to the origin.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::midpoint
-static const char *midpoint =
-R"doc(Returns the midpoint between this and the given node.
-
-Returns:
-    the midpoint between this and the given node.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::x
-static const char *x = R"doc(The first (x) coordinate of the point.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::y
-static const char *y = R"doc(The second (y) coordinate of the point.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::Node_::z
-static const char *z = R"doc(The third (z) coordinate of the point.)doc";
 
 }
 
