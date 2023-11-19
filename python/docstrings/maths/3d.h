@@ -43,11 +43,6 @@ Regarding normalisation:
   for any positive λ (and, if we ignore the _direction_ of rotation
   and just consider its endpoint, then for any negative λ also).
 
-* Geometric operations, such as matrix(), will produce the same
-  results as though this quaternion had been normalised beforehand.
-  This is explicitly noted in the documentation for each relevant
-  function.
-
 * If you wish (though this is not actually necessary), you can
   normalise the coordinates yourself by calling normalise().
 
@@ -151,6 +146,26 @@ Parameter ``d``:
     corresponding to ``z sin θ/2`` from the discussion in the class
     notes.)doc";
 
+// Docstring regina::python::doc::Rotation3D_::__mul
+static const char *__mul =
+R"doc(Returns the composition of this and the given rotation.
+
+Composition of 3-D rotations is _not_ commutative. Here we follow the
+same convention as used elsewhere in Regina (e.g., by Regina's
+permutation classes): the product ``q * r`` indicates that we should
+apply rotation ``r`` first, followed by rotation ``q``. This is also
+consistent with the matrix() function, which produces matrices that
+act on column vectors (``matrix * vector``), and which therefore
+compose using the same convention.
+
+This function does not require the quaternion coordinates of either
+this or *rhs* to be normalised. If the two rotations have coordinates
+scaled by λ and μ respectively, then the resulting rotation will have
+its coordinates scaled by λμ.
+
+Returns:
+    the composition of this and the given rotation.)doc";
+
 // Docstring regina::python::doc::Rotation3D_::__ne
 static const char *__ne =
 R"doc(Determines if this and the given rotation have different quaternion
@@ -174,9 +189,8 @@ R"doc(Returns the inverse to this rotation.
 This rotates around the same axis by negative the original angle.
 
 This function does not require the quaternion coordinates to be
-normalised. However, if the quaternion coordinates for this rotation
-are not normalised then the quaternion coordinates for the inverse
-rotation will not be normalised either (and vice versa).
+normalised. If this rotation has its coordinates scaled by λ, then the
+resulting rotation will have its coordinates scaled by λ also.
 
 Returns:
     the inverse rotation.)doc";

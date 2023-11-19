@@ -76,6 +76,7 @@ void add3D(pybind11::module_& m) {
             return r[i];
         }, rdoc::__array)
         .def("normalise", &Rotation3D<double>::normalise, rdoc::normalise)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
         .def("inverse", &Rotation3D<double>::inverse, rdoc::inverse)
         .def("matrix", &Rotation3D<double>::matrix, rdoc::matrix)
     ;
