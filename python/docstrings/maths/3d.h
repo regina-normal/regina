@@ -167,6 +167,35 @@ Returns:
     ``True`` if and only if the two rotations have different
     quaternion coordinates.)doc";
 
+// Docstring regina::python::doc::Rotation3D_::inverse
+static const char *inverse =
+R"doc(Returns the inverse to this rotation.
+
+This rotates around the same axis by negative the original angle.
+
+This function does not require the quaternion coordinates to be
+normalised. However, if the quaternion coordinates for this rotation
+are not normalised then the quaternion coordinates for the inverse
+rotation will not be normalised either (and vice versa).
+
+Returns:
+    the inverse rotation.)doc";
+
+// Docstring regina::python::doc::Rotation3D_::matrix
+static const char *matrix =
+R"doc(Returns the 3-dimensional transformation matrix for this rotation.
+
+The result will be a 3-by-3 matrix ``M``, which can be used to rotate
+column vectors by matrix multiplication. Specifically, this rotation
+transforms the column vector ``v`` into the vector ``M * v``.
+
+This function does not require the quaternion coordinates to be
+normalised. The result will be the same as though normalise() had been
+called beforehand.
+
+Returns:
+    the corresponding 3-dimensional rotation matrix.)doc";
+
 // Docstring regina::python::doc::Rotation3D_::normalise
 static const char *normalise =
 R"doc(Rescales all four quaternion coordinates by the same positive constant

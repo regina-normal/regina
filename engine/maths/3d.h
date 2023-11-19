@@ -41,6 +41,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <maths/matrix.h>
 
 namespace regina {
 
@@ -444,6 +445,58 @@ class Rotation3D {
                 q_[2] * q_[2] + q_[3] * q_[3]);
             for (int i = 0; i < 4; ++i)
                 q_[i] *= scale;
+        }
+
+        /**
+         * Returns the inverse to this rotation.
+         *
+         * This rotates around the same axis by negative the original angle.
+         *
+         * This function does not require the quaternion coordinates to be
+         * normalised.  However, if the quaternion coordinates for this
+         * rotation are not normalised then the quaternion coordinates for the
+         * inverse rotation will not be normalised either (and vice versa).
+         *
+         * \return the inverse rotation.
+         */
+        constexpr Rotation3D inverse() const {
+            return { q_[0], -q_[1], -q_[2], -q_[3] };
+        }
+
+        /**
+         * Returns the 3-dimensional transformation matrix for this rotation.
+         *
+         * The result will be a 3-by-3 matrix `M`, which can be used to rotate
+         * column vectors by matrix multiplication.  Specifically, this rotation
+         * transforms the column vector `v` into the vector `M * v`.
+         *
+         * This function does not require the quaternion coordinates to be
+         * normalised.  The result will be the same as though normalise() had
+         * been called beforehand.
+         *
+         * \return the corresponding 3-dimensional rotation matrix.
+         */
+        Matrix<Real> matrix() const {
+            // Here we follow the formula from Wikipedia, taken from Watt and
+            // Watt (1992), ISBN 978-0201544121, which optimises the number of
+            // floating-point operations.
+            Real s = 2.0 / (q_[0] * q_[0] + q_[1] * q_[1] +
+                q_[2] * q_[2] + q_[3] * q_[3]);
+            Real bs = q_[1] * s; Real cs = q_[2] * s; Real ds = q_[3] * s;
+            Real ab = q_[0] * bs; Real ac = q_[0] * cs; Real ad = q_[0] * ds;
+            Real bb = q_[1] * bs; Real bc = q_[1] * cs; Real bd = q_[1] * ds;
+            Real cc = q_[2] * cs; Real cd = q_[2] * ds; Real dd = q_[3] * ds;
+            Matrix<Real> ans(3);
+            ans.entry(0, 0) = 1 - cc - dd;
+            ans.entry(0, 1) = bc - ad;
+            ans.entry(0, 2) = bd + ac;
+            ans.entry(1, 0) = bc + ad;
+            ans.entry(1, 1) = 1 - bb - dd;
+            ans.entry(1, 2) = cd - ab;
+            ans.entry(2, 0) = bd - ac;
+            ans.entry(2, 1) = cd + ab;
+            ans.entry(2, 2) = 1 - bb - cc;
+            return ans;
         }
 };
 
