@@ -225,7 +225,7 @@ struct LinkView: View {
                         var p = wrapper.packet
                         couldNotSimplify = !p.intelligentSimplify()
                     } label: {
-                        Label("Simplify", image: "Act-SimplifyLink")
+                        Label("Simplify", systemImage: "rectangle.compress.vertical")
                     }
                     .alert("Could not simplify", isPresented: $couldNotSimplify) {
                         // TODO: Offer a "try harder" option here.
@@ -554,7 +554,7 @@ struct LinkAlgebraView: View {
             
             HStack {
                 Spacer()
-                Button("Simplify presentation", systemImage: "rectangle.compress.vertical") {
+                Button("Simplify presentation") {
                     // TODO: Use a cancellable progress box (maybe only when it's large).
                     var working = group
                     let hom = working.intelligentSimplify()
