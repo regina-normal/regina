@@ -90,9 +90,6 @@ struct TreeView: View {
                 PacketCell(wrapper: item)
             }
             .navigationTitle(title)
-            #if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
         } detail: {
             // TODO: When transitioning from compact to non-compact,
             // the back button on the detail view seems to stay
@@ -100,18 +97,12 @@ struct TreeView: View {
                 s.packetViewer
                     .navigationTitle(swiftString(s.packet.humanLabel()))
                     .navigationBarBackButtonHidden(sizeClass != .compact)
-                    #if !os(macOS)
-                    .navigationBarTitleDisplayMode(.inline)
-                    #endif
             } else {
                 // TODO: Something for the case of no selection.
                 // TODO: Do we want a navigation title also?
                 // Perhaps just in the case of no selection?
                 Text("No packet selected")
                     .navigationBarBackButtonHidden(sizeClass != .compact)
-                    #if !os(macOS)
-                    .navigationBarTitleDisplayMode(.inline)
-                    #endif
             }
         }
         // TODO: On macOS we get the DocumentGroup's navigation title, not the packet's.
