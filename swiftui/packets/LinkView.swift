@@ -143,26 +143,25 @@ struct LinkView: View {
                 }
             }
             
-            // TODO: Ipad 11" portrait, tab icons jump around when selected??
             TabView(selection: $selection) {
                 LinkCrossingsView(wrapper: wrapper).tabItem {
-                    Image(selection == .crossings ? "Tab-Crossings-Bold" : "Tab-Crossings").renderingMode(.template)
+                    Image("Tab-Crossings")
                     Text("Crossings")
                 }.tag(LinkTab.crossings)
                 LinkPolynomialsView(wrapper: wrapper).tabItem {
-                    Image("Tab-Polynomials").renderingMode(.template)
+                    Image("Tab-Polynomials")
                     Text("Polynomials")
                 }.tag(LinkTab.polynomials)
                 LinkAlgebraView(wrapper: wrapper).tabItem {
-                    Image("Tab-Algebra").renderingMode(.template)
+                    Image("Tab-Algebra")
                     Text("Algebra")
                 }.tag(LinkTab.algebra)
                 LinkCodesView(wrapper: wrapper).tabItem {
-                    Image("Tab-Codes").renderingMode(.template)
+                    Image("Tab-Codes")
                     Text("Codes")
                 }.tag(LinkTab.codes)
                 LinkGraphsView(wrapper: wrapper).tabItem {
-                    Image(selection == .graphs ? "Tab-Graphs-Bold" : "Tab-Graphs").renderingMode(.template)
+                    Image("Tab-Graph")
                     Text("Graphs")
                 }.tag(LinkTab.graphs)
             }.onChange(of: selection) { newValue in

@@ -6,12 +6,30 @@
       "scale" : "1x"
     },
     {
-      "filename" : "codes-50.png",
+      "filename" : "codes-25@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "codes-75.png",
+      "filename" : "codes-25@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "filename" : "codes-18.png",
+      "height-class" : "compact",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "codes-18@2x.png",
+      "height-class" : "compact",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "codes-18@3x.png",
+      "height-class" : "compact",
       "idiom" : "universal",
       "scale" : "3x"
     }
@@ -19,5 +37,8 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
   }
 }

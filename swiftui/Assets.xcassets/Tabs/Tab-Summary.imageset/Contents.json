@@ -1,34 +1,34 @@
 {
   "images" : [
     {
-      "filename" : "crossings-25.png",
+      "filename" : "summary-25.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "crossings-25@2x.png",
+      "filename" : "summary-25@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "crossings-25@3x.png",
+      "filename" : "summary-25@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
     {
-      "filename" : "crossings-18.png",
+      "filename" : "summary-18.png",
       "height-class" : "compact",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "crossings-18@2x.png",
+      "filename" : "summary-18@2x.png",
       "height-class" : "compact",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "crossings-18@3x.png",
+      "filename" : "summary-18@3x.png",
       "height-class" : "compact",
       "idiom" : "universal",
       "scale" : "3x"
