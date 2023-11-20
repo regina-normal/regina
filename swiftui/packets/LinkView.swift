@@ -167,9 +167,12 @@ struct LinkView: View {
             }.onChange(of: selection) { newValue in
                 UserDefaults.standard.set(newValue.rawValue, forKey: "tabLink")
             }
+            #if os(macOS)
+            .padding(.top)
+            #endif
             .toolbar {
                 // TODO: Fix groupings.
-                // TODO: Fix icon widths.
+                // TODO: On macOS, primary and secondary are all clumped together.
                 ToolbarItem(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.packet
@@ -257,7 +260,7 @@ struct LinkView: View {
             }
         }
         #if os(macOS)
-            .padding(.vertical)
+        .padding(.top)
         #endif
     }
 }

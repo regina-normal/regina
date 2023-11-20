@@ -63,13 +63,9 @@ struct TreeView: View {
     }
 
     var body: some View {
-        // TODO: Merge the DocumentGroup and NavigationSplitView toolbars
-        // If absolutely necessary, we can change to a three-column view and use fileImporter to open a file.
         // TODO: When first opening a file, we should ensure the packet list
         // is visible instead of being hidden away (iPad portrait).
         // See the columnVisibility parameter for NavigationSplitView.
-        // TODO: iPad portrait: enormous gap at the top of each side of the split view
-        // TODO: iPad landscape: two back arrows (one on each side of the split), which seems weird
         NavigationSplitView {
             // We should not display the root packet.
             // Instead start directly with the list of top-level children.
