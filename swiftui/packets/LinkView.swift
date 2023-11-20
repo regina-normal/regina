@@ -168,6 +168,8 @@ struct LinkView: View {
                 UserDefaults.standard.set(newValue.rawValue, forKey: "tabLink")
             }
             .toolbar {
+                // TODO: Fix groupings.
+                // TODO: Fix icon widths.
                 ToolbarItem(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.packet
