@@ -37,6 +37,8 @@ import SwiftUI
 // In particular, the attachment icon is almost invisible on visionOS.
 // In dark mode, the crossing arrows need to be brighter to help visionOS.
 
+// TODO: Go over compact tab icons and see if they need to be a little thicker.
+
 @main
 struct ReginaApp: App {
     var body: some Scene {
