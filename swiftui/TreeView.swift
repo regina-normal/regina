@@ -43,16 +43,7 @@ struct PacketCell: View {
             if let icon = wrapper.icon {
                 icon.resizable().frame(width: Self.iconSize, height: Self.iconSize)
             }
-            VStack(alignment: .leading) {
-                Text(swiftString(wrapper.packet.humanLabel()))
-                // TODO: Should we display child counts or not?
-                let count = wrapper.packet.countChildren()
-                if (count == 1) {
-                    Text("1 subpacket").font(.footnote)
-                } else if (count > 1) {
-                    Text("\(count) subpackets").font(.footnote)
-                }
-            }
+            Text(swiftString(wrapper.packet.humanLabel()))
         }
     }
 }
