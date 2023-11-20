@@ -236,6 +236,20 @@ struct LinkView: View {
                         Text("I could not simplify the link diagram any further.")
                     }
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        // TODO: Create the complement.
+                    } label: {
+                        Label("Complement", image: "Act-Complement")
+                    }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        // TODO: Create the SnapPea complement, if the link is non-empty.
+                    } label: {
+                        Label("SnapPea", image: "Act-SnapPea")
+                    }
+                }
                 // TODO: Parallel (including MAX_CABLES), alter directly
                 // TODO: Reidemeister moves
                 // TODO: When we have a packet picker: compose with
