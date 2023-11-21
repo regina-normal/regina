@@ -33,7 +33,7 @@
 import SwiftUI
 import ReginaEngine
 
-// TODO: Support renames.
+// TODO: Support renames, additions, and deletions.
 
 struct PacketLabel: View {
     static let iconSize = fontSize(forTextStyle: .body) * 1.5
