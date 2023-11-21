@@ -93,10 +93,17 @@ struct TreeView: View {
             // TODO: What to do if there are no child packets at all?
             // TODO: Disclosure groups with inner disclosure groups do not animate nicely at all on iPad.
             List(root.children ?? [], selection: $selected) { item in
-                // TODO: If this is a container, expand/collapse on selection.
                 PacketCell(wrapper: item, expanded: true)
             }
             .navigationTitle(title)
+            .onChange(of: selected) { selection in
+                if let selection = selection {
+                    if selection.packet.type() == .Container {
+                        // TODO: Expand/collapse children
+                        print("Container selected")
+                    }
+                }
+            }
         } detail: {
             // TODO: When transitioning from compact to non-compact,
             // the back button on the detail view seems to stay
