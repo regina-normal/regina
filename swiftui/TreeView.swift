@@ -33,17 +33,38 @@
 import SwiftUI
 import ReginaEngine
 
-struct PacketCell: View {
+struct PacketLabel: View {
     static let iconSize = fontSize(forTextStyle: .body) * 1.5
+    let wrapper: PacketWrapper
 
-    var wrapper: PacketWrapper
-    
     var body: some View {
-        HStack {
-            if let icon = wrapper.icon {
+        if let icon = wrapper.icon {
+            Label {
+                Text(swiftString(wrapper.packet.humanLabel()))
+            } icon: {
                 icon.resizable().frame(width: Self.iconSize, height: Self.iconSize)
             }
+        } else {
             Text(swiftString(wrapper.packet.humanLabel()))
+        }
+    }
+}
+
+struct PacketCell: View {
+    var wrapper: PacketWrapper
+    @State var expanded = false
+
+    var body: some View {
+        if let children = wrapper.children {
+            DisclosureGroup(isExpanded: $expanded) {
+                ForEach(children) { child in
+                    PacketCell(wrapper: child, expanded: false)
+                }
+            } label: {
+                PacketLabel(wrapper: wrapper)
+            }
+        } else {
+            PacketLabel(wrapper: wrapper)
         }
     }
 }
@@ -66,24 +87,28 @@ struct TreeView: View {
         // TODO: When first opening a file, we should ensure the packet list
         // is visible instead of being hidden away (iPad portrait).
         // See the columnVisibility parameter for NavigationSplitView.
+        // TODO: macOS: remember the split position
         NavigationSplitView {
             // We should not display the root packet.
             // Instead start directly with the list of top-level children.
-            // TODO: Consider using a navigation stack here instead of a tree.
             // TODO: What to do if there are no child packets at all?
-            // TODO: This list does not animate nicely at all on iPad.
-            List(root.children ?? [], children: \.children, selection: $selected) { item in
+            // TODO: Disclosure groups with inner disclosure groups do not animate nicely at all on iPad.
+            List(root.children ?? [], selection: $selected) { item in
                 // TODO: If this is a container, expand/collapse on selection.
-                PacketCell(wrapper: item)
+                PacketCell(wrapper: item, expanded: true)
             }
             .navigationTitle(title)
         } detail: {
             // TODO: When transitioning from compact to non-compact,
             // the back button on the detail view seems to stay
             if let s = selected {
-                s.packetViewer
-                    .navigationTitle(swiftString(s.packet.humanLabel()))
-                    .navigationBarBackButtonHidden(sizeClass != .compact)
+                if s.packet.type() == .Container {
+                    // TODO: Implement
+                } else {
+                    s.packetViewer
+                        .navigationTitle(swiftString(s.packet.humanLabel()))
+                        .navigationBarBackButtonHidden(sizeClass != .compact)
+                }
             } else {
                 // TODO: Something for the case of no selection.
                 // TODO: Do we want a navigation title also?
