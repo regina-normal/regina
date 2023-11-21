@@ -33,6 +33,8 @@
 import SwiftUI
 import ReginaEngine
 
+// TODO: Support renames.
+
 struct PacketLabel: View {
     static let iconSize = fontSize(forTextStyle: .body) * 1.5
     let wrapper: PacketWrapper
