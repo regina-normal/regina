@@ -329,6 +329,7 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
             case .Text:
                 TextView(packet: regina.SharedText(packet))
             default:
+                // TODO: Should we have a header with the packet name?
                 let msg = "No viewer available"
                 let detail = "I am not able to view packets of type \(swiftString(packet.typeName())) (yet).\nYou can, however, work with this packet through Regina's Python interface instead."
                 HStack {

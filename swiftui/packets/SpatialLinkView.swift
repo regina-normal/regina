@@ -200,7 +200,7 @@ struct SpatialLinkView: View {
 
     var wrapper: Wrapper<regina.SharedSpatialLink>
     
-    @State var tooManyNodes = false
+    @State private var errTooManyNodes = false
 
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
@@ -214,13 +214,13 @@ struct SpatialLinkView: View {
             ToolbarItem {
                 Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
                     if wrapper.packet.size() * 2 > Self.maxNodes {
-                        tooManyNodes = true
+                        errTooManyNodes = true
                     } else {
                         var p = wrapper.packet
                         p.refine()
                     }
                 }
-                .alert("Too much detail", isPresented: $tooManyNodes) {
+                .alert("Too much detail", isPresented: $errTooManyNodes) {
                     Button("OK") {}
                 } message: {
                     Text("I am not brave enough to create a spatial link with more than \(Self.maxNodes) nodes.")

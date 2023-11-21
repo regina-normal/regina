@@ -67,10 +67,10 @@ struct LinkView: View {
 
     @Environment(\.horizontalSizeClass) var sizeClass
     
-    @State var couldNotSimplify = false
-    @State var alreadyAlternating = false
-    @State var alreadySelfFramed = false
-    @State var snapPeaEmpty = false
+    @State private var errCouldNotSimplify = false
+    @State private var errAlreadyAlternating = false
+    @State private var errAlreadySelfFramed = false
+    @State private var errSnapPeaEmpty = false
     
     var body: some View {
         let link = wrapper.packet.heldCopy()
@@ -177,11 +177,11 @@ struct LinkView: View {
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button {
                         var p = wrapper.packet
-                        couldNotSimplify = !p.intelligentSimplify()
+                        errCouldNotSimplify = !p.intelligentSimplify()
                     } label: {
                         Label("Simplify", systemImage: "rectangle.compress.vertical")
                     }
-                    .alert("Could not simplify", isPresented: $couldNotSimplify) {
+                    .alert("Could not simplify", isPresented: $errCouldNotSimplify) {
                         // TODO: Offer a "try harder" option here.
                         Button("OK") {}
                     } message: {
@@ -204,8 +204,8 @@ struct LinkView: View {
                         Label("Complement", image: "Act-Complement")
                     }
                     Button {
-                        snapPeaEmpty = wrapper.packet.isEmpty()
-                        if !snapPeaEmpty {
+                        errSnapPeaEmpty = wrapper.packet.isEmpty()
+                        if !errSnapPeaEmpty {
                             var p = wrapper.packet.asPacket()
                             var c = wrapper.packet.snapPea()
                             c.setLabel("Complement")
@@ -215,7 +215,7 @@ struct LinkView: View {
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")
                     }
-                    .alert("Empty link", isPresented: $snapPeaEmpty) {
+                    .alert("Empty link", isPresented: $errSnapPeaEmpty) {
                         Button("OK") {}
                     } message: {
                         Text("The SnapPea kernel cannot triangulate the complement of an empty link.")
@@ -244,11 +244,11 @@ struct LinkView: View {
                 ToolbarItemGroup(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.packet
-                        alreadyAlternating = !p.makeAlternating()
+                        errAlreadyAlternating = !p.makeAlternating()
                     } label: {
                         Label("Make Alternating", image: "Act-Alternating")
                     }
-                    .alert("Already alternating", isPresented: $alreadyAlternating) {
+                    .alert("Already alternating", isPresented: $errAlreadyAlternating) {
                         Button("OK") {}
                     } message: {
                         // TODO: Fix this in the Qt UI also.
@@ -256,11 +256,11 @@ struct LinkView: View {
                     }
                     Button {
                         var p = wrapper.packet
-                        alreadySelfFramed = !p.selfFrame()
+                        errAlreadySelfFramed = !p.selfFrame()
                     } label: {
                         Label("Self-Frame", image: "Act-SelfFrame")
                     }
-                    .alert("Already self-framed", isPresented: $alreadySelfFramed) {
+                    .alert("Already self-framed", isPresented: $errAlreadySelfFramed) {
                         Button("OK") {}
                     } message: {
                         // TODO: Fix this in the Qt UI also.
@@ -521,7 +521,7 @@ struct LinkAlgebraView: View {
     @State var simplifiedGroup: regina.GroupPresentation?
 
     @State var didSimplify = false
-    @State var couldNotSimplify = false
+    @State private var errCouldNotSimplify = false
 
     @AppStorage("displayUnicode") private var unicode = true
 
@@ -601,11 +601,11 @@ struct LinkAlgebraView: View {
                         // Currently Regina's links do not have a way to receive
                         // the simplified group, since link groups are not cached.
                     } else {
-                        couldNotSimplify = true
+                        errCouldNotSimplify = true
                     }
                     #endif
                 }
-                .alert("Could not simplify", isPresented: $couldNotSimplify) {
+                .alert("Could not simplify", isPresented: $errCouldNotSimplify) {
                     Button("OK") {}
                 } message: {
                     Text("I could not simplify the group presentation any further.")
