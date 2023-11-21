@@ -173,59 +173,7 @@ struct LinkView: View {
             .toolbar {
                 // TODO: Fix groupings.
                 // TODO: On macOS, primary and secondary are all clumped together.
-                ToolbarItem(placement: .secondaryAction) {
-                    Button {
-                        var p = wrapper.packet
-                        p.reflect()
-                    } label: {
-                        Label("Reflect", image: "Act-Reflect")
-                    }
-                }
-                ToolbarItem(placement: .secondaryAction) {
-                    Button {
-                        var p = wrapper.packet
-                        p.rotate()
-                    } label: {
-                        Label("Rotate", image: "Act-Rotate")
-                    }
-                }
-                ToolbarItem(placement: .secondaryAction) {
-                    Button {
-                        var p = wrapper.packet
-                        p.reverse()
-                    } label: {
-                        Label("Reverse", image: "Act-Reverse")
-                    }
-                }
-                ToolbarItem(placement: .secondaryAction) {
-                    Button {
-                        var p = wrapper.packet
-                        alreadyAlternating = !p.makeAlternating()
-                    } label: {
-                        Label("Make Alternating", image: "Act-Alternating")
-                    }
-                    .alert("Already alternating", isPresented: $alreadyAlternating) {
-                        Button("OK") {}
-                    } message: {
-                        // TODO: Fix this in the Qt UI also.
-                        Text("This link diagram is already alternating.")
-                    }
-                }
-                ToolbarItem(placement: .secondaryAction) {
-                    Button {
-                        var p = wrapper.packet
-                        alreadySelfFramed = !p.selfFrame()
-                    } label: {
-                        Label("Self-Frame", image: "Act-SelfFrame")
-                    }
-                    .alert("Already self-framed", isPresented: $alreadySelfFramed) {
-                        Button("OK") {}
-                    } message: {
-                        // TODO: Fix this in the Qt UI also.
-                        Text("Every component already has zero writhe.")
-                    }
-                }
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItemGroup(placement: .primaryAction) {
                     Button {
                         var p = wrapper.packet
                         couldNotSimplify = !p.intelligentSimplify()
@@ -238,30 +186,76 @@ struct LinkView: View {
                     } message: {
                         Text("I could not simplify the link diagram any further.")
                     }
-                }
-                ToolbarItem(placement: .primaryAction) {
                     Button {
                         // TODO: Perform Reidemeister moves.
                     } label: {
                         Label("Moves", systemImage: "slider.horizontal.2.square")
                     }
                 }
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItemGroup(placement: .primaryAction) {
                     Button {
                         // TODO: Create the complement.
                     } label: {
                         Label("Complement", image: "Act-Complement")
                     }
-                }
-                ToolbarItem(placement: .primaryAction) {
                     Button {
                         // TODO: Create the SnapPea complement, if the link is non-empty.
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")
                     }
                 }
-                // TODO: Parallel (including MAX_CABLES), alter directly
-                // TODO: When we have a packet picker: compose with
+                ToolbarItemGroup(placement: .secondaryAction) {
+                    Button {
+                        var p = wrapper.packet
+                        p.reflect()
+                    } label: {
+                        Label("Reflect", image: "Act-Reflect")
+                    }
+                    Button {
+                        var p = wrapper.packet
+                        p.rotate()
+                    } label: {
+                        Label("Rotate", image: "Act-Rotate")
+                    }
+                    Button {
+                        var p = wrapper.packet
+                        p.reverse()
+                    } label: {
+                        Label("Reverse", image: "Act-Reverse")
+                    }
+                }
+                ToolbarItemGroup(placement: .secondaryAction) {
+                    Button {
+                        var p = wrapper.packet
+                        alreadyAlternating = !p.makeAlternating()
+                    } label: {
+                        Label("Make Alternating", image: "Act-Alternating")
+                    }
+                    .alert("Already alternating", isPresented: $alreadyAlternating) {
+                        Button("OK") {}
+                    } message: {
+                        // TODO: Fix this in the Qt UI also.
+                        Text("This link diagram is already alternating.")
+                    }
+                    Button {
+                        var p = wrapper.packet
+                        alreadySelfFramed = !p.selfFrame()
+                    } label: {
+                        Label("Self-Frame", image: "Act-SelfFrame")
+                    }
+                    .alert("Already self-framed", isPresented: $alreadySelfFramed) {
+                        Button("OK") {}
+                    } message: {
+                        // TODO: Fix this in the Qt UI also.
+                        Text("Every component already has zero writhe.")
+                    }
+                    Button {
+                        // TODO: Parallel (limit to MAX_CABLES), alter directly
+                    } label: {
+                        Label("Cables", image: "Act-Parallel")
+                    }
+                    // TODO: Compose with
+                }
             }
         }
         #if os(macOS)
