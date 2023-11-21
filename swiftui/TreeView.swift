@@ -104,6 +104,10 @@ struct TreeView: View {
                     }
                 }
             }
+            .refreshable {
+                // TODO: Right now, reload the tree.
+                // Eventually, get rid of this and use PacketListener instead.
+            }
         } detail: {
             // TODO: When transitioning from compact to non-compact,
             // the back button on the detail view seems to stay
