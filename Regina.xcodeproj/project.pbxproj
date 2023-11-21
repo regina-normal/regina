@@ -561,6 +561,11 @@
 		0543AEC41811E12A002758F8 /* reginapref.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5EE1811D920002CC2AE /* reginapref.h */; };
 		0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F01811D920002CC2AE /* reginaprefset.h */; };
 		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
+		0544BBA92B0D6AD600FF26CD /* LinkAlgebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA42B0D6AD500FF26CD /* LinkAlgebra.swift */; };
+		0544BBAA2B0D6AD600FF26CD /* LinkCrossings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA52B0D6AD500FF26CD /* LinkCrossings.swift */; };
+		0544BBAB2B0D6AD600FF26CD /* LinkGraphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA62B0D6AD500FF26CD /* LinkGraphs.swift */; };
+		0544BBAC2B0D6AD600FF26CD /* LinkPolynomials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */; };
+		0544BBAD2B0D6AD600FF26CD /* LinkCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -2978,6 +2983,11 @@
 		05431FD41C40F67C009BC072 /* skeleton.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = skeleton.out; sourceTree = "<group>"; };
 		05431FD51C40F67C009BC072 /* skeleton.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = skeleton.test; sourceTree = "<group>"; };
 		0543AEC71811E2AD002758F8 /* Regina.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Regina.entitlements; sourceTree = "<group>"; };
+		0544BBA42B0D6AD500FF26CD /* LinkAlgebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAlgebra.swift; sourceTree = "<group>"; };
+		0544BBA52B0D6AD500FF26CD /* LinkCrossings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCrossings.swift; sourceTree = "<group>"; };
+		0544BBA62B0D6AD500FF26CD /* LinkGraphs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkGraphs.swift; sourceTree = "<group>"; };
+		0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPolynomials.swift; sourceTree = "<group>"; };
+		0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCodes.swift; sourceTree = "<group>"; };
 		054535B719D8EA7100BED767 /* TextPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextPopover.h; sourceTree = "<group>"; };
 		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
 		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
@@ -6961,6 +6971,11 @@
 		0553FBB22AF6808E00BE89A7 /* packets */ = {
 			isa = PBXGroup;
 			children = (
+				0544BBA42B0D6AD500FF26CD /* LinkAlgebra.swift */,
+				0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */,
+				0544BBA52B0D6AD500FF26CD /* LinkCrossings.swift */,
+				0544BBA62B0D6AD500FF26CD /* LinkGraphs.swift */,
+				0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */,
 				0553FBB52AF6A4E700BE89A7 /* LinkView.swift */,
 				05ACCA002AFC775B000CF07F /* SpatialLinkView.swift */,
 				0553FBB32AF680AE00BE89A7 /* TextView.swift */,
@@ -9505,6 +9520,7 @@
 				0553FAA62AEBE3C000BE89A7 /* boundary8.cpp in Sources */,
 				0553FB752AEBE7F700BE89A7 /* solve_equations.cpp in Sources */,
 				0553FAB52AEBE3C700BE89A7 /* triangulation5.cpp in Sources */,
+				0544BBAA2B0D6AD600FF26CD /* LinkCrossings.swift in Sources */,
 				0553FA792AEBE36E00BE89A7 /* xmlpacketreader.cpp in Sources */,
 				0553FAFB2AEBE6ED00BE89A7 /* modellinkgraph.cpp in Sources */,
 				0553FA7C2AEBE36E00BE89A7 /* xmlhypersurfacereader.cpp in Sources */,
@@ -9553,10 +9569,12 @@
 				0553FA972AEBE3AC00BE89A7 /* hydrate.cpp in Sources */,
 				0553FB732AEBE7E900BE89A7 /* Moebius_transformations.cpp in Sources */,
 				0553FB6D2AEBE7E900BE89A7 /* link_complement.cpp in Sources */,
+				0544BBA92B0D6AD600FF26CD /* LinkAlgebra.swift in Sources */,
 				0553FAC72AEBE3C700BE89A7 /* triangulation2.cpp in Sources */,
 				0553FB112AEBE6FC00BE89A7 /* torusbundle.cpp in Sources */,
 				0553FB342AEBE73A00BE89A7 /* satannulus.cpp in Sources */,
 				0553FB482AEBE74B00BE89A7 /* links.cpp in Sources */,
+				0544BBAC2B0D6AD600FF26CD /* LinkPolynomials.swift in Sources */,
 				0553FAF52AEBE6ED00BE89A7 /* algebra.cpp in Sources */,
 				0553FA6B2AEBDF5600BE89A7 /* grouppresentation.cpp in Sources */,
 				0553FB252AEBE73A00BE89A7 /* blockedsfspair.cpp in Sources */,
@@ -9695,8 +9713,10 @@
 				0553FB962AEBE86300BE89A7 /* automorph.cpp in Sources */,
 				0553FB592AEBE7D400BE89A7 /* cusp_shapes.cpp in Sources */,
 				0553FA9F2AEBE3B500BE89A7 /* skeleton.cpp in Sources */,
+				0544BBAB2B0D6AD600FF26CD /* LinkGraphs.swift in Sources */,
 				0553FADC2AEBE6B500BE89A7 /* gluingperms2.cpp in Sources */,
 				05A628162AE9214A0049739E /* perm3.cpp in Sources */,
+				0544BBAD2B0D6AD600FF26CD /* LinkCodes.swift in Sources */,
 				0553FB282AEBE73A00BE89A7 /* layeredlensspace.cpp in Sources */,
 				0553FB902AEBE86300BE89A7 /* output.cpp in Sources */,
 				0553FA832AEBE36E00BE89A7 /* xmlsurfacereader.cpp in Sources */,
