@@ -87,6 +87,10 @@ struct SharedPacket {
             return packet_->humanLabel();
         }
 
+        std::string adornedLabel(const std::string& adornment) const {
+            return packet_->adornedLabel(adornment);
+        }
+
         void setLabel(std::string label) {
             packet_->setLabel(std::move(label));
         }

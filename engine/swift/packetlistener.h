@@ -48,8 +48,14 @@ class PacketChangeCallback : public PacketListener {
     public:
         void (*callbackPacketToBeChanged)(void*) = nullptr;
 
+        PacketChangeCallback() {
+            // The pointer we are monitoring is null, and the callbacks will
+            // never be triggered.
+        }
+
         PacketChangeCallback(std::shared_ptr<Packet> packet) {
-            packet->listen(this);
+            if (packet)
+                packet->listen(this);
         }
 
         void enableCallbacks(void* context) {
@@ -76,8 +82,14 @@ class PacketChildrenCallback : public PacketListener {
         void (*callbackChildrenToBeReordered)(void*) = nullptr;
         void (*callback)(void*) = nullptr;
 
+        PacketChildrenCallback() {
+            // The pointer we are monitoring is null, and the callbacks will
+            // never be triggered.
+        }
+
         PacketChildrenCallback(std::shared_ptr<Packet> packet) {
-            packet->listen(this);
+            if (packet)
+                packet->listen(this);
         }
 
         void enableCallbacks(void* context) {

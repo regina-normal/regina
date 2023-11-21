@@ -101,7 +101,7 @@ class SwiftPacketChangeListener: ObservableObject {
 }
 
 /**
- * A lightweight Swift wrapper around a C++ shared pointer to a packet of a specific type, which must _not_ be `null`.
+ * A lightweight Swift wrapper around a C++ shared pointer to a packet of a specific type, which must _not_ be a null pointer.
  *
  * This is an ObservableObject, and it uses Regina's C++ PacketListener machinery to publish changes
  * to the object whenever the packet is about to change.
@@ -126,7 +126,7 @@ class Wrapper<T: SharedPacketClass>: SwiftPacketChangeListener, Equatable {
      * PRE: \a packet is not a null pointer.
      */
     override init(packet: regina.SharedPacket) {
-        self.packet = T(packet)
+        self.packet = .init(packet)
         super.init(packet: packet)
     }
     
@@ -135,7 +135,7 @@ class Wrapper<T: SharedPacketClass>: SwiftPacketChangeListener, Equatable {
      * PRE: \a wrapper is a packet of the correct class.
      */
     init(wrapper: PacketWrapper) {
-        self.packet = T(wrapper.packet)
+        self.packet = .init(wrapper.packet)
         super.init(packet: wrapper.packet)
     }
     
@@ -162,23 +162,25 @@ class Wrapper<T: SharedPacketClass>: SwiftPacketChangeListener, Equatable {
 }
 
 /**
- * A lightweight Swift wrapper around a packet pointer (which may be `null`).
- * The underlying packet may be of any packet type.
+ * A lightweight Swift wrapper around a C++ shared pointer to a generic packet (whose type is unknown), and which may be a null pointer.
  *
- * Specifically: this is a value-based Swift object that wraps a value-based C++ `std::shared_ptr`,
- * which in turn wraps a raw packet pointer.
+ * This is an ObservableObject, and it uses Regina's C++ PacketListener machinery to publish changes
+ * to the object whenever the packet's children change.
  */
-struct PacketWrapper: Identifiable, Equatable, Hashable {
+class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
     typealias ID = PacketWrapper
     
     /// A lightweight value-based C++ wrapper around the underlying packet.
     let packet: regina.SharedPacket
+    
+    private var listener: regina.PacketChildrenCallback
 
     /**
      * Creates a null packet wrapper.
      */
     init() {
-        self.packet = regina.SharedPacket()
+        self.packet = .init()
+        self.listener = .init()
     }
 
     /**
@@ -188,6 +190,20 @@ struct PacketWrapper: Identifiable, Equatable, Hashable {
      */
     init(packet: regina.SharedPacket) {
         self.packet = packet
+        self.listener = .init(packet.sharedPtr())
+        
+        // Unretained raw pointers to this object are fine here,
+        // since this object's deinit() disables the callback.
+        listener.enableCallbacks(Unmanaged<PacketWrapper>.passUnretained(self).toOpaque())
+        listener.callbackChildToBeAdded = { context in
+            Unmanaged<PacketWrapper>.fromOpaque(context!).takeUnretainedValue().objectWillChange.send()
+        }
+        listener.callbackChildToBeRemoved = listener.callbackChildToBeAdded
+        listener.callbackChildrenToBeReordered = listener.callbackChildToBeAdded
+    }
+    
+    deinit {
+        listener.disableCallbacks()
     }
 
     /**

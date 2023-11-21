@@ -51,7 +51,7 @@ struct PacketLabel: View {
 }
 
 struct PacketCell: View {
-    var wrapper: PacketWrapper
+    @ObservedObject var wrapper: PacketWrapper
     @State var expanded = false
 
     var body: some View {
@@ -71,7 +71,7 @@ struct PacketCell: View {
 
 struct TreeView: View {
     // @ObservedObject var document: ReginaDocument
-    var root: PacketWrapper
+    @ObservedObject var root: PacketWrapper
     // TODO: Should the title be a binding?
     let title: String
 

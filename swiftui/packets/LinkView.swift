@@ -70,6 +70,7 @@ struct LinkView: View {
     @State var couldNotSimplify = false
     @State var alreadyAlternating = false
     @State var alreadySelfFramed = false
+    @State var snapPeaEmpty = false
     
     var body: some View {
         let link = wrapper.packet.heldCopy()
@@ -194,14 +195,30 @@ struct LinkView: View {
                 }
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button {
-                        // TODO: Create the complement.
+                        var p = wrapper.packet.asPacket()
+                        var c = wrapper.packet.complement()
+                        c.setLabel("Complement")
+                        p.append(c)
+                        // TODO: Show the result in list & detail views.
                     } label: {
                         Label("Complement", image: "Act-Complement")
                     }
                     Button {
-                        // TODO: Create the SnapPea complement, if the link is non-empty.
+                        snapPeaEmpty = wrapper.packet.isEmpty()
+                        if !snapPeaEmpty {
+                            var p = wrapper.packet.asPacket()
+                            var c = wrapper.packet.snapPea()
+                            c.setLabel("Complement")
+                            p.append(c)
+                            // TODO: Show the result in list & detail views.
+                        }
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")
+                    }
+                    .alert("Empty link", isPresented: $snapPeaEmpty) {
+                        Button("OK") {}
+                    } message: {
+                        Text("The SnapPea kernel cannot triangulate the complement of an empty link.")
                     }
                 }
                 ToolbarItemGroup(placement: .secondaryAction) {

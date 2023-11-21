@@ -147,6 +147,10 @@ struct SharedLink {
             return *packet_;
         }
 
+        bool isEmpty() const {
+            return packet_->isEmpty();
+        }
+
         CrossingPtr crossing(size_t index) const {
             return packet_->crossing(index);
         }
@@ -209,6 +213,17 @@ struct SharedLink {
 
         Laurent2<Integer> homflyLM() const {
             return packet_->homflyLM();
+        }
+
+        SharedPacket complement() const {
+            return std::static_pointer_cast<Packet>(
+                make_packet(packet_->complement()));
+        }
+
+        SharedPacket snapPea() const {
+            return std::static_pointer_cast<Packet>(
+                make_packet<regina::SnapPeaTriangulation>(std::in_place,
+                    *packet_));
         }
 };
 
