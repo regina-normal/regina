@@ -84,8 +84,7 @@ struct TreeView: View {
     }
 
     var body: some View {
-        // TODO: When first opening a file, we should ensure the packet list
-        // is visible instead of being hidden away (iPad portrait).
+        // TODO: When first opening a file, we should ensure the packet list (iPad portrait).
         // See the columnVisibility parameter for NavigationSplitView.
         // TODO: macOS: remember the split position
         NavigationSplitView {
@@ -103,7 +102,7 @@ struct TreeView: View {
             // the back button on the detail view seems to stay
             if let s = selected {
                 if s.packet.type() == .Container {
-                    // TODO: Implement
+                    // TODO: Implement container views
                 } else {
                     s.packetViewer
                         .navigationTitle(swiftString(s.packet.humanLabel()))
