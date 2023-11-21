@@ -199,7 +199,8 @@ struct LinkView: View {
                         var c = wrapper.packet.complement()
                         c.setLabel("Complement")
                         p.append(c)
-                        // TODO: Show the result in list & detail views.
+                        treeSelection.current = .init(packet: c)
+                        // TODO: Select c in the tree.
                     } label: {
                         Label("Complement", image: "Act-Complement")
                     }
@@ -210,7 +211,8 @@ struct LinkView: View {
                             var c = wrapper.packet.snapPea()
                             c.setLabel("Complement")
                             p.append(c)
-                            // TODO: Show the result in list & detail views.
+                            treeSelection.current = .init(packet: c)
+                            // TODO: Select c in the tree.
                         }
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")

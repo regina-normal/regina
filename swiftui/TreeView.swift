@@ -35,6 +35,10 @@ import ReginaEngine
 
 // TODO: Support renames, additions, and deletions.
 
+class TreeSelection: ObservableObject {
+    @Published var current: PacketWrapper?
+}
+
 struct PacketLabel: View {
     static let iconSize = fontSize(forTextStyle: .body) * 1.5
     let wrapper: PacketWrapper
@@ -52,6 +56,7 @@ struct PacketLabel: View {
     }
 }
 
+// TODO: When expanding/contracting and a child is displayed, select/deselect it in the list.
 struct PacketCell: View {
     @ObservedObject var wrapper: PacketWrapper
     @State var expanded = false
@@ -71,17 +76,42 @@ struct PacketCell: View {
     }
 }
 
+struct TreeDetail: View {
+    @EnvironmentObject var selection: TreeSelection
+    @Environment(\.horizontalSizeClass) var sizeClass
+
+    var body: some View {
+        // TODO: When transitioning from compact to non-compact,
+        // the back button on the detail view seems to stay
+        if let p = selection.current {
+            if p.packet.type() == .Container {
+                // TODO: Implement container views
+            } else {
+                p.packetViewer
+                    .navigationTitle(swiftString(p.packet.humanLabel()))
+                    .navigationBarBackButtonHidden(sizeClass != .compact)
+            }
+        } else {
+            // TODO: Something for the case of no selection.
+            // TODO: Do we want a navigation title also?
+            // Perhaps just in the case of no selection?
+            Text("No packet selected")
+                .navigationBarBackButtonHidden(sizeClass != .compact)
+        }
+    }
+}
+
 struct TreeView: View {
     // @ObservedObject var document: ReginaDocument
-    @ObservedObject var root: PacketWrapper
+    @ObservedObject private var root: PacketWrapper
+    @StateObject private var selection = TreeSelection()
     // TODO: Should the title be a binding?
     let title: String
 
-    @State private var selected: PacketWrapper?
-    @Environment(\.horizontalSizeClass) var sizeClass
+    @State private var listSelection: PacketWrapper?
 
     init(packet: regina.SharedPacket, title: String) {
-        root = PacketWrapper(packet: packet)
+        root = .init(packet: packet)
         self.title = title
     }
 
@@ -94,16 +124,21 @@ struct TreeView: View {
             // Instead start directly with the list of top-level children.
             // TODO: What to do if there are no child packets at all?
             // TODO: Disclosure groups with inner disclosure groups do not animate nicely at all on iPad.
-            List(root.children ?? [], selection: $selected) { item in
+            List(root.children ?? [], selection: $listSelection) { item in
                 PacketCell(wrapper: item, expanded: true)
             }
             .navigationTitle(title)
-            .onChange(of: selected) { selection in
-                if let selection = selection {
-                    if selection.packet.type() == .Container {
+            .onChange(of: listSelection) { wrapper in
+                // TODO: Ensure changes go in the right direction here.
+                if let wrapper = wrapper {
+                    if wrapper.packet.type() == .Container {
                         // TODO: Expand/collapse children
                         print("Container selected")
+                    } else {
+                        selection.current = wrapper
                     }
+                } else {
+                    selection.current = nil
                 }
             }
             .refreshable {
@@ -111,24 +146,9 @@ struct TreeView: View {
                 // Eventually, get rid of this and use PacketListener instead.
             }
         } detail: {
-            // TODO: When transitioning from compact to non-compact,
-            // the back button on the detail view seems to stay
-            if let s = selected {
-                if s.packet.type() == .Container {
-                    // TODO: Implement container views
-                } else {
-                    s.packetViewer
-                        .navigationTitle(swiftString(s.packet.humanLabel()))
-                        .navigationBarBackButtonHidden(sizeClass != .compact)
-                }
-            } else {
-                // TODO: Something for the case of no selection.
-                // TODO: Do we want a navigation title also?
-                // Perhaps just in the case of no selection?
-                Text("No packet selected")
-                    .navigationBarBackButtonHidden(sizeClass != .compact)
-            }
+            TreeDetail()
         }
+        .environmentObject(selection)
         // TODO: On macOS we get the DocumentGroup's navigation title, not the packet's.
         #if !os(macOS)
         // Hide the DocumentGroup navigation bar, since we want the bar that
