@@ -65,6 +65,7 @@ struct LinkView: View {
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
 
+    @EnvironmentObject var treeSelection: TreeSelection
     @Environment(\.horizontalSizeClass) var sizeClass
     
     @State private var errCouldNotSimplify = false
