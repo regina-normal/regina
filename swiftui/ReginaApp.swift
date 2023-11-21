@@ -39,6 +39,8 @@ import SwiftUI
 
 // TODO: Go over compact tab icons and see if they need to be a little thicker.
 
+// TODO: Possibly the toolbar actions could be a tiny bit heavier in stroke width.
+
 @main
 struct ReginaApp: App {
     var body: some Scene {

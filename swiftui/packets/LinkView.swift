@@ -241,6 +241,13 @@ struct LinkView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
+                        // TODO: Perform Reidemeister moves.
+                    } label: {
+                        Label("Moves", systemImage: "slider.horizontal.2.square")
+                    }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
                         // TODO: Create the complement.
                     } label: {
                         Label("Complement", image: "Act-Complement")
@@ -254,9 +261,7 @@ struct LinkView: View {
                     }
                 }
                 // TODO: Parallel (including MAX_CABLES), alter directly
-                // TODO: Reidemeister moves
                 // TODO: When we have a packet picker: compose with
-                // TODO: When we have triangulations: SnapPea and complement.
             }
         }
         #if os(macOS)
