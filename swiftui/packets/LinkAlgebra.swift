@@ -39,9 +39,9 @@ struct LinkAlgebraView: View {
 
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     // TODO: Not state.
-    @State var simplifiedGroup: regina.GroupPresentation?
+    @State private var simplifiedGroup: regina.GroupPresentation?
 
-    @State var didSimplify = false
+    @State private var didSimplify = false
     @State private var errCouldNotSimplify = false
 
     @AppStorage("displayUnicode") private var unicode = true
