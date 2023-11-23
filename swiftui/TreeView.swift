@@ -109,6 +109,8 @@ struct TreeView: View {
     let title: String
 
     @State private var listSelection: PacketWrapper?
+    @State private var inputNewPacket = false
+    @State private var inputNewPacketType: regina.PacketType = .None
 
     init(packet: regina.SharedPacket, title: String) {
         root = .init(packet: packet)
@@ -149,72 +151,86 @@ struct TreeView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Container
+                            inputNewPacket = true
                         } label: {
                             Label("Container", image: "Container")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Triangulation2
+                            inputNewPacket = true
                         } label: {
                             Label("2-D Triangulation", image: "Triangulation2")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Triangulation3
+                            inputNewPacket = true
                         } label: {
                             Label("3-D Triangulation", image: "Triangulation3")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Triangulation4
+                            inputNewPacket = true
                         } label: {
                             Label("4-D Triangulation", image: "Triangulation4")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .NormalSurfaces
+                            inputNewPacket = true
                         } label: {
                             Label("Normal Surfaces (3-D)", image: "Surfaces")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .NormalHypersurfaces
+                            inputNewPacket = true
                         } label: {
                             Label("Normal Hypersurfaces (4-D)", image: "Hypersurfaces")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .AngleStructures
+                            inputNewPacket = true
                         } label: {
                             Label("Angle Structures", image: "Angles")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Link
+                            inputNewPacket = true
                         } label: {
                             Label("Knot or Link", image: "Link")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .SpatialLink
+                            inputNewPacket = true
                         } label: {
                             Label("Spatial Link", image: "SpatialLink")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .SnapPea
+                            inputNewPacket = true
                         } label: {
                             Label("SnapPea Triangulation", image: "SnapPea")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .SurfaceFilter
+                            inputNewPacket = true
                         } label: {
                             Label("Filter", image: "Filter")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Text
+                            inputNewPacket = true
                         } label: {
                             Label("Text", image: "Text")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Script
+                            inputNewPacket = true
                         } label: {
                             Label("Script", image: "Script")
                         }
                         Button {
-                            // TODO: Implement
+                            inputNewPacketType = .Attachment
+                            inputNewPacket = true
                         } label: {
                             Label("Attachment", image: "Attachment")
                         }
@@ -233,6 +249,21 @@ struct TreeView: View {
         // comes with the inner NavigationSplitView.
         .toolbar(.hidden, for: .navigationBar)
         #endif
+        .sheet(isPresented: $inputNewPacket) {
+            // TODO: Implement packet creators for all types
+            VStack {
+                Text("New packet here!")
+                Spacer()
+                HStack {
+                    Button("OK") {
+                        inputNewPacket = false
+                    }
+                    Button("Cancel") {
+                        inputNewPacket = false
+                    }
+                }
+            }.padding()
+        }
     }
 }
 
