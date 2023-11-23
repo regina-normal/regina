@@ -145,6 +145,84 @@ struct TreeView: View {
                 // TODO: Right now, reload the tree.
                 // Eventually, get rid of this and use PacketListener instead.
             }
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Menu {
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Container", image: "Container")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("2-D Triangulation", image: "Triangulation2")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("3-D Triangulation", image: "Triangulation3")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("4-D Triangulation", image: "Triangulation4")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Normal Surfaces (3-D)", image: "Surfaces")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Normal Hypersurfaces (4-D)", image: "Hypersurfaces")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Angle Structures", image: "Angles")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Knot or Link", image: "Link")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Spatial Link", image: "SpatialLink")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("SnapPea Triangulation", image: "SnapPea")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Filter", image: "Filter")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Text", image: "Text")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Script", image: "Script")
+                        }
+                        Button {
+                            // TODO: Implement
+                        } label: {
+                            Label("Attachment", image: "Attachment")
+                        }
+                    } label: {
+                        Label("New…", systemImage: "plus")
+                    }
+                }
+            }
         } detail: {
             TreeDetail()
         }
