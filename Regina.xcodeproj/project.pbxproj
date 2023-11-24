@@ -566,6 +566,7 @@
 		0544BBAB2B0D6AD600FF26CD /* LinkGraphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA62B0D6AD500FF26CD /* LinkGraphs.swift */; };
 		0544BBAC2B0D6AD600FF26CD /* LinkPolynomials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */; };
 		0544BBAD2B0D6AD600FF26CD /* LinkCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */; };
+		0544BBAF2B102DC400FF26CD /* LinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBAE2B102DC300FF26CD /* LinkCreator.swift */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -2988,6 +2989,7 @@
 		0544BBA62B0D6AD500FF26CD /* LinkGraphs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkGraphs.swift; sourceTree = "<group>"; };
 		0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPolynomials.swift; sourceTree = "<group>"; };
 		0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCodes.swift; sourceTree = "<group>"; };
+		0544BBAE2B102DC300FF26CD /* LinkCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCreator.swift; sourceTree = "<group>"; };
 		054535B719D8EA7100BED767 /* TextPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextPopover.h; sourceTree = "<group>"; };
 		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
 		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
@@ -6973,6 +6975,7 @@
 			children = (
 				0544BBA42B0D6AD500FF26CD /* LinkAlgebra.swift */,
 				0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */,
+				0544BBAE2B102DC300FF26CD /* LinkCreator.swift */,
 				0544BBA52B0D6AD500FF26CD /* LinkCrossings.swift */,
 				0544BBA62B0D6AD500FF26CD /* LinkGraphs.swift */,
 				0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */,
@@ -9679,6 +9682,7 @@
 				0553FB6A2AEBE7E100BE89A7 /* hyperbolic_structure.cpp in Sources */,
 				05ACC9F52AFC674C000CF07F /* spatiallink.cpp in Sources */,
 				0553FA8F2AEBE3AC00BE89A7 /* angle.cpp in Sources */,
+				0544BBAF2B102DC400FF26CD /* LinkCreator.swift in Sources */,
 				0553FB072AEBE6FC00BE89A7 /* graphloop.cpp in Sources */,
 				05A628122AE91FDA0049739E /* base64.cpp in Sources */,
 				0553FAE02AEBE6B500BE89A7 /* hyperbolic.cpp in Sources */,

@@ -111,7 +111,6 @@ struct TreeView: View {
     @State private var listSelection: PacketWrapper?
     @State private var inputNewPacket = false
     @State private var inputNewPacketType: regina.PacketType = .None
-    @State private var inputNewLinkType = 0
 
     init(packet: regina.SharedPacket, title: String) {
         root = .init(packet: packet)
@@ -283,12 +282,7 @@ struct TreeView: View {
                     Text("TODO: SnapPea")
                 case .Link:
                     // TODO: Implement
-                    Text("New Knot / Link").font(.headline).padding(.bottom)
-                    Picker("Type", selection: $inputNewLinkType) {
-                        Text("Example")
-                        Text("Text code")
-                        Text("Torus link")
-                    }.pickerStyle(.segmented).fixedSize()
+                    LinkCreator()
                 case .SpatialLink:
                     // TODO: Implement
                     Text("TODO: Spatial Link")
