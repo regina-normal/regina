@@ -249,7 +249,7 @@ struct TreeView: View {
         // comes with the inner NavigationSplitView.
         .toolbar(.hidden, for: .navigationBar)
         #endif
-        .sheet(isPresented: $inputNewPacket) {
+        .sheet(isPresented: $inputNewPacket) { [inputNewPacketType] in
             // TODO: Implement packet creators for all types
             VStack {
                 switch inputNewPacketType {
