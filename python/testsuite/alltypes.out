@@ -795,10 +795,16 @@ Equality type : EqualityType.BY_VALUE
 Matrix2 : class
 Equality type : EqualityType.BY_VALUE
 
+Matrix3D : class
+Equality type : EqualityType.BY_VALUE
+
 MatrixBool : class
 Equality type : EqualityType.BY_VALUE
 
 MatrixInt : class
+Equality type : EqualityType.BY_VALUE
+
+MatrixReal : class
 Equality type : EqualityType.BY_VALUE
 
 MaxAdmissible : class
@@ -1154,6 +1160,9 @@ Equality type : EqualityType.BY_VALUE
 
 ReginaException : class
 Exception type
+
+Rotation3D : class
+Equality type : EqualityType.BY_VALUE
 
 SFSAlt : class
 Equality type : EqualityType.BY_VALUE
@@ -1522,6 +1531,9 @@ UnsolvedCase : class
 Exception type
 
 ValidityConstraints : class
+Equality type : EqualityType.BY_VALUE
+
+Vector3D : class
 Equality type : EqualityType.BY_VALUE
 
 VectorInt : class
