@@ -37,6 +37,7 @@ enum LinkGraph: Int {
     case tree = 1, nice = 2
 }
 
+// TODO: These take some time to load.. is there a way to give feedback?
 struct LinkGraphsView: View {
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selected: LinkGraph = (LinkGraph(rawValue: UserDefaults.standard.integer(forKey: "linkGraph")) ?? .tree)
