@@ -73,13 +73,9 @@ struct LinkView: View {
     @EnvironmentObject var treeSelection: TreeSelection
     @Environment(\.horizontalSizeClass) var sizeClass
     
-    @State private var errCouldNotSimplify = false
-    @State private var errAlreadyAlternating = false
-    @State private var errAlreadySelfFramed = false
-    @State private var errSnapPeaEmpty = false
-    @State private var errCablesEmpty = false
-    @State private var errCablesSmall = false
-    @State private var errCablesLarge = false
+    @State private var errorGeneral = false
+    @State private var errorCables = false
+    @State private var errorDetail: ReginaError?
     @State private var popoverCables = false
     @State private var inputCables: Int?
     @State private var inputFraming: LinkFraming = (LinkFraming(rawValue: UserDefaults.standard.integer(forKey: "linkFraming")) ?? .seifert)
@@ -191,15 +187,13 @@ struct LinkView: View {
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button {
                         var p = wrapper.packet
-                        errCouldNotSimplify = !p.intelligentSimplify()
+                        if !p.intelligentSimplify() {
+                            // TODO: Offer a "try harder" option here.
+                            errorGeneral = true
+                            errorDetail = .init("Could not simplify", detail: "I could not simplify the link diagram any further.")
+                        }
                     } label: {
                         Label("Simplify", systemImage: "rectangle.compress.vertical")
-                    }
-                    .alert("Could not simplify", isPresented: $errCouldNotSimplify) {
-                        // TODO: Offer a "try harder" option here.
-                        Button("OK") {}
-                    } message: {
-                        Text("I could not simplify the link diagram any further.")
                     }
                     Button {
                         // TODO: Perform Reidemeister moves.
@@ -219,8 +213,10 @@ struct LinkView: View {
                         Label("Complement", image: "Act-Complement")
                     }
                     Button {
-                        errSnapPeaEmpty = wrapper.packet.isEmpty()
-                        if !errSnapPeaEmpty {
+                        if wrapper.packet.isEmpty() {
+                            errorGeneral = true
+                            errorDetail = .init("Empty link", detail: "The SnapPea kernel cannot triangulate the complement of an empty link.")
+                        } else {
                             var p = wrapper.packet.asPacket()
                             var c = wrapper.packet.snapPea()
                             c.setLabel("Complement")
@@ -230,11 +226,6 @@ struct LinkView: View {
                         }
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")
-                    }
-                    .alert("Empty link", isPresented: $errSnapPeaEmpty) {
-                        Button("OK") {}
-                    } message: {
-                        Text("The SnapPea kernel cannot triangulate the complement of an empty link.")
                     }
                 }
                 ToolbarItemGroup(placement: .secondaryAction) {
@@ -260,27 +251,23 @@ struct LinkView: View {
                 ToolbarItemGroup(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.packet
-                        errAlreadyAlternating = !p.makeAlternating()
+                        if !p.makeAlternating() {
+                            // TODO: Notify this in the Qt UI also.
+                            errorGeneral = true
+                            errorDetail = .init("Already alternating", detail: "This link diagram is already alternating.")
+                        }
                     } label: {
                         Label("Make Alternating", image: "Act-Alternating")
                     }
-                    .alert("Already alternating", isPresented: $errAlreadyAlternating) {
-                        Button("OK") {}
-                    } message: {
-                        // TODO: Fix this in the Qt UI also.
-                        Text("This link diagram is already alternating.")
-                    }
                     Button {
                         var p = wrapper.packet
-                        errAlreadySelfFramed = !p.selfFrame()
+                        if !p.selfFrame() {
+                            // TODO: Notify this in the Qt UI also.
+                            errorGeneral = true
+                            errorDetail = .init("Already self-framed", detail: "Every component already has zero writhe.")
+                        }
                     } label: {
                         Label("Self-Frame", image: "Act-SelfFrame")
-                    }
-                    .alert("Already self-framed", isPresented: $errAlreadySelfFramed) {
-                        Button("OK") {}
-                    } message: {
-                        // TODO: Fix this in the Qt UI also.
-                        Text("Every component already has zero writhe.")
                     }
                     Button {
                         popoverCables = true
@@ -288,6 +275,13 @@ struct LinkView: View {
                         Label("Cables", image: "Act-Parallel")
                     }
                     // TODO: Compose with
+                }
+            }
+            .alert(isPresented: $errorGeneral, error: errorDetail) { _ in
+                Button("OK") {}
+            } message: { error in
+                if let detail = error.detail {
+                    Text(detail)
                 }
             }
         }
@@ -322,9 +316,11 @@ struct LinkView: View {
                         Button("Convert") {
                             if let cables = inputCables {
                                 if cables < 2 {
-                                    errCablesSmall = true
+                                    errorCables = true
+                                    errorDetail = .init("Too few cables", detail: "The number of parallel cables should be at least 2.")
                                 } else if cables > Self.MAX_CABLES {
-                                    errCablesLarge = true
+                                    errorCables = true
+                                    errorDetail = .init("Too many cables", detail: "I am not brave enough to try more than \(Self.MAX_CABLES) parallel cables.")
                                 } else {
                                     var p = wrapper.packet
                                     switch (inputFraming) {
@@ -336,7 +332,8 @@ struct LinkView: View {
                                     popoverCables = false
                                 }
                             } else {
-                                errCablesEmpty = true
+                                errorCables = true
+                                errorDetail = .init("Number of cables required", detail: "Please enter the number of parallel cables that should be used.")
                             }
                         }
                     }
@@ -345,20 +342,12 @@ struct LinkView: View {
                 .navigationBarBackButtonHidden()
             }
             .presentationDetents([.medium])
-            .alert("Number of cables required", isPresented: $errCablesEmpty) {
+            .alert(isPresented: $errorCables, error: errorDetail) { _ in
                 Button("OK") {}
-            } message: {
-                Text("Please enter the number of parallel cables that should be used.")
-            }
-            .alert("Too few cables", isPresented: $errCablesSmall) {
-                Button("OK") {}
-            } message: {
-                Text("The number of parallel cables should be at least 2.")
-            }
-            .alert("Too many cables", isPresented: $errCablesLarge) {
-                Button("OK") {}
-            } message: {
-                Text("I am not brave enough to try more than \(Self.MAX_CABLES) parallel cables.")
+            } message: { error in
+                if let detail = error.detail {
+                    Text(detail)
+                }
             }
         }
     }

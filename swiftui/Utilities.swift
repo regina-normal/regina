@@ -32,6 +32,24 @@
 
 import SwiftUI
 
+struct ReginaError: LocalizedError {
+    let title: String
+    let detail: String?
+    
+    var errorDescription: String? { title }
+    var failureReason: String? { detail }
+    
+    init(_ title: String) {
+        self.title = title
+        self.detail = nil
+    }
+
+    init(_ title: String, detail: String) {
+        self.title = title
+        self.detail = detail
+    }
+}
+
 // These functions are here because, as of Xcode 15.1-beta2, the conversion between
 // Swift and C++ strings on visionOS is broken (it _does_ work on iOS/iPadOS/macOS).
 //
