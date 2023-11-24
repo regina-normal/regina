@@ -129,6 +129,7 @@ struct LinkCrossingsView: View {
             }
             .padding(.vertical)
 
+            // TODO: This needs to be scrollable.
             //List {
                 ForEach(0..<wrapper.packet.countComponents(), id: \.self) { i in
                     Section("Component \(i)") {

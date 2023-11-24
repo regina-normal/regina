@@ -77,9 +77,14 @@ struct LinkView: View {
     @State private var errAlreadyAlternating = false
     @State private var errAlreadySelfFramed = false
     @State private var errSnapPeaEmpty = false
+    @State private var errCablesEmpty = false
+    @State private var errCablesSmall = false
+    @State private var errCablesLarge = false
     @State private var popoverCables = false
     @State private var inputCables: Int?
     @State private var inputFraming: LinkFraming = (LinkFraming(rawValue: UserDefaults.standard.integer(forKey: "linkFraming")) ?? .seifert)
+    
+    static let MAX_CABLES = 50
     
     var body: some View {
         let link = wrapper.packet.heldCopy()
@@ -315,9 +320,24 @@ struct LinkView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Convert") {
-                            // TODO: Check against MAX_CABLES
-                            // TODO: Do it by operating directly
-                            popoverCables = false
+                            if let cables = inputCables {
+                                if cables < 2 {
+                                    errCablesSmall = true
+                                } else if cables > Self.MAX_CABLES {
+                                    errCablesLarge = true
+                                } else {
+                                    var p = wrapper.packet
+                                    switch (inputFraming) {
+                                    case .seifert:
+                                        p.makeParallel(cables, .Blackboard)
+                                    case .blackboard:
+                                        p.makeParallel(cables, .Seifert)
+                                    }
+                                    popoverCables = false
+                                }
+                            } else {
+                                errCablesEmpty = true
+                            }
                         }
                     }
                 }
@@ -325,6 +345,21 @@ struct LinkView: View {
                 .navigationBarBackButtonHidden()
             }
             .presentationDetents([.medium])
+            .alert("Number of cables required", isPresented: $errCablesEmpty) {
+                Button("OK") {}
+            } message: {
+                Text("Please enter the number of parallel cables that should be used.")
+            }
+            .alert("Too few cables", isPresented: $errCablesSmall) {
+                Button("OK") {}
+            } message: {
+                Text("The number of parallel cables should be at least 2.")
+            }
+            .alert("Too many cables", isPresented: $errCablesLarge) {
+                Button("OK") {}
+            } message: {
+                Text("I am not brave enough to try more than \(Self.MAX_CABLES) parallel cables.")
+            }
         }
     }
 }

@@ -199,6 +199,10 @@ struct SharedLink {
             return packet_->selfFrame();
         }
 
+        void makeParallel(size_t cables, Framing framing) {
+            *packet_ = packet_->parallel(cables, framing);
+        }
+
         Laurent<Integer> bracket() const {
             return packet_->bracket();
         }
