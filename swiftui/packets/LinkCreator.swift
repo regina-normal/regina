@@ -42,7 +42,7 @@ struct LinkCreator : View {
             Text("Example")
             Text("Text code")
             Text("Torus link")
-        }.pickerStyle(.segmented).fixedSize()
+        }.pickerStyle(.segmented).fixedSize().labelsHidden()
     }
 }
 

@@ -78,7 +78,7 @@ struct LinkView: View {
     @State private var errAlreadySelfFramed = false
     @State private var errSnapPeaEmpty = false
     @State private var popoverCables = false
-    @State private var inputCables = 2
+    @State private var inputCables: Int?
     @State private var inputFraming: LinkFraming = (LinkFraming(rawValue: UserDefaults.standard.integer(forKey: "linkFraming")) ?? .seifert)
     
     var body: some View {
@@ -290,10 +290,12 @@ struct LinkView: View {
         .padding(.top)
         #endif
         .sheet(isPresented: $popoverCables) {
-            NavigationView {
+            NavigationStack {
                 Form {
                     TextField("Number of cables", value: $inputCables, format: .number)
+                        #if !os(macOS)
                         .keyboardType(.numberPad)
+                        #endif
                     Picker("Framing", selection: $inputFraming) {
                         Text("Seifert").tag(LinkFraming.seifert)
                         Text("Blackboard").tag(LinkFraming.blackboard)
@@ -301,21 +303,28 @@ struct LinkView: View {
                     .onChange(of: inputFraming) { newValue in
                         UserDefaults.standard.set(newValue.rawValue, forKey: "linkFraming")
                     }
-                }.toolbar {
+                }
+                #if os(macOS)
+                .padding()
+                #endif
+                .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel", role: .cancel) {
                             popoverCables = false
                         }
                     }
-                    ToolbarItem(placement: .primaryAction) {
+                    ToolbarItem(placement: .confirmationAction) {
                         Button("Convert") {
                             // TODO: Check against MAX_CABLES
                             // TODO: Do it by operating directly
                             popoverCables = false
                         }
                     }
-                }.navigationTitle("Parallel Cables")
+                }
+                .navigationTitle("Parallel Cables")
+                .navigationBarBackButtonHidden()
             }
+            .presentationDetents([.medium])
         }
     }
 }
