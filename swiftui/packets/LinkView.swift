@@ -320,3 +320,9 @@ struct LinkView: View {
     }
 }
 
+struct LinkView_Previews: PreviewProvider {
+    static var previews: some View {
+        let link = regina.SharedLink(regina.ExampleLink.whitehead())
+        LinkView(wrapper: Wrapper<regina.SharedLink>(packet: link))
+    }
+}
