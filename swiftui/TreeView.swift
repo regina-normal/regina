@@ -111,6 +111,7 @@ struct TreeView: View {
     @State private var listSelection: PacketWrapper?
     @State private var inputNewPacket = false
     @State private var inputNewPacketType: regina.PacketType = .None
+    @State private var inputNewLinkType = 0
 
     init(packet: regina.SharedPacket, title: String) {
         root = .init(packet: packet)
@@ -252,15 +253,69 @@ struct TreeView: View {
         .sheet(isPresented: $inputNewPacket) {
             // TODO: Implement packet creators for all types
             VStack {
-                Text("New packet here!")
+                switch inputNewPacketType {
+                case .Container:
+                    // TODO: Implement
+                    Text("TODO: Container")
+                case .Text:
+                    // TODO: Implement
+                    Text("TODO: Text")
+                case .NormalSurfaces:
+                    // TODO: Implement
+                    Text("TODO: Surfaces")
+                case .Script:
+                    // TODO: Implement
+                    Text("TODO: Script")
+                case .SurfaceFilter:
+                    // TODO: Implement
+                    Text("TODO: Filter")
+                case .AngleStructures:
+                    // TODO: Implement
+                    Text("TODO: Angles")
+                case .Attachment:
+                    // TODO: Implement
+                    Text("TODO: Attachment")
+                case .NormalHypersurfaces:
+                    // TODO: Implement
+                    Text("TODO: Hypersurfaces")
+                case .SnapPea:
+                    // TODO: Implement
+                    Text("TODO: SnapPea")
+                case .Link:
+                    // TODO: Implement
+                    Text("New Knot / Link").font(.headline).padding(.bottom)
+                    Picker("Type", selection: $inputNewLinkType) {
+                        Text("Example")
+                        Text("Text code")
+                        Text("Torus link")
+                    }.pickerStyle(.segmented).fixedSize()
+                case .SpatialLink:
+                    // TODO: Implement
+                    Text("TODO: Spatial Link")
+                case .Triangulation2:
+                    // TODO: Implement
+                    Text("TODO: Dim2")
+                case .Triangulation3:
+                    // TODO: Implement
+                    Text("TODO: Dim3")
+                case .Triangulation4:
+                    // TODO: Implement
+                    Text("TODO: Dim4")
+                default:
+                    // TODO: Implement
+                    Text("TODO: Default")
+                }
                 Spacer()
                 HStack {
+                    Spacer()
                     Button("OK") {
                         inputNewPacket = false
                     }
+                    Spacer()
                     Button("Cancel") {
                         inputNewPacket = false
                     }
+                    Spacer()
                 }
             }.padding()
         }
