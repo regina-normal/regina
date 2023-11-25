@@ -77,14 +77,17 @@ struct LinkExample: Identifiable, Equatable, Hashable {
 // TODO: macOS: popup too small (torus link: width; text code: height)
 // TODO: macOS: text code area needs a border or other visual indicator
 // TODO: macOS: picker jumps around
-struct LinkCreator : View {
+struct LinkCreator: View {
     @State private var type: LinkType = (LinkType(rawValue: UserDefaults.standard.integer(forKey: "linkNew")) ?? .example)
 
     // TODO: Make this selection persistent
     @State private var inputExample: LinkExample = LinkExample.all.first!
     @State private var inputCode = ""
     @State private var inputTorusParams = ""
-
+    
+    @Binding var createBeneath: PacketWrapper?
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         Form {
             Section {
@@ -134,9 +137,40 @@ struct LinkCreator : View {
                 }
             }
         }
+        .onChange(of: createBeneath) { value in
+            if let parent = createBeneath {
+                var child = create()
+                if !child.isNull() {
+                    var p = parent.packet
+                    p.append(child)
+                    // TODO: View / select / etc.
+                    dismiss()
+                }
+                createBeneath = nil
+                // This triggers another call to this same onChange closure,
+                // but this time with createBeneath as nil.
+            }
+        }
+    }
+    
+    func create() -> regina.SharedPacket {
+        // TODO: Implement this
+        switch type {
+        case .example:
+            var ans = regina.SharedLink(inputExample.creator()).asPacket()
+            ans.setLabel(cxxString(inputExample.name))
+            return ans
+        case .code:
+            return .init()
+        case .torus:
+            return .init()
+        }
     }
 }
 
-#Preview {
+/*
+ TODO: Fix broken previews
+ #Preview {
     LinkCreator()
 }
+*/

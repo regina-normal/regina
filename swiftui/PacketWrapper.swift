@@ -466,14 +466,19 @@ extension regina.PacketType: Identifiable {
             return ""
         }
     }
+}
+
+struct PacketCreator: View {
+    let type: regina.PacketType
+    @Binding var createBeneath: PacketWrapper?
     
-    @ViewBuilder var creator: some View {
+    var body: some View {
         // TODO: Implement creators for all packet types
-        switch self {
+        switch type {
         case .Link:
-            LinkCreator()
+            LinkCreator(createBeneath: $createBeneath)
         default:
-            // TODO: What to do here?
+            // TODO: I guess we should disable the Create button and/or..?
             SwiftUI.Text("Not yet implemented")
         }
     }

@@ -111,6 +111,7 @@ struct TreeView: View {
     @State private var listSelection: PacketWrapper?
     @State private var inputNewPacket = false
     @State private var inputNewPacketType: regina.PacketType = .None
+    @State private var createBeneath: PacketWrapper?
 
     init(packet: regina.SharedPacket, title: String) {
         root = .init(packet: packet)
@@ -180,7 +181,7 @@ struct TreeView: View {
         .sheet(isPresented: $inputNewPacket) { [inputNewPacketType] in
             // TODO: Implement packet creators for all types
             NavigationStack {
-                inputNewPacketType.creator
+                PacketCreator(type: inputNewPacketType, createBeneath: $createBeneath)
                 #if os(macOS)
                 .padding()
                 #endif
@@ -192,8 +193,10 @@ struct TreeView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Create") {
+                            // TODO: Choose a proper parent
+                            createBeneath = root
                             // TODO: Do the creation
-                            inputNewPacket = false
+                            // TODO: inputNewPacket = false
                         }
                     }
                 }
