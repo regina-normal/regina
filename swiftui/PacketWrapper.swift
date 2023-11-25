@@ -244,63 +244,8 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
         if packet.isNull() {
             return nil
         }
-
-        switch packet.type() {
-        case .AngleStructures:
-            return Image("Angles")
-        case .Attachment:
-            return Image("Attachment")
-        case .Container:
-            return Image("Container")
-        case .Link:
-            return Image("Link")
-        case .NormalHypersurfaces:
-            return Image("Hypersurfaces")
-        case .NormalSurfaces:
-            return Image("Surfaces")
-        case .Script:
-            return Image("Script")
-        case .SnapPea:
-            return Image("SnapPea")
-        case .SpatialLink:
-            return Image("SpatialLink")
-        case .SurfaceFilter:
-            return Image("Filter")
-        case .Text:
-            return Image("Text")
-        case .Triangulation2:
-            return Image("Triangulation2")
-        case .Triangulation3:
-            return Image("Triangulation3")
-        case .Triangulation4:
-            return Image("Triangulation4")
-        case .Triangulation5:
-            return Image("Triangulation5")
-        case .Triangulation6:
-            return Image("Triangulation6")
-        case .Triangulation7:
-            return Image("Triangulation7")
-        case .Triangulation8:
-            return Image("Triangulation8")
-#if REGINA_HIGHDIM
-        case .Triangulation9:
-            return Image("Triangulation9")
-        case .Triangulation10:
-            return Image("Triangulation10")
-        case .Triangulation11:
-            return Image("Triangulation11")
-        case .Triangulation12:
-            return Image("Triangulation12")
-        case .Triangulation13:
-            return Image("Triangulation13")
-        case .Triangulation14:
-            return Image("Triangulation14")
-        case .Triangulation15:
-            return Image("Triangulation15")
-#endif
-        default:
-            return nil
-        }
+        let n = packet.type().iconName
+        return n.isEmpty ? nil : Image(n)
     }
     
     @ViewBuilder var packetViewer: some View {
@@ -321,7 +266,7 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
                 Spacer()
             }
         } else {
-            switch (packet.type()) {
+            switch packet.type() {
             case .Link:
                 LinkView(wrapper: Wrapper<regina.SharedLink>(wrapper: self))
             case .SpatialLink:
@@ -364,5 +309,161 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
      */
     func hash(into hasher: inout Hasher) {
         hasher.combine(packet.id())
+    }
+}
+
+extension regina.PacketType: Identifiable {
+    public var id: Self { self }
+    
+    /**
+     * The human-readable name of the packet type.
+     *
+     * All words in the string shold be capitalised.
+     */
+    var name: String {
+        switch self {
+        case .AngleStructures:
+            return "Angle Structures"
+        case .Attachment:
+            return "Attachment"
+        case .Container:
+            return "Container"
+        case .Link:
+            return "Link"
+        case .NormalHypersurfaces:
+            return "Normal Hypersurfaces"
+        case .NormalSurfaces:
+            return "Normal Surfaces"
+        case .Script:
+            return "Script"
+        case .SnapPea:
+            return "SnapPea Triangulation"
+        case .SpatialLink:
+            return "Spatial Link"
+        case .SurfaceFilter:
+            return "Surface Filter"
+        case .Text:
+            return "Text"
+        case .Triangulation2:
+            return "2-D Triangulation"
+        case .Triangulation3:
+            return "3-D Triangulation"
+        case .Triangulation4:
+            return "4-D Triangulation"
+        case .Triangulation5:
+            return "5-D Triangulation"
+        case .Triangulation6:
+            return "6-D Triangulation"
+        case .Triangulation7:
+            return "7-D Triangulation"
+        case .Triangulation8:
+            return "8-D Triangulation"
+#if REGINA_HIGHDIM
+        case .Triangulation9:
+            return "9-D Triangulation"
+        case .Triangulation10:
+            return "10-D Triangulation"
+        case .Triangulation11:
+            return "11-D Triangulation"
+        case .Triangulation12:
+            return "12-D Triangulation"
+        case .Triangulation13:
+            return "13-D Triangulation"
+        case .Triangulation14:
+            return "14-D Triangulation"
+        case .Triangulation15:
+            return "15-D Triangulation"
+#endif
+        case .None:
+            return "None"
+        @unknown default:
+            return "Unknown"
+        }
+    }
+    
+    /**
+     * The human-readable name of the packet type, for use when offering to create a new packet.
+     *
+     * All words in the string shold be capitalised.
+     */
+    var nameCreation: String {
+        switch self {
+        case .Link:
+            return "Knot or Link"
+        case .NormalHypersurfaces:
+            return "Normal Hypersurfaces (4-D)"
+        case .NormalSurfaces:
+            return "Normal Surfaces (3-D)"
+        case .SurfaceFilter:
+            return "Filter"
+        default:
+            return name
+        }
+    }
+    
+    /**
+     * The name of the icon representing this packet type.
+     *
+     * If there is no such icon, this will be the empty string.
+     */
+    var iconName: String {
+        switch self {
+        case .AngleStructures:
+            return "Angles"
+        case .Attachment:
+            return "Attachment"
+        case .Container:
+            return "Container"
+        case .Link:
+            return "Link"
+        case .NormalHypersurfaces:
+            return "Hypersurfaces"
+        case .NormalSurfaces:
+            return "Surfaces"
+        case .Script:
+            return "Script"
+        case .SnapPea:
+            return "SnapPea"
+        case .SpatialLink:
+            return "SpatialLink"
+        case .SurfaceFilter:
+            return "Filter"
+        case .Text:
+            return "Text"
+        case .Triangulation2:
+            return "Triangulation2"
+        case .Triangulation3:
+            return "Triangulation3"
+        case .Triangulation4:
+            return "Triangulation4"
+        case .Triangulation5:
+            return "Triangulation5"
+        case .Triangulation6:
+            return "Triangulation6"
+        case .Triangulation7:
+            return "Triangulation7"
+        case .Triangulation8:
+            return "Triangulation8"
+#if REGINA_HIGHDIM
+        case .Triangulation9:
+            return "Triangulation9"
+        case .Triangulation10:
+            return "Triangulation10"
+        case .Triangulation11:
+            return "Triangulation11"
+        case .Triangulation12:
+            return "Triangulation12"
+        case .Triangulation13:
+            return "Triangulation13"
+        case .Triangulation14:
+            return "Triangulation14"
+        case .Triangulation15:
+            return "Triangulation15"
+#endif
+        case .None:
+            return ""
+        @unknown default:
+            return ""
+        }
     }
 }

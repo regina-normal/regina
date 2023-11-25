@@ -323,7 +323,7 @@ struct LinkView: View {
                                     errorDetail = .init("Too many cables", detail: "I am not brave enough to try more than \(Self.MAX_CABLES) parallel cables.")
                                 } else {
                                     var p = wrapper.packet
-                                    switch (inputFraming) {
+                                    switch inputFraming {
                                     case .seifert:
                                         p.makeParallel(cables, .Blackboard)
                                     case .blackboard:

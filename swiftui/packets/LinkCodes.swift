@@ -88,7 +88,7 @@ struct LinkCodesView: View {
             
             let link = wrapper.packet.heldCopy()
             
-            switch (selected) {
+            switch selected {
             case .gauss:
                 if link.countComponents() == 1 {
                     Text("Classical: ").font(.headline) + Text((swiftString(link.gauss())))

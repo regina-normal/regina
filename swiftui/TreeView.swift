@@ -143,96 +143,23 @@ struct TreeView: View {
                     selection.current = nil
                 }
             }
-            .refreshable {
-                // TODO: Right now, reload the tree.
-                // Eventually, get rid of this and use PacketListener instead.
-            }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
-                        Button {
-                            inputNewPacketType = .Container
-                            inputNewPacket = true
-                        } label: {
-                            Label("Container", image: "Container")
-                        }
-                        Button {
-                            inputNewPacketType = .Triangulation2
-                            inputNewPacket = true
-                        } label: {
-                            Label("2-D Triangulation", image: "Triangulation2")
-                        }
-                        Button {
-                            inputNewPacketType = .Triangulation3
-                            inputNewPacket = true
-                        } label: {
-                            Label("3-D Triangulation", image: "Triangulation3")
-                        }
-                        Button {
-                            inputNewPacketType = .Triangulation4
-                            inputNewPacket = true
-                        } label: {
-                            Label("4-D Triangulation", image: "Triangulation4")
-                        }
-                        Button {
-                            inputNewPacketType = .NormalSurfaces
-                            inputNewPacket = true
-                        } label: {
-                            Label("Normal Surfaces (3-D)", image: "Surfaces")
-                        }
-                        Button {
-                            inputNewPacketType = .NormalHypersurfaces
-                            inputNewPacket = true
-                        } label: {
-                            Label("Normal Hypersurfaces (4-D)", image: "Hypersurfaces")
-                        }
-                        Button {
-                            inputNewPacketType = .AngleStructures
-                            inputNewPacket = true
-                        } label: {
-                            Label("Angle Structures", image: "Angles")
-                        }
-                        Button {
-                            inputNewPacketType = .Link
-                            inputNewPacket = true
-                        } label: {
-                            Label("Knot or Link", image: "Link")
-                        }
-                        Button {
-                            inputNewPacketType = .SpatialLink
-                            inputNewPacket = true
-                        } label: {
-                            Label("Spatial Link", image: "SpatialLink")
-                        }
-                        Button {
-                            inputNewPacketType = .SnapPea
-                            inputNewPacket = true
-                        } label: {
-                            Label("SnapPea Triangulation", image: "SnapPea")
-                        }
-                        Button {
-                            inputNewPacketType = .SurfaceFilter
-                            inputNewPacket = true
-                        } label: {
-                            Label("Filter", image: "Filter")
-                        }
-                        Button {
-                            inputNewPacketType = .Text
-                            inputNewPacket = true
-                        } label: {
-                            Label("Text", image: "Text")
-                        }
-                        Button {
-                            inputNewPacketType = .Script
-                            inputNewPacket = true
-                        } label: {
-                            Label("Script", image: "Script")
-                        }
-                        Button {
-                            inputNewPacketType = .Attachment
-                            inputNewPacket = true
-                        } label: {
-                            Label("Attachment", image: "Attachment")
+                        let types: [regina.PacketType] = [
+                            .Container,
+                            .Triangulation2, .Triangulation3, .Triangulation4,
+                            .NormalSurfaces, .NormalHypersurfaces, .AngleStructures,
+                            .Link, .SpatialLink, .SnapPea, .SurfaceFilter,
+                            .Text, .Script, .Attachment
+                        ]
+                        ForEach(types) { type in
+                            Button {
+                                inputNewPacketType = type
+                                inputNewPacket = true
+                            } label: {
+                                Label(type.nameCreation, image: type.iconName)
+                            }
                         }
                     } label: {
                         Label("New…", systemImage: "plus")
