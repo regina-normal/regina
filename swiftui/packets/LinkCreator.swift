@@ -33,16 +33,110 @@
 import SwiftUI
 import ReginaEngine
 
+enum LinkType: Int {
+    case example = 1, code = 2, torus = 3
+}
+
+struct LinkExample: Identifiable, Equatable, Hashable {
+    // For now we use the string name as an identifier, since these are unique.
+    // There is surely a better way that does not involve an unnecessary new enum.
+    let name: String
+    let creator: () -> regina.Link
+    
+    var id: String { name }
+        
+    init(_ name: String, _ creator: @escaping () -> regina.Link) {
+        self.name = name
+        self.creator = creator
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
+    
+    static func == (lhs: LinkExample, rhs: LinkExample) -> Bool {
+        lhs.name == rhs.name
+    }
+    
+    static let all: [LinkExample] = [
+        .init("Borromean rings", regina.ExampleLink.borromean),
+        .init("Conway knot", regina.ExampleLink.conway),
+        .init("Figure eight knot", regina.ExampleLink.figureEight),
+        .init("Gompf-Scharlemann-Thompson", regina.ExampleLink.gst),
+        .init("Hopf link", regina.ExampleLink.hopf),
+        .init("Kinoshita-Terasaka knot", regina.ExampleLink.kinoshitaTerasaka),
+        .init("Trefoil (left)", regina.ExampleLink.trefoilLeft),
+        .init("Trefoil (right)", regina.ExampleLink.trefoilRight),
+        .init("Unknot (no crossings)", regina.ExampleLink.unknot),
+        .init("Unknot (10-crossing monster)", regina.ExampleLink.monster),
+        .init("Unknot (141-crossing Gordian)", regina.ExampleLink.gordian),
+        .init("Whitehead link", regina.ExampleLink.whitehead)
+    ]
+}
+
+// TODO: macOS: popup too small (torus link: width; text code: height)
+// TODO: macOS: text code area needs a border or other visual indicator
+// TODO: macOS: picker jumps around
 struct LinkCreator : View {
-    @State private var inputNewLinkType = 0
+    @State private var type: LinkType = (LinkType(rawValue: UserDefaults.standard.integer(forKey: "linkNew")) ?? .example)
+
+    // TODO: Make this selection persistent
+    @State private var inputExample: LinkExample = LinkExample.all.first!
+    @State private var inputCode = ""
+    @State private var inputTorusParams = ""
 
     var body: some View {
-        Text("New Knot / Link").font(.headline).padding(.bottom)
-        Picker("Type", selection: $inputNewLinkType) {
-            Text("Example")
-            Text("Text code")
-            Text("Torus link")
-        }.pickerStyle(.segmented).fixedSize().labelsHidden()
+        Form {
+            Section {
+                switch type {
+                case .example:
+                    Picker("Example", selection: $inputExample) {
+                        ForEach(LinkExample.all) { example in
+                            Text(example.name).tag(example)
+                        }
+                    }
+                case .code:
+                    TextEditor(text: $inputCode)
+                        .font(.system(.body, design: .monospaced))
+                        .disableAutocorrection(true)
+                case .torus:
+                    TextField("Parameters (𝑝, 𝑞)", text: $inputTorusParams)
+                }
+            } header: {
+                HStack {
+                    Spacer()
+                    Picker("Type", selection: $type) {
+                        Text("Example").tag(LinkType.example)
+                        Text("Text code").tag(LinkType.code)
+                        Text("Torus link").tag(LinkType.torus)
+                    }
+                    .pickerStyle(.segmented).fixedSize().labelsHidden()
+                    .onChange(of: type) { newValue in
+                        UserDefaults.standard.set(newValue.rawValue, forKey: "linkNew")
+                    }
+                    .textCase(nil)
+                    Spacer()
+                }
+                .padding(.bottom)
+            } footer: {
+                switch type {
+                // TODO: Should we support Jenkins' format also?
+                case .code:
+                    Text("""
+                        Supported text codes:
+                            • Knot signatures
+                            • Gauss codes (oriented / classical)
+                            • Dowker-Thistlethwaite notation
+                            • Planar diagram codes
+                        """)
+                default:
+                    EmptyView()
+                }
+            }
+        }
     }
 }
 
+#Preview {
+    LinkCreator()
+}

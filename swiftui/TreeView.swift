@@ -87,7 +87,7 @@ struct TreeDetail: View {
             if p.packet.type() == .Container {
                 // TODO: Implement container views
             } else {
-                p.packetViewer
+                p.viewer
                     .navigationTitle(swiftString(p.packet.humanLabel()))
                     .navigationBarBackButtonHidden(sizeClass != .compact)
             }
@@ -146,6 +146,7 @@ struct TreeView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
+                        // TODO: Should this be a static list?
                         let types: [regina.PacketType] = [
                             .Container,
                             .Triangulation2, .Triangulation3, .Triangulation4,
@@ -178,67 +179,28 @@ struct TreeView: View {
         #endif
         .sheet(isPresented: $inputNewPacket) { [inputNewPacketType] in
             // TODO: Implement packet creators for all types
-            VStack {
-                switch inputNewPacketType {
-                case .Container:
-                    // TODO: Implement
-                    Text("TODO: Container")
-                case .Text:
-                    // TODO: Implement
-                    Text("TODO: Text")
-                case .NormalSurfaces:
-                    // TODO: Implement
-                    Text("TODO: Surfaces")
-                case .Script:
-                    // TODO: Implement
-                    Text("TODO: Script")
-                case .SurfaceFilter:
-                    // TODO: Implement
-                    Text("TODO: Filter")
-                case .AngleStructures:
-                    // TODO: Implement
-                    Text("TODO: Angles")
-                case .Attachment:
-                    // TODO: Implement
-                    Text("TODO: Attachment")
-                case .NormalHypersurfaces:
-                    // TODO: Implement
-                    Text("TODO: Hypersurfaces")
-                case .SnapPea:
-                    // TODO: Implement
-                    Text("TODO: SnapPea")
-                case .Link:
-                    // TODO: Implement
-                    LinkCreator()
-                case .SpatialLink:
-                    // TODO: Implement
-                    Text("TODO: Spatial Link")
-                case .Triangulation2:
-                    // TODO: Implement
-                    Text("TODO: Dim2")
-                case .Triangulation3:
-                    // TODO: Implement
-                    Text("TODO: Dim3")
-                case .Triangulation4:
-                    // TODO: Implement
-                    Text("TODO: Dim4")
-                default:
-                    // TODO: Implement
-                    Text("TODO: Default")
-                }
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button("OK") {
-                        inputNewPacket = false
+            NavigationStack {
+                inputNewPacketType.creator
+                #if os(macOS)
+                .padding()
+                #endif
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel", role: .cancel) {
+                            inputNewPacket = false
+                        }
                     }
-                    Spacer()
-                    Button("Cancel") {
-                        inputNewPacket = false
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Create") {
+                            // TODO: Do the creation
+                            inputNewPacket = false
+                        }
                     }
-                    Spacer()
                 }
-            }.padding()
+                .navigationTitle("New \(inputNewPacketType.name)")
+                .navigationBarBackButtonHidden()
+
+            }
         }
     }
 }

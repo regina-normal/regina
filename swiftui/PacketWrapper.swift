@@ -248,7 +248,7 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
         return n.isEmpty ? nil : Image(n)
     }
     
-    @ViewBuilder var packetViewer: some View {
+    @ViewBuilder var viewer: some View {
         if packet.isNull() {
             let msg = "Null packet"
             let detail = "This is a null packet, which should never occur.\nPlease report this to the Regina developers."
@@ -329,7 +329,7 @@ extension regina.PacketType: Identifiable {
         case .Container:
             return "Container"
         case .Link:
-            return "Link"
+            return "Knot / Link"
         case .NormalHypersurfaces:
             return "Normal Hypersurfaces"
         case .NormalSurfaces:
@@ -464,6 +464,17 @@ extension regina.PacketType: Identifiable {
             return ""
         @unknown default:
             return ""
+        }
+    }
+    
+    @ViewBuilder var creator: some View {
+        // TODO: Implement creators for all packet types
+        switch self {
+        case .Link:
+            LinkCreator()
+        default:
+            // TODO: What to do here?
+            SwiftUI.Text("Not yet implemented")
         }
     }
 }

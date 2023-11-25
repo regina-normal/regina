@@ -80,7 +80,7 @@ struct LinkView: View {
     @State private var inputCables: Int?
     @State private var inputFraming: LinkFraming = (LinkFraming(rawValue: UserDefaults.standard.integer(forKey: "linkFraming")) ?? .seifert)
     
-    static let MAX_CABLES = 50
+    static let maxCables = 50
     
     var body: some View {
         let link = wrapper.packet.heldCopy()
@@ -318,9 +318,9 @@ struct LinkView: View {
                                 if cables < 2 {
                                     errorCables = true
                                     errorDetail = .init("Too few cables", detail: "The number of parallel cables should be at least 2.")
-                                } else if cables > Self.MAX_CABLES {
+                                } else if cables > Self.maxCables {
                                     errorCables = true
-                                    errorDetail = .init("Too many cables", detail: "I am not brave enough to try more than \(Self.MAX_CABLES) parallel cables.")
+                                    errorDetail = .init("Too many cables", detail: "I am not brave enough to try more than \(Self.maxCables) parallel cables.")
                                 } else {
                                     var p = wrapper.packet
                                     switch inputFraming {
