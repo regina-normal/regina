@@ -2534,7 +2534,9 @@ template <int n>
 inline std::string PermClass<n>::str() const {
     if (nCycles_) {
         char ans[n + 1];
-        for (int i = 0; i < nCycles_; ++i)
+        // Note: we should always have nCycles_ < n, but as an extra
+        // safeguard against buffer overruns we test this explicitly anyway.
+        for (int i = 0; i < nCycles_ && i < n; ++i)
             ans[i] = regina::digit(cycle_[i]);
         ans[nCycles_] = 0;
 

@@ -31,9 +31,10 @@
  **************************************************************************/
 
 #include <algorithm>
-#include <iostream>
-#include <fstream>
 #include <cctype>
+#include <cstring>
+#include <fstream>
+#include <iostream>
 #include "link/spatiallink.h"
 #include "utilities/exception.h"
 
