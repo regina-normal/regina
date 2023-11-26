@@ -71,7 +71,6 @@ struct LinkView: View {
     @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
 
     @EnvironmentObject var display: DisplayState
-    @EnvironmentObject var treeOpenTo: PacketPath
     @Environment(\.horizontalSizeClass) var sizeClass
     
     @State private var errorGeneral = false
@@ -209,7 +208,6 @@ struct LinkView: View {
                         c.setLabel("Complement")
                         p.append(c)
                         display.selectAndDisplay(packet: c)
-                        treeOpenTo.set(to: c)
                     } label: {
                         Label("Complement", image: "Act-Complement")
                     }
@@ -223,7 +221,6 @@ struct LinkView: View {
                             c.setLabel("Complement")
                             p.append(c)
                             display.selectAndDisplay(packet: c)
-                            treeOpenTo.set(to: c)
                         }
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")

@@ -39,11 +39,14 @@ import ReginaEngine
 class DisplayState: ObservableObject {
     @Published var selected: PacketWrapper?
     @Published var displayed: PacketWrapper?
-    
+    // TODO: Clear out expandTo once it's been used, but without triggering a full list rebuild.
+    @Published var expandTo = PacketPath()
+
     func selectAndDisplay(packet: regina.SharedPacket) {
         let wrapper = PacketWrapper(packet: packet)
         // TODO: Should we be using animation? How to make this clean?
         // Putting this inside a withAnimation {...} block seems to make it worse.
+        expandTo = .init(to: packet)
         selected = wrapper
         displayed = wrapper
     }
@@ -136,15 +139,7 @@ struct TreeView: View {
     // TODO: Should the title be a binding?
     let title: String
 
-    /**
-     * Allows other views to ask for a particular packet to be displayed.
-     */
     @StateObject private var display = DisplayState()
-    /**
-     * Allows other views to ask for the tree in the sidebar to expand to show a particular packet.
-     */
-    @StateObject var openTo = PacketPath()
-    // TODO: openTo needs to be cleared out once it is used, but this sbould not trigger a list rebuild.
 
     @State private var inputNewPacket = false
     @State private var inputNewPacketType: regina.PacketType = .None
@@ -164,9 +159,9 @@ struct TreeView: View {
             // Instead start directly with the list of top-level children.
             // TODO: What to do if there are no child packets at all?
             // TODO: Disclosure groups with inner disclosure groups do not animate nicely at all on iPad.
-            let top = openTo.path.last
+            let top = display.expandTo.path.last
             List(root.children ?? [], selection: $display.selected) { item in
-                PacketCell(wrapper: item, expanded: true, openTo: (top == item ? openTo : .init()), depth: 0)
+                PacketCell(wrapper: item, expanded: true, openTo: (top == item ? display.expandTo : .init()), depth: 0)
             }
             .navigationTitle(title)
             .onChange(of: display.selected) { wrapper in
@@ -210,7 +205,6 @@ struct TreeView: View {
             TreeDetail()
         }
         .environmentObject(display)
-        .environmentObject(openTo)
         // TODO: On macOS we get the DocumentGroup's navigation title, not the packet's.
         #if !os(macOS)
         // Hide the DocumentGroup navigation bar, since we want the bar that
