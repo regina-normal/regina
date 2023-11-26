@@ -95,6 +95,10 @@ struct SharedPacket {
             packet_->setLabel(std::move(label));
         }
 
+        SharedPacket parent() const {
+            return packet_->parent();
+        }
+
         SharedPacket firstChild() const {
             return packet_->firstChild();
         }

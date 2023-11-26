@@ -312,6 +312,45 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
     }
 }
 
+/**
+ * Indicates the complete path from a single packet to the root of the packet tree, but excluding the root itself.
+ *
+ * It is designed to be used on a temporary basis only: it does _not_ update itself when the packet tree is rearranged (or even when some packet on the path is destroyed entirely).
+ */
+class PacketPath: ObservableObject {
+    @Published var path: [PacketWrapper]
+    
+    init() {
+        path = []
+    }
+    
+    init(to: regina.SharedPacket) {
+        path = PacketPath.createPath(to: to)
+    }
+    
+    func reset() {
+        path = []
+    }
+    
+    func set(to: regina.SharedPacket) {
+        path = PacketPath.createPath(to: to)
+    }
+    
+    private static func createPath(to: regina.SharedPacket) -> [PacketWrapper] {
+        var ans: [PacketWrapper] = []
+        if !to.isNull() {
+            var curr = to
+            var next = curr.parent()
+            while !next.isNull() {
+                ans.append(PacketWrapper(packet: curr))
+                curr = next
+                next = curr.parent()
+            }
+        }
+        return ans
+    }
+}
+
 extension regina.PacketType: Identifiable {
     public var id: Self { self }
     

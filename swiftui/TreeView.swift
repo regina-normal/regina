@@ -33,10 +33,20 @@
 import SwiftUI
 import ReginaEngine
 
+// TODO: openTo does not work on the second and later attempts
 // TODO: Support renames, additions, and deletions.
 
-class TreeSelection: ObservableObject {
-    @Published var current: PacketWrapper?
+class DisplayState: ObservableObject {
+    @Published var selected: PacketWrapper?
+    @Published var displayed: PacketWrapper?
+    
+    func selectAndDisplay(packet: regina.SharedPacket) {
+        let wrapper = PacketWrapper(packet: packet)
+        // TODO: Should we be using animation? How to make this clean?
+        // Putting this inside a withAnimation {...} block seems to make it worse.
+        selected = wrapper
+        displayed = wrapper
+    }
 }
 
 struct PacketLabel: View {
@@ -60,12 +70,31 @@ struct PacketLabel: View {
 struct PacketCell: View {
     @ObservedObject var wrapper: PacketWrapper
     @State var expanded = false
+    /**
+     * If we are not expected to display one of this cell's own descendants, then _openTo_ may be
+     * an empty path (and indeed this is recommended, since hopefully this will reduce the need
+     * for UI updates).
+     */
+    let openTo: PacketPath
+    let depth: Int
 
     var body: some View {
         if let children = wrapper.children {
+            let childDepth = depth + 1
             DisclosureGroup(isExpanded: $expanded) {
-                ForEach(children) { child in
-                    PacketCell(wrapper: child, expanded: false)
+                if childDepth > openTo.path.count {
+                    ForEach(children) { child in
+                        PacketCell(wrapper: child, expanded: false, openTo: .init(), depth: childDepth)
+                    }
+                } else {
+                    let next = openTo.path[childDepth]
+                    ForEach(children) { child in
+                        if child == next {
+                            PacketCell(wrapper: child, expanded: true, openTo: openTo, depth: childDepth)
+                        } else {
+                            PacketCell(wrapper: child, expanded: false, openTo: .init(), depth: childDepth)
+                        }
+                    }
                 }
             } label: {
                 PacketLabel(wrapper: wrapper)
@@ -77,13 +106,13 @@ struct PacketCell: View {
 }
 
 struct TreeDetail: View {
-    @EnvironmentObject var selection: TreeSelection
+    @EnvironmentObject var display: DisplayState
     @Environment(\.horizontalSizeClass) var sizeClass
 
     var body: some View {
         // TODO: When transitioning from compact to non-compact,
         // the back button on the detail view seems to stay
-        if let p = selection.current {
+        if let p = display.displayed {
             if p.packet.type() == .Container {
                 // TODO: Implement container views
             } else {
@@ -104,11 +133,19 @@ struct TreeDetail: View {
 struct TreeView: View {
     // @ObservedObject var document: ReginaDocument
     @ObservedObject private var root: PacketWrapper
-    @StateObject private var selection = TreeSelection()
     // TODO: Should the title be a binding?
     let title: String
 
-    @State private var listSelection: PacketWrapper?
+    /**
+     * Allows other views to ask for a particular packet to be displayed.
+     */
+    @StateObject private var display = DisplayState()
+    /**
+     * Allows other views to ask for the tree in the sidebar to expand to show a particular packet.
+     */
+    @StateObject var openTo = PacketPath()
+    // TODO: openTo needs to be cleared out once it is used, but this sbould not trigger a list rebuild.
+
     @State private var inputNewPacket = false
     @State private var inputNewPacketType: regina.PacketType = .None
     @State private var createBeneath: PacketWrapper?
@@ -127,21 +164,22 @@ struct TreeView: View {
             // Instead start directly with the list of top-level children.
             // TODO: What to do if there are no child packets at all?
             // TODO: Disclosure groups with inner disclosure groups do not animate nicely at all on iPad.
-            List(root.children ?? [], selection: $listSelection) { item in
-                PacketCell(wrapper: item, expanded: true)
+            let top = openTo.path.last
+            List(root.children ?? [], selection: $display.selected) { item in
+                PacketCell(wrapper: item, expanded: true, openTo: (top == item ? openTo : .init()), depth: 0)
             }
             .navigationTitle(title)
-            .onChange(of: listSelection) { wrapper in
+            .onChange(of: display.selected) { wrapper in
                 // TODO: Ensure changes go in the right direction here.
                 if let wrapper = wrapper {
                     if wrapper.packet.type() == .Container {
                         // TODO: Expand/collapse children
                         print("Container selected")
                     } else {
-                        selection.current = wrapper
+                        display.displayed = wrapper
                     }
                 } else {
-                    selection.current = nil
+                    display.displayed = nil
                 }
             }
             .toolbar {
@@ -171,7 +209,8 @@ struct TreeView: View {
         } detail: {
             TreeDetail()
         }
-        .environmentObject(selection)
+        .environmentObject(display)
+        .environmentObject(openTo)
         // TODO: On macOS we get the DocumentGroup's navigation title, not the packet's.
         #if !os(macOS)
         // Hide the DocumentGroup navigation bar, since we want the bar that

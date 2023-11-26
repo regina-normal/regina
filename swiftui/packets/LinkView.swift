@@ -70,7 +70,8 @@ struct LinkView: View {
     @ObservedObject var wrapper: Wrapper<regina.SharedLink>
     @State private var selection: LinkTab = (LinkTab(rawValue: UserDefaults.standard.integer(forKey: "tabLink")) ?? .crossings)
 
-    @EnvironmentObject var treeSelection: TreeSelection
+    @EnvironmentObject var display: DisplayState
+    @EnvironmentObject var treeOpenTo: PacketPath
     @Environment(\.horizontalSizeClass) var sizeClass
     
     @State private var errorGeneral = false
@@ -207,8 +208,8 @@ struct LinkView: View {
                         var c = wrapper.packet.complement()
                         c.setLabel("Complement")
                         p.append(c)
-                        treeSelection.current = .init(packet: c)
-                        // TODO: Select c in the tree.
+                        display.selectAndDisplay(packet: c)
+                        treeOpenTo.set(to: c)
                     } label: {
                         Label("Complement", image: "Act-Complement")
                     }
@@ -221,8 +222,8 @@ struct LinkView: View {
                             var c = wrapper.packet.snapPea()
                             c.setLabel("Complement")
                             p.append(c)
-                            treeSelection.current = .init(packet: c)
-                            // TODO: Select c in the tree.
+                            display.selectAndDisplay(packet: c)
+                            treeOpenTo.set(to: c)
                         }
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")
