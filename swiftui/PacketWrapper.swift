@@ -337,6 +337,7 @@ class PacketPath: ObservableObject {
     }
     
     private static func createPath(to: regina.SharedPacket) -> [PacketWrapper] {
+        // TODO: See if there is a data structure that allows us to prepend cheaply and avoid the reverse.
         var ans: [PacketWrapper] = []
         if !to.isNull() {
             var curr = to
@@ -347,6 +348,7 @@ class PacketPath: ObservableObject {
                 next = curr.parent()
             }
         }
+        ans.reverse()
         return ans
     }
 }

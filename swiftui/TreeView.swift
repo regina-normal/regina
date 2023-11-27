@@ -69,41 +69,36 @@ struct PacketLabel: View {
     }
 }
 
-// TODO: When expanding/contracting and a child is displayed, select/deselect it in the list.
 struct PacketCell: View {
     @ObservedObject var wrapper: PacketWrapper
-    @State var expanded = false
-    /**
-     * If we are not expected to display one of this cell's own descendants, then _openTo_ may be
-     * an empty path (and indeed this is recommended, since hopefully this will reduce the need
-     * for UI updates).
-     */
-    let openTo: PacketPath
+    @State var expanded: Bool
     let depth: Int
+
+    init(wrapper: PacketWrapper, depth: Int) {
+        self.wrapper = wrapper
+        self.expanded = (depth == 0)
+        self.depth = depth
+    }
 
     var body: some View {
         if let children = wrapper.children {
-            let childDepth = depth + 1
             DisclosureGroup(isExpanded: $expanded) {
-                if childDepth > openTo.path.count {
-                    ForEach(children) { child in
-                        PacketCell(wrapper: child, expanded: false, openTo: .init(), depth: childDepth)
-                    }
-                } else {
-                    let next = openTo.path[childDepth]
-                    ForEach(children) { child in
-                        if child == next {
-                            PacketCell(wrapper: child, expanded: true, openTo: openTo, depth: childDepth)
-                        } else {
-                            PacketCell(wrapper: child, expanded: false, openTo: .init(), depth: childDepth)
-                        }
-                    }
+                ForEach(children) { child in
+                    PacketCell(wrapper: child, depth: depth + 1)
                 }
             } label: {
                 PacketLabel(wrapper: wrapper)
             }
+            // It looks like we don't need .onReceive() here:
+            // even if this packet already has children, the event is still
+            // caught by the label below.
         } else {
             PacketLabel(wrapper: wrapper)
+                .onReceive(wrapper.objectWillChange) { _ in
+                    // The children of this packet have changed.
+                    // Ensure the change is visible.
+                    expanded = true
+                }
         }
     }
 }
@@ -159,9 +154,8 @@ struct TreeView: View {
             // Instead start directly with the list of top-level children.
             // TODO: What to do if there are no child packets at all?
             // TODO: Disclosure groups with inner disclosure groups do not animate nicely at all on iPad.
-            let top = display.expandTo.path.last
             List(root.children ?? [], selection: $display.selected) { item in
-                PacketCell(wrapper: item, expanded: true, openTo: (top == item ? display.expandTo : .init()), depth: 0)
+                PacketCell(wrapper: item, depth: 0)
             }
             .navigationTitle(title)
             .onChange(of: display.selected) { wrapper in
