@@ -227,10 +227,11 @@ struct TreeView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Create") {
-                            // TODO: Choose a proper parent
-                            createBeneath = root
-                            // TODO: Do the creation
-                            // TODO: inputNewPacket = false
+                            // The creator should be monitoring changes to createBeneath, whereupon it should attempt
+                            // to use its own internal data to actually create the new packet.
+                            // The creator will either dismiss itself (on success) or show an alert (on failure).
+                            // TODO: Is this the parent packet we want to use?
+                            createBeneath = (display.selected ?? root)
                         }
                     }
                 }
