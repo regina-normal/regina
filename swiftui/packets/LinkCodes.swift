@@ -69,7 +69,7 @@ struct LinkCodesView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            // TODO: It's possible the text here needs to be scrollable.
+            // TODO: The text here needs to be scrollable.
             HStack {
                 Spacer()
                 Picker("Display code:", selection: $selected) {

@@ -86,6 +86,7 @@ struct LinkCreator: View {
     @State private var inputTorusParams = ""
     
     @Binding var createBeneath: PacketWrapper?
+    @ObservedObject var display: DisplayState
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -143,7 +144,7 @@ struct LinkCreator: View {
                 if !child.isNull() {
                     var p = parent.packet
                     p.append(child)
-                    // TODO: View / select / etc.
+                    display.selectAndDisplay(packet: child)
                     dismiss()
                 }
                 createBeneath = nil

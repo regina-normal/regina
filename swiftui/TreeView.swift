@@ -161,7 +161,7 @@ struct TreeView: View {
             }
             .navigationTitle(title)
             .onChange(of: display.selected) { wrapper in
-                // TODO: Ensure changes go in the right direction here.
+                // TODO: Ensure the selection is visible.
                 if let wrapper = wrapper {
                     if wrapper.packet.type() == .Container {
                         // TODO: Expand/collapse children
@@ -211,7 +211,7 @@ struct TreeView: View {
         .sheet(isPresented: $inputNewPacket) { [inputNewPacketType] in
             // TODO: Implement packet creators for all types
             NavigationStack {
-                PacketCreator(type: inputNewPacketType, createBeneath: $createBeneath)
+                PacketCreator(type: inputNewPacketType, createBeneath: $createBeneath, display: display)
                 #if os(macOS)
                 .padding()
                 #endif

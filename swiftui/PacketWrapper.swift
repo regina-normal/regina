@@ -513,12 +513,13 @@ extension regina.PacketType: Identifiable {
 struct PacketCreator: View {
     let type: regina.PacketType
     @Binding var createBeneath: PacketWrapper?
-    
+    @ObservedObject var display: DisplayState
+
     var body: some View {
         // TODO: Implement creators for all packet types
         switch type {
         case .Link:
-            LinkCreator(createBeneath: $createBeneath)
+            LinkCreator(createBeneath: $createBeneath, display: display)
         default:
             // TODO: I guess we should disable the Create button and/or..?
             SwiftUI.Text("Not yet implemented")
