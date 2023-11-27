@@ -39,14 +39,16 @@ import ReginaEngine
 class DisplayState: ObservableObject {
     @Published var selected: PacketWrapper?
     @Published var displayed: PacketWrapper?
-    // TODO: Clear out expandTo once it's been used, but without triggering a full list rebuild.
-    @Published var expandTo = PacketPath()
 
+    /**
+     * Selects the given packet in the sidebar tree and displays it in the detail area.
+     *
+     * This does _not_ automatically expand any parent disclosure groups in the sidebar.
+     */
     func selectAndDisplay(packet: regina.SharedPacket) {
         let wrapper = PacketWrapper(packet: packet)
         // TODO: Should we be using animation? How to make this clean?
         // Putting this inside a withAnimation {...} block seems to make it worse.
-        expandTo = .init(to: packet)
         selected = wrapper
         displayed = wrapper
     }
@@ -163,6 +165,7 @@ struct TreeView: View {
                 if let wrapper = wrapper {
                     if wrapper.packet.type() == .Container {
                         // TODO: Expand/collapse children
+                        // TODO: On iPhone, don't push a detail view
                         print("Container selected")
                     } else {
                         display.displayed = wrapper

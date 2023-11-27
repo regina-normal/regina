@@ -312,6 +312,7 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
     }
 }
 
+// TODO: I think we can just get rid of PacketPath completely.
 /**
  * Indicates the complete path from a single packet to the root of the packet tree, but excluding the root itself.
  *

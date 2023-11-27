@@ -139,7 +139,7 @@ struct LinkCreator: View {
         }
         .onChange(of: createBeneath) { value in
             if let parent = createBeneath {
-                var child = create()
+                let child = create()
                 if !child.isNull() {
                     var p = parent.packet
                     p.append(child)
