@@ -33,8 +33,7 @@
 import SwiftUI
 import ReginaEngine
 
-// TODO: openTo does not work on the second and later attempts
-// TODO: Support renames, additions, and deletions.
+// TODO: Support renames, additions, moves and deletions.
 
 class DisplayState: ObservableObject {
     @Published var selected: PacketWrapper?
