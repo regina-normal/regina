@@ -156,45 +156,49 @@ struct TreeView: View {
             // Instead start directly with the list of top-level children.
             // TODO: What to do if there are no child packets at all?
             // TODO: Disclosure groups with inner disclosure groups do not animate nicely at all on iPad.
-            List(root.children ?? [], selection: $display.selected) { item in
-                PacketCell(wrapper: item, depth: 0)
-            }
-            .navigationTitle(title)
-            .onChange(of: display.selected) { wrapper in
-                // TODO: Ensure the selection is visible.
-                if let wrapper = wrapper {
-                    if wrapper.packet.type() == .Container {
-                        // TODO: Expand/collapse children
-                        // TODO: On iPhone, don't push a detail view
-                        print("Container selected")
-                    } else {
-                        display.displayed = wrapper
-                    }
-                } else {
-                    display.displayed = nil
+            ScrollViewReader { proxy in
+                List(root.children ?? [], selection: $display.selected) { item in
+                    PacketCell(wrapper: item, depth: 0)
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        // TODO: Should this be a static list?
-                        let types: [regina.PacketType] = [
-                            .Container,
-                            .Triangulation2, .Triangulation3, .Triangulation4,
-                            .NormalSurfaces, .NormalHypersurfaces, .AngleStructures,
-                            .Link, .SpatialLink, .SnapPea, .SurfaceFilter,
-                            .Text, .Script, .Attachment
-                        ]
-                        ForEach(types) { type in
-                            Button {
-                                inputNewPacketType = type
-                                inputNewPacket = true
-                            } label: {
-                                Label(type.nameCreation, image: type.iconName)
-                            }
+                .navigationTitle(title)
+                .onChange(of: display.selected) { wrapper in
+                    if let wrapper = wrapper {
+                        if wrapper.packet.type() == .Container {
+                            // TODO: Expand/collapse children
+                            // TODO: On iPhone, don't push a detail view
+                            print("Container selected")
+                        } else {
+                            display.displayed = wrapper
                         }
-                    } label: {
-                        Label("New…", systemImage: "plus")
+                        withAnimation {
+                            proxy.scrollTo(wrapper)
+                        }
+                    } else {
+                        display.displayed = nil
+                    }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Menu {
+                            // TODO: Should this be a static list?
+                            let types: [regina.PacketType] = [
+                                .Container,
+                                .Triangulation2, .Triangulation3, .Triangulation4,
+                                .NormalSurfaces, .NormalHypersurfaces, .AngleStructures,
+                                .Link, .SpatialLink, .SnapPea, .SurfaceFilter,
+                                .Text, .Script, .Attachment
+                            ]
+                            ForEach(types) { type in
+                                Button {
+                                    inputNewPacketType = type
+                                    inputNewPacket = true
+                                } label: {
+                                    Label(type.nameCreation, image: type.iconName)
+                                }
+                            }
+                        } label: {
+                            Label("New…", systemImage: "plus")
+                        }
                     }
                 }
             }
