@@ -148,7 +148,7 @@ struct TreeView: View {
     }
 
     var body: some View {
-        // TODO: When first opening a file, we should ensure the packet list (iPad portrait).
+        // TODO: When first opening a file, ensure the packet list is visible (iPad portrait).
         // See the columnVisibility parameter for NavigationSplitView.
         // TODO: macOS: remember the split position
         NavigationSplitView {
