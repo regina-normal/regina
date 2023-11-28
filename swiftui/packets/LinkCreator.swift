@@ -186,8 +186,21 @@ struct LinkCreator: View {
             ans.setLabel(code)
             return ans
         case .torus:
-            // TODO: Implement this
-            return .init()
+            if let match = inputTorusParams.wholeMatch(of: /[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*/) {
+                if let p = Int32(match.1), let q = Int32(match.2) {
+                    var ans = regina.SharedLink(regina.ExampleLink.torus(p, q)).asPacket()
+                    ans.setLabel(cxxString("Torus (\(p), \(q))"))
+                    return ans
+                } else {
+                    error = true
+                    errorDetail = .init("Parameters too large", detail: "The torus link parameters (p,q) must fit into 32-bit integers.")
+                    return .init()
+                }
+            } else {
+                error = true
+                errorDetail = .init("Invalid torus link parameters", detail: "The torus link parameters (p,q) must be non-negative integers.")
+                return .init()
+            }
         }
     }
 }
