@@ -108,6 +108,9 @@ struct LinkCreator: View {
                         .textInputAutocapitalization(.never)
                 case .torus:
                     TextField("Parameters (𝑝, 𝑞)", text: $inputTorusParams)
+                        #if !os(macOS)
+                        .keyboardType(.numbersAndPunctuation)
+                        #endif
                 }
             } header: {
                 HStack {
