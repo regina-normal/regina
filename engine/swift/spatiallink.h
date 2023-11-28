@@ -44,13 +44,15 @@ namespace regina {
 /**
  * A structure that holds a shared pointer to a spatial link packet.
  *
- * It can be assumed that such a packet is never null.
+ * This pointer is allowed to be null, since null return values need to be
+ * used instead of C++ exceptions for construction when working with Swift.
  */
 struct SharedSpatialLink {
     private:
         std::shared_ptr<PacketOf<SpatialLink>> packet_;
 
     public:
+        SharedSpatialLink() = default;
         SharedSpatialLink(const SharedSpatialLink&) = default;
         SharedSpatialLink(SharedSpatialLink&&) = default;
         SharedSpatialLink& operator = (const SharedSpatialLink&) = default;
@@ -58,18 +60,15 @@ struct SharedSpatialLink {
 
         /**
          * Creates a wrapper to the given spatial link packet.
-         *
-         * \pre The given packet is not null.
          */
         SharedSpatialLink(std::shared_ptr<PacketOf<SpatialLink>> packet) :
                 packet_(std::move(packet)) {
         }
 
         /**
-         * Creates a wrapper to the given packet, which is assumed to be a
-         * spatial link packet.
+         * Creates a wrapper to the given packet.
          *
-         * \pre The given packet is a (non-null) spatial link packet.
+         * \pre The given packet is a spatial link packet, or is \c null.
          */
         SharedSpatialLink(SharedPacket packet) : packet_(
                 std::static_pointer_cast<PacketOf<SpatialLink>>(

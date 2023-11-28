@@ -91,13 +91,15 @@ struct StrandRefAlt {
 /**
  * A structure that holds a shared pointer to a link packet.
  *
- * It can be assumed that such a packet is never null.
+ * This pointer is allowed to be null, since null return values need to be
+ * used instead of C++ exceptions for construction when working with Swift.
  */
 struct SharedLink {
     private:
         std::shared_ptr<PacketOf<Link>> packet_;
 
     public:
+        SharedLink() = default;
         SharedLink(const SharedLink&) = default;
         SharedLink(SharedLink&&) = default;
         SharedLink& operator = (const SharedLink&) = default;
@@ -105,18 +107,15 @@ struct SharedLink {
 
         /**
          * Creates a wrapper to the given link packet.
-         *
-         * \pre The given packet is not null.
          */
         SharedLink(std::shared_ptr<PacketOf<Link>> packet) : packet_(
                 std::move(packet)) {
         }
 
         /**
-         * Creates a wrapper to the given packet, which is assumed to be a
-         * link packet.
+         * Creates a wrapper to the given packet.
          *
-         * \pre The given packet is a (non-null) link packet.
+         * \pre The given packet is a link packet, or is \c null.
          */
         SharedLink(SharedPacket packet) : packet_(
                 std::static_pointer_cast<PacketOf<Link>>(packet.sharedPtr())) {
@@ -228,6 +227,15 @@ struct SharedLink {
             return std::static_pointer_cast<Packet>(
                 make_packet<regina::SnapPeaTriangulation>(std::in_place,
                     *packet_));
+        }
+
+        static SharedLink make(const std::string& code) {
+            // Swift cannot catch C++ exceptions.
+            try {
+                return make_packet<Link>(std::in_place, code);
+            } catch (const InvalidArgument&) {
+                return {};
+            }
         }
 };
 

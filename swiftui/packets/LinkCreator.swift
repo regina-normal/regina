@@ -84,7 +84,9 @@ struct LinkCreator: View {
     @State private var inputExample: LinkExample = LinkExample.all.first!
     @State private var inputCode = ""
     @State private var inputTorusParams = ""
-    
+    @State private var error = false
+    @State private var errorDetail: ReginaError?
+
     @Binding var createBeneath: PacketWrapper?
     @ObservedObject var display: DisplayState
     @Environment(\.dismiss) private var dismiss
@@ -102,7 +104,8 @@ struct LinkCreator: View {
                 case .code:
                     TextEditor(text: $inputCode)
                         .font(.system(.body, design: .monospaced))
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                 case .torus:
                     TextField("Parameters (𝑝, 𝑞)", text: $inputTorusParams)
                 }
@@ -152,18 +155,38 @@ struct LinkCreator: View {
                 // but this time with createBeneath as nil.
             }
         }
+        .alert(isPresented: $error, error: errorDetail) { _ in
+            Button("OK") {}
+        } message: { error in
+            if let detail = error.detail {
+                Text(detail)
+            }
+        }
     }
     
     func create() -> regina.SharedPacket {
-        // TODO: Implement this
         switch type {
         case .example:
             var ans = regina.SharedLink(inputExample.creator()).asPacket()
             ans.setLabel(cxxString(inputExample.name))
             return ans
         case .code:
-            return .init()
+            let code = regina.stripWhitespace(cxxString(inputCode))
+            if code.empty() {
+                error = true
+                errorDetail = .init("Empty text code", detail: "Please type a text code for the new link into the area provided.")
+                return .init()
+            }
+            var ans = regina.SharedLink.make(code).asPacket()
+            if ans.isNull() {
+                error = true
+                errorDetail = .init("Invalid text code", detail: "I could not interpret the given text code as representing a knot or link.")
+                return .init()
+            }
+            ans.setLabel(code)
+            return ans
         case .torus:
+            // TODO: Implement this
             return .init()
         }
     }
