@@ -698,7 +698,24 @@ Version 2.3  [ 12 December, 2001 ] - The "Farewell Stillwater" release.
 
 Version 2.2  [ 7 October, 2001 ]
 
-    (See CHANGES.txt for details beyond this point.)
+    - Now builds and runs under windows!
+    - Computes fundamental groups.
+    - Performs 2-0 vertex moves on triangulations.
+    - Recognises common triangulations and subcomplexes (layered solid tori,
+      layered lens spaces, plus some combinatorially simple balls and spheres).
+    - Added support for custom Jython libraries in the graphical user interface.
+    - Better support and infrastructure for configuration files.
+
+Version 2.1.1a  [ 8 March, 2001 ]
+
+    - Added a CORBA interface to the mathematical engine.
+    - Supports face arc coordinates.
+    - The user interface now runs as a Java applet as well as a standalone
+      application.
+
+Version 2.1.0  [ 18 December, 2000 ]
+
+    - Initial public release.
 
 Ben Burton (bab@maths.uq.edu.au)
 http://regina-normal.github.io/
