@@ -31,6 +31,8 @@
  **************************************************************************/
 
 import SwiftUI
+// TODO: Remove this import once the nasty openWindow hack is gone.
+import ReginaEngine
 
 // TODO: Accent colour does not show when the app opens to the file browser.
 // TODO: Create a full set of dark mode assets.
@@ -58,6 +60,26 @@ struct ReginaApp: App {
             TreeView(packet: file.document.root, title: file.document.title).toolbarRole(.automatic)
         }
         // Note: To support multiple document types, add additional DocumentGroup scenes.
+        #if os(visionOS)
+        /*
+        WindowGroup(for: PacketWrapper.ID.self) { link in
+            SpatialLinkVolume(packet: link)
+        }
+        .windowStyle(.volumetric)
+        .defaultSize(width: 0.5, height: 0.5, depth: 0.5, in: .meters)
+         */
+        WindowGroup(id: "spatiallink-volume", for: Date.self) { value in
+            // TODO: Bloody hell. There must be some way to get the actual link data into the new window.
+            // We need to send _some_ data, and it appears this data needs to be different each time;
+            // otherwise when opening a fresh window the packet does not get reset.
+            // For the moment we pass the current date/time to ensure uniqueness.
+            let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+            // TODO: SpatialLinkVolume(packet: link)
+            SpatialLinkVolume()
+        }
+        .windowStyle(.volumetric)
+        .defaultSize(width: 0.7, height: 0.7, depth: 0.7, in: .meters)
+        #endif
         #if os(macOS)
         Settings {
             SettingsView()

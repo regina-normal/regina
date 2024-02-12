@@ -32,6 +32,9 @@
 
 import SwiftUI
 import SceneKit
+#if os(visionOS)
+import RealityKit
+#endif
 import ReginaEngine
 
 // TODO: Choose the default radius properly.
@@ -202,12 +205,20 @@ struct SpatialLinkView: View {
     
     @State private var errTooManyNodes = false
 
+    #if os(visionOS)
+    @Environment(\.openWindow) private var openWindow
+    #endif
+    
     var body: some View {
         // TODO: Make it fit the screen. (Look in particular at the trefoil example on iPhone.)
         // Note: it does seem that SceneKit is automatically scaling the image to fill the screen,
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
+        #if os(visionOS)
+        SpatialLinkVolume(packet: packet)
+        #else
         SpatialLink3D(wrapper: wrapper)
+        #endif
         // TODO: When we have more buttons, start using (placement: ...).
         .toolbar {
             // TODO: Make these edits actually save the file.
@@ -237,10 +248,187 @@ struct SpatialLinkView: View {
                     var p = wrapper.packet
                     p.setRadius(p.radius() * 1.2)
                 }
+                #if os(visionOS)
+                Button("3-D", systemImage: "move.3d") {
+                    // TODO: open next to, not in front of
+                    openWindow(id: "spatiallink-volume", value: Date.now)
+                }
+                #endif
             }
         }
     }
 }
+
+#if os(visionOS)
+// TODO: How do we manage _closing_ the volume?
+struct SpatialLinkVolume: View {
+    // TODO: Tie the radius and colour to the packet
+
+    // TODO: Use an example packet until we figure out how to get the real data in.
+    @State var packet = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+    // @State var packet: regina.SharedSpatialLink
+    @State var radius: Float = 0.2
+    @State var colour = UIColor.systemTeal
+    // TODO: Rotation3D.zero is deprecated.
+    @State var rotation: Rotation3D = Rotation3D.zero
+    @State var rotationInProgress: Rotation3D = Rotation3D.zero
+    
+    // TODO: Can we just apply the material once, to everything?
+    func ball(_ p: regina.SpatialLink.Node, material: RealityKit.Material) -> ModelEntity {
+        let sphere = MeshResource.generateSphere(radius: radius)
+        let entity = ModelEntity(mesh: sphere, materials: [material])
+        // TODO: Extend classes to make this easier
+        entity.position = [Float(p.x), Float(p.y), Float(p.z)]
+        return entity
+    }
+    
+    func arc(_ a: regina.SpatialLink.Node, _ b: regina.SpatialLink.Node, material: RealityKit.Material) -> Entity {
+        let len = Float(a.distance(b))
+        let cylinder = MeshResource.generateCylinder(height: len, radius: radius)
+        let entity = ModelEntity(mesh: cylinder, materials: [material])
+        
+        let m = a.midpoint(b)
+        entity.position = [Float(m.x), Float(m.y), Float(m.z)]
+        // Cylinders initially point along the y axis.
+        // TODO: Clean this up a bit.
+        entity.transform.rotation = simd_quatf(from: [0,1,0], to: [Float(a.x - b.x), Float(a.y - b.y), Float(a.z - b.z)] * (1 / len))
+        return entity
+    }
+
+    func buildLink(material: RealityKit.Material) -> ModelEntity {
+        let link = packet.heldCopy()
+        let root = ModelEntity()
+        
+        // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
+        withExtendedLifetime(link) {
+            // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
+            for i in 0..<link.countComponents() {
+                let nodes = link.componentSize(i)
+                if nodes == 0 {
+                    continue
+                }
+                
+                var prev: regina.SpatialLink.Node?
+                
+                for j in 0..<nodes {
+                    let n = link.__nodeUnsafe(i, j).pointee
+                    root.addChild(ball(n, material: material))
+                    
+                    if let p = prev {
+                        root.addChild(arc(p, n, material: material))
+                    }
+                    prev = n
+                }
+                
+                let n = link.__nodeUnsafe(i, 0).pointee
+                root.addChild(arc(prev!, n, material: material))
+            }
+        }
+        
+        root.generateCollisionShapes(recursive: true)
+        root.components.set(InputTargetComponent())
+
+        return root
+    }
+
+    var body: some View {
+        let material = SimpleMaterial(color: .systemTeal, isMetallic: false)
+        let entity = buildLink(material: material)
+
+        ZStack(alignment: .bottom) {
+            GeometryReader3D { geometry in
+                RealityView { content in
+                    content.add(entity)
+
+                    // Get the smallest dimension of the volume.
+                    let volumeBounds = content.convert(geometry.frame(in: .local), from: .local, to: content)
+                    let minExtent = volumeBounds.extents.min()
+                    
+                    // Get the size of the entity that we are displaying.
+                    let modelBounds = entity.visualBounds(relativeTo: nil)
+                    
+                    // Ensure that the model will fit inside the volume, with a little wiggle room to spare.
+                    let factor = minExtent * 0.95 / modelBounds.extents.max()
+
+                    entity.position = modelBounds.center * (-factor)
+                    entity.scale = [factor, factor, factor]
+                } update: { content in
+                    if let root = content.entities.first {
+                        // root.orientation = simd_quatf(rotation * rotationInProgress)
+                        root.orientation = simd_quatf(rotationInProgress * rotation)
+                    }
+
+                    // TODO: Fix this update.
+                    /*
+                    // TODO: Fix the duplicated code
+                    if let orig = content.entities.first {
+                        content.remove(orig)
+                    }
+                    
+                    let material = SimpleMaterial(color: .systemTeal, isMetallic: false)
+                    let entity = buildLink(material: material)
+                    content.add(entity)
+
+                    // Get the smallest dimension of the volume.
+                    let volumeBounds = content.convert(geometry.frame(in: .local), from: .local, to: content)
+                    let minExtent = volumeBounds.extents.min()
+                    
+                    // Get the size of the entity that we are displaying.
+                    let modelBounds = entity.visualBounds(relativeTo: nil)
+                    
+                    // Ensure that the model will fit inside the volume, with a little wiggle room to spare.
+                    let factor = minExtent * 0.95 / modelBounds.extents.max()
+
+                    entity.position = modelBounds.center * (-factor)
+                    entity.scale = [factor, factor, factor]
+                     */
+                    
+                }.gesture(RotateGesture3D()
+                          // TODO: Rotations are falling out of the volume bounds
+                          // TODO: Pinch to scale?
+                          // TODO: The rotation angles and origin are all wrong.
+                          // Possibly we need to change coordinate system, and also update entity.position.
+                    .targetedToAnyEntity()
+                    .onChanged { value in
+                        rotationInProgress = value.rotation
+                    }
+                    .onEnded { value in
+                        rotationInProgress = Rotation3D.zero
+                        // rotation = rotation * value.rotation
+                        rotation = value.rotation * rotation
+                    }
+                )
+            }
+            /*
+            // TODO: Fix flashing on updates
+            HStack {
+                Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
+                    // TODO: This does not trigger an update
+                    packet.refine()
+                    packet = packet.modified()
+                }
+                Button("Thinner", systemImage: "arrow.down.forward.and.arrow.up.backward") {
+                    radius /= 1.2
+                }
+                Button("Thicker", systemImage: "arrow.up.backward.and.arrow.down.forward") {
+                    radius *= 1.2
+                }
+                Button("Reset", systemImage: "smallcircle.filled.circle") {
+                    radius = 0.2
+                    colour = UIColor.systemTeal
+                    // TODO: Remove this
+                    packet = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+                }
+            }
+            //.buttonStyle(.borderless)
+            .labelStyle(.iconOnly)
+            .padding()
+            .glassBackgroundEffect()
+             */
+        }
+    }
+}
+#endif
 
 struct SpatialLinkView_Previews: PreviewProvider {
     static var previews: some View {
@@ -248,3 +436,12 @@ struct SpatialLinkView_Previews: PreviewProvider {
         SpatialLinkView(wrapper: Wrapper<regina.SharedSpatialLink>(packet: link))
     }
 }
+
+#if os(visionOS)
+struct SpatialLinkVolume_Previews: PreviewProvider {
+    static var previews: some View {
+        let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+        SpatialLinkVolume(packet: link)
+    }
+}
+#endif

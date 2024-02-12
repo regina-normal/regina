@@ -274,6 +274,10 @@ struct LinkView: View {
                     }
                     // TODO: Compose with
                 }
+                #if os(visionOS)
+                .padding()
+                .background(.regularMaterial, in: .rect(cornerRadius: 12))
+                #endif
             }
             .alert(isPresented: $errorGeneral, error: errorDetail) { _ in
                 Button("OK") {}
