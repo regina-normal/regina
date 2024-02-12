@@ -74,6 +74,8 @@ struct LinkGraphsView: View {
                 Text("\(tree.size()) bags, width \(tree.width())").padding(.bottom)
             }
 
+            // TODO: Do we want to make this float in visionOS?
+            // Suggestion: .offset(z: 10), or maybe it's a 3-D offset property.
             SvgView(cxxString: regina.svgUsingDot(tree.dot(colorScheme == .dark)))
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)
