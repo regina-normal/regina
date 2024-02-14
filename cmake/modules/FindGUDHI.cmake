@@ -1,0 +1,16 @@
+# Try to find the GUDHI headers
+#  GUDHI_FOUND - system has GUDHI headers
+#  GUDHI_INCLUDE_DIR - the GUDHI include directory
+
+
+IF (GUDHI_INCLUDE_DIR)
+  # Already in cache, be silent
+  set(GUDHI_FIND_QUIETLY TRUE)
+ENDIF (GUDHI_INCLUDE_DIR)
+
+FIND_PATH(GUDHI_INCLUDE_DIR NAMES gudhi/Persistent_cohomology.h)
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(GUDHI DEFAULT_MSG GUDHI_INCLUDE_DIR)
+
+MARK_AS_ADVANCED(GUDHI_INCLUDE_DIR)
