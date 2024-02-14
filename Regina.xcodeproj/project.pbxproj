@@ -401,6 +401,7 @@
 		053CB70828D0168D006B37B0 /* tetrahedron4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70528D0168B006B37B0 /* tetrahedron4.h */; };
 		053CB70928D0168D006B37B0 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
 		053CB70B28D0168D006B37B0 /* triangle4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70728D0168C006B37B0 /* triangle4.h */; };
+		053ED6622B7D0ECB0008C8E5 /* 3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6612B7D0ECB0008C8E5 /* 3d.h */; };
 		054131092AF9E95A006AAD75 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054131082AF9E95A006AAD75 /* Utilities.swift */; };
 		054131122AF9F246006AAD75 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0541310F2AF9F246006AAD75 /* README.txt */; };
 		054131152AFA26E4006AAD75 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054131132AFA26E4006AAD75 /* graphviz.cpp */; };
@@ -2831,6 +2832,7 @@
 		053CB70528D0168B006B37B0 /* tetrahedron4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetrahedron4.h; sourceTree = "<group>"; };
 		053CB70628D0168C006B37B0 /* hypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypersurfaces.cpp; sourceTree = "<group>"; };
 		053CB70728D0168C006B37B0 /* triangle4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
+		053ED6612B7D0ECB0008C8E5 /* 3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3d.h; sourceTree = "<group>"; };
 		054131082AF9E95A006AAD75 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		0541310C2AF9F246006AAD75 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		0541310D2AF9F246006AAD75 /* container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = container.h; sourceTree = "<group>"; };
@@ -6147,6 +6149,7 @@
 			isa = PBXGroup;
 			children = (
 				053CAB261DA7108F00A92F98 /* spec */,
+				053ED6612B7D0ECB0008C8E5 /* 3d.h */,
 				05B44D1321914FA200B1D343 /* binom.h */,
 				052F9CE0180600FA00FAE4DF /* CMakeLists.txt */,
 				0541AF481B8BE2F5002E166B /* cyclotomic.cpp */,
@@ -8598,6 +8601,7 @@
 				05CAE624274509ED007C93F3 /* purgeflags.h in Headers */,
 				052F9F55180600FB00FAE4DF /* packet.h in Headers */,
 				055114FD1DCDF63000EC753C /* component.h in Headers */,
+				053ED6622B7D0ECB0008C8E5 /* 3d.h in Headers */,
 				05A067291DFA68190047872E /* satannulus.h in Headers */,
 				0512E09726DF34E800DDB222 /* perm7.h in Headers */,
 				055114C81DCC45FD00EC753C /* example4.h in Headers */,
