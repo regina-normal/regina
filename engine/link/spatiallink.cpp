@@ -345,8 +345,8 @@ void SpatialLink::refine(int sub) {
 
             refined.push_back(n2);
 
-            for (int i = 1; i < sub; ++i) {
-                double u = double(i) / double(sub);
+            for (int j = 1; j < sub; ++j) {
+                double u = double(j) / double(sub);
                 double coeff[4] = {
                     -u * (1-u) * (1-u) / 2.0,
                     (1-u) * (3 - 2 * u * u - (1-u) * (1-u)) / 2.0,

@@ -278,6 +278,16 @@ struct Vector3D {
                  (y + other.y) / 2,
                  (z + other.z) / 2};
     }
+
+    /**
+     * Casts this point to a standard C++ array.
+     *
+     * \return a three-element array containing \a x, \a y and \a z
+     * (in that order).
+     */
+    constexpr operator std::array<Real, 3>() const {
+        return { x, y, z };
+    }
 };
 
 /**
