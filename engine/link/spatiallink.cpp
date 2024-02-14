@@ -133,7 +133,7 @@ void SpatialLink::computeDefaultRadius() {
     // TODO: This is very much work in progress.
     std::cerr << "RANGE: " << min << std::endl;
 
-    using Point = std::vector<double>;
+    using Point = std::array<double, 3>;
     using Simplex_tree = Gudhi::Simplex_tree<Gudhi::Simplex_tree_options_fast_persistence>;
     using Filtration_value = Simplex_tree::Filtration_value;
     using Rips_complex = Gudhi::rips_complex::Rips_complex<Filtration_value>;
@@ -141,7 +141,7 @@ void SpatialLink::computeDefaultRadius() {
     std::vector<Point> points;
     for (const auto& c : components_) {
         for (const auto& n : c) {
-            points.push_back({ n.x, n.y, n.z });
+            points.push_back(n);
         }
     }
 
