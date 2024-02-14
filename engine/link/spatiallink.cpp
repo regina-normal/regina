@@ -34,6 +34,13 @@
 #include "utilities/exception.h"
 #include <fstream>
 
+#ifdef GUDHI_FOUND
+#include <gudhi/distance_functions.h>
+#include <gudhi/Persistent_cohomology.h>
+#include <gudhi/Rips_complex.h>
+#include <gudhi/Simplex_tree.h>
+#endif
+
 namespace regina {
 
 SpatialLink::SpatialLink(std::initializer_list<std::initializer_list<Node>>
@@ -119,7 +126,61 @@ void SpatialLink::computeDefaultRadius() {
 
     auto min = std::min(std::min(r.second.x - r.first.x,
         r.second.y - r.first.y), r.second.z - r.first.z);
+
+#ifndef GUDHI_FOUND
     defaultRadius_ = min / 20;
+#else
+    // TODO: This is very much work in progress.
+    std::cerr << "RANGE: " << min << std::endl;
+
+    using Point = std::vector<double>;
+    using Simplex_tree = Gudhi::Simplex_tree<Gudhi::Simplex_tree_options_fast_persistence>;
+    using Filtration_value = Simplex_tree::Filtration_value;
+    using Rips_complex = Gudhi::rips_complex::Rips_complex<Filtration_value>;
+
+    std::vector<Point> points;
+    for (const auto& c : components_) {
+        for (const auto& n : c) {
+            points.push_back({ n.x, n.y, n.z });
+        }
+    }
+
+    double threshold = min / 2; // TODO: shrink this if I can.
+    Rips_complex rips_complex_from_points(points, threshold,
+        Gudhi::Euclidean_distance());
+
+    Simplex_tree stree;
+    rips_complex_from_points.create_complex(stree, 2);
+
+    std::cerr << "Rips complex is of dimension " << stree.dimension() <<
+               " - " << stree.num_simplices() << " simplices - " <<
+               stree.num_vertices() << " vertices." << std::endl;
+
+    std::cerr << "Iterator on Rips complex simplices in the filtration order, with [filtration value]:" <<
+               std::endl;
+    /*
+    for (auto f_simplex : stree.filtration_simplex_range()) {
+        std::cerr << "   ( ";
+        for (auto vertex : stree.simplex_vertex_range(f_simplex)) {
+            std::cerr << vertex << " ";
+        }
+        std::cerr << ") -> " << "[" << stree.filtration(f_simplex) << "] ";
+        std::cerr << std::endl;
+    }
+    */
+
+    Gudhi::persistent_cohomology::Persistent_cohomology< Simplex_tree, Gudhi::persistent_cohomology::Field_Zp > pcoh(stree);
+    pcoh.init_coefficients(2);
+    pcoh.compute_persistent_cohomology(0);
+    for (const auto& pair : pcoh.get_persistent_pairs()) {
+        if (stree.dimension(get<0>(pair)) == 1) {
+        std::cerr << stree.filtration(get<0>(pair)) << " "
+            << stree.filtration(get<1>(pair)) << " " << std::endl;
+        }
+    }
+
+    defaultRadius_ = min / 20;
+#endif
 }
 
 void SpatialLink::writeTextShort(std::ostream& out) const {
