@@ -34,6 +34,9 @@
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
 
+/* Define if the GUDHI headers are available. */
+#define GUDHI_FOUND
+
 /* Define if we implement key-value stores using Tokyo Cabinet.
    Exactly one of these REGINA_KVSTORE_* macros should be defined. */
 #define REGINA_KVSTORE_TOKYOCABINET
