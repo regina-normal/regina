@@ -333,6 +333,29 @@ IF (NOT DISABLE_UTILS)
     "To disable the command-line utilities, run: cmake -DDISABLE_UTILS=1")
 ENDIF (NOT DISABLE_UTILS)
 
+FIND_PACKAGE(Boost 1.71)
+MACRO_LOG_FEATURE(Boost_FOUND
+  "Boost headers (>= 1.71)"
+  "Required by GUDHI for persistent homology"
+  "http://www.boost.org/"
+  ${REGINA_MANDATORY})
+
+IF (Boost_FOUND)
+  FIND_PACKAGE(GUDHI)
+  MACRO_LOG_FEATURE(GUDHI_FOUND
+    "GUDHI headers"
+    "Support persistent homology calculations with spatial links"
+    "https://gudhi.inria.fr"
+    ${REGINA_MANDATORY})
+ELSE (Boost_FOUND)
+  MESSAGE (STATUS "Skipping search for GUDHI, since GUDHI requires Boost.")
+  SET (GUDHI_FOUND FALSE)
+ENDIF (Boost_FOUND)
+
+SET (REGINA_BUILD_ENGINE_DOCS ${UNZIP_FOUND})
+IF (GUDHI_FOUND AND Boost_FOUND)
+ENDIF (GUDHI_FOUND AND Boost_FOUND)
+
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
 

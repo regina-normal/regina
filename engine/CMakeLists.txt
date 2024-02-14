@@ -7,6 +7,10 @@
 # Regina's standard engine headers.
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/engine")
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/engine")
+IF (GUDHI_FOUND)
+  INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+  INCLUDE_DIRECTORIES(${GUDHI_INCLUDE_DIR})
+ENDIF (GUDHI_FOUND)
 
 # The key-value store is only used internally by the engine (i.e., it
 # never appears in the engine headers, only the .cpp sources).
