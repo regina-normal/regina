@@ -118,69 +118,130 @@ std::pair<SpatialLink::Node, SpatialLink::Node> SpatialLink::range() const {
         return {{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }};
 }
 
-void SpatialLink::computeDefaultRadius() {
-    if (isEmpty())
+namespace {
+    // Simplex tree options based on GUDHI's fast_persistence options,
+    // but using double instead of float.
+    struct ReginaSimplexTreeOptions {
+        using Indexing_tag = Gudhi::linear_indexing_tag;
+        using Vertex_handle = int;
+        using Filtration_value = double /* not float */;
+        using Simplex_key = uint32_t;
+        static constexpr bool store_key = true;
+        static constexpr bool store_filtration = true;
+        static constexpr bool contiguous_vertices = true;
+        static constexpr bool link_nodes_by_label = false;
+        static constexpr bool stable_simplex_handles = false;
+    };
+}
+
+void SpatialLink::computeDefaultRadius(int subdivisions) {
+    if (isEmpty()) {
         defaultRadius_ = 1.0; /* The actual value is irrelevant. */
+        return;
+    }
 
     auto r = range();
-
     auto min = std::min(std::min(r.second.x - r.first.x,
         r.second.y - r.first.y), r.second.z - r.first.z);
+    std::cerr << "x range: [" << r.first.x << ", " << r.second.x << ']' << std::endl;
+    std::cerr << "y range: [" << r.first.y << ", " << r.second.y << ']' << std::endl;
+    std::cerr << "z range: [" << r.first.z << ", " << r.second.z << ']' << std::endl;
+    std::cerr << "Min range: " << min << std::endl;
 
-#ifndef GUDHI_FOUND
-    defaultRadius_ = min / 20;
-#else
-    // TODO: This is very much work in progress.
-    std::cerr << "RANGE: " << min << std::endl;
+#ifdef GUDHI_FOUND
+    // TODO: Probably we should choose a better default subdivision.
+    std::vector<std::array<double, 3>> points;
+    points.reserve(size() * subdivisions);
 
-    using Point = std::array<double, 3>;
-    using Simplex_tree = Gudhi::Simplex_tree<Gudhi::Simplex_tree_options_fast_persistence>;
-    using Filtration_value = Simplex_tree::Filtration_value;
-    using Rips_complex = Gudhi::rips_complex::Rips_complex<Filtration_value>;
-
-    std::vector<Point> points;
+    const double slice = 1.0 / subdivisions;
     for (const auto& c : components_) {
-        for (const auto& n : c) {
-            points.push_back(n);
+        for (size_t i = 0; i < c.size(); ++i) {
+            const Node& a = c[i];
+            const Node& b = c[i < c.size() - 1 ? i + 1 : 0];
+
+            points.emplace_back(a);
+            for (int j = 1; j < subdivisions; ++j)
+                points.emplace_back(
+                    b * (j * slice) + a * ((subdivisions - j) * slice));
         }
     }
 
-    double threshold = min / 2; // TODO: shrink this if I can.
-    Rips_complex rips_complex_from_points(points, threshold,
+    // TODO: Choose a good threshold.
+    double threshold = min;
+    Gudhi::rips_complex::Rips_complex<double> rips(points, threshold,
         Gudhi::Euclidean_distance());
 
+    using Simplex_tree = Gudhi::Simplex_tree<ReginaSimplexTreeOptions>;
     Simplex_tree stree;
-    rips_complex_from_points.create_complex(stree, 2);
+    rips.create_complex(stree, 2);
+    std::cerr << "Rips complex: dim = " << stree.dimension()
+        << ", simplices = " << stree.num_simplices()
+        << ", vertices = " << stree.num_vertices() << std::endl;
 
-    std::cerr << "Rips complex is of dimension " << stree.dimension() <<
-               " - " << stree.num_simplices() << " simplices - " <<
-               stree.num_vertices() << " vertices." << std::endl;
-
-    std::cerr << "Iterator on Rips complex simplices in the filtration order, with [filtration value]:" <<
-               std::endl;
-    /*
-    for (auto f_simplex : stree.filtration_simplex_range()) {
-        std::cerr << "   ( ";
-        for (auto vertex : stree.simplex_vertex_range(f_simplex)) {
-            std::cerr << vertex << " ";
-        }
-        std::cerr << ") -> " << "[" << stree.filtration(f_simplex) << "] ";
-        std::cerr << std::endl;
-    }
-    */
-
-    Gudhi::persistent_cohomology::Persistent_cohomology< Simplex_tree, Gudhi::persistent_cohomology::Field_Zp > pcoh(stree);
+    Gudhi::persistent_cohomology::Persistent_cohomology<Simplex_tree,
+        Gudhi::persistent_cohomology::Field_Zp> pcoh(stree);
     pcoh.init_coefficients(2);
     pcoh.compute_persistent_cohomology(0);
+
+    // Persistence pairs are sorted by death time.
+    // Both dimension and birth time are ordered arbitrarily.
+
+    // TODO: Look at 0-dimensional persistence to verify that the subdivision
+    // was enough.
+
+    // Extract the 1-D pairs.
+    std::vector<std::pair<double, double>> dim1;
     for (const auto& pair : pcoh.get_persistent_pairs()) {
-        if (stree.dimension(get<0>(pair)) == 1) {
-        std::cerr << stree.filtration(get<0>(pair)) << " "
-            << stree.filtration(get<1>(pair)) << " " << std::endl;
+        auto dim = stree.dimension(get<0>(pair));
+        if (dim == 1) {
+            auto birth = stree.filtration(get<0>(pair));
+            auto death = stree.filtration(get<1>(pair));
+            std::cerr << "1-D: " << birth << " --> " << death << std::endl;
+            dim1.emplace_back(birth, death);
         }
     }
 
-    defaultRadius_ = min / 20;
+    // Sort by _birth_ time, and then by death time.
+    // If this link has c components, then the first c cycles should describe
+    // these components, and breakage occurs at min(next birth, first death).
+    if (dim1.size() >= components_.size()) {
+        std::sort(dim1.begin(), dim1.end(), [](const auto& x, const auto& y) {
+            if (x.first < y.first) return true;
+            if (x.first > y.first) return false;
+            return (x.second < y.second);
+        });
+
+        defaultRadius_ = dim1.front().second; // first death
+        std::cerr << "First death: " << defaultRadius_ << std::endl;
+        if (dim1.size() > components_.size()) {
+            double nextBirth = dim1[components_.size()].first;
+            std::cerr << "Next birth: " << nextBirth << std::endl;
+            if (nextBirth < defaultRadius_)
+                defaultRadius_ = nextBirth;
+        } else if (std::isinf(defaultRadius_)) {
+            // We never managed to kill off all our cycles.
+            std::cerr << "Cycles not all killed" << std::endl;
+            defaultRadius_ = threshold;
+        }
+        std::cerr << "Final radius: " << defaultRadius_ << std::endl;
+
+        // TODO: Explain away this.
+        defaultRadius_ = defaultRadius_ / 2;
+
+        // NOW: We have the radius at which things first go wrong.
+        // This is not actually the radius that we want to use for rendering.
+        // TODO: Make a good default choice.
+        return;
+    }
+
+    // There were not enough 1-cycles found: something has gone wrong.
+    // Presumably the subdivision was not enough.
+    std::cerr << "Not all link components were found" << std::endl;
+    // TODO: Rerun with a higher subdivision.
 #endif
+
+    // Fall through to an unintelligent default.
+    defaultRadius_ = min / 20;
 }
 
 void SpatialLink::writeTextShort(std::ostream& out) const {

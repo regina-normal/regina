@@ -753,8 +753,22 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * Computes and caches the default rendering radius.
          *
          * This function is internal to defaultRadius().
+         *
+         * If GUDHI was available at build time, then this algorithm will use
+         * persistent homology to estimate the maximum allowed radius before
+         * different sections of the link collide, and will factor this into
+         * the choice of default radius.  The persistence calculation uses a
+         * Rips complex built around a point set: the points will be chosen by
+         * subdividing each line segment in this spatial link.  The number of
+         * subdivisions is passed as the optional argument \a subdivisions.
+         *
+         * If GUDHI was not available at build time, then this algorithm uses
+         * a very simple calculation based on the range of coordinates.
+         *
+         * \param subdivisions indicates how many pieces each line segment
+         * should be subdivided into when computing persistent homology.
          */
-        void computeDefaultRadius();
+        void computeDefaultRadius(int subdivisions = 2);
 
     friend class XMLSpatialLinkReader;
     friend class XMLWriter<SpatialLink>;
