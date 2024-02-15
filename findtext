@@ -6,6 +6,6 @@
 
 find . '(' \
 	-name "*.h" -o -name "*.c" -o \
-	-name "*.m" -o -name "*.mm" -o \
+	-name "*.m" -o -name "*.mm" -o -name "*.swift" -o \
 	-name "*.hpp" -o -name "*.tcc" -o -name "*.cpp" ')' \
 	-exec grep -e "$1" {} \; -print
