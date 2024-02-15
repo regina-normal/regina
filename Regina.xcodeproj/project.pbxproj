@@ -402,6 +402,154 @@
 		053CB70928D0168D006B37B0 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
 		053CB70B28D0168D006B37B0 /* triangle4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70728D0168C006B37B0 /* triangle4.h */; };
 		053ED6622B7D0ECB0008C8E5 /* 3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6612B7D0ECB0008C8E5 /* 3d.h */; };
+		053ED70D2B7E92540008C8E5 /* Persistence_intervals.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6662B7E92530008C8E5 /* Persistence_intervals.h */; };
+		053ED70E2B7E92540008C8E5 /* Alpha_kernel_d.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6682B7E92530008C8E5 /* Alpha_kernel_d.h */; };
+		053ED70F2B7E92540008C8E5 /* Euclidean_witness_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6692B7E92530008C8E5 /* Euclidean_witness_complex.h */; };
+		053ED7102B7E92540008C8E5 /* Active_witness.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED66B2B7E92530008C8E5 /* Active_witness.h */; };
+		053ED7112B7E92540008C8E5 /* Active_witness_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED66C2B7E92530008C8E5 /* Active_witness_iterator.h */; };
+		053ED7122B7E92540008C8E5 /* Unitary_tests_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED66D2B7E92530008C8E5 /* Unitary_tests_utils.h */; };
+		053ED7132B7E92540008C8E5 /* Simplex_tree_star_simplex_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED66F2B7E92530008C8E5 /* Simplex_tree_star_simplex_iterators.h */; };
+		053ED7142B7E92540008C8E5 /* simplex_tree_options.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6702B7E92530008C8E5 /* simplex_tree_options.h */; };
+		053ED7152B7E92540008C8E5 /* hooks_simplex_base.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6712B7E92530008C8E5 /* hooks_simplex_base.h */; };
+		053ED7162B7E92540008C8E5 /* Simplex_tree_node_explicit_storage.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6722B7E92530008C8E5 /* Simplex_tree_node_explicit_storage.h */; };
+		053ED7172B7E92540008C8E5 /* Simplex_tree_siblings.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6732B7E92530008C8E5 /* Simplex_tree_siblings.h */; };
+		053ED7182B7E92540008C8E5 /* serialization_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6742B7E92530008C8E5 /* serialization_utils.h */; };
+		053ED7192B7E92540008C8E5 /* Simplex_tree_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6752B7E92530008C8E5 /* Simplex_tree_iterators.h */; };
+		053ED71A2B7E92540008C8E5 /* indexing_tag.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6762B7E92530008C8E5 /* indexing_tag.h */; };
+		053ED71B2B7E92540008C8E5 /* Kd_tree_search.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6772B7E92530008C8E5 /* Kd_tree_search.h */; };
+		053ED71C2B7E92540008C8E5 /* Implicit_manifold_intersection_oracle.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6782B7E92530008C8E5 /* Implicit_manifold_intersection_oracle.h */; };
+		053ED71E2B7E92540008C8E5 /* Alpha_complex_3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED67A2B7E92530008C8E5 /* Alpha_complex_3d.h */; };
+		053ED71F2B7E92540008C8E5 /* Skeleton_blocker_link_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED67B2B7E92530008C8E5 /* Skeleton_blocker_link_complex.h */; };
+		053ED7212B7E92540008C8E5 /* Persistence_vectors.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED67D2B7E92530008C8E5 /* Persistence_vectors.h */; };
+		053ED7222B7E92540008C8E5 /* Sliced_Wasserstein.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED67E2B7E92530008C8E5 /* Sliced_Wasserstein.h */; };
+		053ED7232B7E92540008C8E5 /* Point.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED67F2B7E92530008C8E5 /* Point.h */; };
+		053ED7242B7E92540008C8E5 /* Coxeter_triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6802B7E92530008C8E5 /* Coxeter_triangulation.h */; };
+		053ED7252B7E92540008C8E5 /* writing_persistence_to_file.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6812B7E92530008C8E5 /* writing_persistence_to_file.h */; };
+		053ED7262B7E92540008C8E5 /* graph_simplicial_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6822B7E92530008C8E5 /* graph_simplicial_complex.h */; };
+		053ED7272B7E92540008C8E5 /* console_color.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6832B7E92530008C8E5 /* console_color.h */; };
+		053ED7282B7E92540008C8E5 /* Points_3D_off_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6842B7E92530008C8E5 /* Points_3D_off_io.h */; };
+		053ED7292B7E92540008C8E5 /* Permutahedral_representation.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6852B7E92530008C8E5 /* Permutahedral_representation.h */; };
+		053ED72A2B7E92540008C8E5 /* Neighbors_finder.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6862B7E92530008C8E5 /* Neighbors_finder.h */; };
+		053ED72B2B7E92540008C8E5 /* Alpha_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6872B7E92530008C8E5 /* Alpha_complex.h */; };
+		053ED72C2B7E92540008C8E5 /* Simple_object_pool.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6882B7E92530008C8E5 /* Simple_object_pool.h */; };
+		053ED72D2B7E92540008C8E5 /* Witness_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6892B7E92530008C8E5 /* Witness_complex.h */; };
+		053ED72E2B7E92540008C8E5 /* Skeleton_blocker_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED68A2B7E92530008C8E5 /* Skeleton_blocker_complex.h */; };
+		053ED72F2B7E92540008C8E5 /* Mesh_medit.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED68C2B7E92530008C8E5 /* Mesh_medit.h */; };
+		053ED7302B7E92540008C8E5 /* output_debug_traces_to_html.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED68D2B7E92530008C8E5 /* output_debug_traces_to_html.h */; };
+		053ED7312B7E92540008C8E5 /* output_meshes_to_medit.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED68E2B7E92530008C8E5 /* output_meshes_to_medit.h */; };
+		053ED7322B7E92540008C8E5 /* build_mesh_from_cell_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED68F2B7E92540008C8E5 /* build_mesh_from_cell_complex.h */; };
+		053ED7332B7E92540008C8E5 /* Flag_complex_edge_collapser.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6902B7E92540008C8E5 /* Flag_complex_edge_collapser.h */; };
+		053ED7342B7E92540008C8E5 /* Bottleneck.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6912B7E92540008C8E5 /* Bottleneck.h */; };
+		053ED7352B7E92540008C8E5 /* Skeleton_blocker_contractor.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6922B7E92540008C8E5 /* Skeleton_blocker_contractor.h */; };
+		053ED7362B7E92540008C8E5 /* random_point_generators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6932B7E92540008C8E5 /* random_point_generators.h */; };
+		053ED7372B7E92540008C8E5 /* Freudenthal_triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6942B7E92540008C8E5 /* Freudenthal_triangulation.h */; };
+		053ED7382B7E92540008C8E5 /* Persistence_graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6952B7E92540008C8E5 /* Persistence_graph.h */; };
+		053ED7392B7E92540008C8E5 /* Sphere_circumradius.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6962B7E92540008C8E5 /* Sphere_circumradius.h */; };
+		053ED73A2B7E92540008C8E5 /* Skeleton_blocker_geometric_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6972B7E92540008C8E5 /* Skeleton_blocker_geometric_complex.h */; };
+		053ED73B2B7E92540008C8E5 /* Persistence_landscape.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6982B7E92540008C8E5 /* Persistence_landscape.h */; };
+		053ED73C2B7E92540008C8E5 /* Persistence_on_rectangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6992B7E92540008C8E5 /* Persistence_on_rectangle.h */; };
+		053ED73D2B7E92540008C8E5 /* Graph_matching.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED69A2B7E92540008C8E5 /* Graph_matching.h */; };
+		053ED73E2B7E92540008C8E5 /* all_faces_in.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED69C2B7E92540008C8E5 /* all_faces_in.h */; };
+		053ED73F2B7E92540008C8E5 /* Null_output_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED69D2B7E92540008C8E5 /* Null_output_iterator.h */; };
+		053ED7402B7E92540008C8E5 /* Hasse_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED69E2B7E92540008C8E5 /* Hasse_complex.h */; };
+		053ED7412B7E92540008C8E5 /* Bitmap_cubical_complex_base.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED69F2B7E92540008C8E5 /* Bitmap_cubical_complex_base.h */; };
+		053ED7422B7E92540008C8E5 /* Euclidean_strong_witness_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A02B7E92540008C8E5 /* Euclidean_strong_witness_complex.h */; };
+		053ED7432B7E92540008C8E5 /* pick_n_random_points.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A12B7E92540008C8E5 /* pick_n_random_points.h */; };
+		053ED7442B7E92540008C8E5 /* Lazy_toplex_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A22B7E92540008C8E5 /* Lazy_toplex_map.h */; };
+		053ED7452B7E92540008C8E5 /* MEB_filtration.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A32B7E92540008C8E5 /* MEB_filtration.h */; };
+		053ED7462B7E92540008C8E5 /* Toplex_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A42B7E92540008C8E5 /* Toplex_map.h */; };
+		053ED7472B7E92540008C8E5 /* Off_reader.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A52B7E92540008C8E5 /* Off_reader.h */; };
+		053ED7482B7E92540008C8E5 /* Skeleton_blocker_simplifiable_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A62B7E92540008C8E5 /* Skeleton_blocker_simplifiable_complex.h */; };
+		053ED7492B7E92540008C8E5 /* Persistence_landscape_on_grid.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A72B7E92540008C8E5 /* Persistence_landscape_on_grid.h */; };
+		053ED74A2B7E92540008C8E5 /* GIC.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A82B7E92540008C8E5 /* GIC.h */; };
+		053ED74B2B7E92540008C8E5 /* Bitmap_cubical_complex_periodic_boundary_conditions_base.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6A92B7E92540008C8E5 /* Bitmap_cubical_complex_periodic_boundary_conditions_base.h */; };
+		053ED74C2B7E92540008C8E5 /* allocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6AA2B7E92540008C8E5 /* allocator.h */; };
+		053ED74D2B7E92540008C8E5 /* Bitmap_cubical_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6AB2B7E92540008C8E5 /* Bitmap_cubical_complex.h */; };
+		053ED74E2B7E92540008C8E5 /* common_persistence_representations.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6AC2B7E92540008C8E5 /* common_persistence_representations.h */; };
+		053ED74F2B7E92540008C8E5 /* Points_off_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6AD2B7E92540008C8E5 /* Points_off_io.h */; };
+		053ED7502B7E92540008C8E5 /* Tangential_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6AE2B7E92540008C8E5 /* Tangential_complex.h */; };
+		053ED7512B7E92540008C8E5 /* Cech_complex_blocker.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6AF2B7E92540008C8E5 /* Cech_complex_blocker.h */; };
+		053ED7522B7E92540008C8E5 /* Cech_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B02B7E92540008C8E5 /* Cech_complex.h */; };
+		053ED7532B7E92540008C8E5 /* Alpha_complex_options.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B12B7E92540008C8E5 /* Alpha_complex_options.h */; };
+		053ED7542B7E92540008C8E5 /* PSSK.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B22B7E92540008C8E5 /* PSSK.h */; };
+		053ED7552B7E92540008C8E5 /* Persistence_on_a_line.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B32B7E92540008C8E5 /* Persistence_on_a_line.h */; };
+		053ED7562B7E92540008C8E5 /* Debug_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B42B7E92540008C8E5 /* Debug_utils.h */; };
+		053ED7572B7E92540008C8E5 /* read_persistence_from_file.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B52B7E92540008C8E5 /* read_persistence_from_file.h */; };
+		053ED7582B7E92540008C8E5 /* Sparse_rips_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B62B7E92540008C8E5 /* Sparse_rips_complex.h */; };
+		053ED7592B7E92540008C8E5 /* PL_approximation.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B82B7E92540008C8E5 /* PL_approximation.h */; };
+		053ED75A2B7E92540008C8E5 /* Constant_function.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6B92B7E92540008C8E5 /* Constant_function.h */; };
+		053ED75B2B7E92540008C8E5 /* Cartesian_product.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6BA2B7E92540008C8E5 /* Cartesian_product.h */; };
+		053ED75C2B7E92540008C8E5 /* Translate.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6BB2B7E92540008C8E5 /* Translate.h */; };
+		053ED75D2B7E92540008C8E5 /* Function_lemniscate_revolution_in_R3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6BC2B7E92540008C8E5 /* Function_lemniscate_revolution_in_R3.h */; };
+		053ED75E2B7E92540008C8E5 /* Negation.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6BD2B7E92540008C8E5 /* Negation.h */; };
+		053ED75F2B7E92540008C8E5 /* Function_Sm_in_Rd.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6BE2B7E92540008C8E5 /* Function_Sm_in_Rd.h */; };
+		053ED7602B7E92540008C8E5 /* Linear_transformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6BF2B7E92540008C8E5 /* Linear_transformation.h */; };
+		053ED7612B7E92540008C8E5 /* random_orthogonal_matrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C02B7E92540008C8E5 /* random_orthogonal_matrix.h */; };
+		053ED7622B7E92540008C8E5 /* Function_moment_curve_in_Rd.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C12B7E92540008C8E5 /* Function_moment_curve_in_Rd.h */; };
+		053ED7632B7E92540008C8E5 /* Function_iron_in_R3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C22B7E92540008C8E5 /* Function_iron_in_R3.h */; };
+		053ED7642B7E92540008C8E5 /* Embed_in_Rd.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C32B7E92540008C8E5 /* Embed_in_Rd.h */; };
+		053ED7652B7E92540008C8E5 /* Function_whitney_umbrella_in_R3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C42B7E92540008C8E5 /* Function_whitney_umbrella_in_R3.h */; };
+		053ED7662B7E92540008C8E5 /* Function_torus_in_R3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C52B7E92540008C8E5 /* Function_torus_in_R3.h */; };
+		053ED7672B7E92540008C8E5 /* Function_chair_in_R3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C62B7E92540008C8E5 /* Function_chair_in_R3.h */; };
+		053ED7682B7E92540008C8E5 /* Function_affine_plane_in_Rd.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C72B7E92540008C8E5 /* Function_affine_plane_in_Rd.h */; };
+		053ED7692B7E92540008C8E5 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6C92B7E92540008C8E5 /* config.h */; };
+		053ED76A2B7E92540008C8E5 /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6CA2B7E92540008C8E5 /* utilities.h */; };
+		053ED76B2B7E92540008C8E5 /* Simplicial_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6CB2B7E92540008C8E5 /* Simplicial_complex.h */; };
+		053ED76C2B7E92540008C8E5 /* Internal_point.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6CC2B7E92540008C8E5 /* Internal_point.h */; };
+		053ED76E2B7E92540008C8E5 /* Multi_field.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6CF2B7E92540008C8E5 /* Multi_field.h */; };
+		053ED76F2B7E92540008C8E5 /* Field_Zp.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D02B7E92540008C8E5 /* Field_Zp.h */; };
+		053ED7702B7E92540008C8E5 /* Persistent_cohomology_column.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D12B7E92540008C8E5 /* Persistent_cohomology_column.h */; };
+		053ED7712B7E92540008C8E5 /* Strong_witness_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D22B7E92540008C8E5 /* Strong_witness_complex.h */; };
+		053ED7722B7E92540008C8E5 /* Edge_contraction.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D32B7E92540008C8E5 /* Edge_contraction.h */; };
+		053ED7732B7E92540008C8E5 /* sparsify_point_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D42B7E92540008C8E5 /* sparsify_point_set.h */; };
+		053ED7742B7E92540008C8E5 /* Manifold_tracing.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D52B7E92540008C8E5 /* Manifold_tracing.h */; };
+		053ED7752B7E92540008C8E5 /* face_from_indices.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D72B7E92540008C8E5 /* face_from_indices.h */; };
+		053ED7762B7E92540008C8E5 /* Integer_combination_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D82B7E92540008C8E5 /* Integer_combination_iterator.h */; };
+		053ED7772B7E92540008C8E5 /* Set_partition_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6D92B7E92540008C8E5 /* Set_partition_iterator.h */; };
+		053ED7782B7E92540008C8E5 /* Size_range.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6DA2B7E92540008C8E5 /* Size_range.h */; };
+		053ED7792B7E92540008C8E5 /* Combination_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6DB2B7E92540008C8E5 /* Combination_iterator.h */; };
+		053ED77A2B7E92540008C8E5 /* Permutahedral_representation_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6DC2B7E92540008C8E5 /* Permutahedral_representation_iterators.h */; };
+		053ED77B2B7E92540008C8E5 /* Simplex_comparator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6DD2B7E92540008C8E5 /* Simplex_comparator.h */; };
+		053ED77C2B7E92540008C8E5 /* Permutation_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6DE2B7E92540008C8E5 /* Permutation_iterator.h */; };
+		053ED77D2B7E92540008C8E5 /* Ordered_set_partition_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6DF2B7E92540008C8E5 /* Ordered_set_partition_iterator.h */; };
+		053ED77E2B7E92540008C8E5 /* Simplex_tree.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E02B7E92540008C8E5 /* Simplex_tree.h */; };
+		053ED77F2B7E92540008C8E5 /* Persistence_heat_maps.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E12B7E92540008C8E5 /* Persistence_heat_maps.h */; };
+		053ED7802B7E92540008C8E5 /* Edge_profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E32B7E92540008C8E5 /* Edge_profile.h */; };
+		053ED7812B7E92540008C8E5 /* Dummy_valid_contraction.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E52B7E92540008C8E5 /* Dummy_valid_contraction.h */; };
+		053ED7822B7E92540008C8E5 /* Link_condition_valid_contraction.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E62B7E92540008C8E5 /* Link_condition_valid_contraction.h */; };
+		053ED7832B7E92540008C8E5 /* Cost_policy.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E72B7E92540008C8E5 /* Cost_policy.h */; };
+		053ED7842B7E92540008C8E5 /* First_vertex_placement.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E82B7E92540008C8E5 /* First_vertex_placement.h */; };
+		053ED7852B7E92540008C8E5 /* Valid_contraction_policy.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6E92B7E92540008C8E5 /* Valid_contraction_policy.h */; };
+		053ED7862B7E92540008C8E5 /* Contraction_visitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6EA2B7E92540008C8E5 /* Contraction_visitor.h */; };
+		053ED7872B7E92540008C8E5 /* Middle_placement.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6EB2B7E92540008C8E5 /* Middle_placement.h */; };
+		053ED7882B7E92540008C8E5 /* Edge_length_cost.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6EC2B7E92540008C8E5 /* Edge_length_cost.h */; };
+		053ED7892B7E92540008C8E5 /* Placement_policy.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6ED2B7E92540008C8E5 /* Placement_policy.h */; };
+		053ED78A2B7E92540008C8E5 /* Query_result.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6EF2B7E92540008C8E5 /* Query_result.h */; };
+		053ED78B2B7E92540008C8E5 /* Hasse_diagram_cell.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6F12B7E92540008C8E5 /* Hasse_diagram_cell.h */; };
+		053ED78C2B7E92540008C8E5 /* Cell_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6F22B7E92540008C8E5 /* Cell_complex.h */; };
+		053ED78D2B7E92540008C8E5 /* distance_functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6F32B7E92540008C8E5 /* distance_functions.h */; };
+		053ED78E2B7E92540008C8E5 /* choose_n_farthest_points.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6F42B7E92540008C8E5 /* choose_n_farthest_points.h */; };
+		053ED78F2B7E92540008C8E5 /* Persistence_intervals_with_distances.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6F52B7E92540008C8E5 /* Persistence_intervals_with_distances.h */; };
+		053ED7902B7E92540008C8E5 /* Skeleton_blocker_simple_traits.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6F72B7E92540008C8E5 /* Skeleton_blocker_simple_traits.h */; };
+		053ED7912B7E92540008C8E5 /* Skeleton_blocker_link_superior.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6F82B7E92540008C8E5 /* Skeleton_blocker_link_superior.h */; };
+		053ED7922B7E92540008C8E5 /* Top_faces.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6FA2B7E92540008C8E5 /* Top_faces.h */; };
+		053ED7932B7E92540008C8E5 /* Trie.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6FB2B7E92540008C8E5 /* Trie.h */; };
+		053ED7942B7E92540008C8E5 /* Skeleton_blocker_sub_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6FC2B7E92540008C8E5 /* Skeleton_blocker_sub_complex.h */; };
+		053ED7952B7E92540008C8E5 /* Skeleton_blocker_off_io.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6FD2B7E92540008C8E5 /* Skeleton_blocker_off_io.h */; };
+		053ED7962B7E92540008C8E5 /* Skeleton_blocker_complex_visitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6FE2B7E92540008C8E5 /* Skeleton_blocker_complex_visitor.h */; };
+		053ED7972B7E92540008C8E5 /* Skeleton_blockers_blockers_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7002B7E92540008C8E5 /* Skeleton_blockers_blockers_iterators.h */; };
+		053ED7982B7E92540008C8E5 /* Skeleton_blockers_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7012B7E92540008C8E5 /* Skeleton_blockers_iterators.h */; };
+		053ED7992B7E92540008C8E5 /* Skeleton_blockers_triangles_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7022B7E92540008C8E5 /* Skeleton_blockers_triangles_iterators.h */; };
+		053ED79A2B7E92540008C8E5 /* Skeleton_blockers_vertices_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7032B7E92540008C8E5 /* Skeleton_blockers_vertices_iterators.h */; };
+		053ED79B2B7E92540008C8E5 /* Skeleton_blockers_edges_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7042B7E92540008C8E5 /* Skeleton_blockers_edges_iterators.h */; };
+		053ED79C2B7E92540008C8E5 /* Skeleton_blockers_simplices_iterators.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7052B7E92540008C8E5 /* Skeleton_blockers_simplices_iterators.h */; };
+		053ED79D2B7E92540008C8E5 /* Skeleton_blocker_simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7062B7E92540008C8E5 /* Skeleton_blocker_simplex.h */; };
+		053ED79E2B7E92540008C8E5 /* Skeleton_blocker_simple_geometric_traits.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7072B7E92540008C8E5 /* Skeleton_blocker_simple_geometric_traits.h */; };
+		053ED79F2B7E92540008C8E5 /* Skeleton_blocker.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7082B7E92540008C8E5 /* Skeleton_blocker.h */; };
+		053ED7A02B7E92540008C8E5 /* Clock.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED7092B7E92540008C8E5 /* Clock.h */; };
+		053ED7A12B7E92540008C8E5 /* Persistent_cohomology.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED70A2B7E92540008C8E5 /* Persistent_cohomology.h */; };
+		053ED7A22B7E92540008C8E5 /* reader_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED70B2B7E92540008C8E5 /* reader_utils.h */; };
+		053ED7A32B7E92540008C8E5 /* Rips_complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED70C2B7E92540008C8E5 /* Rips_complex.h */; };
 		054131092AF9E95A006AAD75 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054131082AF9E95A006AAD75 /* Utilities.swift */; };
 		054131122AF9F246006AAD75 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0541310F2AF9F246006AAD75 /* README.txt */; };
 		054131152AFA26E4006AAD75 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054131132AFA26E4006AAD75 /* graphviz.cpp */; };
@@ -2833,6 +2981,157 @@
 		053CB70628D0168C006B37B0 /* hypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypersurfaces.cpp; sourceTree = "<group>"; };
 		053CB70728D0168C006B37B0 /* triangle4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
 		053ED6612B7D0ECB0008C8E5 /* 3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3d.h; sourceTree = "<group>"; };
+		053ED6662B7E92530008C8E5 /* Persistence_intervals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_intervals.h; sourceTree = "<group>"; };
+		053ED6682B7E92530008C8E5 /* Alpha_kernel_d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alpha_kernel_d.h; sourceTree = "<group>"; };
+		053ED6692B7E92530008C8E5 /* Euclidean_witness_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Euclidean_witness_complex.h; sourceTree = "<group>"; };
+		053ED66B2B7E92530008C8E5 /* Active_witness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Active_witness.h; sourceTree = "<group>"; };
+		053ED66C2B7E92530008C8E5 /* Active_witness_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Active_witness_iterator.h; sourceTree = "<group>"; };
+		053ED66D2B7E92530008C8E5 /* Unitary_tests_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Unitary_tests_utils.h; sourceTree = "<group>"; };
+		053ED66F2B7E92530008C8E5 /* Simplex_tree_star_simplex_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simplex_tree_star_simplex_iterators.h; sourceTree = "<group>"; };
+		053ED6702B7E92530008C8E5 /* simplex_tree_options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplex_tree_options.h; sourceTree = "<group>"; };
+		053ED6712B7E92530008C8E5 /* hooks_simplex_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hooks_simplex_base.h; sourceTree = "<group>"; };
+		053ED6722B7E92530008C8E5 /* Simplex_tree_node_explicit_storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simplex_tree_node_explicit_storage.h; sourceTree = "<group>"; };
+		053ED6732B7E92530008C8E5 /* Simplex_tree_siblings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simplex_tree_siblings.h; sourceTree = "<group>"; };
+		053ED6742B7E92530008C8E5 /* serialization_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serialization_utils.h; sourceTree = "<group>"; };
+		053ED6752B7E92530008C8E5 /* Simplex_tree_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simplex_tree_iterators.h; sourceTree = "<group>"; };
+		053ED6762B7E92530008C8E5 /* indexing_tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = indexing_tag.h; sourceTree = "<group>"; };
+		053ED6772B7E92530008C8E5 /* Kd_tree_search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Kd_tree_search.h; sourceTree = "<group>"; };
+		053ED6782B7E92530008C8E5 /* Implicit_manifold_intersection_oracle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Implicit_manifold_intersection_oracle.h; sourceTree = "<group>"; };
+		053ED6792B7E92530008C8E5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		053ED67A2B7E92530008C8E5 /* Alpha_complex_3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alpha_complex_3d.h; sourceTree = "<group>"; };
+		053ED67B2B7E92530008C8E5 /* Skeleton_blocker_link_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_link_complex.h; sourceTree = "<group>"; };
+		053ED67C2B7E92530008C8E5 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		053ED67D2B7E92530008C8E5 /* Persistence_vectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_vectors.h; sourceTree = "<group>"; };
+		053ED67E2B7E92530008C8E5 /* Sliced_Wasserstein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sliced_Wasserstein.h; sourceTree = "<group>"; };
+		053ED67F2B7E92530008C8E5 /* Point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Point.h; sourceTree = "<group>"; };
+		053ED6802B7E92530008C8E5 /* Coxeter_triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coxeter_triangulation.h; sourceTree = "<group>"; };
+		053ED6812B7E92530008C8E5 /* writing_persistence_to_file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = writing_persistence_to_file.h; sourceTree = "<group>"; };
+		053ED6822B7E92530008C8E5 /* graph_simplicial_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph_simplicial_complex.h; sourceTree = "<group>"; };
+		053ED6832B7E92530008C8E5 /* console_color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = console_color.h; sourceTree = "<group>"; };
+		053ED6842B7E92530008C8E5 /* Points_3D_off_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Points_3D_off_io.h; sourceTree = "<group>"; };
+		053ED6852B7E92530008C8E5 /* Permutahedral_representation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Permutahedral_representation.h; sourceTree = "<group>"; };
+		053ED6862B7E92530008C8E5 /* Neighbors_finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Neighbors_finder.h; sourceTree = "<group>"; };
+		053ED6872B7E92530008C8E5 /* Alpha_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alpha_complex.h; sourceTree = "<group>"; };
+		053ED6882B7E92530008C8E5 /* Simple_object_pool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple_object_pool.h; sourceTree = "<group>"; };
+		053ED6892B7E92530008C8E5 /* Witness_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Witness_complex.h; sourceTree = "<group>"; };
+		053ED68A2B7E92530008C8E5 /* Skeleton_blocker_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_complex.h; sourceTree = "<group>"; };
+		053ED68C2B7E92530008C8E5 /* Mesh_medit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh_medit.h; sourceTree = "<group>"; };
+		053ED68D2B7E92530008C8E5 /* output_debug_traces_to_html.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output_debug_traces_to_html.h; sourceTree = "<group>"; };
+		053ED68E2B7E92530008C8E5 /* output_meshes_to_medit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output_meshes_to_medit.h; sourceTree = "<group>"; };
+		053ED68F2B7E92540008C8E5 /* build_mesh_from_cell_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = build_mesh_from_cell_complex.h; sourceTree = "<group>"; };
+		053ED6902B7E92540008C8E5 /* Flag_complex_edge_collapser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flag_complex_edge_collapser.h; sourceTree = "<group>"; };
+		053ED6912B7E92540008C8E5 /* Bottleneck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bottleneck.h; sourceTree = "<group>"; };
+		053ED6922B7E92540008C8E5 /* Skeleton_blocker_contractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_contractor.h; sourceTree = "<group>"; };
+		053ED6932B7E92540008C8E5 /* random_point_generators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = random_point_generators.h; sourceTree = "<group>"; };
+		053ED6942B7E92540008C8E5 /* Freudenthal_triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Freudenthal_triangulation.h; sourceTree = "<group>"; };
+		053ED6952B7E92540008C8E5 /* Persistence_graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_graph.h; sourceTree = "<group>"; };
+		053ED6962B7E92540008C8E5 /* Sphere_circumradius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sphere_circumradius.h; sourceTree = "<group>"; };
+		053ED6972B7E92540008C8E5 /* Skeleton_blocker_geometric_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_geometric_complex.h; sourceTree = "<group>"; };
+		053ED6982B7E92540008C8E5 /* Persistence_landscape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_landscape.h; sourceTree = "<group>"; };
+		053ED6992B7E92540008C8E5 /* Persistence_on_rectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_on_rectangle.h; sourceTree = "<group>"; };
+		053ED69A2B7E92540008C8E5 /* Graph_matching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph_matching.h; sourceTree = "<group>"; };
+		053ED69C2B7E92540008C8E5 /* all_faces_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = all_faces_in.h; sourceTree = "<group>"; };
+		053ED69D2B7E92540008C8E5 /* Null_output_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Null_output_iterator.h; sourceTree = "<group>"; };
+		053ED69E2B7E92540008C8E5 /* Hasse_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hasse_complex.h; sourceTree = "<group>"; };
+		053ED69F2B7E92540008C8E5 /* Bitmap_cubical_complex_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bitmap_cubical_complex_base.h; sourceTree = "<group>"; };
+		053ED6A02B7E92540008C8E5 /* Euclidean_strong_witness_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Euclidean_strong_witness_complex.h; sourceTree = "<group>"; };
+		053ED6A12B7E92540008C8E5 /* pick_n_random_points.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pick_n_random_points.h; sourceTree = "<group>"; };
+		053ED6A22B7E92540008C8E5 /* Lazy_toplex_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lazy_toplex_map.h; sourceTree = "<group>"; };
+		053ED6A32B7E92540008C8E5 /* MEB_filtration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEB_filtration.h; sourceTree = "<group>"; };
+		053ED6A42B7E92540008C8E5 /* Toplex_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Toplex_map.h; sourceTree = "<group>"; };
+		053ED6A52B7E92540008C8E5 /* Off_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Off_reader.h; sourceTree = "<group>"; };
+		053ED6A62B7E92540008C8E5 /* Skeleton_blocker_simplifiable_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_simplifiable_complex.h; sourceTree = "<group>"; };
+		053ED6A72B7E92540008C8E5 /* Persistence_landscape_on_grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_landscape_on_grid.h; sourceTree = "<group>"; };
+		053ED6A82B7E92540008C8E5 /* GIC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIC.h; sourceTree = "<group>"; };
+		053ED6A92B7E92540008C8E5 /* Bitmap_cubical_complex_periodic_boundary_conditions_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bitmap_cubical_complex_periodic_boundary_conditions_base.h; sourceTree = "<group>"; };
+		053ED6AA2B7E92540008C8E5 /* allocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = allocator.h; sourceTree = "<group>"; };
+		053ED6AB2B7E92540008C8E5 /* Bitmap_cubical_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bitmap_cubical_complex.h; sourceTree = "<group>"; };
+		053ED6AC2B7E92540008C8E5 /* common_persistence_representations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common_persistence_representations.h; sourceTree = "<group>"; };
+		053ED6AD2B7E92540008C8E5 /* Points_off_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Points_off_io.h; sourceTree = "<group>"; };
+		053ED6AE2B7E92540008C8E5 /* Tangential_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tangential_complex.h; sourceTree = "<group>"; };
+		053ED6AF2B7E92540008C8E5 /* Cech_complex_blocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cech_complex_blocker.h; sourceTree = "<group>"; };
+		053ED6B02B7E92540008C8E5 /* Cech_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cech_complex.h; sourceTree = "<group>"; };
+		053ED6B12B7E92540008C8E5 /* Alpha_complex_options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alpha_complex_options.h; sourceTree = "<group>"; };
+		053ED6B22B7E92540008C8E5 /* PSSK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSSK.h; sourceTree = "<group>"; };
+		053ED6B32B7E92540008C8E5 /* Persistence_on_a_line.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_on_a_line.h; sourceTree = "<group>"; };
+		053ED6B42B7E92540008C8E5 /* Debug_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug_utils.h; sourceTree = "<group>"; };
+		053ED6B52B7E92540008C8E5 /* read_persistence_from_file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = read_persistence_from_file.h; sourceTree = "<group>"; };
+		053ED6B62B7E92540008C8E5 /* Sparse_rips_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sparse_rips_complex.h; sourceTree = "<group>"; };
+		053ED6B82B7E92540008C8E5 /* PL_approximation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PL_approximation.h; sourceTree = "<group>"; };
+		053ED6B92B7E92540008C8E5 /* Constant_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constant_function.h; sourceTree = "<group>"; };
+		053ED6BA2B7E92540008C8E5 /* Cartesian_product.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cartesian_product.h; sourceTree = "<group>"; };
+		053ED6BB2B7E92540008C8E5 /* Translate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Translate.h; sourceTree = "<group>"; };
+		053ED6BC2B7E92540008C8E5 /* Function_lemniscate_revolution_in_R3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_lemniscate_revolution_in_R3.h; sourceTree = "<group>"; };
+		053ED6BD2B7E92540008C8E5 /* Negation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Negation.h; sourceTree = "<group>"; };
+		053ED6BE2B7E92540008C8E5 /* Function_Sm_in_Rd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_Sm_in_Rd.h; sourceTree = "<group>"; };
+		053ED6BF2B7E92540008C8E5 /* Linear_transformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Linear_transformation.h; sourceTree = "<group>"; };
+		053ED6C02B7E92540008C8E5 /* random_orthogonal_matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = random_orthogonal_matrix.h; sourceTree = "<group>"; };
+		053ED6C12B7E92540008C8E5 /* Function_moment_curve_in_Rd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_moment_curve_in_Rd.h; sourceTree = "<group>"; };
+		053ED6C22B7E92540008C8E5 /* Function_iron_in_R3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_iron_in_R3.h; sourceTree = "<group>"; };
+		053ED6C32B7E92540008C8E5 /* Embed_in_Rd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Embed_in_Rd.h; sourceTree = "<group>"; };
+		053ED6C42B7E92540008C8E5 /* Function_whitney_umbrella_in_R3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_whitney_umbrella_in_R3.h; sourceTree = "<group>"; };
+		053ED6C52B7E92540008C8E5 /* Function_torus_in_R3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_torus_in_R3.h; sourceTree = "<group>"; };
+		053ED6C62B7E92540008C8E5 /* Function_chair_in_R3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_chair_in_R3.h; sourceTree = "<group>"; };
+		053ED6C72B7E92540008C8E5 /* Function_affine_plane_in_Rd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Function_affine_plane_in_Rd.h; sourceTree = "<group>"; };
+		053ED6C92B7E92540008C8E5 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		053ED6CA2B7E92540008C8E5 /* utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
+		053ED6CB2B7E92540008C8E5 /* Simplicial_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simplicial_complex.h; sourceTree = "<group>"; };
+		053ED6CC2B7E92540008C8E5 /* Internal_point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Internal_point.h; sourceTree = "<group>"; };
+		053ED6CD2B7E92540008C8E5 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		053ED6CF2B7E92540008C8E5 /* Multi_field.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Multi_field.h; sourceTree = "<group>"; };
+		053ED6D02B7E92540008C8E5 /* Field_Zp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Field_Zp.h; sourceTree = "<group>"; };
+		053ED6D12B7E92540008C8E5 /* Persistent_cohomology_column.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistent_cohomology_column.h; sourceTree = "<group>"; };
+		053ED6D22B7E92540008C8E5 /* Strong_witness_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Strong_witness_complex.h; sourceTree = "<group>"; };
+		053ED6D32B7E92540008C8E5 /* Edge_contraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Edge_contraction.h; sourceTree = "<group>"; };
+		053ED6D42B7E92540008C8E5 /* sparsify_point_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sparsify_point_set.h; sourceTree = "<group>"; };
+		053ED6D52B7E92540008C8E5 /* Manifold_tracing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Manifold_tracing.h; sourceTree = "<group>"; };
+		053ED6D72B7E92540008C8E5 /* face_from_indices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = face_from_indices.h; sourceTree = "<group>"; };
+		053ED6D82B7E92540008C8E5 /* Integer_combination_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Integer_combination_iterator.h; sourceTree = "<group>"; };
+		053ED6D92B7E92540008C8E5 /* Set_partition_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Set_partition_iterator.h; sourceTree = "<group>"; };
+		053ED6DA2B7E92540008C8E5 /* Size_range.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Size_range.h; sourceTree = "<group>"; };
+		053ED6DB2B7E92540008C8E5 /* Combination_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Combination_iterator.h; sourceTree = "<group>"; };
+		053ED6DC2B7E92540008C8E5 /* Permutahedral_representation_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Permutahedral_representation_iterators.h; sourceTree = "<group>"; };
+		053ED6DD2B7E92540008C8E5 /* Simplex_comparator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simplex_comparator.h; sourceTree = "<group>"; };
+		053ED6DE2B7E92540008C8E5 /* Permutation_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Permutation_iterator.h; sourceTree = "<group>"; };
+		053ED6DF2B7E92540008C8E5 /* Ordered_set_partition_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ordered_set_partition_iterator.h; sourceTree = "<group>"; };
+		053ED6E02B7E92540008C8E5 /* Simplex_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simplex_tree.h; sourceTree = "<group>"; };
+		053ED6E12B7E92540008C8E5 /* Persistence_heat_maps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_heat_maps.h; sourceTree = "<group>"; };
+		053ED6E32B7E92540008C8E5 /* Edge_profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Edge_profile.h; sourceTree = "<group>"; };
+		053ED6E52B7E92540008C8E5 /* Dummy_valid_contraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dummy_valid_contraction.h; sourceTree = "<group>"; };
+		053ED6E62B7E92540008C8E5 /* Link_condition_valid_contraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Link_condition_valid_contraction.h; sourceTree = "<group>"; };
+		053ED6E72B7E92540008C8E5 /* Cost_policy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cost_policy.h; sourceTree = "<group>"; };
+		053ED6E82B7E92540008C8E5 /* First_vertex_placement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = First_vertex_placement.h; sourceTree = "<group>"; };
+		053ED6E92B7E92540008C8E5 /* Valid_contraction_policy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Valid_contraction_policy.h; sourceTree = "<group>"; };
+		053ED6EA2B7E92540008C8E5 /* Contraction_visitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contraction_visitor.h; sourceTree = "<group>"; };
+		053ED6EB2B7E92540008C8E5 /* Middle_placement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Middle_placement.h; sourceTree = "<group>"; };
+		053ED6EC2B7E92540008C8E5 /* Edge_length_cost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Edge_length_cost.h; sourceTree = "<group>"; };
+		053ED6ED2B7E92540008C8E5 /* Placement_policy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Placement_policy.h; sourceTree = "<group>"; };
+		053ED6EF2B7E92540008C8E5 /* Query_result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Query_result.h; sourceTree = "<group>"; };
+		053ED6F12B7E92540008C8E5 /* Hasse_diagram_cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hasse_diagram_cell.h; sourceTree = "<group>"; };
+		053ED6F22B7E92540008C8E5 /* Cell_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cell_complex.h; sourceTree = "<group>"; };
+		053ED6F32B7E92540008C8E5 /* distance_functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distance_functions.h; sourceTree = "<group>"; };
+		053ED6F42B7E92540008C8E5 /* choose_n_farthest_points.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = choose_n_farthest_points.h; sourceTree = "<group>"; };
+		053ED6F52B7E92540008C8E5 /* Persistence_intervals_with_distances.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistence_intervals_with_distances.h; sourceTree = "<group>"; };
+		053ED6F72B7E92540008C8E5 /* Skeleton_blocker_simple_traits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_simple_traits.h; sourceTree = "<group>"; };
+		053ED6F82B7E92540008C8E5 /* Skeleton_blocker_link_superior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_link_superior.h; sourceTree = "<group>"; };
+		053ED6FA2B7E92540008C8E5 /* Top_faces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Top_faces.h; sourceTree = "<group>"; };
+		053ED6FB2B7E92540008C8E5 /* Trie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trie.h; sourceTree = "<group>"; };
+		053ED6FC2B7E92540008C8E5 /* Skeleton_blocker_sub_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_sub_complex.h; sourceTree = "<group>"; };
+		053ED6FD2B7E92540008C8E5 /* Skeleton_blocker_off_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_off_io.h; sourceTree = "<group>"; };
+		053ED6FE2B7E92540008C8E5 /* Skeleton_blocker_complex_visitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_complex_visitor.h; sourceTree = "<group>"; };
+		053ED7002B7E92540008C8E5 /* Skeleton_blockers_blockers_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blockers_blockers_iterators.h; sourceTree = "<group>"; };
+		053ED7012B7E92540008C8E5 /* Skeleton_blockers_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blockers_iterators.h; sourceTree = "<group>"; };
+		053ED7022B7E92540008C8E5 /* Skeleton_blockers_triangles_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blockers_triangles_iterators.h; sourceTree = "<group>"; };
+		053ED7032B7E92540008C8E5 /* Skeleton_blockers_vertices_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blockers_vertices_iterators.h; sourceTree = "<group>"; };
+		053ED7042B7E92540008C8E5 /* Skeleton_blockers_edges_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blockers_edges_iterators.h; sourceTree = "<group>"; };
+		053ED7052B7E92540008C8E5 /* Skeleton_blockers_simplices_iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blockers_simplices_iterators.h; sourceTree = "<group>"; };
+		053ED7062B7E92540008C8E5 /* Skeleton_blocker_simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_simplex.h; sourceTree = "<group>"; };
+		053ED7072B7E92540008C8E5 /* Skeleton_blocker_simple_geometric_traits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker_simple_geometric_traits.h; sourceTree = "<group>"; };
+		053ED7082B7E92540008C8E5 /* Skeleton_blocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton_blocker.h; sourceTree = "<group>"; };
+		053ED7092B7E92540008C8E5 /* Clock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clock.h; sourceTree = "<group>"; };
+		053ED70A2B7E92540008C8E5 /* Persistent_cohomology.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Persistent_cohomology.h; sourceTree = "<group>"; };
+		053ED70B2B7E92540008C8E5 /* reader_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reader_utils.h; sourceTree = "<group>"; };
+		053ED70C2B7E92540008C8E5 /* Rips_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rips_complex.h; sourceTree = "<group>"; };
 		054131082AF9E95A006AAD75 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		0541310C2AF9F246006AAD75 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		0541310D2AF9F246006AAD75 /* container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = container.h; sourceTree = "<group>"; };
@@ -5956,6 +6255,7 @@
 				052F9C53180600FA00FAE4DF /* enumerate */,
 				052F9C9B180600FA00FAE4DF /* file */,
 				052F9CA6180600FA00FAE4DF /* foreign */,
+				053ED6652B7E92530008C8E5 /* gudhi */,
 				0591E7831C4F749400793A9C /* hypersurface */,
 				05431F391C40F397009BC072 /* libnormaliz */,
 				05721ECD1F97153C00A83FFC /* link */,
@@ -6670,6 +6970,292 @@
 				0512E09426DF34E700DDB222 /* perm7.h */,
 			);
 			path = spec;
+			sourceTree = "<group>";
+		};
+		053ED6652B7E92530008C8E5 /* gudhi */ = {
+			isa = PBXGroup;
+			children = (
+				053ED66A2B7E92530008C8E5 /* Active_witness */,
+				053ED6AA2B7E92540008C8E5 /* allocator.h */,
+				053ED6672B7E92530008C8E5 /* Alpha_complex */,
+				053ED67A2B7E92530008C8E5 /* Alpha_complex_3d.h */,
+				053ED6B12B7E92540008C8E5 /* Alpha_complex_options.h */,
+				053ED6872B7E92530008C8E5 /* Alpha_complex.h */,
+				053ED69F2B7E92540008C8E5 /* Bitmap_cubical_complex_base.h */,
+				053ED6A92B7E92540008C8E5 /* Bitmap_cubical_complex_periodic_boundary_conditions_base.h */,
+				053ED6AB2B7E92540008C8E5 /* Bitmap_cubical_complex.h */,
+				053ED6912B7E92540008C8E5 /* Bottleneck.h */,
+				053ED6AF2B7E92540008C8E5 /* Cech_complex_blocker.h */,
+				053ED6B02B7E92540008C8E5 /* Cech_complex.h */,
+				053ED6F42B7E92540008C8E5 /* choose_n_farthest_points.h */,
+				053ED7092B7E92540008C8E5 /* Clock.h */,
+				053ED6792B7E92530008C8E5 /* CMakeLists.txt */,
+				053ED6AC2B7E92540008C8E5 /* common_persistence_representations.h */,
+				053ED6832B7E92530008C8E5 /* console_color.h */,
+				053ED6E22B7E92540008C8E5 /* Contraction */,
+				053ED6EE2B7E92540008C8E5 /* Coxeter_triangulation */,
+				053ED6802B7E92530008C8E5 /* Coxeter_triangulation.h */,
+				053ED6B42B7E92540008C8E5 /* Debug_utils.h */,
+				053ED6F32B7E92540008C8E5 /* distance_functions.h */,
+				053ED6D32B7E92540008C8E5 /* Edge_contraction.h */,
+				053ED6A02B7E92540008C8E5 /* Euclidean_strong_witness_complex.h */,
+				053ED6692B7E92530008C8E5 /* Euclidean_witness_complex.h */,
+				053ED6902B7E92540008C8E5 /* Flag_complex_edge_collapser.h */,
+				053ED6942B7E92540008C8E5 /* Freudenthal_triangulation.h */,
+				053ED6B72B7E92540008C8E5 /* Functions */,
+				053ED6A82B7E92540008C8E5 /* GIC.h */,
+				053ED69A2B7E92540008C8E5 /* Graph_matching.h */,
+				053ED6822B7E92530008C8E5 /* graph_simplicial_complex.h */,
+				053ED69E2B7E92540008C8E5 /* Hasse_complex.h */,
+				053ED6782B7E92530008C8E5 /* Implicit_manifold_intersection_oracle.h */,
+				053ED6CC2B7E92540008C8E5 /* Internal_point.h */,
+				053ED68B2B7E92530008C8E5 /* IO */,
+				053ED6772B7E92530008C8E5 /* Kd_tree_search.h */,
+				053ED6A22B7E92540008C8E5 /* Lazy_toplex_map.h */,
+				053ED67C2B7E92530008C8E5 /* LICENSE */,
+				053ED6D52B7E92540008C8E5 /* Manifold_tracing.h */,
+				053ED6A32B7E92540008C8E5 /* MEB_filtration.h */,
+				053ED6862B7E92530008C8E5 /* Neighbors_finder.h */,
+				053ED69D2B7E92540008C8E5 /* Null_output_iterator.h */,
+				053ED6A52B7E92540008C8E5 /* Off_reader.h */,
+				053ED6D62B7E92540008C8E5 /* Permutahedral_representation */,
+				053ED6852B7E92530008C8E5 /* Permutahedral_representation.h */,
+				053ED6952B7E92540008C8E5 /* Persistence_graph.h */,
+				053ED6E12B7E92540008C8E5 /* Persistence_heat_maps.h */,
+				053ED6F52B7E92540008C8E5 /* Persistence_intervals_with_distances.h */,
+				053ED6662B7E92530008C8E5 /* Persistence_intervals.h */,
+				053ED6A72B7E92540008C8E5 /* Persistence_landscape_on_grid.h */,
+				053ED6982B7E92540008C8E5 /* Persistence_landscape.h */,
+				053ED6B32B7E92540008C8E5 /* Persistence_on_a_line.h */,
+				053ED6992B7E92540008C8E5 /* Persistence_on_rectangle.h */,
+				053ED67D2B7E92530008C8E5 /* Persistence_vectors.h */,
+				053ED6CE2B7E92540008C8E5 /* Persistent_cohomology */,
+				053ED70A2B7E92540008C8E5 /* Persistent_cohomology.h */,
+				053ED6A12B7E92540008C8E5 /* pick_n_random_points.h */,
+				053ED67F2B7E92530008C8E5 /* Point.h */,
+				053ED6842B7E92530008C8E5 /* Points_3D_off_io.h */,
+				053ED6AD2B7E92540008C8E5 /* Points_off_io.h */,
+				053ED6B22B7E92540008C8E5 /* PSSK.h */,
+				053ED6932B7E92540008C8E5 /* random_point_generators.h */,
+				053ED6B52B7E92540008C8E5 /* read_persistence_from_file.h */,
+				053ED70B2B7E92540008C8E5 /* reader_utils.h */,
+				053ED6CD2B7E92540008C8E5 /* README.txt */,
+				053ED70C2B7E92540008C8E5 /* Rips_complex.h */,
+				053ED6882B7E92530008C8E5 /* Simple_object_pool.h */,
+				053ED66E2B7E92530008C8E5 /* Simplex_tree */,
+				053ED6E02B7E92540008C8E5 /* Simplex_tree.h */,
+				053ED6F62B7E92540008C8E5 /* Skeleton_blocker */,
+				053ED68A2B7E92530008C8E5 /* Skeleton_blocker_complex.h */,
+				053ED6922B7E92540008C8E5 /* Skeleton_blocker_contractor.h */,
+				053ED6972B7E92540008C8E5 /* Skeleton_blocker_geometric_complex.h */,
+				053ED67B2B7E92530008C8E5 /* Skeleton_blocker_link_complex.h */,
+				053ED6A62B7E92540008C8E5 /* Skeleton_blocker_simplifiable_complex.h */,
+				053ED7082B7E92540008C8E5 /* Skeleton_blocker.h */,
+				053ED67E2B7E92530008C8E5 /* Sliced_Wasserstein.h */,
+				053ED6B62B7E92540008C8E5 /* Sparse_rips_complex.h */,
+				053ED6D42B7E92540008C8E5 /* sparsify_point_set.h */,
+				053ED6962B7E92540008C8E5 /* Sphere_circumradius.h */,
+				053ED6D22B7E92540008C8E5 /* Strong_witness_complex.h */,
+				053ED6C82B7E92540008C8E5 /* Tangential_complex */,
+				053ED6AE2B7E92540008C8E5 /* Tangential_complex.h */,
+				053ED6A42B7E92540008C8E5 /* Toplex_map.h */,
+				053ED66D2B7E92530008C8E5 /* Unitary_tests_utils.h */,
+				053ED69B2B7E92540008C8E5 /* Witness_complex */,
+				053ED6892B7E92530008C8E5 /* Witness_complex.h */,
+				053ED6812B7E92530008C8E5 /* writing_persistence_to_file.h */,
+			);
+			path = gudhi;
+			sourceTree = "<group>";
+		};
+		053ED6672B7E92530008C8E5 /* Alpha_complex */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6682B7E92530008C8E5 /* Alpha_kernel_d.h */,
+			);
+			path = Alpha_complex;
+			sourceTree = "<group>";
+		};
+		053ED66A2B7E92530008C8E5 /* Active_witness */ = {
+			isa = PBXGroup;
+			children = (
+				053ED66B2B7E92530008C8E5 /* Active_witness.h */,
+				053ED66C2B7E92530008C8E5 /* Active_witness_iterator.h */,
+			);
+			path = Active_witness;
+			sourceTree = "<group>";
+		};
+		053ED66E2B7E92530008C8E5 /* Simplex_tree */ = {
+			isa = PBXGroup;
+			children = (
+				053ED66F2B7E92530008C8E5 /* Simplex_tree_star_simplex_iterators.h */,
+				053ED6702B7E92530008C8E5 /* simplex_tree_options.h */,
+				053ED6712B7E92530008C8E5 /* hooks_simplex_base.h */,
+				053ED6722B7E92530008C8E5 /* Simplex_tree_node_explicit_storage.h */,
+				053ED6732B7E92530008C8E5 /* Simplex_tree_siblings.h */,
+				053ED6742B7E92530008C8E5 /* serialization_utils.h */,
+				053ED6752B7E92530008C8E5 /* Simplex_tree_iterators.h */,
+				053ED6762B7E92530008C8E5 /* indexing_tag.h */,
+			);
+			path = Simplex_tree;
+			sourceTree = "<group>";
+		};
+		053ED68B2B7E92530008C8E5 /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				053ED68C2B7E92530008C8E5 /* Mesh_medit.h */,
+				053ED68D2B7E92530008C8E5 /* output_debug_traces_to_html.h */,
+				053ED68E2B7E92530008C8E5 /* output_meshes_to_medit.h */,
+				053ED68F2B7E92540008C8E5 /* build_mesh_from_cell_complex.h */,
+			);
+			path = IO;
+			sourceTree = "<group>";
+		};
+		053ED69B2B7E92540008C8E5 /* Witness_complex */ = {
+			isa = PBXGroup;
+			children = (
+				053ED69C2B7E92540008C8E5 /* all_faces_in.h */,
+			);
+			path = Witness_complex;
+			sourceTree = "<group>";
+		};
+		053ED6B72B7E92540008C8E5 /* Functions */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6B82B7E92540008C8E5 /* PL_approximation.h */,
+				053ED6B92B7E92540008C8E5 /* Constant_function.h */,
+				053ED6BA2B7E92540008C8E5 /* Cartesian_product.h */,
+				053ED6BB2B7E92540008C8E5 /* Translate.h */,
+				053ED6BC2B7E92540008C8E5 /* Function_lemniscate_revolution_in_R3.h */,
+				053ED6BD2B7E92540008C8E5 /* Negation.h */,
+				053ED6BE2B7E92540008C8E5 /* Function_Sm_in_Rd.h */,
+				053ED6BF2B7E92540008C8E5 /* Linear_transformation.h */,
+				053ED6C02B7E92540008C8E5 /* random_orthogonal_matrix.h */,
+				053ED6C12B7E92540008C8E5 /* Function_moment_curve_in_Rd.h */,
+				053ED6C22B7E92540008C8E5 /* Function_iron_in_R3.h */,
+				053ED6C32B7E92540008C8E5 /* Embed_in_Rd.h */,
+				053ED6C42B7E92540008C8E5 /* Function_whitney_umbrella_in_R3.h */,
+				053ED6C52B7E92540008C8E5 /* Function_torus_in_R3.h */,
+				053ED6C62B7E92540008C8E5 /* Function_chair_in_R3.h */,
+				053ED6C72B7E92540008C8E5 /* Function_affine_plane_in_Rd.h */,
+			);
+			path = Functions;
+			sourceTree = "<group>";
+		};
+		053ED6C82B7E92540008C8E5 /* Tangential_complex */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6C92B7E92540008C8E5 /* config.h */,
+				053ED6CA2B7E92540008C8E5 /* utilities.h */,
+				053ED6CB2B7E92540008C8E5 /* Simplicial_complex.h */,
+			);
+			path = Tangential_complex;
+			sourceTree = "<group>";
+		};
+		053ED6CE2B7E92540008C8E5 /* Persistent_cohomology */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6CF2B7E92540008C8E5 /* Multi_field.h */,
+				053ED6D02B7E92540008C8E5 /* Field_Zp.h */,
+				053ED6D12B7E92540008C8E5 /* Persistent_cohomology_column.h */,
+			);
+			path = Persistent_cohomology;
+			sourceTree = "<group>";
+		};
+		053ED6D62B7E92540008C8E5 /* Permutahedral_representation */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6D72B7E92540008C8E5 /* face_from_indices.h */,
+				053ED6D82B7E92540008C8E5 /* Integer_combination_iterator.h */,
+				053ED6D92B7E92540008C8E5 /* Set_partition_iterator.h */,
+				053ED6DA2B7E92540008C8E5 /* Size_range.h */,
+				053ED6DB2B7E92540008C8E5 /* Combination_iterator.h */,
+				053ED6DC2B7E92540008C8E5 /* Permutahedral_representation_iterators.h */,
+				053ED6DD2B7E92540008C8E5 /* Simplex_comparator.h */,
+				053ED6DE2B7E92540008C8E5 /* Permutation_iterator.h */,
+				053ED6DF2B7E92540008C8E5 /* Ordered_set_partition_iterator.h */,
+			);
+			path = Permutahedral_representation;
+			sourceTree = "<group>";
+		};
+		053ED6E22B7E92540008C8E5 /* Contraction */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6E32B7E92540008C8E5 /* Edge_profile.h */,
+				053ED6E42B7E92540008C8E5 /* policies */,
+			);
+			path = Contraction;
+			sourceTree = "<group>";
+		};
+		053ED6E42B7E92540008C8E5 /* policies */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6E52B7E92540008C8E5 /* Dummy_valid_contraction.h */,
+				053ED6E62B7E92540008C8E5 /* Link_condition_valid_contraction.h */,
+				053ED6E72B7E92540008C8E5 /* Cost_policy.h */,
+				053ED6E82B7E92540008C8E5 /* First_vertex_placement.h */,
+				053ED6E92B7E92540008C8E5 /* Valid_contraction_policy.h */,
+				053ED6EA2B7E92540008C8E5 /* Contraction_visitor.h */,
+				053ED6EB2B7E92540008C8E5 /* Middle_placement.h */,
+				053ED6EC2B7E92540008C8E5 /* Edge_length_cost.h */,
+				053ED6ED2B7E92540008C8E5 /* Placement_policy.h */,
+			);
+			path = policies;
+			sourceTree = "<group>";
+		};
+		053ED6EE2B7E92540008C8E5 /* Coxeter_triangulation */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6EF2B7E92540008C8E5 /* Query_result.h */,
+				053ED6F02B7E92540008C8E5 /* Cell_complex */,
+			);
+			path = Coxeter_triangulation;
+			sourceTree = "<group>";
+		};
+		053ED6F02B7E92540008C8E5 /* Cell_complex */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6F12B7E92540008C8E5 /* Hasse_diagram_cell.h */,
+				053ED6F22B7E92540008C8E5 /* Cell_complex.h */,
+			);
+			path = Cell_complex;
+			sourceTree = "<group>";
+		};
+		053ED6F62B7E92540008C8E5 /* Skeleton_blocker */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6F72B7E92540008C8E5 /* Skeleton_blocker_simple_traits.h */,
+				053ED6F82B7E92540008C8E5 /* Skeleton_blocker_link_superior.h */,
+				053ED6F92B7E92540008C8E5 /* internal */,
+				053ED6FC2B7E92540008C8E5 /* Skeleton_blocker_sub_complex.h */,
+				053ED6FD2B7E92540008C8E5 /* Skeleton_blocker_off_io.h */,
+				053ED6FE2B7E92540008C8E5 /* Skeleton_blocker_complex_visitor.h */,
+				053ED6FF2B7E92540008C8E5 /* iterators */,
+				053ED7062B7E92540008C8E5 /* Skeleton_blocker_simplex.h */,
+				053ED7072B7E92540008C8E5 /* Skeleton_blocker_simple_geometric_traits.h */,
+			);
+			path = Skeleton_blocker;
+			sourceTree = "<group>";
+		};
+		053ED6F92B7E92540008C8E5 /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				053ED6FA2B7E92540008C8E5 /* Top_faces.h */,
+				053ED6FB2B7E92540008C8E5 /* Trie.h */,
+			);
+			path = internal;
+			sourceTree = "<group>";
+		};
+		053ED6FF2B7E92540008C8E5 /* iterators */ = {
+			isa = PBXGroup;
+			children = (
+				053ED7002B7E92540008C8E5 /* Skeleton_blockers_blockers_iterators.h */,
+				053ED7012B7E92540008C8E5 /* Skeleton_blockers_iterators.h */,
+				053ED7022B7E92540008C8E5 /* Skeleton_blockers_triangles_iterators.h */,
+				053ED7032B7E92540008C8E5 /* Skeleton_blockers_vertices_iterators.h */,
+				053ED7042B7E92540008C8E5 /* Skeleton_blockers_edges_iterators.h */,
+				053ED7052B7E92540008C8E5 /* Skeleton_blockers_simplices_iterators.h */,
+			);
+			path = iterators;
 			sourceTree = "<group>";
 		};
 		0541310A2AF9F246006AAD75 /* swift */ = {
@@ -8312,6 +8898,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				053ED75A2B7E92540008C8E5 /* Constant_function.h in Headers */,
+				053ED7922B7E92540008C8E5 /* Top_faces.h in Headers */,
 				052F9F11180600FB00FAE4DF /* orb.h in Headers */,
 				05F09FFB1DBF078800117BFC /* component4.h in Headers */,
 				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
@@ -8322,14 +8910,19 @@
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
 				052F9E9C180600FB00FAE4DF /* gluingpermsearcher2.h in Headers */,
 				05B7002825AC2305003BAF5C /* input_type.h in Headers */,
+				053ED7A02B7E92540008C8E5 /* Clock.h in Headers */,
+				053ED78D2B7E92540008C8E5 /* distance_functions.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* matrix.h in Headers */,
 				05A0670B1DFA68190047872E /* blockedsfs.h in Headers */,
+				053ED71C2B7E92540008C8E5 /* Implicit_manifold_intersection_oracle.h in Headers */,
 				05CAE6952747E62C007C93F3 /* treeconstraint-impl.h in Headers */,
 				0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */,
+				053ED79E2B7E92540008C8E5 /* Skeleton_blocker_simple_geometric_traits.h in Headers */,
 				052F9F49180600FB00FAE4DF /* primes.h in Headers */,
 				05A0670F1DFA68190047872E /* blockedsfspair.h in Headers */,
 				052F9ECA180600FB00FAE4DF /* hilbertdual.h in Headers */,
 				0542087E1DF0D0B50018AB24 /* repository_p.h in Headers */,
+				053ED7852B7E92540008C8E5 /* Valid_contraction_policy.h in Headers */,
 				05C1BE981DCA7C77007C946B /* boundarycomponent-impl.h in Headers */,
 				055114C61DCC45FD00EC753C /* example2.h in Headers */,
 				05431F201C40F260009BC072 /* canonical-impl.h in Headers */,
@@ -8339,22 +8932,30 @@
 				052F9F8E180600FB00FAE4DF /* kernel_typedefs.h in Headers */,
 				053CAB2D1DA710FE00A92F98 /* perm3.h in Headers */,
 				054208881DF0D0B50018AB24 /* theme.h in Headers */,
+				053ED70E2B7E92540008C8E5 /* Alpha_kernel_d.h in Headers */,
 				052FA08B180600FB00FAE4DF /* bitmask.h in Headers */,
+				053ED71A2B7E92540008C8E5 /* indexing_tag.h in Headers */,
 				05431F291C40F260009BC072 /* triangulation.h in Headers */,
 				05C1BEF11DCAB4DC007C946B /* isomorphism.h in Headers */,
 				050C64881DA1249600C9420F /* globaldirs.h in Headers */,
+				053ED7622B7E92540008C8E5 /* Function_moment_curve_in_Rd.h in Headers */,
 				052FA045180600FB00FAE4DF /* surfacefilter.h in Headers */,
 				053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */,
 				052F9EC6180600FB00FAE4DF /* hilbertcd-impl.h in Headers */,
+				053ED77B2B7E92540008C8E5 /* Simplex_comparator.h in Headers */,
 				052F9EFB180600FB00FAE4DF /* treetraversal.h in Headers */,
 				052F9FA4180600FB00FAE4DF /* triangulation.h in Headers */,
+				053ED79B2B7E92540008C8E5 /* Skeleton_blockers_edges_iterators.h in Headers */,
+				053ED7862B7E92540008C8E5 /* Contraction_visitor.h in Headers */,
 				059802DD26683C6D002D5D57 /* xmlsnappeareader.h in Headers */,
+				053ED7472B7E92540008C8E5 /* Off_reader.h in Headers */,
 				052F9ECC180600FB00FAE4DF /* hilbertprimal-impl.h in Headers */,
 				05431F271C40F260009BC072 /* isosig-impl.h in Headers */,
 				052F9F2B180600FB00FAE4DF /* notation.h in Headers */,
 				05A067151DFA68190047872E /* layeredchain.h in Headers */,
 				052FA093180600FB00FAE4DF /* qitmask.h in Headers */,
 				0541AF521B8BE386002E166B /* sequence.h in Headers */,
+				053ED7552B7E92540008C8E5 /* Persistence_on_a_line.h in Headers */,
 				05FB46E91DD92D4A00BB00E5 /* homgrouppresentation.h in Headers */,
 				05B4D2C3229F376B00B7B11C /* output.h in Headers */,
 				052F9ECD180600FB00FAE4DF /* hilbertprimal.h in Headers */,
@@ -8365,67 +8966,100 @@
 				05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */,
 				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
+				053ED7A22B7E92540008C8E5 /* reader_utils.h in Headers */,
 				054209261DF28C990018AB24 /* keywordlist.h in Headers */,
 				054208C21DF0D2740018AB24 /* simplesurfacebundle.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
+				053ED72F2B7E92540008C8E5 /* Mesh_medit.h in Headers */,
 				052FA08D180600FB00FAE4DF /* boolset.h in Headers */,
+				053ED74B2B7E92540008C8E5 /* Bitmap_cubical_complex_periodic_boundary_conditions_base.h in Headers */,
 				05048A2126B274650088C978 /* perm6.h in Headers */,
 				059D023925BB08B7004150F7 /* retriangulate.h in Headers */,
+				053ED78C2B7E92540008C8E5 /* Cell_complex.h in Headers */,
 				05B7002925AC2305003BAF5C /* automorph.h in Headers */,
 				05431F721C40F3C9009BC072 /* integer.h in Headers */,
+				053ED73A2B7E92540008C8E5 /* Skeleton_blocker_geometric_complex.h in Headers */,
 				05431F6A1C40F3C9009BC072 /* cone.h in Headers */,
 				052F9EBD180600FB00FAE4DF /* docs.h in Headers */,
 				05B4D2D7229F42D700B7B11C /* output.h in Headers */,
+				053ED7422B7E92540008C8E5 /* Euclidean_strong_witness_complex.h in Headers */,
+				053ED7732B7E92540008C8E5 /* sparsify_point_set.h in Headers */,
 				05B4D2CE229F376B00B7B11C /* descent.h in Headers */,
 				055114FE1DCDF63000EC753C /* face.h in Headers */,
+				053ED7602B7E92540008C8E5 /* Linear_transformation.h in Headers */,
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
+				053ED79A2B7E92540008C8E5 /* Skeleton_blockers_vertices_iterators.h in Headers */,
+				053ED7982B7E92540008C8E5 /* Skeleton_blockers_iterators.h in Headers */,
 				054208891DF0D0B50018AB24 /* themedata_p.h in Headers */,
+				053ED76E2B7E92540008C8E5 /* Multi_field.h in Headers */,
+				053ED7212B7E92540008C8E5 /* Persistence_vectors.h in Headers */,
 				05F0A04A1DBF0B5E00117BFC /* tetrahedron3.h in Headers */,
 				05EDDA5027E3102A001743C1 /* chunk.h in Headers */,
 				055115021DCDF63000EC753C /* triangulation.h in Headers */,
+				053ED7652B7E92540008C8E5 /* Function_whitney_umbrella_in_R3.h in Headers */,
 				051261A9278D65B9006A55B1 /* intersectionform.h in Headers */,
 				05721EFF1F9715C700A83FFC /* laurent2.h in Headers */,
 				055115011DCDF63000EC753C /* simplex.h in Headers */,
+				053ED7942B7E92540008C8E5 /* Skeleton_blocker_sub_complex.h in Headers */,
 				059802F626683C6D002D5D57 /* xmlpacketreader.h in Headers */,
 				055BC3E92653380600E5E34C /* sigutils.h in Headers */,
 				0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */,
 				05A067331DFA68190047872E /* snappeacensustri.h in Headers */,
+				053ED7492B7E92540008C8E5 /* Persistence_landscape_on_grid.h in Headers */,
 				052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */,
 				052F9FE5180600FB00FAE4DF /* signature.h in Headers */,
 				052F9FA5180600FB00FAE4DF /* triangulation_io.h in Headers */,
 				052F9F99180600FB00FAE4DF /* SnapPea.h in Headers */,
 				052FA063180600FB00FAE4DF /* example3.h in Headers */,
+				053ED7332B7E92540008C8E5 /* Flag_complex_edge_collapser.h in Headers */,
 				054208B21DF0D2740018AB24 /* graphloop.h in Headers */,
+				053ED7812B7E92540008C8E5 /* Dummy_valid_contraction.h in Headers */,
 				059802EA26683C6D002D5D57 /* xmlreader.h in Headers */,
 				05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */,
 				05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */,
+				053ED7502B7E92540008C8E5 /* Tangential_complex.h in Headers */,
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
 				05FFD26D2905263800E0F61C /* faceembedding.h in Headers */,
 				054208741DF0D0B50018AB24 /* definition_p.h in Headers */,
 				05F09FC01DBEF01800117BFC /* dim3.h in Headers */,
+				053ED7542B7E92540008C8E5 /* PSSK.h in Headers */,
 				05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */,
 				05FB46E71DD92D4A00BB00E5 /* grouppresentation.h in Headers */,
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
+				053ED75D2B7E92540008C8E5 /* Function_lemniscate_revolution_in_R3.h in Headers */,
 				0534FAE422DFDDA7000A96A3 /* zstr.h in Headers */,
 				052121C02662F50A0041FD89 /* jenkins-impl.h in Headers */,
+				053ED7122B7E92540008C8E5 /* Unitary_tests_utils.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */,
 				0512E08D26DF34AF00DDB222 /* modellinkgraph-impl.h in Headers */,
 				05A0673D1DFA68190047872E /* trisolidtorus.h in Headers */,
+				053ED7182B7E92540008C8E5 /* serialization_utils.h in Headers */,
+				053ED7892B7E92540008C8E5 /* Placement_policy.h in Headers */,
 				05B4D2C0229F376B00B7B11C /* nmz_config.h in Headers */,
+				053ED7722B7E92540008C8E5 /* Edge_contraction.h in Headers */,
+				053ED7742B7E92540008C8E5 /* Manifold_tracing.h in Headers */,
 				052FA031180600FB00FAE4DF /* normalcoords.h in Headers */,
 				057B0CA026A2AB770017F5EA /* tightencoding.h in Headers */,
 				05431F681C40F3C9009BC072 /* cone_property.h in Headers */,
 				05F09FD91DBF01B600117BFC /* triangle2.h in Headers */,
+				053ED7612B7E92540008C8E5 /* random_orthogonal_matrix.h in Headers */,
+				053ED7A32B7E92540008C8E5 /* Rips_complex.h in Headers */,
+				053ED7352B7E92540008C8E5 /* Skeleton_blocker_contractor.h in Headers */,
 				052F9FE1180600FB00FAE4DF /* sigcensus.h in Headers */,
+				053ED75C2B7E92540008C8E5 /* Translate.h in Headers */,
 				054208831DF0D0B50018AB24 /* state_p.h in Headers */,
+				053ED7782B7E92540008C8E5 /* Size_range.h in Headers */,
 				05A067311DFA68190047872E /* satregion.h in Headers */,
 				05431F221C40F260009BC072 /* face.h in Headers */,
 				052F9F0F180600FB00FAE4DF /* isosig.h in Headers */,
+				053ED71B2B7E92540008C8E5 /* Kd_tree_search.h in Headers */,
 				059802F826683C6D002D5D57 /* xmlcallback.h in Headers */,
+				053ED7412B7E92540008C8E5 /* Bitmap_cubical_complex_base.h in Headers */,
 				052F9F5C180600FB00FAE4DF /* script.h in Headers */,
 				05B4D2BA229F376B00B7B11C /* project_and_lift.h in Headers */,
 				05431F701C40F3C9009BC072 /* HilbertSeries.h in Headers */,
 				052F9E9E180600FB00FAE4DF /* census.h in Headers */,
+				053ED71E2B7E92540008C8E5 /* Alpha_complex_3d.h in Headers */,
 				054208851DF0D0B50018AB24 /* state.h in Headers */,
 				054C6A821DCC2127005373F0 /* example.h in Headers */,
 				054C6A7F1DCC20DA005373F0 /* strings.h in Headers */,
@@ -8434,6 +9068,8 @@
 				055114FF1DCDF63000EC753C /* facetpairing.h in Headers */,
 				05B4D2D6229F42D700B7B11C /* engine.h in Headers */,
 				05F09FBF1DBEF01800117BFC /* dim2.h in Headers */,
+				053ED7382B7E92540008C8E5 /* Persistence_graph.h in Headers */,
+				053ED7572B7E92540008C8E5 /* read_persistence_from_file.h in Headers */,
 				052F9F3C180600FB00FAE4DF /* integer.h in Headers */,
 				052FA02E180600FB00FAE4DF /* normalsurface.h in Headers */,
 				05669D941DCB0E9A00C870C6 /* facetpairing.h in Headers */,
@@ -8443,7 +9079,10 @@
 				05F0A0511DBF0B5E00117BFC /* vertex3.h in Headers */,
 				052F9F0D180600FB00FAE4DF /* dehydration.h in Headers */,
 				052F9F86180600FB00FAE4DF /* homology.h in Headers */,
+				053ED74D2B7E92540008C8E5 /* Bitmap_cubical_complex.h in Headers */,
+				053ED79C2B7E92540008C8E5 /* Skeleton_blockers_simplices_iterators.h in Headers */,
 				05B7002325AC2305003BAF5C /* options.h in Headers */,
+				053ED7562B7E92540008C8E5 /* Debug_utils.h in Headers */,
 				055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */,
 				05B7002425AC2305003BAF5C /* face_lattice.h in Headers */,
 				05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */,
@@ -8451,19 +9090,25 @@
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				05F0A00C1DBF078800117BFC /* vertex4.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
+				053ED7312B7E92540008C8E5 /* output_meshes_to_medit.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
 				059802F126683C6D002D5D57 /* xmlanglestructreader.h in Headers */,
 				05CBE6ED273B6504009F0674 /* validityconstraints.h in Headers */,
+				053ED7242B7E92540008C8E5 /* Coxeter_triangulation.h in Headers */,
 				0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */,
 				0582FDE82731FE0900203AE7 /* attachment.h in Headers */,
+				053ED77D2B7E92540008C8E5 /* Ordered_set_partition_iterator.h in Headers */,
 				05721F001F9715C700A83FFC /* laurent.h in Headers */,
 				052FA09F180600FB00FAE4DF /* stringutils.h in Headers */,
+				053ED7512B7E92540008C8E5 /* Cech_complex_blocker.h in Headers */,
 				052F9EA4180600FB00FAE4DF /* gluingperms-impl.h in Headers */,
 				0541AF621B8BE40B002E166B /* treedecomposition.h in Headers */,
 				052F9EA5180600FB00FAE4DF /* gluingperms.h in Headers */,
+				053ED7662B7E92540008C8E5 /* Function_torus_in_R3.h in Headers */,
 				05431F841C40F3C9009BC072 /* sublattice_representation.h in Headers */,
 				0568742820C5D86B001C435B /* gauss-tangle-impl.h in Headers */,
+				053ED73B2B7E92540008C8E5 /* Persistence_landscape.h in Headers */,
 				052FA066180600FB00FAE4DF /* facepair.h in Headers */,
 				055114CE1DCC476A00EC753C /* pachner.h in Headers */,
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
@@ -8473,16 +9118,29 @@
 				054209231DF28C990018AB24 /* context.h in Headers */,
 				05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */,
 				05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */,
+				053ED7252B7E92540008C8E5 /* writing_persistence_to_file.h in Headers */,
+				053ED7102B7E92540008C8E5 /* Active_witness.h in Headers */,
 				05A0671D1DFA68190047872E /* layeredsolidtorus.h in Headers */,
 				052FA088180600FB00FAE4DF /* i18nutils.h in Headers */,
 				059802E426683C6D002D5D57 /* xmltrireader.h in Headers */,
 				054209271DF28C990018AB24 /* rule.h in Headers */,
+				053ED7452B7E92540008C8E5 /* MEB_filtration.h in Headers */,
 				055114EE1DCD5D0500EC753C /* gluingpermsearcher.h in Headers */,
+				053ED7822B7E92540008C8E5 /* Link_condition_valid_contraction.h in Headers */,
+				053ED7402B7E92540008C8E5 /* Hasse_complex.h in Headers */,
 				05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */,
 				05FB46E51DD92D4A00BB00E5 /* abeliangroup.h in Headers */,
+				053ED7902B7E92540008C8E5 /* Skeleton_blocker_simple_traits.h in Headers */,
+				053ED7322B7E92540008C8E5 /* build_mesh_from_cell_complex.h in Headers */,
 				0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */,
 				052FA02A180600FB00FAE4DF /* disc.h in Headers */,
+				053ED7912B7E92540008C8E5 /* Skeleton_blocker_link_superior.h in Headers */,
+				053ED73D2B7E92540008C8E5 /* Graph_matching.h in Headers */,
+				053ED7342B7E92540008C8E5 /* Bottleneck.h in Headers */,
 				0512E08526DF346F00DDB222 /* census-impl.h in Headers */,
+				053ED74A2B7E92540008C8E5 /* GIC.h in Headers */,
+				053ED7792B7E92540008C8E5 /* Combination_iterator.h in Headers */,
+				053ED7172B7E92540008C8E5 /* Simplex_tree_siblings.h in Headers */,
 				059802F926683C6D002D5D57 /* xmlsurfacereader.h in Headers */,
 				05772EC5270CF98F00D26D8A /* xmlwriter.h in Headers */,
 				052F9EF7180600FB00FAE4DF /* treelp.h in Headers */,
@@ -8490,58 +9148,81 @@
 				059493092920B1C300940F0D /* permgroup.h in Headers */,
 				059D023A25BB08B7004150F7 /* retriangulate-impl.h in Headers */,
 				052F9F5E180600FB00FAE4DF /* text.h in Headers */,
+				053ED7582B7E92540008C8E5 /* Sparse_rips_complex.h in Headers */,
 				05A067111DFA68190047872E /* blockedsfstriple.h in Headers */,
 				0568742520C5D86B001C435B /* tangle.h in Headers */,
 				05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */,
 				0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */,
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
+				053ED7832B7E92540008C8E5 /* Cost_policy.h in Headers */,
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
 				05F09FD41DBF01B600117BFC /* component2.h in Headers */,
 				05772ED0270CF9F900D26D8A /* fileformat.h in Headers */,
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
 				05B44D1521914FA300B1D343 /* binom.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
+				053ED77E2B7E92540008C8E5 /* Simplex_tree.h in Headers */,
 				0512E09926DF352D00DDB222 /* satregion-impl.h in Headers */,
 				052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */,
 				054208BE1DF0D2740018AB24 /* sfs.h in Headers */,
 				0541AF4D1B8BE2F5002E166B /* polynomial.h in Headers */,
+				053ED7592B7E92540008C8E5 /* PL_approximation.h in Headers */,
+				053ED7462B7E92540008C8E5 /* Toplex_map.h in Headers */,
 				054208C61DF0D2740018AB24 /* torusbundle.h in Headers */,
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
+				053ED7132B7E92540008C8E5 /* Simplex_tree_star_simplex_iterators.h in Headers */,
+				053ED72A2B7E92540008C8E5 /* Neighbors_finder.h in Headers */,
 				05772EB7270CF97100D26D8A /* angleflags.h in Headers */,
+				053ED7142B7E92540008C8E5 /* simplex_tree_options.h in Headers */,
 				0542087A1DF0D0B50018AB24 /* format.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
 				055BC3EB265338E800E5E34C /* fromsiglist-impl.h in Headers */,
+				053ED77F2B7E92540008C8E5 /* Persistence_heat_maps.h in Headers */,
 				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
+				053ED7A12B7E92540008C8E5 /* Persistent_cohomology.h in Headers */,
 				052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */,
 				05B7002125AC2305003BAF5C /* nmz_nauty.h in Headers */,
 				059802E026683C6D002D5D57 /* xmllinkreader.h in Headers */,
 				05431F751C40F3C9009BC072 /* libnormaliz.h in Headers */,
+				053ED7682B7E92540008C8E5 /* Function_affine_plane_in_Rd.h in Headers */,
 				05DC137E1FEB869200171D66 /* pachner-impl.h in Headers */,
 				05431F251C40F260009BC072 /* facetpairing.h in Headers */,
 				05F0A04C1DBF0B5E00117BFC /* triangle3.h in Headers */,
 				05B7002725AC2305003BAF5C /* input.h in Headers */,
 				05A067351DFA68190047872E /* snappedball.h in Headers */,
 				05F0A0391DBF0B5E00117BFC /* component3.h in Headers */,
+				053ED7632B7E92540008C8E5 /* Function_iron_in_R3.h in Headers */,
 				05B7002225AC2305003BAF5C /* dynamic_bitset.h in Headers */,
 				05C2659B2824917700232420 /* edge3.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
+				053ED74F2B7E92540008C8E5 /* Points_off_io.h in Headers */,
 				054208BA1DF0D2740018AB24 /* lensspace.h in Headers */,
+				053ED72C2B7E92540008C8E5 /* Simple_object_pool.h in Headers */,
 				052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */,
 				052FA086180600FB00FAE4DF /* flags.h in Headers */,
 				054209241DF28C990018AB24 /* contextswitch.h in Headers */,
 				0534FAE522DFDDA7000A96A3 /* memstream.h in Headers */,
+				053ED73E2B7E92540008C8E5 /* all_faces_in.h in Headers */,
 				054209251DF28C990018AB24 /* definitionref.h in Headers */,
+				053ED79F2B7E92540008C8E5 /* Skeleton_blocker.h in Headers */,
 				055114FC1DCDF63000EC753C /* boundarycomponent.h in Headers */,
+				053ED72D2B7E92540008C8E5 /* Witness_complex.h in Headers */,
 				0512E0A526DF356300DDB222 /* shortarray.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* perm.h in Headers */,
 				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
+				053ED78A2B7E92540008C8E5 /* Query_result.h in Headers */,
 				055CD8F62A23605A0072F4B5 /* topologylock.h in Headers */,
+				053ED7842B7E92540008C8E5 /* First_vertex_placement.h in Headers */,
 				05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */,
+				053ED77C2B7E92540008C8E5 /* Permutation_iterator.h in Headers */,
+				053ED7972B7E92540008C8E5 /* Skeleton_blockers_blockers_iterators.h in Headers */,
 				05A067171DFA68190047872E /* layeredchainpair.h in Headers */,
 				050C646C1DA1019B00C9420F /* anglestructures.h in Headers */,
 				058E398D1DCBC67C00D463A4 /* generic.h in Headers */,
+				053ED74E2B7E92540008C8E5 /* common_persistence_representations.h in Headers */,
+				053ED7932B7E92540008C8E5 /* Trie.h in Headers */,
 				059802EF26683C6D002D5D57 /* xmlpacketreaders.h in Headers */,
 				05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */,
 				055114D41DCC71A700EC753C /* facenumbering.h in Headers */,
@@ -8556,59 +9237,96 @@
 				054208B81DF0D2740018AB24 /* handlebody.h in Headers */,
 				054208781DF0D0B50018AB24 /* format_p.h in Headers */,
 				059802E926683C6D002D5D57 /* xmlhypersurfacereader.h in Headers */,
+				053ED70D2B7E92540008C8E5 /* Persistence_intervals.h in Headers */,
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
 				05754CE7258D7D6400236ED7 /* randutils.h in Headers */,
 				05431F131C40F257009BC072 /* facenumber.h in Headers */,
+				053ED76C2B7E92540008C8E5 /* Internal_point.h in Headers */,
+				053ED7672B7E92540008C8E5 /* Function_chair_in_R3.h in Headers */,
+				053ED7282B7E92540008C8E5 /* Points_3D_off_io.h in Headers */,
 				05A0673B1DFA68190047872E /* standardtri.h in Headers */,
 				05F09FFD1DBF078800117BFC /* edge4.h in Headers */,
+				053ED7702B7E92540008C8E5 /* Persistent_cohomology_column.h in Headers */,
+				053ED7952B7E92540008C8E5 /* Skeleton_blocker_off_io.h in Headers */,
+				053ED7152B7E92540008C8E5 /* hooks_simplex_base.h in Headers */,
+				053ED76B2B7E92540008C8E5 /* Simplicial_complex.h in Headers */,
 				052F9F3A180600FB00FAE4DF /* matrixops.h in Headers */,
 				052F9F95180600FB00FAE4DF /* positioned_tet.h in Headers */,
 				05431F7E1C40F3C9009BC072 /* offload_handler.h in Headers */,
+				053ED76F2B7E92540008C8E5 /* Field_Zp.h in Headers */,
+				053ED7112B7E92540008C8E5 /* Active_witness_iterator.h in Headers */,
 				05E7DA372758760200B01C09 /* homologicaldata.h in Headers */,
+				053ED7162B7E92540008C8E5 /* Simplex_tree_node_explicit_storage.h in Headers */,
 				054208801DF0D0B50018AB24 /* repository.h in Headers */,
 				052F9ED0180600FB00FAE4DF /* maxadmissible.h in Headers */,
 				052F9F9E180600FB00FAE4DF /* tables.h in Headers */,
 				05ACC9EE2AFC6714000CF07F /* xmlspatiallinkreader.h in Headers */,
+				053ED7712B7E92540008C8E5 /* Strong_witness_complex.h in Headers */,
 				053CAB2C1DA710FE00A92F98 /* perm2.h in Headers */,
 				059802F526683C6D002D5D57 /* xmlalgebrareader.h in Headers */,
+				053ED7772B7E92540008C8E5 /* Set_partition_iterator.h in Headers */,
 				053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */,
 				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
 				05721EEE1F97153E00A83FFC /* gauss-impl.h in Headers */,
+				053ED7272B7E92540008C8E5 /* console_color.h in Headers */,
+				053ED71F2B7E92540008C8E5 /* Skeleton_blocker_link_complex.h in Headers */,
+				053ED7232B7E92540008C8E5 /* Point.h in Headers */,
 				052FA02C180600FB00FAE4DF /* disctype.h in Headers */,
 				05721EF01F97153E00A83FFC /* link.h in Headers */,
+				053ED78E2B7E92540008C8E5 /* choose_n_farthest_points.h in Headers */,
 				05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */,
+				053ED7752B7E92540008C8E5 /* face_from_indices.h in Headers */,
 				052FA036180600FB00FAE4DF /* prism.h in Headers */,
+				053ED76A2B7E92540008C8E5 /* utilities.h in Headers */,
 				052F9EAA180600FB00FAE4DF /* gluingpermsearcher3.h in Headers */,
 				059802E526683C6D002D5D57 /* xmltreeresolver.h in Headers */,
 				052F9EFF180600FB00FAE4DF /* ordering.h in Headers */,
 				05431F871C40F3C9009BC072 /* version.h in Headers */,
+				053ED75B2B7E92540008C8E5 /* Cartesian_product.h in Headers */,
 				052FA084180600FB00FAE4DF /* bitmanip.h in Headers */,
 				052F9FDA180600FB00FAE4DF /* winged_edge.h in Headers */,
+				053ED7222B7E92540008C8E5 /* Sliced_Wasserstein.h in Headers */,
+				053ED7762B7E92540008C8E5 /* Integer_combination_iterator.h in Headers */,
+				053ED7992B7E92540008C8E5 /* Skeleton_blockers_triangles_iterators.h in Headers */,
 				05A067271DFA68190047872E /* plugtrisolidtorus.h in Headers */,
 				05A0672B1DFA68190047872E /* satblock.h in Headers */,
 				052FA097180600FB00FAE4DF /* trieset.h in Headers */,
+				053ED7482B7E92540008C8E5 /* Skeleton_blocker_simplifiable_complex.h in Headers */,
+				053ED72E2B7E92540008C8E5 /* Skeleton_blocker_complex.h in Headers */,
 				052121C12662F50A0041FD89 /* pd-impl.h in Headers */,
 				05A067391DFA68190047872E /* spiralsolidtorus.h in Headers */,
+				053ED7432B7E92540008C8E5 /* pick_n_random_points.h in Headers */,
 				05721EF21F97153E00A83FFC /* examplelink.h in Headers */,
+				053ED7882B7E92540008C8E5 /* Edge_length_cost.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
+				053ED70F2B7E92540008C8E5 /* Euclidean_witness_complex.h in Headers */,
 				0598030B266EDDD5002D5D57 /* exception.h in Headers */,
 				052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */,
 				05772ED2270CFA0B00D26D8A /* packet-impl.h in Headers */,
 				05A067191DFA68190047872E /* layeredlensspace.h in Headers */,
+				053ED7692B7E92540008C8E5 /* config.h in Headers */,
 				052F9EF4180600FB00FAE4DF /* treeconstraint.h in Headers */,
+				053ED7442B7E92540008C8E5 /* Lazy_toplex_map.h in Headers */,
 				05A0671B1DFA68190047872E /* layeredloop.h in Headers */,
 				052FA09A180600FB00FAE4DF /* osutils.h in Headers */,
 				05CAE624274509ED007C93F3 /* purgeflags.h in Headers */,
 				052F9F55180600FB00FAE4DF /* packet.h in Headers */,
 				055114FD1DCDF63000EC753C /* component.h in Headers */,
 				053ED6622B7D0ECB0008C8E5 /* 3d.h in Headers */,
+				053ED7872B7E92540008C8E5 /* Middle_placement.h in Headers */,
 				05A067291DFA68190047872E /* satannulus.h in Headers */,
 				0512E09726DF34E800DDB222 /* perm7.h in Headers */,
 				055114C81DCC45FD00EC753C /* example4.h in Headers */,
+				053ED77A2B7E92540008C8E5 /* Permutahedral_representation_iterators.h in Headers */,
 				05B7002625AC2305003BAF5C /* list_and_map_operations.h in Headers */,
+				053ED7302B7E92540008C8E5 /* output_debug_traces_to_html.h in Headers */,
 				05431F121C40F257009BC072 /* face.h in Headers */,
+				053ED75F2B7E92540008C8E5 /* Function_Sm_in_Rd.h in Headers */,
+				053ED7362B7E92540008C8E5 /* random_point_generators.h in Headers */,
 				059802F426683C6D002D5D57 /* xmlelementreader.h in Headers */,
+				053ED7962B7E92540008C8E5 /* Skeleton_blocker_complex_visitor.h in Headers */,
 				05431F281C40F260009BC072 /* simplex.h in Headers */,
+				053ED7372B7E92540008C8E5 /* Freudenthal_triangulation.h in Headers */,
 				054208C41DF0D2740018AB24 /* snappeacensusmfd.h in Headers */,
 				0512E0A626DF356300DDB222 /* snapshot.h in Headers */,
 				05F09FC11DBEF01800117BFC /* dim4.h in Headers */,
@@ -8616,15 +9334,20 @@
 				05B7002525AC2305003BAF5C /* collection.h in Headers */,
 				05A067211DFA68190047872E /* layering.h in Headers */,
 				052F9FE3180600FB00FAE4DF /* sigisomorphism.h in Headers */,
+				053ED75E2B7E92540008C8E5 /* Negation.h in Headers */,
 				0588F1191808D43B006BDC79 /* packettype.h in Headers */,
+				053ED7292B7E92540008C8E5 /* Permutahedral_representation.h in Headers */,
+				053ED78B2B7E92540008C8E5 /* Hasse_diagram_cell.h in Headers */,
 				05431F7C1C40F3C9009BC072 /* normaliz_exception.h in Headers */,
 				05EDDA4F27E3102A001743C1 /* signed_dec.h in Headers */,
 				056E071F1F994D9000DF136B /* graph.h in Headers */,
 				059BC6681DC7F77F00AB4206 /* boundarycomponent.h in Headers */,
+				053ED7642B7E92540008C8E5 /* Embed_in_Rd.h in Headers */,
 				05431F821C40F3C9009BC072 /* simplex.h in Headers */,
 				05ACC9FA2AFC674C000CF07F /* spatiallink.h in Headers */,
 				052FA09D180600FB00FAE4DF /* stringutils-impl.h in Headers */,
 				052F9F69180600FB00FAE4DF /* regina-core.h in Headers */,
+				053ED7802B7E92540008C8E5 /* Edge_profile.h in Headers */,
 				052FA032180600FB00FAE4DF /* normalflags.h in Headers */,
 				05431F7B1C40F3C9009BC072 /* my_omp.h in Headers */,
 				052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */,
@@ -8633,20 +9356,31 @@
 				059802E126683C6D002D5D57 /* xmlfilterreader.h in Headers */,
 				050C64861DA1249600C9420F /* fileinfo.h in Headers */,
 				05A0673F1DFA68190047872E /* trivialtri.h in Headers */,
+				053ED7262B7E92540008C8E5 /* graph_simplicial_complex.h in Headers */,
 				052F9EF9180600FB00FAE4DF /* treetraversal-impl.h in Headers */,
 				05A067231DFA68190047872E /* pillowtwosphere.h in Headers */,
+				053ED73F2B7E92540008C8E5 /* Null_output_iterator.h in Headers */,
+				053ED72B2B7E92540008C8E5 /* Alpha_complex.h in Headers */,
+				053ED7522B7E92540008C8E5 /* Cech_complex.h in Headers */,
 				0542087D1DF0D0B50018AB24 /* matcher.h in Headers */,
+				053ED73C2B7E92540008C8E5 /* Persistence_on_rectangle.h in Headers */,
 				05098B0028FC0E04005E4716 /* tableview.h in Headers */,
+				053ED78F2B7E92540008C8E5 /* Persistence_intervals_with_distances.h in Headers */,
+				053ED7192B7E92540008C8E5 /* Simplex_tree_iterators.h in Headers */,
 				05431F6D1C40F3C9009BC072 /* full_cone.h in Headers */,
 				052F9F8F180600FB00FAE4DF /* link_projection.h in Headers */,
 				054C6A7E1DCC20DA005373F0 /* example.h in Headers */,
+				053ED7392B7E92540008C8E5 /* Sphere_circumradius.h in Headers */,
 				05A067371DFA68190047872E /* snappedtwosphere.h in Headers */,
 				054208B41DF0D2740018AB24 /* graphpair.h in Headers */,
+				053ED79D2B7E92540008C8E5 /* Skeleton_blocker_simplex.h in Headers */,
 				052F9F53180600FB00FAE4DF /* container.h in Headers */,
 				052F9F9C180600FB00FAE4DF /* symmetry_group.h in Headers */,
+				053ED7532B7E92540008C8E5 /* Alpha_complex_options.h in Headers */,
 				052F9F50180600FB00FAE4DF /* vector.h in Headers */,
 				05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */,
 				052F9F7E180600FB00FAE4DF /* dual_one_skeleton_curve.h in Headers */,
+				053ED74C2B7E92540008C8E5 /* allocator.h in Headers */,
 				052FA083180600FB00FAE4DF /* base64.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
