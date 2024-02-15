@@ -83,6 +83,14 @@ the GNU General Public License as published by the Free Software Foundation,
 either version 3 of the License, or (at your option) any later version.
 
 
+GUDHI:
+
+Regina includes a copy of GUDHI, which it uses for persistent homology
+calculations with spatial links.  GUDHI is distributed under the terms of the
+MIT license; the full license and copyright notice are shipped with Regina's
+source code in the file engine/gudhi/LICENSE.
+
+
 PYBIND11:
 
 Regina includes a copy of pybind11, which it uses to generate python bindings

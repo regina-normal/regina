@@ -21,10 +21,11 @@ Version 7.4  [ (to be announced) ]
           old names kept as deprecated constants in the regina:: namespace.
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
-        - Added optional build-dependencies on GUDHI and (as a consequence) the
-          Boost headers.  These are only used to support persistent homology
-          calculations within the SpatialLink class, and if GHUDI and/or Boost
-          are unavailable then Regina will happily build without these features.
+        - Added a copy of GUDHI 3.9.0 to the source tree, to support persistent
+          homology calculations within the SpatialLink class.  As a result,
+          the Boost headers have been re-introduced as a (now optional) build
+          dependency, since GUDHI requires them.  If Boost is unavailable then
+          Regina will happily build without GUDHI or the features that use it.
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.

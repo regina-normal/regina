@@ -341,14 +341,10 @@ MACRO_LOG_FEATURE(Boost_FOUND
   ${REGINA_MANDATORY})
 
 IF (Boost_FOUND)
-  FIND_PACKAGE(GUDHI)
-  MACRO_LOG_FEATURE(GUDHI_FOUND
-    "GUDHI headers"
-    "Support persistent homology calculations with spatial links"
-    "https://gudhi.inria.fr"
-    ${REGINA_MANDATORY})
+  MESSAGE (STATUS "Enabling GUDHI.")
+  SET (GUDHI_FOUND TRUE)
 ELSE (Boost_FOUND)
-  MESSAGE (STATUS "Skipping search for GUDHI, since GUDHI requires Boost.")
+  MESSAGE (STATUS "Disabling GUDHI, since GUDHI requires Boost.")
   SET (GUDHI_FOUND FALSE)
 ENDIF (Boost_FOUND)
 
