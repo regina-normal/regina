@@ -569,7 +569,17 @@ std::ostream& operator << (std::ostream& out, const Matrix3D<Real>& m) {
  * right-hand rule (the thumb of the right hand points from the origin out
  * towards `(x,y,z)`, and the fingers follow the direction of the rotation).
  * Then the four real numbers that make up the quaternion are
- * `(cos θ/2, x sin θ/2, y sin θ/2, z sin θ/2)`.  Since the axis vector
+ * `(cos θ/2, x sin θ/2, y sin θ/2, z sin θ/2)`.
+ *
+ * Some notes about the uniqueness of quaternions:
+ *
+ * - A non-zero rotation can be described in two ways (by simultaneously
+ *   negating both the axis vector and the angle of rotation).  Both
+ *   descriptions yield identical quaternion coordinates.
+ *
+ * - A zero rotation (i.e., the identity operation) can be described using any
+ *   axis of rotation.  Again, regardless of the choice of axis, we obtain
+ *   identical quaternion coordinates (specifically, `(1,0,0,0)`).
  *
  * Regarding normalisation:
  *
@@ -588,7 +598,7 @@ std::ostream& operator << (std::ostream& out, const Matrix3D<Real>& m) {
  * - If you wish (though this is not actually necessary), you can normalise
  *   the coordinates yourself by calling normalise().
  *
- * See Regina's \ref 3d "notes on 3-D geometry" for importing information,
+ * See Regina's \ref 3d "notes on 3-D geometry" for important information,
  * including the inexact floating-point nature of the Vector3D class, and the
  * right-handedness of Regina's coordinate system.
  *
