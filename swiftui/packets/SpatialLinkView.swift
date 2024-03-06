@@ -215,12 +215,12 @@ struct SpatialLinkView: View {
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
         #if os(visionOS)
-        SpatialLinkVolume(packet: packet)
+        let view = SpatialLinkVolume(packet: packet)
         #else
-        SpatialLink3D(wrapper: wrapper)
+        let view = SpatialLink3D(wrapper: wrapper)
         #endif
         // TODO: When we have more buttons, start using (placement: ...).
-        .toolbar {
+        view.toolbar {
             // TODO: Make these edits actually save the file.
             ToolbarItem {
                 // TODO: Curves need a different name for SFSymbols <5.
