@@ -31,6 +31,7 @@
  **************************************************************************/
 
 import SwiftUI
+import DocumentKit
 // TODO: Remove this import once the nasty openWindow hack is gone.
 import ReginaEngine
 
@@ -59,6 +60,12 @@ struct ReginaApp: App {
         } editor: { file in
             TreeView(packet: file.document.root, title: file.document.title).toolbarRole(.automatic)
         }
+        .additionalNavigationBarButtonItems(
+            leading: [],
+            trailing: [ DocumentGroupToolbarItem(icon: UIImage(systemName: "books.vertical")) {
+                // TODO: Here is where we offer the example data files.
+            } ]
+        )
         // Note: To support multiple document types, add additional DocumentGroup scenes.
         #if os(visionOS)
         /*
