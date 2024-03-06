@@ -402,6 +402,7 @@ struct SpatialLinkVolume: View {
             /*
             // TODO: Fix flashing on updates
             HStack {
+             // TODO: Change systemImage names to match iOS.
                 Button("Refine", systemImage: "point.topleft.down.to.point.bottomright.curvepath") {
                     // TODO: This does not trigger an update
                     packet.refine()
