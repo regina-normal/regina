@@ -1659,7 +1659,7 @@
 		05F2033420A17C1E00FC74ED /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
 		05F2033720A17C6000FC74ED /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
 		05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */; };
-		05FAB8302B98254800F959D1 /* DocumentKit in Frameworks */ = {isa = PBXBuildFile; productRef = 05FAB82F2B98254800F959D1 /* DocumentKit */; };
+		05FAB8302B98254800F959D1 /* DocumentKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 05FAB82F2B98254800F959D1 /* DocumentKit */; };
 		05FB46D21DD92D2800BB00E5 /* abeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46CA1DD92D2400BB00E5 /* abeliangroup.cpp */; };
 		05FB46D31DD92D2800BB00E5 /* grouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46CB1DD92D2400BB00E5 /* grouppresentation.cpp */; };
 		05FB46D41DD92D2800BB00E5 /* homgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46CC1DD92D2400BB00E5 /* homgrouppresentation.cpp */; };
