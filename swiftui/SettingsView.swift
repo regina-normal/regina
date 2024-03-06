@@ -60,6 +60,7 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
             PythonSettingsView()
+            // TODO: apple.terminal in SFSymbols 5.. but see "terminal"
                 .tabItem {
                     Label("Python", systemImage: "apple.terminal")
                 }

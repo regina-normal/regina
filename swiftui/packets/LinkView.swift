@@ -198,6 +198,7 @@ struct LinkView: View {
                     Button {
                         // TODO: Perform Reidemeister moves.
                     } label: {
+                        // TODO: This is SFSymbols 5.0
                         Label("Moves", systemImage: "slider.horizontal.2.square")
                     }
                 }

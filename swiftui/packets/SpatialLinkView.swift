@@ -223,6 +223,7 @@ struct SpatialLinkView: View {
         .toolbar {
             // TODO: Make these edits actually save the file.
             ToolbarItem {
+                // TODO: Curves need a different name for SFSymbols <5.
                 Button("Refine", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
                     if wrapper.packet.size() * 2 > Self.maxNodes {
                         errTooManyNodes = true
