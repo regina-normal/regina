@@ -36,7 +36,6 @@
 #endif
 
 #include <string>
-#include "gvc.h"
 
 namespace regina {
 
