@@ -61,14 +61,21 @@ extension String {
     }
 }
 
-extension std.string {
+extension std.string: ExpressibleByStringLiteral {
     init(_ s: String) {
-        self = s.utf8CString.withUnsafeBufferPointer { buf in
-            if let base = buf.baseAddress {
-                return stringFromCString(base)
-            } else {
-                return std.string()
-            }
+        self.init()
+        for c in s.utf8 {
+            // Convert UInt8 to CChar and append.
+            self.push_back(value_type(bitPattern: c))
+        }
+    }
+    
+    public init(stringLiteral s: String) {
+        // TODO: Can we do this differently?
+        self.init()
+        for c in s.utf8 {
+            // Convert UInt8 to CChar and append.
+            self.push_back(value_type(bitPattern: c))
         }
     }
 }

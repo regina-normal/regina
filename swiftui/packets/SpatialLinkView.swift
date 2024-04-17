@@ -215,7 +215,8 @@ struct SpatialLinkView: View {
         // but on iPhone it fills vertically and overfills horizontally.
         // Note: the camera looks down from above (from high z value down onto the plane).
         #if os(visionOS)
-        let view = SpatialLinkVolume(packet: packet)
+        // TODO: We are not actually passing in the data here.
+        let view = SpatialLinkVolume()
         #else
         let view = SpatialLink3D(wrapper: wrapper)
         #endif
