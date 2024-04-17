@@ -91,8 +91,8 @@ struct LinkCodesView: View {
             switch selected {
             case .gauss:
                 if link.countComponents() == 1 {
-                    Text("Classical: ").font(.headline) + Text((swiftString(link.gauss())))
-                    (Text("Oriented: ").font(.headline) + Text(swiftString(link.orientedGauss()))).padding(.top)
+                    Text("Classical: ").font(.headline) + Text(String(link.gauss()))
+                    (Text("Oriented: ").font(.headline) + Text(String(link.orientedGauss()))).padding(.top)
                 } else {
                     Spacer()
                     onlyKnots(code: "Gauss codes", plural: true)
@@ -101,10 +101,10 @@ struct LinkCodesView: View {
             case .dt:
                 if link.countComponents() == 1 {
                     if link.size() > 26 {
-                        Text(swiftString(link.dt(false)))
+                        Text(String(link.dt(false)))
                     } else {
-                        Text(swiftString(link.dt(true)))
-                        Text(swiftString(link.dt(false))).padding(.top)
+                        Text(String(link.dt(true)))
+                        Text(String(link.dt(false))).padding(.top)
                     }
                 } else {
                     Spacer()
@@ -115,14 +115,14 @@ struct LinkCodesView: View {
                 if link.countComponents() == 1 {
                     // TODO: Find a way to disable word wrap..?
                     // Not sure if SwiftUI makes this possible for Text.
-                    Text(swiftString(link.knotSig(true, true)))
+                    Text(String(link.knotSig(true, true)))
                 } else {
                     Spacer()
                     onlyKnots(code: "knot signatures", plural: true)
                     Spacer()
                 }
            case .pd:
-                Text(swiftString(link.pd()))
+                Text(String(link.pd()))
                 if link.countTrivialComponents() > 0 {
                     Text("This link includes one or more zero-crossing unknot components. These components are omitted entirely from the planar diagram code.").padding(.top)
                 }
@@ -130,7 +130,7 @@ struct LinkCodesView: View {
                     Text("This link includes at least one component that consists entirely of over-crossings. The planar diagram code does not carry enough information to reconstruct the orientation of such a component.").padding(.top)
                 }
             case .jenkins:
-                Text(swiftString(link.jenkins()))
+                Text(String(link.jenkins()))
             }
             Spacer()
         }.padding(.horizontal).textSelection(.enabled)

@@ -171,10 +171,10 @@ struct LinkCreator: View {
         switch type {
         case .example:
             var ans = regina.SharedLink(inputExample.creator()).asPacket()
-            ans.setLabel(cxxString(inputExample.name))
+            ans.setLabel(std.string(inputExample.name))
             return ans
         case .code:
-            let code = regina.stripWhitespace(cxxString(inputCode))
+            let code = regina.stripWhitespace(std.string(inputCode))
             if code.empty() {
                 error = true
                 errorDetail = .init("Empty text code", detail: "Please type a text code for the new link into the area provided.")
@@ -192,7 +192,7 @@ struct LinkCreator: View {
             if let match = inputTorusParams.wholeMatch(of: /[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*/) {
                 if let p = Int32(match.1), let q = Int32(match.2) {
                     var ans = regina.SharedLink(regina.ExampleLink.torus(p, q)).asPacket()
-                    ans.setLabel(cxxString("Torus (\(p), \(q))"))
+                    ans.setLabel(std.string("Torus (\(p), \(q))"))
                     return ans
                 } else {
                     error = true

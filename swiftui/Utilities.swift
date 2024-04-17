@@ -53,35 +53,23 @@ struct ReginaError: LocalizedError {
 // These functions are here because, as of Xcode 15.1-beta2, the conversion between
 // Swift and C++ strings on visionOS is broken (it _does_ work on iOS/iPadOS/macOS).
 //
-// Once this is fixed:
-// - all occurrences of swiftString(s) should be replaced with String(s);
-// - all occurrences of cxxString(s) should be replaced with s;
-// - these functions can be removed entirely (for all platforms).
+// Once this is fixed, these functions can be removed entirely (for all platforms).
 #if os(visionOS)
-import ReginaEngine
-func swiftString(_ s: std.string) -> String {
-    return String(cString: s.__c_strUnsafe())
-}
-func cxxString(_ s: String) -> std.string {
-    return s.withCString { c in
-        std.string(c)
+extension String {
+    init(_ s: std.string) {
+        self.init(cString: s.__dataUnsafe())
     }
 }
+
 extension std.string {
-    func swiftString() -> String {
-        return String(cString: s.__c_strUnsafe())
-    }
-}
-#else
-func swiftString(_ s: std.string) -> String {
-    return String(s)
-}
-func cxxString(_ s: String) -> std.string {
-    return std.string(s)
-}
-extension std.string {
-    func swiftString() -> String {
-        return String(self)
+    init(_ s: String) {
+        self = s.utf8CString.withUnsafeBufferPointer { buf in
+            if let base = buf.baseAddress {
+                return stringFromCString(base)
+            } else {
+                return std.string()
+            }
+        }
     }
 }
 #endif

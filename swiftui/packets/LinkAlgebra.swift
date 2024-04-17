@@ -65,7 +65,7 @@ struct LinkAlgebraView: View {
             if group.countRelations() <= Self.maxRecognise {
                 let name = group.recogniseGroup(unicode)
                 if name.length() > 0 {
-                    Text("Name: \(swiftString(name))").padding(.bottom)
+                    Text("Name: \(String(name))").padding(.bottom)
                 }
             }
 
@@ -98,9 +98,9 @@ struct LinkAlgebraView: View {
                         ForEach(0..<group.countRelations(), id: \.self) { i in
                             let rel = group.__relationUnsafe(i).pointee
                             if unicode {
-                                Text(swiftString(rel.utf8(alphabetic)))
+                                Text(String(rel.utf8(alphabetic)))
                             } else {
-                                Text(swiftString(rel.str(alphabetic)))
+                                Text(String(rel.str(alphabetic)))
                             }
                         }
                     }

@@ -41,14 +41,14 @@ struct TextView: View {
     }
 
     var body: some View {
-        TextEditor(text: .constant(swiftString(packet.text())))
+        TextEditor(text: .constant(String(packet.text())))
     }
 }
 
 struct TextView_Previews: PreviewProvider {
     static var sampleText: regina.SharedText {
         var packet = regina.SharedText.make()
-        packet.setText(cxxString("Some sample text to play with."))
+        packet.setText("Some sample text to play with.")
         return packet
     }
 

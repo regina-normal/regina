@@ -276,7 +276,7 @@ class PacketWrapper: ObservableObject, Identifiable, Equatable, Hashable {
             default:
                 // TODO: Should we have a header with the packet name?
                 let msg = "No viewer available"
-                let detail = "I am not able to view packets of type \(swiftString(packet.typeName())) (yet).\nYou can, however, work with this packet through Regina's Python interface instead."
+                let detail = "I am not able to view packets of type \(String(packet.typeName())) (yet).\nYou can, however, work with this packet through Regina's Python interface instead."
                 HStack {
                     Spacer()
                     if #available(macOS 14.0, iOS 17.0, *) {

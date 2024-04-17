@@ -61,15 +61,15 @@ struct LinkPolynomialsView: View {
                 if jones.isZero() || jones.minExp() % 2 == 0 {
                     let _: Void = jones.scaleDown(2)
                     if unicode {
-                        Text(swiftString(jones.utf8("𝑡")))
+                        Text(String(jones.utf8("𝑡")))
                     } else {
-                        Text(swiftString(jones.str("t")))
+                        Text(String(jones.str("t")))
                     }
                 } else {
                     if unicode {
-                        Text(swiftString(jones.utf8("√𝑡")))
+                        Text(String(jones.utf8("√𝑡")))
                     } else {
-                        Text(swiftString(jones.str("sqrt_t")))
+                        Text(String(jones.str("sqrt_t")))
                     }
                 }
             } else {
@@ -91,15 +91,15 @@ struct LinkPolynomialsView: View {
             if link.knowsHomfly() || link.size() <= Self.maxAuto {
                 if homflyStyle == .az {
                     if unicode {
-                        Text(swiftString(wrapper.packet.homflyAZ().utf8("𝛼", "𝑧")))
+                        Text(String(wrapper.packet.homflyAZ().utf8("𝛼", "𝑧")))
                     } else {
-                        Text(swiftString(wrapper.packet.homflyAZ().str("a", "z")))
+                        Text(String(wrapper.packet.homflyAZ().str("a", "z")))
                     }
                 } else {
                     if unicode {
-                        Text(swiftString(wrapper.packet.homflyLM().utf8("ℓ", "𝑚")))
+                        Text(String(wrapper.packet.homflyLM().utf8("ℓ", "𝑚")))
                     } else {
-                        Text(swiftString(wrapper.packet.homflyLM().str("l", "m")))
+                        Text(String(wrapper.packet.homflyLM().str("l", "m")))
                     }
                 }
             } else {
@@ -110,9 +110,9 @@ struct LinkPolynomialsView: View {
             Text("Kauffman bracket").font(.headline).padding(.vertical)
             if link.knowsBracket() || link.size() <= Self.maxAuto {
                 if unicode {
-                    Text(swiftString(wrapper.packet.bracket().utf8("𝐴")))
+                    Text(String(wrapper.packet.bracket().utf8("𝐴")))
                 } else {
-                    Text(swiftString(wrapper.packet.bracket().str("A")))
+                    Text(String(wrapper.packet.bracket().str("A")))
                 }
             } else {
                 Button("Compute…", systemImage: "gearshape") {

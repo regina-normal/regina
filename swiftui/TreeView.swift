@@ -60,12 +60,12 @@ struct PacketLabel: View {
     var body: some View {
         if let icon = wrapper.icon {
             Label {
-                Text(swiftString(wrapper.packet.humanLabel()))
+                Text(String(wrapper.packet.humanLabel()))
             } icon: {
                 icon.resizable().frame(width: Self.iconSize, height: Self.iconSize)
             }
         } else {
-            Text(swiftString(wrapper.packet.humanLabel()))
+            Text(String(wrapper.packet.humanLabel()))
         }
     }
 }
@@ -116,7 +116,7 @@ struct TreeDetail: View {
                 // TODO: Implement container views
             } else {
                 p.viewer
-                    .navigationTitle(swiftString(p.packet.humanLabel()))
+                    .navigationTitle(String(p.packet.humanLabel()))
                     .navigationBarBackButtonHidden(sizeClass != .compact)
             }
         } else {
@@ -247,15 +247,15 @@ struct TreeView_Previews: PreviewProvider {
         var root = regina.SharedContainer.make().asPacket()
 
         var x = regina.SharedContainer.make().asPacket()
-        x.setLabel(cxxString("First child"))
+        x.setLabel("First child")
         root.append(x)
 
         var y = regina.SharedContainer.make().asPacket()
-        y.setLabel(cxxString("Second child"))
+        y.setLabel("Second child")
         root.append(y)
 
         var y1 = regina.SharedContainer.make().asPacket()
-        y1.setLabel(cxxString("Grandchild"))
+        y1.setLabel("Grandchild")
         y.append(y1)
 
         let z = regina.SharedContainer.make().asPacket()

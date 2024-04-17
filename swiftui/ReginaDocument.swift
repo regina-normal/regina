@@ -117,6 +117,6 @@ class ReginaDocument: ReferenceFileDocument {
         if let filename = configuration.existingFile?.filename {
             self.title = URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent
         }
-        return .init(regularFileWithContents: swiftString(snapshot).data(using: .utf8)!)
+        return .init(regularFileWithContents: String(snapshot).data(using: .utf8)!)
     }
 }
