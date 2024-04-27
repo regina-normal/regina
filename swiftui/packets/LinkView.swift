@@ -184,7 +184,7 @@ struct LinkView: View {
             .toolbar {
                 // TODO: Fix groupings.
                 // TODO: On macOS, primary and secondary are all clumped together.
-                ToolbarItemGroup(placement: .primaryAction) {
+                //ToolbarItemGroup(placement: .primaryAction) {
                     Button {
                         var p = wrapper.packet
                         if !p.intelligentSimplify() {
@@ -201,8 +201,8 @@ struct LinkView: View {
                         // TODO: This is SFSymbols 5.0
                         Label("Moves", systemImage: "slider.horizontal.2.square")
                     }
-                }
-                ToolbarItemGroup(placement: .primaryAction) {
+                //}
+                //ToolbarItemGroup(placement: .primaryAction) {
                     Button {
                         var p = wrapper.packet.asPacket()
                         var c = wrapper.packet.complement()
@@ -226,8 +226,8 @@ struct LinkView: View {
                     } label: {
                         Label("SnapPea", image: "Act-SnapPea")
                     }
-                }
-                ToolbarItemGroup(placement: .secondaryAction) {
+                //}
+                //ToolbarItemGroup(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.packet
                         p.reflect()
@@ -246,8 +246,8 @@ struct LinkView: View {
                     } label: {
                         Label("Reverse", image: "Act-Reverse")
                     }
-                }
-                ToolbarItemGroup(placement: .secondaryAction) {
+                //}
+                //ToolbarItemGroup(placement: .secondaryAction) {
                     Button {
                         var p = wrapper.packet
                         if !p.makeAlternating() {
@@ -274,7 +274,7 @@ struct LinkView: View {
                         Label("Cables", image: "Act-Parallel")
                     }
                     // TODO: Compose with
-                }
+                //}
                 #if os(visionOS)
                 .padding()
                 .background(.regularMaterial, in: .rect(cornerRadius: 12))
