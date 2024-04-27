@@ -114,9 +114,7 @@ struct LinkAlgebraView: View {
                     // TODO: Use a cancellable progress box (maybe only when it's large).
                     var working = group
                     let hom = working.intelligentSimplify()
-                    // TODO: Find a way to work around the broken std::optional <-> Swift binding in visionOS.
-                    #if !os(visionOS)
-                    if hom.hasValue {
+                    if hom.__convertToBool() {
                         simplifiedGroup = working
                         didSimplify = true
                         // Currently Regina's links do not have a way to receive
@@ -124,7 +122,6 @@ struct LinkAlgebraView: View {
                     } else {
                         errCouldNotSimplify = true
                     }
-                    #endif
                 }
                 .alert("Could not simplify", isPresented: $errCouldNotSimplify) {
                     Button("OK") {}
