@@ -152,6 +152,8 @@ Version 7.4  [ (to be announced) ]
             - The ring template argument now defaults to true for matrices over
               native C++ floating-point types, and Python now has a new binding
               MatrixReal to represent the C++ type Matrix<double>.
+        Class ModelLinkGraph:
+            - New routine isSimple().
         Enum NamedPermGroup:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_GROUP_TRIVIAL) have been

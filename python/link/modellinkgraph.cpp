@@ -92,6 +92,7 @@ void addModelLinkGraph(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>(), rdoc::nodes)
         .def("swap", &ModelLinkGraph::swap, rdoc::swap)
         .def("reflect", &ModelLinkGraph::reflect, rdoc::reflect)
+        .def("isSimple", &ModelLinkGraph::isSimple, rdoc::isSimple)
         .def("cells", &ModelLinkGraph::cells,
             pybind11::return_value_policy::reference_internal, rdoc::cells)
         .def("findFlype", &ModelLinkGraph::findFlype, rdoc::findFlype)

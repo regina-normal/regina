@@ -655,6 +655,14 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         const ModelLinkGraphCells& cells() const;
 
         /**
+         * Identifies whether this graph is simple; that is, has no loops or
+         * multiple edges.
+         *
+         * \return \c true if and only if this graph is simple.
+         */
+        bool isSimple() const;
+
+        /**
          * Identifies the smallest flype that can be performed on this
          * graph from the given starting location.
          *

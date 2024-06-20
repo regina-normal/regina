@@ -1122,6 +1122,14 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the graph whose contents should be swapped with *lhs*.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::isSimple
+static const char *isSimple =
+R"doc(Identifies whether this graph is simple; that is, has no loops or
+multiple edges.
+
+Returns:
+    ``True`` if and only if this graph is simple.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::node
 static const char *node =
 R"doc(Returns the node at the given index within this graph.

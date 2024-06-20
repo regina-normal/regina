@@ -186,6 +186,15 @@ void ModelLinkGraph::reflect() {
     }
 }
 
+bool ModelLinkGraph::isSimple() const {
+    for (auto n : nodes_)
+        for (int i = 0; i < 4; ++i)
+            if (n->adj_[i].node_ == n ||
+                    n->adj_[i].node_ == n->adj_[(i + 1) % 4].node_)
+                return false;
+    return true;
+}
+
 void ModelLinkGraph::writeTextShort(std::ostream& out) const {
     if (nodes_.empty()) {
         out << "Empty graph";
