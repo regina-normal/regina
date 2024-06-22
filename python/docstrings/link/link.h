@@ -1774,27 +1774,20 @@ Returns:
 
 // Docstring regina::python::doc::Link_::hasReducingPass
 static const char *hasReducingPass =
-R"doc(Tests whether this knot has a pass move that will reduce the number of
+R"doc(Tests whether this link has a pass move that will reduce the number of
 crossings.
 
-Currently this routine is only available for knots, not multiple-
-component links.
-
-A _pass_ move involves taking a section of the knot that involves only
-over-crossings (or only under-crossings), and then lifting that
-section above (or beneath respectively) the diagram and placing it
-back again in a different location. In particular, this routine
-searches for a different location that will involve fewer crossings
-than the original location.
+A _pass_ move involves taking a section of some link component that
+involves only over-crossings (or only under-crossings), and then
+lifting that section above (or beneath respectively) the diagram and
+placing it back again in a different location. In particular, this
+routine searches for a different location that will involve fewer
+crossings than the original location.
 
 This routine does not actually _perform_ the pass move; it simply
 determines whether one exists.
 
 The running time is cubic in the number of crossings.
-
-Precondition:
-    This link is actually a knot (i.e., it contains exactly one
-    component).
 
 Returns:
     ``True`` if and only if there is a pass move that reduces the
@@ -2481,6 +2474,22 @@ Exception ``NotImplemented``:
 
 Returns:
     an oriented Gauss code for this knot in machine-readable form.)doc";
+
+// Docstring regina::python::doc::Link_::overForComponent
+static const char *overForComponent =
+R"doc(Locates an over-crossing within the same link component as the given
+strand. The choice of _which_ over-crossing is returned will be
+arbitrary (i.e., it might not be the _first_ over-crossing).
+
+Parameter ``component``:
+    a strand reference in this link, which may be a null reference
+    (indicating a zero-crossing component).
+
+Returns:
+    an over-crossing in the same link component, or a null reference
+    if the given link component contains only under-crossings (i.e.,
+    it is a zero-crossing unknot placed beneath the rest of the
+    diagram).)doc";
 
 // Docstring regina::python::doc::Link_::pace
 static const char *pace =
@@ -3259,6 +3268,20 @@ every crossing, but switches all incoming strands with outgoing
 strands and vice versa (so next() becomes prev(), and prev() becomes
 next()).)doc";
 
+// Docstring regina::python::doc::Link_::reverse_2
+static const char *reverse_2 =
+R"doc(Reverses the orientation of just the link component that contains the
+given strand. Other components of the link will not be modified.
+
+For knots, this routine is identical to calling reverse().
+
+Parameter ``component``:
+    a strand belonging to some component of this link. This need not
+    be the starting strand for the component (i.e., it does not need
+    to be the strand that is returned by ``component()``). This may be
+    a null strand reference, in which case this routine will do
+    nothing.)doc";
+
 // Docstring regina::python::doc::Link_::rewrite
 static const char *rewrite =
 R"doc(Explores all knot diagrams that can be reached from this via
@@ -3629,6 +3652,21 @@ Parameter ``other``:
 
 Returns:
     the corresponding strand reference for this link.)doc";
+
+// Docstring regina::python::doc::Link_::underForComponent
+static const char *underForComponent =
+R"doc(Locates an under-crossing within the same link component as the given
+strand. The choice of _which_ under-crossing is returned will be
+arbitrary (i.e., it might not be the _first_ under-crossing).
+
+Parameter ``component``:
+    a strand reference in this link, which may be a null reference
+    (indicating a zero-crossing component).
+
+Returns:
+    an under-crossing in the same link component, or a null reference
+    if the given link component contains only over-crossings (i.e., it
+    is a zero-crossing unknot placed above the rest of the diagram).)doc";
 
 // Docstring regina::python::doc::Link_::useTreeDecomposition
 static const char *useTreeDecomposition =

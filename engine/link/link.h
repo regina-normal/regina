@@ -1081,7 +1081,7 @@ class Link :
          * (i.e., it is a zero-crossing unknot placed beneath the rest of the
          * diagram).
          */
-        StrandRef overForComponent(const StrandRef& component) const;
+        StrandRef overForComponent(StrandRef component) const;
         /**
          * Locates an under-crossing within the same link component as the
          * given strand.  The choice of _which_ under-crossing is returned will
@@ -1094,7 +1094,7 @@ class Link :
          * (i.e., it is a zero-crossing unknot placed above the rest of the
          * diagram).
          */
-        StrandRef underForComponent(const StrandRef& component) const;
+        StrandRef underForComponent(StrandRef component) const;
 
         /**
          * Determines if this link diagram is combinatorially identical to the

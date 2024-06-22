@@ -255,7 +255,7 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     return ans;
 }
 
-StrandRef Link::overForComponent(const StrandRef& component) const {
+StrandRef Link::overForComponent(StrandRef component) const {
     if (! component)
         return {};
 
@@ -281,7 +281,7 @@ StrandRef Link::overForComponent(const StrandRef& component) const {
     return {};
 }
 
-StrandRef Link::underForComponent(const StrandRef& component) const {
+StrandRef Link::underForComponent(StrandRef component) const {
     if (! component)
         return {};
 
