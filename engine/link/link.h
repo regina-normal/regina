@@ -2202,6 +2202,19 @@ class Link :
         long writheOfComponent(size_t index) const;
 
         /**
+         * Returns the number of Seifert circles for this link diagram.
+         * This is the number of circles obtained when we smooth every
+         * crossing in a way that respects the orientations of the strands.
+         *
+         * In other words: this routine returns the number of link components
+         * that would be obtained if we called resolve() on every crossing
+         * in the diagram.
+         *
+         * \return the number of Seifert circles.
+         */
+        size_t seifertCircles() const;
+
+        /**
          * Returns an ideal triangulation of the complement of this link
          * in the 3-sphere.
          *

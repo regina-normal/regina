@@ -3422,6 +3422,19 @@ This routine keeps the sign of each crossing fixed, but switches the
 upper and lower strands. This operation corresponds to a 3-dimensional
 rotation about some axis in the plane.)doc";
 
+// Docstring regina::python::doc::Link_::seifertCircles
+static const char *seifertCircles =
+R"doc(Returns the number of Seifert circles for this link diagram. This is
+the number of circles obtained when we smooth every crossing in a way
+that respects the orientations of the strands.
+
+In other words: this routine returns the number of link components
+that would be obtained if we called resolve() on every crossing in the
+diagram.
+
+Returns:
+    the number of Seifert circles.)doc";
+
 // Docstring regina::python::doc::Link_::selfFrame
 static const char *selfFrame =
 R"doc(Adds trivial twists to this link to ensure that each component has

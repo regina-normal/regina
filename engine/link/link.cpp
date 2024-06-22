@@ -450,6 +450,38 @@ long Link::writheOfComponent(StrandRef strand) const {
     return ans;
 }
 
+size_t Link::seifertCircles() const {
+    if (crossings_.empty())
+        return components_.size();
+
+    size_t ans = 0;
+
+    auto seen = new bool[crossings_.size() * 2];
+    std::fill(seen, seen + crossings_.size() * 2, false);
+
+    for (size_t i = 0; i < crossings_.size() * 2; ++i)
+        if (! seen[i]) {
+            // Follow the Seifert circle starting at the strand with this ID.
+            ++ans;
+            StrandRef start = strand(i);
+            StrandRef s = start;
+            do {
+                seen[s.id()] = true;
+                s.jump();
+                ++s;
+            } while (s != start);
+        }
+
+    delete[] seen;
+
+    // Finish by adding in any zero-crossing components.
+    for (auto c: components_)
+        if (! c)
+            ++ans;
+
+    return ans;
+}
+
 bool Link::selfFrame() {
     // Some notes:
     //

@@ -218,6 +218,7 @@ void addLink(pybind11::module_& m) {
         .def("writheOfComponent", overload_cast<size_t>(
             &Link::writheOfComponent, pybind11::const_),
             rdoc::writheOfComponent_2)
+        .def("seifertCircles", &Link::seifertCircles, rdoc::seifertCircles)
         .def("complement", &Link::complement,
             pybind11::arg("simplify") = true, rdoc::complement)
         .def("parallel", &Link::parallel,

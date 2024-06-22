@@ -358,6 +358,20 @@ TEST_F(LinkTest, writhe) {
     testManualCases(verifyWrithe);
 }
 
+static void verifySeifertCircles(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    Link alt(link);
+    while (alt.size() > 0)
+        alt.resolve(alt.crossing(0));
+
+    EXPECT_EQ(link.seifertCircles(), alt.countComponents());
+}
+
+TEST_F(LinkTest, seifertCircles) {
+    testManualCases(verifySeifertCircles);
+}
+
 static void verifySelfFrame(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
