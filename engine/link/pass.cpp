@@ -36,16 +36,8 @@
 namespace regina {
 
 bool Link::hasReducingPass() const {
-    // Sanity testing:
-    if (components_.size() != 1) {
-        std::cerr << "hasReducingPass(): requires exactly one link component"
-            << std::endl;
-        return false;
-    }
-
-    // Get rid of 0-crossing knots, so that we can assume that
-    // components_[0] is non-null.
-    if (crossings_.size() == 0)
+    // Get rid of 0-crossing links.
+    if (crossings_.empty())
         return false;
 
     // We consider sides of arcs: for crossing i, we denote:
@@ -62,6 +54,15 @@ bool Link::hasReducingPass() const {
     // cross to get from one (side of arc) to the other.  Here we only
     // allow crossing a single strand (i.e., we cannot move between
     // regions by passing through a crossing).
+    //
+    // For links diagrams with multiple disjoint components, our shortest paths
+    // algorithm will fail to realise that you can jump between components
+    // (since it essentially works by crawling around the boundary curves of
+    // cells in the link diagram).  As a result, the "shortest paths" between
+    // disjoint components will be infinity.  This does not matter, since a
+    // pass move always begins in a single component of the diagram, and (as
+    // we want a _reducing_ pass) it is never beneficial for such a move to
+    // interact with other components.
 
     size_t nSides = 4 * crossings_.size();
 
@@ -147,90 +148,105 @@ bool Link::hasReducingPass() const {
     // and then see compare the number of crossings in these sequences
     // against the corresponding shortest-paths entries in dist[].
 
-    // We make two passes through the knot: once looking for sequences of
-    // over-crossings, and then once looking for sequences of under-crossings.
-    // This is wasteful, but I've been flying for 28 hours now and this
-    // increases my chances of getting it right the first time. :/
+    // We make two passes through each link component: once looking for
+    // sequences of over-crossings, and then once looking for sequences of
+    // under-crossings.  This is wasteful, but I've been flying for 28 hours
+    // now and this increases my chances of getting it right the first time. :/
 
-    // Start with over-crossings.  This requires us to begin our
-    // traversal from an under-crossing.
-    StrandRef start = components_.front();
-    if (start.strand() == 1)
-        start.jump();
+    for (auto comp : components_) {
+        // Zero-crossing components do not have reducing pass moves.
+        if (! comp)
+            continue;
 
-    StrandRef s = start;
-    StrandRef beginSeq; // Arc from under-crossing to over-crossing
-    StrandRef endSeq; // Arc from over-crossing to under-crossing
-    size_t seqLen;
+        // Start with over-crossings.  This requires us to begin our
+        // traversal from an under-crossing.
+        StrandRef start = underForComponent(comp);
+        if (! start) {
+            // This component is a zero-crossing knot placed above the rest of
+            // the diagram, which means the entire knot can be slid away.
+            // This can be viewed as a reducing pass.
+            delete[] dist;
+            return true;
+        }
 
-    do {
-        if (s.strand() == 0) {
-            // This is always run in the first iteration of the loop,
-            // thereby initialising beginSeq and seqLen.
-            beginSeq = s;
-            seqLen = 0;
-        } else
-            ++seqLen;
+        StrandRef s = start;
+        StrandRef beginSeq; // Arc from under-crossing to over-crossing
+        StrandRef endSeq; // Arc from over-crossing to under-crossing
+        size_t seqLen;
 
-        ++s;
+        do {
+            if (s.strand() == 0) {
+                // This is always run in the first iteration of the loop,
+                // thereby initialising beginSeq and seqLen.
+                beginSeq = s;
+                seqLen = 0;
+            } else
+                ++seqLen;
 
-        if (s.strand() == 0) {
-            endSeq = s.prev();
+            ++s;
 
-            if (seqLen > 0) {
-                // Compare this to the shortest path in dist[].
-                // Note: we know that beginSeq is a (lower outgoing) arc,
-                // and that endSeq is an (upper outgoing) arc.
-                i = 4 * beginSeq.crossing()->index() + 2;
-                j = 4 * endSeq.crossing()->index();
-                if (dist[nSides * i + j] < seqLen ||
-                        dist[nSides * i + j + 1] < seqLen ||
-                        dist[nSides * (i + 1) + j] < seqLen ||
-                        dist[nSides * (i + 1) + j + 1] < seqLen) {
-                    delete[] dist;
-                    return true;
+            if (s.strand() == 0) {
+                endSeq = s.prev();
+
+                if (seqLen > 0) {
+                    // Compare this to the shortest path in dist[].
+                    // Note: we know that beginSeq is a (lower outgoing) arc,
+                    // and that endSeq is an (upper outgoing) arc.
+                    i = 4 * beginSeq.crossing()->index() + 2;
+                    j = 4 * endSeq.crossing()->index();
+                    if (dist[nSides * i + j] < seqLen ||
+                            dist[nSides * i + j + 1] < seqLen ||
+                            dist[nSides * (i + 1) + j] < seqLen ||
+                            dist[nSides * (i + 1) + j + 1] < seqLen) {
+                        delete[] dist;
+                        return true;
+                    }
                 }
             }
+        } while (s != start);
+
+        // Now look for sequences of under-crossings.
+        // This time we must begin our traversal from an over-crossing.
+        start = overForComponent(comp);
+        if (! start) {
+            // This component is a zero-crossing knot placed below the rest of
+            // the diagram.  Again this can be viewed as a reducing pass.
+            delete[] dist;
+            return true;
         }
-    } while (s != start);
 
-    // Now look for sequences of under-crossings.
-    // This time we must begin our traversal from an over-crossing.
-    start = components_.front();
-    if (start.strand() == 0)
-        start.jump();
+        s = start;
+        do {
+            if (s.strand() == 1) {
+                // This is always run in the first iteration of the loop,
+                // thereby initialising beginSeq and seqLen.
+                beginSeq = s;
+                seqLen = 0;
+            } else
+                ++seqLen;
 
-    s = start;
-    do {
-        if (s.strand() == 1) {
-            // This is always run in the first iteration of the loop,
-            // thereby initialising beginSeq and seqLen.
-            beginSeq = s;
-            seqLen = 0;
-        } else
-            ++seqLen;
+            ++s;
 
-        ++s;
+            if (s.strand() == 1) {
+                endSeq = s.prev();
 
-        if (s.strand() == 1) {
-            endSeq = s.prev();
-
-            if (seqLen > 0) {
-                // Compare this to the shortest path in dist[].
-                // Note: we know that beginSeq is an (upper outgoing) arc,
-                // and that endSeq is a (lower outgoing) arc.
-                i = 4 * beginSeq.crossing()->index();
-                j = 4 * endSeq.crossing()->index() + 2;
-                if (dist[nSides * i + j] < seqLen ||
-                        dist[nSides * i + j + 1] < seqLen ||
-                        dist[nSides * (i + 1) + j] < seqLen ||
-                        dist[nSides * (i + 1) + j + 1] < seqLen) {
-                    delete[] dist;
-                    return true;
+                if (seqLen > 0) {
+                    // Compare this to the shortest path in dist[].
+                    // Note: we know that beginSeq is an (upper outgoing) arc,
+                    // and that endSeq is a (lower outgoing) arc.
+                    i = 4 * beginSeq.crossing()->index();
+                    j = 4 * endSeq.crossing()->index() + 2;
+                    if (dist[nSides * i + j] < seqLen ||
+                            dist[nSides * i + j + 1] < seqLen ||
+                            dist[nSides * (i + 1) + j] < seqLen ||
+                            dist[nSides * (i + 1) + j + 1] < seqLen) {
+                        delete[] dist;
+                        return true;
+                    }
                 }
             }
-        }
-    } while (s != start);
+        } while (s != start);
+    }
 
     // Nothing found!
     delete[] dist;

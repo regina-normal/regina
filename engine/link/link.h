@@ -1070,6 +1070,33 @@ class Link :
         bool connected(const Crossing* a, const Crossing* b) const;
 
         /**
+         * Locates an over-crossing within the same link component as the
+         * given strand.  The choice of _which_ over-crossing is returned will
+         * be arbitrary (i.e., it might not be the _first_ over-crossing).
+         *
+         * \param component a strand reference in this link, which may be a
+         * null reference (indicating a zero-crossing component).
+         * \return an over-crossing in the same link component, or a null
+         * reference if the given link component contains only under-crossings
+         * (i.e., it is a zero-crossing unknot placed beneath the rest of the
+         * diagram).
+         */
+        StrandRef overForComponent(const StrandRef& component) const;
+        /**
+         * Locates an under-crossing within the same link component as the
+         * given strand.  The choice of _which_ under-crossing is returned will
+         * be arbitrary (i.e., it might not be the _first_ under-crossing).
+         *
+         * \param component a strand reference in this link, which may be a
+         * null reference (indicating a zero-crossing component).
+         * \return an under-crossing in the same link component, or a null
+         * reference if the given link component contains only over-crossings
+         * (i.e., it is a zero-crossing unknot placed above the rest of the
+         * diagram).
+         */
+        StrandRef underForComponent(const StrandRef& component) const;
+
+        /**
          * Determines if this link diagram is combinatorially identical to the
          * given link diagram.
          *
@@ -1755,14 +1782,11 @@ class Link :
             bool perform = true);
 
         /**
-         * Tests whether this knot has a pass move that will reduce the
+         * Tests whether this link has a pass move that will reduce the
          * number of crossings.
          *
-         * Currently this routine is only available for knots, not
-         * multiple-component links.
-         *
-         * A _pass_ move involves taking a section of the knot that
-         * involves only over-crossings (or only under-crossings), and
+         * A _pass_ move involves taking a section of some link component
+         * that involves only over-crossings (or only under-crossings), and
          * then lifting that section above (or beneath respectively) the
          * diagram and placing it back again in a different location.
          * In particular, this routine searches for a different location
@@ -1772,9 +1796,6 @@ class Link :
          * simply determines whether one exists.
          *
          * The running time is cubic in the number of crossings.
-         *
-         * \pre This link is actually a knot (i.e., it contains exactly
-         * one component).
          *
          * \return \c true if and only if there is a pass move that
          * reduces the number of crossings.

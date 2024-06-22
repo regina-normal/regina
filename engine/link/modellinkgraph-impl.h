@@ -56,23 +56,45 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
         return;
     }
 
-    // First work out the orientation of the knot as it passes through
-    // each node.
+    // First work out the orientation of the link components as they pass
+    // through each node.
     char* dir = new char[size()]; // Bits 0,1,2,3 are 1/0 for forward/backward.
     std::fill(dir, dir + size(), 0);
 
-    size_t steps = 0;
-    ModelLinkGraphArc a(nodes_[0], 0);
-    do {
-        dir[a.node()->index()] |= (1 << a.arc());
-        a = a.next();
-        ++steps;
-    } while (a.node()->index() != 0 || a.arc() != 0);
+    std::vector<ModelLinkGraphArc> componentArcs;
 
+    size_t steps = 0;
+    for (size_t i = 0; i < size(); ++i) {
+        auto node = nodes_[i];
+
+        // Look at the strand passing through arcs 0 and 2:
+        if ((dir[node->index()] & 5 /* 0101 */) == 0) {
+            ModelLinkGraphArc a(node, 0);
+            componentArcs.push_back(a);
+            do {
+                dir[a.node()->index()] |= (1 << a.arc());
+                a = a.next();
+                ++steps;
+            } while (a.node() != node || a.arc() != 0);
+        }
+
+        // Look at the strand passing through arcs 1 and 3:
+        if ((dir[node->index()] & 10 /* 1010 */) == 0) {
+            ModelLinkGraphArc a(node, 1);
+            componentArcs.push_back(a);
+            do {
+                dir[a.node()->index()] |= (1 << a.arc());
+                a = a.next();
+                ++steps;
+            } while (a.node() != node || a.arc() != 1);
+        }
+    }
     if (steps != 2 * size()) {
+        // This should never happen.
         delete[] dir;
-        throw FailedPrecondition("generateMinimalLinks() cannot work with "
-            "a graph that models multiple-component links");
+        std::cerr << "ERROR: generateMinimalLinks() did not identify "
+            "components correctly" << std::endl;
+        return;
     }
 
     // Next work out which relationships we may assume between different
@@ -169,6 +191,7 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     std::fill(sign, sign + size(), 0);
 
     ssize_t curr = 0;
+    ModelLinkGraphArc a;
     size_t adj;
     int adjStrand;
     while (curr >= 0) {
@@ -202,7 +225,31 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
                 l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
                 l.crossings_[adj]->prev_[adjStrand].strand_ = 0;
             }
-            l.components_.emplace_back(*l.crossings_.begin(), 1);
+
+            for (const auto& a: componentArcs) {
+                size_t i = a.node_->index();
+                // We know from above that a.arc_ is either 0 or 1,
+                // and that dir[i] sets the bit for a.arc_.
+                if (sign[i] > 0) {
+                    // If the outgoing arcs are j, j+1 then j is lower.
+                    if (dir[i] == (3 << a.arc_)) {
+                        // The outgoing arcs are a.arc_, a.arc_+1.
+                        l.components_.emplace_back(l.crossings_[i], 0);
+                    } else {
+                        // The outgoing arcs are a.arc_, a.arc_-1.
+                        l.components_.emplace_back(l.crossings_[i], 1);
+                    }
+                } else {
+                    // If the outgoing arcs are j,j+1 then j is upper.
+                    if (dir[i] == (3 << a.arc_)) {
+                        // The outgoing arcs are a.arc_, a.arc_+1.
+                        l.components_.emplace_back(l.crossings_[i], 1);
+                    } else {
+                        // The outgoing arcs are a.arc_, a.arc_-1.
+                        l.components_.emplace_back(l.crossings_[i], 0);
+                    }
+                }
+            }
 
             action(std::move(l), std::forward<Args>(args)...);
 

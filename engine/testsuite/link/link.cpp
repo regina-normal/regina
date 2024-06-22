@@ -291,6 +291,60 @@ TEST_F(LinkTest, linking) {
     EXPECT_EQ(trefoil_unknot_overlap.link.linking(), 0);
 }
 
+static void verifyUnderOverForComponent(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (auto c : link.components()) {
+        auto under = link.underForComponent(c);
+        auto over = link.overForComponent(c);
+
+        if (!c) {
+            EXPECT_FALSE(under);
+            EXPECT_FALSE(over);
+            continue;
+        }
+
+        // Walk through the entire component.
+        bool foundUnder = false, foundOver = false;
+        bool hasUnder = false, hasOver = false;
+
+        StrandRef s = c;
+        do {
+            if (s == under)
+                foundUnder = true;
+            if (s == over)
+                foundOver = true;
+
+            if (s.strand() == 0)
+                hasUnder = true;
+            else
+                hasOver = true;
+
+            ++s;
+        } while (s != c);
+
+        if (hasUnder) {
+            EXPECT_TRUE(foundUnder);
+            EXPECT_EQ(under.strand(), 0);
+        } else {
+            EXPECT_FALSE(foundUnder);
+            EXPECT_FALSE(under);
+        }
+
+        if (hasOver) {
+            EXPECT_TRUE(foundOver);
+            EXPECT_EQ(over.strand(), 1);
+        } else {
+            EXPECT_FALSE(foundOver);
+            EXPECT_FALSE(over);
+        }
+    }
+}
+
+TEST_F(LinkTest, underOverForComponent) {
+    testManualCases(verifyUnderOverForComponent);
+}
+
 static void verifyWrithe(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 

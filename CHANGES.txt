@@ -123,6 +123,8 @@ Version 7.4  [ (to be announced) ]
             - New routines countTrivialComponents() and pdAmbiguous(), to help
               understand the limitations of planar diagram codes.
             - New routine hash(), which uses the tight encoding.
+            - New routines overForComponent() and underForComponent().
+            - Routine hasReducingPass() can now handle multiple-component links.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
             - Overhaul of the internal change span classes, including a new
@@ -154,6 +156,8 @@ Version 7.4  [ (to be announced) ]
               MatrixReal to represent the C++ type Matrix<double>.
         Class ModelLinkGraph:
             - New routine isSimple().
+            - Routine generateMinimalLinks now supports multiple-component
+              links.
         Enum NamedPermGroup:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_GROUP_TRIVIAL) have been

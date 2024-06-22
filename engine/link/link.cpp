@@ -255,6 +255,58 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     return ans;
 }
 
+StrandRef Link::overForComponent(const StrandRef& component) const {
+    if (! component)
+        return {};
+
+    StrandRef start = component;
+    if (start.strand() == 1)
+        return start;
+
+    // Our component begins with an under-crossing.
+
+    if (components_.size() == 1) {
+        // Our link is actually a _knot_, which means the corresponding
+        // over-crossing is guaranteed to be part of the same component.
+        start.jump();
+        return start;
+    }
+
+    // We will need to follow the link component around.
+    for (StrandRef s = start.next(); s != start; ++s)
+        if (s.strand() == 1)
+            return s;
+
+    // The component is entirely under-crossings.
+    return {};
+}
+
+StrandRef Link::underForComponent(const StrandRef& component) const {
+    if (! component)
+        return {};
+
+    StrandRef start = component;
+    if (start.strand() == 0)
+        return start;
+
+    // Our component begins with an over-crossing.
+
+    if (components_.size() == 1) {
+        // Our link is actually a _knot_, which means the corresponding
+        // under-crossing is guaranteed to be part of the same component.
+        start.jump();
+        return start;
+    }
+
+    // We will need to follow the link component around.
+    for (StrandRef s = start.next(); s != start; ++s)
+        if (s.strand() == 0)
+            return s;
+
+    // The component is entirely over-crossings.
+    return {};
+}
+
 size_t Link::countTrivialComponents() const {
     size_t ans = 0;
     for (StrandRef c : components_)
