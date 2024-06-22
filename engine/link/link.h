@@ -1278,6 +1278,20 @@ class Link :
         void reverse();
 
         /**
+         * Reverses the orientation of just the link component that contains
+         * the given strand.  Other components of the link will not be modified.
+         *
+         * For knots, this routine is identical to calling reverse().
+         *
+         * \param component a strand belonging to some component of this link.
+         * This need not be the starting strand for the component (i.e., it
+         * does not need to be the strand that is returned by `component()`).
+         * This may be a null strand reference, in which case this routine
+         * will do nothing.
+         */
+        void reverse(StrandRef component);
+
+        /**
          * Changes a subset of crossings to convert this into an alternating
          * link diagram.  Here, "changing" a crossing means switching its
          * upper and lower strands (so this operation may change this into

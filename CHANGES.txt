@@ -124,6 +124,8 @@ Version 7.4  [ (to be announced) ]
               understand the limitations of planar diagram codes.
             - New routine hash(), which uses the tight encoding.
             - New routines overForComponent() and underForComponent().
+            - New variant of reverse() to reverse just one component of a
+              multiple-component link.
             - Routine hasReducingPass() can now handle multiple-component links.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.

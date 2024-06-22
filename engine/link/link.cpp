@@ -566,6 +566,22 @@ void Link::reverse() {
     }
 }
 
+void Link::reverse(StrandRef component) {
+    if (! component)
+        return;
+
+    ChangeAndClearSpan<> span(*this);
+
+    StrandRef s = component;
+    do {
+        auto cross = s.crossing();
+        auto strand = s.strand();
+        std::swap(cross->next_[strand], cross->prev_[strand]);
+        cross->sign_ = -cross->sign_;
+        --s; // because we just reversed s
+    } while (s != component);
+}
+
 void Link::rotate() {
     ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 

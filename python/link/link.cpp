@@ -201,7 +201,9 @@ void addLink(pybind11::module_& m) {
         .def("swap", &Link::swap, rdoc::swap)
         .def("reflect", &Link::reflect, rdoc::reflect)
         .def("rotate", &Link::rotate, rdoc::rotate)
-        .def("reverse", &Link::reverse, rdoc::reverse)
+        .def("reverse", overload_cast<>(&Link::reverse), rdoc::reverse)
+        .def("reverse", overload_cast<StrandRef>(&Link::reverse),
+            rdoc::reverse_2)
         .def("change", &Link::change, rdoc::change)
         .def("changeAll", &Link::changeAll, rdoc::changeAll)
         .def("resolve", &Link::resolve, rdoc::resolve)
