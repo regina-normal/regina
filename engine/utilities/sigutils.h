@@ -136,7 +136,10 @@ struct Base64SigEncoding {
      * \param nChars the number of base64 characters to use.
      */
     template <typename IntType>
-    static void encodeInt(std::string& s, IntType val, unsigned nChars) {
+    static void encodeInt(std::string& s, IntType val, int nChars) {
+        static_assert(is_cpp_integer_v,
+            "encodeInt() requires IntType to be a native C++ integer type.");
+
         for ( ; nChars > 0; --nChars) {
             s += encodeSingle(val & 0x3F);
             val >>= 6;
@@ -170,9 +173,12 @@ struct Base64SigEncoding {
      * \return the native integer that was encoded.
      */
     template <typename IntType>
-    static IntType decodeInt(const char* s, unsigned nChars) {
+    static IntType decodeInt(const char* s, int nChars) {
+        static_assert(is_cpp_integer_v,
+            "decodeInt() requires IntType to be a native C++ integer type.");
+
         IntType ans = 0;
-        for (unsigned i = 0; i < nChars; ++i)
+        for (int i = 0; i < nChars; ++i)
             ans |= (static_cast<IntType>(decodeSingle(s[i])) << (6 * i));
         return ans;
     }
@@ -198,7 +204,7 @@ struct Base64SigEncoding {
      * \return the resulting printable base64 character.
      */
     template <typename InputIterator>
-    static char encodeTrits(InputIterator trits, unsigned nTrits) {
+    static char encodeTrits(InputIterator trits, int nTrits) {
         uint8_t ans = 0;
         if (nTrits >= 1)
             ans |= static_cast<uint8_t>(*trits++);

@@ -77,7 +77,7 @@ class IsoSigPrintable : public Base64SigEncoding {
          * represent a single gluing permutation.
          * This must be large enough to encode an index into Perm<dim+1>::Sn.
          */
-        static constexpr unsigned charsPerPerm =
+        static constexpr int charsPerPerm =
             ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
 
         /**

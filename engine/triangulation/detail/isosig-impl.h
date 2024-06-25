@@ -66,7 +66,7 @@ typename IsoSigPrintable<dim>::Signature IsoSigPrintable<dim>::encode(
     // Keep it simple for small triangulations (1 character per integer).
     // For large triangulations, start with a special marker followed by
     // the number of chars per integer.
-    unsigned nChars;
+    int nChars;
     if (nCompSimp < 63)
         nChars = 1;
     else {
@@ -360,7 +360,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
     while (c != end) {
         // Read one component at a time.
         size_t nSimp = Base64SigEncoding::decodeSingle(*c++);
-        unsigned nChars;
+        int nChars;
         if (nSimp < 63)
             nChars = 1;
         else {
@@ -535,7 +535,7 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     ++c;
     if (! *c)
         return 0;
-    unsigned nChars = Base64SigEncoding::decodeSingle(*c++);
+    int nChars = Base64SigEncoding::decodeSingle(*c++);
 
     for (const char* d = c; d < c + nChars; ++d)
         if (! Base64SigEncoding::isValid(*d))
