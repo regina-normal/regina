@@ -59,7 +59,17 @@ rotation follows a right-hand rule (the thumb of the right hand points
 from the origin out towards ``(x,y,z)``, and the fingers follow the
 direction of the rotation). Then the four real numbers that make up
 the quaternion are ``(cos θ/2, x sin θ/2, y sin θ/2, z sin θ/2)``.
-Since the axis vector
+
+Some notes about the uniqueness of quaternions:
+
+* A non-zero rotation can be described in two ways (by simultaneously
+  negating both the axis vector and the angle of rotation). Both
+  descriptions yield identical quaternion coordinates.
+
+* A zero rotation (i.e., the identity operation) can be described
+  using any axis of rotation. Again, regardless of the choice of axis,
+  we obtain identical quaternion coordinates (specifically,
+  ``(1,0,0,0)``).
 
 Regarding normalisation:
 
@@ -79,7 +89,7 @@ Regarding normalisation:
 * If you wish (though this is not actually necessary), you can
   normalise the coordinates yourself by calling normalise().
 
-See Regina's notes on 3-D geometry for importing information,
+See Regina's notes on 3-D geometry for important information,
 including the inexact floating-point nature of the Vector3D class, and
 the right-handedness of Regina's coordinate system.
 
@@ -644,6 +654,13 @@ Computing ``a.midpoint(b)`` is equivalent to computing ``(a+b)/2``.
 
 Returns:
     the midpoint between this and the given point.)doc";
+
+// Docstring regina::python::doc::Vector3D_::operator_array
+static const char *operator_array =
+R"doc(Casts this point to a standard C++ array.
+
+Returns:
+    a three-element array containing *x*, *y* and *z* (in that order).)doc";
 
 // Docstring regina::python::doc::Vector3D_::x
 static const char *x = R"doc(The first (x) coordinate of the vector.)doc";
