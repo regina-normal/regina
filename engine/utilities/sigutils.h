@@ -807,7 +807,7 @@ class Base64SigDecoder {
          * written as a \c uint8_t.
          */
         template <typename OutputIterator>
-        void decodeTrits(char c, OutputIterator result) {
+        void decodeTrits(OutputIterator result) {
             uint8_t val = decodeSingle<uint8_t>();
             *result++ = val & 3;
             *result++ = (val >> 2) & 3;

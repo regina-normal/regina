@@ -286,166 +286,123 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
 
 template <int dim>
 Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
-    Triangulation<dim> ans;
+    Base64SigDecoder dec(sig); // skips leading whitespace
 
-    const char* c = sig.c_str();
+    try {
+        Triangulation<dim> ans;
 
-    // Skip any leading whitespace.
-    while (*c && ::isspace(*c))
-        ++c;
+        while (! dec.done()) {
+            // Read one component at a time.
+            // Note: the call to dec.done() ignores whitespace, but if there
+            // is _internal_ whitespace between components then this will be
+            // caught by decodeSize() below.
+            auto [ nSimp, nChars ] = dec.decodeSize();
+            if (nSimp == 0)
+                continue; // empty component (this should not happen..?)
 
-    // Find the end of the string.
-    const char* end = c;
-    while (*end && ! ::isspace(*end))
-        ++end;
+            FixedArray<uint8_t> facetAction((dim+1) * nSimp + 2);
+            size_t nFacets = 0;
+            auto facetPos = facetAction.begin();
+            size_t nJoins = 0;
 
-    // Initial check for invalid characters.
-    const char* d;
-    for (d = c; d != end; ++d)
-        if (! Base64SigEncoding::isValid(*d))
-            throw InvalidArgument("fromIsoSig(): invalid base64 character");
-    for (d = end; *d; ++d)
-        if (! ::isspace(*d))
-            throw InvalidArgument(
-                "fromIsoSig(): unexpected internal whitespace");
-
-    while (c != end) {
-        // Read one component at a time.
-        size_t nSimp = Base64SigEncoding::decodeSingle(*c++);
-        int nChars;
-        if (nSimp < 63)
-            nChars = 1;
-        else {
-            if (c == end)
-                throw InvalidArgument(
-                    "fromIsoSig(): incomplete signature");
-            nChars = Base64SigEncoding::decodeSingle(*c++);
-            if (c + nChars > end)
-                throw InvalidArgument(
-                    "fromIsoSig(): incomplete signature");
-            nSimp = Base64SigEncoding::decodeInt<size_t>(c, nChars);
-            c += nChars;
-        }
-
-        if (nSimp == 0) {
-            // Empty component.
-            continue;
-        }
-
-        // Non-empty component; keep going.
-        FixedArray<uint8_t> facetAction((dim+1) * nSimp + 2);
-        size_t nFacets = 0;
-        auto facetPos = facetAction.begin();
-        size_t nJoins = 0;
-
-        for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
-            if (c == end) {
-                throw InvalidArgument("fromIsoSig(): incomplete signature");
-            }
-            Base64SigEncoding::decodeTrits(*c++, facetPos);
-            for (int j = 0; j < 3; ++j) {
-                // If we're already finished, make sure the leftover trits
-                // are zero.
-                if (nFacets == (dim+1) * nSimp) {
-                    if (*(facetPos + j) != 0) {
-                        throw InvalidArgument(
-                            "fromIsoSig(): extraneous facet actions");
+            for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
+                dec.decodeTrits(facetPos);
+                for (int j = 0; j < 3; ++j) {
+                    // If we're already finished, make sure the leftover trits
+                    // are zero.
+                    if (nFacets == (dim+1) * nSimp) {
+                        if (*(facetPos + j) != 0) {
+                            throw InvalidArgument(
+                                "fromIsoSig(): extraneous facet actions");
+                        }
+                        continue;
                     }
-                    continue;
-                }
 
-                switch (*(facetPos + j)) {
-                    case 0:
-                        ++nFacets;
-                        break;
-                    case 1:
-                        nFacets += 2;
-                        break;
-                    case 2:
-                        nFacets += 2;
-                        ++nJoins;
-                        break;
-                    default:
-                        throw InvalidArgument(
-                            "fromIsoSig(): invalid facet action");
-                }
-                if (nFacets > (dim+1) * nSimp) {
-                    throw InvalidArgument("fromIsoSig(): facet actions "
-                        "do not match triangulation size");
+                    switch (*(facetPos + j)) {
+                        case 0:
+                            ++nFacets;
+                            break;
+                        case 1:
+                            nFacets += 2;
+                            break;
+                        case 2:
+                            nFacets += 2;
+                            ++nJoins;
+                            break;
+                        default:
+                            throw InvalidArgument(
+                                "fromIsoSig(): invalid facet action");
+                    }
+                    if (nFacets > (dim+1) * nSimp) {
+                        throw InvalidArgument("fromIsoSig(): facet actions "
+                            "do not match triangulation size");
+                    }
                 }
             }
-        }
 
-        FixedArray<size_t> joinDest(nJoins + 1);
-        for (size_t pos = 0; pos < nJoins; ++pos) {
-            if (c + nChars > end) {
-                throw InvalidArgument("fromIsoSig(): incomplete signature");
-            }
+            FixedArray<size_t> joinDest(nJoins);
+            for (size_t pos = 0; pos < nJoins; ++pos)
+                joinDest[pos] = dec.decodeInt<size_t>(nChars);
 
-            joinDest[pos] = Base64SigEncoding::decodeInt<size_t>(c, nChars);
-            c += nChars;
-        }
-
-        FixedArray<typename Perm<dim+1>::Index> joinGluing(nJoins + 1);
-        for (size_t pos = 0; pos < nJoins; ++pos) {
-            if (c + IsoSigPrintable<dim>::charsPerPerm > end) {
-                throw InvalidArgument("fromIsoSig(): incomplete signature");
-            }
-
-            joinGluing[pos] =
-                Base64SigEncoding::decodeInt<typename Perm<dim+1>::Index>(c,
+            FixedArray<typename Perm<dim+1>::Index> joinGluing(nJoins);
+            for (size_t pos = 0; pos < nJoins; ++pos) {
+                joinGluing[pos] = dec.decodeInt<typename Perm<dim+1>::Index>(
                     IsoSigPrintable<dim>::charsPerPerm);
-            c += IsoSigPrintable<dim>::charsPerPerm;
 
-            if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
-                    joinGluing[pos] < 0) {
-                throw InvalidArgument(
-                    "fromIsoSig(): invalid gluing permutation");
+                if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
+                        joinGluing[pos] < 0) {
+                    throw InvalidArgument(
+                        "fromIsoSig(): invalid gluing permutation");
+                }
             }
+
+            // End of component!
+            FixedArray<Simplex<dim>*> simp(nSimp);
+            for (size_t pos = 0; pos < nSimp; ++pos)
+                simp[pos] = ans.newSimplex();
+
+            facetPos = facetAction.begin();
+            size_t nextUnused = 1;
+            size_t joinPos = 0;
+            Perm<dim+1> gluing;
+            for (size_t pos = 0; pos < nSimp; ++pos)
+                for (int j = 0; j <= dim; ++j) {
+                    // Already glued from the other side:
+                    if (simp[pos]->adjacentSimplex(j))
+                        continue;
+
+                    if (*facetPos == 0) {
+                        // Boundary facet.
+                    } else if (*facetPos == 1) {
+                        // Join to new simplex.
+                        if (nextUnused >= nSimp) {
+                            throw InvalidArgument(
+                                "fromIsoSig(): gluing to non-existent simplex");
+                        }
+                        simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
+                    } else {
+                        // Join to existing simplex.
+                        gluing = Perm<dim+1>::orderedSn[joinGluing[joinPos]];
+                        if (joinDest[joinPos] >= nextUnused ||
+                                simp[joinDest[joinPos]]->adjacentSimplex(
+                                gluing[j])) {
+                            throw InvalidArgument(
+                                "fromIsoSig(): invalid gluing destination");
+                        }
+                        simp[pos]->join(j, simp[joinDest[joinPos]], gluing);
+                        ++joinPos;
+                    }
+
+                    ++facetPos;
+                }
         }
 
-        // End of component!
-        FixedArray<Simplex<dim>*> simp(nSimp);
-        for (size_t pos = 0; pos < nSimp; ++pos)
-            simp[pos] = ans.newSimplex();
-
-        facetPos = facetAction.begin();
-        size_t nextUnused = 1;
-        size_t joinPos = 0;
-        Perm<dim+1> gluing;
-        for (size_t pos = 0; pos < nSimp; ++pos)
-            for (int j = 0; j <= dim; ++j) {
-                // Already glued from the other side:
-                if (simp[pos]->adjacentSimplex(j))
-                    continue;
-
-                if (*facetPos == 0) {
-                    // Boundary facet.
-                } else if (*facetPos == 1) {
-                    // Join to new simplex.
-                    if (nextUnused >= nSimp) {
-                        throw InvalidArgument(
-                            "fromIsoSig(): gluing to non-existent simplex");
-                    }
-                    simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
-                } else {
-                    // Join to existing simplex.
-                    gluing = Perm<dim+1>::orderedSn[joinGluing[joinPos]];
-                    if (joinDest[joinPos] >= nextUnused ||
-                            simp[joinDest[joinPos]]->adjacentSimplex(
-                            gluing[j])) {
-                        throw InvalidArgument(
-                            "fromIsoSig(): invalid gluing destination");
-                    }
-                    simp[pos]->join(j, simp[joinDest[joinPos]], gluing);
-                    ++joinPos;
-                }
-
-                ++facetPos;
-            }
+        return ans;
+    } catch (const InvalidInput&) {
+        // Any exception caught here was thrown by Base64SigDecoder.
+        throw InvalidArgument(
+            "fromIsoSig(): incomplete or invalid base64 encoding");
     }
-
-    return ans;
 }
 
 template <int dim>
