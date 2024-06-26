@@ -331,8 +331,23 @@ class Base64SigEncoder {
          *
          * \return The current base64 encoding.
          */
-        const std::string& str() const {
+        const std::string& str() const & {
             return base64_;
+        }
+
+        /**
+         * Moves the base64 encoding that has been constructed thus far
+         * out of this encoder.
+         *
+         * After calling this function, this encoder object will be unusable.
+         *
+         * \nopython Instead use the variant of str() that returns its string
+         * by constant reference.
+         *
+         * \return The current base64 encoding.
+         */
+        std::string&& str() && {
+            return std::move(base64_);
         }
 
         /**
@@ -420,9 +435,12 @@ class Base64SigEncoder {
             // problem for any native IntType.
 
             if (size < 63) {
+                // Keep it simple for small objects: 1 character per integer.
                 encodeSingle(size);
                 return 1;
             } else {
+                // For large objects, start with a special marker followed by
+                // the number of characters per integer.
                 int charsPerInt = 0;
                 IntType tmp = size;
                 while (tmp > 0) {

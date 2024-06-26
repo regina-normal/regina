@@ -82,7 +82,10 @@ void addSigUtils(pybind11::module_& m) {
     auto e = pybind11::class_<Base64SigEncoder>(m, "Base64SigEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
-        .def("str", &Base64SigEncoder::str, rdoc::str)
+        .def("str",
+            static_cast<const std::string&(Base64SigEncoder::*)() const &>(
+                &Base64SigEncoder::str),
+            rdoc::str)
         .def("encodeSingle", &Base64SigEncoder::encodeSingle<long>,
             rdoc::encodeSingle)
         .def("encodeSize", &Base64SigEncoder::encodeSize<long>,

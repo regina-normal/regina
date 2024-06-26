@@ -119,6 +119,9 @@ Version 7.4  [ (to be announced) ]
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Isomorphism<dim>:
             - New routine hash(), which uses the tight encoding.
+        Class IsoSigPrintable<dim>:
+            - No longer derives from Base64SigEncoding (which is now
+              deprecated).
         Enum Language:
             - New enumeration that describes supported programming languages.
         Class LargeInteger:

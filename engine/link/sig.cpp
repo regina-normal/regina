@@ -191,7 +191,7 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
     }
 
     delete[] best;
-    return enc.str();
+    return std::move(enc).str();
 }
 
 Link Link::fromKnotSig(const std::string& sig) {

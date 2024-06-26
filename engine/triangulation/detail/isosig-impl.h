@@ -61,38 +61,20 @@ typename IsoSigPrintable<dim>::Signature IsoSigPrintable<dim>::encode(
     // - facetAction[...];
     // - joinDest[...];
     // - joinGluing[...].
-    std::string ans;
 
-    // Keep it simple for small triangulations (1 character per integer).
-    // For large triangulations, start with a special marker followed by
-    // the number of chars per integer.
-    int nChars;
-    if (nCompSimp < 63)
-        nChars = 1;
-    else {
-        nChars = 0;
-        size_t tmp = nCompSimp;
-        while (tmp > 0) {
-            tmp >>= 6;
-            ++nChars;
-        }
+    Base64SigEncoder enc;
+    int nChars = enc.encodeSize(nCompSimp);
 
-        ans = encodeSingle(63);
-        ans += encodeSingle(nChars);
-    }
-
-    // Off we go.
     size_t i;
-    encodeInt(ans, nCompSimp, nChars);
     for (i = 0; i < nFacetActions; i += 3)
-        ans += encodeTrits(facetAction + i,
+        enc.encodeTrits(facetAction + i,
             (nFacetActions >= i + 3 ? 3 : static_cast<int>(nFacetActions - i)));
     for (i = 0; i < nJoins; ++i)
-        encodeInt(ans, joinDest[i], nChars);
+        enc.encodeInt(joinDest[i], nChars);
     for (i = 0; i < nJoins; ++i)
-        encodeInt(ans, joinGluing[i], charsPerPerm);
+        enc.encodeInt(joinGluing[i], charsPerPerm);
 
-    return ans;
+    return std::move(enc).str();
 }
 
 namespace detail {

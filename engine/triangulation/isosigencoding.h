@@ -65,7 +65,7 @@ namespace regina {
  * \ingroup triangulation
  */
 template <int dim>
-class IsoSigPrintable : public Base64SigEncoding {
+class IsoSigPrintable {
     public:
         /**
          * The data type used to store an isomorphism signature.
@@ -85,8 +85,9 @@ class IsoSigPrintable : public Base64SigEncoding {
          * <i>dim</i>-dimensional triangulation.
          */
         static Signature emptySig() {
-            char c[2] = { encodeSingle(0), 0 };
-            return c;
+            Base64SigEncoder enc;
+            enc.encodeSingle(0);
+            return std::move(enc).str();
         }
 
         /**
