@@ -450,28 +450,13 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
 
 template <int dim>
 size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
-    const char* c = sig.c_str();
-
-    // Examine the first character.
-    // Note that isValid also ensures that *c is non-null (i.e., it
-    // detects premature end of string).
-    if (! Base64SigEncoding::isValid(*c))
+    Base64SigDecoder dec(sig); // skips leading whitespace
+    try {
+        return dec.decodeSize<size_t>().first;
+    } catch (const InvalidInput&) {
+        // The isosig was invalid.
         return 0;
-    size_t nSimp = Base64SigEncoding::decodeSingle(*c);
-    if (nSimp < 63)
-        return nSimp;
-
-    // The number of simplices is so large that it requires several
-    // characters to store.
-    ++c;
-    if (! *c)
-        return 0;
-    int nChars = Base64SigEncoding::decodeSingle(*c++);
-
-    for (const char* d = c; d < c + nChars; ++d)
-        if (! Base64SigEncoding::isValid(*d))
-            return 0;
-    return Base64SigEncoding::decodeInt<size_t>(c, nChars);
+    }
 }
 
 } // namespace regina::detail

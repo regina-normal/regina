@@ -284,7 +284,7 @@ Link Link::fromKnotSig(const std::string& sig) {
             ans.crossings_[crossing[0]]->strand(strand[0]));
 
         return ans;
-    } catch (const InvalidInput& exc) {
+    } catch (const InvalidInput&) {
         // Any exception caught here was thrown by Base64SigDecoder.
         throw InvalidArgument(
             "fromKnotSig(): incomplete or invalid base64 encoding");
