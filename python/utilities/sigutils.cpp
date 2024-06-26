@@ -91,22 +91,14 @@ void addSigUtils(pybind11::module_& m) {
         .def("encodeSize", &Base64SigEncoder::encodeSize<long>,
             rdoc::encodeSize)
         .def("encodeInt", &Base64SigEncoder::encodeInt<long>, rdoc::encodeInt)
+        .def("encodeInts",
+            [](Base64SigEncoder& enc, const std::vector<long>& v, int nChars) {
+                enc.encodeInts(v.begin(), v.end(), nChars);
+            }, rdoc::encodeInts)
         .def("encodeTrits",
-            pybind11::overload_cast<const std::array<uint8_t, 0>&>(
-                &Base64SigEncoder::encodeTrits<0>),
-            rdoc::encodeTrits)
-        .def("encodeTrits",
-            pybind11::overload_cast<const std::array<uint8_t, 1>&>(
-                &Base64SigEncoder::encodeTrits<1>),
-            rdoc::encodeTrits)
-        .def("encodeTrits",
-            pybind11::overload_cast<const std::array<uint8_t, 2>&>(
-                &Base64SigEncoder::encodeTrits<2>),
-            rdoc::encodeTrits)
-        .def("encodeTrits",
-            pybind11::overload_cast<const std::array<uint8_t, 3>&>(
-                &Base64SigEncoder::encodeTrits<3>),
-            rdoc::encodeTrits)
+            [](Base64SigEncoder& enc, const std::vector<uint8_t>& v) {
+                enc.encodeTrits(v.begin(), v.end());
+            }, rdoc::encodeTrits)
     ;
     regina::python::add_eq_operators(e);
 

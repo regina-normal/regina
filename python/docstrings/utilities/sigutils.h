@@ -270,6 +270,42 @@ Parameter ``nChars``:
     the number of base64 characters to use; typically this would be
     obtained through an earlier call to encodeSize().)doc";
 
+// Docstring regina::python::doc::Base64SigEncoder_::encodeInts
+static const char *encodeInts =
+R"doc(Encodes a sequence of non-negative integers, each using a fixed number
+of base64 characters.
+
+Each integer in the sequence will be encoded using encodeInt(). That
+is, each integer will be broken into *nChars* distinct 6-bit blocks,
+which will be encoded in order from lowest to highest significance.
+
+The inverse to this routine is Base64SigDecoder::decodeInt(), though
+that function only decodes one integer at a time.
+
+Exception ``InvalidArgument``:
+    Some integer in the sequence is negative, or requires more than
+    ``6 × nChars`` bits.
+
+Python:
+    Instead of a begin/end pair of iterators, this routine takes a
+    Python sequence of integers. Each Python integer will be read as a
+    native C++ ``long``.
+
+Template parameter ``InputIterator``:
+    an input iterator which, when dereferenced, gives a native C++
+    integer type.
+
+Parameter ``begin``:
+    an iterator pointing to the first integer to encode.
+
+Parameter ``end``:
+    a past-the-end iterator pointing beyond the last integer to
+    encode.
+
+Parameter ``nChars``:
+    the number of base64 characters to use for each integer; typically
+    this would be obtained through an earlier call to encodeSize().)doc";
+
 // Docstring regina::python::doc::Base64SigEncoder_::encodeSingle
 static const char *encodeSingle =
 R"doc(Encodes the given 6-bit integer using a single base64 character.
@@ -328,22 +364,33 @@ Returns:
 
 // Docstring regina::python::doc::Base64SigEncoder_::encodeTrits
 static const char *encodeTrits =
-R"doc(Encodes up to three trits, which are given using a fixed-size array. A
-_trit_ is either 0, 1 or 2.
+R"doc(Encodes a sequence of trits. A _trit_ is either 0, 1 or 2.
 
-The given trits will be packed into a single base64 character, with
-the first trit representing the lowest-significance bits of the
-underlying integer and so on.
+The trits will be packed into base64 characters, three at a time. For
+each individual base64 character, the three trits will use bits of the
+underlying 6-bit integer in order from lowest to highest significance.
+(The last base64 character might of course encode just one or two
+trits instead.)
 
-The inverse to this routine is Base64SigDecoder::decodeTrits().
+Each trit will be obtained by dereferencing an iterator and casting to
+``uint8_t``, and (as noted above) must take the value 0, 1 or 2.
 
-Template parameter ``nTrits``:
-    the number of trits to encode; this must be between 0 and 3
-    inclusive.
+The inverse to this routine is Base64SigDecoder::decodeTrits(), though
+that function only decodes three trits at a time.
 
-Parameter ``trits``:
-    the array of trits to encode. Each trit must take the value 0, 1
-    or 2.)doc";
+Python:
+    This routine takes a single argument, which is a Python sequence
+    of integer trits.
+
+Template parameter ``InputIterator``:
+    an input iterator which, when dereferenced, can be cast as a
+    native C++ unsigned 8-bit integer (``uint8_t``).
+
+Parameter ``beginTrits``:
+    an iterator pointing to the first trit to encode.
+
+Parameter ``endTrits``:
+    a past-the-end iterator pointing beyond the last trit to encode.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoder_::str
 static const char *str =

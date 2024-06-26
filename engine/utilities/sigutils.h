@@ -497,66 +497,82 @@ class Base64SigEncoder {
         }
 
         /**
-         * Encodes up to three trits, which are given using an input iterator.
-         * A _trit_ is either 0, 1 or 2.
+         * Encodes a sequence of non-negative integers, each using a fixed
+         * number of base64 characters.
          *
-         * The given trits will be packed into a single base64 character, with
-         * the first trit representing the lowest-significance bits of the
-         * underlying integer and so on.
+         * Each integer in the sequence will be encoded using encodeInt().
+         * That is, each integer will be broken into \a nChars distinct
+         * 6-bit blocks, which will be encoded in order from lowest to highest
+         * significance.
          *
-         * The inverse to this routine is Base64SigDecoder::decodeTrits().
+         * The inverse to this routine is Base64SigDecoder::decodeInt(),
+         * though that function only decodes one integer at a time.
          *
-         * \nopython Instead you can use the variant of this routine that takes
-         * the trits as a fixed-size array.
+         * \exception InvalidArgument Some integer in the sequence is negative,
+         * or requires more than `6 × nChars` bits.
          *
-         * \param trits an input iterator pointing to the first trit to encode;
-         * it must be possible to read and advance this iterator at least
-         * \a nTrits times.  Each trit will be cast to a \c uint8_t, and must
-         * take the value 0, 1 or 2.
-         * \param nTrits the number of trits to encode; this must be at most 3.
+         * \python Instead of a begin/end pair of iterators, this routine takes
+         * a Python sequence of integers.  Each Python integer will be read as
+         * a native C++ `long`.
+         *
+         * \tparam InputIterator an input iterator which, when dereferenced,
+         * gives a native C++ integer type.
+         *
+         * \param begin an iterator pointing to the first integer to encode.
+         * \param end a past-the-end iterator pointing beyond the last integer
+         * to encode.
+         * \param nChars the number of base64 characters to use for each
+         * integer; typically this would be obtained through an earlier call
+         * to encodeSize().
          */
         template <typename InputIterator>
-        void encodeTrits(InputIterator trits, unsigned nTrits) {
-            uint8_t packed = 0;
-            if (nTrits >= 1)
-                packed |= static_cast<uint8_t>(*trits++);
-            if (nTrits >= 2)
-                packed |= (static_cast<uint8_t>(*trits++) << 2);
-            if (nTrits >= 3)
-                packed |= (static_cast<uint8_t>(*trits++) << 4);
-            encodeSingle(packed);
+        void encodeInts(InputIterator begin, InputIterator end, int nChars) {
+            for (auto it = begin; it != end; ++it)
+                encodeInt(*it, nChars);
         }
 
         /**
-         * Encodes up to three trits, which are given using a fixed-size array.
-         * A _trit_ is either 0, 1 or 2.
+         * Encodes a sequence of trits.  A _trit_ is either 0, 1 or 2.
          *
-         * The given trits will be packed into a single base64 character, with
-         * the first trit representing the lowest-significance bits of the
-         * underlying integer and so on.
+         * The trits will be packed into base64 characters, three at a time.
+         * For each individual base64 character, the three trits will use bits
+         * of the underlying 6-bit integer in order from lowest to highest
+         * significance.  (The last base64 character might of course encode
+         * just one or two trits instead.)
          *
-         * The inverse to this routine is Base64SigDecoder::decodeTrits().
+         * Each trit will be obtained by dereferencing an iterator and casting
+         * to \c uint8_t, and (as noted above) must take the value 0, 1 or 2.
          *
-         * \tparam nTrits the number of trits to encode; this must be between
-         * 0 and 3 inclusive.
+         * The inverse to this routine is Base64SigDecoder::decodeTrits(),
+         * though that function only decodes three trits at a time.
          *
-         * \param trits the array of trits to encode.  Each trit must take
-         * the value 0, 1 or 2.
+         * \python This routine takes a single argument, which is a Python
+         * sequence of integer trits.
+         *
+         * \tparam InputIterator an input iterator which, when dereferenced,
+         * can be cast as a native C++ unsigned 8-bit integer (`uint8_t`).
+         *
+         * \param beginTrits an iterator pointing to the first trit to encode.
+         * \param endTrits a past-the-end iterator pointing beyond the last
+         * trit to encode.
          */
-        template <int nTrits>
-        void encodeTrits(const std::array<uint8_t, nTrits>& trits) {
-            static_assert(nTrits >= 0 && nTrits <= 3,
-                "Base64SigEncoder::encodeTrits() will only encode between "
-                "0 and 3 trits inclusive.");
-
-            uint8_t packed = 0;
-            if constexpr (nTrits >= 1)
-                packed |= trits[0];
-            if constexpr (nTrits >= 2)
-                packed |= (trits[1] << 2);
-            if constexpr (nTrits >= 3)
-                packed |= (trits[2] << 4);
-            encodeSingle(packed);
+        template <typename InputIterator>
+        void encodeTrits(InputIterator beginTrits, InputIterator endTrits) {
+            auto it = beginTrits;
+            while (it != endTrits) {
+                uint8_t packed = static_cast<uint8_t>(*it++);
+                if (it == endTrits) {
+                    encodeSingle(packed);
+                    return;
+                }
+                packed |= (static_cast<uint8_t>(*it++) << 2);
+                if (it == endTrits) {
+                    encodeSingle(packed);
+                    return;
+                }
+                packed |= (static_cast<uint8_t>(*it++) << 4);
+                encodeSingle(packed);
+            }
         }
 };
 

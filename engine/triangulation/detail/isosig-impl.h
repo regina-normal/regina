@@ -47,37 +47,10 @@
 #include <algorithm>
 #include "triangulation/generic/triangulation.h"
 #include "triangulation/isosigtype.h"
+#include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
-namespace regina {
-
-template <int dim>
-typename IsoSigPrintable<dim>::Signature IsoSigPrintable<dim>::encode(
-        size_t nCompSimp, size_t nFacetActions, const uint8_t* facetAction,
-        size_t nJoins, const size_t* joinDest,
-        const typename Perm<dim + 1>::Index *joinGluing) {
-    // We need to encode:
-    // - the number of simplices in this component;
-    // - facetAction[...];
-    // - joinDest[...];
-    // - joinGluing[...].
-
-    Base64SigEncoder enc;
-    int nChars = enc.encodeSize(nCompSimp);
-
-    size_t i;
-    for (i = 0; i < nFacetActions; i += 3)
-        enc.encodeTrits(facetAction + i,
-            (nFacetActions >= i + 3 ? 3 : static_cast<int>(nFacetActions - i)));
-    for (i = 0; i < nJoins; ++i)
-        enc.encodeInt(joinDest[i], nChars);
-    for (i = 0; i < nJoins; ++i)
-        enc.encodeInt(joinGluing[i], charsPerPerm);
-
-    return std::move(enc).str();
-}
-
-namespace detail {
+namespace regina::detail {
 
 template <int dim>
 template <class Encoding>
@@ -102,14 +75,14 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // but only once for each facet (so we "skip" gluings that we've
     // already seen from the other direction).
     size_t nFacets = ((dim + 1) * size() + countBoundaryFacets()) / 2;
-    auto* facetAction = new uint8_t[nFacets];
+    FixedArray<uint8_t> facetAction(nFacets);
 
     // What are the destination simplices and gluing permutations for
     // each facet under case #2 above?
     // For gluing permutations, we store the index of the permutation in
     // Perm<dim+1>::orderedSn.
-    auto* joinDest = new size_t[nFacets];
-    auto* joinGluing = new typename Perm<dim+1>::Index[nFacets];
+    FixedArray<size_t> joinDest(nFacets);
+    FixedArray<typename Perm<dim+1>::Index> joinGluing(nFacets);
 
     // ---------------------------------------------------------------------
     // Data for finding the unique canonical isomorphism from this
@@ -117,11 +90,11 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // ---------------------------------------------------------------------
 
     // The image for each simplex and its vertices:
-    auto* image = new ssize_t[nSimp];
-    auto* vertexMap = new Perm<dim+1>[nSimp];
+    FixedArray<ssize_t> image(nSimp);
+    FixedArray<Perm<dim+1>> vertexMap(nSimp);
 
     // The preimage for each simplex:
-    auto* preImage = new ssize_t[nSimp];
+    FixedArray<ssize_t> preImage(nSimp);
 
     // ---------------------------------------------------------------------
     // Looping variables
@@ -135,8 +108,8 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // The code!
     // ---------------------------------------------------------------------
 
-    std::fill(image, image + nSimp, -1);
-    std::fill(preImage, preImage + nSimp, -1);
+    std::fill(image.begin(), image.end(), -1);
+    std::fill(preImage.begin(), preImage.end(), -1);
 
     image[simp] = 0;
     vertexMap[simp] = vertices.inverse();
@@ -208,8 +181,14 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     }
 
     // We have all we need.  Pack it all together into a string.
+    //
+    // Note: Encoding::encode takes C-style arrays, whereas we have FixedArrays.
+    // For now we use the fact that FixedArray iterators are just pointers
+    // into C-style arrays; however, in the long term we should change the
+    // Encoding interface to be templated and take iterators instead.
     typename Encoding::Signature ans = Encoding::encode(simpImg,
-        facetPos, facetAction, joinPos, joinDest, joinGluing);
+        facetPos, facetAction.begin(),
+        joinPos, joinDest.begin(), joinGluing.begin());
 
     // Record the canonical isomorphism if required.
     if (relabelling)
@@ -219,13 +198,6 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
         }
 
     // Done!
-    delete[] image;
-    delete[] vertexMap;
-    delete[] preImage;
-    delete[] facetAction;
-    delete[] joinDest;
-    delete[] joinGluing;
-
     return ans;
 }
 
@@ -240,7 +212,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     size_t i;
     typename Encoding::Signature curr;
 
-    auto* comp = new typename Encoding::Signature[countComponents()];
+    FixedArray<typename Encoding::Signature> comp(countComponents());
     auto it = components().begin();
     for (i = 0; it != components().end(); ++it, ++i) {
         Type type(**it);
@@ -256,13 +228,12 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     }
 
     // Pack the components together.
-    std::sort(comp, comp + countComponents());
+    std::sort(comp.begin(), comp.end());
 
     typename Encoding::Signature ans;
     for (i = 0; i < countComponents(); ++i)
         ans += comp[i];
 
-    delete[] comp;
     return ans;
 }
 
@@ -288,7 +259,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
     size_t i;
     typename Encoding::Signature curr;
 
-    auto* comp = new typename Encoding::Signature[countComponents()];
+    FixedArray<typename Encoding::Signature> comp(countComponents());
     auto it = components().begin();
     for (i = 0; it != components().end(); ++it, ++i) {
         Type type(**it);
@@ -305,12 +276,11 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
     }
 
     // Pack the components together.
-    std::sort(comp, comp + countComponents());
+    std::sort(comp.begin(), comp.end());
 
     for (i = 0; i < countComponents(); ++i)
         ans.first += comp[i];
 
-    delete[] comp;
     return ans;
 }
 
@@ -363,54 +333,52 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
         }
 
         // Non-empty component; keep going.
-        auto* facetAction = new uint8_t[(dim+1) * nSimp + 2];
+        FixedArray<uint8_t> facetAction((dim+1) * nSimp + 2);
         size_t nFacets = 0;
-        size_t facetPos = 0;
+        auto facetPos = facetAction.begin();
         size_t nJoins = 0;
 
         for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
             if (c == end) {
-                delete[] facetAction;
                 throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
-            Base64SigEncoding::decodeTrits(*c++, facetAction + facetPos);
+            Base64SigEncoding::decodeTrits(*c++, facetPos);
             for (int j = 0; j < 3; ++j) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
                 if (nFacets == (dim+1) * nSimp) {
-                    if (facetAction[facetPos + j] != 0) {
-                        delete[] facetAction;
+                    if (*(facetPos + j) != 0) {
                         throw InvalidArgument(
                             "fromIsoSig(): extraneous facet actions");
                     }
                     continue;
                 }
 
-                if (facetAction[facetPos + j] == 0)
-                    ++nFacets;
-                else if (facetAction[facetPos + j] == 1)
-                    nFacets += 2;
-                else if (facetAction[facetPos + j] == 2) {
-                    nFacets += 2;
-                    ++nJoins;
-                } else {
-                    delete[] facetAction;
-                    throw InvalidArgument(
-                        "fromIsoSig(): invalid facet action");
+                switch (*(facetPos + j)) {
+                    case 0:
+                        ++nFacets;
+                        break;
+                    case 1:
+                        nFacets += 2;
+                        break;
+                    case 2:
+                        nFacets += 2;
+                        ++nJoins;
+                        break;
+                    default:
+                        throw InvalidArgument(
+                            "fromIsoSig(): invalid facet action");
                 }
                 if (nFacets > (dim+1) * nSimp) {
-                    delete[] facetAction;
                     throw InvalidArgument("fromIsoSig(): facet actions "
                         "do not match triangulation size");
                 }
             }
         }
 
-        auto* joinDest = new size_t[nJoins + 1];
+        FixedArray<size_t> joinDest(nJoins + 1);
         for (size_t pos = 0; pos < nJoins; ++pos) {
             if (c + nChars > end) {
-                delete[] facetAction;
-                delete[] joinDest;
                 throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
 
@@ -418,12 +386,9 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
             c += nChars;
         }
 
-        auto* joinGluing = new typename Perm<dim+1>::Index[nJoins + 1];
+        FixedArray<typename Perm<dim+1>::Index> joinGluing(nJoins + 1);
         for (size_t pos = 0; pos < nJoins; ++pos) {
             if (c + IsoSigPrintable<dim>::charsPerPerm > end) {
-                delete[] facetAction;
-                delete[] joinDest;
-                delete[] joinGluing;
                 throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
 
@@ -434,20 +399,17 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
 
             if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
                     joinGluing[pos] < 0) {
-                delete[] facetAction;
-                delete[] joinDest;
-                delete[] joinGluing;
                 throw InvalidArgument(
                     "fromIsoSig(): invalid gluing permutation");
             }
         }
 
         // End of component!
-        auto* simp = new Simplex<dim>*[nSimp];
+        FixedArray<Simplex<dim>*> simp(nSimp);
         for (size_t pos = 0; pos < nSimp; ++pos)
             simp[pos] = ans.newSimplex();
 
-        facetPos = 0;
+        facetPos = facetAction.begin();
         size_t nextUnused = 1;
         size_t joinPos = 0;
         Perm<dim+1> gluing;
@@ -457,15 +419,11 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                 if (simp[pos]->adjacentSimplex(j))
                     continue;
 
-                if (facetAction[facetPos] == 0) {
+                if (*facetPos == 0) {
                     // Boundary facet.
-                } else if (facetAction[facetPos] == 1) {
+                } else if (*facetPos == 1) {
                     // Join to new simplex.
                     if (nextUnused >= nSimp) {
-                        delete[] facetAction;
-                        delete[] joinDest;
-                        delete[] joinGluing;
-                        delete[] simp;
                         throw InvalidArgument(
                             "fromIsoSig(): gluing to non-existent simplex");
                     }
@@ -476,10 +434,6 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
                             gluing[j])) {
-                        delete[] facetAction;
-                        delete[] joinDest;
-                        delete[] joinGluing;
-                        delete[] simp;
                         throw InvalidArgument(
                             "fromIsoSig(): invalid gluing destination");
                     }
@@ -489,11 +443,6 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
 
                 ++facetPos;
             }
-
-        delete[] facetAction;
-        delete[] joinDest;
-        delete[] joinGluing;
-        delete[] simp;
     }
 
     return ans;
@@ -525,6 +474,6 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     return Base64SigEncoding::decodeInt<size_t>(c, nChars);
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

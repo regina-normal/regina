@@ -119,9 +119,18 @@ class IsoSigPrintable {
          * \return the encoding of the component being described.
          */
         static Signature encode(size_t size,
-            size_t nFacetActions, const uint8_t* facetAction,
-            size_t nJoins, const size_t* joinDest,
-            const typename Perm<dim+1>::Index* joinGluing);
+                size_t nFacetActions, const uint8_t* facetAction,
+                size_t nJoins, const size_t* joinDest,
+                const typename Perm<dim+1>::Index* joinGluing) {
+            Base64SigEncoder enc;
+
+            int nChars = enc.encodeSize(size);
+            enc.encodeTrits(facetAction, facetAction + nFacetActions);
+            enc.encodeInts(joinDest, joinDest + nJoins, nChars);
+            enc.encodeInts(joinGluing, joinGluing + nJoins, charsPerPerm);
+
+            return std::move(enc).str();
+        }
 
         // Make this class non-constructible.
         IsoSigPrintable() = delete;
