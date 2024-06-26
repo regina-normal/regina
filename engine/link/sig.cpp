@@ -199,7 +199,7 @@ Link Link::fromKnotSig(const std::string& sig) {
 
     Base64SigDecoder dec(sig); // skips leading whitespace
     try {
-        auto [ n, charsPerInt ] = dec.decodeSize<size_t>();
+        auto [ n, charsPerInt ] = dec.decodeSize();
         if (n == 0) {
             // Zero-crossing unknot.
             if (! dec.done())

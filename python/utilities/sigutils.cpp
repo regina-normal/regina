@@ -88,8 +88,7 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::str)
         .def("encodeSingle", &Base64SigEncoder::encodeSingle<long>,
             rdoc::encodeSingle)
-        .def("encodeSize", &Base64SigEncoder::encodeSize<long>,
-            rdoc::encodeSize)
+        .def("encodeSize", &Base64SigEncoder::encodeSize, rdoc::encodeSize)
         .def("encodeInt", &Base64SigEncoder::encodeInt<long>, rdoc::encodeInt)
         .def("encodeInts",
             [](Base64SigEncoder& enc, const std::vector<long>& v, int nChars) {
@@ -115,8 +114,7 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::arg("ignoreWhitespace") = true, rdoc::done)
         .def("decodeSingle", &Base64SigDecoder::decodeSingle<long>,
             rdoc::decodeSingle)
-        .def("decodeSize", &Base64SigDecoder::decodeSize<long>,
-            rdoc::decodeSize)
+        .def("decodeSize", &Base64SigDecoder::decodeSize, rdoc::decodeSize)
         .def("decodeInt", &Base64SigDecoder::decodeInt<long>, rdoc::decodeInt)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",

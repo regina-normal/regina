@@ -408,27 +408,11 @@ class Base64SigEncoder {
          *
          * The inverse to this routine is Base64SigDecoder::decodeSize().
          *
-         * \exception InvalidArgument The given integer is negative.
-         *
-         * \python The template argument \a IntType is taken to be a
-         * native C++ \c long.
-         *
-         * \tparam IntType a native C++ integer type.
-         *
          * \param size the non-negative integer to encode.
          * \return nChars the number of base64 characters required to write
          * any integer between 0 and \a size inclusive.
          */
-        template <typename IntType>
-        int encodeSize(IntType size) {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigEncoder::encodeSize() requires IntType to be a "
-                "native C++ integer type.");
-
-            if (size < 0)
-                throw InvalidArgument("Base64SigEncoder::encodeSize(): "
-                    "integer argument cannot be negative");
-
+        int encodeSize(size_t size) {
             // There is a theoretical upper limit on \a size: the return value
             // b must fit into a native int.  Even if int is only 16-bit, this
             // translates to size < 2^(6×2^15), which is not going to be a
@@ -442,7 +426,7 @@ class Base64SigEncoder {
                 // For large objects, start with a special marker followed by
                 // the number of characters per integer.
                 int charsPerInt = 0;
-                IntType tmp = size;
+                size_t tmp = size;
                 while (tmp > 0) {
                     tmp >>= 6;
                     ++charsPerInt;
@@ -749,30 +733,17 @@ class Base64SigDecoder {
          * in the encoded string, or a character was encountered that was not
          * a valid base64 character.
          *
-         * \python The template argument \a IntType is taken to be a
-         * native C++ \c long.
-         *
-         * \tparam IntType a native C++ integer type.  The result will be
-         * assembled using bitwise OR and bitwise shift lefts, and it is
-         * assumed that the programmer has chosen an integer type large enough
-         * to contain whatever values they expect to read.
-         *
          * \return a pair (\a size, \a b), where \a size is the integer that
          * was decoded, and \a b is the number of base64 characters described
          * above.
          */
-        template <typename IntType>
-        std::pair<IntType, int> decodeSize() {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigDecoder::decodeSize() requires IntType to be a "
-                "native C++ integer type.");
-
-            IntType n = decodeSingle<IntType>();
-            if (n < 63)
-                return { n, 1 };
+        std::pair<size_t, int> decodeSize() {
+            int first = decodeSingle<int>();
+            if (first < 63)
+                return { first, 1 };
             else {
                 int charsPerInt = decodeSingle<int>();
-                IntType n = decodeInt<IntType>(charsPerInt);
+                size_t n = decodeInt<size_t>(charsPerInt);
                 return { n, charsPerInt };
             }
         }
