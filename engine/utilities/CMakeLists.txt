@@ -30,6 +30,7 @@ if (${REGINA_INSTALL_DEV})
     bitmask.h
     boolset.h
     exception.h
+    fixedarray.h
     flags.h
     i18nutils.h
     intutils.h

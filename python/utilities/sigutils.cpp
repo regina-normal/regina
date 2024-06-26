@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/utilities/sigutils.h"
 
+using regina::Base64SigDecoder;
+using regina::Base64SigEncoder;
 using regina::Base64SigEncoding;
 
 void addSigUtils(pybind11::module_& m) {
@@ -74,6 +76,61 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::decodeTrits)
     ;
     regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_SWITCH(Base64SigEncoder)
+
+    auto e = pybind11::class_<Base64SigEncoder>(m, "Base64SigEncoder",
+            rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def("str", &Base64SigEncoder::str, rdoc::str)
+        .def("encodeSingle", &Base64SigEncoder::encodeSingle<long>,
+            rdoc::encodeSingle)
+        .def("encodeSize", &Base64SigEncoder::encodeSize<long>,
+            rdoc::encodeSize)
+        .def("encodeInt", &Base64SigEncoder::encodeInt<long>, rdoc::encodeInt)
+        .def("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 0>&>(
+                &Base64SigEncoder::encodeTrits<0>),
+            rdoc::encodeTrits)
+        .def("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 1>&>(
+                &Base64SigEncoder::encodeTrits<1>),
+            rdoc::encodeTrits)
+        .def("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 2>&>(
+                &Base64SigEncoder::encodeTrits<2>),
+            rdoc::encodeTrits)
+        .def("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 3>&>(
+                &Base64SigEncoder::encodeTrits<3>),
+            rdoc::encodeTrits)
+    ;
+    regina::python::add_eq_operators(e);
+
+    RDOC_SCOPE_SWITCH(Base64SigDecoder)
+
+    auto d = pybind11::class_<Base64SigDecoder>(m, "Base64SigDecoder",
+            rdoc_scope)
+        .def(pybind11::init<const std::string&, bool>(),
+            pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
+            rdoc::__init)
+        .def("skipWhitespace", &Base64SigDecoder::skipWhitespace,
+            rdoc::skipWhitespace)
+        .def("done", &Base64SigDecoder::done,
+            pybind11::arg("ignoreWhitespace") = true, rdoc::done)
+        .def("decodeSingle", &Base64SigDecoder::decodeSingle<long>,
+            rdoc::decodeSingle)
+        .def("decodeSize", &Base64SigDecoder::decodeSize<long>,
+            rdoc::decodeSize)
+        .def("decodeInt", &Base64SigDecoder::decodeInt<long>, rdoc::decodeInt)
+        // overload_cast cannot handle template vs non-template overloads.
+        .def("decodeTrits",
+            static_cast<std::array<uint8_t, 3>(Base64SigDecoder::*)()>(
+                &Base64SigDecoder::decodeTrits),
+            rdoc::decodeTrits)
+        .def_static("isValid", &Base64SigDecoder::isValid, rdoc::isValid)
+    ;
+    regina::python::add_eq_operators(d);
 
     RDOC_SCOPE_END
 }

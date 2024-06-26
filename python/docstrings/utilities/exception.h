@@ -50,7 +50,7 @@ ReginaException, and are not documented again here.)doc";
 // Docstring regina::python::doc::InvalidInput
 static const char *InvalidInput =
 R"doc(An exception thrown when a function reads unexpected or incomplete
-data from an input stream.
+data from an input stream (or more generally, an input source).
 
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";

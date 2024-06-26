@@ -144,7 +144,7 @@ class InvalidArgument : public ReginaException {
 
 /**
  * An exception thrown when a function reads unexpected or incomplete
- * data from an input stream.
+ * data from an input stream (or more generally, an input source).
  *
  * All member functions follow the same pattern as the parent class
  * ReginaException, and are not documented again here.

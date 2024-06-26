@@ -47,6 +47,12 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., BagComparison::Equal).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class Base64SigDecoder, Base64SigEncoder:
+            - New classes to support base64-encoded signatures, such as
+              isomorphism signatures and knot/link signatures.
+        Class Base64SigEncoding:
+            - Deprecated in favour of the new classes Base64SigEncoder and
+              Base64SigDecoder.
         Class BitManipulator<T>:
             - New routine swapBits().
         Class BoolSet:
@@ -77,6 +83,9 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., FileFormat::XmlGen3).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class FixedArray:
+            - New class for stack-based fixed-size arrays whose sizes are not
+              known until runtime.
         Class Flags<T>:
             - Updated to support both scoped and unscoped enumerations.
             - New operator bool(), which tests for a non-empty flag set.

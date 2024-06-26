@@ -171,6 +171,7 @@
 		051691BE1C5AD60A00DC69EC /* hypermatchingui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691A81C5AD59000DC69EC /* hypermatchingui.h */; };
 		051691BF1C5AD60D00DC69EC /* hypersummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AA1C5AD59000DC69EC /* hypersummaryui.h */; };
 		051691C01C5AD61200DC69EC /* hyperui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AC1C5AD59000DC69EC /* hyperui.h */; };
+		051806AC2C2B9512001470F1 /* fixedarray.h in Headers */ = {isa = PBXBuildFile; fileRef = 051806AB2C2B9512001470F1 /* fixedarray.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		0518B99429D5932D0020ADC1 /* snappy_get_gluing_equations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518B99329D5932C0020ADC1 /* snappy_get_gluing_equations.cpp */; };
 		0518B99B29D594030020ADC1 /* canonize_part_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518B99629D594030020ADC1 /* canonize_part_1.cpp */; };
@@ -2482,6 +2483,8 @@
 		051691AA1C5AD59000DC69EC /* hypersummaryui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypersummaryui.h; sourceTree = "<group>"; };
 		051691AB1C5AD59000DC69EC /* hyperui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hyperui.cpp; sourceTree = "<group>"; };
 		051691AC1C5AD59000DC69EC /* hyperui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperui.h; sourceTree = "<group>"; };
+		051806AB2C2B9512001470F1 /* fixedarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixedarray.h; sourceTree = "<group>"; };
+		051806AD2C2BC447001470F1 /* fixedarray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fixedarray.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		0518B99329D5932C0020ADC1 /* snappy_get_gluing_equations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappy_get_gluing_equations.cpp; sourceTree = "<group>"; };
@@ -4841,6 +4844,7 @@
 				05098A8528F24D98005E4716 /* bitmask.h */,
 				05098A8328F24D98005E4716 /* boolset.h */,
 				05098A8B28F24D98005E4716 /* exception.h */,
+				051806AD2C2BC447001470F1 /* fixedarray.h */,
 				05098AB928F62200005E4716 /* flags.h */,
 				05098A8A28F24D98005E4716 /* i18nutils.h */,
 				05098A8028F24D98005E4716 /* intutils.h */,
@@ -6515,6 +6519,7 @@
 				052F9E6B180600FB00FAE4DF /* boolset.h */,
 				052F9E63180600FB00FAE4DF /* CMakeLists.txt */,
 				0598030A266EDDD5002D5D57 /* exception.h */,
+				051806AB2C2B9512001470F1 /* fixedarray.h */,
 				052F9E64180600FB00FAE4DF /* flags.h */,
 				052F9E65180600FB00FAE4DF /* i18nutils.cpp */,
 				052F9E66180600FB00FAE4DF /* i18nutils.h */,
@@ -8453,6 +8458,7 @@
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				05F0A00C1DBF078800117BFC /* vertex4.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
+				051806AC2C2B9512001470F1 /* fixedarray.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
 				059802F126683C6D002D5D57 /* xmlanglestructreader.h in Headers */,
