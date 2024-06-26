@@ -116,6 +116,14 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::decodeSingle)
         .def("decodeSize", &Base64SigDecoder::decodeSize, rdoc::decodeSize)
         .def("decodeInt", &Base64SigDecoder::decodeInt<long>, rdoc::decodeInt)
+        .def("decodeInts", [](Base64SigDecoder& dec, size_t count, int nChars) {
+            // Reimplement this using decodeInt(), since the iterators for
+            // pybind11::list have the wrong value type.
+            pybind11::list ans;
+            for (size_t i = 0; i < count; ++i)
+                ans.append(dec.decodeInt<long>(nChars));
+            return ans;
+        })
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
             static_cast<std::array<uint8_t, 3>(Base64SigDecoder::*)()>(

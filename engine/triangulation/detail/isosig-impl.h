@@ -340,21 +340,9 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                 }
             }
 
-            FixedArray<size_t> joinDest(nJoins);
-            for (size_t pos = 0; pos < nJoins; ++pos)
-                joinDest[pos] = dec.decodeInt<size_t>(nChars);
-
-            FixedArray<typename Perm<dim+1>::Index> joinGluing(nJoins);
-            for (size_t pos = 0; pos < nJoins; ++pos) {
-                joinGluing[pos] = dec.decodeInt<typename Perm<dim+1>::Index>(
-                    IsoSigPrintable<dim>::charsPerPerm);
-
-                if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
-                        joinGluing[pos] < 0) {
-                    throw InvalidArgument(
-                        "fromIsoSig(): invalid gluing permutation");
-                }
-            }
+            auto joinDest = dec.decodeInts<size_t>(nJoins, nChars);
+            auto joinGluing = dec.decodeInts<typename Perm<dim+1>::Index>(
+                nJoins, IsoSigPrintable<dim>::charsPerPerm);
 
             // End of component!
             FixedArray<Simplex<dim>*> simp(nSimp);
@@ -382,6 +370,11 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                         simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
                     } else {
                         // Join to existing simplex.
+                        if (joinGluing[joinPos] >= Perm<dim+1>::nPerms ||
+                                joinGluing[joinPos] < 0) {
+                            throw InvalidArgument(
+                                "fromIsoSig(): invalid gluing permutation");
+                        }
                         gluing = Perm<dim+1>::orderedSn[joinGluing[joinPos]];
                         if (joinDest[joinPos] >= nextUnused ||
                                 simp[joinDest[joinPos]]->adjacentSimplex(
