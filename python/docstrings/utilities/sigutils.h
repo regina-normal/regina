@@ -257,6 +257,15 @@ Returns:
     ``True`` if and only if *c* is one of the 64 printable characters
     described in the class notes.)doc";
 
+// Docstring regina::python::doc::Base64SigDecoder_::peek
+static const char *peek =
+R"doc(Returns the character at the current position in the encoded string.
+The current position will not move.
+
+Returns:
+    the character at the current position, or 0 if there are no more
+    characters available.)doc";
+
 // Docstring regina::python::doc::Base64SigDecoder_::skipWhitespace
 static const char *skipWhitespace =
 R"doc(Moves the current position past any whitespace.

@@ -112,6 +112,7 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::skipWhitespace)
         .def("done", &Base64SigDecoder::done,
             pybind11::arg("ignoreWhitespace") = true, rdoc::done)
+        .def("peek", &Base64SigDecoder::peek, rdoc::peek)
         .def("decodeSingle", &Base64SigDecoder::decodeSingle<long>,
             rdoc::decodeSingle)
         .def("decodeSize", &Base64SigDecoder::decodeSize, rdoc::decodeSize)

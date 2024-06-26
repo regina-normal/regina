@@ -667,6 +667,17 @@ class Base64SigDecoder {
         }
 
         /**
+         * Returns the character at the current position in the encoded string.
+         * The current position will not move.
+         *
+         * \return the character at the current position, or 0 if there are no
+         * more characters available.
+         */
+        char peek() const {
+            return (next_ == end_ ? 0 : *next_);
+        }
+
+        /**
          * Decodes the 6-bit integer value represented by the next single
          * base64 character.
          *
