@@ -224,41 +224,71 @@ class LinkTest : public testing::Test {
 };
 
 TEST_F(LinkTest, connected) {
-    // For now we just test connectivity of the model graphs, since there is
-    // not yet a function Link::isConnected().
+    // Test connectivity of both the links and their model graphs.
+
+    // The following links should give the same result for both the links and
+    // their underlying graphs: either there are no zero-crossing components,
+    // or there are but these do not change the result.
+    EXPECT_TRUE(empty.link.isConnected());
     EXPECT_TRUE(empty.link.graph().isConnected());
 
+    EXPECT_TRUE(unknot0.link.isConnected());
     EXPECT_TRUE(unknot0.link.graph().isConnected());
+    EXPECT_TRUE(unknot1.link.isConnected());
     EXPECT_TRUE(unknot1.link.graph().isConnected());
+    EXPECT_TRUE(unknot3.link.isConnected());
     EXPECT_TRUE(unknot3.link.graph().isConnected());
+    EXPECT_TRUE(unknotMonster.link.isConnected());
     EXPECT_TRUE(unknotMonster.link.graph().isConnected());
+    EXPECT_TRUE(unknotGordian.link.isConnected());
     EXPECT_TRUE(unknotGordian.link.graph().isConnected());
 
+    EXPECT_TRUE(trefoilLeft.link.isConnected());
     EXPECT_TRUE(trefoilLeft.link.graph().isConnected());
+    EXPECT_TRUE(trefoilRight.link.isConnected());
     EXPECT_TRUE(trefoilRight.link.graph().isConnected());
+    EXPECT_TRUE(trefoil_r1x2.link.isConnected());
     EXPECT_TRUE(trefoil_r1x2.link.graph().isConnected());
+    EXPECT_TRUE(trefoil_r1x6.link.isConnected());
     EXPECT_TRUE(trefoil_r1x6.link.graph().isConnected());
+    EXPECT_TRUE(figureEight.link.isConnected());
     EXPECT_TRUE(figureEight.link.graph().isConnected());
+    EXPECT_TRUE(figureEight_r1x2.link.isConnected());
     EXPECT_TRUE(figureEight_r1x2.link.graph().isConnected());
+    EXPECT_TRUE(conway.link.isConnected());
     EXPECT_TRUE(conway.link.graph().isConnected());
+    EXPECT_TRUE(kinoshitaTerasaka.link.isConnected());
     EXPECT_TRUE(kinoshitaTerasaka.link.graph().isConnected());
+    EXPECT_TRUE(gst.link.isConnected());
     EXPECT_TRUE(gst.link.graph().isConnected());
 
+    EXPECT_TRUE(rht_rht.link.isConnected());
     EXPECT_TRUE(rht_rht.link.graph().isConnected());
+    EXPECT_TRUE(rht_lht.link.isConnected());
     EXPECT_TRUE(rht_lht.link.graph().isConnected());
 
+    EXPECT_TRUE(unlink2_r2.link.isConnected());
     EXPECT_TRUE(unlink2_r2.link.graph().isConnected());
+    EXPECT_FALSE(unlink2_r1r1.link.isConnected());
     EXPECT_FALSE(unlink2_r1r1.link.graph().isConnected());
+    EXPECT_TRUE(hopf.link.isConnected());
     EXPECT_TRUE(hopf.link.graph().isConnected());
+    EXPECT_TRUE(whitehead.link.isConnected());
     EXPECT_TRUE(whitehead.link.graph().isConnected());
+    EXPECT_TRUE(borromean.link.isConnected());
     EXPECT_TRUE(borromean.link.graph().isConnected());
+    EXPECT_FALSE(trefoil_unknot1.link.isConnected());
     EXPECT_FALSE(trefoil_unknot1.link.graph().isConnected());
+    EXPECT_TRUE(trefoil_unknot_overlap.link.isConnected());
     EXPECT_TRUE(trefoil_unknot_overlap.link.graph().isConnected());
 
     // These links are disconnected, but since their graphs ignore
     // zero-crossing components the graphs _are_ connected.
+    EXPECT_FALSE(unlink2_0.link.isConnected());
     EXPECT_TRUE(unlink2_0.link.graph().isConnected());
+    EXPECT_FALSE(unlink3_0.link.isConnected());
     EXPECT_TRUE(unlink3_0.link.graph().isConnected());
+    EXPECT_FALSE(trefoil_unknot0.link.isConnected());
     EXPECT_TRUE(trefoil_unknot0.link.graph().isConnected());
 }
 

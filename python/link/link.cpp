@@ -224,6 +224,7 @@ void addLink(pybind11::module_& m) {
         .def("parallel", &Link::parallel,
             pybind11::arg(), pybind11::arg("framing") = Framing::Seifert,
             rdoc::parallel)
+        .def("isConnected", &Link::isConnected, rdoc::isConnected)
         .def("connected", &Link::connected, rdoc::connected)
         .def("bracket", &Link::bracket,
             pybind11::return_value_policy::reference_internal,

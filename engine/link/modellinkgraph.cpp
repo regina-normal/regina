@@ -233,26 +233,26 @@ bool ModelLinkGraph::isConnected() const {
 
     // Just another depth-first search.
 
-    FixedArray<bool> seen(nodes_.size());
-    FixedArray<size_t> stack(nodes_.size());
+    FixedArray<bool> seen(nodes_.size(), false);
+    FixedArray<const ModelLinkGraphNode*> stack(nodes_.size());
 
     size_t stackSize = 1;
-    stack[0] = 0;
+    stack[0] = nodes_.front();
     seen[0] = true;
     size_t nFound = 1;
 
     while (stackSize > 0) {
-        size_t from = stack[--stackSize];
-        auto n = nodes_[from];
+        auto curr = stack[--stackSize];
+
         for (int i = 0; i < 4; ++i) {
-            size_t to = n->adj_[i].node_->index();
-            if (! seen[to]) {
+            auto adj = curr->adj_[i].node_;
+            if (! seen[adj->index()]) {
                 ++nFound;
                 if (nFound == nodes_.size())
                     return true;
 
-                seen[to] = true;
-                stack[stackSize++] = to;
+                seen[adj->index()] = true;
+                stack[stackSize++] = adj;
             }
         }
     }

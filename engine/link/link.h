@@ -1044,12 +1044,46 @@ class Link :
         StrandRef translate(const StrandRef& other) const;
 
         /**
+         * Determines whether the underlying 4-valent graph of the link
+         * diagram is connected.
+         *
+         * Here "the underlying 4-valent graph" means the multigraph
+         * whose vertices are the crossings and whose edges are the arcs
+         * between crossings.  In particular:
+         *
+         * - the graph may be connected even if the link has multiple
+         *   components;
+         *
+         * - if the graph is not connected then the link must be splittable,
+         *   though a splittable link _could_ still have a connected graph.
+         *
+         * If the link contains any zero-crossing components (i.e., unknotted
+         * circles disjoint from the rest of the diagram), then these components
+         * _will_ be taken into consideration here (although technically they
+         * are not modelled by a 4-valent graph).  In particular:
+         *
+         * - this routine will return `false` if the link has a zero-crossing
+         *   link component and at least one other component;
+         *
+         * - such scenarios are the only cases where `link.isConnected()` and
+         *   `link.graph().isConnected()` may give different results, since
+         *   ModelLinkGraph strips away any zero-crossing components.
+         *
+         * For the purposes of this routine, an empty link is considered to be
+         * connected.
+         *
+         * \return \c true if and only if the two given crossings are
+         * connected.
+         */
+        bool isConnected() const;
+
+        /**
          * Determines whether the two given crossings are connected in the
          * underlying 4-valent graph of the link diagram.
          *
          * Here "the underlying 4-valent graph" means the multigraph
          * whose vertices are the crossings and whose edges are the arcs
-         * between crossings.  In particular
+         * between crossings.  In particular:
          *
          * - two crossings may be connected even if they involve
          *   entirely different components of the link;

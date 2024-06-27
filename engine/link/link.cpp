@@ -212,6 +212,48 @@ Link::Link(const std::string& description) {
         "as representing a link");
 }
 
+bool Link::isConnected() const {
+    if (components_.size() <= 1)
+        return true;
+
+    // Look for any zero-crossing components.
+    for (auto c: components_)
+        if (! c)
+            return false; // since we already know there are other components
+
+    // Run a depth-first search.
+    // We know there is at least one crossing from the tests above.
+    size_t n = crossings_.size();
+
+    FixedArray<bool> visited(n, false);
+    FixedArray<const Crossing*> stack(n);
+
+    size_t stackSize = 1;
+    stack[0] = crossings_.front();
+    visited[0] = true;
+    size_t nFound = 1;
+
+    while (stackSize > 0) {
+        auto curr = stack[--stackSize];
+
+        for (int i = 0; i < 2; ++i) {
+            // We only need to look at next, not prev, since anything we can
+            // reach via prev can also be reached via a sequence of next steps.
+            auto adj = curr->next_[i].crossing();
+            if (! visited[adj->index()]) {
+                ++nFound;
+                if (nFound == n)
+                    return true;
+
+                visited[adj->index()] = true;
+                stack[stackSize++] = adj;
+            }
+        }
+    }
+
+    return false;
+}
+
 bool Link::connected(const Crossing* a, const Crossing* b) const {
     if (components_.size() <= 1)
         return true;
@@ -219,28 +261,20 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     // Do a depth-first search.
     size_t n = crossings_.size();
 
-    bool* visited = new bool[n];
-    auto* stack = new Crossing const*[n];
-
-    std::fill(visited, visited + n, false);
+    FixedArray<bool> visited(n, false);
+    FixedArray<const Crossing*> stack(n);
 
     size_t stackSize = 1;
     stack[0] = a;
     visited[a->index()] = true;
 
-    const Crossing *curr, *adj;
-    int i;
     while (stackSize > 0 && ! visited[b->index()]) {
-        curr = stack[--stackSize];
+        auto curr = stack[--stackSize];
 
-        for (i = 0; i < 2; ++i) {
-            adj = curr->next_[i].crossing();
-            if (! visited[adj->index()]) {
-                visited[adj->index()] = true;
-                stack[stackSize++] = adj;
-            }
-
-            adj = curr->prev_[i].crossing();
+        for (int i = 0; i < 2; ++i) {
+            // We only need to look at next, not prev, since anything we can
+            // reach via prev can also be reached via a sequence of next steps.
+            const Crossing* adj = curr->next_[i].crossing();
             if (! visited[adj->index()]) {
                 visited[adj->index()] = true;
                 stack[stackSize++] = adj;
@@ -248,11 +282,7 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
         }
     }
 
-    bool ans = visited[b->index()];
-
-    delete[] stack;
-    delete[] visited;
-    return ans;
+    return visited[b->index()];
 }
 
 StrandRef Link::overForComponent(StrandRef component) const {
