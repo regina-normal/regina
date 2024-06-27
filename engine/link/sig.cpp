@@ -63,12 +63,12 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
     // Ordering: crossing by ID; strand upper first; sign positive first
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
     size_t n = crossings_.size();
-    auto* best = new SigData[2 * n];
-    auto* curr = new SigData[2 * n];
+    FixedArray<SigData> best(2 * n);
+    FixedArray<SigData> curr(2 * n);
 
     // The image and preimage for each crossing.
-    auto* image = new ssize_t[n];
-    auto* preimage = new ssize_t[n];
+    FixedArray<ssize_t> image(n);
+    FixedArray<ssize_t> preimage(n);
 
     bool currBetter;
     StrandRef currStrand;
@@ -86,8 +86,8 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
                             start->sign() == (reflectSign ? 1 : -1))
                         continue;
 
-                    std::fill(image, image + n, -1);
-                    std::fill(preimage, preimage + n, -1);
+                    std::fill(image.begin(), image.end(), -1);
+                    std::fill(preimage.begin(), preimage.end(), -1);
 
                     // Map crossing start -> 0.
                     image[start->index()] = 0;
@@ -162,17 +162,13 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
             break;
     }
 
-    delete[] preimage;
-    delete[] image;
-    delete[] curr;
-
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
     Base64SigEncoder enc;
 
     // Output crossings in order.
     int charsPerInt = enc.encodeSize(n);
-    for (auto dat = best; dat != best + 2*n; ++dat)
-        enc.encodeInt(dat->crossing, charsPerInt);
+    for (const auto& dat: best)
+        enc.encodeInt(dat.crossing, charsPerInt);
 
     // Output strands and signs, each as a packed sequence of bits.
     for (size_t i = 0; i < 2 * n; i += 6) {
@@ -190,7 +186,6 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
         enc.encodeSingle(write);
     }
 
-    delete[] best;
     return std::move(enc).str();
 }
 

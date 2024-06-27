@@ -70,8 +70,7 @@ bool Link::hasReducingPass() const {
     size_t infinity = nSides + 1;
 
     // dist[nSides*i + j] denotes the distance from (side of arc) i to j.
-    auto* dist = new size_t[nSides * nSides];
-    std::fill(dist, dist + nSides * nSides, infinity);
+    FixedArray<size_t> dist(nSides * nSides, infinity);
 
     size_t upperOutgoing, lowerOutgoing, upperIncoming, lowerIncoming;
     StrandRef prev;
@@ -165,7 +164,6 @@ bool Link::hasReducingPass() const {
             // This component is a zero-crossing knot placed above the rest of
             // the diagram, which means the entire knot can be slid away.
             // This can be viewed as a reducing pass.
-            delete[] dist;
             return true;
         }
 
@@ -198,7 +196,6 @@ bool Link::hasReducingPass() const {
                             dist[nSides * i + j + 1] < seqLen ||
                             dist[nSides * (i + 1) + j] < seqLen ||
                             dist[nSides * (i + 1) + j + 1] < seqLen) {
-                        delete[] dist;
                         return true;
                     }
                 }
@@ -211,7 +208,6 @@ bool Link::hasReducingPass() const {
         if (! start) {
             // This component is a zero-crossing knot placed below the rest of
             // the diagram.  Again this can be viewed as a reducing pass.
-            delete[] dist;
             return true;
         }
 
@@ -240,7 +236,6 @@ bool Link::hasReducingPass() const {
                             dist[nSides * i + j + 1] < seqLen ||
                             dist[nSides * (i + 1) + j] < seqLen ||
                             dist[nSides * (i + 1) + j + 1] < seqLen) {
-                        delete[] dist;
                         return true;
                     }
                 }
@@ -249,7 +244,6 @@ bool Link::hasReducingPass() const {
     }
 
     // Nothing found!
-    delete[] dist;
     return false;
 }
 

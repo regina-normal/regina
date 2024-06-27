@@ -75,11 +75,11 @@ class FixedArray {
          */
         using const_reference = T const&;
         /**
-         * An iterator over this array.
+         * A random-access iterator over this array.
          */
         using iterator = T*;
         /**
-         * A constant iterator over this array.
+         * A constant random-access iterator over this array.
          */
         using const_iterator = T const*;
         /**
@@ -97,8 +97,24 @@ class FixedArray {
          * \pre The type \a T has a default constructor.
          *
          * Every element will be created using the default constructor for \a T.
+         *
+         * \param size the number of elements in the new array.
          */
         FixedArray(size_t size) : data_(new T[size]), size_(size) {
+        }
+
+        /**
+         * Constructs a new array of the given size, and initialises every
+         * element to the given value.
+         *
+         * \pre The type \a T has a copy constructor.
+         *
+         * \param size the number of elements in the new array.
+         * \param value the value to assign to every element of the new array.
+         */
+        FixedArray(size_t size, const T& value) :
+                data_(new T[size]), size_(size) {
+            std::fill(data_, data_ + size_, value);
         }
 
         /**
@@ -177,8 +193,8 @@ class FixedArray {
         }
 
         /**
-         * Returns a read-write iterator pointing to the first element of this
-         * array.
+         * Returns a read-write random-access iterator pointing to the
+         * first element of this array.
          *
          * \return a read-write begin iterator.
          */
@@ -187,8 +203,8 @@ class FixedArray {
         }
 
         /**
-         * Returns a read-only iterator pointing to the first element of this
-         * array.
+         * Returns a read-only random-access iterator pointing to the
+         * first element of this array.
          *
          * \return a read-only begin iterator.
          */
@@ -197,8 +213,8 @@ class FixedArray {
         }
 
         /**
-         * Returns a read-write iterator pointing beyond the last element of
-         * this array.
+         * Returns a read-write random-access iterator pointing beyond the
+         * last element of this array.
          *
          * Note that, because this iterator is past-the-end, it must not be
          * dereferenced.
@@ -210,8 +226,8 @@ class FixedArray {
         }
 
         /**
-         * Returns a read-only iterator pointing beyond the last element of
-         * this array.
+         * Returns a read-only random-access iterator pointing beyond the
+         * last element of this array.
          *
          * Note that, because this iterator is past-the-end, it must not be
          * dereferenced.

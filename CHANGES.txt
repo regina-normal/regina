@@ -171,9 +171,10 @@ Version 7.4  [ (to be announced) ]
               MatrixReal to represent the C++ type Matrix<double>.
         Class ModelLinkGraph:
             - New routines isSimple() and isConnected().
-            - New routines loops(), bigons() and triangles().
             - Routine generateMinimalLinks() now supports multiple-component
               links.
+        Class ModelLinkGraphNode:
+            - New routines loops(), bigons() and triangles().
         Enum NamedPermGroup:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_GROUP_TRIVIAL) have been

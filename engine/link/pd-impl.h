@@ -44,6 +44,7 @@
 #endif
 
 #include <algorithm>
+#include "utilities/fixedarray.h"
 
 namespace regina {
 
@@ -81,7 +82,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
 
     // Identify the two crossings that each strand meets.
     // A position of -1 in the 4-tuple means "not yet seen".
-    auto* occ = new PDOccurrence[2 * n];
+    FixedArray<PDOccurrence> occ(2 * n);
     for (size_t i = 0; i < 2 * n; ++i)
         occ[i].first.second = occ[i].second.second = -1;
 
@@ -91,10 +92,9 @@ Link Link::fromPD(Iterator begin, Iterator end) {
         for (int i = 0; i < 4; ++i) {
             InputInt s = (*it)[i];
             if (s <= 0 || s > maxStrand) {
-                delete[] occ;
                 throw InvalidArgument("fromPD(): strand out of range");
             }
-            PDOccurrence* o = occ + (s - 1);
+            auto o = occ.begin() + (s - 1);
             if (o->first.second < 0) {
                 o->first.first = index;
                 o->first.second = i;
@@ -102,7 +102,6 @@ Link Link::fromPD(Iterator begin, Iterator end) {
                 o->second.first = index;
                 o->second.second = i;
             } else {
-                delete[] occ;
                 throw InvalidArgument(
                     "fromPD(): strand appears more than twice");
             }
@@ -114,8 +113,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     // 1 means first occurrence -> second occurrence;
     // -1 means second occurrence -> first occurrence.
 
-    int* dir = new int[2 * n];
-    std::fill(dir, dir + 2 * n, 0);
+    FixedArray<int> dir(2 * n, 0);
 
     // First walk through the crossings and work out what we can.
     for (it = begin, index = 0; it != end; ++it, ++index) {
@@ -249,8 +247,6 @@ Link Link::fromPD(Iterator begin, Iterator end) {
             (from.second % 2 ? 1 : 0));
     }
 
-    delete[] dir;
-    delete[] occ;
     return ans;
 }
 

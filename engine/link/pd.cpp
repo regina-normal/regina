@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "link/link.h"
+#include "utilities/fixedarray.h"
 #include <cctype>
 #include <climits>
 #include <cstdlib>
@@ -114,7 +115,7 @@ std::vector<std::array<int, 4>> Link::pdData() const {
     ans.reserve(n);
 
     // Build a lookup table from StrandRef::id() -> PD strand number:
-    int* strand = new int[2 * n];
+    FixedArray<int> strand(2 * n);
     int pdStrand = 1;
     for (auto start : components_) {
         if (! start)
@@ -156,7 +157,6 @@ std::vector<std::array<int, 4>> Link::pdData() const {
         } while (s != start);
     }
 
-    delete[] strand;
     return ans;
 }
 
@@ -173,7 +173,7 @@ void Link::pd(std::ostream& out) const {
     bool nonEmpty = false;
 
     // Build a lookup table from StrandRef::id() -> PD strand number:
-    auto* strand = new size_t[2 * n];
+    FixedArray<size_t> strand(2 * n);
     size_t pdStrand = 1;
     for (auto start : components_) {
         if (! start)
@@ -223,8 +223,6 @@ void Link::pd(std::ostream& out) const {
             s = next;
         } while (s != start);
     }
-
-    delete[] strand;
 
     out << ']';
 }
