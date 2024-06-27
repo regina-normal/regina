@@ -1044,57 +1044,62 @@ class Link :
         StrandRef translate(const StrandRef& other) const;
 
         /**
-         * Determines whether the underlying 4-valent graph of the link
-         * diagram is connected.
+         * Determines whether this link diagram is connected, if we treat each
+         * crossing as a 4-way intersection.
          *
-         * Here "the underlying 4-valent graph" means the multigraph
-         * whose vertices are the crossings and whose edges are the arcs
-         * between crossings.  In particular:
+         * This tests whether it is possible to travel from any part of the
+         * link to any other part of the link by:
          *
-         * - the graph may be connected even if the link has multiple
-         *   components;
+         * - following the link around its components, and/or;
+         * - jumping between upper and lower strands at crossings.
          *
-         * - if the graph is not connected then the link must be splittable,
-         *   though a splittable link _could_ still have a connected graph.
+         * In particular, the link diagram may be connected even if the link
+         * has multiple components.
          *
-         * If the link contains any zero-crossing components (i.e., unknotted
-         * circles disjoint from the rest of the diagram), then these components
-         * _will_ be taken into consideration here (although technically they
-         * are not modelled by a 4-valent graph).  In particular:
+         * Connectivity is a property of the diagram, not an invariant of the
+         * link itself, since the locations of the crossings matter.
+         * In particular:
          *
-         * - this routine will return `false` if the link has a zero-crossing
-         *   link component and at least one other component;
+         * - a disconnected diagram _must_ describe a splittable link;
          *
-         * - such scenarios are the only cases where `link.isConnected()` and
-         *   `link.graph().isConnected()` may give different results, since
-         *   ModelLinkGraph strips away any zero-crossing components.
+         * - a splittable link, however, could be represented by either a
+         *   connected or disconnected link diagram.
+         *
+         * This is almost, but not quite, equivalent to testing whether the
+         * underlying 4-valent graph of the link diagram is connected.
+         * Specifically, where `link.isConnected()` and
+         * `link.graph().isConnected()` differ is in cases where the link has
+         * zero-crossing components (i.e., unknotted circles disjoint from the
+         * rest of the diagram).  Zero-crossing components are considered here
+         * in `Link.isConnected()` but _not_ in `ModelLinkGraph.isConnected()`,
+         * since such components cannot be represented by a 4-valent graph
+         * (and so the ModelLinkGraph class ignores them completely).
          *
          * For the purposes of this routine, an empty link is considered to be
          * connected.
          *
-         * \return \c true if and only if the two given crossings are
-         * connected.
+         * \return \c true if and only if this link diagram is connected.
          */
         bool isConnected() const;
 
         /**
          * Determines whether the two given crossings are connected in the
-         * underlying 4-valent graph of the link diagram.
+         * link diagram, if we treat each crossing as a 4-way intersection.
          *
-         * Here "the underlying 4-valent graph" means the multigraph
-         * whose vertices are the crossings and whose edges are the arcs
-         * between crossings.  In particular:
+         * This tests whether it is possible to travel between the two given
+         * crossings by:
          *
-         * - two crossings may be connected even if they involve
-         *   entirely different components of the link;
+         * - following the link around its components, and/or;
+         * - jumping between upper and lower strands at crossings.
          *
-         * - if two crossings are not connected then the underlying link
-         *   must be splittable (though this need not happen in the
-         *   other direction: one can have a diagram of a splittable
-         *   link in which all crossings are connected with each other).
+         * In particular, two crossings may be connected in the diagram even
+         * if they involve entirely different components of the link.
          *
-         * \warning This routine is slow (linear time), since it may
-         * need to perform a depth-first search through the graph.
+         * See isConnected() for further discussion on the connectivity of
+         * link diagrams.
+         *
+         * \warning This routine is linear time, since it may
+         * need to perform a depth-first search through the diagram.
          *
          * \param a the first of the two crossings to examine.
          * \param b the second of the two crossings to examine.
