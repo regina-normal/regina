@@ -33,7 +33,15 @@ This base64 encoding uses the characters: ``a..zA..Z0..9+-``
     symbols from the encoding used in utilities/base64.h. This should
     not be a problem: Regina uses this encoding exclusively for
     signatures, and uses utilities/base64.h exclusively for encoding
-    files.)doc";
+    files.
+
+Python:
+    The type *Iterator* is an implementation detail, and is hidden
+    from Python users. Just use the unadorned type name
+    ``Base64SigDecoder``.
+
+Template parameter ``Iterator``:
+    a forward iterator whose associated value type is ``char``.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoder
 static const char *Base64SigEncoder =
@@ -80,9 +88,19 @@ namespace Base64SigDecoder_ {
 static const char *__init =
 R"doc(Creates a new decoder for the given encoded string.
 
+The string itself should be passed as an iterator range. This iterator
+range must remain valid for the entire lifespan of this decoder.
+
+Python:
+    Instead of an iterator range, this constructor takes a Python
+    string. In Python (but not C++), the decoder will also keep a deep
+    copy of the string, to ensure the lifespan requirements.
+
 Parameter ``encoding``:
-    a reference to the encoded string. This string _must_ remain alive
-    and unchanged for the entire lifespan of this decoder.
+    an iterator pointing to the beginning of the encoded string.
+
+Parameter ``end``:
+    a past-the-end iterator that marks the end of the encoded string.
 
 Parameter ``skipInitialWhitespace``:
     ``True`` if the current position should immediately advance past

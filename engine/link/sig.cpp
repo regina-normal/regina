@@ -197,7 +197,7 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
 Link Link::fromKnotSig(const std::string& sig) {
     Link ans;
 
-    Base64SigDecoder dec(sig); // skips leading whitespace
+    Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
     try {
         auto [ n, charsPerInt ] = dec.decodeSize();
         if (n == 0) {

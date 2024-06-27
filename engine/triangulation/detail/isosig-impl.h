@@ -286,7 +286,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
 
 template <int dim>
 Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
-    Base64SigDecoder dec(sig); // skips leading whitespace
+    Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
 
     try {
         Triangulation<dim> ans;
@@ -400,7 +400,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
 
 template <int dim>
 size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
-    Base64SigDecoder dec(sig); // skips leading whitespace
+    Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
     try {
         return dec.decodeSize().first;
     } catch (const InvalidInput&) {

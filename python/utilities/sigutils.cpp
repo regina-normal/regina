@@ -36,9 +36,34 @@
 #include "../helpers.h"
 #include "../docstrings/utilities/sigutils.h"
 
-using regina::Base64SigDecoder;
 using regina::Base64SigEncoder;
 using regina::Base64SigEncoding;
+
+using Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
+
+namespace regina::python {
+    // For Python (but not C++), we need Base64SigDecoder to keep a deep copy
+    // of the base64 string.
+    //
+    // Awkwardly, we need to copy the string _before_ passing its iterators to
+    // the Base64Decoder constructor, which means we can't just keep the string
+    // as member variable (since base classes are initialised first).
+    // Instead we use _another_ base class holding the string, which is
+    // initialised before Base64Decoder. Bleh.
+
+    struct StringStorage {
+        std::string str_;
+        StringStorage(std::string&& str) : str_(std::move(str)) {}
+    };
+
+    class Base64SigDecoder_Copy : private StringStorage, public Decoder {
+        public:
+            Base64SigDecoder_Copy(std::string str, bool skipInitialWhitespace) :
+                    StringStorage(std::move(str)),
+                    Decoder(str_.begin(), str_.end(), skipInitialWhitespace) {
+            }
+    };
+}
 
 void addSigUtils(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Base64SigEncoding)
@@ -103,21 +128,20 @@ void addSigUtils(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Base64SigDecoder)
 
-    auto d = pybind11::class_<Base64SigDecoder>(m, "Base64SigDecoder",
-            rdoc_scope)
+    auto d = pybind11::class_<regina::python::Base64SigDecoder_Copy>(m,
+            "Base64SigDecoder", rdoc_scope)
         .def(pybind11::init<const std::string&, bool>(),
             pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
             rdoc::__init)
-        .def("skipWhitespace", &Base64SigDecoder::skipWhitespace,
-            rdoc::skipWhitespace)
-        .def("done", &Base64SigDecoder::done,
+        .def("skipWhitespace", &Decoder::skipWhitespace, rdoc::skipWhitespace)
+        .def("done", &Decoder::done,
             pybind11::arg("ignoreWhitespace") = true, rdoc::done)
-        .def("peek", &Base64SigDecoder::peek, rdoc::peek)
-        .def("decodeSingle", &Base64SigDecoder::decodeSingle<long>,
-            rdoc::decodeSingle)
-        .def("decodeSize", &Base64SigDecoder::decodeSize, rdoc::decodeSize)
-        .def("decodeInt", &Base64SigDecoder::decodeInt<long>, rdoc::decodeInt)
-        .def("decodeInts", [](Base64SigDecoder& dec, size_t count, int nChars) {
+        .def("peek", &Decoder::peek, rdoc::peek)
+        .def("decodeSingle", &Decoder::decodeSingle<long>, rdoc::decodeSingle)
+        .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
+        .def("decodeInt", &Decoder::decodeInt<long>, rdoc::decodeInt)
+        .def("decodeInts", [](regina::python::Base64SigDecoder_Copy& dec,
+                size_t count, int nChars) {
             // Reimplement this using decodeInt(), since the iterators for
             // pybind11::list have the wrong value type.
             pybind11::list ans;
@@ -126,11 +150,10 @@ void addSigUtils(pybind11::module_& m) {
             return ans;
         })
         // overload_cast cannot handle template vs non-template overloads.
-        .def("decodeTrits",
-            static_cast<std::array<uint8_t, 3>(Base64SigDecoder::*)()>(
-                &Base64SigDecoder::decodeTrits),
+        .def("decodeTrits", static_cast<std::array<uint8_t, 3>(Decoder::*)()>(
+                &Decoder::decodeTrits),
             rdoc::decodeTrits)
-        .def_static("isValid", &Base64SigDecoder::isValid, rdoc::isValid)
+        .def_static("isValid", &Decoder::isValid, rdoc::isValid)
     ;
     regina::python::add_eq_operators(d);
 

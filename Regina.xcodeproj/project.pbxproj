@@ -2485,6 +2485,8 @@
 		051691AC1C5AD59000DC69EC /* hyperui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperui.h; sourceTree = "<group>"; };
 		051806AB2C2B9512001470F1 /* fixedarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixedarray.h; sourceTree = "<group>"; };
 		051806AD2C2BC447001470F1 /* fixedarray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fixedarray.h; sourceTree = "<group>"; };
+		051806AE2C2CF65D001470F1 /* base64.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = base64.out; sourceTree = "<group>"; };
+		051806AF2C2CF65D001470F1 /* base64.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = base64.test; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		0518B99329D5932C0020ADC1 /* snappy_get_gluing_equations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappy_get_gluing_equations.cpp; sourceTree = "<group>"; };
@@ -5446,6 +5448,8 @@
 				05431FD11C40F67C009BC072 /* alltypes.test */,
 				05772F03270CFB6000D26D8A /* angles.out */,
 				05772F08270CFB6000D26D8A /* angles.test */,
+				051806AE2C2CF65D001470F1 /* base64.out */,
+				051806AF2C2CF65D001470F1 /* base64.test */,
 				054DF94028CABC2800EC3D81 /* basic.cpp */,
 				054F7DF1278EA2970036B923 /* bool.out */,
 				054F7DF0278EA2970036B923 /* bool.test */,

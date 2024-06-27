@@ -580,53 +580,49 @@ class Base64SigEncoder {
  * This should not be a problem: Regina uses this encoding exclusively for
  * signatures, and uses utilities/base64.h exclusively for encoding files.
  *
+ * \python The type \a Iterator is an implementation detail, and is hidden
+ * from Python users.  Just use the unadorned type name `Base64SigDecoder`.
+ *
+ * \tparam Iterator a forward iterator whose associated value type is `char`.
+ *
  * \ingroup utilities
  */
+template <typename Iterator>
 class Base64SigDecoder {
     private:
-        const char* next_;
+        Iterator next_;
             /**< The current position in the encoded string. */
-        const char* end_;
+        Iterator end_;
             /**< The end of the encoded string (specifically, a past-the-end
-                 pointer, such as the location of a terminating null). */
+                 location, as is usual for an iterator range). */
 
     public:
-        /**
-         * Creates a new decoder for the given encoded string.
-         *
-         * \nopython Instead of this constructor (which takes C-style character
-         * pointers), you can use the constructor that takes a string.
-         *
-         * \param encoding a pointer to the beginning of the encoded string.
-         * This string _must_ remain alive for the entire lifespan of this
-         * decoder.
-         * \param end a pointer just past the end of the encoded string
-         * (e.g., the location of a terminating null).
-         * \param skipInitialWhitespace \c true if the current position should
-         * immediately advance past any initial whitespace in the given string.
-         */
-        Base64SigDecoder(const char* encoding, const char* end,
-                bool skipInitialWhitespace = true) :
-                next_(encoding), end_(end) {
-            if (skipInitialWhitespace) {
-                while (next_ != end_ && ::isspace(*next_))
-                    ++next_;
-            }
-        }
+        static_assert(
+            std::is_same_v<typename std::iterator_traits<Iterator>::value_type,
+                char>,
+            "Base64SigDecoder requires iterators over characters.");
 
         /**
          * Creates a new decoder for the given encoded string.
          *
-         * \param encoding a reference to the encoded string.  This string
-         * _must_ remain alive and unchanged for the entire lifespan of this
-         * decoder.
+         * The string itself should be passed as an iterator range.
+         * This iterator range must remain valid for the entire lifespan
+         * of this decoder.
+         *
+         * \python Instead of an iterator range, this constructor takes a
+         * Python string.  In Python (but not C++), the decoder will also keep
+         * a deep copy of the string, to ensure the lifespan requirements.
+         *
+         * \param encoding an iterator pointing to the beginning of the
+         * encoded string.
+         * \param end a past-the-end iterator that marks the end of the
+         * encoded string.
          * \param skipInitialWhitespace \c true if the current position should
          * immediately advance past any initial whitespace in the given string.
          */
-        Base64SigDecoder(const std::string& encoding,
+        Base64SigDecoder(Iterator encoding, Iterator end,
                 bool skipInitialWhitespace = true) :
-                next_(encoding.c_str()),
-                end_(encoding.c_str() + encoding.length()) {
+                next_(encoding), end_(end) {
             if (skipInitialWhitespace) {
                 while (next_ != end_ && ::isspace(*next_))
                     ++next_;
@@ -657,7 +653,7 @@ class Base64SigDecoder {
          */
         bool done(bool ignoreWhitespace = true) const {
             if (ignoreWhitespace) {
-                for (const char* pos = next_; pos != end_; ++pos)
+                for (Iterator pos = next_; pos != end_; ++pos)
                     if (! ::isspace(*pos))
                         return false;
                 return true;
@@ -821,7 +817,7 @@ class Base64SigDecoder {
          * not take an output iterator, but instead returns the sequence of
          * integers that were decoded.
          *
-         * \tparam Iterator an output iterator whose associated value type
+         * \tparam OutputIterator an output iterator whose associated value type
          * is a native C++ integer type.  Each integer that is decoded will be
          * assembled using bitwise OR and bitwise shift lefts, and it is
          * assumed that the programmer has chosen an integer type large enough
@@ -835,9 +831,10 @@ class Base64SigDecoder {
          * \param count the number of integers to decode.
          * \param nChars the number of base64 characters to read.
          */
-        template <typename Iterator>
-        void decodeInts(Iterator output, size_t count, int nChars) {
-            using IntType = typename std::iterator_traits<Iterator>::value_type;
+        template <typename OutputIterator>
+        void decodeInts(OutputIterator output, size_t count, int nChars) {
+            using IntType =
+                typename std::iterator_traits<OutputIterator>::value_type;
             for (size_t i = 0; i < count; ++i)
                 *output++ = decodeInt<IntType>(nChars);
         }
