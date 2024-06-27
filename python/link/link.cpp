@@ -290,8 +290,8 @@ void addLink(pybind11::module_& m) {
         .def("pdAmbiguous", &Link::pdAmbiguous, rdoc::pdAmbiguous)
         .def("pace", &Link::pace, rdoc::pace)
         .def("knotSig", &Link::knotSig,
-            pybind11::arg("useReflection") = true,
-            pybind11::arg("useReversal") = true,
+            pybind11::arg("allowReflection") = true,
+            pybind11::arg("allowReversal") = true,
             rdoc::knotSig)
         .def("source", &Link::source,
             // The default should be Language::Current, but in C++ that

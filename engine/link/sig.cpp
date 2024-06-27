@@ -53,7 +53,7 @@ namespace {
     };
 }
 
-std::string Link::knotSig(bool useReflection, bool useReverse) const {
+std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
     // Only defined for knots at present.
     if (components_.size() != 1)
         throw NotImplemented(
@@ -82,7 +82,7 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
                 for (auto start : crossings_) {
                     // If we can reflect, then we can guarantee to start with
                     // a positive crossing.
-                    if (useReflection &&
+                    if (allowReflection &&
                             start->sign() == (reflectSign ? 1 : -1))
                         continue;
 
@@ -150,7 +150,7 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
                         ;
                 }
 
-                if (! useReverse)
+                if (! allowReversal)
                     break;
             }
 
@@ -158,7 +158,7 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
             // rotation of the knot.
         }
 
-        if (! useReflection)
+        if (! allowReflection)
             break;
     }
 

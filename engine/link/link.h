@@ -3561,18 +3561,18 @@ class Link :
          * \exception NotImplemented This link is empty or has multiple
          * components.
          *
-         * \param useReflection \c true if the reflection of a knot diagram
+         * \param allowReflection \c true if the reflection of a knot diagram
          * should have the same signature as the original, or \c false
          * if these should be distinct (assuming the diagram is not symmetric
          * under reflection).
-         * \param useReversal \c true if the reversal of a knot diagram
+         * \param allowReversal \c true if the reversal of a knot diagram
          * should have the same signature as the original, or \c false
          * if these should be distinct (assuming the diagram is not symmetric
          * under reversal).
          * \return the signature for this knot diagram.
          */
-        std::string knotSig(bool useReflection = true, bool useReversal = true)
-            const;
+        std::string knotSig(
+            bool allowReflection = true, bool allowReversal = true) const;
 
         /**
          * Writes the tight encoding of this link to the given output stream.
