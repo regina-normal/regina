@@ -75,6 +75,9 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("index", &ModelLinkGraphNode::index, rdoc::index)
         .def("arc", &ModelLinkGraphNode::arc, rdoc::arc)
         .def("adj", &ModelLinkGraphNode::adj, rdoc::adj)
+        .def("loops", &ModelLinkGraphNode::loops, rdoc::loops)
+        .def("bigons", &ModelLinkGraphNode::bigons, rdoc::bigons)
+        .def("triangles", &ModelLinkGraphNode::triangles, rdoc::triangles)
     ;
     regina::python::add_output(n);
     regina::python::add_eq_operators(n);
@@ -92,6 +95,7 @@ void addModelLinkGraph(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>(), rdoc::nodes)
         .def("swap", &ModelLinkGraph::swap, rdoc::swap)
         .def("reflect", &ModelLinkGraph::reflect, rdoc::reflect)
+        .def("isConnected", &ModelLinkGraph::isConnected, rdoc::isConnected)
         .def("isSimple", &ModelLinkGraph::isSimple, rdoc::isSimple)
         .def("cells", &ModelLinkGraph::cells,
             pybind11::return_value_policy::reference_internal, rdoc::cells)

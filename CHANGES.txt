@@ -170,8 +170,9 @@ Version 7.4  [ (to be announced) ]
               native C++ floating-point types, and Python now has a new binding
               MatrixReal to represent the C++ type Matrix<double>.
         Class ModelLinkGraph:
-            - New routine isSimple().
-            - Routine generateMinimalLinks now supports multiple-component
+            - New routines isSimple() and isConnected().
+            - New routines loops(), bigons() and triangles().
+            - Routine generateMinimalLinks() now supports multiple-component
               links.
         Enum NamedPermGroup:
             - This is now a scoped enumeration, for better type safety.

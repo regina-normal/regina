@@ -223,6 +223,45 @@ class LinkTest : public testing::Test {
         }
 };
 
+TEST_F(LinkTest, connected) {
+    // For now we just test connectivity of the model graphs, since there is
+    // not yet a function Link::isConnected().
+    EXPECT_TRUE(empty.link.graph().isConnected());
+
+    EXPECT_TRUE(unknot0.link.graph().isConnected());
+    EXPECT_TRUE(unknot1.link.graph().isConnected());
+    EXPECT_TRUE(unknot3.link.graph().isConnected());
+    EXPECT_TRUE(unknotMonster.link.graph().isConnected());
+    EXPECT_TRUE(unknotGordian.link.graph().isConnected());
+
+    EXPECT_TRUE(trefoilLeft.link.graph().isConnected());
+    EXPECT_TRUE(trefoilRight.link.graph().isConnected());
+    EXPECT_TRUE(trefoil_r1x2.link.graph().isConnected());
+    EXPECT_TRUE(trefoil_r1x6.link.graph().isConnected());
+    EXPECT_TRUE(figureEight.link.graph().isConnected());
+    EXPECT_TRUE(figureEight_r1x2.link.graph().isConnected());
+    EXPECT_TRUE(conway.link.graph().isConnected());
+    EXPECT_TRUE(kinoshitaTerasaka.link.graph().isConnected());
+    EXPECT_TRUE(gst.link.graph().isConnected());
+
+    EXPECT_TRUE(rht_rht.link.graph().isConnected());
+    EXPECT_TRUE(rht_lht.link.graph().isConnected());
+
+    EXPECT_TRUE(unlink2_r2.link.graph().isConnected());
+    EXPECT_FALSE(unlink2_r1r1.link.graph().isConnected());
+    EXPECT_TRUE(hopf.link.graph().isConnected());
+    EXPECT_TRUE(whitehead.link.graph().isConnected());
+    EXPECT_TRUE(borromean.link.graph().isConnected());
+    EXPECT_FALSE(trefoil_unknot1.link.graph().isConnected());
+    EXPECT_TRUE(trefoil_unknot_overlap.link.graph().isConnected());
+
+    // These links are disconnected, but since their graphs ignore
+    // zero-crossing components the graphs _are_ connected.
+    EXPECT_TRUE(unlink2_0.link.graph().isConnected());
+    EXPECT_TRUE(unlink3_0.link.graph().isConnected());
+    EXPECT_TRUE(trefoil_unknot0.link.graph().isConnected());
+}
+
 TEST_F(LinkTest, components) {
     EXPECT_EQ(empty.link.countComponents(), 0);
 
@@ -2002,6 +2041,64 @@ static void verifyGroup(const Link& link, const char* name) {
 
 TEST_F(LinkTest, group) {
     testManualCases(verifyGroup, false);
+}
+
+static void verifySmallCells(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    const regina::ModelLinkGraph graph(link);
+    if (! graph.isConnected()) {
+        // We cannot build the dual cell decomposition.
+        // Don't test this link.
+        return;
+    }
+    const auto& cells = graph.cells();
+
+    // Verify that loops(), bigons() and triangles() match what we see from
+    // the dual cell decomposition.
+    for (auto n: graph.nodes()) {
+        SCOPED_TRACE_NUMERIC(n->index());
+
+        int foundLoops = 0;
+        int foundBigons = 0;
+        int foundTriangles = 0;
+
+        for (int i = 0; i < 4; ++i) {
+            int cell = cells.cell(n->arc(i));
+            switch (cells.size(cell)) {
+                case 1:
+                    ++foundLoops;
+                    break;
+                case 2:
+                    {
+                        auto n0 = cells.arc(cell, 0).node();
+                        auto n1 = cells.arc(cell, 1).node();
+                        if (n0 != n1)
+                            ++foundBigons;
+                    }
+                    break;
+                case 3:
+                    {
+                        auto n0 = cells.arc(cell, 0).node();
+                        auto n1 = cells.arc(cell, 1).node();
+                        auto n2 = cells.arc(cell, 2).node();
+                        if (n0 != n1 && n0 != n2 && n1 != n2)
+                            ++foundTriangles;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        EXPECT_EQ(foundLoops, n->loops());
+        EXPECT_EQ(foundBigons, n->bigons());
+        EXPECT_EQ(foundTriangles, n->triangles());
+    }
+}
+
+TEST_F(LinkTest, smallCells) {
+    testManualCases(verifySmallCells);
 }
 
 TEST_F(LinkTest, swapping) {

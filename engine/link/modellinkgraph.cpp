@@ -87,6 +87,47 @@ namespace {
 
 namespace regina {
 
+int ModelLinkGraphNode::loops() const {
+    int ans = 0;
+    for (int i = 0; i < 4; ++i)
+        if (adj_[i].node() == this)
+            ++ans;
+    return ans >> 1; // each loop is counted twice, once from each end
+}
+
+int ModelLinkGraphNode::bigons() const {
+    int ans = 0;
+    for (int i = 0; i < 4; ++i)
+        if (adj_[i].node() != this) {
+            auto next = (i+1) % 4;
+            if (adj_[i].node() == adj_[next].node()) {
+                auto left = adj_[i];
+                --left;
+                if (left == adj_[next])
+                    ++ans;
+            }
+        }
+    return ans;
+}
+
+int ModelLinkGraphNode::triangles() const {
+    int ans = 0;
+    for (int i = 0; i < 4; ++i) {
+        if (adj_[i].node() != this) {
+            auto next = (i+1) % 4;
+            if (adj_[i].node() != adj_[next].node()) {
+                auto left = adj_[i];
+                --left;
+                auto right = adj_[next];
+                ++right;
+                if (left.traverse() == right)
+                    ++ans;
+            }
+        }
+    }
+    return ans;
+}
+
 ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& copy) : cells_(nullptr) {
     nodes_.reserve(copy.nodes_.size());
     for (size_t i = 0; i < copy.nodes_.size(); ++i)
@@ -184,6 +225,39 @@ void ModelLinkGraph::reflect() {
         delete cells_;
         cells_ = nullptr;
     }
+}
+
+bool ModelLinkGraph::isConnected() const {
+    if (nodes_.size() <= 1)
+        return true;
+
+    // Just another depth-first search.
+
+    FixedArray<bool> seen(nodes_.size());
+    FixedArray<size_t> stack(nodes_.size());
+
+    size_t stackSize = 1;
+    stack[0] = 0;
+    seen[0] = true;
+    size_t nFound = 1;
+
+    while (stackSize > 0) {
+        size_t from = stack[--stackSize];
+        auto n = nodes_[from];
+        for (int i = 0; i < 4; ++i) {
+            size_t to = n->adj_[i].node_->index();
+            if (! seen[to]) {
+                ++nFound;
+                if (nFound == nodes_.size())
+                    return true;
+
+                seen[to] = true;
+                stack[stackSize++] = to;
+            }
+        }
+    }
+
+    return false;
 }
 
 bool ModelLinkGraph::isSimple() const {
