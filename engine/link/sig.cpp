@@ -54,14 +54,27 @@ namespace {
 }
 
 std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
-    // Only defined for knots at present.
-    if (components_.size() != 1)
+    if (! isConnected())
         throw NotImplemented(
-            "Knot signatures are only implemented for single-component links");
+            "Signatures are only implemented for connected link diagrams");
 
-    // Minimise sequence: (crossing, strand, sign) ... (crossing, strand, sign)
-    // Ordering: crossing by ID; strand upper first; sign positive first
-    // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
+    // The original knot signatures (Regina ≤ 7.3):
+    //
+    // - Minimise: (crossing, strand, sign) ... (crossing, strand, sign)
+    // - Ordering: crossing by ID; strand upper first; sign positive first
+    // - Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
+    //
+    // Extending to connected diagrams with multiple components (Regina ≥ 7.4):
+    //
+    // - In the sequence above, insert a sentinel (n, 0, 0) between different
+    //   link components (but not after the final component);
+    // - In the text output, include sentinels in the list of crossings (but
+    //   not in the strand/sign bits);
+    // - Under these rules, the empty link needs to be special-cased since the
+    //   sequence [ 0 ] already represents the 0-crossing unknot: here we
+    //   cheat and give the empty link a symbol that is not part of our usual
+    //   base64 set (Base64Encoder.spare[0]).
+
     size_t n = crossings_.size();
     FixedArray<SigData> best(2 * n);
     FixedArray<SigData> curr(2 * n);
@@ -142,7 +155,7 @@ std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
                     }
 
                     if (currBetter) {
-                        std::swap(curr, best);
+                        curr.swap(best);
                         begin = false;
                     }
 

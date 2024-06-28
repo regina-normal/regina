@@ -2299,45 +2299,51 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knotSig
 static const char *knotSig =
-R"doc(Constructs the _signature_ for this knot diagram.
+R"doc(Constructs the _signature_ for this knot or link diagram.
 
-A _signature_ is a compact text representation of a knot diagram that
-unique determines the knot up to relabelling, rotation, and
-(optionally) reflection and/or reversal.
+A _signature_ is a compact text representation of a link diagram that
+uniquely determines the diagram up to relabelling, rotation, and
+(optionally) reflecting the entire diagram and/or reversing some or
+all link components.
 
-Currently signatures are only implemented for knots, not empty or
-multiple component links. If this link does not have precisely one
-component, then this routine will throw an exception. It is possible
-that in future versions of Regina, knot signatures will be expanded to
-cover all possible link diagrams (hence the choice of NotImplemented
-as the exception type).
+In Regina versions 7.3 and earlier, signatures were only supported for
+knots. As of Regina 7.4, signatures are now also supported for empty
+links and _connected_ diagrams with multiple link components (and in
+the case of knots, the signature format has not changed). Signatures
+remain unsupported for _disconnected_ link diagrams: if this link
+diagram is disconnected then this routine will throw an exception. See
+isConnected() for further discussion on connectivity.
 
 The signature is constructed entirely of printable characters, and has
 length proportional to ``n log n``, where *n* is the number of
 crossings.
 
-The routine fromKnotSig() can be used to recover a knot from its
-signature. The resulting knot might not be identical to the original,
-but it will be related by zero or more applications of relabelling,
-rotation, and/or (according to the arguments) reflection and reversal.
+The routine fromKnotSig() can be used to recover a link diagram from
+its signature. The resulting diagram might not be identical to the
+original, but it will be related by zero or more applications of
+relabelling, rotation, and/or (according to the arguments) reflection
+of the entire diagram and/or reversal of components.
 
 This routine runs in quadratic time.
 
 Exception ``NotImplemented``:
-    This link is empty or has multiple components.
+    This link diagram is not connected. See isConnected() for a more
+    detailed discussion of connectivity.
 
 Parameter ``allowReflection``:
-    ``True`` if the reflection of a knot diagram should have the same
-    signature as the original, or ``False`` if these should be
-    distinct (assuming the diagram is not symmetric under reflection).
+    ``True`` if reflecting the entire link diagram should preserve the
+    signature, or ``False`` if the signature should distinguish
+    between a diagram and its reflection (unless of course there is a
+    symmetry).
 
 Parameter ``allowReversal``:
-    ``True`` if the reversal of a knot diagram should have the same
-    signature as the original, or ``False`` if these should be
-    distinct (assuming the diagram is not symmetric under reversal).
+    ``True`` if reversing some or all link components should preserve
+    the signature, or ``False`` if the signature should distinguish
+    between different orientations (again, unless of course there are
+    symmetries).
 
 Returns:
-    the signature for this knot diagram.)doc";
+    the signature for this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::knowsBracket
 static const char *knowsBracket =
@@ -3494,29 +3500,32 @@ Returns:
 
 // Docstring regina::python::doc::Link_::sig
 static const char *sig =
-R"doc(Alias for knotSig(), which constructs the signature for this knot
-diagram.
+R"doc(Alias for knotSig(), which constructs the signature for this knot or
+link diagram.
 
 This alias sig() is provided to assist with generic code that can work
-with both knots and triangulations.
+with both links and triangulations.
 
 See knotSig() for further details.
 
 Exception ``NotImplemented``:
-    This link is empty or has multiple components.
+    This link diagram is not connected. See isConnected() for a more
+    detailed discussion of connectivity.
 
 Parameter ``allowReflection``:
-    ``True`` if the reflection of a knot diagram should have the same
-    signature as the original, or ``False`` if these should be
-    distinct (assuming the diagram is not symmetric under reflection).
+    ``True`` if reflecting the entire link diagram should preserve the
+    signature, or ``False`` if the signature should distinguish
+    between a diagram and its reflection (unless of course there is a
+    symmetry).
 
 Parameter ``allowReversal``:
-    ``True`` if the reversal of a knot diagram should have the same
-    signature as the original, or ``False`` if these should be
-    distinct (assuming the diagram is not symmetric under reversal).
+    ``True`` if reversing some or all link components should preserve
+    the signature, or ``False`` if the signature should distinguish
+    between different orientations (again, unless of course there are
+    symmetries).
 
 Returns:
-    the signature for this knot diagram.)doc";
+    the signature for this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::simplifyExhaustive
 static const char *simplifyExhaustive =
