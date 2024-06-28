@@ -1696,7 +1696,7 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
 }
 
 static void verifyKnotSig(const Link& link, const char* name) {
-    if (link.countComponents() != 1)
+    if (link.countComponents() > 1)
         return;
 
     SCOPED_TRACE_CSTRING(name);

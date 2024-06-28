@@ -73,7 +73,21 @@ std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
     // - Under these rules, the empty link needs to be special-cased since the
     //   sequence [ 0 ] already represents the 0-crossing unknot: here we
     //   cheat and give the empty link a symbol that is not part of our usual
-    //   base64 set (Base64Encoder.spare[0]).
+    //   base64 set (Base64SigEncoder::spare[0]).
+
+    // Get the zero-crossing cases out of the way first.
+    if (size() == 0) {
+        if (isEmpty()) {
+            return { Base64SigEncoder::spare[0] };
+        } else {
+            // Since the diagram is connected, we must have a 0-crossing unknot.
+            Base64SigEncoder enc;
+            enc.encodeSize(0);
+            return enc.str();
+        }
+    }
+
+    // We have at least one crossing, and at least one component.
 
     size_t n = crossings_.size();
     FixedArray<SigData> best(2 * n);
@@ -206,6 +220,16 @@ Link Link::fromKnotSig(const std::string& sig) {
     Link ans;
 
     Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
+
+    // Get the empty link out of the way first.
+    if (dec.peek() == Base64SigEncoder::spare[0]) {
+        dec.skip();
+        if (! dec.done())
+            throw InvalidArgument("fromKnotSig(): "
+                "Unexpected additional characters");
+        return ans;
+    }
+
     try {
         auto [ n, charsPerInt ] = dec.decodeSize();
         if (n == 0) {
