@@ -1723,6 +1723,27 @@ TEST_F(LinkTest, knotSig) {
     EXPECT_EQ(asymmetric.knotSig(true, false),  "gaabcdefdcbefPQ--");
     EXPECT_EQ(asymmetric.knotSig(false, true),  "gaabcdefbcfedPQaa");
     EXPECT_EQ(asymmetric.knotSig(false, false), "gaabcdefdcbefPQaa");
+
+    // Verify some signatures against actual hard-coded strings, to ensure
+    // that the single-component knot signature format from Regina ≤ 7.3
+    // matches the more general format in Regina ≥ 7.4.
+    // The following signatures were all computed using Regina 7.3.
+    EXPECT_EQ(unknot0.link.sig(), "a");
+    EXPECT_EQ(unknot1.link.sig(), "baabd");
+    EXPECT_EQ(unknot3.link.sig(), "dabcabchT");
+    EXPECT_EQ(unknotMonster.link.sig(), "kabcdefghijbefgdcjahixfvbdwGd");
+    EXPECT_EQ(unknotGordian.link.sig(), "-cncaabacadaeafagahaiajakalamanaoapaqarasatauavawaxayazaAaBaCaDaEaFavaGataHaIaJapaoaKaLalaMaNaOahaPaQaeaRaSabaTaUaVaWaXajaNaYaZafaQa0a1a2aUa3auaGa4a5a6aza7aBa8a9a+a-aabbbcbdbebfbgbhbibjbkblbmbnbobpbqbrbdbsbtbubvbwbxbybzbAbBb+aEaCbDbxaEb4aFbGbqaJaHbIbJbLamaobKbLbMbNbObibPbxbQbRbSbTb-aSacaUb0aVbWbVaXbHaYbraGbZb0bmb1b2b3bMbfb4b5b6bub7bRbzb8b9bAbSb+b-bsb5bacgbNbbc2b1blbccZbnaKaJbdcXaecWbfc1aUbdaRaabgc+b7bvbhcPbjbicbc3bLbjcpbMakadcIbHbIaYbsaFbkc6ayaDbCbDalc8a9b8bybQbwbhc6btb-bcbmcqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3aVB3NNT3NVoYNthlfdnryeRZac44044idYmmqb5MT6MAwhJx3YEkl-T9wMNu-F+rMu86EgBAxURTr1DzB6E60Z-7pYJKn2T");
+    EXPECT_EQ(trefoilLeft.link.sig(), "dabcabcv-");
+    EXPECT_EQ(trefoilRight.link.sig(), "dabcabcv-");
+    EXPECT_EQ(trefoil_r1x2.link.sig(), "faabcdeebcd1eFo");
+    EXPECT_EQ(trefoil_r1x6.link.sig(), "jaabccdeefggbhhdiifnwo-KN");
+    EXPECT_EQ(figureEight.link.sig(), "eabcdbadcvbZa");
+    EXPECT_EQ(figureEight_r1x2.link.sig(), "gaabcdbeffdcevtBy");
+    EXPECT_EQ(conway.link.sig(), "labcdbefcdghiefjkgaijkhRswfFoWa");
+    EXPECT_EQ(kinoshitaTerasaka.link.sig(), "labcdefgahefhijbkdijckgBvQcndZl");
+    EXPECT_EQ(gst.link.sig(), "WabcdefghijklmnopqrsetuvinwxohvyazABCDEpguFbzGBHIJqftKcAGCHLsrMIDNOPQjmRNOSTklUSPVyFKdLMJExwRUTQVFyCHZX4sCdFzZe6yV7-D5cCbUGXTBhbG");
+    EXPECT_EQ(rht_rht.link.sig(), "gabcabcdefdefvv--");
+    EXPECT_EQ(rht_lht.link.sig(), "gabcabcdefdefvv-a");
 }
 
 static void verifyGaussAndDT(const TestCase& test,
