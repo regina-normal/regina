@@ -1078,6 +1078,9 @@ class Link :
          * For the purposes of this routine, an empty link is considered to be
          * connected.
          *
+         * Note: for knots and empty links, this routine is constant time.
+         * For multiple-component links, it is linear in the link size.
+         *
          * \return \c true if and only if this link diagram is connected.
          */
         bool isConnected() const;
@@ -1098,8 +1101,8 @@ class Link :
          * See isConnected() for further discussion on the connectivity of
          * link diagrams.
          *
-         * \warning This routine is linear time, since it may
-         * need to perform a depth-first search through the diagram.
+         * Note: for knots and empty links, this routine is constant time.
+         * For multiple-component links, it is linear in the link size.
          *
          * \param a the first of the two crossings to examine.
          * \param b the second of the two crossings to examine.

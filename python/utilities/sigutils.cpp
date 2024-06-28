@@ -123,6 +123,7 @@ void addSigUtils(pybind11::module_& m) {
             [](Base64SigEncoder& enc, const std::vector<uint8_t>& v) {
                 enc.encodeTrits(v.begin(), v.end());
             }, rdoc::encodeTrits)
+        .def_readonly_static("spare", &Base64SigEncoder::spare)
     ;
     regina::python::add_eq_operators(e);
 
@@ -137,6 +138,7 @@ void addSigUtils(pybind11::module_& m) {
         .def("done", &Decoder::done,
             pybind11::arg("ignoreWhitespace") = true, rdoc::done)
         .def("peek", &Decoder::peek, rdoc::peek)
+        .def("skip", &Decoder::skip, rdoc::skip)
         .def("decodeSingle", &Decoder::decodeSingle<long>, rdoc::decodeSingle)
         .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
         .def("decodeInt", &Decoder::decodeInt<long>, rdoc::decodeInt)

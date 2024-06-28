@@ -652,9 +652,8 @@ they involve entirely different components of the link.
 See isConnected() for further discussion on the connectivity of link
 diagrams.
 
-.. warning::
-    This routine is linear time, since it may need to perform a depth-
-    first search through the diagram.
+Note: for knots and empty links, this routine is constant time. For
+multiple-component links, it is linear in the link size.
 
 Parameter ``a``:
     the first of the two crossings to examine.
@@ -2113,6 +2112,9 @@ so the ModelLinkGraph class ignores them completely).
 
 For the purposes of this routine, an empty link is considered to be
 connected.
+
+Note: for knots and empty links, this routine is constant time. For
+multiple-component links, it is linear in the link size.
 
 Returns:
     ``True`` if and only if this link diagram is connected.)doc";

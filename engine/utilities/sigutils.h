@@ -317,6 +317,21 @@ struct [[deprecated]] Base64SigEncoding {
  * \ingroup utilities
  */
 class Base64SigEncoder {
+    public:
+        /**
+         * A table of printable characters that are _not_ amongst the base64
+         * characters used by Base64SigEncoder and Base64SigDecoder.
+         *
+         * These characters could (for example) be used to mark the boundaries
+         * of base64 blocks, or to indicate special cases.
+         *
+         * These characters are presented as a string of length at least 3.
+         * Future versions of Regina may append new characters to the end of
+         * this string, but the existing characters `spare[0..2]` will not
+         * change.
+         */
+        constexpr static char spare[] = "_./";
+
     private:
         std::string base64_;
             /**< The base64 encoding that has been constructed thus far. */
@@ -671,6 +686,15 @@ class Base64SigDecoder {
          */
         char peek() const {
             return (next_ == end_ ? 0 : *next_);
+        }
+
+        /**
+         * Advances to the next position in the encoded string.
+         *
+         * \pre The current position has not yet reached the end of the string.
+         */
+        void skip() {
+            ++next_;
         }
 
         /**
