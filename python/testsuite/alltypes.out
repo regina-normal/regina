@@ -28,6 +28,12 @@ Equality type : EqualityType.BY_VALUE
 BanTorusBoundary : class
 Equality type : EqualityType.BY_VALUE
 
+Base64SigDecoder : class
+Equality type : EqualityType.BY_REFERENCE
+
+Base64SigEncoder : class
+Equality type : EqualityType.BY_REFERENCE
+
 Base64SigEncoding : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
