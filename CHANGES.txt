@@ -140,6 +140,7 @@ Version 7.4  [ (to be announced) ]
             - New routines overForComponent() and underForComponent().
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
+            - New alias sig(), which is is identical to knotSig().
             - Routine hasReducingPass() can now handle multiple-component links.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
@@ -298,6 +299,7 @@ Version 7.4  [ (to be announced) ]
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
+            - New alias sig(), which is is identical to isoSig().
             - Renamed dumpConstruction() to source(), and extended it to produce
               either C++ and Python code via an optional language argument.
               The old C++-only dumpConstruction() is kept but deprecated.

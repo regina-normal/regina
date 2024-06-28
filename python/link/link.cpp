@@ -293,6 +293,10 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("allowReflection") = true,
             pybind11::arg("allowReversal") = true,
             rdoc::knotSig)
+        .def("sig", &Link::sig,
+            pybind11::arg("allowReflection") = true,
+            pybind11::arg("allowReversal") = true,
+            rdoc::sig)
         .def("source", &Link::source,
             // The default should be Language::Current, but in C++ that
             // evaluates to Language::Cxx.  We need it to evaluate to

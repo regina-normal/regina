@@ -419,6 +419,7 @@ void addTriangulation4(pybind11::module_& m) {
             rdoc::linkingSurface)
         .def("insertTriangulation", &Triangulation<4>::insertTriangulation,
             rbase::insertTriangulation)
+        .def("sig", &Triangulation<4>::sig<>, rbase::sig)
         .def("isoSig", &Triangulation<4>::isoSig<>, rbase::isoSig)
         .def("isoSig_EdgeDegrees",
             &Triangulation<4>::isoSig<regina::IsoSigEdgeDegrees<4>>,

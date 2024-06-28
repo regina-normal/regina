@@ -3575,6 +3575,31 @@ class Link :
             bool allowReflection = true, bool allowReversal = true) const;
 
         /**
+         * Alias for knotSig(), which constructs the signature for this
+         * knot diagram.
+         *
+         * This alias sig() is provided to assist with generic code that can
+         * work with both knots and triangulations.
+         *
+         * See knotSig() for further details.
+         *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
+         * \param allowReflection \c true if the reflection of a knot diagram
+         * should have the same signature as the original, or \c false
+         * if these should be distinct (assuming the diagram is not symmetric
+         * under reflection).
+         * \param allowReversal \c true if the reversal of a knot diagram
+         * should have the same signature as the original, or \c false
+         * if these should be distinct (assuming the diagram is not symmetric
+         * under reversal).
+         * \return the signature for this knot diagram.
+         */
+        std::string sig(
+            bool allowReflection = true, bool allowReversal = true) const;
+
+        /**
          * Writes the tight encoding of this link to the given output stream.
          * See the page on \ref tight "tight encodings" for details.
          *
@@ -5216,6 +5241,10 @@ inline bool Link::simplifyExhaustive(int height, unsigned threads,
 inline void Link::join(const StrandRef& s, const StrandRef& t) {
     s.crossing_->next_[s.strand_] = t;
     t.crossing_->prev_[t.strand_] = s;
+}
+
+inline std::string Link::sig(bool allowReflection, bool allowReversal) const {
+    return knotSig(allowReflection, allowReversal);
 }
 
 inline Link Link::fromSig(const std::string& sig) {

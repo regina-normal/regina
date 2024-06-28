@@ -657,6 +657,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rbase::insertTriangulation)
         .def("dehydrate", &Triangulation<3>::dehydrate, rdoc::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate, rdoc::rehydrate)
+        .def("sig", &Triangulation<3>::sig<>, rbase::sig)
         .def("isoSig", &Triangulation<3>::isoSig<>, rbase::isoSig)
         .def("isoSig_EdgeDegrees",
             &Triangulation<3>::isoSig<regina::IsoSigEdgeDegrees<3>>,

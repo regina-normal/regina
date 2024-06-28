@@ -298,6 +298,7 @@ void addTriangulation2(pybind11::module_& m) {
             &Triangulation<2>::subdivide, rbase::barycentricSubdivision)
         .def("insertTriangulation", &Triangulation<2>::insertTriangulation,
             rbase::insertTriangulation)
+        .def("sig", &Triangulation<2>::sig<>, rbase::sig)
         .def("isoSig", &Triangulation<2>::isoSig<>, rbase::isoSig)
         .def("isoSig_EdgeDegrees",
             &Triangulation<2>::isoSig<regina::IsoSigEdgeDegrees<2>>,

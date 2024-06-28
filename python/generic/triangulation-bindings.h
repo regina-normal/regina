@@ -261,6 +261,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             rbase::makeCanonical)
         .def("insertTriangulation", &Triangulation<dim>::insertTriangulation,
             rbase::insertTriangulation)
+        .def("sig", &Triangulation<dim>::template sig<>, rbase::sig)
         .def("isoSig", &Triangulation<dim>::template isoSig<>, rbase::isoSig)
         .def("isoSig_EdgeDegrees", &Triangulation<dim>::
             template isoSig<regina::IsoSigEdgeDegrees<dim>>, rbase::isoSig)

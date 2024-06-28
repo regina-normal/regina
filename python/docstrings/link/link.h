@@ -2324,12 +2324,12 @@ This routine runs in quadratic time.
 Exception ``NotImplemented``:
     This link is empty or has multiple components.
 
-Parameter ``useReflection``:
+Parameter ``allowReflection``:
     ``True`` if the reflection of a knot diagram should have the same
     signature as the original, or ``False`` if these should be
     distinct (assuming the diagram is not symmetric under reflection).
 
-Parameter ``useReversal``:
+Parameter ``allowReversal``:
     ``True`` if the reversal of a knot diagram should have the same
     signature as the original, or ``False`` if these should be
     distinct (assuming the diagram is not symmetric under reversal).
@@ -3489,6 +3489,32 @@ This link will be modified directly.
 Returns:
     ``True`` if the link diagram was changed, or ``False`` if every
     component already had zero writhe to begin with.)doc";
+
+// Docstring regina::python::doc::Link_::sig
+static const char *sig =
+R"doc(Alias for knotSig(), which constructs the signature for this knot
+diagram.
+
+This alias sig() is provided to assist with generic code that can work
+with both knots and triangulations.
+
+See knotSig() for further details.
+
+Exception ``NotImplemented``:
+    This link is empty or has multiple components.
+
+Parameter ``allowReflection``:
+    ``True`` if the reflection of a knot diagram should have the same
+    signature as the original, or ``False`` if these should be
+    distinct (assuming the diagram is not symmetric under reflection).
+
+Parameter ``allowReversal``:
+    ``True`` if the reversal of a knot diagram should have the same
+    signature as the original, or ``False`` if these should be
+    distinct (assuming the diagram is not symmetric under reversal).
+
+Returns:
+    the signature for this knot diagram.)doc";
 
 // Docstring regina::python::doc::Link_::simplifyExhaustive
 static const char *simplifyExhaustive =
