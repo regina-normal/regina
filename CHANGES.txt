@@ -140,7 +140,8 @@ Version 7.4  [ (to be announced) ]
             - New routines overForComponent() and underForComponent().
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
-            - New alias sig(), which is is identical to knotSig().
+            - Extended knotSig() to work with connected link diagrams with any
+              number of link components, and added an alias sig() for knotSig().
             - Routine hasReducingPass() can now handle multiple-component links.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.

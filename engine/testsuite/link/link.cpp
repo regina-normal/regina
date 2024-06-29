@@ -1727,7 +1727,8 @@ TEST_F(LinkTest, knotSig) {
     // Verify some signatures against actual hard-coded strings, to ensure
     // that the single-component knot signature format from Regina ≤ 7.3
     // matches the more general format in Regina ≥ 7.4.
-    // The following signatures were all computed using Regina 7.3.
+    //
+    // The following knot signatures were all computed using Regina 7.3.
     EXPECT_EQ(unknot0.link.sig(), "a");
     EXPECT_EQ(unknot1.link.sig(), "baabd");
     EXPECT_EQ(unknot3.link.sig(), "dabcabchT");
@@ -1744,6 +1745,16 @@ TEST_F(LinkTest, knotSig) {
     EXPECT_EQ(gst.link.sig(), "WabcdefghijklmnopqrsetuvinwxohvyazABCDEpguFbzGBHIJqftKcAGCHLsrMIDNOPQjmRNOSTklUSPVyFKdLMJExwRUTQVFyCHZX4sCdFzZe6yV7-D5cCbUGXTBhbG");
     EXPECT_EQ(rht_rht.link.sig(), "gabcabcdefdefvv--");
     EXPECT_EQ(rht_lht.link.sig(), "gabcabcdefdefvv-a");
+
+    // Add some hard-coded link signatures also, to ensure that nothing changes
+    // as we optimise the underlying algorithms.  For now we can only work
+    // with connected link diagrams, hence the fairly small list below.
+    EXPECT_EQ(empty.link.sig(), "_");
+    EXPECT_EQ(hopf.link.sig(), "cabcabjp");
+    EXPECT_EQ(whitehead.link.sig(), "fabcadefbcedvfpd");
+    EXPECT_EQ(borromean.link.sig(), "gabcdgaecfgbedfLwZm");
+    EXPECT_EQ(trefoil_unknot_overlap.link.sig(), "fabcdeadefbcxb7h");
+    EXPECT_EQ(adams6_28.link.sig(), "gabcdgabefcdfeLQ-m");
 }
 
 static void verifyGaussAndDT(const TestCase& test,
