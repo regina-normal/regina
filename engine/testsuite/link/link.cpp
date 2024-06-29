@@ -2115,7 +2115,7 @@ static void verifySmallCells(const Link& link, const char* name) {
         int foundTriangles = 0;
 
         for (int i = 0; i < 4; ++i) {
-            int cell = cells.cell(n->arc(i));
+            size_t cell = cells.cell(n->arc(i));
             switch (cells.size(cell)) {
                 case 1:
                     ++foundLoops;

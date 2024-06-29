@@ -191,9 +191,6 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     std::fill(sign, sign + size(), 0);
 
     ssize_t curr = 0;
-    ModelLinkGraphArc a;
-    size_t adj;
-    int adjStrand;
     while (curr >= 0) {
         // We have selected the signs for all crossings < curr, and we
         // need to move to the next available sign at crossing curr.
@@ -204,9 +201,10 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
                 l.crossings_.push_back(new Crossing(sign[i]));
             for (size_t i = 0; i < size(); ++i) {
                 // Upper outgoing arc:
-                a = nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 1 : 0][dir[i]]];
-                adj = a.node_->index();
-                adjStrand = (a.arc_ ==
+                ModelLinkGraphArc a =
+                    nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 1 : 0][dir[i]]];
+                size_t adj = a.node_->index();
+                int adjStrand = (a.arc_ ==
                     (upperOutArc[sign[adj] > 0 ? 1 : 0][dir[adj]] ^ 2) ? 1 : 0);
                 l.crossings_[i]->next_[1].crossing_ = l.crossings_[adj];
                 l.crossings_[i]->next_[1].strand_ = adjStrand;
