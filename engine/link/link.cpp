@@ -217,7 +217,7 @@ bool Link::isConnected() const {
         return true;
 
     // Look for any zero-crossing components.
-    for (auto c: components_)
+    for (auto c : components_)
         if (! c)
             return false; // since we already know there are other components
 
@@ -505,7 +505,7 @@ size_t Link::seifertCircles() const {
     delete[] seen;
 
     // Finish by adding in any zero-crossing components.
-    for (auto c: components_)
+    for (auto c : components_)
         if (! c)
             ++ans;
 

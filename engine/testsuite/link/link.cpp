@@ -2107,7 +2107,7 @@ static void verifySmallCells(const Link& link, const char* name) {
 
     // Verify that loops(), bigons() and triangles() match what we see from
     // the dual cell decomposition.
-    for (auto n: graph.nodes()) {
+    for (auto n : graph.nodes()) {
         SCOPED_TRACE_NUMERIC(n->index());
 
         int foundLoops = 0;

@@ -1726,7 +1726,7 @@ TreeDecomposition::TreeDecomposition(const std::vector<Row>& graph,
     size_t r = 0;
     for (const auto& row : graph) {
         size_t c = 0;
-        for (const auto& entry: row) {
+        for (const auto& entry : row) {
             if (c >= order)
                 throw InvalidArgument("The adjacency matrix must be square");
             if (entry)

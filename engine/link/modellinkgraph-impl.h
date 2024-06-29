@@ -226,7 +226,7 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
                 l.crossings_[adj]->prev_[adjStrand].strand_ = 0;
             }
 
-            for (const auto& a: componentArcs) {
+            for (const auto& a : componentArcs) {
                 size_t i = a.node_->index();
                 // We know from above that a.arc_ is either 0 or 1,
                 // and that dir[i] sets the bit for a.arc_.
