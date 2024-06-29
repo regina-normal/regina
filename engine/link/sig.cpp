@@ -347,19 +347,32 @@ Link Link::fromKnotSig(const std::string& sig) {
         FixedArray<int> sign(2 * n);
         FixedArray<int> strand(2 * n);
 
-        size_t i, j;
+        // A connected diagram with n ≥ 1 crossings can have at most
+        // n link components, since each component uses ≥ 2 strands.
+        // Here compStart[i] is the index into crossing[] at which component i
+        // begins, and we terminate compStart[] with an extra value of 2n.
+        FixedArray<size_t> compStart(n + 1);
 
-        for (i = 0; i < 2 * n; ++i) {
+        size_t i = 0;    // next index into crossing[] to read
+        size_t comp = 0; // current component being read
+        compStart[0] = 0;
+        while (i < 2 * n) {
             crossing[i] = dec.decodeInt<size_t>(charsPerInt);
-            if (/* crossing[i] < 0 || */ crossing[i] >= n) {
+            if (crossing[i] < n) {
+                ++i;
+            } else if (crossing[i] == n) {
+                // A sentinel that indicates the start of a new link component.
+                compStart[++comp] = i;
+            } else {
                 throw InvalidArgument("fromKnotSig(): "
                     "invalid destination crossing");
             }
         }
+        compStart[++comp] = 2 * n;
 
         for (i = 0; i < 2 * n; i += 6) {
             unsigned bits = dec.decodeSingle<unsigned>();
-            for (j = 0; j < 6 && i + j < 2 * n; ++j) {
+            for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
                 strand[i + j] = (bits & 1);
                 bits >>= 1;
             }
@@ -369,7 +382,7 @@ Link Link::fromKnotSig(const std::string& sig) {
         }
         for (i = 0; i < 2 * n; i += 6) {
             unsigned bits = dec.decodeSingle<unsigned>();
-            for (j = 0; j < 6 && i + j < 2 * n; ++j) {
+            for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
                 sign[i + j] = ((bits & 1) ? 1 : -1);
                 bits >>= 1;
             }
@@ -387,6 +400,7 @@ Link Link::fromKnotSig(const std::string& sig) {
         for (i = 0; i < n; ++i)
             ans.crossings_.push_back(new Crossing());
 
+        comp = 0;
         for (i = 0; i < 2 * n; ++i) {
             Crossing* cr = ans.crossings_[crossing[i]];
             if (cr->sign_ == 0)
@@ -400,7 +414,16 @@ Link Link::fromKnotSig(const std::string& sig) {
                 throw InvalidArgument(
                     "fromKnotSig(): invalid outgoing connection");
             }
-            size_t nextIdx = (i == 2 * n - 1 ? 0 : i + 1);
+
+            size_t nextIdx;
+            if (i + 1 == compStart[comp + 1]) {
+                nextIdx = compStart[comp];
+                ans.components_.push_back(
+                    ans.crossings_[crossing[nextIdx]]->strand(strand[nextIdx]));
+                ++comp;
+            } else {
+                nextIdx = i + 1;
+            }
             cr->next_[strand[i]].crossing_ = ans.crossings_[crossing[nextIdx]];
             cr->next_[strand[i]].strand_ = strand[nextIdx];
 
@@ -413,9 +436,6 @@ Link Link::fromKnotSig(const std::string& sig) {
             ans.crossings_[crossing[nextIdx]]->
                 prev_[strand[nextIdx]].strand_ = strand[i];
         }
-
-        ans.components_.push_back(
-            ans.crossings_[crossing[0]]->strand(strand[0]));
 
         return ans;
     } catch (const InvalidInput&) {

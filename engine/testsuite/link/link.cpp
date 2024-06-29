@@ -1674,12 +1674,22 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
         Link alt(link, false);
         alt.reverse();
         EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+
+        for (size_t i = 1; i < link.countComponents(); ++i) {
+            alt.reverse(link.component(i));
+            EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+        }
     }
     if (reflect && reverse) {
         Link alt(link, false);
         alt.reflect();
         alt.reverse();
         EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+
+        for (size_t i = 1; i < link.countComponents(); ++i) {
+            alt.reverse(link.component(i));
+            EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+        }
     }
 
     Link recon;
@@ -1696,7 +1706,7 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
 }
 
 static void verifyKnotSig(const Link& link, const char* name) {
-    if (link.countComponents() > 1)
+    if (! link.isConnected())
         return;
 
     SCOPED_TRACE_CSTRING(name);
