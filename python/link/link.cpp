@@ -121,6 +121,12 @@ void addLink(pybind11::module_& m) {
         .def("countTrivialComponents", &Link::countTrivialComponents,
             rdoc::countTrivialComponents)
         .def("strand", &Link::strand, rdoc::strand)
+        .def("componentsByStrand", [](const Link& link) {
+            pybind11::list ans;
+            for (auto val: link.componentsByStrand())
+                ans.append(val);
+            return ans;
+        }, rdoc::componentsByStrand)
         .def("translate", &Link::translate, rdoc::translate)
         .def("graph", &Link::graph, rdoc::graph)
         // In the following overloads, we define functions twice because

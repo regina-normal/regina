@@ -54,6 +54,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
+#include "utilities/fixedarray.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
@@ -1018,6 +1019,36 @@ class Link :
          * \see StrandRef::id()
          */
         StrandRef strand(ssize_t id) const;
+
+        /**
+         * Returns a sequence that maps strand IDs to link component numbers.
+         *
+         * This sequence will have length `2n`, where \a n is the number of
+         * crossings in this link diagram.  If \a strand is a non-null strand
+         * reference, \a map is the sequence that is returned, and
+         * `map[strand.id()] == c`, then this indicates that \a strand is part
+         * of the link component defined by `component(c)`.
+         *
+         * Null strand references are not handled by this map: they have a
+         * negative ID (which means calling `map[strand.id()]` is an error),
+         * and they could refer to any 0-crossing unknot component (so the
+         * specific component might not be uniquely determined).
+         *
+         * The return type is deliberately not specified here.  It is
+         * guaranteed to be a container whose elements have type `size_t`,
+         * with value semantics, fast move construction and swap operations,
+         * an array index operator, and random access iterators.  It is _not_
+         * guaranteed to have a copy assignment operator (but it will support
+         * fast move assignment).  At present the specific implementation
+         * returns `FixedArray<size_t>`, though this is subject to change in
+         * future versions of Regina and so end user code should always use
+         * `auto`.
+         *
+         * \python This routine will return a Python list.
+         *
+         * \return a sequence mapping strand IDs to component numbers.
+         */
+        auto componentsByStrand() const;
 
         /**
          * Translates a strand reference from some other link into the
@@ -5114,6 +5145,22 @@ inline auto Link::components() const {
 inline StrandRef Link::strand(ssize_t id) const {
     return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
         StrandRef());
+}
+
+inline auto Link::componentsByStrand() const {
+    // We implement this here in the header because the return type is auto.
+    FixedArray<size_t> ans(2 * crossings_.size());
+    for (size_t c = 0; c < components_.size(); ++c) {
+        StrandRef start = components_[c];
+        if (! start)
+            continue;
+        StrandRef s = start;
+        do {
+            ans[s.id()] = c;
+            ++s;
+        } while (s != start);
+    }
+    return ans;
 }
 
 inline bool Link::operator != (const Link& other) const {

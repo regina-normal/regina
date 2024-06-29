@@ -609,6 +609,36 @@ only, and to call components() again each time you need it.
 Returns:
     access to the list of all components.)doc";
 
+// Docstring regina::python::doc::Link_::componentsByStrand
+static const char *componentsByStrand =
+R"doc(Returns a sequence that maps strand IDs to link component numbers.
+
+This sequence will have length ``2n``, where *n* is the number of
+crossings in this link diagram. If *strand* is a non-null strand
+reference, *map* is the sequence that is returned, and
+``map[strand.id()] == c``, then this indicates that *strand* is part
+of the link component defined by ``component(c)``.
+
+Null strand references are not handled by this map: they have a
+negative ID (which means calling ``map[strand.id()]`` is an error),
+and they could refer to any 0-crossing unknot component (so the
+specific component might not be uniquely determined).
+
+The return type is deliberately not specified here. It is guaranteed
+to be a container whose elements have type ``size_t``, with value
+semantics, fast move construction and swap operations, an array index
+operator, and random access iterators. It is _not_ guaranteed to have
+a copy assignment operator (but it will support fast move assignment).
+At present the specific implementation returns ``FixedArray<size_t>``,
+though this is subject to change in future versions of Regina and so
+end user code should always use ``auto``.
+
+Python:
+    This routine will return a Python list.
+
+Returns:
+    a sequence mapping strand IDs to component numbers.)doc";
+
 // Docstring regina::python::doc::Link_::composeWith
 static const char *composeWith =
 R"doc(Forms the composition of this with the given link. This link will be
