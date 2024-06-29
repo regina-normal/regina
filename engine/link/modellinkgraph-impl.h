@@ -44,6 +44,7 @@
 #endif
 
 #include "link/link.h"
+#include "utilities/fixedarray.h"
 
 namespace regina {
 
@@ -58,8 +59,7 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
 
     // First work out the orientation of the link components as they pass
     // through each node.
-    char* dir = new char[size()]; // Bits 0,1,2,3 are 1/0 for forward/backward.
-    std::fill(dir, dir + size(), 0);
+    FixedArray<char> dir(size(), 0); // Bits 0,1,2,3 are 1/0 for forward/back.
 
     std::vector<ModelLinkGraphArc> componentArcs;
 
@@ -91,7 +91,6 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     }
     if (steps != 2 * size()) {
         // This should never happen.
-        delete[] dir;
         std::cerr << "ERROR: generateMinimalLinks() did not identify "
             "components correctly" << std::endl;
         return;
@@ -109,10 +108,8 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     // sign of crossing parent[i].  The signs are the same if flip[i] is false,
     // and the signs are different if flip[i] is true.
     // We guarantee for all nodes that parent[i] < i.
-    auto* parent = new ssize_t[size()];
-    bool* flip = new bool[size()];
-
-    std::fill(parent, parent + size(), -1);
+    FixedArray<ssize_t> parent(size(), -1);
+    FixedArray<bool> flip(size());
 
     for (size_t i = 0; i < cells_->nCells_; ++i)
         if (cells_->size(i) == 2) {
@@ -187,8 +184,7 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
         }
 
     // Now choose the signs of the crossings!
-    int* sign = new int[size()];
-    std::fill(sign, sign + size(), 0);
+    FixedArray<int> sign(size(), 0);
 
     ssize_t curr = 0;
     while (curr >= 0) {
@@ -282,10 +278,6 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     }
 
     // All done!
-    delete[] sign;
-    delete[] flip;
-    delete[] parent;
-    delete[] dir;
 }
 
 } // namespace regina
