@@ -691,6 +691,31 @@ void Link::insert(const Link& source) {
     }
 }
 
+void Link::insert(Link&& source) {
+    if (source.isEmpty())
+        return;
+    if (isEmpty()) {
+        *this = std::move(source);
+        return;
+    }
+
+    ChangeAndClearSpan<> span(*this);
+    // Don't worry about change spans for source, since source is about to be
+    // destroyed.
+
+    // The following code abuses the MarkedVector API slightly, but it's fine;
+    // see the comments in moveContentsTo() below.
+    for (auto* c : source.crossings_)
+        crossings_.push_back(c);
+    source.crossings_.clear();
+
+    components_.insert(components_.end(),
+        source.components_.begin(), source.components_.end());
+    // It should be harmless to leave junk in source.components_, but let's
+    // not risk someone abusing what might become dangling crossing pointers.
+    source.components_.clear();
+}
+
 void Link::moveContentsTo(Link& dest) {
     if (isEmpty())
         return;

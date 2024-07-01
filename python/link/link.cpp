@@ -205,7 +205,7 @@ void addLink(pybind11::module_& m) {
         .def_static("fromKnotSig", &Link::fromKnotSig, rdoc::fromKnotSig)
         .def_static("fromSig", &Link::fromSig, rdoc::fromSig)
         .def("swap", &Link::swap, rdoc::swap)
-        .def("insert", &Link::insert, rdoc::insert)
+        .def("insert", overload_cast<const Link&>(&Link::insert), rdoc::insert)
         .def("moveContentsTo", &Link::moveContentsTo, rdoc::moveContentsTo)
         .def("reflect", &Link::reflect, rdoc::reflect)
         .def("rotate", &Link::rotate, rdoc::rotate)

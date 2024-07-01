@@ -307,8 +307,10 @@ Version 7.4  [ (to be announced) ]
             - Renamed dumpConstruction() to source(), and extended it to produce
               either C++ and Python code via an optional language argument.
               The old C++-only dumpConstruction() is kept but deprecated.
-            - Renamed insertTriangulation() to insert().  The old name is kept
-              as a deprecated alias.
+            - Renamed insertTriangulation() to insert(), and added a variant
+              that takes an rvalue reference (alongside the original which
+              takes a const reference).  The old insertTriangulation()
+              with a const reference argument is kept as a deprecated alias.
             - The two-argument copy constructor is now a three-argument
               copy constructor, giving an additional boolean option for
               whether to clone simplex/facet locks.

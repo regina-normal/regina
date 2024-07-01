@@ -1296,11 +1296,10 @@ class Link :
          * Inserts a copy of the given link into this link.
          *
          * The crossings and components of \a source will be copied into this
-         * link in the same order in which they appear in \a source.
-         * That is, if the original number of crossings in this link was \a N,
-         * then the crossing at index \a i in \a source will be copied into
-         * this link as a new crossing at index <i>N</i>+<i>i</i>; likewise
-         * for components.
+         * link, and placed after any pre-existing crossings and components.
+         * Specifically, if the original number of crossings in this link was
+         * \a N, then crossing number \a i of \a source will be copied to
+         * a new crosssing `N+i` of this link; likewise for components.
          *
          * This routine behaves correctly when \a source is this link.
          *
@@ -1314,29 +1313,70 @@ class Link :
         void insert(const Link& source);
 
         /**
+         * Moves the contents of the given link into this link.
+         *
+         * The crossings and components of \a source will be moved directly
+         * into this link, and placed after any pre-existing crossings and
+         * components.  Specifically, if the original number of crossings in
+         * this link was \a N, then crossing number \a i of \a source will
+         * become crosssing `N+i` of this link; likewise for components.
+         *
+         * As is normal for an rvalue reference, after calling this function
+         * \a source will be unusable.  Any strand references or crossing
+         * pointers that referred to either this link or \a source will remain
+         * valid (and will all now refer to this link), though if they
+         * originally referred to \a source then they will now return
+         * different crossing indices and strand IDs.
+         *
+         * Calling `link.insert(source)` (where \a source is an rvalue
+         * reference) is similar to calling `source.moveContentsTo(link)`,
+         * but it is a little faster since it does not need to leave
+         * \a source in a usable state.
+         *
+         * Regarding packet change events: this function does _not_ fire
+         * a change event on \a source, since it assumes that \a source is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * \pre \a source is not this link.
+         *
+         * \warning Be careful not to confuse this function with
+         * Packet::insert(), which takes two arguments and which manipulates
+         * the packet tree (not the link).  A knot/link packet will inherit
+         * both types of insert() function.
+         *
+         * \nopython Only the copying version of this function is available
+         * (i.e., the version that takes \a source as a const reference).
+         * If you want a fast move operation, call
+         * `source.moveContentsTo(this)`.
+         *
+         * \param source the link whose contents should be moved.
+         */
+        void insert(Link&& source);
+
+        /**
          * Moves the contents of this link into the given destination link,
-         * without destroying any pre-existing contents from the destination
-         * link.
+         * leaving this link empty but otherwise usable.
          *
-         * All crossings and components that currently belong to \a dest will
-         * remain there (and will keep the same indices in \a dest).  All
-         * crossings and components from this link will be moved into \a dest
-         * also (but in general their indices will change).
+         * The crossings and components of this link will be moved directly
+         * into \a dest, and placed after any pre-existing crossings and
+         * components.  Specifically, if the original number of crossings in
+         * \a dest was \a N, then crossing number \a i of this link will
+         * become crosssing `N+i` of \a dest; likewise for components.
          *
-         * This link will become empty as a result.  Any strand references or
-         * pointers to Crossing objects that used to refer to this link will
-         * remain valid, and will now refer to the corresponding objects in
-         * \a dest instead.
+         * This link will become empty as a result, but it will otherwise
+         * remain a valid and usable Link object.  Any strand references or
+         * crossing pointers that referred to either this link or \a dest will
+         * remain valid (and will all now refer to \a dest), though if they
+         * originally referred to this link then they will now return
+         * different crossing indices and strand IDs.
          *
-         * If your intention is to _replace_ the contents of \a dest
-         * (i.e., you do not need to preserve its original contents),
-         * then consider using the move assignment operator instead
-         * (which is more streamlined and also moves across any cached
-         * properties from the source link).
+         * Calling `link.moveContentsTo(dest)` is similar to calling
+         * `dest.insert(std::move(link))`; it is a little slower but it comes
+         * with the benefit of leaving this link in a usable state.
          *
          * \pre \a dest is not this link.
          *
-         * \param dest the link into which crossings and components should be
+         * \param dest the link into which the contents of this link should be
          * moved.
          */
         void moveContentsTo(Link& dest);

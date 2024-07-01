@@ -653,9 +653,12 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rdoc::insertLayeredSolidTorus)
         .def("connectedSumWith", &Triangulation<3>::connectedSumWith,
             rdoc::connectedSumWith)
-        .def("insert", &Triangulation<3>::insert, rbase::insert)
-        .def("insertTriangulation", &Triangulation<3>::insert,
-            rbase::insertTriangulation) // deprecated
+        .def("insert",
+            overload_cast<const Triangulation<3>&>(&Triangulation<3>::insert),
+            rbase::insert)
+        .def("insertTriangulation", // deprecated
+            overload_cast<const Triangulation<3>&>(&Triangulation<3>::insert),
+            rbase::insertTriangulation)
         .def("dehydrate", &Triangulation<3>::dehydrate, rdoc::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate, rdoc::rehydrate)
         .def("sig", &Triangulation<3>::sig<>, rbase::sig)

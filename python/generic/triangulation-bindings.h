@@ -259,9 +259,14 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         }, pybind11::arg("other"), rbase::findAllSubcomplexesIn)
         .def("makeCanonical", &Triangulation<dim>::makeCanonical,
             rbase::makeCanonical)
-        .def("insert", &Triangulation<dim>::insert, rbase::insert)
-        .def("insertTriangulation", &Triangulation<dim>::insert,
-            rbase::insertTriangulation) // deprecated
+        .def("insert",
+            overload_cast<const Triangulation<dim>&>(
+                &Triangulation<dim>::insert),
+            rbase::insert)
+        .def("insertTriangulation", // deprecated
+            overload_cast<const Triangulation<dim>&>(
+                &Triangulation<dim>::insert),
+            rbase::insertTriangulation)
         .def("sig", &Triangulation<dim>::template sig<>, rbase::sig)
         .def("isoSig", &Triangulation<dim>::template isoSig<>, rbase::isoSig)
         .def("isoSig_EdgeDegrees", &Triangulation<dim>::

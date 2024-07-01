@@ -48,6 +48,7 @@
 #endif
 
 #include "triangulation/generic/triangulation.h"
+#include "utilities/fixedarray.h"
 
 // The symbol used in writeTextLong() to indicate a locked simplex or facet:
 #define LOCKED_MARKER '*'
@@ -567,9 +568,9 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
     size_t nFaces = countFaces<dim - 1>();
 
-    auto* bdry = new Simplex<dim>*[nFaces];
-    auto* bdryPerm = new Perm<dim + 1>[nFaces];
-    auto* cone = new Simplex<dim>*[nFaces];
+    FixedArray<Simplex<dim>*> bdry(nFaces);
+    FixedArray<Perm<dim + 1>> bdryPerm(nFaces);
+    FixedArray<Simplex<dim>*> cone(nFaces);
 
     // Since staging is new here, we can use the "raw" simplex routines
     // that do not generate change events / snapshots, check locks, etc.
@@ -582,13 +583,9 @@ bool TriangulationBase<dim>::finiteToIdeal() {
             continue;
         }
 
-        if (f->isLocked()) {
-            delete[] cone;
-            delete[] bdryPerm;
-            delete[] bdry;
+        if (f->isLocked())
             throw LockViolation("An attempt was made to change the boundary "
                 "of a triangulation with one or more locked boundary facets");
-        }
 
         bdry[f->index()] = f->front().simplex();
         bdryPerm[f->index()] = f->front().vertices();
@@ -625,16 +622,12 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
     PacketChangeGroup span(static_cast<Triangulation<dim>&>(*this));
 
-    staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
+    insert(std::move(staging));
 
     for (size_t i = 0; i < nFaces; ++i)
         if (cone[i])
             cone[i]->join(dim, bdry[i], bdryPerm[i]);
 
-    // Clean up and return.
-    delete[] cone;
-    delete[] bdryPerm;
-    delete[] bdry;
     return true;
 }
 
