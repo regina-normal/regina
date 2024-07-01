@@ -1315,17 +1315,18 @@ class Link :
 
         /**
          * Moves the contents of this link into the given destination link,
-         * without destroying any pre-existing contents.
+         * without destroying any pre-existing contents from the destination
+         * link.
          *
          * All crossings and components that currently belong to \a dest will
          * remain there (and will keep the same indices in \a dest).  All
          * crossings and components from this link will be moved into \a dest
          * also (but in general their indices will change).
          *
-         * This link will become empty as a result.
-         *
-         * Any strand references or pointers to Crossing objects will remain
-         * valid.
+         * This link will become empty as a result.  Any strand references or
+         * pointers to Crossing objects that used to refer to this link will
+         * remain valid, and will now refer to the corresponding objects in
+         * \a dest instead.
          *
          * If your intention is to _replace_ the contents of \a dest
          * (i.e., you do not need to preserve its original contents),

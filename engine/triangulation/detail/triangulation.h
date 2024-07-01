@@ -535,9 +535,11 @@ class TriangulationBase :
          * work and what their implications are.
          */
         void removeAllSimplices();
+
         /**
          * Moves the contents of this triangulation into the given destination
-         * triangulation, without destroying any pre-existing contents.
+         * triangulation, without destroying any pre-existing contents from
+         * the destination triangulation.
          *
          * All top-dimensional simplices that currently belong to \a dest
          * will remain there (and will keep the same indices in \a dest).
@@ -545,11 +547,11 @@ class TriangulationBase :
          * will be moved into \a dest also (but in general their indices will
          * change).
          *
-         * This triangulation will become empty as a result.
-         *
-         * Any pointers or references to Simplex<dim> objects will remain
-         * valid, and any locks on top-dimensional simplices and/or their
-         * facets will be preserved.
+         * This triangulation will become empty as a result.  Any pointers or
+         * references to Simplex<dim> objects that used to refer to this
+         * triangulation will remain valid, and will now refer to the
+         * corresponding objects in \a dest instead.  Any locks on
+         * top-dimensional simplices and/or their facets will be preserved.
          *
          * If your intention is to _replace_ the simplices in \a dest
          * (i.e., you do not need to preserve the original contents),
