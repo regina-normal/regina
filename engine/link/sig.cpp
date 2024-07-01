@@ -336,117 +336,123 @@ Link Link::fromKnotSig(const std::string& sig) {
     Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
 
     // Get the empty link out of the way first.
-    if (dec.peek() == Base64SigEncoder::spare[0]) {
-        dec.skip();
-        if (! dec.done())
-            throw InvalidArgument("fromKnotSig(): "
-                "Unexpected additional characters");
-        return ans;
+    switch (dec.peek()) {
+        case Base64SigEncoder::spare[0]:
+            // This is the signature for the empty link.
+            dec.skip();
+            if (! dec.done())
+                throw InvalidArgument("fromKnotSig(): "
+                    "unexpected additional characters");
+            return ans;
+        case 0:
+            // An empty string is _not_ the signature for the empty link.
+            throw InvalidArgument("fromKnotSig(): signature is empty");
     }
 
     try {
-        auto [ n, charsPerInt ] = dec.decodeSize();
-        if (n == 0) {
-            // Zero-crossing unknot.
-            if (! dec.done())
-                throw InvalidArgument("fromKnotSig(): "
-                    "Unexpected additional characters");
-            ans.components_.emplace_back();
-            return ans;
-        }
-
-        FixedArray<size_t> crossing(2 * n);
-        FixedArray<int> sign(2 * n);
-        FixedArray<int> strand(2 * n);
-
-        // A connected diagram with n ≥ 1 crossings can have at most
-        // n link components, since each component uses ≥ 2 strands.
-        // Here compStart[i] is the index into crossing[] at which component i
-        // begins, and we terminate compStart[] with an extra value of 2n.
-        FixedArray<size_t> compStart(n + 1);
-
-        size_t i = 0;    // next index into crossing[] to read
-        size_t comp = 0; // current component being read
-        compStart[0] = 0;
-        while (i < 2 * n) {
-            crossing[i] = dec.decodeInt<size_t>(charsPerInt);
-            if (crossing[i] < n) {
-                ++i;
-            } else if (crossing[i] == n) {
-                // A sentinel that indicates the start of a new link component.
-                compStart[++comp] = i;
-            } else {
-                throw InvalidArgument("fromKnotSig(): "
-                    "invalid destination crossing");
-            }
-        }
-        compStart[++comp] = 2 * n;
-
-        for (i = 0; i < 2 * n; i += 6) {
-            unsigned bits = dec.decodeSingle<unsigned>();
-            for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
-                strand[i + j] = (bits & 1);
-                bits >>= 1;
-            }
-            if (bits) {
-                throw InvalidArgument("fromKnotSig(): extraneous strand bits");
-            }
-        }
-        for (i = 0; i < 2 * n; i += 6) {
-            unsigned bits = dec.decodeSingle<unsigned>();
-            for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
-                sign[i + j] = ((bits & 1) ? 1 : -1);
-                bits >>= 1;
-            }
-            if (bits) {
-                throw InvalidArgument("fromKnotSig(): extraneous sign bits");
-            }
-        }
-
-        if (! dec.done())
-            throw InvalidArgument("fromKnotSig(): "
-                "Unexpected additional characters");
-
-        // At this point we are finished with our base64 decoder.
-
-        for (i = 0; i < n; ++i)
-            ans.crossings_.push_back(new Crossing());
-
-        comp = 0;
-        for (i = 0; i < 2 * n; ++i) {
-            Crossing* cr = ans.crossings_[crossing[i]];
-            if (cr->sign_ == 0)
-                cr->sign_ = sign[i];
-            else if (cr->sign_ != sign[i]) {
-                throw InvalidArgument(
-                    "fromKnotSig(): inconsistent crossing signs");
+        while (! dec.done()) {
+            // Read one component of the link diagram at a time.
+            // Note: the call to dec.done() ignores whitespace, but if there
+            // _is_ internal whitespace between components then this will be
+            // caught by decodeSize() below.
+            auto [ n, charsPerInt ] = dec.decodeSize();
+            if (n == 0) {
+                // Zero-crossing unknot.
+                ans.components_.emplace_back();
+                continue;
             }
 
-            if (cr->next_[strand[i]].crossing_) {
-                throw InvalidArgument(
-                    "fromKnotSig(): invalid outgoing connection");
+            FixedArray<size_t> crossing(2 * n);
+            FixedArray<int> sign(2 * n);
+            FixedArray<int> strand(2 * n);
+
+            // A connected diagram with n ≥ 1 crossings can have at most n
+            // link components, since each component uses ≥ 2 strands.  Here
+            // compStart[i] is the index into crossing[] at which component i
+            // begins, and we terminate compStart[] with an extra value of 2n.
+            FixedArray<size_t> compStart(n + 1);
+
+            size_t i = 0;    // next index into crossing[] to read
+            size_t comp = 0; // current component being read
+            compStart[0] = 0;
+            while (i < 2 * n) {
+                crossing[i] = dec.decodeInt<size_t>(charsPerInt);
+                if (crossing[i] < n) {
+                    ++i;
+                } else if (crossing[i] == n) {
+                    // A sentinel indicating the start of a new link component.
+                    compStart[++comp] = i;
+                } else {
+                    throw InvalidArgument("fromKnotSig(): "
+                        "invalid destination crossing");
+                }
+            }
+            compStart[++comp] = 2 * n;
+
+            for (i = 0; i < 2 * n; i += 6) {
+                unsigned bits = dec.decodeSingle<unsigned>();
+                for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
+                    strand[i + j] = (bits & 1);
+                    bits >>= 1;
+                }
+                if (bits) {
+                    throw InvalidArgument(
+                        "fromKnotSig(): extraneous strand bits");
+                }
+            }
+            for (i = 0; i < 2 * n; i += 6) {
+                unsigned bits = dec.decodeSingle<unsigned>();
+                for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
+                    sign[i + j] = ((bits & 1) ? 1 : -1);
+                    bits >>= 1;
+                }
+                if (bits) {
+                    throw InvalidArgument(
+                        "fromKnotSig(): extraneous sign bits");
+                }
             }
 
-            size_t nextIdx;
-            if (i + 1 == compStart[comp + 1]) {
-                nextIdx = compStart[comp];
-                ans.components_.push_back(
-                    ans.crossings_[crossing[nextIdx]]->strand(strand[nextIdx]));
-                ++comp;
-            } else {
-                nextIdx = i + 1;
-            }
-            cr->next_[strand[i]].crossing_ = ans.crossings_[crossing[nextIdx]];
-            cr->next_[strand[i]].strand_ = strand[nextIdx];
+            // At this point we are finished with our base64 decoder.
 
-            if (ans.crossings_[crossing[nextIdx]]->prev_[strand[nextIdx]]) {
-                throw InvalidArgument(
-                    "fromKnotSig(): invalid incoming connection");
+            size_t base = ans.crossings_.size();
+            for (i = 0; i < n; ++i)
+                ans.crossings_.push_back(new Crossing());
+
+            comp = 0;
+            for (i = 0; i < 2 * n; ++i) {
+                Crossing* cr = ans.crossings_[base + crossing[i]];
+                if (cr->sign_ == 0)
+                    cr->sign_ = sign[i];
+                else if (cr->sign_ != sign[i]) {
+                    throw InvalidArgument(
+                        "fromKnotSig(): inconsistent crossing signs");
+                }
+
+                if (cr->next_[strand[i]].crossing_) {
+                    throw InvalidArgument(
+                        "fromKnotSig(): invalid outgoing connection");
+                }
+
+                size_t nextIdx;
+                Crossing* next;
+                if (i + 1 == compStart[comp + 1]) {
+                    nextIdx = compStart[comp];
+                    next = ans.crossings_[base + crossing[nextIdx]];
+                    ans.components_.push_back(next->strand(strand[nextIdx]));
+                    ++comp;
+                } else {
+                    nextIdx = i + 1;
+                    next = ans.crossings_[base + crossing[nextIdx]];
+                }
+                cr->next_[strand[i]].crossing_ = next;
+                cr->next_[strand[i]].strand_ = strand[nextIdx];
+
+                if (next->prev_[strand[nextIdx]])
+                    throw InvalidArgument(
+                        "fromKnotSig(): invalid incoming connection");
+                next->prev_[strand[nextIdx]].crossing_ = cr;
+                next->prev_[strand[nextIdx]].strand_ = strand[i];
             }
-            ans.crossings_[crossing[nextIdx]]->
-                prev_[strand[nextIdx]].crossing_ = cr;
-            ans.crossings_[crossing[nextIdx]]->
-                prev_[strand[nextIdx]].strand_ = strand[i];
         }
 
         return ans;
