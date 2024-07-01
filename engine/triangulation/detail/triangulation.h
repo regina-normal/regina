@@ -4148,6 +4148,13 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
 
 template <int dim>
 void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
+    if (isEmpty())
+        return;
+    if (dest.isEmpty()) {
+        dest.swap(static_cast<Triangulation<dim>&>(*this));
+        return;
+    }
+
     ChangeAndClearSpan<> span1(*this);
     ChangeAndClearSpan<> span2(dest);
 
@@ -4652,8 +4659,14 @@ inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
 }
 
 template <int dim>
-void TriangulationBase<dim>::insert(
-        const Triangulation<dim>& source) {
+void TriangulationBase<dim>::insert(const Triangulation<dim>& source) {
+    if (source.isEmpty())
+        return;
+    if (isEmpty()) {
+        *this = source;
+        return;
+    }
+
     ChangeAndClearSpan<> span(*this);
 
     size_t nOrig = size();
@@ -4668,12 +4681,10 @@ void TriangulationBase<dim>::insert(
         simplices_.push_back(new Simplex<dim>(*source.simplices_[i],
             static_cast<Triangulation<dim>*>(this)));
 
-    Simplex<dim> *me, *you;
-    int f;
     for (i = 0; i < nSource; ++i) {
-        me = simplices_[nOrig + i];
-        you = source.simplices_[i];
-        for (f = 0; f <= dim; ++f) {
+        auto me = simplices_[nOrig + i];
+        auto you = source.simplices_[i];
+        for (int f = 0; f <= dim; ++f) {
             if (you->adj_[f]) {
                 me->adj_[f] = simplices_[nOrig + you->adj_[f]->index()];
                 me->gluing_[f] = you->gluing_[f];

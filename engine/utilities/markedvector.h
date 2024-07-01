@@ -313,7 +313,7 @@ class MarkedVector : private std::vector<T*> {
         }
 
         /**
-         * Empties this vector and destroys all of the object that it contains.
+         * Empties this vector and destroys all of the objects that it contains.
          *
          * This is a convenience method that simply calls \c delete on each
          * element of the vector, and then calls clear().
