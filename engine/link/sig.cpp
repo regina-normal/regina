@@ -52,9 +52,50 @@ namespace {
         }
     };
 
-    struct ComponentData {
-        StrandRef start;
-        bool reverse;
+    /**
+     * A convenience struct that makes it easy to analyse how a link behaves
+     * under a particular choice of reflection/reversal/rotation.
+     *
+     * This struct does _not_ initialise or maintain its
+     * reflection/reversal/rotation data members - this is the responsibility
+     * of the loop that iterates through them.
+     */
+    struct Symmetries {
+        /**
+         * A map from strand IDs to link component numbers.
+         */
+        const FixedArray<size_t> compFor; // strand ID -> component number
+
+        /**
+         * 0 indicates original, 1 indicates reflected.
+         */
+        int reflect;
+        /**
+         * A bitmask where the ith bit indicates the orientation of the ith
+         * componnt: 0 indicates original, and 1 indicates reversed.
+         */
+        uint64_t reverse;
+        /**
+         * 0 indicates original, 1 indicates rotated.
+         */
+        int rotate;
+
+        Symmetries(const Link& link) : compFor(link.componentsByStrand()) {
+        }
+
+        bool isReversed(const StrandRef& strand) const {
+            return reverse & (uint64_t(1) << compFor[strand.id()]);
+        }
+
+        int apparentSign(Crossing* c) const {
+            if (! reverse)
+                return reflect ? -(c->sign()) : c->sign();
+
+            if (isReversed(c->lower()) == isReversed(c->upper()))
+                return reflect ? -(c->sign()) : c->sign();
+            else
+                return reflect ? c->sign() : -(c->sign());
+        }
     };
 }
 
@@ -62,6 +103,9 @@ std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
     if (! isConnected())
         throw NotImplemented(
             "Signatures are only implemented for connected link diagrams");
+    if (components_.size() >= 64)
+        throw NotImplemented(
+            "Signatures are only implemented for less than 64 link components");
 
     // The original knot signatures (Regina ≤ 7.3):
     //
@@ -93,179 +137,147 @@ std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
     }
 
     // We have at least one crossing, and at least one component.
+    const size_t n = crossings_.size();
+    Symmetries sym(*this);
 
-    size_t n = crossings_.size();
-    FixedArray<SigData> best(2 * n + components_.size() - 1);
+    // Details of the sequence we are trying to minimise, including sentinels:
     FixedArray<SigData> curr(2 * n + components_.size() - 1);
+    FixedArray<SigData> best(2 * n + components_.size() - 1);
     bool firstAttempt = true;
 
-    // The image and preimage for each crossing.
-    FixedArray<ssize_t> image(n, -1);
-    FixedArray<ssize_t> preimage(n, -1);
+    // The image and preimage for each crossing:
+    FixedArray<ssize_t> image(n);
+    FixedArray<ssize_t> preimage(n);
+
+    // We can always guarantee to make the first (crossing, strand, sign)
+    // tuple (0, 1, ?).  Can we make the _sign_ positive, i.e., (0, 1, 1)?
+    bool startPositive;
+    if (allowReflection) {
+        startPositive = true;
+    } else if (allowReversal && components_.size() > 1) {
+        // The link diagram is connected, which means there is some crossing
+        // where two different components cross, and *that* crossing can be
+        // made positive by reversing only one of those two link components.
+        startPositive = true;
+    } else {
+        // We cannot change any crossing signs.
+        startPositive = false;
+        for (auto c : crossings_)
+            if (c->sign() > 0) {
+                startPositive = true;
+                break;
+            }
+    }
 
     // How many times have we visited each crossing?
     // (0, 1, 2, 3) = (never, lower only, upper only, both).
     // Indices are images under our relabelling.
     // Upper/lower strands are original, not rotated.
-    FixedArray<int> seen(n, 0);
+    FixedArray<int> seen(n);
 
-    // Information about each component that we process.
-    FixedArray<ComponentData> comp(components_.size());
+    // The orientations of all link components will be held in a 64-bit bitmask
+    // (0 means original, 1 means reversed).  Here we make a past-the-end value
+    // indicating when all such choices have been exhausted.
+    const uint64_t reverseEnd =
+        (allowReversal ? (uint64_t(1) << components_.size()) : 1);
 
-    for (int reflect = 0; reflect < 2; ++reflect) {
-        for (int rotate = 0; rotate < 2; ++rotate) {
-            // Find a starting point for the first component.
+    // Off we go!
+    for (sym.reflect = 0; sym.reflect < (allowReflection ? 2 : 1);
+            ++sym.reflect) {
+        for (sym.reverse = 0; sym.reverse != reverseEnd; ++sym.reverse) {
             for (auto start : crossings_) {
-                // If we are allowed to reflect, then we can guarantee to
-                // start with a positive crossing.
-                if (allowReflection && start->sign() == (reflect ? 1 : -1))
+                int startSign = sym.apparentSign(start);
+                if (startPositive && startSign < 0)
                     continue;
 
-                // We will map start to crossing 0, and we will always start
-                // on the upper strand (after taking into account rotation).
-                image[start->index()] = 0;
-                preimage[0] = start->index();
-                size_t nextUnused = 1;
+                for (sym.rotate = 0; sym.rotate < 2; ++sym.rotate) {
+                    // Follow the link around from this starting point,
+                    // using the chosen set of component orientations.
 
-                // Prepare to make choices for traversing the this component.
-                comp[0].start = start->strand(rotate ? 0 : 1);
-                comp[0].reverse = false;
+                    std::fill(image.begin(), image.end(), -1);
+                    std::fill(preimage.begin(), preimage.end(), -1);
+                    std::fill(seen.begin(), seen.end(), 0);
 
-                ssize_t doneComp = 0;
-                size_t pos = 0;
-                while (doneComp < components_.size()) {
-                    // Traverse comp[doneComp].
-                    StrandRef s = comp[doneComp].start;
-                    while (true) {
-                        seen[image[s.crossing()->index()]] |= (s.strand() + 1);
+                    image[start->index()] = 0;
+                    preimage[0] = start->index();
+                    size_t nextUnused = 1;
 
-                        curr[pos].crossing = image[s.crossing()->index()];
-                        curr[pos].strand = (rotate ?
-                            (s.strand() ^ 1) : s.strand());
-                        curr[pos].sign = (reflect ?
-                            -s.crossing()->sign() : s.crossing()->sign());
+                    StrandRef compStart = start->strand(sym.rotate ? 0 : 1);
+                    bool compReverse = sym.isReversed(compStart);
 
-                        // TODO: check for non-canonical
+                    curr[0].crossing = 0;
+                    curr[0].strand = 1;
+                    curr[0].sign = startSign;
+                    seen[0] |= (compStart.strand() + 1);
 
-                        if (comp[doneComp].reverse)
-                            --s;
-                        else
-                            ++s;
-                        ++pos;
-                        if (s == comp[doneComp].start)
-                            break;
+                    // Since we already checked the sign of the start crossing,
+                    // we know that every time we reach this point in the loop
+                    // the value of curr[0] will be initialised the same way.
+                    // Therefore there is no need to test it against best[0].
+                    bool currBetter = firstAttempt;
 
-                        if (image[s.crossing()->index()] < 0) {
-                            // This is a new crossing.
-                            preimage[nextUnused] = s.crossing()->index();
-                            image[s.crossing()->index()] = nextUnused++;
-                        }
-                    }
+                    StrandRef s = compStart;
+                    if (compReverse)
+                        --s;
+                    else
+                        ++s;
+                    for (size_t pos = 1; pos < curr.size(); ++pos) {
+                        if (s == compStart && curr[pos-1].crossing != n) {
+                            // We are at the start of the component, and it is
+                            // not because we just started the component now.
+                            // We must have finished traversing this component.
+                            curr[pos].crossing = n;
+                            curr[pos].strand = curr[pos].sign = 0;
 
-                    ++doneComp;
-                    if (doneComp < components_.size()) {
-                        // Find the strand to start the next component from.
-                        // This should be the lowest index crossing, under our
-                        // relabelling, which has been visited only once.
-                        // Since the diagram is connected, such a crossing
-                        // should exist.
-                        //
-                        // TODO: We can probably do this in amortised constant
-                        // time instead of the linear search we use here..?
-                        for (size_t i = 0; i < size(); ++i)
-                            if (seen[i] == 1) {
-                                comp[doneComp].start =
-                                    crossings_[preimage[i]]->upper();
-                                break;
-                            } else if (seen[i] == 2) {
-                                comp[doneComp].start =
-                                    crossings_[preimage[i]]->lower();
-                                break;
-                            } else if (seen[i] == 0) {
-                                // This should never happen - it means the
-                                // diagram was disconnected, and we have
-                                // already tested for this.
-                                throw NotImplemented(
-                                    "Link::knotSig() is seeing behaviour "
-                                    "that should only occur for a "
-                                    "disconnected link diagram");
-                            }
-
-                        comp[doneComp].reverse = false;
-
-                        // Add the sentinel between components.
-                        curr[pos].crossing = n;
-                        curr[pos].strand = curr[pos].sign = 0;
-                        ++pos;
-
-                        continue;
-                    }
-
-                    // We have a complete labelling.
-                    // TODO: Replace this with a piecewise test.
-                    if (firstAttempt) {
-                        std::copy(curr.begin(), curr.end(), best.begin());
-                        firstAttempt = false;
-                    } else if (std::lexicographical_compare(
-                            curr.begin(), curr.end(),
-                            best.begin(), best.end())) {
-                        std::copy(curr.begin(), curr.end(), best.begin());
-                    }
-
-wind_back:
-                    --doneComp;
-                    while (doneComp >= 0) {
-                        // Wind back comp[doneComp].
-                        // The direction of traversal does not matter here.
-                        StrandRef s = comp[doneComp].start;
-                        do {
-                            size_t idx = s.crossing()->index();
-                            size_t idxImg = image[idx];
-                            if (seen[idxImg] == 3)
-                                seen[idxImg] ^= (s.strand() + 1);
-                            else {
-                                // This crossing becomes unseen.
-                                seen[idxImg] = 0;
-
-                                // Note: we shouldn't remove image/preimage
-                                // for the starting point of diagram traversal,
-                                // since this is managed separately.
-                                if (idxImg > 0) {
-                                    image[idx] = -1;
-                                    preimage[idxImg] = -1;
-                                    if (nextUnused > idxImg)
-                                        nextUnused = idxImg;
-                                }
-                            }
-                            ++s;
-                            --pos;
-                        } while (s != comp[doneComp].start);
-
-                        if (allowReversal && ! comp[doneComp].reverse) {
-                            // Try this same component in the other direction.
-                            comp[doneComp].reverse = true;
-                            break;
+                            // Find the smallest possible starting point for
+                            // the next component.  Since the link diagram is
+                            // connected, this will be at a crossing that
+                            // we've already seen.
+                            size_t i = image[compStart.crossing()->index()];
+                            while (seen[i] == 3)
+                                ++i;
+                            compStart = crossings_[preimage[i]]->strand(
+                                seen[i] == 1 /* lower already seen */ ? 1 : 0);
+                            compReverse = sym.isReversed(compStart);
+                            s = compStart;
                         } else {
-                            // We are done with this component.
-                            --doneComp;
-                            --pos; // moves back past the sentinel
+                            size_t idx = s.crossing()->index();
+                            if (image[idx] < 0) {
+                                // This is a new crossing.
+                                preimage[nextUnused] = idx;
+                                image[idx] = nextUnused++;
+                            }
+
+                            curr[pos].crossing = image[idx];
+                            curr[pos].strand = (sym.rotate ?
+                                (s.strand() ^ 1) : s.strand());
+                            curr[pos].sign = sym.apparentSign(s.crossing());
+                            seen[image[idx]] |= (s.strand() + 1);
+
+                            if (compReverse)
+                                --s;
+                            else
+                                ++s;
+                        }
+
+                        if (! currBetter) {
+                            if (curr[pos] < best[pos])
+                                currBetter = true;
+                            else if (best[pos] < curr[pos])
+                                goto noncanonical;
                         }
                     }
 
-                    // Loop around again to traverse comp[doneComp].
+                    if (currBetter) {
+                        curr.swap(best);
+                        firstAttempt = false;
+                    }
+
+                    noncanonical:
+                        ;
                 }
-
-                // Time to try a different starting point.
-                image[start->index()] = -1;
-                preimage[0] = -1;
             }
-
-            // Here we move on to the next choice of rotate.
         }
-
-        // Here we move on to the next choice of reflect.
-        if (! allowReflection)
-            break;
     }
 
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]

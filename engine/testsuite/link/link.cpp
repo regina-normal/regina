@@ -1675,8 +1675,8 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
         alt.reverse();
         EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
 
-        for (size_t i = 1; i < link.countComponents(); ++i) {
-            alt.reverse(link.component(i));
+        for (size_t i = 1; i < alt.countComponents(); ++i) {
+            alt.reverse(alt.component(i));
             EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
         }
     }
@@ -1686,8 +1686,8 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
         alt.reverse();
         EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
 
-        for (size_t i = 1; i < link.countComponents(); ++i) {
-            alt.reverse(link.component(i));
+        for (size_t i = 1; i < alt.countComponents(); ++i) {
+            alt.reverse(alt.component(i));
             EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
         }
     }
@@ -1698,8 +1698,35 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
     EXPECT_EQ(recon.size(), link.size());
     EXPECT_EQ(recon.countComponents(), link.countComponents());
     EXPECT_EQ(recon.knotSig(reflect, reverse), sig);
-    if (link.size() <= JONES_THRESHOLD && ! reflect)
-        EXPECT_EQ(recon.jones(), link.jones());
+    if (link.size() <= JONES_THRESHOLD) {
+        if (reverse && link.countComponents() > 1) {
+            // We could reverse some but not all components, which will do
+            // unusual things to the Jones polynomial.  At least we can
+            // still span of exponents.
+            auto reconJones = recon.jones();
+            auto linkJones = link.jones();
+            EXPECT_EQ(reconJones.maxExp() - reconJones.minExp(),
+                linkJones.maxExp() - linkJones.minExp());
+        } else if (reflect) {
+            // The only possible change to the Jones polynomial is x -> x^-1.
+            auto reconJones = recon.jones();
+            auto linkJones = link.jones();
+
+            auto reconJonesAlt = recon.jones();
+            auto linkJonesAlt = link.jones();
+            reconJonesAlt.invertX();
+            linkJonesAlt.invertX();
+
+            if (reconJonesAlt < reconJones)
+                reconJones.swap(reconJonesAlt);
+            if (linkJonesAlt < linkJones)
+                linkJones.swap(linkJonesAlt);
+
+            EXPECT_EQ(reconJones, linkJones);
+        } else {
+            EXPECT_EQ(recon.jones(), link.jones());
+        }
+    }
 
     // Verify the "magic" string constructor.
     EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
@@ -1760,11 +1787,11 @@ TEST_F(LinkTest, knotSig) {
     // as we optimise the underlying algorithms.  For now we can only work
     // with connected link diagrams, hence the fairly small list below.
     EXPECT_EQ(empty.link.sig(), "_");
-    EXPECT_EQ(hopf.link.sig(), "cabcabjp");
-    EXPECT_EQ(whitehead.link.sig(), "fabcadefbcedvfpd");
-    EXPECT_EQ(borromean.link.sig(), "gabcdgaecfgbedfLwZm");
+    EXPECT_EQ(hopf.link.sig(), "cabcabjp"); // verified by hand
+    EXPECT_EQ(whitehead.link.sig(), "fabcadefbcedvfpd"); // verified by hand
+    EXPECT_EQ(borromean.link.sig(), "gabcdgaecfgbfdeLwto"); // verified by hand
     EXPECT_EQ(trefoil_unknot_overlap.link.sig(), "fabcdeadefbcxb7h");
-    EXPECT_EQ(adams6_28.link.sig(), "gabcdgabefcdfeLQ-m");
+    EXPECT_EQ(adams6_28.link.sig(), "gabcadefdgbcefvv--"); // verified by hand
 }
 
 static void verifyGaussAndDT(const TestCase& test,

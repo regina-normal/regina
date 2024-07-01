@@ -3574,13 +3574,25 @@ class Link :
          * rotation, and (optionally) reflecting the entire diagram and/or
          * reversing some or all link components.
          *
-         * In Regina versions 7.3 and earlier, signatures were only supported
-         * for knots.  As of Regina 7.4, signatures are now also supported for
-         * empty links and _connected_ diagrams with multiple link components
-         * (and in the case of knots, the signature format has not changed).
-         * Signatures remain unsupported for _disconnected_ link diagrams: if
-         * this link diagram is disconnected then this routine will throw an
-         * exception.  See isConnected() for further discussion on connectivity.
+         * Signatures are not supported for all link diagrams.  At present
+         * they are supported only for connected link diagrams with fewer than
+         * 64 link components.  In detail:
+         *
+         * - Regina 7.3 and earlier only offered signatures for knots.
+         *   As of Regina 7.4, signatures are also supported for empty links
+         *   and _connected_ diagrams with multiple link components (and for
+         *   knots, the new signatures are identical to the old).
+         *   Signatures remain unsupported for _disconnected_ link diagrams:
+         *   in such cases this routine will throw an exception.
+         *   See isConnected() for further discussion on connectivity.
+         *
+         * - The implementation uses bitmasks, and a side-effect of this is
+         *   that it can only support fewer than 64 link components.  However,
+         *   since the running time is exponential in the number of components
+         *   (if we allow reversal, which is the default) then it would be
+         *   completely infeasible to use this routine in practice with _more_
+         *   components than this.  Again, if there are more than 64 link
+         *   components then this routine will throw an exception.
          *
          * The signature is constructed entirely of printable characters,
          * and has length proportional to `n log n`, where \a n
@@ -3592,9 +3604,15 @@ class Link :
          * of relabelling, rotation, and/or (according to the arguments)
          * reflection of the entire diagram and/or reversal of components.
          *
+         * The running time is quadratic in the number of crossings and (if we
+         * allow reversal, which is the default) exponential in the number of
+         * link components.  For this reason, signatures should not be used
+         * for links with a large number of components.
+         *
          * This routine runs in quadratic time.
          *
-         * \exception NotImplemented This link diagram is not connected.
+         * \exception NotImplemented This link diagram is not connected,
+         * or has at least 64 link components.
          * See isConnected() for a more detailed discussion of connectivity.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
@@ -3619,7 +3637,8 @@ class Link :
          *
          * See knotSig() for further details.
          *
-         * \exception NotImplemented This link diagram is not connected.
+         * \exception NotImplemented This link diagram is not connected,
+         * or has at least 64 link components.
          * See isConnected() for a more detailed discussion of connectivity.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
