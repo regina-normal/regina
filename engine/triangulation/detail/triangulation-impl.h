@@ -622,7 +622,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
     PacketChangeGroup span(static_cast<Triangulation<dim>&>(*this));
 
-    insert(std::move(staging));
+    insertTriangulation(std::move(staging));
 
     for (size_t i = 0; i < nFaces; ++i)
         if (cone[i])

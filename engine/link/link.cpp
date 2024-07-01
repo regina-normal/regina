@@ -660,7 +660,7 @@ void Link::rotate() {
     }
 }
 
-void Link::insert(const Link& source) {
+void Link::insertLink(const Link& source) {
     if (source.isEmpty())
         return;
     if (isEmpty()) {
@@ -691,7 +691,7 @@ void Link::insert(const Link& source) {
     }
 }
 
-void Link::insert(Link&& source) {
+void Link::insertLink(Link&& source) {
     if (source.isEmpty())
         return;
     if (isEmpty()) {

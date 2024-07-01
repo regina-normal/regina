@@ -78,7 +78,7 @@ class DualGraph3Test : public testing::Test {
         DualGraph3Test() {
             disconnected.insertLayeredSolidTorus(4, 7);
             disconnected.tetrahedron(disconnected.size() - 1)->unjoin(0);
-            disconnected.insert(Example<3>::layeredLoop(6, true));
+            disconnected.insertTriangulation(Example<3>::layeredLoop(6, true));
         }
 };
 

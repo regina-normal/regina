@@ -53,12 +53,12 @@ class Dim2Test : public TriangulationTest<2> {
         TestCase disjoint3 { {}, "KB U Annulus U S^2" };
 
         Dim2Test() {
-            disjoint2.tri.insert(sphereBundle.tri);
-            disjoint2.tri.insert(twistedBallBundle.tri);
+            disjoint2.tri.insertTriangulation(sphereBundle.tri);
+            disjoint2.tri.insertTriangulation(twistedBallBundle.tri);
 
-            disjoint3.tri.insert(twistedSphereBundle.tri);
-            disjoint3.tri.insert(ballBundle.tri);
-            disjoint3.tri.insert(sphere.tri);
+            disjoint3.tri.insertTriangulation(twistedSphereBundle.tri);
+            disjoint3.tri.insertTriangulation(ballBundle.tri);
+            disjoint3.tri.insertTriangulation(sphere.tri);
         }
 
         /**

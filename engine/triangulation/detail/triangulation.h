@@ -554,8 +554,9 @@ class TriangulationBase :
          * simplices and/or their facets will be preserved.
          *
          * Calling `tri.moveContentsTo(dest)` is similar to calling
-         * `dest.insert(std::move(tri))`; it is a little slower but it comes
-         * with the benefit of leaving this triangulation in a usable state.
+         * `dest.insertTriangulation(std::move(tri))`; it is a little slower
+         * but it comes with the benefit of leaving this triangulation in a
+         * usable state.
          *
          * \pre \a dest is not this triangulation.
          *
@@ -2569,14 +2570,9 @@ class TriangulationBase :
          *
          * This routine behaves correctly when \a source is this triangulation.
          *
-         * \warning Be careful not to confuse this function with
-         * Packet::insert(), which takes two arguments and which manipulates
-         * the packet tree (not the triangulation).  A triangulation packet
-         * will inherit both types of insert() function.
-         *
          * \param source the triangulation whose copy will be inserted.
          */
-        void insert(const Triangulation<dim>& source);
+        void insertTriangulation(const Triangulation<dim>& source);
 
         /**
          * Moves the contents of the given triangulation into this
@@ -2596,21 +2592,16 @@ class TriangulationBase :
          * Any locks on top-dimensional simplices and/or their facets will be
          * preserved.
          *
-         * Calling `tri.insert(source)` (where \a source is an rvalue reference)
-         * is similar to calling `source.moveContentsTo(tri)`, but it is a
-         * little faster since it does not need to leave \a source in a usable
-         * state.
+         * Calling `tri.insertTriangulation(source)` (where \a source is an
+         * rvalue reference) is similar to calling `source.moveContentsTo(tri)`,
+         * but it is a little faster since it does not need to leave \a source
+         * in a usable state.
          *
          * Regarding packet change events: this function does _not_ fire
          * a change event on \a source, since it assumes that \a source is
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \pre \a source is not this triangulation.
-         *
-         * \warning Be careful not to confuse this function with
-         * Packet::insert(), which takes two arguments and which manipulates
-         * the packet tree (not the triangulation).  A triangulation packet
-         * will inherit both types of insert() function.
          *
          * \nopython Only the copying version of this function is available
          * (i.e., the version that takes \a source as a const reference).
@@ -2619,19 +2610,7 @@ class TriangulationBase :
          *
          * \param source the triangulation whose contents should be moved.
          */
-        void insert(Triangulation<dim>&& source);
-
-        /**
-         * A deprecated alias for insert(), which inserts a copy of the given
-         * triangulation into this triangulation.
-         *
-         * \deprecated This routine has been renamed to insert().
-         * See insert() for further details.
-         *
-         * \param src the triangulation whose copy will be inserted.
-         */
-        [[deprecated]] void insertTriangulation(
-            const Triangulation<dim>& source);
+        void insertTriangulation(Triangulation<dim>&& source);
 
         /*@}*/
         /**
@@ -4703,7 +4682,8 @@ inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
 }
 
 template <int dim>
-void TriangulationBase<dim>::insert(const Triangulation<dim>& source) {
+void TriangulationBase<dim>::insertTriangulation(
+        const Triangulation<dim>& source) {
     if (source.isEmpty())
         return;
     if (isEmpty()) {
@@ -4739,7 +4719,7 @@ void TriangulationBase<dim>::insert(const Triangulation<dim>& source) {
 }
 
 template <int dim>
-void TriangulationBase<dim>::insert(Triangulation<dim>&& source) {
+void TriangulationBase<dim>::insertTriangulation(Triangulation<dim>&& source) {
     if (source.isEmpty())
         return;
     if (isEmpty()) {
@@ -4758,12 +4738,6 @@ void TriangulationBase<dim>::insert(Triangulation<dim>&& source) {
         simplices_.push_back(s);
     }
     source.simplices_.clear();
-}
-
-template <int dim>
-inline void TriangulationBase<dim>::insertTriangulation(
-        const Triangulation<dim>& source) {
-    insert(source);
 }
 
 template <int dim>

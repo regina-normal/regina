@@ -1303,14 +1303,9 @@ class Link :
          *
          * This routine behaves correctly when \a source is this link.
          *
-         * \warning Be careful not to confuse this function with
-         * Packet::insert(), which takes two arguments and which manipulates
-         * the packet tree (not the link).  A knot/link packet will inherit
-         * both types of insert() function.
-         *
          * \param source the link whose copy will be inserted.
          */
-        void insert(const Link& source);
+        void insertLink(const Link& source);
 
         /**
          * Moves the contents of the given link into this link.
@@ -1328,7 +1323,7 @@ class Link :
          * originally referred to \a source then they will now return
          * different crossing indices and strand IDs.
          *
-         * Calling `link.insert(source)` (where \a source is an rvalue
+         * Calling `link.insertLink(source)` (where \a source is an rvalue
          * reference) is similar to calling `source.moveContentsTo(link)`,
          * but it is a little faster since it does not need to leave
          * \a source in a usable state.
@@ -1339,11 +1334,6 @@ class Link :
          *
          * \pre \a source is not this link.
          *
-         * \warning Be careful not to confuse this function with
-         * Packet::insert(), which takes two arguments and which manipulates
-         * the packet tree (not the link).  A knot/link packet will inherit
-         * both types of insert() function.
-         *
          * \nopython Only the copying version of this function is available
          * (i.e., the version that takes \a source as a const reference).
          * If you want a fast move operation, call
@@ -1351,7 +1341,7 @@ class Link :
          *
          * \param source the link whose contents should be moved.
          */
-        void insert(Link&& source);
+        void insertLink(Link&& source);
 
         /**
          * Moves the contents of this link into the given destination link,
@@ -1371,8 +1361,8 @@ class Link :
          * different crossing indices and strand IDs.
          *
          * Calling `link.moveContentsTo(dest)` is similar to calling
-         * `dest.insert(std::move(link))`; it is a little slower but it comes
-         * with the benefit of leaving this link in a usable state.
+         * `dest.insertLink(std::move(link))`; it is a little slower but it
+         * comes with the benefit of leaving this link in a usable state.
          *
          * \pre \a dest is not this link.
          *

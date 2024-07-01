@@ -163,12 +163,12 @@ class Dim4Test : public TriangulationTest<4> {
         TestCase disjoint3 { {}, "RP^4 U B^4 U (ideal Poincare x I)" };
 
         Dim4Test() {
-            disjoint2.tri.insert(sphereBundle.tri);
-            disjoint2.tri.insert(ball_layerAndFold.tri);
+            disjoint2.tri.insertTriangulation(sphereBundle.tri);
+            disjoint2.tri.insertTriangulation(ball_layerAndFold.tri);
 
-            disjoint3.tri.insert(rp4.tri);
-            disjoint3.tri.insert(ball_layerAndFold.tri);
-            disjoint3.tri.insert(idealPoincareProduct.tri);
+            disjoint3.tri.insertTriangulation(rp4.tri);
+            disjoint3.tri.insertTriangulation(ball_layerAndFold.tri);
+            disjoint3.tri.insertTriangulation(idealPoincareProduct.tri);
         }
 
         /**
@@ -1429,9 +1429,10 @@ TEST_F(Dim4Test, events) {
         EXPECT_EQ(p->homology<2>().rank(), 1);
 
         // Move assignment that changes H2
-        // The extra insert() is to ensure that the move is not optimised away.
+        // The extra insertTriangulation() is to ensure that the move is not
+        // optimised away.
         Triangulation<4> t = rp4.tri;
-        t.insert(t);
+        t.insertTriangulation(t);
         *p = std::move(t);
 
         EXPECT_EQ(w.events, 1);
