@@ -158,12 +158,12 @@ class Dim3Test : public TriangulationTest<3> {
             figure8_bary.tri.subdivide();
             idealRP2xI.tri.subdivide();
 
-            disjoint2.tri.insertTriangulation(gieseking.tri);
-            disjoint2.tri.insertTriangulation(idealGenusTwoHandlebody.tri);
+            disjoint2.tri.insert(gieseking.tri);
+            disjoint2.tri.insert(idealGenusTwoHandlebody.tri);
 
-            disjoint3.tri.insertTriangulation(sphereBundle.tri);
-            disjoint3.tri.insertTriangulation(ball_large_pillows.tri);
-            disjoint3.tri.insertTriangulation(figure8.tri);
+            disjoint3.tri.insert(sphereBundle.tri);
+            disjoint3.tri.insert(ball_large_pillows.tri);
+            disjoint3.tri.insert(figure8.tri);
         }
 
         /**
@@ -1725,8 +1725,8 @@ TEST_F(Dim3Test, minimiseVertices) {
     // Some disconnected triangulations where reductions are required.
     {
         Triangulation<3> t;
-        t.insertTriangulation(ball_bary.tri);
-        t.insertTriangulation(figure8_bary.tri);
+        t.insert(ball_bary.tri);
+        t.insert(figure8_bary.tri);
         verifyMinimiseVertices(t, "Subdivided, disconnected, mixed boundaries");
     }
     {
@@ -2186,7 +2186,7 @@ TEST_F(Dim3Test, angleStructures) {
 
     {
         Triangulation<3> t = figure8.tri;
-        t.insertTriangulation(gieseking.tri);
+        t.insert(gieseking.tri);
         verifyAngleStructures(t, "Figure eight U Gieseking");
     }
 }
@@ -2523,7 +2523,7 @@ TEST_F(Dim3Test, sphereRecognition) {
     {
         SCOPED_TRACE("S^3 U S^3");
         Triangulation<3> tri = s3.tri;
-        tri.insertTriangulation(s3.tri);
+        tri.insert(s3.tri);
         verifySphere(tri, false);
     }
 
@@ -3474,10 +3474,9 @@ TEST_F(Dim3Test, events) {
         EXPECT_TRUE(p->isSolidTorus());
 
         // Move assignment that changes isSolidTorus()
-        // The extra insertTriangulation() is to ensure that the
-        // move is not optimised away.
+        // The extra insert() is to ensure that the move is not optimised away.
         Triangulation<3> t = rp3_1.tri;
-        t.insertTriangulation(t);
+        t.insert(t);
         *p = std::move(t);
 
         EXPECT_EQ(w.events, 1);

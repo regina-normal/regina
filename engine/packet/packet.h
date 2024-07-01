@@ -776,6 +776,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre This packet is already the parent of \a prevChild.
          * \pre This packet is not a descendant of \a newChild.
          *
+         * \warning Be careful not to confuse this function with
+         * Triangulation<dim>::insert() or Link::insert(), which are functions
+         * that take just one argument and manipulate the triangulation or link
+         * (not the packet tree).  A triangulation or knot/link packet will
+         * inherit both types of insert() function.
+         *
          * \exception InvalidArgument The argument \a newChild already has a
          * parent packet, and/or the argument \a prevChild is non-null and
          * does not have this packet as its parent.  Note that, although this

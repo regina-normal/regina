@@ -283,7 +283,7 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     if (other.simplices_.empty())
         return;
     if (simplices_.empty()) {
-        insertTriangulation(other);
+        insert(other);
         return;
     }
 
@@ -294,14 +294,14 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // (joinRaw, etc.) further down below - this is so we can manage facet
     // locks manually.  A basic PacketChangeSpan is enough: we do not need to
     // take a snapshot or clear properties, since (a) that will be managed
-    // already by insertTriangulation() and puncture(), and (b) we will not
-    // compute any fresh properties that need clearing after that.
+    // already by insert() and puncture(), and (b) we will not compute any
+    // fresh properties that need clearing after that.
     PacketChangeSpan span(*this);
 
     // Insert the other triangulation *before* puncturing this, so that
     // things work in the case where we sum a triangulation with itself.
-    unsigned long n = simplices_.size();
-    insertTriangulation(other);
+    size_t n = simplices_.size();
+    insert(other);
 
     // Make the puncture and record the resulting new boundary triangles.
     // Note: the default location for puncture() is tetrahedron 0, facet 0.

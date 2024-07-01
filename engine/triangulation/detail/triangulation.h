@@ -2568,9 +2568,26 @@ class TriangulationBase :
          *
          * This routine behaves correctly when \a source is this triangulation.
          *
+         * \warning Be careful not to confuse this function with
+         * Packet::insert(), which takes two arguments and which manipulates
+         * the packet tree (not the triangulation).  A triangulation packet
+         * will inherit both types of insert() function.
+         *
          * \param source the triangulation whose copy will be inserted.
          */
-        void insertTriangulation(const Triangulation<dim>& source);
+        void insert(const Triangulation<dim>& source);
+
+        /**
+         * A deprecated alias for insert(), which inserts a copy of the given
+         * triangulation into this triangulation.
+         *
+         * \deprecated This routine has been renamed to insert().
+         * See insert() for further details.
+         *
+         * \param src the triangulation whose copy will be inserted.
+         */
+        [[deprecated]] void insertTriangulation(
+            const Triangulation<dim>& source);
 
         /*@}*/
         /**
@@ -4635,7 +4652,7 @@ inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
 }
 
 template <int dim>
-void TriangulationBase<dim>::insertTriangulation(
+void TriangulationBase<dim>::insert(
         const Triangulation<dim>& source) {
     ChangeAndClearSpan<> span(*this);
 
@@ -4664,6 +4681,12 @@ void TriangulationBase<dim>::insertTriangulation(
                 me->adj_[f] = nullptr;
         }
     }
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::insertTriangulation(
+        const Triangulation<dim>& source) {
+    insert(source);
 }
 
 template <int dim>

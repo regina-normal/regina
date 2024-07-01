@@ -360,7 +360,7 @@ TEST_F(SnapPeaTest, incompatible) {
         // Two disconnected copies of m2_1
         Triangulation<3> m2_1_m2_1;
         m2_1_m2_1 = Triangulation<3>::rehydrate("cabbbbaei");
-        m2_1_m2_1.insertTriangulation(m2_1_m2_1);
+        m2_1_m2_1.insert(m2_1_m2_1);
 
         EXPECT_TRUE(m2_1_m2_1.isValid());
         EXPECT_FALSE(m2_1_m2_1.isConnected());
@@ -595,7 +595,7 @@ TEST_F(SnapPeaTest, copyMove) {
     verifyCopyMoveNull(Example<3>::lst(1,2), "LST(1,2,3)");
     {
         Triangulation<3> t(m2_1);
-        t.insertTriangulation(m2_1);
+        t.insert(m2_1);
         verifyCopyMoveNull(t, "M 2_1 U M 2_1");
     }
 }

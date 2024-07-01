@@ -1305,8 +1305,8 @@ Parameter ``k``:
 Returns:
     the *k*th homology group.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::insertTriangulation
-constexpr const char *insertTriangulation =
+// Docstring regina::python::doc::detail::TriangulationBase_::insert
+constexpr const char *insert =
 R"doc(Inserts a copy of the given triangulation into this triangulation.
 
 The top-dimensional simplices of *source* will be copied into this
@@ -1325,7 +1325,25 @@ facets, these locks will also be copied over to this triangulation.
 
 This routine behaves correctly when *source* is this triangulation.
 
+.. warning::
+    Be careful not to confuse this function with Packet::insert(),
+    which takes two arguments and which manipulates the packet tree
+    (not the triangulation). A triangulation packet will inherit both
+    types of insert() function.
+
 Parameter ``source``:
+    the triangulation whose copy will be inserted.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::insertTriangulation
+constexpr const char *insertTriangulation =
+R"doc(A deprecated alias for insert(), which inserts a copy of the given
+triangulation into this triangulation.
+
+.. deprecated::
+    This routine has been renamed to insert(). See insert() for
+    further details.
+
+Parameter ``src``:
     the triangulation whose copy will be inserted.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::isConnected

@@ -417,8 +417,9 @@ void addTriangulation4(pybind11::module_& m) {
             rdoc::linkingSurface)
         .def("linkingSurface", &Triangulation<4>::linkingSurface<3>,
             rdoc::linkingSurface)
-        .def("insertTriangulation", &Triangulation<4>::insertTriangulation,
-            rbase::insertTriangulation)
+        .def("insert", &Triangulation<4>::insert, rbase::insert)
+        .def("insertTriangulation", &Triangulation<4>::insert,
+            rbase::insertTriangulation) // deprecated
         .def("sig", &Triangulation<4>::sig<>, rbase::sig)
         .def("isoSig", &Triangulation<4>::isoSig<>, rbase::isoSig)
         .def("isoSig_EdgeDegrees",
