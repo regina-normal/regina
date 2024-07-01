@@ -660,6 +660,61 @@ void Link::rotate() {
     }
 }
 
+void Link::insert(const Link& source) {
+    if (source.isEmpty())
+        return;
+    if (isEmpty()) {
+        *this = source;
+        return;
+    }
+
+    ChangeAndClearSpan<> span(*this);
+
+    // From here we can assume source is non-empty.
+    // Clone its crossings, and transfer them directly into this link.
+    // This abuses the MarkedVector API slightly (since an object must
+    // not belong to more than one MarkedVector at a time), but the
+    // implementation of MarkedVector does make it correct.
+    Link clone(source);
+    for (Crossing* c : clone.crossings_)
+        crossings_.push_back(c);
+    clone.crossings_.clear();
+
+    // We can copy or move components from clone, whichever makes more sense.
+    if (isEmpty()) {
+        // Constant time, and correct since this link is empty and we do not
+        // care what happens to clone.components_.
+        clone.components_.swap(components_);
+    } else {
+        components_.insert(components_.end(),
+            clone.components_.begin(), clone.components_.end());
+    }
+}
+
+void Link::moveContentsTo(Link& dest) {
+    if (isEmpty())
+        return;
+    if (dest.isEmpty()) {
+        swap(dest);
+        return;
+    }
+
+    ChangeAndClearSpan<> span(*this);
+    ChangeAndClearSpan<> span2(dest);
+
+    // The following code abuse MarkedVector, since for a brief moment each
+    // crossing belongs to both crossings_ and dest.crossings_.  However, the
+    // subsequent clear() operation does not touch the markings (indices), and
+    // so we end up with the correct result (i.e., markings correct for dest).
+    for (auto* c : crossings_)
+        dest.crossings_.push_back(c);
+    crossings_.clear();
+
+    dest.components_.insert(dest.components_.end(),
+        components_.begin(), components_.end());
+    components_.clear();
+}
+
 void Link::change(Crossing* c) {
     ChangeAndClearSpan<> span(*this);
 

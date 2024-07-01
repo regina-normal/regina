@@ -1293,6 +1293,54 @@ class Link :
         void swap(Link& other);
 
         /**
+         * Inserts a copy of the given link into this link.
+         *
+         * The crossings and components of \a source will be copied into this
+         * link in the same order in which they appear in \a source.
+         * That is, if the original number of crossings in this link was \a N,
+         * then the crossing at index \a i in \a source will be copied into
+         * this link as a new crossing at index <i>N</i>+<i>i</i>; likewise
+         * for components.
+         *
+         * This routine behaves correctly when \a source is this link.
+         *
+         * \warning Be careful not to confuse this function with
+         * Packet::insert(), which takes two arguments and which manipulates
+         * the packet tree (not the link).  A knot/link packet will inherit
+         * both types of insert() function.
+         *
+         * \param source the link whose copy will be inserted.
+         */
+        void insert(const Link& source);
+
+        /**
+         * Moves the contents of this link into the given destination link,
+         * without destroying any pre-existing contents.
+         *
+         * All crossings and components that currently belong to \a dest will
+         * remain there (and will keep the same indices in \a dest).  All
+         * crossings and components from this link will be moved into \a dest
+         * also (but in general their indices will change).
+         *
+         * This link will become empty as a result.
+         *
+         * Any strand references or pointers to Crossing objects will remain
+         * valid.
+         *
+         * If your intention is to _replace_ the contents of \a dest
+         * (i.e., you do not need to preserve its original contents),
+         * then consider using the move assignment operator instead
+         * (which is more streamlined and also moves across any cached
+         * properties from the source link).
+         *
+         * \pre \a dest is not this link.
+         *
+         * \param dest the link into which crossings and components should be
+         * moved.
+         */
+        void moveContentsTo(Link& dest);
+
+        /**
          * Switches the upper and lower strands of the given crossing.
          *
          * \param c the crossing to change.

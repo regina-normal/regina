@@ -2038,6 +2038,27 @@ Returns:
     the HOMFLY polynomial, or the zero polynomial if the calculation
     was cancelled via the given progress tracker.)doc";
 
+// Docstring regina::python::doc::Link_::insert
+static const char *insert =
+R"doc(Inserts a copy of the given link into this link.
+
+The crossings and components of *source* will be copied into this link
+in the same order in which they appear in *source*. That is, if the
+original number of crossings in this link was *N*, then the crossing
+at index *i* in *source* will be copied into this link as a new
+crossing at index *N*+*i*; likewise for components.
+
+This routine behaves correctly when *source* is this link.
+
+.. warning::
+    Be careful not to confuse this function with Packet::insert(),
+    which takes two arguments and which manipulates the packet tree
+    (not the link). A knot/link packet will inherit both types of
+    insert() function.
+
+Parameter ``source``:
+    the link whose copy will be inserted.)doc";
+
 // Docstring regina::python::doc::Link_::insertTorusLink
 static const char *insertTorusLink =
 R"doc(Inserts a new (*p*, *q*) torus link into this link.
@@ -2440,6 +2461,32 @@ the lowest-index crossing in that piece of the diagram.
 Returns:
     ``True`` if the link diagram was changed, or *false* if it was
     already alternating to begin with.)doc";
+
+// Docstring regina::python::doc::Link_::moveContentsTo
+static const char *moveContentsTo =
+R"doc(Moves the contents of this link into the given destination link,
+without destroying any pre-existing contents.
+
+All crossings and components that currently belong to *dest* will
+remain there (and will keep the same indices in *dest*). All crossings
+and components from this link will be moved into *dest* also (but in
+general their indices will change).
+
+This link will become empty as a result.
+
+Any strand references or pointers to Crossing objects will remain
+valid.
+
+If your intention is to _replace_ the contents of *dest* (i.e., you do
+not need to preserve its original contents), then consider using the
+move assignment operator instead (which is more streamlined and also
+moves across any cached properties from the source link).
+
+Precondition:
+    *dest* is not this link.
+
+Parameter ``dest``:
+    the link into which crossings and components should be moved.)doc";
 
 // Docstring regina::python::doc::Link_::niceTreeDecomposition
 static const char *niceTreeDecomposition =

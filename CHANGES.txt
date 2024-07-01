@@ -134,6 +134,7 @@ Version 7.4  [ (to be announced) ]
             - New routine makeAlternating().
             - New routine seifertCircles().
             - New routine isConnected().
+            - New routines insert() and moveContentsTo().
             - New routines countTrivialComponents() and pdAmbiguous(), to help
               understand the limitations of planar diagram codes.
             - New routine hash(), which uses the tight encoding.
