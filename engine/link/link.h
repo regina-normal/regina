@@ -3691,29 +3691,26 @@ class Link :
          * Constructs the _signature_ for this knot or link diagram.
          *
          * A _signature_ is a compact text representation of a link
-         * diagram that uniquely determines the diagram up to relabelling,
-         * rotation, and (optionally) reflecting the entire diagram and/or
-         * reversing some or all link components.
+         * diagram that uniquely determines the diagram up to: relabelling;
+         * rotating connected components of the diagram; and (optionally)
+         * reflecting the entire diagram and/or reversing some or all link
+         * components.
          *
-         * Signatures are not supported for all link diagrams.  At present
-         * they are supported only for connected link diagrams with fewer than
-         * 64 link components.  In detail:
+         * Signatures are now supported for all link diagrams with fewer than
+         * 64 link components.  Specifically:
          *
          * - Regina 7.3 and earlier only offered signatures for knots.
-         *   As of Regina 7.4, signatures are also supported for empty links
-         *   and _connected_ diagrams with multiple link components (and for
-         *   knots, the new signatures are identical to the old).
-         *   Signatures remain unsupported for _disconnected_ link diagrams:
-         *   in such cases this routine will throw an exception.
-         *   See isConnected() for further discussion on connectivity.
+         *   As of Regina 7.4, signatures are now supported for arbitrary
+         *   link diagrams (but see the next point), and for knots the new
+         *   signatures are identical to the old.
          *
          * - The implementation uses bitmasks, and a side-effect of this is
          *   that it can only support fewer than 64 link components.  However,
          *   since the running time is exponential in the number of components
          *   (if we allow reversal, which is the default) then it would be
          *   completely infeasible to use this routine in practice with _more_
-         *   components than this.  Again, if there are more than 64 link
-         *   components then this routine will throw an exception.
+         *   components than this.  If there are more than 64 link components
+         *   then this routine will throw an exception.
          *
          * The signature is constructed entirely of printable characters,
          * and has length proportional to `n log n`, where \a n
@@ -3722,8 +3719,9 @@ class Link :
          * The routine fromKnotSig() can be used to recover a link diagram from
          * its signature.  The resulting diagram might not be identical to
          * the original, but it will be related by zero or more applications
-         * of relabelling, rotation, and/or (according to the arguments)
-         * reflection of the entire diagram and/or reversal of components.
+         * of relabelling, rotating connected components of the diagram, and/or
+         * (according to the arguments) reflection of the entire diagram and/or
+         * reversal of individual link components.
          *
          * The running time is quadratic in the number of crossings and (if we
          * allow reversal, which is the default) exponential in the number of
@@ -3732,9 +3730,8 @@ class Link :
          *
          * This routine runs in quadratic time.
          *
-         * \exception NotImplemented This link diagram is not connected,
-         * or has at least 64 link components.
-         * See isConnected() for a more detailed discussion of connectivity.
+         * \exception NotImplemented This link diagram has at least 64 link
+         * components.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
          * should preserve the signature, or \c false if the signature should
@@ -3758,9 +3755,8 @@ class Link :
          *
          * See knotSig() for further details.
          *
-         * \exception NotImplemented This link diagram is not connected,
-         * or has at least 64 link components.
-         * See isConnected() for a more detailed discussion of connectivity.
+         * \exception NotImplemented This link diagram has at least 64 link
+         * components.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
          * should preserve the signature, or \c false if the signature should
@@ -3984,10 +3980,11 @@ class Link :
          * See knotSig() for more information on knot signatures.
          *
          * Calling knotSig() followed by fromKnotSig() is not guaranteed to
-         * produce an _identical_ knot diagram to the original, but it
-         * is guaranteed to produce one that is related by relabelling,
-         * rotation, and optionally (according to the arguments that
-         * were passed to knotSig()) reflection and/or reversal.
+         * produce an _identical_ knot diagram to the original, but it is
+         * guaranteed to produce one that is related by relabelling, rotating
+         * connected components of the diagram, and optionally (according to
+         * the arguments that were passed to knotSig()) reflection of the
+         * entire diagram and/or reversal of individual link components.
          *
          * \exception InvalidArgument The given string was not a valid
          * knot signature.
