@@ -326,6 +326,64 @@ TEST_F(LinkTest, components) {
     EXPECT_EQ(trefoil_unknot_overlap.link.countComponents(), 2);
 }
 
+static void verifyDiagramComponents(const Link& link, const char* name,
+        std::initializer_list<std::string> expectBrief) {
+    SCOPED_TRACE_CSTRING(name);
+
+    auto foundComponents = link.diagramComponents();
+    EXPECT_EQ(foundComponents.size(), expectBrief.size());
+
+    auto found = foundComponents.begin();
+    auto expect = expectBrief.begin();
+    for ( ; found != foundComponents.end() && expect != expectBrief.end();
+            ++found, ++expect)
+        EXPECT_EQ(found->brief(), *expect);
+}
+
+TEST_F(LinkTest, diagramComponents) {
+    // Just test a few things manually.
+    {
+        verifyDiagramComponents(empty.link, empty.name, {});
+    }
+    {
+        verifyDiagramComponents(unknot0.link, unknot0.name, { "( )" });
+    }
+    {
+        verifyDiagramComponents(unlink2_0.link, unlink2_0.name,
+            { "( )", "( )" });
+    }
+    {
+        verifyDiagramComponents(figureEight.link, figureEight.name,
+            { "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )" });
+    }
+    {
+        verifyDiagramComponents(whitehead.link, whitehead.name,
+            { "--++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )" });
+    }
+    {
+        verifyDiagramComponents(trefoil_unknot0.link, trefoil_unknot0.name,
+            { "+++ ( ^0 _1 ^2 _0 ^1 _2 )", "( )" });
+    }
+    {
+        verifyDiagramComponents(trefoil_unknot1.link, trefoil_unknot1.name,
+            { "+++ ( ^0 _1 ^2 _0 ^1 _2 )", "- ( _0 ^0 )" });
+    }
+    {
+        verifyDiagramComponents(trefoil_unknot_overlap.link,
+            trefoil_unknot_overlap.name,
+            { "-++++ ( ^1 _2 _3 _0 ^4 _1 ^2 _4 ) ( ^3 ^0 )" });
+    }
+    {
+        Link link = ExampleLink::whitehead();
+        link.insertLink(Link(2));
+        link.insertLink(ExampleLink::figureEight());
+        link.insertLink(Link(1));
+        verifyDiagramComponents(link, "Whitehead U Figure_Eight U 3x()",
+            { "--++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )",
+              "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )", "( )", "( )", "( )" });
+    }
+}
+
 TEST_F(LinkTest, linking) {
     EXPECT_EQ(empty.link.linking(), 0);
 

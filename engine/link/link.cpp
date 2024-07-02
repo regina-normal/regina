@@ -254,6 +254,101 @@ bool Link::isConnected() const {
     return false;
 }
 
+std::vector<Link> Link::diagramComponents() const {
+    if (components_.empty())
+        return {};
+    if (components_.size() == 1)
+        return { Link(*this) };
+
+    // We have multiple link components.
+    // Work out how many of these are zero-crossing unknots.
+    size_t nTrivial = 0;
+    for (auto c : components_)
+        if (! c)
+            ++nTrivial;
+
+    if (crossings_.empty()) {
+        std::vector<Link> ans(nTrivial); // all empty links
+        for (auto& link : ans)
+            link.components_.emplace_back(); // make them 0-crossing unknots
+        return ans;
+    }
+
+    // We have at least one crossing.
+    // Run a depth-first search to work out which crossings belong to the same
+    // components.
+
+    size_t n = crossings_.size();
+
+    FixedArray<ssize_t> comp(n, -1);
+    FixedArray<const Crossing*> stack(n);
+
+    size_t next = 0;
+    size_t nComp = 0; // only incremented _after_ finishing the component
+    size_t nFound = 0;
+
+    while (nFound < n) {
+        // Find a starting point to explore the next connected component.
+        while (comp[next] >= 0)
+            ++next;
+
+        size_t stackSize = 1;
+        stack[0] = crossings_[next];
+        comp[next] = nComp;
+        ++next;
+        ++nFound;
+
+        while (stackSize > 0) {
+            auto curr = stack[--stackSize];
+
+            for (int i = 0; i < 2; ++i) {
+                // We only need to look at next, not prev, since anything we
+                // can reach via prev can also be reached via a sequence of
+                // next steps.
+                auto adj = curr->next_[i].crossing();
+                if (comp[adj->index()] < 0) {
+                    stack[stackSize++] = adj;
+                    comp[adj->index()] = nComp;
+                    ++nFound;
+                }
+            }
+        }
+
+        ++nComp;
+    }
+
+    // Extract the components into individual links.
+    //
+    // Do this the easy way for now: clone this link so that we get copies of
+    // all the crossings, hooked together and indexed correctly.
+    //
+    // Like moveContentsTo(), we abuse MarkedVector by having crossings
+    // temporarily belong to two marked vectors at once; see moveContentsTo()
+    // for why this is fine.
+
+    Link clone(*this);
+    std::vector<Link> ans(nComp + nTrivial);
+
+    // We need to distribute link components first, while the new crossings
+    // still have their old indices.
+    for (auto c : clone.components_)
+        if (c)
+            ans[comp[c.crossing()->index()]].components_.push_back(c);
+    clone.components_.clear();
+
+    // Now distribute crossings, which will change their indices and make our
+    // comp[] array useless.
+    for (auto i = 0; i < n; ++i)
+        ans[comp[i]].crossings_.push_back(clone.crossings_[i]);
+    clone.crossings_.clear();
+
+    // Finally add the trivial (0-crossing) diagram components.
+    for (auto i = 0; i < nTrivial; ++i)
+        ans[nComp + i].components_.emplace_back();
+
+    return ans;
+}
+
 bool Link::connected(const Crossing* a, const Crossing* b) const {
     if (components_.size() <= 1)
         return true;

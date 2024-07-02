@@ -755,6 +755,44 @@ only, and to call crossings() again each time you need it.
 Returns:
     access to the list of all crossings.)doc";
 
+// Docstring regina::python::doc::Link_::diagramComponents
+static const char *diagramComponents =
+R"doc(Returns the connected components of this link diagram as individual
+standalone links.
+
+Here _connected components_ are not the same as _link components_. A
+connected component means a portion of the link diagram that is
+connected when we treat each crossing as a 4-way intersection. In
+other words, one can travel around the connected component by
+following the link around, and/or jumping between upper and lower
+strands at crossings. A single connected component of the diagram may
+contain multiple link components, and will always describe a sublink
+for which isConnected() returns ``True``.
+
+The connected components are a property of the diagram, not an
+invariant of the link itself, since the locations of the crossings
+matter. In particular:
+
+* a diagram with multiple connected components _must_ describe a
+  splittable link;
+
+* a splittable link, however, could be represented by a diagram with
+  multiple connected components or with just one connected component.
+
+The connected components that are returned will be cloned from this
+link (so even if this diagram is connected and there is just one
+connected component, a deep copy will still take place). The total
+number of crossings across all of the links that are returned will
+equal size(), and the total number of _link_ components across all of
+the links that are returned will equal countComponents().
+
+If you simply wish to know whether this diagram is connected, you
+should call isConnected() instead which is much more lightweight.
+
+Returns:
+    a list containing the individual connected components of this link
+    diagram.)doc";
+
 // Docstring regina::python::doc::Link_::dt
 static const char *dt =
 R"doc(Exports this knot in either numerical or alphabetical Dowker-
@@ -2160,6 +2198,9 @@ connected.
 
 Note: for knots and empty links, this routine is constant time. For
 multiple-component links, it is linear in the link size.
+
+See also diagramComponents(), which extracts the connected components
+of a link diagram as individual Link objects.
 
 Returns:
     ``True`` if and only if this link diagram is connected.)doc";

@@ -235,6 +235,8 @@ void addLink(pybind11::module_& m) {
             rdoc::parallel)
         .def("isConnected", &Link::isConnected, rdoc::isConnected)
         .def("connected", &Link::connected, rdoc::connected)
+        .def("diagramComponents", &Link::diagramComponents,
+            rdoc::diagramComponents)
         .def("bracket", &Link::bracket,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,
