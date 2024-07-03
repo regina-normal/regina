@@ -1365,7 +1365,7 @@ class TriangulationTest : public testing::Test {
 
             // Some tests that are better done _after_ simplification:
             if constexpr (dim > 2) {
-                subdiv.intelligentSimplify();
+                subdiv.simplify();
                 // While we're here: simplification shouldn't break orientation.
                 if (tri.isOrientable())
                     EXPECT_TRUE(subdiv.isOriented());
@@ -1532,7 +1532,7 @@ class TriangulationTest : public testing::Test {
             auto t = test.tri.boundaryComponent(whichBdry)->build();
             if constexpr (dim >= 4 && regina::standardDim(dim - 1)) {
                 t.subdivide();
-                t.intelligentSimplify();
+                t.simplify();
             }
             EXPECT_EQ(t.homology(), expect);
         }

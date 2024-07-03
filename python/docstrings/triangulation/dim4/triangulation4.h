@@ -303,29 +303,13 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::intelligentSimplify
 static const char *intelligentSimplify =
-R"doc(Attempts to simplify the triangulation as intelligently as possible
-without further input. Specifically, this routine will attempt to
-reduce the number of pentachora in the triangulation.
+R"doc(Deprecated alias for simplify(), which attempts to simplify this
+triangulation as intelligently as possible using fast and greedy
+heuristics.
 
-Currently this routine uses simplifyToLocalMinimum() in combination
-with random 3-3 moves and book opening moves.
-
-If this triangulation is currently oriented, then this operation will
-preserve the orientation.
-
-If any pentachora and/or tetrahedra are locked, these locks will be
-respected: that is, the simplification operation will avoid any moves
-that would violate these locks (and in particular, no LockViolation
-exceptions should be thrown). Of course, however, having locks may
-make the simplification less effective in reducing the number of
-pentachora.
-
-.. warning::
-    The specific behaviour of this routine will almost certainly
-    change between releases. At present, simplification for 4-manifold
-    triangulations is extremely weak (as opposed to 3-manifolds, where
-    a rich library of simplification techinques is available to call
-    upon).
+.. deprecated::
+    This routine has been renamed to simplify(). See simplify() for
+    further details.
 
 Returns:
     ``True`` if and only if the triangulation was changed.)doc";
@@ -768,11 +752,50 @@ Returns:
     topology of the manifold or violating any locks. If *check* is
     ``False``, this function simply returns ``True``.)doc";
 
+// Docstring regina::python::doc::Triangulation_::simplify
+static const char *simplify =
+R"doc(Attempts to simplify this triangulation as intelligently as possible
+using fast and greedy heuristics. Specifically, this routine will
+attempt to reduce the number of pentachora in the triangulation.
+
+Currently this routine uses simplifyToLocalMinimum() in combination
+with random 3-3 moves and book opening moves.
+
+If simplify() fails to improve the triangulation (which in four
+dimensions is likely), you may instead wish to try the well-climbing
+routine simplifyUpDown(), or the powerful but *much* slower
+simplifyExhaustive().
+
+If this triangulation is currently oriented, then this operation will
+preserve the orientation.
+
+If any pentachora and/or tetrahedra are locked, these locks will be
+respected: that is, the simplification operation will avoid any moves
+that would violate these locks (and in particular, no LockViolation
+exceptions should be thrown). Of course, however, having locks may
+make the simplification less effective in reducing the number of
+pentachora.
+
+.. warning::
+    The specific behaviour of this routine will almost certainly
+    change between releases. At present, simplification for 4-manifold
+    triangulations is extremely weak (as opposed to 3-manifolds, where
+    a rich library of simplification techinques is available to call
+    upon).
+
+.. note::
+    For long-term users of Regina: this is the routine that was for a
+    long time called intelligentSimplify(). It was renamed to
+    simplify() in Regina 7.4.
+
+Returns:
+    ``True`` if and only if the triangulation was changed.)doc";
+
 // Docstring regina::python::doc::Triangulation_::simplifyExhaustive
 static const char *simplifyExhaustive =
 R"doc(Attempts to simplify this triangulation using a slow but exhaustive
 search through the Pachner graph. This routine is more powerful but
-much slower than intelligentSimplify().
+much slower than simplify().
 
 Specifically, this routine will iterate through all triangulations
 that can be reached from this triangulation via 1-5, 2-4, 3-3 and 4-2
@@ -781,10 +804,10 @@ beyond the original number. Note that 5-1 moves are currently not
 supported, though this may be added in a future verson of Regina.
 
 If at any stage it finds a triangulation with _fewer_ pentachora than
-the original, then this routine will call intelligentSimplify() to
-shrink the triangulation further if possible and will then return
-``True``. If it cannot find a triangulation with fewer pentachora then
-it will leave this triangulation unchanged and return ``False``.
+the original, then this routine will call simplify() to shrink the
+triangulation further if possible and will then return ``True``. If it
+cannot find a triangulation with fewer pentachora then it will leave
+this triangulation unchanged and return ``False``.
 
 This routine can be very slow and very memory-intensive: the number of
 triangulations it visits may be superexponential in the number of
@@ -809,10 +832,10 @@ exceptions should be thrown). Of course, however, having locks may
 reduce the number of distinct triangulations that can be reached.
 
 If you want a _fast_ simplification routine, you should call
-intelligentSimplify() instead. The benefit of simplifyExhaustive() is
-that, for very stubborn triangulations where intelligentSimplify()
-finds itself stuck at a local minimum, simplifyExhaustive() is able to
-"climb out" of such wells.
+simplify() instead. The benefit of simplifyExhaustive() is that, for
+very stubborn triangulations where simplify() finds itself stuck at a
+local minimum, simplifyExhaustive() is able to "climb out" of such
+wells.
 
 Since Regina 7.0, this routine will not return until either the
 triangulation is simplified or the exhaustive search is complete,
@@ -865,15 +888,14 @@ R"doc(Uses all known simplification moves to reduce the triangulation
 monotonically to some local minimum number of pentachora.
 
 End users will probably not want to call this routine. You should call
-intelligentSimplify() if you want a fast method of simplifying a
-triangulation.
+simplify() if you want a fast method of simplifying a triangulation.
 
 The moves used by this routine include collapsing edges, 4-2 moves,
 and boundary shelling moves.
 
 Moves that do not reduce the number of pentachora (such as 3-3 moves
 or book opening moves) are not used in this routine. Such moves do
-however feature in intelligentSimplify().
+however feature in simplify().
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
@@ -913,8 +935,8 @@ This routine will _only_ perform 2-4 moves, 2-0 edge moves, 2-0
 triangle moves, and 3-3 moves.
 
 The main purpose of this routine is to offer a "well-climbing"
-technique that explores more widely than intelligentSimplify(), but
-that is not nearly as slow as simplifyExhaustive().
+technique that explores more widely than simplify(), but that is not
+nearly as slow as simplifyExhaustive().
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.

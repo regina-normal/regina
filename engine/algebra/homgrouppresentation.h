@@ -290,19 +290,29 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         GroupExpression invEvaluate(unsigned long i) const;
 
         /**
-         * Simultaneously simplifies:
+         * Simultaneously simplifies the presentation of the domain, the
+         * presentation of the codomain, and the description of the map.
          *
-         * - the presentation of the domain;
-         * - the presentation of the codomain;
-         * - the description of the map.
-         *
-         * Uses the underlying GroupPresentation::intelligentSimplify().
+         * Uses the underlying GroupPresentation::simplify().
          * See that routine for details.
          *
          * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
-        bool intelligentSimplify();
+        bool simplify();
+
+        /**
+         * Deprecated alias for simplify(), which simultaneously simplifies
+         * the presentation of the domain, the presentation of the codomain,
+         * and the description of the map.
+         *
+         * \deprecated This routine has been renamed to simplify().
+         * See simplify() for further details.
+         *
+         * \return \c true if and only if either presentation and/or the
+         * map was changed.
+         */
+        [[deprecated]] bool intelligentSimplify();
 
         /**
          * Simplifies the domain and codomain using only Nielsen moves, keeping
@@ -311,7 +321,20 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
-        bool intelligentNielsen();
+        bool nielsen();
+
+        /**
+         * Deprecated alias for nielsen(), which simplifies the domain and
+         * codomain using only Nielsen moves, keeping track of the resulting
+         * map in the progress.
+         *
+         * \deprecated This routine has been renamed to nielsen().
+         * See nielsen() for further details.
+         *
+         * \return \c true if and only if either presentation and/or the
+         * map was changed.
+         */
+        [[deprecated]] bool intelligentNielsen();
 
         /**
          * Simplifies the domain and codomain using only small cancellation
@@ -539,6 +562,14 @@ inline GroupExpression HomGroupPresentation::invEvaluate(GroupExpression arg)
 inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
         const {
     return (*inv_)[i];
+}
+
+inline bool HomGroupPresentation::intelligentSimplify() {
+    return simplify();
+}
+
+inline bool HomGroupPresentation::intelligentNielsen() {
+    return nielsen();
 }
 
 inline void swap(HomGroupPresentation& a, HomGroupPresentation& b) noexcept {

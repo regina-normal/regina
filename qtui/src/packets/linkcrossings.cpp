@@ -633,7 +633,7 @@ void LinkCrossingsUI::simplify() {
         return;
     }
 
-    if (! link->intelligentSimplify()) {
+    if (! link->simplify()) {
         if (link->countComponents() > 1) {
             ReginaSupport::info(ui, tr("I could not simplify the link."),
                 tr("<qt>I have only tried fast heuristics so far.<p>"

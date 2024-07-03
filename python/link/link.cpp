@@ -365,7 +365,8 @@ void addLink(pybind11::module_& m) {
             rdoc::r3_2)
         .def("hasReducingPass", &Link::hasReducingPass, rdoc::hasReducingPass)
         .def("selfFrame", &Link::selfFrame, rdoc::selfFrame)
-        .def("intelligentSimplify", &Link::intelligentSimplify,
+        .def("simplify", &Link::simplify, rdoc::simplify)
+        .def("intelligentSimplify", &Link::simplify, // deprecated
             rdoc::intelligentSimplify)
         .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
             pybind11::arg("perform") = true,

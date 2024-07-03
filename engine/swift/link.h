@@ -186,8 +186,8 @@ struct SharedLink {
             packet_->reverse();
         }
 
-        bool intelligentSimplify() {
-            return packet_->intelligentSimplify();
+        bool simplify() {
+            return packet_->simplify();
         }
 
         bool makeAlternating() {

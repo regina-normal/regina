@@ -154,7 +154,9 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("relations", &GroupPresentation::relations,
             pybind11::return_value_policy::reference_internal, rdoc::relations)
         .def("isValid", &GroupPresentation::isValid, rdoc::isValid)
-        .def("intelligentSimplify", &GroupPresentation::intelligentSimplify,
+        .def("simplify", &GroupPresentation::simplify,
+            rdoc::simplify)
+        .def("intelligentSimplify", &GroupPresentation::simplify, // deprecated
             rdoc::intelligentSimplify)
         .def("smallCancellation", &GroupPresentation::smallCancellation,
             rdoc::smallCancellation)
@@ -172,7 +174,8 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg(), pybind11::arg(),
             pybind11::arg("rightMult") = true,
             rdoc::nielsenCombine)
-        .def("intelligentNielsen", &GroupPresentation::intelligentNielsen,
+        .def("nielsen", &GroupPresentation::nielsen, rdoc::nielsen)
+        .def("intelligentNielsen", &GroupPresentation::nielsen, // deprecated
             rdoc::intelligentNielsen)
         .def("homologicalAlignment", &GroupPresentation::homologicalAlignment,
             rdoc::homologicalAlignment)

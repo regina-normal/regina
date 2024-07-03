@@ -215,7 +215,7 @@
 
     // Simplify before doing any algebraic computations.
     regina::Triangulation<3> t(*self.packet);
-    t.intelligentSimplify();
+    t.simplify();
 
     self.h1.text = @(t.homology().utf8().c_str());
 

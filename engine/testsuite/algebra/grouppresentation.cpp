@@ -118,7 +118,7 @@ TEST_F(GroupPresentationTest, reidemeisterSchreir) {
     for (GroupPresentation* g : presList) {
         SCOPED_TRACE("g = " + g->str());
 
-        g->intelligentSimplify();
+        g->simplify();
         // Currently identifyExtensionOverZ() is private, so we
         // cannot call it.  Examine the name from recogniseGroup()
         // instead to see if R-S worked.
@@ -262,7 +262,7 @@ TEST_F(GroupPresentationTest, simplifyHomomorphism) {
     // In regina 7.2 and earlier, this incorrectly conjugated the image of
     // the first generator, resulting in the incorrectly simplified image
     // bcbC instead of the correct image daaaaaD.
-    H2.intelligentSimplify();
+    H2.simplify();
 
     EXPECT_EQ(H, H2);
 }

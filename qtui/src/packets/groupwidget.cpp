@@ -198,7 +198,7 @@ void GroupWidget::refresh() {
 void GroupWidget::simplifyInternal() {
     // This *should* block the UI, which means we don't need to worry
     // about race conditons with group_.
-    group_.intelligentSimplify();
+    group_.simplify();
     refresh();
     emit simplified();
 }

@@ -60,7 +60,7 @@ def stopAfter10(sig, tri):
 
 def displayCover(tri, type):
     t = Triangulation3(tri)
-    t.intelligentSimplify()
+    t.simplify()
     print('    ' + str(type) + ': ' + t.homology().str())
 
 ########################################################################

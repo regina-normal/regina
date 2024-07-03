@@ -444,7 +444,7 @@ static void verifyBoundaryManifolds(const TriangulationTest<4>::TestCase& test,
     auto it = expect.begin();
     for (auto bc : test.tri.boundaryComponents()) {
         Triangulation<3> t = bc->build();
-        t.intelligentSimplify();
+        t.simplify();
 
         if (auto std = regina::StandardTriangulation::recognise(t)) {
             if (auto mfd = std->manifold())
@@ -1102,7 +1102,7 @@ static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
                     tri.countBoundaryComponents());
 
             // Homology can only be computed for valid triangulations.
-            other.intelligentSimplify();
+            other.simplify();
 
             EXPECT_EQ(other.homology<1>(), tri.homology<1>());
             EXPECT_EQ(other.homology<2>(), tri.homology<2>());
@@ -1227,7 +1227,7 @@ static void verifyIBundle(const Triangulation<3>& tri, const char* name) {
     // TODO: Check isomorphisms from tri onto the boundary of b.
 
     // Simplify the triangulation before running any more expensive tests.
-    b.intelligentSimplify();
+    b.simplify();
 
     EXPECT_EQ(b.homology<1>(), tri.homology<1>());
     EXPECT_EQ(b.homology<2>(), tri.homology<2>());
@@ -1256,7 +1256,7 @@ static void verifyS1Bundle(const Triangulation<3>& tri, const char* name) {
     EXPECT_EQ(b.countBoundaryFacets(), 20 * tri.countBoundaryTriangles());
 
     // Simplify the triangulation before running any more expensive tests.
-    b.intelligentSimplify();
+    b.simplify();
 
     {
         regina::AbelianGroup expectH1 = tri.homology<1>();

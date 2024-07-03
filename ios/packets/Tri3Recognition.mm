@@ -113,7 +113,7 @@
     // Combinatorial recognition.
     {
         regina::Triangulation<3> simp(*self.packet);
-        simp.intelligentSimplify();
+        simp.simplify();
         auto std = regina::StandardTriangulation::recognise(&simp);
         if (std) {
             auto mfd = std->manifold();

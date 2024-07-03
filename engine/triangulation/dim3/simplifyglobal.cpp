@@ -37,10 +37,10 @@
 // Affects the number of random 4-4 moves attempted during simplification.
 #define COEFF_4_4 5
 
-// If you define PINCH_NOT_COLLAPSE, then intelligentSimplify() will use
+// If you define PINCH_NOT_COLLAPSE, then simplify() will use
 // pinchEdge() instead of collapseEdge() to reduce the number of vertices.
 // This may *increase* the number of tetrahedra, and so it should be used with
-// great care -- it may break the requirements of intelligentSimplify(), and
+// great care -- it may break the requirements of simplify(), and
 // so may adversely affect other code that expects monotonic behaviour.
 //
 // #define PINCH_NOT_COLLAPSE
@@ -185,7 +185,7 @@ startLoop:
     }
 }
 
-bool Triangulation<3>::intelligentSimplify() {
+bool Triangulation<3>::simplify() {
     bool changed;
 
     { // Begin scope for change event block.

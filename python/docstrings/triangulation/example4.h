@@ -42,9 +42,8 @@ symmetric 3-manifold triangulation to begin with.
 
 The resulting manifold will contain 82 pentachora for each original
 tetrahedron of *M*, and will contain many internal vertices. It is
-highly recommended that you call
-Triangulation<4>::intelligentSimplify() afterwards if you do not need
-to preserve the combinatorial structure.
+highly recommended that you call Triangulation<4>::simplify()
+afterwards if you do not need to preserve the combinatorial structure.
 
 Precondition:
     The given monodromy must be an isomorphism from *M* to itself;
@@ -109,9 +108,8 @@ vertices 0,1,2,3 of pentachoron *n*+i.
 
 The product itself will contain 82 pentachora for each original
 tetrahedron of *M*, and will contain many internal vertices. It is
-highly recommended that you call
-Triangulation<4>::intelligentSimplify() afterwards if you do not need
-to preserve the combinatorial structure.
+highly recommended that you call Triangulation<4>::simplify()
+afterwards if you do not need to preserve the combinatorial structure.
 
 .. warning::
     If the given 3-manifold triangulation has ideal boundary, then you
@@ -147,8 +145,8 @@ glues together the two copies of *M* on the boundary.
 
 The product will contain 82 pentachora for each original tetrahedron
 of *M*, and will contain many internal vertices. It is highly
-recommended that you call Triangulation<4>::intelligentSimplify()
-afterwards if you do not need to preserve the combinatorial structure.
+recommended that you call Triangulation<4>::simplify() afterwards if
+you do not need to preserve the combinatorial structure.
 
 .. warning::
     If the given 3-manifold triangulation has ideal boundary, then you

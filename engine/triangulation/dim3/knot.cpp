@@ -57,7 +57,7 @@ namespace {
     bool fastSphere(Triangulation<3>& t) {
         // Try simplifying the triangulation - see if we can make it
         // small enough to get a precise answer.
-        while (t.intelligentSimplify())
+        while (t.simplify())
             ;
 
         if (t.size() <= 10) {
@@ -80,7 +80,7 @@ namespace {
 
         // Still: try kicking it, just in case.
         t.subdivide();
-        while (t.intelligentSimplify())
+        while (t.simplify())
             ;
         if (t.size() <= 10)
             return t.isSphere();

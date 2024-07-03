@@ -701,7 +701,7 @@ Reidemeister moves (which do not reduce the number of crossings) are
 not used in this routine.
 
 Unlike links, tangle do not (at present) offer stronger simplification
-routines (such as the much better Link::intelligentSimplify() and
+routines (such as the much better Link::simplify() and
 Link::simplifyExhaustive()).
 
 .. warning::

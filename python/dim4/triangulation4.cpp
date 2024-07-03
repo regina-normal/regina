@@ -294,7 +294,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("reflect", &Triangulation<4>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents,
             rbase::triangulateComponents)
-        .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify,
+        .def("simplify", &Triangulation<4>::simplify, rdoc::simplify)
+        .def("intelligentSimplify", &Triangulation<4>::simplify, // deprecated
             rdoc::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Triangulation<4>::simplifyToLocalMinimum,

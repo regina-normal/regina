@@ -336,7 +336,7 @@
     if (! [self checkEditable])
         return;
 
-    if (! self.packet->intelligentSimplify()) {
+    if (! self.packet->simplify()) {
         // Greedy simplification failed.
         // Offer a more exhaustive alternative.
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
@@ -475,7 +475,7 @@
     
     regina::Packet::PacketChangeGroup span(self.packet);
     self.packet->idealToFinite();
-    self.packet->intelligentSimplify();
+    self.packet->simplify();
 }
 
 - (IBAction)makeIdeal:(id)sender
@@ -496,7 +496,7 @@
 
     regina::Packet::PacketChangeGroup span(self.packet);
     self.packet->finiteToIdeal();
-    self.packet->intelligentSimplify();
+    self.packet->simplify();
 }
 
 - (IBAction)reflect:(id)sender

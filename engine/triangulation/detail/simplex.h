@@ -389,7 +389,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   (e.g., via any of the other Pachner moves).
          *
          * Regina's own automatic retriangulation routines (such as
-         * Triangulation<dim>::intelligentSimplify() or
+         * Triangulation<dim>::simplify() or
          * Triangulation<dim>::retriangulate()) will simply avoid changing
          * any locked simplices.  If the user attempts to manually force a
          * change (e.g., by calling Triangulation<dim>::subdivide()), then
@@ -465,7 +465,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   the choice of \a F1 versus \a F2 is arbitrary.
          *
          * Regina's own automatic retriangulation routines (such as
-         * Triangulation<dim>::intelligentSimplify() or
+         * Triangulation<dim>::simplify() or
          * Triangulation<dim>::retriangulate()) will simply avoid changing
          * any locked facets.  If the user attempts to manually force a
          * change (e.g., by calling Triangulation<dim>::subdivide()), then

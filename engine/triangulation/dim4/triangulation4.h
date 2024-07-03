@@ -528,12 +528,17 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
-         * Attempts to simplify the triangulation as intelligently as
-         * possible without further input.  Specifically, this routine will
+         * Attempts to simplify this triangulation as intelligently as possible
+         * using fast and greedy heuristics.  Specifically, this routine will
          * attempt to reduce the number of pentachora in the triangulation.
          *
          * Currently this routine uses simplifyToLocalMinimum() in
          * combination with random 3-3 moves and book opening moves.
+         *
+         * If simplify() fails to improve the triangulation (which in four
+         * dimensions is likely), you may instead wish to try the well-climbing
+         * routine simplifyUpDown(), or the powerful but *much* slower
+         * simplifyExhaustive().
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -551,15 +556,30 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * weak (as opposed to 3-manifolds, where a rich library of
          * simplification techinques is available to call upon).
          *
+         * \note For long-term users of Regina: this is the routine that was
+         * for a long time called intelligentSimplify().  It was renamed to
+         * simplify() in Regina 7.4.
+         *
          * \return \c true if and only if the triangulation was changed.
          */
-        bool intelligentSimplify();
+        bool simplify();
+        /**
+         * Deprecated alias for simplify(), which attempts to simplify this
+         * triangulation as intelligently as possible using fast and greedy
+         * heuristics.
+         *
+         * \deprecated This routine has been renamed to simplify().
+         * See simplify() for further details.
+         *
+         * \return \c true if and only if the triangulation was changed.
+         */
+        [[deprecated]] bool intelligentSimplify();
         /**
          * Uses all known simplification moves to reduce the triangulation
          * monotonically to some local minimum number of pentachora.
          *
          * End users will probably not want to call this routine.
-         * You should call intelligentSimplify() if you want a fast
+         * You should call simplify() if you want a fast
          * method of simplifying a triangulation.
          *
          * The moves used by this routine include collapsing edges, 4-2 moves,
@@ -567,7 +587,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Moves that do not reduce the number of pentachora
          * (such as 3-3 moves or book opening moves) are not used in this
-         * routine.  Such moves do however feature in intelligentSimplify().
+         * routine.  Such moves do however feature in simplify().
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -604,7 +624,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * 2-0 triangle moves, and 3-3 moves.
          *
          * The main purpose of this routine is to offer a "well-climbing"
-         * technique that explores more widely than intelligentSimplify(),
+         * technique that explores more widely than simplify(),
          * but that is not nearly as slow as simplifyExhaustive().
          *
          * If this triangulation is currently oriented, then this operation
@@ -644,7 +664,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /**
          * Attempts to simplify this triangulation using a slow but
          * exhaustive search through the Pachner graph.  This routine is
-         * more powerful but much slower than intelligentSimplify().
+         * more powerful but much slower than simplify().
          *
          * Specifically, this routine will iterate through all
          * triangulations that can be reached from this triangulation via
@@ -655,7 +675,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * If at any stage it finds a triangulation with _fewer_
          * pentachora than the original, then this routine will call
-         * intelligentSimplify() to shrink the triangulation further if
+         * simplify() to shrink the triangulation further if
          * possible and will then return \c true.  If it cannot find a
          * triangulation with fewer pentachora then it will leave this
          * triangulation unchanged and return \c false.
@@ -684,8 +704,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * reduce the number of distinct triangulations that can be reached.
          *
          * If you want a _fast_ simplification routine, you should call
-         * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
-         * is that, for very stubborn triangulations where intelligentSimplify()
+         * simplify() instead.  The benefit of simplifyExhaustive()
+         * is that, for very stubborn triangulations where simplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
@@ -1407,13 +1427,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         void calculateEdgeLinks();
 
         /**
-         * Implements intelligentSimplify().  The template argument indicates
+         * Implements simplify().  The template argument indicates
          * which individual moves we are allowed to use.
          *
-         * See intelligentSimplify() for further details.
+         * See simplify() for further details.
          */
         template <SimplifyContext>
-        bool intelligentSimplifyInternal();
+        bool simplifyInternal();
 
         /**
          * Implements simplifyToLocalMinimum().  The template argument
@@ -1543,8 +1563,12 @@ inline bool Triangulation<4>::isClosed() const {
     return boundaryComponents().empty();
 }
 
+inline bool Triangulation<4>::simplify() {
+    return simplifyInternal<simplifyBest>();
+}
+
 inline bool Triangulation<4>::intelligentSimplify() {
-    return intelligentSimplifyInternal<simplifyBest>();
+    return simplifyInternal<simplifyBest>();
 }
 
 inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
@@ -1590,7 +1614,7 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
             if (alt.size() < minSimp) {
                 PacketChangeGroup span(original);
                 original = std::move(alt);
-                original.intelligentSimplify();
+                original.simplify();
                 return true;
             } else
                 return false;

@@ -181,10 +181,10 @@ HomGroupPresentation HomGroupPresentation::operator * (
     }
 }
 
-bool HomGroupPresentation::intelligentNielsen() {
-    // modelled on intelligentSimplify
-    auto codomainMap = codomain_.intelligentNielsen();
-    auto domainMap = domain_.intelligentNielsen();
+bool HomGroupPresentation::nielsen() {
+    // modelled on simplify()
+    auto codomainMap = codomain_.nielsen();
+    auto domainMap = domain_.nielsen();
     bool retval = codomainMap || domainMap;
     if (! domainMap)
         domainMap = HomGroupPresentation(domain_);
@@ -218,10 +218,10 @@ bool HomGroupPresentation::intelligentNielsen() {
     return retval;
 }
 
-bool HomGroupPresentation::intelligentSimplify() {
+bool HomGroupPresentation::simplify() {
     // step 1: simplify presentation of domain and codomain
-    auto codomainMap = codomain_.intelligentSimplify();
-    auto domainMap = domain_.intelligentSimplify();
+    auto codomainMap = codomain_.simplify();
+    auto domainMap = domain_.simplify();
     bool retval = codomainMap || domainMap;
 
     // build identity maps if either of the above is null.

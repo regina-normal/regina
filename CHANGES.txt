@@ -103,6 +103,13 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., Framing::Seifert).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class GroupPresentation:
+            - Renamed intelligentSimplify() to simplify().  The old name is
+              kept as a deprecated alias.
+        Class HomGroupPresentation:
+            - Renamed intelligentSimplify() and intelligentNielsen() to
+              simplify() and nielsen() respectively.  The old names are kept
+              as deprecated aliases.
         Class HomologicalData:
             - New routine triangulation().
         Enum HyperCoords:
@@ -144,8 +151,10 @@ Version 7.4  [ (to be announced) ]
             - New routine componentsByStrand().
             - Extended knotSig(), rewrite() and simplifyExhaustive() to work
               with all link diagrams with fewer than 64 link components.
-            - Added an alias sig() for knotSig().
             - Routine hasReducingPass() can now handle multiple-component links.
+            - Added an alias sig() for knotSig().
+            - Renamed intelligentSimplify() to simplify().  The old name is
+              kept as a deprecated alias.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
             - Overhaul of the internal change span classes, including a new
@@ -322,6 +331,8 @@ Version 7.4  [ (to be announced) ]
         Class Triangulation<2>:
             - New routine twoZeroMove().
         Class Triangulation<3>:
+            - Renamed intelligentSimplify() to simplify().  The old name is
+              kept as a deprecated alias.
             - Routine puncture() now takes an optional triangle, not an
               optional tetrahedron.  The old version is kept but deprecated.
             - Routine insertLayeredSolidTorus() is now non-recursive, and
@@ -352,6 +363,8 @@ Version 7.4  [ (to be announced) ]
               throw an exception when called on an empty triangulation.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
+            - Renamed intelligentSimplify() to simplify().  The old name is
+              kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer
               throw an exception when called on an empty triangulation.
         Class Vector<T>:

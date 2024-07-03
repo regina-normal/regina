@@ -225,7 +225,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
 
     // Done!
     if (simplify)
-        intelligentSimplify();
+        Triangulation<3>::simplify();
 }
 
 } // namespace regina

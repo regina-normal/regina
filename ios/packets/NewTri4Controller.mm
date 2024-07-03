@@ -240,7 +240,7 @@ using Tri4Creator = regina::Triangulation<4>* (*)();
             ans->setLabel(tri->label() + " × S¹");
     }
 
-    ans->intelligentSimplify();
+    ans->simplify();
     return ans;
 }
 

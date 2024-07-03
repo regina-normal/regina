@@ -236,7 +236,7 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
 
     // Tidy up.
     delete[] genIndex;
-    ans.intelligentSimplify();
+    ans.simplify();
 
     return *(fundGroup_ = std::move(ans));
 }

@@ -76,11 +76,12 @@ void addHomGroupPresentation(pybind11::module_& m) {
         .def("invEvaluate", overload_cast<unsigned long>(
             &HomGroupPresentation::invEvaluate, pybind11::const_),
             rdoc::invEvaluate_2)
-        .def("intelligentSimplify",
-            &HomGroupPresentation::intelligentSimplify,
-            rdoc::intelligentSimplify)
-        .def("intelligentNielsen",
-            &HomGroupPresentation::intelligentNielsen, rdoc::intelligentNielsen)
+        .def("simplify", &HomGroupPresentation::simplify, rdoc::simplify)
+        .def("intelligentSimplify", // deprecated
+            &HomGroupPresentation::simplify, rdoc::intelligentSimplify)
+        .def("nielsen", &HomGroupPresentation::nielsen, rdoc::nielsen)
+        .def("intelligentNielsen", // deprecated
+            &HomGroupPresentation::nielsen, rdoc::intelligentNielsen)
         .def("smallCancellation",
             &HomGroupPresentation::smallCancellation, rdoc::smallCancellation)
         .def(pybind11::self * pybind11::self, rdoc::__mul)

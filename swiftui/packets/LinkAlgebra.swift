@@ -113,7 +113,7 @@ struct LinkAlgebraView: View {
                 Button("Simplify presentation") {
                     // TODO: Use a cancellable progress box (maybe only when it's large).
                     var working = group
-                    let hom = working.intelligentSimplify()
+                    let hom = working.simplify()
                     if hom.__convertToBool() {
                         simplifiedGroup = working
                         didSimplify = true

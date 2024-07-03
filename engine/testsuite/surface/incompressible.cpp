@@ -134,7 +134,7 @@ TEST(IncompressibleTest, hasCompressingDisc) {
     {
         Triangulation<3> tri = Example<3>::figureEight();
         tri.idealToFinite();
-        tri.intelligentSimplify();
+        tri.simplify();
         EXPECT_FALSE(tri.hasCompressingDisc());
     }
 }

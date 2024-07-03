@@ -265,7 +265,7 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             break;
     }
 
-    intelligentSimplify();
+    simplify();
     return true;
 }
 

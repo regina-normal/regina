@@ -773,7 +773,7 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
         ASSERT_EQ(cut.countComponents(), 2);
 
         cut.finiteToIdeal(); // Fills the sphere boundaries with balls.
-        cut.intelligentSimplify();
+        cut.simplify();
         auto comp = cut.triangulateComponents();
 
         if (comp[0].isIdeal() && comp[1].isIdeal()) {
@@ -815,7 +815,7 @@ TEST_F(LinkTest, complement) {
     EXPECT_EQ(hopf.link.complement().group().recogniseGroup(), "2 Z");
 
     // For some knots and links, it is reasonable to assume that
-    // intelligentSimplify() will reach a minimal triangulation.
+    // simplify() will reach a minimal triangulation.
 
     EXPECT_TRUE(isFigureEightComplement(figureEight.link.complement()));
     EXPECT_TRUE(isFigureEightComplement(figureEight_r1x2.link.complement()));

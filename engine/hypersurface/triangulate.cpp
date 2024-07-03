@@ -583,7 +583,7 @@ Triangulation<3> NormalHypersurface::triangulate() const {
         delete tetData[tet];
     delete[] tetData;
 
-    inner.intelligentSimplify();
+    inner.simplify();
     return inner;
 }
 

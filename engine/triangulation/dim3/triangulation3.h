@@ -1563,16 +1563,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                 bool canJoinBoundaries = true) const;
 
         /**
-         * Attempts to simplify the triangulation using fast and greedy
-         * heuristics.  This routine will attempt to reduce the number
-         * of tetrahedra, the number of vertices and the number of
-         * boundary triangles (with the number of tetrahedra as its priority).
+         * Attempts to simplify this triangulation as intelligently as possible
+         * using fast and greedy heuristics.  This routine will attempt to
+         * reduce the number of tetrahedra, the number of vertices and the
+         * number of boundary triangles (with the number of tetrahedra as its
+         * priority).
          *
          * Currently this routine uses simplifyToLocalMinimum() and
          * minimiseVertices() in combination with random 4-4 moves,
          * book opening moves and book closing moves.
          *
-         * Although intelligentSimplify() works very well most of the time,
+         * Although simplify() works very well most of the time,
          * it can occasionally get stuck; in such cases you may wish to try
          * the more powerful but (much) slower simplifyExhaustive() instead.
          *
@@ -1592,18 +1593,34 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * routine (and therefore its results) may change between different
          * releases of Regina.
          *
+         * \note For long-term users of Regina: this is the routine that was
+         * for a long time called intelligentSimplify().  It was renamed to
+         * simplify() in Regina 7.4.
+         *
          * \todo \opt Include random 2-3 moves to get out of wells.
          *
          * \return \c true if and only if the triangulation was successfully
          * simplified.  Otherwise this triangulation will not be changed.
          */
-        bool intelligentSimplify();
+        bool simplify();
+        /**
+         * Deprecated alias for simplify(), which attempts to simplify this
+         * triangulation as intelligently as possible using fast and greedy
+         * heuristics.
+         *
+         * \deprecated This routine has been renamed to simplify().
+         * See simplify() for further details.
+         *
+         * \return \c true if and only if the triangulation was successfully
+         * simplified.  Otherwise this triangulation will not be changed.
+         */
+        [[deprecated]] bool intelligentSimplify();
         /**
          * Uses all known simplification moves to reduce the triangulation
          * monotonically to some local minimum number of tetrahedra.
          *
          * End users will probably not want to call this routine.
-         * You should call intelligentSimplify() if you want a fast (and
+         * You should call simplify() if you want a fast (and
          * usually effective) means of simplifying a triangulation, or
          * you should call simplifyExhaustive() if you are still stuck
          * and you want to try a slower but more powerful method instead.
@@ -1613,7 +1630,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Moves that do not reduce the number of tetrahedra
          * (such as 4-4 moves or book opening moves) are not used in this
-         * routine.  Such moves do however feature in intelligentSimplify().
+         * routine.  Such moves do however feature in simplify().
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -1642,7 +1659,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Attempts to simplify this triangulation using a slow but
          * exhaustive search through the Pachner graph.  This routine is
-         * more powerful but much slower than intelligentSimplify().
+         * more powerful but much slower than simplify().
          *
          * Specifically, this routine will iterate through all
          * triangulations that can be reached from this triangulation
@@ -1651,7 +1668,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If at any stage it finds a triangulation with _fewer_
          * tetrahedra than the original, then this routine will call
-         * intelligentSimplify() to shrink the triangulation further if
+         * simplify() to shrink the triangulation further if
          * possible and will then return \c true.  If it cannot find a
          * triangulation with fewer tetrahedra then it will leave this
          * triangulation unchanged and return \c false.
@@ -1680,8 +1697,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * reduce the number of distinct triangulations that can be reached.
          *
          * If you want a _fast_ simplification routine, you should call
-         * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
-         * is that, for very stubborn triangulations where intelligentSimplify()
+         * simplify() instead.  The benefit of simplifyExhaustive()
+         * is that, for very stubborn triangulations where simplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
@@ -3401,7 +3418,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * ideal vertices.  A side-effect of this, however, is that the
          * resulting triangulation will contain additional vertices, and will
          * almost certainly be far from minimal.  It is highly recommended
-         * that you run intelligentSimplify() if you do not need to preserve
+         * that you run simplify() if you do not need to preserve
          * the combinatorial structure of the new triangulation.
          *
          * If this triangulation was originally oriented, then it will also be
@@ -4409,6 +4426,10 @@ inline unsigned long Triangulation<3>::homologyH2Z2() const {
 inline const Triangulation<3>::TuraevViroSet&
         Triangulation<3>::allCalculatedTuraevViro() const {
     return prop_.turaevViroCache_;
+}
+
+inline bool Triangulation<3>::intelligentSimplify() {
+    return simplify();
 }
 
 template <typename Action, typename... Args>

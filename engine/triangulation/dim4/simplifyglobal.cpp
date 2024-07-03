@@ -37,7 +37,7 @@
 namespace regina {
 
 template <Triangulation<4>::SimplifyContext context>
-bool Triangulation<4>::intelligentSimplifyInternal() {
+bool Triangulation<4>::simplifyInternal() {
     bool changed;
 
     { // Begin scope for change event span.
@@ -176,10 +176,10 @@ bool Triangulation<4>::intelligentSimplifyInternal() {
     return changed;
 }
 
-// Instantiate all variants of intelligentSimplifyInternal().
-template bool Triangulation<4>::intelligentSimplifyInternal<
+// Instantiate all variants of simplifyInternal().
+template bool Triangulation<4>::simplifyInternal<
     Triangulation<4>::simplifyBest>();
-template bool Triangulation<4>::intelligentSimplifyInternal<
+template bool Triangulation<4>::simplifyInternal<
     Triangulation<4>::simplifyUpDownDescent>();
 
 template <Triangulation<4>::SimplifyContext context>
@@ -345,7 +345,7 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
         }
 
         // Simplify using only 2-0 edge/triangle moves and 3-3 moves.
-        working.intelligentSimplifyInternal<simplifyUpDownDescent>();
+        working.simplifyInternal<simplifyUpDownDescent>();
 
         if (working.countEdges() < initEdges) {
             // We simplified!

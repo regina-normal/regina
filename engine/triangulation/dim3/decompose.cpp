@@ -58,7 +58,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     // Make a working copy (throwing away any locks), simplify, and record
     // the initial homology.
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
-    start.intelligentSimplify();
+    start.simplify();
 
     unsigned long initZ, initZ2, initZ3;
     {
@@ -96,7 +96,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
                     "projective plane");
             }
 
-            crushed.intelligentSimplify();
+            crushed.simplify();
 
             // Insert each component of the crushed triangulation back
             // into the list to process.
@@ -233,7 +233,7 @@ bool Triangulation<3>::isSphere() const {
     // Check homology and fundamental group.
     // Better simplify first, which means we need a clone.
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
-    start.intelligentSimplify();
+    start.simplify();
 
     // The Poincare conjecture!
     if (start.group().countGenerators() == 0) {
@@ -268,7 +268,7 @@ bool Triangulation<3>::isSphere() const {
             sphere.reset(); // to avoid a deep copy of top when we pop
             toProcess.pop();
 
-            crushed.intelligentSimplify();
+            crushed.simplify();
 
             // Insert each component of the crushed triangulation in the
             // list to process.
@@ -362,11 +362,11 @@ bool Triangulation<3>::isBall() const {
     // call isSphere() on the resulting closed triangulation.
 
     Triangulation<3> working(*this, false, false);
-    working.intelligentSimplify();
+    working.simplify();
     working.finiteToIdeal();
 
     // Simplify again in case our coning was inefficient.
-    working.intelligentSimplify();
+    working.simplify();
 
     if (working.isSphere()) {
         prop_.handlebody_ = 0;
@@ -423,10 +423,10 @@ bool Triangulation<3>::isSolidTorus() const {
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
     Triangulation<3> working(*this, false, false);
-    working.intelligentSimplify();
+    working.simplify();
     if (working.isIdeal()) {
         working.idealToFinite();
-        working.intelligentSimplify();
+        working.simplify();
     }
 
     // Check homology.
@@ -472,7 +472,7 @@ bool Triangulation<3>::isSolidTorus() const {
         s.reset(); // to avoid any automatic deep copy of the triangulation
 
 
-        crushed.intelligentSimplify();
+        crushed.simplify();
 
         bool found = false;
         for (Triangulation<3>& comp : crushed.triangulateComponents()) {
@@ -603,10 +603,10 @@ ssize_t Triangulation<3>::recogniseHandlebody() const {
     // If it's not ideal, clone it anyway so we can modify it.
     std::stack<Triangulation<3>> toProcess;
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
-    start.intelligentSimplify();
+    start.simplify();
     if ( start.isIdeal() ) {
         start.idealToFinite();
-        start.intelligentSimplify();
+        start.simplify();
     }
 
     // So:
@@ -661,7 +661,7 @@ ssize_t Triangulation<3>::recogniseHandlebody() const {
         s.reset(); // to avoid a deep copy of top when we pop
         toProcess.pop();
 
-        crushed.intelligentSimplify();
+        crushed.simplify();
 
         for ( Triangulation<3>& comp : crushed.triangulateComponents() ) {
             // Examine each connected component after crushing.
@@ -800,9 +800,9 @@ bool Triangulation<3>::isTxI() const {
         return *prop_.TxI_;
 
     Triangulation<3> working(*this, false, false);
-    working.intelligentSimplify();
+    working.simplify();
     working.idealToFinite();
-    working.intelligentSimplify();
+    working.simplify();
 
     // If it's not a homology T2xI, we're done.
     if ((! working.homology().isFree(2)) || (! working.homologyRel().isZ())) {
@@ -891,7 +891,7 @@ bool Triangulation<3>::isIrreducible() const {
 
     // Make a working copy, simplify and record the initial homology.
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
-    start.intelligentSimplify();
+    start.simplify();
 
     unsigned long Z, Z2, Z3;
     {
@@ -917,7 +917,7 @@ bool Triangulation<3>::isIrreducible() const {
             sphere.reset(); // to avoid a deep copy of top when we pop
             toProcess.pop();
 
-            crushed.intelligentSimplify();
+            crushed.simplify();
 
             // Insert each component of the crushed triangulation back
             // into the list to process.
@@ -1030,7 +1030,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // We keep this as a pointer because we will be switching and changing
     // triangulations.
     Triangulation<3> use(*this, false, false);
-    use.intelligentSimplify();
+    use.simplify();
 
     // Try for a fast answer first.
     if (use.hasSimpleCompressingDisc())
@@ -1040,7 +1040,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // machinery or whether we need to do a full vertex surface enumeration.
     if (use.isOrientable() && use.countBoundaryComponents() == 1) {
         while (true) {
-            use.intelligentSimplify();
+            use.simplify();
 
             if (use.countVertices() > 1) {
                 // Try harder.
@@ -1145,7 +1145,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // Off we go.
     // Work with a simplified triangulation.
     Triangulation<3> use(*this, false, false);
-    use.intelligentSimplify();
+    use.simplify();
 
     // Check to see whether any component is a one-tetrahedron solid torus.
     for (Component<3>* c : use.components())
@@ -1305,7 +1305,7 @@ bool Triangulation<3>::isHaken() const {
     // Okay: we are closed, connected, orientable and irreducible.
     // Move to a copy of this triangulation, which we can mess with.
     Triangulation<3> t(*this, false, false);
-    t.intelligentSimplify();
+    t.simplify();
 
     // First check for an easy answer via homology:
     if (t.homology().rank() > 0) {

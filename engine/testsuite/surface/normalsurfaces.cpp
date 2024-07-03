@@ -1012,10 +1012,10 @@ static void verifyCutAlong(const Triangulation<3>& tri, const char* name) {
     // We use the fact that all vertex surfaces are connected.
     for (const NormalSurface& s : list) {
         Triangulation<3> t = s.cutAlong();
-        t.intelligentSimplify();
+        t.simplify();
 
         Triangulation<3> tDouble = (s * 2).cutAlong();
-        tDouble.intelligentSimplify();
+        tDouble.simplify();
 
         auto comp = t.triangulateComponents();
         auto compDouble = tDouble.triangulateComponents();

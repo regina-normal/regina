@@ -988,9 +988,8 @@ generators.
 .. warning::
     If you have not adequately simplified this presentation this
     routine will most likely return ``False``. Consider running
-    intelligentSimplify, possibly in concert with
-    proliferateRelators(), in order to discover adequately many
-    commutators.
+    simplify(), possibly in concert with proliferateRelators(), in
+    order to discover adequately many commutators.
 
 Returns:
     ``True`` if the group is shown to be abelian, or ``False`` if the
@@ -1046,24 +1045,12 @@ Returns:
 
 // Docstring regina::python::doc::GroupPresentation_::intelligentNielsen
 static const char *intelligentNielsen =
-R"doc(Looks for Nielsen moves that will simplify the presentation. Performs
-one of the most-effective moves, if it can find any.
+R"doc(Deprecated alias for nielsen(), which looks for Nielsen moves that
+will simplify the presentation.
 
-If this routine does return a homomorphism (because some move was
-performed), then this homomorphsm will in fact be a declared
-isomorphism. See the HomGroupPresentation class notes for details on
-what this means.
-
-This routine is guaranteed to be deterministic: within the same
-version of Regina, simplifying identical group presentations will give
-identical results. These results could, however, change between
-different versions of Regina.
-
-.. note::
-    If you all care about is whether the presentation changed, you can
-    simply cast the return value to a ``bool``. This will then mirror
-    the behaviour of intelligentNielsen() from Regina 6.0 and earlier,
-    when the return type was simply ``bool``.
+.. deprecated::
+    This routine has been renamed to nielsen(). See nielsen() for
+    further details.
 
 Returns:
     an isomorphism describing the map from the original presentation
@@ -1072,27 +1059,12 @@ Returns:
 
 // Docstring regina::python::doc::GroupPresentation_::intelligentSimplify
 static const char *intelligentSimplify =
-R"doc(Attempts to simplify the group presentation as intelligently as
-possible without further input.
+R"doc(Deprecated alias for simplify(), which attempts to simplify this group
+presentation as intelligently as possible without further input.
 
-The current simplification method uses a combination of small
-cancellation theory and Nielsen moves.
-
-If this routine does return a homomorphism (because the presentation
-was changed), then this homomorphsm will in fact be a declared
-isomorphism. See the HomGroupPresentation class notes for details on
-what this means.
-
-This routine is guaranteed to be deterministic: within the same
-version of Regina, simplifying identical group presentations will give
-identical results. These results could, however, change between
-different versions of Regina.
-
-.. note::
-    If you all care about is whether the presentation changed, you can
-    simply cast the return value to a ``bool``. This will then mirror
-    the behaviour of intelligentSimplify() from Regina 6.0 and
-    earlier, when the return type was simply ``bool``.
+.. deprecated::
+    This routine has been renamed to simplify(). See simplify() for
+    further details.
 
 Returns:
     an isomorphism describing the reduction map from the original
@@ -1120,6 +1092,32 @@ group.
 
 Returns:
     the abelianisation of this group.)doc";
+
+// Docstring regina::python::doc::GroupPresentation_::nielsen
+static const char *nielsen =
+R"doc(Looks for Nielsen moves that will simplify the presentation. Performs
+one of the most-effective moves, if it can find any.
+
+If this routine does return a homomorphism (because some move was
+performed), then this homomorphsm will in fact be a declared
+isomorphism. See the HomGroupPresentation class notes for details on
+what this means.
+
+This routine is guaranteed to be deterministic: within the same
+version of Regina, simplifying identical group presentations will give
+identical results. These results could, however, change between
+different versions of Regina.
+
+.. note::
+    If you all care about is whether the presentation changed, you can
+    simply cast the return value to a ``bool``. This will then mirror
+    the behaviour of intelligentNielsen() from Regina 6.0 and earlier,
+    when the return type was simply ``bool``.
+
+Returns:
+    an isomorphism describing the map from the original presentation
+    to the new presentation, or ``None`` if this presentation was not
+    changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::nielsenCombine
 static const char *nielsenCombine =
@@ -1262,7 +1260,7 @@ Parameter ``depth``:
 static const char *recogniseGroup =
 R"doc(Attempts to recognise the group corresponding to this presentation.
 This routine is much more likely to be successful if you have already
-called intelligentSimplify().
+called simplify().
 
 Currently, the groups this routine recognises include: the trivial
 group, abelian groups, free groups, extensions over the integers, and
@@ -1335,6 +1333,35 @@ measure of the complexity of the presentation.
 Returns:
     the sum of word lengths.)doc";
 
+// Docstring regina::python::doc::GroupPresentation_::simplify
+static const char *simplify =
+R"doc(Attempts to simplify this group presentation as intelligently as
+possible without further input.
+
+The current simplification method uses a combination of small
+cancellation theory and Nielsen moves.
+
+If this routine does return a homomorphism (because the presentation
+was changed), then this homomorphsm will in fact be a declared
+isomorphism. See the HomGroupPresentation class notes for details on
+what this means.
+
+This routine is guaranteed to be deterministic: within the same
+version of Regina, simplifying identical group presentations will give
+identical results. These results could, however, change between
+different versions of Regina.
+
+.. note::
+    If you all care about is whether the presentation changed, you can
+    simply cast the return value to a ``bool``. This will then mirror
+    the behaviour of intelligentSimplify() from Regina 6.0 and
+    earlier, when the return type was simply ``bool``.
+
+Returns:
+    an isomorphism describing the reduction map from the original
+    presentation to the new presentation, or ``None`` if this
+    presentation was not changed.)doc";
+
 // Docstring regina::python::doc::GroupPresentation_::simplifyAndConjugate
 static const char *simplifyAndConjugate =
 R"doc(Uses small cancellation theory to reduce the input word, modulo
@@ -1353,9 +1380,9 @@ conjugate.
 
 .. warning::
     This routine is only as good as the relator table for the group.
-    You might want to consider running intelligentSimplify(), possibly
-    in concert with proliferateRelators(), before using this routine
-    for any significant tasks.
+    You might want to consider running simplify(), possibly in concert
+    with proliferateRelators(), before using this routine for any
+    significant tasks.
 
 Parameter ``word``:
     the word you would like to simplify (modulo conjugation). This

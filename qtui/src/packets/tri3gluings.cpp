@@ -845,7 +845,7 @@ void Tri3GluingsUI::simplify() {
         return;
     }
 
-    if (! tri->intelligentSimplify()) {
+    if (! tri->simplify()) {
         if (tri->countComponents() > 1) {
             ReginaSupport::info(ui,
                 tr("I could not simplify the triangulation."),
@@ -964,7 +964,7 @@ void Tri3GluingsUI::idealToFinite() {
     else {
         regina::Packet::PacketChangeGroup span(*tri);
         tri->idealToFinite();
-        tri->intelligentSimplify();
+        tri->simplify();
     }
 }
 
@@ -990,7 +990,7 @@ void Tri3GluingsUI::finiteToIdeal() {
                 "have ideal boundary."));
             return;
         }
-        tri->intelligentSimplify();
+        tri->simplify();
     }
 }
 
@@ -1017,7 +1017,7 @@ void Tri3GluingsUI::puncture() {
     else {
         regina::Packet::PacketChangeGroup span(*tri);
         tri->puncture();
-        tri->intelligentSimplify();
+        tri->simplify();
     }
 }
 

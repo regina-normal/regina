@@ -957,7 +957,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         bool isValid() const;
 
         /**
-         * Attempts to simplify the group presentation as intelligently
+         * Attempts to simplify this group presentation as intelligently
          * as possible without further input.
          *
          * The current simplification method uses a combination of small
@@ -982,7 +982,22 @@ class GroupPresentation : public Output<GroupPresentation> {
          * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
-        std::optional<HomGroupPresentation> intelligentSimplify();
+        std::optional<HomGroupPresentation> simplify();
+
+        /**
+         * Deprecated alias for simplify(), which attempts to simplify this
+         * group presentation as intelligently as possible without further
+         * input.
+         *
+         * \deprecated This routine has been renamed to simplify().
+         * See simplify() for further details.
+         *
+         * \return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or \nullopt if
+         * this presentation was not changed.
+         */
+        [[deprecated]] std::optional<HomGroupPresentation>
+            intelligentSimplify();
 
         /**
          * Attempts to simplify the group presentation using small cancellation
@@ -1035,7 +1050,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * potentially conjugate.
          *
          * \warning This routine is only as good as the relator table for the
-         * group.  You might want to consider running intelligentSimplify(),
+         * group.  You might want to consider running simplify(),
          * possibly in concert with proliferateRelators(), before using this
          * routine for any significant tasks.
          *
@@ -1076,7 +1091,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Attempts to recognise the group corresponding to this
          * presentation.  This routine is much more likely to be
-         * successful if you have already called intelligentSimplify().
+         * successful if you have already called simplify().
          *
          * Currently, the groups this routine recognises include:
          * the trivial group, abelian groups, free groups,
@@ -1185,7 +1200,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \warning If you have not adequately simplified this presentation
          * this routine will most likely return \c false.  Consider running
-         * intelligentSimplify, possibly in concert with proliferateRelators(),
+         * simplify(), possibly in concert with proliferateRelators(),
          * in order to discover adequately many commutators.
          *
          * \return \c true if the group is shown to be abelian, or
@@ -1271,7 +1286,20 @@ class GroupPresentation : public Output<GroupPresentation> {
          * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
-        std::optional<HomGroupPresentation> intelligentNielsen();
+        std::optional<HomGroupPresentation> nielsen();
+
+        /**
+         * Deprecated alias for nielsen(), which looks for Nielsen moves that
+         * will simplify the presentation.
+         *
+         * \deprecated This routine has been renamed to nielsen().
+         * See nielsen() for further details.
+         *
+         * \return an isomorphism describing the map from the
+         * original presentation to the new presentation, or \nullopt if
+         * this presentation was not changed.
+         */
+        [[deprecated]] std::optional<HomGroupPresentation> intelligentNielsen();
 
         /**
          * Rewrites the presentation so that generators
@@ -2048,6 +2076,16 @@ inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept {
 #include "algebra/homgrouppresentation.h"
 
 namespace regina {
+
+inline std::optional<HomGroupPresentation>
+        GroupPresentation::intelligentSimplify() {
+    return simplify();
+}
+
+inline std::optional<HomGroupPresentation>
+        GroupPresentation::intelligentNielsen() {
+    return nielsen();
+}
 
 template <int index, typename Action, typename... Args>
 inline size_t GroupPresentation::enumerateCovers(

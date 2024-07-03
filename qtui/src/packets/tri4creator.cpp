@@ -249,7 +249,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         }
         auto& from = regina::static_triangulation3_cast(*fromPacket);
         auto ans = regina::make_packet(Example<4>::iBundle(from));
-        ans->intelligentSimplify();
+        ans->simplify();
         if (fromPacket->label().empty())
             ans->setLabel("I-bundle");
         else
@@ -265,7 +265,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         }
         auto& from = regina::static_triangulation3_cast(*fromPacket);
         auto ans = regina::make_packet(Example<4>::s1Bundle(from));
-        ans->intelligentSimplify();
+        ans->simplify();
         if (fromPacket->label().empty())
             ans->setLabel("S¹-bundle");
         else

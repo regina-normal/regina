@@ -2026,15 +2026,15 @@ class Link :
         bool selfFrame();
 
         /**
-         * Attempts to simplify the link diagram using fast and greedy
-         * heuristics.  Specifically, this routine tries combinations of
-         * Reidemeister moves with the aim of reducing the number of
-         * crossings.
+         * Attempts to simplify this link diagram as intelligently as possible
+         * using fast and greedy heuristics.  Specifically, this routine tries
+         * combinations of Reidemeister moves with the aim of reducing the
+         * number of crossings.
          *
          * Currently this routine uses simplifyToLocalMinimum() in
          * combination with random type III Reidemeister moves.
          *
-         * Although intelligentSimplify() often works well, it can sometimes
+         * Although simplify() often works well, it can sometimes
          * get stuck.  If this link is a knot (i.e., it has precisely one
          * component), then in such cases you can try the more powerful but
          * (much) slower simplifyExhaustive() instead.
@@ -2046,14 +2046,33 @@ class Link :
          * decisions.  More broadly, the implementation of this routine
          * (and therefore its results) may change between different releases
          * of Regina.
+         *
+         * \note For long-term users of Regina: this is the routine that was
+         * for a long time called intelligentSimplify().  It was renamed to
+         * simplify() in Regina 7.4.
+         *
+         * \return \c true if and only if the link diagram was successfully
+         * simplified.
          */
-        bool intelligentSimplify();
+        bool simplify();
+        /**
+         * Deprecated alias for simplify(), which attempts to simplify this
+         * link diagram as intelligently as possible using fast and greedy
+         * heuristics.
+         *
+         * \deprecated This routine has been renamed to simplify().
+         * See simplify() for further details.
+         *
+         * \return \c true if and only if the link diagram was successfully
+         * simplified.
+         */
+        [[deprecated]] bool intelligentSimplify();
         /**
          * Uses type I and II Reidemeister moves to reduce the link
          * monotonically to some local minimum number of crossings.
          *
          * End users will probably not want to call this routine.
-         * You should call intelligentSimplify() if you want a fast (and
+         * You should call simplify() if you want a fast (and
          * usually effective) means of simplifying a link.  If this link is
          * a knot (i.e., it has precisely one component), then you can also
          * call simplifyExhaustive() if you are still stuck and you want to
@@ -2061,7 +2080,7 @@ class Link :
          *
          * Type III Reidemeister moves (which do not reduce the number of
          * crossings) are not used in this routine.  Such moves do however
-         * feature in intelligentSimplify().
+         * feature in simplify().
          *
          * This routine will never reflect or reverse the link.
          *
@@ -2082,9 +2101,9 @@ class Link :
         /**
          * Attempts to simplify this link diagram using a slow but
          * exhaustive search through the Reidemeister graph.  This routine is
-         * more powerful but much slower than intelligentSimplify().
+         * more powerful but much slower than simplify().
          *
-         * Unlike intelligentSimplify(), this routine **could potentially
+         * Unlike simplify(), this routine **could potentially
          * reflect or reverse the link**.
          *
          * As of Regina 7.4, this routine is now available for any connected
@@ -2098,7 +2117,7 @@ class Link :
          *
          * If at any stage it finds a diagram with _fewer_
          * crossings than the original, then this routine will call
-         * intelligentSimplify() to simplify the diagram further if
+         * simplify() to simplify the diagram further if
          * possible and will then return \c true.  If it cannot find a
          * diagram with fewer crossings then it will leave this
          * link diagram unchanged and return \c false.
@@ -2120,8 +2139,8 @@ class Link :
          * (read on for details).
          *
          * If you want a _fast_ simplification routine, you should call
-         * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
-         * is that, for very stubborn link diagrams where intelligentSimplify()
+         * simplify() instead.  The benefit of simplifyExhaustive()
+         * is that, for very stubborn link diagrams where simplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
@@ -5379,6 +5398,10 @@ inline StrandRef Link::translate(const StrandRef& other) const {
         StrandRef(nullptr, other.strand()));
 }
 
+inline bool Link::intelligentSimplify() {
+    return simplify();
+}
+
 template <typename Action, typename... Args>
 inline bool Link::rewrite(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
@@ -5416,7 +5439,7 @@ inline bool Link::simplifyExhaustive(int height, unsigned threads,
             if (alt.size() < minCrossings) {
                 PacketChangeGroup span(original);
                 original = std::move(alt);
-                original.intelligentSimplify();
+                original.simplify();
                 return true;
             } else
                 return false;

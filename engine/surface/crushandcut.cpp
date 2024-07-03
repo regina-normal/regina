@@ -1387,7 +1387,7 @@ namespace {
                     return;
                 }
 
-                t_[side]->intelligentSimplify();
+                t_[side]->simplify();
 
                 if (hasFound()) {
                     delete t_[side];
@@ -1423,7 +1423,7 @@ namespace {
                 // Look for a normal disc or sphere to crush.
                 bool found;
                 while (true) {
-                    t_[side]->intelligentSimplify();
+                    t_[side]->simplify();
 
                     // The LP-and-crushing method only works for
                     // 1-vertex triangulations (at present).
@@ -1527,7 +1527,7 @@ bool NormalSurface::isIncompressible() const {
 
     // Time for the heavy machinery.
     Triangulation<3> cut = cutAlong();
-    cut.intelligentSimplify();
+    cut.simplify();
 
     Triangulation<3>* side[2] { nullptr, nullptr };
 

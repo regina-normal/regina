@@ -290,7 +290,7 @@ static void verifyFreeAbelian(int rank) {
     size_t nFound = 0;
     size_t ans = freeAbelian.enumerateCovers<index>([&](
             GroupPresentation&& g) {
-        g.intelligentSimplify();
+        g.simplify();
 
         // Of course the group itself should be free abelian, but we
         // call abelianisation() since that is guaranteed to show
@@ -388,7 +388,7 @@ static void verifyFree(int rank) {
     size_t nFound = 0;
     size_t ans = GroupPresentation(rank).enumerateCovers<index>([&](
             GroupPresentation&& g) {
-        g.intelligentSimplify();
+        g.simplify();
 
         EXPECT_EQ(g.countGenerators(), expectedRank);
         EXPECT_EQ(g.countRelations(), 0);
@@ -434,7 +434,7 @@ static void verifyCyclic(long order) {
     GroupPresentation src(1);
     src.addRelation(regina::GroupExpression(0, order));
     size_t ans = src.enumerateCovers<index>([&](GroupPresentation&& g) {
-        g.intelligentSimplify();
+        g.simplify();
 
         if (expectedOrder == 1) {
             EXPECT_EQ(g.countGenerators(), 0);

@@ -224,7 +224,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
     }
     
     regina::Triangulation<3>* ans = s->triangulate();
-    ans->intelligentSimplify();
+    ans->simplify();
     ans->setLabel("Hypersurface #" + std::to_string(selectedRow - 1));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];

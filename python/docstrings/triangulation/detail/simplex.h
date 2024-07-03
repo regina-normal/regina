@@ -479,11 +479,11 @@ change. Specifically:
   any of the other Pachner moves).
 
 Regina's own automatic retriangulation routines (such as
-Triangulation<dim>::intelligentSimplify() or
-Triangulation<dim>::retriangulate()) will simply avoid changing any
-locked simplices. If the user attempts to manually force a change
-(e.g., by calling Triangulation<dim>::subdivide()), then a
-FailedPrecondition exception will be thrown.
+Triangulation<dim>::simplify() or Triangulation<dim>::retriangulate())
+will simply avoid changing any locked simplices. If the user attempts
+to manually force a change (e.g., by calling
+Triangulation<dim>::subdivide()), then a FailedPrecondition exception
+will be thrown.
 
 It is safe to call this function even if this simplex is already
 locked.
@@ -553,11 +553,11 @@ There are some important exceptions to these rules:
   *F1* versus *F2* is arbitrary.
 
 Regina's own automatic retriangulation routines (such as
-Triangulation<dim>::intelligentSimplify() or
-Triangulation<dim>::retriangulate()) will simply avoid changing any
-locked facets. If the user attempts to manually force a change (e.g.,
-by calling Triangulation<dim>::subdivide()), then a FailedPrecondition
-exception will be thrown.
+Triangulation<dim>::simplify() or Triangulation<dim>::retriangulate())
+will simply avoid changing any locked facets. If the user attempts to
+manually force a change (e.g., by calling
+Triangulation<dim>::subdivide()), then a FailedPrecondition exception
+will be thrown.
 
 Regina will always ensure that the locks on facets are consistent.
 That is, if some facet *F* of some top-dimensional simplex is glued to

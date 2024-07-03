@@ -417,8 +417,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("canJoinBoundaries") = true,
             rdoc::maximalForestInSkeleton)
-        .def("intelligentSimplify",
-            &Triangulation<3>::intelligentSimplify, rdoc::intelligentSimplify)
+        .def("simplify", &Triangulation<3>::simplify, rdoc::simplify)
+        .def("intelligentSimplify", &Triangulation<3>::simplify, // deprecated
+            rdoc::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Triangulation<3>::simplifyToLocalMinimum,
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)

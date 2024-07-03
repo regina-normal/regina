@@ -1116,7 +1116,7 @@ GroupPresentation Link::group(bool simplify) const {
     delete[] strandToSection;
 
     if (simplify)
-        g.intelligentSimplify();
+        g.simplify();
     return g;
 }
 

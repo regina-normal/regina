@@ -1138,7 +1138,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface.
          *
          * The triangulation will be simplified via
-         * Triangulation<3>::intelligentSimplify(), which means that the
+         * Triangulation<3>::simplify(), which means that the
          * tetrahedra of the final triangulation are not likely to
          * correspond to any particular tetrahedron/prism pieces of
          * this normal hypersurface.

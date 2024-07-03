@@ -264,7 +264,7 @@ static NSString* unknotText = @"Unknot, no crossings";
         return;
     }
     
-    if (! self.packet->intelligentSimplify()) {
+    if (! self.packet->simplify()) {
         // Greedy simplification failed.
         // Offer a more exhaustive alternative.
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"

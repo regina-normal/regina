@@ -218,7 +218,7 @@ void GroupExpression::substitute(const std::vector<GroupExpression>& expansions,
 // TODO: To add: platonic groups, octahedral/cubical, dihedral,
 //       icosahedral/dodecahedral, tetrahedral and binary versions of them.
 //       Also need to recognise circle bundles over surfaces.
-//       Free products with amalgamation. Currently intelligentSimplify()
+//       Free products with amalgamation. Currently simplify()
 //       isn't smart enough for this.
 std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
     std::ostringstream out;
@@ -765,7 +765,7 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
 // 3) Loop back to (1) until nothing happens in either (1) or (2).
 // TODO: consider a homological alignment call if the abelianization
 //       has rank 1 or any other situation where we know it can be useful.
-std::optional<HomGroupPresentation> GroupPresentation::intelligentSimplify() {
+std::optional<HomGroupPresentation> GroupPresentation::simplify() {
     // IMPORTANT NOTE: This routine *must* be deterministic.
     // This matters (for example) when we simplify the domain and codomain
     // of a monodromy, and we need both ends to simplify identically.
@@ -782,7 +782,7 @@ std::optional<HomGroupPresentation> GroupPresentation::intelligentSimplify() {
                 *redHom = (*h) * (*redHom);
         }
 
-        if (auto h = intelligentNielsen()) {
+        if (auto h = nielsen()) {
             doRep = true;
             if (!redHom)
                 redHom = std::move(*h);
@@ -953,7 +953,7 @@ found_a_generator_killer:
         return std::nullopt;
 }// end smallCancellation()
 
-std::optional<HomGroupPresentation> GroupPresentation::intelligentNielsen() {
+std::optional<HomGroupPresentation> GroupPresentation::nielsen() {
     // IMPORTANT NOTE: This routine *must* be deterministic.
     // This matters (for example) when we simplify the domain and codomain
     // of a monodromy, and we need both ends to simplify identically.
@@ -1830,7 +1830,7 @@ std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
     // kerPres in the line below, to save one of the two deep copies
     // that we are currently making.
     HomGroupPresentation retval( kerPres, kerPres, autVec );
-    retval.intelligentSimplify();
+    retval.simplify();
 
     // Modify this presentation to reflect the semi-direct product
     //        structure we've discovered!

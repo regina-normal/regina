@@ -525,7 +525,7 @@ class Tangle : public Output<Tangle> {
          *
          * Unlike links, tangle do not (at present) offer stronger
          * simplification routines (such as the much better
-         * Link::intelligentSimplify() and Link::simplifyExhaustive()).
+         * Link::simplify() and Link::simplifyExhaustive()).
          *
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.

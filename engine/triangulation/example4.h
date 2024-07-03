@@ -198,7 +198,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * The product itself will contain 82 pentachora for each
          * original tetrahedron of \a M, and will contain many internal
          * vertices.  It is highly recommended that you call
-         * Triangulation<4>::intelligentSimplify() afterwards if you do
+         * Triangulation<4>::simplify() afterwards if you do
          * not need to preserve the combinatorial structure.
          *
          * \warning If the given 3-manifold triangulation has ideal boundary,
@@ -218,7 +218,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * The product will contain 82 pentachora for each
          * original tetrahedron of \a M, and will contain many internal
          * vertices.  It is highly recommended that you call
-         * Triangulation<4>::intelligentSimplify() afterwards if you do
+         * Triangulation<4>::simplify() afterwards if you do
          * not need to preserve the combinatorial structure.
          *
          * \warning If the given 3-manifold triangulation has ideal boundary,
@@ -245,7 +245,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * The resulting manifold will contain 82 pentachora for each
          * original tetrahedron of \a M, and will contain many internal
          * vertices.  It is highly recommended that you call
-         * Triangulation<4>::intelligentSimplify() afterwards if you do
+         * Triangulation<4>::simplify() afterwards if you do
          * not need to preserve the combinatorial structure.
          *
          * \pre The given monodromy must be an isomorphism from \a M to

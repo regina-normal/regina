@@ -244,8 +244,13 @@ Parameter ``rhs``:
 
 // Docstring regina::python::doc::HomGroupPresentation_::intelligentNielsen
 static const char *intelligentNielsen =
-R"doc(Simplifies the domain and codomain using only Nielsen moves, keeping
-track of the resulting map in the progress.
+R"doc(Deprecated alias for nielsen(), which simplifies the domain and
+codomain using only Nielsen moves, keeping track of the resulting map
+in the progress.
+
+.. deprecated::
+    This routine has been renamed to nielsen(). See nielsen() for
+    further details.
 
 Returns:
     ``True`` if and only if either presentation and/or the map was
@@ -253,16 +258,13 @@ Returns:
 
 // Docstring regina::python::doc::HomGroupPresentation_::intelligentSimplify
 static const char *intelligentSimplify =
-R"doc(Simultaneously simplifies:
+R"doc(Deprecated alias for simplify(), which simultaneously simplifies the
+presentation of the domain, the presentation of the codomain, and the
+description of the map.
 
-* the presentation of the domain;
-
-* the presentation of the codomain;
-
-* the description of the map.
-
-Uses the underlying GroupPresentation::intelligentSimplify(). See that
-routine for details.
+.. deprecated::
+    This routine has been renamed to simplify(). See simplify() for
+    further details.
 
 Returns:
     ``True`` if and only if either presentation and/or the map was
@@ -333,6 +335,27 @@ codomain.
 
 Returns:
     the induced map on the abelianizations.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation_::nielsen
+static const char *nielsen =
+R"doc(Simplifies the domain and codomain using only Nielsen moves, keeping
+track of the resulting map in the progress.
+
+Returns:
+    ``True`` if and only if either presentation and/or the map was
+    changed.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation_::simplify
+static const char *simplify =
+R"doc(Simultaneously simplifies the presentation of the domain, the
+presentation of the codomain, and the description of the map.
+
+Uses the underlying GroupPresentation::simplify(). See that routine
+for details.
+
+Returns:
+    ``True`` if and only if either presentation and/or the map was
+    changed.)doc";
 
 // Docstring regina::python::doc::HomGroupPresentation_::smallCancellation
 static const char *smallCancellation =

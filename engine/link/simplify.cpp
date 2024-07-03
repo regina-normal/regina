@@ -38,7 +38,7 @@
 
 namespace regina {
 
-bool Link::intelligentSimplify() {
+bool Link::simplify() {
     bool changed;
 
     { // Begin scope for change event group.

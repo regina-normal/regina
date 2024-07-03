@@ -2124,26 +2124,16 @@ Parameter ``positive``:
 
 // Docstring regina::python::doc::Link_::intelligentSimplify
 static const char *intelligentSimplify =
-R"doc(Attempts to simplify the link diagram using fast and greedy
-heuristics. Specifically, this routine tries combinations of
-Reidemeister moves with the aim of reducing the number of crossings.
+R"doc(Deprecated alias for simplify(), which attempts to simplify this link
+diagram as intelligently as possible using fast and greedy heuristics.
 
-Currently this routine uses simplifyToLocalMinimum() in combination
-with random type III Reidemeister moves.
+.. deprecated::
+    This routine has been renamed to simplify(). See simplify() for
+    further details.
 
-Although intelligentSimplify() often works well, it can sometimes get
-stuck. If this link is a knot (i.e., it has precisely one component),
-then in such cases you can try the more powerful but (much) slower
-simplifyExhaustive() instead.
-
-This routine will never reflect or reverse the link.
-
-.. warning::
-    Running this routine multiple times upon the same link may return
-    different results, since the implementation makes random
-    decisions. More broadly, the implementation of this routine (and
-    therefore its results) may change between different releases of
-    Regina.)doc";
+Returns:
+    ``True`` if and only if the link diagram was successfully
+    simplified.)doc";
 
 // Docstring regina::python::doc::Link_::isAlternating
 static const char *isAlternating =
@@ -3655,14 +3645,47 @@ Parameter ``allowReversal``:
 Returns:
     the signature for this link diagram.)doc";
 
+// Docstring regina::python::doc::Link_::simplify
+static const char *simplify =
+R"doc(Attempts to simplify this link diagram as intelligently as possible
+using fast and greedy heuristics. Specifically, this routine tries
+combinations of Reidemeister moves with the aim of reducing the number
+of crossings.
+
+Currently this routine uses simplifyToLocalMinimum() in combination
+with random type III Reidemeister moves.
+
+Although simplify() often works well, it can sometimes get stuck. If
+this link is a knot (i.e., it has precisely one component), then in
+such cases you can try the more powerful but (much) slower
+simplifyExhaustive() instead.
+
+This routine will never reflect or reverse the link.
+
+.. warning::
+    Running this routine multiple times upon the same link may return
+    different results, since the implementation makes random
+    decisions. More broadly, the implementation of this routine (and
+    therefore its results) may change between different releases of
+    Regina.
+
+.. note::
+    For long-term users of Regina: this is the routine that was for a
+    long time called intelligentSimplify(). It was renamed to
+    simplify() in Regina 7.4.
+
+Returns:
+    ``True`` if and only if the link diagram was successfully
+    simplified.)doc";
+
 // Docstring regina::python::doc::Link_::simplifyExhaustive
 static const char *simplifyExhaustive =
 R"doc(Attempts to simplify this link diagram using a slow but exhaustive
 search through the Reidemeister graph. This routine is more powerful
-but much slower than intelligentSimplify().
+but much slower than simplify().
 
-Unlike intelligentSimplify(), this routine **could potentially reflect
-or reverse the link**.
+Unlike simplify(), this routine **could potentially reflect or reverse
+the link**.
 
 As of Regina 7.4, this routine is now available for any connected link
 diagram with fewer than 64 link components. If this link has 64 or
@@ -3674,10 +3697,10 @@ reached from this via Reidemeister moves, without ever exceeding
 *height* additional crossings beyond the original number.
 
 If at any stage it finds a diagram with _fewer_ crossings than the
-original, then this routine will call intelligentSimplify() to
-simplify the diagram further if possible and will then return
-``True``. If it cannot find a diagram with fewer crossings then it
-will leave this link diagram unchanged and return ``False``.
+original, then this routine will call simplify() to simplify the
+diagram further if possible and will then return ``True``. If it
+cannot find a diagram with fewer crossings then it will leave this
+link diagram unchanged and return ``False``.
 
 This routine can be very slow and very memory-intensive: the number of
 link diagrams it visits may be exponential in the number of crossings,
@@ -3694,10 +3717,10 @@ exists then the only way to terminate this function is to cancel the
 operation via a progress tracker (read on for details).
 
 If you want a _fast_ simplification routine, you should call
-intelligentSimplify() instead. The benefit of simplifyExhaustive() is
-that, for very stubborn link diagrams where intelligentSimplify()
-finds itself stuck at a local minimum, simplifyExhaustive() is able to
-"climb out" of such wells.
+simplify() instead. The benefit of simplifyExhaustive() is that, for
+very stubborn link diagrams where simplify() finds itself stuck at a
+local minimum, simplifyExhaustive() is able to "climb out" of such
+wells.
 
 Since Regina 7.0, this routine will not return until either the link
 diagram is simplified or the exhaustive search is complete, regardless
@@ -3750,15 +3773,15 @@ R"doc(Uses type I and II Reidemeister moves to reduce the link monotonically
 to some local minimum number of crossings.
 
 End users will probably not want to call this routine. You should call
-intelligentSimplify() if you want a fast (and usually effective) means
-of simplifying a link. If this link is a knot (i.e., it has precisely
-one component), then you can also call simplifyExhaustive() if you are
+simplify() if you want a fast (and usually effective) means of
+simplifying a link. If this link is a knot (i.e., it has precisely one
+component), then you can also call simplifyExhaustive() if you are
 still stuck and you want to try a slower but more powerful method
 instead.
 
 Type III Reidemeister moves (which do not reduce the number of
 crossings) are not used in this routine. Such moves do however feature
-in intelligentSimplify().
+in simplify().
 
 This routine will never reflect or reverse the link.
 

@@ -112,7 +112,7 @@ bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
             if (alt.size() < minSimp) {
                 PacketChangeGroup span(*this);
                 *this = std::move(alt);
-                intelligentSimplify();
+                simplify();
                 return true;
             } else
                 return false;

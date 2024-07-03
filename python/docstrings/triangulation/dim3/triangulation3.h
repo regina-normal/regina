@@ -1175,35 +1175,13 @@ See also:
 
 // Docstring regina::python::doc::Triangulation_::intelligentSimplify
 static const char *intelligentSimplify =
-R"doc(Attempts to simplify the triangulation using fast and greedy
-heuristics. This routine will attempt to reduce the number of
-tetrahedra, the number of vertices and the number of boundary
-triangles (with the number of tetrahedra as its priority).
+R"doc(Deprecated alias for simplify(), which attempts to simplify this
+triangulation as intelligently as possible using fast and greedy
+heuristics.
 
-Currently this routine uses simplifyToLocalMinimum() and
-minimiseVertices() in combination with random 4-4 moves, book opening
-moves and book closing moves.
-
-Although intelligentSimplify() works very well most of the time, it
-can occasionally get stuck; in such cases you may wish to try the more
-powerful but (much) slower simplifyExhaustive() instead.
-
-If this triangulation is currently oriented, then this operation will
-preserve the orientation.
-
-If any tetrahedra and/or triangles are locked, these locks will be
-respected: that is, the simplification operation will avoid any moves
-that would violate these locks (and in particular, no LockViolation
-exceptions should be thrown). Of course, however, having locks may
-make the simplification less effective in reducing the number of
-tetrahedra.
-
-.. warning::
-    Running this routine multiple times upon the same triangulation
-    may return different results, since the implementation makes
-    random decisions. More broadly, the implementation of this routine
-    (and therefore its results) may change between different releases
-    of Regina.
+.. deprecated::
+    This routine has been renamed to simplify(). See simplify() for
+    further details.
 
 Returns:
     ``True`` if and only if the triangulation was successfully
@@ -2464,9 +2442,9 @@ The puncture will not meet the boundary of the pillow, and so nothing
 will go wrong if the given triangle is boundary or has ideal vertices.
 A side-effect of this, however, is that the resulting triangulation
 will contain additional vertices, and will almost certainly be far
-from minimal. It is highly recommended that you run
-intelligentSimplify() if you do not need to preserve the combinatorial
-structure of the new triangulation.
+from minimal. It is highly recommended that you run simplify() if you
+do not need to preserve the combinatorial structure of the new
+triangulation.
 
 If this triangulation was originally oriented, then it will also be
 oriented after this routine has been called. See isOriented() for
@@ -2939,11 +2917,52 @@ Returns:
     topology of the manifold or violating any locks. If *check* is
     ``False``, the function simply returns ``True``.)doc";
 
+// Docstring regina::python::doc::Triangulation_::simplify
+static const char *simplify =
+R"doc(Attempts to simplify this triangulation as intelligently as possible
+using fast and greedy heuristics. This routine will attempt to reduce
+the number of tetrahedra, the number of vertices and the number of
+boundary triangles (with the number of tetrahedra as its priority).
+
+Currently this routine uses simplifyToLocalMinimum() and
+minimiseVertices() in combination with random 4-4 moves, book opening
+moves and book closing moves.
+
+Although simplify() works very well most of the time, it can
+occasionally get stuck; in such cases you may wish to try the more
+powerful but (much) slower simplifyExhaustive() instead.
+
+If this triangulation is currently oriented, then this operation will
+preserve the orientation.
+
+If any tetrahedra and/or triangles are locked, these locks will be
+respected: that is, the simplification operation will avoid any moves
+that would violate these locks (and in particular, no LockViolation
+exceptions should be thrown). Of course, however, having locks may
+make the simplification less effective in reducing the number of
+tetrahedra.
+
+.. warning::
+    Running this routine multiple times upon the same triangulation
+    may return different results, since the implementation makes
+    random decisions. More broadly, the implementation of this routine
+    (and therefore its results) may change between different releases
+    of Regina.
+
+.. note::
+    For long-term users of Regina: this is the routine that was for a
+    long time called intelligentSimplify(). It was renamed to
+    simplify() in Regina 7.4.
+
+Returns:
+    ``True`` if and only if the triangulation was successfully
+    simplified. Otherwise this triangulation will not be changed.)doc";
+
 // Docstring regina::python::doc::Triangulation_::simplifyExhaustive
 static const char *simplifyExhaustive =
 R"doc(Attempts to simplify this triangulation using a slow but exhaustive
 search through the Pachner graph. This routine is more powerful but
-much slower than intelligentSimplify().
+much slower than simplify().
 
 Specifically, this routine will iterate through all triangulations
 that can be reached from this triangulation via 2-3 and 3-2 Pachner
@@ -2951,10 +2970,10 @@ moves, without ever exceeding *height* additional tetrahedra beyond
 the original number.
 
 If at any stage it finds a triangulation with _fewer_ tetrahedra than
-the original, then this routine will call intelligentSimplify() to
-shrink the triangulation further if possible and will then return
-``True``. If it cannot find a triangulation with fewer tetrahedra then
-it will leave this triangulation unchanged and return ``False``.
+the original, then this routine will call simplify() to shrink the
+triangulation further if possible and will then return ``True``. If it
+cannot find a triangulation with fewer tetrahedra then it will leave
+this triangulation unchanged and return ``False``.
 
 This routine can be very slow and very memory-intensive: the number of
 triangulations it visits may be superexponential in the number of
@@ -2979,10 +2998,10 @@ exceptions should be thrown). Of course, however, having locks may
 reduce the number of distinct triangulations that can be reached.
 
 If you want a _fast_ simplification routine, you should call
-intelligentSimplify() instead. The benefit of simplifyExhaustive() is
-that, for very stubborn triangulations where intelligentSimplify()
-finds itself stuck at a local minimum, simplifyExhaustive() is able to
-"climb out" of such wells.
+simplify() instead. The benefit of simplifyExhaustive() is that, for
+very stubborn triangulations where simplify() finds itself stuck at a
+local minimum, simplifyExhaustive() is able to "climb out" of such
+wells.
 
 Since Regina 7.0, this routine will not return until either the
 triangulation is simplified or the exhaustive search is complete,
@@ -3035,17 +3054,17 @@ R"doc(Uses all known simplification moves to reduce the triangulation
 monotonically to some local minimum number of tetrahedra.
 
 End users will probably not want to call this routine. You should call
-intelligentSimplify() if you want a fast (and usually effective) means
-of simplifying a triangulation, or you should call
-simplifyExhaustive() if you are still stuck and you want to try a
-slower but more powerful method instead.
+simplify() if you want a fast (and usually effective) means of
+simplifying a triangulation, or you should call simplifyExhaustive()
+if you are still stuck and you want to try a slower but more powerful
+method instead.
 
 The moves used by this routine include 3-2, 2-0 (edge and vertex), 2-1
 and boundary shelling moves.
 
 Moves that do not reduce the number of tetrahedra (such as 4-4 moves
 or book opening moves) are not used in this routine. Such moves do
-however feature in intelligentSimplify().
+however feature in simplify().
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
