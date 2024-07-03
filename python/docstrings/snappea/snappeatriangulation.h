@@ -976,11 +976,10 @@ Precondition:
     The covers that are produced will typically use far more
     tetrahedra than necessary. If size is important then you should
     take a copy using Regina's native type Triangulation<3> and call
-    intelligentSimplify() on that. Note that you cannot call
-    intelligentSimplify() directly on a SnapPeaTriangulation, since
-    (like all modifying functions inherited from Triangulation<3>)
-    this will nullify the SnapPeaTriangulation. See the class notes
-    for further explanation.
+    simplify() on that. Note that you cannot call simplify() directly
+    on a SnapPeaTriangulation, since (like all modifying functions
+    inherited from Triangulation<3>) this will nullify the
+    SnapPeaTriangulation. See the class notes for further explanation.
 
 .. warning::
     The API for this class or function has not yet been finalised.

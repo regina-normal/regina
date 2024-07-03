@@ -928,10 +928,10 @@ static const char *triangulate =
 R"doc(Returns a 3-manifold triangulation describing this normal
 hypersurface.
 
-The triangulation will be simplified via
-Triangulation<3>::intelligentSimplify(), which means that the
-tetrahedra of the final triangulation are not likely to correspond to
-any particular tetrahedron/prism pieces of this normal hypersurface.
+The triangulation will be simplified via Triangulation<3>::simplify(),
+which means that the tetrahedra of the final triangulation are not
+likely to correspond to any particular tetrahedron/prism pieces of
+this normal hypersurface.
 
 Precondition:
     This normal hypersurface is compact and embedded.
