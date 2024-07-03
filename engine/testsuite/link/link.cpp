@@ -1791,9 +1791,6 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
 }
 
 static void verifyKnotSig(const Link& link, const char* name) {
-    if (! link.isConnected())
-        return;
-
     SCOPED_TRACE_CSTRING(name);
 
     verifyKnotSig(link, true, true);
@@ -1810,6 +1807,33 @@ TEST_F(LinkTest, knotSig) {
     EXPECT_EQ(trefoilRight.link.knotSig(false, true), "dabcabcv-");
     EXPECT_EQ(trefoilLeft.link.knotSig(true, true),   "dabcabcv-");
     EXPECT_EQ(trefoilLeft.link.knotSig(false, true) , "dabcabcva");
+
+    // Test that reflection applies to the entire diagram only, not individual
+    // connected components:
+    {
+        Link l = ExampleLink::trefoilRight();
+        l.insertLink(ExampleLink::trefoilRight());
+        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcv-");
+    }
+    {
+        Link l = ExampleLink::trefoilRight();
+        l.insertLink(ExampleLink::trefoilLeft());
+        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
+    }
+    {
+        Link l = ExampleLink::trefoilLeft();
+        l.insertLink(ExampleLink::trefoilRight());
+        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
+    }
+    {
+        Link l = ExampleLink::trefoilLeft();
+        l.insertLink(ExampleLink::trefoilLeft());
+        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.sig(false, true), "dabcabcvadabcabcva");
+    }
 
     // A link where all four reflection/reversal options give different sigs:
     Link asymmetric = Link::fromOrientedGauss(
