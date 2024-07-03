@@ -34,12 +34,15 @@
  *  \brief Deals with finite presentations of groups.
  */
 
+// The headers grouppresentation.h and homgrouppresentation.h are fragile,
+// in that we _must_ ensure that grouppresentation.h is read first.
+// That will in turn re-include _this_ header at the correct point in the file.
+#include "algebra/grouppresentation.h"
+
 #ifndef __REGINA_HOMGROUPPRESENTATION_H
 #ifndef __DOXYGEN
 #define __REGINA_HOMGROUPPRESENTATION_H
 #endif
-
-#include "algebra/grouppresentation.h"
 
 namespace regina {
 
