@@ -2063,6 +2063,10 @@ static void verifyRetriangulate(const TriangulationTest<3>::TestCase& test,
 TEST_F(Dim3Test, retriangulate) {
     // The counts here were computed using Regina 6.0 in single-threaded mode.
 
+    verifyRetriangulate(empty, 0, 1);
+    verifyRetriangulate(empty, 1, 1);
+    verifyRetriangulate(empty, 2, 1);
+    verifyRetriangulate(empty, 3, 1);
     verifyRetriangulate(s3, 0, 1);
     verifyRetriangulate(s3, 1, 1);
     verifyRetriangulate(s3, 2, 1);

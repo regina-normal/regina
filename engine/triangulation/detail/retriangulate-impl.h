@@ -539,9 +539,15 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
 
     if (obj.isEmpty()) {
         // There are no moves possible on empty links or empty triangulations.
+        // However, we should still visit the original (empty) object.
+        bool result;
+        if constexpr (withSig)
+            result = action(obj.sig(), Object(obj));
+        else
+            result = action(Object(obj));
         if (tracker)
             tracker->setFinished();
-        return false;
+        return result;
     }
 
     using T = Retriangulator<Object, threading, withSig>;

@@ -142,8 +142,9 @@ Version 7.4  [ (to be announced) ]
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
             - New routine componentsByStrand().
-            - Extended knotSig() to work with any link diagram with fewer than
-              64 link components, and added an alias sig() for knotSig().
+            - Extended knotSig(), rewrite() and simplifyExhaustive() to work
+              with all link diagrams with fewer than 64 link components.
+            - Added an alias sig() for knotSig().
             - Routine hasReducingPass() can now handle multiple-component links.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
@@ -347,8 +348,12 @@ Version 7.4  [ (to be announced) ]
             - Routine from SnapPea() can now take either a filename or file
               contents.  It can also now handle empty lines before the manifold
               name (SnapPy does not write these, but some other tools do).
+            - Routines retriangulate() and simplifyExhaustive() no longer
+              throw an exception when called on an empty triangulation.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
+            - Routines retriangulate() and simplifyExhaustive() no longer
+              throw an exception when called on an empty triangulation.
         Class Vector<T>:
             - Added a copy constructor that takes a vector whose elements are
               of a different type.

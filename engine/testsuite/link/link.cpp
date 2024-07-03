@@ -2154,8 +2154,11 @@ static void verifyRewrite(const TestCase& test, int height, size_t count) {
 
 TEST_F(LinkTest, rewrite) {
     // The counts here were computed using Regina 6.0 in single-threaded mode
-    // (except for the unknot0 cases, which were computed by hand).
+    // (except for the zero-crossing cases, which were computed by hand).
 
+    verifyRewrite(empty, 0, 1);
+    verifyRewrite(empty, 1, 1);
+    verifyRewrite(empty, 2, 1);
     verifyRewrite(unknot0, 0, 1);
     verifyRewrite(unknot0, 1, 2);
     verifyRewrite(unknot0, 2, 6);
@@ -2163,6 +2166,12 @@ TEST_F(LinkTest, rewrite) {
     verifyRewrite(unknot3, 0, 22);
     verifyRewrite(unknot3, 1, 131);
     verifyRewrite(unknot3, 2, 998);
+    verifyRewrite(unlink2_0, 0, 1);
+    verifyRewrite(unlink2_0, 1, 2);
+    verifyRewrite(unlink2_0, 2, 9);
+    verifyRewrite(unlink3_0, 0, 1);
+    verifyRewrite(unlink3_0, 1, 2);
+    verifyRewrite(unlink3_0, 2, 9);
     verifyRewrite(figureEight, 0, 1);
     verifyRewrite(figureEight, 1, 8);
     verifyRewrite(figureEight, 2, 137);

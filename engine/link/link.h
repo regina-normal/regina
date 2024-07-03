@@ -2080,18 +2080,19 @@ class Link :
         bool simplifyToLocalMinimum(bool perform = true);
 
         /**
-         * Attempts to simplify this knot diagram using a slow but
+         * Attempts to simplify this link diagram using a slow but
          * exhaustive search through the Reidemeister graph.  This routine is
          * more powerful but much slower than intelligentSimplify().
          *
          * Unlike intelligentSimplify(), this routine **could potentially
          * reflect or reverse the link**.
          *
-         * This routine is only available for knots at the present time.
-         * If this link has multiple (or zero) components, then this
+         * As of Regina 7.4, this routine is now available for any connected
+         * link diagram with fewer than 64 link components.
+         * If this link has 64 or more components then this
          * routine will throw an exception (as described below).
          *
-         * This routine will iterate through all knot diagrams that can be
+         * This routine will iterate through all link diagrams that can be
          * reached from this via Reidemeister moves, without ever exceeding
          * \a height additional crossings beyond the original number.
          *
@@ -2100,10 +2101,10 @@ class Link :
          * intelligentSimplify() to simplify the diagram further if
          * possible and will then return \c true.  If it cannot find a
          * diagram with fewer crossings then it will leave this
-         * knot diagram unchanged and return \c false.
+         * link diagram unchanged and return \c false.
          *
          * This routine can be very slow and very memory-intensive: the
-         * number of knot diagrams it visits may be exponential in
+         * number of link diagrams it visits may be exponential in
          * the number of crossings, and it records every diagram
          * that it visits (so as to avoid revisiting the same diagram
          * again).  It is highly recommended that you begin with \a height = 1,
@@ -2120,12 +2121,12 @@ class Link :
          *
          * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
-         * is that, for very stubborn knot diagrams where intelligentSimplify()
+         * is that, for very stubborn link diagrams where intelligentSimplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
          * Since Regina 7.0, this routine will not return until either the
-         * knot diagram is simplified or the exhaustive search is complete,
+         * link diagram is simplified or the exhaustive search is complete,
          * regardless of whether a progress tracker was passed.  If you
          * need the old behaviour (where passing a progress tracker caused
          * the exhaustive search to start in the background), simply call
@@ -2137,15 +2138,14 @@ class Link :
          * routine will not return until processing has finished (i.e., either
          * the diagram was simplified or the search was exhausted).
          *
-         * If this routine is unable to simplify the knot diagram, then
-         * this knot diagram will not be changed.
+         * If this routine is unable to simplify the link diagram, then
+         * this link diagram will not be changed.
          *
-         * \pre This link has at most one component (i.e., it is empty
-         * or it is a knot).
+         * \pre This link has at most 64 link components.
          *
-         * \exception FailedPrecondition This link has more than one component.
-         * If a progress tracker was passed, it will be marked as finished
-         * before the exception is thrown.
+         * \exception FailedPrecondition This link has 64 or more link
+         * components.  If a progress tracker was passed, it will be marked as
+         * finished before the exception is thrown.
          *
          * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
@@ -2165,15 +2165,16 @@ class Link :
             ProgressTrackerOpen* tracker = nullptr);
 
         /**
-         * Explores all knot diagrams that can be reached from this via
+         * Explores all link diagrams that can be reached from this via
          * Reidemeister moves, without exceeding a given number of additional
          * crossings.
          *
-         * This routine is only available for knots at the present time.
-         * If this link has multiple (or zero) components, then this
+         * As of Regina 7.4, this routine is now available for any connected
+         * link diagram with fewer than 64 link components.
+         * If this link has 64 or more components then this
          * routine will throw an exception (as described below).
          *
-         * This routine iterates through all knot diagrams that can be reached
+         * This routine iterates through all link diagrams that can be reached
          * from this via Reidemeister moves, without ever exceeding
          * \a height additional crossings beyond the original number.
          * With the current implementation, these diagrams **could become
@@ -2182,16 +2183,16 @@ class Link :
          * behaviour could change and/or become configurable in a future version
          * of Regina.
          *
-         * For every such knot diagram (including this starting
-         * diagram), this routine will call \a action (which must
-         * be a function or some other callable object).
+         * For every such link diagram (including this starting diagram), this
+         * routine will call \a action (which must be a function or some other
+         * callable object).
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a link (the precise type
-         *   is discussed below), representing the knot diagram that has been
+         *   is discussed below), representing the link diagram that has been
          *   found; or else (b) the first two arguments must be of types
          *   const std::string& followed by a link, representing both the
-         *   knot diagram and its knot signature.
+         *   link diagram and its signature (as returned by knotSig()).
          *   The second form is offered in order to avoid unnecessarily
          *   recomputation within the \a action function.
          *   If there are any additional arguments supplied in the list \a args,
@@ -2204,23 +2205,23 @@ class Link :
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
-         *   immediately (i.e., no more knot diagrams will be processed).
+         *   immediately (i.e., no more link diagrams will be processed).
          *
-         * - \a action may, if it chooses, make changes to this knot
-         *   (i.e., the original knot upon which rewrite() was called).
-         *   This will not affect the search: all knot diagrams
+         * - \a action may, if it chooses, make changes to this link
+         *   (i.e., the original link upon which rewrite() was called).
+         *   This will not affect the search: all link diagrams
          *   that this routine visits will be obtained via Reidemeister moves
-         *   from the original knot diagram, before any subsequent changes
+         *   from the original link diagram, before any subsequent changes
          *   (if any) were made.
          *
-         * - \a action will only be called once for each knot diagram
+         * - \a action will only be called once for each link diagram
          *   (including this starting diagram).  In other words, no
-         *   knot diagram will be revisited a second time in a single call
+         *   link diagram will be revisited a second time in a single call
          *   to rewrite().
          *
          * This routine can be very slow and very memory-intensive, since the
-         * number of knot diagrams it visits may be exponential in
-         * the number of crossings, and it records every knot diagram
+         * number of link diagrams it visits may be exponential in
+         * the number of crossings, and it records every link diagram
          * that it visits (so as to avoid revisiting the same diagram
          * again).  It is highly recommended that you begin with \a height = 1,
          * and if necessary try increasing \a height one at a time until
@@ -2229,10 +2230,10 @@ class Link :
          * If \a height is negative, then there will be _no_ bound on
          * the number of additional crossings.  This means that the
          * routine will _never terminate_, unless \a action returns
-         * \c true for some knot diagram that is passed to it.
+         * \c true for some link diagram that is passed to it.
          *
          * Since Regina 7.0, this routine will not return until the exploration
-         * of knot diagrams is complete, regardless of whether a progress
+         * of link diagrams is complete, regardless of whether a progress
          * tracker was passed.  If you need the old behaviour (where passing a
          * progress tracker caused the enumeration to start in the background),
          * simply call this routine in a new detached thread.
@@ -2247,11 +2248,11 @@ class Link :
          * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * \pre This link has precisely one component (i.e., it is a knot).
+         * \pre This link has fewer than 64 link components.
          *
-         * \exception FailedPrecondition This link is empty or has more than
-         * one component.  If a progress tracker was passed, it will be marked
-         * as finished before the exception is thrown.
+         * \exception FailedPrecondition This link has 64 or more link
+         * components.  If a progress tracker was passed, it will be marked as
+         * finished before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -2260,20 +2261,20 @@ class Link :
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you simply call it as rewrite(height, threads, action).
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Link&&) representing the knot signature and
-         * the knot diagram, as described in option (b) above.
+         * (const std::string&, Link&&) representing the signature and
+         * the link diagram, as described in option (b) above.
          *
          * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
-         * knot diagram, or a negative number if this should not be bounded.
+         * link diagram, or a negative number if this should not be bounded.
          * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \param action a function (or other callable object) to call
-         * for each knot diagram that is found.
+         * for each link diagram that is found.
          * \param args any additional arguments that should be passed to
-         * \a action, following the initial knot argument(s).
+         * \a action, following the initial link argument(s).
          * \return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
          * completion.
@@ -3709,7 +3710,7 @@ class Link :
          *   since the running time is exponential in the number of components
          *   (if we allow reversal, which is the default) then it would be
          *   completely infeasible to use this routine in practice with _more_
-         *   components than this.  If there are more than 64 link components
+         *   components than this.  If there are 64 or more link components
          *   then this routine will throw an exception.
          *
          * The signature is constructed entirely of printable characters,
@@ -3730,7 +3731,7 @@ class Link :
          *
          * This routine runs in quadratic time.
          *
-         * \exception NotImplemented This link diagram has at least 64 link
+         * \exception NotImplemented This link diagram has 64 or more link
          * components.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
@@ -3755,7 +3756,7 @@ class Link :
          *
          * See knotSig() for further details.
          *
-         * \exception NotImplemented This link diagram has at least 64 link
+         * \exception NotImplemented This link diagram has 64 or more link
          * components.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
@@ -5381,11 +5382,11 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 template <typename Action, typename... Args>
 inline bool Link::rewrite(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    if (countComponents() != 1) {
+    if (components_.size() >= 64) {
         if (tracker)
             tracker->setFinished();
         throw FailedPrecondition(
-            "rewrite() requires a link with exactly one component");
+            "rewrite() requires fewer than 64 link components");
     }
 
     // Use RetriangulateActionTraits to deduce whether the given action takes
@@ -5410,11 +5411,6 @@ inline bool Link::rewrite(int height, unsigned threads,
 
 inline bool Link::simplifyExhaustive(int height, unsigned threads,
         ProgressTrackerOpen* tracker) {
-    if (isEmpty()) {
-        if (tracker)
-            tracker->setFinished();
-        return false;
-    }
     return rewrite(height, threads, tracker,
         [](Link&& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {

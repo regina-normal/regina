@@ -1364,6 +1364,9 @@ TEST_F(Dim4Test, retriangulate) {
     // The counts that are commented out are too slow, though they can be
     // brought back in again as the retriangulation code gets faster.
 
+    verifyRetriangulate(empty, 0, 1);
+    verifyRetriangulate(empty, 1, 1);
+    verifyRetriangulate(empty, 2, 1);
     verifyRetriangulate(s4_doubleCone, 0, 1);
     verifyRetriangulate(s4_doubleCone, 1, 1);
     verifyRetriangulate(s4_doubleCone, 2, 15);

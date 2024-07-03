@@ -1554,7 +1554,7 @@ inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
 template <typename Action, typename... Args>
 inline bool Triangulation<4>::retriangulate(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    if (countComponents() != 1) {
+    if (countComponents() > 1) {
         if (tracker)
             tracker->setFinished();
         throw FailedPrecondition(

@@ -98,7 +98,7 @@ template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
 //
 bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {
-    if (countComponents() != 1) {
+    if (countComponents() > 1) {
         if (tracker)
             tracker->setFinished();
         throw FailedPrecondition(

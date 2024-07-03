@@ -4414,7 +4414,7 @@ inline const Triangulation<3>::TuraevViroSet&
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    if (countComponents() != 1) {
+    if (countComponents() > 1) {
         if (tracker)
             tracker->setFinished();
         throw FailedPrecondition(

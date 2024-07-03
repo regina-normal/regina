@@ -49,20 +49,46 @@ namespace detail {
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
             Link t = Link::fromKnotSig(sig);
+
             if (t.size() == 0) {
-                // We have a zero-crossing unknot.
-                // There is only one move we can perform on this.
-                if (maxSize > 0) {
-                    Link alt(t, false);
-                    alt.r1(regina::StrandRef(), 0, 1 /* sign */, false, true);
-                    retriang->candidate(std::move(alt), sig);
+                // We have a zero-crossing unlink (possibly empty).
+                if (t.isEmpty() || maxSize == 0) {
+                    // No moves are available at all.
                     return;
                 }
+                // The link is non-empty, and we are allowed to add crossings.
+                {
+                    // Add a twist to a single unknot component.
+                    // The side does not matter, since both options are
+                    // equivalent under reversal of individual link components.
+                    // The sign does not matter either, since there no
+                    // pre-existing crossings, and so the two options are
+                    // equivalent under reflection of the entire diagram.
+                    Link alt(t, false);
+                    alt.r1(regina::StrandRef(), 0 /* side */, 1 /* sign */,
+                        false, true);
+                    if (retriang->candidate(std::move(alt), sig))
+                        return;
+                }
+                if (t.countComponents() >= 2 && maxSize >= 2) {
+                    // Pass one unknot component over another.
+                    // The sides do not matter, since the different options
+                    // are equivalent under reversal of individual link
+                    // components.
+                    Link alt(t, false);
+                    alt.r2(regina::StrandRef(), 0 /* left side */,
+                        regina::StrandRef(), 0 /* left side */, false, true);
+                    if (retriang->candidate(std::move(alt), sig))
+                        return;
+                }
+                return;
             }
 
             // From here we assume >= 1 crossing.
             size_t i;
             int strand, side, sign;
+
+            // Moves that reduce the number of crossings:
 
             for (i = 0; i < t.size(); ++i)
                 if (t.r1(t.crossing(i), true, false)) {
@@ -80,6 +106,8 @@ namespace detail {
                         return;
                 }
 
+            // Moves that preserve the number of crossings:
+
             for (i = 0; i < t.size(); ++i)
                 for (side = 0; side < 2; ++side)
                     if (t.r3(t.crossing(i), side, true, false)) {
@@ -89,18 +117,39 @@ namespace detail {
                             return;
                     }
 
+            // All that remains is moves that increase the number of crossings.
+            if (t.size() >= maxSize)
+                return;
+
+            // We need to know the number of 0-crossing link components
+            // (though not precisely - we just need to know 0 vs 1 vs ≥2.
+            size_t nTrivial = 0;
+            for (auto c : t.components())
+                if (! c)
+                    if (++nTrivial == 2)
+                        break;
+
             // R1 twist moves on arcs are always valid.
-            if (t.size() < maxSize)
-                for (i = 0; i < t.size(); ++i)
-                    for (strand = 0; strand < 2; ++strand)
-                        for (side = 0; side < 2; ++side)
-                            for (sign = -1; sign <= 1; sign += 2) {
-                                Link alt(t, false);
-                                alt.r1(alt.crossing(i)->strand(strand),
-                                    side, sign, false, true);
-                                if (retriang->candidate(std::move(alt), sig))
-                                    return;
-                            }
+            for (i = 0; i < t.size(); ++i)
+                for (strand = 0; strand < 2; ++strand)
+                    for (side = 0; side < 2; ++side)
+                        for (sign = -1; sign <= 1; sign += 2) {
+                            Link alt(t, false);
+                            alt.r1(alt.crossing(i)->strand(strand),
+                                side, sign, false, true);
+                            if (retriang->candidate(std::move(alt), sig))
+                                return;
+                        }
+            if (nTrivial > 0) {
+                for (sign = -1; sign <= 1; sign += 2) {
+                    // The side does not matter, since both options are
+                    // equivalent under reversal of individual link components.
+                    Link alt(t, false);
+                    alt.r1(regina::StrandRef(), 0, sign, false, true);
+                    if (retriang->candidate(std::move(alt), sig))
+                        return;
+                }
+            }
 
             if (t.size() + 1 < maxSize) {
                 StrandRef upperArc, lowerArc;
@@ -190,6 +239,48 @@ namespace detail {
                             }
                         }
                     }
+
+                if (nTrivial > 0) {
+                    // We can also use a 0-crossing unknot as one of the
+                    // actors in our R2 move.
+                    //
+                    // The choice of sides does not matter here, since all
+                    // options give the same diagram modulo reversal of the
+                    // 0-crossing unknot component.  It does, however, matter
+                    // which strand gets pushed over vs under.
+                    for (i = 0; i < t.size(); ++i)
+                        for (strand = 0; strand < 2; ++strand) {
+                            StrandRef arc = t.crossing(i)->strand(strand);
+                            {
+                                Link alt(t, false);
+                                alt.r2(alt.translate(arc), 0 /* left side */,
+                                    StrandRef(), 0 /* left side */,
+                                    false, true);
+                                if (retriang->candidate(std::move(alt), sig))
+                                    return;
+                            }
+                            {
+                                Link alt(t, false);
+                                alt.r2(StrandRef(), 0 /* left side */,
+                                    alt.translate(arc), 0 /* left side */,
+                                    false, true);
+                                if (retriang->candidate(std::move(alt), sig))
+                                    return;
+                            }
+                        }
+
+                    if (nTrivial > 1) {
+                        // Finally, try performing the R2 move on two distinct
+                        // 0-crossing unknot components.  Again, all choices
+                        // of side are equivalent under component reversal.
+                        Link alt(t, false);
+                        alt.r2(regina::StrandRef(), 0 /* left side */,
+                            regina::StrandRef(), 0 /* left side */,
+                            false, true);
+                        if (retriang->candidate(std::move(alt), sig))
+                            return;
+                    }
+                }
             }
         }
     };
