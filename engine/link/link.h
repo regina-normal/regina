@@ -5434,16 +5434,15 @@ inline bool Link::rewrite(int height, unsigned threads,
 
 inline bool Link::simplifyExhaustive(int height, unsigned threads,
         ProgressTrackerOpen* tracker) {
-    return rewrite(height, threads, tracker,
-        [](Link&& alt, Link& original, size_t minCrossings) {
-            if (alt.size() < minCrossings) {
-                PacketChangeGroup span(original);
-                original = std::move(alt);
-                original.simplify();
-                return true;
-            } else
-                return false;
-        }, *this, size());
+    if (components_.size() >= 64) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "simplifyExhaustive() requires fewer than 64 link components");
+    }
+
+    return regina::detail::simplifyExhaustiveInternal<Link>(
+        *this, height, threads, tracker);
 }
 
 inline void Link::join(const StrandRef& s, const StrandRef& t) {

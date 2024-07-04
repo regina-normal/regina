@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file triangulation/detail/retriangulate.h
- *  \brief Traits classes for analysing actions that are passed to
- *  retriangulation or link rewriting functions.
+ *  \brief Traits classes and implementation details for retriangulation or
+ *  link rewriting functions.
  */
 
 #ifndef __REGINA_RETRIANGULATE_H_DETAIL
@@ -162,6 +162,51 @@ bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
 template <class Object, typename Action,
         typename FirstArg = typename CallableArg<Action, 0>::type>
 struct RetriangulateActionTraits;
+
+/**
+ * The common implementation of all exhaustive simplification functions.
+ *
+ * This routine performs exactly the task described by
+ * Link::simplifyExhaustive() or Triangluation<dim>::simplifyExhaustive()
+ * (for those dimensions where it is defined), with the following differences:
+ *
+ * - This routine assumes any preconditions have already been checked, and
+ *   exceptions thrown if they failed.
+ *
+ * See Triangulation<dim>::simplifyExhaustive() or Link::simplifyExhaustive()
+ * for full details on what this routine actually does.
+ *
+ * \tparam Object the class providing the exhaustive simplification function,
+ * such as regina::Triangulation<dim> or regina::Link.
+ *
+ * \param obj the object being simplified.
+ * \param height the maximum number of top-dimensional simplices or crossings
+ * to allow beyond the initial number in \a obj, or a negative number if
+ * this should not be bounded.
+ * \param threads the number of threads to use.  If this is 1 or smaller then
+ * the routine will run single-threaded.
+ * \param tracker a progress tracker through which progress will be reported,
+ * or \c null if no progress reporting is required.
+ * \return \c true if and only if the given object was simplified.
+ *
+ * \ingroup detail
+ */
+template <class Object>
+bool simplifyExhaustiveInternal(Object& obj, int height,
+        unsigned threads, ProgressTrackerOpen* tracker) {
+    size_t initSize = obj.size();
+    return regina::detail::retriangulateInternal<Object, false>(
+        obj, height, threads, tracker,
+        [&obj, initSize](Object&& alt) {
+            if (alt.size() < initSize) {
+                typename Object::PacketChangeGroup span(obj);
+                obj = std::move(alt);
+                obj.simplify();
+                return true;
+            } else
+                return false;
+        });
+}
 
 #ifndef __DOXYGEN
 

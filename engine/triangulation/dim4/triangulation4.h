@@ -1609,16 +1609,15 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned threads,
 
 inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
         ProgressTrackerOpen* tracker) {
-    return retriangulate(height, threads, tracker,
-        [](Triangulation<4>&& alt, Triangulation<4>& original, size_t minSimp) {
-            if (alt.size() < minSimp) {
-                PacketChangeGroup span(original);
-                original = std::move(alt);
-                original.simplify();
-                return true;
-            } else
-                return false;
-        }, *this, size());
+    if (countComponents() > 1) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "simplifyExhaustive() requires a connected triangulation");
+    }
+
+    return regina::detail::simplifyExhaustiveInternal<Triangulation<4>>(
+        *this, height, threads, tracker);
 }
 
 } // namespace regina
