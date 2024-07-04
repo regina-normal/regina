@@ -39,6 +39,7 @@
 
 using regina::Matrix3D;
 using regina::Rotation3D;
+using regina::Segment3D;
 using regina::Vector3D;
 
 namespace regina {
@@ -101,6 +102,7 @@ void add3D(pybind11::module_& m) {
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= double(), rdoc::__imul)
         .def(pybind11::self /= double(), rdoc::__idiv)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_2)
         .def("length", &Vector3D<double>::length, rdoc::length)
         .def("distance", &Vector3D<double>::distance, rdoc::distance)
         .def("midpoint", &Vector3D<double>::midpoint, rdoc::midpoint)
@@ -110,6 +112,27 @@ void add3D(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(v);
     regina::python::add_eq_operators(v, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_SWITCH(Segment3D)
+
+    auto seg = pybind11::class_<Segment3D<double>>(m, "Segment3D", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const Segment3D<double>&>(), rdoc::__copy)
+        .def(pybind11::init<const Vector3D<double>&, const Vector3D<double>&>(),
+            rdoc::__init)
+        .def("length", &Segment3D<double>::length, rdoc::length)
+        .def("point", &Segment3D<double>::point, rdoc::point)
+        .def(pybind11::self + Vector3D(), rdoc::__add)
+        .def(pybind11::self - Vector3D(), rdoc::__sub)
+        .def(pybind11::self += Vector3D(), rdoc::__iadd)
+        .def(pybind11::self -= Vector3D(), rdoc::__isub)
+        .def("midpoint", &Segment3D<double>::midpoint, rdoc::midpoint)
+        .def("closest", &Segment3D<double>::closest, rdoc::closest)
+        .def_readwrite("u", &Segment3D<double>::u, rdoc::u)
+        .def_readwrite("v", &Segment3D<double>::v, rdoc::v)
+    ;
+    regina::python::add_output_ostream(seg);
+    regina::python::add_eq_operators(seg, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH(Matrix3D)
 

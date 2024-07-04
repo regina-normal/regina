@@ -30,7 +30,7 @@ less on other more general matrix operations. For a general numerical
 matrix class you can always use ``Matrix<double>`` (or ``MatrixReal``
 in Python) instead.
 
-See Regina's notes on 3-D geometry for importing information,
+See Regina's notes on 3-D geometry for important information,
 including the inexact floating-point nature of the Vector3D class, and
 the right-handedness of Regina's coordinate system.
 
@@ -103,12 +103,37 @@ Python:
 Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
 
+// Docstring regina::python::doc::Segment3D
+static const char *Segment3D =
+R"doc(Represents a line segment in 3-dimensional space, defined by its two
+endpoints *u* and *v*.
+
+The points on this line segment are precisely those points of the form
+``𝜆v + (1-𝜆)u``, where 𝜆 is any real number between 0 and 1 inclusive.
+
+Degenerate segments (whose two endpoints are the same) are explicitly
+supported by this class.
+
+See Regina's notes on 3-D geometry for important information,
+including the inexact floating-point nature of the Vector3D class, and
+the right-handedness of Regina's coordinate system.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Python:
+    The template parameter *Real* is ``double``.
+
+Template parameter ``Real``:
+    the floating-point type to use for all storage and computation.)doc";
+
 // Docstring regina::python::doc::Vector3D
 static const char *Vector3D =
 R"doc(Represents a vector in real three-dimensional space. This class is
 also used to represent a single 3-D point.
 
-See Regina's notes on 3-D geometry for importing information,
+See Regina's notes on 3-D geometry for important information,
 including the inexact floating-point nature of the Vector3D class, and
 the right-handedness of Regina's coordinate system.
 
@@ -473,6 +498,162 @@ Specifically, after this operation:
 
 }
 
+namespace Segment3D_ {
+
+// Docstring regina::python::doc::Segment3D_::__add
+static const char *__add =
+R"doc(Returns the translation of this line segment by the given vector.
+
+Parameter ``translation``:
+    the vector to add to both endpoints of this line segment.
+
+Returns:
+    the translated copy of this line segment.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given line segment.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__default
+static const char *__default = R"doc(Creates a new line segment whose endpoints are uninitialised.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__eq
+static const char *__eq =
+R"doc(Determines if this and the given line segment have the same endpoints,
+in the same order.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating-point comparisons.
+
+Parameter ``other``:
+    the line segment to compare with this.
+
+Returns:
+    ``True`` if and only if both segments have identical first
+    endpoints *u*, and both segments have identical second endpoints
+    *v*.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__iadd
+static const char *__iadd =
+R"doc(Translates this line segment by the given vector.
+
+Parameter ``translation``:
+    the vector to add to both endpoints of this line segment.
+
+Returns:
+    a reference to this line segment, which will be modified directly.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__init
+static const char *__init =
+R"doc(Creates a new line segment with the given endpoints.
+
+Parameter ``u``:
+    the first endpoint.
+
+Parameter ``v``:
+    the second endpoint.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__isub
+static const char *__isub =
+R"doc(Translates this line segment by the negative of the given vector.
+
+Parameter ``translation``:
+    the vector to subtract from both endpoints of this line segment.
+
+Returns:
+    a reference to this line segment, which will be modified directly.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__ne
+static const char *__ne =
+R"doc(Determines if this and the given line segment do not have the same
+endpoints in the same order.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating-point comparisons.
+
+Parameter ``other``:
+    the line segment to compare with this.
+
+Returns:
+    ``True`` if and only if either the two segments have different
+    first endpoints *u*, and/or the two segments have different second
+    endpoints *v*.)doc";
+
+// Docstring regina::python::doc::Segment3D_::__sub
+static const char *__sub =
+R"doc(Returns the translation of this line segment by the negative of the
+given vector.
+
+Parameter ``translation``:
+    the vector to subtract from both endpoints of this line segment.
+
+Returns:
+    the translated copy of this line segment.)doc";
+
+// Docstring regina::python::doc::Segment3D_::closest
+static const char *closest =
+R"doc(Computes the closest point on this line segment to the given point.
+
+This routine does respect the limits defined by the two endpoints of
+this line segment. That is, the resulting closest point will always
+lie between the two endpoints of this segment inclusive.
+
+This routine does behave correctly if this segment is degenerate
+(i.e., its two endpoints are the same); however, the real number that
+is returned could be anywhere between 0 and 1 inclusive.
+
+Parameter ``p``:
+    the point whose proximity we are interested in.
+
+Returns:
+    a real number 𝜆 between 0 and 1 inclusive, where the closest point
+    to *p* on this segment is the point ``𝜆v + (1-𝜆)u``; in other
+    words, ``point(𝜆)``.)doc";
+
+// Docstring regina::python::doc::Segment3D_::length
+static const char *length =
+R"doc(Returns the length of this line segment.
+
+Returns:
+    the length of this line segment.)doc";
+
+// Docstring regina::python::doc::Segment3D_::midpoint
+static const char *midpoint =
+R"doc(Returns the midpoint of this line segment.
+
+Returns:
+    the midpoint of this line segment.)doc";
+
+// Docstring regina::python::doc::Segment3D_::point
+static const char *point =
+R"doc(Returns the point on this line segment represented by the given real
+number 𝜆.
+
+As outlined in the class notes, this line segment contains all points
+of the form ``𝜆v + (1-𝜆)u``, where 𝜆 is any real number between 0 and
+1 inclusive. This routine returns the exact point corresponding to the
+given argument 𝜆. In particular ``point(0)`` will return the first
+endpoint *u*, and ``point(1)`` will return the second endpoint *v*.
+
+Parameter ``lambda``:
+    the real number 𝜆 as described above. Typically this would be
+    between 0 and 1 inclusive; however, there is no problem passing a
+    value of 𝜆 outside this range (which, for non-degenerate segments,
+    means the resulting point will be outside the bounds of this line
+    segment).
+
+Returns:
+    the corresponding point ``𝜆v + (1-𝜆)u``.)doc";
+
+// Docstring regina::python::doc::Segment3D_::u
+static const char *u = R"doc(The first endpoint (u) of this line segment.)doc";
+
+// Docstring regina::python::doc::Segment3D_::v
+static const char *v = R"doc(The second endpoint (v) of this line segment.)doc";
+
+}
+
 namespace Vector3D_ {
 
 // Docstring regina::python::doc::Vector3D_::__add
@@ -591,6 +772,16 @@ Parameter ``scale``:
 
 Returns:
     a rescaled copy of this vector.)doc";
+
+// Docstring regina::python::doc::Vector3D_::__mul_2
+static const char *__mul_2 =
+R"doc(Returns the inner product of this and the given vector.
+
+Parameter ``rhs``:
+    the other vector to use in computing the inner product.
+
+Returns:
+    the inner product of this vector and *rhs*.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__ne
 static const char *__ne =

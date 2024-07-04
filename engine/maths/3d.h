@@ -49,7 +49,7 @@ namespace regina {
  * Represents a vector in real three-dimensional space.  This class is also
  * used to represent a single 3-D point.
  *
- * See Regina's \ref 3d "notes on 3-D geometry" for importing information,
+ * See Regina's \ref 3d "notes on 3-D geometry" for important information,
  * including the inexact floating-point nature of the Vector3D class, and the
  * right-handedness of Regina's coordinate system.
  *
@@ -235,6 +235,16 @@ struct Vector3D {
     }
 
     /**
+     * Returns the inner product of this and the given vector.
+     *
+     * \param rhs the other vector to use in computing the inner product.
+     * \return the inner product of this vector and \a rhs.
+     */
+    constexpr Real operator * (const Vector3D& rhs) const {
+        return x * rhs.x + y * rhs.y + z * rhs.z;
+    }
+
+    /**
      * Returns the length of this vector.
      *
      * If this object represents a single 3-D point, then this function
@@ -306,6 +316,232 @@ std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
 }
 
 /**
+ * Represents a line segment in 3-dimensional space, defined by its two
+ * endpoints \a u and \a v.
+ *
+ * The points on this line segment are precisely those points of the form
+ * `𝜆v + (1-𝜆)u`, where 𝜆 is any real number between 0 and 1 inclusive.
+ *
+ * Degenerate segments (whose two endpoints are the same) are explicitly
+ * supported by this class.
+ *
+ * See Regina's \ref 3d "notes on 3-D geometry" for important information,
+ * including the inexact floating-point nature of the Vector3D class, and the
+ * right-handedness of Regina's coordinate system.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \python The template parameter \a Real is \c double.
+ *
+ * \tparam Real the floating-point type to use for all storage and computation.
+ *
+ * \ingroup maths
+ */
+template <typename Real = double>
+struct Segment3D {
+    /**
+     * The first endpoint (u) of this line segment.
+     */
+    Vector3D<Real> u;
+    /**
+     * The second endpoint (v) of this line segment.
+     */
+    Vector3D<Real> v;
+
+    /**
+     * Creates a new line segment whose endpoints are uninitialised.
+     */
+    Segment3D() = default;
+
+    /**
+     * Creates a new copy of the given line segment.
+     */
+    constexpr Segment3D(const Segment3D&) = default;
+
+    /**
+     * Creates a new line segment with the given endpoints.
+     *
+     * \param u the first endpoint.
+     * \param v the second endpoint.
+     */
+    constexpr Segment3D(const Vector3D<Real>& u, const Vector3D<Real>& v) :
+            u(u), v(v) {
+    }
+
+    /**
+     * Sets this to be a copy of the given line segment.
+     *
+     * \return a reference to this line segment.
+     */
+    Segment3D& operator = (const Segment3D&) = default;
+
+    /**
+     * Determines if this and the given line segment have the same endpoints,
+     * in the same order.
+     *
+     * \warning Equality and inequailty testing, while supported, is
+     * extremely fragile, since it relies on floating-point comparisons.
+     *
+     * \param other the line segment to compare with this.
+     * \return \c true if and only if both segments have identical first
+     * endpoints \a u, and both segments have identical second endpoints \a v.
+     */
+    constexpr bool operator == (const Segment3D& other) const {
+        return (u == other.u && v == other.v);
+    }
+
+    /**
+     * Determines if this and the given line segment do not have the same
+     * endpoints in the same order.
+     *
+     * \warning Equality and inequailty testing, while supported, is
+     * extremely fragile, since it relies on floating-point comparisons.
+     *
+     * \param other the line segment to compare with this.
+     * \return \c true if and only if either the two segments have different
+     * first endpoints \a u, and/or the two segments have different second
+     * endpoints \a v.
+     */
+    constexpr bool operator != (const Segment3D& other) const {
+        return (u != other.u || v != other.v);
+    }
+
+    /**
+     * Returns the length of this line segment.
+     *
+     * \return the length of this line segment.
+     */
+    constexpr Real length() const {
+        return (u - v).length();
+    }
+
+    /**
+     * Returns the point on this line segment represented by the given real
+     * number 𝜆.
+     *
+     * As outlined in the class notes, this line segment contains all points
+     * of the form `𝜆v + (1-𝜆)u`, where 𝜆 is any real number between 0 and 1
+     * inclusive.  This routine returns the exact point corresponding to the
+     * given argument 𝜆.  In particular `point(0)` will return the first
+     * endpoint \a u, and `point(1)` will return the second endpoint \a v.
+     *
+     * \param lambda the real number 𝜆 as described above.  Typically this
+     * would be between 0 and 1 inclusive; however, there is no problem
+     * passing a value of 𝜆 outside this range (which, for non-degenerate
+     * segments, means the resulting point will be outside the bounds of
+     * this line segment).
+     * \return the corresponding point `𝜆v + (1-𝜆)u`.
+     */
+    constexpr Vector3D<Real> point(Real lambda) const {
+        return v * lambda + u * (1 - lambda);
+    };
+
+    /**
+     * Returns the translation of this line segment by the given vector.
+     *
+     * \param translation the vector to add to both endpoints of this
+     * line segment.
+     * \return the translated copy of this line segment.
+     */
+    constexpr Segment3D operator + (const Vector3D<Real>& translation) const {
+        return { u + translation, v + translation };
+    };
+
+    /**
+     * Translates this line segment by the given vector.
+     *
+     * \param translation the vector to add to both endpoints of this
+     * line segment.
+     * \return a reference to this line segment, which will be modified
+     * directly.
+     */
+    Segment3D& operator += (const Vector3D<Real>& translation) {
+        u += translation;
+        v += translation;
+        return *this;
+    }
+
+    /**
+     * Returns the translation of this line segment by the negative of the
+     * given vector.
+     *
+     * \param translation the vector to subtract from both endpoints of this
+     * line segment.
+     * \return the translated copy of this line segment.
+     */
+    constexpr Segment3D operator - (const Vector3D<Real>& translation) const {
+        return { u - translation, v - translation };
+    };
+
+    /**
+     * Translates this line segment by the negative of the given vector.
+     *
+     * \param translation the vector to subtract from both endpoints of this
+     * line segment.
+     * \return a reference to this line segment, which will be modified
+     * directly.
+     */
+    Segment3D& operator -= (const Vector3D<Real>& translation) {
+        u -= translation;
+        v -= translation;
+        return *this;
+    }
+
+    /**
+     * Returns the midpoint of this line segment.
+     *
+     * \return the midpoint of this line segment.
+     */
+    constexpr Vector3D<Real> midpoint() const {
+        return { (u.x + v.x) / 2,
+                 (u.y + v.y) / 2,
+                 (u.z + v.z) / 2};
+    }
+
+    /**
+     * Computes the closest point on this line segment to the given point.
+     *
+     * This routine does respect the limits defined by the two endpoints of
+     * this line segment.  That is, the resulting closest point will always
+     * lie between the two endpoints of this segment inclusive.
+     *
+     * This routine does behave correctly if this segment is degenerate
+     * (i.e., its two endpoints are the same); however, the real number that
+     * is returned could be anywhere between 0 and 1 inclusive.
+     *
+     * \param p the point whose proximity we are interested in.
+     * \return a real number 𝜆 between 0 and 1 inclusive, where the closest
+     * point to \a p on this segment is the point `𝜆v + (1-𝜆)u`; in other
+     * words, `point(𝜆)`.
+     */
+    Real closest(const Vector3D<Real>& p) const {
+        auto uv = v - u;
+        auto norm = uv * uv;
+        if (norm > 0) {
+            auto ans = (v - u) * (p - u) / norm;
+            return (ans > 1 ? 1 : ans < 0 ? 0 : ans);
+        } else
+            return 0; // degenerate segment
+    }
+};
+
+/**
+ * Writes the given line segment to the given output stream.
+ * The segment will be written in the form `[(...), (...)]`.
+ *
+ * \param out the output stream to which to write.
+ * \param s the line segment to write.
+ * \return a reference to \a out.
+ *
+ * \ingroup maths
+ */
+template <typename Real>
+std::ostream& operator << (std::ostream& out, const Segment3D<Real>& s) {
+    return out << '[' << s.u << ", " << s.v << ']';
+}
+
+/**
  * Represents a linear transformation in three-dimensional space, as
  * represented by a real 3-by-3 matrix.
  *
@@ -322,7 +558,7 @@ std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
  * other more general matrix operations.  For a general numerical matrix class
  * you can always use `Matrix<double>` (or `MatrixReal` in Python) instead.
  *
- * See Regina's \ref 3d "notes on 3-D geometry" for importing information,
+ * See Regina's \ref 3d "notes on 3-D geometry" for important information,
  * including the inexact floating-point nature of the Vector3D class, and the
  * right-handedness of Regina's coordinate system.
  *
