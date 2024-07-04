@@ -412,7 +412,7 @@
     (hyper)surfaces;</para></listitem>
    <listitem><para>whether you asked for
     <link linkend="surfaces-embeddedonly">embedded (hyper)surfaces only</link>,
-    or for immersed and/or branched (hyper)surfaces also;</para></listitem>
+    or for immersed and/or singular (hyper)surfaces also;</para></listitem>
    <listitem><para>the normal or almost normal
     <link linkend="surfaces-selectcoords">coordinate system</link>
     in which you performed the enumeration.</para></listitem>
@@ -643,9 +643,24 @@
      <glosslist>
       <glossentry id="surfaces-propeuler">
        <glossterm><guilabel>Euler</guilabel> (for 3-manifolds only)</glossterm>
-       <glossdef><para>
-        Shows the Euler characteristic of the surface.
-       </para></glossdef>
+       <glossdef>
+        <para>
+         Shows the Euler characteristic of the surface.
+        </para>
+        <para>
+         For properly embedded surfaces, this is of course just the ordinary
+         Euler characteristic of the surface.
+        </para>
+        <para>
+         For immersed or singular surfaces, the situation is more complex
+         since &regina; does not know how many branch points there are (if any).
+         Instead it will compute everything locally, assuming that the surface
+         is an immersion.  This means that for an immersed surface the result
+         will be correct, but for a <emphasis>singular</emphasis> surface
+         it will report a larger number than it should
+         (essentially each branch point will be counted as multiple vertices).
+        </para>
+       </glossdef>
       </glossentry>
       <glossentry id="hypersurfaces-prophomology">
        <glossterm><guilabel>Homology</guilabel> (for 4-manifolds only)</glossterm>
@@ -1595,6 +1610,13 @@
         Check this to allow only surfaces with particular Euler
         characteristics.  You can allow more than one Euler
         characteristic; simply type them all into the box provided.
+       </para>
+       <para>
+        For immersed or singular surfaces, the number(s) you type here
+        will be matched against the <emphasis>reported</emphasis> Euler
+        characteristic, which for singular surfaces may be larger than it
+        should be.  See the <link linkend="surfaces-propeuler">notes on Euler
+        characteristic</link> for details.
        </para>
       </listitem>
      </varlistentry>

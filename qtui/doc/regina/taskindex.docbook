@@ -227,6 +227,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>branched normal (hyper)surfaces</primaryie>
+  <seeie>See: immersed and singular normal (hyper)surfaces</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="services">bug reporting</link></primaryie>
  </indexentry>
 
@@ -962,9 +967,10 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>immersed / singular</primaryie>
-  <secondaryie><link linkend="surfaces-embeddedonly">normal surfaces
-   or hypersurfaces, enumerating</link></secondaryie>
+  <primaryie>immersed and singular normal (hyper)surfaces</primaryie>
+  <secondaryie><link linkend="surfaces-embeddedonly">enumerating</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propeuler">Euler
+   characteristic</link></secondaryie>
   <secondaryie><link linkend="options-general">warn before
    enumerating</link></secondaryie>
  </indexentry>
@@ -1295,6 +1301,8 @@
    recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-creation">enumerating vertex
    or fundamental normal (hyper)surfaces</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propeuler">Euler
+   characteristic of immersed and singular surfaces</link></secondaryie>
   <secondaryie><link linkend="export-csvsurfacelist">exporting to
    &csv; files</link></secondaryie>
   <secondaryie><link linkend="surfaces-filtering">filtering surface
@@ -1710,8 +1718,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>singular / immersed normal surfaces</primaryie>
-  <seeie>See: immersed / singular surfaces</seeie>
+  <primaryie>singular normal (hyper)surfaces</primaryie>
+  <seeie>See: immersed and singular normal (hyper)surfaces</seeie>
  </indexentry>
 
  <indexentry>
