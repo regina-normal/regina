@@ -155,13 +155,13 @@ QWidget* SurfacesSummaryUI::getInterface() {
 }
 
 void SurfacesSummaryUI::refresh() {
-    unsigned long spun = 0;
-    unsigned long bounded = 0;
-    unsigned long closed = 0;
-    std::map<regina::LargeInteger, unsigned long>
+    size_t spun = 0;
+    size_t bounded = 0;
+    size_t closed = 0;
+    std::map<regina::LargeInteger, size_t>
         countClosed[2][2], countBounded[2][2]; /* 2-sided, orbl ? */
     std::set<regina::LargeInteger> allECsClosed, allECsBounded;
-    std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
+    std::set<std::pair<int, int>> allTypesClosed, allTypesBounded;
 
     regina::LargeInteger euler;
     std::pair<int, int> type;
@@ -192,7 +192,7 @@ void SurfacesSummaryUI::refresh() {
         }
     }
 
-    unsigned long n = surfaces->size();
+    size_t n = surfaces->size();
     if (n == 0)
         tot->setText(tr("<qt><b>No surfaces at all.</b></qt>"));
     else if (n == 1)
@@ -200,9 +200,9 @@ void SurfacesSummaryUI::refresh() {
     else
         tot->setText(tr("<qt><b>%1 surfaces in total.</b></qt>").arg(n));
 
-    std::set<std::pair<int, int> >::const_iterator typeIt;
+    std::set<std::pair<int, int>>::const_iterator typeIt;
     std::set<regina::LargeInteger>::const_iterator ECIt;
-    std::map<regina::LargeInteger, unsigned long>::const_iterator countIt;
+    std::map<regina::LargeInteger, size_t>::const_iterator countIt;
     QTreeWidgetItem *row, *header;
     int col;
 
