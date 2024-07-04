@@ -29,10 +29,10 @@ exact computations (for example, of link invariants), use the Link
 class instead.
 
 This class supports links with any number of components (including
-zero). Each component is made up of a sequence of nodes, which are
-points in 3-dimensional space represented by objects of type Vector3D.
-The nodes in each component are connected by straight line segments to
-form a closed loop.
+zero). Each component is made up of a non-empty sequence of nodes,
+which are points in 3-dimensional space represented by objects of type
+Vector3D. The nodes in each component are connected by straight line
+segments to form a closed loop.
 
 It is assumed that this indeed forms an embedding (i.e., no two nodes
 are equal, no node meets any other line segment beyond the two that it
@@ -40,6 +40,8 @@ sits between on its link component, and no two line segments meet
 beyond the expect cases of two adjacent segments touching at their
 common endpoint). This is _not_ checked, and indeed the use of
 floating point arithmetic makes it difficult to check this precisely.
+Note that, as a consequence of forming an embedding, each link
+component must contain at least three nodes.
 
 It is assumed that the underlying coordinate system is right-handed.
 
@@ -103,11 +105,11 @@ R"doc(Creates a new link whose components are supplied by the given
 sequences of points in 3-space.
 
 Each element of the given sequence should represent a separate link
-component. Each component should be given as a sequence of points in
-3-space (any reasonable container type will do; see the requirements
-for the *iterator* type below). These are the points that will be
-stored directly in the Component structure, which means that to form
-the actual geometry of the link component:
+component. Each component should be given as a sequence of at least
+three points in 3-space (any reasonable container type will do; see
+the requirements for the *iterator* type below). These are the points
+that will be stored directly in the Component structure, which means
+that to form the actual geometry of the link component:
 
 * each node in the sequence is joined by a straight line segment to
   the node that follows it (and likewise, the last node is joined to
