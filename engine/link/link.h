@@ -2155,7 +2155,8 @@ class Link :
          * (multithreaded) mode; simply pass the number of parallel threads
          * in the argument \a threads.  Even in multithreaded mode, this
          * routine will not return until processing has finished (i.e., either
-         * the diagram was simplified or the search was exhausted).
+         * the diagram was simplified or the search was exhausted), and any
+         * change to this link diagram will happen in the calling thread.
          *
          * If this routine is unable to simplify the link diagram, then
          * this link diagram will not be changed.

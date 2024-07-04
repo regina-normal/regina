@@ -169,6 +169,8 @@ Version 7.4  [ (to be announced) ]
               (instead of containing a single 0) for zero-crossing components.
             - Routine selfFrame() now returns a boolean indicating whether
               anything changed.
+            - Routine simplifyExhaustive() now ensures that any change to the
+              link diagram happens on the calling thread.
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
@@ -361,12 +363,16 @@ Version 7.4  [ (to be announced) ]
               name (SnapPy does not write these, but some other tools do).
             - Routines retriangulate() and simplifyExhaustive() no longer
               throw an exception when called on an empty triangulation.
+            - Routine simplifyExhaustive() now ensures that any change to the
+              triangulation happens on the calling thread.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer
               throw an exception when called on an empty triangulation.
+            - Routine simplifyExhaustive() now ensures that any change to the
+              triangulation happens on the calling thread.
         Class Vector<T>:
             - Added a copy constructor that takes a vector whose elements are
               of a different type.

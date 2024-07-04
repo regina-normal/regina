@@ -194,18 +194,29 @@ struct RetriangulateActionTraits;
 template <class Object>
 bool simplifyExhaustiveInternal(Object& obj, int height,
         unsigned threads, ProgressTrackerOpen* tracker) {
+    // Make a place for the callback to put a simplified object, if it finds
+    // one.  Afterwards we will move this into obj, since the change to obj
+    // must happen on the calling thread.  The upshot is that we end up moving
+    // the result twice (not once), but moves are cheap and thread safety
+    // matters.
+    std::unique_ptr<Object> simplified;
+
     size_t initSize = obj.size();
-    return regina::detail::retriangulateInternal<Object, false>(
-        obj, height, threads, tracker,
-        [&obj, initSize](Object&& alt) {
-            if (alt.size() < initSize) {
-                typename Object::PacketChangeGroup span(obj);
-                obj = std::move(alt);
-                obj.simplify();
-                return true;
-            } else
-                return false;
-        });
+    if (regina::detail::retriangulateInternal<Object, false>(
+            obj, height, threads, tracker,
+            [&simplified, initSize](Object&& alt) {
+                if (alt.size() < initSize) {
+                    simplified.reset(new Object(std::move(alt)));
+                    return true;
+                } else
+                    return false;
+            })) {
+        typename Object::PacketChangeGroup span(obj);
+        obj = std::move(*simplified);
+        obj.simplify();
+        return true;
+    } else
+        return false;
 }
 
 #ifndef __DOXYGEN
