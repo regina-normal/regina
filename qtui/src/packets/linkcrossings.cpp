@@ -253,7 +253,7 @@ QSize CrossingDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         PacketTabbedUI* useParentUI) :
-        PacketEditorTab(useParentUI), link(packet), useCrossing(-1) {
+        PacketEditorTab(useParentUI), link(packet), useStrand(-1) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
@@ -280,7 +280,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     ui->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(contextCrossing(const QPoint&)));
+        this, SLOT(contextStrand(const QPoint&)));
 
     if (explnPictorial.isNull())
         explnPictorial = tr("Shows a pictorial representation of each "
@@ -774,44 +774,55 @@ void LinkCrossingsUI::typeChanged(int) {
         }
 }
 
-void LinkCrossingsUI::contextCrossing(const QPoint& pos) {
+void LinkCrossingsUI::contextStrand(const QPoint& pos) {
     for (auto l : componentLists) {
         if (l && l->geometry().contains(pos)) {
             QModelIndex index = l->indexAt(l->mapFrom(ui, pos));
             if (! index.isValid()) {
-                useCrossing = -1;
+                useStrand = -1;
                 return;
             }
 
-            useCrossing = static_cast<CrossingModel*>(l->model())->
-                strandAt(index).crossing()->index();
+            regina::StrandRef s = static_cast<CrossingModel*>(l->model())->
+                strandAt(index);
+            useStrand = s.id();
+            size_t useCrossing = useStrand >> 1;
 
             QMenu m(tr("Context menu"), ui);
 
             QAction change(tr("Change crossing %1").arg(useCrossing), this);
             QAction resolve(tr("Resolve crossing %1").arg(useCrossing), this);
+            QAction reverse(tr("Reverse component"), this);
             connect(&change, SIGNAL(triggered()), this, SLOT(changeCrossing()));
             connect(&resolve, SIGNAL(triggered()), this, SLOT(resolveCrossing()));
+            connect(&reverse, SIGNAL(triggered()), this, SLOT(reverseComponent()));
             m.addAction(&change);
             m.addAction(&resolve);
+            m.addAction(&reverse);
 
             m.exec(ui->mapToGlobal(pos));
             return;
         }
     }
-    useCrossing = -1;
+    useStrand = -1;
 }
 
 void LinkCrossingsUI::changeCrossing() {
-    if (useCrossing >= 0 && useCrossing < link->size())
-        link->change(link->crossing(useCrossing));
-    useCrossing = -1;
+    if (useStrand >= 0 && useStrand < 2 * link->size())
+        link->change(link->crossing(useStrand >> 1));
+    useStrand = -1;
 }
 
 void LinkCrossingsUI::resolveCrossing() {
-    if (useCrossing >= 0 && useCrossing < link->size())
-        link->resolve(link->crossing(useCrossing));
-    useCrossing = -1;
+    if (useStrand >= 0 && useStrand < 2 * link->size())
+        link->resolve(link->crossing(useStrand >> 1));
+    useStrand = -1;
+}
+
+void LinkCrossingsUI::reverseComponent() {
+    if (useStrand >= 0 && useStrand < 2 * link->size())
+        link->reverse(link->strand(useStrand));
+    useStrand = -1;
 }
 
 void LinkCrossingsUI::updatePreferences() {

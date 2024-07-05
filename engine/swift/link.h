@@ -186,6 +186,12 @@ struct SharedLink {
             packet_->reverse();
         }
 
+        void reverse(StrandRefAlt strand) {
+            ssize_t id = strand.id();
+            if (id >= 0 && id < 2 * packet_->size())
+                packet_->reverse(packet_->strand(id));
+        }
+
         bool simplify() {
             return packet_->simplify();
         }

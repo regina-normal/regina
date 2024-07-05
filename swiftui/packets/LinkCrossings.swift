@@ -152,6 +152,10 @@ struct LinkCrossingsView: View {
                                                     var packet = wrapper.packet
                                                     packet.resolve(s)
                                                 }
+                                                Button("Reverse component") {
+                                                    var packet = wrapper.packet
+                                                    packet.reverse(s)
+                                                }
                                             }
                                         }
                                 }
