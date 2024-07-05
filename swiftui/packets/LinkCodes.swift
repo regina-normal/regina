@@ -67,6 +67,31 @@ struct LinkCodesView: View {
         }
     }
     
+    // TODO: Split this into a separate view class.
+    @ViewBuilder func noSigs() -> some View {
+        let detail = "Knot signatures are only available for links with fewer than 64 components."
+        
+        HStack {
+            Spacer()
+            if #available(macOS 14.0, iOS 17.0, *) {
+                ContentUnavailableView {
+                    Label {
+                        Text("No knot signature")
+                    } icon: {
+                        // For now we use the native size of this icon (64pt).
+                        // Probably this is reasonable.
+                        Image("Link-Large").renderingMode(.template)
+                    }
+                } description: {
+                    Text(detail)
+                }
+            } else {
+                Text(detail)
+            }
+            Spacer()
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             // TODO: The text here needs to be scrollable.
@@ -112,13 +137,13 @@ struct LinkCodesView: View {
                     Spacer()
                 }
             case .signature:
-                if link.countComponents() == 1 {
+                if link.countComponents() < 64 {
                     // TODO: Find a way to disable word wrap..?
                     // Not sure if SwiftUI makes this possible for Text.
                     Text(String(link.knotSig(true, true)))
                 } else {
                     Spacer()
-                    onlyKnots(code: "knot signatures", plural: true)
+                    noSigs()
                     Spacer()
                 }
            case .pd:

@@ -79,12 +79,11 @@
      <listitem id="link-new-knotsig">
       <para>&regina;'s own <firstterm>knot signatures</firstterm>,
        which are compact sequences of letters, digits and/or punctuation
-       that uniquely identify a knot up to combinatorial isomorphism.
+       that uniquely identify a link diagram up to combinatorial isomorphism.
        Here <firstterm>combinatorial isomorphism</firstterm>
-       includes relabelling the crossings,
-       reflecting or rotating the entire diagram,
-       and/or reversing the orientation of the knot (i.e., the direction
-       of travel).
+       includes relabelling the crossings and/or components,
+       reflecting the entire diagram, rotating connected components of the
+       diagram, and/or reversing individual link components.
       </para>
       <para>
        An example is <literal>dabcabcv-</literal>, which represents
@@ -93,6 +92,8 @@
       <para>
        Knot signatures played a significant role in the 19-crossing
        knot tabulation <xref linkend="bib-burton-knots"/>.
+       Despite their name, knot signatures are now supported not just for
+       knots but also any links with fewer than 64 components.
       </para>
      </listitem>
      <listitem id="link-new-classical-gauss">
@@ -646,10 +647,11 @@
        <para>
         Knot signatures are &regina;s own text-based format, and were
         designed to have a combinatorial uniqueness property:
-        two knot diagrams have the same signature
+        two link diagrams have the same signature
         if and only if they are combinatorially isomorphic
-        (which includes relabelling crossings, reflecting,
-        rotating and/or reversing the knot).
+        (which includes relabelling crossings and/or components,
+        reflecting the entire diagram, rotating connected components of the
+        diagram, and/or reversing individual link components).
        </para>
        <para>
         For a more detailed discussion of knot signatures,
@@ -657,8 +659,8 @@
         knots from knot signatures</link>.
        </para>
        <para>
-        Currently &regina; only displays knot signatures
-        for knots, not multiple component links.
+        Despite their name, knot signatures are now supported not just for
+        knots but also any links with fewer than 64 components.
         Be aware that knot signatures are case-sensitive
         (i.e., upper-case and lower-case matters).
        </para>
@@ -1214,7 +1216,7 @@
    <title>Reflection, Rotation and Reversal</title>
    <para>
     &regina; offers some simple transformations related to orientation:
-    each of these changes will alter the knot diagram, but the
+    each of these changes will alter the link diagram, but the
     <link linkend="link-new-knotsig">knot signature</link> will stay
     the same.
    </para>

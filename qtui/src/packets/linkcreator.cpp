@@ -128,8 +128,8 @@ LinkCreator::LinkCreator(ReginaMain*) {
         "oriented Gauss code, classical Gauss code, "
         "Dowker-Thistlethwaite notation, or planar diagram code "
         "representing a knot or link.<p>"
-        "At present, all except for planar diagram codes "
-        "can only be used for knots, not multiple-component links.<p>"
+        "At present, only knot signatures and planar diagram codes "
+        "can be used for multiple-component links.<p>"
         "See the Regina Handbook for more information on each of these "
         "types of codes.</qt>");
         /*
@@ -169,8 +169,8 @@ LinkCreator::LinkCreator(ReginaMain*) {
         "<li><tt>4 6 2</tt></li>"
         "<li><tt>bca</tt></li>"
         "<li><tt>[[1,4,2,5], [3,6,4,1], [5,2,6,3]]</tt></li></ul><p>"
-        "At present, all except planar diagram codes can only "
-        "represent knots, not multiple-component links.</qt>");
+        "At present, only knot signatures and planar diagram codes "
+        "are able to represent multiple-component links.</qt>");
     label->setWordWrap(true);
     label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->addLayout(subSubLayout);
