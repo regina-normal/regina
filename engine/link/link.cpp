@@ -179,7 +179,7 @@ Link& Link::operator = (Link&& src) {
 
 Link::Link(const std::string& description) {
     try {
-        *this = fromKnotSig(description);
+        *this = fromSig(description);
         return;
     } catch (const InvalidArgument&) {
     }

@@ -847,7 +847,7 @@ class Link :
          * At present, Regina understands the following types of strings
          * (and attempts to parse them in the following order):
          *
-         * - knot signatures, as used by fromKnotSig();
+         * - knot/link signatures, as used by fromSig();
          * - oriented Gauss codes, as used by fromOrientedGauss();
          * - classical Gauss codes, as used by fromGauss();
          * - numeric or alphabetical Dowker-Thistlethwaite strings, as
@@ -2212,7 +2212,7 @@ class Link :
          *   is discussed below), representing the link diagram that has been
          *   found; or else (b) the first two arguments must be of types
          *   const std::string& followed by a link, representing both the
-         *   link diagram and its signature (as returned by knotSig()).
+         *   link diagram and its signature (as returned by sig()).
          *   The second form is offered in order to avoid unnecessarily
          *   recomputation within the \a action function.
          *   If there are any additional arguments supplied in the list \a args,
@@ -3737,7 +3737,7 @@ class Link :
          * and has length proportional to `n log n`, where \a n
          * is the number of crossings.
          *
-         * The routine fromKnotSig() can be used to recover a link diagram from
+         * The routine fromSig() can be used to recover a link diagram from
          * its signature.  The resulting diagram might not be identical to
          * the original, but it will be related by zero or more applications
          * of relabelling, rotating connected components of the diagram, and/or
@@ -3764,17 +3764,20 @@ class Link :
          * there are symmetries).
          * \return the signature for this link diagram.
          */
-        std::string knotSig(
+        std::string sig(
             bool allowReflection = true, bool allowReversal = true) const;
 
         /**
-         * Alias for knotSig(), which constructs the signature for this
+         * Alias for sig(), which constructs the signature for this
          * knot or link diagram.
          *
-         * This alias sig() is provided to assist with generic code that can
-         * work with both links and triangulations.
+         * This alias knotSig() has been kept to reflect the fact that, in
+         * older versions of Regina, these signatures were only available for
+         * single-component knots; moreover the old name "knot signatures" can
+         * still be found in the literature.  While this routine is not
+         * deprecated, it is recommended to use sig() in new code.
          *
-         * See knotSig() for further details.
+         * See sig() for further details.
          *
          * \exception NotImplemented This link diagram has 64 or more link
          * components.
@@ -3789,7 +3792,7 @@ class Link :
          * there are symmetries).
          * \return the signature for this link diagram.
          */
-        std::string sig(
+        std::string knotSig(
             bool allowReflection = true, bool allowReversal = true) const;
 
         /**
@@ -3997,42 +4000,45 @@ class Link :
             ComponentIterator beginComponents, ComponentIterator endComponents);
 
         /**
-         * Recovers a knot diagram from its signature.
-         * See knotSig() for more information on knot signatures.
+         * Recovers a link diagram from its knot/link signature.
+         * See sig() for more information on these signatures.
          *
-         * Calling knotSig() followed by fromKnotSig() is not guaranteed to
+         * Calling sig() followed by fromSig() is not guaranteed to
          * produce an _identical_ knot diagram to the original, but it is
          * guaranteed to produce one that is related by relabelling, rotating
          * connected components of the diagram, and optionally (according to
-         * the arguments that were passed to knotSig()) reflection of the
+         * the arguments that were passed to sig()) reflection of the
          * entire diagram and/or reversal of individual link components.
          *
          * \exception InvalidArgument The given string was not a valid
-         * knot signature.
+         * knot/link signature.
          *
-         * \param sig the signature of the knot diagram to construct.
+         * \param sig the signature of the link diagram to construct.
          * Note that signatures are case-sensitive.
-         * \return the reconstructed knot.
-         */
-        static Link fromKnotSig(const std::string& sig);
-
-        /**
-         * Alias for fromKnotSig(), to recover a knot diagram from its
-         * signature.
-         *
-         * This alias fromSig() is provided to assist with generic code
-         * that can work with both knots and triangulations.
-         *
-         * See fromKnotSig() for further details.
-         *
-         * \exception InvalidArgument The given string was not a valid
-         * knot signature.
-         *
-         * \param sig the signature of the knot diagram to construct.
-         * Note that signatures are case-sensitive.
-         * \return the reconstructed knot.
+         * \return the reconstructed link diagram.
          */
         static Link fromSig(const std::string& sig);
+
+        /**
+         * Alias for fromSig(), to recover a link diagram from its
+         * knot/link signature.
+         *
+         * This alias fromKnotSig() has been kept to reflect the fact that, in
+         * older versions of Regina, these signatures were only available for
+         * single-component knots; moreover the old name "knot signatures" can
+         * still be found in the literature.  While this routine is not
+         * deprecated, it is recommended to use fromSig() in new code.
+         *
+         * See fromSig() for further details.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * knot/link signature.
+         *
+         * \param sig the signature of the link diagram to construct.
+         * Note that signatures are case-sensitive.
+         * \return the reconstructed link diagram.
+         */
+        static Link fromKnotSig(const std::string& sig);
 
         /**
          * Reconstructs a link from its given tight encoding.
@@ -5414,7 +5420,7 @@ inline bool Link::rewrite(int height, unsigned threads,
     }
 
     // Use RetriangulateActionTraits to deduce whether the given action takes
-    // a link or both a knot signature and link as its initial argument(s).
+    // a link or both a signature and link as its initial argument(s).
     using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
     static_assert(Traits::valid,
         "The action that is passed to rewrite() does not take the correct initial argument type(s).");
@@ -5451,12 +5457,12 @@ inline void Link::join(const StrandRef& s, const StrandRef& t) {
     t.crossing_->prev_[t.strand_] = s;
 }
 
-inline std::string Link::sig(bool allowReflection, bool allowReversal) const {
-    return knotSig(allowReflection, allowReversal);
+inline std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
+    return sig(allowReflection, allowReversal);
 }
 
-inline Link Link::fromSig(const std::string& sig) {
-    return Link::fromKnotSig(sig);
+inline Link Link::fromKnotSig(const std::string& sig) {
+    return Link::fromSig(sig);
 }
 
 inline std::string Link::dumpConstruction() const {

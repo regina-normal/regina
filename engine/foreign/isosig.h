@@ -53,7 +53,7 @@ class Container;
  * though the type of object must be known in advance and fixed for the
  * entire function call using the template parameter \a ObjectType.
  * These signatures will be converted into knots and/or triangulations using
- * Link::fromKnotSig() and Triangulation<dim>::fromIsoSig() respectively.
+ * Link::fromSig() and Triangulation<dim>::fromIsoSig() respectively.
  *
  * A new container will be returned; the imported knots or triangulations will
  * be inserted as children of this container.  The container will not be

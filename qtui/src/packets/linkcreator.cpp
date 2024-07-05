@@ -124,11 +124,11 @@ LinkCreator::LinkCreator(ReginaMain*) {
     area->setLayout(subLayout);
     QBoxLayout* subSubLayout = new QHBoxLayout();
     subSubLayout->setContentsMargins(0, 0, 0, 0);
-    expln = QObject::tr("<qt>A knot signature, "
+    expln = QObject::tr("<qt>A knot/link signature, "
         "oriented Gauss code, classical Gauss code, "
         "Dowker-Thistlethwaite notation, or planar diagram code "
         "representing a knot or link.<p>"
-        "At present, only knot signatures and planar diagram codes "
+        "At present, only knot/link signatures and planar diagram codes "
         "can be used for multiple-component links.<p>"
         "See the Regina Handbook for more information on each of these "
         "types of codes.</qt>");
@@ -158,7 +158,7 @@ LinkCreator::LinkCreator(ReginaMain*) {
     code->setWhatsThis(expln);
     subSubLayout->addWidget(code, 1);
     label = new QLabel("<qt>Here you can enter:<p>"
-        "<ul><li>a knot signature;</li>"
+        "<ul><li>a knot/link signature;</li>"
         "<li>an oriented or classical Gauss code;</li>"
         "<li>numerical or alphabetical Dowker-Thistlethwaite notation;</li>"
         "<li>a planar diagram code.</li></ul><p>"
@@ -169,7 +169,7 @@ LinkCreator::LinkCreator(ReginaMain*) {
         "<li><tt>4 6 2</tt></li>"
         "<li><tt>bca</tt></li>"
         "<li><tt>[[1,4,2,5], [3,6,4,1], [5,2,6,3]]</tt></li></ul><p>"
-        "At present, only knot signatures and planar diagram codes "
+        "At present, only knot/link signatures and planar diagram codes "
         "are able to represent multiple-component links.</qt>");
     label->setWordWrap(true);
     label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -268,7 +268,7 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given text code."),
-                QObject::tr("<qt>Here you can enter a knot signature, "
+                QObject::tr("<qt>Here you can enter a knot/link signature, "
                     "an oriented or classical Gauss code, numerical or "
                     "alphabetical Dowker-Thistlethwaite notation, or "
                     "a planar diagram code.<p>"

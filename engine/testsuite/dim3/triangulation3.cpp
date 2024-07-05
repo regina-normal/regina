@@ -113,7 +113,7 @@ class Dim3Test : public TriangulationTest<3> {
         TestCase figure8 { Example<3>::figureEight(),
             "Figure eight knot complement" };
         TestCase trefoil { Example<3>::trefoil(), "Trefoil complement" };
-        TestCase knot18 { regina::Link::fromKnotSig(
+        TestCase knot18 { regina::Link::fromSig(
                 "sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE").
                 complement(),
             "18-crossing knot complement" };

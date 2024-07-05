@@ -134,7 +134,7 @@ struct LinkCreator: View {
                 case .code:
                     Text("""
                         Supported text codes:
-                            • Knot signatures
+                            • Knot/link signatures
                             • Gauss codes (oriented / classical)
                             • Dowker-Thistlethwaite notation
                             • Planar diagram codes

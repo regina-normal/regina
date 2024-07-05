@@ -400,7 +400,7 @@ namespace {
     }
 }
 
-std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
+std::string Link::sig(bool allowReflection, bool allowReversal) const {
     if (components_.size() >= 64)
         throw NotImplemented("Signatures are only implemented for "
             "fewer than 64 link components");
@@ -472,7 +472,7 @@ std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
     return std::move(enc).str();
 }
 
-Link Link::fromKnotSig(const std::string& sig) {
+Link Link::fromSig(const std::string& sig) {
     Link ans;
 
     Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
@@ -483,12 +483,12 @@ Link Link::fromKnotSig(const std::string& sig) {
             // This is the signature for the empty link.
             dec.skip();
             if (! dec.done())
-                throw InvalidArgument("fromKnotSig(): "
+                throw InvalidArgument("fromSig(): "
                     "unexpected additional characters");
             return ans;
         case 0:
             // An empty string is _not_ the signature for the empty link.
-            throw InvalidArgument("fromKnotSig(): signature is empty");
+            throw InvalidArgument("fromSig(): signature is empty");
     }
 
     try {
@@ -525,7 +525,7 @@ Link Link::fromKnotSig(const std::string& sig) {
                     // A sentinel indicating the start of a new link component.
                     compStart[++comp] = i;
                 } else {
-                    throw InvalidArgument("fromKnotSig(): "
+                    throw InvalidArgument("fromSig(): "
                         "invalid destination crossing");
                 }
             }
@@ -539,7 +539,7 @@ Link Link::fromKnotSig(const std::string& sig) {
                 }
                 if (bits) {
                     throw InvalidArgument(
-                        "fromKnotSig(): extraneous strand bits");
+                        "fromSig(): extraneous strand bits");
                 }
             }
             for (i = 0; i < 2 * n; i += 6) {
@@ -550,7 +550,7 @@ Link Link::fromKnotSig(const std::string& sig) {
                 }
                 if (bits) {
                     throw InvalidArgument(
-                        "fromKnotSig(): extraneous sign bits");
+                        "fromSig(): extraneous sign bits");
                 }
             }
 
@@ -567,12 +567,12 @@ Link Link::fromKnotSig(const std::string& sig) {
                     cr->sign_ = sign[i];
                 else if (cr->sign_ != sign[i]) {
                     throw InvalidArgument(
-                        "fromKnotSig(): inconsistent crossing signs");
+                        "fromSig(): inconsistent crossing signs");
                 }
 
                 if (cr->next_[strand[i]].crossing_) {
                     throw InvalidArgument(
-                        "fromKnotSig(): invalid outgoing connection");
+                        "fromSig(): invalid outgoing connection");
                 }
 
                 size_t nextIdx;
@@ -591,7 +591,7 @@ Link Link::fromKnotSig(const std::string& sig) {
 
                 if (next->prev_[strand[nextIdx]])
                     throw InvalidArgument(
-                        "fromKnotSig(): invalid incoming connection");
+                        "fromSig(): invalid incoming connection");
                 next->prev_[strand[nextIdx]].crossing_ = cr;
                 next->prev_[strand[nextIdx]].strand_ = strand[i];
             }
@@ -601,7 +601,7 @@ Link Link::fromKnotSig(const std::string& sig) {
     } catch (const InvalidInput&) {
         // Any exception caught here was thrown by Base64SigDecoder.
         throw InvalidArgument(
-            "fromKnotSig(): incomplete or invalid base64 encoding");
+            "fromSig(): incomplete or invalid base64 encoding");
     }
 }
 

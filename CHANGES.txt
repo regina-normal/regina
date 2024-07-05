@@ -151,6 +151,10 @@ Version 7.4  [ (to be announced) ]
             - New routine componentsByStrand().
             - Extended knotSig(), rewrite() and simplifyExhaustive() to work
               with all link diagrams with fewer than 64 link components.
+              It is now recommended to use sig() and fromSig() instead of
+              knotSig() and fromKnotSig() since these names better reflect the
+              scope of these routines.  The original names knotSig() and
+              fromKnotSig() have been kept (and are _not_ deprecated).
             - Routine hasReducingPass() can now handle multiple-component links.
             - Added an alias sig() for knotSig().
             - Renamed intelligentSimplify() to simplify().  The old name is

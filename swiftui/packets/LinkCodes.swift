@@ -69,14 +69,14 @@ struct LinkCodesView: View {
     
     // TODO: Split this into a separate view class.
     @ViewBuilder func noSigs() -> some View {
-        let detail = "Knot signatures are only available for links with fewer than 64 components."
+        let detail = "Knot/link signatures are only available for links with fewer than 64 components."
         
         HStack {
             Spacer()
             if #available(macOS 14.0, iOS 17.0, *) {
                 ContentUnavailableView {
                     Label {
-                        Text("No knot signature")
+                        Text("No knot/link signature")
                     } icon: {
                         // For now we use the native size of this icon (64pt).
                         // Probably this is reasonable.
@@ -100,7 +100,7 @@ struct LinkCodesView: View {
                 Picker("Display code:", selection: $selected) {
                     Text("Gauss codes").tag(LinkCode.gauss)
                     Text("Dowker-Thistlethwaite").tag(LinkCode.dt)
-                    Text("Knot signature").tag(LinkCode.signature)
+                    Text("Knot/link signature").tag(LinkCode.signature)
                     Text("Planar diagram code").tag(LinkCode.pd)
                     Text("Jenkins format").tag(LinkCode.jenkins)
                 }.fixedSize()
@@ -140,7 +140,7 @@ struct LinkCodesView: View {
                 if link.countComponents() < 64 {
                     // TODO: Find a way to disable word wrap..?
                     // Not sure if SwiftUI makes this possible for Text.
-                    Text(String(link.knotSig(true, true)))
+                    Text(String(link.sig(true, true)))
                 } else {
                     Spacer()
                     noSigs()

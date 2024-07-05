@@ -184,7 +184,7 @@ TEST_F(CoversTest, knots) {
           "Z + Z_139", "Z + Z_1838", "Z + Z_2782" },
         "Conway knot");
 
-    Link link19 = regina::Link::fromKnotSig(
+    Link link19 = regina::Link::fromSig(
         "tabcadefghdijklmnoipkjplmefqrghbcsonqrsvvvvvvb-VzgZBa");
     compareResults<3>(link19, "19-crossing knot");
     verifyResults<4>(link19,
@@ -199,7 +199,7 @@ TEST_F(CoversTest, knots) {
           "Z + 2 Z_4 + Z_1819388", "Z + Z_628 + Z_324048" },
         "19-crossing knot");
 
-    Link link20 = regina::Link::fromKnotSig(
+    Link link20 = regina::Link::fromSig(
         "uabcdbefgecdhifgjklmnhijopqlkqrsaoprtnmtsRktvvvfFyWJTFl");
     compareResults<3>(link20, "20-crossing knot");
     verifyResults<4>(link20,

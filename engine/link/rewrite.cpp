@@ -40,7 +40,7 @@ namespace detail {
     template <>
     struct RetriangulateParams<Link> {
         static std::string sig(const Link& link) {
-            return link.knotSig();
+            return link.sig();
         }
 
         static constexpr const char* progressStage = "Exploring diagrams";
@@ -48,7 +48,7 @@ namespace detail {
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
-            Link t = Link::fromKnotSig(sig);
+            Link t = Link::fromSig(sig);
 
             if (t.size() == 0) {
                 // We have a zero-crossing unlink (possibly empty).

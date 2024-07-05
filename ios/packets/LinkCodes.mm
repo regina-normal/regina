@@ -104,7 +104,7 @@
                 return;
             }
 
-            ans = @(self.packet->knotSig().c_str());
+            ans = @(self.packet->sig().c_str());
             break;
 
         case 3:
@@ -181,7 +181,7 @@
             return;
         case 2:
             if (self.packet->countComponents() == 1)
-                [[UIPasteboard generalPasteboard] setString:@(self.packet->knotSig().c_str())];
+                [[UIPasteboard generalPasteboard] setString:@(self.packet->sig().c_str())];
             return;
         case 3:
             [[UIPasteboard generalPasteboard] setString:@(self.packet->jenkins().c_str())];

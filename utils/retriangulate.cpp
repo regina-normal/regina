@@ -319,7 +319,7 @@ int main(int argc, char* argv[]) {
             }
             case FLAVOUR_KNOT: {
                 try {
-                    process(regina::Link::fromKnotSig(sig));
+                    process(regina::Link::fromSig(sig));
                 } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "knot signature.\n";

@@ -937,11 +937,12 @@
    <para>
     All triangulations or knot diagrams, both input and output, are described
     using <firstterm>isomorphism signatures</firstterm> and
-    <firstterm>knot signatures</firstterm> respectively.  These are short text
-    strings that identify a triangulation or knot diagram uniquely up to
+    <firstterm>knot/link signatures</firstterm> respectively.  These are short
+    text strings that identify a triangulation or link diagram uniquely up to
     combinatorial isomorphism (which includes relabellings of
     tetrahedra/pentachora/crossings, relabellings of the vertices of
-    tetrahedra/pentachora vertices, and reflection/reversal of knot diagrams).
+    tetrahedra/pentachora vertices, and various rotation/reflection/reversal
+    operations on link diagrams).
    </para>
    <para>
     To view the isomorphism signature of a triangulation:
@@ -949,11 +950,11 @@
     <guilabel>Composition</guilabel> tab in the triangulation viewer,
     and in &python; you can call <userinput>t.isoSig()</userinput>
     for a triangulation <userinput>t</userinput>.
-    To view a knot signature:
+    To view a knot/link signature:
     in &regina;'s graphical user interface this is available through the
     <guilabel>Codes</guilabel> tab in the knot/link viewer,
-    and in &python; you can call <userinput>k.knotSig()</userinput>
-    for a knot <userinput>k</userinput>.
+    and in &python; you can call <userinput>d.sig()</userinput>
+    for a knot or link diagram <userinput>d</userinput>.
    </para>
    <para>
     For a full and precise specification of isomorphism signatures for
@@ -964,7 +965,7 @@
    </para>
    <tip>
     <para>
-     Very large triangulations or knots have signatures that begin with a dash
+     Very large triangulations or links have signatures that begin with a dash
      (<literal>-</literal>).  Such a signature could be mistaken for an option
      when passing it on the command line.  To avoid this, you can pass the
      special option <option>--</option> immediately before it: this indicates
@@ -1075,7 +1076,7 @@
      <term><option>-k, --knot</option></term>
      <listitem>
       <para>
-       Indicates that the given signature is a knot signature.
+       Indicates that the given signature is a knot/link signature.
        The local moves used will be the Reidemeister moves.
       </para>
      </listitem>
@@ -1121,7 +1122,7 @@
       </para></warning>
       <note><para>
        Currently &regina; only uses alternate signature types with
-       triangulations.  For knot signatures, it still uses
+       triangulations.  For knot/link signatures, it still uses
        classic signatures, though again this is subject to change in
        future version of &regina;.
       </para></note>

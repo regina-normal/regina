@@ -1715,47 +1715,47 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
     SCOPED_TRACE_NUMERIC(reflect);
     SCOPED_TRACE_NUMERIC(reverse);
 
-    std::string sig = link.knotSig(reflect, reverse);
+    std::string sig = link.sig(reflect, reverse);
     EXPECT_FALSE(sig.empty());
 
     {
         Link alt(link, false);
         alt.rotate();
-        EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+        EXPECT_EQ(alt.sig(reflect, reverse), sig);
     }
     if (reflect) {
         Link alt(link, false);
         alt.reflect();
-        EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+        EXPECT_EQ(alt.sig(reflect, reverse), sig);
     }
     if (reverse) {
         Link alt(link, false);
         alt.reverse();
-        EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+        EXPECT_EQ(alt.sig(reflect, reverse), sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+            EXPECT_EQ(alt.sig(reflect, reverse), sig);
         }
     }
     if (reflect && reverse) {
         Link alt(link, false);
         alt.reflect();
         alt.reverse();
-        EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+        EXPECT_EQ(alt.sig(reflect, reverse), sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.knotSig(reflect, reverse), sig);
+            EXPECT_EQ(alt.sig(reflect, reverse), sig);
         }
     }
 
     Link recon;
-    ASSERT_NO_THROW({ recon = Link::fromKnotSig(sig); });
+    ASSERT_NO_THROW({ recon = Link::fromSig(sig); });
 
     EXPECT_EQ(recon.size(), link.size());
     EXPECT_EQ(recon.countComponents(), link.countComponents());
-    EXPECT_EQ(recon.knotSig(reflect, reverse), sig);
+    EXPECT_EQ(recon.sig(reflect, reverse), sig);
     if (link.size() <= JONES_THRESHOLD) {
         if (reverse && link.countComponents() > 1) {
             // We could reverse some but not all components, which will do
@@ -1799,14 +1799,14 @@ static void verifyKnotSig(const Link& link, const char* name) {
     verifyKnotSig(link, false, false);
 }
 
-TEST_F(LinkTest, knotSig) {
+TEST_F(LinkTest, sig) {
     testManualCases(verifyKnotSig);
 
     // Test signatures that respect / ignore reflection:
-    EXPECT_EQ(trefoilRight.link.knotSig(true, true),  "dabcabcv-");
-    EXPECT_EQ(trefoilRight.link.knotSig(false, true), "dabcabcv-");
-    EXPECT_EQ(trefoilLeft.link.knotSig(true, true),   "dabcabcv-");
-    EXPECT_EQ(trefoilLeft.link.knotSig(false, true) , "dabcabcva");
+    EXPECT_EQ(trefoilRight.link.sig(true, true),  "dabcabcv-");
+    EXPECT_EQ(trefoilRight.link.sig(false, true), "dabcabcv-");
+    EXPECT_EQ(trefoilLeft.link.sig(true, true),   "dabcabcv-");
+    EXPECT_EQ(trefoilLeft.link.sig(false, true) , "dabcabcva");
 
     // Test that reflection applies to the entire diagram only, not individual
     // connected components:
@@ -1838,10 +1838,10 @@ TEST_F(LinkTest, knotSig) {
     // A link where all four reflection/reversal options give different sigs:
     Link asymmetric = Link::fromOrientedGauss(
         "-<6 +>3 -<5 +>2 -<4 -<1 +>1 +>5 -<3 +>6 -<2 +>4");
-    EXPECT_EQ(asymmetric.knotSig(true, true),   "gaabcdefbcfedPQ--");
-    EXPECT_EQ(asymmetric.knotSig(true, false),  "gaabcdefdcbefPQ--");
-    EXPECT_EQ(asymmetric.knotSig(false, true),  "gaabcdefbcfedPQaa");
-    EXPECT_EQ(asymmetric.knotSig(false, false), "gaabcdefdcbefPQaa");
+    EXPECT_EQ(asymmetric.sig(true, true),   "gaabcdefbcfedPQ--");
+    EXPECT_EQ(asymmetric.sig(true, false),  "gaabcdefdcbefPQ--");
+    EXPECT_EQ(asymmetric.sig(false, true),  "gaabcdefbcfedPQaa");
+    EXPECT_EQ(asymmetric.sig(false, false), "gaabcdefdcbefPQaa");
 
     // Verify some signatures against actual hard-coded strings, to ensure
     // that the single-component knot signature format from Regina ≤ 7.3
@@ -1884,7 +1884,7 @@ static void verifyGaussAndDT(const TestCase& test,
     // For "non-composite-like" knot diagrams, the only possible ambiguity
     // is reflection.  Use the reflection-distinguishing knot signature to
     // tell whether we reflected upon reconstruction.
-    std::string targetSig = test.link.knotSig(false);
+    std::string targetSig = test.link.sig(false);
 
     if (testGauss) {
         std::string code = test.link.gauss();
@@ -1899,10 +1899,10 @@ static void verifyGaussAndDT(const TestCase& test,
         EXPECT_NO_THROW({ EXPECT_EQ(Link(code), recon); });
 
         // If we reflected, undo this for our subsequent tests.
-        if (recon.knotSig(false) != targetSig)
+        if (recon.sig(false) != targetSig)
             recon.reflect();
 
-        EXPECT_EQ(recon.knotSig(false), targetSig);
+        EXPECT_EQ(recon.sig(false), targetSig);
         if (test.link.size() <= JONES_THRESHOLD)
             EXPECT_EQ(recon.jones(), test.link.jones());
     }
@@ -1931,10 +1931,10 @@ static void verifyGaussAndDT(const TestCase& test,
                 });
 
                 // If we reflected, undo this for our subsequent tests.
-                if (recon.knotSig(false) != targetSig)
+                if (recon.sig(false) != targetSig)
                     recon.reflect();
 
-                EXPECT_EQ(recon.knotSig(false), targetSig);
+                EXPECT_EQ(recon.sig(false), targetSig);
                 if (test.link.size() <= JONES_THRESHOLD)
                     EXPECT_EQ(recon.jones(), test.link.jones());
             }
@@ -2106,7 +2106,7 @@ TEST_F(LinkTest, pdCode) {
 TEST_F(LinkTest, invalidCode) {
     static const char* code = "INVALID";
 
-    EXPECT_THROW({ Link::fromKnotSig(code); }, regina::InvalidArgument);
+    EXPECT_THROW({ Link::fromSig(code); }, regina::InvalidArgument);
     EXPECT_THROW({ Link::fromGauss(code); }, regina::InvalidArgument);
     EXPECT_THROW({ Link::fromDT(code); }, regina::InvalidArgument);
     EXPECT_THROW({ Link::fromOrientedGauss(code); }, regina::InvalidArgument);

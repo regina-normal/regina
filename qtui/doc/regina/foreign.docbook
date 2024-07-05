@@ -190,18 +190,18 @@
    <title>Isomorphism / Knot Signature Lists</title>
 
    <para>
-    You can import a list of isomorphism signatures or knot signatures
+    You can import a list of isomorphism signatures or knot/link signatures
     from a text file.
     These signatures are a space-efficient, plain-text method of storing a
-    list of triangulations or knots.
+    list of triangulations or link diagrams.
    </para>
    <para>
     An <firstterm>isomorphism signature</firstterm> is a
     compact sequence of letters, digits and/or punctuation that identifies a
     triangulation uniquely up to combinatorial isomorphism.
-    A <firstterm>knot signature</firstterm> is a similar type sequence
-    of symbols that encodes a knot diagram up to relabelling, rotation,
-    reflection and/or reversal.
+    A <firstterm>knot/link signature</firstterm> is a similar type of sequence
+    of symbols that encodes a link diagram up to various relabelling, rotation,
+    reflection and/or reversal operations.
     See the <link linkend="tri-composition-isosig">composition viewer</link>
     for a more detailed discussion on isomorphism signatures, or
     <xref linkend="bib-burton-pachner-orprime"/> for examples of their use
@@ -210,7 +210,8 @@
    <para>
     The list should be stored in a plain text file with one triangulation
     or knot per line.  Each line may contain an arbitrary amount of data, but
-    the first word of each line should be the isomorphism or knot signature.
+    the first word of each line should be the isomorphism or knot/link
+    signature.
     Note that signatures are <emphasis>case sensitive</emphasis>
     (i.e., upper-case and lower-case matter).  An example file for
     3-manifold triangulations is shown below.
@@ -226,13 +227,13 @@
     In an isomorphism signature list, all signatures must represent
     triangulations of the same dimension (so, for example, the list cannot
     contain a mix of 3-manifold and 4-manifold signatures; likewise, it cannot
-    contain a mix of signatures for triangulations and knots).  The
+    contain a mix of signatures for triangulations and links).  The
     <menuchoice>
      <guimenu>File</guimenu>
      <guisubmenu>Import</guisubmenu>
     </menuchoice>
     menu has different menu items for importing lists in dimensions 2, 3 and 4,
-    and for importing lists of knot signatures.  &regina; does support
+    and for importing lists of knot/link signatures.  &regina; does support
     isomorphism signatures in higher dimensions, but for this you will
     need to use <link linkend="python">&python;</link>.
    </para>

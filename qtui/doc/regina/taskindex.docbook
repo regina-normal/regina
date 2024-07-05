@@ -1067,12 +1067,12 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>knot signatures</primaryie>
+  <primaryie>knot/link signatures</primaryie>
   <secondaryie><link linkend="link-new-knotsig">described</link></secondaryie>
-  <secondaryie><link linkend="link-new-code">reconstructing knots
-   from knot signatures</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing link diagrams
+   from signatures</link></secondaryie>
   <secondaryie><link linkend="link-codes">viewing
-   the knot signature for a knot</link></secondaryie>
+   the signature for a link diagram</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1182,9 +1182,9 @@
    polynomial</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">Kauffman
    bracket</link></secondaryie>
-  <secondaryie><link linkend="link-new-code">knot signature,
+  <secondaryie><link linkend="link-new-code">knot/link signature,
    recreating from</link></secondaryie>
-  <secondaryie><link linkend="link-codes">knot signature,
+  <secondaryie><link linkend="link-codes">knot/link signature,
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>

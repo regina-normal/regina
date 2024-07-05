@@ -77,7 +77,7 @@
     The codes that &regina; understands include:
     <itemizedlist>
      <listitem id="link-new-knotsig">
-      <para>&regina;'s own <firstterm>knot signatures</firstterm>,
+      <para>&regina;'s own <firstterm>knot/link signatures</firstterm>,
        which are compact sequences of letters, digits and/or punctuation
        that uniquely identify a link diagram up to combinatorial isomorphism.
        Here <firstterm>combinatorial isomorphism</firstterm>
@@ -86,14 +86,12 @@
        diagram, and/or reversing individual link components.
       </para>
       <para>
-       An example is <literal>dabcabcv-</literal>, which represents
-       the trefoil.
+       An example is <literal>dabcabcv-</literal>, which represents the trefoil.
       </para>
       <para>
-       Knot signatures played a significant role in the 19-crossing
+       Knot/link signatures played a significant role in the 19-crossing
        knot tabulation <xref linkend="bib-burton-knots"/>.
-       Despite their name, knot signatures are now supported not just for
-       knots but also any links with fewer than 64 components.
+       They are supported for all links with fewer than 64 components.
       </para>
      </listitem>
      <listitem id="link-new-classical-gauss">
@@ -117,7 +115,7 @@
        (more importantly) for composite knots they may not even uniquely
        define the topology of the knot.
        If this is a problem, consider using either
-       <emphasis>oriented</emphasis> Gauss codes or knot signatures
+       <emphasis>oriented</emphasis> Gauss codes or knot/link signatures
        instead.
       </para>
      </listitem>
@@ -184,7 +182,7 @@
        (more importantly) for composite knots may not uniquely
        define the topology of the knot.
        If this is a problem, consider using either oriented Gauss codes
-       or knot signatures instead.
+       or knot/link signatures instead.
       </para>
      </listitem>
      <listitem id="link-new-pd">
@@ -238,7 +236,7 @@
     <link linkend="link-codes">codes tab</link>.
    </para>
    <caution><para>
-    Knot signatures and Dowker-Thistlethwaite notation are
+    Knot/link signatures and Dowker-Thistlethwaite notation are
     both <emphasis>case sensitive</emphasis>!
     Be sure that you are entering upper-case and lower-case correctly
     (or better, copy and paste the text using the clipboard if you can).
@@ -642,10 +640,10 @@
       </glossdef>
      </glossentry>
      <glossentry>
-      <glossterm><guilabel>Knot signature</guilabel></glossterm>
+      <glossterm><guilabel>Knot/link signature</guilabel></glossterm>
       <glossdef>
        <para>
-        Knot signatures are &regina;s own text-based format, and were
+        Knot/link signatures are &regina;s own text-based format, and were
         designed to have a combinatorial uniqueness property:
         two link diagrams have the same signature
         if and only if they are combinatorially isomorphic
@@ -654,14 +652,13 @@
         diagram, and/or reversing individual link components).
        </para>
        <para>
-        For a more detailed discussion of knot signatures,
+        For a more detailed discussion of knot/link signatures,
         see the section on <link linkend="link-new-knotsig">creating
-        knots from knot signatures</link>.
+        knots from knot/link signatures</link>.
        </para>
        <para>
-        Despite their name, knot signatures are now supported not just for
-        knots but also any links with fewer than 64 components.
-        Be aware that knot signatures are case-sensitive
+        These signatures are supported for all links with fewer than
+        64 components.  Be aware that they are case-sensitive
         (i.e., upper-case and lower-case matters).
        </para>
       </glossdef>
@@ -1217,7 +1214,7 @@
    <para>
     &regina; offers some simple transformations related to orientation:
     each of these changes will alter the link diagram, but the
-    <link linkend="link-new-knotsig">knot signature</link> will stay
+    <link linkend="link-new-knotsig">knot/link signature</link> will stay
     the same.
    </para>
    <para>
