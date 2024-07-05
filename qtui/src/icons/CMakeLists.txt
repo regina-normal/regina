@@ -36,6 +36,7 @@ set (IMGS
   packet_pdf
   packet_script
   packet_snappea
+  packet_spatiallink
   packet_surfaces
   packet_text
   packet_triangulation2

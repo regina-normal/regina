@@ -61,6 +61,7 @@ class IconCache {
             packet_attachment,
             packet_script,
             packet_snappea,
+            packet_spatiallink,
             packet_surfaces,
             packet_text,
             packet_triangulation2,

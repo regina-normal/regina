@@ -64,6 +64,9 @@ void IconCache::load(IconID id) {
         case packet_snappea:
             cache_[id] = ReginaSupport::regIcon("packet_snappea");
             return;
+        case packet_spatiallink:
+            cache_[id] = ReginaSupport::regIcon("packet_spatiallink");
+            return;
         case packet_surfaces:
             cache_[id] = ReginaSupport::regIcon("packet_surfaces");
             return;

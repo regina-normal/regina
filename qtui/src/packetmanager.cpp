@@ -84,6 +84,9 @@ QIcon PacketManager::icon(const Packet& packet) {
         case PacketType::Link:
             id = IconCache::packet_link;
             break;
+        case PacketType::SpatialLink:
+            id = IconCache::packet_spatiallink;
+            break;
         case PacketType::Attachment:
             id = IconCache::packet_attachment;
             break;
