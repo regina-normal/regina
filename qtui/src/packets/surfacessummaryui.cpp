@@ -158,10 +158,16 @@ void SurfacesSummaryUI::refresh() {
     size_t spun = 0;
     size_t bounded = 0;
     size_t closed = 0;
+
+    // Note: std::map will zero-initialise new values that are inserted via [].
     std::map<regina::LargeInteger, size_t>
         countClosed[2][2], countBounded[2][2]; /* 2-sided, orbl ? */
+    std::map<regina::LargeInteger, size_t>
+        countNonEmbClosed, countNonEmbBounded;
+
     std::set<regina::LargeInteger> allECsClosed, allECsBounded;
     std::set<std::pair<int, int>> allTypesClosed, allTypesBounded;
+    bool hasNonEmbClosed = false, hasNonEmbBounded = false;
 
     regina::LargeInteger euler;
     std::pair<int, int> type;
@@ -173,21 +179,29 @@ void SurfacesSummaryUI::refresh() {
             euler = s.eulerChar();
             allECsBounded.insert(euler);
 
-            type = std::make_pair(boolIndex(s.isTwoSided()),
-                boolIndex(s.isOrientable()));
-            allTypesBounded.insert(type);
-
-            ++countBounded[type.first][type.second][euler];
+            if (surfaces->isEmbeddedOnly() || s.embedded()) {
+                type = std::make_pair(boolIndex(s.isTwoSided()),
+                    boolIndex(s.isOrientable()));
+                allTypesBounded.insert(type);
+                ++countBounded[type.first][type.second][euler];
+            } else {
+                hasNonEmbBounded = true;
+                ++countNonEmbBounded[euler];
+            }
             ++bounded;
         } else {
             euler = s.eulerChar();
             allECsClosed.insert(euler);
 
-            type = std::make_pair(boolIndex(s.isTwoSided()),
-                boolIndex(s.isOrientable()));
-            allTypesClosed.insert(type);
-
-            ++countClosed[type.first][type.second][euler];
+            if (surfaces->isEmbeddedOnly() || s.embedded()) {
+                type = std::make_pair(boolIndex(s.isTwoSided()),
+                    boolIndex(s.isOrientable()));
+                allTypesClosed.insert(type);
+                ++countClosed[type.first][type.second][euler];
+            } else {
+                hasNonEmbClosed = true;
+                ++countNonEmbClosed[euler];
+            }
             ++closed;
         }
     }
@@ -218,11 +232,16 @@ void SurfacesSummaryUI::refresh() {
             totClosed->setText(tr("%1 closed surfaces, breakdown below:").
                 arg(closed));
 
-        tableClosed->setColumnCount(allTypesClosed.size() + 1);
+        tableClosed->setColumnCount(allTypesClosed.size() +
+            (hasNonEmbClosed ? 2 : 1));
         header = new QTreeWidgetItem();
         for (col = 1, typeIt = allTypesClosed.begin();
                 typeIt != allTypesClosed.end(); ++col, ++typeIt) {
             header->setText(col, tableHeader(typeIt->first, typeIt->second));
+            header->setTextAlignment(col, Qt::AlignRight);
+        }
+        if (hasNonEmbClosed) {
+            header->setText(col, "Non-embedded");
             header->setTextAlignment(col, Qt::AlignRight);
         }
         tableClosed->setHeaderItem(header);
@@ -238,6 +257,13 @@ void SurfacesSummaryUI::refresh() {
                     find(*ECIt);
                 if (countIt !=
                         countClosed[typeIt->first][typeIt->second].end()) {
+                    row->setText(col, QString::number(countIt->second));
+                    row->setTextAlignment(col, Qt::AlignRight);
+                }
+            }
+            if (hasNonEmbClosed) {
+                countIt = countNonEmbClosed.find(*ECIt);
+                if (countIt != countNonEmbClosed.end()) {
                     row->setText(col, QString::number(countIt->second));
                     row->setTextAlignment(col, Qt::AlignRight);
                 }
@@ -262,11 +288,16 @@ void SurfacesSummaryUI::refresh() {
                 totBounded->setText(tr(
                     "%1 bounded surfaces, breakdown below:").arg(bounded));
 
-            tableBounded->setColumnCount(allTypesBounded.size() + 1);
+            tableBounded->setColumnCount(allTypesBounded.size() +
+                (hasNonEmbBounded ? 2 : 1));
             header = new QTreeWidgetItem();
             for (col = 1, typeIt = allTypesBounded.begin();
                     typeIt != allTypesBounded.end(); ++col, ++typeIt) {
                 header->setText(col, tableHeader(typeIt->first, typeIt->second));
+                header->setTextAlignment(col, Qt::AlignRight);
+            }
+            if (hasNonEmbBounded) {
+                header->setText(col, "Non-embedded");
                 header->setTextAlignment(col, Qt::AlignRight);
             }
             tableBounded->setHeaderItem(header);
@@ -283,6 +314,13 @@ void SurfacesSummaryUI::refresh() {
                         find(*ECIt);
                     if (countIt !=
                             countBounded[typeIt->first][typeIt->second].end()) {
+                        row->setText(col, QString::number(countIt->second));
+                        row->setTextAlignment(col, Qt::AlignRight);
+                    }
+                }
+                if (hasNonEmbBounded) {
+                    countIt = countNonEmbBounded.find(*ECIt);
+                    if (countIt != countNonEmbBounded.end()) {
                         row->setText(col, QString::number(countIt->second));
                         row->setTextAlignment(col, Qt::AlignRight);
                     }
@@ -316,6 +354,7 @@ void SurfacesSummaryUI::refresh() {
             else
                 totSpun->setText(tr("%1 spun (non-compact) surfaces.").arg(spun));
         }
+        totSpun->show();
     } else {
         // The triangulation is not ideal and/or the coordinate system
         // does not support spun normal surfaces.

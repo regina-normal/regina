@@ -67,6 +67,7 @@ class HyperSummaryUI : public QObject, public PacketViewerTab {
         QLabel* totClosed;
         QLabel* totBounded;
         QLabel* totSpun;
+        QLabel* totNonEmbedded;
         QTreeWidget* tableClosed;
         QTreeWidget* tableBounded;
 

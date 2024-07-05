@@ -571,6 +571,32 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    If your enumeration parameters allowed for
+    <link linkend="surfaces-embeddedonly">immersed and/or singular
+    (hyper)surfaces</link>, then these will be counted separately.
+    For normal surfaces in 3-manifold triangulations, they will appear in a
+    separate column labelled <guilabel>Non-embedded</guilabel>;
+    for normal hypersurfaces in 4-manifold triangulations they will appear
+    in a separate count above the list.
+    In the 3-dimensional case, you should read the notes on
+    <link linkend="surfaces-propeuler">what Euler characteristic means</link>
+    for immersed and singular surfaces.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="surfaces-summary-nonemb"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="hypersurfaces-summary-nonemb"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
    <note><para>
     Spun-normal surfaces and non-compact hypersurfaces will only be
     explicitly mentioned in the <guilabel>Summary</guilabel> tab if your

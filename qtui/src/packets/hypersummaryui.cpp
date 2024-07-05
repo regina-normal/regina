@@ -98,10 +98,15 @@ HyperSummaryUI::HyperSummaryUI(
         "in this list."));
     paneLayout->addWidget(tot);
 
+    totNonEmbedded = new QLabel();
+    totNonEmbedded->setWhatsThis(tr("Counts the total number of immersed "
+        "and/or singular hypersurfaces in this list."));
+    paneLayout->addWidget(totNonEmbedded);
+
     totClosed = new QLabel();
     totClosed->setWhatsThis(tr("Counts the total number of closed compact "
-        "hypersurfaces in this list (i.e., closed hypersurfaces with "
-        "finitely many normal pieces)."));
+        "embedded hypersurfaces in this list (i.e., closed embedded "
+        "hypersurfaces with finitely many normal pieces)."));
     paneLayout->addWidget(totClosed);
 
     tableClosed = new QTreeWidget();
@@ -111,8 +116,8 @@ HyperSummaryUI::HyperSummaryUI(
     tableClosed->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     tableClosed->setSelectionMode(QAbstractItemView::NoSelection);
     tableClosed->setWhatsThis(tr("<qt>Breaks down the total count "
-        "for closed compact hypersurfaces (i.e., closed hypersurfaces with "
-        "finitely many normal pieces).<p>"
+        "for closed compact embedded hypersurfaces (i.e., closed hypersurfaces "
+        "with finitely many normal pieces).<p>"
         "Each entry in this table counts the number of "
         "bounded hypersurfaces with a particular orientability, "
         "1-or-2-sidedness and homology.</qt>"));
@@ -120,8 +125,9 @@ HyperSummaryUI::HyperSummaryUI(
 
     totBounded = new QLabel();
     totBounded->setWhatsThis(tr("Counts the total number of compact "
-        "hypersurfaces in this list with real boundary "
-        "(i.e., bounded hypersurfaces with finitely many normal pieces)."));
+        "embedded hypersurfaces in this list with real boundary "
+        "(i.e., bounded embedded hypersurfaces with finitely many "
+        "normal pieces)."));
     paneLayout->addWidget(totBounded);
 
     tableBounded = new QTreeWidget();
@@ -131,7 +137,7 @@ HyperSummaryUI::HyperSummaryUI(
     tableBounded->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     tableBounded->setSelectionMode(QAbstractItemView::NoSelection);
     tableBounded->setWhatsThis(tr("<qt>Breaks down the total "
-        "count for hypersurfaces with real boundary "
+        "count for compact embedded hypersurfaces with real boundary "
         "(i.e., bounded hypersurfaces with finitely many normal pieces).<p>"
         "Each entry in this table counts the number of "
         "bounded hypersurfaces with a particular orientability, "
@@ -140,8 +146,8 @@ HyperSummaryUI::HyperSummaryUI(
 
     totSpun = new QLabel();
     totSpun->setWhatsThis(tr("Counts the total number of non-compact "
-        "hypersurfaces in this list "
-        "(i.e., hypersurfaces with infinitely many normal pieces)."));
+        "embedded hypersurfaces in this list "
+        "(i.e., embedded hypersurfaces with infinitely many normal pieces)."));
     paneLayout->addWidget(totSpun);
 
     // Add some space at the end.
@@ -165,6 +171,7 @@ void HyperSummaryUI::refresh() {
     size_t spun = 0;
     size_t bounded = 0;
     size_t closed = 0;
+    size_t nonEmbedded = 0;
     std::map<std::string, size_t>
         countClosed[2][2], countBounded[2][2]; /* 2-sided, orbl ? */
     std::set<std::string> allHomClosed, allHomBounded;
@@ -176,6 +183,8 @@ void HyperSummaryUI::refresh() {
             static_cast<const regina::NormalHypersurfaces&>(*surfaces)) {
         if (! s.isCompact())
             ++spun;
+        else if (! (surfaces->isEmbeddedOnly() || s.embedded()))
+            ++nonEmbedded;
         else {
             if (unicode)
                 homology = s.homology().utf8();
@@ -217,15 +226,36 @@ void HyperSummaryUI::refresh() {
 
     tableClosed->clear();
 
+    QString embStr;
+    if (nonEmbedded) {
+        embStr = tr("embedded ");
+
+        if (nonEmbedded == 1)
+            totNonEmbedded->setText(
+                tr("1 non-embedded (immersed/singular) hypersurface."));
+        else
+            totNonEmbedded->setText(
+                tr("%1 non-embedded (immersed/singular) hypersurfaces.")
+                .arg(nonEmbedded));
+        totNonEmbedded->show();
+    } else if (! surfaces->isEmbeddedOnly()) {
+        totNonEmbedded->setText(
+            tr("No non-embedded (immersed/singular) hypersurfaces."));
+        totNonEmbedded->show();
+    } else {
+        totNonEmbedded->hide();
+    }
+
     if (closed == 0) {
-        totClosed->setText(tr("No closed hypersurfaces."));
+        totClosed->setText(tr("No closed %1hypersurfaces.").arg(embStr));
         tableClosed->hide();
     } else {
         if (closed == 1)
-            totClosed->setText(tr("1 closed hypersurface, breakdown below:"));
+            totClosed->setText(tr("1 closed %1hypersurface, breakdown below:")
+                .arg(embStr));
         else
-            totClosed->setText(tr("%1 closed hypersurfaces, breakdown below:").
-                arg(closed));
+            totClosed->setText(tr("%1 closed %2hypersurfaces, breakdown below:")
+                .arg(closed).arg(embStr));
 
         tableClosed->setColumnCount(allTypesClosed.size() + 1);
         header = new QTreeWidgetItem();
@@ -263,15 +293,16 @@ void HyperSummaryUI::refresh() {
         tableBounded->clear();
 
         if (bounded == 0) {
-            totBounded->setText(tr("No bounded hypersurfaces."));
+            totBounded->setText(tr("No bounded %1hypersurfaces.").arg(embStr));
             tableBounded->hide();
         } else {
             if (bounded == 1)
                 totBounded->setText(tr(
-                    "1 bounded hypersurface, breakdown below:"));
+                    "1 bounded %1hypersurface, breakdown below:").arg(embStr));
             else
                 totBounded->setText(tr(
-                    "%1 bounded hypersurfaces, breakdown below:").arg(bounded));
+                    "%1 bounded %2hypersurfaces, breakdown below:")
+                    .arg(bounded).arg(embStr));
 
             tableBounded->setColumnCount(allTypesBounded.size() + 1);
             header = new QTreeWidgetItem();
@@ -321,13 +352,16 @@ void HyperSummaryUI::refresh() {
             ! surfaces->triangulation().isValid()) &&
             (surfaces->allowsNonCompact())) {
         if (spun == 0) {
-            totSpun->setText(tr("No non-compact hypersurfaces."));
+            totSpun->setText(tr("No non-compact %1hypersurfaces.").arg(embStr));
         } else {
             if (spun == 1)
-                totSpun->setText(tr("1 non-compact hypersurface."));
+                totSpun->setText(tr("1 non-compact %1hypersurface.")
+                    .arg(embStr));
             else
-                totSpun->setText(tr("%1 non-compact hypersurfaces.").arg(spun));
+                totSpun->setText(tr("%1 non-compact %2hypersurfaces.")
+                    .arg(spun).arg(embStr));
         }
+        totSpun->show();
     } else {
         // The triangulation is not ideal and/or the coordinate system
         // does not support spun normal surfaces.
