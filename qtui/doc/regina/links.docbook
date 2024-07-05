@@ -968,6 +968,8 @@
     To change or resolve a crossing, switch to the
     <guilabel>Crossings</guilabel> tab, right-click on the crossing you
     want to change, and choose which operation you wish to perform.
+    (You will also see an extra option to
+    <link linkend="link-flip">reverse a single component</link>.)
    </para>
    <para>
     <inlinemediaobject>
@@ -1078,7 +1080,8 @@
       Unlike the fast simplification process when you first press the
       <guilabel>Simplify</guilabel> button, this exhaustive
       simplification process could well
-      <link linkend="link-flip">reflect or reverse</link> your link.
+      <link linkend="link-flip">reflect your link</link>
+      and/or <link linkend="link-flip">reverse individual components</link>.
      </para>
     </warning>
     <tip id="link-gordian">
@@ -1261,6 +1264,21 @@
      through its crossings in reverse order.
     </para></listitem>
    </itemizedlist>
+   <para>
+    For a link with multiple components, you can reverse an individual
+    component by switching to the <guilabel>Crossings</guilabel> tab and
+    right-clicking on any part of the component that you wish to reverse.
+    On computers where right-click is not supported (e.g.,
+    computers with a one-button mouse), you should use the normal
+    secondary-click mechanism for bringing up a pop-up context menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-editcrossing"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
   </sect2>
 
   <sect2 id="link-cables">
