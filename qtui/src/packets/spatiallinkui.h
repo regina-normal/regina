@@ -30,15 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file anglesui.h
- *  \brief Provides an interface for viewing angle structure lists.
+/*! \file spatiallinkui.h
+ *  \brief Provides an interface for viewing spatial links.
  */
 
-#ifndef __ANGLESUI_H
-#define __ANGLESUI_H
+#ifndef __SPATIALLINKUI_H
+#define __SPATIALLINKUI_H
 
-#include "angle/anglestructures.h"
-#include "triangulation/dim3.h"
+#include "link/spatiallink.h"
 #include "../packetui.h"
 
 #include <QAbstractItemModel>
@@ -47,122 +46,58 @@ class QLabel;
 class QTreeView;
 
 namespace regina {
-    class AngleStructures;
     class Packet;
-};
-
-class AngleModel : public QAbstractItemModel {
-    protected:
-        /**
-         * Details of the angle structures being displayed
-         */
-        const regina::AngleStructures* structures_;
-        unsigned nCoords;
-
-    public:
-        /**
-         * Constructor.
-         */
-        AngleModel(regina::AngleStructures* structures);
-
-        /**
-         * Rebuild the model from scratch.
-         */
-        void rebuild();
-
-        /**
-         * Overrides for describing data in the model.
-         */
-        QModelIndex index(int row, int column,
-                const QModelIndex& parent) const override;
-        QModelIndex parent(const QModelIndex& index) const override;
-        int rowCount(const QModelIndex& parent) const override;
-        int columnCount(const QModelIndex& parent) const override;
-        QVariant data(const QModelIndex& index, int role) const override;
-        QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const override;
+    class SpatialLink;
 };
 
 /**
- * A packet interface for viewing angle structure lists.
+ * A packet interface for viewing spatial links.
  */
-class AngleStructureUI : public QObject, public PacketReadOnlyUI,
-        regina::PacketListener {
+class SpatialLinkUI : public QObject, public PacketUI {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::PacketOf<regina::AngleStructures>* structures_;
-        AngleModel* model;
-        bool triDestroyed { false };
+        regina::PacketOf<regina::SpatialLink>* link_;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QLabel* stats;
-        QTreeView* table;
 
         /**
-         * Status of any ongoing actions.
+         * Spatial link actions
          */
-        bool currentlyAutoResizing;
+        QAction* actThinner;
+        QAction* actThicker;
+        QAction* actRefine;
+        std::vector<QAction*> actionList;
 
     public:
         /**
          * Constructor and destructor.
          */
-        AngleStructureUI(regina::PacketOf<regina::AngleStructures>* packet,
+        SpatialLinkUI(regina::PacketOf<regina::SpatialLink>* packet,
                 PacketPane* newEnclosingPane);
-        ~AngleStructureUI() override;
 
         /**
          * PacketUI overrides.
          */
         regina::Packet* getPacket() override;
         QWidget* getInterface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
         void refresh() override;
 
-        /**
-         * Refresh just the text header above the table.
-         */
-        void refreshHeader();
-
-        /**
-         * PacketListener overrides.
-         */
-        void packetWasRenamed(regina::Packet&) override;
-        void packetWasChanged(regina::Packet&) override;
-        void packetBeingDestroyed(regina::PacketShell) override;
-
     public slots:
         /**
-         * View the underlying triangulation.
+         * Spatial link actions.
          */
-        void viewTriangulation();
-
-        /**
-         * Provides auto-resizing of columns.
-         */
-        void columnResized(int section, int oldSize, int newSize);
+        void makeThinner();
+        void makeThicker();
+        void refine();
 };
-
-inline AngleModel::AngleModel(regina::AngleStructures* structures) :
-        structures_(structures),
-        nCoords(3 * structures_->triangulation().size()) {
-}
-
-inline QModelIndex AngleModel::index(int row, int column,
-        const QModelIndex& /* unused parent */) const {
-    return createIndex(row, column, quint32((nCoords + 1) * row + column));
-}
-
-inline QModelIndex AngleModel::parent(const QModelIndex& /* unused index */) const {
-    // All items are top-level.
-    return QModelIndex();
-}
 
 #endif

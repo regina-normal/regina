@@ -62,6 +62,7 @@
 #include "packets/linkui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
+#include "packets/spatiallinkui.h"
 #include "packets/surfacesui.h"
 #include "packets/textui.h"
 #include "packets/tri3ui.h"
@@ -176,6 +177,10 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
         case PacketType::Link:
             return new LinkUI(
                 static_cast<regina::PacketOf<Link>*>(&packet), enclosingPane);
+        case PacketType::SpatialLink:
+            return new SpatialLinkUI(
+                static_cast<regina::PacketOf<SpatialLink>*>(&packet),
+                    enclosingPane);
         case PacketType::NormalSurfaces:
             return new SurfacesUI(
                 static_cast<regina::PacketOf<NormalSurfaces>*>(&packet),

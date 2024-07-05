@@ -36,6 +36,7 @@ SET ( FILES
   snappeagluings.cpp
   snappeashapes.cpp
   snappeaui.cpp
+  spatiallinkui.cpp
   surfacescompatui.cpp
   surfacescoordinateui.cpp
   surfacescreator.cpp
