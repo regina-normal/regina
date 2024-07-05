@@ -1843,6 +1843,17 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(asymmetric.sig(false, true),  "gaabcdefbcfedPQaa");
     EXPECT_EQ(asymmetric.sig(false, false), "gaabcdefdcbefPQaa");
 
+    // For the Hopf link, reversing one component is the same as reflection.
+    {
+        Link hopfNegative = ExampleLink::hopf(); // positive crossings
+        hopfNegative.reflect();
+
+        EXPECT_EQ(hopfNegative.sig(true, true), "cabcabjp");
+        EXPECT_EQ(hopfNegative.sig(true, false), "cabcabjp");
+        EXPECT_EQ(hopfNegative.sig(false, true), "cabcabjp");
+        EXPECT_EQ(hopfNegative.sig(false, false), "cabcabja");
+    }
+
     // Verify some signatures against actual hard-coded strings, to ensure
     // that the single-component knot signature format from Regina ≤ 7.3
     // matches the more general format in Regina ≥ 7.4.
