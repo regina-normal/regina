@@ -634,12 +634,11 @@ void LinkCrossingsUI::simplify() {
     }
 
     if (! link->simplify()) {
-        if (link->countComponents() > 1) {
+        if (link->countComponents() >= 64) {
             ReginaSupport::info(ui, tr("I could not simplify the link."),
-                tr("<qt>I have only tried fast heuristics so far.<p>"
-                    "For knots I can try a more exaustive approach, "
-                    "but for multiple-component links this is not "
-                    "yet available.</qt>"));
+                tr("I have only tried fast heuristics so far, and "
+                    "my more exhaustive approach is not available for "
+                    "links with ≥ 64 crossings."));
             return;
         }
 

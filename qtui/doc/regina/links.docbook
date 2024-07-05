@@ -1022,7 +1022,7 @@
     <para>
      If &regina; cannot
      simplify the link immediately using its fast heuristics,
-     and if your link has only one component (i.e., you have a knot),
+     and if your link has fewer than 64 components,
      then it will offer to perform a slower, more exhaustive search.  Press
      the <guilabel>Try harder</guilabel> button, as shown below:
     </para>
