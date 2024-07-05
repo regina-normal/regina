@@ -268,6 +268,8 @@ Version 7.4  [ (to be announced) ]
         Class SatAnnulus:
             - Routine attachLST() now checks its preconditions, and throws
               an exception if they fail.
+        Class Segment3D:
+            - New class to support floating-point 3-D geometry.
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().

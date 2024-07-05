@@ -1215,6 +1215,9 @@ Equality type : EqualityType.BY_VALUE
 Script : class
 Equality type : EqualityType.BY_VALUE
 
+Segment3D : class
+Equality type : EqualityType.BY_VALUE
+
 SigCensus : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
