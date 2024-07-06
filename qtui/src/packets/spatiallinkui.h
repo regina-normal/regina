@@ -40,9 +40,8 @@
 #include "link/spatiallink.h"
 #include "../packetui.h"
 
-#include <QAbstractItemModel>
-
 class QLabel;
+class QPushButton;
 class QTreeView;
 
 namespace regina {
@@ -56,6 +55,12 @@ namespace regina {
 class SpatialLinkUI : public QObject, public PacketUI {
     Q_OBJECT
 
+    public:
+        /**
+         * The maximum number of nodes that we are willing to render.
+         */
+        static constexpr size_t MAX_NODES = 500;
+
     private:
         /**
          * Packet details
@@ -66,6 +71,8 @@ class SpatialLinkUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
+        QLabel* linkStats;
+        QLabel* renderingStats;
 
         /**
          * Spatial link actions
@@ -98,6 +105,11 @@ class SpatialLinkUI : public QObject, public PacketUI {
         void makeThinner();
         void makeThicker();
         void refine();
+
+        /**
+         * Open a python console to work with this spatial link.
+         */
+        void pythonConsole();
 };
 
 #endif
