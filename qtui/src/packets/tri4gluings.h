@@ -206,6 +206,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void idealToFinite();
         void finiteToIdeal();
         void elementaryMove();
+        void insertTriangulation();
         void doubleCover();
         void boundaryComponents();
         void vertexLinks();

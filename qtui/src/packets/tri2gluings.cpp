@@ -37,6 +37,8 @@
 // UI includes:
 #include "tri2gluings.h"
 #include "edittableview.h"
+#include "packetchooser.h"
+#include "packetfilter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -430,6 +432,18 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
+    auto* actInsertTri = new QAction(this);
+    actInsertTri->setText(tr("Insert Triangulation..."));
+    actInsertTri->setIcon(ReginaSupport::regIcon("disjointunion"));
+    actInsertTri->setToolTip(tr(
+        "Insert another triangulation as additional connected component(s)"));
+    actInsertTri->setWhatsThis(tr("Forms the disjoint union "
+        "of this triangulation with some other triangulation.  "
+        "This triangulation will be modified directly."));
+    triActionList.push_back(actInsertTri);
+    connect(actInsertTri, SIGNAL(triggered()), this,
+        SLOT(insertTriangulation()));
+
     sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.push_back(sep);
@@ -677,6 +691,23 @@ void Tri2GluingsUI::barycentricSubdivide() {
             "triangles or edges, and so cannot be subdivided."));
     else
         tri->subdivide();
+}
+
+void Tri2GluingsUI::insertTriangulation() {
+    endEdit();
+
+    auto other = std::static_pointer_cast<regina::PacketOf<
+        regina::Triangulation<2>>>(PacketDialog::choose(ui,
+            tri->root(),
+            new SubclassFilter<regina::Triangulation<2>>(),
+            tr("Insert Triangulation"),
+            tr("Insert a copy of which other triangulation?"),
+            tr("Regina will form the disjoint union of this triangulation "
+                "and whatever triangulation you choose here.  "
+                "The current triangulation will be modified directly.")));
+
+    if (other)
+        tri->insertTriangulation(*other);
 }
 
 void Tri2GluingsUI::doubleCover() {

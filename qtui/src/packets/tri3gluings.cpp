@@ -552,6 +552,18 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(actConnectedSumWith, SIGNAL(triggered()), this,
         SLOT(connectedSumWith()));
 
+    auto* actInsertTri = new QAction(this);
+    actInsertTri->setText(tr("Insert Triangulation..."));
+    actInsertTri->setIcon(ReginaSupport::regIcon("disjointunion"));
+    actInsertTri->setToolTip(tr(
+        "Insert another triangulation as additional connected component(s)"));
+    actInsertTri->setWhatsThis(tr("Forms the disjoint union "
+        "of this triangulation with some other triangulation.  "
+        "This triangulation will be modified directly."));
+    triActionList.push_back(actInsertTri);
+    connect(actInsertTri, SIGNAL(triggered()), this,
+        SLOT(insertTriangulation()));
+
     auto* actZeroEff = new QAction(this);
     actZeroEff->setText(tr("Make &0-Efficient"));
     actZeroEff->setToolTip(tr(
@@ -1144,6 +1156,22 @@ void Tri3GluingsUI::connectedSumWith() {
 
     if (other)
         tri->connectedSumWith(regina::static_triangulation3_cast(*other));
+}
+
+void Tri3GluingsUI::insertTriangulation() {
+    endEdit();
+
+    auto other = PacketDialog::choose(ui,
+            tri->root(),
+            new SubclassFilter<regina::Triangulation<3>>(),
+            tr("Insert Triangulation"),
+            tr("Insert a copy of which other triangulation?"),
+            tr("Regina will form the disjoint union of this triangulation "
+                "and whatever triangulation you choose here.  "
+                "The current triangulation will be modified directly."));
+
+    if (other)
+        tri->insertTriangulation(regina::static_triangulation3_cast(*other));
 }
 
 void Tri3GluingsUI::boundaryComponents() {

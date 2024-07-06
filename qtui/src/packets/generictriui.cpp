@@ -61,7 +61,7 @@ GenericTriangulationBase::GenericTriangulationBase(regina::Packet* p,
 
     connect(python, SIGNAL(clicked()), this, SLOT(pythonConsole()));
 #else
-    python = 0;
+    python = nullptr;
 #endif
 }
 

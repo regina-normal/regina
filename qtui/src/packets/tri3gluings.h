@@ -214,6 +214,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         void puncture();
         void drillEdge();
         void connectedSumWith();
+        void insertTriangulation();
         void boundaryComponents();
         void vertexLinks();
         void splitIntoComponents();

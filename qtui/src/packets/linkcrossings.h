@@ -199,11 +199,13 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void reverse();
         void alternating();
         void moves();
+        void diagramComponents();
         void complement();
         void snapPea();
         void parallel();
         void selfFrame();
         void composeWith();
+        void insertLink();
 
         /**
          * Other user interface actions.
