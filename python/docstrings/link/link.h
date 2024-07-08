@@ -361,7 +361,7 @@ string as a link.
 At present, Regina understands the following types of strings (and
 attempts to parse them in the following order):
 
-* knot signatures, as used by fromKnotSig();
+* knot/link signatures, as used by fromSig();
 
 * oriented Gauss codes, as used by fromOrientedGauss();
 
@@ -1368,25 +1368,26 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromKnotSig
 static const char *fromKnotSig =
-R"doc(Recovers a knot diagram from its signature. See knotSig() for more
-information on knot signatures.
+R"doc(Alias for fromSig(), to recover a link diagram from its knot/link
+signature.
 
-Calling knotSig() followed by fromKnotSig() is not guaranteed to
-produce an _identical_ knot diagram to the original, but it is
-guaranteed to produce one that is related by relabelling, rotating
-connected components of the diagram, and optionally (according to the
-arguments that were passed to knotSig()) reflection of the entire
-diagram and/or reversal of individual link components.
+This alias fromKnotSig() has been kept to reflect the fact that, in
+older versions of Regina, these signatures were only available for
+single-component knots; moreover the old name "knot signatures" can
+still be found in the literature. While this routine is not
+deprecated, it is recommended to use fromSig() in new code.
+
+See fromSig() for further details.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid knot signature.
+    The given string was not a valid knot/link signature.
 
 Parameter ``sig``:
-    the signature of the knot diagram to construct. Note that
+    the signature of the link diagram to construct. Note that
     signatures are case-sensitive.
 
 Returns:
-    the reconstructed knot.)doc";
+    the reconstructed link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::fromOrientedGauss
 static const char *fromOrientedGauss =
@@ -1681,22 +1682,25 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromSig
 static const char *fromSig =
-R"doc(Alias for fromKnotSig(), to recover a knot diagram from its signature.
+R"doc(Recovers a link diagram from its knot/link signature. See sig() for
+more information on these signatures.
 
-This alias fromSig() is provided to assist with generic code that can
-work with both knots and triangulations.
-
-See fromKnotSig() for further details.
+Calling sig() followed by fromSig() is not guaranteed to produce an
+_identical_ knot diagram to the original, but it is guaranteed to
+produce one that is related by relabelling, rotating connected
+components of the diagram, and optionally (according to the arguments
+that were passed to sig()) reflection of the entire diagram and/or
+reversal of individual link components.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid knot signature.
+    The given string was not a valid knot/link signature.
 
 Parameter ``sig``:
-    the signature of the knot diagram to construct. Note that
+    the signature of the link diagram to construct. Note that
     signatures are case-sensitive.
 
 Returns:
-    the reconstructed knot.)doc";
+    the reconstructed link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::gauss
 static const char *gauss =
@@ -2376,46 +2380,16 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knotSig
 static const char *knotSig =
-R"doc(Constructs the _signature_ for this knot or link diagram.
+R"doc(Alias for sig(), which constructs the signature for this knot or link
+diagram.
 
-A _signature_ is a compact text representation of a link diagram that
-uniquely determines the diagram up to: relabelling; rotating connected
-components of the diagram; and (optionally) reflecting the entire
-diagram and/or reversing some or all link components.
+This alias knotSig() has been kept to reflect the fact that, in older
+versions of Regina, these signatures were only available for single-
+component knots; moreover the old name "knot signatures" can still be
+found in the literature. While this routine is not deprecated, it is
+recommended to use sig() in new code.
 
-Signatures are now supported for all link diagrams with fewer than 64
-link components. Specifically:
-
-* Regina 7.3 and earlier only offered signatures for knots. As of
-  Regina 7.4, signatures are now supported for arbitrary link diagrams
-  (but see the next point), and for knots the new signatures are
-  identical to the old.
-
-* The implementation uses bitmasks, and a side-effect of this is that
-  it can only support fewer than 64 link components. However, since
-  the running time is exponential in the number of components (if we
-  allow reversal, which is the default) then it would be completely
-  infeasible to use this routine in practice with _more_ components
-  than this. If there are 64 or more link components then this routine
-  will throw an exception.
-
-The signature is constructed entirely of printable characters, and has
-length proportional to ``n log n``, where *n* is the number of
-crossings.
-
-The routine fromKnotSig() can be used to recover a link diagram from
-its signature. The resulting diagram might not be identical to the
-original, but it will be related by zero or more applications of
-relabelling, rotating connected components of the diagram, and/or
-(according to the arguments) reflection of the entire diagram and/or
-reversal of individual link components.
-
-The running time is quadratic in the number of crossings and (if we
-allow reversal, which is the default) exponential in the number of
-link components. For this reason, signatures should not be used for
-links with a large number of components.
-
-This routine runs in quadratic time.
+See sig() for further details.
 
 Exception ``NotImplemented``:
     This link diagram has 64 or more link components.
@@ -3477,7 +3451,7 @@ callable object).
   representing the link diagram that has been found; or else (b) the
   first two arguments must be of types const std::string& followed by
   a link, representing both the link diagram and its signature (as
-  returned by knotSig()). The second form is offered in order to avoid
+  returned by sig()). The second form is offered in order to avoid
   unnecessarily recomputation within the *action* function. If there
   are any additional arguments supplied in the list *args*, then these
   will be passed as subsequent arguments to *action*.
@@ -3619,13 +3593,46 @@ Returns:
 
 // Docstring regina::python::doc::Link_::sig
 static const char *sig =
-R"doc(Alias for knotSig(), which constructs the signature for this knot or
-link diagram.
+R"doc(Constructs the _signature_ for this knot or link diagram.
 
-This alias sig() is provided to assist with generic code that can work
-with both links and triangulations.
+A _signature_ is a compact text representation of a link diagram that
+uniquely determines the diagram up to: relabelling; rotating connected
+components of the diagram; and (optionally) reflecting the entire
+diagram and/or reversing some or all link components.
 
-See knotSig() for further details.
+Signatures are now supported for all link diagrams with fewer than 64
+link components. Specifically:
+
+* Regina 7.3 and earlier only offered signatures for knots. As of
+  Regina 7.4, signatures are now supported for arbitrary link diagrams
+  (but see the next point), and for knots the new signatures are
+  identical to the old.
+
+* The implementation uses bitmasks, and a side-effect of this is that
+  it can only support fewer than 64 link components. However, since
+  the running time is exponential in the number of components (if we
+  allow reversal, which is the default) then it would be completely
+  infeasible to use this routine in practice with _more_ components
+  than this. If there are 64 or more link components then this routine
+  will throw an exception.
+
+The signature is constructed entirely of printable characters, and has
+length proportional to ``n log n``, where *n* is the number of
+crossings.
+
+The routine fromSig() can be used to recover a link diagram from its
+signature. The resulting diagram might not be identical to the
+original, but it will be related by zero or more applications of
+relabelling, rotating connected components of the diagram, and/or
+(according to the arguments) reflection of the entire diagram and/or
+reversal of individual link components.
+
+The running time is quadratic in the number of crossings and (if we
+allow reversal, which is the default) exponential in the number of
+link components. For this reason, signatures should not be used for
+links with a large number of components.
+
+This routine runs in quadratic time.
 
 Exception ``NotImplemented``:
     This link diagram has 64 or more link components.
@@ -3733,7 +3740,8 @@ To assist with performance, this routine can run in parallel
 (multithreaded) mode; simply pass the number of parallel threads in
 the argument *threads*. Even in multithreaded mode, this routine will
 not return until processing has finished (i.e., either the diagram was
-simplified or the search was exhausted).
+simplified or the search was exhausted), and any change to this link
+diagram will happen in the calling thread.
 
 If this routine is unable to simplify the link diagram, then this link
 diagram will not be changed.
