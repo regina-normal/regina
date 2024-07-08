@@ -1089,6 +1089,25 @@ Parameter ``plantri``:
 Returns:
     the resulting graph.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::generateAnyLink
+static const char *generateAnyLink =
+R"doc(Generates an arbitrary link diagram that is modelled by this graph.
+
+All link diagrams modelled by this graph are identical up to switching
+of individual crossings and/or reversal of individual link components.
+This routine will generate just one of these many possible link
+diagrams. If you wish to generate _all_ such diagrams, consider
+whether generateMinimalLinks() might be more appropriate for what you
+need.
+
+Unlike generateMinimalLinks(), there is no guarantee that the diagram
+produced by this routine is minimal or even locally minimal in any
+sense. For example, it is entirely possible that the link diagram
+returned by this routine will have a reducing Reidemeister move.
+
+In the link diagram that is generated, crossing *k* will always
+correspond to node *k* of this graph.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::generateMinimalLinks
 static const char *generateMinimalLinks =
 R"doc(Exhaustively generates potentially-minimal link diagrams that are

@@ -192,6 +192,7 @@ Version 7.4  [ (to be announced) ]
               MatrixReal to represent the C++ type Matrix<double>.
         Class ModelLinkGraph:
             - New routines isSimple() and isConnected().
+            - New routine generateAnyLink().
             - Routine generateMinimalLinks() now supports multiple-component
               links.
         Class ModelLinkGraphNode:

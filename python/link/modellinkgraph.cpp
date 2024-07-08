@@ -112,6 +112,8 @@ void addModelLinkGraph(pybind11::module_& m) {
             rdoc::canonicalPlantri)
         .def_static("fromPlantri", &ModelLinkGraph::fromPlantri,
             rdoc::fromPlantri)
+        .def("generateAnyLink", &ModelLinkGraph::generateAnyLink,
+            rdoc::generateAnyLink)
         .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
             const std::function<void(regina::Link&&)>&>,
             pybind11::arg("action"), rdoc::generateMinimalLinks)

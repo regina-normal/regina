@@ -269,6 +269,88 @@ bool ModelLinkGraph::isSimple() const {
     return true;
 }
 
+Link ModelLinkGraph::generateAnyLink() const {
+    if (size() == 0)
+        return Link();
+
+    // First work out the orientation of the link components as they pass
+    // through each node.
+    FixedArray<char> dir(size(), 0); // Bits 0,1,2,3 are 1/0 for forward/back.
+
+    std::vector<ModelLinkGraphArc> componentArcs;
+
+    size_t steps = 0;
+    for (size_t i = 0; i < size(); ++i) {
+        auto node = nodes_[i];
+
+        // Look for a new component passing through arcs 0 and 2:
+        if ((dir[node->index()] & 5 /* 0101 */) == 0) {
+            ModelLinkGraphArc a(node, 0);
+            componentArcs.push_back(a);
+            do {
+                dir[a.node()->index()] |= (1 << a.arc());
+                a = a.next();
+                ++steps;
+            } while (a.node() != node || a.arc() != 0);
+        }
+
+        // Look for a new component passing through arcs 1 and 3:
+        if ((dir[node->index()] & 10 /* 1010 */) == 0) {
+            ModelLinkGraphArc a(node, 1);
+            componentArcs.push_back(a);
+            do {
+                dir[a.node()->index()] |= (1 << a.arc());
+                a = a.next();
+                ++steps;
+            } while (a.node() != node || a.arc() != 1);
+        }
+    }
+
+    // Go ahead and build the link.
+    // We will make every crossing positive.
+    Link l;
+    for (size_t i = 0; i < size(); ++i)
+        l.crossings_.push_back(new Crossing(1));
+    for (size_t i = 0; i < size(); ++i) {
+        // Upper outgoing arc:
+        ModelLinkGraphArc a = nodes_[i]->adj_[upperOutArc[1][dir[i]]];
+        size_t adj = a.node_->index();
+        int adjStrand = (a.arc_ == (upperOutArc[1][dir[adj]] ^ 2) ? 1 : 0);
+        l.crossings_[i]->next_[1].crossing_ = l.crossings_[adj];
+        l.crossings_[i]->next_[1].strand_ = adjStrand;
+
+        l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
+        l.crossings_[adj]->prev_[adjStrand].strand_ = 1;
+
+        // Lower outgoing arc:
+        a = nodes_[i]->adj_[upperOutArc[0][dir[i]]];
+        adj = a.node_->index();
+        adjStrand = (a.arc_ == (upperOutArc[1][dir[adj]] ^ 2) ? 1 : 0);
+        l.crossings_[i]->next_[0].crossing_ = l.crossings_[adj];
+        l.crossings_[i]->next_[0].strand_ = adjStrand;
+
+        l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
+        l.crossings_[adj]->prev_[adjStrand].strand_ = 0;
+    }
+    for (const auto& a : componentArcs) {
+        size_t i = a.node_->index();
+        // We know from above that a.arc_ is either 0 or 1,
+        // and that dir[i] sets the bit for a.arc_.
+        //
+        // Since all crossings are positive: if the outgoing arcs are j, j+1
+        // then j is lower.
+        if (dir[i] == (3 << a.arc_)) {
+            // The outgoing arcs are a.arc_, a.arc_+1, so a.arc_ is lower.
+            l.components_.emplace_back(l.crossings_[i], 0);
+        } else {
+            // The outgoing arcs are a.arc_, a.arc_-1, so a.arc_ is upper.
+            l.components_.emplace_back(l.crossings_[i], 1);
+        }
+    }
+
+    return l;
+}
+
 void ModelLinkGraph::writeTextShort(std::ostream& out) const {
     if (nodes_.empty()) {
         out << "Empty graph";
