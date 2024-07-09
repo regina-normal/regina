@@ -118,7 +118,7 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
 
     actThinner = new QAction(this);
     actThinner->setText(tr("T&hinner"));
-    // TODO: actThinner->setIcon(ReginaSupport::regIcon("insert"));
+    actThinner->setIcon(ReginaSupport::regIcon("thinner"));
     actThinner->setToolTip(tr("Make the link appear thinner"));
     actThinner->setWhatsThis(tr("Reduces the radius that is used to render "
         "the link."));
@@ -128,7 +128,7 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
 
     actThicker = new QAction(this);
     actThicker->setText(tr("Thic&ker"));
-    // TODO: actThicker->setIcon(ReginaSupport::regIcon("insert"));
+    actThicker->setIcon(ReginaSupport::regIcon("thicker"));
     actThicker->setToolTip(tr("Make the link appear thicker"));
     actThicker->setWhatsThis(tr("Increases the radius that is used to render "
         "the link."));
@@ -138,7 +138,7 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
 
     actRefine = new QAction(this);
     actRefine->setText(tr("&Refine"));
-    // TODO: actRefine->setIcon(ReginaSupport::regIcon("insert"));
+    actRefine->setIcon(ReginaSupport::regIcon("refine"));
     actRefine->setToolTip(tr("Makes the link appear smoother"));
     actRefine->setWhatsThis(tr("Increases the number of line segments that are "
         "used to render the link."));
