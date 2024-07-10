@@ -153,6 +153,20 @@ Link ExampleLink::gst() {
           37, 42, -46, -47, 48, -44, -35, 38, 41, -45, 47, -48 });
 }
 
+Link ExampleLink::chen() {
+    return Link::fromData(
+        { -1, -1, -1, -1,
+          +1, +1, +1, +1,
+          +1, +1, +1, +1,
+          -1, -1, -1, -1,
+          +1, +1, +1, +1 },
+        { 1, -2, 6, 10, -14, 15, -19, -8 },
+        { 2, -3, 7, 11, -15, 16, -20, -5 },
+        { 3, -4, 8, 12, -16, 13, -17, -6 },
+        { 4, -1, 5, 9, -13, 14, -18, -7 },
+        { 17, -10, 18, -11, 19, -12, 20, -9 });
+}
+
 SpatialLink ExampleLink::spatialTrefoil() {
     // Note: we could happily remove the second and fourth columns; the
     // reason we keep them is to add a bend to the arcs and make everything

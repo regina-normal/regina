@@ -59,6 +59,7 @@ void addExampleLink(pybind11::module_& m) {
             rdoc::kinoshitaTerasaka)
         .def_static("torus", &ExampleLink::torus, rdoc::torus)
         .def_static("gst", &ExampleLink::gst, rdoc::gst)
+        .def_static("chen", &ExampleLink::chen, rdoc::chen)
         .def_static("spatialTrefoil", &ExampleLink::spatialTrefoil,
             rdoc::spatialTrefoil)
         .def_static("spatialHopf", &ExampleLink::spatialHopf, rdoc::spatialHopf)

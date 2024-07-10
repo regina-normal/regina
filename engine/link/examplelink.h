@@ -184,6 +184,26 @@ class ExampleLink {
         static Link gst();
 
         /**
+         * Returns a 20-crossing, 5-component counterexample to the 3-move
+         * conjecture, as proposed by Chen and proven to be a counterexample
+         * by Dabkowski and Przytycki.
+         *
+         * This link was proposed as a potential counterexample to the 3-move
+         * conjecture in "The 3-move conjecture for 5-braids", Qi Chen,
+         * Knots in Hellas '98, Proceedings of the International Conference on
+         * Knot Theory and its Ramifications, Series on Knots and Everything,
+         * Vol. 24, World Scientific, 2000, pp. 36-47.
+         *
+         * It was _proven_ to be a counterexample in "Burnside obstructions to
+         * the Montesinos-Nakanishi 3-move conjecture", M. K. Dabkowski and
+         * J. H. Przytycki, Geometry and Topology 6 (2002), 335-360.
+         *
+         * \return Chen's proposed (and since proven) 20-crossing
+         * counterexample to the 3-move conjecture.
+         */
+        static Link chen();
+
+        /**
          * Returns a simple and symmetric embedding in 3-space of the
          * right-hand trefoil.
          *
