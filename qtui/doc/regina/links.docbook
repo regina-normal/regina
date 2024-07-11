@@ -901,6 +901,75 @@
     </inlinemediaobject>
    </para>
   </sect2>
+
+  <sect2 id="link-decomposition">
+   <title>Decomposition</title>
+   <para>
+    At present &regina; only offers very basic algorithms for decomposing
+    links into smaller pieces.  These include the following:
+   </para>
+
+   <sect3 id="link-decomposition-components">
+    <title>Diagram Components</title>
+
+    <para>
+     If you have a link diagram that is a disjoint union of several smaller
+     diagrams, you can split the diagram into its connected components.
+     Here <firstterm>connected</firstterm> means that you can travel between
+     any two parts of the diagram by following the link and/or jumping
+     between upper and lower strands at crossings.  In other words,
+     connectivity refers to the underlying 4-valent graph, where every
+     crossing becomes a 4-way intersection.
+    </para>
+    <para>
+     What this means:
+    </para>
+    <itemizedlist>
+     <listitem><para>
+      A disconnected link diagram must describe a splittable link.
+     </para></listitem>
+     <listitem><para>
+      A splittable link, however, <emphasis>could</emphasis> be described by a
+      single connected diagram component.  For example, you could perform
+      trivial type II Reidemeister moves to make the different link components
+      overlap (thus making the entire link diagram connected).
+     </para></listitem>
+     <listitem><para>
+      In general, a single <emphasis>diagram component</emphasis>
+      could contain multiple <emphasis>link components</emphasis>.
+     </para></listitem>
+    </itemizedlist>
+    <para>
+     To split a link diagram into its connected components, select
+     <menuchoice>
+      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+      <guimenuitem>Extract Diagram Components</guimenuitem>
+     </menuchoice>
+     from the menu.
+     You must open the link for viewing before you can do this.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="menulinkcomponents"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     &regina; will create several new links, one for each
+     connected component of the original diagram.
+     These will be added beneath the original in the packet tree.
+     Your original (disconnected) link diagram will remain unchanged.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="link-extract-components"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+  </sect2>
  </sect1>
 
  <sect1 id="link-modification">

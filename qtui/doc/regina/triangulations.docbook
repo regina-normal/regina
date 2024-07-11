@@ -2414,7 +2414,7 @@
   <sect2 id="tri-decomposition">
    <title>Decomposition (All Dimensions)</title>
    <para>
-    &regina; implements some high-level algorithms for decomposition
+    &regina; implements some high-level algorithms for decomposing
     manifolds into &ldquo;atomic pieces&rdquo;.  These include the following:
    </para>
 

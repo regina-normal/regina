@@ -397,6 +397,8 @@
   <primaryie>components</primaryie>
   <secondaryie><link linkend="tri-decomposition-component">decomposing into,
    for triangulations</link></secondaryie>
+  <secondaryie><link linkend="link-decomposition-components">diagram components,
+   for links</link></secondaryie>
   <secondaryie><link linkend="link-crossings">viewing,
    for links</link></secondaryie>
   <secondaryie><link linkend="tri-components">viewing,
@@ -423,6 +425,11 @@
    interaction</link></secondaryie>
   <secondaryie><link linkend="options-tools">tools,
    third-party</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>connected components</primaryie>
+  <seeie>See: components</seeie>
  </indexentry>
 
  <indexentry>
@@ -524,7 +531,9 @@
  <indexentry>
   <primaryie>decomposition</primaryie>
   <secondaryie><link linkend="tri-decomposition-component">by
-   components</link></secondaryie>
+   components, for triangulations</link></secondaryie>
+  <secondaryie><link linkend="link-decomposition-components">by
+   diagram components, for links</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">by
    connected sum</link></secondaryie>
  </indexentry>
@@ -546,6 +555,11 @@
 
  <indexentry>
   <primaryie><link linkend="packet-delete">deleting packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>diagram components</primaryie>
+  <seeie>See: components</seeie>
  </indexentry>
 
  <indexentry>
@@ -1157,6 +1171,8 @@
   <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
   <secondaryie><link linkend="link-cables">cabling</link></secondaryie>
   <secondaryie><link linkend="link-complement">complements</link></secondaryie>
+  <secondaryie><link linkend="link-decomposition-components">components,
+   decomposition</link></secondaryie>
   <secondaryie><link linkend="link-crossings">components,
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-composewith">composite link,
@@ -1168,6 +1184,8 @@
    resolving (or splicing)</link></secondaryie>
   <secondaryie><link linkend="link-crossings">crossings,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="link-decomposition-components">diagram components,
+   decomposition</link></secondaryie>
   <secondaryie><link linkend="link-graphs">diagram
    graphs</link></secondaryie>
   <secondaryie><link linkend="link-insert">disjoint union</link></secondaryie>
