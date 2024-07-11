@@ -1454,6 +1454,65 @@
     into the resulting composite link.
    </para>
   </sect2>
+
+  <sect2 id="link-insert">
+   <title>Building Disjoint Unions</title>
+   <para>
+    You can also combine two links using a
+    <firstterm>disjoint union</firstterm>.
+    This will convert some link <replaceable>L</replaceable>
+    into the split link
+    <replaceable>L</replaceable>&nbsp;U&nbsp;<replaceable>M</replaceable>
+    for some other link <replaceable>M</replaceable>
+    (note that
+    <replaceable>M</replaceable> is allowed to be the same as
+    <replaceable>L</replaceable>).
+    Essentially, this modifies <replaceable>L</replaceable> by placing a copy
+    of <replaceable>M</replaceable> beside it.
+    As with composition, the disjoint union will respect the orientations
+    (i.e., directions of traversal) of each link.
+   </para>
+   <para>
+    To form this union, first open the the link
+    <replaceable>L</replaceable> for editing;
+    this is the link that you are operating on, and it will be
+    modified directly.
+    Then select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Insert Link</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-insert"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    &regina; will ask you which other link to insert;
+    in other words, &regina; will ask you for the link
+    <replaceable>M</replaceable>.
+    This second link <replaceable>M</replaceable> will be
+    left unchanged (unless you have chosen to insert
+    <replaceable>L</replaceable> into itself, which is again legal
+    and will work as expected).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-insert-link"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The link <replaceable>L</replaceable> will be changed directly
+    into the disjoint union
+    <replaceable>L</replaceable>&nbsp;U&nbsp;<replaceable>M</replaceable>.
+   </para>
+  </sect2>
  </sect1>
 </chapter>
 

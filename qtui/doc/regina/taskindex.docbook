@@ -570,6 +570,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>disjoint union</primaryie>
+  <secondaryie><link linkend="link-insert">of links</link></secondaryie>
+  <secondaryie><link linkend="tri-insert">of triangulations</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>documentation, &regina; objects, classes and methods</primaryie>
   <secondaryie><link linkend="python-docstrings">accessing inline through
    &python;</link></secondaryie>
@@ -991,6 +997,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>inserting</primaryie>
+  <secondaryie><link linkend="link-insert">links</link></secondaryie>
+  <secondaryie><link linkend="tri-insert">triangulations</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>interface</primaryie>
   <seeie>See: user interface</seeie>
  </indexentry>
@@ -1158,6 +1170,7 @@
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-graphs">diagram
    graphs</link></secondaryie>
+  <secondaryie><link linkend="link-insert">disjoint union</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Dowker-Thistlethwaite notation,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Dowker-Thistlethwaite notation,
@@ -1174,6 +1187,8 @@
   <secondaryie><link linkend="link-algebra">group</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">&homflypt;
    polynomial</link></secondaryie>
+  <secondaryie><link linkend="link-insert">inserting other
+   links</link></secondaryie>
   <secondaryie><link linkend="link-codes-construct">Jenkins format,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Jenkins format,
@@ -2044,6 +2059,7 @@
   <secondaryie><link linkend="tri-faces">cusps</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">dehydration
    string, rehydrating</link></secondaryie>
+  <secondaryie><link linkend="tri-insert">disjoint union</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">drilling
    edges</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-dual">dual
@@ -2080,6 +2096,8 @@
    truncation</link></secondaryie>
   <secondaryie><link linkend="foreign-import">importing from
    external files</link></secondaryie>
+  <secondaryie><link linkend="tri-insert">inserting other
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homiform">intersection
    form</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
@@ -2161,6 +2179,11 @@
  <indexentry>
   <primaryie><link linkend="options-unicode">unicode symbols,
    enabling / disabling</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>union</primaryie>
+  <seeie>See: disjoint union</seeie>
  </indexentry>
 
  <indexentry>

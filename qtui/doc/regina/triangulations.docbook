@@ -3492,9 +3492,70 @@
    </para>
   </sect2>
 
+  <sect2 id="tri-insert">
+   <title>Building Disjoint Unions (All Dimensions)</title>
+   <para>
+    You can also combine two 3-manifold triangulations by forming their
+    disjoint union.  This will convert some triangulation
+    <replaceable>X</replaceable> into the union
+    <replaceable>X</replaceable>&nbsp;U&nbsp;<replaceable>Y</replaceable>
+    for some other triangulation <replaceable>Y</replaceable>
+    (note that
+    <replaceable>Y</replaceable> is allowed to be the same as
+    <replaceable>X</replaceable>).
+    Essentially, this just inserts a copy of <replaceable>Y</replaceable>
+    into <replaceable>X</replaceable>.
+    If both <replaceable>X</replaceable> and <replaceable>Y</replaceable>
+    are <link linkend="tri-proporient">oriented</link> triangulations then
+    the union will respect these orientations, and will be oriented also.
+   </para>
+   <para>
+    Again, the triangulation <replaceable>X</replaceable> must be one of
+    &regina;'s native <link linkend="packet-triangulation3">triangulation
+    packets</link>, since
+    <replaceable>X</replaceable> will be modified directly.
+    The triangulation <replaceable>Y</replaceable> may be either a
+    native triangulation packet or a hybrid
+    <link linkend="packet-snappea">&snappea; triangulation</link>,
+    since <replaceable>Y</replaceable> will not be modified.
+   </para>
+   <para>
+    To form this disjoint union, first open the the triangulation
+    <replaceable>X</replaceable> for editing, and then select
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Insert Triangulation</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-insert"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    &regina; will ask you which other triangulation to insert;
+    in other words, &regina; will ask you for the triangulation
+    <replaceable>Y</replaceable>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-insert-tri"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The triangulation <replaceable>X</replaceable> will be changed directly
+    into the disjoint union
+    <replaceable>X</replaceable>&nbsp;U&nbsp;<replaceable>Y</replaceable>.
+   </para>
+  </sect2>
+
   <sect2 id="tri-cutcrush">
    <title>Cutting Along and Crushing Normal Surfaces (3-D)</title>
-
    <para>
     If you have a normal surface in a 3-manifold triangulation,
     you can either cut along your surface or crush it to a point.
