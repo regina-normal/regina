@@ -59,7 +59,7 @@ ALIASES = \
 
 # Warning and progress related options:
 
-QUIET                = NO
+QUIET                = YES
 WARNINGS             = YES
 WARN_IF_UNDOCUMENTED = YES
 
