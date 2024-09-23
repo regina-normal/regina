@@ -340,8 +340,8 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                 }
             }
 
-            auto joinDest = dec.decodeInts<size_t>(nJoins, nChars);
-            auto joinGluing = dec.decodeInts<typename Perm<dim+1>::Index>(
+            auto joinDest = dec.template decodeInts<size_t>(nJoins, nChars);
+            auto joinGluing = dec.template decodeInts<typename Perm<dim+1>::Index>(
                 nJoins, IsoSigPrintable<dim>::charsPerPerm);
 
             // End of component!
