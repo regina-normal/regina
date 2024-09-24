@@ -109,6 +109,8 @@ namespace regina {
  * Until isFinished() returns \c true, there is no guarantee that the
  * writing thread has detected and honoured the cancellation request.
  *
+ * All read and write operations on progress trackers are thread-safe.
+ *
  * Progress trackers rely on multiple threads accessing the same underlying
  * object, and so they cannot be copied, moved or swapped.
  *
