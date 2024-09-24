@@ -30,11 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#define _USE_MATH_DEFINES // for M_PI, which is non-standard
-
 #include <algorithm>
-#include <cmath>
 #include <complex>
+#include <numbers>
 #include <numeric> // for std::gcd()
 #include <thread>
 #include "regina-config.h"
@@ -191,7 +189,7 @@ namespace {
             bracket_(new TVResult[r]),
             fact_(new TVResult[r]),
             inv_(new TVResult[r]) {
-        TVResult angle = (M_PI * whichRoot) / r;
+        TVResult angle = (std::numbers::pi_v<TVResult> * whichRoot) / r;
         bracket_[0] = bracket_[1] = fact_[0] = fact_[1] =
             inv_[0] = inv_[1] = 1.0;
         for (unsigned long i = 2; i < r; i++) {
@@ -398,7 +396,7 @@ namespace {
             whichRoot(newWhichRoot),
             halfField(r % 2 != 0 && whichRoot % 2 == 0),
             fact(r, whichRoot) {
-        double tmp = sin(M_PI * whichRoot / r);
+        double tmp = sin(std::numbers::pi_v<double> * whichRoot / r);
         vertexContrib = 2.0 * tmp * tmp / r;
     }
 

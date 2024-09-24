@@ -30,12 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#define _USE_MATH_DEFINES // for M_PI, which is non-standard
-
 #include "maths/cyclotomic.h"
 #include "maths/integer.h"
-#include <cmath>
 #include <mutex>
+#include <numbers>
 #include <thread>
 #include <vector>
 
@@ -52,8 +50,10 @@ std::complex<double> Cyclotomic::evaluate(size_t whichRoot) const {
     double c;
     for (size_t i = 1; i < degree_; ++i) {
         c = coeff_[i].doubleApprox();
-        real += c * cos(2 * M_PI * whichRoot * i / field_);
-        imag += c * sin(2 * M_PI * whichRoot * i / field_);
+        real += c * cos(
+            2 * std::numbers::pi_v<double> * whichRoot * i / field_);
+        imag += c * sin(
+            2 * std::numbers::pi_v<double> * whichRoot * i / field_);
     }
     return std::complex<double>(real, imag);
 }

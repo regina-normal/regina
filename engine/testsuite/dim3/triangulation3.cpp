@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include <cmath>
+#include <numbers>
 #include "angle/anglestructures.h"
 #include "link/link.h"
 #include "manifold/simplesurfacebundle.h"
@@ -44,11 +44,6 @@
 
 #include "generic/triangulationtest.h"
 #include "testexhaustive.h"
-
-// Pi only becomes a standard language constant in C++20.
-// For now, use the non-standard M_PI (which requires the following #define).
-// This is used in the Turaev-Viro approximation tests.
-#define _USE_MATH_DEFINES
 
 using regina::AbelianGroup;
 using regina::Example;
@@ -3018,7 +3013,7 @@ TEST_F(Dim3Test, turaevViro) {
             if (std::gcd(q0, r) == 1) {
                 SCOPED_TRACE_NUMERIC(q0);
 
-                double pow = 2 * sin(M_PI * q0 / r);
+                double pow = 2 * sin(std::numbers::pi_v<double> * q0 / r);
                 EXPECT_NEAR(s3.tri.turaevViroApprox(r, q0),
                     (pow * pow) / (2 * r), epsilon);
                 EXPECT_NEAR(sphere.tri.turaevViroApprox(r, q0),
@@ -3048,8 +3043,8 @@ TEST_F(Dim3Test, turaevViro) {
                     EXPECT_NEAR(rp3_large.tri.turaevViroApprox(r, q0), 0,
                         epsilon);
                 } else {
-                    double real = cos(M_PI * q0 / r) - 1.0;
-                    double imag = sin(M_PI * q0 / r);
+                    double real = cos(std::numbers::pi_v<double> * q0 / r) - 1;
+                    double imag = sin(std::numbers::pi_v<double> * q0 / r);
                     EXPECT_NEAR(rp3_1.tri.turaevViroApprox(r, q0),
                         ((real * real) + (imag * imag)) / r, epsilon);
                     EXPECT_NEAR(rp3_2.tri.turaevViroApprox(r, q0),
@@ -3072,7 +3067,8 @@ TEST_F(Dim3Test, turaevViro) {
             if (std::gcd(q0, r) == 1) {
                 SCOPED_TRACE_NUMERIC(q0);
 
-                double pow = 2 * sin(M_PI * q0 * (((r - 2) / 3) + 1) / r);
+                double pow = 2 * sin(std::numbers::pi_v<double> * q0 *
+                    (((r - 2) / 3) + 1) / r);
                 EXPECT_NEAR(lens3_1.tri.turaevViroApprox(r, q0),
                     (pow * pow) / (2 * r), epsilon);
             }
