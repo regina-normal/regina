@@ -67,7 +67,7 @@ void addGluingPermSearcher4(pybind11::module_& m) {
         .def_static("bestSearcher", &GluingPermSearcher<4>::bestSearcher,
             rdoc::bestSearcher)
         .def_static("fromTaggedData",
-            pybind11::overload_cast<const std::string&>(
+            pybind11::overload_cast<std::string>(
                 &GluingPermSearcher<4>::fromTaggedData), rdoc::fromTaggedData)
         .def_readonly_static("dataTag", &GluingPermSearcher<4>::dataTag)
         ;
