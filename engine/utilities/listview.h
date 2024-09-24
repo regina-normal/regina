@@ -85,7 +85,7 @@ namespace regina {
  *
  * End users should always store ListView objects using \c auto, not by
  * explicitly writing out the full ListView type.  One reason for this
- * is that, if/when Regina moves to C++20, the ListView class will most
+ * is that, now that Regina has moved to C++20, the ListView class will most
  * likely be removed completely (in favour of the new C++20 ranges library).
  *
  * ListView objects are small enough to pass by value and swap with std::swap(),

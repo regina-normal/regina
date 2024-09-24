@@ -914,7 +914,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * given string was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<4>> fromTaggedData(
-                const std::string& data);
+                std::string data);
 
         // Make this class non-copyable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
@@ -1433,11 +1433,9 @@ inline std::unique_ptr<GluingPermSearcher<4>>
 }
 
 inline std::unique_ptr<GluingPermSearcher<4>>
-        GluingPermSearcher<4>::fromTaggedData(const std::string& data) {
-    // With C++20 we will be able to move the string into the input stream,
-    // which means the argument should become a string (not const string&).
+        GluingPermSearcher<4>::fromTaggedData(std::string data) {
     try {
-        std::istringstream in(data);
+        std::istringstream in(std::move(data));
         return fromTaggedData(in);
     } catch (const InvalidInput& exc) {
         throw InvalidArgument(exc.what());

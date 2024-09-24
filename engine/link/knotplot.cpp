@@ -38,21 +38,6 @@
 #include "link/spatiallink.h"
 #include "utilities/exception.h"
 
-// From wikipedia: IEEE-754 binary32 should represent
-// 00111110 00100000 00000000 00000000 = 0.15625.
-
-static bool isFloatBigEndian() {
-    uint8_t data[4] = { 62, 32, 0, 0 };
-    float f = *reinterpret_cast<const float*>(data);
-    return (std::abs(f - 0.15625) < 0.00001);
-}
-
-static bool isFloatLittleEndian() {
-    uint8_t data[4] = { 0, 0, 32, 62 };
-    float f = *reinterpret_cast<const float*>(data);
-    return (std::abs(f - 0.15625) < 0.00001);
-}
-
 // Converts two successive bytes into a single unsigned 16-bit integer, where
 // the input is treated as big-endian (regardless of the endianness of the
 // current platform).
@@ -84,18 +69,19 @@ static constexpr uint32_t KPInt32(const char c[]) {
 // platform).
 //
 // THIS NEEDS TESTING ON DIFFERENT PLATFORMS.  I have seen a promise (on
-// cppreferences.com) that float and double should use IEEE-754 binary32 and
+// cppreference.com) that float and double should use IEEE-754 binary32 and
 // IEEE-754 binary64 respectively.
 //
 // However, I believe endianness still matters.  My own main platforms are
 // all little-endian.
 //
-// Note: the current endianness test is a bit messy, but once we have C++20
-// we should have access to std::endian.
-//
 // PRE: the array c has length at least 4.
-float KPFloat32(const char c[], bool bigEndian) {
-    if (bigEndian) {
+float KPFloat32(const char c[]) {
+    static_assert(std::endian::native == std::endian::big ||
+        std::endian::native == std::endian::little,
+        "Only big-endian and little-endian platforms are supported.");
+
+    if constexpr (std::endian::native == std::endian::big) {
         return *(reinterpret_cast<const float*>(c));
     } else {
         const char x[4] = { c[3], c[2], c[1], c[0] };
@@ -111,8 +97,12 @@ float KPFloat32(const char c[], bool bigEndian) {
 // KPFloat32().
 //
 // PRE: the array c has length at least 8.
-double KPFloat64(const char c[], bool bigEndian) {
-    if (bigEndian) {
+double KPFloat64(const char c[]) {
+    static_assert(std::endian::native == std::endian::big ||
+        std::endian::native == std::endian::little,
+        "Only big-endian and little-endian platforms are supported.");
+
+    if constexpr (std::endian::native == std::endian::big) {
         return *(reinterpret_cast<const double*>(c));
     } else {
         const char x[8] = { c[7], c[6], c[5], c[4], c[3], c[2], c[1], c[0] };
@@ -128,15 +118,6 @@ SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
     if (sizeof(float) != 4 || sizeof(double) != 8)
         throw NotImplemented("fromKnotPlot(): binary file format requires "
             "a platform with 32-bit floats and 64-bit doubles");
-
-    bool floatBigEndian;
-    if (isFloatLittleEndian())
-        floatBigEndian = false;
-    else if (isFloatBigEndian())
-        floatBigEndian = true;
-    else
-        throw NotImplemented("fromKnotPlot(): could not determine the "
-            "endianness for floating-point numbers on the current platform");
 
     std::ifstream in(filename, std::ios::binary);
     if (! in)
@@ -254,11 +235,11 @@ SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
                                 throw InvalidInput(
                                     "fromKnotPlot(): unexpected end of file");
 
-                            float scale = KPFloat32(data, floatBigEndian);
+                            float scale = KPFloat32(data);
                             float offset[3] = {
-                                KPFloat32(data + 4, floatBigEndian),
-                                KPFloat32(data + 8, floatBigEndian),
-                                KPFloat32(data + 12, floatBigEndian) };
+                                KPFloat32(data + 4),
+                                KPFloat32(data + 8),
+                                KPFloat32(data + 12) };
 
                             for (size_t i = 16; i < len; i += 6) {
                                 in.read(data, 6);
@@ -297,9 +278,9 @@ SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
                                 // Note: we already tested above that
                                 // components_ is non-empty.
                                 ans.components_.back().emplace_back(
-                                    KPFloat32(data, floatBigEndian),
-                                    KPFloat32(data + 4, floatBigEndian),
-                                    KPFloat32(data + 8, floatBigEndian));
+                                    KPFloat32(data),
+                                    KPFloat32(data + 4),
+                                    KPFloat32(data + 8));
                             }
                         }
                         break;
@@ -323,9 +304,9 @@ SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
                                 // Note: we already tested above that
                                 // components_ is non-empty.
                                 ans.components_.back().emplace_back(
-                                    KPFloat64(data, floatBigEndian),
-                                    KPFloat64(data + 8, floatBigEndian),
-                                    KPFloat64(data + 16, floatBigEndian));
+                                    KPFloat64(data),
+                                    KPFloat64(data + 8),
+                                    KPFloat64(data + 16));
                             }
                         }
                         break;
@@ -369,18 +350,18 @@ SpatialLink SpatialLink::fromKnotPlot(const char* filename) {
                                 throw InvalidInput(
                                     "fromKnotPlot(): unexpected end of file");
                             float scale[3] = {
-                                KPFloat32(data + 4, floatBigEndian),
-                                KPFloat32(data + 8, floatBigEndian),
-                                KPFloat32(data + 12, floatBigEndian) };
+                                KPFloat32(data + 4),
+                                KPFloat32(data + 8),
+                                KPFloat32(data + 12) };
 
                             in.read(data, 12);
                             if (! in)
                                 throw InvalidInput(
                                     "fromKnotPlot(): unexpected end of file");
                             Node pos(
-                                KPFloat32(data + 4, floatBigEndian),
-                                KPFloat32(data + 8, floatBigEndian),
-                                KPFloat32(data + 12, floatBigEndian));
+                                KPFloat32(data + 4),
+                                KPFloat32(data + 8),
+                                KPFloat32(data + 12));
                             // Note: we already tested above that
                             // components_ is non-empty.
                             ans.components_.back().push_back(pos);

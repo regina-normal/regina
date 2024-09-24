@@ -3269,8 +3269,7 @@ inline constexpr Perm<6>::Perm(const std::array<int, 6>& image) :
 inline constexpr Perm<6>::Perm(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1, int e0, int e1, int f0, int f1) :
         code2_(0) {
-    // TODO: When we move to C++20, we can get rid of the zero initialisers.
-    int image[6] = { 0, 0, 0, 0, 0, 0 };
+    int image[6];
     image[a0] = a1;
     image[b0] = b1;
     image[c0] = c1;

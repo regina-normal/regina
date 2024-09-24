@@ -350,9 +350,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             // The (i)th bit of v will indicate whether i is a vertex of
             // this face.  We are using a bitmask here to avoid the need
-            // to call std::sort(), which will not be constexpr until C++20
-            // (and possibly using a bitmask will end up faster anyway, since
-            // we know we are sorting distinct integers in the range [0, dim].
+            // to call std::sort(), which was not constexpr until C++20
+            // (and possibly using a bitmask is faster anyway, since we know
+            // we are sorting distinct integers in the range [0, dim]).
             static_assert(sizeof(unsigned) * 8 >= dim + 1);
             unsigned v = 0;
             for (int i = 0; i <= lexDim; ++i)

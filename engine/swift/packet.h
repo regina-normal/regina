@@ -146,8 +146,7 @@ struct SharedPacket {
         std::string save() const {
             std::ostringstream s;
             packet_->save(s, false);
-            // Once we have C++20 we can use std::move(s).str() instead.
-            return s.str();
+            return std::move(s).str();
         }
 
         /**

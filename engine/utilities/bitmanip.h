@@ -194,15 +194,16 @@ class BitManipulatorBySize {
         static constexpr bool specialised = false;
 
         /**
-         * Returns the number of bits that are set to 1 in the given integer.
+         * Deprecated routine that returns the number of bits that are set
+         * to 1 in the given integer.
          *
-         * Note that this routine will become redundant once we move to C++20,
-         * since we will be able to use std::popcount() instead.
+         * \deprecated Now that Regina uses C++20, this routine is redundant.
+         * You should use `std::popcount()` instead.
          *
          * \param x the integer of type \a T to examine.
          * \return the number of bits that are set.
          */
-        inline static constexpr int bits(T x) {
+        [[deprecated]] inline static constexpr int bits(T x) {
             return BitManipulatorBySize<T, (size >> 1)>::bits(x) +
                 BitManipulatorBySize<T, (size >> 1)>::bits(x >> (4 * size));
         }

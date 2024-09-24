@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
+#include <bit>
 #include <cstdlib>
 #include <sstream>
 #include "maths/binom.h"
@@ -237,7 +238,7 @@ static void verifyNextPermutationFor() {
     size_t count = 0;
     for (T i = (T(1) << k) - 1; i != 0;
             i = regina::BitManipulator<T>::nextPermutation(i)) {
-        EXPECT_EQ(regina::BitManipulator<T>::bits(i), k);
+        EXPECT_EQ(std::popcount(i), k);
         if (k == 1) {
             EXPECT_EQ(regina::BitManipulator<T>::firstBit(i), count);
             EXPECT_EQ(regina::BitManipulator<T>::lastBit(i), count);
