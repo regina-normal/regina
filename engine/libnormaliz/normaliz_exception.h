@@ -163,6 +163,36 @@ class InterruptException : public NormalizException {
     std::string msg;
 };
 
+class NoComputationException : public NormalizException {
+   public:
+    NoComputationException(const std::string& message) : msg("No Computation: " + message) {
+    }
+    ~NoComputationException() noexcept {
+    }
+
+    virtual const char* what() const noexcept {
+        return msg.c_str();
+    }
+
+   private:
+    std::string msg;
+};
+
+class TimeBoundException : public NormalizException {
+   public:
+    TimeBoundException(const std::string& message) : msg("Interrupted: " + message) {
+    }
+    ~TimeBoundException() noexcept {
+    }
+
+    virtual const char* what() const noexcept {
+        return msg.c_str();
+    }
+
+   private:
+    std::string msg;
+};
+
 class NumberFieldInputException : public NormalizException {
    public:
     virtual const char* what() const noexcept {

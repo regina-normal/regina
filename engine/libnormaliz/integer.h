@@ -107,11 +107,16 @@ inline bool try_convert(mpz_class& ret, const long& val) {
     ret = val;
     return true;
 }
+
 bool try_convert(mpz_class& ret, const long long& val);
 
 bool try_convert(nmz_float& ret, const long& val);
 bool try_convert(nmz_float& ret, const long long& val);
 bool try_convert(nmz_float& ret, const mpz_class& val);
+
+bool try_convert(long& ret, const nmz_float& val);
+bool try_convert(long long& ret, const nmz_float& val);
+bool try_convert(mpz_class& ret, const nmz_float& val);
 
 bool try_convert(long& ret, const nmz_float& val);
 bool try_convert(long long& ret, const nmz_float& val);
@@ -137,7 +142,12 @@ inline bool try_convert(Type& ret, const Type& val) {
     return true;
 }
 
-inline bool try_convert(nmz_float& ret, const nmz_float& val) {
+inline bool try_convert(mpq_class& ret, const mpz_class& val) {
+    ret = val;
+    return true;
+}
+
+inline bool try_convert(mpq_class& ret, const long& val) {
     ret = val;
     return true;
 }
@@ -222,7 +232,7 @@ inline bool is_scalar_zero<nmz_float>(const nmz_float& m){
 
 template <typename Integer>
 inline bool check_range(const Integer& m) {
-    const Integer max_primary = int_max_value_primary<Integer>();
+    static Integer max_primary = int_max_value_primary<Integer>();
     return (Iabs(m) <= max_primary);
 }
 
@@ -395,7 +405,6 @@ size_t decimal_length(Integer a);
 template <typename Integer>
 mpz_class nmz_factorial(Integer n);
 
-// formerly convert.h
 // conversion for integers, throws ArithmeticException if conversion fails
 template <typename ToType, typename FromType>
 inline void convert(ToType& ret, const FromType& val) {
@@ -421,12 +430,26 @@ ToType convertTo(const FromType& val) {
     return copy;
 }
 
-inline bool try_convert(mpz_class& ret, const mpq_class&) {
-    assert(false);  // must never be used
-    return false;
+
+// Conversion of mpq_classs to nmz_float needs its own function
+// since we did not manage to do it via templates alone
+template <typename FromType>
+nmz_float convertTo_nmz_float(const FromType& val) {
+    nmz_float copy;
+    convert(copy, val);
+    return copy;
 }
 
-inline bool try_convert(mpq_class& ret, const mpz_class&) {
+template <>
+inline nmz_float convertTo_nmz_float(const mpq_class& val) {
+    return mpq_to_nmz_float(val);
+}
+
+
+
+// Now the try_convert
+
+inline bool try_convert(mpz_class& ret, const mpq_class&) {
     assert(false);  // must never be used
     return false;
 }
@@ -440,7 +463,7 @@ inline bool try_convert(renf_elem_class& ret, const mpz_class& val) {
 inline bool try_convert(mpz_class& ret, const renf_elem_class& val) {
     renf_elem_class help = val;
     if (!help.is_integer())
-        throw ArithmeticException("field element cannot be converted to integer");
+        throw ArithmeticException(". Field element cannot be converted to integer");
     ret = help.num();
     return true;
 }
@@ -567,6 +590,25 @@ inline bool try_convert(long long& ret, const nmz_float& val) {
         return false;
     return try_convert(ret, bridge);
 }
+
+
+/*
+inline bool fits_short_range(long long a) {
+    return  (a <= SHRT_MAX && a >= SHRT_MIN);
+}
+
+inline bool try_convert(short& ret, const long long& val) {
+    if(!fits_short_range(val))
+       return false;
+    ret = val;
+    return true;
+}
+
+inline bool try_convert(short& ret, const mpz_class& val) {
+    long long bridge = convertTo<long long>(val);
+    return try_convert(ret,bridge);
+}
+*/
 //---------------------------------------------------------------------------
 
 template <typename Integer>

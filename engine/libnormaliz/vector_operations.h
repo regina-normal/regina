@@ -28,11 +28,13 @@
 #include <vector>
 #include <ostream>
 #include <list>
+#include <string>
 
 #include "libnormaliz/general.h"
 #include "libnormaliz/integer.h"
 // #include "libnormaliz/convert.h"
 #include "libnormaliz/dynamic_bitset.h"
+#include "libnormaliz/my_omp.h"
 
 #ifdef NMZ_FLINT
 #include "flint/flint.h"
@@ -41,6 +43,7 @@
 
 namespace libnormaliz {
 using std::vector;
+using std::string;
 
 //---------------------------------------------------------------------------
 //				Output
@@ -54,6 +57,40 @@ std::ostream& operator<<(std::ostream& out, const vector<T>& vec) {
     out << std::endl;
     return out;
 }
+
+/*
+ *
+ * NOT O:K.
+ *
+template <typename T>
+void do_print_vector(vector<T>& vec, std::ostream out, int level, int max_level){
+    string indent;
+    for(size_t i = 0; i < max_level - level; ++i)
+        indent += "  ";
+    out << indent << "[" << std::endl;
+    if(level == 0){
+        for(site_t k = 0; k < vec.size(); ++k){
+            out << vec[k];
+            if(k < vec.size() -1)
+                out << ",";
+        }
+    }
+    if(level > 0){
+        for(size_t j = 0; j < vec.size(); ++j){
+            do_print_vector(vec[j], level - 1, max_level);
+            out << indent << "]";
+            if(j < vec.size() -1)
+                out << ",";
+            out << std::endl;
+        }
+    }
+
+}
+
+void print_vector(vector<T>& vec, std::ostream out, int lavel){
+    do_print_vector(vec, out, level, level);
+}
+*/
 
 //---------------------------------------------------------------------------
 //          Prototypes for vector_operations.cpp
@@ -75,6 +112,8 @@ void order_by_perm_bool(vector<bool>& v, const vector<key_t>& permfix);
 
 template <typename Integer>
 vector<Integer> v_select_coordinates(const vector<Integer>& v, const vector<key_t> projection_key);
+template <typename Integer>
+dynamic_bitset v_support(const vector<Integer>& v);
 template <typename Integer>
 vector<Integer> v_insert_coordinates(const vector<Integer>& v, const vector<key_t> projection_key, const size_t nr_cols);
 
@@ -119,8 +158,8 @@ bool compare_last(const vector<Integer>& a, const vector<Integer>& b) {
 
 // swaps entry i and j of the vector<bool> v
 void v_bool_entry_swap(vector<bool>& v, size_t i, size_t j);
-
 vector<key_t> identity_key(size_t n);
+vector<shortkey_t> identity_shortkey(size_t n);
 vector<key_t> reverse_key(size_t n);
 vector<key_t> random_key(size_t n);
 
@@ -212,7 +251,7 @@ bool v_non_negative(const vector<Integer>& v) {
 
 //---------------------------------------------------------------------------
 /*
-// returns a key vector containing the positions of non-zero entrys of v
+// returns a key vector containing the positions of non-zero entries of v
 template <typename Integer>
 vector<key_t> v_non_zero_pos(const vector<Integer>& v) {
     vector<key_t> key;
@@ -503,7 +542,7 @@ void v_el_trans(const vector<Integer>& av, vector<Integer>& bv, const Integer& F
     if (n > 0)
         b[0] += F * a[0];
 
-    for (i = 0; i < bv.size(); ++i)
+    for (size_t i = 0; i < bv.size(); ++i)
         if (!check_range(bv[i]))
             throw ArithmeticException("Vector entry out of range. Imminent danger of arithmetic overflow.");
 }
@@ -528,8 +567,10 @@ Integer v_standardize(vector<Integer>& v);
 
 vector<bool> bitset_to_bool(const dynamic_bitset& BS);
 vector<key_t> bitset_to_key(const dynamic_bitset& BS);
+vector<shortkey_t> bitset_to_shortkey(const dynamic_bitset& BS);
 dynamic_bitset bool_to_bitset(const vector<bool>& val);
 dynamic_bitset key_to_bitset(const vector<key_t>& key, long size);
+dynamic_bitset shortkey_to_bitset(const vector<shortkey_t>& key, long size);
 
 template <typename Integer>
 inline void make_integral(vector<Integer>& vec) {
@@ -544,7 +585,10 @@ inline void vector2fmpq_poly(fmpq_poly_t flp, const std::vector<mpq_class>& poly
 
     fmpq_poly_fit_length(flp, n);
     for (size_t i = 0; i < poly_vector.size(); ++i) {
-        fmpq_poly_set_coeff_mpq(flp, (slong)i, poly_vector[i].get_mpq_t());
+        fmpq_t fcurrent_coeff;
+        fmpq_init(fcurrent_coeff);
+        fmpq_set_mpq(fcurrent_coeff, poly_vector[i].get_mpq_t());
+        fmpq_poly_set_coeff_fmpq(flp, (slong)i, fcurrent_coeff);
     }
 }
 
@@ -557,8 +601,11 @@ inline void fmpq_poly2vector(std::vector<mpq_class>& poly_vector, const fmpq_pol
     poly_vector.resize(length);
     for (slong i = 0; i < length; i++) {
         mpq_t current_coeff;
+        fmpq_t fcurrent_coeff;
         mpq_init(current_coeff);
-        fmpq_poly_get_coeff_mpq(current_coeff, flp, (slong)i);
+        fmpq_init(fcurrent_coeff);
+        fmpq_poly_get_coeff_fmpq(fcurrent_coeff, flp, (slong)i);
+        fmpq_get_mpq(current_coeff, fcurrent_coeff);
         poly_vector[i] = mpq_class(current_coeff);
     }
 }
@@ -872,11 +919,43 @@ inline mpq_class v_scalar_product(const vector<mpq_class>& av, const vector<mpq_
 //---------------------------------------------------------------------------
 
 template <typename Integer>
+Integer pos_degree(const vector<Integer>& to_test, const vector<Integer> grading){
+    assert(to_test.size() == grading.size());
+    Integer deg = 0;
+    for(size_t j = 0; j < to_test.size(); ++j)
+        if(to_test[j] > 0)
+            deg += to_test[j]*grading[j];
+
+    return deg;
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
 vector<Integer> v_select_coordinates(const vector<Integer>& v, const vector<key_t> projection_key) {
     vector<Integer> w(projection_key.size());
     for (size_t i = 0; i < w.size(); ++i)
         w[i] = v[projection_key[i]];
     return w;
+}
+
+//---------------------------------------------------------------------------
+template <typename Integer>
+dynamic_bitset v_support(const vector<Integer>& v){
+    dynamic_bitset supp(v.size());
+    for(size_t i = 0; i < v.size(); i++){
+        if(v[i] != 0)
+            supp[i] = 1;
+    }
+    return supp;
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void v_transfer_coordinates(vector<Integer>& v, const vector<Integer>& w,   const vector<key_t> insertion_key) {
+    for (size_t i = 0; i< insertion_key.size(); ++i)
+        v[insertion_key[i]] = w[i];
 }
 
 //---------------------------------------------------------------------------
@@ -976,6 +1055,13 @@ inline vector<key_t> identity_key(size_t n) {
     vector<key_t> key(n);
     for (size_t k = 0; k < n; ++k)
         key[k] = static_cast<key_t>(k);
+    return key;
+}
+
+inline vector<shortkey_t> identity_shortkey(size_t n) {
+    vector<shortkey_t> key(n);
+    for (shortkey_t k = 0; k < n; ++k)
+        key[k] = k;
     return key;
 }
 
@@ -1209,7 +1295,24 @@ inline vector<key_t> bitset_to_key(const dynamic_bitset& val) {
     return ret;
 }
 
+inline vector<shortkey_t> bitset_to_shortkey(const dynamic_bitset& val) {
+    vector<shortkey_t> ret;
+    for (shortkey_t i = 0; i < val.size(); ++i)
+        if (val[i])
+            ret.push_back(i);
+    return ret;
+}
+
 inline dynamic_bitset key_to_bitset(const vector<key_t>& key, long size) {
+    dynamic_bitset bs(size);
+    for (size_t i = 0; i < key.size(); ++i) {
+        assert(key[i] < size);
+        bs[key[i]] = 1;
+    }
+    return bs;
+}
+
+inline dynamic_bitset shortkey_to_bitset(const vector<shortkey_t>& key, long size) {
     dynamic_bitset bs(size);
     for (size_t i = 0; i < key.size(); ++i) {
         assert(key[i] < size);
@@ -1332,6 +1435,62 @@ void AdditionPyramid<Integer>::add(const Integer& summand) {
     }
     add_inner(summand, 0);
 }
+
+template <typename T>
+void v_cyclic_shift_right( T& vec, size_t col){
+    if(vec.size() == 0)
+        return;
+    assert(col < vec.size());
+    auto dummy = vec[col];
+    for(int i = col; i >= 1; --i)
+        vec[i] = vec[i-1];
+    vec[0] = dummy;
+}
+
+template <typename T>
+void v_cyclic_shift_left( T& vec, size_t col){
+    if(vec.size() == 0)
+        return;
+    assert(col < vec.size());
+    auto dummy = vec[0];
+    for(size_t i = 0; i < col; ++i)
+        vec[i] = vec[i+1];
+    vec[col] = dummy;
+}
+
+template <typename T>
+T v_permute_coordinates(const T& vec, const vector<key_t>& perm){
+    assert(vec.size() == perm.size());
+    T new_vec(vec.size());
+    for(size_t i = 0; i< vec.size(); ++i)
+        new_vec[i] = vec[perm[i]];
+    return new_vec;
+}
+
+template <typename T>
+T v_inverse_permute_coordinates(const T& vec, const vector<key_t>& perm){
+    assert(vec.size() == perm.size());
+    T new_vec(vec.size());
+    for(size_t i = 0; i< vec.size(); ++i)
+        new_vec[perm[i]] = vec[i];
+    return new_vec;
+}
+
+template <typename T>
+string v_to_point_list(const T& v){
+    string pl;
+    for(auto& c: v)
+        pl += std::to_string(c) + ".";
+    return pl;
+}
+
+inline vector<string> to_string_vector(int argc, char* argv[]){
+    vector<string> ret;
+    for(int i = 0; i < argc; ++i)
+        ret.push_back(string(argv[i]));
+     return ret;
+}
+
 
 }  // namespace libnormaliz
 

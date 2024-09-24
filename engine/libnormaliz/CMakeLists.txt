@@ -6,17 +6,23 @@
 SET ( FILES
   HilbertSeries.cpp
   automorph.cpp
+  binomial.cpp
+  binomial_containers.cpp
   chunk.cpp
+  collect_lat.cpp
   collection.cpp
   cone.cpp
   cone_dual_mode.cpp
   cone_property.cpp
   descent.cpp
   face_lattice.cpp
+  fusion.cpp
   full_cone.cpp
   general.cpp
   input.cpp
+  lattice_ideal.cpp
   matrix.cpp
+  nmz_polynomial.cpp
   offload_handler.cpp
   options.cpp
   output.cpp

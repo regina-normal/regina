@@ -1,3 +1,4 @@
+
 /*
  * Normaliz
  * Copyright (C) 2007-2022  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
@@ -37,17 +38,13 @@
 #include <libnormaliz/matrix.h>
 #include <libnormaliz/HilbertSeries.h>
 #include "libnormaliz/dynamic_bitset.h"
+#include "libnormaliz/nmz_polynomial.h"
+#include "libnormaliz/fusion.h"
 
 namespace libnormaliz {
 using std::map;
 using std::pair;
 using std::vector;
-
-template <typename Number>
-using InputMap = map<InputType, Matrix<Number> >;
-
-template <typename Number>
-using InputMapVV = map<InputType, vector<vector<Number> > >;
 
 
 template <typename Integer>
@@ -127,6 +124,10 @@ struct STANLEYDATA {
 
 template <typename Integer>
 class Cone {
+
+    template <typename, typename>
+    friend class ProjectAndLift;
+
     // friend class ConeCollection<Integer>;
     //---------------------------------------------------------------------------
     //                               public methods
@@ -273,12 +274,13 @@ class Cone {
      * returns the old value
      */
     bool setVerbose(bool v);
+    bool getVerbose() const;
 
     void deactivateChangeOfPrecision();
 
     /* We allow the change of the cone by additional inequalities or generators
      * after the first computation for "dynamical" applications, in which
-     * thecone is canged depending on previous computation results.
+     * the cone is changed depending on previous computation results.
      *
      * If you want to add more than one type, use the map version.
      */
@@ -297,10 +299,13 @@ class Cone {
     void modifyCone(InputType type, const Matrix<T>& input_data);
 
     /* We must also transport data that cannot be conveyed by the constructors
-     * or comute functions (in the present setting)
+     * or compute functions (in the present setting)
      */
 
-    void setPolynomial(string poly);
+    void setPolyParams(const map<PolyParam::Param, vector<string> >& poly_params);
+    void setPolynomial(const string& poly);
+    void setPolynomialEquations(const vector<string>& poly_equs);
+    void setPolynomialInequalities(const vector<string>& poly_inequs);
 
     void setNumericalParams(const map<NumParam::Param, long>& num_params);
     void setNrCoeffQuasiPol(long nr_coeff);
@@ -310,6 +315,9 @@ class Cone {
     void setAutomCodimBoundVectors(long bound);
     void setDecimalDigits(long digiots);
     void setBlocksizeHollowTri(long block_size);
+    void setGBDegreeBound(const long degree_bound);
+    void setGBMinDegree(const long min_degree);
+    void setModularGraing(long mod_gr);
 
     void setProjectName(const string& my_project);
     string getProjectName() const;
@@ -349,7 +357,7 @@ class Cone {
 
     //---------------------------------------------------------------------------
     //   get the results, these methods will start a computation if necessary
-    //   throws an NotComputableException if not succesful
+    //   throws an NotComputableException if not successful
     //---------------------------------------------------------------------------
 
     // dimension and rank invariants
@@ -357,6 +365,7 @@ class Cone {
         return dim;
     };                            // is always known
     size_t getRank();             // depends on ExtremeRays
+    size_t getRankRaw(); // returns what is computed at the time of call
     Integer getInternalIndex();   // depends on OriginalMonoidGenerators
     Integer getUnitGroupIndex();  // ditto
     // only for inhomogeneous case:
@@ -371,6 +380,18 @@ class Cone {
     const Matrix<Integer>& getExtremeRaysMatrix();
     const vector<vector<Integer> >& getExtremeRays();
     size_t getNrExtremeRays();
+
+    const Matrix<Integer>& getGroebnerBasisMatrix();
+    const vector<vector<Integer> >& getGroebnerBasis();
+    size_t getNrGroebnerBasis();
+
+    const Matrix<Integer>& getRepresentationsMatrix();
+    const vector<vector<Integer> >& getRepresentations();
+    size_t getNrRepresentations();
+
+    const Matrix<Integer>& getMarkovBasisMatrix();
+    const vector<vector<Integer> >& getMarkovBasis();
+    size_t getNrMarkovBasis();
 
     const Matrix<nmz_float>& getVerticesFloatMatrix();
     const vector<vector<nmz_float> >& getVerticesFloat();
@@ -391,6 +412,22 @@ class Cone {
     const Matrix<Integer>& getSupportHyperplanesMatrix();
     const vector<vector<Integer> >& getSupportHyperplanes();
     size_t getNrSupportHyperplanes();
+
+    const Matrix<Integer>& getFusionRingsMatrix();
+    const vector<vector<Integer> >& getFusionRings();
+    size_t getNrFusionRings();
+
+    const Matrix<Integer>& getSimpleFusionRingsMatrix();
+    const vector<vector<Integer> >& getSimpleFusionRings();
+    size_t getNrSimpleFusionRings();
+
+    const Matrix<Integer>& getNonsimpleFusionRingsMatrix();
+    const vector<vector<Integer> >& getNonsimpleFusionRings();
+    size_t getNrNonsimpleFusionRings();
+
+    const vector<vector<Matrix<Integer> > >& getFusionDataMatrix();
+
+    const FusionBasic& getFusionBasicCone();
 
     const Matrix<Integer>& getMaximalSubspaceMatrix();
     const vector<vector<Integer> >& getMaximalSubspace();
@@ -422,6 +459,7 @@ class Cone {
     const Matrix<Integer>& getHilbertBasisMatrix();
     const vector<vector<Integer> >& getHilbertBasis();
     size_t getNrHilbertBasis();
+    vector<key_t> getHilbertBasisKey();
 
     const Matrix<Integer>& getModuleGeneratorsOverOriginalMonoidMatrix();
     const vector<vector<Integer> >& getModuleGeneratorsOverOriginalMonoid();
@@ -436,22 +474,40 @@ class Cone {
     size_t getNrDeg1Elements();
 
     size_t getNumberLatticePoints();
+    void setNumberLatticePoints(const size_t nr_lp);
 
     const Matrix<Integer>& getLatticePointsMatrix();
     const vector<vector<Integer> >& getLatticePoints();
     size_t getNrLatticePoints();
 
+    const vector<Integer>& getSingleLatticePoint();
+    const vector<Integer>& getSingleFusionRing();
+
+    const map<dynamic_bitset, int>& getSingularLocus();
+    size_t getCodimSingularLocus();
+
     const map<dynamic_bitset, int>& getFaceLattice();
     vector<size_t> getFVector();
     const vector<dynamic_bitset>& getIncidence();
+
+    const map<dynamic_bitset, int>& getFaceLatticeOrbits();
+    vector<size_t> getFVectorOrbits();
 
     const map<dynamic_bitset, int>& getDualFaceLattice();
     vector<size_t> getDualFVector();
     const vector<dynamic_bitset>& getDualIncidence();
 
+    const map<dynamic_bitset, int>& getDualFaceLatticeOrbits();
+    vector<size_t> getDualFVectorOrbits();
+
+    const vector<vector<dynamic_bitset> >& getModularGradings();
+    size_t getNrModularGradings();
+
     // the actual grading is Grading/GradingDenom
     vector<Integer> getGrading();
     Integer getGradingDenom();
+    Integer getGradingDenomRaw() const;
+    vector<long long> ValuesGradingOnMonoid;
 
     vector<Integer> getDehomogenization();
 
@@ -471,6 +527,11 @@ class Cone {
     const pair<HilbertSeries, mpz_class>& getWeightedEhrhartSeries();
 
     string getPolynomial() const;
+    vector<string> getPolynomialEquations() const;
+
+    bool get_lattice_ideal_input() const;
+    bool get_pure_lattice_ideal() const;
+    bool get_monoid_input() const;
 
     bool inequalities_present;
     bool addition_generators_allowed;
@@ -481,16 +542,21 @@ class Cone {
     bool isDeg1ExtremeRays();
     bool isDeg1HilbertBasis();
     bool isIntegrallyClosed();
+    bool isSerreR1();
+    bool isLatticeIdealToric();
     bool isGorenstein();
     bool isEmptySemiOpen();
     bool isReesPrimary();
     bool isIntHullCone();
+    bool isPolynomiallyConstrained();
+
     Integer getReesPrimaryMultiplicity();
     const Matrix<Integer>& getOriginalMonoidGeneratorsMatrix();
     const vector<vector<Integer> >& getOriginalMonoidGenerators();
     size_t getNrOriginalMonoidGenerators();
 
     const Sublattice_Representation<Integer>& getSublattice();
+    Matrix<Integer> getEmbMatrix();
     const HilbertSeries& getHilbertSeries();  // general purpose object
     const HilbertSeries& getEhrhartSeries();  // general purpose object
 
@@ -505,7 +571,7 @@ class Cone {
     const vector<pair<vector<key_t>, long> >& getInclusionExclusionData();
     const pair<list<STANLEYDATA<Integer> >, Matrix<Integer> >& getStanleyDec();
     pair<list<STANLEYDATA_int>, Matrix<Integer> >& getStanleyDec_mutable();  // allows us to erase the StanleyDec
-                                                                             // in order to save memeory for weighted Ehrhart
+                                                                             // in order to save memory for weighted Ehrhart
 
     string project_name;
 
@@ -549,12 +615,23 @@ class Cone {
     const renf_class* getRenf();
     renf_class_shared getRenfSharedPtr();
 
+    bool isParallelotope() const;
+    vector<dynamic_bitset> getPair() const;        // for indicator vectors in project-and_lift
+    vector<dynamic_bitset> getParaInPair() const;
+
+    bool getChangeIntegerType() const;
+    void setChangeIntegerType(const bool onoff);
+
+    void make_Hilbert_series_from_pos_and_neg(const vector<num_t>& h_vec_pos, const vector<num_t>& h_vec_neg);
+
     //---------------------------------------------------------------------------
     //                          private part
     //---------------------------------------------------------------------------
 
    private:
     size_t dim;
+    size_t codim_singular_locus;
+
     bool inhom_input;
 
     bool keep_convex_hull_data;  // indicates that data computed in Full_Cone and other data are preserved and can be used again
@@ -563,12 +640,19 @@ class Cone {
 
     // the following matrices store the constraints of the input
     Matrix<Integer> Inequalities;
+    Matrix<Integer> BoundingInequalitiesLattP; // upper bounds for lattice points in positive orthant
     Matrix<Integer> AddInequalities;  // for inequalities added later on
     Matrix<Integer> AddGenerators;    // for generators added later on
     Matrix<Integer> Equations;
     Matrix<Integer> Congruences;
+    Matrix<Integer> Binomials;
     // we must register some information about thew input
-    bool lattice_ideal_input;
+    bool lattice_ideal_input; // input is abinomial ideal
+    bool pure_lattice_ideal; // input type is lattice_ideal
+    bool lattice_ideal_toric; // input lattice_ideal is already toric
+    bool monoid_input;  // setbtrue for input types monoid and toric_ideal
+    bool normal_monoid_input; // set true for normal_toric_ideal input
+    bool explicit_monoid_input; // type monoid explicit in construction, and not only derived from toric ideal
     size_t nr_latt_gen, nr_cone_gen;  // they count matrices in the input
 
     Sublattice_Representation<Integer> BasisChange;         // always use compose_basis_change() !
@@ -604,7 +688,7 @@ class Cone {
     mpq_class multiplicity;
     mpq_class volume;
     nmz_float euclidean_volume;
-    nmz_float euclidean_height;  // for volume computations wuth renf_elem_class
+    nmz_float euclidean_height;  // for volume computations with renf_elem_class
     renf_elem_class renf_volume;
     mpq_class Integral;
     mpq_class VirtualMultiplicity;
@@ -613,24 +697,39 @@ class Cone {
     vector<Integer> CoveringFace;
     vector<Integer> AxesScaling;
     Matrix<Integer> HilbertBasis;
+    vector<key_t> HilbertBasisKey;
+    Matrix<Integer> MarkovBasis;
+    Matrix<Integer> GroebnerBasis;
+    Matrix<Integer> Representations;
     Matrix<Integer> HilbertBasisRecCone;
     Matrix<Integer> BasisMaxSubspace;
     Matrix<Integer> RationalBasisMaxSubspace; // used for integer hull computation
     Matrix<Integer> ModuleGeneratorsOverOriginalMonoid;
     Matrix<Integer> Deg1Elements;
+    vector<Integer> SingleLatticePoint;
+    vector<Integer> SingleFusionRing;
+    Matrix<Integer> FusionRings;
+    Matrix<Integer> SimpleFusionRings;
+    Matrix<Integer> NonsimpleFusionRings;
+    vector<vector<Matrix<Integer> > > FusionTables; // to avoid the name FusionData
+    vector<Integer> fusion_type_input;
+
     HilbertSeries HSeries;
     HilbertSeries EhrSeries;
     IntegrationData IntData;
     vector<Integer> Grading;
+    vector<Integer> GB_Weight;
     vector<Integer> Dehomogenization;
     vector<Integer> IntHullNorm;  // used in computation of integer hulls for guessing extreme rays
-    vector<Integer> Norm;         // used by v_standardize in the numberfield case
+    vector<Integer> Norm;         // used by v_standardize in the number field case
     Integer GradingDenom;
     Integer internal_index;
     Integer unit_group_index;
     size_t number_lattice_points;
     vector<size_t> f_vector;
     vector<size_t> dual_f_vector;
+    vector<size_t> f_vector_orbits;
+    vector<size_t> dual_f_vector_orbits;
 
     vector<dynamic_bitset> Pair;        // for indicator vectors in project-and_lift
     vector<dynamic_bitset> ParaInPair;  // if polytope is a parallelotope
@@ -639,14 +738,23 @@ class Cone {
 
     map<dynamic_bitset, int> FaceLat;
     map<dynamic_bitset, int> DualFaceLat;
-    vector<dynamic_bitset> SuppHypInd;  // incidemnce vectors of the support hyperplanes
+    map<dynamic_bitset, int> FaceLatOrbits;
+    map<dynamic_bitset, int> DualFaceLatOrbits;
+    vector<dynamic_bitset> SuppHypInd;  // incidence vectors of the support hyperplanes
     vector<dynamic_bitset> DualSuppHypInd;
+
+    map<dynamic_bitset, int> SingularLocus;
+
+    FusionBasic FusionBasicCone;
 
     bool pointed;
     bool inhomogeneous;
     bool precomputed_extreme_rays;
     bool precomputed_support_hyperplanes;
     bool empty_semiopen;
+    bool is_fusion; // explicit fusion data input
+    bool is_fusion_candidate_subring; // explicit fusion data input
+    bool is_fusion_partition;
 
     bool input_automorphisms;
 
@@ -654,10 +762,17 @@ class Cone {
     bool rational_lattice_in_input;
     bool inequalities_in_input;
     bool positive_orthant;
+    bool zero_one;
+    bool positive_and_bounded;
+    vector<Integer> UpperBoundsLattP;
+    dynamic_bitset upper_bound_set;
+
+    bool polynomially_constrained;
 
     bool deg1_extreme_rays;
     bool deg1_hilbert_basis;
     bool integrally_closed;
+    bool SerreR1;
     bool Gorenstein;
     bool rees_primary;
     bool dual_original_generators;  // true means: dual cone has original generators
@@ -686,12 +801,15 @@ class Cone {
     long face_codim_bound;
     long decimal_digits;
     long block_size_hollow_tri;
+    long gb_degree_bound;
+    long gb_min_degree;
+    long modular_grading;
 
     // if this is true we allow to change to a smaller integer type in the computation
     bool change_integer_type;
 
     long autom_codim_vectors;
-    long autom_codim_mult;
+    // long autom_codim_mult; Out of use
 
     Cone<Integer>* IntHullCone;  // cone containing data of integer hull
     Cone<Integer>* SymmCone;     // cone containing symmetrized data
@@ -700,6 +818,9 @@ class Cone {
     // In cone based algorithms we use the following information
     bool Grading_Is_Coordinate;  // indicates that the grading or dehomogenization is a coordinate
     key_t GradingCoordinate;     // namely this one
+
+    OurPolynomialSystem<Integer> PolynomialEquations;
+    OurPolynomialSystem<Integer> PolynomialInequalities;
 
     void compose_basis_change(const Sublattice_Representation<Integer>& SR);  // composes SR
 
@@ -711,6 +832,7 @@ class Cone {
 
     void prepare_input_lattice_ideal(InputMap<Integer>& multi_input_data);
     void prepare_input_constraints(const InputMap<Integer>& multi_input_data);
+    void find_lower_and_upper_bounds();
     void prepare_input_generators(InputMap<Integer>& multi_input_data,
                                   Matrix<Integer>& LatticeGenerators);
     template <typename InputNumber>
@@ -723,9 +845,9 @@ class Cone {
     void convert_lattice_generators_to_constraints(Matrix<Integer>& LatticeGenerators);
     void convert_equations_to_inequalties();
 
-    // void check_gens_vs_reference();  // to make sure that newly computed generators agrre with the previously computed
+    // void check_gens_vs_reference();  // to make sure that newly computed generators agree with the previously computed
 
-    void setGrading(const vector<Integer>& lf);
+    void setGrading(const vector<Integer>& lf, bool compute_grading_denom = false);
     void setWeights();
     void setDehomogenization(const vector<Integer>& lf);
     void checkGrading(bool compute_grading_denom);
@@ -733,15 +855,28 @@ class Cone {
     void check_vanishing_of_grading_and_dehom();
     void process_lattice_data(const Matrix<Integer>& LatticeGenerators, Matrix<Integer>& Congruences, Matrix<Integer>& Equations);
 
+    ConeProperties monoid_compute(ConeProperties ToCompute);
+    void compute_monoid_basic_data(const Matrix<long long>& InputGensLL, ConeProperties& ToCompute);
+    ConeProperties lattice_ideal_compute(ConeProperties ToCompute);
+    ConeProperties lattice_ideal_compute_inner(ConeProperties ToCompute,
+                const Matrix<long long>& LatticeId,
+                const vector<long long>& ValuesGradingOnMonoid,
+                bool verbose);
+
+    void make_modular_gradings(ConeProperties& ToCompute);
+    void add_fusion_ass_and_grading_constraints(ConeProperties& ToCompute);
     void try_symmetrization(ConeProperties& ToCompute);
     void try_approximation_or_projection(ConeProperties& ToCompute);
+    void make_fusion_data(ConeProperties& ToCompute);
 
     void try_Hilbert_Series_from_lattice_points(const ConeProperties& ToCompute);
-    void make_Hilbert_series_from_pos_and_neg(const vector<num_t>& h_vec_pos, const vector<num_t>& h_vec_neg);
 
     void make_face_lattice(const ConeProperties& ToCompute);
     void make_face_lattice_primal(const ConeProperties& ToCompute);
     void make_face_lattice_dual(const ConeProperties& ToCompute);
+
+    void compute_singular_locus(const ConeProperties& ToCompute);
+
     void compute_combinatorial_automorphisms(const ConeProperties& ToCompute);
     void compute_euclidean_automorphisms(const ConeProperties& ToCompute);
     void compute_ambient_automorphisms(const ConeProperties& ToCompute);
@@ -831,6 +966,7 @@ class Cone {
     /* If the Hilbert basis and the original monoid generators are computed,
      * use them to check whether the original monoid is integrally closed. */
     void check_integrally_closed(const ConeProperties& ToCompute);
+    void check_SerreR1(const ConeProperties& ToCompute);
     void compute_unit_group_index();
     /* try to find a witness for not integrally closed in the Hilbert basis */
     void find_witness(const ConeProperties& ToCompute);
@@ -866,12 +1002,15 @@ class Cone {
     template <typename IntegerFC>
     void give_data_of_approximated_cone_to(Full_Cone<IntegerFC>& FC);
 
-    void project_and_lift(const ConeProperties& ToCompute,
+    /* void project_and_lift(const ConeProperties& ToCompute,
                           Matrix<Integer>& Deg1,
                           const Matrix<Integer>& Gens,
                           const Matrix<Integer>& Supps,
                           const Matrix<Integer>& Congs,
-                          const vector<Integer> GradingOnPolytope);
+                          const vector<Integer>& GradingOnPolytope,
+                          const bool primitive,
+                          const OurPolynomialSystem<Integer>& PolyEqs,
+                          const OurPolynomialSystem<Integer>& PolyIneqs);*/
 
     void compute_volume(ConeProperties& ToCompute);
 
@@ -887,11 +1026,10 @@ class Cone {
     void compute_projection_from_gens(const vector<Integer>& GradOrDehom, ConeProperties& ToComput);
     // out of use: void compute_projection_from_constraints(const vector<Integer>& GradOrDehom, ConeProperties& ToCompute);
 
-    // in order to avoid getRank fromm inside compute
+    // in order to avoid getRank from inside compute
     size_t get_rank_internal();
     const Sublattice_Representation<Integer>& get_sublattice_internal();
 
-    void compute_lattice_points_in_polytope(ConeProperties& ToCompute);
     void prepare_volume_computation(ConeProperties& ToCompute);
 
     void compute_affine_dim_and_recession_rank();
@@ -924,7 +1062,7 @@ void insert_column(Matrix<Integer>& mat, size_t col, Integer entry);
 // q is a rational vector with the denominator in the FIRST component q[0]
 template <typename Integer>
 inline void approx_simplex(const vector<Integer>& q, std::list<vector<Integer> >& approx, const long approx_level) {
-    // cout << "approximate the point " << q;
+    // ;; << "approximate the point " << q;
     long dim = q.size();
     long l = approx_level;
     // if (approx_level>q[0]) l=q[0]; // approximating on level q[0](=grading) is the best we can do
@@ -964,7 +1102,7 @@ inline void approx_simplex(const vector<Integer>& q, std::list<vector<Integer> >
     vector<pair<Integer, size_t> > best_remain(dim);
     for (long i = 0; i < dim; i++) {
         best_remain[i].first = remain[best_level][i];
-        best_remain[i].second = i;  // after sorting we must lnow where elements come from
+        best_remain[i].second = i;  // after sorting we must know where elements come from
     }
 
     sort(best_remain.begin(), best_remain.end());

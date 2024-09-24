@@ -41,6 +41,10 @@
 #include "flint/fmpz_mat.h"
 #endif
 
+#ifdef _MSC_VER
+typedef long long ssize_t;
+#endif
+
 //---------------------------------------------------------------------------
 
 namespace libnormaliz {
@@ -55,10 +59,11 @@ using namespace std;
 // slight efficiency advantage compared to specialized version below
 template <typename Integer>
 vector<size_t> Matrix<Integer>::maximal_decimal_length_columnwise() const {
+    size_t i, j = 0;
     vector<size_t> maxim(nc, 0);
     vector<Integer> pos_max(nc, 0), neg_max(nc, 0);
-    for (size_t i = 0; i < nr; i++) {
-        for (size_t j = 0; j < nc; j++) {
+    for (i = 0; i < nr; i++) {
+        for (j = 0; j < nc; j++) {
             // maxim[j]=max(maxim[j],decimal_length(elem[i][j]));
             if (elem[i][j] < 0) {
                 if (elem[i][j] < neg_max[j])
@@ -240,6 +245,43 @@ void Matrix<Integer>::print(ostream& out, bool with_format) const {
     }
 }
 
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Matrix<Integer>::sparse_print(const string& name, const string& suffix) const {
+    string file_name = name + "." + suffix;
+    const char* file = file_name.c_str();
+    ofstream out(file);
+    sparse_print(out);
+    out.close();
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Matrix<Integer>::sparse_print(ostream& out, bool with_format) const {
+    size_t i, j;
+    long nr_long = nr;
+    if (with_format)
+        out << -nr_long << endl << nc << endl;
+    for (i = 0; i < nr; i++) {
+        size_t nr_nonzero = 0;
+        for (j = 0; j < nc; j++) {
+            if(elem[i][j] != 0)
+                nr_nonzero++;
+        }
+        out << nr_nonzero << " ";
+
+        for (j = 0; j < nc; j++) {
+            if(elem[i][j] != 0)
+                out << j+1 << " " << elem[i][j] << " ";
+        }
+        out << endl;
+    }
+}
+
+//---------------------------------------------------------------------------
+
 template <typename Integer>
 void Matrix<Integer>::debug_print(char mark) const {
     for(int i = 0; i < 19; ++i)
@@ -259,18 +301,19 @@ void Matrix<Integer>::pretty_print(ostream& out, bool with_row_nr, bool count_fr
         print(out, false);
         return;
     }
+    size_t i, j;
     vector<size_t> max_length = maximal_decimal_length_columnwise();
     size_t max_index_length = decimal_length(nr);
     if (count_from_one)
         max_index_length = decimal_length(nr + 1);
-    for (size_t i = 0; i < nr; i++) {
+    for (i = 0; i < nr; i++) {
         if (with_row_nr) {
             size_t j = i;
             if (count_from_one)
                 j++;
             out << std::setw((int)max_index_length + 1) << std::setprecision(6) << j << ": ";
         }
-        for (size_t j = 0; j < nc; j++) {
+        for (j = 0; j < nc; j++) {
             out << std::setw((int)max_length[j] + 1) << std::setprecision(6) << elem[i][j];
         }
         out << endl;
@@ -723,6 +766,19 @@ void Matrix<Integer>::append(const Matrix<Integer>& M) {
     nr += M.nr;
 }
 
+//---------------------------------------------------------------------------
+/*
+template <typename Integer>
+void Matrix<Integer>::swap_append(Matrix<Integer>& M) {
+    assert(nc == M.nc);
+    size_t old_nr = nr;
+    nr += M.nr;
+    elem.resize(nr);
+    for (size_t i=0; i<M.nr; i++) {
+        M.elem[i].swap(elem[old_nr+i]);
+    }
+}
+*/
 //---------------------------------------------------------------------------
 
 template <typename Integer>
@@ -1527,6 +1583,31 @@ void Matrix<Integer>::exchange_rows(const size_t& row1, const size_t& row2) {
 //---------------------------------------------------------------------------
 
 template <typename Integer>
+void Matrix<Integer>::permute_columns(const vector<key_t>& perm) {
+    assert(perm.size() == nc);
+    Matrix<Integer> Copy = *this;
+    for(size_t i = 0; i< nr; ++i){
+        for(size_t j = 0; j< nc; ++j)
+            elem[i][j] = Copy[i][perm[j]];
+    }
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Matrix<Integer>::inverse_permute_columns(const vector<key_t>& perm) {
+    assert(perm.size() == nc);
+    Matrix<Integer> Copy = *this;
+    for(size_t i = 0; i< nr; ++i){
+        for(size_t j = 0; j< nc; ++j)
+            elem[i][perm[j]] = Copy[i][j];
+    }
+}
+
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
 void Matrix<Integer>::exchange_columns(const size_t& col1, const size_t& col2) {
     if (col1 == col2)
         return;
@@ -1534,6 +1615,34 @@ void Matrix<Integer>::exchange_columns(const size_t& col1, const size_t& col2) {
     assert(col2 < nc);
     for (size_t i = 0; i < nr; i++) {
         std::swap(elem[i][col1], elem[i][col2]);
+    }
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Matrix<Integer>::cyclic_shift_right(const size_t& col){
+    assert(col < nc);
+    Integer dummy;
+    for(int i = 0; i < nr; ++i){
+        dummy = elem[i][col];
+        for(size_t j = col; j >= 1; --j)
+            elem[i][j] = elem[i][j-1];
+        elem[i][0] = dummy;
+    }
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Matrix<Integer>::cyclic_shift_left(const size_t& col){
+    assert(col < nc);
+    Integer dummy;
+    for(size_t i = 0; i < nr; ++i){
+        dummy = elem[i][0];
+        for(size_t j = 0; j < col; ++j)
+            elem[i][j] = elem[i][j+1];
+        elem[i][col] = dummy;
     }
 }
 
@@ -1594,7 +1703,7 @@ bool Matrix<Integer>::reduce_row(size_t corner) {
 template <typename Integer>
 bool Matrix<Integer>::reduce_rows_upwards() {
     // assumes that "this" is in row echelon form
-    // and reduces eevery column in which the rank jumps
+    // and reduces every column in which the rank jumps
     // by its lowest element
 
     if (nr == 0)
@@ -1626,6 +1735,54 @@ bool Matrix<Integer>::reduce_rows_upwards() {
     return true;
 }
 
+#ifdef ENFNORMALIZ
+template <>
+bool Matrix<renf_elem_class>::reduce_rows_upwards_negative(){
+    assert(false);
+    return true;
+}
+#endif
+
+template <typename Integer>
+bool Matrix<Integer>::reduce_rows_upwards_negative() {
+    // assumes that "this" is in row echelon form
+    // and reduces every column in which the rank jumps
+    // by its lowest element such that the nonzero remainders
+    // arer chosen negative
+
+    if (nr == 0)
+        return true;
+
+    for (size_t row = 0; row < nr; ++row) {
+        size_t col;
+        for (col = 0; col < nc; ++col)
+            if (elem[row][col] != 0)
+                break;
+        if (col == nc)
+            continue;
+        if (elem[row][col] < 0)
+            v_scalar_multiplication<Integer>(elem[row], -1);
+
+        for (long i = row - 1; i >= 0; --i) {
+            Integer quot, rem;
+
+            minimal_remainder(elem[i][col], elem[row][col], quot, rem);
+            if(rem > 0){
+                rem -= elem[row][col];
+                quot += 1;
+            }
+            elem[i][col] = rem;
+            for (size_t j = col + 1; j < nc; ++j) {
+                elem[i][j] -= quot * elem[row][j];
+                if (!check_range(elem[i][j])) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 template <>
 bool Matrix<nmz_float>::reduce_rows_upwards() {
     assert(false);  // for the time being
@@ -1636,7 +1793,7 @@ bool Matrix<nmz_float>::reduce_rows_upwards() {
 template <>
 bool Matrix<renf_elem_class>::reduce_rows_upwards() {
     // assumes that "this" is in row echelon form
-    // and reduces eevery column in which the rank jumps
+    // and reduces every column in which the rank jumps
     // by its lowest element
     //
     if (nr == 0)
@@ -2934,7 +3091,9 @@ vector<Integer> Matrix<Integer>::solve_rectangular(const vector<Integer>& v, Int
     size_t i;
     vector<key_t> rows = max_rank_submatrix_lex();
     Matrix<Integer> Left_Side = submatrix(rows);
-    assert(nc == Left_Side.nr);  // otherwise input hadn't full rank //TODO
+    if(nc != Left_Side.nr){
+        throw ArithmeticException("Most likely an overflow occurred. Rerunning with indefinite precision if possible. If you have used LOngLong, omit it. If the problem persists, iform the authors.");
+    }
     Matrix<Integer> Right_Side(v.size(), 1);
     Right_Side.write_column(0, v);
     Right_Side = Right_Side.submatrix(rows);
@@ -3566,7 +3725,7 @@ void Matrix<Integer>::saturate() {
 
 //---------------------------------------------------------------------------
 
-/* sorts rows of a matrix by a degree function and returns the permuation
+/* sorts rows of a matrix by a degree function and returns the permutation
  * does not change matrix (yet)
  */
 
@@ -3742,14 +3901,15 @@ vector<key_t> Matrix<Integer>::perm_by_weights(const Matrix<Integer>& Weights, v
 template <typename Integer>
 Matrix<Integer> Matrix<Integer>::solve_congruences(bool& zero_modulus) const {
     zero_modulus = false;
+    size_t i, j;
     size_t nr_cong = nr, dim = nc - 1;
     if (nr_cong == 0)
         return Matrix<Integer>(dim);  // give back unit matrix
 
     // add slack variables to convert congruences into equaitions
     Matrix<Integer> Cong_Slack(nr_cong, dim + nr_cong);
-    for (size_t i = 0; i < nr_cong; i++) {
-        for (size_t j = 0; j < dim; j++) {
+    for (i = 0; i < nr_cong; i++) {
+        for (j = 0; j < dim; j++) {
             Cong_Slack[i][j] = elem[i][j];
         }
         Cong_Slack[i][dim + i] = elem[i][dim];
@@ -3845,18 +4005,18 @@ vector<key_t> max_and_min_values(const vector<nmz_float> Values) {
 }
 
 template <typename Integer>
-size_t Matrix<Integer>::extreme_points_first(bool verbose_, vector<key_t>& perm) {
+size_t Matrix<Integer>::extreme_points_first(bool verbose, vector<key_t>& perm) {
     assert(false);
     return 0;
 }
 
 template <>
-size_t Matrix<nmz_float>::extreme_points_first(bool verbose_, vector<key_t>& perm) {
+size_t Matrix<nmz_float>::extreme_points_first(bool verbose, vector<key_t>& perm) {
 
     if (nr == 0)
         return 0;
 
-    if (verbose_)
+    if (verbose)
         verboseOutput() << "Trying to find extreme points" << endl;
 
     size_t nr_extr = 0;
@@ -3943,7 +4103,7 @@ size_t Matrix<nmz_float>::extreme_points_first(bool verbose_, vector<key_t>& per
         else {
             no_success = 0;
             nr_extr += new_hits;
-            if (verbose_ && counter_100 >= 100) {
+            if (verbose && counter_100 >= 100) {
                 verboseOutput() << "Extreme points " << nr_extr << endl;
                 counter_100 = 0;
             }
@@ -4148,15 +4308,15 @@ vector<renf_elem_class> Matrix<renf_elem_class>::optimal_subdivision_point_inner
 // The orthogonal matrix is B
 // Coefficients in M
 template <typename Integer>
-void Matrix<Integer>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, size_t from, size_t to) {
+void Matrix<Integer>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, int from, int to) {
     // from=0;
-    // to=nr_of_rows();
-    assert(to <= nr_of_rows());
+    // to= (int) nr_of_rows();
+    assert(to <= (int)nr_of_rows());
     size_t dim = nr_of_columns();
-    for (size_t i = from; i < to; ++i) {
+    for (int i = from; i < to; ++i) {
         convert(B[i], elem[i]);
         // cout << B[i];
-        for (size_t j = 0; j < i; ++j) {
+        for (int j = 0; j < i; ++j) {
             nmz_float sp = 0;
             for (size_t k = 0; k < dim; ++k) {
                 nmz_float fact;
@@ -4172,18 +4332,18 @@ void Matrix<Integer>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, si
 }
 
 template <>
-void Matrix<mpq_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, size_t from, size_t to) {
+void Matrix<mpq_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, int from, int to) {
     assert(false);
 
     /*
         // from=0;
-        // to=nr_of_rows();
-        assert(to <= nr_of_rows());
+        // to= (int) nr_of_rows();
+        assert(to <= (int) nr_of_rows());
         size_t dim=nr_of_columns();
-        for(size_t i=from;i<to;++i){
+        for(int i=from;i<to;++i){
             convert(B[i],elem[i]);
             // cout << B[i];
-            for(size_t j=0;j<i;++j){
+            for(int j=0;j<i;++j){
                 nmz_float sp=0;
                 for(size_t k=0;k<dim;++k){
                     nmz_float fact;
@@ -4200,18 +4360,18 @@ void Matrix<mpq_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, 
 
 #ifdef ENFNORMALIZ
 template <>
-void Matrix<renf_elem_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, size_t from, size_t to) {
+void Matrix<renf_elem_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, int from, int to) {
     assert(false);
 
     /*
         // from=0;
-        // to=nr_of_rows();
-        assert(to <= nr_of_rows());
+        // to= (int) nr_of_rows();
+        assert(to <= (int) nr_of_rows());
         size_t dim=nr_of_columns();
-        for(size_t i=from;i<to;++i){
+        for(int i=from;i<to;++i){
             convert(B[i],elem[i]);
             // cout << B[i];
-            for(size_t j=0;j<i;++j){
+            for(int j=0;j<i;++j){
                 nmz_float sp=0;
                 for(size_t k=0;k<dim;++k){
                     nmz_float fact;
@@ -4407,7 +4567,7 @@ BinaryMatrix<Integer>::BinaryMatrix(size_t m, size_t n, size_t height) {
 
 // data access & equality
 
-// test bit k in binary expansion at "planar" coordiantes (i,j)
+// test bit k in binary expansion at "planar" coordinates (i,j)
 template <typename Integer>
 bool BinaryMatrix<Integer>::test(key_t i, key_t j, key_t k) const {
     assert(i < nr_rows);

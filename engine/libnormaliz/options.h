@@ -46,7 +46,8 @@ class OptionsHandler {
     OptionsHandler();
 
     // returns true if a help should be printed, false otherwise
-    bool handle_commandline(int argc, char* argv[]);
+    // bool handle_commandline(int argc, char* argv[]);
+    bool handle_commandline(vector<string> argv);
 
     // returns true if default mode was activated, false otherwise
     bool activateDefaultMode();
@@ -87,10 +88,20 @@ class OptionsHandler {
             no_ext_rays_output = true;
     }
 
+    inline void activateBinomialsPacked() {
+        if (!ignoreInFileOpt)
+            binomials_packed = true;
+    }
+
     inline void activateNoMatricesOutput() {
         if (!ignoreInFileOpt)
             no_matrices_output = true;
     }
+    inline void activateNoOutputOnInterrupt() {
+        if (!ignoreInFileOpt)
+            no_output_on_interrupt = true;
+    }
+
 
     inline void activateNoSuppHypsOutput() {
         if (!ignoreInFileOpt)
@@ -117,17 +128,39 @@ class OptionsHandler {
         return use_chunk;
     }
 
+    inline bool isUseCollectLat() const {
+        return use_collect_lat;
+    }
+    inline bool isUseSaveLocalSolutions() const {
+        return use_save_local_solutions;
+    }
+
+    inline bool isUseMakeFullInput() const {
+        return use_make_full_input;
+    }
+
     inline bool isUseAddChunks() const {
         return use_add_chunks;
+    }
+
+    inline bool isUseSplit() const {
+        return use_split;
     }
 
     inline bool isNoExtRaysOutput() const {
         return no_ext_rays_output;
     }
 
+    inline bool isBinomialsPacked() const {
+        return binomials_packed;
+    }
+    inline bool isNoOutputOnInterrupt() const {
+        return no_output_on_interrupt;
+    }
     inline bool isNoMatricesOutput() const {
         return no_matrices_output;
     }
+
 
     inline bool isNoSuppHypsOutput() const {
         return no_supp_hyps_output;
@@ -141,8 +174,17 @@ class OptionsHandler {
         return project_name;
     }
 
+    inline void setProjectName_from_list(const string& name){
+        project_name = name;
+        project_name_set = true;
+    }
+
     inline const string& getOutputDir() const {
         return output_dir;
+    }
+
+    inline bool get_given_name_contains_in() const {
+        return given_name_contains_in;
     }
 
     //---------------------------------------------------------------------------
@@ -157,11 +199,17 @@ class OptionsHandler {
     // bool use_Big_Integer; now in ConeProperty
     bool use_long_long;
     bool use_chunk;
+    bool use_collect_lat;
+    bool use_save_local_solutions;
+    bool use_make_full_input;
     bool use_add_chunks;
     bool no_ext_rays_output;
     bool no_supp_hyps_output;
     bool no_matrices_output;
     bool no_hilbert_basis_output;
+    bool binomials_packed;
+    bool use_split;
+    bool given_name_contains_in;
 
     bool ignoreInFileOpt;
 
@@ -189,6 +237,8 @@ inline OptionsHandler::OptionsHandler() {
     // use_Big_Integer = false;
     use_long_long = false;
     use_chunk = false;
+    use_collect_lat = false;
+    use_save_local_solutions = false;
     use_add_chunks = false;
     ignoreInFileOpt = false;
     nr_threads = 0;
@@ -196,6 +246,10 @@ inline OptionsHandler::OptionsHandler() {
     no_supp_hyps_output = false;
     no_matrices_output = false;
     no_hilbert_basis_output = false;
+    binomials_packed = false;
+    use_split = false;
+    use_make_full_input = false;
+    given_name_contains_in = false;
 }
 
 template <typename Integer>
@@ -208,34 +262,19 @@ void OptionsHandler::applyOutputOptions(Output<Integer>& Out) {
         Out.set_no_matrices_output();
     if (no_hilbert_basis_output)
         Out.set_no_hilbert_basis_output();
+    if (binomials_packed)
+        Out.set_binomials_packed();
     if (write_all_files) {
         Out.set_write_all_files();
     }
     else if (write_extra_files) {
         Out.set_write_extra_files();
     }
+
     if (to_compute.test(ConeProperty::WritePreComp)) {
         Out.set_write_precomp(true);
     }
-    if (to_compute.test(ConeProperty::ConeDecomposition) || to_compute.intersection_with(all_triangulations()).any()) {
-        Out.set_write_tri(true);
-        Out.set_write_tgn(true);
-        Out.set_write_inv(true);
-    }
-    if (to_compute.test(ConeProperty::StanleyDec)) {
-        Out.set_write_dec(true);
-        Out.set_write_tgn(true);
-        Out.set_write_inv(true);
-    }
-    if (to_compute.test(ConeProperty::FaceLattice) || to_compute.test(ConeProperty::DualFaceLattice)) {
-        Out.set_write_fac(true);
-    }
-    if (to_compute.test(ConeProperty::Incidence) || to_compute.test(ConeProperty::DualIncidence)) {
-        Out.set_write_inc(true);
-    }
-    if (to_compute.intersection_with(all_automorphisms()).any()) {
-        Out.set_write_aut(true);
-    }
+
     for (const auto& OutFile : OutFiles) {
         if (OutFile == "gen") {
             Out.set_write_gen(true);
@@ -294,6 +333,8 @@ void OptionsHandler::applyOutputOptions(Output<Integer>& Out) {
     Out.set_name(output_file);
 }
 
+string pureName(const string& fullName);
+
 inline string package_string() {
     string optional_packages;
 
@@ -306,7 +347,7 @@ inline string package_string() {
 #endif
 #endif
 #ifdef ENFNORMALIZ
-    optional_packages += " Flint antic arb e-antic";
+    optional_packages += " Flint e-antic";
 #endif
 #ifdef NMZ_NAUTY
     optional_packages += " nauty";

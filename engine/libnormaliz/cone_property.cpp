@@ -167,6 +167,24 @@ ConeProperties all_options() {
     ret.set(ConeProperty::ExploitIsosMult);
     ret.set(ConeProperty::StrictIsoTypeCheck);
     ret.set(ConeProperty::WritePreComp);
+    ret.set(ConeProperty::Lex);
+    ret.set(ConeProperty::RevLex);
+    ret.set(ConeProperty::DegLex);
+    ret.set(ConeProperty::ShortInt);
+    ret.set(ConeProperty::NoHeuristicMinimization);
+    ret.set(ConeProperty::WritePreComp); // is not really an option, but taken care of in options.h
+    ret.set(ConeProperty::NoPatching);
+    ret.set(ConeProperty::NoCoarseProjection);
+    ret.set(ConeProperty::SingleLatticePointInternal);
+    ret.set(ConeProperty::MaxDegRepresentations);
+    ret.set(ConeProperty::ConeForMonoid);
+    ret.set(ConeProperty::UseWeightsPatching);
+    ret.set(ConeProperty::NoWeights);
+    ret.set(ConeProperty::LinearOrderPatches);
+    ret.set(ConeProperty::CongOrderPatches);
+    ret.set(ConeProperty::MinimizePolyEquations);
+    ret.set(ConeProperty::DistributedComp);
+    ret.set(ConeProperty::UseModularGrading);
     return ret;
 }
 
@@ -203,6 +221,8 @@ ConeProperties treated_as_hom_props() {
     ret.set(ConeProperty::DualIncidence);
     ret.set(ConeProperty::DualFVector);
     ret.set(ConeProperty::DualFaceLattice);
+    ret.set(ConeProperty::DualFVectorOrbits);
+    ret.set(ConeProperty::DualFaceLatticeOrbits);
     return ret;
 }
 
@@ -215,11 +235,16 @@ ConeProperties only_homogeneous_props() {
     ret.set(ConeProperty::IsDeg1ExtremeRays);
     ret.set(ConeProperty::IsDeg1HilbertBasis);
     ret.set(ConeProperty::IsIntegrallyClosed);
+    ret.set(ConeProperty::IsSerreR1);
+    ret.set(ConeProperty::IsLatticeIdealToric);
     ret.set(ConeProperty::IsReesPrimary);
     ret.set(ConeProperty::ReesPrimaryMultiplicity);
     ret.set(ConeProperty::IsGorenstein);
     ret.set(ConeProperty::ClassGroup);
     ret.set(ConeProperty::UnitGroupIndex);
+    ret.set(ConeProperty::SingularLocus);
+    ret.set(ConeProperty::CodimSingularLocus);
+    ret.set(ConeProperty::Representations);
     return ret;
 }
 
@@ -252,6 +277,77 @@ ConeProperties all_full_cone_goals(bool renf) {
     if (renf)
         ret.set(ConeProperty::Volume);
     return ret;
+}
+
+void ConeProperties::check_monoid_goals() const{
+    ConeProperties copy(*this);
+    copy = copy.goals();
+    copy.reset(ConeProperty::HilbertBasis);
+    copy.reset(ConeProperty::IsIntegrallyClosed);
+    copy.reset(ConeProperty::IsSerreR1);
+    copy.reset(ConeProperty::Multiplicity);
+    copy.reset(ConeProperty::Grading);
+    copy.reset(ConeProperty::HilbertSeries);
+    copy.reset(ConeProperty::HilbertQuasiPolynomial);
+    copy.reset(ConeProperty::MarkovBasis);
+    copy.reset(ConeProperty::GroebnerBasis);
+    copy.reset(ConeProperty::AmbientAutomorphisms);
+    copy.reset(ConeProperty::InputAutomorphisms);
+    copy.reset(ConeProperty::Automorphisms);
+    copy.reset(ConeProperty::Representations);
+    copy.reset(ConeProperty::SingularLocus);
+    copy.reset(ConeProperty::CodimSingularLocus);
+    copy.reset(ConeProperty::Lex);
+    copy.reset(ConeProperty::DegLex);
+    copy.reset(ConeProperty::RevLex);
+    if (copy.any()) {
+        errorOutput() << copy << endl;
+        throw BadInputException("Cone Property in last line not allowed for monoids");
+    }
+}
+
+void ConeProperties::check_lattice_ideal_goals() const{
+    ConeProperties copy(*this);
+    copy = copy.goals();
+    copy.reset(ConeProperty::MarkovBasis);
+    copy.reset(ConeProperty::GroebnerBasis);
+    copy.reset(ConeProperty::Lex);
+    copy.reset(ConeProperty::DegLex);
+    copy.reset(ConeProperty::RevLex);
+    copy.reset(ConeProperty::IsLatticeIdealToric);
+    if (copy.any()) {
+        errorOutput() << copy << endl;
+        throw BadInputException("Cone Property in last line not allowed for lattice ideals");
+    }
+}
+
+void ConeProperties::check_fusion_ring_props() const{
+    ConeProperties copy(*this);
+    copy.reset(ConeProperty::FusionRings);
+    copy.reset(ConeProperty::SimpleFusionRings);
+    copy.reset(ConeProperty::SingleFusionRing);
+    copy.reset(ConeProperty::FusionData);
+    copy.reset(ConeProperty::LatticePoints);
+    copy.reset(ConeProperty::SingleLatticePointInternal);
+    copy.reset(ConeProperty::SingleLatticePoint);
+    copy.reset(ConeProperty::LinearOrderPatches);
+    copy.reset(ConeProperty::CongOrderPatches);
+    copy.reset(ConeProperty::UseWeightsPatching);
+    copy.reset(ConeProperty::NoWeights);
+    copy.reset(ConeProperty::NoGradingDenom);
+    copy.reset(ConeProperty::DistributedComp);
+    copy.reset(ConeProperty::Projection);
+    copy.reset(ConeProperty::NoHeuristicMinimization);
+    copy.reset(ConeProperty::ShortInt);
+    copy.reset(ConeProperty::MinimizePolyEquations);
+    copy.reset(ConeProperty::ModularGradings);
+    copy.reset(ConeProperty::UseModularGrading);
+
+
+    if (copy.any()) {
+        errorOutput() << copy << endl;
+        throw BadInputException("Cone Property in last line not allowed for fusion rings");
+    }
 }
 
 ConeProperties all_automorphisms() {
@@ -320,12 +416,66 @@ size_t ConeProperties::count() const {
     return CPs.count();
 }
 
+void ConeProperties::set_fusion_default(const bool has_subring) {
+
+    if(CPs.test(ConeProperty::LatticePoints) || CPs.test(ConeProperty::FusionRings)
+        || CPs.test(ConeProperty::SimpleFusionRings) || CPs.test(ConeProperty::NonsimpleFusionRings)
+         || CPs.test(ConeProperty::FusionData) || CPs.test(ConeProperty::SingleFusionRing) )
+        return;
+    if(CPs.test(ConeProperty::DefaultMode)){
+        if(has_subring)
+            CPs.set(ConeProperty::SimpleFusionRings);
+        else
+            CPs.set(ConeProperty::FusionRings);
+        CPs.reset(ConeProperty::DefaultMode);
+    }
+}
+
+void ConeProperties::set_fusion_partition_default() {
+
+    if(CPs.test(ConeProperty::LatticePoints))
+        return;
+    if(CPs.test(ConeProperty::DefaultMode)){
+        CPs.set(ConeProperty::SingleLatticePoint);
+        CPs.reset(ConeProperty::DefaultMode);
+    }
+}
+
 /* add preconditions */
 void ConeProperties::set_preconditions(bool inhomogeneous, bool numberfield) {
+
+    if(CPs.test(ConeProperty::NonsimpleFusionRings)){
+        CPs.set(ConeProperty::FusionRings);
+        CPs.reset(ConeProperty::NonsimpleFusionRings);
+    }
+
+    if(CPs.test(ConeProperty::SingleFusionRing)){
+        CPs.set(ConeProperty::FusionRings);
+    }
+
+    if(CPs.test(ConeProperty::FusionData) && !CPs.test(ConeProperty::SimpleFusionRings)){
+        CPs.set(ConeProperty::FusionRings);
+    }
+
+    // if(CPs.test(ConeProperty::FusionRings) || CPs.test(ConeProperty::SimpleFusionRings))
+    //    CPs.set(ConeProperty::LatticePoints); // LatticePoints will be disabled later
+
+    if(CPs.test(ConeProperty::GroebnerBasis) ||
+                CPs.test(ConeProperty::MarkovBasis)){
+        CPs.set(ConeProperty::HilbertBasis);
+        CPs.set(ConeProperty::IsPointed);
+    }
+
+    if(CPs.test(ConeProperty::MaxDegRepresentations))
+        CPs.set(ConeProperty::Representations);
+
     if (CPs.test(ConeProperty::ExploitAutomsVectors)) {
         errorOutput() << *this << endl;
         throw BadInputException("At least one of the listed computation goals not yet implemernted");
     }
+
+    if(CPs.test(ConeProperty::SingleLatticePoint))
+        CPs.set(ConeProperty::NoGradingDenom);
 
     if (CPs.test(ConeProperty::WritePreComp)) {  // the following are needed for precomputed data
         CPs.set(ConeProperty::SupportHyperplanes);
@@ -361,7 +511,7 @@ void ConeProperties::set_preconditions(bool inhomogeneous, bool numberfield) {
     if (CPs.test(ConeProperty::EhrhartQuasiPolynomial))
         CPs.set(ConeProperty::EhrhartSeries);
 
-    // homogenous && EhrhartSeies ==> HilbertSeries
+    // homogeneous && EhrhartSeies ==> HilbertSeries
     if (CPs.test(ConeProperty::EhrhartSeries) && !inhomogeneous) {
         CPs.set(ConeProperty::HilbertSeries);
         CPs.set(ConeProperty::NoGradingDenom);
@@ -629,6 +779,37 @@ void ConeProperties::set_preconditions(bool inhomogeneous, bool numberfield) {
         CPs.set(ConeProperty::ExtremeRays);
 }
 
+void ConeProperties::check_compatibility_with_polynomial_constraints(bool inhomogeneous){
+
+    if(test(ConeProperty::ProjectionFloat))
+        throw BadInputException("ProjectionFloat not allowed with polynomial constraints");
+    ConeProperties wanted((*this).intersection_with(all_goals()));
+    wanted.reset(ConeProperty::Deg1Elements);
+    wanted.reset(ConeProperty::ModuleGenerators);
+    wanted.reset(ConeProperty::LatticePoints);
+    wanted.reset(ConeProperty::SupportHyperplanes);
+    wanted.reset(ConeProperty::ExtremeRays);
+    wanted.reset(ConeProperty::VerticesOfPolyhedron);
+    wanted.reset(ConeProperty::MaximalSubspace);
+    wanted.reset(ConeProperty::AffineDim);
+    wanted.reset(ConeProperty::NumberLatticePoints);
+    wanted.reset(ConeProperty::SingleLatticePoint);
+    wanted.reset(ConeProperty::DistributedComp);
+    wanted.reset(ConeProperty::FusionRings);
+    wanted.reset(ConeProperty::SimpleFusionRings);
+    wanted.reset(ConeProperty::FusionData);
+    wanted.reset(ConeProperty::NonsimpleFusionRings);
+    wanted.reset(ConeProperty::SingleFusionRing);
+    wanted.reset(ConeProperty::ModularGradings);
+    wanted.reset(ConeProperty::UseModularGrading);
+    if(inhomogeneous)
+        wanted.reset(ConeProperty::HilbertBasis);
+    if(wanted.any()){
+        errorOutput() << wanted << endl;
+        throw BadInputException("One of the goals in the last line not allowed with polynomial constraints.");
+    }
+}
+
 void ConeProperties::check_Q_permissible(bool after_implications) {
     ConeProperties copy(*this);
     copy.reset(ConeProperty::SupportHyperplanes);
@@ -680,6 +861,10 @@ void ConeProperties::check_Q_permissible(bool after_implications) {
     copy.reset(ConeProperty::DualFaceLattice);
     copy.reset(ConeProperty::DualFVector);
     copy.reset(ConeProperty::DualIncidence);
+    copy.reset(ConeProperty::FaceLatticeOrbits);
+    copy.reset(ConeProperty::FVectorOrbits);
+    copy.reset(ConeProperty::DualFaceLatticeOrbits);
+    copy.reset(ConeProperty::DualFVectorOrbits);
     copy.reset(ConeProperty::AmbientAutomorphisms);
     copy.reset(ConeProperty::InputAutomorphisms);
     copy.reset(ConeProperty::Automorphisms);
@@ -691,7 +876,19 @@ void ConeProperties::check_Q_permissible(bool after_implications) {
     copy.reset(ConeProperty::TestSmallPyramids);
     copy.reset(ConeProperty::FullConeDynamic);
     copy.reset(ConeProperty::ExcludedFaces);
-
+    copy.reset(ConeProperty::GroebnerBasis);
+    copy.reset(ConeProperty::MarkovBasis);
+    copy.reset(ConeProperty::SingleLatticePoint);
+    copy.reset(ConeProperty::SingleLatticePointInternal);
+    copy.reset(ConeProperty::NoCoarseProjection);
+    copy.reset(ConeProperty::NoPatching);
+    copy.reset(ConeProperty::FusionRings);
+    copy.reset(ConeProperty::SimpleFusionRings);
+    copy.reset(ConeProperty::NonsimpleFusionRings);
+    copy.reset(ConeProperty::SingleFusionRing);
+    copy.reset(ConeProperty::FusionData);
+    copy.reset(ConeProperty::ShortInt);
+    copy.reset(ConeProperty::NoHeuristicMinimization);
     if (after_implications) {
         copy.reset(ConeProperty::Multiplicity);
         copy.reset(ConeProperty::Grading);
@@ -701,6 +898,34 @@ void ConeProperties::check_Q_permissible(bool after_implications) {
         errorOutput() << copy << endl;
         throw BadInputException("Cone Property in last line not allowed for field coefficients");
     }
+}
+
+void ConeProperties::check_conflicting_fusion_variants(){
+
+    size_t fusion_count = 0;
+    size_t latt_count = 0;
+    if(CPs.test(ConeProperty::FusionRings))
+        fusion_count++;
+    if(CPs.test(ConeProperty::SimpleFusionRings))
+        fusion_count++;
+    if(CPs.test(ConeProperty::ModularGradings))
+        fusion_count++;
+    if(CPs.test(ConeProperty::LatticePoints)){
+        fusion_count++;
+        latt_count++;
+    }
+    if(CPs.test(ConeProperty::SingleLatticePoint)){
+        fusion_count++;
+        latt_count++;
+    }
+    if(fusion_count > 1 || latt_count > 1)
+        throw BadInputException("Conflicting properties for lattice points/fusion rings");
+    if(latt_count > 0 &&CPs.test(ConeProperty::UseModularGrading))
+        throw BadInputException("Conflicting properties for lattice points/fusion rings");
+    if(CPs.test(ConeProperty::ModularGradings) &&CPs.test(ConeProperty::UseModularGrading))
+        throw BadInputException("Conflicting properties for lattice points/fusion rings");
+    if(CPs.test(ConeProperty::SingleFusionRing) &&CPs.test(ConeProperty::SimpleFusionRings))
+        throw BadInputException("Conflicting properties for lattice points/fusion rings");
 }
 
 void ConeProperties::check_conflicting_variants() {
@@ -715,8 +940,12 @@ void ConeProperties::check_conflicting_variants() {
         (CPs.test(ConeProperty::NoSignedDec) && CPs.test(ConeProperty::SignedDec)) ||
         (CPs.test(ConeProperty::Symmetrize) && CPs.test(ConeProperty::Descent)) ||
         (CPs.test(ConeProperty::Descent) && CPs.test(ConeProperty::SignedDec)) ||
+        (CPs.test(ConeProperty::UseWeightsPatching) && CPs.test(ConeProperty::NoWeights)) ||
+        (CPs.test(ConeProperty::LinearOrderPatches) && CPs.test(ConeProperty::CongOrderPatches)) ||
+        (CPs.test(ConeProperty::LatticePoints) && CPs.test(ConeProperty::SingleLatticePoint) ) ||
         // (CPs.test(ConeProperty::Symmetrize) && CPs.test(ConeProperty::SignedDec)) ||
-        (CPs.test(ConeProperty::Dynamic) && CPs.test(ConeProperty::Static)))
+        (CPs.test(ConeProperty::Dynamic) && CPs.test(ConeProperty::Static) )
+    )
         throw BadInputException("Contradictory algorithmic variants in options.");
 
     size_t nr_var = 0;
@@ -732,6 +961,9 @@ void ConeProperties::check_conflicting_variants() {
         nr_var++;
     if (nr_var > 1)
         throw BadInputException("Only one of DualMode, PrimalMode, Approximate, Projection, ProjectionFloat allowed.");
+
+    if(CPs.test(ConeProperty::LinearOrderPatches) && CPs.test(ConeProperty::CongOrderPatches))
+        throw BadInputException("Only one of LinearOrderPatches and CongOrderPatches allowed");
 }
 
 void ConeProperties::check_sanity(bool inhomogeneous) {  //, bool input_automorphisms) {
@@ -741,6 +973,9 @@ void ConeProperties::check_sanity(bool inhomogeneous) {  //, bool input_automorp
 
     if ((CPs.test(ConeProperty::Approximate) || CPs.test(ConeProperty::DualMode)) && CPs.test(ConeProperty::NumberLatticePoints))
         throw BadInputException("NumberLatticePoints not compuiable with DualMode or Approximate.");
+
+    if(CPs.test(ConeProperty::DistributedComp) && CPs.test(ConeProperty::LatticePoints) && CPs.test(ConeProperty::SignedDec))
+        throw BadInputException("Only one of LatticePoints and SignedDec allowed with DistributedComp");
 
     size_t nr_triangs = 0;
     if (CPs.test(ConeProperty::UnimodularTriangulation))
@@ -765,12 +1000,24 @@ void ConeProperties::check_sanity(bool inhomogeneous) {  //, bool input_automorp
 
     bool something_to_do_primal =
         CPs.test(ConeProperty::FaceLattice) || CPs.test(ConeProperty::FVector) || CPs.test(ConeProperty::Incidence);
+    bool something_to_do_primal_orbits = test(ConeProperty::FaceLatticeOrbits) || CPs.test(ConeProperty::FVectorOrbits);
 
     bool something_to_do_dual =
         CPs.test(ConeProperty::DualFaceLattice) || CPs.test(ConeProperty::DualFVector) || CPs.test(ConeProperty::DualIncidence);
+    bool something_to_do_dual_orbits =test(ConeProperty::DualFaceLatticeOrbits) || CPs.test(ConeProperty::DualFVectorOrbits);
 
-    if (something_to_do_dual && something_to_do_primal)
-        throw BadInputException("Only one of primal or dual face lattice/f-vector/incidence allowed");
+    int nr_face_kattice_goals = 0;
+    if(something_to_do_primal)
+        nr_face_kattice_goals++;
+    if(something_to_do_primal_orbits)
+        nr_face_kattice_goals++;
+    if(something_to_do_dual)
+        nr_face_kattice_goals++;
+    if(something_to_do_dual_orbits)
+        nr_face_kattice_goals++;
+
+    if (nr_face_kattice_goals > 1)
+        throw BadInputException("Only one of primal/dual full/orbits face lattice/f-vector/incidence allowed");
 
     if (intersection_with(all_automorphisms()).count() > 1)
         throw BadInputException("Only one type of automorphism group allowed.");
@@ -826,6 +1073,8 @@ vector<string> initializeCPN() {
     CPN.at(ConeProperty::IsDeg1ExtremeRays) = "IsDeg1ExtremeRays";
     CPN.at(ConeProperty::IsDeg1HilbertBasis) = "IsDeg1HilbertBasis";
     CPN.at(ConeProperty::IsIntegrallyClosed) = "IsIntegrallyClosed";
+    CPN.at(ConeProperty::IsSerreR1) = "IsSerreR1";
+    CPN.at(ConeProperty::IsLatticeIdealToric) = "IsLatticeIdealToric";
     CPN.at(ConeProperty::WitnessNotIntegrallyClosed) = "WitnessNotIntegrallyClosed";
     CPN.at(ConeProperty::OriginalMonoidGenerators) = "OriginalMonoidGenerators";
     CPN.at(ConeProperty::IsReesPrimary) = "IsReesPrimary";
@@ -848,7 +1097,6 @@ vector<string> initializeCPN() {
     CPN.at(ConeProperty::ProjectCone) = "ProjectCone";
     CPN.at(ConeProperty::MaximalSubspace) = "MaximalSubspace";
     CPN.at(ConeProperty::ConeDecomposition) = "ConeDecomposition";
-
     CPN.at(ConeProperty::Automorphisms) = "Automorphisms";
     CPN.at(ConeProperty::AmbientAutomorphisms) = "AmbientAutomorphisms";
     CPN.at(ConeProperty::InputAutomorphisms) = "InputAutomorphisms";
@@ -858,7 +1106,6 @@ vector<string> initializeCPN() {
     CPN.at(ConeProperty::ExploitAutomsVectors) = "ExploitAutomsVectors";
     CPN.at(ConeProperty::ExploitIsosMult) = "ExploitIsosMult";
     CPN.at(ConeProperty::StrictIsoTypeCheck) = "StrictIsoTypeCheck";
-
     CPN.at(ConeProperty::HSOP) = "HSOP";
     CPN.at(ConeProperty::NoBottomDec) = "NoBottomDec";
     CPN.at(ConeProperty::PrimalMode) = "PrimalMode";
@@ -914,21 +1161,54 @@ vector<string> initializeCPN() {
     CPN.at(ConeProperty::NumberLatticePoints) = "NumberLatticePoints";
     CPN.at(ConeProperty::FaceLattice) = "FaceLattice";
     CPN.at(ConeProperty::FVector) = "FVector";
-    CPN.at(ConeProperty::Incidence) = "Incidence";
     CPN.at(ConeProperty::DualFaceLattice) = "DualFaceLattice";
     CPN.at(ConeProperty::DualFVector) = "DualFVector";
+    CPN.at(ConeProperty::FaceLatticeOrbits) = "FaceLatticeOrbits";
+    CPN.at(ConeProperty::FVectorOrbits) = "FVectorOrbits";
+    CPN.at(ConeProperty::DualFaceLatticeOrbits) = "DualFaceLatticeOrbits";
+    CPN.at(ConeProperty::DualFVectorOrbits) = "DualFVectorOrbits";
+    CPN.at(ConeProperty::Incidence) = "Incidence";
     CPN.at(ConeProperty::DualIncidence) = "DualIncidence";
+    CPN.at(ConeProperty::SingularLocus) = "SingularLocus";
+    CPN.at(ConeProperty::CodimSingularLocus) = "CodimSingularLocus";
     CPN.at(ConeProperty::Dynamic) = "Dynamic";
     CPN.at(ConeProperty::Static) = "Static";
     CPN.at(ConeProperty::SignedDec) = "SignedDec";
     CPN.at(ConeProperty::NoSignedDec) = "NoSignedDec";
     CPN.at(ConeProperty::FixedPrecision) = "FixedPrecision";
     CPN.at(ConeProperty::DistributedComp) = "DistributedComp";
+    CPN.at(ConeProperty::MarkovBasis) = "MarkovBasis";
+    CPN.at(ConeProperty::GroebnerBasis) = "GroebnerBasis";
+    CPN.at(ConeProperty::Lex) = "Lex";
+    CPN.at(ConeProperty::RevLex) = "RevLex";
+    CPN.at(ConeProperty::ShortInt) = "ShortInt";
+    CPN.at(ConeProperty::NoHeuristicMinimization) = "NoHeuristicMinimization";
+    CPN.at(ConeProperty::DegLex) = "DegLex";
+    CPN.at(ConeProperty::NoPatching) = "NoPatching";
+    CPN.at(ConeProperty::NoCoarseProjection) = "NoCoarseProjection";
+    CPN.at(ConeProperty::SingleLatticePoint) = "SingleLatticePoint";
+    CPN.at(ConeProperty::SingleLatticePointInternal) = "SingleLatticePointInternal";
+    CPN.at(ConeProperty::Representations) = "Representations";
+    CPN.at(ConeProperty::MaxDegRepresentations) = "MaxDegRepresentations";
+    CPN.at(ConeProperty::ConeForMonoid) = "ConeForMonoid";
+    CPN.at(ConeProperty::UseWeightsPatching) = "UseWeightsPatching";
+    CPN.at(ConeProperty::NoWeights) = "NoWeights";
+    CPN.at(ConeProperty::MinimizePolyEquations) = "MinimizePolyEquations";
+    CPN.at(ConeProperty::LinearOrderPatches) = "LinearOrderPatches";
+    CPN.at(ConeProperty::CongOrderPatches) = "CongOrderPatches";
+    CPN.at(ConeProperty::FusionRings) = "FusionRings";
+    CPN.at(ConeProperty::ModularGradings) = "ModularGradings";
+    CPN.at(ConeProperty::SimpleFusionRings) = "SimpleFusionRings";
+    CPN.at(ConeProperty::NonsimpleFusionRings) = "NonsimpleFusionRings";
+    CPN.at(ConeProperty::SingleFusionRing) = "SingleFusionRing";
+    CPN.at(ConeProperty::FusionData) = "FusionData";
+    CPN.at(ConeProperty::UseModularGrading) = "UseModularGrading";
 
     // detect changes in size of Enum, to remember to update CPN!
-    static_assert(ConeProperty::EnumSize == 131, "ConeProperties Enum size does not fit! Update cone_property.cpp!");
+    static_assert(ConeProperty::EnumSize == 165,"ConeProperties Enum size does not fit! Update cone_property.cpp!");
     // assert all fields contain an non-empty string
     for (size_t i = 0; i < ConeProperty::EnumSize; i++) {
+        // bstd::cout << "iii " << i << "  " << CPN.at(i) << endl;
         assert(CPN.at(i).size() > 0);
     }
     return CPN;

@@ -22,6 +22,7 @@ Version 7.4  [ (to be announced) ]
           old names kept as deprecated constants in the regina:: namespace.
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
+        - Updated the bundled copy of Normaliz to version 3.10.3 (30 May 2024).
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.

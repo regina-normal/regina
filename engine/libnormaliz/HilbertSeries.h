@@ -77,6 +77,7 @@ class HilbertSeries {
     HilbertSeries(const vector<num_t>& num, const vector<denom_t>& gen_degrees);
     // Constructor, creates num/denom, see class description for format
     HilbertSeries(const vector<mpz_class>& num, const map<long, denom_t>& denom);
+    HilbertSeries(const vector<mpz_class>& numerator, const vector<denom_t> given_denom);
     // Constructor, string as created by to_string_rep
     HilbertSeries(const string& str);
 
@@ -132,6 +133,12 @@ class HilbertSeries {
     void adjustShift();
     // returns the shift of the Hilbert series, that is the lowest degree of an element
     long getShift() const;
+    // increase the shift by d
+    void increase_shift(const int d);
+    // multiply denom by factor 1-t^d
+    void multiply_denom(const int d);
+    // set to 1/1
+    void set_to_one();
 
     // methods for textual transfer of a Hilbert Series
     string to_string_rep() const;
@@ -141,8 +148,8 @@ class HilbertSeries {
         verbose = v;
     }
 
-    // compute the new numerator by multiplying the HS with a denominator
-    // of the form (1-t^i)
+    // compute the hsop numerator by multiplying the HS with a denominator
+    // of the form "product of (1-t^i)"
     void compute_hsop_num() const;
 
     void set_nr_coeff_quasipol(long nr_coeff);

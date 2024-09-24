@@ -23,19 +23,48 @@
 
 #include <cstdlib>
 #include <csignal>
-#ifdef NMZ_DEVELOP
-#include <sys/time.h>
-#endif
 #include "libnormaliz/general.h"
+#include <fstream>
+
+#ifdef _MSC_VER
+int gettimeofday(struct timeval * tp, struct timezone * tzp)
+{
+    // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
+    // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
+    // until 00:00:00 January 1, 1970
+    static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL);
+
+    SYSTEMTIME  system_time;
+    FILETIME    file_time;
+    uint64_t    time;
+
+    GetSystemTime( &system_time );
+    SystemTimeToFileTime( &system_time, &file_time );
+    time =  ((uint64_t)file_time.dwLowDateTime )      ;
+    time += ((uint64_t)file_time.dwHighDateTime) << 32;
+
+    tp->tv_sec  = (long) ((time - EPOCH) / 10000000L);
+    tp->tv_usec = (long) (system_time.wMilliseconds * 1000);
+    return 0;
+}
+#endif
 
 namespace libnormaliz {
 
 bool verbose = false;
+bool constructor_verbose = true;
+bool polynomial_verbose = false;
+bool talkative = false;
+bool running_input_file = false;
 
 volatile sig_atomic_t nmz_interrupted = 0;
 const int default_thread_limit = 8;
 int thread_limit = default_thread_limit;
 bool parallelization_set = false;
+bool no_output_on_interrupt = false;
+bool no_lattice_data = false;
+bool write_lp_file = false;
+bool save_local_solutions = false;
 
 // bool test_arithmetic_overflow = false;
 // long overflow_test_modulus = 15401;
@@ -54,6 +83,33 @@ bool int_max_value_primary_long_computed = false;
 bool int_max_value_primary_long_long_computed = false;
 
 vector<vector<vector<long> > > CollectedAutoms(default_thread_limit);  // for use in nmz_nauty.cpp
+
+long level_local_solutions = -1;
+long split_index_option = -1;
+long split_index_rounds = -1;
+long split_refinement = -1;
+bool is_split_patching = false;
+size_t verb_length;
+
+bool list_of_input_files = false;
+long number_normaliz_instances= -1;
+long input_file_option = -1;
+
+std::string global_project;
+
+std::string lat_file_name;
+
+/*
+std::vector<key_t> fusion_type_coinc_from_input;
+std::string fusion_type_from_input;
+std::vector<key_t> fusion_duality_from_input;
+bool fusion_commutative_from_input;
+te_fusion_mult_tables_from_input;
+void set_global_fusion_data();
+std::vector<key_t> candidate_subring_from_input;;
+*/
+bool write_fusion_mult_tables_from_input = false;
+// std::vector<key_t> fusion_type_for_partition_from_input;
 
 #ifdef NMZ_EXTENDED_TESTS
 bool test_arith_overflow_full_cone = false;
@@ -89,6 +145,23 @@ bool setVerboseDefault(bool v) {
     return old;
 }
 
+bool setTalkativeDefault(bool v) {
+    // we want to return the old value
+    bool old_talk = talkative;
+    talkative = v;
+    return old_talk;
+}
+
+bool setPolynomialVerbose(bool onoff){
+    bool old = polynomial_verbose;
+    polynomial_verbose = onoff;
+    return old;
+}
+
+void suppressNextConstructorVerbose(){
+        constructor_verbose = false;
+}
+
 int set_thread_limit(int t) {
     int old = thread_limit;
     parallelization_set = true;
@@ -113,29 +186,81 @@ std::ostream& errorOutput() {
     return *error_ostream_ptr;
 }
 
-#ifdef NMZ_DEVELOP
-struct timeval TIME_begin, TIME_end;
+struct timeval TIME_global_begin, TIME_step_begin;
+double GlobalTimeBound = -1.0; // can be set in normaliz.cfg
+double GlobalPredictionTimeBound = -1.0;
+// -1.0 means: no time bound
 
-void StartTime() {
-    gettimeofday(&TIME_begin, 0);
+void StartTime(struct timeval& var_TIME_begin) {
+    gettimeofday(&var_TIME_begin, 0);
 }
 
-void MeasureTime(bool verbose_, const std::string& step) {
-    gettimeofday(&TIME_end, 0);
-    long seconds = TIME_end.tv_sec - TIME_begin.tv_sec;
-    long microseconds = TIME_end.tv_usec - TIME_begin.tv_usec;
+void StartTime(){
+        StartTime(TIME_step_begin);
+}
+
+void StartGlobalTime() {
+    StartTime(TIME_global_begin);
+}
+
+double MeasureTime(const struct timeval var_TIME_begin) {
+    struct timeval time_end;
+    gettimeofday(&time_end, 0);
+    long seconds = time_end.tv_sec - var_TIME_begin.tv_sec;
+    long microseconds = time_end.tv_usec - var_TIME_begin.tv_usec;
     double elapsed = seconds + microseconds * 1e-6;
-    if (verbose_)
+    return elapsed;
+}
+
+double TimeSinceStart(){
+    double elapsed = MeasureTime(TIME_global_begin);
+    return elapsed;
+}
+
+void MeasureGlobalTime(bool verbose) {
+    double elapsed = TimeSinceStart();
+    if (verbose)
+        verboseOutput() << "Normaliz elapsed wall clock time: " << elapsed << " sec" << endl;
+}
+
+void PrintTime(const struct timeval var_TIME_begin, bool verbose, const std::string& step){
+    double elapsed = MeasureTime(var_TIME_begin);
+    if (verbose)
         verboseOutput() << step << ": " << elapsed << " sec" << endl;
-    TIME_begin = TIME_end;
 }
-#else
-void StartTime() {
-    return;
+
+void MeasureTime(bool verbose, const std::string& step){
+    PrintTime(TIME_step_begin,verbose,step);
 }
-void MeasureTime(bool verbose_, const std::string& step) {
-    return;
+
+void Check_Stop(){
+    string name = global_project + ".stop";
+    std::ifstream stop(name.c_str());
+    if(stop.is_open())
+        throw NoComputationException("Stop of " + global_project + " requested");
+    name = "normaliz.stop";
+    std::ifstream total_stop(name.c_str());
+    if(total_stop.is_open())
+        throw NoComputationException("normaliz stop requested");
 }
+
+/*
+void reset_global_fusion_data(){
+    fusion_type_coinc_from_input.clear();
+    fusion_type_from_input.clear();
+    fusion_duality_from_input.clear();
+    fusion_commutative_from_input = false;
+}
+*/
+
+unsigned int getVersion()
+{
+#ifdef NMZ_MAKEFILE_CLASSIC
+#ifdef NMZ_DEVELOP
+#define NMZ_RELEASE 9999999
 #endif
+#endif
+    return NMZ_RELEASE;
+}
 
 } /* end namespace libnormaliz */

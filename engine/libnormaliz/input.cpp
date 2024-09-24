@@ -42,18 +42,16 @@ namespace libnormaliz {
 static int xalloc = std::ios_base::xalloc();
 
 // Normaliz implementation of deprecated e-antic functions
-
 std::istream & nmz_set_pword(boost::intrusive_ptr<const renf_class> our_renf, std::istream & is)
 {
     is.pword(xalloc) = const_cast<void*>(reinterpret_cast<const void*>(&*our_renf));
     return is;
 }
-
-
 boost::intrusive_ptr<const renf_class> nmz_get_pword(std::istream& is) {
     return reinterpret_cast<renf_class*>(is.pword(xalloc));
 }
 #endif
+//---------------------------------------------------------
 
 
 // To be used in input.cpp
@@ -90,7 +88,6 @@ inline void string2coeff(renf_elem_class& coeff, istream& in, const string& s) {
 
     try {
         coeff = renf_elem_class(*nmz_get_pword(in), s);
-        // coeff = renf_elem_class(*renf_class::get_pword(in), s);
     } catch (const std::exception& e) {
         cerr << e.what() << endl;
         throw BadInputException("Illegal number string " + s + " in input, Exiting.");
@@ -147,16 +144,21 @@ Matrix<Integer> readMatrix(const string project) {
     ifstream in;
     in.open(file_in, ifstream::in);
     if (in.is_open() == false)
-        throw BadInputException("readMatrix cannot find file");
+        throw BadInputException("readMatrix cannot find file " + project);
     int nrows, ncols;
     in >> nrows;
     in >> ncols;
 
-    if (nrows == 0 || ncols == 0)
-        throw BadInputException("readMatrix finds matrix empty");
+    Matrix<Integer> result(nrows, ncols);
+
+    if (nrows == 0 || ncols == 0){
+        if(verbose){
+            verboseOutput() << "Matrix in file " << project << " empty" << endl;
+        }
+        return result;
+    }
 
     int i, j;
-    Matrix<Integer> result(nrows, ncols);
 
     for (i = 0; i < nrows; ++i)
         for (j = 0; j < ncols; ++j) {
@@ -295,7 +297,7 @@ void process_constraint(const string& rel,
             return;
         }
     }
-    throw BadInputException("Illegal constrint type " + rel + " !");
+    throw BadInputException("Illegal constraint type " + rel + " !");
 }
 
 template <typename Number>
@@ -439,6 +441,7 @@ void read_symbolic_constraint(istream& in, string& rel, vector<Number>& left, Nu
         current_term += test;
     }
     terms.push_back(current_term);
+    // cout << terms;
     if (!relation_read)
         throw BadInputException("No relation in constraint");
 
@@ -531,12 +534,16 @@ void read_symbolic_constraint(istream& in, string& rel, vector<Number>& left, Nu
         }
 
         if (comp_string != "") {
+
+            // cout << "CCCCCCCCCC " << comp_string << endl;
             bool bracket_read = false;
             string expo_string;
             for (char j : comp_string) {
                 if (j == ']')
                     break;
                 if (j == '[') {
+                    if(bracket_read)
+                        throw BadInputException("Double [ in term.");
                     bracket_read = true;
                     continue;
                 }
@@ -713,6 +720,23 @@ void read_polynomial(istream& in, string& polynomial) {
     }
 }
 
+void read_polynomial_constraints(istream& in, vector<string>& polynomial_constraints) {
+
+    int nr_constraints;
+    in >> nr_constraints;
+    if(in.fail() || nr_constraints< 0)
+        throw BadInputException("Failure in reading number of polynomial constraints!");
+    if(nr_constraints == 0)
+        return;
+
+    string equ;
+    for(int i = 0; i < nr_constraints; ++i){
+        read_polynomial(in, equ);
+        polynomial_constraints.push_back(equ);
+        equ.clear();
+    }
+}
+
 template <typename Number>
 bool read_formatted_matrix(istream& in, Matrix<Number>& input_Matrix, bool transpose) {
     vector<vector<Number> > input_mat;
@@ -823,7 +847,8 @@ renf_class_shared read_number_field(istream& in) {
 }
 #endif
 
-void read_num_param(istream& in, map<NumParam::Param, long>& num_param_input, NumParam::Param numpar, const string& type_string) {
+void read_num_param(istream& in, map<NumParam::Param, long>& num_param_input,
+                    NumParam::Param numpar, const string& type_string) {
     long value;
     in >> value;
     if (in.fail())
@@ -832,19 +857,65 @@ void read_num_param(istream& in, map<NumParam::Param, long>& num_param_input, Nu
 }
 
 template <typename Number>
+void convert_equ_to_inequ(InputMap<Number>& Input, const InputType& equ, const InputType inequ){
+
+    Number MinusOne = -1;
+
+    if(Input.find(equ) != Input.end() && Input[equ].nr_of_rows() > 0){
+        if(Input.find(inequ) == Input.end())
+            Input[inequ] = Matrix<Number>(0, Input[equ][0].size());
+        for(size_t i =0; i< Input[equ].nr_of_rows(); ++i){
+            Input[inequ].append(Input[equ][i]);
+            Input[inequ].append(Input[equ][i]);
+            v_scalar_multiplication<Number>(Input[inequ][Input[inequ].nr_of_rows()-1], MinusOne);
+        }
+        Input[equ].resize(0, Input[equ][0].size());
+    }
+
+}
+
+template <typename Number>
+void convert_equ_to_inequ(InputMap<Number>& Input,  const long dim){
+
+    bool exists_default_breaker = false;
+    for(auto& T: Input){
+        if(is_inequalities(T.first) || is_generators(T.first)){
+            exists_default_breaker = true;
+            break;
+        }
+    }
+
+    convert_equ_to_inequ<Number>(Input, Type::equations, Type::inequalities);
+    convert_equ_to_inequ<Number>(Input, Type::inhom_equations, Type::inhom_inequalities);
+    if(exists_default_breaker)
+        return;
+    Matrix<Number> unit_mat(dim); // must add unit_mat of inequalities to imitate default befavior
+    save_matrix(Input, Type::inequalities, unit_mat); // if no inequalities in input
+}
+
+template <typename Number>
 InputMap<Number> readNormalizInput(istream& in,
-                                                                 OptionsHandler& options,
-                                                                 map<NumParam::Param, long>& num_param_input,
-                                                                 string& polynomial,
-                                                                 renf_class_shared& number_field) {
+                                            OptionsHandler& options,
+                                            map<NumParam::Param, long>& num_param_input,
+                                            map<PolyParam::Param, vector<string> >& poly_param_input,
+                                            renf_class_shared& number_field) {
     string type_string;
+    long i, j;
     long nr_rows, nr_columns, nr_rows_or_columns;
     InputType input_type;
     Number number;
     ConeProperty::Enum cp;
     NumParam::Param numpar;
+    PolyParam::Param polypar;
     set<NumParam::Param> num_par_already_set;
     bool we_have_a_polynomial = false;
+    bool convert_equations = false;
+    no_lattice_data = false; // in general.h and cpp
+
+    write_lp_file = false; // in general.h and cpp
+    size_t length_weight = 0;
+    bool monoid_read = false;
+    bool lattice_ideal_read = false;
 
     InputMap<Number> input_map;
 
@@ -855,8 +926,9 @@ InputMap<Number> readNormalizInput(istream& in,
     }
     bool new_input_syntax = !std::isdigit(c);
 
+    long dim;
+
     if (new_input_syntax) {
-        long dim;
         while (in.peek() == '/') {
             skip_comment(in);
             in >> std::ws;
@@ -912,12 +984,36 @@ InputMap<Number> readNormalizInput(istream& in,
                     num_par_already_set.insert(numpar);
                     continue;
                 }
+               if (isPolyParam(polypar, type_string)) {
+                        if(type_string == "polynomial"){
+                        if (we_have_a_polynomial)
+                                throw BadInputException("Only one polynomial allowed");
+                            we_have_a_polynomial = true;
+                            string poly_str;
+                            read_polynomial(in, poly_str);
+                            poly_param_input[PolyParam::polynomial].push_back(poly_str);
+                        }
+                        else{
+                            vector<string> poly_cosnts;
+                            read_polynomial_constraints(in, poly_cosnts);
+                            poly_param_input[polypar].insert(poly_param_input[polypar].end(),
+                                                             poly_cosnts.begin(), poly_cosnts.end());
+                        }
+                        continue;
+                }
+
+                // One could think that the following are superfluous.
+                // BUT: they take care of having the options in the inpput fike and not ón the command line
                 if (type_string == "LongLong") {
                     options.activateInputFileLongLong();
                     continue;
                 }
                 if (type_string == "NoExtRaysOutput") {
                     options.activateNoExtRaysOutput();
+                    continue;
+                }
+                if (type_string == "BinomialsPacked") {
+                    options.activateBinomialsPacked();
                     continue;
                 }
                 if (type_string == "NoHilbertBasisOutput") {
@@ -928,10 +1024,15 @@ InputMap<Number> readNormalizInput(istream& in,
                     options.activateNoMatricesOutput();
                     continue;
                 }
+                if (type_string == "NoOutputOnInterrupt") {
+                    options.activateNoOutputOnInterrupt();
+                    continue;
+                }
                 if (type_string == "NoSuppHypsOutput") {
                     options.activateNoSuppHypsOutput();
                     continue;
                 }
+
                 if (type_string == "number_field") {
 #ifndef ENFNORMALIZ
                     throw BadInputException("number_field only allowed for Normaliz with e-antic");
@@ -977,23 +1078,64 @@ InputMap<Number> readNormalizInput(istream& in,
                     read_constraints(in, dim, input_map, true);
                     continue;
                 }
-                if (type_string == "polynomial") {
-                    if (we_have_a_polynomial)
-                        throw BadInputException("Only one polynomial allowed");
-                    read_polynomial(in, polynomial);
-                    we_have_a_polynomial = true;
+                if (type_string == "convert_equations") {
+                    convert_equations = true;
+                    continue;
+                }
+                if (type_string == "no_lattice_data") {
+                    no_lattice_data = true;
+                    continue;
+                }
+                if (type_string == "write_lp_file") {
+                    write_lp_file = true;
+                    continue;
+                }
+                if (type_string == "list_polynomials") {
+                    polynomial_verbose = true;
+                    continue;
+                }
+                if(type_string == "parallel_threads"){
+
+                    long nr_threads;
+                    in >> nr_threads;
+                    if(in.fail())
+                        throw BadInputException("Error after parallel_threads");
+                    set_thread_limit(nr_threads);
                     continue;
                 }
 
                 input_type = to_type(type_string);
+
+                if(type_string == "monoid")
+                    monoid_read = true;
+
+                if(type_string == "lattice_ideal" || type_string == "toric_ideal")
+                    lattice_ideal_read = true;
+
+                if(type_string == "gb_weight"){
+                    if(!(monoid_read || lattice_ideal_read))
+                        throw BadInputException("gb_weight must follow monoid, lattice_ideal or toric_ideal");
+                    if(monoid_read){
+                        length_weight = input_map[Type::monoid].nr_of_rows();
+                    }
+                    else{
+                        length_weight = dim;
+                    }
+                }
+
                 if (dim_known)
                     nr_columns = dim + type_nr_columns_correction(input_type);
+
+                if(type_string == "gb_weight")
+                    nr_columns = length_weight;
 
                 if (type_is_vector(input_type)) {
                     nr_rows_or_columns = nr_rows = 1;
                     in >> std::ws;  // eat up any leading white spaces
                     c = in.peek();
                     if (c == 'u') {  // must be unit vector
+                        if(type_string == "gb_weight")
+                            throw BadInputException("gb_weight cannot be unit vector");
                         string vec_kind;
                         in >> vec_kind;
                         if (vec_kind != "unit_vector") {
@@ -1033,7 +1175,7 @@ InputMap<Number> readNormalizInput(istream& in,
                         }
 
                         vector<Number> sparse_vec;
-                        nr_columns = dim + type_nr_columns_correction(input_type);
+                        // nr_columns = dim + type_nr_columns_correction(input_type);
                         bool success = read_sparse_vector(in, sparse_vec, nr_columns);
                         if (!success) {
                             throw BadInputException("Error while reading " + type_string + " as a sparse vector!");
@@ -1156,9 +1298,9 @@ InputMap<Number> readNormalizInput(istream& in,
                     }
                 }
                 if (dense_matrix) {  // dense matrix
-                    for (long i = 0; i < nr_rows; i++) {
+                    for (i = 0; i < nr_rows; i++) {
                         M[i].resize(nr_columns);
-                        for (long j = 0; j < nr_columns; j++) {
+                        for (j = 0; j < nr_columns; j++) {
                             read_number(in, M[i][j]);
                             // cout << M[i][j] << endl;
                         }
@@ -1185,8 +1327,8 @@ InputMap<Number> readNormalizInput(istream& in,
                 throw BadInputException("Error while reading a " + toString(nr_rows) + "x" + toString(nr_columns) + " matrix !");
             }
             Matrix<Number> M(nr_rows, nr_columns);
-            for (long i = 0; i < nr_rows; i++) {
-                for (long j = 0; j < nr_columns; j++) {
+            for (i = 0; i < nr_rows; i++) {
+                for (j = 0; j < nr_columns; j++) {
                     read_number(in, M[i][j]);
                 }
             }
@@ -1203,20 +1345,23 @@ InputMap<Number> readNormalizInput(istream& in,
             save_matrix(input_map, input_type, M);
         }
     }
+    if(convert_equations){
+            convert_equ_to_inequ(input_map, dim);
+    }
     return input_map;
 }
 
 template InputMap<mpq_class> readNormalizInput(istream& in,
                                                                              OptionsHandler& options,
                                                                              map<NumParam::Param, long>& num_param_input,
-                                                                             string& polynomial,
+                                                                             map<PolyParam::Param, vector<string> >& poly_param_input,
                                                                              renf_class_shared& number_field);
 
 #ifdef ENFNORMALIZ
 template InputMap<renf_elem_class> readNormalizInput(istream& in,
                                                                                    OptionsHandler& options,
                                                                                    map<NumParam::Param, long>& num_param_input,
-                                                                                   string& polynomial,
+                                                                                   map<PolyParam::Param, vector<string> >& poly_param_input,
                                                                                    renf_class_shared& number_field);
 #endif
 

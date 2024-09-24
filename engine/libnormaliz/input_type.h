@@ -26,10 +26,15 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 
 #include "libnormaliz/general.h"
+#include "libnormaliz/matrix.h"
 
 namespace libnormaliz {
+
+using std::string;
+using std::map;
 
 namespace Type {
 enum InputType {
@@ -44,6 +49,7 @@ enum InputType {
     lattice,
     saturation,
     rational_lattice,
+    monoid,
     //
     // inhomogeneous generators
     //
@@ -68,15 +74,26 @@ enum InputType {
     inhom_congruences,
     inhom_excluded_faces,
     //
-    // linearforms
+    // linear forms
     //
     grading,
     dehomogenization,
+    gb_weight,
+    //
+    // lattice ideals and friends
+    //
+    lattice_ideal,
+    toric_ideal,
+    normal_toric_ideal,
     //
     // special
+    //
     open_facets,
     projection_coordinates,
-    lattice_ideal,
+    fusion_type,
+    fusion_duality,
+    candidate_subring,
+    fusion_type_for_partition,
     //
     // precomputed data
     //
@@ -107,9 +124,15 @@ enum InputType {
 
 using Type::InputType;
 
+template <typename Number>
+using InputMap = map<InputType, Matrix<Number> >;
+
+template <typename Number>
+using InputMapVV = map<InputType, vector<vector<Number> > >;
+
 /* converts a string to an InputType
  * throws an BadInputException if the string cannot be converted */
-InputType to_type(const std::string& type_string);
+InputType to_type(const string& type_string);
 
 /* gives the difference of the number of columns to the dimension */
 long type_nr_columns_correction(InputType type);
@@ -128,15 +151,31 @@ enum Param {
     autom_codim_bound_vectors,
     block_size_hollow_tri,
     decimal_digits,
+    gb_degree_bound,
+    gb_min_degree,
+    modular_grading,
     not_a_num_param
 };
 }  // end namespace NumParam
 
-bool isNumParam(NumParam::Param& numpar, const std::string& type_string);
-NumParam::Param to_numpar(const std::string& type_string);
-std::string numpar_to_string(const NumParam::Param& numpar);
+bool isNumParam(NumParam::Param& numpar, const string& type_string);
+NumParam::Param to_numpar(const string& type_string);
+string numpar_to_string(const NumParam::Param& numpar);
 
-inline InputType to_type(const std::string& type_string) {
+namespace PolyParam {
+enum Param {
+    polynomial,
+    polynomial_equations,
+    polynomial_inequalities,
+    not_a_poly_param
+};
+}  // end namespace PolyParam
+
+bool isPolyParam(PolyParam::Param& polypar, const string& type_string);
+PolyParam::Param to_polypar(const string& type_string);
+string polypar_to_string(const PolyParam::Param& polypar);
+
+inline InputType to_type(const string& type_string) {
     if (type_string == "0" || type_string == "1" || type_string == "2" || type_string == "3" || type_string == "4" ||
         type_string == "5" || type_string == "6" || type_string == "hyperplanes" || type_string == "10") {
         throw BadInputException("Error: deprecated type \"" + type_string + "\", please use new type string!");
@@ -172,6 +211,9 @@ inline InputType to_type(const std::string& type_string) {
     if (type_string == "dehomogenization") {
         return Type::dehomogenization;
     }
+    if (type_string == "gb_weight") {
+        return Type::gb_weight;
+    }
     if (type_string == "5" || type_string == "equations") {
         return Type::equations;
     }
@@ -187,8 +229,14 @@ inline InputType to_type(const std::string& type_string) {
     if (type_string == "signs") {
         return Type::signs;
     }
-    if (type_string == "10" || type_string == "lattice_ideal") {
+    if (type_string == "lattice_ideal") {
         return Type::lattice_ideal;
+    }
+    if ( type_string == "toric_ideal") {
+        return Type::toric_ideal;
+    }
+    if ( type_string == "normal_toric_ideal") {
+        return Type::normal_toric_ideal;
     }
     if (type_string == "grading") {
         return Type::grading;
@@ -207,6 +255,9 @@ inline InputType to_type(const std::string& type_string) {
     }
     if (type_string == "saturation") {
         return Type::saturation;
+    }
+    if (type_string == "monoid") {
+        return Type::monoid;
     }
     if (type_string == "cone") {
         return Type::cone;
@@ -284,6 +335,26 @@ inline InputType to_type(const std::string& type_string) {
         return Type::add_inhom_equations;
     }
 
+    if (type_string == "add_inhom_equations") {
+        return Type::add_inhom_equations;
+    }
+
+    if (type_string == "fusion_type") {
+        return Type::fusion_type;
+    }
+
+    if (type_string == "fusion_type_for_partition") {
+        return Type::fusion_type_for_partition;
+    }
+
+    if (type_string == "fusion_duality") {
+        return Type::fusion_duality;
+    }
+
+    if (type_string == "candidate_subring") {
+        return Type::candidate_subring;
+    }
+
     throw BadInputException("Unknown type \"" + type_string + "\"!");
     return Type::integral_closure;
 }
@@ -303,14 +374,38 @@ inline long type_nr_columns_correction(InputType t) {
 /* returns true if the input of this type is a vector */
 inline bool type_is_vector(InputType type) {
     if (type == Type::grading || type == Type::signs || type == Type::strict_signs || type == Type::dehomogenization ||
-        type == Type::offset || type == Type::open_facets || type == Type::projection_coordinates || type == Type::scale ||
-        type == Type::rational_offset) {
+        type == Type::offset || type == Type::open_facets || type == Type::projection_coordinates
+        || type == Type::scale || type == Type::rational_offset || type == Type::gb_weight
+         || type == Type::fusion_type || type == Type::fusion_duality || type == Type::fusion_type_for_partition
+        || type == Type::candidate_subring) {
         return true;
     }
     return false;
 }
 
-inline NumParam::Param to_numpar(const std::string& type_string) {
+inline bool is_inequalities(InputType type) {
+    if (type == Type::signs || type == Type::strict_signs || type == Type::inequalities || type ==
+        Type::strict_inequalities || type == Type::inhom_inequalities || type == Type::excluded_faces
+           || type == Type::inhom_excluded_faces) {
+        return true;
+    }
+    return false;
+}
+
+// generators definiong something convex
+inline bool is_generators(InputType type) {
+    if (type == Type::cone || type == Type::cone_and_lattice
+           || type == Type::polyhedron  || type == Type::vertices
+           || type == Type::polytope || type == Type::rees_algebra
+           || type == Type::monoid || type == Type::integral_closure
+           || type == Type::normalization) {
+        return true;
+    }
+    return false;
+}
+
+
+inline NumParam::Param to_numpar(const string& type_string) {
     if (type_string == "expansion_degree")
         return NumParam::expansion_degree;
     if (type_string == "nr_coeff_quasipol")
@@ -323,11 +418,17 @@ inline NumParam::Param to_numpar(const std::string& type_string) {
         return NumParam::block_size_hollow_tri;
     if (type_string == "decimal_digits")
         return NumParam::decimal_digits;
+    if (type_string == "gb_degree_bound")
+        return NumParam::gb_degree_bound;
+    if (type_string == "gb_min_degree")
+        return NumParam::gb_min_degree;
+    if (type_string == "modular_grading")
+        return NumParam::modular_grading;
 
     return NumParam::not_a_num_param;
 }
 
-inline std::string numpar_to_string(const NumParam::Param& numpar) {
+inline string numpar_to_string(const NumParam::Param& numpar) {
     if (numpar == NumParam::expansion_degree)
         return "expansion_degree";
     if (numpar == NumParam::nr_coeff_quasipol)
@@ -342,18 +443,56 @@ inline std::string numpar_to_string(const NumParam::Param& numpar) {
         return "block_size_hollow_tri";
     if (numpar == NumParam::decimal_digits)
         return "decimal_digits";
+    if (numpar == NumParam::gb_degree_bound)
+        return "gb_degree_bound";
+    if (numpar == NumParam::gb_min_degree)
+        return "gb_min_degree";
+    if (numpar == NumParam::modular_grading)
+        return "modular_grading";
     if (numpar == NumParam::not_a_num_param)
         return "not_a_num_param";
     assert(false);
-    return std::string();  // silence compiler warning
+    return string();  // silence compiler warning
 }
 
-inline bool isNumParam(NumParam::Param& numpar, const std::string& type_string) {
+inline bool isNumParam(NumParam::Param& numpar, const string& type_string) {
     numpar = to_numpar(type_string);
     if (numpar == NumParam::not_a_num_param)
         return false;
     return true;
 }
+
+inline PolyParam::Param to_polypar(const string& type_string) {
+    if (type_string == "polynomial")
+        return PolyParam::polynomial;
+    if (type_string == "polynomial_equations")
+        return PolyParam::polynomial_equations;
+    if (type_string == "polynomial_inequalities")
+        return  PolyParam::polynomial_inequalities;
+
+    return PolyParam::not_a_poly_param;
+}
+
+inline string polypar_to_string(const PolyParam::Param& polypar) {
+    if (polypar == PolyParam::polynomial)
+        return "polynomial";
+    if (polypar == PolyParam::polynomial_equations)
+        return "polynomial_equations";
+    if (polypar == PolyParam::polynomial_inequalities)
+        return "polynomial_inequalities";
+    if (polypar == PolyParam::not_a_poly_param)
+        return "not_a_poly_param";
+    assert(false);
+    return string();  // silence compiler warning
+}
+
+inline bool isPolyParam(PolyParam::Param& polypar, const string& type_string) {
+    polypar = to_polypar(type_string);
+    if (polypar == PolyParam::not_a_poly_param)
+        return false;
+    return true;
+}
+
 
 } /* end namespace libnormaliz */
 

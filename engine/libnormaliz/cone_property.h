@@ -77,6 +77,12 @@ enum Enum {
     MaximalSubspace,
     Equations,
     Congruences,
+    GroebnerBasis,
+    MarkovBasis,
+    Representations,
+    SimpleFusionRings,
+    NonsimpleFusionRings,
+    FusionRings,
     END_ENUM_RANGE(LAST_MATRIX),
 
     START_ENUM_RANGE(FIRST_MATRIX_FLOAT),
@@ -93,6 +99,8 @@ enum Enum {
     GeneratorOfInterior,
     CoveringFace,
     AxesScaling,
+    SingleLatticePoint,
+    SingleFusionRing,
     END_ENUM_RANGE(LAST_VECTOR),
 
     // integer valued
@@ -136,6 +144,7 @@ enum Enum {
     ModuleRank,
     Rank,
     EmbeddingDim,
+    CodimSingularLocus,
     END_ENUM_RANGE(LAST_MACHINE_INTEGER),
 
     // boolean valued
@@ -144,6 +153,8 @@ enum Enum {
     IsDeg1ExtremeRays,
     IsDeg1HilbertBasis,
     IsIntegrallyClosed,
+    IsSerreR1,
+    IsLatticeIdealToric,
     IsReesPrimary,
     IsInhomogeneous,
     IsGorenstein,
@@ -188,11 +199,20 @@ enum Enum {
     DualFaceLattice,
     FVector,
     DualFVector,
+    FaceLatticeOrbits,
+    DualFaceLatticeOrbits,
+    FVectorOrbits,
+    DualFVectorOrbits,
     Incidence,
     DualIncidence,
+    SingularLocus,
+    //
     Sublattice,
     //
     ClassGroup,
+    //
+    ModularGradings,
+    FusionData,
     END_ENUM_RANGE(LAST_COMPLEX_STRUCTURE),
 
     //
@@ -232,11 +252,27 @@ enum Enum {
     NoSignedDec,
     FixedPrecision,
     DistributedComp,
+    NoPatching,
+    NoCoarseProjection,
+    MaxDegRepresentations,
+    UseWeightsPatching,
+    NoWeights,
+    LinearOrderPatches,
+    CongOrderPatches,
+    MinimizePolyEquations,
+    UseModularGrading,
     //
     Dynamic,
     Static,
     //
     WritePreComp,
+    // Gröbner Basis
+    Lex,
+    RevLex,
+    DegLex,
+    //
+    ShortInt,
+    NoHeuristicMinimization,
     //
     END_ENUM_RANGE(LAST_PROPERTY),
     //
@@ -249,8 +285,10 @@ enum Enum {
     FullConeDynamic,
     Generators,
     PullingTriangulationInternal,
+    SingleLatticePointInternal,
+    ConeForMonoid,
     //
-    // ONLY FOR E§XTENDED TESTS
+    // ONLY FOR EXTENDED TESTS
     //
     TestArithOverflowFullCone,
     TestArithOverflowDualMode,
@@ -314,9 +352,16 @@ class ConeProperties {
     void set_preconditions(bool inhomogeneous, bool numberfield);  // activate properties which are needed implicitly
     // void prepare_compute_options(bool inhomogeneous, bool numberfield);
     void check_sanity(bool inhomogeneous);
+    void set_fusion_default(const bool has_candidate);
+    void set_fusion_partition_default();
 
     void check_conflicting_variants();
+    void check_conflicting_fusion_variants();
     void check_Q_permissible(bool after_implications);
+    void check_monoid_goals() const;
+    void check_lattice_ideal_goals() const;
+    void check_fusion_ring_props() const;
+    void check_compatibility_with_polynomial_constraints(bool inhomogeneous);
     // void set_default_goals(bool inhomogeneous, bool numberfield);
 
     /* print it in a nice way */

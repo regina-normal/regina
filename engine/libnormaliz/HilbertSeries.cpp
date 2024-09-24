@@ -42,6 +42,7 @@
 
 #ifdef NMZ_FLINT
 #include "flint/flint.h"
+#include "flint/fmpz.h"
 #include "flint/fmpz_poly.h"
 #endif
 
@@ -72,7 +73,10 @@ void flint_poly(fmpz_poly_t flp, const vector<mpz_class>& nmzp) {
     slong n = (slong)nmzp.size();
     fmpz_poly_fit_length(flp, n);
     for (size_t i = 0; i < nmzp.size(); ++i) {
-        fmpz_poly_set_coeff_mpz(flp, (slong)i, nmzp[i].get_mpz_t());
+        fmpz_t fc;
+        fmpz_init(fc);
+        fmpz_set_mpz(fc, nmzp[i].get_mpz_t());
+        fmpz_poly_set_coeff_fmpz(flp, (slong)i, fc);
     }
 }
 
@@ -80,9 +84,12 @@ void nmz_poly(vector<mpz_class>& nmzp, const fmpz_poly_t flp) {
     size_t n = (size_t)fmpz_poly_length(flp);
     nmzp.resize(n);
     mpz_t c;
+    fmpz_t fc;
     mpz_init(c);
+    fmpz_init(fc);
     for (size_t i = 0; i < nmzp.size(); ++i) {
-        fmpz_poly_get_coeff_mpz(c, flp, i);
+        fmpz_poly_get_coeff_fmpz(fc, flp, i);
+        fmpz_get_mpz(c, fc);
         nmzp[i] = mpz_class(c);
     }
     mpz_clear(c);
@@ -303,6 +310,10 @@ HilbertSeries::HilbertSeries() {
     initialize();
 }
 
+void HilbertSeries::set_to_one(){
+        num = vector<mpz_class>(1, 1);
+}
+
 // Constructor, creates num/denom, see class description for format
 HilbertSeries::HilbertSeries(const vector<num_t>& numerator, const vector<denom_t>& gen_degrees) {
     num = vector<mpz_class>(1, 0);
@@ -312,6 +323,20 @@ HilbertSeries::HilbertSeries(const vector<num_t>& numerator, const vector<denom_
 
 // Constructor, creates num/denom, see class description for format
 HilbertSeries::HilbertSeries(const vector<mpz_class>& numerator, const map<long, denom_t>& denominator) {
+    num = numerator;
+    denom = denominator;
+    initialize();
+}
+
+HilbertSeries::HilbertSeries(const vector<mpz_class>& numerator, const vector<denom_t> given_denom) {
+
+    map<long, denom_t> denominator;
+    for(size_t i = 0; i < given_denom.size(); ++i){
+        if(denominator.find(given_denom[i]) == denominator.end())
+            denominator[given_denom[i]] = 1;
+        else
+            denominator[given_denom[i]]++;
+    }
     num = numerator;
     denom = denominator;
     initialize();
@@ -350,12 +375,12 @@ bool HilbertSeries::get_period_bounded() const {
     return period_bounded;
 }
 // add another HilbertSeries to this
-void HilbertSeries::add(const vector<num_t>& num_, const vector<denom_t>& gen_degrees) {
+void HilbertSeries::add(const vector<num_t>& num, const vector<denom_t>& gen_degrees) {
     vector<denom_t> sorted_gd(gen_degrees);
     sort(sorted_gd.begin(), sorted_gd.end());
     if (gen_degrees.size() > 0)
         assert(sorted_gd[0] > 0);  // TODO InputException?
-    poly_add_to(denom_classes[sorted_gd], num_);
+    poly_add_to(denom_classes[sorted_gd], num);
     if (denom_classes.size() > DENOM_CLASSES_BOUND)
         collectData();
     is_simplified = false;
@@ -455,7 +480,7 @@ void HilbertSeries::simplify() const {
         poly = coeff_vector<mpz_class>(i);
         while (denom_i > 0) {
             poly_div(q, r, num, poly);
-            if (r.size() == 0) {  // numerator is divisable by poly
+            if (r.size() == 0) {  // numerator is divisible by poly
                 num = q;
                 denom_i--;
             }
@@ -489,7 +514,7 @@ void HilbertSeries::simplify() const {
         poly = cyclotomicPoly<mpz_class>(i);
         while (cyclo_i > 0) {
             poly_div(q, r, num, poly);
-            if (r.empty()) {  // numerator is divisable by poly
+            if (r.empty()) {  // numerator is divisible by poly
                 num = q;
                 cyclo_i--;
             }
@@ -535,12 +560,12 @@ void HilbertSeries::simplify() const {
             long k = 1;
             bool empty = true;
             vector<mpz_class> existing_factor(1, 1);  // collects the existing cyclotomic gactors in the denom
-            for (auto& d : cdenom) {                 // with multiplicvity 1
-                if (d.second > 0) {
+            for (auto& it : cdenom) {                 // with multiplicvity 1
+                if (it.second > 0) {
                     empty = false;
-                    k = libnormaliz::lcm(k, d.first);
-                    existing_factor = poly_mult(existing_factor, cyclotomicPoly<mpz_class>(d.first));
-                    d.second--;
+                    k = libnormaliz::lcm(k, it.first);
+                    existing_factor = poly_mult(existing_factor, cyclotomicPoly<mpz_class>(it.first));
+                    it.second--;
                 }
             }
             if (empty)
@@ -620,7 +645,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     vector<long> denom_vec = to_vector(denom);
     if (nr_coeff_quasipol > (long)denom_vec.size()) {
         if (verbose)
-            verboseOutput() << "Number of coeff of quasipol too large. Reset to deault value." << endl;
+            verboseOutput() << "Number of coeff of quasipol too large. Reset to default value." << endl;
         nr_coeff_quasipol = -1;
     }
 
@@ -668,7 +693,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     long reduced_period;
     if (nr_coeff_quasipol >= 0) {
         reduced_period = 1;
-        for (j = 0; j < nr_coeff_quasipol; ++j)
+        for (long j = 0; j < nr_coeff_quasipol; ++j)
             reduced_period = lcm(reduced_period, denom_vec[j]);
     }
     else
@@ -694,7 +719,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     }
 
     // substitute t by t/period:
-    // dividing by period^dim and multipling the coeff with powers of period
+    // dividing by period^dim and multiplying the coeff with powers of period
     mpz_class pp = 1;
     for (i = dim - 2; i >= 0; --i) {
         pp *= period;  // p^i   ok, it is p^(dim-1-i)
@@ -715,7 +740,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     g = libnormaliz::gcd(g, quasi_denom);
     quasi_denom /= g;
     QP.scalar_division(g);
-    // we use a normed shift, so that the cylcic shift % period always yields a non-negative integer
+    // we use a normed shift, so that the cyclic shift % period always yields a non-negative integer
     long normed_shift = -shift;
     while (normed_shift < 0)
         normed_shift += reduced_period;
@@ -727,9 +752,9 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     if (nr_coeff_quasipol >= 0)
         delete_coeff = (long)quasi_poly[0].size() - nr_coeff_quasipol;
 
-    for (auto& p : quasi_poly)  // delete coefficients that have not been computed completely
-        for (j = 0; j < delete_coeff; ++j)
-            p[j] = 0;
+    for (auto& i : quasi_poly)  // delete coefficients that have not been computed completely
+        for (long j = 0; j < delete_coeff; ++j)
+            i[j] = 0;
 
     if (verbose && period > 1) {
         verboseOutput() << " done." << endl;
@@ -754,8 +779,8 @@ long HilbertSeries::get_expansion_degree() const {
     return expansion_degree;
 }
 
-void HilbertSeries::set_expansion_degree(long degree_) {
-    expansion_degree = degree_;
+void HilbertSeries::set_expansion_degree(long degree) {
+    expansion_degree = degree;
 }
 
 vector<mpz_class> HilbertSeries::expand_denom() const {
@@ -848,6 +873,21 @@ void HilbertSeries::adjustShift() {
         }
     }
 }
+
+ void HilbertSeries::increase_shift(const int d){
+     assert( d >= 0);
+     num.insert(num.begin(),d,0);
+     if(cyclo_num.size() > 0)
+        cyclo_num.insert(cyclo_num.begin(),0);
+ }
+
+ void HilbertSeries::multiply_denom(const int d){
+        assert(d > 0);
+        if(denom.find(d) != denom.end())
+            denom[d]+=1;
+        else
+            denom[d] = 1;
+ }
 
 /*
 // methods for textual transfer of a Hilbert Series

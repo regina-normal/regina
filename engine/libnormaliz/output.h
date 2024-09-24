@@ -36,25 +36,19 @@ using namespace std;
 template <typename Number>
 class Output {
     string name;
-    bool write_out;
-    bool write_inv;
+    bool out;
+    bool inv;
     bool ext;
     bool esp;
     bool typ;
     bool egn;
     bool gen;
     bool cst;
-    bool tri;
-    bool aut;
-    bool tgn;
     bool ht1;
-    bool dec;
     bool lat;
-    bool precomp;
     bool mod;
     bool msp;
-    bool fac;
-    bool inc;
+    bool precomp;
     Cone<Number>* Result;
     size_t dim;
     bool homogeneous;
@@ -65,14 +59,18 @@ class Output {
     string lattice_or_space;
     string of_polyhedron;
     string module_generators_name;
+    string polynomial_constraints;
     // string HilbertOrEhrhart;
 
     bool lattice_ideal_input;
+    bool pure_lattice_ideal;
+    bool monoid_input;
 
     bool no_ext_rays_output;
     bool no_supp_hyps_output;
     bool no_hilbert_basis_output;
     bool no_matrices_output;
+    bool binomials_packed;
 
 #ifdef ENFNORMALIZ
     renf_class_shared Renf;
@@ -89,7 +87,7 @@ class Output {
     // the Cone Object is handled at another place
 
     //---------------------------------------------------------------------------
-    //                                Data acces
+    //                                Data access
     //---------------------------------------------------------------------------
 
     void set_name(const string& n);
@@ -103,17 +101,11 @@ class Output {
     void set_write_egn(const bool& flag);      // sets the write .egn flag
     void set_write_gen(const bool& flag);      // sets the write .gen flag
     void set_write_cst(const bool& flag);      // sets the write .cst flag
-    void set_write_tri(const bool& flag);      // sets the write .tri flag
-    void set_write_aut(const bool& flag);      // sets the write .aut flag
-    void set_write_tgn(const bool& flag);      // sets the write .tgn flag
     void set_write_ht1(const bool& flag);      // sets the write .ht1 flag
-    void set_write_dec(const bool& flag);      // sets the write .dec flag
     void set_write_lat(const bool& flag);      // sets the write .lat flag
-    void set_write_precomp(const bool& flag);  // sets the write .precomp flag
     void set_write_mod(const bool& flag);      // sets the write .mod flag
     void set_write_msp(const bool& flag);      // sets the write .msp flag
-    void set_write_fac(const bool& flag);      // sets the write .fac flag
-    void set_write_inc(const bool& flag);      // sets the write .inc flag
+    void set_write_precomp(const bool& flag);      // sets the write .msp flag
     void set_write_extra_files();              // sets some flags to true
     void set_write_all_files();                // sets most flags to true
 
@@ -123,16 +115,19 @@ class Output {
     void write_matrix_typ(const Matrix<Number>& M) const;  // writes M to file name.typ
     void write_matrix_egn(const Matrix<Number>& M) const;  // writes M to file name.egn
     void write_matrix_gen(const Matrix<Number>& M) const;  // writes M to file name.gen
+    void write_matrix_ogn(const Matrix<Number>& M) const;  // writes M to file name.ogn
     void write_matrix_mod(const Matrix<Number>& M) const;  // writes M to file name.mod
     void write_matrix_msp(const Matrix<Number>& M) const;  // writes M to file name.msp
+    void write_matrix_grb(const Matrix<Number>& M) const;  // writes M to file name.grb
+    void write_matrix_mrk(const Matrix<Number>& M) const;  // writes M to file name.mrk
+    void write_matrix_rep(const Matrix<Number>& M) const;  // writes M to file name.rep
     void write_precomp() const;
     void write_tri() const;                                               // writes the .tri file
     void write_aut() const;                                               // writes the .aut file
     void write_aut_ambient(ofstream& out, const string& gen_name) const;  // ... in a special case
-    void write_fac() const;                                               // writes the .fac file
-    void write_dual_fac() const;                                          // writes the .fac file with duual face lattice
+    void write_locus(const string suffix, const map<dynamic_bitset, int>& Locus, const string orientation) const; // write locus
     void write_inc() const;                                               // writes the .inc file
-    void write_dual_inc() const;                                          // writes the .inc file with dual incidence
+    void write_dual_inc() const;                                          // writes the .grb file with dual incidence
 
     void write_Stanley_dec() const;
     void write_matrix_ht1(const Matrix<Number>& M) const;  // writes M to file name.ht1
@@ -155,12 +150,13 @@ class Output {
     void set_no_supp_hyps_output();
     void set_no_hilbert_basis_output();
     void set_no_matrices_output();
+    void set_binomials_packed();
 
     //---------------------------------------------------------------------------
     //                         Output Algorithms
     //---------------------------------------------------------------------------
 
-    void write_files() const;
+    void write_files();
     void writeWeightedEhrhartSeries(ofstream& out) const;
     void writeSeries(ofstream& out, const HilbertSeries& HS, string HilbertOrEhrhart) const;
 
@@ -170,6 +166,19 @@ class Output {
                                 const string& type_string) const;
 };
 // class end *****************************************************************
+
+template <typename Integer>
+void write_fusion_files(const FusionBasic basic, const string& name, const bool non_simple_fusion_rings, const bool simple_fusion_rings,
+                                         size_t embdim, const Matrix<Integer>& SimpleFusionRings,
+                                         const Matrix<Integer>& NonSimpleFusionRings,
+                                         const bool no_matrices_output, const bool only_one);
+
+void write_modular_gradings(const string& name, const vector<vector<dynamic_bitset> >& modular_gradings);
+
+template <typename Integer>
+void write_single_fusion_file(const FusionBasic fusion_basic, const string& name,
+                        size_t embdim, vector<Integer> SingleFusionRing,
+                        const bool no_matrices_output);
 
 }  // namespace libnormaliz
 

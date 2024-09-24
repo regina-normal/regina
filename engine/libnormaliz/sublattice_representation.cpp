@@ -82,8 +82,8 @@ Sublattice_Representation<Integer>::Sublattice_Representation(const Matrix<Integ
         mpz_SLR.initialize(mpz_M, take_saturation, success);
         if (use_LLL)
             mpz_SLR.LLL_improve();
-        A = Matrix<Integer>(mpz_SLR.A.nr, mpz_SLR.A.nc);
-        B = Matrix<Integer>(mpz_SLR.B.nr, mpz_SLR.B.nc);
+        A.resize(mpz_SLR.A.nr, mpz_SLR.A.nc);
+        B.resize(mpz_SLR.B.nr, mpz_SLR.B.nc);
         // mat_to_Int(mpz_SLR.A,A);
         convert(A, mpz_SLR.A);
         // mat_to_Int(mpz_SLR.B,B);
@@ -173,8 +173,8 @@ void Sublattice_Representation<Integer>::initialize(const Matrix<Integer>& M, bo
         return;
     }
 
-    A = Matrix<Integer>(rank, dim);
-    B = Matrix<Integer>(dim, rank);
+    A.resize(rank, dim);
+    B.resize(dim, rank);
 
     if (row_index == 1) {  // no saturation needed since sublattice is direct summand
 
@@ -273,8 +273,8 @@ void Sublattice_Representation<renf_elem_class>::initialize(const Matrix<renf_el
         }
     }
 
-    A = Matrix<renf_elem_class>(rank, dim);
-    B = Matrix<renf_elem_class>(dim, rank);
+    A.resize(rank, dim);
+    B.resize(dim, rank);
 
     for (size_t k = 0; k < rank; ++k)
         A[k] = N[k];
@@ -337,7 +337,7 @@ void Sublattice_Representation<Integer>::compose(const Sublattice_Representation
     B = B.multiplication(SR.B);
     c = c * SR.c;
 
-    // check if a factor can be extraced from B  //TODO necessary?
+    // check if a factor can be extracted from B  //TODO necessary?
     if (!using_float<Integer>() && !using_renf<Integer>()) {
         Integer g = B.matrix_gcd();
         g = libnormaliz::gcd(g, c);  // TODO necessary??
@@ -378,7 +378,7 @@ void Sublattice_Representation<Integer>::compose_dual(const Sublattice_Represent
     B = B.multiplication(SR.A.transpose());
 
     if (!using_float<Integer>() && !using_renf<Integer>()) {
-        // check if a factor can be extraced from B  //TODO necessary?
+        // check if a factor can be extracted from B  //TODO necessary?
         Integer g = B.matrix_gcd();
         g = libnormaliz::gcd(g, c);  // TODO necessary??
         if (g > 1) {
@@ -395,7 +395,7 @@ void Sublattice_Representation<Integer>::compose_dual(const Sublattice_Represent
 // Instrad of Sub we can also give its "orthogonal" Perp. Then Sub is computed.
 // One of the matrices must be empty.
 // If Sub is empty, we assume it must be computed.
-// If Sub is nonempty, we asume that Perp must be computed.
+// If Sub is nonempty, we assume that Perp must be computed.
 // Suib and Perp are given/computed in the coordinates of the ambient space
 //
 // If Sub is
@@ -461,7 +461,7 @@ Matrix<Integer> Sublattice_Representation<Integer>::from_sublattice(const Matrix
 
 template <typename Integer>
 void Sublattice_Representation<Integer>::convert_from_sublattice(Matrix<Integer>& ret, const Matrix<Integer>& val) const {
-    ret = Matrix<Integer>(val.nr_of_rows(), dim);
+    ret.resize(val.nr_of_rows(), dim);
 
     bool skip_remaining = false;
     std::exception_ptr tmp_exception;
@@ -491,7 +491,7 @@ void Sublattice_Representation<Integer>::convert_from_sublattice(Matrix<Integer>
 
 template <typename Integer>
 void Sublattice_Representation<Integer>::convert_from_sublattice_dual(Matrix<Integer>& ret, const Matrix<Integer>& val) const {
-    ret = Matrix<Integer>(val.nr_of_rows(), dim);
+    ret.resize(val.nr_of_rows(), dim);
 
     bool skip_remaining = false;
     std::exception_ptr tmp_exception;
@@ -522,7 +522,7 @@ void Sublattice_Representation<Integer>::convert_from_sublattice_dual(Matrix<Int
 template <typename Integer>
 template <typename FromType>
 void Sublattice_Representation<Integer>::convert_from_sublattice(Matrix<Integer>& ret, const Matrix<FromType>& val) const {
-    ret = Matrix<Integer>(val.nr_of_rows(), dim);
+    ret.resize(val.nr_of_rows(), dim);
 
     bool skip_remaining = false;
     std::exception_ptr tmp_exception;
@@ -558,7 +558,7 @@ void Sublattice_Representation<Integer>::convert_from_sublattice(Matrix<Integer>
 template <typename Integer>
 template <typename FromType>
 void Sublattice_Representation<Integer>::convert_from_sublattice_dual(Matrix<Integer>& ret, const Matrix<FromType>& val) const {
-    ret = Matrix<Integer>(val.nr_of_rows(), dim);
+    ret.resize(val.nr_of_rows(), dim);
 
     bool skip_remaining = false;
     std::exception_ptr tmp_exception;
@@ -752,7 +752,7 @@ const vector<vector<Integer> >& Sublattice_Representation<Integer>::getEquations
 template <typename Integer>
 void Sublattice_Representation<Integer>::make_equations() const {
     if (rank == dim)
-        Equations = Matrix<Integer>(0, dim);
+        Equations.resize(0, dim);
     else
         Equations = A.kernel(false);
     Equations_computed = true;
@@ -780,7 +780,7 @@ mpz_class Sublattice_Representation<Integer>::getExternalIndex() const {
 template <typename Integer>
 void Sublattice_Representation<Integer>::make_congruences() const {
     if (c == 1) {  // no congruences then
-        Congruences = Matrix<Integer>(0, dim + 1);
+        Congruences.resize(0, dim + 1);
         Congruences_computed = true;
         external_index = 1;
         return;
@@ -797,7 +797,7 @@ void Sublattice_Representation<Integer>::make_congruences() const {
 
     Transf.append(Matrix<Integer>(1, dim));
     Transf = Transf.transpose();
-    Matrix<Integer> Transf2(0, dim + 1);  // only the relavant congruences
+    Matrix<Integer> Transf2(0, dim + 1);  // only the relevant congruences
     for (size_t k = 0; k < rank; ++k) {
         if (A_Copy[k][k] != 1) {
             Transf2.append(Transf[k]);
@@ -819,7 +819,7 @@ void Sublattice_Representation<Integer>::make_congruences() const {
 #ifdef ENFNORMALIZ
 template <>
 void Sublattice_Representation<renf_elem_class>::make_congruences() const {
-    Congruences = Matrix<renf_elem_class>(0, dim + 1);
+    Congruences.resize(0, dim + 1);
 }
 #endif
 

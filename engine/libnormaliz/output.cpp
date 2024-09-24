@@ -39,6 +39,7 @@
 #include "libnormaliz/vector_operations.h"
 #include "libnormaliz/list_and_map_operations.h"
 #include "libnormaliz/automorph.h"
+#include "libnormaliz/fusion.h"
 
 namespace libnormaliz {
 using namespace std;
@@ -47,31 +48,26 @@ using namespace std;
 
 template <typename Integer>
 Output<Integer>::Output() {
-    write_out = true;
-    write_inv = false;
+    out = true;
+    inv = false;
     ext = false;
     esp = false;
     typ = false;
     egn = false;
     gen = false;
     cst = false;
-    tri = false;
-    tgn = false;
     ht1 = false;
-    dec = false;
     lat = false;
-    precomp = false;
     mod = false;
     msp = false;
-    fac = false;
-    aut = false;
-    inc = false;
-
+    precomp = false;
     lattice_ideal_input = false;
+    pure_lattice_ideal = false;
     no_ext_rays_output = false;
     no_supp_hyps_output = false;
     no_hilbert_basis_output = false;
     no_matrices_output = false;
+    binomials_packed = false;
     print_renf = true;
 }
 
@@ -96,9 +92,18 @@ void Output<Integer>::set_no_ext_rays_output() {
     no_ext_rays_output = true;
 }
 
+//---------------------------------------------------------------------------
+
 template <typename Integer>
 void Output<Integer>::set_no_hilbert_basis_output() {
     no_hilbert_basis_output = true;
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Output<Integer>::set_binomials_packed() {
+    binomials_packed = true;
 }
 
 //---------------------------------------------------------------------------
@@ -122,6 +127,8 @@ void Output<Integer>::setCone(Cone<Integer>& C) {
     this->Result = &C;
     dim = Result->getEmbeddingDim();
     homogeneous = !Result->isInhomogeneous();
+    if(Result->isPolynomiallyConstrained())
+        polynomial_constraints = " satisfying polynomial constraints";
     if (!using_renf<Integer>())
         lattice_or_space = "lattice";
     else
@@ -132,9 +139,9 @@ void Output<Integer>::setCone(Cone<Integer>& C) {
         of_polyhedron = "";
         string absolute;
         if (!using_renf<Integer>())
-            module_generators_name = " lattice points in polytope (Hilbert basis elements of degree 1)";
+            module_generators_name = " lattice points in polytope (Hilbert basis elements of degree 1)" + polynomial_constraints;
         else
-            module_generators_name = " lattice points in polytope";
+            module_generators_name = " lattice points in polytope" + polynomial_constraints;
     }
     else {
         of_cone = " of recession cone";
@@ -144,20 +151,23 @@ void Output<Integer>::setCone(Cone<Integer>& C) {
         else
             monoid_or_cone = "cone";
         of_polyhedron = " of polyhedron (homogenized)";
-        if ((Result->isComputed(ConeProperty::ModuleGenerators) || Result->isComputed(ConeProperty::NumberLatticePoints)) &&
+
+        if ((Result->isComputed(ConeProperty::ModuleGenerators) || Result->isComputed(ConeProperty::NumberLatticePoints) || Result->isComputed(ConeProperty::SingleLatticePoint)) &&
             Result->getRecessionRank() == 0) {
             if (!using_renf<Integer>())
-                module_generators_name = " lattice points in polytope (module generators)";
+                module_generators_name = " lattice points in polytope (module generators)" + polynomial_constraints;
             else
-                module_generators_name = " lattice points in polytope";
+                module_generators_name = " lattice points in polytope" + polynomial_constraints;
         }
         else {
             if (using_renf<Integer>())
-                module_generators_name = " lattice points in polytope";
+                module_generators_name = " lattice points in polytope" + polynomial_constraints;
             else
                 module_generators_name = " module generators";
         }
     }
+    if(Result->isComputed(ConeProperty::SingleLatticePoint) && !Result->isComputed(ConeProperty::NumberLatticePoints))
+        module_generators_name += " (only single lattice point asked for)";
 }
 
 template <typename Number>
@@ -190,14 +200,14 @@ void Output<renf_elem_class>::set_renf(const renf_class_shared renf, bool is_int
 
 template <typename Integer>
 void Output<Integer>::set_write_out(const bool& flag) {
-    write_out = flag;
+    out = flag;
 }
 
 //---------------------------------------------------------------------------
 
 template <typename Integer>
 void Output<Integer>::set_write_inv(const bool& flag) {
-    write_inv = flag;
+    inv = flag;
 }
 
 //---------------------------------------------------------------------------
@@ -245,43 +255,8 @@ void Output<Integer>::set_write_cst(const bool& flag) {
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void Output<Integer>::set_write_tri(const bool& flag) {
-    tri = flag;
-}
-
-//---------------------------------------------------------------------------
-
-template <typename Integer>
-void Output<Integer>::set_write_aut(const bool& flag) {
-    aut = flag;
-}
-
-//---------------------------------------------------------------------------
-
-template <typename Integer>
-void Output<Integer>::set_write_tgn(const bool& flag) {
-    tgn = flag;
-}
-
-//---------------------------------------------------------------------------
-
-template <typename Integer>
 void Output<Integer>::set_write_ht1(const bool& flag) {
     ht1 = flag;
-}
-
-//---------------------------------------------------------------------------
-
-template <typename Integer>
-void Output<Integer>::set_write_dec(const bool& flag) {
-    dec = flag;
-}
-
-//---------------------------------------------------------------------------
-
-template <typename Integer>
-void Output<Integer>::set_write_precomp(const bool& flag) {
-    precomp = flag;
 }
 
 //---------------------------------------------------------------------------
@@ -301,6 +276,13 @@ void Output<Integer>::set_write_lat(const bool& flag) {
 //---------------------------------------------------------------------------
 
 template <typename Integer>
+void Output<Integer>::set_write_precomp(const bool& flag) {
+    precomp = flag;
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
 void Output<Integer>::set_write_msp(const bool& flag) {
     msp = flag;
 }
@@ -308,21 +290,9 @@ void Output<Integer>::set_write_msp(const bool& flag) {
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void Output<Integer>::set_write_fac(const bool& flag) {
-    fac = flag;
-}
-//---------------------------------------------------------------------------
-
-template <typename Integer>
-void Output<Integer>::set_write_inc(const bool& flag) {
-    inc = flag;
-}
-//---------------------------------------------------------------------------
-
-template <typename Integer>
 void Output<Integer>::set_write_extra_files() {
-    write_out = true;
-    write_inv = true;
+    out = true;
+    inv = true;
     gen = true;
     cst = true;
 }
@@ -331,8 +301,8 @@ void Output<Integer>::set_write_extra_files() {
 
 template <typename Integer>
 void Output<Integer>::set_write_all_files() {
-    write_out = true;
-    write_inv = true;
+    out = true;
+    inv = true;
     ext = true;
     esp = true;
     typ = true;
@@ -367,7 +337,7 @@ void Output<Integer>::write_matrix_mod(const Matrix<Integer>& M) const {
 
 template <typename Integer>
 void Output<Integer>::write_matrix_lat(const Matrix<Integer>& M) const {
-    if (ext == true) {
+    if (lat == true) {
         M.print(name, "lat");
     }
 }
@@ -407,6 +377,13 @@ void Output<Integer>::write_matrix_gen(const Matrix<Integer>& M) const {
         M.print(name, "gen");
     }
 }
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Output<Integer>::write_matrix_ogn(const Matrix<Integer>& M) const {
+        M.print(name, "ogn");
+}
 //---------------------------------------------------------------------------
 
 template <typename Integer>
@@ -414,6 +391,32 @@ void Output<Integer>::write_matrix_msp(const Matrix<Integer>& M) const {
     if (msp == true) {
         M.print(name, "msp");
     }
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Output<Integer>::write_matrix_grb(const Matrix<Integer>& M) const {
+    if(binomials_packed)
+        M.sparse_print(name, "grb");
+    else
+        M.print(name, "grb");
+}
+
+template <typename Integer>
+void Output<Integer>::write_matrix_mrk(const Matrix<Integer>& M) const {
+    if(binomials_packed)
+        M.sparse_print(name, "mrk");
+    else
+        M.print(name, "mrk");
+}
+
+template <typename Integer>
+void Output<Integer>::write_matrix_rep(const Matrix<Integer>& M) const {
+    if(binomials_packed)
+        M.sparse_print(name, "rep");
+    else
+        M.print(name, "rep");
 }
 
 //---------------------------------------------------------------------------
@@ -440,9 +443,9 @@ void Output<Integer>::write_perms_and_orbits(ofstream& out,
     out << "Cycle decompositions " << endl << endl;
 
     for (size_t i = 0; i < nr_items; ++i) {
-        vector<vector<libnormaliz::key_t> > decomp = cycle_decomposition(Perms[i]);
+        vector<vector<libnormaliz::key_t> > dec = cycle_decomposition(Perms[i]);
         out << "Perm " << i + 1 << ": ";
-        pretty_print_cycle_dec(decomp, out);
+        pretty_print_cycle_dec(dec, out);
     }
     out << endl;
 
@@ -472,8 +475,12 @@ void Output<Integer>::write_aut() const {
     if (Result->getAutomorphismGroup().getOrder() == 1)
         return;
 
-    if (Result->getAutomorphismGroup().IsIntegralityChecked()) {
-        if (Result->getAutomorphismGroup().IsIntegral())
+    bool monoid_autos = false;
+    if(qualities_string.find("Monoid") != string::npos)
+        monoid_autos = true;
+
+    if (Result->getAutomorphismGroup().IsIntegralityChecked() || monoid_autos) {
+        if (Result->getAutomorphismGroup().IsIntegral() || monoid_autos)
             out << "Automorphisms are integral" << endl;
         else
             out << "Automorphisms are not integral" << endl;
@@ -482,6 +489,11 @@ void Output<Integer>::write_aut() const {
         out << "Integrality not known" << endl;
 
     out << "************************************************************************" << endl;
+
+    if(monoid_autos){
+        write_aut_ambient(out, "Hilbert basis elements");
+        return;
+    }
 
     if (qualities_string.find("generators") != string::npos) {
         write_aut_ambient(out, "input generators");
@@ -518,8 +530,8 @@ void Output<Integer>::write_aut() const {
 
 template <typename Integer>
 void Output<Integer>::write_aut_ambient(ofstream& out, const string& gen_name) const {
-    write_perms_and_orbits(out, Result->getAutomorphismGroup().getGensPerms(), Result->getAutomorphismGroup().getGensOrbits(),
-                           gen_name);
+    write_perms_and_orbits(out, Result->getAutomorphismGroup().getGensPerms(),
+                Result->getAutomorphismGroup().getGensOrbits(), gen_name);
     out << "************************************************************************" << endl;
 
     string qualities_string = Result->getAutomorphismGroup().getQualitiesString();
@@ -538,7 +550,8 @@ void Output<Integer>::write_aut_ambient(ofstream& out, const string& gen_name) c
 
 template <typename Integer>
 void Output<Integer>::write_precomp() const {
-    if (!precomp)
+
+    if(!precomp)
         return;
 
     if (!Result->isComputed(ConeProperty::SupportHyperplanes)  // not all required data computed
@@ -592,167 +605,144 @@ void Output<Integer>::write_precomp() const {
 
 template <typename Integer>
 void Output<Integer>::write_tri() const {
-    if (tri == true) {
-        string file_name = name + ".tri";
-        ofstream out(file_name.c_str());
+    string file_name = name + ".tri";
+    ofstream out(file_name.c_str());
 
-        const pair<vector<SHORTSIMPLEX<Integer> >, Matrix<Integer> >& Tri = Result->getTriangulation();
-        // const vector<vector<bool> >& Dec =
-        //    Result->isComputed(ConeProperty::ConeDecomposition) ? Result->getOpenFacets() : vector<vector<bool> >();
-        // auto idd = Dec.begin();
+    const pair<vector<SHORTSIMPLEX<Integer> >, Matrix<Integer> >& Tri = Result->getTriangulation();
+    // const vector<vector<bool> >& Dec =
+    //    Result->isComputed(ConeProperty::ConeDecomposition) ? Result->getOpenFacets() : vector<vector<bool> >();
+    // auto idd = Dec.begin();
 
-        out << Tri.first.size() << endl;
-        size_t nr_extra_entries = 1;
-        if (Result->isComputed(ConeProperty::ConeDecomposition))
-            nr_extra_entries += Result->getSublattice().getRank() - Result->getDimMaximalSubspace();
-        out << Result->getSublattice().getRank() - Result->getDimMaximalSubspace() + nr_extra_entries
-            << endl;  // works also for empty list
+    out << Tri.first.size() << endl;
+    size_t nr_extra_entries = 1;
+    if (Result->isComputed(ConeProperty::ConeDecomposition))
+        nr_extra_entries += Result->getSublattice().getRank() - Result->getDimMaximalSubspace();
+    out << Result->getSublattice().getRank() - Result->getDimMaximalSubspace() + nr_extra_entries
+        << endl;  // works also for empty list
 
-        for (const auto& tit : Tri.first) {
-            for (size_t i = 0; i < tit.key.size(); i++) {
-                out << tit.key[i] + 1 << " ";
-            }
-            out << "   " << tit.vol;
-            if (Result->isComputed(ConeProperty::ConeDecomposition)) {
-                out << "   ";
-                for (size_t i = 0; i < tit.key.size(); i++) {
-                    out << " " << tit.Excluded[i];
-                }
-                // idd++;
-            }
-            out << endl;
+    for (const auto& tit : Tri.first) {
+        for (size_t i = 0; i < tit.key.size(); i++) {
+            out << tit.key[i] + 1 << " ";
         }
-        /* if (Result->isTriangulationNested())
-            out << "nested" << endl;
-        else
-            out << "plain" << endl;
-        if (Result->isTriangulationPartial())
-            out << "partial" << endl;*/
-        out.close();
+        out << "   " << tit.vol;
+        if (Result->isComputed(ConeProperty::ConeDecomposition)) {
+            out << "   ";
+            for (size_t i = 0; i < tit.key.size(); i++) {
+                out << " " << tit.Excluded[i];
+            }
+            // idd++;
+        }
+        out << endl;
     }
+    /* if (Result->isTriangulationNested())
+        out << "nested" << endl;
+    else
+        out << "plain" << endl;
+    if (Result->isTriangulationPartial())
+        out << "partial" << endl;*/
+    out.close();
 }
 
 //---------------------------------------------------------------------------
 
 template <typename Integer>
 void Output<Integer>::write_inc() const {
-    if (inc == true) {
-        string file_name = name + ".inc";
-        ofstream out(file_name.c_str());
+    string file_name = name + ".inc";
+    ofstream out(file_name.c_str());
 
-        size_t nr_vert = 0;
-        if (Result->isInhomogeneous())
-            nr_vert = Result->getNrVerticesOfPolyhedron();
-        size_t nr_ext = Result->getNrExtremeRays();
+    size_t nr_vert = 0;
+    if (Result->isInhomogeneous())
+        nr_vert = Result->getNrVerticesOfPolyhedron();
+    size_t nr_ext = Result->getNrExtremeRays();
 
-        out << Result->getNrSupportHyperplanes() << endl;
-        out << nr_vert << endl;
-        out << nr_ext << endl;
-        out << endl;
+    out << Result->getNrSupportHyperplanes() << endl;
+    out << nr_vert << endl;
+    out << nr_ext << endl;
+    out << endl;
 
-        for (size_t f = 0; f < Result->getIncidence().size(); ++f) {
-            if (nr_vert > 0) {
-                for (size_t j = 0; j < nr_vert; ++j)
-                    out << Result->getIncidence()[f][j];
-                out << "  ";
-            }
-            for (size_t j = 0; j < nr_ext; ++j)
-                out << Result->getIncidence()[f][j + nr_vert];
-            out << endl;
+    for (size_t f = 0; f < Result->getIncidence().size(); ++f) {
+        if (nr_vert > 0) {
+            for (size_t j = 0; j < nr_vert; ++j)
+                out << Result->getIncidence()[f][j];
+            out << "  ";
         }
-
-        out << "primal" << endl;
-
-        out.close();
+        for (size_t j = 0; j < nr_ext; ++j)
+            out << Result->getIncidence()[f][j + nr_vert];
+        out << endl;
     }
+
+    out << "primal" << endl;
+
+    out.close();
 }
 
 //---------------------------------------------------------------------------
 
 template <typename Integer>
 void Output<Integer>::write_dual_inc() const {
-    if (inc == true) {
-        string file_name = name + ".inc";
-        ofstream out(file_name.c_str());
+    string file_name = name + ".inc";
+    ofstream out(file_name.c_str());
 
-        size_t nr_vert = 0;
-        if (Result->isInhomogeneous())
-            nr_vert = Result->getNrVerticesOfPolyhedron();
-        size_t nr_ext = Result->getNrExtremeRays();
-        size_t nr_supp = Result->getNrSupportHyperplanes();
+    size_t nr_vert = 0;
+    if (Result->isInhomogeneous())
+        nr_vert = Result->getNrVerticesOfPolyhedron();
+    size_t nr_ext = Result->getNrExtremeRays();
+    size_t nr_supp = Result->getNrSupportHyperplanes();
 
-        out << nr_vert << endl;
-        out << nr_ext << endl;
-        out << nr_supp << endl;
+    out << nr_vert << endl;
+    out << nr_ext << endl;
+    out << nr_supp << endl;
+    out << endl;
+
+    for (size_t f = 0; f < Result->getDualIncidence().size(); ++f) {
+        for (size_t j = 0; j < nr_supp; ++j)
+            out << Result->getDualIncidence()[f][j];
         out << endl;
-
-        for (size_t f = 0; f < Result->getDualIncidence().size(); ++f) {
-            for (size_t j = 0; j < nr_supp; ++j)
-                out << Result->getDualIncidence()[f][j];
-            out << endl;
-        }
-
-        out << "dual" << endl;
-
-        out.close();
     }
+
+    out << "dual" << endl;
+
+    out.close();
 }
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void Output<Integer>::write_fac() const {
-    if (fac == true) {
-        string file_name = name + ".fac";
-        ofstream out(file_name.c_str());
-        out << Result->getFaceLattice().size() << endl;
+void Output<Integer>::write_locus(const string suffix, const map<dynamic_bitset, int>& Locus, const string orientation) const {
+    string file_name = name + "." + suffix;
+    ofstream out(file_name.c_str());
+    out << Locus.size() << endl;
+
+    if(orientation != "dual"){
         out << Result->getNrSupportHyperplanes() << endl;
-        out << endl;
-
-        for (const auto& f : Result->getFaceLattice()) {
-            for (size_t k = 0; k < f.first.size(); ++k)
-                out << f.first[k];
-            out << " " << f.second << endl;
-        }
-
-        out << "primal" << endl;
-
-        out.close();
     }
-}
-
-//---------------------------------------------------------------------------
-
-template <typename Integer>
-void Output<Integer>::write_dual_fac() const {
-    if (fac == true) {
-        string file_name = name + ".fac";
-        ofstream out(file_name.c_str());
-        out << Result->getDualFaceLattice().size() << endl;
+    else{
         if (Result->isInhomogeneous()) {
             out << Result->getNrVerticesOfPolyhedron() << endl;
         }
         else {
             out << Result->getNrExtremeRays() << endl;
         }
-        out << endl;
-
-        for (const auto& f : Result->getDualFaceLattice()) {
-            for (size_t k = 0; k < f.first.size(); ++k)
-                out << f.first[k];
-            out << " " << f.second << endl;
-        }
-
-        out << "dual" << endl;
-
-        out.close();
     }
+    out << endl;
+
+    for (const auto& f : Locus) {
+        for (size_t k = 0; k < f.first.size(); ++k)
+            out << f.first[k];
+        out << " " << f.second << endl;
+    }
+
+    if(orientation != "")
+        out << orientation << endl;
+
+    out.close();
 }
+
 
 //---------------------------------------------------------------------------
 
 template <typename Integer>
 void Output<Integer>::write_Stanley_dec() const {
-    if (dec && Result->isComputed(ConeProperty::StanleyDec)) {
+    if (Result->isComputed(ConeProperty::StanleyDec)) {
         ofstream out((name + ".dec").c_str());
 
         if (Result->isComputed(ConeProperty::InclusionExclusionData)) {
@@ -804,7 +794,7 @@ string is_maximal(long a, long b) {
 
 template <typename Integer>
 void Output<Integer>::write_inv_file() const {
-    if (write_inv == true) {  // printing .inv file
+    if (inv == true) {  // printing .inv file
         size_t i;
         string name_open = name + ".inv";  // preparing output files
         const char* file = name_open.c_str();
@@ -820,15 +810,40 @@ void Output<Integer>::write_inv_file() const {
         if (Result->isComputed(ConeProperty::VerticesOfPolyhedron)) {
             inv << "integer number_vertices_polyhedron = " << Result->getNrVerticesOfPolyhedron() << endl;
         }
+        if (Result->isComputed(ConeProperty::MarkovBasis)) {
+            inv << "integer number_markov_basis_elemrnts = " << Result->getNrMarkovBasis() << endl;
+        }
+        if (Result->isComputed(ConeProperty::GroebnerBasis)) {
+            inv << "integer number_groebner_basis_elemrnts = " << Result->getNrGroebnerBasis() << endl;
+        }
+        if (Result->isComputed(ConeProperty::Representations)) {
+            inv << "integer number_representations = " << Result->getNrRepresentations() << endl;
+            vector<key_t> KeyForOutput = Result-> getHilbertBasisKey();
+            for(size_t i = 0; i < KeyForOutput.size(); ++i)
+                KeyForOutput[i]++;
+            inv << "vector " << KeyForOutput.size() << "hilbert_basis_key = "
+            << KeyForOutput << endl;
+        }
         if (Result->isComputed(ConeProperty::ExtremeRays)) {
             size_t nr_ex_rays = Result->getNrExtremeRays();
             inv << "integer number_extreme_rays = " << nr_ex_rays << endl;
+        }
+        if (Result->isComputed(ConeProperty::CodimSingularLocus)) {
+            size_t codim = Result->getCodimSingularLocus();
+            inv << "integer codim_singular_locus = " << codim << endl;
         }
         if (Result->isComputed(ConeProperty::FVector)) {
             inv << "vector " << Result->getFVector().size() << " f_vector = " << Result->getFVector();
         }
         if (Result->isComputed(ConeProperty::DualFVector)) {
             inv << "vector " << Result->getDualFVector().size() << " dual_f_vector = " << Result->getDualFVector();
+        }
+        if (Result->isComputed(ConeProperty::FVectorOrbits)) {
+            inv << "vector " << Result->getFVectorOrbits().size() << " f_vector_orbits = " << Result->getFVectorOrbits();
+        }
+        if (Result->isComputed(ConeProperty::DualFVectorOrbits)) {
+            inv << "vector " << Result->getDualFVectorOrbits().size() << " dual_f_vector_orbits = "
+                     << Result->getDualFVectorOrbits();
         }
         if (Result->isComputed(ConeProperty::MaximalSubspace)) {
             size_t dim_max_subspace = Result->getDimMaximalSubspace();
@@ -872,6 +887,13 @@ void Output<Integer>::write_inv_file() const {
                 inv << "boolean integrally_closed = true" << endl;
             else
                 inv << "boolean integrally_closed = false" << endl;
+        }
+
+        if (Result->isComputed(ConeProperty::IsSerreR1)) {
+            if (Result->isIntegrallyClosed())
+                inv << "boolean SerreR1 = true" << endl;
+            else
+                inv << "boolean SerreR1= false" << endl;
         }
 
         if (!Result->isComputed(ConeProperty::Dehomogenization)) {
@@ -1005,6 +1027,16 @@ void Output<Integer>::write_inv_file() const {
             }
             else
                 inv << "boolean Gorenstein = false" << endl;
+        }
+
+        if (Result->isComputed(ConeProperty::SingleLatticePoint)) {
+            if (Result->getSingleLatticePoint().size() > 0) {
+                inv << "boolean lattice_point_exists = true" << endl;
+                inv << "vector " << Result->getSingleLatticePoint().size()
+                    << "  lattice_point = " << Result->getSingleLatticePoint();
+            }
+            else
+                inv << "boolean lattice_point_exists = false" << endl;
         }
 
         inv.close();
@@ -1183,14 +1215,46 @@ void Output<Integer>::writeSeries(ofstream& out, const HilbertSeries& HS, string
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void Output<Integer>::write_files() const {
-    size_t nr;
+void Output<Integer>::write_files() {
+
+    if(Result->isComputed(ConeProperty::SingleFusionRing)){
+        write_single_fusion_file(Result->getFusionBasicCone(), name, Result->getEmbeddingDim(), Result->getSingleFusionRing(), no_matrices_output);
+        return;
+    }
+
+    if(Result->isComputed(ConeProperty::FusionRings) || Result->isComputed(ConeProperty::SimpleFusionRings)){
+        if(Result->isComputed(ConeProperty::FusionRings)){
+            write_fusion_files(Result->getFusionBasicCone(), name, Result->isComputed(ConeProperty::SimpleFusionRings),
+                            Result->isComputed(ConeProperty::NonsimpleFusionRings), Result->getEmbeddingDim(),
+                            Result->getSimpleFusionRingsMatrix(), Result->getNonsimpleFusionRingsMatrix(),
+                            no_matrices_output, false);
+        }
+        else{ // only soimple computed
+            Matrix<Integer> Zero;
+            write_fusion_files(Result->getFusionBasicCone(),name, Result->isComputed(ConeProperty::SimpleFusionRings),
+                            Result->isComputed(ConeProperty::NonsimpleFusionRings), Result->getEmbeddingDim(),
+                            Result->getSimpleFusionRingsMatrix(), Zero,
+                            no_matrices_output,false);
+        }
+        return;
+    }
+
+    if(Result->isComputed(ConeProperty::ModularGradings)){
+        write_modular_gradings(name, Result->getModularGradings());
+        return;
+    }
+
+    size_t i, nr;
     vector<libnormaliz::key_t> rees_ideal_key;
+
+    lattice_ideal_input = Result->get_lattice_ideal_input();
+    pure_lattice_ideal = Result->get_pure_lattice_ideal();
+    monoid_input = Result->get_monoid_input();
 
     write_precomp();  // only if asked for
 
     if (esp && Result->isComputed(ConeProperty::SupportHyperplanes) && Result->isComputed(ConeProperty::Sublattice)) {
-        // write the suport hyperplanes of the full dimensional cone
+        // write the support hyperplanes of the full dimensional cone
         const Sublattice_Representation<Integer>& BasisChange = Result->getSublattice();
         Matrix<Integer> Support_Hyperplanes_Full_Cone = BasisChange.to_sublattice_dual(Result->getSupportHyperplanesMatrix());
         // Support_Hyperplanes_Full_Cone.print(name,"esp");
@@ -1211,30 +1275,68 @@ void Output<Integer>::write_files() const {
         }
         esp_out.close();
     }
-    if (tgn && (Result->getTriangulation().first.size() > 0 || Result->isComputed(ConeProperty::StanleyDec)))
+    if (Result->isComputed(ConeProperty::Triangulation) || Result->isComputed(ConeProperty::StanleyDec))
         Result->getTriangulation().second.print(name, "tgn");
 
-    if (tri && Result->getTriangulation().first.size() > 0) {  // write triangulation
+    if (Result->isComputed(ConeProperty::Triangulation )){  // write triangulation
         write_tri();
     }
 
-    if (fac && Result->isComputed(ConeProperty::FaceLattice)) {  // write face lattice
-        write_fac();
+    if (Result->isComputed(ConeProperty::MarkovBasis)) {  // write MarkovBasis
+        write_matrix_mrk(Result->getMarkovBasisMatrix());
+        if(monoid_input)
+            write_matrix_ogn(Result->getOriginalMonoidGeneratorsMatrix());
+        else
+            if(!pure_lattice_ideal){
+                write_matrix_ogn(Result->getHilbertBasisMatrix());
+            }
+    }
+    if (Result->isComputed(ConeProperty::Representations)) {  // write MarkovBasis
+        write_matrix_rep(Result->getRepresentationsMatrix());
+        if(monoid_input)
+            write_matrix_ogn(Result->getOriginalMonoidGeneratorsMatrix());
+        else
+            write_matrix_ogn(Result->getHilbertBasisMatrix());
+    }
+    if (Result->isComputed(ConeProperty::GroebnerBasis)) {  // write GröbnerBasis
+        write_matrix_grb(Result->getGroebnerBasisMatrix());
+        if(monoid_input)
+            write_matrix_ogn(Result->getOriginalMonoidGeneratorsMatrix());
+        else
+            if(!pure_lattice_ideal){
+                write_matrix_ogn(Result->getHilbertBasisMatrix());
+            }
     }
 
-    if (fac && Result->isComputed(ConeProperty::DualFaceLattice)) {  // write dual face lattice
-        write_dual_fac();
+    if(Result->isComputed(ConeProperty::FaceLattice)) {  // write face lattice
+        write_locus("fac", Result->getFaceLattice(),"primal");
     }
 
-    if (inc && Result->isComputed(ConeProperty::Incidence)) {  // write incidence lattice
+    if (Result->isComputed(ConeProperty::DualFaceLattice)) {  // write dual face lattice
+        write_locus("fac", Result->getDualFaceLattice(),"dual");
+    }
+
+    if(Result->isComputed(ConeProperty::FaceLatticeOrbits)) {  // write face lattice
+        write_locus("fac", Result->getFaceLatticeOrbits(),"primal_orbits");
+    }
+
+    if (Result->isComputed(ConeProperty::DualFaceLatticeOrbits)) {  // write dual face lattice
+        write_locus("fac", Result->getDualFaceLatticeOrbits(),"dual_orbits");
+    }
+
+    if (Result->isComputed(ConeProperty::SingularLocus)) {  // write dual face lattice
+        write_locus("sng", Result->getSingularLocus(),"");
+    }
+
+    if (Result->isComputed(ConeProperty::Incidence)) {  // write incidence lattice
         write_inc();
     }
 
-    if (inc && Result->isComputed(ConeProperty::DualIncidence)) {  // write incidence lattice
+    if (Result->isComputed(ConeProperty::DualIncidence)) {  // write incidence lattice
         write_dual_inc();
     }
 
-    if (write_out == true) {                     // printing .out file
+    if (out == true) {                     // printing .out file
         string name_open = name + ".out";  // preparing output files
         const char* file = name_open.c_str();
         ofstream out(file);
@@ -1247,12 +1349,25 @@ void Output<Integer>::write_files() const {
         write_renf(out);
 
         size_t nr_orig_gens = 0;
-        if (lattice_ideal_input) {
+        if (lattice_ideal_input && !pure_lattice_ideal) {
             nr_orig_gens = Result->getNrOriginalMonoidGenerators();
             out << nr_orig_gens << " original generators of the toric ring" << endl;
         }
-        if (!homogeneous && Result->isComputed(ConeProperty::NumberLatticePoints) && !Result->isIntHullCone()) {
-            out << Result->getNumberLatticePoints() << module_generators_name << endl;
+        size_t nr_lattice_points = 0;
+        bool print_nr_of_allice_points = false;;
+        if(Result->isComputed(ConeProperty::NumberLatticePoints)){
+            nr_lattice_points = Result->getNumberLatticePoints();
+            print_nr_of_allice_points = true;
+        }
+        else{
+            if(Result->isComputed(ConeProperty::SingleLatticePoint)){
+                print_nr_of_allice_points = true;
+                if (Result->getSingleLatticePoint().size() > 0)
+                    nr_lattice_points = 1;
+            }
+        }
+        if (!homogeneous && print_nr_of_allice_points && !Result->isIntHullCone()) {
+            out << nr_lattice_points << module_generators_name << endl;
         }
         if (Result->isComputed(ConeProperty::HilbertBasis) && !Result->isIntHullCone()) {
             out << Result->getNrHilbertBasis() << " Hilbert basis elements" << of_monoid << endl;
@@ -1263,7 +1378,7 @@ void Output<Integer>::write_files() const {
         if (Result->isComputed(ConeProperty::IsReesPrimary) && Result->isComputed(ConeProperty::HilbertBasis)) {
             const Matrix<Integer>& Hilbert_Basis = Result->getHilbertBasisMatrix();
             nr = Hilbert_Basis.nr_of_rows();
-            for (size_t i = 0; i < nr; i++) {
+            for (i = 0; i < nr; i++) {
                 if (Hilbert_Basis[i][dim - 1] == 1) {
                     rees_ideal_key.push_back(static_cast<key_t>(i));
                 }
@@ -1294,6 +1409,18 @@ void Output<Integer>::write_files() const {
             if (Result->getDualFVector()[0] != 1)
                 trunc = " (possibly truncated)";
             out << "dual f-vector" << trunc << ":" << endl << Result->getDualFVector() << endl;
+        }
+        if (Result->isComputed(ConeProperty::FVectorOrbits)) {
+            string trunc = "";
+            if (Result->getFVectorOrbits()[0] != 1)
+                trunc = " (possibly truncated)";
+            out << "f-vector orbits" << trunc << ":" << endl << Result->getFVectorOrbits() << endl;
+        }
+        if (Result->isComputed(ConeProperty::DualFVectorOrbits)) {
+            string trunc = "";
+            if (Result->getDualFVectorOrbits()[0] != 1)
+                trunc = " (possibly truncated)";
+            out << "dual f-vector orbits" << trunc << ":" << endl << Result->getDualFVectorOrbits() << endl;
         }
         if (Result->isComputed(ConeProperty::ExcludedFaces)) {
             out << Result->getNrExcludedFaces() << " excluded faces" << endl;
@@ -1345,7 +1472,16 @@ void Output<Integer>::write_files() const {
                 }
             }
         }
+        if (homogeneous && Result->isComputed(ConeProperty::IsSerreR1)) {
+            if (Result->isIntegrallyClosed()) {
+                out << "original monoid satisfies Serre condition R1" << endl;
+            }
+            else {
+                out << "original monoid violates Serre condition R1" << endl;
+            }
+        }
         out << endl;
+
         if (Result->isComputed(ConeProperty::AxesScaling)) {
             out << "scaling of axes" << endl;
             out << Result->getAxesScaling();
@@ -1381,7 +1517,7 @@ void Output<Integer>::write_files() const {
                 out << "degrees of extreme rays:" << endl;
                 map<Integer, long> deg_count;
                 vector<Integer> degs = Result->getExtremeRaysMatrix().MxV(Result->getGrading());
-                for (size_t i = 0; i < degs.size(); ++i) {
+                for (i = 0; i < degs.size(); ++i) {
                     deg_count[degs[i] / denom]++;
                 }
                 out << deg_count;
@@ -1405,6 +1541,25 @@ void Output<Integer>::write_files() const {
         if (Result->isComputed(ConeProperty::ModuleRank)) {
             out << "module rank = " << Result->getModuleRank() << endl;
         }
+
+        if (Result->isComputed(ConeProperty::CodimSingularLocus)) {
+            out << "codim singular locus = " << Result->getCodimSingularLocus() << endl;
+        }
+
+        if(Result->isComputed(ConeProperty::MarkovBasis)){
+            out << Result->getNrMarkovBasis() << " Markov basis elements" << endl << endl;
+        }
+        if(Result->isComputed(ConeProperty::GroebnerBasis)){
+            out << Result->getNrGroebnerBasis() << " Gröbner basis elements" << endl << endl;
+        }
+        if(Result->isComputed(ConeProperty::IsLatticeIdealToric)){
+            if(Result->isLatticeIdealToric())
+                out << "Lattice ideal is toric" << endl;
+            else
+                out << "Lattice ideal is not toric" << endl;
+        }
+
+
         if (Result->isComputed(ConeProperty::Multiplicity)) {
             string mult_string = "multiplicity ";
             if (Result->isComputed(ConeProperty::FixedPrecision))
@@ -1509,7 +1664,21 @@ void Output<Integer>::write_files() const {
             out << endl;
         }
 
-        if (aut &&
+       if (Result->isComputed(ConeProperty::SingleLatticePoint)) {
+           // output can be suppressed in tests because non-uniqueness of the lattice point
+            if (Result->getSingleLatticePoint().size() > 0) {
+                if(!no_matrices_output){
+                    out << "Lattice point:" << endl;
+                    out <<  Result->getSingleLatticePoint();
+                }
+            }
+            else
+                out << "No lattice point found" << endl;
+
+            out << endl;
+        }
+
+        if (
             (Result->isComputed(ConeProperty::Automorphisms) || Result->isComputed(ConeProperty::AmbientAutomorphisms) ||
              Result->isComputed(ConeProperty::CombinatorialAutomorphisms) ||
              Result->isComputed(ConeProperty::InputAutomorphisms) || Result->isComputed(ConeProperty::RationalAutomorphisms) ||
@@ -1535,7 +1704,7 @@ void Output<Integer>::write_files() const {
             return;
         }
 
-        if (lattice_ideal_input) {
+        if (lattice_ideal_input &&!pure_lattice_ideal) {
             out << nr_orig_gens << " original generators:" << endl;
             Result->getOriginalMonoidGeneratorsMatrix().pretty_print(out);
             out << endl;
@@ -1756,6 +1925,138 @@ void Output<Integer>::write_files() const {
     write_Stanley_dec();
 }
 
+void write_modular_gradings(const string& name, const vector<vector<dynamic_bitset> >& modular_gradings){
+
+    string name_open = name + ".out";  // preparing output files
+    ofstream out(name_open);
+    out << modular_gradings.size() << " modular gradings" << endl;
+    out << endl;
+    out << "***********************************************************************" << endl << endl;
+    out << modular_gradings.size() << " modular gradings:" << endl;
+    for(size_t i = 0; i < modular_gradings.size(); ++i){
+
+        out << "modular grading " << i + 1 << endl << endl;
+        for(auto& p: modular_gradings[i])
+            out << bitset_to_key(p);
+        out << "---------------------" << endl;
+    }
+}
+
+template <typename Integer>
+void write_single_fusion_file(const FusionBasic fusion_basic, const string& name,
+                        size_t embdim, vector<Integer> SingleFusionRing,
+                        const bool no_matrices_output) {
+
+    Matrix<Integer> Simple, Nonsimple;
+    Matrix<Integer> Fusion;
+    if(SingleFusionRing.size() > 0){
+        Fusion.resize(0,SingleFusionRing.size());
+        Fusion.append(SingleFusionRing);
+
+    }
+
+    split_into_simple_and_nonsimple(fusion_basic, Simple, Nonsimple, Fusion, libnormaliz::verbose);
+
+    write_fusion_files(fusion_basic, name, true,true, embdim,Simple, Nonsimple,no_matrices_output, true);
+
+    return;
+}
+
+template <typename Integer>
+void write_fusion_files(const FusionBasic fusion_basic, const string& name, const bool simple_fusion_rings,
+                        const bool non_simple_fusion_rings,
+                        size_t embdim, const Matrix<Integer>& SimpleFusionRings,
+                        const Matrix<Integer>& NonsimpleFusionRings,
+                        const bool no_matrices_output, const bool only_one) {
+
+    string name_open = name + ".out";  // preparing output files
+    const char* file = name_open.c_str();
+    ofstream out(file);
+    if (out.fail()) {
+        throw BadInputException("Cannot write to output file. Typo in directory name?");
+    }
+
+    FusionComp<Integer> fusion(fusion_basic);
+
+    string simple_fusion_text, nonsimple_fusion_text;
+
+    if(fusion.candidate_given){
+        simple_fusion_text =  " fusion rings not containing candidate subring";
+        nonsimple_fusion_text = " fusion rings containing candidate subring";
+    }
+    else{
+        simple_fusion_text =  " simple fusion rings up to isomorphism";
+        nonsimple_fusion_text = " nonsimple fusion rings up to isomorphism";
+    }
+
+    bool fusion_rings = simple_fusion_rings && non_simple_fusion_rings;
+    size_t total_nr_fusion_rings = NonsimpleFusionRings.nr_of_rows() + SimpleFusionRings.nr_of_rows();
+    if(fusion_rings){
+        if(only_one && total_nr_fusion_rings > 0)
+            out << total_nr_fusion_rings << " fusion rings up to isomorphism (only single fusion ring  asked for)" << endl;
+        else
+            out << total_nr_fusion_rings << " fusion rings up to isomorphism" << endl;
+    }
+    if(simple_fusion_rings){
+        out << SimpleFusionRings.nr_of_rows() << simple_fusion_text << endl;
+    }
+    if(non_simple_fusion_rings){
+        out << NonsimpleFusionRings.nr_of_rows() << nonsimple_fusion_text << endl;
+    }
+
+    out << endl;
+
+    if(embdim == 0){
+        embdim = NonsimpleFusionRings.nr_of_columns();
+    }
+
+    if(embdim == 0){
+        embdim = SimpleFusionRings.nr_of_columns();
+    }
+
+    if(embdim > 0){
+
+        vector<Integer> dehom(embdim);
+        dehom.back() = 1;
+        out << "Embedding dimension = " << embdim << endl;
+        out << endl;
+        out << "dehomogenization" << endl;
+        out << dehom;
+    }
+
+    out << endl;
+    out << "***********************************************************************" << endl << endl;
+
+    if(no_matrices_output){
+        out.close();
+        return;
+    }
+
+    if(simple_fusion_rings){
+        out <<  SimpleFusionRings.nr_of_rows() << simple_fusion_text << ":" << endl;
+        SimpleFusionRings.pretty_print(out);
+        out << endl;
+    }
+
+    if(non_simple_fusion_rings){
+        out << NonsimpleFusionRings.nr_of_rows() << nonsimple_fusion_text << ":" << endl;
+        NonsimpleFusionRings.pretty_print(out);
+        out << endl;
+    }
+    out.close();
+
+    if(write_fusion_mult_tables_from_input){
+        name_open = name + ".fus";
+        ofstream ftb_out(name_open);
+        Matrix<Integer> AllFusionRings = SimpleFusionRings;
+        if(NonsimpleFusionRings.nr_of_rows() > 0)
+            AllFusionRings.append(NonsimpleFusionRings);
+        fusion.write_all_data_tables(AllFusionRings, ftb_out);
+        ftb_out.close();
+    }
+
+}
+
 #ifndef NMZ_MIC_OFFLOAD  // offload with long is not supported
 template class Output<long>;
 #endif
@@ -1764,6 +2065,44 @@ template class Output<mpz_class>;
 
 #ifdef ENFNORMALIZ
 template class Output<renf_elem_class>;
+#endif
+
+template void write_fusion_files(const FusionBasic fusion_basic, const string& name, const bool non_simple_fusion_rings,
+                                 const bool simple_fusion_rings,
+                                 size_t embdim, const Matrix<long long>& SimpleFusionRings,
+                                 const Matrix<long long>& NonSimpleFusionRings,
+                                 const bool no_matrices_output, const bool only_one);
+
+template void write_fusion_files(const FusionBasic fusion_basic, const string& name, const bool non_simple_fusion_rings,
+                                 const bool simple_fusion_rings,
+                                 size_t embdim, const Matrix<long>& SimpleFusionRings,
+                                 const Matrix<long>& NonSimpleFusionRings,
+                                 const bool no_matrices_output, const bool only_one);
+
+template void write_fusion_files(const FusionBasic fusion_basic, const string& name, const bool non_simple_fusion_rings,
+                                 const bool simple_fusion_rings,
+                                 size_t embdim, const Matrix<mpz_class>& SimpleFusionRings,
+                                 const Matrix<mpz_class>& NonSimpleFusionRings,
+                                 const bool no_matrices_output, const bool only_one);
+#ifdef ENFNORMALIZ
+template void write_fusion_files(const FusionBasic fusion_basic, const string& name, const bool non_simple_fusion_rings,
+                                 const bool simple_fusion_rings,size_t embdim,
+                                 const Matrix<renf_elem_class>& SimpleFusionRings,
+                                 const Matrix<renf_elem_class>& NonSimpleFusionRings,
+                                 const bool no_matrices_output, const bool only_one);
+#endif
+
+template void write_single_fusion_file(const FusionBasic fusion_basic, const string& name,
+                        size_t embdim, vector<long> SingleFusionRing, const bool no_matrices_output);
+
+template void write_single_fusion_file(const FusionBasic fusion_basic, const string& name,
+                        size_t embdim, vector<long long> SingleFusionRing, const bool no_matrices_output);
+
+template void write_single_fusion_file(const FusionBasic fusion_basic, const string& name,
+                        size_t embdim, vector<mpz_class> SingleFusionRing, const bool no_matrices_output);
+#ifdef ENFNORMALIZ
+template void write_single_fusion_file(const FusionBasic fusion_basic, const string& name,
+                        size_t embdim, vector<renf_elem_class> SingleFusionRing, const bool no_matrices_output);
 #endif
 
 }  // namespace libnormaliz

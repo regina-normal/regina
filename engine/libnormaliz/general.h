@@ -29,6 +29,21 @@
 #include <csignal>
 #include <cstddef>
 #include <string>
+#include <vector>
+
+#ifndef _MSC_VER
+#include <sys/time.h>
+#else
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <stdint.h> // portable: uint64_t   MSVC: __int64
+
+// MSVC defines this in winsock2.h!?
+typedef struct timeval {
+    long tv_sec;
+    long tv_usec;
+} timeval;
+#endif
 
 #include <libnormaliz/dynamic_bitset.h>
 
@@ -89,8 +104,13 @@ const nmz_float nmz_epsilon = 1.0e-12;
 /* this type is used in the entries of keys
  * it has to be able to hold number of generators */
 typedef unsigned int key_t;
+typedef unsigned short shortkey_t;
 
 NORMALIZ_DLL_EXPORT extern bool verbose;
+NORMALIZ_DLL_EXPORT extern bool running_input_file;
+NORMALIZ_DLL_EXPORT extern bool constructor_verbose;
+NORMALIZ_DLL_EXPORT extern bool polynomial_verbose;
+NORMALIZ_DLL_EXPORT extern bool talkative;
 NORMALIZ_DLL_EXPORT extern size_t GMP_mat, GMP_hyp, GMP_scal_prod;
 NORMALIZ_DLL_EXPORT extern size_t TotDet;
 
@@ -98,6 +118,9 @@ NORMALIZ_DLL_EXPORT extern bool int_max_value_dual_long_computed;
 NORMALIZ_DLL_EXPORT extern bool int_max_value_dual_long_long_computed;
 NORMALIZ_DLL_EXPORT extern bool int_max_value_primary_long_computed;
 NORMALIZ_DLL_EXPORT extern bool int_max_value_primary_long_long_computed;
+NORMALIZ_DLL_EXPORT extern bool no_output_on_interrupt;
+NORMALIZ_DLL_EXPORT extern bool no_lattice_data;
+NORMALIZ_DLL_EXPORT extern bool write_lp_file;
 
 #ifdef NMZ_EXTENDED_TESTS
 NORMALIZ_DLL_EXPORT extern bool test_arith_overflow_full_cone, test_arith_overflow_dual_mode;
@@ -135,6 +158,9 @@ NORMALIZ_DLL_EXPORT extern long full_cone_recursion_level;
 
 /* set the verbose default value */
 bool setVerboseDefault(bool v);
+void suppressNextConstructorVerbose();
+bool setPolynomialVerbose(bool onoff);
+bool setTalkativeDefault(bool v);
 /* methods to set and use the output streams */
 void setVerboseOutput(std::ostream&);
 void setErrorOutput(std::ostream&);
@@ -144,13 +170,60 @@ std::ostream& errorOutput();
 
 void interrupt_signal_handler(int signal);
 
+void StartTime(struct timeval& var_TIME_begin);
+void StartGlobalTime();
 void StartTime();
+double MeasureTime(const struct timeval var_TIME_begin);
 void MeasureTime(bool verbose, const std::string& step);
+double TimeSinceStart();
+void MeasureGlobalTime(bool verbose);
+void PrintTime(const struct timeval var_TIME_begin, bool verbose, const std::string& step);
+
+void Check_Stop();
+
+
+NORMALIZ_DLL_EXPORT extern double GlobalTimeBound;
+NORMALIZ_DLL_EXPORT extern double GlobalPredictionTimeBound;
+
+
+NORMALIZ_DLL_EXPORT extern long level_local_solutions; // transports <l> of -Q=<n>
+NORMALIZ_DLL_EXPORT extern long split_index_option; // transports <n> of -X=<n>
+NORMALIZ_DLL_EXPORT extern long split_index_rounds; // transports the split index option after adding the rounds
+NORMALIZ_DLL_EXPORT extern long split_refinement; // transports the refinement of the split
+NORMALIZ_DLL_EXPORT extern bool is_split_patching; // indicates that we are computing a split
+NORMALIZ_DLL_EXPORT extern bool save_local_solutions; // indicates that local solutions are to be stored in distributed computation
+
+NORMALIZ_DLL_EXPORT extern bool list_of_input_files; // true if processing list of input files
+NORMALIZ_DLL_EXPORT extern long number_normaliz_instances; // for distribution of input files to several instances of normaliz
+NORMALIZ_DLL_EXPORT extern long input_file_option; // index modulo number_normaliz_instances  of input fileas to be run by this instance
+NORMALIZ_DLL_EXPORT extern size_t verb_length; // helps in verrbose output
+
+NORMALIZ_DLL_EXPORT extern std::string global_project;
+NORMALIZ_DLL_EXPORT extern std::string lat_file_name;
+
+// The following hold data read from the input file, used inside fusion.cp
+/*
+NORMALIZ_DLL_EXPORT extern std::vector<key_t> fusion_type_coinc_from_input;
+NORMALIZ_DLL_EXPORT extern std::string fusion_type_from_input;
+NORMALIZ_DLL_EXPORT extern std::vector<key_t> fusion_duality_from_input;
+NORMALIZ_DLL_EXPORT extern std::vector<key_t> candidate_subring_from_input;
+NORMALIZ_DLL_EXPORT extern std::vector<key_t> fusion_type_for_partition_from_input;
+NORMALIZ_DLL_EXPORT extern bool fusion_commutative_from_input;
+*/
+NORMALIZ_DLL_EXPORT extern bool write_fusion_mult_tables_from_input;
+// void set_global_fusion_data();
+// void reset_global_fusion_data();
+/*
+NORMALIZ_DLL_EXPORT extern bool write_fusion_mult_tables_from_input;
+void set_global_fusion_data();
+void reset_global_fusion_data();
+*/
+
 
 } /* end namespace libnormaliz */
 
 #include <libnormaliz/normaliz_exception.h>
-#include <libnormaliz/input_type.h>
+// #include <libnormaliz/input_type.h>
 #include <libnormaliz/cone_property.h>
 #include <libnormaliz/integer.h>
 

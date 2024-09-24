@@ -75,11 +75,11 @@ void getmyautoms(int count, int* perm, int* orbits, int numorbits, int stabverte
  * What matrixis taken, depends on the type of automorphism group (or isomorphism
  * classes) that are computed.
  *
- * The given matrices are transformed as follows: we replace the tru eentries by
+ * The given matrices are transformed as follows: we replace the true eentries by
  * indices in a vector listing the values of the entries. In this way the pattern
  * of equality is preserved.
  *
- * From this matrix of indices we produce a BinaryMatrix (= layer5s of 0-1-matrices
+ * From this matrix of indices we produce a BinaryMatrix (= layers of 0-1-matrices
  * representing the indices vertically) that can be directly transformed into a graph
  * whose automorphuism group is then computed by nauty. (For isomorphism types we just
  * need the canonical type.). See the nauty manual for this trick.
@@ -91,7 +91,7 @@ void getmyautoms(int count, int* perm, int* orbits, int numorbits, int stabverte
  *
  * There is one crucial point for isomorphism classes. See the comment in makeMM(...): we must take
  * care that the canonical type does not depend on the order in which the values in our matrix
- * are produced (or procesed).
+ * are produced (or processed).
  *
  */
 
@@ -201,7 +201,7 @@ void makeMM(BinaryMatrix<Integer>& MM,
     }
 
     // At this point the order of the values stored in VV depends on the order in
-    // which they are computed. This is no problem in the computatio of automorphism groups,
+    // which they are computed. This is no problem in the computation of automorphism groups,
     // but for isomorphism types we must make sure that two matrices Val that differ
     // only by row and column transformations produce binary matrices MVal that again differ only
     // by such permutations. Therefore we must order the values and replace the entries of MVal
@@ -298,7 +298,7 @@ void makeMMFromGensOnly(BinaryMatrix<renf_elem_class>& MM,
 // matrix with entries f(x), with x corresponding to a row and f to a column
 // This rectangular matrix is then interpreted as the weight pattern on a complete
 // bipartite graph.
-// Via a binary matrix the weights are tranlated into a grpah with "layers"
+// Via a binary matrix the weights are translated into a grpah with "layers"
 // where each layer corresponds to a place in the binary expansion of the entries.
 //
 // But the function can be used also for 0-1-matrices where the entries
@@ -581,7 +581,7 @@ nauty_result<Integer> compute_automs_by_nauty_FromGensOnly(const Matrix<Integer>
 
     vector<key_t> row_order;  //
     for (key_t i = 0; i < layer_size; ++i)
-        if (lab[i] < (int)mm)  // we suppoess the clumn of the special linear form
+        if (lab[i] < (int)mm)  // we suppoess the column of the special linear form
             row_order.push_back(lab[i]);
 
     /*vector<key_t> col_order(layer_size); // this includes the column of the special linear form

@@ -48,7 +48,7 @@ static void printVersion() {
     printCopying();
 }
 
-static string pureName(const string& fullName) {
+string pureName(const string& fullName) {
     // extracts the pure filename
 
     string slash = "/";
@@ -68,7 +68,7 @@ static string pureName(const string& fullName) {
 void OptionsHandler::setProjectName(const string& s) {
     if (project_name_set) {
         cerr << "Error: Second project name " << s << " in command line!" << endl;
-        exit(1);
+        throw BadInputException("Comnnad line error");
     }
     project_name = s;
     // check if we can read the .in file
@@ -82,6 +82,7 @@ void OptionsHandler::setProjectName(const string& s) {
         size_t found = project_name.rfind(suffix);
         if (found != string::npos) {
             project_name.erase(found);
+            given_name_contains_in = true;
         }
     }
     else {
@@ -90,47 +91,93 @@ void OptionsHandler::setProjectName(const string& s) {
     project_name_set = true;
 }
 
-bool OptionsHandler::handle_commandline(int argc, char* argv[]) {
+bool OptionsHandler::handle_commandline(vector<string> argv) {
     vector<string> LongOptions;
     string ShortOptions;  // all options concatenated (including -)
     // read command line options
-    for (int i = 1; i < argc; i++) {
-        if (argv[i][0] == '-') {
-            if (argv[i][1] != '\0') {
-                if (argv[i][1] != 'x') {
-                    if (argv[i][1] == '-') {
-                        string LO = argv[i];
-                        LO.erase(0, 2);
-                        LongOptions.push_back(LO);
-                    }
-                    else
-                        ShortOptions = ShortOptions + argv[i];
-                }
-                else if (argv[i][2] == '=') {
-#ifdef _OPENMP
-                    string Threads = argv[i];
-                    Threads.erase(0, 3);
-                    if ((istringstream(Threads) >> nr_threads) && nr_threads >= 0) {
-                        set_thread_limit(nr_threads);
-                        // omp_set_num_threads(nr_threads); -- now in cone.cpp
-                    }
-                    else {
-                        cerr << "Error: Invalid option string " << argv[i] << endl;
-                        exit(1);
-                    }
-#else
-                    cerr << "Warning: Compiled without OpenMP support, option " << argv[i] << " ignored." << endl;
-#endif
-                }
-                else {
-                    cerr << "Error: Invalid option string " << argv[i] << endl;
-                    exit(1);
-                }
-            }
-        }
-        else {
+    for (int i = 1; i < argv.size(); i++) {
+        if(argv[i][0] != '-') { // our project
             setProjectName(argv[i]);
+            continue;
         }
+        if (argv[i][1] == '\0') // only -, disregard
+            continue;
+
+        if (argv[i][1] != 'x' && argv[i][1] != 'X' && argv[i][1] != 'Z' && argv[i][1] != 'A' && argv[i][1] != 'Q') {
+            if (argv[i][1] == '-') { // test for long option
+                string LO = argv[i];
+                LO.erase(0, 2);
+                LongOptions.push_back(LO);
+            }
+            else
+                ShortOptions = ShortOptions + argv[i];
+            continue;
+        }
+        if (argv[i][2] != '='){   // must now be of type -?=
+            cerr << "Error: Invalid option string " << argv[i] << endl;
+            throw BadInputException("Option error");
+        }
+
+        if(argv[i][1] == 'x'){
+#ifdef _OPENMP
+            string Threads = argv[i];
+            Threads.erase(0, 3);
+            if ((istringstream(Threads) >> nr_threads) && nr_threads >= 0) {
+                set_thread_limit(nr_threads);
+                // omp_set_num_threads(nr_threads); -- now in cone.cpp
+            }
+            else {
+                cerr << "Error: Invalid option string " << argv[i] << endl;
+                throw BadInputException("Option error");
+            }
+#else
+            cerr << "Warning: Compiled without OpenMP support, option " << argv[i] << " ignored." << endl;
+#endif
+            continue;
+        }
+
+        if(argv[i][1] == 'X'){ // used for split processing
+            string Split = argv[i];
+            Split.erase(0, 3);
+            if ((!(istringstream(Split) >> split_index_option) && split_index_option >= 0)) {
+                cerr << "Error: Invalid option string " << argv[i] << endl;
+                throw BadInputException("Option error");
+            }
+            continue;
+        }
+
+        if(argv[i][1] == 'Q'){ // used for split processing
+            string Split = argv[i];
+            Split.erase(0, 3);
+            if ((!(istringstream(Split) >> level_local_solutions) && level_local_solutions >= 0)) {
+                cerr << "Error: Invalid option string " << argv[i] << endl;
+                throw BadInputException("Option error");
+            }
+            continue;
+        }
+
+        if(argv[i][1] == 'Z'){ // used for  list processing
+            string Instances = argv[i];
+            Instances.erase(0, 3);
+            if ((!(istringstream(Instances) >> number_normaliz_instances) && number_normaliz_instances > 0)) {
+                cerr << "Error: Invalid option string " << argv[i] << endl;
+                throw BadInputException("Option error");
+            }
+            continue;
+        }
+
+        if(argv[i][1] == 'A'){ // used for  list processing
+            string File = argv[i];
+            File.erase(0, 3);
+            if ((!(istringstream(File) >> input_file_option) && input_file_option >= 0)) {
+                cerr << "Error: Invalid option string " << argv[i] << endl;
+                throw BadInputException("Option error");
+            }
+            continue;
+        }
+
+        cerr << "Error: Invalid option string " << argv[i] << endl;
+        throw BadInputException("Option error");
     }
     return handle_options(LongOptions, ShortOptions);
 }
@@ -154,6 +201,11 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
                 break;
             case 'c':
                 verbose = true;
+                /*
+#ifdef NMZ_DEVELOP
+                talkative = true;
+#endif
+                */
                 break;
             case 'f':
                 write_extra_files = true;
@@ -244,7 +296,11 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
                 break;
             case 'x':  // should be separated from other options
                 cerr << "Error: Option -x=<T> has to be separated from other options" << endl;
-                exit(1);
+                throw BadInputException("Option error");
+                break;
+            case 'X':  // should be separated from other options
+                cerr << "Error: Option -X=<S> has to be separated from other options" << endl;
+                throw BadInputException("Option error");
                 break;
             case 'I':
                 to_compute.set(ConeProperty::Integral);
@@ -270,9 +326,6 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
             case 'Y':
                 to_compute.set(ConeProperty::Symmetrize);
                 break;
-            case 'X':
-                to_compute.set(ConeProperty::NoSymmetrization);
-                break;
             case 'G':
                 to_compute.set(ConeProperty::IsGorenstein);
                 break;
@@ -284,13 +337,13 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
                 break;
             default:
                 cerr << "Error: Unknown option -" << ShortOptions[i] << endl;
-                exit(1);
+                throw BadInputException("Option error");
                 break;
         }
     }
 
     // Remember to update also the --help text and the documentation when changing this!
-    vector<string> AdmissibleOut;
+    vector<string> AdmissibleOut;  // the truly OPTIONAL output files
     string AdmissibleOutarray[] = {"gen", "cst", "inv", "ext", "ht1", "esp",
                                    "egn", "typ", "lat", "msp", "mod"};  // "mod" must be last
     for (const auto& i : AdmissibleOutarray)
@@ -316,7 +369,16 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
             return true;  // indicate printing of help text
         }
         if (LongOption == "verbose") {
-            verbose = true;
+            verbose = true;  // global verbose
+            continue;
+        }
+        if (LongOption == "talkative" || LongOption == "talk") {
+            talkative = true;  // global talkative
+            verbose = true;    // global verbose
+            continue;
+        }
+        if (LongOption == "list_polynomials") {
+            polynomial_verbose = true; // global
             continue;
         }
         if (LongOption == "version") {
@@ -335,6 +397,26 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
             use_chunk = true;
             continue;
         }
+        if (LongOption == "CollectLat" || LongOption == "CLL") {
+            use_collect_lat = true;
+            continue;
+        }
+        if (LongOption == "SaveLocalSolutions" || LongOption == "SLS") {
+            use_save_local_solutions = true;
+            continue;
+        }
+        if (LongOption == "MakeFusionInput" || LongOption == "MFI") {
+            use_make_full_input = true;
+            continue;
+        }
+        if (LongOption == "Split") {
+            use_split = true;
+            continue;
+        }
+        if (LongOption == "List") {
+            list_of_input_files = true;
+            continue;
+        }
         if (LongOption == "AddChunks") {
             use_add_chunks = true;
             continue;
@@ -343,12 +425,20 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
             no_ext_rays_output = true;
             continue;
         }
+        if (LongOption == "BinomialsPacked") {
+            binomials_packed = true;
+            continue;
+        }
         if (LongOption == "NoSuppHypsOutput") {
             no_supp_hyps_output = true;
             continue;
         }
         if (LongOption == "NoMatricesOutput") {
             no_matrices_output = true;
+            continue;
+        }
+        if (LongOption == "NoOutputOnInterrupt") {
+            no_output_on_interrupt = true;
             continue;
         }
         if (LongOption == "NoHilbertBasisOutput") {
@@ -367,6 +457,27 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
             write_all_files = true;
             continue;
         }
+        if(LongOption == "UWP"){
+            to_compute.set(ConeProperty::UseWeightsPatching);
+            continue;
+        }
+        if(LongOption == "COP"){
+            to_compute.set(ConeProperty::CongOrderPatches);
+            continue;
+        }
+        if(LongOption == "LOP"){
+            to_compute.set(ConeProperty::LinearOrderPatches);
+            continue;
+        }
+        if(LongOption == "DCM"){
+            to_compute.set(ConeProperty::DistributedComp);
+            continue;
+
+        }
+        if(LongOption == "NHM"){
+            to_compute.set(ConeProperty::NoHeuristicMinimization);
+            continue;
+        }
         if (find(AdmissibleOut.begin(), AdmissibleOut.end(), LongOption) != AdmissibleOut.end()) {
             OutFiles.push_back(LongOption);
             continue;
@@ -377,7 +488,7 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
         } catch (const BadInputException&) {
         };
         cerr << "Error: Unknown option --" << LongOption << endl;
-        exit(1);
+        throw BadInputException("Option error");
     }
 
     if (output_dir_set) {

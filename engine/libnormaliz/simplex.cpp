@@ -43,6 +43,10 @@
 
 //---------------------------------------------------------------------------
 
+#ifdef _MSC_VER
+typedef long long ssize_t;
+#endif
+
 namespace libnormaliz {
 using namespace std;
 
@@ -353,15 +357,15 @@ void SimplexEvaluator<Integer>::prepare_inclusion_exclusion_simpl(size_t Deg, Co
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void SimplexEvaluator<Integer>::update_inhom_hvector(long level_offset_, size_t Deg, Collector<Integer>& Coll) {
-    if (level_offset_ == 1) {
+void SimplexEvaluator<Integer>::update_inhom_hvector(long level_offset, size_t Deg, Collector<Integer>& Coll) {
+    if (level_offset == 1) {
         Coll.inhom_hvector[Deg]++;
         return;
     }
 
     size_t Deg_i;
 
-    assert(level_offset_ == 0);
+    assert(level_offset == 0);
 
     for (size_t i = 0; i < dim; ++i) {
         if (gen_levels[i] == 1) {
@@ -484,8 +488,8 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
             RS_pointers = unit_matrix.submatrix_pointers(Ind0_key);
             LinSys.solve_system_submatrix(Generators, id_key, RS_pointers, GDiag, volume, 0, RS_pointers.size());
             // RS_pointers.size(): all columns of solution replaced by sign vevctors
-            for (i = 0; i < dim; ++i)
-                for (j = dim; j < dim + Ind0_key.size(); ++j)
+            for (size_t i = 0; i < dim; ++i)
+                for (size_t j = dim; j < dim + Ind0_key.size(); ++j)
                     InvGenSelCols[i][Ind0_key[j - dim]] = LinSys[i][j];
 
             v_abs(GDiag);
@@ -554,8 +558,8 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
         if (Ind0_key.size() > 0) {
             RS_pointers = unit_matrix.submatrix_pointers(Ind0_key);
             LinSys.solve_system_submatrix(Generators, id_key, RS_pointers, volume, 0, RS_pointers.size());
-            for (i = 0; i < dim; ++i)
-                for (j = dim; j < dim + Ind0_key.size(); ++j)
+            for (size_t i = 0; i < dim; ++i)
+                for (size_t j = dim; j < dim + Ind0_key.size(); ++j)
                     InvGenSelCols[i][Ind0_key[j - dim]] = LinSys[i][j];
         }
     }
@@ -700,7 +704,7 @@ void SimplexEvaluator<Integer>::evaluate_element(const vector<Integer>& element,
 
     Full_Cone<Integer>& C = *C_ptr;
 
-    norm = 0;                    // norm is just the sum of coefficients, = volume*degree if homogenous
+    norm = 0;                    // norm is just the sum of coefficients, = volume*degree if homogeneous
                                  // it is used to sort the Hilbert basis candidates
     normG = 0;                   // the degree according to the grading
     for (i = 0; i < dim; i++) {  // since generators have degree 1
@@ -710,7 +714,7 @@ void SimplexEvaluator<Integer>::evaluate_element(const vector<Integer>& element,
         }
     }
 
-    long level, level_offset_ = 0;
+    long level, level_offset = 0;
     Integer level_Int = 0;
 
     if (C.inhomogeneous) {
@@ -726,10 +730,10 @@ void SimplexEvaluator<Integer>::evaluate_element(const vector<Integer>& element,
         // cout << "Habe ihn" << endl;
 
         if (C.do_h_vector) {
-            level_offset_ = level;
+            level_offset = level;
             for (i = 0; i < dim; i++)
                 if (element[i] == 0 && Excluded[i])
-                    level_offset_ += gen_levels_long[i];
+                    level_offset += gen_levels_long[i];
         }
     }
 
@@ -743,8 +747,8 @@ void SimplexEvaluator<Integer>::evaluate_element(const vector<Integer>& element,
         }
 
         // count point in the h-vector
-        if (C.inhomogeneous && level_offset_ <= 1)
-            update_inhom_hvector(level_offset_, Deg, Coll);
+        if (C.inhomogeneous && level_offset <= 1)
+            update_inhom_hvector(level_offset, Deg, Coll);
         else
             Coll.hvector[Deg]++;
 
@@ -1013,7 +1017,7 @@ void SimplexEvaluator<Integer>::evaluation_loop_parallel() {
 
 #pragma omp parallel
             {
-                int thread = omp_get_thread_num();  // chooses the associated collector Results[thread]
+                int tn = omp_get_thread_num();  // chooses the associated collector Results[tn]
 
 #pragma omp for schedule(dynamic)
                 for (size_t i = 0; i < actual_nr_blocks; ++i) {
@@ -1029,8 +1033,8 @@ void SimplexEvaluator<Integer>::evaluation_loop_parallel() {
                         long block_end = block_start + block_length - 1;
                         if (block_end > (long)nr_elements)
                             block_end = nr_elements;
-                        evaluate_block(block_start, block_end, C_ptr->Results[thread]);
-                        if (C_ptr->Results[thread].candidates_size >= LocalReductionBound)  // >= (not > !! ) if
+                        evaluate_block(block_start, block_end, C_ptr->Results[tn]);
+                        if (C_ptr->Results[tn].candidates_size >= LocalReductionBound)  // >= (not > !! ) if
                             skip_remaining = true;  // LocalReductionBound==ParallelBlockLength
                     } catch (const std::exception&) {
                         tmp_exception = std::current_exception();
@@ -1513,7 +1517,7 @@ Collector<Integer>::Collector(Full_Cone<Integer>& fc)
         long max_degree = convertToLong(C_ptr->gen_degrees[C_ptr->nr_gen - 1]);
         hv_max = max_degree * C_ptr->dim;
         if (hv_max > 1000000) {
-            throw BadInputException("Generator degrees are too huge, h-vector would contain more than 10^6 entires.");
+            throw BadInputException("Generator degrees are too huge, h-vector would contain more than 10^6 entries.");
         }
 
         hvector.resize(hv_max, 0);

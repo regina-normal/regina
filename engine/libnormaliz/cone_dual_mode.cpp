@@ -174,6 +174,7 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
 
     const size_t ReportBound = 100000;
 
+    size_t i;
     int sign;
 
     CandidateList<Integer> Positive_Irred(true), Negative_Irred(true), Neutral_Irred(true);  // for the Hilbert basis elements
@@ -202,7 +203,7 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
                 sign = -1;
             }
             factor = scalar_product / orientation;  // we reduce all elements by the generator of the halfspace
-            for (size_t i = 0; i < dim; i++) {
+            for (i = 0; i < dim; i++) {
                 h.cand[i] -= sign * factor * old_lin_subspace_half[i];
             }
         }
@@ -234,6 +235,7 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
         gen0_mindeg = 0;  // sort_deg has already been set > 0 for half_space_gen
     else
         gen0_mindeg = Intermediate_HB.Candidates.begin()->sort_deg;
+    typename list<Candidate<Integer> >::const_iterator hh;
     for (const auto& hh : Intermediate_HB.Candidates)
         if (hh.sort_deg < gen0_mindeg)
             gen0_mindeg = hh.sort_deg;
@@ -347,7 +349,7 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
 
     vector<CandidateTable<Integer> > Pos_Table, Neg_Table, Neutr_Table;  // for reduction in each thread
 
-    for (int i = 0; i < omp_get_max_threads(); ++i) {
+    for (long i = 0; i < omp_get_max_threads(); ++i) {
         New_Positive_thread[i].dual = true;
         New_Positive_thread[i].verbose = verbose;
         New_Negative_thread[i].dual = true;
@@ -729,17 +731,17 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_counter, const Matrix<Integer>& Orig_BasisMaxSubspace) {
+Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_counter, const Matrix<Integer>& BasisMaxSubspace) {
     INTERRUPT_COMPUTATION_BY_EXCEPTION
 
-    size_t i, rank_subspace = Orig_BasisMaxSubspace.nr_of_rows();
+    size_t i, rank_subspace = BasisMaxSubspace.nr_of_rows();
 
     vector<Integer> restriction, lin_form = SupportHyperplanes[hyp_counter], old_lin_subspace_half;
     bool lifting = false;
     Matrix<Integer> New_BasisMaxSubspace =
-        Orig_BasisMaxSubspace;  // the new maximal subspace is the intersection of the old with the new haperplane
+        BasisMaxSubspace;  // the new maximal subspace is the intersection of the old with the new haperplane
     if (rank_subspace != 0) {
-        restriction = Orig_BasisMaxSubspace.MxV(lin_form);  // the restriction of the new linear form to Max_Subspace
+        restriction = BasisMaxSubspace.MxV(lin_form);  // the restriction of the new linear form to Max_Subspace
         for (i = 0; i < rank_subspace; i++)
             if (restriction[i] != 0)
                 break;
@@ -754,7 +756,7 @@ Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_co
             Matrix<Integer> NewBasisOldMaxSubspace =
                 M.AlmostHermite(dummy_rank).transpose();  // compute kernel of restriction and complementary subspace
 
-            Matrix<Integer> NewBasisOldMaxSubspaceAmbient = NewBasisOldMaxSubspace.multiplication(Orig_BasisMaxSubspace);
+            Matrix<Integer> NewBasisOldMaxSubspaceAmbient = NewBasisOldMaxSubspace.multiplication(BasisMaxSubspace);
             // in coordinates of the ambient space
 
             old_lin_subspace_half = NewBasisOldMaxSubspaceAmbient[0];
@@ -769,7 +771,7 @@ Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_co
             New_BasisMaxSubspace = temp;
         }
     }
-    bool pointed = (Orig_BasisMaxSubspace.nr_of_rows() == 0);
+    bool pointed = (BasisMaxSubspace.nr_of_rows() == 0);
 
     cut_with_halfspace_hilbert_basis(hyp_counter, lifting, old_lin_subspace_half, pointed);
 
@@ -805,6 +807,7 @@ void Cone_Dual_Mode<Integer>::hilbert_basis_dual() {
     if (ExtremeRaysInd.size() > 0) {  // implies that we have transformed everything to a pointed full-dimensional cone
         // must produce the relevant support hyperplanes from the generators
         // since the Hilbert basis may have been truncated
+        vector<Integer> test(SupportHyperplanes.nr_of_rows());
         vector<key_t> key;
         vector<key_t> relevant_sh;
         size_t realdim = Generators.rank();
