@@ -108,11 +108,11 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     standardTri->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(standardTri, &QPushButton::customContextMenuRequested,
-        [=](const QPoint& p) {
+        [this](const QPoint& p) {
             contextStandardTri(p, standardTri);
         });
     connect(label, &QPushButton::customContextMenuRequested,
-        [=](const QPoint& p) {
+        [=, this](const QPoint& p) {
             contextStandardTri(p, label);
         });
 
@@ -146,11 +146,11 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(isoSig, &QPushButton::customContextMenuRequested,
-        [=](const QPoint& p) {
+        [this](const QPoint& p) {
             contextIsoSig(p, isoSig);
         });
     connect(label, &QPushButton::customContextMenuRequested,
-        [=](const QPoint& p) {
+        [=, this](const QPoint& p) {
             contextIsoSig(p, label);
         });
 

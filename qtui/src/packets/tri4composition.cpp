@@ -82,11 +82,11 @@ Tri4CompositionUI::Tri4CompositionUI(
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(isoSig, &QPushButton::customContextMenuRequested,
-        [=](const QPoint& p) {
+        [this](const QPoint& p) {
             contextIsoSig(p, isoSig);
         });
     connect(label, &QPushButton::customContextMenuRequested,
-        [=](const QPoint& p) {
+        [=, this](const QPoint& p) {
             contextIsoSig(p, label);
         });
 
