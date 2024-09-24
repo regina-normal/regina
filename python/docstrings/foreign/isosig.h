@@ -19,7 +19,7 @@ Signatures for knots or triangulations of any dimension are all
 accepted, though the type of object must be known in advance and fixed
 for the entire function call using the template parameter
 *ObjectType*. These signatures will be converted into knots and/or
-triangulations using Link::fromKnotSig() and
+triangulations using Link::fromSig() and
 Triangulation<dim>::fromIsoSig() respectively.
 
 A new container will be returned; the imported knots or triangulations

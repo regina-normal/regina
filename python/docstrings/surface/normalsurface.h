@@ -653,6 +653,17 @@ Returns:
 static const char *eulerChar =
 R"doc(Returns the Euler characteristic of this surface.
 
+For properly embedded surfaces, this is of course just the ordinary
+Euler characteristic of the surface.
+
+For immersed or singular surfaces, the situation is more complex since
+Regina does not know how many branch points there are (if any).
+Regina's approach is to compute everything locally, assuming that the
+surface is an immersion. This means that eulerChar() will report the
+correct result for an immersed surface, but for singular surfaces it
+will report a _larger_ number than it should since it essentially
+counts each branch point as multiple vertices.
+
 This routine caches its results, which means that once it has been
 called for a particular surface, subsequent calls return the answer
 immediately.

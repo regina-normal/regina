@@ -3014,7 +3014,8 @@ To assist with performance, this routine can run in parallel
 (multithreaded) mode; simply pass the number of parallel threads in
 the argument *threads*. Even in multithreaded mode, this routine will
 not return until processing has finished (i.e., either the
-triangulation was simplified or the search was exhausted).
+triangulation was simplified or the search was exhausted), and any
+change to this triangulation will happen in the calling thread.
 
 If this routine is unable to simplify the triangulation, then the
 triangulation will not be changed.
