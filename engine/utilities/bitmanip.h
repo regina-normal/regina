@@ -65,11 +65,10 @@ class BitManipulatorByType {
     public:
         /**
          * Indicates whether this class is a template specialisation
-         * of BitManipulatorByType with extra optimisations.
+         * with extra optimisations.
          *
          * This compile-time constant is set to \c false for the generic
-         * implementation of BitManipulatorByType, and \c true for all
-         * specialisations.
+         * implementation, and \c true for all specialisations.
          */
         static constexpr bool specialised = false;
 
@@ -164,143 +163,6 @@ class BitManipulatorByType<unsigned long long> {
 #endif // __DOXYGEN__
 
 /**
- * Contains implementation details for BitManipulator where we optimise
- * according to the size of the underlying data type.
- *
- * End users should use the BitManipulator class, not this class.
- *
- * \pre Type \a T is an unsigned integral numeric type.
- * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
- *
- * \nopython Only the end-user class BitManipulator<unsigned long> is
- * available to Python users.
- *
- * \tparam T an unsigned integral numeric type, which we treat as a
- * sequence of \c true and/or \c false bits.
- * \tparam size the number of _bytes_ of \a T to examine.  Any higher-order
- * bits will be ignored by the implementations in this class.
- */
-template <typename T, unsigned size = sizeof(T)>
-class BitManipulatorBySize {
-    public:
-        /**
-         * Indicates whether this class is a template specialisation
-         * of BitManipulatorBySize with extra optimisations.
-         *
-         * This compile-time constant is set to \c false for the generic
-         * implementation of BitManipulatorBySize, and \c true for all
-         * specialisations.
-         */
-        static constexpr bool specialised = false;
-
-        /**
-         * Deprecated routine that returns the number of bits that are set
-         * to 1 in the given integer.
-         *
-         * \deprecated Now that Regina uses C++20, this routine is redundant.
-         * You should use `std::popcount()` instead.
-         *
-         * \param x the integer of type \a T to examine.
-         * \return the number of bits that are set.
-         */
-        [[deprecated]] inline static constexpr int bits(T x) {
-            return BitManipulatorBySize<T, (size >> 1)>::bits(x) +
-                BitManipulatorBySize<T, (size >> 1)>::bits(x >> (4 * size));
-        }
-};
-
-// Specialisations for individual type sizes.
-// Hide these from doxygen.
-
-#ifndef __DOXYGEN
-
-template <typename T>
-class BitManipulatorBySize<T, 1> {
-    public:
-        static constexpr bool specialised = true;
-
-        inline static constexpr int bits(T x) {
-            x = (x & T(0x55)) + ((x & T(0xAA)) >> 1);
-            x = (x & T(0x33)) + ((x & T(0xCC)) >> 2);
-            return (x & T(0x0F)) + ((x & T(0xF0)) >> 4);
-        }
-};
-
-template <typename T>
-class BitManipulatorBySize<T, 2> {
-    public:
-        static constexpr bool specialised = true;
-
-        inline static constexpr int bits(T x) {
-            x = (x & T(0x5555)) + ((x & T(0xAAAA)) >> 1);
-            x = (x & T(0x3333)) + ((x & T(0xCCCC)) >> 2);
-            x = (x & T(0x0F0F)) + ((x & T(0xF0F0)) >> 4);
-            return (x & T(0x00FF)) + ((x & T(0xFF00)) >> 8);
-        }
-};
-
-template <typename T>
-class BitManipulatorBySize<T, 4> {
-    public:
-        static constexpr bool specialised = true;
-
-        inline static constexpr int bits(T x) {
-            x = (x & T(0x55555555)) + ((x & T(0xAAAAAAAA)) >> 1);
-            x = (x & T(0x33333333)) + ((x & T(0xCCCCCCCC)) >> 2);
-            x = (x & T(0x0F0F0F0F)) + ((x & T(0xF0F0F0F0)) >> 4);
-            x = (x & T(0x00FF00FF)) + ((x & T(0xFF00FF00)) >> 8);
-            return (x & T(0x0000FFFF)) + ((x & T(0xFFFF0000)) >> 16);
-        }
-};
-
-// Support 64-bit processing natively if we can; otherwise we will fall
-// back to the generic two-lots-of-32-bit implementation.
-#if defined(NUMERIC_64_FOUND)
-template <typename T>
-class BitManipulatorBySize<T, 8> {
-    public:
-        static constexpr bool specialised = true;
-
-        inline static constexpr int bits(T x) {
-            x = (x & T(0x5555555555555555)) +
-                ((x & T(0xAAAAAAAAAAAAAAAA)) >> 1);
-            x = (x & T(0x3333333333333333)) +
-                ((x & T(0xCCCCCCCCCCCCCCCC)) >> 2);
-            x = (x & T(0x0F0F0F0F0F0F0F0F)) +
-                ((x & T(0xF0F0F0F0F0F0F0F0)) >> 4);
-            x = (x & T(0x00FF00FF00FF00FF)) +
-                ((x & T(0xFF00FF00FF00FF00)) >> 8);
-            x = (x & T(0x0000FFFF0000FFFF)) +
-                ((x & T(0xFFFF0000FFFF0000)) >> 16);
-            return (x & T(0x00000000FFFFFFFF)) +
-                ((x & T(0xFFFFFFFF00000000)) >> 32);
-        }
-};
-#elif defined(NUMERIC_64_LL_FOUND)
-template <typename T>
-class BitManipulatorBySize<T, 8> {
-    public:
-        static constexpr bool specialised = true;
-
-        inline static constexpr int bits(T x) {
-            x = (x & T(0x5555555555555555LL)) +
-                ((x & T(0xAAAAAAAAAAAAAAAALL)) >> 1);
-            x = (x & T(0x3333333333333333LL)) +
-                ((x & T(0xCCCCCCCCCCCCCCCCLL)) >> 2);
-            x = (x & T(0x0F0F0F0F0F0F0F0FLL)) +
-                ((x & T(0xF0F0F0F0F0F0F0F0LL)) >> 4);
-            x = (x & T(0x00FF00FF00FF00FFLL)) +
-                ((x & T(0xFF00FF00FF00FF00LL)) >> 8);
-            x = (x & T(0x0000FFFF0000FFFFLL)) +
-                ((x & T(0xFFFF0000FFFF0000LL)) >> 16);
-            return (x & T(0x00000000FFFFFFFFLL)) +
-                ((x & T(0xFFFFFFFF00000000LL)) >> 32);
-        }
-};
-#endif // NUMERIC_64_LL_FOUND
-#endif // __DOXYGEN__
-
-/**
  * An optimised class for bitwise analysis and manipulation of native
  * data types.
  *
@@ -323,8 +185,7 @@ class BitManipulatorBySize<T, 8> {
  * BitManipulator routines are small enough to fit inside a C++ unsigned long.
  */
 template <typename T>
-class BitManipulator :
-        public BitManipulatorByType<T>, public BitManipulatorBySize<T> {
+class BitManipulator : public BitManipulatorByType<T> {
     static_assert(regina::is_unsigned_cpp_integer_v<T>,
         "BitManipulator can only work with native unsigned integral types.");
     static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
@@ -334,16 +195,24 @@ class BitManipulator :
         "power of two.");
     public:
         /**
-         * Indicates whether this class is a template specialisation
-         * of BitManipulator with extra optimisations.
+         * Returns the number of bits that are set to 1 in the given integer.
          *
-         * This compile-time constant is set to \c false for the generic
-         * implementation of BitManipulator, and \c true for all
-         * specialisations.
+         * The implementation uses `std::popcount()` where possible, and a
+         * hand-rolled implementation where `std::popcount()` might be
+         * unavailable (e.g., for 128-bit integers).
+         *
+         * \param x the integer of type \a T to examine.
+         * \return the number of bits that are set.
          */
-        static constexpr bool specialised =
-            BitManipulatorByType<T>::specialised ||
-            BitManipulatorBySize<T>::specialised;
+        inline static constexpr int bits(T x) {
+            if constexpr (sizeof(T) > sizeof(unsigned long long)) {
+                using HalfSize = IntOfSize<sizeof(T) / 2>::utype;
+                return std::popcount(static_cast<HalfSize>(x)) +
+                    std::popcount(static_cast<HalfSize>(x >> (4 * sizeof(T))));
+            } else {
+                return std::popcount(x);
+            }
+        }
 
         /**
          * Returns the index of the first \c true bit in the given
