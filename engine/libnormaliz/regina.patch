@@ -22,3 +22,16 @@ index 9f86902df..ac81876b3 100644
 +// #define NMZ_FLINT
 +// #define NMZ_COCOA
 +// #define NORMALIZ_USE_DLL
+diff --git a/engine/libnormaliz/collection.h b/engine/libnormaliz/collection.h
+index 81dfe2ce7..e4a6ee651 100644
+--- a/engine/libnormaliz/collection.h
++++ b/engine/libnormaliz/collection.h
+@@ -62,7 +62,7 @@ class MiniCone {
+ 
+     void print() const;
+ 
+-    MiniCone<Integer>(const vector<key_t> GKeys, const Integer& mult, ConeCollection<Integer>& Coll);
++    MiniCone(const vector<key_t> GKeys, const Integer& mult, ConeCollection<Integer>& Coll);
+ };
+ 
+ template <typename Integer>

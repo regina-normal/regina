@@ -62,7 +62,7 @@ class MiniCone {
 
     void print() const;
 
-    MiniCone<Integer>(const vector<key_t> GKeys, const Integer& mult, ConeCollection<Integer>& Coll);
+    MiniCone(const vector<key_t> GKeys, const Integer& mult, ConeCollection<Integer>& Coll);
 };
 
 template <typename Integer>
