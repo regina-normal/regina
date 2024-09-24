@@ -277,7 +277,7 @@ __END__
 # This uses the build of Regina from $prog_dir/.
 
 % : %.$extension
-	c++ @CMAKE_CXX17_STANDARD_COMPILE_OPTION@ -O3 '\$<' \\
+	c++ @CMAKE_CXX20_STANDARD_COMPILE_OPTION@ -O3 '\$<' \\
 		-I$make_src_dir/engine -I$make_prog_dir \\
 		$include_flags \\
 		$make_prog_dir/@ENGINE_FILENAME@ \\

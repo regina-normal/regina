@@ -32,22 +32,12 @@
 
 #include <cctype>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
-
-#if __has_include(<filesystem>)
-  #include <filesystem>
-  namespace std_filesystem = std::filesystem;
-#elif __has_include(<experimental/filesystem>)
-  #include <experimental/filesystem>
-  #warning This compiler implements only an experimental std::filesystem.
-  namespace std_filesystem = std::experimental::filesystem;
-#else
-  #error This compiler does not implement std::filesystem from C++17.
-#endif
 
 namespace regina {
 
@@ -60,9 +50,9 @@ Triangulation<3> Triangulation<3>::fromSnapPea(
     }
 
     try {
-        auto status = std_filesystem::status(filenameOrContents);
+        auto status = std::filesystem::status(filenameOrContents);
         switch (status.type()) {
-            case std_filesystem::file_type::regular:
+            case std::filesystem::file_type::regular:
                 // Attempt to read this as a SnapPea data file.
                 {
                     std::ifstream in(filenameOrContents);
@@ -73,7 +63,7 @@ Triangulation<3> Triangulation<3>::fromSnapPea(
                             "given file");
                 }
                 break;
-            case std_filesystem::file_type::unknown:
+            case std::filesystem::file_type::unknown:
                 throw FileError("fromSnapPea(): could not query the "
                     "attributes of the given file");
             default:
@@ -81,7 +71,7 @@ Triangulation<3> Triangulation<3>::fromSnapPea(
                 // interested in (directories, sockets, etc.).
                 break;
         }
-    } catch (const std_filesystem::filesystem_error&) {
+    } catch (const std::filesystem::filesystem_error&) {
         throw FileError("fromSnapPea(): could not test whether the "
             "given file exists");
     }

@@ -31,23 +31,13 @@
  **************************************************************************/
 
 #include <cstdio>
+#include <filesystem>
 #include <sys/stat.h>
 #include "packet/attachment.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
 
 #define BASE64_LINE_LEN 76
-
-#if __has_include(<filesystem>)
-  #include <filesystem>
-  using filesystem_path = std::filesystem::path;
-#elif __has_include(<experimental/filesystem>)
-  #include <experimental/filesystem>
-  #warning This compiler implements only an experimental std::filesystem.
-  using filesystem_path = std::experimental::filesystem::path;
-#else
-  #error This compiler does not implement std::filesystem from C++17.
-#endif
 
 namespace regina {
 
@@ -96,7 +86,7 @@ Attachment::Attachment(const char* pathname) :
     size_ = size;
     try {
         // The choice bewteen string() vs generic_string() is irrelevant here.
-        filename_ = filesystem_path(pathname).filename().string();
+        filename_ = std::filesystem::path(pathname).filename().string();
     } catch (const std::exception&) {
         filename_.clear();
     }
@@ -108,7 +98,7 @@ std::string Attachment::extension() const {
 
     try {
         // The choice bewteen string() vs generic_string() is irrelevant here.
-        return filesystem_path(filename_).extension().string();
+        return std::filesystem::path(filename_).extension().string();
     } catch (const std::exception&) {
         return {};
     }

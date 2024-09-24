@@ -250,7 +250,8 @@ True
    </para>
    <para>
     In &regina;&nbsp;7.0, the &cpp; &api; underwent a complete overhaul
-    from head to toe.  The &api; now uses the &cpp17; standard.
+    from head to toe.  The &api; switched to the &cpp17; standard (and
+    has moved again to newer standards in subsequent releases).
     Widespread changes include:
     <itemizedlist>
      <listitem><para>

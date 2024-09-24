@@ -8,6 +8,9 @@ Regina - A Normal Surface Theory Calculator
 
 Version 7.4  [ (to be announced) ]
 
+    Python / C++:
+        - Regina now uses the C++20 standard.
+
 Version 7.3  [ 18 March, 2023 ]
 
     Overview:

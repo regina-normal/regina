@@ -161,15 +161,10 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-# Make everything use C++17 (or later).
-SET(CMAKE_CXX_STANDARD 17)
+# Make everything use C++20 (or later).
+SET(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_CXX_STANDARD_REQUIRED YES)
 SET(CMAKE_CXX_EXTENSIONS OFF)
-
-CHECK_STDFS()
-IF (NOT STDFS_FOUND)
-  MESSAGE(FATAL_ERROR "Your compiler does not appear to support either the C++17 std::filesystem or the alternative std::experimental::filesystem.")
-ENDIF (NOT STDFS_FOUND)
 
 # Always include . in the header search path:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

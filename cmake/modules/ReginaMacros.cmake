@@ -10,50 +10,6 @@
 # restrictions that are required by its terms of service.
 
 
-# Macro: CHECK_STDFS
-#
-# Sets the boolean variable STDFS_FOUND according to whether one of
-# std::filesystem or std::experimental::filesystem is available.
-#
-# Sets the variable STDFS_LIBRARY to any additional library that is required
-# to use std::filesystem, beyond the standard C++ library.  This is important
-# for example with gcc7, which provides only std::experimental::filesystem,
-# and which needs the linker flag -lstdc++fs in order to use it.
-#
-macro (CHECK_STDFS)
-  SET (_SRCFILE "${CMAKE_SOURCE_DIR}/cmake/modules/stdfs.cpp")
-  SET (_BINDIR "${CMAKE_BINARY_DIR}/cmake/modules")
-
-  MESSAGE(STATUS "Checking for C++17 std::filesystem")
-  try_compile(_REGINA_STDFS_RAW ${_BINDIR} ${_SRCFILE})
-  IF (_REGINA_STDFS_RAW)
-    SET (STDFS_FOUND TRUE)
-    SET (STDFS_LIBRARY)
-    MESSAGE(STATUS "Checking for C++17 std::filesystem -- found")
-    IF (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION MATCHES "^8\.")
-      # On newer ubuntu versions, an older gcc8 will happily link without
-      # libstdc++fs but will crash at runtime, since it will be linking with
-      # incompatible std::filesystem symbols from the newer libstdc++.
-      #
-      # Therefore, for gcc8, even though executables might *build* without
-      # libstdc++fs, we still need to explicitly link with libstdc++fs.
-      SET (STDFS_LIBRARY stdc++fs)
-      MESSAGE(STATUS "Explicitly linking with stdc++fs for GCC 8")
-    ENDIF ()
-  ELSE (_REGINA_STDFS_RAW)
-    try_compile(_REGINA_STDFS_LIB ${_BINDIR} ${_SRCFILE} LINK_LIBRARIES stdc++fs)
-    IF (_REGINA_STDFS_LIB)
-      SET (STDFS_FOUND TRUE)
-      SET (STDFS_LIBRARY stdc++fs)
-      MESSAGE(STATUS "Checking for C++17 std::filesystem -- requires ${STDFS_LIBRARY}")
-    ELSE (_REGINA_STDFS_LIB)
-      SET (STDFS_FOUND FALSE)
-      MESSAGE(STATUS "Checking for C++17 std::filesystem -- not found")
-    ENDIF (_REGINA_STDFS_LIB)
-  ENDIF (_REGINA_STDFS_RAW)
-endmacro (CHECK_STDFS)
-
-
 # Macro: CHECK_GETOPT
 #
 # Sets the boolean variable GETOPT_FOUND according to whether the GNU libc

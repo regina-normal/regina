@@ -70,7 +70,7 @@ while test $# -gt 0; do
 done
 
 if test "$echo_cflags" = "yes" -o "$echo_libs" = "yes"; then
-	echo '@CMAKE_CXX17_STANDARD_COMPILE_OPTION@'
+	echo '@CMAKE_CXX20_STANDARD_COMPILE_OPTION@'
 fi
 
 if test "$echo_cflags" = "yes"; then
