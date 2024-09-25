@@ -40,6 +40,7 @@
 #define __REGINA_BITMANIP_H
 #endif
 
+#include <bit>
 #include "utilities/intutils.h"
 
 namespace regina {
