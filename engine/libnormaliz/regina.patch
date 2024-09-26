@@ -35,3 +35,34 @@ index 81dfe2ce7..e4a6ee651 100644
  };
  
  template <typename Integer>
+diff --git a/engine/libnormaliz/binomial.cpp b/engine/libnormaliz/binomial.cpp
+index b9805e210..c99297ab9 100644
+--- a/engine/libnormaliz/binomial.cpp
++++ b/engine/libnormaliz/binomial.cpp
+@@ -217,14 +217,6 @@ void binomial::clear() {
+ //     return std::accumulate(neg_vec.begin(), neg_vec.end(), 0);
+ // }
+ 
+-bool binomial::operator ==(const exponent_vec& rhs) const {
+-    // for (size_t i = 0; i < size(); ++i)
+-    //     if ((*this)[i] != rhs[i])
+-    //         return false;
+-    // return true;
+-    return (static_cast<exponent_vec>(*this) == rhs);
+-}
+-
+ binomial binomial::operator -(const binomial& rhs) const {
+     assert(size() == rhs.size());
+     binomial w(size());
+diff --git a/engine/libnormaliz/binomial.h b/engine/libnormaliz/binomial.h
+index 64d651e33..8138c0e5a 100644
+--- a/engine/libnormaliz/binomial.h
++++ b/engine/libnormaliz/binomial.h
+@@ -132,7 +132,6 @@ public:
+     void operator -=(const binomial& rhs);
+     void operator *=(const exponent_t rhs); // scalar multiplication
+ 
+-    bool operator ==(const exponent_vec& rhs) const;
+     bool operator |(const exponent_vec& rhs) const;
+ 
+     // General member functions:

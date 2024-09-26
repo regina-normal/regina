@@ -132,7 +132,6 @@ public:
     void operator -=(const binomial& rhs);
     void operator *=(const exponent_t rhs); // scalar multiplication
 
-    bool operator ==(const exponent_vec& rhs) const;
     bool operator |(const exponent_vec& rhs) const;
 
     // General member functions:

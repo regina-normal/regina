@@ -217,14 +217,6 @@ void binomial::clear() {
 //     return std::accumulate(neg_vec.begin(), neg_vec.end(), 0);
 // }
 
-bool binomial::operator ==(const exponent_vec& rhs) const {
-    // for (size_t i = 0; i < size(); ++i)
-    //     if ((*this)[i] != rhs[i])
-    //         return false;
-    // return true;
-    return (static_cast<exponent_vec>(*this) == rhs);
-}
-
 binomial binomial::operator -(const binomial& rhs) const {
     assert(size() == rhs.size());
     binomial w(size());
