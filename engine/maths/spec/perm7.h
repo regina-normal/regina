@@ -1797,7 +1797,7 @@ class Perm<7> {
          * \param code the second-generation code from which the new
          * permutation will be created.
          */
-        constexpr Perm<7>(Code2 code);
+        constexpr Perm(Code2 code);
 
     private:
         /**

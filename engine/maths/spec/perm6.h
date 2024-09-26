@@ -3156,7 +3156,7 @@ class Perm<6> {
          * \param code the second-generation code from which the new
          * permutation will be created.
          */
-        constexpr Perm<6>(Code2 code);
+        constexpr Perm(Code2 code);
 
     private:
         /**
