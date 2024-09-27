@@ -2489,6 +2489,8 @@ class PacketData {
  * \python The \a src argument is a const reference, and this routine
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
+ * Also, Python users can access this function using either name
+ * `make_packet()` or the more regina-esque `makePacket()`.
  *
  * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
@@ -2520,6 +2522,8 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  * \python The \a src argument is a const reference, and this routine
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
+ * Also, Python users can access this function using either name
+ * `make_packet()` or the more regina-esque `makePacket()`.
  *
  * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.

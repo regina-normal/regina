@@ -82,6 +82,7 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
     regina::python::add_output(c);
+
     m.def("make_packet", [](const Held& h) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h));
@@ -90,6 +91,15 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h), label);
     }, doc::common::make_packet_2);
+
+    // Be kind to users who expect regina-style capitalisation.
+    m.def("makePacket", [](const Held& h) {
+        return regina::make_packet(Held(h)); // rvalue ref, as above
+    }, doc::common::make_packet);
+    m.def("makePacket", [](const Held& h, const std::string& label) {
+        return regina::make_packet(Held(h), label); // rvalue ref, as above
+    }, doc::common::make_packet_2);
+
     return c;
 }
 

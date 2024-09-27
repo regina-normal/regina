@@ -498,6 +498,8 @@ Python:
     The *src* argument is a const reference, and this routine makes a
     deep copy of *src*. This is because Python will still maintain a
     reference to *src*, and so it is not possible to move from *src*.
+    Also, Python users can access this function using either name
+    ``make_packet()`` or the more regina-esque ``makePacket()``.
 
 Parameter ``src``:
     the *Held* object that will be moved into the new packet; this
@@ -526,6 +528,8 @@ Python:
     The *src* argument is a const reference, and this routine makes a
     deep copy of *src*. This is because Python will still maintain a
     reference to *src*, and so it is not possible to move from *src*.
+    Also, Python users can access this function using either name
+    ``make_packet()`` or the more regina-esque ``makePacket()``.
 
 Parameter ``src``:
     the *Held* object that will be moved into the new packet; this

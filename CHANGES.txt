@@ -239,6 +239,7 @@ Version 7.4  [ (to be announced) ]
               name is kept as a deprecated alias.
             - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
+            - For Python users, added an alias makePacket() for make_packet().
         Class PacketData<Held>:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old
