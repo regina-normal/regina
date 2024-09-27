@@ -100,7 +100,7 @@ struct Vector3D {
     /**
      * Creates a new vector with the given coordinates.
      *
-     * \param coordinates array whose three elements are the \z x,
+     * \param coordinates array whose three elements are the \a x,
      * \a y and \a z coordinate respectively.
      */
     constexpr Vector3D(const std::array<Real, 3>& coordinates) :
