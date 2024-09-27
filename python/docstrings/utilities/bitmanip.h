@@ -40,6 +40,20 @@ Python:
 
 namespace BitManipulator_ {
 
+// Docstring regina::python::doc::BitManipulator_::bits
+static const char *bits =
+R"doc(Returns the number of bits that are set to 1 in the given integer.
+
+The implementation uses ``std::popcount()`` where possible, and a
+hand-rolled implementation where ``std::popcount()`` might be
+unavailable (e.g., for 128-bit integers).
+
+Parameter ``x``:
+    the integer of type *T* to examine.
+
+Returns:
+    the number of bits that are set.)doc";
+
 // Docstring regina::python::doc::BitManipulator_::firstBit
 static const char *firstBit =
 R"doc(Returns the index of the first ``True`` bit in the given integer, or

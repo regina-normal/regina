@@ -748,7 +748,7 @@ static const char *__init_2 =
 R"doc(Creates a new vector with the given coordinates.
 
 Parameter ``coordinates``:
-    array whose three elements are the \z x, *y* and *z* coordinate
+    array whose three elements are the *x*, *y* and *z* coordinate
     respectively.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__isub
