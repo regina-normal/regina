@@ -2290,40 +2290,7 @@ class TriangulationBase :
          * \return \c true if and only if the two triangulations are
          * combinatorially identical.
          */
-        bool operator == (const Triangulation<dim>& other) const;
-
-        /**
-         * Determines if this triangulation is not combinatorially identical
-         * to the given triangulation.
-         *
-         * Here "identical" means that the triangulations have the same
-         * number of top-dimensional simplices, with gluings between the same
-         * pairs of numbered simplices using the same gluing permutations.
-         * In other words, "identical" means that the triangulations
-         * are isomorphic via the identity isomorphism.
-         *
-         * For the less strict notion of _isomorphic_ triangulations,
-         * which allows relabelling of the top-dimensional simplices and their
-         * vertices, see isIsomorphicTo() instead.
-         *
-         * This test does _not_ examine the textual simplex descriptions or
-         * simplex/facet locks, as seen in Simplex<dim>::description() and
-         * Simplex<dim>::lockMask(); these may still differ.
-         * It also does not test whether lower-dimensional faces are
-         * numbered identically (vertices, edges and so on); this routine
-         * is only concerned with top-dimensional simplices.
-         *
-         * (At the time of writing, two identical triangulations will
-         * always number their lower-dimensional faces in the same way.
-         * However, it is conceivable that in future versions of Regina there
-         * may be situations in which identical triangulations can acquire
-         * different numberings for vertices, edges, and so on.)
-         *
-         * \param other the triangulation to compare with this.
-         * \return \c true if and only if the two triangulations are
-         * not combinatorially identical.
-         */
-        bool operator != (const Triangulation<dim>& other) const;
+        bool operator == (const TriangulationBase<dim>& other) const;
 
         /**
          * Determines if this triangulation is combinatorially
@@ -4610,7 +4577,7 @@ inline bool TriangulationBase<dim>::isConnected() const {
 }
 
 template <int dim>
-bool TriangulationBase<dim>::operator == (const Triangulation<dim>& other)
+bool TriangulationBase<dim>::operator == (const TriangulationBase<dim>& other)
         const {
     if (simplices_.size() != other.simplices_.size())
         return false;
@@ -4633,12 +4600,6 @@ bool TriangulationBase<dim>::operator == (const Triangulation<dim>& other)
     }
 
     return true;
-}
-
-template <int dim>
-inline bool TriangulationBase<dim>::operator != (
-        const Triangulation<dim>& other) const {
-    return ! ((*this) == other);
 }
 
 template <int dim>

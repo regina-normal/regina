@@ -162,7 +162,9 @@ void LPConstraintNonSpun::addRows(
 
     MatrixInt coeffs = snapPea.slopeEquations();
 
-    if (snapPea != tri)
+    // Use a static_cast to ensure we are using the Triangulation<3>
+    // equality test. Otherwise C++20 complains about ambiguity.
+    if (static_cast<const Triangulation<3>&>(snapPea) != tri)
         throw UnsolvedCase("SnapPea retriangulated "
             "when attempting to use LPConstraintNonSpun");
 
