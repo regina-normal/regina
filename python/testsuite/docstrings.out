@@ -626,7 +626,7 @@ class ListView(pybind11_object)
  |  
  |  End users should always store ListView objects using ``auto``, not by
  |  explicitly writing out the full ListView type. One reason for this is
- |  that, if/when Regina moves to C++20, the ListView class will most
+ |  that, now that Regina has moved to C++20, the ListView class will most
  |  likely be removed completely (in favour of the new C++20 ranges
  |  library).
  |  
