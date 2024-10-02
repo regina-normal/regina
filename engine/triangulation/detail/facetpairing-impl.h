@@ -110,7 +110,8 @@ bool FacetPairingBase<dim>::isClosed() const {
 }
 
 template <int dim>
-bool FacetPairingBase<dim>::operator == (const FacetPairing<dim>& other) const {
+bool FacetPairingBase<dim>::operator == (const FacetPairingBase<dim>& other)
+        const {
     return size_ == other.size_ &&
         std::equal(pairs_, pairs_ + (size_ * (dim + 1)), other.pairs_);
 }

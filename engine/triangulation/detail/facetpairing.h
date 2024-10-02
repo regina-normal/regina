@@ -310,7 +310,7 @@ class FacetPairingBase :
          * \return \c true if and only if this and the given facet pairing
          * are identical.
          */
-        bool operator == (const FacetPairing<dim>& other) const;
+        bool operator == (const FacetPairingBase<dim>& other) const;
 
         /*@}*/
         /**
