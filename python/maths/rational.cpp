@@ -69,10 +69,6 @@ void addRational(pybind11::module_& m) {
         .def(pybind11::self /= pybind11::self, rdoc::__idiv)
         .def("negate", &Rational::negate, rdoc::negate)
         .def("invert", &Rational::invert, rdoc::invert)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
-        .def(pybind11::self > pybind11::self, rdoc::__gt)
-        .def(pybind11::self <= pybind11::self, rdoc::__le)
-        .def(pybind11::self >= pybind11::self, rdoc::__ge)
         .def("doubleApprox", &Rational::doubleApprox, rdoc::doubleApprox)
         .def("str", &Rational::tex, rdoc::str)
         .def("tex", &Rational::tex, rdoc::tex)
@@ -82,6 +78,7 @@ void addRational(pybind11::module_& m) {
         .def_readonly_static("undefined", &Rational::undefined)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
     regina::python::add_global_swap<Rational>(m, rdoc::global_swap);

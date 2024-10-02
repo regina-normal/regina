@@ -105,7 +105,7 @@ MEMBER_BLACKLIST = [
 ]
 
 CPP_OPERATORS = {
-    '<=': 'le', '>=': 'ge', '==': 'eq', '!=': 'ne', '[]': 'array',
+    '<=>': 'cmp', '<=': 'le', '>=': 'ge', '==': 'eq', '!=': 'ne', '[]': 'array',
     '+=': 'iadd', '-=': 'isub', '*=': 'imul', '/=': 'idiv', '%=':
     'imod', '&=': 'iand', '|=': 'ior', '^=': 'ixor', '<<=': 'ilshift',
     '>>=': 'irshift', '++': 'inc', '--': 'dec', '<<': 'lshift', '>>':

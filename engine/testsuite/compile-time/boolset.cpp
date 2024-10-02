@@ -65,3 +65,24 @@ static_assert(~ BoolSet(true) == false);
 
 static_assert(BoolSet(true).byteCode() == 1);
 static_assert(BoolSet::fromByteCode(2) == false);
+
+static_assert(! (BoolSet(true) == BoolSet(true, true)));
+static_assert(BoolSet(true) != BoolSet(true, true));
+static_assert(BoolSet(true) < BoolSet(true, true));
+static_assert(BoolSet(true) <= BoolSet(true, true));
+static_assert(! (BoolSet(true) > BoolSet(true, true)));
+static_assert(! (BoolSet(true) >= BoolSet(true, true)));
+
+static_assert(! (BoolSet(true) == BoolSet(false)));
+static_assert(BoolSet(true) != BoolSet(false));
+static_assert(! (BoolSet(true) < BoolSet(false)));
+static_assert(! (BoolSet(true) <= BoolSet(false)));
+static_assert(! (BoolSet(true) > BoolSet(false)));
+static_assert(! (BoolSet(true) >= BoolSet(false)));
+
+static_assert(BoolSet(true) == BoolSet(true));
+static_assert(! (BoolSet(true) != BoolSet(true)));
+static_assert(! (BoolSet(true) < BoolSet(true)));
+static_assert(BoolSet(true) <= BoolSet(true));
+static_assert(! (BoolSet(true) > BoolSet(true)));
+static_assert(BoolSet(true) >= BoolSet(true));

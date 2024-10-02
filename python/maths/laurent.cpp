@@ -86,10 +86,6 @@ void addLaurent(pybind11::module_& m) {
             &Laurent<regina::Integer>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(
             &Laurent<regina::Integer>::utf8, pybind11::const_), rdoc::utf8)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
-        .def(pybind11::self > pybind11::self, rdoc::__gt)
-        .def(pybind11::self <= pybind11::self, rdoc::__le)
-        .def(pybind11::self >= pybind11::self, rdoc::__ge)
         .def(pybind11::self *= regina::Integer(), rdoc::__imul)
         .def(pybind11::self /= regina::Integer(), rdoc::__idiv)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
@@ -106,6 +102,7 @@ void addLaurent(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     regina::python::add_global_swap<Laurent<regina::Integer>>(m,
         rdoc::global_swap);

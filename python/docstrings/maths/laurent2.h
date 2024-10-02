@@ -283,6 +283,31 @@ Parameter ``yExp``:
 Returns:
     the coefficient of the term with the given exponents.)doc";
 
+// Docstring regina::python::doc::Laurent2_::__cmp
+static const char *__cmp =
+R"doc(Compares this against the given polynomial under a total ordering of
+all two-variable Laurent polynomials.
+
+The particular total order that Regina uses is not important, and may
+change between Regina releases (though such changes should be very
+infrequent). The main purpose of this routine is to support algorithms
+that require a "canonical" choice of polynomial from amongst many
+alternatives.
+
+This routine generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the polynomial to compare with this.
+
+Returns:
+    The result of the comparison between this and the given
+    polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent2_::__copy
 static const char *__copy =
 R"doc(Creates a new copy of the given polynomial.
@@ -309,42 +334,6 @@ Parameter ``rhs``:
 
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
-
-// Docstring regina::python::doc::Laurent2_::__ge
-static const char *__ge =
-R"doc(Compares this against the given polynomial under a total ordering of
-all two-variable Laurent polynomials.
-
-The particular total order that Regina uses is not important, and may
-change between Regina releases (though such changes should be very
-infrequent). The main purpose of this routine is to support algorithms
-that require a "canonical" choice of polynomial from amongst many
-alternatives.
-
-Parameter ``rhs``:
-    the polynomial to compare with this.
-
-Returns:
-    ``True`` if and only if this is greater than or equal to the given
-    polynomial under the total order that Regina uses.)doc";
-
-// Docstring regina::python::doc::Laurent2_::__gt
-static const char *__gt =
-R"doc(Compares this against the given polynomial under a total ordering of
-all two-variable Laurent polynomials.
-
-The particular total order that Regina uses is not important, and may
-change between Regina releases (though such changes should be very
-infrequent). The main purpose of this routine is to support algorithms
-that require a "canonical" choice of polynomial from amongst many
-alternatives.
-
-Parameter ``rhs``:
-    the polynomial to compare with this.
-
-Returns:
-    ``True`` if and only if this is greater than the given polynomial
-    under the total order that Regina uses.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__iadd
 static const char *__iadd =
@@ -474,42 +463,6 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent2_::__le
-static const char *__le =
-R"doc(Compares this against the given polynomial under a total ordering of
-all two-variable Laurent polynomials.
-
-The particular total order that Regina uses is not important, and may
-change between Regina releases (though such changes should be very
-infrequent). The main purpose of this routine is to support algorithms
-that require a "canonical" choice of polynomial from amongst many
-alternatives.
-
-Parameter ``rhs``:
-    the polynomial to compare with this.
-
-Returns:
-    ``True`` if and only if this is less than or equal to the given
-    polynomial under the total order that Regina uses.)doc";
-
-// Docstring regina::python::doc::Laurent2_::__lt
-static const char *__lt =
-R"doc(Compares this against the given polynomial under a total ordering of
-all two-variable Laurent polynomials.
-
-The particular total order that Regina uses is not important, and may
-change between Regina releases (though such changes should be very
-infrequent). The main purpose of this routine is to support algorithms
-that require a "canonical" choice of polynomial from amongst many
-alternatives.
-
-Parameter ``rhs``:
-    the polynomial to compare with this.
-
-Returns:
-    ``True`` if and only if this is less than the given polynomial
-    under the total order that Regina uses.)doc";
 
 // Docstring regina::python::doc::Laurent2_::global_swap
 static const char *global_swap =

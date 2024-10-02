@@ -355,37 +355,22 @@ class Rational {
          */
         bool operator == (const Rational& compare) const;
         /**
-         * Determines if this is less than the given rational.
+         * Compares this to the given rational.
          *
-         * \param compare the rational with which this will be compared.
-         * \return \c true if and only if this rational is less than
-         * \a compare.
-         */
-        bool operator < (const Rational& compare) const;
-        /**
-         * Determines if this is greater than the given rational.
+         * This is a numerical comparison; that is, it uses the usual ordering
+         * of the rationals.  Infinity is considered greater than any rational,
+         * and undefined is considered less than any rational.
          *
-         * \param compare the rational with which this will be compared.
-         * \return \c true if and only if this rational is greater than
-         * \a compare.
-         */
-        bool operator > (const Rational& compare) const;
-        /**
-         * Determines if this is less than or equal to the given rational.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
          *
-         * \param compare the rational with which this will be compared.
-         * \return \c true if and only if this rational is less than or
-         * equal to \a compare.
-         */
-        bool operator <= (const Rational& compare) const;
-        /**
-         * Determines if this is greater than or equal to the given rational.
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
          *
-         * \param compare the rational with which this will be compared.
-         * \return \c true if and only if this rational is greater than
-         * or equal to \a compare.
+         * \return The result of the numerical comparison between this
+         * and the given rational.
          */
-        bool operator >= (const Rational& compare) const;
+        std::strong_ordering operator <=> (const Rational&) const;
 
         /**
          * Attempts to convert this rational to a real number.
@@ -593,13 +578,6 @@ inline void Rational::swap(Rational& other) noexcept {
 inline void Rational::negate() {
     if (flavour == f_normal)
         mpq_neg(data, data);
-}
-
-inline bool Rational::operator <= (const Rational& compare) const {
-    return ! (*this > compare);
-}
-inline bool Rational::operator >= (const Rational& compare) const {
-    return ! (*this < compare);
 }
 
 inline void swap(Rational& a, Rational& b) noexcept {

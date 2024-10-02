@@ -725,20 +725,14 @@ class ListView(pybind11_object)
  |      
  |      1. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: <internal>.ListView[regina.Vertex3]) -> bool
  |      
- |      Determines whether this and the given list view are accessing
- |      different underlying containers.
+ |      Determines whether this and the given object have different values.
+ |      This operator ``x != y`` is generated automatically, as the negation
+ |      of ``x == y``.
  |      
- |      Here the containers are compared by _reference_ (i.e., to be
- |      considered equal they must be the same container object at the same
- |      location in memory; it is not enough to be two containers with
- |      identical contents).
- |      
- |      Parameter ``other``:
- |          the list view to compare with this.
- |      
- |      Returns:
- |          ``True`` if and only if this and the given list use different
- |          underlying containers.
+ |      This test compares the _contents_ of the two objects (i.e., it
+ |      compares by value, not by reference). See the documentation for the
+ |      corresponding equality test (i.e., the member function ``__eq__``)
+ |      for full details on how objects of this type will be compared.
  |      
  |      2. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: None) -> bool
  |      

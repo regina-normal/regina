@@ -156,40 +156,22 @@ class FacePair {
         /**
          * Determines if this and the given face pair are equal.
          *
-         * \param other the pair to compare with this.
          * \return \c true if and only if this and the given pair are equal.
          */
-        bool operator == (const FacePair& other) const;
+        bool operator == (const FacePair&) const = default;
         /**
-         * Determines if this is less than the given face pair.
+         * Compares two face pairs lexicographically.
          *
-         * \param other the pair to compare with this.
-         * \return \c true if and only if this is less than \a other.
-         */
-        bool operator < (const FacePair& other) const;
-        /**
-         * Determines if this is greater than the given face pair.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
          *
-         * \param other the pair to compare with this.
-         * \return \c true if and only if this is greater than \a other.
-         */
-        bool operator > (const FacePair& other) const;
-        /**
-         * Determines if this is less than or equal to the given face pair.
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
          *
-         * \param other the pair to compare with this.
-         * \return \c true if and only if this is less than or
-         * equal to \a other.
+         * \return The result of the lexicographical comparison between this
+         * and the given face pair.
          */
-        bool operator <= (const FacePair& other) const;
-        /**
-         * Determines if this is greater than or equal to the given face pair.
-         *
-         * \param other the pair to compare with this.
-         * \return \c true if and only if this is greater than or
-         * equal to \a other.
-         */
-        bool operator >= (const FacePair& other) const;
+        std::strong_ordering operator <=> (const FacePair&) const = default;
         /**
          * Increments this face pair.  It will be set to the following
          * face pair in the lexicographical ordering, or to a
@@ -337,26 +319,6 @@ inline FacePair FacePair::complement() const {
         case 11: return FacePair(1);
         default: return FacePair(9 - code_);
     }
-}
-
-inline bool FacePair::operator == (const FacePair& other) const {
-    return (code_ == other.code_);
-}
-
-inline bool FacePair::operator < (const FacePair& other) const {
-    return (code_ < other.code_);
-}
-
-inline bool FacePair::operator > (const FacePair& other) const {
-    return (code_ > other.code_);
-}
-
-inline bool FacePair::operator <= (const FacePair& other) const {
-    return (code_ <= other.code_);
-}
-
-inline bool FacePair::operator >= (const FacePair& other) const {
-    return (code_ >= other.code_);
 }
 
 inline FacePair FacePair::operator ++ (int) {

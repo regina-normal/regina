@@ -232,17 +232,14 @@ class IsoSigDegrees {
              * Tests whether this and the given sorted degree sequence
              * are identical.
              */
-            bool operator == (const SimplexMarking& rhs) const {
-                return degree == rhs.degree;
-            }
+            bool operator == (const SimplexMarking&) const = default;
 
             /**
              * Lexicographically compares this with the given sorted
              * degree sequence.
              */
-            bool operator < (const SimplexMarking& rhs) const {
-                return degree < rhs.degree;
-            }
+            std::strong_ordering operator <=> (const SimplexMarking&) const =
+                default;
         };
 
         size_t size_;

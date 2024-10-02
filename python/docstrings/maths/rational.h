@@ -51,6 +51,25 @@ Parameter ``r``:
 Returns:
     the sum *this* + *r*.)doc";
 
+// Docstring regina::python::doc::Rational_::__cmp
+static const char *__cmp =
+R"doc(Compares this to the given rational.
+
+This is a numerical comparison; that is, it uses the usual ordering of
+the rationals. Infinity is considered greater than any rational, and
+undefined is considered less than any rational.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result of the numerical comparison between this and the given
+    rational.)doc";
+
 // Docstring regina::python::doc::Rational_::__copy
 static const char *__copy =
 R"doc(Initialises to the given rational value.
@@ -80,27 +99,6 @@ Parameter ``compare``:
 
 Returns:
     ``True`` if and only if this rational is equal to *compare*.)doc";
-
-// Docstring regina::python::doc::Rational_::__ge
-static const char *__ge =
-R"doc(Determines if this is greater than or equal to the given rational.
-
-Parameter ``compare``:
-    the rational with which this will be compared.
-
-Returns:
-    ``True`` if and only if this rational is greater than or equal to
-    *compare*.)doc";
-
-// Docstring regina::python::doc::Rational_::__gt
-static const char *__gt =
-R"doc(Determines if this is greater than the given rational.
-
-Parameter ``compare``:
-    the rational with which this will be compared.
-
-Returns:
-    ``True`` if and only if this rational is greater than *compare*.)doc";
 
 // Docstring regina::python::doc::Rational_::__iadd
 static const char *__iadd =
@@ -209,27 +207,6 @@ Parameter ``other``:
 
 Returns:
     a reference to this rational with its new value.)doc";
-
-// Docstring regina::python::doc::Rational_::__le
-static const char *__le =
-R"doc(Determines if this is less than or equal to the given rational.
-
-Parameter ``compare``:
-    the rational with which this will be compared.
-
-Returns:
-    ``True`` if and only if this rational is less than or equal to
-    *compare*.)doc";
-
-// Docstring regina::python::doc::Rational_::__lt
-static const char *__lt =
-R"doc(Determines if this is less than the given rational.
-
-Parameter ``compare``:
-    the rational with which this will be compared.
-
-Returns:
-    ``True`` if and only if this rational is less than *compare*.)doc";
 
 // Docstring regina::python::doc::Rational_::__mul
 static const char *__mul =

@@ -58,12 +58,12 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<unsigned long, long>(), rdoc::__init)
         .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__copy)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
         .def("inverse", &GroupExpressionTerm::inverse, rdoc::inverse)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
     ;
     regina::python::add_output_ostream(c1);
     regina::python::add_eq_operators(c1, rdoc::__eq);
+    regina::python::add_cmp_operators(c1, rdoc::__cmp);
 
     RDOC_SCOPE_SWITCH(GroupExpression)
 

@@ -31,11 +31,12 @@
  **************************************************************************/
 
 /*! \file python/helpers/equality.h
- *  \brief Assists with wrapping == and != operators in Python.
+ *  \brief Assists with wrapping equality and comparison operators in Python.
  */
 
 #include <sstream>
 #include <type_traits>
+#include "../pybind11/operators.h"
 
 namespace regina {
 
@@ -270,6 +271,21 @@ void no_eq_abstract(pybind11::class_<C, options...>& c);
  */
 template <class C, typename... options>
 void disable_eq_operators(pybind11::class_<C, options...>& c);
+
+/**
+ * Adds appropriate comparison operators to the python bindings for a C++ class,
+ * with custom docstrings.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_cmp_operators(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
+ *
+ * The effect will be to add Python operators `<`, `<=`, `>` and `>=`, all of
+ * which compare by value.  The \a doc argument will be used for all four
+ * Python docstrings.
+ */
+template <class C, typename... options>
+void add_cmp_operators(pybind11::class_<C, options...>& c, const char* doc);
 
 #ifndef __DOXYGEN
 namespace add_eq_operators_detail {
@@ -514,6 +530,19 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
     c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
         doc::common::neq_None);
     c.attr("equalityType") = EqualityType::DISABLED;
+}
+
+template <class C, typename... options>
+void add_cmp_operators(pybind11::class_<C, options...>& c, const char* doc) {
+    static_assert(add_eq_operators_detail::EqualityOperators<C>::equalityType()
+            == BY_VALUE,
+        "The function add_cmp_operators() should only be used for classes "
+        "that compare by value.");
+
+    c.def(pybind11::self < pybind11::self, doc);
+    c.def(pybind11::self <= pybind11::self, doc);
+    c.def(pybind11::self > pybind11::self, doc);
+    c.def(pybind11::self >= pybind11::self, doc);
 }
 
 #endif // __DOXYGEN

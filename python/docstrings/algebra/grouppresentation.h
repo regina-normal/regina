@@ -53,6 +53,23 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace GroupExpressionTerm_ {
 
+// Docstring regina::python::doc::GroupExpressionTerm_::__cmp
+static const char *__cmp =
+R"doc(Compares two terms lexicographically. Specifically, this operator
+imposes a total order on terms by comparing them lexicographically as
+(generator, exponent) pairs.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result of the lexicographical comparison between this and the
+    given term.)doc";
+
 // Docstring regina::python::doc::GroupExpressionTerm_::__copy
 static const char *__copy = R"doc(Creates a new term initialised to the given value.)doc";
 
@@ -62,9 +79,6 @@ static const char *__default = R"doc(Creates a new uninitialised term.)doc";
 // Docstring regina::python::doc::GroupExpressionTerm_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given term contain identical data.
-
-Parameter ``other``:
-    the term with which this term will be compared.
 
 Returns:
     ``True`` if and only if this and the given term have both the same
@@ -95,18 +109,6 @@ Parameter ``gen``:
 
 Parameter ``exp``:
     the exponent to which this generator is raised.)doc";
-
-// Docstring regina::python::doc::GroupExpressionTerm_::__lt
-static const char *__lt =
-R"doc(Imposes an ordering on terms. Terms are ordered lexigraphically as
-(generator, exponent) pairs.
-
-Parameter ``other``:
-    the term to compare with this.
-
-Returns:
-    true if and only if this term is lexicographically smaller than
-    *other*.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::inverse
 static const char *inverse =

@@ -100,21 +100,27 @@ struct GroupExpressionTerm {
     /**
      * Determines whether this and the given term contain identical data.
      *
-     * \param other the term with which this term will be compared.
      * \return \c true if and only if this and the given term have both the
      * same generator and exponent.
      */
-    bool operator == (const GroupExpressionTerm& other) const;
+    bool operator == (const GroupExpressionTerm&) const = default;
 
     /**
-     * Imposes an ordering on terms.
-     * Terms are ordered lexigraphically as (generator, exponent) pairs.
+     * Compares two terms lexicographically.
+     * Specifically, this operator imposes a total order on terms by comparing
+     * them lexicographically as (generator, exponent) pairs.
      *
-     * \param other the term to compare with this.
-     * \return true if and only if this term is lexicographically
-     * smaller than \a other.
+     * This generates all of the usual comparison operators, including
+     * `<`, `<=`, `>`, and `>=`.
+     *
+     * \python This spaceship operator `x <=> y` is not available, but the
+     * other comparison operators that it generates _are_ available.
+     *
+     * \return The result of the lexicographical comparison between this
+     * and the given term.
      */
-    bool operator < (const GroupExpressionTerm& other) const;
+    std::strong_ordering operator <=> (const GroupExpressionTerm&) const =
+        default;
 
     /**
      * Returns the inverse of this term.  The inverse has the same
@@ -1836,11 +1842,6 @@ inline GroupExpressionTerm::GroupExpressionTerm(unsigned long gen, long exp) :
         generator(gen), exponent(exp) {
 }
 
-inline bool GroupExpressionTerm::operator == (
-        const GroupExpressionTerm& other) const {
-    return (generator == other.generator) && (exponent == other.exponent);
-}
-
 inline GroupExpressionTerm GroupExpressionTerm::inverse() const {
     return GroupExpressionTerm(generator, -exponent);
 }
@@ -1852,13 +1853,6 @@ inline bool GroupExpressionTerm::operator += (
         return true;
     } else
         return false;
-}
-
-inline bool GroupExpressionTerm::operator < (
-        const GroupExpressionTerm& other) const {
-    return ( (generator < other.generator) ||
-             ( (generator == other.generator) &&
-               ( exponent < other.exponent ) ) );
 }
 
 // Inline functions for GroupExpression

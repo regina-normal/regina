@@ -17,11 +17,15 @@ Version 7.4  [ (to be announced) ]
           potentially throw a LockViolation (and this is now explicitly noted
           in their respective docs); other routines now examine locks as part
           of their validity checks (e.g., local moves on triangulations).
-        - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
         - All global enumerations are now C++11 scoped enumerations, with the
           old names kept as deprecated constants in the regina:: namespace.
+        - Explicit inequality tests (!=) have been removed, and are now
+          automatically generated from equality tests (==) instead.
+        - Explicit comparisons (<, <=, >, >=) have been removed, and are now
+          automatically generated from the new spaceship operator (<=>).
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
+        - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
         - Updated the bundled copy of Normaliz to version 3.10.3 (30 May 2024).
     ENGINE:
         Class AbelianGroup:
@@ -62,6 +66,7 @@ Version 7.4  [ (to be announced) ]
             - Renamed empty() to clear(), without a deprecated alias, to avoid
               confusion with the more common pattern where empty() queries
               whether or not a container is empty.
+            - Added a spaceship operator (<=>) for subset comparisons.
         Enum ChangeType:
             - New enum for internal use with triangulation/link change spans.
         Class Example<3>:
@@ -76,6 +81,8 @@ Version 7.4  [ (to be announced) ]
               of links (i.e., SpatialLink objects).
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
+        Class FacePair:
+            - Added a spaceship operator (<=>) for comparisons.
         Class FacetPairing<dim>:
             - New routine hash(), which uses the tight encoding.
         Class FacetSpec<dim>:
@@ -106,6 +113,10 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., Framing::Seifert).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Struct GroupExpressionTerm:
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Class GroupPresentation:
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
@@ -125,6 +136,7 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
             - New class constant supportsInfinity, which is set to false.
+            - Added a spaceship operator (<=>) for comparisons.
         Class IntOfBits<k>:
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Isomorphism<dim>:
@@ -140,6 +152,7 @@ Version 7.4  [ (to be announced) ]
             - New class constant supportsInfinity, which is set to true.
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
+            - Added a spaceship operator (<=>) for comparisons.
         Class Link:
             - New routine makeAlternating().
             - New routine seifertCircles().
@@ -208,6 +221,7 @@ Version 7.4  [ (to be announced) ]
               in the regina:: namespace.
         Class NativeInteger<bytes>:
             - New routine str().
+            - Added a spaceship operator (<=>) for comparisons.
         Enum NiceType:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., NICE_INTRODUCE) have been
@@ -272,6 +286,7 @@ Version 7.4  [ (to be announced) ]
               in the regina:: namespace.
         Class Rational:
             - New function str().
+            - Added a spaceship operator (<=>) for comparisons.
         Class Rotation3D:
             - New class to support floating-point 3-D geometry.
         Class SatAnnulus:
