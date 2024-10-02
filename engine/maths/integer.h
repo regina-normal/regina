@@ -722,30 +722,6 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         bool operator ==(long rhs) const;
         /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(const IntegerBase& rhs) const;
-        /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(const IntegerBase<! withInfinity>& rhs) const;
-        /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(long rhs) const;
-        /**
          * Determines if this is less than the given integer.
          *
          * \param rhs the integer with which this will be compared.
@@ -1981,22 +1957,6 @@ class NativeInteger {
          */
         bool operator ==(Native rhs) const;
         /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(const NativeInteger& rhs) const;
-        /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(Native rhs) const;
-        /**
          * Determines if this is less than the given integer.
          *
          * \param rhs the integer with which this will be compared.
@@ -3011,55 +2971,6 @@ inline bool IntegerBase<withInfinity>::operator ==(long rhs) const {
 }
 
 template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator !=(const IntegerBase& rhs)
-        const {
-    if (isInfinite() && rhs.isInfinite())
-        return false;
-    else if (isInfinite() || rhs.isInfinite())
-        return true;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) != 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) != 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) != 0);
-        else
-            return (small_ != rhs.small_);
-    }
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator !=(
-        const IntegerBase<! withInfinity>& rhs) const {
-    // The types are different, so both cannot be infinity.
-    if (isInfinite() || rhs.isInfinite())
-        return true;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) != 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) != 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) != 0);
-        else
-            return (small_ != rhs.small_);
-    }
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator !=(long rhs) const {
-    if (isInfinite())
-        return true;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) != 0);
-    else
-        return (small_ != rhs);
-}
-
-template <bool withInfinity>
 inline bool IntegerBase<withInfinity>::operator <(const IntegerBase& rhs)
         const {
     if (isInfinite())
@@ -3738,17 +3649,6 @@ inline bool NativeInteger<bytes>::operator ==(
 template <int bytes>
 inline bool NativeInteger<bytes>::operator ==(Native rhs) const {
     return (data_ == rhs);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator !=(
-        const NativeInteger<bytes>& rhs) const {
-    return (data_ != rhs.data_);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator !=(Native rhs) const {
-    return (data_ != rhs);
 }
 
 template <int bytes>

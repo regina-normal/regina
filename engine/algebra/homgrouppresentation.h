@@ -203,32 +203,6 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         bool operator == (const HomGroupPresentation& other) const;
 
         /**
-         * Determines whether this and the given homomorphism do not have
-         * identical presentations.
-         *
-         * This routine does _not_ test whether the two homomorphisms
-         * are equal in the sense that each element of the domain maps
-         * to the same group element of the codomain - in general this
-         * is an undecidable problem.
-         *
-         * Instead, this routine tests whether the two homomorphisms map the
-         * <i>i</i>th generator of the domain to precisely the same _word_
-         * in the codomain, for each \a i.
-         *
-         * This routine will not test whether the domains and codomains
-         * have identical presentations, or whether either homomorphism
-         * is declared to be an isomorphism.  However, if the two domains
-         * have different numbers of generators then the two homomorphisms
-         * will compare as not equal (since it will be impossible to compare
-         * the words that the corresponding generators map to).
-         *
-         * \param other the homomorphism to compare with this.
-         * \return \c true if and only if this and the given homomorphisms
-         * do not have identical presentations.
-         */
-        bool operator != (const HomGroupPresentation& other) const;
-
-        /**
          * The domain of the map.
          *
          * \return a reference to the domain.
@@ -527,11 +501,6 @@ inline void HomGroupPresentation::swap(HomGroupPresentation& other) noexcept {
 inline bool HomGroupPresentation::operator == (
         const HomGroupPresentation& other) const {
     return map_ == other.map_;
-}
-
-inline bool HomGroupPresentation::operator != (
-        const HomGroupPresentation& other) const {
-    return map_ != other.map_;
 }
 
 inline const GroupPresentation& HomGroupPresentation::domain() const {

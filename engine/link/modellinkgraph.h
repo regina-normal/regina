@@ -149,21 +149,6 @@ class ModelLinkGraphArc {
          */
         bool operator == (const ModelLinkGraphArc& rhs) const;
         /**
-         * Tests whether this and the given arc reference are not identical.
-         *
-         * Two references are identical if and only if they return the
-         * same values for both node() and arc().
-         *
-         * \warning If you create a null arc by calling
-         * ModelLinkGraphArc(\c null, \a i) for some non-zero \a i, then this
-         * will _not_ be considered equal to the null arc created by calling
-         * ModelLinkGraphArc(), since the latter is equivalent to calling
-         * ModelLinkGraphArc(\c null, 0).
-         *
-         * \c true if and only if this and \a rhs are not identical.
-         */
-        bool operator != (const ModelLinkGraphArc& rhs) const;
-        /**
          * Sets this to be a copy of the given arc reference.
          *
          * \return a reference to this object.
@@ -672,20 +657,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * combinatorially identical.
          */
         bool operator == (const ModelLinkGraph& other) const;
-
-        /**
-         * Determines if this graph is not combinatorially identical to the
-         * given graph.
-         *
-         * Here "identical" means that both graphs have the same number
-         * of nodes, and in both graphs the same pairs of outgoing arcs of
-         * numbered nodes are connected by edges.
-         *
-         * \param other the graph to compare with this.
-         * \return \c true if and only if the two graphs are
-         * not combinatorially identical.
-         */
-        bool operator != (const ModelLinkGraph& other) const;
 
         /**
          * Converts this graph into its reflection.
@@ -1588,22 +1559,6 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         bool operator == (const ModelLinkGraphCells& other) const;
 
         /**
-         * Determines if this and the given cellular decomposition are
-         * not combinatorially identical.
-         *
-         * Here "identical" means that both decompositions have the same
-         * number of cells, these cells are presented in the same order,
-         * and their boundaries enter and exit the same numbered arcs of the
-         * same numbered nodes, using the same directions of traversal and
-         * the same starting points on each cell boundary.
-         *
-         * \param other the cellular decomposition to compare with this.
-         * \return \c true if and only if the two cellular decompositions are
-         * not combinatorially identical.
-         */
-        bool operator != (const ModelLinkGraphCells& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1696,11 +1651,6 @@ inline int ModelLinkGraphArc::arc() const {
 inline bool ModelLinkGraphArc::operator == (const ModelLinkGraphArc& rhs)
         const {
     return (node_ == rhs.node_ && arc_ == rhs.arc_);
-}
-
-inline bool ModelLinkGraphArc::operator != (const ModelLinkGraphArc& rhs)
-        const {
-    return (node_ != rhs.node_ || arc_ != rhs.arc_);
 }
 
 inline ModelLinkGraphArc ModelLinkGraphArc::opposite() const {
@@ -1834,10 +1784,6 @@ inline void ModelLinkGraph::swap(ModelLinkGraph& other) noexcept {
     }
 }
 
-inline bool ModelLinkGraph::operator != (const ModelLinkGraph& other) const {
-    return ! ((*this) == other);
-}
-
 inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
     if (! cells_)
         const_cast<ModelLinkGraph*>(this)->cells_ =
@@ -1897,11 +1843,6 @@ inline size_t ModelLinkGraphCells::cell(const ModelLinkGraphArc& arc) const {
 
 inline size_t ModelLinkGraphCells::cellPos(const ModelLinkGraphArc& arc) const {
     return step_[(arc.node()->index() << 2) | arc.arc()];
-}
-
-inline bool ModelLinkGraphCells::operator != (const ModelLinkGraphCells& other)
-        const {
-    return ! ((*this) == other);
 }
 
 } // namespace regina

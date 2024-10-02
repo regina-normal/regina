@@ -700,23 +700,6 @@ class SnapshotRef {
             return snapshot_ == rhs.snapshot_;
         }
         /**
-         * Tests whether this and the given snapshot reference do not refer
-         * to the same snapshot of the same type \a T object.
-         *
-         * This will be true if either the two references were obtained from
-         * different type \a T objects (possibly via copies/moves/swaps from
-         * other references), or if they were obtained from the same type \a T
-         * object but at times that were separated by a modification of this
-         * type \a T object.
-         *
-         * \param rhs the snapshot reference to compare with this.
-         * \return \c true if and only if this and \a rhs do not refer to the
-         * same snapshot of the same underlying type \a T object.
-         */
-        bool operator != (const SnapshotRef& rhs) const {
-            return snapshot_ != rhs.snapshot_;
-        }
-        /**
          * Gives read-only access to the image that was snapshotted.
          *
          * Note that this dereference operator may refer to different objects

@@ -158,25 +158,6 @@ class TrivialTri : public StandardTriangulation {
         bool operator == (const TrivialTri& other) const;
 
         /**
-         * Determines whether this and the given structure represent
-         * different types of trivial triangulation.
-         *
-         * This is the same as testing whether type() returns different
-         * values for this and the given triangulation.
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass means they describe isomorphic structures).
-         *
-         * \param other the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * represent different types of trivial triangulation.
-         */
-        bool operator != (const TrivialTri& other) const;
-
-        /**
          * Determines if the given triangulation component is one of the
          * trivial triangulations recognised by this class.
          *
@@ -232,10 +213,6 @@ inline int TrivialTri::type() const {
 
 inline bool TrivialTri::operator == (const TrivialTri& other) const {
     return type_ == other.type_;
-}
-
-inline bool TrivialTri::operator != (const TrivialTri& other) const {
-    return type_ != other.type_;
 }
 
 inline void swap(TrivialTri& a, TrivialTri& b) noexcept {

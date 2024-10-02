@@ -395,19 +395,6 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
             return std::equal(elts_, end_, compare.elts_, compare.end_);
         }
         /**
-         * Determines if this vector is different from the given vector.
-         *
-         * It is safe to call this operator if this and the given vector have
-         * different sizes (in which case the return value will be \c true).
-         *
-         * \param compare the vector with which this will be compared.
-         * \return \c true if and only if the this and the given vector
-         * are not equal.
-         */
-        inline bool operator != (const Vector& compare) const {
-            return ! std::equal(elts_, end_, compare.elts_, compare.end_);
-        }
-        /**
          * Sets this vector equal to the given vector.
          *
          * It does not matter if this and the given vector have different

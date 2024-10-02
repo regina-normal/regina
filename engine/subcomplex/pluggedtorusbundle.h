@@ -270,36 +270,6 @@ class PluggedTorusBundle : public StandardTriangulation {
          */
         bool operator == (const PluggedTorusBundle& other) const;
 
-        /**
-         * Determines whether this and the given structure do not represent
-         * the same type of plugged torus bundle.
-         *
-         * Specifically, two structures will compare as equal if and only if:
-         *
-         * - both structures use the same type of thin I-bundle with the
-         *   same parameters (as tested by the TxICore comparison operators);
-         *
-         * - both structures use saturated regions with the same combinatorial
-         *   presentation (as tested by the SatRegion comparison operators);
-         *
-         * - the layerings that connect the thin I-bundle and saturated region
-         *   in each structure are the same (as tested by the Layering
-         *   comparison operators), and use the same attaching matrices.
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass is more specific than combinatorial isomorphism, since
-         * this test does not account for the many possible symmetries in a
-         * plugged torus bundle).
-         *
-         * \param other the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * do not represent the same type of plugged torus bundle.
-         */
-        bool operator != (const PluggedTorusBundle& other) const;
-
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
@@ -453,11 +423,6 @@ inline bool PluggedTorusBundle::operator == (const PluggedTorusBundle& other)
     if (region_ != other.region_)
         return false;
     return true;
-}
-
-inline bool PluggedTorusBundle::operator != (const PluggedTorusBundle& other)
-        const {
-    return ! ((*this) == other);
 }
 
 inline void swap(PluggedTorusBundle& a, PluggedTorusBundle& b) noexcept {

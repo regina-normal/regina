@@ -231,23 +231,6 @@ class Signature : public ShortOutput<Signature> {
         bool operator == (const Signature& other) const;
 
         /**
-         * Determines whether this and the given signature are not identical.
-         *
-         * To be considered identical, it is not enough for two signatures
-         * to be isomorphic: their cycles and cycle groups must be presented
-         * in the same order, using the same symbols which must likewise
-         * be presented in the same order.
-         *
-         * If either signature was parsed from a string, any choice of
-         * formatting (e.g., punctuation and/or whitespace) is irrelevant;
-         * only the mathematical content of the signatures is important here.
-         *
-         * \param other the signature to compare with this.
-         * \return \c true if and only if this and \a other are not identical.
-         */
-        bool operator != (const Signature& other) const;
-
-        /**
          * Returns the 3-manifold triangulation corresponding to
          * this splitting surface signature.
          *
@@ -454,10 +437,6 @@ inline Signature::~Signature() {
 
 inline unsigned Signature::order() const {
     return order_;
-}
-
-inline bool Signature::operator != (const Signature& other) const {
-    return ! ((*this) == other);
 }
 
 inline std::string Signature::str(const std::string& cycleOpen,

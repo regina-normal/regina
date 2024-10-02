@@ -966,17 +966,6 @@ class Perm {
         constexpr bool operator == (const Perm& other) const;
 
         /**
-         * Determines if this differs from the given permutation.
-         * This is true if and only if the two permutations have
-         * different images for some 0 ≤ \a i < \a n.
-         *
-         * \param other the permutation with which to compare this.
-         * \return \c true if and only if this and the given permutation
-         * differ.
-         */
-        constexpr bool operator != (const Perm& other) const;
-
-        /**
          * Lexicographically compares the images of (0,1,...,\a n-1) under this
          * and the given permutation.
          *
@@ -1515,17 +1504,6 @@ class PermClass {
          * are identical.
          */
         bool operator == (const PermClass& other) const;
-        /**
-         * Determines whether this and the given object describe
-         * different conjugacy classes.
-         *
-         * Two past-the-end conjugacy classes will be treated as equal.
-         *
-         * \param other the conjugacy class to compare with this.
-         * \return \c true if and only if this and the given conjugacy class
-         * are different.
-         */
-        bool operator != (const PermClass& other) const;
 
         /**
          * Determines whether this is the conjugacy class for the identity
@@ -2071,11 +2049,6 @@ inline constexpr bool Perm<n>::operator == (const Perm& other) const {
 }
 
 template <int n>
-inline constexpr bool Perm<n>::operator != (const Perm& other) const {
-    return (code_ != other.code_);
-}
-
-template <int n>
 constexpr int Perm<n>::compareWith(const Perm& other) const {
     Code mask = imageMask;
     for (int i = 0; i < n; ++i) {
@@ -2489,12 +2462,6 @@ template <int n>
 inline bool PermClass<n>::operator == (const PermClass& other) const {
     return nCycles_ == other.nCycles_ &&
         std::equal(cycle_, cycle_ + n, other.cycle_);
-}
-
-template <int n>
-inline bool PermClass<n>::operator != (const PermClass& other) const {
-    return nCycles_ != other.nCycles_ ||
-        ! std::equal(cycle_, cycle_ + n, other.cycle_);
 }
 
 template <int n>

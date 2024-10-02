@@ -1183,36 +1183,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool operator == (const NormalHypersurface& other) const;
 
         /**
-         * Determines whether this and the given hypersurface represent
-         * different normal hypersurfaces.
-         *
-         * Specifically, this routine examines (or computes) the number of
-         * normal pieces of each type, and returns \c true if and only if
-         * these counts are not the same for both hypersurfaces.
-         *
-         * It does not matter what vector encodings the two hypersurfaces
-         * use.  In particular, it does not matter if this and the
-         * given hypersurface use different encodings, or if one but not
-         * the other supports non-compact hypersurfaces.
-         *
-         * This routine is safe to call even if this and the given
-         * hypersurface do not belong to the same triangulation:
-         *
-         * - If the two triangulations have the same size, then this routine
-         *   will test whether this hypersurface, if transplanted into the
-         *   other triangulation using the same pentachoron numbering and the
-         *   same normal piece types, would be different from \a other.
-         *
-         * - If the two triangulations have different sizes, then this
-         *   routine will return \c true.
-         *
-         * \param other the hypersurface to be compared with this hypersurface.
-         * \return \c true if both hypersurfaces represent different normal
-         * hypersurface, or \c false if not.
-         */
-        bool operator != (const NormalHypersurface& other) const;
-
-        /**
          * Imposes a total order on all normal hypersurfaces.
          *
          * This order is not mathematically meaningful; it is merely
@@ -1549,11 +1519,6 @@ inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
 
 inline HyperEncoding NormalHypersurface::encoding() const {
     return enc_;
-}
-
-inline bool NormalHypersurface::operator != (const NormalHypersurface& other)
-        const {
-    return ! ((*this) == other);
 }
 
 inline NormalHypersurface NormalHypersurface::operator + (

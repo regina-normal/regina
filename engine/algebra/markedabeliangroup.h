@@ -453,21 +453,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         bool operator == (const MarkedAbelianGroup& other) const;
 
         /**
-         * Determines whether this and the given group were formed from
-         * different chain complex constructions.
-         *
-         * This is _not_ an isomorphism test.  For this comparison to return
-         * \c false (i.e., for the chain complex constructions to be considered
-         * identical), both groups must have been constructed from identical
-         * matrices \a M and \a N, using homology with the same coefficients.
-         *
-         * \param other the group with which this should be compared.
-         * \return \c true if and only if the this and the given group
-         * do not have identical chain complex definitions.
-         */
-        bool operator != (const MarkedAbelianGroup& other) const;
-
-        /**
          * Returns the requested free generator of this group,
          * represented in the original chain complex defining the group.
          *
@@ -1257,11 +1242,6 @@ inline bool MarkedAbelianGroup::isZ() const {
 inline bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other)
         const {
     return (M_ == other.M_) && (N_ == other.N_) && (coeff_ == other.coeff_);
-}
-
-inline bool MarkedAbelianGroup::operator != (const MarkedAbelianGroup& other)
-        const {
-    return (M_ != other.M_) || (N_ != other.N_) || (coeff_ != other.coeff_);
 }
 
 inline bool MarkedAbelianGroup::isIsomorphicTo(

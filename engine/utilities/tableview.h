@@ -288,17 +288,6 @@ class TableView {
                 bool operator == (const iterator& rhs) const {
                     return current_ == rhs.current_;
                 }
-                /**
-                 * Compares this with the given iterator for inequality.
-                 *
-                 * \param rhs the iterator to compare this with.
-                 * \return \c false if the iterators point to the same
-                 * subarray/element of the underlying table, or \c true
-                 * if they do not.
-                 */
-                bool operator != (const iterator& rhs) const {
-                    return current_ != rhs.current_;
-                }
 
                 /**
                  * The preincrement operator.
@@ -535,23 +524,6 @@ class TableView {
          */
         constexpr bool operator == (const TableView& other) const {
             return (array_ == other.array_);
-        }
-
-        /**
-         * Determines whether this and the given table view are accessing
-         * different underlying C-style arrays.
-         *
-         * To be considered the same array, the two arrays must have the same
-         * location in memory (i.e., the pointers that define the C-style arrays
-         * must be equal).  In particular, it is not enough for the two arrays
-         * just to have identical contents.
-         *
-         * \param other the table view to compare with this.
-         * \return \c true if and only if this and the given table use
-         * different underlying C-style arrays.
-         */
-        constexpr bool operator != (const TableView& other) const {
-            return (array_ != other.array_);
         }
 };
 

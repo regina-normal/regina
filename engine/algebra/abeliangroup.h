@@ -389,22 +389,6 @@ class AbelianGroup :
          * presentations (i.e., they are isomorphic).
          */
         bool operator == (const AbelianGroup& other) const;
-        /**
-         * Determines whether this and the given abelian group have
-         * different presentations (which means they are non-isomorphic).
-         *
-         * Since the AbelianGroup class stores _only_ the invariants required
-         * to identify the isomorphism type, two groups will compare as equal
-         * if and only if they are isomorphic.  This is in contrast to the
-         * comparisons for GroupPresentation (which tests for identical
-         * generators and relations), or for MarkedAbelianGroup (which tests
-         * for identical chain complex presentations).
-         *
-         * \param other the group with which this should be compared.
-         * \return \c true if and only if the two groups have different
-         * presentations (i.e., they are non-isomorphic).
-         */
-        bool operator != (const AbelianGroup& other) const;
 
         /**
          * Sets this to be a clone of the given group.
@@ -597,10 +581,6 @@ inline bool AbelianGroup::isZn(size_t n) const {
 
 inline bool AbelianGroup::operator == (const AbelianGroup& other) const {
     return (rank_ == other.rank_ && revInvFactors_ == other.revInvFactors_);
-}
-
-inline bool AbelianGroup::operator != (const AbelianGroup& other) const {
-    return (rank_ != other.rank_ || revInvFactors_ != other.revInvFactors_);
 }
 
 inline void AbelianGroup::tightEncode(std::ostream& out) const {

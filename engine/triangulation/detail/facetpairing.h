@@ -312,15 +312,6 @@ class FacetPairingBase :
          */
         bool operator == (const FacetPairing<dim>& other) const;
 
-        /**
-         * Determines if this and the given facet pairing are not identical.
-         *
-         * \param other the facet pairing to compare with this.
-         * \return \c true if and only if this and the given facet pairing
-         * are not identical.
-         */
-        bool operator != (const FacetPairing<dim>& other) const;
-
         /*@}*/
         /**
          * \name Connected components

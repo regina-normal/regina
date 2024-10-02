@@ -138,19 +138,6 @@ namespace graph {
          * equal, as described above.
          */
         bool operator == (const DualEdge& rhs) const;
-        /**
-         * Determines whether this and the given dual edge object
-         * are not equal.
-         *
-         * See the equality test (operator ==) for details on
-         * what it means for two dual edge objects to be
-         * considered equal.
-         *
-         * \param rhs the dual edge object to compare with this.
-         * \return \c true if and only if the two dual edges are
-         * not equal.
-         */
-        bool operator != (const DualEdge& rhs) const;
 
         /**
          * Returns the dual vertex at the beginning of this
@@ -316,13 +303,6 @@ namespace graph {
              * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const DualEdgeIterator& rhs) const;
-            /**
-             * Tests whether this and the given iterator are different.
-             *
-             * \param rhs the iterator to compare with this.
-             * \return \c true if and only if the two iterators are different.
-             */
-            bool operator != (const DualEdgeIterator& rhs) const;
 
         private:
             /**
@@ -465,13 +445,6 @@ namespace graph {
              * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const IncidentDualEdgeIterator& rhs) const;
-            /**
-             * Tests whether this and the given iterator are different.
-             *
-             * \param rhs the iterator to compare with this.
-             * \return \c true if and only if the two iterators are different.
-             */
-            bool operator != (const IncidentDualEdgeIterator& rhs) const;
 
         private:
             /**
@@ -601,13 +574,6 @@ namespace graph {
              * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const AdjacentDualVertexIterator& rhs) const;
-            /**
-             * Tests whether this and the given iterator are different.
-             *
-             * \param rhs the iterator to compare with this.
-             * \return \c true if and only if the two iterators are different.
-             */
-            bool operator != (const AdjacentDualVertexIterator& rhs) const;
 
         private:
             /**
@@ -1028,11 +994,6 @@ namespace graph {
     }
 
     template <int dim>
-    inline bool DualEdge<dim>::operator != (const DualEdge& rhs) const {
-        return (face != rhs.face) || (forward != rhs.forward);
-    }
-
-    template <int dim>
     inline Simplex<dim>* DualEdge<dim>::source() const {
         return face->embedding(forward ? 0 : 1).simplex();
     }
@@ -1072,12 +1033,6 @@ namespace graph {
     inline bool DualEdgeIterator<dim>::operator == (const DualEdgeIterator& rhs)
             const {
         return it_ == rhs.it_;
-    }
-
-    template <int dim>
-    inline bool DualEdgeIterator<dim>::operator != (const DualEdgeIterator& rhs)
-            const {
-        return it_ != rhs.it_;
     }
 
     template <int dim>
@@ -1132,12 +1087,6 @@ namespace graph {
     }
 
     template <int dim, bool out>
-    inline bool IncidentDualEdgeIterator<dim, out>::operator != (
-            const IncidentDualEdgeIterator& rhs) const {
-        return (simp_ != rhs.simp_) || (facet_ != rhs.facet_);
-    }
-
-    template <int dim, bool out>
     inline void IncidentDualEdgeIterator<dim, out>::makeValid() {
         while (facet_ <= dim && ! simp_->adjacentSimplex(facet_))
             ++facet_;
@@ -1183,12 +1132,6 @@ namespace graph {
     inline bool AdjacentDualVertexIterator<dim>::operator == (
             const AdjacentDualVertexIterator& rhs) const {
         return (source_ == rhs.source_) && (facet_ == rhs.facet_);
-    }
-
-    template <int dim>
-    inline bool AdjacentDualVertexIterator<dim>::operator != (
-            const AdjacentDualVertexIterator& rhs) const {
-        return (source_ != rhs.source_) || (facet_ != rhs.facet_);
     }
 
     template <int dim>

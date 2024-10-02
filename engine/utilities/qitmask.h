@@ -244,17 +244,6 @@ class Qitmask1 {
         }
 
         /**
-         * Determines whether this and the given qitmask are different.
-         *
-         * \param other the qitmask to compare against this.
-         * \return \c true if and only if this and the given qitmask are
-         * different.
-         */
-        inline bool operator != (const Qitmask1<T>& other) const {
-            return (mask1 != other.mask1 || mask2 != other.mask2);
-        }
-
-        /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
          * index \a i for which `get(i)` and `other.get(i)`
@@ -499,18 +488,6 @@ class Qitmask2 {
         inline bool operator == (const Qitmask2<T, U>& other) const {
             return (low1 == other.low1 && low2 == other.low2 &&
                 high1 == other.high1 && high2 == other.high2);
-        }
-
-        /**
-         * Determines whether this and the given qitmask are different.
-         *
-         * \param other the qitmask to compare against this.
-         * \return \c true if and only if this and the given qitmask are
-         * different.
-         */
-        inline bool operator != (const Qitmask2<T, U>& other) const {
-            return (low1 != other.low1 || low2 != other.low2 ||
-                high1 != other.high1 || high2 != other.high2);
         }
 
         /**

@@ -272,23 +272,6 @@ class GraphLoop : public Manifold {
          */
         bool operator == (const GraphLoop& compare) const;
 
-        /**
-         * Determines whether this and the given object do not contain
-         * precisely the same presentations of the same graph manifold.
-         *
-         * This routine does _not_ test for homeomorphism.  Instead it
-         * compares the exact presentations, including the matching matrix
-         * and the specific presentation of the bounded Seifert fibred space,
-         * and determines whether or not these _presentations_ are identical.
-         * If you have two different presentations of the same graph manifold,
-         * they will be treated as not equal by this routine.
-         *
-         * \param compare the presentation with which this will be compared.
-         * \return \c true if and only if this and the given object do not
-         * contain identical presentations of the same graph manifold.
-         */
-        bool operator != (const GraphLoop& compare) const;
-
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -394,10 +377,6 @@ inline bool GraphLoop::isHyperbolic() const {
 
 inline bool GraphLoop::operator == (const GraphLoop& compare) const {
     return sfs_ == compare.sfs_ && matchingReln_ == compare.matchingReln_;
-}
-
-inline bool GraphLoop::operator != (const GraphLoop& compare) const {
-    return sfs_ != compare.sfs_ || matchingReln_ != compare.matchingReln_;
 }
 
 inline void swap(GraphLoop& a, GraphLoop& b) noexcept {

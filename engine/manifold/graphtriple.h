@@ -319,23 +319,6 @@ class GraphTriple : public Manifold {
          */
         bool operator == (const GraphTriple& compare) const;
 
-        /**
-         * Determines whether this and the given object do not contain
-         * precisely the same presentations of the same graph manifold.
-         *
-         * This routine does _not_ test for homeomorphism.  Instead it
-         * compares the exact presentations, including the matching matrices
-         * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these _presentations_ are identical.
-         * If you have two different presentations of the same graph manifold,
-         * they will be treated as not equal by this routine.
-         *
-         * \param compare the presentation with which this will be compared.
-         * \return \c true if and only if this and the given object do not
-         * contain identical presentations of the same graph manifold.
-         */
-        bool operator != (const GraphTriple& compare) const;
-
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -445,15 +428,6 @@ inline bool GraphTriple::operator == (const GraphTriple& compare) const {
         centre_ == compare.centre_ &&
         matchingReln_[0] == compare.matchingReln_[0] &&
         matchingReln_[1] == compare.matchingReln_[1];
-}
-
-inline bool GraphTriple::operator != (const GraphTriple& compare) const {
-    return
-        end_[0] != compare.end_[0] ||
-        end_[1] != compare.end_[1] ||
-        centre_ != compare.centre_ ||
-        matchingReln_[0] != compare.matchingReln_[0] ||
-        matchingReln_[1] != compare.matchingReln_[1];
 }
 
 inline void swap(GraphTriple& a, GraphTriple& b) noexcept {

@@ -994,17 +994,6 @@ class Perm<4> {
         constexpr bool operator == (const Perm<4>& other) const;
 
         /**
-         * Determines if this differs from the given permutation.
-         * This is true if and only if the two permutations have
-         * different images for at least one of 0, 1, 2 or 3.
-         *
-         * \param other the permutation with which to compare this.
-         * \return \c true if and only if this and the given permutation
-         * differ.
-         */
-        constexpr bool operator != (const Perm<4>& other) const;
-
-        /**
          * Lexicographically compares the images of (0,1,2,3) under this
          * and the given permutation.
          *
@@ -1845,10 +1834,6 @@ inline Perm<4> Perm<4>::rand(URBG&& gen, bool even) {
 
 inline constexpr bool Perm<4>::operator == (const Perm<4>& other) const {
     return (code_ == other.code_);
-}
-
-inline constexpr bool Perm<4>::operator != (const Perm<4>& other) const {
-    return (code_ != other.code_);
 }
 
 inline void Perm<4>::tightEncode(std::ostream& out) const {

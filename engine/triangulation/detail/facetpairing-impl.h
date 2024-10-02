@@ -116,12 +116,6 @@ bool FacetPairingBase<dim>::operator == (const FacetPairing<dim>& other) const {
 }
 
 template <int dim>
-bool FacetPairingBase<dim>::operator != (const FacetPairing<dim>& other) const {
-    return size_ != other.size_ ||
-        ! std::equal(pairs_, pairs_ + (size_ * (dim + 1)), other.pairs_);
-}
-
-template <int dim>
 bool FacetPairingBase<dim>::isConnected() const {
     if (size_ <= 1)
         return true;

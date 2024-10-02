@@ -314,15 +314,6 @@ class Laurent2 :
         bool operator == (const Laurent2<T>& rhs) const;
 
         /**
-         * Tests whether this and the given polynomial are not equal.
-         *
-         * \param rhs the polynomial to compare with this.
-         * \return \c true if and only if this and the given polynomial
-         * are not equal.
-         */
-        bool operator != (const Laurent2<T>& rhs) const;
-
-        /**
          * Compares this against the given polynomial under a total
          * ordering of all two-variable Laurent polynomials.
          *
@@ -927,11 +918,6 @@ void Laurent2<T>::set(long xExp, long yExp, const T& value) {
 template <typename T>
 inline bool Laurent2<T>::operator == (const Laurent2<T>& rhs) const {
     return coeff_ == rhs.coeff_;
-}
-
-template <typename T>
-inline bool Laurent2<T>::operator != (const Laurent2<T>& rhs) const {
-    return ! (coeff_ == rhs.coeff_);
 }
 
 template <typename T>

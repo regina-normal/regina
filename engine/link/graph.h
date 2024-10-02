@@ -149,17 +149,6 @@ class CrossingIterator {
          * \return \c true if and only if the two iterators are equal.
          */
         bool operator == (const CrossingIterator& rhs) const;
-        /**
-         * Tests whether this and the given iterator are different.
-         *
-         * \note This routine only compares the indices of the crossings.
-         * It does not examine whether this and the given iterator refer
-         * to the same underlying link.
-         *
-         * \param rhs the iterator to compare with this.
-         * \return \c true if and only if the two iterators are different.
-         */
-        bool operator != (const CrossingIterator& rhs) const;
 };
 
 /**
@@ -274,17 +263,6 @@ class ArcIterator {
          * \return \c true if and only if the two iterators are equal.
          */
         bool operator == (const ArcIterator& rhs) const;
-        /**
-         * Tests whether this and the given iterator are different.
-         *
-         * \note This routine only compares the indices of the crossings
-         * and the upper/lower strand markings.  It does not examine whether
-         * this and the given iterator refer to the same underlying link.
-         *
-         * \param rhs the iterator to compare with this.
-         * \return \c true if and only if the two iterators are different.
-         */
-        bool operator != (const ArcIterator& rhs) const;
 };
 
     /**
@@ -403,18 +381,6 @@ class ArcIterator {
              * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const IncidentArcIterator& rhs) const;
-            /**
-             * Tests whether this and the given iterator are different.
-             *
-             * \note This only tests the "current strand" for each iterator,
-             * which identifies the incident arcs that they are pointing to.
-             * It does not compare the original "source" crossings that were
-             * passed to each constructor.
-             *
-             * \param rhs the iterator to compare with this.
-             * \return \c true if and only if the two iterators are different.
-             */
-            bool operator != (const IncidentArcIterator& rhs) const;
     };
 
     /**
@@ -520,18 +486,6 @@ class ArcIterator {
              * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const AdjacentCrossingIterator& rhs) const;
-            /**
-             * Tests whether this and the given iterator are different.
-             *
-             * \note This only tests the "current strand" for each iterator,
-             * which identifies the adjacent crossings that they are pointing
-             * to.  It does not compare the original "source" crossings that
-             * were passed to each constructor.
-             *
-             * \param rhs the iterator to compare with this.
-             * \return \c true if and only if the two iterators are different.
-             */
-            bool operator != (const AdjacentCrossingIterator& rhs) const;
     };
 
     /**
@@ -854,11 +808,6 @@ namespace graph {
         return (index_ == rhs.index_);
     }
 
-    inline bool CrossingIterator::operator != (const CrossingIterator& rhs)
-            const {
-        return (index_ != rhs.index_);
-    }
-
     // Inline functions for ArcIterator
 
     inline ArcIterator::ArcIterator() : link_(nullptr), index_(0),
@@ -894,10 +843,6 @@ namespace graph {
 
     inline bool ArcIterator::operator == (const ArcIterator& rhs) const {
         return (index_ == rhs.index_) && (upper_ == rhs.upper_);
-    }
-
-    inline bool ArcIterator::operator != (const ArcIterator& rhs) const {
-        return (index_ != rhs.index_) || (upper_ != rhs.upper_);
     }
 
     // Inline functions for IncidentArcIterator
@@ -940,12 +885,6 @@ namespace graph {
         return (strand_ == rhs.strand_);
     }
 
-    template <bool out>
-    inline bool IncidentArcIterator<out>::operator != (
-            const IncidentArcIterator& rhs) const {
-        return (strand_ != rhs.strand_);
-    }
-
     // Inline functions for AdjacentCrossingIterator
 
     inline AdjacentCrossingIterator::AdjacentCrossingIterator() :
@@ -974,11 +913,6 @@ namespace graph {
     inline bool AdjacentCrossingIterator::operator == (
             const AdjacentCrossingIterator& rhs) const {
         return (strand_ == rhs.strand_);
-    }
-
-    inline bool AdjacentCrossingIterator::operator != (
-            const AdjacentCrossingIterator& rhs) const {
-        return (strand_ != rhs.strand_);
     }
 
     } // leaving namespace regina::graph, returning to namespace regina

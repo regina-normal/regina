@@ -71,10 +71,6 @@ namespace regina {
                 return (row[0] == other.row[0] && row[1] == other.row[1]);
             }
 
-            bool operator != (const Matrix2Row& other) const {
-                return (row[0] != other.row[0] || row[1] != other.row[1]);
-            }
-
         friend std::ostream& operator << (std::ostream&, const Matrix2Row&);
     };
 

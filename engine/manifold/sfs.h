@@ -121,16 +121,6 @@ struct SFSFibre {
      */
     bool operator == (const SFSFibre& compare) const;
     /**
-     * Determines if this and the given exceptional fibre are different.
-     * This requires the fibres to have different values for \a alpha and/or
-     * to have different values for \a beta.
-     *
-     * \param compare the fibre with which this will be compared.
-     * \return \c true if and only if this and the given fibre are
-     * different.
-     */
-    bool operator != (const SFSFibre& compare) const;
-    /**
      * Determines if this exceptional fibre is smaller than the given
      * fibre.  Fibres are sorted by \a alpha and then by \a beta.
      *
@@ -773,23 +763,6 @@ class SFSpace : public Manifold {
         bool operator == (const SFSpace& compare) const;
 
         /**
-         * Determines whether this and the given object do not contain
-         * precisely the same presentations of the same Seifert fibred space.
-         *
-         * This routine does _not_ test for homeomorphism.  Instead it
-         * compares the exact presentations, including the precise details of
-         * the base orbifold and the exact parameters of the exceptional fibres,
-         * and determines whether or not these _presentations_ are identical.
-         * If you have two different presentations of the same Seifert fibred
-         * space, they will be treated as not equal by this routine.
-         *
-         * \param compare the presentation with which this will be compared.
-         * \return \c true if and only if this and the given object do not
-         * contain identical presentations of the same Seifert fibred space.
-         */
-        bool operator != (const SFSpace& compare) const;
-
-        /**
          * Determines in a fairly ad-hoc fashion whether this representation
          * of this space is "smaller" than the given representation of the
          * given space.
@@ -902,9 +875,6 @@ inline SFSFibre::SFSFibre(long newAlpha, long newBeta) :
 inline bool SFSFibre::operator == (const SFSFibre& compare) const {
     return (alpha == compare.alpha && beta == compare.beta);
 }
-inline bool SFSFibre::operator != (const SFSFibre& compare) const {
-    return (alpha != compare.alpha || beta != compare.beta);
-}
 inline bool SFSFibre::operator < (const SFSFibre& compare) const {
     return (alpha < compare.alpha ||
         (alpha == compare.alpha && beta < compare.beta));
@@ -937,10 +907,6 @@ inline void SFSpace::swap(SFSpace& other) noexcept {
     fibres_.swap(other.fibres_);
     std::swap(nFibres_, other.nFibres_);
     std::swap(b_, other.b_);
-}
-
-inline bool SFSpace::operator != (const SFSpace& compare) const {
-    return ! ((*this) == compare);
 }
 
 inline SFSpace::ClassType SFSpace::baseClass() const {

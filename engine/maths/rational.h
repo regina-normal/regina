@@ -355,14 +355,6 @@ class Rational {
          */
         bool operator == (const Rational& compare) const;
         /**
-         * Determines if this is not equal to the given rational.
-         *
-         * \param compare the rational with which this will be compared.
-         * \return \c true if and only if this rational is not equal to
-         * \a compare.
-         */
-        bool operator != (const Rational& compare) const;
-        /**
          * Determines if this is less than the given rational.
          *
          * \param compare the rational with which this will be compared.
@@ -608,9 +600,6 @@ inline bool Rational::operator <= (const Rational& compare) const {
 }
 inline bool Rational::operator >= (const Rational& compare) const {
     return ! (*this < compare);
-}
-inline bool Rational::operator != (const Rational& compare) const {
-    return ! (*this == compare);
 }
 
 inline void swap(Rational& a, Rational& b) noexcept {

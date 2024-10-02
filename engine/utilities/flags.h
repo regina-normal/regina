@@ -190,28 +190,6 @@ class Flags {
         }
 
         /**
-         * Determines whether this set is not equal to the given flag.
-         *
-         * \param rhs the flag to test this against.
-         * \return \c true if and only if this and the given flag are not
-         * identical.
-         */
-        inline bool operator != (T rhs) const {
-            return (value_ != static_cast<int>(rhs));
-        }
-
-        /**
-         * Determines whether this set is not equal to the given flag set.
-         *
-         * \param rhs the flag to test this against.
-         * \return \c true if and only if this and the given flag set are not
-         * identical.
-         */
-        inline bool operator != (const Flags<T>& rhs) const {
-            return (value_ != rhs.value_);
-        }
-
-        /**
          * Sets this flag set to contain precisely the given flag only.
          *
          * \param rhs the new value of this flag set.

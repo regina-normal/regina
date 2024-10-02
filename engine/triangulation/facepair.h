@@ -161,13 +161,6 @@ class FacePair {
          */
         bool operator == (const FacePair& other) const;
         /**
-         * Determines if this and the given face pair are not equal.
-         *
-         * \param other the pair to compare with this.
-         * \return \c true if and only if this and the given pair are not equal.
-         */
-        bool operator != (const FacePair& other) const;
-        /**
          * Determines if this is less than the given face pair.
          *
          * \param other the pair to compare with this.
@@ -348,10 +341,6 @@ inline FacePair FacePair::complement() const {
 
 inline bool FacePair::operator == (const FacePair& other) const {
     return (code_ == other.code_);
-}
-
-inline bool FacePair::operator != (const FacePair& other) const {
-    return (code_ != other.code_);
 }
 
 inline bool FacePair::operator < (const FacePair& other) const {

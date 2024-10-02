@@ -265,31 +265,6 @@ class BlockedSFSTriple : public StandardTriangulation {
          */
         bool operator == (const BlockedSFSTriple& other) const;
 
-        /**
-         * Determines whether this and the given structure do not represent
-         * the same type of blocked sequence of three Seifert fibred spaces.
-         *
-         * Specifically, two structures will compare as equal if and only if
-         * both structures are formed from the same triple of combinatorial
-         * presentations of saturated regions (as returned by the SatRegion
-         * comparison operators), presented in the same order, and with their
-         * torus boundaries joined using the same pair of 2-by-2 matrices.
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass is more specific than combinatorial isomorphism, since
-         * this test does not account for the many symmetries in a
-         * blocked Seifert fibred space).
-         *
-         * \param other the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * do not represent the same type of blocked sequence of three
-         * Seifert fibred spaces.
-         */
-        bool operator != (const BlockedSFSTriple& other) const;
-
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
@@ -382,11 +357,6 @@ inline bool BlockedSFSTriple::operator == (const BlockedSFSTriple& other)
         centre_ == other.centre_ &&
         matchingReln_[0] == other.matchingReln_[0] &&
         matchingReln_[1] == other.matchingReln_[1];
-}
-
-inline bool BlockedSFSTriple::operator != (const BlockedSFSTriple& other)
-        const {
-    return ! ((*this) == other);
 }
 
 inline void swap(BlockedSFSTriple& a, BlockedSFSTriple& b) noexcept {

@@ -133,16 +133,6 @@ struct DiscType {
      */
     constexpr bool operator == (const DiscType& compare) const;
     /**
-     * Determines if this and the given disc type are different.
-     *
-     * This is the negation of the equality test; see operator == for
-     * further details.
-     *
-     * \return \c true if this and the given disc type are different, or
-     * \c false if they are identical.
-     */
-    constexpr bool operator != (const DiscType& compare) const;
-    /**
      * Provides an ordering of disc types.  Types are ordered first by
      * \a tetrahedron and then by \a type.  The null disc type is considered
      * less than all "meaningful" disc types.
@@ -180,10 +170,6 @@ inline constexpr DiscType::operator bool() const {
 
 inline constexpr bool DiscType::operator == (const DiscType& compare) const {
     return (tetIndex == compare.tetIndex && type == compare.type);
-}
-
-inline constexpr bool DiscType::operator != (const DiscType& compare) const {
-    return (tetIndex != compare.tetIndex || type != compare.type);
 }
 
 inline constexpr bool DiscType::operator < (const DiscType& compare) const {

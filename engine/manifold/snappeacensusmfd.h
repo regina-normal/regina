@@ -162,20 +162,6 @@ class SnapPeaCensusManifold : public Manifold {
          * represent the same SnapPea census manifold.
          */
         bool operator == (const SnapPeaCensusManifold& compare) const;
-        /**
-         * Determines whether this and the given structure represent
-         * different 3-manifolds from the SnapPea census.
-         *
-         * As of Regina 5.0, this test respects the recent discovery that
-         * the manifolds \c x101 and \c x103 are homeomorphic.
-         * For details, see B.B., _A duplicate pair in the SnapPea census_,
-         * Experimental Mathematics, 23:170-173, 2014.
-         *
-         * \param compare the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * represent different SnapPea census manifolds.
-         */
-        bool operator != (const SnapPeaCensusManifold& compare) const;
 
         /**
          * Sets this to be a copy of the given SnapPea census manifold.
@@ -232,14 +218,6 @@ inline bool SnapPeaCensusManifold::operator == (
             (compare.index_ == 101 || compare.index_ == 103))
         return true;
     return (section_ == compare.section_ && index_ == compare.index_);
-}
-inline bool SnapPeaCensusManifold::operator != (
-        const SnapPeaCensusManifold& compare) const {
-    if (section_ == SEC_6_NOR && compare.section_ == SEC_6_NOR &&
-            (index_ == 101 || index_ == 103) &&
-            (compare.index_ == 101 || compare.index_ == 103))
-        return false;
-    return (section_ != compare.section_ || index_ != compare.index_);
 }
 inline bool SnapPeaCensusManifold::isHyperbolic() const {
     return true;

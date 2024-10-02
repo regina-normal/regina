@@ -238,14 +238,6 @@ class Matrix2 {
          * \return \c true if and only if this matrix is equal to \a compare.
          */
         bool operator == (const Matrix2& compare) const;
-        /**
-         * Determines if this is not equal to the given matrix.
-         *
-         * \param compare the matrix with which this will be compared.
-         * \return \c true if and only if this matrix is not equal to
-         * \a compare.
-         */
-        bool operator != (const Matrix2& compare) const;
 
         /**
          * Returns the determinant of this matrix.
@@ -415,10 +407,6 @@ inline void Matrix2::negate() {
 
 inline bool Matrix2::operator == (const Matrix2& compare) const {
     return data_ == compare.data_;
-}
-
-inline bool Matrix2::operator != (const Matrix2& compare) const {
-    return data_ != compare.data_;
 }
 
 inline long Matrix2::determinant() const {

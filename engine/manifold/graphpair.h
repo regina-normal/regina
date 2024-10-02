@@ -279,23 +279,6 @@ class GraphPair : public Manifold {
          */
         bool operator == (const GraphPair& compare) const;
 
-        /**
-         * Determines whether this and the given object do not contain
-         * precisely the same presentations of the same graph manifold.
-         *
-         * This routine does _not_ test for homeomorphism.  Instead it
-         * compares the exact presentations, including the matching matrix
-         * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these _presentations_ are identical.
-         * If you have two different presentations of the same graph manifold,
-         * they will be treated as not equal by this routine.
-         *
-         * \param compare the presentation with which this will be compared.
-         * \return \c true if and only if this and the given object do not
-         * contain identical presentations of the same graph manifold.
-         */
-        bool operator != (const GraphPair& compare) const;
-
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -397,13 +380,6 @@ inline bool GraphPair::operator == (const GraphPair& compare) const {
         sfs_[0] == compare.sfs_[0] &&
         sfs_[1] == compare.sfs_[1] &&
         matchingReln_ == compare.matchingReln_;
-}
-
-inline bool GraphPair::operator != (const GraphPair& compare) const {
-    return
-        sfs_[0] != compare.sfs_[0] ||
-        sfs_[1] != compare.sfs_[1] ||
-        matchingReln_ != compare.matchingReln_;
 }
 
 inline void swap(GraphPair& a, GraphPair& b) noexcept {

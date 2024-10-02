@@ -105,15 +105,6 @@ struct PrismSpec {
      * contain identical information.
      */
     bool operator == (const PrismSpec& other) const;
-    /**
-     * Determines if this and the given prism specifier contain different
-     * information.
-     *
-     * \param other the prism specifier to compare with this.
-     * \return \c true if and only if this and the given prism specifier
-     * contain different information.
-     */
-    bool operator != (const PrismSpec& other) const;
 
     friend std::ostream& operator << (std::ostream& out,
         const PrismSpec& spec);
@@ -139,9 +130,6 @@ inline PrismSpec::PrismSpec(size_t newTetIndex, int newEdge) :
 
 inline bool PrismSpec::operator == (const PrismSpec& other) const {
     return (tetIndex == other.tetIndex && edge == other.edge);
-}
-inline bool PrismSpec::operator != (const PrismSpec& other) const {
-    return (tetIndex != other.tetIndex || edge != other.edge);
 }
 
 inline std::ostream& operator << (std::ostream& out, const PrismSpec& spec) {

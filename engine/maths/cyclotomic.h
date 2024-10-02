@@ -380,27 +380,6 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
         bool operator == (const Cyclotomic& rhs) const;
 
         /**
-         * Tests whether or not this and the given argument are the same
-         * element of the same cyclotomic field.
-         *
-         * If this and \a rhs have different underlying fields then
-         * this test will always return \c true (indicating that the
-         * elements are not equal), even if they take the same numerical
-         * value when evaluated as complex numbers.
-         *
-         * If either this or \a rhs have not been initialised (typically
-         * because they were created using the default constructor),
-         * then this comparison will return \c true.  If _both_ field
-         * elements have not been initialised, then this comparison will
-         * return \c false.
-         *
-         * \param rhs the value to compare with this.
-         * \return \c false if this and \a rhs are the same element of the
-         * same cyclotomic field, or \c true if they are not.
-         */
-        bool operator != (const Cyclotomic& rhs) const;
-
-        /**
          * Sets this to a copy of the given field element.
          *
          * This assignment operator is safe even if this and \a value belong
@@ -956,15 +935,6 @@ inline bool Cyclotomic::operator == (const Cyclotomic& rhs) const {
         if (coeff_[i] != rhs.coeff_[i])
             return false;
     return true;
-}
-
-inline bool Cyclotomic::operator != (const Cyclotomic& rhs) const {
-    if (field_ != rhs.field_)
-        return true;
-    for (size_t i = 0; i < degree_; ++i)
-        if (coeff_[i] != rhs.coeff_[i])
-            return true;
-    return false;
 }
 
 // Self-assignment works, assuming Rational's self-assignment works.

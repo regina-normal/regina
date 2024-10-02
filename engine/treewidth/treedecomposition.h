@@ -1029,22 +1029,6 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         bool operator == (const TreeDecomposition& other) const;
 
         /**
-         * Determines whether this and the given tree decomposition are
-         * different.
-         *
-         * To be considered identical (i.e., for this comparison to return
-         * \c false), the two tree decompositions must have the same number
-         * of bags; moreover, the same numbered bags must contain the same
-         * elements (i.e., numbered graph nodes), and must have the same
-         * numbered child bags.  Bag types and subtypes are ignored.
-         *
-         * \param other the tree decomposition to compare with this.
-         * \return \c true if and only if this and the given tree
-         * decomposition are different.
-         */
-        bool operator != (const TreeDecomposition& other) const;
-
-        /**
          * Returns the bag at the root of the underlying tree.
          *
          * \return the root bag, or \c null if there are no bags (which
@@ -1773,11 +1757,6 @@ inline ssize_t TreeDecomposition::width() const {
 
 inline size_t TreeDecomposition::size() const {
     return size_;
-}
-
-inline bool TreeDecomposition::operator != (const TreeDecomposition& other)
-        const {
-    return ! ((*this) == other);
 }
 
 inline const TreeBag* TreeDecomposition::root() const {

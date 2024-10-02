@@ -342,15 +342,6 @@ class Laurent :
         bool operator == (const Laurent<T>& rhs) const;
 
         /**
-         * Tests whether this and the given polynomial are not equal.
-         *
-         * \param rhs the polynomial to compare with this.
-         * \return \c true if and only if this and the given polynomial
-         * are not equal.
-         */
-        bool operator != (const Laurent<T>& rhs) const;
-
-        /**
          * Compares this against the given polynomial under a total
          * ordering of all one-variable Laurent polynomials.
          *
@@ -1163,16 +1154,6 @@ inline bool Laurent<T>::operator == (const Laurent<T>& rhs) const {
         if ((*this)[i] != rhs[i])
             return false;
     return true;
-}
-
-template <typename T>
-inline bool Laurent<T>::operator != (const Laurent<T>& rhs) const {
-    if (minExp_ != rhs.minExp_ || maxExp_ != rhs.maxExp_)
-        return true;
-    for (long i = minExp_; i <= maxExp_; ++i)
-        if ((*this)[i] != rhs[i])
-            return true;
-    return false;
 }
 
 template <typename T>

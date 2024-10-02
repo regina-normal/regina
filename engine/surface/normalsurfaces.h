@@ -688,40 +688,6 @@ class NormalSurfaces :
         bool operator == (const NormalSurfaces& other) const;
 
         /**
-         * Determines whether this and the given list contain different
-         * sets of normal (or almost normal) surfaces.
-         *
-         * The lists will be compared as multisets: the order of the
-         * surfaces in each list does not matter; however, in the unusual
-         * scenario where a list the same surface multiple times,
-         * multiplicity does matter.
-         *
-         * Like the comparison operators for NormalSurface, it does not
-         * matter whether the lists work with different triangulations,
-         * or different encodings, or if one but not the other supports
-         * almost normal and/or spun-normal surfaces.  The individual
-         * surfaces will simply be compared by examining or computing
-         * the number of discs of each type.
-         *
-         * In particular, this routine is safe to call even if this and the
-         * given list work with different triangulations:
-         *
-         * - If the two triangulations have the same size, then this routine
-         *   will compare surfaces as though they were transplanted into the
-         *   same triangulation using the same tetrahedron numbering and the
-         *   same disc types.
-         *
-         * - If the two triangulations have different sizes, then this
-         *   comparison will return \c true (i.e., the lists will be
-         *   considered different).
-         *
-         * \param other the list to be compared with this list.
-         * \return \c true if both lists do not represent the same multiset of
-         * normal or almost normal surfaces, or \c false if they do.
-         */
-        bool operator != (const NormalSurfaces& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -956,16 +922,6 @@ class NormalSurfaces :
                  * if they do not.
                  */
                 bool operator == (const VectorIterator& other) const;
-
-                /**
-                 * Compares this with the given iterator for inequality.
-                 *
-                 * \param other the iterator to compare this with.
-                 * \return \c false if the iterators point to the same
-                 * element of the same normal surface list, or \c true
-                 * if they do not.
-                 */
-                bool operator != (const VectorIterator& other) const;
 
                 /**
                  * Returns the raw vector for the normal surface that this
@@ -1512,11 +1468,6 @@ inline bool NormalSurfaces::VectorIterator::operator ==(
     return (it_ == other.it_);
 }
 
-inline bool NormalSurfaces::VectorIterator::operator !=(
-        const NormalSurfaces::VectorIterator& other) const {
-    return (it_ != other.it_);
-}
-
 inline const Vector<LargeInteger>& NormalSurfaces::VectorIterator::
         operator *() const {
     return it_->vector();
@@ -1554,10 +1505,6 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::beginVectors() const {
 
 inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
-}
-
-inline bool NormalSurfaces::operator != (const NormalSurfaces& other) const {
-    return ! ((*this) == other);
 }
 
 inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,

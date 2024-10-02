@@ -89,17 +89,6 @@ class Handlebody : public Manifold {
          * have the same genus.
          */
         bool operator == (const Handlebody& compare) const;
-        /**
-         * Determines whether this and the given handlebody do not have
-         * the same genus.
-         *
-         * Handlebodies with the same genus are homeomorphic as 3-manifolds.
-         *
-         * \param compare the handlebody with which this will be compared.
-         * \return \c true if and only if this and the given handlebody
-         * do not have the same genus.
-         */
-        bool operator != (const Handlebody& compare) const;
 
         /**
          * Sets this to be a copy of the given handlebody.
@@ -145,9 +134,6 @@ inline size_t Handlebody::genus() const {
 }
 inline bool Handlebody::operator == (const Handlebody& compare) const {
     return (genus_ == compare.genus_);
-}
-inline bool Handlebody::operator != (const Handlebody& compare) const {
-    return (genus_ != compare.genus_);
 }
 
 inline bool Handlebody::isHyperbolic() const {

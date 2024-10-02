@@ -357,21 +357,6 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         inline bool operator == (const LPMatrix& other) const;
 
         /**
-         * Determines whether this and the given matrix are not equal.
-         *
-         * Two matrices are equal if and only if their dimensions are the same,
-         * and the corresponding elements of each matrix are equal.
-         *
-         * It is safe to compare matrices of different dimensions, and
-         * it is safe to compare matrices that might not yet be initialised.
-         * Two uninitialised matrices will compare as equal.
-         *
-         * \param other the matrix to compare with this.
-         * \return \c true if and only if the two matrices are not equal.
-         */
-        inline bool operator != (const LPMatrix& other) const;
-
-        /**
          * Swaps the two given rows of this matrix.
          * The two arguments \a r1 and \a r2 may be equal (in which case
          * the matrix will be left unchanged).
@@ -670,17 +655,6 @@ class LPSystem : public ShortOutput<LPSystem> {
          */
         constexpr bool operator == (const LPSystem& other) const {
             return system_ == other.system_;
-        }
-        /**
-         * Determines whether this and the given object represent
-         * different classes of vector encodings.
-         *
-         * \param other the object to compare with this.
-         * \return \c true if and only if both objects represent
-         * different classes of encodings.
-         */
-        constexpr bool operator != (const LPSystem& other) const {
-            return system_ != other.system_;
         }
         /**
          * Identifies whether this is one of the two classes of
@@ -2085,11 +2059,6 @@ inline bool LPMatrix<IntType>::operator == (const LPMatrix& other) const {
         return std::equal(dat_, dat_ + rows_ * cols_, other.dat_);
     else
         return true;
-}
-
-template <typename IntType>
-inline bool LPMatrix<IntType>::operator != (const LPMatrix& other) const {
-    return ! ((*this) == other);
 }
 
 template <typename IntType>

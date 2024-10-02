@@ -128,19 +128,6 @@ struct Vector3D {
     }
 
     /**
-     * Determines if this and the given vector have different coordinates.
-     *
-     * \warning Equality and inequailty testing, while supported, is
-     * extremely fragile, since it relies on floating-point comparisons.
-     *
-     * \param other the vector to compare with this.
-     * \return \c true if and only if the two vectors are different.
-     */
-    constexpr bool operator != (const Vector3D& other) const {
-        return (x != other.x || y != other.y || z != other.z);
-    }
-
-    /**
      * Returns the sum of this and the given vector.
      *
      * \param rhs the vector to add to this vector.
@@ -389,22 +376,6 @@ struct Segment3D {
      */
     constexpr bool operator == (const Segment3D& other) const {
         return (u == other.u && v == other.v);
-    }
-
-    /**
-     * Determines if this and the given line segment do not have the same
-     * endpoints in the same order.
-     *
-     * \warning Equality and inequailty testing, while supported, is
-     * extremely fragile, since it relies on floating-point comparisons.
-     *
-     * \param other the line segment to compare with this.
-     * \return \c true if and only if either the two segments have different
-     * first endpoints \a u, and/or the two segments have different second
-     * endpoints \a v.
-     */
-    constexpr bool operator != (const Segment3D& other) const {
-        return (u != other.u || v != other.v);
     }
 
     /**
@@ -661,19 +632,6 @@ class Matrix3D {
         }
 
         /**
-         * Determines if this and the given matrix are different.
-         *
-         * \warning Equality and inequailty testing, while supported, is
-         * extremely fragile, since it relies on floating-point comparisons.
-         *
-         * \param other the matrix to compare with this.
-         * \return \c true if and only if the two matrices are not equal.
-         */
-        constexpr bool operator != (const Matrix3D& other) const {
-            return m_ != other.m_;
-        }
-
-        /**
          * Returns the composition of this and the given transformation.
          *
          * Composition of transformations is _not_ commutative.  Here we follow
@@ -916,21 +874,6 @@ class Rotation3D {
          */
         constexpr bool operator == (const Rotation3D& other) const {
             return q_ == other.q_;
-        }
-
-        /**
-         * Determines if this and the given rotation have different quaternion
-         * coordinates.
-         *
-         * \warning Equality and inequailty testing, while supported, is
-         * extremely fragile, since it relies on floating-point comparisons.
-         *
-         * \param other the rotation to compare with this.
-         * \return \c true if and only if the two rotations have different
-         * quaternion coordinates.
-         */
-        constexpr bool operator != (const Rotation3D& other) const {
-            return q_ != other.q_;
         }
 
         /**

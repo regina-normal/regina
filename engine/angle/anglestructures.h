@@ -450,33 +450,6 @@ class AngleStructures :
         bool operator == (const AngleStructures& other) const;
 
         /**
-         * Determines whether this and the given list contain different
-         * sets of angle structures.
-         *
-         * The lists will be compared as multisets: the order of the angle
-         * structures in each list does not matter; however, in the unusual
-         * scenario where a list the same angle structure multiple times,
-         * multiplicity does matter.
-         *
-         * Like the comparison operators for AngleStructure, it does not
-         * matter whether the two lists work with different triangulations:
-         *
-         * - If the two triangulations have the same size, then this routine
-         *   will compare angle structures as though they were transplanted
-         *   into the same triangulation using the same tetrahedron numbering
-         *   and the same angle coordinates.
-         *
-         * - If the two triangulations have different sizes, then this
-         *   comparison will return \c true (i.e., the lists will be
-         *   considered different).
-         *
-         * \param other the list to be compared with this list.
-         * \return \c true if both lists do not represent the same multiset of
-         * angle structures, or \c false if they do.
-         */
-        bool operator != (const AngleStructures& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -685,10 +658,6 @@ inline bool AngleStructures::spansTaut() const {
     if (! doesSpanTaut_.has_value())
         calculateSpanTaut();
     return *doesSpanTaut_;
-}
-
-inline bool AngleStructures::operator != (const AngleStructures& other) const {
-    return ! ((*this) == other);
 }
 
 template <typename Comparison>

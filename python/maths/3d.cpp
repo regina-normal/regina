@@ -73,10 +73,6 @@ namespace regina {
                 return row_ == other.row_;
             }
 
-            bool operator != (const Matrix3DRow& other) const {
-                return row_ != other.row_;
-            }
-
         friend std::ostream& operator << (std::ostream&, const Matrix3DRow&);
     };
 

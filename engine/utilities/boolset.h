@@ -163,14 +163,6 @@ class BoolSet {
          */
         constexpr bool operator == (BoolSet other) const;
         /**
-         * Determines if this set is not equal to the given set.
-         *
-         * \param other the set to compare with this.
-         * \return \c true if and only if this and the given set are
-         * not equal.
-         */
-        constexpr bool operator != (BoolSet other) const;
-        /**
          * Determines if this set is a proper subset of the given set.
          *
          * \param other the set to compare with this.
@@ -423,9 +415,6 @@ inline void BoolSet::fill() {
 
 inline constexpr bool BoolSet::operator == (BoolSet other) const {
     return (elements == other.elements);
-}
-inline constexpr bool BoolSet::operator != (BoolSet other) const {
-    return (elements != other.elements);
 }
 inline constexpr bool BoolSet::operator < (BoolSet other) const {
     return ((elements & other.elements) == elements) &&

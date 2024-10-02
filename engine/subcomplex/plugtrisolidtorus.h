@@ -233,29 +233,6 @@ class PlugTriSolidTorus : public StandardTriangulation {
         bool operator == (const PlugTriSolidTorus& other) const;
 
         /**
-         * Determines whether this and the given structure represent
-         * different types of plugged triangular solid torus.
-         *
-         * Specifically, two structures will compare as equal if and only if
-         * their equators are of the same (major/minor) type, and the same
-         * numbered annuli either both have no chains attached or both have
-         * chains of the same length attached in the same (major/minor) manner.
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass is more specific than combinatorial isomorphism, since
-         * this test does not account for the many symmetries in a
-         * plugged triangular solid torus).
-         *
-         * \param other the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * represent different types of plugged triangular solid torus.
-         */
-        bool operator != (const PlugTriSolidTorus& other) const;
-
-        /**
          * Determines if the given triangulation component is a
          * plugged triangular solid torus.
          *
@@ -332,11 +309,6 @@ inline bool PlugTriSolidTorus::operator == (
     return equatorType_ == other.equatorType_ &&
         std::equal(chainType_, chainType_ + 3, other.chainType_) &&
         std::equal(chain_, chain_ + 3, other.chain_);
-}
-
-inline bool PlugTriSolidTorus::operator != (
-        const PlugTriSolidTorus& other) const {
-    return ! ((*this) == other);
 }
 
 inline void swap(PlugTriSolidTorus& a, PlugTriSolidTorus& b) noexcept {
