@@ -152,29 +152,6 @@ Precondition:
 Parameter ``knot``:
     the knot to break and duplicate to form this tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::__ne
-static const char *__ne =
-R"doc(Determines if this tangle is not combinatorially identical to the
-given tangle.
-
-Here "identical" means that:
-
-* the tangles are of the same type and have the same number of
-  crossings;
-
-* the same numbered crossings are positive and negative in both
-  tangles;
-
-* the corresponding strings in each tangle pass through the same
-  under/over-strands of the same numbered crossings in the same order.
-
-Parameter ``other``:
-    the tangle to compare with this.
-
-Returns:
-    ``True`` if and only if the two tangles are not combinatorially
-    identical.)doc";
-
 // Docstring regina::python::doc::Tangle_::add
 static const char *add =
 R"doc(Adds the given tangle to the right-hand side of this tangle.

@@ -118,24 +118,6 @@ Returns:
     ``True`` if and only if this and *other* contain combinatorially
     equivalent information.)doc";
 
-// Docstring regina::python::doc::SatBlockSpec_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure do not contain
-combinatorially equivalent information.
-
-Specifically, to compare as equal, two SatBlockSpec objects must hold
-blocks of the same type with the same combinatorial parameters (as
-tested by the SatBlock equality comparison), and they must use the
-same horizontal/vertical reflection parameters within the larger
-region (as returned by refVert() and refHoriz()).
-
-Parameter ``other``:
-    the structure to compare against this.
-
-Returns:
-    ``True`` if and only if this and *other* do not contain
-    combinatorially equivalent information.)doc";
-
 // Docstring regina::python::doc::SatBlockSpec_::block
 static const char *block =
 R"doc(Returns the full combinatorial structure of the saturated block.
@@ -224,31 +206,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given object represent the
     same combinatorial presentation of a saturated region.)doc";
-
-// Docstring regina::python::doc::SatRegion_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object represent diffrerent
-combinatorial presentations of a saturated region.
-
-Specifically, in order to compare as equal, two saturated regions must
-be formed from saturated blocks with the same combinatorial parameters
-(as returned by the SatBlock comparison operators), and these blocks
-must be presented in the same order with the same horizontal/vertical
-reflections and joined together in the same way.
-
-Like the comparison operators for most parameterised subclasses of
-StandardTriangulation, it does not matter how the constituent
-tetrahedra and/or their vertices are numbered. However, this test is
-more specific than combinatorial isomorphism of the underlying
-subcomplex of the triangulation, since it does not account for the
-many symmetries in how the same saturated region can be presented.
-
-Parameter ``other``:
-    the saturated region to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given object represent
-    different combinatorial presentations of a saturated region.)doc";
 
 // Docstring regina::python::doc::SatRegion_::beginsRegion
 static const char *beginsRegion =

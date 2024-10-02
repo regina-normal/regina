@@ -290,38 +290,6 @@ Parameter ``coeff``:
 Returns:
     the resulting multiple of this hypersurface.)doc";
 
-// Docstring regina::python::doc::NormalHypersurface_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given hypersurface represent different
-normal hypersurfaces.
-
-Specifically, this routine examines (or computes) the number of normal
-pieces of each type, and returns ``True`` if and only if these counts
-are not the same for both hypersurfaces.
-
-It does not matter what vector encodings the two hypersurfaces use. In
-particular, it does not matter if this and the given hypersurface use
-different encodings, or if one but not the other supports non-compact
-hypersurfaces.
-
-This routine is safe to call even if this and the given hypersurface
-do not belong to the same triangulation:
-
-* If the two triangulations have the same size, then this routine will
-  test whether this hypersurface, if transplanted into the other
-  triangulation using the same pentachoron numbering and the same
-  normal piece types, would be different from *other*.
-
-* If the two triangulations have different sizes, then this routine
-  will return ``True``.
-
-Parameter ``other``:
-    the hypersurface to be compared with this hypersurface.
-
-Returns:
-    ``True`` if both hypersurfaces represent different normal
-    hypersurface, or ``False`` if not.)doc";
-
 // Docstring regina::python::doc::NormalHypersurface_::doubleHypersurface
 static const char *doubleHypersurface =
 R"doc(Deprecated routine that returns the double of this hypersurface.

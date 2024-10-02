@@ -55,7 +55,7 @@ void addSFSpace(pybind11::module_& m) {
         .def(pybind11::self < pybind11::self, rdoc::__lt)
     ;
     regina::python::add_output_ostream(f);
-    regina::python::add_eq_operators(f, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(f, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(SFSpace)
 
@@ -118,7 +118,7 @@ void addSFSpace(pybind11::module_& m) {
         // Do not bind <, since this is already inherited from Manifold
         // and we do not want to hide that more general version.
     ;
-    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(s, rdoc::__eq);
     regina::python::add_output(s);
 
     regina::python::add_global_swap<SFSpace>(m, rdoc::global_swap);

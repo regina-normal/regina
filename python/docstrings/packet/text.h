@@ -54,17 +54,6 @@ R"doc(Initialises the packet to the given string.
 Parameter ``text``:
     the new value for the packet.)doc";
 
-// Docstring regina::python::doc::Text_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given packet do not contain the same text.
-
-Parameter ``other``:
-    the text packet to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given packet do not contain
-    the same text.)doc";
-
 // Docstring regina::python::doc::Text_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the given text packets.

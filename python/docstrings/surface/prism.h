@@ -63,18 +63,6 @@ Parameter ``newEdge``:
     the edge of the tetrahedron that is contained in this prism; this
     must be between 0 and 5 inclusive.)doc";
 
-// Docstring regina::python::doc::PrismSpec_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given prism specifier contain different
-information.
-
-Parameter ``other``:
-    the prism specifier to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given prism specifier contain
-    different information.)doc";
-
 }
 
 } // namespace regina::python::doc

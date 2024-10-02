@@ -385,7 +385,7 @@ namespace regina {
  *    VectorInt and MatrixInt, this tests the usual mathematical equality.
  *
  *    For each such class, you can find out what is being compared by reading
- *    the documentation for the C++ class operators == and !=.
+ *    the documentation for the C++ class operator ==.
  *    See for example Link::operator==().
  *
  *  - Some selected classes use _comparison by reference_.  Here
@@ -399,7 +399,7 @@ namespace regina {
  *    This is also used with objects that manage or track long computations
  *    (e.g., ProgressTracker, GluingPermSearcher4, or TreeEnumeration).
  *
- *    These classes do not provide C++ class operators == or !=.
+ *    These classes do not provide the C++ class operator ==.
  *
  *  - A few classes have explicitly disabled their comparison operators,
  *    since they are designed to be moved and/or copied (which makes
@@ -407,7 +407,7 @@ namespace regina {
  *    their own customised comparisons implemented (often because such a
  *    test would be expensive and/or would be difficult to define cleanly).
  *
- *    These classes do not provide C++ class operators == or !=.
+ *    These classes do not provide the C++ class operators ==.
  *    If you attempt to compare two Python objects of such a class, you
  *    will receive a Python error with a message explain essentially
  *    what is written here.
@@ -431,9 +431,13 @@ namespace regina {
  *  combinatorially identical), but it is also useful to know whether
  *  two Python wrappers identify the same underlying C++ packet (e.g., when
  *  traversing the packet tree).  To resolve this, you can compare two
- *  packets of the same type by value using the operators `x == y` and
- *  `x != y`, and you can test whether two packets of any types
- *  reference the same underlying object by calling Packet::samePacket().
+ *  packets of the same type by value using the operator `x == y`, and you
+ *  can test whether two packets of any types reference the same underlying
+ *  object by calling Packet::samePacket().
+ *
+ *  Wherever an operator == is available in C++ or Python, the corresponding
+ *  operator != will be available also (though it might not be documented,
+ *  since in most cases it is generated automatically).
  *
  *  <h3>International and special characters</h3>
  *

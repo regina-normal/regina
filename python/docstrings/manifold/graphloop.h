@@ -207,25 +207,6 @@ Returns:
     ``True`` if and only if this is "smaller" than the given graph
     manifold representation.)doc";
 
-// Docstring regina::python::doc::GraphLoop_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object do not contain precisely
-the same presentations of the same graph manifold.
-
-This routine does _not_ test for homeomorphism. Instead it compares
-the exact presentations, including the matching matrix and the
-specific presentation of the bounded Seifert fibred space, and
-determines whether or not these _presentations_ are identical. If you
-have two different presentations of the same graph manifold, they will
-be treated as not equal by this routine.
-
-Parameter ``compare``:
-    the presentation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given object do not contain
-    identical presentations of the same graph manifold.)doc";
-
 // Docstring regina::python::doc::GraphLoop_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given graph manifolds.

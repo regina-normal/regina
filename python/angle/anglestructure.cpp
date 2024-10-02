@@ -85,7 +85,7 @@ void addAngleStructure(pybind11::module_& m) {
         .def(pybind11::self < pybind11::self, rdoc::__lt)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<AngleStructure>(m, rdoc::global_swap);
 

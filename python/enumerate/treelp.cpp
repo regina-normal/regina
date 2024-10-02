@@ -168,7 +168,7 @@ void addTreeLP(pybind11::module_& m) {
         .def("negateRow", &LPMatrix<Integer>::negateRow, rdoc::negateRow)
         ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<LPMatrix<Integer>>(m, rdoc::global_swap);
 
@@ -184,7 +184,7 @@ void addTreeLP(pybind11::module_& m) {
         .def("coords", &LPSystem::coords, rdoc::coords)
         ;
     regina::python::add_output(s);
-    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(s, rdoc::__eq);
 
     addLPInitialTableaux<LPConstraintNone>(m, "LPInitialTableaux");
     addLPInitialTableaux<LPConstraintEulerPositive>(m,

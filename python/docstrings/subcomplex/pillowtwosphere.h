@@ -57,26 +57,6 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same specific presentation of a pillow 2-sphere.)doc";
 
-// Docstring regina::python::doc::PillowTwoSphere_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object represent different
-specific presentations of a pillow 2-sphere.
-
-Specifically, two pillow 2-spheres will compare as equal if and only
-if they join the same two numbered triangles, presented in the same
-order, using the same mapping of triangle vertices.
-
-Since this test looks at triangle numbers and not the specific
-Triangle objects, it is meaningful to compare pillow 2-spheres within
-different triangulations.
-
-Parameter ``other``:
-    the pillow 2-sphere to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given object represent
-    different specific presentations of a pillow 2-sphere.)doc";
-
 // Docstring regina::python::doc::PillowTwoSphere_::recognise
 static const char *recognise =
 R"doc(Determines if the two given triangles together form a pillow 2-sphere.

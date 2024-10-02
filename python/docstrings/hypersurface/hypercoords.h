@@ -135,16 +135,6 @@ invalid, and valid() will return ``False``.
 Parameter ``coords``:
     one of Regina's normal hypersurface coordinate systems.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given encoding are different.
-
-Parameter ``other``:
-    the encoding to compare with this.
-
-Returns:
-    ``True`` if and only if both encodings are different.)doc";
-
 // Docstring regina::python::doc::HyperEncoding_::block
 static const char *block =
 R"doc(Returns the number of coordinates stored for each pentachoron.

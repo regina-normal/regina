@@ -97,17 +97,6 @@ Returns:
     ``True`` if this disc type appears before the given disc type in
     the ordering, or ``False`` if not.)doc";
 
-// Docstring regina::python::doc::DiscType_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given disc type are different.
-
-This is the negation of the equality test; see operator == for further
-details.
-
-Returns:
-    ``True`` if this and the given disc type are different, or
-    ``False`` if they are identical.)doc";
-
 }
 
 } // namespace regina::python::doc

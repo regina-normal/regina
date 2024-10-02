@@ -195,22 +195,6 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the 0-1 sequence of
     sides.)doc";
 
-// Docstring regina::python::doc::Cut_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given cut are different.
-
-Two cuts are considered identical if they describe the same partition
-of simplices into sides 0 and 1.
-
-It does not matter if this and the given cut have different sizes; in
-this case they will be considered different.
-
-Parameter ``rhs``:
-    the cut to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given cut are different.)doc";
-
 // Docstring regina::python::doc::Cut_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the given cuts.

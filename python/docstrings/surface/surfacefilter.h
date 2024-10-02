@@ -106,18 +106,6 @@ Returns:
     ``True`` if and only if this and the given filter use the same
     boolean operation.)doc";
 
-// Docstring regina::python::doc::SurfaceFilterCombination_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given filter do not use the same boolean
-operation.
-
-Parameter ``other``:
-    the filter to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given filter use different
-    boolean operations.)doc";
-
 // Docstring regina::python::doc::SurfaceFilterCombination_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the given combination filters.
@@ -191,24 +179,6 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if this and the given filters are identical.)doc";
-
-// Docstring regina::python::doc::SurfaceFilterProperties_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given filter are configured to filter on
-the different sets of constraints.
-
-Even if both filters are designed to reject _every_ surface by having
-an empty BoolSet for one of the boolean conditions, they will still
-compare as different unless they use an empty BoolSet for the _same_
-boolean condition(s). In other words, this test compares the precise
-configurations of the filters, not their deduced behaviour.
-
-Parameter ``other``:
-    the filter to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given filters are not
-    identical.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::addEulerChar
 static const char *addEulerChar =

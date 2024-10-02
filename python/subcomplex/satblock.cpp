@@ -74,7 +74,7 @@ void addSatBlock(pybind11::module_& m) {
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(SatBlockModel)
 
@@ -86,7 +86,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("block", &SatBlockModel::block, rdoc::block)
     ;
     regina::python::add_output(d);
-    regina::python::add_eq_operators(d, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(d, rdoc::__eq);
 
     regina::python::add_global_swap<SatBlockModel>(m, rdoc::global_swap);
 

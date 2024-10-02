@@ -139,18 +139,6 @@ Parameter ``compare``:
 Returns:
     ``True`` if and only if this is smaller than the given fibre.)doc";
 
-// Docstring regina::python::doc::SFSFibre_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given exceptional fibre are different. This
-requires the fibres to have different values for *alpha* and/or to
-have different values for *beta*.
-
-Parameter ``compare``:
-    the fibre with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given fibre are different.)doc";
-
 }
 
 namespace SFSpace_ {
@@ -258,25 +246,6 @@ Parameter ``compare``:
 Returns:
     ``True`` if and only if this is "smaller" than the given Seifert
     fibred space representation.)doc";
-
-// Docstring regina::python::doc::SFSpace_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object do not contain precisely
-the same presentations of the same Seifert fibred space.
-
-This routine does _not_ test for homeomorphism. Instead it compares
-the exact presentations, including the precise details of the base
-orbifold and the exact parameters of the exceptional fibres, and
-determines whether or not these _presentations_ are identical. If you
-have two different presentations of the same Seifert fibred space,
-they will be treated as not equal by this routine.
-
-Parameter ``compare``:
-    the presentation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given object do not contain
-    identical presentations of the same Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::addCrosscap
 static const char *addCrosscap =

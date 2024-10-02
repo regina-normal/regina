@@ -165,25 +165,6 @@ Parameter ``p``:
 Author:
     Ryan Budney)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given abelian group have different
-presentations (which means they are non-isomorphic).
-
-Since the AbelianGroup class stores _only_ the invariants required to
-identify the isomorphism type, two groups will compare as equal if and
-only if they are isomorphic. This is in contrast to the comparisons
-for GroupPresentation (which tests for identical generators and
-relations), or for MarkedAbelianGroup (which tests for identical chain
-complex presentations).
-
-Parameter ``other``:
-    the group with which this should be compared.
-
-Returns:
-    ``True`` if and only if the two groups have different
-    presentations (i.e., they are non-isomorphic).)doc";
-
 // Docstring regina::python::doc::AbelianGroup_::addGroup
 static const char *addGroup =
 R"doc(Adds the abelian group defined by the given presentation to this

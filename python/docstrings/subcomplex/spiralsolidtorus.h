@@ -86,27 +86,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of spiralled solid torus.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-types of spiralled solid torus.
-
-Specifically, two spiralled solid tori will compare as equal if and
-only if they have the same size (i.e., the same number of tetrahedra).
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass means
-they describe isomorphic structures).
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different types of spiralled solid torus.)doc";
-
 // Docstring regina::python::doc::SpiralSolidTorus_::cycle
 static const char *cycle =
 R"doc(Cycles this spiralled solid torus by the given number of tetrahedra.

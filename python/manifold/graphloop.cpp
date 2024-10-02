@@ -59,7 +59,7 @@ void addGraphLoop(pybind11::module_& m) {
         // Do not bind <, since this is already inherited from Manifold
         // and we do not want to hide that more general version.
     ;
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output(c);
 
     regina::python::add_global_swap<GraphLoop>(m, rdoc::global_swap);

@@ -136,26 +136,6 @@ Parameter ``t1``:
 Parameter ``r1``:
     the permutation to assign to *roles*[1].)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::__ne
-static const char *__ne =
-R"doc(Determines whether or not this and the given structure describe
-different specific presentations of a saturated annulus.
-
-Specifically, in order to compare as equal, two saturated annuli must
-use the same two numbered tetrahedra, presented in the same order, and
-with the same *roles* permutations.
-
-Because this operation compares tetrahedron _numbers_ and not the
-underlying Tetrahedron objects, it is meaningful to compare saturated
-annuli from different triangulations.
-
-Parameter ``other``:
-    the structure to compare with this.
-
-Returns:
-    ``True`` if and only if both structures describe different
-    specific presentations of a saturated annulus.)doc";
-
 // Docstring regina::python::doc::SatAnnulus_::attachLST
 static const char *attachLST =
 R"doc(Attaches a layered solid torus to the given saturated annulus. Instead

@@ -185,16 +185,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this is a proper subset of the given set.)doc";
 
-// Docstring regina::python::doc::BoolSet_::__ne
-static const char *__ne =
-R"doc(Determines if this set is not equal to the given set.
-
-Parameter ``other``:
-    the set to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given set are not equal.)doc";
-
 // Docstring regina::python::doc::BoolSet_::byteCode
 static const char *byteCode =
 R"doc(Returns the byte code representing this boolean set. The byte code is

@@ -54,7 +54,7 @@ void addDisc(pybind11::module_& m) {
         .def_readwrite("number", &DiscSpec::number)
     ;
     regina::python::add_output_ostream(d);
-    regina::python::add_eq_operators(d, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(d, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -89,7 +89,7 @@ void addDisc(pybind11::module_& m) {
             s << ' ' << d.nDiscs(i);
         s << " )";
     });
-    regina::python::add_eq_operators(t, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(t, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(DiscSetSurfaceDataImpl)
 
@@ -118,7 +118,7 @@ void addDisc(pybind11::module_& m) {
         }
         s << " )";
     });
-    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(s, rdoc::__eq);
 
     regina::python::add_global_swap<DiscSetSurface>(m, rdoc::global_swap);
 
@@ -132,7 +132,7 @@ void addDisc(pybind11::module_& m) {
             else
                 throw pybind11::stop_iteration();
         }, rdoc::__next__);
-    regina::python::add_eq_operators(it, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(it, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

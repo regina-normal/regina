@@ -130,28 +130,6 @@ Returns:
     ``True`` if and only if this appears before the given structure in
     the total order.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given angle structure are different.
-
-This routine is safe to call even if this and the given angle
-structure do not belong to the same triangulation:
-
-* If the two triangulations have the same size, then this routine will
-  test whether this angle structure, if transplanted into the other
-  triangulation using the same tetrahedron numbering, would be
-  different from *other*.
-
-* If the two triangulations have different sizes, then this routine
-  will return ``True``.
-
-Parameter ``other``:
-    the angle structure to be compared with this structure.
-
-Returns:
-    ``True`` if and only if this and the given structure are
-    different.)doc";
-
 // Docstring regina::python::doc::AngleStructure_::angle
 static const char *angle =
 R"doc(Returns the requested angle in this angle structure. The angle

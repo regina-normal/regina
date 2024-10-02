@@ -482,17 +482,6 @@ Returns:
     ``True`` if and only if this is less than the given polynomial
     under the total order that Regina uses.)doc";
 
-// Docstring regina::python::doc::Laurent_::__ne
-static const char *__ne =
-R"doc(Tests whether this and the given polynomial are not equal.
-
-Parameter ``rhs``:
-    the polynomial to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given polynomial are not
-    equal.)doc";
-
 // Docstring regina::python::doc::Laurent_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the given polynomials.

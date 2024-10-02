@@ -108,18 +108,6 @@ Returns:
     true if and only if this term is lexicographically smaller than
     *other*.)doc";
 
-// Docstring regina::python::doc::GroupExpressionTerm_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given term do not contain identical
-data.
-
-Parameter ``other``:
-    the term with which this term will be compared.
-
-Returns:
-    ``True`` if and only if this and the given term do not have both
-    the same generator and exponent.)doc";
-
 // Docstring regina::python::doc::GroupExpressionTerm_::inverse
 static const char *inverse =
 R"doc(Returns the inverse of this term. The inverse has the same generator
@@ -241,17 +229,6 @@ Parameter ``nGens``:
     the number of generators in the group presentation. If this is 0
     (the default), then this argument will be ignored and this
     constructor will not check whether generators are within range.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::__ne
-static const char *__ne =
-R"doc(Inequality operator. Checks to see whether or not these two words
-represent different literal strings.
-
-Parameter ``comp``:
-    the expression to compare against this.
-
-Returns:
-    ``True`` if this and the given string literal are not identical.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermFirst
 static const char *addTermFirst =
@@ -694,23 +671,6 @@ Parameter ``nGens``:
 Parameter ``rels``:
     a vector of relations each given in string form, as outlined
     above.)doc";
-
-// Docstring regina::python::doc::GroupPresentation_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given group presentation are not
-identical.
-
-This routine does _not_ test for isomorphism (which in general is an
-undecidable problem). Instead it tests whether this and the given
-presentation use exactly the same generators and exactly the same
-relations, presented in exactly the same order.
-
-Parameter ``other``:
-    the group presentation to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given group presentation are
-    not identical.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::abelianRank
 static const char *abelianRank =

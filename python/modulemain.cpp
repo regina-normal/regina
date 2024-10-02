@@ -49,6 +49,16 @@ namespace regina::python::doc::common {
     // Note: docstrings should be wrapped at 70 characters per line;
     // the hard maximum is 72.
 
+    const char* neq_value =
+R"doc(Determines whether this and the given object have different values.
+This operator ``x != y`` is generated automatically, as the negation
+of ``x == y``.
+
+This test compares the _contents_ of the two objects (i.e., it
+compares by value, not by reference). See the documentation for the
+corresponding equality test (i.e., the member function ``__eq__``)
+for full details on how objects of this type will be compared.)doc";
+
     const char* eq_reference =
 R"doc(Determines whether this and the given Python wrapper refer to the same
 underlying object in Regina's calculation engine.

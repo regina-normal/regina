@@ -64,7 +64,7 @@ void addFacePair(pybind11::module_& m) {
         .def("oppositeEdge", &FacePair::oppositeEdge, rdoc::oppositeEdge)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

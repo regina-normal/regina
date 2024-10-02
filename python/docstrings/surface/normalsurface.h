@@ -288,38 +288,6 @@ Parameter ``coeff``:
 Returns:
     the resulting multiple of this surface.)doc";
 
-// Docstring regina::python::doc::NormalSurface_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given surface represent different
-normal (or almost normal) surfaces.
-
-Specifically, this routine examines (or computes) the number of normal
-or almost normal discs of each type, and returns ``True`` if and only
-if these counts are not the same for both surfaces.
-
-It does not matter what vector encodings the two surfaces use. In
-particular, it does not matter if the two surfaces use different
-encodings, or if one but not the other supports almost normal and/or
-spun-normal surfaces.
-
-This routine is safe to call even if this and the given surface do not
-belong to the same triangulation:
-
-* If the two triangulations have the same size, then this routine will
-  test whether this surface, if transplanted into the other
-  triangulation using the same tetrahedron numbering and the same
-  normal disc types, would be different from *other*.
-
-* If the two triangulations have different sizes, then this routine
-  will return ``True``.
-
-Parameter ``other``:
-    the surface to be compared with this surface.
-
-Returns:
-    ``True`` if both surfaces represent different normal or almost
-    normal surface, or ``False`` if not.)doc";
-
 // Docstring regina::python::doc::NormalSurface_::arcs
 static const char *arcs =
 R"doc(Returns the number of arcs in which this normal surface intersects the

@@ -85,7 +85,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
         .def_readonly_static("fixedSize", &B::fixedSize)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 }
@@ -133,7 +133,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
         .def_readonly_static("fixedSize", &Bitmask::fixedSize)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<Bitmask>(m, rdoc::global_swap);
 

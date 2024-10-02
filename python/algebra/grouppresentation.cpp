@@ -63,7 +63,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
     ;
     regina::python::add_output_ostream(c1);
-    regina::python::add_eq_operators(c1, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c1, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(GroupExpression)
 
@@ -128,7 +128,7 @@ void addGroupPresentation(pybind11::module_& m) {
             rdoc::utf8)
     ;
     regina::python::add_output(c2);
-    regina::python::add_eq_operators(c2, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c2, rdoc::__eq);
 
     regina::python::add_global_swap<GroupExpression>(m, rdoc::global_swap);
 
@@ -247,7 +247,7 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::arg("groupVariable") = "g", rdoc::gap)
     ;
     regina::python::add_output(c3);
-    regina::python::add_eq_operators(c3, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c3, rdoc::__eq);
 
     regina::python::add_global_swap<GroupPresentation>(m, rdoc::global_swap);
 

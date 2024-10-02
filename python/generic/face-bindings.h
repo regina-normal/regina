@@ -72,7 +72,7 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
             rbase2::pentachoron);
     regina::python::add_output(e);
-    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+    regina::python::add_eq_operators(e, rbase::__eq);
 
     // We use the global scope here because all of Face's members are
     // inherited, and so Face's own docstring namespace does not exist.

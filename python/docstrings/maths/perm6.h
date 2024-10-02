@@ -276,18 +276,6 @@ Parameter ``q``:
 Returns:
     the composition of both permutations.)doc";
 
-// Docstring regina::python::doc::Perm_::__ne
-static const char *__ne =
-R"doc(Determines if this differs from the given permutation. This is true if
-and only if the two permutations have different images for at least
-one of 0, 1, 2, 3, 4 or 5.
-
-Parameter ``other``:
-    the permutation with which to compare this.
-
-Returns:
-    ``True`` if and only if this and the given permutation differ.)doc";
-
 // Docstring regina::python::doc::Perm_::cachedComp
 static const char *cachedComp =
 R"doc(Returns the composition of this and the given permutation, using fast

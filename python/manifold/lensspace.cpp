@@ -49,7 +49,7 @@ void addLensSpace(pybind11::module_& m) {
         .def("p", &LensSpace::p, rdoc::p)
         .def("q", &LensSpace::q, rdoc::q)
     ;
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output(c);
 
     regina::python::add_global_swap<LensSpace>(m, rdoc::global_swap);

@@ -196,20 +196,6 @@ Python:
 Returns:
     a copy of this conjugacy class before the increment took place.)doc";
 
-// Docstring regina::python::doc::PermClass_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object describe different
-conjugacy classes.
-
-Two past-the-end conjugacy classes will be treated as equal.
-
-Parameter ``other``:
-    the conjugacy class to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given conjugacy class are
-    different.)doc";
-
 // Docstring regina::python::doc::PermClass_::countCycles
 static const char *countCycles =
 R"doc(Returns the number of cycles in this conjugacy class.
@@ -434,18 +420,6 @@ Parameter ``q``:
 
 Returns:
     the composition of both permutations.)doc";
-
-// Docstring regina::python::doc::Perm_::__ne
-static const char *__ne =
-R"doc(Determines if this differs from the given permutation. This is true if
-and only if the two permutations have different images for some 0 ≤
-*i* < *n*.
-
-Parameter ``other``:
-    the permutation with which to compare this.
-
-Returns:
-    ``True`` if and only if this and the given permutation differ.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedComp
 static const char *cachedComp =

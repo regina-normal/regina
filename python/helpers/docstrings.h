@@ -48,6 +48,7 @@ namespace regina::python::doc::common {
     extern const char* TightEncodable_decoding;
     extern const char* TightEncodable_hash;
 
+    extern const char* neq_value;
     extern const char* eq_reference;
     extern const char* neq_reference;
     extern const char* eq_None;

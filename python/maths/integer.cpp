@@ -38,6 +38,7 @@
 #include "../docstrings/maths/integer.h"
 
 using pybind11::overload_cast;
+using regina::python::doc::common::neq_value;
 
 template <bool inf>
 void addIntegerBase(pybind11::module_& m, const char* className) {
@@ -82,8 +83,8 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("swap", &Int::swap, rdoc::swap)
         .def(pybind11::self == AltInt(), rdoc::__eq_2)
         .def(pybind11::self == long(), rdoc::__eq_3)
-        .def(pybind11::self != AltInt(), rdoc::__ne_2)
-        .def(pybind11::self != long(), rdoc::__ne_3)
+        .def(pybind11::self != AltInt(), neq_value)
+        .def(pybind11::self != long(), neq_value)
         .def(pybind11::self < pybind11::self, rdoc::__lt)
         .def(pybind11::self < long(), rdoc::__lt_2)
         .def(pybind11::self > pybind11::self, rdoc::__gt)
@@ -163,7 +164,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
 
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding, rdoc::hash);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
     m.def("tightEncoding", static_cast<std::string(&)(Int)>(

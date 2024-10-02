@@ -76,29 +76,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered chain pair.)doc";
 
-// Docstring regina::python::doc::LayeredChainPair_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-types of layered chain pair.
-
-Specifically, two layered chain pairs will compare as equal if and
-only if they their constituent layered chains each have the same
-respective lengths, _and_ appear in the same order.
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, due to the ordering
-requirement).
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different types of layered chain pair.)doc";
-
 // Docstring regina::python::doc::LayeredChainPair_::chain
 static const char *chain =
 R"doc(Returns the requested layered chain used to form this structure. If

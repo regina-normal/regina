@@ -66,7 +66,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("__bool__", &ModelLinkGraphArc::operator bool, rdoc::__as_bool)
     ;
     regina::python::add_output_ostream(a);
-    regina::python::add_eq_operators(a, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(a, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(ModelLinkGraphNode)
 
@@ -119,7 +119,7 @@ void addModelLinkGraph(pybind11::module_& m) {
             pybind11::arg("action"), rdoc::generateMinimalLinks)
     ;
     regina::python::add_output(g);
-    regina::python::add_eq_operators(g, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(g, rdoc::__eq);
 
     regina::python::add_global_swap<ModelLinkGraph>(m, rdoc::global_swap);
 
@@ -138,7 +138,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("cellPos", &ModelLinkGraphCells::cellPos, rdoc::cellPos)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(m);
 

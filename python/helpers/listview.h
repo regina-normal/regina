@@ -143,8 +143,7 @@ void addListView(pybind11::module_& m) {
         }
         out << ']';
     });
-    regina::python::add_eq_operators(c,
-        doc::ListView_::__eq, doc::ListView_::__ne);
+    regina::python::add_eq_operators(c, doc::ListView_::__eq);
 }
 
 } // namespace regina::python

@@ -699,36 +699,6 @@ Parameter ``other``:
 Returns:
     the product *this* times *other*.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::__ne
-static const char *__ne =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__ne_2
-static const char *__ne_2 =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__ne_3
-static const char *__ne_3 =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
-
 // Docstring regina::python::doc::IntegerBase_::__sub
 static const char *__sub =
 R"doc(Subtracts the given integer from this and returns the result. This

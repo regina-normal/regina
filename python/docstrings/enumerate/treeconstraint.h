@@ -580,29 +580,6 @@ Parameter ``init``:
     the original starting tableaux being used for this enumeration
     task.)doc";
 
-// Docstring regina::python::doc::BanConstraintBase_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given object do not ban and mark the same
-tableaux coordinates as each other.
-
-Even if this and the given object are of different subclasses of
-BanConstraintBase, as long as they ban the same coordinates and mark
-the same coordinates, they will compare as equal (i.e., this
-inequality comparison will return ``False``).
-
-It does not matter whether the two objects use the same underlying
-tableaux. However, if the underlying tableaux use triangulations of
-different sizes and/or different broad classes of vector encodings (as
-described by LPSystem), then these two objects will compare as not
-equal.
-
-Parameter ``other``:
-    the object to compare with this.
-
-Returns:
-    ``True`` if and only if this and the object do not ban and mark
-    the same tableaux coordinates, as described above.)doc";
-
 // Docstring regina::python::doc::BanConstraintBase_::enforceBans
 static const char *enforceBans =
 R"doc(Enforces all bans described by this class in the given tableaux.

@@ -214,16 +214,6 @@ Returns:
     ``True`` if and only if this bitmask is entirely contained within
     the given bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask1_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given bitmask are different.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are different.)doc";
-
 // Docstring regina::python::doc::Bitmask1_::atMostOneBit
 static const char *atMostOneBit =
 R"doc(Determines whether at most one bit is set to ``True`` in this bitmask.
@@ -518,16 +508,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this bitmask is entirely contained within
     the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given bitmask are different.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are different.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::atMostOneBit
 static const char *atMostOneBit =
@@ -862,24 +842,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this bitmask is entirely contained within
     the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given bitmask are different.
-
-.. warning::
-    As explain in the class notes, bitmasks do not store their exact
-    length; instead the length is rounded up to the next "raw unit of
-    storage". This means that two bitmasks that were initialised with
-    different lengths may still be considered equal if the two lengths
-    round up to the same value _and_ the extra bits in the longer
-    bitmask are all ``False``.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are different.)doc";
 
 // Docstring regina::python::doc::Bitmask_::atMostOneBit
 static const char *atMostOneBit =

@@ -74,7 +74,7 @@ void addBoolSet(pybind11::module_& m) {
         .def("setStringCode", &BoolSet::setStringCode, rdoc::setStringCode)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 

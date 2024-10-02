@@ -67,7 +67,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("l", &Cusp::l, rdoc::l)
     ;
     regina::python::add_output(c1);
-    regina::python::add_eq_operators(c1, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c1, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(SnapPeaTriangulation)
 
@@ -183,7 +183,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     // get left with the inherited versions from Triangulation<3>.
     regina::python::add_output(c2);
     regina::python::add_packet_data(c2);
-    regina::python::packet_eq_operators(c2, rdoc::__eq, rdoc::__ne);
+    regina::python::packet_eq_operators(c2, rdoc::__eq);
 
     regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(m);
 

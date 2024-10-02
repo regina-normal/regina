@@ -138,17 +138,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this is less than the given specifier.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given specifier are not identical.
-
-Parameter ``other``:
-    the specifier to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given specifier are not
-    equal.)doc";
-
 // Docstring regina::python::doc::FacetSpec_::isBeforeStart
 static const char *isBeforeStart =
 R"doc(Determines if this specifier represents a before-the-start value.

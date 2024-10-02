@@ -118,7 +118,7 @@ void addPerm(pybind11::module_& m, const char* name) {
     regina::python::add_output_basic(c, rdoc::str);
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding, rdoc::hash);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_lightweight_array<decltype(Perm<n>::Sn)>(c,
         "_Sn", rdoc::SnLookup);
@@ -146,7 +146,7 @@ void addPermClass(pybind11::module_& m, const char* name) {
         .def_readonly_static("count", &PermClass<n>::count)
     ;
     regina::python::add_output_basic(c, rdoc::str);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

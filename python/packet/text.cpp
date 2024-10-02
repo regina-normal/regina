@@ -52,7 +52,7 @@ void addText(pybind11::module_& m) {
         .def_readonly_static("typeID", &Text::typeID)
     ;
     regina::python::add_output(c);
-    regina::python::packet_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::packet_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<Text>(m, rdoc::global_swap);
 

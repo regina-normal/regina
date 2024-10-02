@@ -63,30 +63,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered lens space.)doc";
 
-// Docstring regina::python::doc::LayeredLensSpace_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-types of layered lens space.
-
-Specifically, two layered lens spaces will compare as equal if and
-only if they are formed from layered solid tori with the same
-parameters, closed off in the same way.
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since the same layered
-lens space can be built from a layered solid torus starting at either
-of its two "ends").
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different types of layered lens space.)doc";
-
 // Docstring regina::python::doc::LayeredLensSpace_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given structures.

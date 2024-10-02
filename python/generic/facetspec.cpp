@@ -70,7 +70,7 @@ void addFacetSpec(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

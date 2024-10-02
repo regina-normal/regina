@@ -199,34 +199,6 @@ for s in list:
 Returns:
     an iterator over the angle structures in this list.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given list contain different sets of
-angle structures.
-
-The lists will be compared as multisets: the order of the angle
-structures in each list does not matter; however, in the unusual
-scenario where a list the same angle structure multiple times,
-multiplicity does matter.
-
-Like the comparison operators for AngleStructure, it does not matter
-whether the two lists work with different triangulations:
-
-* If the two triangulations have the same size, then this routine will
-  compare angle structures as though they were transplanted into the
-  same triangulation using the same tetrahedron numbering and the same
-  angle coordinates.
-
-* If the two triangulations have different sizes, then this comparison
-  will return ``True`` (i.e., the lists will be considered different).
-
-Parameter ``other``:
-    the list to be compared with this list.
-
-Returns:
-    ``True`` if both lists do not represent the same multiset of angle
-    structures, or ``False`` if they do.)doc";
-
 // Docstring regina::python::doc::AngleStructures_::algorithm
 static const char *algorithm =
 R"doc(Returns details of the algorithm that was used to enumerate this list.

@@ -212,27 +212,6 @@ Parameter ``rhs``:
 Returns:
     a reference to this flag set.)doc";
 
-// Docstring regina::python::doc::Flags_::__ne
-constexpr const char *__ne =
-R"doc(Determines whether this set is not equal to the given flag.
-
-Parameter ``rhs``:
-    the flag to test this against.
-
-Returns:
-    ``True`` if and only if this and the given flag are not identical.)doc";
-
-// Docstring regina::python::doc::Flags_::__ne_2
-constexpr const char *__ne_2 =
-R"doc(Determines whether this set is not equal to the given flag set.
-
-Parameter ``rhs``:
-    the flag to test this against.
-
-Returns:
-    ``True`` if and only if this and the given flag set are not
-    identical.)doc";
-
 // Docstring regina::python::doc::Flags_::clear
 constexpr const char *clear =
 R"doc(Clears all bits from this set that appear in the given flag.

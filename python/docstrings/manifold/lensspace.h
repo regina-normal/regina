@@ -69,25 +69,6 @@ Parameter ``q``:
     the second parameter *q* of the lens space L(p,q). Note that there
     are no range restrictions whatsoever on this parameter.)doc";
 
-// Docstring regina::python::doc::LensSpace_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given lens space have different
-presentations.
-
-Since the presentation is made canonical by the class constructor,
-this routine also identifies whether this and the given lens space are
-homeomorphic as 3-manifolds. This is in contrast to the comparison
-operators for other manifold classes (such as Seifert fibred spaces
-and graph manifolds), where the same manifold could have different
-presentations that compare as not equal.
-
-Parameter ``compare``:
-    the lens space with which this should be compared.
-
-Returns:
-    ``True`` if and only if this and the given lens space have
-    different presentations (i.e., are non-homeomorphic).)doc";
-
 // Docstring regina::python::doc::LensSpace_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given lens spaces.

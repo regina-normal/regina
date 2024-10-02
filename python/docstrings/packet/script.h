@@ -95,23 +95,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given script are identical.)doc";
 
-// Docstring regina::python::doc::Script_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given script are not identical.
-
-Here _identical_ means that both scripts contain exactly the same
-text, and they have the same set of variables. For two variables to be
-considered the same, they must have the same variable name, and their
-values must be either both ``None`` or both pointers to the same
-packet.
-
-Parameter ``other``:
-    the script to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given script are not
-    identical.)doc";
-
 // Docstring regina::python::doc::Script_::addVariable
 static const char *addVariable =
 R"doc(Attempts to add a new variable to be associated with this script. If a

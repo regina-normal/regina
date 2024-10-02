@@ -136,23 +136,6 @@ not run through the individual array elements; for this you will need
 Returns:
     an iterator over the subarrays or elements of this table.)doc";
 
-// Docstring regina::python::doc::TableView_::__ne
-constexpr const char *__ne =
-R"doc(Determines whether this and the given table view are accessing
-different underlying C-style arrays.
-
-To be considered the same array, the two arrays must have the same
-location in memory (i.e., the pointers that define the C-style arrays
-must be equal). In particular, it is not enough for the two arrays
-just to have identical contents.
-
-Parameter ``other``:
-    the table view to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given table use different
-    underlying C-style arrays.)doc";
-
 // Docstring regina::python::doc::TableView_::size
 constexpr const char *size =
 R"doc(Returns the size of this array, across all of the array dimensions.

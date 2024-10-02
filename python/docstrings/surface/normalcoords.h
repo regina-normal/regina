@@ -299,16 +299,6 @@ details.
 Parameter ``coords``:
     one of Regina's normal or almost normal coordinate systems.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given encoding are different.
-
-Parameter ``other``:
-    the encoding to compare with this.
-
-Returns:
-    ``True`` if and only if both encodings are different.)doc";
-
 // Docstring regina::python::doc::NormalEncoding_::block
 static const char *block =
 R"doc(Returns the number of coordinates stored for each tetrahedron.

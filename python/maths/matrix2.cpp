@@ -116,7 +116,7 @@ void addMatrix2(pybind11::module_& m) {
         .def("isIdentity", &Matrix2::isIdentity, rdoc::isIdentity)
         .def("isZero", &Matrix2::isZero, rdoc::isZero)
     ;
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_ostream(c);
 
     regina::python::add_global_swap<Matrix2>(m, rdoc::global_swap);
@@ -149,8 +149,7 @@ See the main class Matrix2 for further details.)doc")
 "Returns the number of entries in this row. This will always be 2.")
         ;
     regina::python::add_eq_operators(row,
-"Tests whether this and the given row contain the same integer entries.",
-"Tests whether this and the given row contain different integer entries.");
+"Tests whether this and the given row contain the same integer entries.");
     regina::python::add_output_ostream(row);
 
     RDOC_SCOPE_SWITCH_MAIN

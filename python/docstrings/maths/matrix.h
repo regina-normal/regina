@@ -235,30 +235,6 @@ Returns:
     the product ``this * other``, which will be a vector whose length
     is the number of rows in this matrix.)doc";
 
-// Docstring regina::python::doc::Matrix_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given matrix are different.
-
-Two matrices are different if either (i) their dimensions differ, or
-(ii) the corresponding elements of each matrix differ in at least one
-location.
-
-Note that this routine can happily deal with two matrices of different
-dimensions (in which case it will always return ``True``).
-
-This routine returns ``True`` if and only if the equality operator
-(==) returns ``False``.
-
-Precondition:
-    The type *T* provides an equality operator (==).
-
-Parameter ``other``:
-    the matrix to compare with this.
-
-Returns:
-    ``True`` if the matrices are different as described above, or
-    ``False`` otherwise.)doc";
-
 // Docstring regina::python::doc::Matrix_::addCol
 static const char *addCol =
 R"doc(Adds the given source column to the given destination column.

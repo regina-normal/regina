@@ -51,7 +51,7 @@ void addDiscType(pybind11::module_& m) {
         .def_readwrite("type", &DiscType::type)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

@@ -143,16 +143,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this is less than *other*.)doc";
 
-// Docstring regina::python::doc::FacePair_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given face pair are not equal.
-
-Parameter ``other``:
-    the pair to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given pair are not equal.)doc";
-
 // Docstring regina::python::doc::FacePair_::commonEdge
 static const char *commonEdge =
 R"doc(Identifies the tetrahedron edge that is common to both faces in this

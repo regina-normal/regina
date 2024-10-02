@@ -78,18 +78,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both tries store the same type vectors.)doc";
 
-// Docstring regina::python::doc::TypeTrie_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given trie do not store exactly the
-same type vectors.
-
-Parameter ``other``:
-    the trie to compare with this.
-
-Returns:
-    ``True`` if and only if both tries do not store the same type
-    vectors.)doc";
-
 // Docstring regina::python::doc::TypeTrie_::clear
 static const char *clear = R"doc(Resets this to the empty trie.)doc";
 

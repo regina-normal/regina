@@ -241,16 +241,6 @@ Parameter ``r``:
 Returns:
     the product *this* * *r*.)doc";
 
-// Docstring regina::python::doc::Rational_::__ne
-static const char *__ne =
-R"doc(Determines if this is not equal to the given rational.
-
-Parameter ``compare``:
-    the rational with which this will be compared.
-
-Returns:
-    ``True`` if and only if this rational is not equal to *compare*.)doc";
-
 // Docstring regina::python::doc::Rational_::__sub
 static const char *__sub =
 R"doc(Calculates the difference of two rationals. This rational is not

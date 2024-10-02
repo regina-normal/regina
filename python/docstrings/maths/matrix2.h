@@ -210,16 +210,6 @@ Parameter ``scalar``:
 Returns:
     the product *this* * *scalar*.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__ne
-static const char *__ne =
-R"doc(Determines if this is not equal to the given matrix.
-
-Parameter ``compare``:
-    the matrix with which this will be compared.
-
-Returns:
-    ``True`` if and only if this matrix is not equal to *compare*.)doc";
-
 // Docstring regina::python::doc::Matrix2_::__sub
 static const char *__sub =
 R"doc(Calculates the difference of two matrices. Neither this nor the given

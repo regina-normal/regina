@@ -472,17 +472,6 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__ne
-static const char *__ne =
-R"doc(Tests whether this and the given polynomial are not equal.
-
-Parameter ``rhs``:
-    the polynomial to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given polynomial are not
-    equal.)doc";
-
 // Docstring regina::python::doc::Polynomial_::degree
 static const char *degree =
 R"doc(Returns the degree of this polynomial. This is the largest exponent

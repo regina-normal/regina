@@ -66,34 +66,6 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same type of layered solid torus.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object do not represent the same
-type of layered solid torus.
-
-Specifically, two layered solid tori will compare as equal if and only
-if each has the same ordered triple of integer parameters (describing
-how many times the three top-level edge groups cut the meridinal
-disc).
-
-Note that it is possible for two non-isomorphic layered solid tori to
-compare as equal, since these integer parameters do not detect the
-presence of redundant layerings (i.e., consecutive layerings that
-topologically cancel each other out).
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass, as
-noted above, is weaker than combinatorial isomorphism).
-
-Parameter ``other``:
-    the layered solid torus to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given object do not represent
-    the same type of layered solid torus.)doc";
-
 // Docstring regina::python::doc::LayeredSolidTorus_::base
 static const char *base =
 R"doc(Returns the tetrahedron that is glued to itself at the base of this

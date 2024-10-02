@@ -127,16 +127,6 @@ Parameter ``rhs``:
 Returns:
     a reference to this qitmask.)doc";
 
-// Docstring regina::python::doc::Qitmask1_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given qitmask are different.
-
-Parameter ``other``:
-    the qitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given qitmask are different.)doc";
-
 // Docstring regina::python::doc::Qitmask1_::empty
 static const char *empty =
 R"doc(Determines whether this qitmask contains all zeroes.
@@ -249,16 +239,6 @@ Parameter ``rhs``:
 
 Returns:
     a reference to this qitmask.)doc";
-
-// Docstring regina::python::doc::Qitmask2_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given qitmask are different.
-
-Parameter ``other``:
-    the qitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given qitmask are different.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::empty
 static const char *empty =

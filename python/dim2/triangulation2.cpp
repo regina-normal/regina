@@ -343,7 +343,7 @@ void addTriangulation2(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
-    regina::python::packet_eq_operators(c, rbase::__eq, rbase::__ne);
+    regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);

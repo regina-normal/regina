@@ -65,7 +65,7 @@ void addEdge2(pybind11::module_& m) {
         .def("vertices", &EdgeEmbedding<2>::vertices, rbase::vertices)
     ;
     regina::python::add_output(e);
-    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+    regina::python::add_eq_operators(e, rbase::__eq);
 
     // We use the global scope here because all of Face's members are
     // inherited, and so Face's own docstring namespace does not exist.

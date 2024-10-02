@@ -520,23 +520,6 @@ Parameter ``p``:
     describes the type of ring that we use to talk about the "free"
     module.)doc";
 
-// Docstring regina::python::doc::MarkedAbelianGroup_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given group were formed from different
-chain complex constructions.
-
-This is _not_ an isomorphism test. For this comparison to return
-``False`` (i.e., for the chain complex constructions to be considered
-identical), both groups must have been constructed from identical
-matrices *M* and *N*, using homology with the same coefficients.
-
-Parameter ``other``:
-    the group with which this should be compared.
-
-Returns:
-    ``True`` if and only if the this and the given group do not have
-    identical chain complex definitions.)doc";
-
 // Docstring regina::python::doc::MarkedAbelianGroup_::asBoundary
 static const char *asBoundary =
 R"doc(Expresses the given vector as a boundary in the chain complex.

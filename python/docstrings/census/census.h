@@ -100,21 +100,6 @@ Parameter ``desc``:
     routine for further information on how this description might be
     used.)doc";
 
-// Docstring regina::python::doc::CensusDB_::__ne
-static const char *__ne =
-R"doc(Tests whether this and the given object represent different databases.
-
-Two databases are considered the same if they have identical filenames
-(as returned by the filename() function). The database descriptions
-are irrelevant here.
-
-Parameter ``rhs``:
-    the database to compare this against.
-
-Returns:
-    ``True`` if and only if this and the given object represent
-    different databases.)doc";
-
 // Docstring regina::python::doc::CensusDB_::desc
 static const char *desc =
 R"doc(Returns a human-readable description of this database.
@@ -214,21 +199,6 @@ Parameter ``rhs``:
 
 Returns:
     ``True`` if and only if this and the given hit are the same.)doc";
-
-// Docstring regina::python::doc::CensusHit_::__ne
-static const char *__ne =
-R"doc(Tests whether this and the given object represent different census
-hits.
-
-Two census hits are considered the same if they have the same human-
-readable name and also come from the same database (as identified by
-the CensusDB comparison operators).
-
-Parameter ``rhs``:
-    the census hit to compare this against.
-
-Returns:
-    ``True`` if and only if this and the given hit are different.)doc";
 
 // Docstring regina::python::doc::CensusHit_::db
 static const char *db =

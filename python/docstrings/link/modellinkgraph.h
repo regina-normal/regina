@@ -184,22 +184,6 @@ Parameter ``arc``:
     an integer in the range 0 to 3 inclusive, indicating which of the
     four arcs exiting *node* this represents.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraphArc_::__ne
-static const char *__ne =
-R"doc(Tests whether this and the given arc reference are not identical.
-
-Two references are identical if and only if they return the same
-values for both node() and arc().
-
-.. warning::
-    If you create a null arc by calling ModelLinkGraphArc(``None``,
-    *i*) for some non-zero *i*, then this will _not_ be considered
-    equal to the null arc created by calling ModelLinkGraphArc(),
-    since the latter is equivalent to calling
-    ModelLinkGraphArc(``None``, 0).
-
-``True`` if and only if this and *rhs* are not identical.)doc";
-
 // Docstring regina::python::doc::ModelLinkGraphArc_::arc
 static const char *arc =
 R"doc(Indicates which arc this is amongst the four arcs exiting the
@@ -317,24 +301,6 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if the two cellular decompositions are
-    combinatorially identical.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given cellular decomposition are not
-combinatorially identical.
-
-Here "identical" means that both decompositions have the same number
-of cells, these cells are presented in the same order, and their
-boundaries enter and exit the same numbered arcs of the same numbered
-nodes, using the same directions of traversal and the same starting
-points on each cell boundary.
-
-Parameter ``other``:
-    the cellular decomposition to compare with this.
-
-Returns:
-    ``True`` if and only if the two cellular decompositions are not
     combinatorially identical.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphCells_::arc
@@ -681,22 +647,6 @@ Using this constructor is identical to calling Link::graph().
 
 Parameter ``link``:
     the link that this new graph will model.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraph_::__ne
-static const char *__ne =
-R"doc(Determines if this graph is not combinatorially identical to the given
-graph.
-
-Here "identical" means that both graphs have the same number of nodes,
-and in both graphs the same pairs of outgoing arcs of numbered nodes
-are connected by edges.
-
-Parameter ``other``:
-    the graph to compare with this.
-
-Returns:
-    ``True`` if and only if the two graphs are not combinatorially
-    identical.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraph_::canonicalPlantri
 static const char *canonicalPlantri =

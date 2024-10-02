@@ -87,23 +87,6 @@ Parameter ``index``:
     and so this index must be between 0 and *k*-1, where *k* is the
     total number of manifolds in the given section.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusManifold_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-3-manifolds from the SnapPea census.
-
-As of Regina 5.0, this test respects the recent discovery that the
-manifolds ``x101`` and ``x103`` are homeomorphic. For details, see
-B.B., _A duplicate pair in the SnapPea census_, Experimental
-Mathematics, 23:170-173, 2014.
-
-Parameter ``compare``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different SnapPea census manifolds.)doc";
-
 // Docstring regina::python::doc::SnapPeaCensusManifold_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given SnapPea census manifolds.

@@ -50,18 +50,6 @@ Parameter ``bundleType``:
     the specific type of surface bundle to represent. This must be one
     of the 3-manifold constants defined in this class.)doc";
 
-// Docstring regina::python::doc::SimpleSurfaceBundle_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given surface bundle are of different
-types (i.e., they represent different 3-manifolds).
-
-Parameter ``compare``:
-    the surface bundle with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given surface bundle are of
-    different types.)doc";
-
 // Docstring regina::python::doc::SimpleSurfaceBundle_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given surface bundles.

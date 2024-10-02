@@ -66,17 +66,6 @@ Parameter ``newDir``:
     reversed, or negative if this isomorphism specifies that all
     cycles keep their original direction.)doc";
 
-// Docstring regina::python::doc::SigPartialIsomorphism_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given partial isomorphism are not
-identical.
-
-Parameter ``other``:
-    the partial isomorphism to compare with this.
-
-Returns:
-    ``True`` if and only if this and *other* are not identical.)doc";
-
 // Docstring regina::python::doc::SigPartialIsomorphism_::compareWith
 static const char *compareWith =
 R"doc(Lexicographically compares the results of applying this and the given

@@ -110,23 +110,6 @@ Parameter ``mon10``:
 Parameter ``mon11``:
     the (1,1) element of the monodromy matrix.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object do not contain precisely
-the same presentations of the same torus bundle.
-
-This routine does _not_ test for homeomorphism; instead it compares
-the specific monodromies. If you have two objects that represent same
-torus bundle using two different monodromies, they will be treated as
-not equal by this routine.
-
-Parameter ``compare``:
-    the presentation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given object do not contain
-    identical presentations of the same torus bundle.)doc";
-
 // Docstring regina::python::doc::TorusBundle_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given torus bundles.

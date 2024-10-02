@@ -81,7 +81,7 @@ void addRational(pybind11::module_& m) {
         .def_readonly_static("infinity", &Rational::infinity)
         .def_readonly_static("undefined", &Rational::undefined)
     ;
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
     regina::python::add_global_swap<Rational>(m, rdoc::global_swap);

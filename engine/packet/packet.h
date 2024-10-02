@@ -3386,8 +3386,8 @@ class PacketShell {
         /**
          * Identifies if this shell refers to the given packet.
          *
-         * This test is also available the other way around (with PacketShell
-         * on the right); this reversed test is defined as a global function.
+         * This test can also be used the other way around (with Packet on
+         * the left and PacketShell on the right).
          *
          * \param packet the packet to test against; this may be \c null.
          * \return \c true if and only if this shell refers to the given packet.

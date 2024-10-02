@@ -167,33 +167,6 @@ Parameter ``rhs``:
 Returns:
     the composition of both homomorphisms.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given homomorphism do not have
-identical presentations.
-
-This routine does _not_ test whether the two homomorphisms are equal
-in the sense that each element of the domain maps to the same group
-element of the codomain - in general this is an undecidable problem.
-
-Instead, this routine tests whether the two homomorphisms map the
-*i*th generator of the domain to precisely the same _word_ in the
-codomain, for each *i*.
-
-This routine will not test whether the domains and codomains have
-identical presentations, or whether either homomorphism is declared to
-be an isomorphism. However, if the two domains have different numbers
-of generators then the two homomorphisms will compare as not equal
-(since it will be impossible to compare the words that the
-corresponding generators map to).
-
-Parameter ``other``:
-    the homomorphism to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given homomorphisms do not
-    have identical presentations.)doc";
-
 // Docstring regina::python::doc::HomGroupPresentation_::codomain
 static const char *codomain =
 R"doc(The codomain of the map.

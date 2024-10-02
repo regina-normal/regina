@@ -976,23 +976,6 @@ Parameter ``cols``:
     the number of columns in the new matrix. This must be strictly
     positive.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given matrix are not equal.
-
-Two matrices are equal if and only if their dimensions are the same,
-and the corresponding elements of each matrix are equal.
-
-It is safe to compare matrices of different dimensions, and it is safe
-to compare matrices that might not yet be initialised. Two
-uninitialised matrices will compare as equal.
-
-Parameter ``other``:
-    the matrix to compare with this.
-
-Returns:
-    ``True`` if and only if the two matrices are not equal.)doc";
-
 // Docstring regina::python::doc::LPMatrix_::columns
 static const char *columns =
 R"doc(Returns the number of columns in this matrix. This relates to the
@@ -1280,18 +1263,6 @@ Parameter ``enc``:
     a normal surface vector encoding; this may be any valid
     NormalEncoding object, including the special angle structure
     encoding.)doc";
-
-// Docstring regina::python::doc::LPSystem_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object represent different
-classes of vector encodings.
-
-Parameter ``other``:
-    the object to compare with this.
-
-Returns:
-    ``True`` if and only if both objects represent different classes
-    of encodings.)doc";
 
 // Docstring regina::python::doc::LPSystem_::angle
 static const char *angle =

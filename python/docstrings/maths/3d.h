@@ -279,20 +279,6 @@ Parameter ``vector``:
 Returns:
     the result of applying this transformation to the given vector.)doc";
 
-// Docstring regina::python::doc::Matrix3D_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given matrix are different.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating-point comparisons.
-
-Parameter ``other``:
-    the matrix to compare with this.
-
-Returns:
-    ``True`` if and only if the two matrices are not equal.)doc";
-
 // Docstring regina::python::doc::Matrix3D_::inverse
 static const char *inverse =
 R"doc(Returns the inverse of this transformation.
@@ -439,22 +425,6 @@ Parameter ``vector``:
 Returns:
     the result of applying this rotation to the given vector.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given rotation have different quaternion
-coordinates.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating-point comparisons.
-
-Parameter ``other``:
-    the rotation to compare with this.
-
-Returns:
-    ``True`` if and only if the two rotations have different
-    quaternion coordinates.)doc";
-
 // Docstring regina::python::doc::Rotation3D_::inverse
 static const char *inverse =
 R"doc(Returns the inverse to this rotation.
@@ -562,23 +532,6 @@ Parameter ``translation``:
 
 Returns:
     a reference to this line segment, which will be modified directly.)doc";
-
-// Docstring regina::python::doc::Segment3D_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given line segment do not have the same
-endpoints in the same order.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating-point comparisons.
-
-Parameter ``other``:
-    the line segment to compare with this.
-
-Returns:
-    ``True`` if and only if either the two segments have different
-    first endpoints *u*, and/or the two segments have different second
-    endpoints *v*.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__sub
 static const char *__sub =
@@ -782,20 +735,6 @@ Parameter ``rhs``:
 
 Returns:
     the inner product of this vector and *rhs*.)doc";
-
-// Docstring regina::python::doc::Vector3D_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given vector have different coordinates.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating-point comparisons.
-
-Parameter ``other``:
-    the vector to compare with this.
-
-Returns:
-    ``True`` if and only if the two vectors are different.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__sub
 static const char *__sub =

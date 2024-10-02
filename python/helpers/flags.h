@@ -130,7 +130,7 @@ void add_flags(pybind11::module_& m,
             return out.str();
         })
         ;
-    regina::python::add_eq_operators(f, rdoc::__eq_2, rdoc::__ne_2);
+    regina::python::add_eq_operators(f, rdoc::__eq_2);
 
     RDOC_SCOPE_END
 
