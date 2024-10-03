@@ -145,9 +145,10 @@ class ModelLinkGraphArc {
          * ModelLinkGraphArc(), since the latter is equivalent to calling
          * ModelLinkGraphArc(\c null, 0).
          *
-         * \c true if and only if this and \a rhs are identical.
+         * \return \c true if and only if this and the given arc reference
+         * are identical.
          */
-        bool operator == (const ModelLinkGraphArc& rhs) const;
+        bool operator == (const ModelLinkGraphArc&) const = default;
         /**
          * Sets this to be a copy of the given arc reference.
          *
@@ -1646,11 +1647,6 @@ inline ModelLinkGraphNode* ModelLinkGraphArc::node() const {
 
 inline int ModelLinkGraphArc::arc() const {
     return arc_;
-}
-
-inline bool ModelLinkGraphArc::operator == (const ModelLinkGraphArc& rhs)
-        const {
-    return (node_ == rhs.node_ && arc_ == rhs.arc_);
 }
 
 inline ModelLinkGraphArc ModelLinkGraphArc::opposite() const {

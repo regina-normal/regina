@@ -959,11 +959,10 @@ class Perm {
          * This is true if and only if both permutations have the same
          * images for all 0 ≤ \a i < \a n.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,...,\a n-1) under this
@@ -2048,11 +2047,6 @@ inline constexpr int Perm<n>::pre(int image) const {
             return i;
     // We should never reach this point.
     return -1;
-}
-
-template <int n>
-inline constexpr bool Perm<n>::operator == (const Perm& other) const {
-    return (code_ == other.code_);
 }
 
 template <int n>

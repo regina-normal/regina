@@ -2790,7 +2790,7 @@ class ChildIterator {
          *
          * \return true if and only if the two iterators are equal.
          */
-        bool operator == (const ChildIterator& rhs) const;
+        bool operator == (const ChildIterator&) const = default;
 
         /**
          * Preincrement operator.
@@ -4240,12 +4240,6 @@ inline Packet::PacketChangeSpan::~PacketChangeSpan() {
 template <bool const_>
 inline ChildIterator<const_>::ChildIterator(
         std::shared_ptr<value_type> current) : current_(std::move(current)) {
-}
-
-template <bool const_>
-inline bool ChildIterator<const_>::operator == (const ChildIterator& rhs)
-        const {
-    return current_ == rhs.current_;
 }
 
 template <bool const_>

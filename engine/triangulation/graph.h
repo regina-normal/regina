@@ -133,11 +133,10 @@ namespace graph {
          * (<i>dim</i>-1)-face but oriented in opposite
          * directions are also considered unequal.
          *
-         * \param rhs the dual edge object to compare with this.
          * \return \c true if and only if the two dual edges are
          * equal, as described above.
          */
-        bool operator == (const DualEdge& rhs) const;
+        bool operator == (const DualEdge&) const = default;
 
         /**
          * Returns the dual vertex at the beginning of this
@@ -441,10 +440,9 @@ namespace graph {
             /**
              * Tests whether this and the given iterator are equal.
              *
-             * \param rhs the iterator to compare with this.
              * \return \c true if and only if the two iterators are equal.
              */
-            bool operator == (const IncidentDualEdgeIterator& rhs) const;
+            bool operator == (const IncidentDualEdgeIterator&) const = default;
 
         private:
             /**
@@ -570,10 +568,10 @@ namespace graph {
             /**
              * Tests whether this and the given iterator are equal.
              *
-             * \param rhs the iterator to compare with this.
              * \return \c true if and only if the two iterators are equal.
              */
-            bool operator == (const AdjacentDualVertexIterator& rhs) const;
+            bool operator == (const AdjacentDualVertexIterator&) const =
+                default;
 
         private:
             /**
@@ -989,11 +987,6 @@ namespace graph {
     }
 
     template <int dim>
-    inline bool DualEdge<dim>::operator == (const DualEdge& rhs) const {
-        return (face == rhs.face) && (forward == rhs.forward);
-    }
-
-    template <int dim>
     inline Simplex<dim>* DualEdge<dim>::source() const {
         return face->embedding(forward ? 0 : 1).simplex();
     }
@@ -1081,12 +1074,6 @@ namespace graph {
     }
 
     template <int dim, bool out>
-    inline bool IncidentDualEdgeIterator<dim, out>::operator == (
-            const IncidentDualEdgeIterator& rhs) const {
-        return (simp_ == rhs.simp_) && (facet_ == rhs.facet_);
-    }
-
-    template <int dim, bool out>
     inline void IncidentDualEdgeIterator<dim, out>::makeValid() {
         while (facet_ <= dim && ! simp_->adjacentSimplex(facet_))
             ++facet_;
@@ -1126,12 +1113,6 @@ namespace graph {
     template <int dim>
     inline Simplex<dim>* AdjacentDualVertexIterator<dim>::operator * () const {
         return source_->adjacentSimplex(facet_);
-    }
-
-    template <int dim>
-    inline bool AdjacentDualVertexIterator<dim>::operator == (
-            const AdjacentDualVertexIterator& rhs) const {
-        return (source_ == rhs.source_) && (facet_ == rhs.facet_);
     }
 
     template <int dim>

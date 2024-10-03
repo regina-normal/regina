@@ -647,29 +647,24 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
 
                 /**
                  * Creates a copy of the given iterator.
-                 *
-                 * \param cloneMe the iterator to clone.
                  */
-                VectorIterator(const VectorIterator& cloneMe) = default;
+                VectorIterator(const VectorIterator&) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
                  *
-                 * \param cloneMe the iterator to clone.
                  * \return a reference to this iterator.
                  */
-                VectorIterator& operator = (const VectorIterator& cloneMe) =
-                    default;
+                VectorIterator& operator = (const VectorIterator&) = default;
 
                 /**
                  * Compares this with the given iterator for equality.
                  *
-                 * \param other the iterator to compare this with.
                  * \return \c true if the iterators point to the same
-                 * element of the same normal surface list, or \c false
+                 * element of the same normal hypersurface list, or \c false
                  * if they do not.
                  */
-                bool operator == (const VectorIterator& other) const;
+                bool operator == (const VectorIterator&) const = default;
 
                 /**
                  * Returns the raw vector for the normal hypersurface that this
@@ -1068,11 +1063,6 @@ inline MatrixInt NormalHypersurfaces::recreateMatchingEquations() const {
     // Although makeMatchingEquations() could throw an exception, we are
     // guaranteed in our scenario here that this will always succeed.
     return makeMatchingEquations(triangulation(), coords_);
-}
-
-inline bool NormalHypersurfaces::VectorIterator::operator ==(
-        const NormalHypersurfaces::VectorIterator& other) const {
-    return (it_ == other.it_);
 }
 
 inline const Vector<LargeInteger>&

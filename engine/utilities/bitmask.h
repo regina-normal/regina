@@ -627,10 +627,8 @@ class Bitmask1 {
 
         /**
          * Creates a clone of the given bitmask.
-         *
-         * \param src the bitmask to clone.
          */
-        inline Bitmask1(const Bitmask1<T>& src) = default;
+        inline Bitmask1(const Bitmask1<T>&) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -652,10 +650,9 @@ class Bitmask1 {
         /**
          * Sets this bitmask to a copy of the given bitmask.
          *
-         * \param other the bitmask to clone.
          * \return a reference to this bitmask.
          */
-        Bitmask1<T>& operator = (const Bitmask1<T>& other) = default;
+        Bitmask1<T>& operator = (const Bitmask1<T>&) = default;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -817,13 +814,10 @@ class Bitmask1 {
         /**
          * Determines whether this and the given bitmask are identical.
          *
-         * \param other the bitmask to compare against this.
          * \return \c true if and only if this and the given bitmask are
          * identical.
          */
-        inline bool operator == (const Bitmask1<T>& other) const {
-            return (mask == other.mask);
-        }
+        bool operator == (const Bitmask1<T>&) const = default;
 
         /**
          * Determines whether this bitmask appears strictly before the given
@@ -1044,10 +1038,8 @@ class Bitmask2 {
 
         /**
          * Creates a clone of the given bitmask.
-         *
-         * \param src the bitmask to clone.
          */
-        inline Bitmask2(const Bitmask2<T, U>& src) = default;
+        inline Bitmask2(const Bitmask2<T, U>&) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -1071,10 +1063,9 @@ class Bitmask2 {
         /**
          * Sets this bitmask to a copy of the given bitmask.
          *
-         * \param other the bitmask to clone.
          * \return a reference to this bitmask.
          */
-        Bitmask2<T, U>& operator = (const Bitmask2<T, U>& other) = default;
+        Bitmask2<T, U>& operator = (const Bitmask2<T, U>&) = default;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -1266,13 +1257,10 @@ class Bitmask2 {
         /**
          * Determines whether this and the given bitmask are identical.
          *
-         * \param other the bitmask to compare against this.
          * \return \c true if and only if this and the given bitmask are
          * identical.
          */
-        inline bool operator == (const Bitmask2<T, U>& other) const {
-            return (low == other.low && high == other.high);
-        }
+        bool operator == (const Bitmask2<T, U>& other) const = default;
 
         /**
          * Determines whether this bitmask appears strictly before the given

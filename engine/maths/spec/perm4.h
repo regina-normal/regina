@@ -987,11 +987,10 @@ class Perm<4> {
          * This is true if and only if both permutations have the same
          * images for 0, 1, 2 and 3.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<4>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,2,3) under this
@@ -1834,10 +1833,6 @@ inline Perm<4> Perm<4>::rand(URBG&& gen, bool even) {
     }
 }
 #endif // __DOXYGEN
-
-inline constexpr bool Perm<4>::operator == (const Perm<4>& other) const {
-    return (code_ == other.code_);
-}
 
 inline void Perm<4>::tightEncode(std::ostream& out) const {
     out << static_cast<char>(code_ + 33);

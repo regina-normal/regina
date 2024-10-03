@@ -109,27 +109,23 @@ struct DiscSpec {
     DiscSpec(size_t newTetIndex, int newType, unsigned long newNumber);
     /**
      * Creates a new disc specifier that is a clone of the given specifier.
-     *
-     * \param cloneMe the disc specifier to clone.
      */
-    DiscSpec(const DiscSpec& cloneMe) = default;
+    DiscSpec(const DiscSpec&) = default;
 
     /**
      * Copies the values from the given disc specifier into this specifier.
      *
-     * \param cloneMe the disc specifier whose values should be copied.
      * \return a reference to this disc specifier.
      */
-    DiscSpec& operator = (const DiscSpec& cloneMe) = default;
+    DiscSpec& operator = (const DiscSpec&) = default;
     /**
      * Determines if this and the given disc specifier contain identical
      * information.
      *
-     * \param other the disc specifier to compare with this.
      * \return \c true if and only if this and the given disc specifier
      * contain identical information.
      */
-    bool operator == (const DiscSpec& other) const;
+    bool operator == (const DiscSpec&) const = default;
 
     friend std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
 };
@@ -1313,11 +1309,6 @@ class DiscSpecIterator {
 inline DiscSpec::DiscSpec(size_t newTetIndex, int newType,
         unsigned long newNumber) : tetIndex(newTetIndex), type(newType),
         number(newNumber) {
-}
-
-inline bool DiscSpec::operator == (const DiscSpec& other) const {
-    return (tetIndex == other.tetIndex && type == other.type &&
-        number == other.number);
 }
 
 inline std::ostream& operator << (std::ostream& out, const DiscSpec& spec) {

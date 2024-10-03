@@ -848,11 +848,10 @@ class Perm<6> {
          * This is true if and only if both permutations have the same
          * images for 0, 1, 2, 3, 4 and 5.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<6>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,2,3,4,5) under this
@@ -3449,10 +3448,6 @@ inline constexpr int Perm<6>::operator[](int source) const {
 
 inline constexpr int Perm<6>::pre(int image) const {
     return (code1Table[invS6[code2_]] >> (3 * image)) & 0x07;
-}
-
-inline constexpr bool Perm<6>::operator == (const Perm<6>& other) const {
-    return (code2_ == other.code2_);
 }
 
 inline constexpr int Perm<6>::compareWith(const Perm<6>& other) const {

@@ -1080,11 +1080,10 @@ class Perm<5> {
          * This is true if and only if both permutations have the same
          * images for 0, 1, 2, 3 and 4.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<5>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,2,3,4) under this
@@ -2016,10 +2015,6 @@ inline constexpr int Perm<5>::operator[](int source) const {
 
 inline constexpr int Perm<5>::pre(int image) const {
     return imageTable[invS5[code2_]][image];
-}
-
-inline constexpr bool Perm<5>::operator == (const Perm<5>& other) const {
-    return (code2_ == other.code2_);
 }
 
 inline constexpr int Perm<5>::compareWith(const Perm<5>& other) const {

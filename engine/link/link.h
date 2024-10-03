@@ -250,9 +250,10 @@ class StrandRef {
          * equal to the null reference created by calling StrandRef(),
          * since the latter is equivalent to calling StrandRef(\c null, 0).
          *
-         * \c true if and only if this and \a rhs are identical.
+         * \return \c true if and only if this and the given reference are
+         * identical.
          */
-        bool operator == (const StrandRef& rhs) const;
+        bool operator == (const StrandRef&) const = default;
         /**
          * Sets this to be a copy of the given strand reference.
          *
@@ -5138,10 +5139,6 @@ inline ssize_t StrandRef::id() const {
         return (crossing()->index() << 1) | static_cast<size_t>(strand_);
     else
         return -1;
-}
-
-inline bool StrandRef::operator == (const StrandRef& rhs) const {
-    return (crossing_ == rhs.crossing_ && strand_ == rhs.strand_);
 }
 
 inline StrandRef& StrandRef::operator ++ () {

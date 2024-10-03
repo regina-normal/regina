@@ -660,11 +660,10 @@ class Perm<2> {
          * This is true if and only if both permutations have the same
          * images for 0 and 1.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<2>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1) under this
@@ -1160,10 +1159,6 @@ inline constexpr int Perm<2>::operator[](int source) const {
 
 inline constexpr int Perm<2>::pre(int image) const {
     return image ^ code_;
-}
-
-inline constexpr bool Perm<2>::operator == (const Perm<2>& other) const {
-    return (code_ == other.code_);
 }
 
 inline constexpr int Perm<2>::compareWith(const Perm<2>& other) const {

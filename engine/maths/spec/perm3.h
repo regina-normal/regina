@@ -729,11 +729,10 @@ class Perm<3> {
          * This is true if and only if both permutations have the same
          * images for 0, 1 and 2.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<3>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,2) under this
@@ -1376,10 +1375,6 @@ inline constexpr int Perm<3>::operator[](int source) const {
 
 inline constexpr int Perm<3>::pre(int image) const {
     return imageTable[invS3[code_]][image];
-}
-
-inline constexpr bool Perm<3>::operator == (const Perm<3>& other) const {
-    return (code_ == other.code_);
 }
 
 inline constexpr int Perm<3>::compareWith(const Perm<3>& other) const {

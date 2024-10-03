@@ -80,10 +80,8 @@ class BoolSet {
         constexpr BoolSet(bool member);
         /**
          * Creates a clone of the given set.
-         *
-         * \param src the set to clone.
          */
-        constexpr BoolSet(const BoolSet& src) = default;
+        constexpr BoolSet(const BoolSet&) = default;
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
@@ -157,11 +155,10 @@ class BoolSet {
         /**
          * Determines if this set is equal to the given set.
          *
-         * \param other the set to compare with this.
          * \return \c true if and only if this and the given set are
          * equal.
          */
-        constexpr bool operator == (BoolSet other) const;
+        constexpr bool operator == (const BoolSet&) const = default;
         /**
          * Compares two sets under the subset relation.
          *
@@ -180,10 +177,9 @@ class BoolSet {
         /**
          * Sets this set to be identical to the given set.
          *
-         * \param cloneMe the set whose value this set will take.
          * \return a reference to this set.
          */
-        BoolSet& operator = (const BoolSet& cloneMe) = default;
+        BoolSet& operator = (const BoolSet&) = default;
         /**
          * Sets this set to the single member set containing the given
          * element.
@@ -393,9 +389,6 @@ inline void BoolSet::fill() {
     elements = static_cast<unsigned char>(eltTrue | eltFalse);
 }
 
-inline constexpr bool BoolSet::operator == (BoolSet other) const {
-    return (elements == other.elements);
-}
 inline constexpr std::partial_ordering BoolSet::operator <=> (BoolSet rhs)
         const {
     if (elements == rhs.elements)

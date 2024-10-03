@@ -96,10 +96,8 @@ class Flags {
 
         /**
          * Creates a clone of the given flag set.
-         *
-         * \param init the flag set to clone.
          */
-        inline Flags(const Flags<T>& init) = default;
+        inline Flags(const Flags<T>&) = default;
 
         /**
          * Returns the integer representation of this set.
@@ -185,9 +183,7 @@ class Flags {
          * \return \c true if and only if this and the given flag set are
          * identical.
          */
-        inline bool operator == (const Flags<T>& rhs) const {
-            return (value_ == rhs.value_);
-        }
+        bool operator == (const Flags<T>&) const = default;
 
         /**
          * Sets this flag set to contain precisely the given flag only.
@@ -203,10 +199,9 @@ class Flags {
         /**
          * Sets this flag set to contain a copy of the given flag set.
          *
-         * \param rhs the new value of this flag set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator = (const Flags<T>& rhs) = default;
+        Flags<T>& operator = (const Flags<T>&) = default;
 
         /**
          * Changes this flag set by taking a bitwise OR with the given

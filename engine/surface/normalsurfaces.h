@@ -916,12 +916,11 @@ class NormalSurfaces :
                 /**
                  * Compares this with the given iterator for equality.
                  *
-                 * \param other the iterator to compare this with.
                  * \return \c true if the iterators point to the same
                  * element of the same normal surface list, or \c false
                  * if they do not.
                  */
-                bool operator == (const VectorIterator& other) const;
+                bool operator == (const VectorIterator&) const = default;
 
                 /**
                  * Returns the raw vector for the normal surface that this
@@ -1461,11 +1460,6 @@ template <typename Comparison>
 inline void NormalSurfaces::sort(Comparison&& comp) {
     PacketChangeSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
-}
-
-inline bool NormalSurfaces::VectorIterator::operator ==(
-        const NormalSurfaces::VectorIterator& other) const {
-    return (it_ == other.it_);
 }
 
 inline const Vector<LargeInteger>& NormalSurfaces::VectorIterator::
