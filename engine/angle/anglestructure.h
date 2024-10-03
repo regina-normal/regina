@@ -429,9 +429,10 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         bool operator == (const AngleStructure& other) const;
 
         /**
-         * Imposes a total order on all angle structures.
+         * Compares this against the given angle structure under a total
+         * ordering of all angle structures.
          *
-         * This order is not mathematically meaningful; it is merely
+         * This ordering is not mathematically meaningful; it is merely
          * provided for scenarios where you need to be able to sort
          * angle structures (e.g., when using them as keys in a map).
          *
@@ -446,11 +447,19 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * belong to different triangulations.
          * See the equality test operator==() for further details.
          *
-         * \param other the angle structure to be compared with this structure.
-         * \return \c true if and only if this appears before the given
-         * structure in the total order.
+         * This routine generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the angle structure to compare this structure with.
+         * \return The result of the comparison between this and the given
+         * angle structure.  This is marked as a weak ordering (not a strong
+         * ordering) to reflect the fact that angle structures in different
+         * triangulations could be considered equal under this comparison.
          */
-        bool operator < (const AngleStructure& other) const;
+        std::weak_ordering operator <=> (const AngleStructure& rhs) const;
 
         /**
          * Writes a short text representation of this object to the

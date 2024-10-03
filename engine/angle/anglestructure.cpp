@@ -37,12 +37,13 @@
 
 namespace regina {
 
-bool AngleStructure::operator < (const AngleStructure& other) const {
-    if (triangulation_->size() != other.triangulation_->size())
-        return triangulation_->size() < other.triangulation_->size();
+std::weak_ordering AngleStructure::operator <=> (const AngleStructure& rhs)
+        const {
+    if (triangulation_->size() != rhs.triangulation_->size())
+        return triangulation_->size() <=> rhs.triangulation_->size();
 
-    return std::lexicographical_compare(vector_.begin(), vector_.end(),
-        other.vector_.begin(), other.vector_.end());
+    return std::lexicographical_compare_three_way(
+        vector_.begin(), vector_.end(), rhs.vector_.begin(), rhs.vector_.end());
 }
 
 Rational AngleStructure::angle(size_t tetIndex, int edgePair) const {

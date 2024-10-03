@@ -1581,9 +1581,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         bool operator == (const NormalSurface& other) const;
 
         /**
-         * Imposes a total order on all normal and almost normal surfaces.
+         * Compares this against the given surface under a total
+         * ordering of all normal and almost normal surfaces.
          *
-         * This order is not mathematically meaningful; it is merely
+         * This ordering is not mathematically meaningful; it is merely
          * provided for scenarios where you need to be able to sort
          * surfaces (e.g., when using them as keys in a map).
          *
@@ -1599,11 +1600,20 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * other supports non-compact or almost normal surfaces.
          * See the equality test operator==() for further details.
          *
-         * \param other the surface to be compared with this surface.
-         * \return \c true if and only if this appears before the given
-         * surface in the total order.
+         * This routine generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the surface to compare this surface with.
+         * \return The result of the comparison between this and the given
+         * surface.  This is marked as a weak ordering (not a strong
+         * ordering) to reflect the fact that (for example) surfaces in
+         * different triangulations or using different encodings could be
+         * considered equal under this comparison.
          */
-        bool operator < (const NormalSurface& other) const;
+        std::weak_ordering operator <=> (const NormalSurface& rhs) const;
 
         /**
          * Determines whether this surface contains only triangle and/or

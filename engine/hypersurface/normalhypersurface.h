@@ -1183,9 +1183,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool operator == (const NormalHypersurface& other) const;
 
         /**
-         * Imposes a total order on all normal hypersurfaces.
+         * Compares this against the given surface under a total
+         * ordering of all normal hypersurfaces.
          *
-         * This order is not mathematically meaningful; it is merely
+         * This ordering is not mathematically meaningful; it is merely
          * provided for scenarios where you need to be able to sort
          * hypersurfaces (e.g., when using them as keys in a map).
          *
@@ -1195,17 +1196,26 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * coordinates, and does not use transient properties such as
          * locations in memory).
          *
-         * This operation is consistent with the equality test.  In
-         * particular, it does not matter whether the two hypersurfaces
-         * belong to different triangulations, or use different encodings,
-         * or if one but not the other supports non-compact hypersurfaces.
+         * This operation is consistent with the equality test.  In particular,
+         * it does not matter whether the two hypersurfaces belong to different
+         * triangulations, or use different encodings, or if one but not the
+         * other supports non-compact hypersurfaces.
          * See the equality test operator==() for further details.
          *
-         * \param other the hypersurface to be compared with this hypersurface.
-         * \return \c true if and only if this appears before the given
-         * hypersurface in the total order.
+         * This routine generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the hypersurface to compare this hypersurface with.
+         * \return The result of the comparison between this and the given
+         * hypersurface.  This is marked as a weak ordering (not a strong
+         * ordering) to reflect the fact that (for example) hypersurfaces in
+         * different triangulations or using different encodings could be
+         * considered equal under this comparison.
          */
-        bool operator < (const NormalHypersurface& other) const;
+        std::weak_ordering operator <=> (const NormalHypersurface& rhs) const;
 
         /**
          * Determines whether this hypersurface is embedded.  This is true if

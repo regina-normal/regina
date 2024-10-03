@@ -177,28 +177,29 @@ bool NormalHypersurface::operator == (const NormalHypersurface& other) const {
     return true;
 }
 
-bool NormalHypersurface::operator < (const NormalHypersurface& other) const {
+std::weak_ordering NormalHypersurface::operator <=> (
+        const NormalHypersurface& rhs) const {
     size_t nPents = triangulation_->size();
-    if (nPents != other.triangulation_->size())
-        return nPents < other.triangulation_->size();
+    if (nPents != rhs.triangulation_->size())
+        return nPents <=> rhs.triangulation_->size();
 
     for (size_t t = 0; t < nPents; ++t) {
         for (int i = 0; i < 5; ++i) {
-            if (tetrahedra(t, i) < other.tetrahedra(t, i))
-                return true;
-            if (tetrahedra(t, i) > other.tetrahedra(t, i))
-                return false;
+            if (tetrahedra(t, i) < rhs.tetrahedra(t, i))
+                return std::weak_ordering::less;
+            if (tetrahedra(t, i) > rhs.tetrahedra(t, i))
+                return std::weak_ordering::greater;
         }
         for (int i = 0; i < 10; ++i) {
-            if (prisms(t, i) < other.prisms(t, i))
-                return true;
-            if (prisms(t, i) > other.prisms(t, i))
-                return false;
+            if (prisms(t, i) < rhs.prisms(t, i))
+                return std::weak_ordering::less;
+            if (prisms(t, i) > rhs.prisms(t, i))
+                return std::weak_ordering::greater;
         }
     }
 
     // The hypersurfaces are equal.
-    return false;
+    return std::weak_ordering::equivalent;
 }
 
 bool NormalHypersurface::embedded() const {

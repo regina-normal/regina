@@ -219,38 +219,39 @@ bool NormalSurface::operator == (const NormalSurface& other) const {
     return true;
 }
 
-bool NormalSurface::operator < (const NormalSurface& other) const {
+std::weak_ordering NormalSurface::operator <=> (const NormalSurface& rhs)
+        const {
     size_t nTet = triangulation_->size();
-    if (nTet != other.triangulation_->size())
-        return nTet < other.triangulation_->size();
+    if (nTet != rhs.triangulation_->size())
+        return nTet <=> rhs.triangulation_->size();
 
     bool checkAlmostNormal =
-        (enc_.storesOctagons() || other.enc_.storesOctagons());
+        (enc_.storesOctagons() || rhs.enc_.storesOctagons());
 
     for (size_t t = 0; t < nTet; ++t) {
         for (int i = 0; i < 4; ++i) {
-            if (triangles(t, i) < other.triangles(t, i))
-                return true;
-            if (triangles(t, i) > other.triangles(t, i))
-                return false;
+            if (triangles(t, i) < rhs.triangles(t, i))
+                return std::weak_ordering::less;
+            if (triangles(t, i) > rhs.triangles(t, i))
+                return std::weak_ordering::greater;
         }
         for (int i = 0; i < 3; ++i) {
-            if (quads(t, i) < other.quads(t, i))
-                return true;
-            if (quads(t, i) > other.quads(t, i))
-                return false;
+            if (quads(t, i) < rhs.quads(t, i))
+                return std::weak_ordering::less;
+            if (quads(t, i) > rhs.quads(t, i))
+                return std::weak_ordering::greater;
         }
         if (checkAlmostNormal)
             for (int i = 0; i < 3; ++i) {
-                if (octs(t, i) < other.octs(t, i))
-                    return true;
-                if (octs(t, i) > other.octs(t, i))
-                    return false;
+                if (octs(t, i) < rhs.octs(t, i))
+                    return std::weak_ordering::less;
+                if (octs(t, i) > rhs.octs(t, i))
+                    return std::weak_ordering::greater;
             }
     }
 
     // The surfaces are equal.
-    return false;
+    return std::weak_ordering::equivalent;
 }
 
 bool NormalSurface::embedded() const {

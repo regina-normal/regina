@@ -83,6 +83,43 @@ Parameter ``rhs``:
 Returns:
     the sum of both normal hypersurfaces.)doc";
 
+// Docstring regina::python::doc::NormalHypersurface_::__cmp
+static const char *__cmp =
+R"doc(Compares this against the given surface under a total ordering of all
+normal hypersurfaces.
+
+This ordering is not mathematically meaningful; it is merely provided
+for scenarios where you need to be able to sort hypersurfaces (e.g.,
+when using them as keys in a map).
+
+The order _is_ well-defined, and will be preserved across copy/move
+operations, different program executions, and different platforms
+(since it is defined purely in terms of the normal coordinates, and
+does not use transient properties such as locations in memory).
+
+This operation is consistent with the equality test. In particular, it
+does not matter whether the two hypersurfaces belong to different
+triangulations, or use different encodings, or if one but not the
+other supports non-compact hypersurfaces. See the equality test
+operator==() for further details.
+
+This routine generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the hypersurface to compare this hypersurface with.
+
+Returns:
+    The result of the comparison between this and the given
+    hypersurface. This is marked as a weak ordering (not a strong
+    ordering) to reflect the fact that (for example) hypersurfaces in
+    different triangulations or using different encodings could be
+    considered equal under this comparison.)doc";
+
 // Docstring regina::python::doc::NormalHypersurface_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given normal hypersurface.)doc";
 
@@ -249,32 +286,6 @@ Parameter ``coords``:
 
 Parameter ``vector``:
     a vector containing the coordinates of the normal hypersurface.)doc";
-
-// Docstring regina::python::doc::NormalHypersurface_::__lt
-static const char *__lt =
-R"doc(Imposes a total order on all normal hypersurfaces.
-
-This order is not mathematically meaningful; it is merely provided for
-scenarios where you need to be able to sort hypersurfaces (e.g., when
-using them as keys in a map).
-
-The order _is_ well-defined, and will be preserved across copy/move
-operations, different program executions, and different platforms
-(since it is defined purely in terms of the normal coordinates, and
-does not use transient properties such as locations in memory).
-
-This operation is consistent with the equality test. In particular, it
-does not matter whether the two hypersurfaces belong to different
-triangulations, or use different encodings, or if one but not the
-other supports non-compact hypersurfaces. See the equality test
-operator==() for further details.
-
-Parameter ``other``:
-    the hypersurface to be compared with this hypersurface.
-
-Returns:
-    ``True`` if and only if this appears before the given hypersurface
-    in the total order.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__mul
 static const char *__mul =

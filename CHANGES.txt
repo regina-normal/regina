@@ -39,6 +39,9 @@ Version 7.4  [ (to be announced) ]
         Class AngleStructure:
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::Integer.
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Class AngleStructures:
             - New routine sort().
         Enum Attachment::OwnershipPolicy:
@@ -160,6 +163,10 @@ Version 7.4  [ (to be announced) ]
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
             - Added a spaceship operator (<=>) for comparisons.
+        Class LightweightSequence<T>:
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Class Link:
             - New routine makeAlternating().
             - New routine seifertCircles().
@@ -248,6 +255,9 @@ Version 7.4  [ (to be announced) ]
               return the entire surface as a single component.
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::LargeInteger.
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Enum NormalCoords:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., NS_STANDARD) have been
