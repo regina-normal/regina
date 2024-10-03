@@ -86,7 +86,7 @@ struct SFSFibre {
     /**
      * Creates a new uninitialised exceptional fibre.
      */
-    SFSFibre() = default;
+    constexpr SFSFibre() = default;
     /**
      * Creates a new exceptional fibre with the given parameters.
      *
@@ -95,39 +95,40 @@ struct SFSFibre {
      * \param newBeta the second parameter of this exceptional fibre;
      * this must have no common factors with the first parameter \a newAlpha.
      */
-    SFSFibre(long newAlpha, long newBeta);
+    constexpr SFSFibre(long newAlpha, long newBeta);
     /**
      * Creates a new exceptional fibre that is a clone of the given
      * fibre.
-     *
-     * \param cloneMe the exceptional fibre to clone.
      */
-    SFSFibre(const SFSFibre& cloneMe) = default;
+    constexpr SFSFibre(const SFSFibre&) = default;
 
     /**
      * Makes this exceptional fibre a clone of the given fibre.
-     *
-     * \param cloneMe the exceptional fibre to clone.
      */
-    SFSFibre& operator = (const SFSFibre& cloneMe) = default;
+    SFSFibre& operator = (const SFSFibre&) = default;
     /**
      * Determines if this and the given exceptional fibre are identical.
      * This requires both fibres to have the same values for \a alpha
      * and the same values for \a beta.
      *
-     * \param compare the fibre with which this will be compared.
      * \return \c true if and only if this and the given fibre are
      * identical.
      */
-    bool operator == (const SFSFibre& compare) const;
+    constexpr bool operator == (const SFSFibre&) const = default;
     /**
-     * Determines if this exceptional fibre is smaller than the given
-     * fibre.  Fibres are sorted by \a alpha and then by \a beta.
+     * Compares two exceptional fibres.
+     * Fibres are ordered first by \a alpha and then by \a beta.
      *
-     * \param compare the fibre with which this will be compared.
-     * \return \c true if and only if this is smaller than the given fibre.
+     * This generates all of the usual comparison operators, including
+     * `<`, `<=`, `>`, and `>=`.
+     *
+     * \python This spaceship operator `x <=> y` is not available, but the
+     * other comparison operators that it generates _are_ available.
+     *
+     * \return The result of the comparison between this and the given fibre.
      */
-    bool operator < (const SFSFibre& compare) const;
+    constexpr std::strong_ordering operator <=> (const SFSFibre&) const =
+        default;
 };
 
 /**
@@ -868,16 +869,8 @@ void swap(SFSpace& a, SFSpace& b) noexcept;
 
 // Inline functions for SFSFibre
 
-inline SFSFibre::SFSFibre(long newAlpha, long newBeta) :
+inline constexpr SFSFibre::SFSFibre(long newAlpha, long newBeta) :
         alpha(newAlpha), beta(newBeta) {
-}
-
-inline bool SFSFibre::operator == (const SFSFibre& compare) const {
-    return (alpha == compare.alpha && beta == compare.beta);
-}
-inline bool SFSFibre::operator < (const SFSFibre& compare) const {
-    return (alpha < compare.alpha ||
-        (alpha == compare.alpha && beta < compare.beta));
 }
 
 // Inline functions for SFSpace

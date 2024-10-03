@@ -98,10 +98,8 @@ struct DiscType {
     constexpr DiscType(size_t newTetIndex, int newType);
     /**
      * Creates a copy of the given disc type.
-     *
-     * \param cloneMe the disc type to clone.
      */
-    constexpr DiscType(const DiscType& cloneMe) = default;
+    constexpr DiscType(const DiscType&) = default;
 
     /**
      * Returns \c true if this disc type is non-null.
@@ -116,10 +114,9 @@ struct DiscType {
     /**
      * Sets this to a copy of the given disc type.
      *
-     * \param cloneMe the disc type to clone.
      * \return a reference to this disc type.
      */
-    DiscType& operator = (const DiscType& cloneMe) = default;
+    DiscType& operator = (const DiscType&) = default;
     /**
      * Determines if this and the given disc type are identical.
      *
@@ -131,16 +128,23 @@ struct DiscType {
      * \return \c true if this and the given disc type are identical, or
      * \c false if they are different.
      */
-    constexpr bool operator == (const DiscType& compare) const;
+    constexpr bool operator == (const DiscType&) const = default;
     /**
-     * Provides an ordering of disc types.  Types are ordered first by
-     * \a tetrahedron and then by \a type.  The null disc type is considered
-     * less than all "meaningful" disc types.
+     * Compares two disc types.
+     * Types are ordered first by \a tetrahedron and then by \a type.
+     * The null disc type is considered less than all "meaningful" disc types.
      *
-     * \return \c true if this disc type appears before the given disc type
-     * in the ordering, or \c false if not.
+     * This generates all of the usual comparison operators, including
+     * `<`, `<=`, `>`, and `>=`.
+     *
+     * \python This spaceship operator `x <=> y` is not available, but the
+     * other comparison operators that it generates _are_ available.
+     *
+     * \return The result of the comparison between this and the given
+     * disc type.
      */
-    constexpr bool operator < (const DiscType& compare) const;
+    constexpr std::strong_ordering operator <=> (const DiscType&) const =
+        default;
 };
 
 /**
@@ -166,16 +170,6 @@ inline constexpr DiscType::DiscType(size_t newTetIndex, int newType) :
 
 inline constexpr DiscType::operator bool() const {
     return (type >= 0);
-}
-
-inline constexpr bool DiscType::operator == (const DiscType& compare) const {
-    return (tetIndex == compare.tetIndex && type == compare.type);
-}
-
-inline constexpr bool DiscType::operator < (const DiscType& compare) const {
-    // A null type will have tetIndex = 0, and so will be sorted first.
-    return (tetIndex < compare.tetIndex ||
-        (tetIndex == compare.tetIndex && type < compare.type));
 }
 
 inline std::ostream& operator << (std::ostream& out, const DiscType& type) {

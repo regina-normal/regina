@@ -45,13 +45,13 @@ void addDiscType(pybind11::module_& m) {
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t, int>(), rdoc::__init)
         .def(pybind11::init<const DiscType&>(), rdoc::__copy)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
         .def("__bool__", &DiscType::operator bool, rdoc::__as_bool)
         .def_readwrite("tetIndex", &DiscType::tetIndex)
         .def_readwrite("type", &DiscType::type)
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     RDOC_SCOPE_END
 }

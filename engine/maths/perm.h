@@ -1013,11 +1013,11 @@ class Perm {
         Perm operator ++(int);
 
         /**
-         * Determines if this appears earlier than the given permutation
-         * in the array Perm<n>::Sn.
+         * Compares two permutations according to which appears earlier in the
+         * array Perm<n>::Sn.
          *
          * Note that this is _not_ the same ordering of permutations as
-         * the ordering implied by compareWith().  This is, however,
+         * the ordering implied by compareWith().  This ordering is, however,
          * consistent with the ordering implied by the ++ operators.
          *
          * Unlike the smaller permutation classes that use \a Sn indices
@@ -1029,10 +1029,17 @@ class Perm {
          * (ii) just compare permutation codes if you are happy with an
          * arbitrary ordering (which will be _much_ faster).
          *
-         * \param rhs the permutation to compare this against.
-         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the permutation to compare this with.
+         * \return The result that indicates which permutation appears earlier
+         * in \a Sn.
          */
-        constexpr bool operator < (const Perm& rhs) const;
+        constexpr std::strong_ordering operator <=> (const Perm& rhs) const;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -2076,9 +2083,9 @@ inline Perm<n> Perm<n>::operator ++(int) {
 }
 
 template <int n>
-constexpr bool Perm<n>::operator < (const Perm<n>& rhs) const {
+constexpr std::strong_ordering Perm<n>::operator <=> (const Perm& rhs) const {
     if (code_ == rhs.code_)
-        return false;
+        return std::strong_ordering::equal;
 
     // The following mask blots out the images of n-2 and n-1.
     Code mask = ~((imageMask | (imageMask << imageBits))
@@ -2086,12 +2093,14 @@ constexpr bool Perm<n>::operator < (const Perm<n>& rhs) const {
     if ((code_ & mask) == (rhs.code_ & mask)) {
         // The two permutations differ precisely in the last two images.
         // In this case, the even permutation will have smaller Sn index.
-        return sign() > 0;
+        return sign() > 0 ? std::strong_ordering::less :
+            std::strong_ordering::greater;
     } else {
         // The two permutations do not just differ in the last two images.
         // This means that comparison by Sn indices will give the same
         // result as comparison by orderedSn indices.
-        return compareWith(rhs) < 0;
+        return compareWith(rhs) < 0 ? std::strong_ordering::less :
+            std::strong_ordering::greater;
     }
 }
 

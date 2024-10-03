@@ -83,7 +83,6 @@ void addPerm3(pybind11::module_& m) {
         .def("inc", [](Perm<3>& p) {
             return p++;
         }, rdoc::__inc)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
         .def_static("rot", &Perm<3>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<3>(&)(bool)>(Perm<3>::rand),
             pybind11::arg("even") = false, rdoc::rand)
@@ -122,6 +121,7 @@ void addPerm3(pybind11::module_& m) {
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding, rdoc::hash);
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     regina::python::add_lightweight_array<decltype(Perm<3>::S3)>(c,
         "_S3", rdoc::S3Lookup);

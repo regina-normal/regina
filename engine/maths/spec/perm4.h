@@ -1045,18 +1045,25 @@ class Perm<4> {
         constexpr Perm<4> operator ++(int);
 
         /**
-         * Determines if this appears earlier than the given permutation
-         * in the array Perm<4>::Sn.
+         * Compares two permutations according to which appears earlier in the
+         * array Perm<4>::Sn.
          *
          * Note that this is _not_ the same ordering of permutations as
-         * the ordering implied by compareWith().  This is, however,
+         * the ordering implied by compareWith().  This ordering is, however,
          * consistent with the ordering implied by the ++ operators,
-         * and this order is also faster to compute than compareWith().
+         * and this ordering is also faster to compute than compareWith().
          *
-         * \param rhs the permutation to compare this against.
-         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \return The result that indicates which permutation appears earlier
+         * in \a Sn.
          */
-        constexpr bool operator < (const Perm<4>& rhs) const;
+        constexpr std::strong_ordering operator <=> (const Perm&) const =
+            default;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -1797,10 +1804,6 @@ inline constexpr Perm<4> Perm<4>::operator ++(int) {
     if (++code_ == 24)
         code_ = 0;
     return ans;
-}
-
-inline constexpr bool Perm<4>::operator < (const Perm<4>& rhs) const {
-    return code_ < rhs.code_;
 }
 
 inline constexpr Perm<4> Perm<4>::rot(int i) {

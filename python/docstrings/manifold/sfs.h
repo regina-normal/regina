@@ -94,12 +94,23 @@ sized) amount of data to be copied even in a move operation.
 
 namespace SFSFibre_ {
 
-// Docstring regina::python::doc::SFSFibre_::__copy
-static const char *__copy =
-R"doc(Creates a new exceptional fibre that is a clone of the given fibre.
+// Docstring regina::python::doc::SFSFibre_::__cmp
+static const char *__cmp =
+R"doc(Compares two exceptional fibres. Fibres are ordered first by *alpha*
+and then by *beta*.
 
-Parameter ``cloneMe``:
-    the exceptional fibre to clone.)doc";
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result of the comparison between this and the given fibre.)doc";
+
+// Docstring regina::python::doc::SFSFibre_::__copy
+static const char *__copy = R"doc(Creates a new exceptional fibre that is a clone of the given fibre.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__default
 static const char *__default = R"doc(Creates a new uninitialised exceptional fibre.)doc";
@@ -109,9 +120,6 @@ static const char *__eq =
 R"doc(Determines if this and the given exceptional fibre are identical. This
 requires both fibres to have the same values for *alpha* and the same
 values for *beta*.
-
-Parameter ``compare``:
-    the fibre with which this will be compared.
 
 Returns:
     ``True`` if and only if this and the given fibre are identical.)doc";
@@ -127,17 +135,6 @@ Parameter ``newAlpha``:
 Parameter ``newBeta``:
     the second parameter of this exceptional fibre; this must have no
     common factors with the first parameter *newAlpha*.)doc";
-
-// Docstring regina::python::doc::SFSFibre_::__lt
-static const char *__lt =
-R"doc(Determines if this exceptional fibre is smaller than the given fibre.
-Fibres are sorted by *alpha* and then by *beta*.
-
-Parameter ``compare``:
-    the fibre with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is smaller than the given fibre.)doc";
 
 }
 

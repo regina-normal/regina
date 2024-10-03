@@ -328,6 +328,38 @@ Parameter ``source``:
 Returns:
     the image of *source*.)doc";
 
+// Docstring regina::python::doc::Perm_::__cmp
+static const char *__cmp =
+R"doc(Compares two permutations according to which appears earlier in the
+array Perm<n>::Sn.
+
+Note that this is _not_ the same ordering of permutations as the
+ordering implied by compareWith(). This ordering is, however,
+consistent with the ordering implied by the ++ operators.
+
+Unlike the smaller permutation classes that use *Sn* indices as
+internal permutation codes, for this generic Perm class the ordering
+defined here is _slower_ to compute than compareWith(). It is
+recommended that, unless you specifically need to align your ordering
+with *Sn* indices, you either (i) use compareWith() for
+lexicographical ordering (which is a little faster), or else (ii) just
+compare permutation codes if you are happy with an arbitrary ordering
+(which will be _much_ faster).
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the permutation to compare this with.
+
+Returns:
+    The result that indicates which permutation appears earlier in
+    *Sn*.)doc";
+
 // Docstring regina::python::doc::Perm_::__copy
 static const char *__copy = R"doc(Creates a permutation that is a clone of the given permutation.)doc";
 
@@ -384,30 +416,6 @@ Precondition:
 
 Parameter ``image``:
     the array of images.)doc";
-
-// Docstring regina::python::doc::Perm_::__lt
-static const char *__lt =
-R"doc(Determines if this appears earlier than the given permutation in the
-array Perm<n>::Sn.
-
-Note that this is _not_ the same ordering of permutations as the
-ordering implied by compareWith(). This is, however, consistent with
-the ordering implied by the ++ operators.
-
-Unlike the smaller permutation classes that use *Sn* indices as
-internal permutation codes, for this generic Perm class the ordering
-defined here is _slower_ to compute than compareWith(). It is
-recommended that, unless you specifically need to align your ordering
-with *Sn* indices, you either (i) use compareWith() for
-lexicographical ordering (which is a little faster), or else (ii) just
-compare permutation codes if you are happy with an arbitrary ordering
-(which will be _much_ faster).
-
-Parameter ``rhs``:
-    the permutation to compare this against.
-
-Returns:
-    ``True`` if and only if this appears before *rhs* in *Sn*.)doc";
 
 // Docstring regina::python::doc::Perm_::__mul
 static const char *__mul =

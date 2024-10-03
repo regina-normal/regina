@@ -94,6 +94,28 @@ Parameter ``source``:
 Returns:
     the image of *source*.)doc";
 
+// Docstring regina::python::doc::Perm_::__cmp
+static const char *__cmp =
+R"doc(Compares two permutations according to which appears earlier in the
+array Perm<2>::Sn.
+
+For the special case of permutations on two elements, this ordering is
+consistent with the ordering implied by compareWith() (but beware: for
+other permutation classes this is not true). Also, like all
+permutation classes, this ordering is consistent with the ordering
+implied by the ++ operators.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result that indicates which permutation appears earlier in
+    *Sn*.)doc";
+
 // Docstring regina::python::doc::Perm_::__copy
 static const char *__copy =
 R"doc(Creates a permutation that is a clone of the given permutation.
@@ -152,23 +174,6 @@ Precondition:
 
 Parameter ``image``:
     the array of images.)doc";
-
-// Docstring regina::python::doc::Perm_::__lt
-static const char *__lt =
-R"doc(Determines if this appears earlier than the given permutation in the
-array Perm<2>::Sn.
-
-For the special case of permutations on two elements, this ordering is
-consistent with the ordering implied by compareWith() (but beware: for
-other permutation classes this is not true). Also, like all
-permutation classes, this ordering is consistent with the ordering
-implied by the ++ operators.
-
-Parameter ``rhs``:
-    the permutation to compare this against.
-
-Returns:
-    ``True`` if and only if this appears before *rhs* in *Sn*.)doc";
 
 // Docstring regina::python::doc::Perm_::__mul
 static const char *__mul =

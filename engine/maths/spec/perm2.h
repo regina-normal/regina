@@ -712,8 +712,8 @@ class Perm<2> {
         constexpr Perm<2> operator ++(int);
 
         /**
-         * Determines if this appears earlier than the given permutation
-         * in the array Perm<2>::Sn.
+         * Compares two permutations according to which appears earlier in the
+         * array Perm<2>::Sn.
          *
          * For the special case of permutations on two elements, this
          * ordering is consistent with the ordering implied by compareWith()
@@ -721,10 +721,17 @@ class Perm<2> {
          * Also, like all permutation classes, this ordering is consistent
          * with the ordering implied by the ++ operators.
          *
-         * \param rhs the permutation to compare this against.
-         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \return The result that indicates which permutation appears earlier
+         * in \a Sn.
          */
-        constexpr bool operator < (const Perm<2>& rhs) const;
+        constexpr std::strong_ordering operator <=> (const Perm&) const =
+            default;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -1177,10 +1184,6 @@ inline constexpr Perm<2> Perm<2>::operator ++(int) {
     Perm<2> ans(code_);
     code_ ^= 1;
     return ans;
-}
-
-inline constexpr bool Perm<2>::operator < (const Perm<2>& rhs) const {
-    return code_ < rhs.code_;
 }
 
 inline constexpr Perm<2> Perm<2>::rot(int i) {

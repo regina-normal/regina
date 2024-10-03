@@ -52,10 +52,10 @@ void addSFSpace(pybind11::module_& m) {
         .def(pybind11::init<const SFSFibre&>(), rdoc::__copy)
         .def_readwrite("alpha", &SFSFibre::alpha)
         .def_readwrite("beta", &SFSFibre::beta)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
     ;
     regina::python::add_output_ostream(f);
     regina::python::add_eq_operators(f, rdoc::__eq);
+    regina::python::add_cmp_operators(f, rdoc::__cmp);
 
     RDOC_SCOPE_SWITCH(SFSpace)
 
