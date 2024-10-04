@@ -66,11 +66,20 @@ void addSatBlock(pybind11::module_& m) {
             pybind11::return_value_policy::reference, rdoc::nextBoundaryAnnulus)
         .def("abbr", &SatBlock::abbr,
             pybind11::arg("tex") = false, rdoc::abbr)
-        // We cannot bind the < operator in the normal way:
+        // We cannot bind the comparison operators in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.
         .def("__lt__", [](const SatBlock& lhs, const SatBlock& rhs) {
             return lhs < rhs;
-        }, rdoc::__lt)
+        }, rdoc::__cmp)
+        .def("__le__", [](const SatBlock& lhs, const SatBlock& rhs) {
+            return lhs <= rhs;
+        }, rdoc::__cmp)
+        .def("__gt__", [](const SatBlock& lhs, const SatBlock& rhs) {
+            return lhs > rhs;
+        }, rdoc::__cmp)
+        .def("__ge__", [](const SatBlock& lhs, const SatBlock& rhs) {
+            return lhs >= rhs;
+        }, rdoc::__cmp)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.

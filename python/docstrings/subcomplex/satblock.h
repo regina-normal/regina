@@ -169,6 +169,33 @@ Returns:
 
 namespace SatBlock_ {
 
+// Docstring regina::python::doc::SatBlock_::__cmp
+static const char *__cmp =
+R"doc(Compares saturated blocks according to an aesthetic ordering.
+
+The only purpose of this routine is to implement a consistent ordering
+of saturated blocks. The specific ordering used is purely aesthetic on
+the part of the author, and is subject to change in future versions of
+Regina.
+
+The result is marked as a weak ordering, since a triangulation could
+contain multiple blocks with the same parameters, and this ordering
+does not distinguish between them.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the saturated block to compare this with.
+
+Returns:
+    A result that indicates how this and the given block should be
+    ordered with respect to each other.)doc";
+
 // Docstring regina::python::doc::SatBlock_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object represent saturated
@@ -196,20 +223,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given object represent blocks
     of the same type with the same parameters.)doc";
-
-// Docstring regina::python::doc::SatBlock_::__lt
-static const char *__lt =
-R"doc(Implements a consistent ordering of saturated blocks. This ordering is
-purely aesthetic on the part of the author, and is subject to change
-in future versions of Regina.
-
-Parameter ``compare``:
-    the saturated block with which this will be compared.
-
-Returns:
-    ``True`` if this block comes before the given block according to
-    the ordering of saturated blocks, or ``False`` if either the
-    blocks are identical or this block comes after the given block.)doc";
 
 // Docstring regina::python::doc::SatBlock_::abbr
 static const char *abbr =

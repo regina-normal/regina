@@ -42,106 +42,114 @@
 
 namespace regina {
 
-bool SatBlock::operator < (const SatBlock& compare) const {
+std::weak_ordering SatBlock::operator <=> (const SatBlock& rhs) const {
     const auto* tri1 = dynamic_cast<const SatTriPrism*>(this);
-    const auto* tri2 = dynamic_cast<const SatTriPrism*>(&compare);
+    const auto* tri2 = dynamic_cast<const SatTriPrism*>(&rhs);
     if (tri1 && ! tri2)
-        return true;
+        return std::weak_ordering::less;
     if (tri2 && ! tri1)
-        return false;
+        return std::weak_ordering::greater;
     if (tri1 && tri2) {
         // Major first, then minor.
-        return (tri1->isMajor() && ! tri2->isMajor());
+        if (tri1->isMajor() && ! tri2->isMajor())
+            return std::weak_ordering::less;
+        if (tri2->isMajor() && ! tri1->isMajor())
+            return std::weak_ordering::greater;
+        return std::weak_ordering::equivalent;
     }
 
     const auto* cube1 = dynamic_cast<const SatCube*>(this);
-    const auto* cube2 = dynamic_cast<const SatCube*>(&compare);
+    const auto* cube2 = dynamic_cast<const SatCube*>(&rhs);
     if (cube1 && ! cube2)
-        return true;
+        return std::weak_ordering::less;
     if (cube2 && ! cube1)
-        return false;
+        return std::weak_ordering::greater;
     if (cube1 && cube2) {
         // All cubes are considered equal.
-        return false;
+        return std::weak_ordering::equivalent;
     }
 
     const auto* ref1 = dynamic_cast<const SatReflectorStrip*>(this);
-    const auto* ref2 = dynamic_cast<const SatReflectorStrip*>(&compare);
+    const auto* ref2 = dynamic_cast<const SatReflectorStrip*>(&rhs);
     if (ref1 && ! ref2)
-        return true;
+        return std::weak_ordering::less;
     if (ref2 && ! ref1)
-        return false;
+        return std::weak_ordering::greater;
     if (ref1 && ref2) {
         // Always put untwisted before twisted.
         if (ref1->twistedBoundary() && ! ref2->twistedBoundary())
-            return false;
+            return std::weak_ordering::greater;
         if (ref2->twistedBoundary() && ! ref1->twistedBoundary())
-            return true;
-        return (ref1->countAnnuli() < ref2->countAnnuli());
+            return std::weak_ordering::less;
+        return (ref1->countAnnuli() <=> ref2->countAnnuli());
     }
 
     const auto* lst1 = dynamic_cast<const SatLST*>(this);
-    const auto* lst2 = dynamic_cast<const SatLST*>(&compare);
+    const auto* lst2 = dynamic_cast<const SatLST*>(&rhs);
     if (lst1 && ! lst2)
-        return true;
+        return std::weak_ordering::less;
     if (lst2 && ! lst1)
-        return false;
+        return std::weak_ordering::greater;
     if (lst1 && lst2) {
         // Order first by LST parameters, then by roles.
         if (lst1->lst().meridinalCuts(2) < lst2->lst().meridinalCuts(2))
-            return true;
+            return std::weak_ordering::less;
         if (lst1->lst().meridinalCuts(2) > lst2->lst().meridinalCuts(2))
-            return false;
+            return std::weak_ordering::greater;
         if (lst1->lst().meridinalCuts(1) < lst2->lst().meridinalCuts(1))
-            return true;
+            return std::weak_ordering::less;
         if (lst1->lst().meridinalCuts(1) > lst2->lst().meridinalCuts(1))
-            return false;
+            return std::weak_ordering::greater;
         if (lst1->lst().meridinalCuts(0) < lst2->lst().meridinalCuts(0))
-            return true;
+            return std::weak_ordering::less;
         if (lst1->lst().meridinalCuts(0) > lst2->lst().meridinalCuts(0))
-            return false;
+            return std::weak_ordering::greater;
 
         // Sorts by which edge group is joined to the vertical annulus
         // edges, then horizontal, then diagonal (though we won't bother
         // testing diagonal, since by that stage we will know the roles
         // permutations to be equal).
         if (lst1->roles()[0] < lst2->roles()[0])
-            return true;
+            return std::weak_ordering::less;
         if (lst1->roles()[0] > lst2->roles()[0])
-            return false;
+            return std::weak_ordering::greater;
         if (lst1->roles()[1] < lst2->roles()[1])
-            return true;
+            return std::weak_ordering::less;
         if (lst1->roles()[1] > lst2->roles()[1])
-            return false;
+            return std::weak_ordering::greater;
 
         // All equal.
-        return false;
+        return std::weak_ordering::equivalent;
     }
 
     const auto* mob1 = dynamic_cast<const SatMobius*>(this);
-    const auto* mob2 = dynamic_cast<const SatMobius*>(&compare);
+    const auto* mob2 = dynamic_cast<const SatMobius*>(&rhs);
     if (mob1 && ! mob2)
-        return true;
+        return std::weak_ordering::less;
     if (mob2 && ! mob1)
-        return false;
+        return std::weak_ordering::greater;
     if (mob1 && mob2) {
-        // Order by position in descending order (vertical first, then
+        // Order by position in _descending_ order (vertical first, then
         // horizontal, then finally diagonal).
-        return (mob1->position() > mob2->position());
+        return (mob2->position() <=> mob1->position()); // note reversal
     }
 
     const auto* layer1 = dynamic_cast<const SatLayering*>(this);
-    const auto* layer2 = dynamic_cast<const SatLayering*>(&compare);
+    const auto* layer2 = dynamic_cast<const SatLayering*>(&rhs);
     if (layer1 && ! layer2)
-        return true;
+        return std::weak_ordering::less;
     if (layer2 && ! layer1)
-        return false;
+        return std::weak_ordering::greater;
     if (layer1 && layer2) {
         // Horizontal, then diagonal.
-        return (layer1->overHorizontal() && ! layer2->overHorizontal());
+        if (layer1->overHorizontal() && ! layer2->overHorizontal())
+            return std::weak_ordering::less;
+        if (layer2->overHorizontal() && ! layer1->overHorizontal())
+            return std::weak_ordering::greater;
+        return std::weak_ordering::equivalent;
     }
 
-    return false;
+    return std::weak_ordering::equivalent;
 }
 
 void SatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {

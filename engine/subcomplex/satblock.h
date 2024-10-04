@@ -423,18 +423,28 @@ class SatBlock : public ShortOutput<SatBlock> {
         virtual void writeAbbr(std::ostream& out, bool tex = false) const = 0;
 
         /**
-         * Implements a consistent ordering of saturated blocks.
-         * This ordering is purely aesthetic on the part of the author,
-         * and is subject to change in future versions of Regina.
+         * Compares saturated blocks according to an aesthetic ordering.
          *
-         * \param compare the saturated block with which this will be
-         * compared.
-         * \return \c true if this block comes before the given block
-         * according to the ordering of saturated blocks, or \c false
-         * if either the blocks are identical or this block comes after
-         * the given block.
+         * The only purpose of this routine is to implement a consistent
+         * ordering of saturated blocks.  The specific ordering used is
+         * purely aesthetic on the part of the author, and is subject to
+         * change in future versions of Regina.
+         *
+         * The result is marked as a weak ordering, since a triangulation
+         * could contain multiple blocks with the same parameters, and this
+         * ordering does not distinguish between them.
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the saturated block to compare this with.
+         * \return A result that indicates how this and the given block
+         * should be ordered with respect to each other.
          */
-        bool operator < (const SatBlock& compare) const;
+        std::weak_ordering operator <=> (const SatBlock& rhs) const;
 
         /**
          * Determines whether this and the given object represent saturated

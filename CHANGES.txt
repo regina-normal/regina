@@ -328,6 +328,10 @@ Version 7.4  [ (to be announced) ]
         Class SatAnnulus:
             - Routine attachLST() now checks its preconditions, and throws
               an exception if they fail.
+        Class SatBlock:
+            - Added a spaceship operator (<=>) for ordering.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
         Class Segment3D:
             - New class to support floating-point 3-D geometry.
         Struct SFSFibre:
