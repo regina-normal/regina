@@ -32,6 +32,35 @@ manifold classes.)doc";
 
 namespace LensSpace_ {
 
+// Docstring regina::python::doc::LensSpace_::__cmp
+static const char *__cmp =
+R"doc(Compares representations of two lens spaces in an ad-hoc fashion to
+determine which representation is "smaller".
+
+It does not matter whether the two lens spaces are homeomorphic; this
+routine compares the specific _representations_ of these spaces (and
+so in particular, different representations of the same lens space
+will be ordered differently). The specific choice of ordering is
+purely aesthetic on the part of the author, and is subject to change
+in future versions of Regina.
+
+Ultimately, all that this routine really offers is a well-defined way
+of ordering lens space representations.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the other representation to compare this with.
+
+Returns:
+    The result of the comparison between this and the given lens space
+    representation.)doc";
+
 // Docstring regina::python::doc::LensSpace_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given lens space.)doc";
 

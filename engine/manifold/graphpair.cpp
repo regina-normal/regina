@@ -38,18 +38,14 @@
 
 namespace regina {
 
-bool GraphPair::operator < (const GraphPair& compare) const {
-    if (sfs_[0] < compare.sfs_[0])
-        return true;
-    if (compare.sfs_[0] < sfs_[0])
-        return false;
+std::strong_ordering GraphPair::operator <=> (const GraphPair& rhs) const {
+    for (int i = 0; i < 2; ++i) {
+        auto cmp = sfs_[i] <=> rhs.sfs_[i];
+        if (cmp != std::strong_ordering::equal)
+            return cmp;
+    }
 
-    if (sfs_[1] < compare.sfs_[1])
-        return true;
-    if (compare.sfs_[1] < sfs_[1])
-        return false;
-
-    return simpler(matchingReln_, compare.matchingReln_);
+    return simplerThreeWay(matchingReln_, rhs.matchingReln_);
 }
 
 AbelianGroup GraphPair::homology() const {
@@ -223,19 +219,26 @@ void GraphPair::reduce() {
 
             // Try without space swapping.
             if (! (it1->alt() < it0->alt())) {
-                if (first || simpler(tryReln, useReln)) {
+                if (first) {
                     use0 = it0;
                     use1 = it1;
                     useReln = tryReln;
                     first = false;
-                } else if (! simpler(useReln, tryReln)) {
-                    // The matrix is the same as our best.  Compare spaces.
-                    if (it0->alt() < use0->alt() ||
-                            (it0->alt() == use0->alt() &&
-                             it1->alt() < use1->alt())) {
+                } else {
+                    auto cmp = simplerThreeWay(tryReln, useReln);
+                    if (cmp < 0) {
                         use0 = it0;
                         use1 = it1;
                         useReln = tryReln;
+                    } else if (cmp == 0) {
+                        // The matrix is the same as the best we have seen.
+                        // Compare spaces.
+                        cmp = it0->alt() <=> use0->alt();
+                        if (cmp < 0 || (cmp == 0 && it1->alt() < use1->alt())) {
+                            use0 = it0;
+                            use1 = it1;
+                            useReln = tryReln;
+                        }
                     }
                 }
             }
@@ -245,19 +248,26 @@ void GraphPair::reduce() {
                 tryReln = tryReln.inverse();
                 reduceSign(tryReln);
 
-                if (first || simpler(tryReln, useReln)) {
+                if (first) {
                     use0 = it1;
                     use1 = it0;
                     useReln = tryReln;
                     first = false;
-                } else if (! simpler(useReln, tryReln)) {
-                    // The matrix is the same as our best.  Compare spaces.
-                    if (it1->alt() < use0->alt() ||
-                            (it1->alt() == use0->alt() &&
-                             it0->alt() < use1->alt())) {
+                } else {
+                    auto cmp = simplerThreeWay(tryReln, useReln);
+                    if (cmp < 0) {
                         use0 = it1;
                         use1 = it0;
                         useReln = tryReln;
+                    } else if (cmp == 0) {
+                        // The matrix is the same as the best we have seen.
+                        // Compare spaces.
+                        cmp = it1->alt() <=> use0->alt();
+                        if (cmp < 0 || (cmp == 0 && it0->alt() < use1->alt())) {
+                            use0 = it1;
+                            use1 = it0;
+                            useReln = tryReln;
+                        }
                     }
                 }
             }
@@ -276,7 +286,7 @@ void GraphPair::reduce() {
 void GraphPair::reduceSign(Matrix2& reln) {
     // All we can do is negate the entire matrix (180 degree rotation
     // along the join).
-    if (simpler(- reln, reln))
+    if (simplerThreeWay(- reln, reln) < 0)
         reln.negate();
 }
 

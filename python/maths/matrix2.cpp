@@ -154,11 +154,31 @@ See the main class Matrix2 for further details.)doc")
 
     RDOC_SCOPE_SWITCH_MAIN
 
-    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc::simpler);
-    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
-            const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc::simpler_2);
+    m.def("simplerThreeWay", [](const Matrix2& a, const Matrix2& b) {
+        auto ans = simplerThreeWay(a, b);
+        if (ans == std::strong_ordering::less)
+            return -1;
+        if (ans == std::strong_ordering::greater)
+            return 1;
+        return 0;
+    }, rdoc::simplerThreeWay);
+    m.def("simplerThreeWay", [](const Matrix2& a, const Matrix2& b,
+                                const Matrix2& c, const Matrix2& d) {
+        auto ans = simplerThreeWay(a, b, c, d);
+        if (ans == std::strong_ordering::less)
+            return -1;
+        if (ans == std::strong_ordering::greater)
+            return 1;
+        return 0;
+    }, rdoc::simplerThreeWay_2);
+
+    m.def("simpler", [](const Matrix2& a, const Matrix2& b) { // deprecated
+        return simplerThreeWay(a, b) == std::strong_ordering::less;
+    }, rdoc::simpler);
+    m.def("simpler", [](const Matrix2& a, const Matrix2& b,
+                        const Matrix2& c, const Matrix2& d) { // deprecated
+        return simplerThreeWay(a, b, c, d) == std::strong_ordering::less;
+    }, rdoc::simpler_2);
 
     RDOC_SCOPE_END
 }

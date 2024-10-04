@@ -764,24 +764,30 @@ class SFSpace : public Manifold {
         bool operator == (const SFSpace& compare) const;
 
         /**
-         * Determines in a fairly ad-hoc fashion whether this representation
-         * of this space is "smaller" than the given representation of the
-         * given space.
+         * Compares representations of two Seifert fibred spaces in a fairly
+         * ad-hoc fashion to determine which representation is "smaller".
          *
-         * The ordering imposed on Seifert fibred space representations
-         * is purely aesthetic on the part of the author, and is subject to
-         * change in future versions of Regina.  It also depends upon the
-         * particular representation, so that different representations
-         * of the same space may be ordered differently.
+         * It does not matter whether the two spaces are homeomorphic; this
+         * routine compares the specific _representations_ of these spaces
+         * (and so in particular, different representations of the same
+         * Seifert fibred space will be ordered differently).
+         * The specific choice of ordering is purely aesthetic on the part of
+         * the author, and is subject to change in future versions of Regina.
          *
-         * All that this routine really offers is a well-defined way of
-         * ordering Seifert fibred space representations.
+         * Ultimately, all that this routine really offers is a well-defined
+         * way of ordering Seifert fibred space representations.
          *
-         * \param compare the representation with which this will be compared.
-         * \return \c true if and only if this is "smaller" than the given
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other representation to compare this with.
+         * \return The result of the comparison between this and the given
          * Seifert fibred space representation.
          */
-        bool operator < (const SFSpace& compare) const;
+        std::strong_ordering operator <=> (const SFSpace& rhs) const;
 
         Triangulation<3> construct() const override;
         AbelianGroup homology() const override;

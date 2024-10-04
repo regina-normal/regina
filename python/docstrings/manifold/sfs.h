@@ -146,6 +146,35 @@ R"doc(Lists the six classes ``o1``, ``o2``, ``n1``, ``n2``, ``n3``, ``n4``
 for base orbifolds without boundaries, plus five classes ``bo1``,
 ``b02``, ``bn1``, ``bn2``, ``bn3`` for base orbifolds with boundaries.)doc";
 
+// Docstring regina::python::doc::SFSpace_::__cmp
+static const char *__cmp =
+R"doc(Compares representations of two Seifert fibred spaces in a fairly ad-
+hoc fashion to determine which representation is "smaller".
+
+It does not matter whether the two spaces are homeomorphic; this
+routine compares the specific _representations_ of these spaces (and
+so in particular, different representations of the same Seifert fibred
+space will be ordered differently). The specific choice of ordering is
+purely aesthetic on the part of the author, and is subject to change
+in future versions of Regina.
+
+Ultimately, all that this routine really offers is a well-defined way
+of ordering Seifert fibred space representations.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the other representation to compare this with.
+
+Returns:
+    The result of the comparison between this and the given Seifert
+    fibred space representation.)doc";
+
 // Docstring regina::python::doc::SFSpace_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
 
@@ -221,28 +250,6 @@ Parameter ``reflectorsTwisted``:
     the number of twisted reflector boundary components of the base
     orbifold. These are in addition to the ordinary boundary
     components described by *puncturesTwisted*.)doc";
-
-// Docstring regina::python::doc::SFSpace_::__lt
-static const char *__lt =
-R"doc(Determines in a fairly ad-hoc fashion whether this representation of
-this space is "smaller" than the given representation of the given
-space.
-
-The ordering imposed on Seifert fibred space representations is purely
-aesthetic on the part of the author, and is subject to change in
-future versions of Regina. It also depends upon the particular
-representation, so that different representations of the same space
-may be ordered differently.
-
-All that this routine really offers is a well-defined way of ordering
-Seifert fibred space representations.
-
-Parameter ``compare``:
-    the representation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is "smaller" than the given Seifert
-    fibred space representation.)doc";
 
 // Docstring regina::python::doc::SFSpace_::addCrosscap
 static const char *addCrosscap =

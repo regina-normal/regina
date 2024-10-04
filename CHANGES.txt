@@ -128,6 +128,10 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., Framing::Seifert).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class GraphLoop, GraphPair, GraphTriple:
+            - Added a spaceship operator (<=>) for aesthetic comparisons.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
         Struct GroupExpressionTerm:
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
@@ -168,6 +172,9 @@ Version 7.4  [ (to be announced) ]
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
             - Added a spaceship operator (<=>) for comparisons.
+        Class LensSpace:
+            - Added a spaceship operator (<=>) for aesthetic comparisons, which
+              also adds comparison operators (<, <=, >, >=) to this class.
         Class LightweightSequence<T>:
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
@@ -213,6 +220,10 @@ Version 7.4  [ (to be announced) ]
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
+        Class Manifold:
+            - Added a spaceship operator (<=>) for aesthetic comparisons.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
         Class Matrix<T>:
             - Added a copy constructor that takes a matrix whose elements are
               of a different type.
@@ -323,6 +334,10 @@ Version 7.4  [ (to be announced) ]
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
               less-than (<) as before.
+        Class SFSpace:
+            - Added a spaceship operator (<=>) for aesthetic comparisons.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().
@@ -457,6 +472,12 @@ Version 7.4  [ (to be announced) ]
             - Now checks its preconditions and throws an exception if they fail.
         Function rowBasisAndOrthComp():
             - Now checks its preconditions and throws an exception if they fail.
+        Functions simpler(), simplerThreeWay():
+            - The old simpler() functions that compare 2x2 matrices are now
+              deprecated (both the 2-argument and the 4-argument variants).
+            - To replace them, there are new simplerThreeWay() functions that
+              return a std::strong_ordering instead of a bool (likewise with
+              both 2-argument and 4-argument variants).
         Function torsionAutInverse():
             - Now checks some of its preconditions and throws an exception
               if they fail.

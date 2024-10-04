@@ -171,32 +171,37 @@ class Manifold : public Output<Manifold> {
         virtual bool isHyperbolic() const = 0;
 
         /**
-         * Determines in a fairly ad-hoc fashion whether this representation
-         * of this 3-manifold is "smaller" than the given representation
-         * of the given 3-manifold.
+         * Compares representations of two 3-manifolds in a fairly
+         * ad-hoc fashion to determine which representation is "smaller".
          *
-         * The ordering imposed on 3-manifolds is purely aesthetic on
-         * the part of the author, and is subject to change in future
-         * versions of Regina.
+         * It does not matter whether the two 3-manifolds are homeomorphic;
+         * this routine compares the specific _representations_ of these
+         * manifolds (and so in particular, different representations of the
+         * same 3-manifold might well be ordered differently).
+         * The specific choice of ordering is purely aesthetic on the part of
+         * the author, and is subject to change in future versions of Regina.
          *
-         * The ordering also depends on the particular representation of
-         * the 3-manifold that is used.  As an example, different
-         * representations of the same Seifert fibred space might well
-         * be ordered differently.
+         * Ultimately, all that this routine really offers is a well-defined
+         * way of ordering 3-manifold representations.
          *
-         * All that this routine really offers is a well-defined way of
-         * ordering 3-manifold representations.
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
          *
          * \warning Currently this routine is only implemented in full for
          * closed 3-manifolds.  For most classes of bounded 3-manifolds,
          * this routine simply compares the strings returned by name().
+         * For this reason, the return value is currently marked as a
+         * weak ordering, since it is possible that different representations
+         * of the same 3-manifold will produce the same string name.
          *
-         * \param compare the 3-manifold representation with which this
-         * will be compared.
-         * \return \c true if and only if this is "smaller" than the
-         * given 3-manifold representation.
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other 3-manifold representation to compare this with.
+         * \return The result of the comparison between this and the given
+         * 3-manifold representation.
          */
-        bool operator < (const Manifold& compare) const;
+        std::weak_ordering operator <=> (const Manifold& rhs) const;
 
         /**
          * Writes the common name of this 3-manifold as a

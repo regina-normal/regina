@@ -141,7 +141,9 @@ values for both node() and arc().
     since the latter is equivalent to calling
     ModelLinkGraphArc(``None``, 0).
 
-``True`` if and only if this and *rhs* are identical.)doc";
+Returns:
+    ``True`` if and only if this and the given arc reference are
+    identical.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphArc_::__inc
 static const char *__inc =

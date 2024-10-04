@@ -52,6 +52,35 @@ sized) amount of data to be copied even in a move operation.)doc";
 
 namespace GraphLoop_ {
 
+// Docstring regina::python::doc::GraphLoop_::__cmp
+static const char *__cmp =
+R"doc(Compares two representations of graph manifolds in a fairly ad-hoc
+fashion to determine which representation is "smaller".
+
+It does not matter whether the two manifolds are homeomorphic; this
+routine compares the specific _representations_ of these manifolds
+(and so in particular, different representations of the same graph
+manifold will be ordered differently). The specific choice of ordering
+is purely aesthetic on the part of the author, and is subject to
+change in future versions of Regina.
+
+Ultimately, all that this routine really offers is a well-defined way
+of ordering graph manifold representations.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the other representation to compare this with.
+
+Returns:
+    The result of the comparison between this and the given graph
+    manifold representation.)doc";
+
 // Docstring regina::python::doc::GraphLoop_::__copy
 static const char *__copy = R"doc(Creates a clone of the given graph manifold.)doc";
 
@@ -184,28 +213,6 @@ Parameter ``sfs``:
 
 Parameter ``matchingReln``:
     the 2-by-2 matching matrix.)doc";
-
-// Docstring regina::python::doc::GraphLoop_::__lt
-static const char *__lt =
-R"doc(Determines in a fairly ad-hoc fashion whether this representation of
-this space is "smaller" than the given representation of the given
-space.
-
-The ordering imposed on graph manifolds is purely aesthetic on the
-part of the author, and is subject to change in future versions of
-Regina. It also depends upon the particular representation, so that
-different representations of the same space may be ordered
-differently.
-
-All that this routine really offers is a well-defined way of ordering
-graph manifold representations.
-
-Parameter ``compare``:
-    the representation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is "smaller" than the given graph
-    manifold representation.)doc";
 
 // Docstring regina::python::doc::GraphLoop_::global_swap
 static const char *global_swap =

@@ -4033,7 +4033,9 @@ values for both crossing() and strand().
     created by calling StrandRef(), since the latter is equivalent to
     calling StrandRef(``None``, 0).
 
-``True`` if and only if this and *rhs* are identical.)doc";
+Returns:
+    ``True`` if and only if this and the given reference are
+    identical.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__inc
 static const char *__inc =

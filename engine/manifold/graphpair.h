@@ -219,24 +219,30 @@ class GraphPair : public Manifold {
         const Matrix2& matchingReln() const;
 
         /**
-         * Determines in a fairly ad-hoc fashion whether this
-         * representation of this space is "smaller" than the given
-         * representation of the given space.
+         * Compares two representations of graph manifolds in a fairly
+         * ad-hoc fashion to determine which representation is "smaller".
          *
-         * The ordering imposed on graph manifolds is purely aesthetic
-         * on the part of the author, and is subject to change in future
-         * versions of Regina.  It also depends upon the particular
-         * representation, so that different representations of the same
-         * space may be ordered differently.
+         * It does not matter whether the two manifolds are homeomorphic; this
+         * routine compares the specific _representations_ of these manifolds
+         * (and so in particular, different representations of the same
+         * graph manifold will be ordered differently).
+         * The specific choice of ordering is purely aesthetic on the part of
+         * the author, and is subject to change in future versions of Regina.
          *
-         * All that this routine really offers is a well-defined way of
-         * ordering graph manifold representations.
+         * Ultimately, all that this routine really offers is a well-defined
+         * way of ordering graph manifold representations.
          *
-         * \param compare the representation with which this will be compared.
-         * \return \c true if and only if this is "smaller" than the
-         * given graph manifold representation.
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other representation to compare this with.
+         * \return The result of the comparison between this and the given
+         * graph manifold representation.
          */
-        bool operator < (const GraphPair& compare) const;
+        std::strong_ordering operator <=> (const GraphPair& rhs) const;
 
         /**
          * Sets this to be a clone of the given graph manifold.

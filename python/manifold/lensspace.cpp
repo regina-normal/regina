@@ -50,6 +50,8 @@ void addLensSpace(pybind11::module_& m) {
         .def("q", &LensSpace::q, rdoc::q)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
+    // Do not bind comparison operators, since these are already inherited
+    // from Manifold and we do not want to hide those more general versions.
     regina::python::add_output(c);
 
     regina::python::add_global_swap<LensSpace>(m, rdoc::global_swap);

@@ -123,6 +123,32 @@ class LensSpace : public Manifold {
         bool operator == (const LensSpace& compare) const;
 
         /**
+         * Compares representations of two lens spaces in an ad-hoc fashion
+         * to determine which representation is "smaller".
+         *
+         * It does not matter whether the two lens spaces are homeomorphic;
+         * this routine compares the specific _representations_ of these spaces
+         * (and so in particular, different representations of the same
+         * lens space will be ordered differently).
+         * The specific choice of ordering is purely aesthetic on the part of
+         * the author, and is subject to change in future versions of Regina.
+         *
+         * Ultimately, all that this routine really offers is a well-defined
+         * way of ordering lens space representations.
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other representation to compare this with.
+         * \return The result of the comparison between this and the given
+         * lens space representation.
+         */
+        std::strong_ordering operator <=> (const LensSpace& rhs) const;
+
+        /**
          * Sets this to be a copy of the given lens space.
          *
          * \return a reference to this lens space.
@@ -177,6 +203,21 @@ inline unsigned long LensSpace::q() const {
 }
 inline bool LensSpace::operator == (const LensSpace& compare) const {
     return (p_ == compare.p_ && q_ == compare.q_);
+}
+
+inline std::strong_ordering LensSpace::operator <=> (const LensSpace& rhs)
+        const {
+    if (p_ < rhs.p_)
+        return std::strong_ordering::less;
+    if (p_ > rhs.p_)
+        return std::strong_ordering::greater;
+
+    if (q_ < rhs.q_)
+        return std::strong_ordering::less;
+    if (q_ > rhs.q_)
+        return std::strong_ordering::greater;
+
+    return std::strong_ordering::equal;
 }
 
 inline bool LensSpace::isHyperbolic() const {

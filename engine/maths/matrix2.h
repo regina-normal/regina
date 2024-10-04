@@ -290,29 +290,74 @@ void swap(Matrix2& a, Matrix2& b) noexcept;
 std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 
 /**
- * Determines whether the first given matrix is more aesthetically
- * pleasing than the second.  The way in which this judgement is made
- * is purely aesthetic on the part of the author, and is subject to
- * change in future versions of Regina.
+ * Compare two matrices to determine which is more aesthetically pleasing.
+ * The way in which this judgement is made is purely aesthetic on the part
+ * of the author, and is subject to change in future versions of Regina.
+ *
+ * \python Instead of a `std::strong_ordering`, this routine returns an
+ * integer -1, 0 or 1 (representing `less`, `equal` or `greater` respectively).
  *
  * \param m1 the first matrix to examine.
  * \param m2 the second matrix to examine.
- * \return \c true if \a m1 is deemed to be more pleasing than \a m2,
- * or \c false if either the matrices are equal or \a m2 is more
- * pleasing than \a m1.
+ * \return `less` if \a m1 is deemed to be more pleasing than \a m2,
+ * `greater` if \a m2 is more pleasing than \a m1, or `equal` if both matrices
+ * are equal.
  *
  * \ingroup maths
  */
-bool simpler(const Matrix2& m1, const Matrix2& m2);
+std::strong_ordering simplerThreeWay(const Matrix2& m1, const Matrix2& m2);
 
 /**
- * Determines whether the first given pair of matrices is more aesthetically
- * pleasing than the second pair.  The way in which this judgement is made
- * is purely aesthetic on the part of the author, and is subject to
- * change in future versions of Regina.
+ * Deprecated routine that determines whether the first given matrix is
+ * more aesthetically pleasing than the second.
+ *
+ * \deprecated This routine is implemented using simplerThreeWay(), and new
+ * code should use that routine instead.  See simplerThreeWay() for further
+ * discussion.
+ *
+ * \param m1 the first matrix to examine.
+ * \param m2 the second matrix to examine.
+ * \return \c true if \a m1 is deemed to be more pleasing than \a m2, or
+ * \c false if either the matrices are equal or \a m2 is more pleasing than
+ * \a m1.
+ *
+ * \ingroup maths
+ */
+[[deprecated]] bool simpler(const Matrix2& m1, const Matrix2& m2);
+
+/**
+ * Compares two ordered pairs of matrices to determine which pair is more
+ * aesthetically pleasing.  The way in which this judgement is made is purely
+ * aesthetic on the part of the author, and is subject to change in future
+ * versions of Regina.
  *
  * Note that pairs are ordered, so the pair (\a M, \a N) may be more
  * (or perhaps less) pleasing than the pair (\a N, \a M).
+ *
+ * \python Instead of a `std::strong_ordering`, this routine returns an
+ * integer -1, 0 or 1 (representing `less`, `equal` or `greater` respectively).
+ *
+ * \param pair1first the first matrix of the first pair to examine.
+ * \param pair1second the second matrix of the first pair to examine.
+ * \param pair2first the first matrix of the second pair to examine.
+ * \param pair2second the second matrix of the second pair to examine.
+ * \return `less` if the first pair is deemed to be more pleasing than the
+ * second pair, `greater` if the second pair is more pleasing than the first,
+ * or `equal` if both ordered pairs are equal.
+ *
+ * \ingroup maths
+ */
+std::strong_ordering simplerThreeWay(
+        const Matrix2& pair1first, const Matrix2& pair1second,
+        const Matrix2& pair2first, const Matrix2& pair2second);
+
+/**
+ * Deprecated routine that determines whether the first given pair of matrices
+ * is more aesthetically pleasing than the second pair.
+ *
+ * \deprecated This routine is implemented using simplerThreeWay(), and new
+ * code should use that routine instead.  See simplerThreeWay() for further
+ * discussion.
  *
  * \param pair1first the first matrix of the first pair to examine.
  * \param pair1second the second matrix of the first pair to examine.
@@ -324,7 +369,8 @@ bool simpler(const Matrix2& m1, const Matrix2& m2);
  *
  * \ingroup maths
  */
-bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
+[[deprecated]] bool simpler(
+        const Matrix2& pair1first, const Matrix2& pair1second,
         const Matrix2& pair2first, const Matrix2& pair2second);
 
 // Inline functions for Matrix2
@@ -426,6 +472,16 @@ inline std::ostream& operator << (std::ostream& out, const Matrix2& mat) {
 
 inline void swap(Matrix2& a, Matrix2& b) noexcept {
     a.swap(b);
+}
+
+inline bool simpler(const Matrix2& m1, const Matrix2& m2) {
+    return simplerThreeWay(m1, m2) == std::strong_ordering::less;
+}
+
+inline bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
+        const Matrix2& pair2first, const Matrix2& pair2second) {
+    return simplerThreeWay(pair1first, pair1second, pair2first, pair2second) ==
+        std::strong_ordering::less;
 }
 
 } // namespace regina

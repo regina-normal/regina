@@ -80,26 +80,6 @@ Returns:
     the position of the last ``True`` bit, or -1 if there are no
     ``True`` bits.)doc";
 
-// Docstring regina::python::doc::BitManipulator_::subsetComparison
-static const char *subsetComparison =
-R"doc(Compares the bits of two integers under the subset relation.
-
-Here *x* is considered less than *y* if the bits that are set in *x*
-form a strict subset of the bits that are set in *y*.
-
-Parameter ``x``:
-    the first integer to examine.
-
-Parameter ``y``:
-    the second integer to examine.
-
-Returns:
-    A three-way comparison result, indicating whether the bits of *x*
-    are equal to, a strict subset of, a strict superset of, or
-    incomparable to the bits of *y*. These outcomes are indicated by
-    the return values ``equivalent``, ``less``, ``greater``, and
-    ``unordered`` respectively.)doc";
-
 // Docstring regina::python::doc::BitManipulator_::swapBits
 static const char *swapBits =
 R"doc(Returns a copy of the given integer with two bits swapped. Bits are

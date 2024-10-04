@@ -497,11 +497,7 @@ Returns:
 namespace DiscSpec_ {
 
 // Docstring regina::python::doc::DiscSpec_::__copy
-static const char *__copy =
-R"doc(Creates a new disc specifier that is a clone of the given specifier.
-
-Parameter ``cloneMe``:
-    the disc specifier to clone.)doc";
+static const char *__copy = R"doc(Creates a new disc specifier that is a clone of the given specifier.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__default
 static const char *__default = R"doc(Creates a new uninitialised disc specifier.)doc";
@@ -510,9 +506,6 @@ static const char *__default = R"doc(Creates a new uninitialised disc specifier.
 static const char *__eq =
 R"doc(Determines if this and the given disc specifier contain identical
 information.
-
-Parameter ``other``:
-    the disc specifier to compare with this.
 
 Returns:
     ``True`` if and only if this and the given disc specifier contain

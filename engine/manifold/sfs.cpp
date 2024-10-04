@@ -639,75 +639,73 @@ bool SFSpace::operator == (const SFSpace& compare) const {
     return true;
 }
 
-bool SFSpace::operator < (const SFSpace& compare) const {
+std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // Double the genus if it's orientable, so that we can line up tori
     // with Klein bottles, etc.
     unsigned long adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
-    unsigned long adjGenus2 = (compare.baseOrientable() ?
-        compare.genus_ * 2 : compare.genus_);
+    unsigned long adjGenus2 = (rhs.baseOrientable() ?
+        rhs.genus_ * 2 : rhs.genus_);
 
     // Too many punctures is worse than anything.
-    if (punctures_ + puncturesTwisted_ <
-            compare.punctures_ + compare.puncturesTwisted_)
-        return true;
-    if (punctures_ + puncturesTwisted_ >
-            compare.punctures_ + compare.puncturesTwisted_)
-        return false;
+    if (punctures_ + puncturesTwisted_ < rhs.punctures_ + rhs.puncturesTwisted_)
+        return std::strong_ordering::less;
+    if (punctures_ + puncturesTwisted_ > rhs.punctures_ + rhs.puncturesTwisted_)
+        return std::strong_ordering::greater;
 
     // After this, order by a combination of genus and reflectors to
     // group closed spaces with approximately the same complexity.
     if (adjGenus1 + reflectors_ + reflectorsTwisted_ <
-            adjGenus2 + compare.reflectors_ + compare.reflectorsTwisted_)
-        return true;
+            adjGenus2 + rhs.reflectors_ + rhs.reflectorsTwisted_)
+        return std::strong_ordering::less;
     if (adjGenus1 + reflectors_ + reflectorsTwisted_ >
-            adjGenus2 + compare.reflectors_ + compare.reflectorsTwisted_)
-        return false;
+            adjGenus2 + rhs.reflectors_ + rhs.reflectorsTwisted_)
+        return std::strong_ordering::greater;
 
     // Within this genus + reflectors combination, reflectors are worse.
     if (reflectors_ + reflectorsTwisted_ <
-            compare.reflectors_ + compare.reflectorsTwisted_)
-        return true;
+            rhs.reflectors_ + rhs.reflectorsTwisted_)
+        return std::strong_ordering::less;
     if (reflectors_ + reflectorsTwisted_ >
-            compare.reflectors_ + compare.reflectorsTwisted_)
-        return false;
+            rhs.reflectors_ + rhs.reflectorsTwisted_)
+        return std::strong_ordering::greater;
 
     // If we reach this point, we must have adjGenus1 == adjGenus2.
     // Down to more mundane comparisons.
 
     // Comparing class will catch orientability also (placing orientable
     // before non-orientable).
-    if (class_ < compare.class_)
-        return true;
-    if (class_ > compare.class_)
-        return false;
+    if (class_ < rhs.class_)
+        return std::strong_ordering::less;
+    if (class_ > rhs.class_)
+        return std::strong_ordering::greater;
 
-    if (reflectorsTwisted_ < compare.reflectorsTwisted_)
-        return true;
-    if (reflectorsTwisted_ > compare.reflectorsTwisted_)
-        return false;
+    if (reflectorsTwisted_ < rhs.reflectorsTwisted_)
+        return std::strong_ordering::less;
+    if (reflectorsTwisted_ > rhs.reflectorsTwisted_)
+        return std::strong_ordering::greater;
 
-    if (puncturesTwisted_ < compare.puncturesTwisted_)
-        return true;
-    if (puncturesTwisted_ > compare.puncturesTwisted_)
-        return false;
+    if (puncturesTwisted_ < rhs.puncturesTwisted_)
+        return std::strong_ordering::less;
+    if (puncturesTwisted_ > rhs.puncturesTwisted_)
+        return std::strong_ordering::greater;
 
-    if (nFibres_ < compare.nFibres_)
-        return true;
-    if (nFibres_ > compare.nFibres_)
-        return false;
+    if (nFibres_ < rhs.nFibres_)
+        return std::strong_ordering::less;
+    if (nFibres_ > rhs.nFibres_)
+        return std::strong_ordering::greater;
 
-    if (fibres_ < compare.fibres_)
-        return true;
-    if (compare.fibres_ < fibres_)
-        return false;
+    if (fibres_ < rhs.fibres_)
+        return std::strong_ordering::less;
+    if (rhs.fibres_ < fibres_)
+        return std::strong_ordering::greater;
 
-    if (b_ < compare.b_)
-        return true;
-    if (b_ > compare.b_)
-        return false;
+    if (b_ < rhs.b_)
+        return std::strong_ordering::less;
+    if (b_ > rhs.b_)
+        return std::strong_ordering::greater;
 
     // Exactly the same!
-    return false;
+    return std::strong_ordering::equal;
 }
 
 Triangulation<3> SFSpace::construct() const {

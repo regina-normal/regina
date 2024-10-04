@@ -147,9 +147,6 @@ static const char *__eq =
 R"doc(Determines if this is equal to the given permutation. This is true if
 and only if both permutations have the same images for 0, 1, 2 and 3.
 
-Parameter ``other``:
-    the permutation with which to compare this.
-
 Returns:
     ``True`` if and only if this and the given permutation are equal.)doc";
 

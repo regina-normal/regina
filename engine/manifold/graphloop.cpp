@@ -38,13 +38,12 @@
 
 namespace regina {
 
-bool GraphLoop::operator < (const GraphLoop& compare) const {
-    if (sfs_ < compare.sfs_)
-        return true;
-    if (compare.sfs_ < sfs_)
-        return false;
+std::strong_ordering GraphLoop::operator <=> (const GraphLoop& rhs) const {
+    auto cmp = sfs_ <=> rhs.sfs_;
+    if (cmp != std::strong_ordering::equal)
+        return cmp;
 
-    return simpler(matchingReln_, compare.matchingReln_);
+    return simplerThreeWay(matchingReln_, rhs.matchingReln_);
 }
 
 AbelianGroup GraphLoop::homology() const {
@@ -161,7 +160,7 @@ void GraphLoop::reduce() {
         Matrix2(1, 0, 0, -1);
     reduce(compMatch);
 
-    if (simpler(compMatch, matchingReln_)) {
+    if (simplerThreeWay(compMatch, matchingReln_) < 0) {
         // Do it.
         matchingReln_ = compMatch;
         sfs_.complementAllFibres();
@@ -176,7 +175,7 @@ void GraphLoop::reduce(Matrix2& reln) {
     Matrix2 inv = reln.inverse();
     reduceBasis(inv);
 
-    if (simpler(inv, reln))
+    if (simplerThreeWay(inv, reln) < 0)
         reln = inv;
 }
 
@@ -225,7 +224,7 @@ void GraphLoop::reduceBasis(Matrix2& reln) {
                 alt[1][1] += alt[0][1];
             }
 
-            if (simpler(alt, reln))
+            if (simplerThreeWay(alt, reln) < 0)
                 reln = alt;
         }
     } else {
