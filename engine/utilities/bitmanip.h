@@ -295,6 +295,36 @@ class BitManipulator : public BitManipulatorByType<T> {
                 return x ^ (mask0 | mask1);
             }
         }
+
+        /**
+         * Compares the bits of two integers under the subset relation.
+         *
+         * Here \a x is considered less than \a y if the bits that are set in
+         * \a x form a strict subset of the bits that are set in \a y.
+         *
+         * \nopython This is not available for Python users, since Python does
+         * not have access to the standard C++ type `std::partial_ordering`,
+         * and since there is no "natural" way to present a partial ordering
+         * as an integer.
+         *
+         * \param x the first integer to examine.
+         * \param y the second integer to examine.
+         * \return A three-way comparison result, indicating whether the bits
+         * of \a x are equal to, a strict subset of, a strict superset of,
+         * or incomparable to the bits of \a y.  These outcomes are indicated
+         * by the return values `equivalent`, `less`, `greater`, and
+         * `unordered` respectively.
+         */
+        inline static std::partial_ordering subsetComparison(T x, T y) {
+            if (x == y)
+                return std::partial_ordering::equivalent;
+            else if ((x | y) == y)
+                return std::partial_ordering::less;
+            else if ((x | y) == x)
+                return std::partial_ordering::greater;
+            else
+                return std::partial_ordering::unordered;
+        }
 };
 
 } // namespace regina

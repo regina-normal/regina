@@ -102,9 +102,6 @@ Here the containers are compared by _reference_ (i.e., they must be
 the same container object at the same location in memory; it is not
 enough to be two containers with identical contents).
 
-Parameter ``other``:
-    the list view to compare with this.
-
 Returns:
     ``True`` if and only if this and the given list use the same
     underlying container.)doc";

@@ -85,11 +85,7 @@ Returns:
     set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::__copy
-static const char *__copy =
-R"doc(Creates a clone of the given set.
-
-Parameter ``src``:
-    the set to clone.)doc";
+static const char *__copy = R"doc(Creates a clone of the given set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::__default
 static const char *__default = R"doc(Creates a new empty set.)doc";
@@ -97,9 +93,6 @@ static const char *__default = R"doc(Creates a new empty set.)doc";
 // Docstring regina::python::doc::BoolSet_::__eq
 static const char *__eq =
 R"doc(Determines if this set is equal to the given set.
-
-Parameter ``other``:
-    the set to compare with this.
 
 Returns:
     ``True`` if and only if this and the given set are equal.)doc";

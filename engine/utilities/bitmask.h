@@ -405,8 +405,8 @@ class Bitmask {
          *
          * \pre This and the given bitmask have the same length.
          *
-         * \warning We do not use \< for this operation, since ≤
-         * represents the subset operation.
+         * \warning We do not use \< for this ordering, since the comparison
+         * operators (`<`, `≤`, `>`, `≥`) work with the subset relation instead.
          *
          * \param other the bitmask to compare against this.
          * \return \c true if and only if this is lexicographically
@@ -415,24 +415,29 @@ class Bitmask {
         bool lessThan(const Bitmask& other) const;
 
         /**
-         * Determines whether this bitmask is entirely contained within
-         * the given bitmask.
+         * Compares two bitmasks under the subset relation.
          *
-         * For this routine to return \c true, every bit that is set
-         * in this bitmask must also be set in the given bitmask.
+         * Here the bitmask \a x is considered less than \a y if the bits that
+         * are set in \a x form a strict subset of the bits that are set in
+         * \a y.  In other words: `x ≠ y`, and every bit that is set in \a x
+         * is also set in \a y.
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
          *
          * \pre This and the given bitmask have the same length.
          *
-         * \warning This operation does not compare bitmasks
-         * lexicographically; moreover, it only describes a partial
-         * order, not a total order.  To compare bitmasks
-         * lexicographically, use lessThan() instead.
+         * \note This does not compare bitmasks lexicographically.
+         * For lexicographical comparison, use lessThan() instead.
          *
-         * \param other the bitmask to compare against this.
-         * \return \c true if and only if this bitmask is entirely contained
-         * within the given bitmask.
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the bitmask to compare against this.
+         * \return The result of the subset comparison between this and the
+         * given bitmask.
          */
-        bool operator <= (const Bitmask& other) const;
+        std::partial_ordering operator <=> (const Bitmask& rhs) const;
 
         /**
          * Determines whether this bitmask is entirely contained within
@@ -825,8 +830,8 @@ class Bitmask1 {
          * Here the bit at index 0 is least significant, and the bit at
          * index \a length-1 is most significant.
          *
-         * \warning We do not use \< for this operation, since ≤
-         * represents the subset operation.
+         * \warning We do not use \< for this ordering, since the comparison
+         * operators (`<`, `≤`, `>`, `≥`) work with the subset relation instead.
          *
          * \param other the bitmask to compare against this.
          * \return \c true if and only if this is lexicographically
@@ -837,23 +842,29 @@ class Bitmask1 {
         }
 
         /**
-         * Determines whether this bitmask is entirely contained within
-         * the given bitmask.
+         * Compares two bitmasks under the subset relation.
          *
-         * For this routine to return \c true, every bit that is set
-         * in this bitmask must also be set in the given bitmask.
+         * Here the bitmask \a x is considered less than \a y if the bits that
+         * are set in \a x form a strict subset of the bits that are set in
+         * \a y.  In other words: `x ≠ y`, and every bit that is set in \a x
+         * is also set in \a y.
          *
-         * \warning This operation does not compare bitmasks
-         * lexicographically; moreover, it only describes a partial
-         * order, not a total order.  To compare bitmasks
-         * lexicographically, use lessThan() instead.
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
          *
-         * \param other the bitmask to compare against this.
-         * \return \c true if and only if this bitmask is entirely contained
-         * within the given bitmask.
+         * \note This does not compare bitmasks lexicographically.
+         * For lexicographical comparison, use lessThan() instead.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the bitmask to compare against this.
+         * \return The result of the subset comparison between this and the
+         * given bitmask.
          */
-        inline bool operator <= (const Bitmask1<T>& other) const {
-            return ((mask | other.mask) == other.mask);
+        inline std::partial_ordering operator <=> (const Bitmask1<T>& rhs)
+                const {
+            return BitManipulator<T>::subsetComparison(mask, rhs.mask);
         }
 
         /**
@@ -1268,8 +1279,8 @@ class Bitmask2 {
          * Here the bit at index 0 is least significant, and the bit at
          * index \a length-1 is most significant.
          *
-         * \warning We do not use \< for this operation, since ≤
-         * represents the subset operation.
+         * \warning We do not use \< for this ordering, since the comparison
+         * operators (`<`, `≤`, `>`, `≥`) work with the subset relation instead.
          *
          * \param other the bitmask to compare against this.
          * \return \c true if and only if this is lexicographically
@@ -1281,24 +1292,48 @@ class Bitmask2 {
         }
 
         /**
-         * Determines whether this bitmask is entirely contained within
-         * the given bitmask.
+         * Compares two bitmasks under the subset relation.
          *
-         * For this routine to return \c true, every bit that is set
-         * in this bitmask must also be set in the given bitmask.
+         * Here the bitmask \a x is considered less than \a y if the bits that
+         * are set in \a x form a strict subset of the bits that are set in
+         * \a y.  In other words: `x ≠ y`, and every bit that is set in \a x
+         * is also set in \a y.
          *
-         * \warning This operation does not compare bitmasks
-         * lexicographically; moreover, it only describes a partial
-         * order, not a total order.  To compare bitmasks
-         * lexicographically, use lessThan() instead.
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
          *
-         * \param other the bitmask to compare against this.
-         * \return \c true if and only if this bitmask is entirely contained
-         * within the given bitmask.
+         * \note This does not compare bitmasks lexicographically.
+         * For lexicographical comparison, use lessThan() instead.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the bitmask to compare against this.
+         * \return The result of the subset comparison between this and the
+         * given bitmask.
          */
-        inline bool operator <= (const Bitmask2<T, U>& other) const {
-            return ((low | other.low) == other.low &&
-                (high | other.high) == other.high);
+        std::partial_ordering operator <=> (const Bitmask2<T, U>& rhs) const {
+            auto t = BitManipulator<T>::subsetComparison(low, rhs.low);
+
+            if (t == std::partial_ordering::equivalent) {
+                return BitManipulator<U>::subsetComparison(high, rhs.high);
+            } else if (t == std::partial_ordering::less) {
+                auto u = BitManipulator<U>::subsetComparison(high, rhs.high);
+                if (u == std::partial_ordering::equivalent ||
+                        u == std::partial_ordering::less)
+                    return t; // less
+                else
+                    return std::partial_ordering::unordered;
+            } else if (t == std::partial_ordering::greater) {
+                auto u = BitManipulator<U>::subsetComparison(high, rhs.high);
+                if (u == std::partial_ordering::equivalent ||
+                        u == std::partial_ordering::greater)
+                    return t; // greater
+                else
+                    return std::partial_ordering::unordered;
+            } else {
+                return t; // unordered
+            }
         }
 
         /**
@@ -1535,11 +1570,30 @@ inline bool Bitmask::lessThan(const Bitmask& other) const {
     return false;
 }
 
-inline bool Bitmask::operator <= (const Bitmask& other) const {
-    for (size_t i = 0; i < pieces; ++i)
-        if ((mask[i] | other.mask[i]) != other.mask[i])
-            return false;
-    return true;
+inline std::partial_ordering Bitmask::operator <=> (const Bitmask& rhs) const {
+    auto ans = std::partial_ordering::equivalent;
+
+    for (size_t i = 0; i < pieces; ++i) {
+        // INV: ans is equivalent, less, or greater (not unordered).
+        auto next = BitManipulator<Piece>::subsetComparison(
+            mask[i], rhs.mask[i]);
+        if (next == std::partial_ordering::unordered)
+            return next;
+
+        if (ans == std::partial_ordering::equivalent) {
+            ans = next;
+        } else if (ans == std::partial_ordering::less) {
+            if (next == std::partial_ordering::greater)
+                return std::partial_ordering::unordered;
+            // ans stays as less
+        } else { // ans == greater
+            if (next == std::partial_ordering::less)
+                return std::partial_ordering::unordered;
+            // ans stays as greater
+        }
+    }
+
+    return ans;
 }
 
 inline bool Bitmask::inUnion(const Bitmask& x, const Bitmask& y) const {

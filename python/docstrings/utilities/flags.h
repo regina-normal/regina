@@ -116,11 +116,7 @@ Returns:
     the combination of this and the given flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__copy
-constexpr const char *__copy =
-R"doc(Creates a clone of the given flag set.
-
-Parameter ``init``:
-    the flag set to clone.)doc";
+constexpr const char *__copy = R"doc(Creates a clone of the given flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__default
 constexpr const char *__default = R"doc(Creates an empty flag set, with no flags set at all.)doc";

@@ -64,6 +64,11 @@ Version 7.4  [ (to be announced) ]
               Base64SigDecoder.
         Class BitManipulator<T>:
             - New routine swapBits().
+            - New routine subsetComparison().
+        Class Bitmask, Bitmask1<T>, Bitmask2<T, U>:
+            - Added a spaceship operator (<=>) for subset comparisons.  This
+              has the effect of implementing all comparison operators, not just
+              less-than-or-equal (<=) as before.
         Class BoolSet:
             - New routine full().
             - Renamed empty() to clear(), without a deprecated alias, to avoid

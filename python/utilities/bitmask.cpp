@@ -75,7 +75,6 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def("flip", &B::flip, rdoc::flip)
         .def("lessThan", &B::lessThan, rdoc::lessThan)
-        .def(pybind11::self <= pybind11::self, rdoc::__le)
         .def("inUnion", &B::inUnion, rdoc::inUnion)
         .def("containsIntn", &B::containsIntn, rdoc::containsIntn)
         .def("bits", &B::bits, rdoc::bits)
@@ -86,6 +85,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     RDOC_SCOPE_END
 }
@@ -123,7 +123,6 @@ void addBitmaskGeneric(pybind11::module_& m) {
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def("flip", &Bitmask::flip, rdoc::flip)
         .def("lessThan", &Bitmask::lessThan, rdoc::lessThan)
-        .def(pybind11::self <= pybind11::self, rdoc::__le)
         .def("inUnion", &Bitmask::inUnion, rdoc::inUnion)
         .def("containsIntn", &Bitmask::containsIntn, rdoc::containsIntn)
         .def("bits", &Bitmask::bits, rdoc::bits)
@@ -134,6 +133,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     regina::python::add_global_swap<Bitmask>(m, rdoc::global_swap);
 
