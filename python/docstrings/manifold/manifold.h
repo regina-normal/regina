@@ -40,18 +40,18 @@ namespace Manifold_ {
 
 // Docstring regina::python::doc::Manifold_::__cmp
 static const char *__cmp =
-R"doc(Compares representations of two 3-manifolds in a fairly ad-hoc fashion
-to determine which representation is "smaller".
+R"doc(Compares representations of two 3-manifolds according to an aesthetic
+ordering.
+
+The only purpose of this routine is to implement a consistent ordering
+of 3-manifold representations. The specific ordering used is purely
+aesthetic on the part of the author, and is subject to change in
+future versions of Regina.
 
 It does not matter whether the two 3-manifolds are homeomorphic; this
 routine compares the specific _representations_ of these manifolds
 (and so in particular, different representations of the same
-3-manifold might well be ordered differently). The specific choice of
-ordering is purely aesthetic on the part of the author, and is subject
-to change in future versions of Regina.
-
-Ultimately, all that this routine really offers is a well-defined way
-of ordering 3-manifold representations.
+3-manifold might well be ordered differently).
 
 This operator generates all of the usual comparison operators,
 including ``<``, ``<=``, ``>``, and ``>=``.
@@ -69,11 +69,11 @@ Python:
     other comparison operators that it generates _are_ available.
 
 Parameter ``rhs``:
-    the other 3-manifold representation to compare this with.
+    the 3-manifold representation to compare this with.
 
 Returns:
-    The result of the comparison between this and the given 3-manifold
-    representation.)doc";
+    A result that indicates how this and the given 3-manifold
+    representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::Manifold_::construct
 static const char *construct =

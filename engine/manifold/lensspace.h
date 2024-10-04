@@ -123,18 +123,18 @@ class LensSpace : public Manifold {
         bool operator == (const LensSpace& compare) const;
 
         /**
-         * Compares representations of two lens spaces in an ad-hoc fashion
-         * to determine which representation is "smaller".
+         * Compares representations of two lens spaces according to an
+         * aesthetic ordering.
+         *
+         * The only purpose of this routine is to implement a consistent
+         * ordering of lens space representations.  The specific ordering
+         * used is purely aesthetic on the part of the author, and is subject
+         * to change in future versions of Regina.
          *
          * It does not matter whether the two lens spaces are homeomorphic;
          * this routine compares the specific _representations_ of these spaces
          * (and so in particular, different representations of the same
          * lens space will be ordered differently).
-         * The specific choice of ordering is purely aesthetic on the part of
-         * the author, and is subject to change in future versions of Regina.
-         *
-         * Ultimately, all that this routine really offers is a well-defined
-         * way of ordering lens space representations.
          *
          * This operator generates all of the usual comparison operators,
          * including `<`, `<=`, `>`, and `>=`.
@@ -143,8 +143,8 @@ class LensSpace : public Manifold {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the other representation to compare this with.
-         * \return The result of the comparison between this and the given
-         * lens space representation.
+         * \return A result that indicates how this and the given lens space
+         * representation should be ordered with respect to each other.
          */
         std::strong_ordering operator <=> (const LensSpace& rhs) const;
 

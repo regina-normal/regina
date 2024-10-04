@@ -148,18 +148,18 @@ for base orbifolds without boundaries, plus five classes ``bo1``,
 
 // Docstring regina::python::doc::SFSpace_::__cmp
 static const char *__cmp =
-R"doc(Compares representations of two Seifert fibred spaces in a fairly ad-
-hoc fashion to determine which representation is "smaller".
+R"doc(Compares representations of two Seifert fibred spaces according to an
+aesthetic ordering.
+
+The only purpose of this routine is to implement a consistent ordering
+of Seifert fibred space representations. The specific ordering used is
+purely aesthetic on the part of the author, and is subject to change
+in future versions of Regina.
 
 It does not matter whether the two spaces are homeomorphic; this
 routine compares the specific _representations_ of these spaces (and
 so in particular, different representations of the same Seifert fibred
-space will be ordered differently). The specific choice of ordering is
-purely aesthetic on the part of the author, and is subject to change
-in future versions of Regina.
-
-Ultimately, all that this routine really offers is a well-defined way
-of ordering Seifert fibred space representations.
+space will be ordered differently).
 
 This operator generates all of the usual comparison operators,
 including ``<``, ``<=``, ``>``, and ``>=``.
@@ -172,8 +172,8 @@ Parameter ``rhs``:
     the other representation to compare this with.
 
 Returns:
-    The result of the comparison between this and the given Seifert
-    fibred space representation.)doc";
+    A result that indicates how this and the given Seifert fibred
+    space representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
