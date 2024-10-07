@@ -1447,6 +1447,13 @@ void v_cyclic_shift_right( T& vec, size_t col){
     vec[0] = dummy;
 }
 
+// GCC gives the following warning when setting vec[i] = vec[i+1]:
+//   warning: 'void* __builtin_memmove(void*, const void*, long unsigned int)'
+//   reading <very large number> or more bytes from a region of size
+//   <very large number minus two> [-Wstringop-overread]
+// Here T = std::vector<short unsigned int>.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overread"
 template <typename T>
 void v_cyclic_shift_left( T& vec, size_t col){
     if(vec.size() == 0)
@@ -1457,6 +1464,7 @@ void v_cyclic_shift_left( T& vec, size_t col){
         vec[i] = vec[i+1];
     vec[col] = dummy;
 }
+#pragma GCC diagnostic pop
 
 template <typename T>
 T v_permute_coordinates(const T& vec, const vector<key_t>& perm){
