@@ -68,6 +68,10 @@ namespace regina::python {
 void addSigUtils(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Base64SigEncoding)
 
+    // The entire class Base64SigEncoding is deprecated, but we still need to
+    // bind it.
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated"
     auto c = pybind11::class_<Base64SigEncoding>(m, "Base64SigEncoding",
             rdoc_scope)
         .def_static("decodeSingle", &Base64SigEncoding::decodeSingle,
@@ -101,6 +105,7 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::decodeTrits)
     ;
     regina::python::no_eq_static(c);
+    #pragma GCC diagnostic pop
 
     RDOC_SCOPE_SWITCH(Base64SigEncoder)
 
