@@ -207,7 +207,7 @@ class BitManipulator : public BitManipulatorByType<T> {
          */
         inline static constexpr int bits(T x) {
             if constexpr (sizeof(T) > sizeof(unsigned long long)) {
-                using HalfSize = IntOfSize<sizeof(T) / 2>::utype;
+                using HalfSize = typename IntOfSize<sizeof(T) / 2>::utype;
                 return std::popcount(static_cast<HalfSize>(x)) +
                     std::popcount(static_cast<HalfSize>(x >> (4 * sizeof(T))));
             } else {
