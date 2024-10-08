@@ -40,13 +40,7 @@
 #define __REGINA_BITMANIP_H
 #endif
 
-#if __has_include(<bit>)
 #include <bit>
-#define has_cpp20_bit 1
-#else
-#warning "This compiler does not provide the C++20 header <bit>."
-#undef has_cpp20_bit
-#endif
 #include "utilities/intutils.h"
 
 namespace regina {
@@ -212,7 +206,6 @@ class BitManipulator : public BitManipulatorByType<T> {
          * \return the number of bits that are set.
          */
         inline static constexpr int bits(T x) {
-#if defined(has_cpp20_bit)
             if constexpr (sizeof(T) > sizeof(unsigned long long)) {
                 using HalfSize = IntOfSize<sizeof(T) / 2>::utype;
                 return std::popcount(static_cast<HalfSize>(x)) +
@@ -220,59 +213,6 @@ class BitManipulator : public BitManipulatorByType<T> {
             } else {
                 return std::popcount(x);
             }
-#else
-            #warning "Using a hand-rolled replacement for std::popcount()."
-            if constexpr (sizeof(T) == 1) {
-                x = (x & T(0x55)) + ((x & T(0xAA)) >> 1);
-                x = (x & T(0x33)) + ((x & T(0xCC)) >> 2);
-                return (x & T(0x0F)) + ((x & T(0xF0)) >> 4);
-            } else if constexpr (sizeof(T) == 2) {
-                x = (x & T(0x5555)) + ((x & T(0xAAAA)) >> 1);
-                x = (x & T(0x3333)) + ((x & T(0xCCCC)) >> 2);
-                x = (x & T(0x0F0F)) + ((x & T(0xF0F0)) >> 4);
-                return (x & T(0x00FF)) + ((x & T(0xFF00)) >> 8);
-            } else if constexpr (sizeof(T) == 4) {
-                x = (x & T(0x55555555)) + ((x & T(0xAAAAAAAA)) >> 1);
-                x = (x & T(0x33333333)) + ((x & T(0xCCCCCCCC)) >> 2);
-                x = (x & T(0x0F0F0F0F)) + ((x & T(0xF0F0F0F0)) >> 4);
-                x = (x & T(0x00FF00FF)) + ((x & T(0xFF00FF00)) >> 8);
-                return (x & T(0x0000FFFF)) + ((x & T(0xFFFF0000)) >> 16);
-            #if defined(NUMERIC_64_FOUND)
-            } else if constexpr (sizeof(T) == 8) {
-                x = (x & T(0x5555555555555555)) +
-                    ((x & T(0xAAAAAAAAAAAAAAAA)) >> 1);
-                x = (x & T(0x3333333333333333)) +
-                    ((x & T(0xCCCCCCCCCCCCCCCC)) >> 2);
-                x = (x & T(0x0F0F0F0F0F0F0F0F)) +
-                    ((x & T(0xF0F0F0F0F0F0F0F0)) >> 4);
-                x = (x & T(0x00FF00FF00FF00FF)) +
-                    ((x & T(0xFF00FF00FF00FF00)) >> 8);
-                x = (x & T(0x0000FFFF0000FFFF)) +
-                    ((x & T(0xFFFF0000FFFF0000)) >> 16);
-                return (x & T(0x00000000FFFFFFFF)) +
-                    ((x & T(0xFFFFFFFF00000000)) >> 32);
-            #elif defined(NUMERIC_64_LL_FOUND)
-            } else if constexpr (sizeof(T) == 8) {
-                x = (x & T(0x5555555555555555LL)) +
-                    ((x & T(0xAAAAAAAAAAAAAAAALL)) >> 1);
-                x = (x & T(0x3333333333333333LL)) +
-                    ((x & T(0xCCCCCCCCCCCCCCCCLL)) >> 2);
-                x = (x & T(0x0F0F0F0F0F0F0F0FLL)) +
-                    ((x & T(0xF0F0F0F0F0F0F0F0LL)) >> 4);
-                x = (x & T(0x00FF00FF00FF00FFLL)) +
-                    ((x & T(0xFF00FF00FF00FF00LL)) >> 8);
-                x = (x & T(0x0000FFFF0000FFFFLL)) +
-                    ((x & T(0xFFFF0000FFFF0000LL)) >> 16);
-                return (x & T(0x00000000FFFFFFFFLL)) +
-                    ((x & T(0xFFFFFFFF00000000LL)) >> 32);
-            #endif
-            } else {
-                constexpr unsigned size = sizeof(T);
-                using Half = IntOfSize<size / 2>::utype;
-                return BitManipulator<Half>::bits(x) +
-                    BitManipulator<Half>::bits(x >> (4 * size));
-            }
-#endif
         }
 
         /**
