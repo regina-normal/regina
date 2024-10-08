@@ -82,7 +82,7 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
 #else
         const auto name1 = name();
         const auto name2 = rhs.name();
-        return strcmp(name1.c_str(), name2.c_str());
+        return strcmp(name1.c_str(), name2.c_str()) <=> 0;
 #endif
     }
 
@@ -120,7 +120,7 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
 #else
     const auto name1 = name();
     const auto name2 = rhs.name();
-    return strcmp(name1.c_str(), name2.c_str());
+    return strcmp(name1.c_str(), name2.c_str()) <=> 0;
 #endif
 }
 
