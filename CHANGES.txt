@@ -10,7 +10,7 @@ Regina - A Normal Surface Theory Calculator
 Version 7.4  [ (to be announced) ]
 
     GENERAL:
-        - Now requires C++20 (not C++17).
+        - Now requires C++20 (not C++17), and Python 3.7 or newer.
         - Added support for simplex and facet locks throughout the API.  See
           Simplex<dim>::lock() and Simplex<dim>::lockFacet() for an overview
           of how locks work.  Many routines throughout the API could now
@@ -424,7 +424,8 @@ Version 7.4  [ (to be announced) ]
             - New alternatives to using std::is_integeral_v<T> and
               std::is_unsigned_v<T> that allow for 128-bit integers also.
     PYTHON:
-        - Updated the included pybind11 library from 2.10.0 to 2.10.4.
+        - Updated the included pybind11 library from 2.10.0 to 2.13.6.
+          This drops support for Python 3.6.
         - Improved the speed of iteration (specifically, throwing/catching
           StopIteration exceptions).
         - Rich flag types based on regina::Flags<...> (such as NormalAlg,

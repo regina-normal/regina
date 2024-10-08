@@ -1,3 +1,5 @@
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/python")
+
 SET ( SOURCES modulemain.cpp )
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
