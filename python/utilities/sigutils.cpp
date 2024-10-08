@@ -71,7 +71,7 @@ void addSigUtils(pybind11::module_& m) {
     #if defined(__GNUC__)
     // The class Base64SigEncoding is deprecated, but we still need to bind it.
     #pragma GCC diagnostic push
-    #if (__GNUC__ < 11) && !defined(__clang__)
+    #if (__GNUC__ < 13) && !defined(__clang__)
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #else
     #pragma GCC diagnostic ignored "-Wdeprecated"
