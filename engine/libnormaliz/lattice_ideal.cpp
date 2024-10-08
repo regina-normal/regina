@@ -102,7 +102,19 @@ MarkovProjectAndLift::MarkovProjectAndLift(Matrix<Integer>& LatticeIdeal, const 
     Weights.append(vector<Integer> (LItranspose.nr_of_columns(),1));
     vector<bool> absolute(1,1);
 
+    // GCC 13 gives the following warning when initialising StartPerm as a
+    // vector of bools:
+    //   warning: 'void* __builtin_memmove(void*, const void*, long unsigned
+    //   int)' writing between 9 and <very large number> bytes into a region
+    //   of size 8 overflows the destination [-Wstringop-overflow=]
+    #if defined(__GNUC__) && (__GNUC__ == 13) && !defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-overflow"
+    #endif
     StartPerm = LItranspose.perm_by_weights(Weights, absolute);
+    #if defined(__GNUC__) && (__GNUC__ == 13) && !defined(__clang__)
+    #pragma GCC diagnostic pop
+    #endif
     LItranspose.order_rows_by_perm(StartPerm);
     if(verbose){
         verboseOutput() << "---------------------------------------------------" << endl;
