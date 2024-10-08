@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <array>
 #include "maths/integer.h"
 
 #include "testhelper.h"
