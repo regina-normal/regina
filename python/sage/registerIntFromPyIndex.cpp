@@ -44,7 +44,7 @@
 // explicitly with engine._registerIntFromPyIndex() in __init__.py when
 // we detect regina is run from sage.
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #if 0
 #include <boost/python.hpp>
 #include <boost/optional.hpp>

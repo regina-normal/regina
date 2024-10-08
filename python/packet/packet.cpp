@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
-#include "../pybind11/iostream.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/iostream.h>
 #include "packet/packet.h"
 #include "../helpers.h"
 #include "../docstrings/packet/packet.h"

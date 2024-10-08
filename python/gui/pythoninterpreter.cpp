@@ -44,8 +44,8 @@
 #include <iostream>
 
 // Python includes:
-#include "../python/pybind11/pybind11.h"
-#include "../python/pybind11/embed.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
 #include <compile.h>
 #include <sysmodule.h>
 

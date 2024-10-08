@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include "regina-config.h" // for REGINA_HIGHDIM
 #include "triangulation/facetspec.h"
 #include "../helpers.h"

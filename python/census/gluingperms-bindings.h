@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "census/gluingperms.h"
 #include "triangulation/facetpairing.h"
 #include "../helpers.h"

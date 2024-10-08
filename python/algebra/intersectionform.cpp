@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include "algebra/intersectionform.h"
 #include "../helpers.h"
 #include "../docstrings/algebra/intersectionform.h"

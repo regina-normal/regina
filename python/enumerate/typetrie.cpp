@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "enumerate/typetrie.h"
 #include "utilities/exception.h"
 #include "../helpers.h"

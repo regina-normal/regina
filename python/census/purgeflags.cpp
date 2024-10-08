@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "census/purgeflags.h"
 #include "../helpers.h"
 #include "../helpers/flags.h"

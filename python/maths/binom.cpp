@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "maths/binom.h"
 #include "../helpers/docstrings.h"
 #include "../docstrings/maths/binom.h"

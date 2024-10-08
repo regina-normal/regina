@@ -40,7 +40,7 @@
 #include <iomanip>
 #include <sstream>
 #include "../helpers.h"
-#include "../pybind11/operators.h"
+#include <pybind11/operators.h>
 #include "utilities/flags.h"
 #include "../helpers/docstrings.h"
 #include "../docstrings/utilities/flags.h"

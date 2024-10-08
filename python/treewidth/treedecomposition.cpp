@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "link/link.h"
 #include "treewidth/treedecomposition-impl.h"
 #include "triangulation/facetpairing.h"

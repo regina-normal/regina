@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "pythonoutputstream.h"
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "../helpers/gil.h"
 
 namespace regina::python {

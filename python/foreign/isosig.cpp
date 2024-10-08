@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "foreign/isosig.h"
 #include "link/link.h"
 #include "packet/container.h"

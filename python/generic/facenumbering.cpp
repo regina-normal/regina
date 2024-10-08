@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/facenumbering.h"
 #include "utilities/typeutils.h"
 #include "facehelper.h"

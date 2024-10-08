@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "utilities/base64.h"
 #include "../helpers/docstrings.h"
 #include "../docstrings/utilities/base64.h"

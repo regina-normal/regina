@@ -30,10 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/iostream.h"
-#include "../pybind11/operators.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/iostream.h>
+#include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include "hypersurface/normalhypersurfaces.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"

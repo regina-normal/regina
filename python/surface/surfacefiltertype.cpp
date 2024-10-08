@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "surface/surfacefiltertype.h"
 #include "../helpers.h"
 #include "../docstrings/surface/surfacefiltertype.h"

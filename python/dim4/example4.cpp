@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/example4.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
