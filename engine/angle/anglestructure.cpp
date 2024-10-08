@@ -46,7 +46,14 @@ std::weak_ordering AngleStructure::operator <=> (const AngleStructure& rhs)
     return std::lexicographical_compare_three_way(
         vector_.begin(), vector_.end(), rhs.vector_.begin(), rhs.vector_.end());
 #else
-    #error "TODO: Implement a workaround"
+    // The triangulations have the same size, and so both underlying vectors
+    // should have the same length.
+    auto i = vector_.begin();
+    auto j = rhs.vector_.begin();
+    for ( ; i != vector_.end(); ++i, ++j)
+        if (auto c = (*i <=> *j); c != 0)
+            return c;
+    return std::strong_ordering::equal;
 #endif
 }
 
