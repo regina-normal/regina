@@ -1447,14 +1447,12 @@ void v_cyclic_shift_right( T& vec, size_t col){
     vec[0] = dummy;
 }
 
-// GCC gives the following warning when setting vec[i] = vec[i+1]:
+// GCC 11+ gives the following warning when setting vec[i] = vec[i+1]:
 //   warning: 'void* __builtin_memmove(void*, const void*, long unsigned int)'
 //   reading <very large number> or more bytes from a region of size
 //   <very large number minus two> [-Wstringop-overread]
 // Here T = std::vector<short unsigned int>.
-// We do not use this #pragma under clang, since clang does not know this
-// warning type.
-#if !defined(__clang__)
+#if defined(__GNUC__) && (__GNUC__ >= 11) && !defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overread"
 #endif
@@ -1468,7 +1466,7 @@ void v_cyclic_shift_left( T& vec, size_t col){
         vec[i] = vec[i+1];
     vec[col] = dummy;
 }
-#if !defined(__clang__)
+#if defined(__GNUC__) && (__GNUC__ >= 11) && !defined(__clang__)
 #pragma GCC diagnostic pop
 #endif
 
