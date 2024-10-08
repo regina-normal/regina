@@ -57,7 +57,13 @@
   #define MATCH_PYBIND11_VISIBILITY
 #endif
 
-#include "pybind11/pybind11.h"
+// Include the core pybind11 headers, and make sure we're finding our own
+// patched versions and not some other system installation of pybind11.
+#include <pybind11/pybind11.h>
+#if !defined(REGINA_PYBIND11)
+#error "A system installation of pybind11 is being included instead of Regina's own patched version."
+#endif
+
 // #include "helpers/arraylike.h"
 #include "helpers/docstrings.h"
 #include "helpers/equality.h"

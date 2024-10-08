@@ -43,11 +43,6 @@
 #include "maths/perm.h"
 #include <chrono>
 
-// Ensure that our include have brought in regina's own patched pybind11.
-#if !defined(REGINA_PYBIND11)
-#error "A system installation of pybind11 is being included instead of Regina's own version. Please check your compiler's include flags."
-#endif
-
 // Docstrings that are generated once but need to be reused across many
 // source files:
 namespace regina::python::doc::common {
