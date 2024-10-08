@@ -30,6 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
+#if !defined(STRING_SPACESHIP_FOUND)
+#include <cstring>
+#endif
+
 #include <manifold/graphloop.h>
 #include <manifold/graphpair.h>
 #include <manifold/graphtriple.h>
@@ -73,7 +77,13 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
     if (bundle1 && bundle2) {
         // TODO: Just sort by name here, since bundle parameters will
         // probably need to be made canonical anyway.
+#if defined(STRING_SPACESHIP_FOUND)
         return name() <=> rhs.name();
+#else
+        const auto name1 = name();
+        const auto name2 = rhs.name();
+        return strcmp(name1.c_str(), name2.c_str());
+#endif
     }
 
     // Finally graph manifolds (SFS pairs, triples and loops).
@@ -108,7 +118,9 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
 #if defined(STRING_SPACESHIP_FOUND)
     return name() <=> rhs.name();
 #else
-    #error "TODO: Implement a workaround."
+    const auto name1 = name();
+    const auto name2 = rhs.name();
+    return strcmp(name1.c_str(), name2.c_str());
 #endif
 }
 
