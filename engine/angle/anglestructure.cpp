@@ -42,8 +42,12 @@ std::weak_ordering AngleStructure::operator <=> (const AngleStructure& rhs)
     if (triangulation_->size() != rhs.triangulation_->size())
         return triangulation_->size() <=> rhs.triangulation_->size();
 
+#if defined(LEXCMP_FOUND)
     return std::lexicographical_compare_three_way(
         vector_.begin(), vector_.end(), rhs.vector_.begin(), rhs.vector_.end());
+#else
+    #error "TODO: Implement a workaround"
+#endif
 }
 
 Rational AngleStructure::angle(size_t tetIndex, int edgePair) const {

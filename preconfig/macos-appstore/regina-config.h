@@ -22,6 +22,9 @@
 /* Define if 64-bit integer literals are available using the LL suffix */
 #define NUMERIC_64_LL_FOUND
 
+/* Define if std::lexicographical_compare_three_way is available */
+#define LEXCMP_FOUND
+
 /* Define if we are supporting triangulations of dimensions 9-15. */
 /* #undef REGINA_HIGHDIM */
 

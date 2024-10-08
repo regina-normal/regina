@@ -271,6 +271,16 @@ CHECK_CXX_SOURCE_COMPILES("
   int main() { return 0; }"
   NUMERIC_64_LL_FOUND)
 
+# Test for the C++20 function std::lexicographical_compare_three_way, which
+# is missing from some older versions of clang's libc++.
+CHECK_CXX_SOURCE_COMPILES("
+  #include <algorithm>
+  int x[3] = { 1, 2, 3 }, y[3] = { 1, 2, 3 };
+  int main() {
+    std::lexicographical_compare_three_way(x, x + 3, y, y + 3); return 0;
+  }"
+  LEXCMP_FOUND)
+
 # Dependencies used by all components of Regina
 
 # Note that pkg-config is optional, but it does help us find some libraries

@@ -646,8 +646,12 @@ inline bool LightweightSequence<T>::operator == (
 template <typename T>
 inline auto LightweightSequence<T>::operator <=> (
         const LightweightSequence& rhs) const {
+#if defined(LEXCMP_FOUND)
     return std::lexicographical_compare_three_way(
         data_, data_ + size_, rhs.data_, rhs.data_ + rhs.size_);
+#else
+    #error "TODO: Implement a workaround"
+#endif
 }
 
 template <typename T>
