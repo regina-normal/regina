@@ -25,6 +25,9 @@
 /* Define if std::lexicographical_compare_three_way is available */
 #define LEXCMP_FOUND
 
+/* Define if std::string has a spaceship operator */
+#define STRING_SPACESHIP_FOUND
+
 /* Define if we are supporting triangulations of dimensions 9-15. */
 /* #undef REGINA_HIGHDIM */
 

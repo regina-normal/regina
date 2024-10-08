@@ -105,7 +105,11 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
         return (*loop1 <=> *loop2);
 
     // No idea.  Use the dictionary.
+#if defined(STRING_SPACESHIP_FOUND)
     return name() <=> rhs.name();
+#else
+    #error "TODO: Implement a workaround."
+#endif
 }
 
 } // namespace regina

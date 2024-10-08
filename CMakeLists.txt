@@ -281,6 +281,13 @@ CHECK_CXX_SOURCE_COMPILES("
   }"
   LEXCMP_FOUND)
 
+# Test for the C++20 spaceship operator on std::string, which again is missing
+# from some older versions of clang's libc++.
+CHECK_CXX_SOURCE_COMPILES("
+  #include <string>
+  int main() { std::string a, b; a <=> b; return 0; }"
+  STRING_SPACESHIP_FOUND)
+
 # Dependencies used by all components of Regina
 
 # Note that pkg-config is optional, but it does help us find some libraries
