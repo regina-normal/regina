@@ -256,7 +256,7 @@ namespace Coordinates {
                     arg(whichCoord % 7);
             else
                 return QString("%1: %2").arg(whichCoord / 7).
-                    arg(regina::quadString[(whichCoord % 7) - 4]);
+                    arg(regina::quadString[(whichCoord % 7) - 4].c_str());
         } else if (coordSystem == regina::NormalCoords::AlmostNormal ||
                 coordSystem == regina::NormalCoords::LegacyAlmostNormal) {
             if (whichCoord % 10 < 4)
@@ -264,22 +264,22 @@ namespace Coordinates {
                     arg(whichCoord % 10);
             else if (whichCoord % 10 < 7)
                 return QString("Q%1: %2").arg(whichCoord / 10).
-                    arg(regina::quadString[(whichCoord % 10) - 4]);
+                    arg(regina::quadString[(whichCoord % 10) - 4].c_str());
             else
                 return QString("K%1: %2").arg(whichCoord / 10).
-                    arg(regina::quadString[(whichCoord % 10) - 7]);
+                    arg(regina::quadString[(whichCoord % 10) - 7].c_str());
         } else if (coordSystem == regina::NormalCoords::Quad ||
                 coordSystem == regina::NormalCoords::QuadClosed) {
             return QString("%1: %2").arg(whichCoord / 3).
-                arg(regina::quadString[whichCoord % 3]);
+                arg(regina::quadString[whichCoord % 3].c_str());
         } else if (coordSystem == regina::NormalCoords::QuadOct ||
                 coordSystem == regina::NormalCoords::QuadOctClosed) {
             if (whichCoord % 6 < 3)
                 return QString("Q%1: %2").arg(whichCoord / 6).
-                    arg(regina::quadString[whichCoord % 6]);
+                    arg(regina::quadString[whichCoord % 6].c_str());
             else
                 return QString("K%1: %2").arg(whichCoord / 6).
-                    arg(regina::quadString[(whichCoord % 6) - 3]);
+                    arg(regina::quadString[(whichCoord % 6) - 3].c_str());
         } else if (coordSystem == regina::NormalCoords::Edge) {
             if (! tri.edge(whichCoord)->isBoundary())
                 return QString::number(whichCoord);
@@ -379,7 +379,7 @@ namespace Coordinates {
             else
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 7).
-                    arg(regina::quadString[(whichCoord % 7) - 4]);
+                    arg(regina::quadString[(whichCoord % 7) - 4].c_str());
         } else if (coordSystem == regina::NormalCoords::AlmostNormal ||
                 coordSystem == regina::NormalCoords::LegacyAlmostNormal) {
             if (whichCoord % 10 < 4)
@@ -388,26 +388,26 @@ namespace Coordinates {
             else if (whichCoord % 10 < 7)
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 10).
-                    arg(regina::quadString[(whichCoord % 10) - 4]);
+                    arg(regina::quadString[(whichCoord % 10) - 4].c_str());
             else
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 10).
-                    arg(regina::quadString[(whichCoord % 10) - 7]);
+                    arg(regina::quadString[(whichCoord % 10) - 7].c_str());
         } else if (coordSystem == regina::NormalCoords::Quad ||
                 coordSystem == regina::NormalCoords::QuadClosed) {
             return context->tr("Tetrahedron %1, quad splitting vertices %2").
                 arg(whichCoord / 3).
-                arg(regina::quadString[whichCoord % 3]);
+                arg(regina::quadString[whichCoord % 3].c_str());
         } else if (coordSystem == regina::NormalCoords::QuadOct ||
                 coordSystem == regina::NormalCoords::QuadOctClosed) {
             if (whichCoord % 6 < 3)
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 6).
-                    arg(regina::quadString[whichCoord % 6]);
+                    arg(regina::quadString[whichCoord % 6].c_str());
             else
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 6).
-                    arg(regina::quadString[(whichCoord % 6) - 3]);
+                    arg(regina::quadString[(whichCoord % 6) - 3].c_str());
         } else if (coordSystem == regina::NormalCoords::Edge) {
             if (tri.edge(whichCoord)->isBoundary())
                 return context->tr("Weight of (boundary) edge %1").

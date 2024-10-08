@@ -152,7 +152,7 @@ inline constexpr int quadPartner[3][4] = {
  *
  * \ingroup surfaces
  */
-inline constexpr char quadString[3][6] = { "01/23", "02/13", "03/12" };
+inline constexpr std::string quadString[3] = { "01/23", "02/13", "03/12" };
 
 /**
  * Lists in consecutive order the directed normal arcs that form the

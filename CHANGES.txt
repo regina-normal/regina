@@ -423,6 +423,9 @@ Version 7.4  [ (to be announced) ]
         Constants is_cpp_integer_v<T>, is_unsigned_cpp_integer_v<T>:
             - New alternatives to using std::is_integeral_v<T> and
               std::is_unsigned_v<T> that allow for 128-bit integers also.
+        Global array quadString:
+            - These are now C++-style strings (std::string), not C-style
+              strings (array of char).
     PYTHON:
         - Updated the included pybind11 library from 2.10.0 to 2.13.6.
           This drops support for Python 3.6.

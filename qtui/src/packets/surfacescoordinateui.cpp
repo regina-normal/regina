@@ -243,11 +243,11 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 if (tot == 1) {
                     return tr("K%1: %2 (1 oct)").
                         arg(oct.tetIndex).
-                        arg(regina::quadString[oct.type]);
+                        arg(regina::quadString[oct.type].c_str());
                 } else {
                     return tr("K%1: %2 (%3 octs)").
                         arg(oct.tetIndex).
-                        arg(regina::quadString[oct.type]).
+                        arg(regina::quadString[oct.type].c_str()).
                         arg(tot.stringValue().c_str());
                 }
             }
