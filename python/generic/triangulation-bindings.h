@@ -152,14 +152,14 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             // gcc-10 struggles with casting: even a static_cast fails here
             // because gcc-10 cannot handle the "auto" return type.
             // Just use face<2>(), which triangle() is an alias for.
-            overload_cast<size_t>(&Triangulation<dim>::face<2>,
+            overload_cast<size_t>(&Triangulation<dim>::template face<2>,
                 pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::triangle)
         .def("tetrahedron",
             // gcc-10 struggles with casting: even a static_cast fails here
             // because gcc-10 cannot handle the "auto" return type.
             // Just use face<3>(), which tetrahedron() is an alias for.
-            overload_cast<size_t>(&Triangulation<dim>::face<3>,
+            overload_cast<size_t>(&Triangulation<dim>::template face<3>,
                 pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             rbase::tetrahedron)
@@ -167,7 +167,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             // gcc-10 struggles with casting: even a static_cast fails here
             // because gcc-10 cannot handle the "auto" return type.
             // Just use face<4>(), which pentachoron() is an alias for.
-            overload_cast<size_t>(&Triangulation<dim>::face<4>,
+            overload_cast<size_t>(&Triangulation<dim>::template face<4>,
                 pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             rbase::pentachoron)
