@@ -36,6 +36,21 @@ functions.)doc";
 
 namespace FacePair_ {
 
+// Docstring regina::python::doc::FacePair_::__cmp
+static const char *__cmp =
+R"doc(Compares two face pairs lexicographically.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result of the lexicographical comparison between this and the
+    given face pair.)doc";
+
 // Docstring regina::python::doc::FacePair_::__copy
 static const char *__copy = R"doc(Creates a new face pair that is a clone of the given pair.)doc";
 
@@ -64,31 +79,8 @@ static const char *__default = R"doc(Creates a new face pair (0,1).)doc";
 static const char *__eq =
 R"doc(Determines if this and the given face pair are equal.
 
-Parameter ``other``:
-    the pair to compare with this.
-
 Returns:
     ``True`` if and only if this and the given pair are equal.)doc";
-
-// Docstring regina::python::doc::FacePair_::__ge
-static const char *__ge =
-R"doc(Determines if this is greater than or equal to the given face pair.
-
-Parameter ``other``:
-    the pair to compare with this.
-
-Returns:
-    ``True`` if and only if this is greater than or equal to *other*.)doc";
-
-// Docstring regina::python::doc::FacePair_::__gt
-static const char *__gt =
-R"doc(Determines if this is greater than the given face pair.
-
-Parameter ``other``:
-    the pair to compare with this.
-
-Returns:
-    ``True`` if and only if this is greater than *other*.)doc";
 
 // Docstring regina::python::doc::FacePair_::__inc
 static const char *__inc =
@@ -122,36 +114,6 @@ Parameter ``first``:
 
 Parameter ``second``:
     the second face number in the new pair.)doc";
-
-// Docstring regina::python::doc::FacePair_::__le
-static const char *__le =
-R"doc(Determines if this is less than or equal to the given face pair.
-
-Parameter ``other``:
-    the pair to compare with this.
-
-Returns:
-    ``True`` if and only if this is less than or equal to *other*.)doc";
-
-// Docstring regina::python::doc::FacePair_::__lt
-static const char *__lt =
-R"doc(Determines if this is less than the given face pair.
-
-Parameter ``other``:
-    the pair to compare with this.
-
-Returns:
-    ``True`` if and only if this is less than *other*.)doc";
-
-// Docstring regina::python::doc::FacePair_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given face pair are not equal.
-
-Parameter ``other``:
-    the pair to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given pair are not equal.)doc";
 
 // Docstring regina::python::doc::FacePair_::commonEdge
 static const char *commonEdge =

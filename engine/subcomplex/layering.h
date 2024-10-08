@@ -187,31 +187,6 @@ class Layering : public ShortOutput<Layering> {
         bool operator == (const Layering& other) const;
 
         /**
-         * Determines whether this and the given object represent different
-         * layerings.
-         *
-         * Specifically, for two layerings to compare as equal, they must:
-         *
-         * - use the same numbered tetrahedra in the old boundary, presented
-         *   in the same order and using the same two permutations;
-         *
-         * - likewise use the same numbered tetrahedra in the new boundary,
-         *   presented in the same order and using the same two permutations;
-         *
-         * - contain the same number of layered tetrahedra, and use the
-         *   same matrix relating the old and new boundary curves.
-         *
-         * Since this test looks at tetrahedron numbers and not the specific
-         * Tetrahedron objects, it is meaningful to compare layerings
-         * within different triangulations.
-         *
-         * \param other the layering to compare with this.
-         * \return \c true if and only if this and the given object represent
-         * different layerings, as described above.
-         */
-        bool operator != (const Layering& other) const;
-
-        /**
          * Creates a new copy of the given layering structure.
          *
          * The new structure will describe the same layering within the same
@@ -531,10 +506,6 @@ inline bool Layering::operator == (const Layering& other) const {
             return false;
     }
     return true;
-}
-
-inline bool Layering::operator != (const Layering& other) const {
-    return ! ((*this) == other);
 }
 
 } // namespace regina

@@ -117,25 +117,6 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
         bool operator == (const SnappedTwoSphere& other) const;
 
         /**
-         * Determines whether this and the given object represent different
-         * specific presentations of a snapped 2-sphere.
-         *
-         * Specifically, two snapped 2-spheres will compare as equal if and
-         * only if they slice through the same pair of numbered tetrahedra,
-         * presented in the same order, and bisecting the same numbered edges
-         * within corresponding tetrahedra.
-         *
-         * Since this test looks at tetrahedron numbers and not the specific
-         * Tetrahedron objects, it is meaningful to compare snapped 2-spheres
-         * within different triangulations.
-         *
-         * \param other the snapped 2-sphere to compare with this.
-         * \return \c true if and only if this and the given object represent
-         * different specific presentations of a snapped 2-sphere.
-         */
-        bool operator != (const SnappedTwoSphere& other) const;
-
-        /**
          * Determines if the two given tetrahedra together form a snapped
          * 2-sphere.
          *
@@ -208,10 +189,6 @@ inline const SnappedBall& SnappedTwoSphere::snappedBall(int index) const {
 inline bool SnappedTwoSphere::operator == (const SnappedTwoSphere& other)
         const {
     return ball_[0] == other.ball_[0] && ball_[1] == other.ball_[1];
-}
-inline bool SnappedTwoSphere::operator != (const SnappedTwoSphere& other)
-        const {
-    return ball_[0] != other.ball_[0] || ball_[1] != other.ball_[1];
 }
 
 } // namespace regina

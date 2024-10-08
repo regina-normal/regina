@@ -56,10 +56,6 @@ void addBoolSet(pybind11::module_& m) {
         .def("removeFalse", &BoolSet::removeFalse, rdoc::removeFalse)
         .def("clear", &BoolSet::clear, rdoc::clear)
         .def("fill", &BoolSet::fill, rdoc::fill)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
-        .def(pybind11::self > pybind11::self, rdoc::__gt)
-        .def(pybind11::self <= pybind11::self, rdoc::__le)
-        .def(pybind11::self >= pybind11::self, rdoc::__ge)
         .def(pybind11::self |= pybind11::self, rdoc::__ior)
         .def(pybind11::self &= pybind11::self, rdoc::__iand)
         .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
@@ -74,7 +70,8 @@ void addBoolSet(pybind11::module_& m) {
         .def("setStringCode", &BoolSet::setStringCode, rdoc::setStringCode)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     RDOC_SCOPE_END
 

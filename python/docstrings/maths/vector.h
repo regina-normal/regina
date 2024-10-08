@@ -280,20 +280,6 @@ Parameter ``other``:
 Returns:
     the dot product of this and the given vector.)doc";
 
-// Docstring regina::python::doc::Vector_::__ne
-static const char *__ne =
-R"doc(Determines if this vector is different from the given vector.
-
-It is safe to call this operator if this and the given vector have
-different sizes (in which case the return value will be ``True``).
-
-Parameter ``compare``:
-    the vector with which this will be compared.
-
-Returns:
-    ``True`` if and only if the this and the given vector are not
-    equal.)doc";
-
 // Docstring regina::python::doc::Vector_::__sub
 static const char *__sub =
 R"doc(Subtracts the given vector from this vector, and returns the result.

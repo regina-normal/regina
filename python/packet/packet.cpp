@@ -135,7 +135,7 @@ void addPacket(pybind11::module_& m) {
             return c.begin();
         }, rdoc::__iter__)
         ;
-    regina::python::add_eq_operators(c1, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c1, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(PacketDescendants)
 
@@ -145,7 +145,7 @@ void addPacket(pybind11::module_& m) {
             return d.begin();
         }, rdoc::__iter__)
         ;
-    regina::python::add_eq_operators(c2, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c2, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(ChildIterator)
 
@@ -153,7 +153,7 @@ void addPacket(pybind11::module_& m) {
             rdoc_scope)
         .def("__next__", next<ChildIterator<false>>, rdoc::__next__)
         ;
-    regina::python::add_eq_operators(c3, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c3, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(SubtreeIterator)
 
@@ -164,7 +164,7 @@ void addPacket(pybind11::module_& m) {
         }, rdoc::__iter__)
         .def("__next__", next<SubtreeIterator<false>>, rdoc::__next__)
         ;
-    regina::python::add_eq_operators(c4, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c4, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(Packet)
 
@@ -265,10 +265,10 @@ void addPacket(pybind11::module_& m) {
         .def("internalID", &Packet::internalID, rdoc::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);
-        }, pybind11::is_operator(), rdoc_global::__eq)
+        }, pybind11::is_operator(), regina::python::doc::PacketShell_::__eq_2)
         .def("__ne__", [](const Packet* p, PacketShell s) {
             return (s != p);
-        }, pybind11::is_operator(), rdoc_global::__ne)
+        }, pybind11::is_operator(), regina::python::doc::common::neq_value)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
@@ -297,7 +297,7 @@ void addPacket(pybind11::module_& m) {
         }, pybind11::is_operator(), rdoc::__eq_2)
         .def("__ne__", [](const PacketShell& s, const Packet* p) {
             return (s != p);
-        }, pybind11::is_operator(), rdoc::__ne_2)
+        }, pybind11::is_operator(), regina::python::doc::common::neq_value)
         ;
     regina::python::add_output_custom(s, [](const PacketShell& p,
             std::ostream& s) {
@@ -308,7 +308,7 @@ void addPacket(pybind11::module_& m) {
         if (! p.label().empty())
             s << ": " << p.label();
     });
-    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(s, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(PacketListener)
 

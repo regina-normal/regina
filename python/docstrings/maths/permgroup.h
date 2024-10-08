@@ -188,26 +188,6 @@ of Regina.
 Returns:
     an iterator over the elements of this group.)doc";
 
-// Docstring regina::python::doc::PermGroup_::__ne
-static const char *__ne =
-R"doc(Indicates whether this and the given group are different.
-
-This does _not_ test group isomorphism, and it does _not_ test whether
-the two groups use the same internal representation. Instead it tests
-_membership_; that is, whether or not the two groups contain precisely
-the same set of permutations.
-
-As a result, this test is not trivial. It _is_ small polynomial time
-in *n*, but it is not as fast as (for example) directly comparing the
-internal representations.
-
-Parameter ``other``:
-    the group to compare this with.
-
-Returns:
-    ``True`` if and only if there is some permutation that belongs to
-    one group but not the other.)doc";
-
 // Docstring regina::python::doc::PermGroup_::centraliser
 static const char *centraliser =
 R"doc(Returns the group of all permutations that fix the minimal
@@ -287,24 +267,6 @@ Parameter ``rhs``:
 Returns:
     ``True`` if the iterators point to the same permutation, or
     ``False`` if they do not.)doc";
-
-// Docstring regina::python::doc::PermGroup_::iterator_::__ne
-static const char *__ne =
-R"doc(Compares this with the given iterator for inequality.
-
-To be considered equal, two iterators must be pointing to the same
-permutation within the same group. (The second condition means that
-the underlying PermGroup pointers must be the same - it is not enough
-to have two distinct PermGorup objects with identical contents.)
-
-Two past-the-end iterators will always be considered equal.
-
-Parameter ``rhs``:
-    the iterator to compare this with.
-
-Returns:
-    ``False`` if the iterators point to the same permutation, or
-    ``True`` if they do not.)doc";
 
 // Docstring regina::python::doc::PermGroup_::iterator_::__next__
 static const char *__next__ =

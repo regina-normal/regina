@@ -118,12 +118,35 @@ Python:
 
 namespace Bitmask1_ {
 
-// Docstring regina::python::doc::Bitmask1_::__copy
-static const char *__copy =
-R"doc(Creates a clone of the given bitmask.
+// Docstring regina::python::doc::Bitmask1_::__cmp
+static const char *__cmp =
+R"doc(Compares two bitmasks under the subset relation.
 
-Parameter ``src``:
-    the bitmask to clone.)doc";
+Here the bitmask *x* is considered less than *y* if the bits that are
+set in *x* form a strict subset of the bits that are set in *y*. In
+other words: ``x ≠ y``, and every bit that is set in *x* is also set
+in *y*.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+.. note::
+    This does not compare bitmasks lexicographically. For
+    lexicographical comparison, use lessThan() instead.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the bitmask to compare against this.
+
+Returns:
+    The result of the subset comparison between this and the given
+    bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1_::__copy
+static const char *__copy = R"doc(Creates a clone of the given bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::__default
 static const char *__default = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
@@ -131,9 +154,6 @@ static const char *__default = R"doc(Creates a new bitmask with all bits set to 
 // Docstring regina::python::doc::Bitmask1_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
-
-Parameter ``other``:
-    the bitmask to compare against this.
 
 Returns:
     ``True`` if and only if this and the given bitmask are identical.)doc";
@@ -193,36 +213,6 @@ Parameter ``other``:
 
 Returns:
     a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__le
-static const char *__le =
-R"doc(Determines whether this bitmask is entirely contained within the given
-bitmask.
-
-For this routine to return ``True``, every bit that is set in this
-bitmask must also be set in the given bitmask.
-
-.. warning::
-    This operation does not compare bitmasks lexicographically;
-    moreover, it only describes a partial order, not a total order. To
-    compare bitmasks lexicographically, use lessThan() instead.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this bitmask is entirely contained within
-    the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given bitmask are different.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are different.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::atMostOneBit
 static const char *atMostOneBit =
@@ -322,8 +312,9 @@ bit at index 0 is least significant, and the bit at index *length*-1
 is most significant.
 
 .. warning::
-    We do not use < for this operation, since ≤ represents the subset
-    operation.
+    We do not use < for this ordering, since the comparison operators
+    (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
+    instead.
 
 Parameter ``other``:
     the bitmask to compare against this.
@@ -423,12 +414,35 @@ Parameter ``numBits``:
 
 namespace Bitmask2_ {
 
-// Docstring regina::python::doc::Bitmask2_::__copy
-static const char *__copy =
-R"doc(Creates a clone of the given bitmask.
+// Docstring regina::python::doc::Bitmask2_::__cmp
+static const char *__cmp =
+R"doc(Compares two bitmasks under the subset relation.
 
-Parameter ``src``:
-    the bitmask to clone.)doc";
+Here the bitmask *x* is considered less than *y* if the bits that are
+set in *x* form a strict subset of the bits that are set in *y*. In
+other words: ``x ≠ y``, and every bit that is set in *x* is also set
+in *y*.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+.. note::
+    This does not compare bitmasks lexicographically. For
+    lexicographical comparison, use lessThan() instead.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the bitmask to compare against this.
+
+Returns:
+    The result of the subset comparison between this and the given
+    bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2_::__copy
+static const char *__copy = R"doc(Creates a clone of the given bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::__default
 static const char *__default = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
@@ -436,9 +450,6 @@ static const char *__default = R"doc(Creates a new bitmask with all bits set to 
 // Docstring regina::python::doc::Bitmask2_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
-
-Parameter ``other``:
-    the bitmask to compare against this.
 
 Returns:
     ``True`` if and only if this and the given bitmask are identical.)doc";
@@ -498,36 +509,6 @@ Parameter ``other``:
 
 Returns:
     a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__le
-static const char *__le =
-R"doc(Determines whether this bitmask is entirely contained within the given
-bitmask.
-
-For this routine to return ``True``, every bit that is set in this
-bitmask must also be set in the given bitmask.
-
-.. warning::
-    This operation does not compare bitmasks lexicographically;
-    moreover, it only describes a partial order, not a total order. To
-    compare bitmasks lexicographically, use lessThan() instead.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this bitmask is entirely contained within
-    the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given bitmask are different.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are different.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::atMostOneBit
 static const char *atMostOneBit =
@@ -627,8 +608,9 @@ bit at index 0 is least significant, and the bit at index *length*-1
 is most significant.
 
 .. warning::
-    We do not use < for this operation, since ≤ represents the subset
-    operation.
+    We do not use < for this ordering, since the comparison operators
+    (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
+    instead.
 
 Parameter ``other``:
     the bitmask to compare against this.
@@ -727,6 +709,36 @@ Parameter ``numBits``:
 }
 
 namespace Bitmask_ {
+
+// Docstring regina::python::doc::Bitmask_::__cmp
+static const char *__cmp =
+R"doc(Compares two bitmasks under the subset relation.
+
+Here the bitmask *x* is considered less than *y* if the bits that are
+set in *x* form a strict subset of the bits that are set in *y*. In
+other words: ``x ≠ y``, and every bit that is set in *x* is also set
+in *y*.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Precondition:
+    This and the given bitmask have the same length.
+
+.. note::
+    This does not compare bitmasks lexicographically. For
+    lexicographical comparison, use lessThan() instead.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the bitmask to compare against this.
+
+Returns:
+    The result of the subset comparison between this and the given
+    bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask_::__copy
 static const char *__copy =
@@ -839,47 +851,6 @@ Parameter ``other``:
 
 Returns:
     a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask_::__le
-static const char *__le =
-R"doc(Determines whether this bitmask is entirely contained within the given
-bitmask.
-
-For this routine to return ``True``, every bit that is set in this
-bitmask must also be set in the given bitmask.
-
-Precondition:
-    This and the given bitmask have the same length.
-
-.. warning::
-    This operation does not compare bitmasks lexicographically;
-    moreover, it only describes a partial order, not a total order. To
-    compare bitmasks lexicographically, use lessThan() instead.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this bitmask is entirely contained within
-    the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given bitmask are different.
-
-.. warning::
-    As explain in the class notes, bitmasks do not store their exact
-    length; instead the length is rounded up to the next "raw unit of
-    storage". This means that two bitmasks that were initialised with
-    different lengths may still be considered equal if the two lengths
-    round up to the same value _and_ the extra bits in the longer
-    bitmask are all ``False``.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are different.)doc";
 
 // Docstring regina::python::doc::Bitmask_::atMostOneBit
 static const char *atMostOneBit =
@@ -1004,8 +975,9 @@ Precondition:
     This and the given bitmask have the same length.
 
 .. warning::
-    We do not use < for this operation, since ≤ represents the subset
-    operation.
+    We do not use < for this ordering, since the comparison operators
+    (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
+    instead.
 
 Parameter ``other``:
     the bitmask to compare against this.

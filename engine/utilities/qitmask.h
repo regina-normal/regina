@@ -123,10 +123,8 @@ class Qitmask1 {
 
         /**
          * Creates a clone of the given qitmask.
-         *
-         * \param cloneMe the qitmask to clone.
          */
-        inline Qitmask1(const Qitmask1<T>& cloneMe) = default;
+        inline Qitmask1(const Qitmask1<T>&) = default;
 
         /**
          * Sets all qits of this qitmask to 0.
@@ -138,10 +136,9 @@ class Qitmask1 {
         /**
          * Sets this qitmask to a copy of the given qitmask.
          *
-         * \param other the qitmask to clone.
          * \return a reference to this qitmask.
          */
-        Qitmask1<T>& operator = (const Qitmask1<T>& other) = default;
+        Qitmask1<T>& operator = (const Qitmask1<T>&) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.
@@ -235,24 +232,10 @@ class Qitmask1 {
         /**
          * Determines whether this and the given qitmask are identical.
          *
-         * \param other the qitmask to compare against this.
          * \return \c true if and only if this and the given qitmask are
          * identical.
          */
-        inline bool operator == (const Qitmask1<T>& other) const {
-            return (mask1 == other.mask1 && mask2 == other.mask2);
-        }
-
-        /**
-         * Determines whether this and the given qitmask are different.
-         *
-         * \param other the qitmask to compare against this.
-         * \return \c true if and only if this and the given qitmask are
-         * different.
-         */
-        inline bool operator != (const Qitmask1<T>& other) const {
-            return (mask1 != other.mask1 || mask2 != other.mask2);
-        }
+        bool operator == (const Qitmask1<T>&) const = default;
 
         /**
          * Determines whether there is some index at which both this and
@@ -363,10 +346,8 @@ class Qitmask2 {
 
         /**
          * Creates a clone of the given qitmask.
-         *
-         * \param cloneMe the qitmask to clone.
          */
-        inline Qitmask2(const Qitmask2<T, U>& cloneMe) = default;
+        inline Qitmask2(const Qitmask2<T, U>&) = default;
 
         /**
          * Sets all qits of this qitmask to 0.
@@ -379,10 +360,9 @@ class Qitmask2 {
         /**
          * Sets this qitmask to a copy of the given qitmask.
          *
-         * \param other the qitmask to clone.
          * \return a reference to this qitmask.
          */
-        Qitmask2<T, U>& operator = (const Qitmask2<T, U>& other) = default;
+        Qitmask2<T, U>& operator = (const Qitmask2<T, U>&) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.
@@ -492,26 +472,10 @@ class Qitmask2 {
         /**
          * Determines whether this and the given qitmask are identical.
          *
-         * \param other the qitmask to compare against this.
          * \return \c true if and only if this and the given qitmask are
          * identical.
          */
-        inline bool operator == (const Qitmask2<T, U>& other) const {
-            return (low1 == other.low1 && low2 == other.low2 &&
-                high1 == other.high1 && high2 == other.high2);
-        }
-
-        /**
-         * Determines whether this and the given qitmask are different.
-         *
-         * \param other the qitmask to compare against this.
-         * \return \c true if and only if this and the given qitmask are
-         * different.
-         */
-        inline bool operator != (const Qitmask2<T, U>& other) const {
-            return (low1 != other.low1 || low2 != other.low2 ||
-                high1 != other.high1 || high2 != other.high2);
-        }
+        bool operator == (const Qitmask2<T, U>&) const = default;
 
         /**
          * Determines whether there is some index at which both this and

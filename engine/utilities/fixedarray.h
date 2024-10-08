@@ -313,23 +313,6 @@ class FixedArray {
             return size_ == rhs.size_ &&
                 std::equal(data_, data_ + size_, rhs.data_);
         }
-
-        /**
-         * Determines whether this and the given array are different.
-         *
-         * This routine compares the elements of both arrays in order using
-         * the standard equality operator for the element type \a T.
-         *
-         * It is fine if this array and \a rhs have different sizes (in which
-         * case this comparison will immediately return \c true).
-         *
-         * \return \c true if and only if this and the given array are
-         * different.
-         */
-        inline bool operator != (const FixedArray& rhs) const {
-            return size_ != rhs.size_ ||
-                ! std::equal(data_, data_ + size_, rhs.data_);
-        }
 };
 
 /**

@@ -68,7 +68,7 @@ void addValidityConstraints(pybind11::module_& m) {
         .def_readonly_static("none", &ValidityConstraints::none)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<ValidityConstraints>(m, rdoc::global_swap);
 

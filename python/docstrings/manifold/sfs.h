@@ -94,12 +94,23 @@ sized) amount of data to be copied even in a move operation.
 
 namespace SFSFibre_ {
 
-// Docstring regina::python::doc::SFSFibre_::__copy
-static const char *__copy =
-R"doc(Creates a new exceptional fibre that is a clone of the given fibre.
+// Docstring regina::python::doc::SFSFibre_::__cmp
+static const char *__cmp =
+R"doc(Compares two exceptional fibres. Fibres are ordered first by *alpha*
+and then by *beta*.
 
-Parameter ``cloneMe``:
-    the exceptional fibre to clone.)doc";
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result of the comparison between this and the given fibre.)doc";
+
+// Docstring regina::python::doc::SFSFibre_::__copy
+static const char *__copy = R"doc(Creates a new exceptional fibre that is a clone of the given fibre.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__default
 static const char *__default = R"doc(Creates a new uninitialised exceptional fibre.)doc";
@@ -109,9 +120,6 @@ static const char *__eq =
 R"doc(Determines if this and the given exceptional fibre are identical. This
 requires both fibres to have the same values for *alpha* and the same
 values for *beta*.
-
-Parameter ``compare``:
-    the fibre with which this will be compared.
 
 Returns:
     ``True`` if and only if this and the given fibre are identical.)doc";
@@ -128,29 +136,6 @@ Parameter ``newBeta``:
     the second parameter of this exceptional fibre; this must have no
     common factors with the first parameter *newAlpha*.)doc";
 
-// Docstring regina::python::doc::SFSFibre_::__lt
-static const char *__lt =
-R"doc(Determines if this exceptional fibre is smaller than the given fibre.
-Fibres are sorted by *alpha* and then by *beta*.
-
-Parameter ``compare``:
-    the fibre with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is smaller than the given fibre.)doc";
-
-// Docstring regina::python::doc::SFSFibre_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given exceptional fibre are different. This
-requires the fibres to have different values for *alpha* and/or to
-have different values for *beta*.
-
-Parameter ``compare``:
-    the fibre with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given fibre are different.)doc";
-
 }
 
 namespace SFSpace_ {
@@ -160,6 +145,35 @@ static const char *ClassType =
 R"doc(Lists the six classes ``o1``, ``o2``, ``n1``, ``n2``, ``n3``, ``n4``
 for base orbifolds without boundaries, plus five classes ``bo1``,
 ``b02``, ``bn1``, ``bn2``, ``bn3`` for base orbifolds with boundaries.)doc";
+
+// Docstring regina::python::doc::SFSpace_::__cmp
+static const char *__cmp =
+R"doc(Compares representations of two Seifert fibred spaces according to an
+aesthetic ordering.
+
+The only purpose of this routine is to implement a consistent ordering
+of Seifert fibred space representations. The specific ordering used is
+purely aesthetic on the part of the author, and is subject to change
+in future versions of Regina.
+
+It does not matter whether the two spaces are homeomorphic; this
+routine compares the specific _representations_ of these spaces (and
+so in particular, different representations of the same Seifert fibred
+space will be ordered differently).
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the other representation to compare this with.
+
+Returns:
+    A result that indicates how this and the given Seifert fibred
+    space representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
@@ -236,47 +250,6 @@ Parameter ``reflectorsTwisted``:
     the number of twisted reflector boundary components of the base
     orbifold. These are in addition to the ordinary boundary
     components described by *puncturesTwisted*.)doc";
-
-// Docstring regina::python::doc::SFSpace_::__lt
-static const char *__lt =
-R"doc(Determines in a fairly ad-hoc fashion whether this representation of
-this space is "smaller" than the given representation of the given
-space.
-
-The ordering imposed on Seifert fibred space representations is purely
-aesthetic on the part of the author, and is subject to change in
-future versions of Regina. It also depends upon the particular
-representation, so that different representations of the same space
-may be ordered differently.
-
-All that this routine really offers is a well-defined way of ordering
-Seifert fibred space representations.
-
-Parameter ``compare``:
-    the representation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is "smaller" than the given Seifert
-    fibred space representation.)doc";
-
-// Docstring regina::python::doc::SFSpace_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object do not contain precisely
-the same presentations of the same Seifert fibred space.
-
-This routine does _not_ test for homeomorphism. Instead it compares
-the exact presentations, including the precise details of the base
-orbifold and the exact parameters of the exceptional fibres, and
-determines whether or not these _presentations_ are identical. If you
-have two different presentations of the same Seifert fibred space,
-they will be treated as not equal by this routine.
-
-Parameter ``compare``:
-    the presentation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given object do not contain
-    identical presentations of the same Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::addCrosscap
 static const char *addCrosscap =

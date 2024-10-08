@@ -52,10 +52,10 @@ void addSFSpace(pybind11::module_& m) {
         .def(pybind11::init<const SFSFibre&>(), rdoc::__copy)
         .def_readwrite("alpha", &SFSFibre::alpha)
         .def_readwrite("beta", &SFSFibre::beta)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
     ;
     regina::python::add_output_ostream(f);
-    regina::python::add_eq_operators(f, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(f, rdoc::__eq);
+    regina::python::add_cmp_operators(f, rdoc::__cmp);
 
     RDOC_SCOPE_SWITCH(SFSpace)
 
@@ -115,10 +115,10 @@ void addSFSpace(pybind11::module_& m) {
         .def("reduce", &SFSpace::reduce,
             pybind11::arg("mayReflect") = true, rdoc::reduce)
         .def("isLensSpace", &SFSpace::isLensSpace, rdoc::isLensSpace)
-        // Do not bind <, since this is already inherited from Manifold
-        // and we do not want to hide that more general version.
     ;
-    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(s, rdoc::__eq);
+    // Do not bind comparison operators, since these are already inherited
+    // from Manifold and we do not want to hide those more general versions.
     regina::python::add_output(s);
 
     regina::python::add_global_swap<SFSpace>(m, rdoc::global_swap);

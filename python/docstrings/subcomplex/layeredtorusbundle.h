@@ -77,34 +77,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered torus bundle.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-types of layered torus bundle.
-
-Specifically, two layered torus bundles will compare as equal if and
-only if their core ``T x I`` triangulations have the same
-combinatorial parameters, and their layering relations are the same.
-
-In particular, if you invert a layered torus bundle (which means the
-layering relation becomes its inverse matrix), the resulting layered
-torus bundle will generally _not_ compare as equal.
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
-recognise inversion and also does not recognise symmetries within the
-``T x I`` core).
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different types of layered torus bundle.)doc";
-
 // Docstring regina::python::doc::LayeredTorusBundle_::core
 static const char *core =
 R"doc(Returns the ``T x I`` triangulation at the core of this layered torus

@@ -167,41 +167,6 @@ Parameter ``cloneLocks``:
     from the given triangulation, or ``False`` if the new
     triangulation should have no locks at all.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::__ne
-constexpr const char *__ne =
-R"doc(Determines if this triangulation is not combinatorially identical to
-the given triangulation.
-
-Here "identical" means that the triangulations have the same number of
-top-dimensional simplices, with gluings between the same pairs of
-numbered simplices using the same gluing permutations. In other words,
-"identical" means that the triangulations are isomorphic via the
-identity isomorphism.
-
-For the less strict notion of _isomorphic_ triangulations, which
-allows relabelling of the top-dimensional simplices and their
-vertices, see isIsomorphicTo() instead.
-
-This test does _not_ examine the textual simplex descriptions or
-simplex/facet locks, as seen in Simplex<dim>::description() and
-Simplex<dim>::lockMask(); these may still differ. It also does not
-test whether lower-dimensional faces are numbered identically
-(vertices, edges and so on); this routine is only concerned with top-
-dimensional simplices.
-
-(At the time of writing, two identical triangulations will always
-number their lower-dimensional faces in the same way. However, it is
-conceivable that in future versions of Regina there may be situations
-in which identical triangulations can acquire different numberings for
-vertices, edges, and so on.)
-
-Parameter ``other``:
-    the triangulation to compare with this.
-
-Returns:
-    ``True`` if and only if the two triangulations are not
-    combinatorially identical.)doc";
-
 // Docstring regina::python::doc::detail::TriangulationBase_::barycentricSubdivision
 constexpr const char *barycentricSubdivision =
 R"doc(Deprecated routine that performs a barycentric subdivision of the

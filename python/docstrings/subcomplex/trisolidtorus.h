@@ -85,32 +85,6 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same specific presentation of a triangular solid torus.)doc";
 
-// Docstring regina::python::doc::TriSolidTorus_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object represent different
-specific presentations of a triangular solid torus.
-
-Unlike the parameterised subclasses of StandardTriangulation, this
-TriSolidTorus subclass represents a fixed structure, and so its
-comparisons test not for the _structure_ but the precise _location_ of
-this structure within the enclosing triangulation.
-
-Specifically, two triangular solid tori will compare as equal if and
-only if each uses the same three numbered tetrahedra, in the same
-order, and with the same vertex roles. That is, the corresponding
-permutations returned by vertexRoles() must be equal, and the
-corresponding tetrahedra returned by tetrahedron() must have equal
-indices within the triangulation. In particular, it is still
-meaningful to compare triangular solid tori within different
-triangulations.
-
-Parameter ``other``:
-    the triangular solid torus to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given object represent
-    different specific presentations of a triangular solid torus.)doc";
-
 // Docstring regina::python::doc::TriSolidTorus_::areAnnuliLinkedAxis
 static const char *areAnnuliLinkedAxis =
 R"doc(Determines whether the two given annuli are linked in a particular

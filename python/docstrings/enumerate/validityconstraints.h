@@ -136,29 +136,6 @@ Parameter ``reserveGlobal``:
     to addGlobal(). This is purely for optimisation; it is safe to
     leave this as 0 (the default).)doc";
 
-// Docstring regina::python::doc::ValidityConstraints_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given set do not contain the same
-constraints.
-
-This test compares the number of coordinates in each block, the total
-number of blocks, the set of local constraints, and the set of global
-constraints. The local and global constraints may appear in any order,
-and their individual coordinates may likewise appear in any order;
-such reorderings will not affect the outcome of this test.
-
-.. warning::
-    Because this test allows for reordering, the comparison is not
-    very efficient. It is assumed that this will not be a problem,
-    because typical constraint sets are extremely small.
-
-Parameter ``other``:
-    the constraint set to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given set do not contain the
-    same constraints.)doc";
-
 // Docstring regina::python::doc::ValidityConstraints_::addGlobal
 static const char *addGlobal =
 R"doc(Adds one new global constraint to this set.

@@ -702,34 +702,6 @@ Parameter ``vertices``:
     See vertices() for details of how this permutation should be
     structured.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase_::__ne
-constexpr const char *__ne =
-R"doc(Tests whether this and the given object are not identical.
-
-Here _identical_ means that two FaceEmbedding objects refer to the
-same-numbered face of the same-numbered simplex, _and_ have the same
-embedding permutations as returned by vertices().
-
-In particular, since this test only examines face/simplex/vertex
-_numbers_ (not object pointers), it is meaningful to compare two
-FaceEmbedding objects from different underlying triangulations.
-
-.. warning::
-    The meaning of this comparison changed in Regina 7.0. In older
-    versions of Regina, to compare as equal, two FaceEmbedding objects
-    (i) had to be faces of the same Simplex object (a stronger
-    requirement that effectively restricted this test to faces of the
-    same triangulation); but also (ii) only had to refer to the same-
-    numbered face, not use the same full embedding permutations (a
-    weaker requirement that nowadays would incur an unacceptable
-    performance cost).
-
-Parameter ``rhs``:
-    the object to compare with this.
-
-Returns:
-    ``True`` if and only if both object are identical.)doc";
-
 // Docstring regina::python::doc::detail::FaceEmbeddingBase_::face
 constexpr const char *face =
 R"doc(Returns the corresponding face number of simplex(). This identifies

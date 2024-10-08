@@ -270,25 +270,10 @@ class ListView {
          * must be the same container object at the same location in memory;
          * it is not enough to be two containers with identical contents).
          *
-         * \param other the list view to compare with this.
          * \return \c true if and only if this and the given list use
          * the same underlying container.
          */
-        bool operator == (const ListView& other) const;
-        /**
-         * Determines whether this and the given list view are accessing
-         * different underlying containers.
-         *
-         * Here the containers are compared by _reference_ (i.e., to be
-         * considered equal they must be the same container object at the same
-         * location in memory; it is not enough to be two containers with
-         * identical contents).
-         *
-         * \param other the list view to compare with this.
-         * \return \c true if and only if this and the given list use
-         * different underlying containers.
-         */
-        bool operator != (const ListView& other) const;
+        bool operator == (const ListView&) const = default;
 };
 
 /**
@@ -486,26 +471,10 @@ class ListView<Element*> {
          * In particular, it is not enough for the two arrays just to have
          * identical contents.
          *
-         * \param other the list view to compare with this.
          * \return \c true if and only if this and the given list use
          * the same underlying array.
          */
-        bool operator == (const ListView& other) const;
-        /**
-         * Determines whether this and the given list view are accessing
-         * different underlying C-style arrays.
-         *
-         * To be considered the same array, the two arrays must have the same
-         * location in memory (i.e., the pointers that define the C-style arrays
-         * must be equal), _and_ the two arrays must have the same length.
-         * In particular, it is not enough for the two arrays just to have
-         * identical contents.
-         *
-         * \param other the list view to compare with this.
-         * \return \c true if and only if this and the given list use
-         * different underlying arrays.
-         */
-        bool operator != (const ListView& other) const;
+        bool operator == (const ListView&) const = default;
 };
 
 /**
@@ -683,25 +652,10 @@ class ListView<Element[n]> {
          * must be equal).  In particular, it is not enough for the two arrays
          * just to have identical contents.
          *
-         * \param other the list view to compare with this.
          * \return \c true if and only if this and the given list use
          * the same underlying array.
          */
-        bool operator == (const ListView& other) const;
-        /**
-         * Determines whether this and the given list view are accessing
-         * different underlying C-style arrays.
-         *
-         * To be considered the same array, the two arrays must have the same
-         * location in memory (i.e., the pointers that define the C-style arrays
-         * must be equal).  In particular, it is not enough for the two arrays
-         * just to have identical contents.
-         *
-         * \param other the list view to compare with this.
-         * \return \c true if and only if this and the given list use
-         * different underlying arrays.
-         */
-        bool operator != (const ListView& other) const;
+        bool operator == (const ListView&) const = default;
 };
 
 // Deduction guides (hide these from Doxygen, which cannot handle them):
@@ -770,16 +724,6 @@ inline typename ListView<Container>::const_iterator ListView<Container>::end()
     return list_->end();
 }
 
-template <class Container>
-inline bool ListView<Container>::operator == (const ListView& other) const {
-    return (list_ == other.list_);
-}
-
-template <class Container>
-inline bool ListView<Container>::operator != (const ListView& other) const {
-    return (list_ != other.list_);
-}
-
 template <class Element>
 inline ListView<Element*>::ListView(const Element* array, size_t size) :
         begin_(array), end_(array + size) {
@@ -830,16 +774,6 @@ inline typename ListView<Element*>::const_iterator ListView<Element*>::end()
     return end_;
 }
 
-template <class Element>
-inline bool ListView<Element*>::operator == (const ListView& other) const {
-    return (begin_ == other.begin_ && end_ == other.end_);
-}
-
-template <class Element>
-inline bool ListView<Element*>::operator != (const ListView& other) const {
-    return (begin_ != other.begin_ || end_ != other.end_);
-}
-
 template <class Element, size_t n>
 inline ListView<Element[n]>::ListView(const Element* array) : array_(array) {
 }
@@ -883,16 +817,6 @@ template <class Element, size_t n>
 inline typename ListView<Element[n]>::const_iterator ListView<Element[n]>::end()
         const {
     return array_ + n;
-}
-
-template <class Element, size_t n>
-inline bool ListView<Element[n]>::operator == (const ListView& other) const {
-    return (array_ == other.array_);
-}
-
-template <class Element, size_t n>
-inline bool ListView<Element[n]>::operator != (const ListView& other) const {
-    return (array_ != other.array_);
 }
 
 } // namespace regina

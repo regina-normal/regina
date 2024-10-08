@@ -241,32 +241,6 @@ class LayeredTorusBundle : public StandardTriangulation {
         bool operator == (const LayeredTorusBundle& other) const;
 
         /**
-         * Determines whether this and the given structure represent
-         * different types of layered torus bundle.
-         *
-         * Specifically, two layered torus bundles will compare as equal if
-         * and only if their core `T x I` triangulations have the same
-         * combinatorial parameters, and their layering relations are the same.
-         *
-         * In particular, if you invert a layered torus bundle (which means
-         * the layering relation becomes its inverse matrix), the resulting
-         * layered torus bundle will generally _not_ compare as equal.
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass is more specific than combinatorial isomorphism, since
-         * this test does not recognise inversion and also does not recognise
-         * symmetries within the `T x I` core).
-         *
-         * \param other the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * represent different types of layered torus bundle.
-         */
-        bool operator != (const LayeredTorusBundle& other) const;
-
-        /**
          * Determines if the given triangulation is a layered torus bundle.
          *
          * This function returns by (smart) pointer for consistency with
@@ -379,11 +353,6 @@ inline const Matrix2& LayeredTorusBundle::layeringReln() const {
 inline bool LayeredTorusBundle::operator == (const LayeredTorusBundle& other)
         const {
     return reln_ == other.reln_ && (*core_) == (*other.core_);
-}
-
-inline bool LayeredTorusBundle::operator != (const LayeredTorusBundle& other)
-        const {
-    return reln_ != other.reln_ || (*core_) != (*other.core_);
 }
 
 inline std::ostream& LayeredTorusBundle::writeName(std::ostream& out) const {

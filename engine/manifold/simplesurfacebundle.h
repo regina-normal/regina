@@ -109,15 +109,6 @@ class SimpleSurfaceBundle : public Manifold {
          * are of the same type.
          */
         bool operator == (const SimpleSurfaceBundle& compare) const;
-        /**
-         * Determines whether this and the given surface bundle are of
-         * different types (i.e., they represent different 3-manifolds).
-         *
-         * \param compare the surface bundle with which this will be compared.
-         * \return \c true if and only if this and the given surface bundle
-         * are of different types.
-         */
-        bool operator != (const SimpleSurfaceBundle& compare) const;
 
         /**
          * Sets this to be a copy of the given surface bundle.
@@ -165,10 +156,6 @@ inline int SimpleSurfaceBundle::type() const {
 inline bool SimpleSurfaceBundle::operator ==
         (const SimpleSurfaceBundle& compare) const {
     return (type_ == compare.type_);
-}
-inline bool SimpleSurfaceBundle::operator !=
-        (const SimpleSurfaceBundle& compare) const {
-    return (type_ != compare.type_);
 }
 
 inline bool SimpleSurfaceBundle::isHyperbolic() const {

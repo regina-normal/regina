@@ -54,7 +54,7 @@ void addBlockedSFS(pybind11::module_& m) {
         .def_static("recognise", &BlockedSFS::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<BlockedSFS>(m, rdoc::global_swap);
 

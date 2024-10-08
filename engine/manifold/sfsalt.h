@@ -333,22 +333,6 @@ class SFSAlt : public ShortOutput<SFSAlt> {
         bool operator == (const SFSAlt& other) const;
 
         /**
-         * Determines whether this and the given alternative representation
-         * do not have identical presentations.
-         *
-         * To be considered _identical_, the two alternatives must have equal
-         * alternative SFSpace representations, equal conversion matrices,
-         * and either both must have used a reflection or both must have
-         * not used a reflection.  In other words, this is equivalent to
-         * testing all of alt(), conversion() and reflected() for equality.
-         *
-         * \param other the alternative to compare against this.
-         * \return \c true if and only if this and the given alternative
-         * do not have identical presentations, as described above.
-         */
-        bool operator != (const SFSAlt& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -420,11 +404,6 @@ inline std::vector<SFSAlt> SFSAlt::altSet(const SFSpace& sfs) {
 inline bool SFSAlt::operator == (const SFSAlt& other) const {
     return alt_ == other.alt_ && conversion_ == other.conversion_ &&
         reflected_ == other.reflected_;
-}
-
-inline bool SFSAlt::operator != (const SFSAlt& other) const {
-    return alt_ != other.alt_ || conversion_ != other.conversion_ ||
-        reflected_ != other.reflected_;
 }
 
 inline void SFSAlt::writeTextShort(std::ostream& out) const {

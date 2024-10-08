@@ -78,10 +78,11 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>(), rbase::pentachora)
         .def("simplices", &Triangulation<4>::simplices,
             pybind11::keep_alive<0, 1>(), rbase::simplices)
-        // Use a static cast because GCC struggles with the overload_cast here:
         .def("pentachoron",
-            static_cast<regina::Simplex<4>* (Triangulation<4>::*)(size_t)>(
-                &Triangulation<4>::pentachoron),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use simplex(), which pentachoron() is an alias for.
+            overload_cast<size_t>(&Triangulation<4>::simplex),
             pybind11::return_value_policy::reference_internal,
             rbase::pentachoron)
         .def("simplex",
@@ -178,14 +179,17 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rbase::vertex)
         .def("edge", &Triangulation<4>::edge,
             pybind11::return_value_policy::reference_internal, rbase::edge)
-        // Use static casts because GCC struggles with overload_cast here:
         .def("triangle",
-            static_cast<regina::Face<4, 2>* (Triangulation<4>::*)(size_t)>(
-                &Triangulation<4>::triangle),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use face<2>(), which triangle() is an alias for.
+            overload_cast<size_t>(&Triangulation<4>::face<2>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::triangle)
         .def("tetrahedron",
-            static_cast<regina::Face<4, 3>* (Triangulation<4>::*)(size_t)>(
-                &Triangulation<4>::tetrahedron),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use face<3>(), which tetrahedron() is an alias for.
+            overload_cast<size_t>(&Triangulation<4>::face<3>, pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             rbase::tetrahedron)
         .def("translate", &Triangulation<4>::translate<0>,
@@ -465,7 +469,7 @@ void addTriangulation4(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
-    regina::python::packet_eq_operators(c, rbase::__eq, rbase::__ne);
+    regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<4>().vertices())>(m);

@@ -196,16 +196,6 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
         bool operator == (const TypeTrie& other) const;
 
         /**
-         * Determines whether this and the given trie do not store exactly the
-         * same type vectors.
-         *
-         * \param other the trie to compare with this.
-         * \return \c true if and only if both tries do not store the same type
-         * vectors.
-         */
-        bool operator != (const TypeTrie& other) const;
-
-        /**
          * Resets this to the empty trie.
          */
         void clear();
@@ -380,11 +370,6 @@ bool TypeTrie<nTypes>::operator == (const TypeTrie& other) const {
         }
     }
     return true;
-}
-
-template <int nTypes>
-inline bool TypeTrie<nTypes>::operator != (const TypeTrie& other) const {
-    return ! ((*this) == other);
 }
 
 template <int nTypes>

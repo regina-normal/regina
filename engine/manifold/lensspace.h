@@ -121,22 +121,32 @@ class LensSpace : public Manifold {
          * have the same presentation (i.e., are homeomorphic).
          */
         bool operator == (const LensSpace& compare) const;
+
         /**
-         * Determines whether this and the given lens space have
-         * different presentations.
+         * Compares representations of two lens spaces according to an
+         * aesthetic ordering.
          *
-         * Since the presentation is made canonical by the class constructor,
-         * this routine also identifies whether this and the given lens space
-         * are homeomorphic as 3-manifolds.  This is in contrast to the
-         * comparison operators for other manifold classes (such as Seifert
-         * fibred spaces and graph manifolds), where the same manifold
-         * could have different presentations that compare as not equal.
+         * The only purpose of this routine is to implement a consistent
+         * ordering of lens space representations.  The specific ordering
+         * used is purely aesthetic on the part of the author, and is subject
+         * to change in future versions of Regina.
          *
-         * \param compare the lens space with which this should be compared.
-         * \return \c true if and only if this and the given lens space
-         * have different presentations (i.e., are non-homeomorphic).
+         * It does not matter whether the two lens spaces are homeomorphic;
+         * this routine compares the specific _representations_ of these spaces
+         * (and so in particular, different representations of the same
+         * lens space will be ordered differently).
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other representation to compare this with.
+         * \return A result that indicates how this and the given lens space
+         * representation should be ordered with respect to each other.
          */
-        bool operator != (const LensSpace& compare) const;
+        std::strong_ordering operator <=> (const LensSpace& rhs) const;
 
         /**
          * Sets this to be a copy of the given lens space.
@@ -194,8 +204,20 @@ inline unsigned long LensSpace::q() const {
 inline bool LensSpace::operator == (const LensSpace& compare) const {
     return (p_ == compare.p_ && q_ == compare.q_);
 }
-inline bool LensSpace::operator != (const LensSpace& compare) const {
-    return (p_ != compare.p_ || q_ != compare.q_);
+
+inline std::strong_ordering LensSpace::operator <=> (const LensSpace& rhs)
+        const {
+    if (p_ < rhs.p_)
+        return std::strong_ordering::less;
+    if (p_ > rhs.p_)
+        return std::strong_ordering::greater;
+
+    if (q_ < rhs.q_)
+        return std::strong_ordering::less;
+    if (q_ > rhs.q_)
+        return std::strong_ordering::greater;
+
+    return std::strong_ordering::equal;
 }
 
 inline bool LensSpace::isHyperbolic() const {

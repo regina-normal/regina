@@ -296,24 +296,6 @@ Returns:
     ``True`` if and only this and the given object hold the same cusp
     information.)doc";
 
-// Docstring regina::python::doc::Cusp_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given object do not hold the same cusp
-information.
-
-Two Cusp objects are considered equal if they refer to the same vertex
-number of the underlying triangulation, and they have the same filling
-coefficients. Note that the vertex _pointers_ do not need to be the
-same (i.e., it is meaningful to compare cusps from different
-triangulations).
-
-Parameter ``other``:
-    the cusp information to compare with this.
-
-Returns:
-    ``True`` if and only this and the given object do not hold the
-    same cusp information.)doc";
-
 // Docstring regina::python::doc::Cusp_::complete
 static const char *complete =
 R"doc(Returns whether this cusp is complete.
@@ -639,41 +621,6 @@ Exception ``InvalidArgument``:
 
 Parameter ``link``:
     the link whose complement we should build.)doc";
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given SnapPea triangulation are, at
-some elementary level, different.
-
-This routine checks only those things that can be checked exactly,
-without going through the SnapPea kernel and without requiring
-floating-point comparisons.
-
-In particular, it _does_ check whether:
-
-* the tetrahedron numbers, vertex labels and gluings are the same in
-  both triangulations (i.e., the tests performed by Regina's native
-  Triangulation<3> comparison operators);
-
-* the same numbered cusps correspond to the same numbered vertices of
-  the triangulation;
-
-* each pair of corresponding cusps are either both not filled, or both
-  filled using the same coefficients.
-
-It does _not_ check wehether corresponding tetrahedron shapes are the
-same, or if the volumes are "sufficiently close", or even whether the
-SnapPea kernel has produced the same solution type for both
-triangulations.
-
-Two null SnapPea triangulations will be considered equal.
-
-Parameter ``other``:
-    the SnapPea triangulation to compare with this.
-
-Returns:
-    ``True`` if and only this and the given triangulation are
-    different, according to the criteria described above.)doc";
 
 // Docstring regina::python::doc::SnapPeaTriangulation_::canonise
 static const char *canonise =

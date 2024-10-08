@@ -422,24 +422,6 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         bool operator == (const SpatialLink& other) const;
 
         /**
-         * Determines if this link is not identical to the given link.
-         *
-         * Here "identical" means that both links follow exactly the same
-         * paths through 3-dimensional space, with their components and
-         * nodes stored in exactly the same order.
-         *
-         * If any rendering radii have been fixed (e.g., via setRadius()),
-         * these will be ignored for the purpose of this comparison.
-         *
-         * \warning Equality and inequailty testing, while supported, is
-         * extremely fragile, since it relies on floating point comparisons.
-         *
-         * \param other the link to compare with this.
-         * \return \c true if and only if the two links are not identical.
-         */
-        bool operator != (const SpatialLink& other) const;
-
-        /**
          * Returns the range of coordinates that this link occupies.
          *
          * Specifically, this routine returns a pair `(min, max)`, where
@@ -861,10 +843,6 @@ inline double SpatialLink::defaultRadius() const {
 
 inline bool SpatialLink::operator == (const SpatialLink& other) const {
     return components_ == other.components_;
-}
-
-inline bool SpatialLink::operator != (const SpatialLink& other) const {
-    return components_ != other.components_;
 }
 
 inline void swap(SpatialLink& lhs, SpatialLink& rhs) {

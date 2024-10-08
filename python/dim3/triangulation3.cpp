@@ -137,10 +137,11 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>(), rbase::tetrahedra)
         .def("simplices", &Triangulation<3>::simplices,
             pybind11::keep_alive<0, 1>(), rbase::simplices)
-        // Use a static cast because GCC struggles with the overload_cast here:
         .def("tetrahedron",
-            static_cast<regina::Simplex<3>* (Triangulation<3>::*)(size_t)>(
-                &Triangulation<3>::tetrahedron),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use simplex(), which tetrahedron() is an alias for.
+            overload_cast<size_t>(&Triangulation<3>::simplex),
             pybind11::return_value_policy::reference_internal,
             rbase::tetrahedron)
         .def("simplex",
@@ -233,10 +234,11 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rbase::vertex)
         .def("edge", &Triangulation<3>::edge,
             pybind11::return_value_policy::reference_internal, rbase::edge)
-        // Use a static cast because GCC struggles with the overload_cast here:
         .def("triangle",
-            static_cast<regina::Face<3, 2>* (Triangulation<3>::*)(size_t)>(
-                &Triangulation<3>::triangle),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use face<2>(), which triangle() is an alias for.
+            overload_cast<size_t>(&Triangulation<3>::face<2>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::triangle)
         .def("translate", &Triangulation<3>::translate<0>,
             pybind11::return_value_policy::reference_internal, rbase::translate)
@@ -717,7 +719,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     ;
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
-    regina::python::packet_eq_operators(c, rbase::__eq, rbase::__ne);
+    regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<3>().vertices())>(m);

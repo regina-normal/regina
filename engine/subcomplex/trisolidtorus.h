@@ -272,30 +272,6 @@ class TriSolidTorus : public StandardTriangulation {
         bool operator == (const TriSolidTorus& other) const;
 
         /**
-         * Determines whether this and the given object represent
-         * different specific presentations of a triangular solid torus.
-         *
-         * Unlike the parameterised subclasses of StandardTriangulation,
-         * this TriSolidTorus subclass represents a fixed structure, and
-         * so its comparisons test not for the _structure_ but the precise
-         * _location_ of this structure within the enclosing triangulation.
-         *
-         * Specifically, two triangular solid tori will compare as equal if
-         * and only if each uses the same three numbered tetrahedra, in
-         * the same order, and with the same vertex roles.  That is, the
-         * corresponding permutations returned by vertexRoles() must be equal,
-         * and the corresponding tetrahedra returned by tetrahedron() must
-         * have equal indices within the triangulation.  In particular, it is
-         * still meaningful to compare triangular solid tori within different
-         * triangulations.
-         *
-         * \param other the triangular solid torus to compare with this.
-         * \return \c true if and only if this and the given object represent
-         * different specific presentations of a triangular solid torus.
-         */
-        bool operator != (const TriSolidTorus& other) const;
-
-        /**
          * Determines if the given tetrahedron forms part of a
          * three-tetrahedron triangular solid torus with its vertices
          * playing the given roles in the solid torus.
@@ -368,10 +344,6 @@ inline bool TriSolidTorus::operator == (const TriSolidTorus& other) const {
         tet_[1]->index() == other.tet_[1]->index() &&
         tet_[2]->index() == other.tet_[2]->index() &&
         std::equal(vertexRoles_, vertexRoles_ + 3, other.vertexRoles_);
-}
-
-inline bool TriSolidTorus::operator != (const TriSolidTorus& other) const {
-    return ! ((*this) == other);
 }
 
 inline std::ostream& TriSolidTorus::writeName(std::ostream& out) const {

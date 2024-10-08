@@ -73,27 +73,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered loop.)doc";
 
-// Docstring regina::python::doc::LayeredLoop_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-types of layered loop.
-
-Specifically, two layered loops will compare as equal if they have the
-same length and either both are twisted or both are untwisted.
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass means
-they describe isomorphic structures).
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different types of layered loop.)doc";
-
 // Docstring regina::python::doc::LayeredLoop_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given structures.

@@ -202,7 +202,7 @@ bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
         int listSign) {
     typename std::list<VecSpec<IntegerType, BitmaskType>*>::const_iterator it;
     for (it = against.begin(); it != against.end(); ++it) {
-        if (! (**it <= vec))
+        if (! (*it)->dominatedBy(vec))
             continue;
 
         if (listSign > 0) {
@@ -244,7 +244,7 @@ void HilbertDual::reduceBasis(
                 continue;
             }
 
-            if (! (**red <= **i))
+            if (! (*red)->dominatedBy(**i))
                 continue;
 
             if (listSign > 0) {

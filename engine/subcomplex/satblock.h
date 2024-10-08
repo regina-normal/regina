@@ -423,18 +423,28 @@ class SatBlock : public ShortOutput<SatBlock> {
         virtual void writeAbbr(std::ostream& out, bool tex = false) const = 0;
 
         /**
-         * Implements a consistent ordering of saturated blocks.
-         * This ordering is purely aesthetic on the part of the author,
-         * and is subject to change in future versions of Regina.
+         * Compares saturated blocks according to an aesthetic ordering.
          *
-         * \param compare the saturated block with which this will be
-         * compared.
-         * \return \c true if this block comes before the given block
-         * according to the ordering of saturated blocks, or \c false
-         * if either the blocks are identical or this block comes after
-         * the given block.
+         * The only purpose of this routine is to implement a consistent
+         * ordering of saturated blocks.  The specific ordering used is
+         * purely aesthetic on the part of the author, and is subject to
+         * change in future versions of Regina.
+         *
+         * The result is marked as a weak ordering, since a triangulation
+         * could contain multiple blocks with the same parameters, and this
+         * ordering does not distinguish between them.
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the saturated block to compare this with.
+         * \return A result that indicates how this and the given block
+         * should be ordered with respect to each other.
          */
-        bool operator < (const SatBlock& compare) const;
+        std::weak_ordering operator <=> (const SatBlock& rhs) const;
 
         /**
          * Determines whether this and the given object represent saturated
@@ -461,20 +471,6 @@ class SatBlock : public ShortOutput<SatBlock> {
          * represent blocks of the same type with the same parameters.
          */
         virtual bool operator == (const SatBlock& other) const = 0;
-
-        /**
-         * Determines whether this and the given object do not represent
-         * saturated blocks of the same type with the same combinatorial
-         * parameters.
-         *
-         * See the equality test operator==() for examples of what is
-         * meant by "the same combinatorial parameters".
-         *
-         * \param other the saturated block to compare with this.
-         * \return \c true if and only if this and the given object
-         * do not represent blocks of the same type with the same parameters.
-         */
-        bool operator != (const SatBlock& other) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -862,27 +858,6 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
         bool operator == (const SatBlockModel& other) const;
 
         /**
-         * Determines whether this and the given object do not model saturated
-         * blocks of the same type with the same combinatorial parameters.
-         *
-         * This is equivalent to testing whether the blocks returned by
-         * block() compare as non-equal.  See SatBlock::operator==() for
-         * further details on what this comparison means.
-         *
-         * Assuming you created your models using the block-specific factory
-         * routines (SatTriPrism::model(), SatCube::model(), etc.), if
-         * two models compare as equal then their triangulations should
-         * be combinatorially identical.  At the time of writing, the
-         * converse is also true: all models created from non-equal blocks
-         * yield non-identical (and moreover non-isomorphic) triangulations.
-         *
-         * \param other the model to compare with this.
-         * \return \c true if and only if this and the given object do not
-         * model the same block type with the same combinatorial parameters.
-         */
-        bool operator != (const SatBlockModel& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -982,10 +957,6 @@ inline void SatBlock::setAdjacent(size_t whichAnnulus, SatBlock* adjBlock,
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
 }
 
-inline bool SatBlock::operator != (const SatBlock& other) const {
-    return ! ((*this) == other);
-}
-
 inline bool SatBlock::notUnique(const Tetrahedron<3>* test) {
     return (test == nullptr);
 }
@@ -1079,10 +1050,6 @@ inline const SatBlock& SatBlockModel::block() const {
 
 inline bool SatBlockModel::operator == (const SatBlockModel& other) const {
     return (*block_) == (*other.block_);
-}
-
-inline bool SatBlockModel::operator != (const SatBlockModel& other) const {
-    return (*block_) != (*other.block_);
 }
 
 inline void SatBlockModel::writeTextShort(std::ostream& out) const {

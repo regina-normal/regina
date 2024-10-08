@@ -81,7 +81,7 @@ bool Matrix2::invert() {
         return false;
 }
 
-bool simpler(const Matrix2& m1, const Matrix2& m2) {
+std::strong_ordering simplerThreeWay(const Matrix2& m1, const Matrix2& m2) {
     long maxAbs1 = 0, maxAbs2 = 0;
     unsigned nZeroes1 = 0, nZeroes2 = 0;
     unsigned nNeg1 = 0, nNeg2 = 0;
@@ -109,33 +109,34 @@ bool simpler(const Matrix2& m1, const Matrix2& m2) {
         }
 
     if (maxAbs1 < maxAbs2)
-        return true;
+        return std::strong_ordering::less;
     if (maxAbs1 > maxAbs2)
-        return false;
+        return std::strong_ordering::greater;
 
     if (nZeroes1 > nZeroes2)
-        return true;
+        return std::strong_ordering::less;
     if (nZeroes1 < nZeroes2)
-        return false;
+        return std::strong_ordering::greater;
 
     if (nNeg1 < nNeg2)
-        return true;
+        return std::strong_ordering::less;
     if (nNeg1 > nNeg2)
-        return false;
+        return std::strong_ordering::greater;
 
     // Go lexicograhpic.
     for (i = 0; i < 2; i++)
         for (j = 0; j < 2; j++)
             if (m1[i][j] < m2[i][j])
-                return true;
+                return std::strong_ordering::less;
             else if (m1[i][j] > m2[i][j])
-                return false;
+                return std::strong_ordering::greater;
 
     // They're the same.
-    return false;
+    return std::strong_ordering::equal;
 }
 
-bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
+std::strong_ordering simplerThreeWay(
+        const Matrix2& pair1first, const Matrix2& pair1second,
         const Matrix2& pair2first, const Matrix2& pair2second) {
     long maxAbs0 = 0, maxAbs1 = 0;
     unsigned nZeroes0 = 0, nZeroes1 = 0;
@@ -180,36 +181,36 @@ bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
         }
 
     if (maxAbs0 < maxAbs1)
-        return true;
+        return std::strong_ordering::less;
     if (maxAbs0 > maxAbs1)
-        return false;
+        return std::strong_ordering::greater;
 
     if (nZeroes0 > nZeroes1)
-        return true;
+        return std::strong_ordering::less;
     if (nZeroes0 < nZeroes1)
-        return false;
+        return std::strong_ordering::greater;
 
     if (nNeg0 < nNeg1)
-        return true;
+        return std::strong_ordering::less;
     if (nNeg0 > nNeg1)
-        return false;
+        return std::strong_ordering::greater;
 
     // Go lexicograhpic.
     for (i = 0; i < 2; i++)
         for (j = 0; j < 2; j++)
             if (pair1first[i][j] < pair2first[i][j])
-                return true;
+                return std::strong_ordering::less;
             else if (pair1first[i][j] > pair2first[i][j])
-                return false;
+                return std::strong_ordering::greater;
     for (i = 0; i < 2; i++)
         for (j = 0; j < 2; j++)
             if (pair1second[i][j] < pair2second[i][j])
-                return true;
+                return std::strong_ordering::less;
             else if (pair1second[i][j] > pair2second[i][j])
-                return false;
+                return std::strong_ordering::greater;
 
     // They're the same.
-    return false;
+    return std::strong_ordering::equal;
 }
 
 } // namespace regina

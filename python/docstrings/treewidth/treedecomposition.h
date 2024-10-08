@@ -676,24 +676,6 @@ Parameter ``alg``:
     decomposition; in particular, this specifies whether to use a slow
     exact algorithm or a fast greedy algorithm.)doc";
 
-// Docstring regina::python::doc::TreeDecomposition_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given tree decomposition are
-different.
-
-To be considered identical (i.e., for this comparison to return
-``False``), the two tree decompositions must have the same number of
-bags; moreover, the same numbered bags must contain the same elements
-(i.e., numbered graph nodes), and must have the same numbered child
-bags. Bag types and subtypes are ignored.
-
-Parameter ``other``:
-    the tree decomposition to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given tree decomposition are
-    different.)doc";
-
 // Docstring regina::python::doc::TreeDecomposition_::bag
 static const char *bag =
 R"doc(A slow (linear-time) routine that returns the bag at the given index.

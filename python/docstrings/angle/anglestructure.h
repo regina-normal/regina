@@ -28,6 +28,41 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace AngleStructure_ {
 
+// Docstring regina::python::doc::AngleStructure_::__cmp
+static const char *__cmp =
+R"doc(Compares this against the given angle structure under a total ordering
+of all angle structures.
+
+This ordering is not mathematically meaningful; it is merely provided
+for scenarios where you need to be able to sort angle structures
+(e.g., when using them as keys in a map).
+
+The order _is_ well-defined, and will be preserved across copy/move
+operations, different program executions, and different platforms
+(since it is defined purely in terms of the angle coordinates, and
+does not use transient properties such as locations in memory).
+
+This operation is consistent with the equality test. In particular, it
+does not matter whether the two angle structures belong to different
+triangulations. See the equality test operator==() for further
+details.
+
+This routine generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the angle structure to compare this structure with.
+
+Returns:
+    The result of the comparison between this and the given angle
+    structure. This is marked as a weak ordering (not a strong
+    ordering) to reflect the fact that angle structures in different
+    triangulations could be considered equal under this comparison.)doc";
+
 // Docstring regina::python::doc::AngleStructure_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given angle structure.)doc";
 
@@ -104,53 +139,6 @@ Parameter ``triang``:
 
 Parameter ``vector``:
     a vector containing the individual angles in the angle structure.)doc";
-
-// Docstring regina::python::doc::AngleStructure_::__lt
-static const char *__lt =
-R"doc(Imposes a total order on all angle structures.
-
-This order is not mathematically meaningful; it is merely provided for
-scenarios where you need to be able to sort angle structures (e.g.,
-when using them as keys in a map).
-
-The order _is_ well-defined, and will be preserved across copy/move
-operations, different program executions, and different platforms
-(since it is defined purely in terms of the angle coordinates, and
-does not use transient properties such as locations in memory).
-
-This operation is consistent with the equality test. In particular, it
-does not matter whether the two angle structures belong to different
-triangulations. See the equality test operator==() for further
-details.
-
-Parameter ``other``:
-    the angle structure to be compared with this structure.
-
-Returns:
-    ``True`` if and only if this appears before the given structure in
-    the total order.)doc";
-
-// Docstring regina::python::doc::AngleStructure_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given angle structure are different.
-
-This routine is safe to call even if this and the given angle
-structure do not belong to the same triangulation:
-
-* If the two triangulations have the same size, then this routine will
-  test whether this angle structure, if transplanted into the other
-  triangulation using the same tetrahedron numbering, would be
-  different from *other*.
-
-* If the two triangulations have different sizes, then this routine
-  will return ``True``.
-
-Parameter ``other``:
-    the angle structure to be compared with this structure.
-
-Returns:
-    ``True`` if and only if this and the given structure are
-    different.)doc";
 
 // Docstring regina::python::doc::AngleStructure_::angle
 static const char *angle =

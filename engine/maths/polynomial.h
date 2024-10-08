@@ -321,15 +321,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         bool operator == (const Polynomial& rhs) const;
 
         /**
-         * Tests whether this and the given polynomial are not equal.
-         *
-         * \param rhs the polynomial to compare with this.
-         * \return \c true if and only if this and the given polynomial
-         * are not equal.
-         */
-        bool operator != (const Polynomial& rhs) const;
-
-        /**
          * Sets this to be a copy of the given polynomial.
          *
          * This and the given polynomial need not have the same degree
@@ -1039,16 +1030,6 @@ inline bool Polynomial<T>::operator == (const Polynomial<T>& rhs) const {
         if (coeff_[i] != rhs.coeff_[i])
             return false;
     return true;
-}
-
-template <typename T>
-inline bool Polynomial<T>::operator != (const Polynomial<T>& rhs) const {
-    if (degree_ != rhs.degree_)
-        return true;
-    for (size_t i = 0; i <= degree_; ++i)
-        if (coeff_[i] != rhs.coeff_[i])
-            return true;
-    return false;
 }
 
 template <typename T>

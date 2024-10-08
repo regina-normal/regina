@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
+#include <bit> // for std::endian
 #include <cctype>
 #include <cstring>
 #include <fstream>

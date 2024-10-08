@@ -38,28 +38,28 @@
 
 namespace regina {
 
-bool GraphTriple::operator < (const GraphTriple& compare) const {
-    if (centre_ < compare.centre_)
-        return true;
-    if (compare.centre_ < centre_)
-        return false;
-
-    if (end_[0] < compare.end_[0])
-        return true;
-    if (compare.end_[0] < end_[0])
-        return false;
-
-    if (end_[1] < compare.end_[1])
-        return true;
-    if (compare.end_[1] < end_[1])
-        return false;
-
-    if (simpler(matchingReln_[0], compare.matchingReln_[0]))
-        return true;
-    if (simpler(compare.matchingReln_[0], matchingReln_[0]))
-        return false;
-
-    return simpler(matchingReln_[1], compare.matchingReln_[1]);
+std::strong_ordering GraphTriple::operator <=> (const GraphTriple& rhs) const {
+    {
+        auto cmp = centre_ <=> rhs.centre_;
+        if (cmp != std::strong_ordering::equal)
+            return cmp;
+    }
+    {
+        auto cmp = end_[0] <=> rhs.end_[0];
+        if (cmp != std::strong_ordering::equal)
+            return cmp;
+    }
+    {
+        auto cmp = end_[1] <=> rhs.end_[1];
+        if (cmp != std::strong_ordering::equal)
+            return cmp;
+    }
+    {
+        auto cmp = simplerThreeWay(matchingReln_[0], rhs.matchingReln_[0]);
+        if (cmp != std::strong_ordering::equal)
+            return cmp;
+    }
+    return simplerThreeWay(matchingReln_[1], rhs.matchingReln_[1]);
 }
 
 AbelianGroup GraphTriple::homology() const {
@@ -269,29 +269,38 @@ void GraphTriple::reduce() {
 
                 // First try without end space swapping.
                 if (! (it1->alt() < it0->alt())) {
-                    if (first || simpler(tryReln[0], tryReln[1],
-                            useReln[0], useReln[1])) {
+                    if (first) {
                         use0 = it0;
                         use1 = it1;
                         useCentre = itC;
                         useReln[0] = tryReln[0];
                         useReln[1] = tryReln[1];
                         first = false;
-                    } else if (! simpler(useReln[0], useReln[1],
-                            tryReln[0], tryReln[1])) {
-                        // The matrices are the same as our best.
-                        // Compare spaces.
-                        if (itC->alt() < useCentre->alt() ||
-                                (itC->alt() == useCentre->alt() &&
-                                    it0->alt() < use0->alt()) ||
-                                (itC->alt() == useCentre->alt() &&
-                                    it0->alt() == use0->alt() &&
-                                    it1->alt() < use1->alt())) {
+                    } else {
+                        auto cmp = simplerThreeWay(tryReln[0], tryReln[1],
+                            useReln[0], useReln[1]);
+                        if (cmp < 0) {
                             use0 = it0;
                             use1 = it1;
                             useCentre = itC;
                             useReln[0] = tryReln[0];
                             useReln[1] = tryReln[1];
+                        } else if (cmp == 0) {
+                            // The matrices are the same as our best so far.
+                            // Compare spaces.
+                            cmp = itC->alt() <=> useCentre->alt();
+                            if (cmp == 0) {
+                                cmp = it0->alt() <=> use0->alt();
+                                if (cmp == 0)
+                                    cmp = it1->alt() <=> use1->alt();
+                            }
+                            if (cmp < 0) {
+                                use0 = it0;
+                                use1 = it1;
+                                useCentre = itC;
+                                useReln[0] = tryReln[0];
+                                useReln[1] = tryReln[1];
+                            }
                         }
                     }
                 }
@@ -300,29 +309,38 @@ void GraphTriple::reduce() {
                 if (! (it0->alt() < it1->alt())) {
                     reduceBasis(tryReln[1], tryReln[0]);
 
-                    if (first || simpler(tryReln[1], tryReln[0],
-                            useReln[0], useReln[1])) {
+                    if (first) {
                         use0 = it1;
                         use1 = it0;
                         useCentre = itC;
                         useReln[0] = tryReln[1];
                         useReln[1] = tryReln[0];
                         first = false;
-                    } else if (! simpler(useReln[0], useReln[1],
-                            tryReln[1], tryReln[0])) {
-                        // The matrices are the same as our best.
-                        // Compare spaces.
-                        if (itC->alt() < useCentre->alt() ||
-                                (itC->alt() == useCentre->alt() &&
-                                    it1->alt() < use0->alt()) ||
-                                (itC->alt() == useCentre->alt() &&
-                                    it1->alt() == use0->alt() &&
-                                    it0->alt() < use1->alt())) {
+                    } else {
+                        auto cmp = simplerThreeWay(tryReln[1], tryReln[0],
+                            useReln[0], useReln[1]);
+                        if (cmp < 0) {
                             use0 = it1;
                             use1 = it0;
                             useCentre = itC;
                             useReln[0] = tryReln[1];
                             useReln[1] = tryReln[0];
+                        } else if (cmp == 0) {
+                            // The matrices are the same as our best so far.
+                            // Compare spaces.
+                            cmp = itC->alt() <=> useCentre->alt();
+                            if (cmp == 0) {
+                                cmp = it1->alt() <=> use0->alt();
+                                if (cmp == 0)
+                                    cmp = it0->alt() <=> use1->alt();
+                            }
+                            if (cmp < 0) {
+                                use0 = it1;
+                                use1 = it0;
+                                useCentre = itC;
+                                useReln[0] = tryReln[1];
+                                useReln[1] = tryReln[0];
+                            }
                         }
                     }
                 }
@@ -363,7 +381,7 @@ void GraphTriple::reduceBasis(Matrix2& reln0, Matrix2& reln1) {
     while (true) {
         alt0 = reln0 * Matrix2(1, 0, 1, 1);
         alt1 = reln1 * Matrix2(1, 0, -1, 1);
-        if (simpler(alt0, alt1, reln0, reln1)) {
+        if (simplerThreeWay(alt0, alt1, reln0, reln1) < 0) {
             reln0 = alt0;
             reln1 = alt1;
             continue;
@@ -371,7 +389,7 @@ void GraphTriple::reduceBasis(Matrix2& reln0, Matrix2& reln1) {
 
         alt0 = reln0 * Matrix2(1, 0, -1, 1);
         alt1 = reln1 * Matrix2(1, 0, 1, 1);
-        if (simpler(alt0, alt1, reln0, reln1)) {
+        if (simplerThreeWay(alt0, alt1, reln0, reln1) < 0) {
             reln0 = alt0;
             reln1 = alt1;
             continue;

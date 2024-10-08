@@ -129,20 +129,6 @@ Parameter ``pairing``:
     the specific pairing of simplex facets that this permutation set
     will complement.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::__ne
-constexpr const char *__ne =
-R"doc(Determines if this and the given gluing permutation set are not
-identical.
-
-To be identical, the two sets must use identical facet pairings and
-all of their corresponding permutations must be the same.
-
-Parameter ``other``:
-    the gluing permutation set to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given set are not identical.)doc";
-
 // Docstring regina::python::doc::GluingPerms_::data
 constexpr const char *data =
 R"doc(Returns all internal data in a plain text format. This gluing

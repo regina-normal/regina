@@ -200,31 +200,6 @@ class BlockedSFSPair : public StandardTriangulation {
          */
         bool operator == (const BlockedSFSPair& other) const;
 
-        /**
-         * Determines whether this and the given structure do not represent
-         * the same type of blocked pair of Seifert fibred spaces.
-         *
-         * Specifically, two structures will compare as equal if and only if
-         * both structures are formed from the same pair of combinatorial
-         * presentations of saturated regions (as returned by the SatRegion
-         * comparison operators), presented in the same order, and with their
-         * torus boundaries joined using the same 2-by-2 matrix.
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass is more specific than combinatorial isomorphism, since
-         * this test does not account for the many symmetries in a
-         * blocked Seifert fibred space).
-         *
-         * \param other the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * do not represent the same type of blocked pair of Seifert fibred
-         * spaces.
-         */
-        bool operator != (const BlockedSFSPair& other) const;
-
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
@@ -299,11 +274,6 @@ inline const Matrix2& BlockedSFSPair::matchingReln() const {
 inline bool BlockedSFSPair::operator == (const BlockedSFSPair& other) const {
     return region_[0] == other.region_[0] && region_[1] == other.region_[1] &&
         matchingReln_ == other.matchingReln_;
-}
-
-inline bool BlockedSFSPair::operator != (const BlockedSFSPair& other) const {
-    return region_[0] != other.region_[0] || region_[1] != other.region_[1] ||
-        matchingReln_ != other.matchingReln_;
 }
 
 inline void swap(BlockedSFSPair& a, BlockedSFSPair& b) noexcept {

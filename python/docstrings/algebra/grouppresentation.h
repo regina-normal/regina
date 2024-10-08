@@ -53,6 +53,23 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace GroupExpressionTerm_ {
 
+// Docstring regina::python::doc::GroupExpressionTerm_::__cmp
+static const char *__cmp =
+R"doc(Compares two terms lexicographically. Specifically, this operator
+imposes a total order on terms by comparing them lexicographically as
+(generator, exponent) pairs.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result of the lexicographical comparison between this and the
+    given term.)doc";
+
 // Docstring regina::python::doc::GroupExpressionTerm_::__copy
 static const char *__copy = R"doc(Creates a new term initialised to the given value.)doc";
 
@@ -62,9 +79,6 @@ static const char *__default = R"doc(Creates a new uninitialised term.)doc";
 // Docstring regina::python::doc::GroupExpressionTerm_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given term contain identical data.
-
-Parameter ``other``:
-    the term with which this term will be compared.
 
 Returns:
     ``True`` if and only if this and the given term have both the same
@@ -95,30 +109,6 @@ Parameter ``gen``:
 
 Parameter ``exp``:
     the exponent to which this generator is raised.)doc";
-
-// Docstring regina::python::doc::GroupExpressionTerm_::__lt
-static const char *__lt =
-R"doc(Imposes an ordering on terms. Terms are ordered lexigraphically as
-(generator, exponent) pairs.
-
-Parameter ``other``:
-    the term to compare with this.
-
-Returns:
-    true if and only if this term is lexicographically smaller than
-    *other*.)doc";
-
-// Docstring regina::python::doc::GroupExpressionTerm_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given term do not contain identical
-data.
-
-Parameter ``other``:
-    the term with which this term will be compared.
-
-Returns:
-    ``True`` if and only if this and the given term do not have both
-    the same generator and exponent.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::inverse
 static const char *inverse =
@@ -241,17 +231,6 @@ Parameter ``nGens``:
     the number of generators in the group presentation. If this is 0
     (the default), then this argument will be ignored and this
     constructor will not check whether generators are within range.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::__ne
-static const char *__ne =
-R"doc(Inequality operator. Checks to see whether or not these two words
-represent different literal strings.
-
-Parameter ``comp``:
-    the expression to compare against this.
-
-Returns:
-    ``True`` if this and the given string literal are not identical.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermFirst
 static const char *addTermFirst =
@@ -694,23 +673,6 @@ Parameter ``nGens``:
 Parameter ``rels``:
     a vector of relations each given in string form, as outlined
     above.)doc";
-
-// Docstring regina::python::doc::GroupPresentation_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given group presentation are not
-identical.
-
-This routine does _not_ test for isomorphism (which in general is an
-undecidable problem). Instead it tests whether this and the given
-presentation use exactly the same generators and exactly the same
-relations, presented in exactly the same order.
-
-Parameter ``other``:
-    the group presentation to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given group presentation are
-    not identical.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::abelianRank
 static const char *abelianRank =

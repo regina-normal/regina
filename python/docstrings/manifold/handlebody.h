@@ -48,20 +48,6 @@ R"doc(Creates a new orientable handlebody of the given genus.
 Parameter ``genus``:
     the number of handles.)doc";
 
-// Docstring regina::python::doc::Handlebody_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given handlebody do not have the same
-genus.
-
-Handlebodies with the same genus are homeomorphic as 3-manifolds.
-
-Parameter ``compare``:
-    the handlebody with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given handlebody do not have
-    the same genus.)doc";
-
 // Docstring regina::python::doc::Handlebody_::genus
 static const char *genus =
 R"doc(Returns the genus of this handlebody.

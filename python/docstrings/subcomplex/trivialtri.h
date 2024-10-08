@@ -53,27 +53,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of trivial triangulation.)doc";
 
-// Docstring regina::python::doc::TrivialTri_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-types of trivial triangulation.
-
-This is the same as testing whether type() returns different values
-for this and the given triangulation.
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass means
-they describe isomorphic structures).
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different types of trivial triangulation.)doc";
-
 // Docstring regina::python::doc::TrivialTri_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given structures.

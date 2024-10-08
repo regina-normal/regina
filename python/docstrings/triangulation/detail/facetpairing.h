@@ -129,17 +129,6 @@ Exception ``InvalidInput``:
 Parameter ``in``:
     the input stream from which to read.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::__ne
-constexpr const char *__ne =
-R"doc(Determines if this and the given facet pairing are not identical.
-
-Parameter ``other``:
-    the facet pairing to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given facet pairing are not
-    identical.)doc";
-
 // Docstring regina::python::doc::detail::FacetPairingBase_::canonical
 constexpr const char *canonical =
 R"doc(Returns the canonical form of this facet pairing, along with one

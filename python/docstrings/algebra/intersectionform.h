@@ -71,23 +71,6 @@ Parameter ``form``:
     a symmetric square integer matrix that describes this bilinear
     form.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given bilinear form are not represented by
-the same symmetric square integer matrices.
-
-This does _not_ test whether this and the given form are congruent
-(i.e., related by a change basis in the underlying free abelian
-group). Instead it is equivalent to testing whether ``matrix() !=
-other.matrix()``.
-
-Parameter ``other``:
-    the bilinear form to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given bilinear form are not
-    represented by identical matrices.)doc";
-
 // Docstring regina::python::doc::IntersectionForm_::even
 static const char *even =
 R"doc(Returns ``True`` if and only if this bilinear form is of even type.

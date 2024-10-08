@@ -848,22 +848,10 @@ class Perm<6> {
          * This is true if and only if both permutations have the same
          * images for 0, 1, 2, 3, 4 and 5.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<6>& other) const;
-
-        /**
-         * Determines if this differs from the given permutation.
-         * This is true if and only if the two permutations have
-         * different images for at least one of 0, 1, 2, 3, 4 or 5.
-         *
-         * \param other the permutation with which to compare this.
-         * \return \c true if and only if this and the given permutation
-         * differ.
-         */
-        constexpr bool operator != (const Perm<6>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,2,3,4,5) under this
@@ -917,18 +905,25 @@ class Perm<6> {
         constexpr Perm<6> operator ++(int);
 
         /**
-         * Determines if this appears earlier than the given permutation
-         * in the array Perm<6>::Sn.
+         * Compares two permutations according to which appears earlier in the
+         * array Perm<6>::Sn.
          *
          * Note that this is _not_ the same ordering of permutations as
-         * the ordering implied by compareWith().  This is, however,
+         * the ordering implied by compareWith().  This ordering is, however,
          * consistent with the ordering implied by the ++ operators,
-         * and this order is also faster to compute than compareWith().
+         * and this ordering is also faster to compute than compareWith().
          *
-         * \param rhs the permutation to compare this against.
-         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \return The result that indicates which permutation appears earlier
+         * in \a Sn.
          */
-        constexpr bool operator < (const Perm<6>& rhs) const;
+        constexpr std::strong_ordering operator <=> (const Perm&) const =
+            default;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -3455,14 +3450,6 @@ inline constexpr int Perm<6>::pre(int image) const {
     return (code1Table[invS6[code2_]] >> (3 * image)) & 0x07;
 }
 
-inline constexpr bool Perm<6>::operator == (const Perm<6>& other) const {
-    return (code2_ == other.code2_);
-}
-
-inline constexpr bool Perm<6>::operator != (const Perm<6>& other) const {
-    return (code2_ != other.code2_);
-}
-
 inline constexpr int Perm<6>::compareWith(const Perm<6>& other) const {
     // Computing orderedS6Index() is very fast, now that we use S6 indices
     // for internal permutation codes.  Use this instead of comparing images
@@ -3487,10 +3474,6 @@ inline constexpr Perm<6> Perm<6>::operator ++(int) {
     if (++code2_ == 720)
         code2_ = 0;
     return ans;
-}
-
-inline constexpr bool Perm<6>::operator < (const Perm<6>& rhs) const {
-    return code2_ < rhs.code2_;
 }
 
 inline constexpr Perm<6> Perm<6>::rot(int i) {

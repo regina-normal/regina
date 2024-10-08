@@ -66,12 +66,26 @@ Parameter ``other``:
 Returns:
     the symmetric difference of this and the given set.)doc";
 
-// Docstring regina::python::doc::BoolSet_::__copy
-static const char *__copy =
-R"doc(Creates a clone of the given set.
+// Docstring regina::python::doc::BoolSet_::__cmp
+static const char *__cmp =
+R"doc(Compares two sets under the subset relation.
 
-Parameter ``src``:
-    the set to clone.)doc";
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the set to compare with this.
+
+Returns:
+    The result of the subset comparison between this and the given
+    set.)doc";
+
+// Docstring regina::python::doc::BoolSet_::__copy
+static const char *__copy = R"doc(Creates a clone of the given set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::__default
 static const char *__default = R"doc(Creates a new empty set.)doc";
@@ -80,33 +94,8 @@ static const char *__default = R"doc(Creates a new empty set.)doc";
 static const char *__eq =
 R"doc(Determines if this set is equal to the given set.
 
-Parameter ``other``:
-    the set to compare with this.
-
 Returns:
     ``True`` if and only if this and the given set are equal.)doc";
-
-// Docstring regina::python::doc::BoolSet_::__ge
-static const char *__ge =
-R"doc(Determines if this set is a superset of (possibly equal to) the given
-set.
-
-Parameter ``other``:
-    the set to compare with this.
-
-Returns:
-    ``True`` if and only if this is a superset of the given set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::__gt
-static const char *__gt =
-R"doc(Determines if this set is a proper superset of the given set.
-
-Parameter ``other``:
-    the set to compare with this.
-
-Returns:
-    ``True`` if and only if this is a proper superset of the given
-    set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::__iand
 static const char *__iand =
@@ -163,37 +152,6 @@ Parameter ``other``:
 
 Returns:
     a reference to this set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::__le
-static const char *__le =
-R"doc(Determines if this set is a subset of (possibly equal to) the given
-set.
-
-Parameter ``other``:
-    the set to compare with this.
-
-Returns:
-    ``True`` if and only if this is a subset of the given set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::__lt
-static const char *__lt =
-R"doc(Determines if this set is a proper subset of the given set.
-
-Parameter ``other``:
-    the set to compare with this.
-
-Returns:
-    ``True`` if and only if this is a proper subset of the given set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::__ne
-static const char *__ne =
-R"doc(Determines if this set is not equal to the given set.
-
-Parameter ``other``:
-    the set to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given set are not equal.)doc";
 
 // Docstring regina::python::doc::BoolSet_::byteCode
 static const char *byteCode =

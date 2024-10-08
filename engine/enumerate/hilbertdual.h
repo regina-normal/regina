@@ -335,15 +335,15 @@ class HilbertDual {
                 inline bool operator == (const VecSpec& other) const;
 
                 /**
-                 * Determines if every element of this vector is less
-                 * than or equal to every element of the given vector.
+                 * Determines if every element of this vector is less than or
+                 * equal to the corresponding element of the given vector.
                  *
                  * \param other the vector to compare with this.
-                 * \return \c true if every element of this vector is
-                 * less than or equal to every element of \a other, or
-                 * \c false otherwise.
+                 * \return \c true if the <i>k</i>th element of this vector is
+                 * less than or equal to the <i>k</i>th element of \a other
+                 * for all \a k, or \c false otherwise.
                  */
-                inline bool operator <= (const VecSpec& other) const;
+                inline bool dominatedBy(const VecSpec& other) const;
 
                 using Vector<IntegerType>::operator [];
         };
@@ -548,7 +548,7 @@ inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::operator == (
 }
 
 template <class IntegerType, class BitmaskType>
-inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::operator <= (
+inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::dominatedBy(
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.
     if (! (mask_ <= other.mask_))

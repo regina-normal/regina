@@ -250,23 +250,10 @@ class StrandRef {
          * equal to the null reference created by calling StrandRef(),
          * since the latter is equivalent to calling StrandRef(\c null, 0).
          *
-         * \c true if and only if this and \a rhs are identical.
+         * \return \c true if and only if this and the given reference are
+         * identical.
          */
-        bool operator == (const StrandRef& rhs) const;
-        /**
-         * Tests whether this and the given reference are not identical.
-         *
-         * Two references are identical if and only if they return the
-         * same values for both crossing() and strand().
-         *
-         * \warning If you create a null reference by calling
-         * StrandRef(\c null, 1) then this will _not_ be considered
-         * equal to the null reference created by calling StrandRef(),
-         * since the latter is equivalent to calling StrandRef(\c null, 0).
-         *
-         * \c true if and only if this and \a rhs are not identical.
-         */
-        bool operator != (const StrandRef& rhs) const;
+        bool operator == (const StrandRef&) const = default;
         /**
          * Sets this to be a copy of the given strand reference.
          *
@@ -1235,31 +1222,6 @@ class Link :
          * combinatorially identical.
          */
         bool operator == (const Link& other) const;
-
-        /**
-         * Determines if this link diagram is not combinatorially identical
-         * to the given link diagram.
-         *
-         * Here "identical" means that:
-         *
-         * - the link diagrams have the same number of crossings and the
-         *   same number of components;
-         *
-         * - the same numbered crossings are positive and negative in both
-         *   diagrams;
-         *
-         * - the same pairs of numbered crossings have their
-         *   under/over-strands connected, with the same orientations;
-         *
-         * - for each \a i, the starting strand for the <i>th</i> component
-         *   is the same (under/over) strand of the same numbered crossing
-         *   in both diagrams.
-         *
-         * \param other the link diagram to compare with this.
-         * \return \c true if and only if the two link diagrams are
-         * not combinatorially identical.
-         */
-        bool operator != (const Link& other) const;
 
         /**
          * Returns the 4-valent planar graph that models this link.
@@ -5179,14 +5141,6 @@ inline ssize_t StrandRef::id() const {
         return -1;
 }
 
-inline bool StrandRef::operator == (const StrandRef& rhs) const {
-    return (crossing_ == rhs.crossing_ && strand_ == rhs.strand_);
-}
-
-inline bool StrandRef::operator != (const StrandRef& rhs) const {
-    return (crossing_ != rhs.crossing_ || strand_ != rhs.strand_);
-}
-
 inline StrandRef& StrandRef::operator ++ () {
     return (*this = crossing_->next(strand_));
 }
@@ -5325,10 +5279,6 @@ inline auto Link::componentsByStrand() const {
         } while (s != start);
     }
     return ans;
-}
-
-inline bool Link::operator != (const Link& other) const {
-    return ! ((*this) == other);
 }
 
 inline ModelLinkGraph Link::graph() const {

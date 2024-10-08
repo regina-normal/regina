@@ -170,28 +170,6 @@ class LayeredLensSpace : public StandardTriangulation {
         bool operator == (const LayeredLensSpace& other) const;
 
         /**
-         * Determines whether this and the given structure represent
-         * different types of layered lens space.
-         *
-         * Specifically, two layered lens spaces will compare as equal if and
-         * only if they are formed from layered solid tori with the same
-         * parameters, closed off in the same way.
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass is more specific than combinatorial isomorphism, since
-         * the same layered lens space can be built from a layered solid
-         * torus starting at either of its two "ends").
-         *
-         * \param other the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * represent different types of layered lens space.
-         */
-        bool operator != (const LayeredLensSpace& other) const;
-
-        /**
          * Determines if the given triangulation component is a layered
          * lens space.
          *
@@ -269,11 +247,6 @@ inline bool LayeredLensSpace::operator == (const LayeredLensSpace& other)
         const {
     return torus_ == other.torus_ &&
         mobiusBoundaryGroup_ == other.mobiusBoundaryGroup_;
-}
-inline bool LayeredLensSpace::operator != (const LayeredLensSpace& other)
-        const {
-    return torus_ != other.torus_ ||
-        mobiusBoundaryGroup_ != other.mobiusBoundaryGroup_;
 }
 
 inline void LayeredLensSpace::writeTextLong(std::ostream& out) const {

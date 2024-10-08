@@ -147,7 +147,7 @@ void addTableView(pybind11::module_& m) {
         }
         out << ']';
     });
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

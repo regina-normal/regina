@@ -46,6 +46,30 @@ Template parameter ``dim``:
 
 namespace FacetSpec_ {
 
+// Docstring regina::python::doc::FacetSpec_::__cmp
+static const char *__cmp =
+R"doc(Compares two specifiers, following the same ordering that is used for
+iteration.
+
+Specifically: specifiers are compared first by simplex number and then
+by facet number. The overall boundary is considered greater than any
+"real" simplex facet, the before-the-start value is considered smaller
+than anything else, and the past-the-end value is considered greater
+than anything else.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the specifier to compare with this.
+
+Returns:
+    The result of the comparison between this and the given specifier.)doc";
+
 // Docstring regina::python::doc::FacetSpec_::__copy
 static const char *__copy =
 R"doc(Creates a new specifier referring to the same simplex facet as the
@@ -81,7 +105,7 @@ initialised before it is used.)doc";
 static const char *__eq =
 R"doc(Determines if this and the given specifier are identical.
 
-Parameter ``other``:
+Parameter ``rhs``:
     the specifier to compare with this.
 
 Returns:
@@ -116,38 +140,6 @@ Parameter ``newSimp``:
 
 Parameter ``newFacet``:
     the given facet; this should be between 0 and *dim* inclusive.)doc";
-
-// Docstring regina::python::doc::FacetSpec_::__le
-static const char *__le =
-R"doc(Determines if this is less than or equal to the given specifier.
-
-Parameter ``other``:
-    the specifier to compare with this.
-
-Returns:
-    ``True`` if and only if this is less than or equal to the given
-    specifier.)doc";
-
-// Docstring regina::python::doc::FacetSpec_::__lt
-static const char *__lt =
-R"doc(Determines if this is less than the given specifier.
-
-Parameter ``other``:
-    the specifier to compare with this.
-
-Returns:
-    ``True`` if and only if this is less than the given specifier.)doc";
-
-// Docstring regina::python::doc::FacetSpec_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given specifier are not identical.
-
-Parameter ``other``:
-    the specifier to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given specifier are not
-    equal.)doc";
 
 // Docstring regina::python::doc::FacetSpec_::isBeforeStart
 static const char *isBeforeStart =

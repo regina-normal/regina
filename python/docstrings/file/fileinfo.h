@@ -55,26 +55,6 @@ Returns:
     ``True`` if and only if this and the given file information
     describe the same format and version, as described above.)doc";
 
-// Docstring regina::python::doc::FileInfo_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given file information do not describe
-the same format and version.
-
-For two FileInfo objects to compare as equal, they must have the same
-file formats, use the same version of the calculation engine, and use
-the same compression type. The pathnames of the files being described
-are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
-
-Parameter ``other``:
-    the file information to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given file information do not
-    describe the same format and version, as described above.)doc";
-
 // Docstring regina::python::doc::FileInfo_::engine
 static const char *engine =
 R"doc(Returns the version of the calculation engine that wrote this file.

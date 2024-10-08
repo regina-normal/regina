@@ -102,6 +102,35 @@ sized) amount of data to be copied even in a move operation.
 
 namespace GraphTriple_ {
 
+// Docstring regina::python::doc::GraphTriple_::__cmp
+static const char *__cmp =
+R"doc(Compares representations of two graph manifolds according to an
+aesthetic ordering.
+
+The only purpose of this routine is to implement a consistent ordering
+of graph manifold representations. The specific ordering used is
+purely aesthetic on the part of the author, and is subject to change
+in future versions of Regina.
+
+It does not matter whether the two manifolds are homeomorphic; this
+routine compares the specific _representations_ of these manifolds
+(and so in particular, different representations of the same graph
+manifold will be ordered differently).
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the other representation to compare this with.
+
+Returns:
+    A result that indicates how this and the given graph manifold
+    representation should be ordered with respect to each other.)doc";
+
 // Docstring regina::python::doc::GraphTriple_::__copy
 static const char *__copy = R"doc(Creates a clone of the given graph manifold.)doc";
 
@@ -192,47 +221,6 @@ Parameter ``matchingReln0``:
 Parameter ``matchingReln1``:
     the 2-by-2 matching matrix that specifies how spaces *end1* and
     *centre* are joined.)doc";
-
-// Docstring regina::python::doc::GraphTriple_::__lt
-static const char *__lt =
-R"doc(Determines in a fairly ad-hoc fashion whether this representation of
-this space is "smaller" than the given representation of the given
-space.
-
-The ordering imposed on graph manifolds is purely aesthetic on the
-part of the author, and is subject to change in future versions of
-Regina. It also depends upon the particular representation, so that
-different representations of the same space may be ordered
-differently.
-
-All that this routine really offers is a well-defined way of ordering
-graph manifold representations.
-
-Parameter ``compare``:
-    the representation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is "smaller" than the given graph
-    manifold representation.)doc";
-
-// Docstring regina::python::doc::GraphTriple_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object do not contain precisely
-the same presentations of the same graph manifold.
-
-This routine does _not_ test for homeomorphism. Instead it compares
-the exact presentations, including the matching matrices and the
-specific presentations of the bounded Seifert fibred spaces, and
-determines whether or not these _presentations_ are identical. If you
-have two different presentations of the same graph manifold, they will
-be treated as not equal by this routine.
-
-Parameter ``compare``:
-    the presentation with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given object do not contain
-    identical presentations of the same graph manifold.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::centre
 static const char *centre =

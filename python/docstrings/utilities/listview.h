@@ -102,9 +102,6 @@ Here the containers are compared by _reference_ (i.e., they must be
 the same container object at the same location in memory; it is not
 enough to be two containers with identical contents).
 
-Parameter ``other``:
-    the list view to compare with this.
-
 Returns:
     ``True`` if and only if this and the given list use the same
     underlying container.)doc";
@@ -115,23 +112,6 @@ R"doc(Returns a Python iterator over the elements of this list.
 
 Returns:
     an iterator over the elements of this list.)doc";
-
-// Docstring regina::python::doc::ListView_::__ne
-constexpr const char *__ne =
-R"doc(Determines whether this and the given list view are accessing
-different underlying containers.
-
-Here the containers are compared by _reference_ (i.e., to be
-considered equal they must be the same container object at the same
-location in memory; it is not enough to be two containers with
-identical contents).
-
-Parameter ``other``:
-    the list view to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given list use different
-    underlying containers.)doc";
 
 // Docstring regina::python::doc::ListView_::back
 constexpr const char *back =

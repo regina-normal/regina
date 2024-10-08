@@ -80,10 +80,8 @@ class BoolSet {
         constexpr BoolSet(bool member);
         /**
          * Creates a clone of the given set.
-         *
-         * \param src the set to clone.
          */
-        constexpr BoolSet(const BoolSet& src) = default;
+        constexpr BoolSet(const BoolSet&) = default;
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
@@ -157,61 +155,31 @@ class BoolSet {
         /**
          * Determines if this set is equal to the given set.
          *
-         * \param other the set to compare with this.
          * \return \c true if and only if this and the given set are
          * equal.
          */
-        constexpr bool operator == (BoolSet other) const;
+        constexpr bool operator == (const BoolSet&) const = default;
         /**
-         * Determines if this set is not equal to the given set.
+         * Compares two sets under the subset relation.
          *
-         * \param other the set to compare with this.
-         * \return \c true if and only if this and the given set are
-         * not equal.
-         */
-        constexpr bool operator != (BoolSet other) const;
-        /**
-         * Determines if this set is a proper subset of the given set.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
          *
-         * \param other the set to compare with this.
-         * \return \c true if and only if this is a proper subset of the
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the set to compare with this.
+         * \return The result of the subset comparison between this and the
          * given set.
          */
-        constexpr bool operator < (BoolSet other) const;
-        /**
-         * Determines if this set is a proper superset of the given set.
-         *
-         * \param other the set to compare with this.
-         * \return \c true if and only if this is a proper superset of the
-         * given set.
-         */
-        constexpr bool operator > (BoolSet other) const;
-        /**
-         * Determines if this set is a subset of (possibly equal to)
-         * the given set.
-         *
-         * \param other the set to compare with this.
-         * \return \c true if and only if this is a subset of the
-         * given set.
-         */
-        constexpr bool operator <= (BoolSet other) const;
-        /**
-         * Determines if this set is a superset of (possibly equal to)
-         * the given set.
-         *
-         * \param other the set to compare with this.
-         * \return \c true if and only if this is a superset of the
-         * given set.
-         */
-        constexpr bool operator >= (BoolSet other) const;
+        constexpr std::partial_ordering operator <=> (BoolSet rhs) const;
 
         /**
          * Sets this set to be identical to the given set.
          *
-         * \param cloneMe the set whose value this set will take.
          * \return a reference to this set.
          */
-        BoolSet& operator = (const BoolSet& cloneMe) = default;
+        BoolSet& operator = (const BoolSet&) = default;
         /**
          * Sets this set to the single member set containing the given
          * element.
@@ -421,25 +389,16 @@ inline void BoolSet::fill() {
     elements = static_cast<unsigned char>(eltTrue | eltFalse);
 }
 
-inline constexpr bool BoolSet::operator == (BoolSet other) const {
-    return (elements == other.elements);
-}
-inline constexpr bool BoolSet::operator != (BoolSet other) const {
-    return (elements != other.elements);
-}
-inline constexpr bool BoolSet::operator < (BoolSet other) const {
-    return ((elements & other.elements) == elements) &&
-        (elements != other.elements);
-}
-inline constexpr bool BoolSet::operator > (BoolSet other) const {
-    return ((elements & other.elements) == other.elements) &&
-        (elements != other.elements);
-}
-inline constexpr bool BoolSet::operator <= (BoolSet other) const {
-    return ((elements & other.elements) == elements);
-}
-inline constexpr bool BoolSet::operator >= (BoolSet other) const {
-    return ((elements & other.elements) == other.elements);
+inline constexpr std::partial_ordering BoolSet::operator <=> (BoolSet rhs)
+        const {
+    if (elements == rhs.elements)
+        return std::partial_ordering::equivalent;
+    else if ((elements & rhs.elements) == elements)
+        return std::partial_ordering::less;
+    else if ((elements & rhs.elements) == rhs.elements)
+        return std::partial_ordering::greater;
+    else
+        return std::partial_ordering::unordered;
 }
 
 inline BoolSet& BoolSet::operator = (bool member) {

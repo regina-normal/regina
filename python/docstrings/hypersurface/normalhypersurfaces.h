@@ -288,40 +288,6 @@ for s in list:
 Returns:
     an iterator over the normal hypersurfaces in this list.)doc";
 
-// Docstring regina::python::doc::NormalHypersurfaces_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given list contain different sets of
-normal hypersurfaces.
-
-The lists will be compared as multisets: the order of the
-hypersurfaces in each list does not matter; however, in the unusual
-scenario where a list the same hypersurface multiple times,
-multiplicity does matter.
-
-Like the comparison operators for NormalHypersurface, it does not
-matter whether the lists work with different triangulations, or
-different encodings, or if one but not the other supports non-compact
-hypersurfaces. The individual hypersurfaces will simply be compared by
-examining or computing the number of normal pieces of each type.
-
-In particular, this routine is safe to call even if this and the given
-list work with different triangulations:
-
-* If the two triangulations have the same size, then this routine will
-  compare hypersurfaces as though they were transplanted into the same
-  triangulation using the same pentachoron numbering and the same
-  normal piece types.
-
-* If the two triangulations have different sizes, then this comparison
-  will return ``True`` (i.e., the lists will be considered different).
-
-Parameter ``other``:
-    the list to be compared with this list.
-
-Returns:
-    ``True`` if both lists do not represent the same multiset of
-    normal hypersurfaces, or ``False`` if they do.)doc";
-
 // Docstring regina::python::doc::NormalHypersurfaces_::algorithm
 static const char *algorithm =
 R"doc(Returns details of the algorithm that was used to enumerate this list.

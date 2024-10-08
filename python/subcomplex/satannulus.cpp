@@ -91,7 +91,7 @@ void addSatAnnulus(pybind11::module_& m) {
         s << a.tet[0]->index() << " (" << a.roles[0].trunc(3) << "), "
             << a.tet[1]->index() << " (" << a.roles[1].trunc(3) << ')';
     });
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

@@ -28,10 +28,13 @@ classes.)doc";
 
 // Docstring regina::python::doc::simpler
 static const char *simpler =
-R"doc(Determines whether the first given matrix is more aesthetically
-pleasing than the second. The way in which this judgement is made is
-purely aesthetic on the part of the author, and is subject to change
-in future versions of Regina.
+R"doc(Deprecated routine that determines whether the first given matrix is
+more aesthetically pleasing than the second.
+
+.. deprecated::
+    This routine is implemented using simplerThreeWay(), and new code
+    should use that routine instead. See simplerThreeWay() for further
+    discussion.
 
 Parameter ``m1``:
     the first matrix to examine.
@@ -46,13 +49,13 @@ Returns:
 
 // Docstring regina::python::doc::simpler_2
 static const char *simpler_2 =
-R"doc(Determines whether the first given pair of matrices is more
-aesthetically pleasing than the second pair. The way in which this
-judgement is made is purely aesthetic on the part of the author, and
-is subject to change in future versions of Regina.
+R"doc(Deprecated routine that determines whether the first given pair of
+matrices is more aesthetically pleasing than the second pair.
 
-Note that pairs are ordered, so the pair (*M*, *N*) may be more (or
-perhaps less) pleasing than the pair (*N*, *M*).
+.. deprecated::
+    This routine is implemented using simplerThreeWay(), and new code
+    should use that routine instead. See simplerThreeWay() for further
+    discussion.
 
 Parameter ``pair1first``:
     the first matrix of the first pair to examine.
@@ -70,6 +73,61 @@ Returns:
     ``True`` if the first pair is deemed to be more pleasing than the
     second pair, or ``False`` if either the ordered pairs are equal or
     the second pair is more pleasing than the first.)doc";
+
+// Docstring regina::python::doc::simplerThreeWay
+static const char *simplerThreeWay =
+R"doc(Compare two matrices to determine which is more aesthetically
+pleasing. The way in which this judgement is made is purely aesthetic
+on the part of the author, and is subject to change in future versions
+of Regina.
+
+Python:
+    Instead of a ``std::strong_ordering``, this routine returns an
+    integer -1, 0 or 1 (representing ``less``, ``equal`` or
+    ``greater`` respectively).
+
+Parameter ``m1``:
+    the first matrix to examine.
+
+Parameter ``m2``:
+    the second matrix to examine.
+
+Returns:
+    ``less`` if *m1* is deemed to be more pleasing than *m2*,
+    ``greater`` if *m2* is more pleasing than *m1*, or ``equal`` if
+    both matrices are equal.)doc";
+
+// Docstring regina::python::doc::simplerThreeWay_2
+static const char *simplerThreeWay_2 =
+R"doc(Compares two ordered pairs of matrices to determine which pair is more
+aesthetically pleasing. The way in which this judgement is made is
+purely aesthetic on the part of the author, and is subject to change
+in future versions of Regina.
+
+Note that pairs are ordered, so the pair (*M*, *N*) may be more (or
+perhaps less) pleasing than the pair (*N*, *M*).
+
+Python:
+    Instead of a ``std::strong_ordering``, this routine returns an
+    integer -1, 0 or 1 (representing ``less``, ``equal`` or
+    ``greater`` respectively).
+
+Parameter ``pair1first``:
+    the first matrix of the first pair to examine.
+
+Parameter ``pair1second``:
+    the second matrix of the first pair to examine.
+
+Parameter ``pair2first``:
+    the first matrix of the second pair to examine.
+
+Parameter ``pair2second``:
+    the second matrix of the second pair to examine.
+
+Returns:
+    ``less`` if the first pair is deemed to be more pleasing than the
+    second pair, ``greater`` if the second pair is more pleasing than
+    the first, or ``equal`` if both ordered pairs are equal.)doc";
 
 namespace Matrix2_ {
 
@@ -122,11 +180,8 @@ static const char *__default = R"doc(Initialises to the zero matrix.)doc";
 static const char *__eq =
 R"doc(Determines if this is equal to the given matrix.
 
-Parameter ``compare``:
-    the matrix with which this will be compared.
-
 Returns:
-    ``True`` if and only if this matrix is equal to *compare*.)doc";
+    ``True`` if and only if this matrix is equal to the given matrix.)doc";
 
 // Docstring regina::python::doc::Matrix2_::__iadd
 static const char *__iadd =
@@ -209,16 +264,6 @@ Parameter ``scalar``:
 
 Returns:
     the product *this* * *scalar*.)doc";
-
-// Docstring regina::python::doc::Matrix2_::__ne
-static const char *__ne =
-R"doc(Determines if this is not equal to the given matrix.
-
-Parameter ``compare``:
-    the matrix with which this will be compared.
-
-Returns:
-    ``True`` if and only if this matrix is not equal to *compare*.)doc";
 
 // Docstring regina::python::doc::Matrix2_::__sub
 static const char *__sub =

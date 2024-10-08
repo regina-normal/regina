@@ -91,9 +91,6 @@ namespace {
             bool operator == (const ReorderIterator& rhs) const {
                 return it_ == rhs.it_;
             }
-            bool operator != (const ReorderIterator& rhs) const {
-                return it_ != rhs.it_;
-            }
             ReorderIterator& operator ++() {
                 ++it_;
                 return *this;

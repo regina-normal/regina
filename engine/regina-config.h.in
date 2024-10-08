@@ -22,6 +22,12 @@
 /* Define if 64-bit integer literals are available using the LL suffix */
 #cmakedefine NUMERIC_64_LL_FOUND
 
+/* Define if std::lexicographical_compare_three_way is available */
+#cmakedefine LEXCMP_FOUND
+
+/* Define if std::string has a spaceship operator */
+#cmakedefine STRING_SPACESHIP_FOUND
+
 /* Define if we are supporting triangulations of dimensions 9-15. */
 #cmakedefine REGINA_HIGHDIM
 

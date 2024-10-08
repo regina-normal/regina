@@ -660,22 +660,10 @@ class Perm<2> {
          * This is true if and only if both permutations have the same
          * images for 0 and 1.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<2>& other) const;
-
-        /**
-         * Determines if this differs from the given permutation.
-         * This is true if and only if the two permutations have
-         * different images for at least one of 0 or 1.
-         *
-         * \param other the permutation with which to compare this.
-         * \return \c true if and only if this and the given permutation
-         * differ.
-         */
-        constexpr bool operator != (const Perm<2>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1) under this
@@ -723,8 +711,8 @@ class Perm<2> {
         constexpr Perm<2> operator ++(int);
 
         /**
-         * Determines if this appears earlier than the given permutation
-         * in the array Perm<2>::Sn.
+         * Compares two permutations according to which appears earlier in the
+         * array Perm<2>::Sn.
          *
          * For the special case of permutations on two elements, this
          * ordering is consistent with the ordering implied by compareWith()
@@ -732,10 +720,17 @@ class Perm<2> {
          * Also, like all permutation classes, this ordering is consistent
          * with the ordering implied by the ++ operators.
          *
-         * \param rhs the permutation to compare this against.
-         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \return The result that indicates which permutation appears earlier
+         * in \a Sn.
          */
-        constexpr bool operator < (const Perm<2>& rhs) const;
+        constexpr std::strong_ordering operator <=> (const Perm&) const =
+            default;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -1166,14 +1161,6 @@ inline constexpr int Perm<2>::pre(int image) const {
     return image ^ code_;
 }
 
-inline constexpr bool Perm<2>::operator == (const Perm<2>& other) const {
-    return (code_ == other.code_);
-}
-
-inline constexpr bool Perm<2>::operator != (const Perm<2>& other) const {
-    return (code_ != other.code_);
-}
-
 inline constexpr int Perm<2>::compareWith(const Perm<2>& other) const {
     // For n=2, permutation codes respect lexicographical order.
     return (code_ == other.code_ ? 0 : code_ < other.code_ ? -1 : 1);
@@ -1192,10 +1179,6 @@ inline constexpr Perm<2> Perm<2>::operator ++(int) {
     Perm<2> ans(code_);
     code_ ^= 1;
     return ans;
-}
-
-inline constexpr bool Perm<2>::operator < (const Perm<2>& rhs) const {
-    return code_ < rhs.code_;
 }
 
 inline constexpr Perm<2> Perm<2>::rot(int i) {

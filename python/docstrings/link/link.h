@@ -381,32 +381,6 @@ Exception ``InvalidArgument``:
 Parameter ``description``:
     a string that describes a knot or link.)doc";
 
-// Docstring regina::python::doc::Link_::__ne
-static const char *__ne =
-R"doc(Determines if this link diagram is not combinatorially identical to
-the given link diagram.
-
-Here "identical" means that:
-
-* the link diagrams have the same number of crossings and the same
-  number of components;
-
-* the same numbered crossings are positive and negative in both
-  diagrams;
-
-* the same pairs of numbered crossings have their under/over-strands
-  connected, with the same orientations;
-
-* for each *i*, the starting strand for the *th* component is the same
-  (under/over) strand of the same numbered crossing in both diagrams.
-
-Parameter ``other``:
-    the link diagram to compare with this.
-
-Returns:
-    ``True`` if and only if the two link diagrams are not
-    combinatorially identical.)doc";
-
 // Docstring regina::python::doc::Link_::bracket
 static const char *bracket =
 R"doc(Returns the Kauffman bracket polynomial of this link diagram.
@@ -4059,7 +4033,9 @@ values for both crossing() and strand().
     created by calling StrandRef(), since the latter is equivalent to
     calling StrandRef(``None``, 0).
 
-``True`` if and only if this and *rhs* are identical.)doc";
+Returns:
+    ``True`` if and only if this and the given reference are
+    identical.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__inc
 static const char *__inc =
@@ -4097,21 +4073,6 @@ Parameter ``crossing``:
 Parameter ``strand``:
     0 to denote the strand running under the crossing, or 1 to denote
     the strand running over the crossing.)doc";
-
-// Docstring regina::python::doc::StrandRef_::__ne
-static const char *__ne =
-R"doc(Tests whether this and the given reference are not identical.
-
-Two references are identical if and only if they return the same
-values for both crossing() and strand().
-
-.. warning::
-    If you create a null reference by calling StrandRef(``None``, 1)
-    then this will _not_ be considered equal to the null reference
-    created by calling StrandRef(), since the latter is equivalent to
-    calling StrandRef(``None``, 0).
-
-``True`` if and only if this and *rhs* are not identical.)doc";
 
 // Docstring regina::python::doc::StrandRef_::crossing
 static const char *crossing =

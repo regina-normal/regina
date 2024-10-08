@@ -58,31 +58,6 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same specific presentation of a snapped 3-ball.)doc";
 
-// Docstring regina::python::doc::SnappedBall_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object represent different
-specific presentations of a snapped 3-ball.
-
-Unlike the parameterised subclasses of StandardTriangulation, this
-SnappedBall subclass represents a fixed structure, and so its
-comparisons test not for the _structure_ but the precise _location_ of
-this structure within the enclosing triangulation.
-
-Specifically, two snapped 3-balls will compare as equal if and only if
-each uses the same numbered tetrahedron, and has the same numbered
-equator edge within that tetrahedron. That is, the tetrahedra returned
-by tetrahedron() must have equal indices within the triangulation, and
-the edge numbers returned by equatorEdge() must be equal. In
-particular, it is still meaningful to compare snapped 3-balls within
-different triangulations.
-
-Parameter ``other``:
-    the snapped 3-ball to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given object represent
-    different specific presentations of a snapped 3-ball.)doc";
-
 // Docstring regina::python::doc::SnappedBall_::boundaryFace
 static const char *boundaryFace =
 R"doc(Returns one of the two tetrahedron faces that forms the boundary of

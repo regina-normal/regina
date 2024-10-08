@@ -74,18 +74,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both collections store the same sets.)doc";
 
-// Docstring regina::python::doc::TrieSet_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given collection do not store exactly
-the same sets.
-
-Parameter ``other``:
-    the collection to compare with this.
-
-Returns:
-    ``True`` if and only if both collections do not store the same
-    sets.)doc";
-
 // Docstring regina::python::doc::TrieSet_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given collections.

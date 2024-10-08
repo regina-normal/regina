@@ -244,20 +244,20 @@ bool Rational::operator == (const Rational& compare) const {
     return mpq_equal(data, compare.data);
 }
 
-bool Rational::operator < (const Rational& compare) const {
-    if (flavour == f_infinity || compare.flavour == f_undefined)
-        return false;
-    if (flavour == f_undefined || compare.flavour == f_infinity)
-        return (compare.flavour != flavour);
-    return (mpq_cmp(data, compare.data) < 0);
-}
+std::strong_ordering Rational::operator <=> (const Rational& compare) const {
+    if (flavour == f_infinity)
+        return (compare.flavour == f_infinity ? std::strong_ordering::equal :
+            std::strong_ordering::greater);
+    if (compare.flavour == f_infinity)
+        return std::strong_ordering::less;
 
-bool Rational::operator > (const Rational& compare) const {
-    if (flavour == f_undefined || compare.flavour == f_infinity)
-        return false;
-    if (flavour == f_infinity || compare.flavour == f_undefined)
-        return (compare.flavour != flavour);
-    return (mpq_cmp(data, compare.data) > 0);
+    if (flavour == f_undefined)
+        return (compare.flavour == f_undefined ? std::strong_ordering::equal :
+            std::strong_ordering::less);
+    if (compare.flavour == f_undefined)
+        return std::strong_ordering::greater;
+
+    return mpq_cmp(data, compare.data) <=> 0;
 }
 
 std::ostream& operator << (std::ostream& out, const Rational& rat) {

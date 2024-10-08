@@ -504,28 +504,6 @@ Parameter ``other``:
 Returns:
     a reference to this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__ne
-static const char *__ne =
-R"doc(Tests whether or not this and the given argument are the same element
-of the same cyclotomic field.
-
-If this and *rhs* have different underlying fields then this test will
-always return ``True`` (indicating that the elements are not equal),
-even if they take the same numerical value when evaluated as complex
-numbers.
-
-If either this or *rhs* have not been initialised (typically because
-they were created using the default constructor), then this comparison
-will return ``True``. If _both_ field elements have not been
-initialised, then this comparison will return ``False``.
-
-Parameter ``rhs``:
-    the value to compare with this.
-
-Returns:
-    ``False`` if this and *rhs* are the same element of the same
-    cyclotomic field, or ``True`` if they are not.)doc";
-
 // Docstring regina::python::doc::Cyclotomic_::cyclotomic
 static const char *cyclotomic =
 R"doc(Returns the *n*th cyclotomic polynomial ``Φ_n``.

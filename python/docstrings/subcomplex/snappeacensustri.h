@@ -82,29 +82,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same SnapPea census triangulation.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusTri_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-triangulations from the SnapPea census.
-
-The SnapPea census manifolds ``x101`` and ``x103`` are homeomorphic;
-however, the corresponding triangulations represented by
-SnapPeaCensusTri will compare as different (since this class describes
-the specific triangulation, not the underlying manifold).
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass means
-they describe isomorphic structures).
-
-Parameter ``compare``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different SnapPea census triangulations.)doc";
-
 // Docstring regina::python::doc::SnapPeaCensusTri_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given structures.

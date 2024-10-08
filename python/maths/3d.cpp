@@ -73,10 +73,6 @@ namespace regina {
                 return row_ == other.row_;
             }
 
-            bool operator != (const Matrix3DRow& other) const {
-                return row_ != other.row_;
-            }
-
         friend std::ostream& operator << (std::ostream&, const Matrix3DRow&);
     };
 
@@ -111,7 +107,7 @@ void add3D(pybind11::module_& m) {
         .def_readwrite("z", &Vector3D<double>::z, rdoc::z)
     ;
     regina::python::add_output_ostream(v);
-    regina::python::add_eq_operators(v, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(v, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(Segment3D)
 
@@ -132,7 +128,7 @@ void add3D(pybind11::module_& m) {
         .def_readwrite("v", &Segment3D<double>::v, rdoc::v)
     ;
     regina::python::add_output_ostream(seg);
-    regina::python::add_eq_operators(seg, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(seg, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(Matrix3D)
 
@@ -156,7 +152,7 @@ void add3D(pybind11::module_& m) {
         }, "Returns the number of rows in this matrix. This will always be 3.")
     ;
     regina::python::add_output_ostream(mat);
-    regina::python::add_eq_operators(mat, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(mat, rdoc::__eq);
 
     auto row = pybind11::class_<regina::Matrix3DRow>(mat, "_Row",
 R"doc(Gives access to a single row of a 3-D matrix.
@@ -188,9 +184,6 @@ See the main class Matrix3D for further details.)doc")
     regina::python::add_eq_operators(row,
 R"doc(Tests whether this and the given row contain the same entries.
 
-Be aware of the inherent risks of floating-point comparisons.)doc",
-R"doc(Tests whether this and the given row contain different entries.
-
 Be aware of the inherent risks of floating-point comparisons.)doc");
     regina::python::add_output_ostream(row);
 
@@ -211,7 +204,7 @@ Be aware of the inherent risks of floating-point comparisons.)doc");
         .def("matrix", &Rotation3D<double>::matrix, rdoc::matrix)
     ;
     regina::python::add_output_ostream(r);
-    regina::python::add_eq_operators(r, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(r, rdoc::__eq);
 
     RDOC_SCOPE_END
 }

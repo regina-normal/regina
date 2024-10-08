@@ -157,22 +157,6 @@ Returns:
     ``True`` if and only if this and the given triangulation are of
     the same type and have the same parameters.)doc";
 
-// Docstring regina::python::doc::TxICore_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given ``T x I`` triangulation are of
-different types and/or have different parameters.
-
-If this returns ``False`` (i.e., both objects compare as equal), then
-the triangulations returned by core() should also be combinatorially
-identical.
-
-Parameter ``other``:
-    the ``T x I`` triangulation to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given triangulation are of
-    different types and/or have different parameters.)doc";
-
 // Docstring regina::python::doc::TxICore_::bdryReln
 static const char *bdryReln =
 R"doc(Returns a 2-by-2 matrix describing the α and β curves on a torus

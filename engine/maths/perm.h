@@ -959,22 +959,10 @@ class Perm {
          * This is true if and only if both permutations have the same
          * images for all 0 ≤ \a i < \a n.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm& other) const;
-
-        /**
-         * Determines if this differs from the given permutation.
-         * This is true if and only if the two permutations have
-         * different images for some 0 ≤ \a i < \a n.
-         *
-         * \param other the permutation with which to compare this.
-         * \return \c true if and only if this and the given permutation
-         * differ.
-         */
-        constexpr bool operator != (const Perm& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,...,\a n-1) under this
@@ -1024,11 +1012,11 @@ class Perm {
         Perm operator ++(int);
 
         /**
-         * Determines if this appears earlier than the given permutation
-         * in the array Perm<n>::Sn.
+         * Compares two permutations according to which appears earlier in the
+         * array Perm<n>::Sn.
          *
          * Note that this is _not_ the same ordering of permutations as
-         * the ordering implied by compareWith().  This is, however,
+         * the ordering implied by compareWith().  This ordering is, however,
          * consistent with the ordering implied by the ++ operators.
          *
          * Unlike the smaller permutation classes that use \a Sn indices
@@ -1040,10 +1028,17 @@ class Perm {
          * (ii) just compare permutation codes if you are happy with an
          * arbitrary ordering (which will be _much_ faster).
          *
-         * \param rhs the permutation to compare this against.
-         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the permutation to compare this with.
+         * \return The result that indicates which permutation appears earlier
+         * in \a Sn.
          */
-        constexpr bool operator < (const Perm& rhs) const;
+        constexpr std::strong_ordering operator <=> (const Perm& rhs) const;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -1515,17 +1510,6 @@ class PermClass {
          * are identical.
          */
         bool operator == (const PermClass& other) const;
-        /**
-         * Determines whether this and the given object describe
-         * different conjugacy classes.
-         *
-         * Two past-the-end conjugacy classes will be treated as equal.
-         *
-         * \param other the conjugacy class to compare with this.
-         * \return \c true if and only if this and the given conjugacy class
-         * are different.
-         */
-        bool operator != (const PermClass& other) const;
 
         /**
          * Determines whether this is the conjugacy class for the identity
@@ -2066,16 +2050,6 @@ inline constexpr int Perm<n>::pre(int image) const {
 }
 
 template <int n>
-inline constexpr bool Perm<n>::operator == (const Perm& other) const {
-    return (code_ == other.code_);
-}
-
-template <int n>
-inline constexpr bool Perm<n>::operator != (const Perm& other) const {
-    return (code_ != other.code_);
-}
-
-template <int n>
 constexpr int Perm<n>::compareWith(const Perm& other) const {
     Code mask = imageMask;
     for (int i = 0; i < n; ++i) {
@@ -2103,9 +2077,9 @@ inline Perm<n> Perm<n>::operator ++(int) {
 }
 
 template <int n>
-constexpr bool Perm<n>::operator < (const Perm<n>& rhs) const {
+constexpr std::strong_ordering Perm<n>::operator <=> (const Perm& rhs) const {
     if (code_ == rhs.code_)
-        return false;
+        return std::strong_ordering::equal;
 
     // The following mask blots out the images of n-2 and n-1.
     Code mask = ~((imageMask | (imageMask << imageBits))
@@ -2113,12 +2087,14 @@ constexpr bool Perm<n>::operator < (const Perm<n>& rhs) const {
     if ((code_ & mask) == (rhs.code_ & mask)) {
         // The two permutations differ precisely in the last two images.
         // In this case, the even permutation will have smaller Sn index.
-        return sign() > 0;
+        return sign() > 0 ? std::strong_ordering::less :
+            std::strong_ordering::greater;
     } else {
         // The two permutations do not just differ in the last two images.
         // This means that comparison by Sn indices will give the same
         // result as comparison by orderedSn indices.
-        return compareWith(rhs) < 0;
+        return compareWith(rhs) < 0 ? std::strong_ordering::less :
+            std::strong_ordering::greater;
     }
 }
 
@@ -2489,12 +2465,6 @@ template <int n>
 inline bool PermClass<n>::operator == (const PermClass& other) const {
     return nCycles_ == other.nCycles_ &&
         std::equal(cycle_, cycle_ + n, other.cycle_);
-}
-
-template <int n>
-inline bool PermClass<n>::operator != (const PermClass& other) const {
-    return nCycles_ != other.nCycles_ ||
-        ! std::equal(cycle_, cycle_ + n, other.cycle_);
 }
 
 template <int n>

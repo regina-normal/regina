@@ -383,27 +383,6 @@ class ValidityConstraints : public Output<ValidityConstraints> {
         bool operator == (const ValidityConstraints& other) const;
 
         /**
-         * Determines whether this and the given set do not contain the same
-         * constraints.
-         *
-         * This test compares the number of coordinates in each block,
-         * the total number of blocks, the set of local constraints, and
-         * the set of global constraints.  The local and global constraints
-         * may appear in any order, and their individual coordinates may
-         * likewise appear in any order; such reorderings will not
-         * affect the outcome of this test.
-         *
-         * \warning Because this test allows for reordering, the comparison is
-         * not very efficient.  It is assumed that this will not be a problem,
-         * because typical constraint sets are extremely small.
-         *
-         * \param other the constraint set to compare against this.
-         * \return \c true if and only if this and the given set
-         * do not contain the same constraints.
-         */
-        bool operator != (const ValidityConstraints& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -540,11 +519,6 @@ inline bool ValidityConstraints::operator == (const ValidityConstraints& other)
         return false;
 
     return true;
-}
-
-inline bool ValidityConstraints::operator != (const ValidityConstraints& other)
-        const {
-    return ! ((*this) == other);
 }
 
 inline void ValidityConstraints::writeTextShort(std::ostream& out) const {

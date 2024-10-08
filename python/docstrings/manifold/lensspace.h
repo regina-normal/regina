@@ -32,6 +32,35 @@ manifold classes.)doc";
 
 namespace LensSpace_ {
 
+// Docstring regina::python::doc::LensSpace_::__cmp
+static const char *__cmp =
+R"doc(Compares representations of two lens spaces according to an aesthetic
+ordering.
+
+The only purpose of this routine is to implement a consistent ordering
+of lens space representations. The specific ordering used is purely
+aesthetic on the part of the author, and is subject to change in
+future versions of Regina.
+
+It does not matter whether the two lens spaces are homeomorphic; this
+routine compares the specific _representations_ of these spaces (and
+so in particular, different representations of the same lens space
+will be ordered differently).
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the other representation to compare this with.
+
+Returns:
+    A result that indicates how this and the given lens space
+    representation should be ordered with respect to each other.)doc";
+
 // Docstring regina::python::doc::LensSpace_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given lens space.)doc";
 
@@ -68,25 +97,6 @@ Parameter ``p``:
 Parameter ``q``:
     the second parameter *q* of the lens space L(p,q). Note that there
     are no range restrictions whatsoever on this parameter.)doc";
-
-// Docstring regina::python::doc::LensSpace_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given lens space have different
-presentations.
-
-Since the presentation is made canonical by the class constructor,
-this routine also identifies whether this and the given lens space are
-homeomorphic as 3-manifolds. This is in contrast to the comparison
-operators for other manifold classes (such as Seifert fibred spaces
-and graph manifolds), where the same manifold could have different
-presentations that compare as not equal.
-
-Parameter ``compare``:
-    the lens space with which this should be compared.
-
-Returns:
-    ``True`` if and only if this and the given lens space have
-    different presentations (i.e., are non-homeomorphic).)doc";
 
 // Docstring regina::python::doc::LensSpace_::global_swap
 static const char *global_swap =

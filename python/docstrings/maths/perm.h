@@ -196,20 +196,6 @@ Python:
 Returns:
     a copy of this conjugacy class before the increment took place.)doc";
 
-// Docstring regina::python::doc::PermClass_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object describe different
-conjugacy classes.
-
-Two past-the-end conjugacy classes will be treated as equal.
-
-Parameter ``other``:
-    the conjugacy class to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given conjugacy class are
-    different.)doc";
-
 // Docstring regina::python::doc::PermClass_::countCycles
 static const char *countCycles =
 R"doc(Returns the number of cycles in this conjugacy class.
@@ -342,6 +328,38 @@ Parameter ``source``:
 Returns:
     the image of *source*.)doc";
 
+// Docstring regina::python::doc::Perm_::__cmp
+static const char *__cmp =
+R"doc(Compares two permutations according to which appears earlier in the
+array Perm<n>::Sn.
+
+Note that this is _not_ the same ordering of permutations as the
+ordering implied by compareWith(). This ordering is, however,
+consistent with the ordering implied by the ++ operators.
+
+Unlike the smaller permutation classes that use *Sn* indices as
+internal permutation codes, for this generic Perm class the ordering
+defined here is _slower_ to compute than compareWith(). It is
+recommended that, unless you specifically need to align your ordering
+with *Sn* indices, you either (i) use compareWith() for
+lexicographical ordering (which is a little faster), or else (ii) just
+compare permutation codes if you are happy with an arbitrary ordering
+(which will be _much_ faster).
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the permutation to compare this with.
+
+Returns:
+    The result that indicates which permutation appears earlier in
+    *Sn*.)doc";
+
 // Docstring regina::python::doc::Perm_::__copy
 static const char *__copy = R"doc(Creates a permutation that is a clone of the given permutation.)doc";
 
@@ -353,9 +371,6 @@ static const char *__eq =
 R"doc(Determines if this is equal to the given permutation. This is true if
 and only if both permutations have the same images for all 0 ≤ *i* <
 *n*.
-
-Parameter ``other``:
-    the permutation with which to compare this.
 
 Returns:
     ``True`` if and only if this and the given permutation are equal.)doc";
@@ -399,30 +414,6 @@ Precondition:
 Parameter ``image``:
     the array of images.)doc";
 
-// Docstring regina::python::doc::Perm_::__lt
-static const char *__lt =
-R"doc(Determines if this appears earlier than the given permutation in the
-array Perm<n>::Sn.
-
-Note that this is _not_ the same ordering of permutations as the
-ordering implied by compareWith(). This is, however, consistent with
-the ordering implied by the ++ operators.
-
-Unlike the smaller permutation classes that use *Sn* indices as
-internal permutation codes, for this generic Perm class the ordering
-defined here is _slower_ to compute than compareWith(). It is
-recommended that, unless you specifically need to align your ordering
-with *Sn* indices, you either (i) use compareWith() for
-lexicographical ordering (which is a little faster), or else (ii) just
-compare permutation codes if you are happy with an arbitrary ordering
-(which will be _much_ faster).
-
-Parameter ``rhs``:
-    the permutation to compare this against.
-
-Returns:
-    ``True`` if and only if this appears before *rhs* in *Sn*.)doc";
-
 // Docstring regina::python::doc::Perm_::__mul
 static const char *__mul =
 R"doc(Returns the composition of this permutation with the given
@@ -434,18 +425,6 @@ Parameter ``q``:
 
 Returns:
     the composition of both permutations.)doc";
-
-// Docstring regina::python::doc::Perm_::__ne
-static const char *__ne =
-R"doc(Determines if this differs from the given permutation. This is true if
-and only if the two permutations have different images for some 0 ≤
-*i* < *n*.
-
-Parameter ``other``:
-    the permutation with which to compare this.
-
-Returns:
-    ``True`` if and only if this and the given permutation differ.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedComp
 static const char *cachedComp =

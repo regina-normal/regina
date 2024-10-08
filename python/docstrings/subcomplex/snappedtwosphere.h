@@ -58,27 +58,6 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same specific presentation of a snapped 2-sphere.)doc";
 
-// Docstring regina::python::doc::SnappedTwoSphere_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given object represent different
-specific presentations of a snapped 2-sphere.
-
-Specifically, two snapped 2-spheres will compare as equal if and only
-if they slice through the same pair of numbered tetrahedra, presented
-in the same order, and bisecting the same numbered edges within
-corresponding tetrahedra.
-
-Since this test looks at tetrahedron numbers and not the specific
-Tetrahedron objects, it is meaningful to compare snapped 2-spheres
-within different triangulations.
-
-Parameter ``other``:
-    the snapped 2-sphere to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given object represent
-    different specific presentations of a snapped 2-sphere.)doc";
-
 // Docstring regina::python::doc::SnappedTwoSphere_::recognise
 static const char *recognise =
 R"doc(Determines if the two given tetrahedra together form a snapped

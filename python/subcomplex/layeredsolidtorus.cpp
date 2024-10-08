@@ -70,7 +70,7 @@ void addLayeredSolidTorus(pybind11::module_& m) {
         .def_static("recognise", &LayeredSolidTorus::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<LayeredSolidTorus>(m, rdoc::global_swap);
 

@@ -55,7 +55,7 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
         .def_readonly_static("SEC_7_OR", &SnapPeaCensusTri::SEC_7_OR)
         .def_readonly_static("SEC_7_NOR", &SnapPeaCensusTri::SEC_7_NOR)
     ;
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output(c);
 
     regina::python::add_global_swap<SnapPeaCensusTri>(m, rdoc::global_swap);

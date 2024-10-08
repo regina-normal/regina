@@ -101,31 +101,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of self-identified blocked Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure do not represent the
-same type of self-identified blocked Seifert fibred space.
-
-Specifically, two structures will compare as equal if and only if both
-structures are formed from the same combinatorial presentation of a
-saturated region (as returned by the SatRegion comparison operators),
-with the two torus boundaries joined using the same 2-by-2 matrix.
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
-account for the many symmetries in a blocked Seifert fibred space).
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure do not
-    represent the same type of self-identified blocked Seifert fibred
-    space.)doc";
-
 // Docstring regina::python::doc::BlockedSFSLoop_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given structures.

@@ -157,28 +157,6 @@ class SnappedBall : public StandardTriangulation {
          * the same specific presentation of a snapped 3-ball.
          */
         bool operator == (const SnappedBall& other) const;
-        /**
-         * Determines whether this and the given object represent different
-         * specific presentations of a snapped 3-ball.
-         *
-         * Unlike the parameterised subclasses of StandardTriangulation,
-         * this SnappedBall subclass represents a fixed structure, and
-         * so its comparisons test not for the _structure_ but the precise
-         * _location_ of this structure within the enclosing triangulation.
-         *
-         * Specifically, two snapped 3-balls will compare as equal if and only
-         * if each uses the same numbered tetrahedron, and has the same
-         * numbered equator edge within that tetrahedron.  That is, the
-         * tetrahedra returned by tetrahedron() must have equal indices within
-         * the triangulation, and the edge numbers returned by equatorEdge()
-         * must be equal.  In particular, it is still meaningful to compare
-         * snapped 3-balls within different triangulations.
-         *
-         * \param other the snapped 3-ball to compare with this.
-         * \return \c true if and only if this and the given object represent
-         * different specific presentations of a snapped 3-ball.
-         */
-        bool operator != (const SnappedBall& other) const;
 
         /**
          * Determines if the given tetrahedron forms a snapped 3-ball
@@ -260,9 +238,6 @@ inline int SnappedBall::internalEdge() const {
 
 inline bool SnappedBall::operator == (const SnappedBall& other) const {
     return tet_->index() == other.tet_->index() && equator_ == other.equator_;
-}
-inline bool SnappedBall::operator != (const SnappedBall& other) const {
-    return tet_->index() != other.tet_->index() || equator_ != other.equator_;
 }
 
 inline std::ostream& SnappedBall::writeName(std::ostream& out) const {

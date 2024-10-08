@@ -575,30 +575,6 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Determines whether this and the given matrix are different.
-         *
-         * Two matrices are different if either (i) their dimensions
-         * differ, or (ii) the corresponding elements of each matrix differ
-         * in at least one location.
-         *
-         * Note that this routine can happily deal with two matrices of
-         * different dimensions (in which case it will always return
-         * \c true).
-         *
-         * This routine returns \c true if and only if the equality operator
-         * (==) returns \c false.
-         *
-         * \pre The type \a T provides an equality operator (==).
-         *
-         * \param other the matrix to compare with this.
-         * \return \c true if the matrices are different as described above,
-         * or \c false otherwise.
-         */
-        bool operator != (const Matrix& other) const {
-            return ! ((*this) == other);
-        }
-
-        /**
          * Swaps the elements of the two given rows in the matrix.
          *
          * This operation is constant time (unlike swapping columns,

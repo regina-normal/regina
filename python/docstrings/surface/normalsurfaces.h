@@ -376,39 +376,6 @@ for s in list:
 Returns:
     an iterator over the normal surfaces in this list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given list contain different sets of
-normal (or almost normal) surfaces.
-
-The lists will be compared as multisets: the order of the surfaces in
-each list does not matter; however, in the unusual scenario where a
-list the same surface multiple times, multiplicity does matter.
-
-Like the comparison operators for NormalSurface, it does not matter
-whether the lists work with different triangulations, or different
-encodings, or if one but not the other supports almost normal and/or
-spun-normal surfaces. The individual surfaces will simply be compared
-by examining or computing the number of discs of each type.
-
-In particular, this routine is safe to call even if this and the given
-list work with different triangulations:
-
-* If the two triangulations have the same size, then this routine will
-  compare surfaces as though they were transplanted into the same
-  triangulation using the same tetrahedron numbering and the same disc
-  types.
-
-* If the two triangulations have different sizes, then this comparison
-  will return ``True`` (i.e., the lists will be considered different).
-
-Parameter ``other``:
-    the list to be compared with this list.
-
-Returns:
-    ``True`` if both lists do not represent the same multiset of
-    normal or almost normal surfaces, or ``False`` if they do.)doc";
-
 // Docstring regina::python::doc::NormalSurfaces_::algorithm
 static const char *algorithm =
 R"doc(Returns details of the algorithm that was used to enumerate this list.

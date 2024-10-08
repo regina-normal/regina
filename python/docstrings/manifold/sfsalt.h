@@ -157,24 +157,6 @@ Parameter ``negate``:
     ``True`` if we should attempt to negate all exceptional fibres
     without reflecting, as described above.)doc";
 
-// Docstring regina::python::doc::SFSAlt_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given alternative representation do
-not have identical presentations.
-
-To be considered _identical_, the two alternatives must have equal
-alternative SFSpace representations, equal conversion matrices, and
-either both must have used a reflection or both must have not used a
-reflection. In other words, this is equivalent to testing all of
-alt(), conversion() and reflected() for equality.
-
-Parameter ``other``:
-    the alternative to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given alternative do not have
-    identical presentations, as described above.)doc";
-
 // Docstring regina::python::doc::SFSAlt_::alt
 static const char *alt =
 R"doc(Returns the alternative representation of the original Seifert fibred

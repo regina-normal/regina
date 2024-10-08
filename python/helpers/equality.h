@@ -31,11 +31,12 @@
  **************************************************************************/
 
 /*! \file python/helpers/equality.h
- *  \brief Assists with wrapping == and != operators in Python.
+ *  \brief Assists with wrapping equality and comparison operators in Python.
  */
 
 #include <sstream>
 #include <type_traits>
+#include "../pybind11/operators.h"
 
 namespace regina {
 
@@ -92,8 +93,8 @@ enum EqualityType {
  *
  * - If \a T provides both == and != operators (either as member
  *   functions or as global functions), then the python operators == and !=
- *   will compare by value.  The \a docEq and \a docNeq arguments will be
- *   used as the respective Python docstrings.
+ *   will compare by value.  The \a docEq argument will be used to generate
+ *   the respective Python docstrings.
  *
  * - If \a T provides neither == nor != operators, then this will generate
  *   a compile error.  Instead you should be calling the variant of
@@ -113,8 +114,7 @@ enum EqualityType {
  * instead.
  */
 template <class C, typename... options>
-void add_eq_operators(pybind11::class_<C, options...>& c,
-    const char* docEq, const char* docNeq);
+void add_eq_operators(pybind11::class_<C, options...>& c, const char* docEq);
 
 /**
  * Adds appropriate == and != operators to the python bindings for a C++ class,
@@ -162,8 +162,7 @@ void add_eq_operators(pybind11::class_<C, options...>& c);
  * to test whether two Python objects wrap the same packet.
  */
 template <class C, typename... options>
-void packet_eq_operators(pybind11::class_<C, options...>& c,
-    const char* docEq, const char* docNeq);
+void packet_eq_operators(pybind11::class_<C, options...>& c, const char* docEq);
 
 /**
  * Adds appropriate == and != operators to the python bindings,
@@ -272,6 +271,21 @@ void no_eq_abstract(pybind11::class_<C, options...>& c);
  */
 template <class C, typename... options>
 void disable_eq_operators(pybind11::class_<C, options...>& c);
+
+/**
+ * Adds appropriate comparison operators to the python bindings for a C++ class,
+ * with custom docstrings.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_cmp_operators(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
+ *
+ * The effect will be to add Python operators `<`, `<=`, `>` and `>=`, all of
+ * which compare by value.  The \a doc argument will be used for all four
+ * Python docstrings.
+ */
+template <class C, typename... options>
+void add_cmp_operators(pybind11::class_<C, options...>& c, const char* doc);
 
 #ifndef __DOXYGEN
 namespace add_eq_operators_detail {
@@ -396,7 +410,7 @@ namespace add_eq_operators_detail {
 
 template <class C, typename... options>
 inline void add_eq_operators(pybind11::class_<C, options...>& c,
-        const char* docEq, const char* docNeq) {
+        const char* docEq) {
     constexpr EqualityType equalityType =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
 
@@ -407,7 +421,8 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c,
     c.def("__eq__",
         &add_eq_operators_detail::EqualityOperators<C>::are_equal, docEq);
     c.def("__ne__",
-        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal, docNeq);
+        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
+        doc::common::neq_value);
 
     c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
         doc::common::eq_None);
@@ -482,8 +497,8 @@ inline bool invalidPacketComparison(const regina::Packet&,
 
 template <class C, typename... options>
 inline void packet_eq_operators(pybind11::class_<C, options...>& c,
-        const char* docEq, const char* docNeq) {
-    add_eq_operators(c, docEq, docNeq);
+        const char* docEq) {
+    add_eq_operators(c, docEq);
     c.def("__eq__", &invalidPacketComparison, doc::common::eq_packet_invalid);
     c.def("__ne__", &invalidPacketComparison, doc::common::eq_packet_invalid);
 }
@@ -515,6 +530,19 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
     c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
         doc::common::neq_None);
     c.attr("equalityType") = EqualityType::DISABLED;
+}
+
+template <class C, typename... options>
+void add_cmp_operators(pybind11::class_<C, options...>& c, const char* doc) {
+    static_assert(add_eq_operators_detail::EqualityOperators<C>::equalityType()
+            == BY_VALUE,
+        "The function add_cmp_operators() should only be used for classes "
+        "that compare by value.");
+
+    c.def(pybind11::self < pybind11::self, doc);
+    c.def(pybind11::self <= pybind11::self, doc);
+    c.def(pybind11::self > pybind11::self, doc);
+    c.def(pybind11::self >= pybind11::self, doc);
 }
 
 #endif // __DOXYGEN

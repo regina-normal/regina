@@ -236,26 +236,6 @@ for disc in surfaceData:
 Returns:
     an iterator over all normal discs.)doc";
 
-// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given set have different numbers of
-discs of some type in some tetrahedron, or contain different data for
-some pair of corresponding discs.
-
-This routine does not consider whether the two underlying
-triangulations are the same; it merely compares the disc counts and
-associated data within each set. If the two disc sets come from
-triangulations with different sizes, and/or surfaces with different
-disc counts in one or more tetarhedra, then this comparison will
-return ``True``.
-
-The associated data (of type *T*) will be compared using the equality
-operator (==).
-
-Returns:
-    ``True`` if and only if both sets are not the same, as described
-    above.)doc";
-
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::adjacentDisc
 static const char *adjacentDisc =
 R"doc(Determines which normal disc is adjacent to the given normal disc
@@ -407,18 +387,6 @@ Parameter ``oct1``:
 Parameter ``oct2``:
     the number of octahedral discs of type 2.)doc";
 
-// Docstring regina::python::doc::DiscSetTet_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given set do not have the same number
-of discs of each type.
-
-This routine does not consider whether the two underlying tetrahedra
-are the same; it merely compares the ten disc counts in each set.
-
-Returns:
-    ``True`` if and only if both sets are not the same, as described
-    above.)doc";
-
 // Docstring regina::python::doc::DiscSetTet_::arcFromDisc
 static const char *arcFromDisc =
 R"doc(Determines which normal arc of a given type on a given face of this
@@ -513,21 +481,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given iterator are equal.)doc";
 
-// Docstring regina::python::doc::DiscSpecIterator_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given iterator are different.
-
-Two iterators are considered equal if (i) they were constructed from
-the same DiscSetSurface object (not two different DiscSetSurface
-objects with identical contents), and (ii) they point to the same disc
-of the same tetrahedron.
-
-Parameter ``other``:
-    the iterator to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given iterator are equal.)doc";
-
 // Docstring regina::python::doc::DiscSpecIterator_::__next__
 static const char *__next__ =
 R"doc(Returns the current DiscSpec and increments this iterator.
@@ -544,11 +497,7 @@ Returns:
 namespace DiscSpec_ {
 
 // Docstring regina::python::doc::DiscSpec_::__copy
-static const char *__copy =
-R"doc(Creates a new disc specifier that is a clone of the given specifier.
-
-Parameter ``cloneMe``:
-    the disc specifier to clone.)doc";
+static const char *__copy = R"doc(Creates a new disc specifier that is a clone of the given specifier.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__default
 static const char *__default = R"doc(Creates a new uninitialised disc specifier.)doc";
@@ -557,9 +506,6 @@ static const char *__default = R"doc(Creates a new uninitialised disc specifier.
 static const char *__eq =
 R"doc(Determines if this and the given disc specifier contain identical
 information.
-
-Parameter ``other``:
-    the disc specifier to compare with this.
 
 Returns:
     ``True`` if and only if this and the given disc specifier contain
@@ -581,18 +527,6 @@ Parameter ``newNumber``:
     specifies which disc of the particular type in the particular
     tetrahedron is being referred to; discs are numbered as described
     in the *DiscSpec* class notes.)doc";
-
-// Docstring regina::python::doc::DiscSpec_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given disc specifier contain different
-information.
-
-Parameter ``other``:
-    the disc specifier to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given disc specifier contain
-    different information.)doc";
 
 }
 

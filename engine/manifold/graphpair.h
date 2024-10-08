@@ -219,24 +219,30 @@ class GraphPair : public Manifold {
         const Matrix2& matchingReln() const;
 
         /**
-         * Determines in a fairly ad-hoc fashion whether this
-         * representation of this space is "smaller" than the given
-         * representation of the given space.
+         * Compares representations of two graph manifolds according to an
+         * aesthetic ordering.
          *
-         * The ordering imposed on graph manifolds is purely aesthetic
-         * on the part of the author, and is subject to change in future
-         * versions of Regina.  It also depends upon the particular
-         * representation, so that different representations of the same
-         * space may be ordered differently.
+         * The only purpose of this routine is to implement a consistent
+         * ordering of graph manifold representations.  The specific ordering
+         * used is purely aesthetic on the part of the author, and is subject
+         * to change in future versions of Regina.
          *
-         * All that this routine really offers is a well-defined way of
-         * ordering graph manifold representations.
+         * It does not matter whether the two manifolds are homeomorphic; this
+         * routine compares the specific _representations_ of these manifolds
+         * (and so in particular, different representations of the same
+         * graph manifold will be ordered differently).
          *
-         * \param compare the representation with which this will be compared.
-         * \return \c true if and only if this is "smaller" than the
-         * given graph manifold representation.
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other representation to compare this with.
+         * \return A result that indicates how this and the given graph
+         * manifold representation should be ordered with respect to each other.
          */
-        bool operator < (const GraphPair& compare) const;
+        std::strong_ordering operator <=> (const GraphPair& rhs) const;
 
         /**
          * Sets this to be a clone of the given graph manifold.
@@ -278,23 +284,6 @@ class GraphPair : public Manifold {
          * identical presentations of the same graph manifold.
          */
         bool operator == (const GraphPair& compare) const;
-
-        /**
-         * Determines whether this and the given object do not contain
-         * precisely the same presentations of the same graph manifold.
-         *
-         * This routine does _not_ test for homeomorphism.  Instead it
-         * compares the exact presentations, including the matching matrix
-         * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these _presentations_ are identical.
-         * If you have two different presentations of the same graph manifold,
-         * they will be treated as not equal by this routine.
-         *
-         * \param compare the presentation with which this will be compared.
-         * \return \c true if and only if this and the given object do not
-         * contain identical presentations of the same graph manifold.
-         */
-        bool operator != (const GraphPair& compare) const;
 
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
@@ -397,13 +386,6 @@ inline bool GraphPair::operator == (const GraphPair& compare) const {
         sfs_[0] == compare.sfs_[0] &&
         sfs_[1] == compare.sfs_[1] &&
         matchingReln_ == compare.matchingReln_;
-}
-
-inline bool GraphPair::operator != (const GraphPair& compare) const {
-    return
-        sfs_[0] != compare.sfs_[0] ||
-        sfs_[1] != compare.sfs_[1] ||
-        matchingReln_ != compare.matchingReln_;
 }
 
 inline void swap(GraphPair& a, GraphPair& b) noexcept {

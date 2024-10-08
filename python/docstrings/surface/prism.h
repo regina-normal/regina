@@ -30,11 +30,7 @@ Precondition:
 namespace PrismSpec_ {
 
 // Docstring regina::python::doc::PrismSpec_::__copy
-static const char *__copy =
-R"doc(Creates a new prism specifier that is a clone of the given specifier.
-
-Parameter ``cloneMe``:
-    the prism specifier to clone.)doc";
+static const char *__copy = R"doc(Creates a new prism specifier that is a clone of the given specifier.)doc";
 
 // Docstring regina::python::doc::PrismSpec_::__default
 static const char *__default = R"doc(Creates a new uninitialised prism specifier.)doc";
@@ -43,9 +39,6 @@ static const char *__default = R"doc(Creates a new uninitialised prism specifier
 static const char *__eq =
 R"doc(Determines if this and the given prism specifier contain identical
 information.
-
-Parameter ``other``:
-    the prism specifier to compare with this.
 
 Returns:
     ``True`` if and only if this and the given prism specifier contain
@@ -62,18 +55,6 @@ Parameter ``newTetIndex``:
 Parameter ``newEdge``:
     the edge of the tetrahedron that is contained in this prism; this
     must be between 0 and 5 inclusive.)doc";
-
-// Docstring regina::python::doc::PrismSpec_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given prism specifier contain different
-information.
-
-Parameter ``other``:
-    the prism specifier to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given prism specifier contain
-    different information.)doc";
 
 }
 

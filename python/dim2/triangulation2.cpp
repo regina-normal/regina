@@ -75,10 +75,11 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>(), rbase::triangles)
         .def("simplices", &Triangulation<2>::simplices,
             pybind11::keep_alive<0, 1>(), rbase::simplices)
-        // Use a static cast because GCC struggles with the overload_cast here:
         .def("triangle",
-            static_cast<regina::Simplex<2>* (Triangulation<2>::*)(size_t)>(
-                &Triangulation<2>::triangle),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use simplex(), which triangle() is an alias for.
+            overload_cast<size_t>(&Triangulation<2>::simplex),
             pybind11::return_value_policy::reference_internal, rbase::triangle)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<2>::simplex),
@@ -343,7 +344,7 @@ void addTriangulation2(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
-    regina::python::packet_eq_operators(c, rbase::__eq, rbase::__ne);
+    regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);

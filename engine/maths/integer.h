@@ -722,93 +722,39 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         bool operator ==(long rhs) const;
         /**
-         * Determines if this is not equal to the given integer.
+         * Compares this to the given integer.
+         *
+         * This is a numerical comparison; that is, it uses the usual ordering
+         * of the integers. Infinity is considered greater than any integer.
+         *
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(const IntegerBase& rhs) const;
-        /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(const IntegerBase<! withInfinity>& rhs) const;
-        /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(long rhs) const;
-        /**
-         * Determines if this is less than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than the given
-         * integer.
-         */
-        bool operator <(const IntegerBase& rhs) const;
-        /**
-         * Determines if this is less than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than the given
-         * integer.
-         */
-        bool operator <(long rhs) const;
-        /**
-         * Determines if this is greater than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than the given
-         * integer.
-         */
-        bool operator >(const IntegerBase& rhs) const;
-        /**
-         * Determines if this is greater than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than the given
-         * integer.
-         */
-        bool operator >(long rhs) const;
-        /**
-         * Determines if this is less than or equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than or equal to
+         * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        bool operator <=(const IntegerBase& rhs) const;
+        std::strong_ordering operator <=> (const IntegerBase& rhs) const;
         /**
-         * Determines if this is less than or equal to the given integer.
+         * Compares this to the given integer.
+         *
+         * This is a numerical comparison; that is, it uses the usual ordering
+         * of the integers. Infinity is considered greater than any integer.
+         *
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than or equal to
+         * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        bool operator <=(long rhs) const;
-        /**
-         * Determines if this is greater than or equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than or equal
-         * to the given integer.
-         */
-        bool operator >=(const IntegerBase& rhs) const;
-        /**
-         * Determines if this is greater than or equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than or equal
-         * to the given integer.
-         */
-        bool operator >=(long rhs) const;
+        std::strong_ordering operator <=> (long rhs) const;
 
         /**
          * The preincrement operator.
@@ -1981,85 +1927,39 @@ class NativeInteger {
          */
         bool operator ==(Native rhs) const;
         /**
-         * Determines if this is not equal to the given integer.
+         * Compares this to the given integer.
+         *
+         * This is a numerical comparison; that is, it uses the usual ordering
+         * of the integers.
+         *
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(const NativeInteger& rhs) const;
-        /**
-         * Determines if this is not equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * not equal.
-         */
-        bool operator !=(Native rhs) const;
-        /**
-         * Determines if this is less than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than the given
-         * integer.
-         */
-        bool operator <(const NativeInteger& rhs) const;
-        /**
-         * Determines if this is less than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than the given
-         * integer.
-         */
-        bool operator <(Native rhs) const;
-        /**
-         * Determines if this is greater than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than the given
-         * integer.
-         */
-        bool operator >(const NativeInteger& rhs) const;
-        /**
-         * Determines if this is greater than the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than the given
-         * integer.
-         */
-        bool operator >(Native rhs) const;
-        /**
-         * Determines if this is less than or equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than or equal to
+         * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        bool operator <=(const NativeInteger& rhs) const;
+        std::strong_ordering operator <=> (const NativeInteger& rhs) const;
         /**
-         * Determines if this is less than or equal to the given integer.
+         * Compares this to the given integer.
+         *
+         * This is a numerical comparison; that is, it uses the usual ordering
+         * of the integers.
+         *
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is less than or equal to
+         * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        bool operator <=(Native rhs) const;
-        /**
-         * Determines if this is greater than or equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than or equal
-         * to the given integer.
-         */
-        bool operator >=(const NativeInteger& rhs) const;
-        /**
-         * Determines if this is greater than or equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this is greater than or equal
-         * to the given integer.
-         */
-        bool operator >=(Native rhs) const;
+        std::strong_ordering operator <=> (Native rhs) const;
 
         /**
          * The preincrement operator.
@@ -3011,172 +2911,35 @@ inline bool IntegerBase<withInfinity>::operator ==(long rhs) const {
 }
 
 template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator !=(const IntegerBase& rhs)
-        const {
-    if (isInfinite() && rhs.isInfinite())
-        return false;
-    else if (isInfinite() || rhs.isInfinite())
-        return true;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) != 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) != 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) != 0);
-        else
-            return (small_ != rhs.small_);
-    }
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator !=(
-        const IntegerBase<! withInfinity>& rhs) const {
-    // The types are different, so both cannot be infinity.
-    if (isInfinite() || rhs.isInfinite())
-        return true;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) != 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) != 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) != 0);
-        else
-            return (small_ != rhs.small_);
-    }
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator !=(long rhs) const {
+inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
+        const IntegerBase& rhs) const {
     if (isInfinite())
-        return true;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) != 0);
-    else
-        return (small_ != rhs);
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator <(const IntegerBase& rhs)
-        const {
-    if (isInfinite())
-        return false;
+        return rhs.isInfinite() ? std::strong_ordering::equal :
+            std::strong_ordering::greater;
     else if (rhs.isInfinite())
-        return true;
+        return std::strong_ordering::less;
     else if (large_) {
         if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) < 0);
+            return (mpz_cmp(large_, rhs.large_) <=> 0);
         else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) < 0);
+            return (mpz_cmp_si_cpp(large_, rhs.small_) <=> 0);
     } else {
         if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) > 0); // back-to-front
+            return (0 <=> mpz_cmp_si_cpp(rhs.large_, small_)); // back-to-front
         else
-            return (small_ < rhs.small_);
+            return (small_ <=> rhs.small_);
     }
 }
 
 template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator <(long rhs) const {
-    if (isInfinite())
-        return false;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) < 0);
-    else
-        return (small_ < rhs);
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator >(const IntegerBase& rhs)
-        const {
-    if (rhs.isInfinite())
-        return false;
-    else if (isInfinite())
-        return true;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) > 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) > 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) < 0); // back-to-front
-        else
-            return (small_ > rhs.small_);
-    }
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator >(long rhs) const {
-    if (isInfinite())
-        return true;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) > 0);
-    else
-        return (small_ > rhs);
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator <=(const IntegerBase& rhs)
-        const {
-    if (rhs.isInfinite())
-        return true;
-    else if (isInfinite())
-        return false;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) <= 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) <= 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) >= 0); // back-to-front
-        else
-            return (small_ <= rhs.small_);
-    }
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator <=(long rhs) const {
-    if (isInfinite())
-        return false;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) <= 0);
-    else
-        return (small_ <= rhs);
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator >=(const IntegerBase& rhs)
+inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (long rhs)
         const {
     if (isInfinite())
-        return true;
-    else if (rhs.isInfinite())
-        return false;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) >= 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) >= 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) <= 0); // back-to-front
-        else
-            return (small_ >= rhs.small_);
-    }
-}
-
-template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator >=(long rhs) const {
-    if (isInfinite())
-        return true;
+        return std::strong_ordering::greater;
     else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) >= 0);
+        return (mpz_cmp_si_cpp(large_, rhs) <=> 0);
     else
-        return (small_ >= rhs);
+        return (small_ <=> rhs);
 }
 
 template <bool withInfinity>
@@ -3741,58 +3504,15 @@ inline bool NativeInteger<bytes>::operator ==(Native rhs) const {
 }
 
 template <int bytes>
-inline bool NativeInteger<bytes>::operator !=(
-        const NativeInteger<bytes>& rhs) const {
-    return (data_ != rhs.data_);
+inline std::strong_ordering NativeInteger<bytes>::operator <=> (
+        const NativeInteger& rhs) const {
+    return data_ <=> rhs.data_;
 }
 
 template <int bytes>
-inline bool NativeInteger<bytes>::operator !=(Native rhs) const {
-    return (data_ != rhs);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator <(
-        const NativeInteger<bytes>& rhs) const {
-    return (data_ < rhs.data_);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator <(Native rhs) const {
-    return (data_ < rhs);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator >(
-        const NativeInteger<bytes>& rhs) const {
-    return (data_ > rhs.data_);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator >(Native rhs) const {
-    return (data_ > rhs);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator <=(
-        const NativeInteger<bytes>& rhs) const {
-    return (data_ <= rhs.data_);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator <=(Native rhs) const {
-    return (data_ <= rhs);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator >=(
-        const NativeInteger<bytes>& rhs) const {
-    return (data_ >= rhs.data_);
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::operator >=(Native rhs) const {
-    return (data_ >= rhs);
+inline std::strong_ordering NativeInteger<bytes>::operator <=> (Native rhs)
+        const {
+    return data_ <=> rhs;
 }
 
 template <int bytes>

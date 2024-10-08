@@ -17,11 +17,15 @@ Version 7.4  [ (to be announced) ]
           potentially throw a LockViolation (and this is now explicitly noted
           in their respective docs); other routines now examine locks as part
           of their validity checks (e.g., local moves on triangulations).
-        - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
         - All global enumerations are now C++11 scoped enumerations, with the
           old names kept as deprecated constants in the regina:: namespace.
+        - Explicit inequality tests (!=) have been removed, and are now
+          automatically generated from equality tests (==) instead.
+        - Explicit comparisons (<, <=, >, >=) have been removed, and are now
+          automatically generated from the new spaceship operator (<=>).
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
+        - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
         - Updated the bundled copy of Normaliz to version 3.10.3 (30 May 2024).
     ENGINE:
         Class AbelianGroup:
@@ -35,6 +39,9 @@ Version 7.4  [ (to be announced) ]
         Class AngleStructure:
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::Integer.
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Class AngleStructures:
             - New routine sort().
         Enum Attachment::OwnershipPolicy:
@@ -57,13 +64,23 @@ Version 7.4  [ (to be announced) ]
               Base64SigDecoder.
         Class BitManipulator<T>:
             - New routine swapBits().
+            - New routine subsetComparison().
+        Class Bitmask, Bitmask1<T>, Bitmask2<T, U>:
+            - Added a spaceship operator (<=>) for subset comparisons.  This
+              has the effect of implementing all comparison operators, not just
+              less-than-or-equal (<=) as before.
         Class BoolSet:
             - New routine full().
             - Renamed empty() to clear(), without a deprecated alias, to avoid
               confusion with the more common pattern where empty() queries
               whether or not a container is empty.
+            - Added a spaceship operator (<=>) for subset comparisons.
         Enum ChangeType:
             - New enum for internal use with triangulation/link change spans.
+        Struct DiscType:
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Class Example<3>:
             - New routine b5().
             - Routines lst(), lens(), augTriSolidTorus() and sfsOverSphere()
@@ -76,10 +93,15 @@ Version 7.4  [ (to be announced) ]
               of links (i.e., SpatialLink objects).
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
+        Class FacePair:
+            - Added a spaceship operator (<=>) for comparisons.
         Class FacetPairing<dim>:
             - New routine hash(), which uses the tight encoding.
         Class FacetSpec<dim>:
             - New routine hash(), which uses the tight encoding.
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) and less-than-or-equal (<=) as before.
         Enum FileFormat:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., REGINA_XML_GEN_3) have been
@@ -106,6 +128,14 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., Framing::Seifert).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class GraphLoop, GraphPair, GraphTriple:
+            - Added a spaceship operator (<=>) for aesthetic comparisons.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
+        Struct GroupExpressionTerm:
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Class GroupPresentation:
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
@@ -125,6 +155,7 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
             - New class constant supportsInfinity, which is set to false.
+            - Added a spaceship operator (<=>) for comparisons.
         Class IntOfBits<k>:
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Isomorphism<dim>:
@@ -140,6 +171,14 @@ Version 7.4  [ (to be announced) ]
             - New class constant supportsInfinity, which is set to true.
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
+            - Added a spaceship operator (<=>) for comparisons.
+        Class LensSpace:
+            - Added a spaceship operator (<=>) for aesthetic comparisons, which
+              also adds comparison operators (<, <=, >, >=) to this class.
+        Class LightweightSequence<T>:
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Class Link:
             - New routine makeAlternating().
             - New routine seifertCircles().
@@ -181,6 +220,10 @@ Version 7.4  [ (to be announced) ]
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
+        Class Manifold:
+            - Added a spaceship operator (<=>) for aesthetic comparisons.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
         Class Matrix<T>:
             - Added a copy constructor that takes a matrix whose elements are
               of a different type.
@@ -208,6 +251,7 @@ Version 7.4  [ (to be announced) ]
               in the regina:: namespace.
         Class NativeInteger<bytes>:
             - New routine str().
+            - Added a spaceship operator (<=>) for comparisons.
         Enum NiceType:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., NICE_INTRODUCE) have been
@@ -227,6 +271,9 @@ Version 7.4  [ (to be announced) ]
               return the entire surface as a single component.
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::LargeInteger.
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
         Enum NormalCoords:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., NS_STANDARD) have been
@@ -264,6 +311,9 @@ Version 7.4  [ (to be announced) ]
             - New class constant degree.
             - Added an alias Perm<6>::cachedOrder(), for consistency with the
               other permutation classes Perm<2..15>.
+            - Added a spaceship operator (<=>) for comparisons under the Sn
+              ordering.  This has the effect of implementing all comparison
+              operators, not just less-than (<) as before.
         Enum PermCodeType:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_CODE_IMAGES) have been
@@ -272,13 +322,26 @@ Version 7.4  [ (to be announced) ]
               in the regina:: namespace.
         Class Rational:
             - New function str().
+            - Added a spaceship operator (<=>) for comparisons.
         Class Rotation3D:
             - New class to support floating-point 3-D geometry.
         Class SatAnnulus:
             - Routine attachLST() now checks its preconditions, and throws
               an exception if they fail.
+        Class SatBlock:
+            - Added a spaceship operator (<=>) for ordering.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
         Class Segment3D:
             - New class to support floating-point 3-D geometry.
+        Struct SFSFibre:
+            - Added a spaceship operator (<=>) for comparisons.  This has the
+              effect of implementing all comparison operators, not just
+              less-than (<) as before.
+        Class SFSpace:
+            - Added a spaceship operator (<=>) for aesthetic comparisons.
+              This has the effect of implementing all comparison operators,
+              not just less-than (<) as before.
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().
@@ -413,6 +476,12 @@ Version 7.4  [ (to be announced) ]
             - Now checks its preconditions and throws an exception if they fail.
         Function rowBasisAndOrthComp():
             - Now checks its preconditions and throws an exception if they fail.
+        Functions simpler(), simplerThreeWay():
+            - The old simpler() functions that compare 2x2 matrices are now
+              deprecated (both the 2-argument and the 4-argument variants).
+            - To replace them, there are new simplerThreeWay() functions that
+              return a std::strong_ordering instead of a bool (likewise with
+              both 2-argument and 4-argument variants).
         Function torsionAutInverse():
             - Now checks some of its preconditions and throws an exception
               if they fail.

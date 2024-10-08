@@ -292,15 +292,20 @@ class LightweightSequence {
         bool operator == (const LightweightSequence& rhs) const;
 
         /**
-         * Tests whether this sequence is lexicographically smaller than the
-         * given sequence.  The sequences need not be the same size.
+         * Compares two sequences lexicographically.
+         * The sequences need not be the same size.
          *
-         * \param rhs the sequence to compare with this.
-         * \return \c true if this is strictly lexicographically
-         * smaller than \a rhs, or \c false if this is either
-         * lexicographically greater than or equal to \a rhs.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \param rhs the sequence to compare this with.
+         * \return The result of the lexicographical comparison between this
+         * and the given sequence.  This will be of the strongest possible
+         * comparison category type for comparing objects of type \a T
+         * (so, for example, the return type will be `std::strong_ordering`
+         * when working with sequences of integers).
          */
-        bool operator < (const LightweightSequence& rhs) const;
+        auto operator <=> (const LightweightSequence& rhs) const;
 
         /**
          * A binary function object for comparing subsequences, for use in
@@ -639,16 +644,23 @@ inline bool LightweightSequence<T>::operator == (
 }
 
 template <typename T>
-inline bool LightweightSequence<T>::operator < (
-        const LightweightSequence<T>& rhs) const {
-    for (size_t i = 0; i < rhs.size_; ++i)
-        if (i >= size_ || data_[i] < rhs.data_[i])
-            return true;
-        else if (rhs.data_[i] < data_[i])
-            return false;
-    // The sequences match for the first rhs.size_ elements, and
-    // this sequence is at least as long as rhs.
-    return false;
+inline auto LightweightSequence<T>::operator <=> (
+        const LightweightSequence& rhs) const {
+#if defined(LEXCMP_FOUND)
+    return std::lexicographical_compare_three_way(
+        data_, data_ + size_, rhs.data_, rhs.data_ + rhs.size_);
+#else
+    auto i = data_;
+    auto j = rhs.data_;
+    for ( ; i != data_ + size_ && j != rhs.data_ + rhs.size_; ++i, ++j)
+        if (auto c = (*i <=> *j); c != 0)
+            return c;
+    if (i != data_ + size_)
+        return std::strong_ordering::greater; // LHS is longer
+    if (j != rhs.data_ + rhs.size_)
+        return std::strong_ordering::less; // RHS is longer
+    return std::strong_ordering::equal; // sequences are identical
+#endif
 }
 
 template <typename T>

@@ -268,20 +268,6 @@ class TxICore : public Output<TxICore> {
         virtual bool operator == (const TxICore& other) const = 0;
 
         /**
-         * Determines if this and the given `T x I` triangulation
-         * are of different types and/or have different parameters.
-         *
-         * If this returns \c false (i.e., both objects compare as equal),
-         * then the triangulations returned by core() should also be
-         * combinatorially identical.
-         *
-         * \param other the `T x I` triangulation to compare with this.
-         * \return \c true if and only if this and the given triangulation
-         * are of different types and/or have different parameters.
-         */
-        bool operator != (const TxICore& other) const;
-
-        /**
          * Writes the name of this specific triangulation of
          * `T x I` to the given output stream.  The name will be
          * written as a human-readable string.
@@ -661,10 +647,6 @@ inline const Matrix2& TxICore::bdryReln(int whichBdry) const {
 
 inline const Matrix2& TxICore::parallelReln() const {
     return parallelReln_;
-}
-
-inline bool TxICore::operator != (const TxICore& other) const {
-    return ! ((*this) == other);
 }
 
 inline void TxICore::writeTextShort(std::ostream& out) const {

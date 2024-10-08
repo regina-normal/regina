@@ -237,35 +237,32 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Determines if this and the given specifier are identical.
      *
-     * \param other the specifier to compare with this.
+     * \param rhs the specifier to compare with this.
      * \return \c true if and only if this and the given specifier are
      * equal.
      */
-    bool operator == (const FacetSpec<dim>& other) const;
+    bool operator == (const FacetSpec<dim>& rhs) const;
     /**
-     * Determines if this and the given specifier are not identical.
+     * Compares two specifiers, following the same ordering that is used for
+     * iteration.
      *
-     * \param other the specifier to compare with this.
-     * \return \c true if and only if this and the given specifier are
-     * not equal.
-     */
-    bool operator != (const FacetSpec<dim>& other) const;
-    /**
-     * Determines if this is less than the given specifier.
+     * Specifically: specifiers are compared first by simplex number and then
+     * by facet number.  The overall boundary is considered greater than any
+     * "real" simplex facet, the before-the-start value is considered smaller
+     * than anything else, and the past-the-end value is considered greater
+     * than anything else.
      *
-     * \param other the specifier to compare with this.
-     * \return \c true if and only if this is less than the given
+     * This generates all of the usual comparison operators, including
+     * `<`, `<=`, `>`, and `>=`.
+     *
+     * \python This spaceship operator `x <=> y` is not available, but the
+     * other comparison operators that it generates _are_ available.
+     *
+     * \param rhs the specifier to compare with this.
+     * \return The result of the comparison between this and the given
      * specifier.
      */
-    bool operator < (const FacetSpec<dim>& other) const;
-    /**
-     * Determines if this is less than or equal to the given specifier.
-     *
-     * \param other the specifier to compare with this.
-     * \return \c true if and only if this is less than or equal to
-     * the given specifier.
-     */
-    bool operator <= (const FacetSpec<dim>& other) const;
+    std::strong_ordering operator <=> (const FacetSpec<dim>& rhs) const;
 
     /**
      * Writes the tight encoding of this specifier to the given output
@@ -406,23 +403,19 @@ inline FacetSpec<dim> FacetSpec<dim>::operator -- (int) {
 }
 
 template <int dim>
-inline bool FacetSpec<dim>::operator == (const FacetSpec<dim>& other) const {
-    return (simp == other.simp && facet == other.facet);
+inline bool FacetSpec<dim>::operator == (const FacetSpec& rhs) const {
+    return (simp == rhs.simp && facet == rhs.facet);
 }
 
 template <int dim>
-inline bool FacetSpec<dim>::operator != (const FacetSpec<dim>& other) const {
-    return (simp != other.simp || facet != other.facet);
-}
-
-template <int dim>
-inline bool FacetSpec<dim>::operator < (const FacetSpec<dim>& other) const {
-    return (simp < other.simp || (simp == other.simp && facet < other.facet));
-}
-
-template <int dim>
-inline bool FacetSpec<dim>::operator <= (const FacetSpec<dim>& other) const {
-    return (simp < other.simp || (simp == other.simp && facet <= other.facet));
+inline std::strong_ordering FacetSpec<dim>::operator <=> (const FacetSpec& rhs)
+        const {
+    if (simp < rhs.simp)
+        return std::strong_ordering::less;
+    else if (simp > rhs.simp)
+        return std::strong_ordering::greater;
+    else
+        return facet <=> rhs.facet;
 }
 
 template <int dim>

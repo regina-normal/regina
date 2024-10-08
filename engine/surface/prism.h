@@ -84,36 +84,23 @@ struct PrismSpec {
     PrismSpec(size_t newTetIndex, int newEdge);
     /**
      * Creates a new prism specifier that is a clone of the given specifier.
-     *
-     * \param cloneMe the prism specifier to clone.
      */
-    PrismSpec(const PrismSpec& cloneMe) = default;
+    PrismSpec(const PrismSpec&) = default;
 
     /**
      * Copies the values from the given prism specifier into this specifier.
      *
-     * \param cloneMe the prism specifier whose values should be copied.
      * \return a reference to this prism specifier.
      */
-    PrismSpec& operator = (const PrismSpec& cloneMe) = default;
+    PrismSpec& operator = (const PrismSpec&) = default;
     /**
      * Determines if this and the given prism specifier contain identical
      * information.
      *
-     * \param other the prism specifier to compare with this.
      * \return \c true if and only if this and the given prism specifier
      * contain identical information.
      */
-    bool operator == (const PrismSpec& other) const;
-    /**
-     * Determines if this and the given prism specifier contain different
-     * information.
-     *
-     * \param other the prism specifier to compare with this.
-     * \return \c true if and only if this and the given prism specifier
-     * contain different information.
-     */
-    bool operator != (const PrismSpec& other) const;
+    bool operator == (const PrismSpec&) const = default;
 
     friend std::ostream& operator << (std::ostream& out,
         const PrismSpec& spec);
@@ -135,13 +122,6 @@ std::ostream& operator << (std::ostream& out, const PrismSpec& spec);
 
 inline PrismSpec::PrismSpec(size_t newTetIndex, int newEdge) :
         tetIndex(newTetIndex), edge(newEdge) {
-}
-
-inline bool PrismSpec::operator == (const PrismSpec& other) const {
-    return (tetIndex == other.tetIndex && edge == other.edge);
-}
-inline bool PrismSpec::operator != (const PrismSpec& other) const {
-    return (tetIndex != other.tetIndex || edge != other.edge);
 }
 
 inline std::ostream& operator << (std::ostream& out, const PrismSpec& spec) {

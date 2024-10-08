@@ -142,27 +142,6 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     components.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::__ne
-static const char *__ne =
-R"doc(Determines if this link is not identical to the given link.
-
-Here "identical" means that both links follow exactly the same paths
-through 3-dimensional space, with their components and nodes stored in
-exactly the same order.
-
-If any rendering radii have been fixed (e.g., via setRadius()), these
-will be ignored for the purpose of this comparison.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating point comparisons.
-
-Parameter ``other``:
-    the link to compare with this.
-
-Returns:
-    ``True`` if and only if the two links are not identical.)doc";
-
 // Docstring regina::python::doc::SpatialLink_::clearRadius
 static const char *clearRadius =
 R"doc(Removes any user-specified radius to use when rendering this link.

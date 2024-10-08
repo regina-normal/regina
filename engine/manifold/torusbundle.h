@@ -169,21 +169,6 @@ class TorusBundle : public Manifold {
          */
         bool operator == (const TorusBundle& compare) const;
 
-        /**
-         * Determines whether this and the given object do not contain
-         * precisely the same presentations of the same torus bundle.
-         *
-         * This routine does _not_ test for homeomorphism; instead it compares
-         * the specific monodromies.  If you have two objects that represent
-         * same torus bundle using two different monodromies, they will
-         * be treated as not equal by this routine.
-         *
-         * \param compare the presentation with which this will be compared.
-         * \return \c true if and only if this and the given object do not
-         * contain identical presentations of the same torus bundle.
-         */
-        bool operator != (const TorusBundle& compare) const;
-
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -348,10 +333,6 @@ inline void TorusBundle::swap(TorusBundle& other) noexcept {
 
 inline bool TorusBundle::operator == (const TorusBundle& compare) const {
     return monodromy_ == compare.monodromy_;
-}
-
-inline bool TorusBundle::operator != (const TorusBundle& compare) const {
-    return monodromy_ != compare.monodromy_;
 }
 
 inline void swap(TorusBundle& a, TorusBundle& b) noexcept {

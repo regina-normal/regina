@@ -148,19 +148,27 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal, rbase::vertex)
         .def("edge", &Triangulation<dim>::edge,
             pybind11::return_value_policy::reference_internal, rbase::edge)
-        // Use static casts because GCC struggles with overload_cast here:
         .def("triangle",
-            static_cast<regina::Face<dim, 2>* (Triangulation<dim>::*)(size_t)>(
-                &Triangulation<dim>::triangle),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use face<2>(), which triangle() is an alias for.
+            overload_cast<size_t>(&Triangulation<dim>::template face<2>,
+                pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::triangle)
         .def("tetrahedron",
-            static_cast<regina::Face<dim, 3>* (Triangulation<dim>::*)(size_t)>(
-                &Triangulation<dim>::tetrahedron),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use face<3>(), which tetrahedron() is an alias for.
+            overload_cast<size_t>(&Triangulation<dim>::template face<3>,
+                pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             rbase::tetrahedron)
         .def("pentachoron",
-            static_cast<regina::Face<dim, 4>* (Triangulation<dim>::*)(size_t)>(
-                &Triangulation<dim>::pentachoron),
+            // gcc-10 struggles with casting: even a static_cast fails here
+            // because gcc-10 cannot handle the "auto" return type.
+            // Just use face<4>(), which pentachoron() is an alias for.
+            overload_cast<size_t>(&Triangulation<dim>::template face<4>,
+                pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             rbase::pentachoron)
         .def("pairing", &Triangulation<dim>::pairing, rbase::pairing)
@@ -317,7 +325,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     });
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
-    regina::python::packet_eq_operators(c, rbase::__eq, rbase::__ne);
+    regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
     // The ListView classes for faces() are wrapped in face-bindings.h,

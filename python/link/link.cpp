@@ -81,7 +81,7 @@ void addLink(pybind11::module_& m) {
         .def("__bool__", &StrandRef::operator bool, rdoc::__as_bool)
     ;
     regina::python::add_output_ostream(s);
-    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(s, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(Crossing)
 
@@ -408,7 +408,7 @@ void addLink(pybind11::module_& m) {
     ;
     regina::python::add_output(l);
     regina::python::add_tight_encoding(l);
-    regina::python::packet_eq_operators(l, rdoc::__eq, rdoc::__ne);
+    regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
 
     regina::python::addListView<decltype(Link().crossings())>(m);

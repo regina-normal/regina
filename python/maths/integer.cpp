@@ -38,6 +38,7 @@
 #include "../docstrings/maths/integer.h"
 
 using pybind11::overload_cast;
+using regina::python::doc::common::neq_value;
 
 template <bool inf>
 void addIntegerBase(pybind11::module_& m, const char* className) {
@@ -82,16 +83,12 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("swap", &Int::swap, rdoc::swap)
         .def(pybind11::self == AltInt(), rdoc::__eq_2)
         .def(pybind11::self == long(), rdoc::__eq_3)
-        .def(pybind11::self != AltInt(), rdoc::__ne_2)
-        .def(pybind11::self != long(), rdoc::__ne_3)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
-        .def(pybind11::self < long(), rdoc::__lt_2)
-        .def(pybind11::self > pybind11::self, rdoc::__gt)
-        .def(pybind11::self > long(), rdoc::__gt_2)
-        .def(pybind11::self <= pybind11::self, rdoc::__le)
-        .def(pybind11::self <= long(), rdoc::__le_2)
-        .def(pybind11::self >= pybind11::self, rdoc::__ge)
-        .def(pybind11::self >= long(), rdoc::__ge_2)
+        .def(pybind11::self != AltInt(), neq_value)
+        .def(pybind11::self != long(), neq_value)
+        .def(pybind11::self < long(), rdoc::__cmp_2)
+        .def(pybind11::self > long(), rdoc::__cmp_2)
+        .def(pybind11::self <= long(), rdoc::__cmp_2)
+        .def(pybind11::self >= long(), rdoc::__cmp_2)
         .def("inc", [](Int& i) {
             return i++;
         }, rdoc::__inc)
@@ -163,7 +160,8 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
 
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding, rdoc::hash);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
     m.def("tightEncoding", static_cast<std::string(&)(Int)>(

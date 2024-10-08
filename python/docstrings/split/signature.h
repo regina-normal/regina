@@ -99,25 +99,6 @@ Exception ``InvalidArgument``:
 Parameter ``str``:
     a string representation of a splitting surface signature.)doc";
 
-// Docstring regina::python::doc::Signature_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given signature are not identical.
-
-To be considered identical, it is not enough for two signatures to be
-isomorphic: their cycles and cycle groups must be presented in the
-same order, using the same symbols which must likewise be presented in
-the same order.
-
-If either signature was parsed from a string, any choice of formatting
-(e.g., punctuation and/or whitespace) is irrelevant; only the
-mathematical content of the signatures is important here.
-
-Parameter ``other``:
-    the signature to compare with this.
-
-Returns:
-    ``True`` if and only if this and *other* are not identical.)doc";
-
 // Docstring regina::python::doc::Signature_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the given signatures.

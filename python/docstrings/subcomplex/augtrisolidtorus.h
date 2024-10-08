@@ -87,37 +87,6 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of augmented triangular solid torus.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::__ne
-static const char *__ne =
-R"doc(Determines whether this and the given structure represent different
-types of augmented triangular solid torus.
-
-Specifically, two structures will compare as equal if and only if:
-
-* in both structures, the layered solid tori attached to the same
-  numbered annuli have the same three integer parameters, and have
-  their top level edge groups attached to the annuli in the same
-  manner;
-
-* either both structures do not include a layered chain, or else both
-  structures do include a layered chain of the same type and length,
-  attached to the same numbered annulus.
-
-This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
-account for the many symmetries in an augmented triangular solid
-torus).
-
-Parameter ``other``:
-    the structure with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given structure represent
-    different types of augmented triangular solid torus.)doc";
-
 // Docstring regina::python::doc::AugTriSolidTorus_::augTorus
 static const char *augTorus =
 R"doc(Returns the layered solid torus attached to the requested annulus on

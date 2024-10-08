@@ -323,20 +323,6 @@ class Cut : public ShortOutput<Cut> {
         bool operator == (const Cut& rhs) const;
 
         /**
-         * Determines if this and the given cut are different.
-         *
-         * Two cuts are considered identical if they describe the same
-         * partition of simplices into sides 0 and 1.
-         *
-         * It does not matter if this and the given cut have different
-         * sizes; in this case they will be considered different.
-         *
-         * \param rhs the cut to compare with this.
-         * \return \c true if and only if this and the given cut are different.
-         */
-        bool operator != (const Cut& rhs) const;
-
-        /**
          * Partitions the given triangulation using this cut.
          *
          * This routine will return _two_ triangulations: the first
@@ -635,10 +621,6 @@ inline void Cut::swap(Cut& other) noexcept {
 
 inline bool Cut::operator == (const Cut& rhs) const {
     return size_ == rhs.size_ && std::equal(side_, side_ + size_, rhs.side_);
-}
-
-inline bool Cut::operator != (const Cut& rhs) const {
-    return size_ != rhs.size_ || ! std::equal(side_, side_ + size_, rhs.side_);
 }
 
 template <int dim>

@@ -749,27 +749,6 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
         bool operator == (const BanConstraintBase& other) const;
 
         /**
-         * Determines if this and the given object do not ban and mark the same
-         * tableaux coordinates as each other.
-         *
-         * Even if this and the given object are of different subclasses
-         * of BanConstraintBase, as long as they ban the same coordinates
-         * and mark the same coordinates, they will compare as equal (i.e.,
-         * this inequality comparison will return \c false).
-         *
-         * It does not matter whether the two objects use the same underlying
-         * tableaux.  However, if the underlying tableaux use triangulations of
-         * different sizes and/or different broad classes of vector encodings
-         * (as described by LPSystem), then these two objects will compare as
-         * not equal.
-         *
-         * \param other the object to compare with this.
-         * \return \c true if and only if this and the object do not ban and
-         * mark the same tableaux coordinates, as described above.
-         */
-        bool operator != (const BanConstraintBase& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -852,7 +831,6 @@ class BanNone : public ShortOutput<BanNone> {
         void enforceBans(LPData<LPConstraint, IntType>&) const {}
 
         bool operator == (const BanNone&) const { return true; }
-        bool operator != (const BanNone&) const { return false; }
 
         void writeTextShort(std::ostream& out) const {
             out << "Nothing banned or marked";
@@ -1182,11 +1160,6 @@ inline bool BanConstraintBase::operator == (const BanConstraintBase& other)
     const size_t nCols = system_.coords(tri_.size());
     return std::equal(banned_, banned_ + nCols, other.banned_) &&
         std::equal(marked_, marked_ + nCols, other.marked_);
-}
-
-inline bool BanConstraintBase::operator != (const BanConstraintBase& other)
-        const {
-    return ! ((*this) == other);
 }
 
 inline bool BanBoundary::supported(NormalEncoding enc) {

@@ -2790,13 +2790,7 @@ class ChildIterator {
          *
          * \return true if and only if the two iterators are equal.
          */
-        bool operator == (const ChildIterator& rhs) const;
-        /**
-         * Tests whether this and the given iterator are different.
-         *
-         * \return true if and only if the two iterators are different.
-         */
-        bool operator != (const ChildIterator& rhs) const;
+        bool operator == (const ChildIterator&) const = default;
 
         /**
          * Preincrement operator.
@@ -2995,16 +2989,6 @@ class SubtreeIterator {
          * \return true if and only if the two iterators are equal.
          */
         bool operator == (const SubtreeIterator& rhs) const;
-        /**
-         * Tests whether this and the given iterator are different.
-         *
-         * This routine only compares the packets that each iterator
-         * is currently pointing to.  It does not compare the roots of the
-         * subtrees themselves.
-         *
-         * \return true if and only if the two iterators are different.
-         */
-        bool operator != (const SubtreeIterator& rhs) const;
 
         /**
          * Preincrement operator.
@@ -3205,15 +3189,6 @@ class PacketChildren {
          * over children of the same packet.
          */
         bool operator == (const PacketChildren& rhs) const;
-
-        /**
-         * Determines whether this and the given object are designed to
-         * iterate over children of different parent packets.
-         *
-         * \return \c true if and only if this object and \a rhs iterate
-         * over children of different packets.
-         */
-        bool operator != (const PacketChildren& rhs) const;
 };
 
 /**
@@ -3348,15 +3323,6 @@ class PacketDescendants {
          * over descendants of the same packet.
          */
         bool operator == (const PacketDescendants& rhs) const;
-
-        /**
-         * Determines whether this and the given object are designed to
-         * iterate over strict descendants of different packets.
-         *
-         * \return \c true if and only if this object and \a rhs iterate
-         * over descendants of different packets.
-         */
-        bool operator != (const PacketDescendants& rhs) const;
 };
 
 /**
@@ -3420,35 +3386,13 @@ class PacketShell {
         /**
          * Identifies if this shell refers to the given packet.
          *
-         * This test is also available the other way around (with PacketShell
-         * on the right); this reversed test is defined as a global function.
+         * This test can also be used the other way around (with Packet on
+         * the left and PacketShell on the right).
          *
          * \param packet the packet to test against; this may be \c null.
          * \return \c true if and only if this shell refers to the given packet.
          */
         bool operator == (const Packet* packet) const;
-
-        /**
-         * Identifies if this and the given shell refer to different
-         * underlying packets.
-         *
-         * \param shell the shell to compare with this.
-         * \return \c true if and only if both shells refer to different
-         * packets.
-         */
-        bool operator != (const PacketShell& shell) const;
-
-        /**
-         * Identifies if this shell does not refer to the given packet.
-         *
-         * This test is also available the other way around (with PacketShell
-         * on the right); this reversed test is defined as a global function.
-         *
-         * \param packet the packet to test against; this may be \c null.
-         * \return \c true if and only if this shell does not refer to the
-         * given packet.
-         */
-        bool operator != (const Packet* packet) const;
 
         /**
          * Returns the label associated with this individual packet.
@@ -3522,35 +3466,6 @@ class PacketShell {
          */
         std::string internalID() const;
 };
-
-/**
- * Identifies if the given shell refers to the given packet.
- *
- * This test is also available the other way around (with PacketShell on
- * the left); this reversed test is defined as a member function of PacketShell.
- *
- * \param packet the packet to test against; this may be \c null.
- * \param shell the packet shell to test against.
- * \return \c true if and only if the given shell refers to the given packet.
- *
- * \ingroup packet
- */
-bool operator == (const Packet* packet, PacketShell shell);
-
-/**
- * Identifies if the given shell does not refer to the given packet.
- *
- * This test is also available the other way around (with PacketShell on
- * the left); this reversed test is defined as a member function of PacketShell.
- *
- * \param packet the packet to test against; this may be \c null.
- * \param shell the packet shell to test against.
- * \return \c true if and only if the given shell does not refer to the
- * given packet.
- *
- * \ingroup packet
- */
-bool operator != (const Packet* packet, PacketShell shell);
 
 /**
  * An object that can be registered to listen for packet events.
@@ -4328,18 +4243,6 @@ inline ChildIterator<const_>::ChildIterator(
 }
 
 template <bool const_>
-inline bool ChildIterator<const_>::operator == (const ChildIterator& rhs)
-        const {
-    return current_ == rhs.current_;
-}
-
-template <bool const_>
-inline bool ChildIterator<const_>::operator != (const ChildIterator& rhs)
-        const {
-    return current_ != rhs.current_;
-}
-
-template <bool const_>
 inline ChildIterator<const_>& ChildIterator<const_>::operator ++ () {
     current_ = current_->nextSibling();
     return *this;
@@ -4367,12 +4270,6 @@ template <bool const_>
 inline bool SubtreeIterator<const_>::operator == (const SubtreeIterator& rhs)
         const {
     return current_ == rhs.current_;
-}
-
-template <bool const_>
-inline bool SubtreeIterator<const_>::operator != (const SubtreeIterator& rhs)
-        const {
-    return current_ != rhs.current_;
 }
 
 template <bool const_>
@@ -4424,11 +4321,6 @@ bool PacketChildren<const_>::operator == (const PacketChildren& rhs) const {
 }
 
 template <bool const_>
-bool PacketChildren<const_>::operator != (const PacketChildren& rhs) const {
-    return parent_ == rhs.parent_;
-}
-
-template <bool const_>
 inline SubtreeIterator<const_> PacketDescendants<const_>::begin() const {
     return SubtreeIterator<const_>(subtree_, subtree_->firstChild());
 }
@@ -4444,12 +4336,6 @@ bool PacketDescendants<const_>::operator == (const PacketDescendants& rhs)
     return subtree_ == rhs.subtree_;
 }
 
-template <bool const_>
-bool PacketDescendants<const_>::operator != (const PacketDescendants& rhs)
-        const {
-    return subtree_ == rhs.subtree_;
-}
-
 // Inline functions for PacketShell
 
 inline PacketShell::PacketShell(const Packet* packet) : packet_(packet) {
@@ -4461,14 +4347,6 @@ inline bool PacketShell::operator == (const PacketShell& shell) const {
 
 inline bool PacketShell::operator == (const Packet* packet) const {
     return (packet_ == packet);
-}
-
-inline bool PacketShell::operator != (const PacketShell& shell) const {
-    return (packet_ != shell.packet_);
-}
-
-inline bool PacketShell::operator != (const Packet* packet) const {
-    return (packet_ != packet);
 }
 
 inline const std::string& PacketShell::label() const {
@@ -4493,14 +4371,6 @@ inline const std::set<std::string>& PacketShell::tags() const {
 
 inline std::string PacketShell::internalID() const {
     return packet_->internalID();
-}
-
-inline bool operator == (const Packet* packet, PacketShell shell) {
-    return (shell == packet);
-}
-
-inline bool operator != (const Packet* packet, PacketShell shell) {
-    return (shell != packet);
 }
 
 // Inline functions for PacketListener

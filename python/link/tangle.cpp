@@ -105,7 +105,7 @@ void addTangle(pybind11::module_& m) {
         }, pybind11::arg("tokens"), rdoc::fromOrientedGauss_2)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     // No need to register the ListView class for crossings(), since
     // this is the same class used by Link.

@@ -178,27 +178,6 @@ class SnapPeaCensusTri: public StandardTriangulation {
         bool operator == (const SnapPeaCensusTri& compare) const;
 
         /**
-         * Determines whether this and the given structure represent
-         * different triangulations from the SnapPea census.
-         *
-         * The SnapPea census manifolds \c x101 and \c x103 are homeomorphic;
-         * however, the corresponding triangulations represented by
-         * SnapPeaCensusTri will compare as different (since this class
-         * describes the specific triangulation, not the underlying manifold).
-         *
-         * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
-         * SnappedBall and TriSolidTorus): two objects compare as equal if and
-         * only if they have the same combinatorial parameters (which for this
-         * subclass means they describe isomorphic structures).
-         *
-         * \param compare the structure with which this will be compared.
-         * \return \c true if and only if this and the given structure
-         * represent different SnapPea census triangulations.
-         */
-        bool operator != (const SnapPeaCensusTri& compare) const;
-
-        /**
          * Determines if the given triangulation component is one of the
          * smallest SnapPea census triangulations.
          *
@@ -273,11 +252,6 @@ inline size_t SnapPeaCensusTri::index() const {
 inline bool SnapPeaCensusTri::operator == (const SnapPeaCensusTri& compare)
         const {
     return (section_ == compare.section_ && index_ == compare.index_);
-}
-
-inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
-        const {
-    return (section_ != compare.section_ || index_ != compare.index_);
 }
 
 inline void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept {

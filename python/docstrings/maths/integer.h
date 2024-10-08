@@ -132,6 +132,48 @@ Parameter ``other``:
 Returns:
     the sum *this* plus *other*.)doc";
 
+// Docstring regina::python::doc::IntegerBase_::__cmp
+static const char *__cmp =
+R"doc(Compares this to the given integer.
+
+This is a numerical comparison; that is, it uses the usual ordering of
+the integers. Infinity is considered greater than any integer.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the integer with which this will be compared.
+
+Returns:
+    The result of the numerical comparison between this and the given
+    integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__cmp_2
+static const char *__cmp_2 =
+R"doc(Compares this to the given integer.
+
+This is a numerical comparison; that is, it uses the usual ordering of
+the integers. Infinity is considered greater than any integer.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the integer with which this will be compared.
+
+Returns:
+    The result of the numerical comparison between this and the given
+    integer.)doc";
+
 // Docstring regina::python::doc::IntegerBase_::__copy
 static const char *__copy =
 R"doc(Initialises this integer to the given value.
@@ -232,48 +274,6 @@ Parameter ``rhs``:
 
 Returns:
     ``True`` if and only if this and the given integer are equal.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__ge
-static const char *__ge =
-R"doc(Determines if this is greater than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__ge_2
-static const char *__ge_2 =
-R"doc(Determines if this is greater than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__gt
-static const char *__gt =
-R"doc(Determines if this is greater than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than the given integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__gt_2
-static const char *__gt_2 =
-R"doc(Determines if this is greater than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than the given integer.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::__iadd
 static const char *__iadd =
@@ -587,48 +587,6 @@ Parameter ``other``:
 Returns:
     a reference to this integer with its new value.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::__le
-static const char *__le =
-R"doc(Determines if this is less than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__le_2
-static const char *__le_2 =
-R"doc(Determines if this is less than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__lt
-static const char *__lt =
-R"doc(Determines if this is less than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than the given integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__lt_2
-static const char *__lt_2 =
-R"doc(Determines if this is less than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than the given integer.)doc";
-
 // Docstring regina::python::doc::IntegerBase_::__mod
 static const char *__mod =
 R"doc(Determines the remainder when this integer is divided by the given
@@ -698,36 +656,6 @@ Parameter ``other``:
 
 Returns:
     the product *this* times *other*.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__ne
-static const char *__ne =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__ne_2
-static const char *__ne_2 =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__ne_3
-static const char *__ne_3 =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::__sub
 static const char *__sub =

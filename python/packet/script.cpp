@@ -96,7 +96,7 @@ void addScript(pybind11::module_& m) {
             rdoc::unlistenVariables)
     ;
     regina::python::add_output(c);
-    regina::python::packet_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::packet_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<Script>(m, rdoc::global_swap);
 

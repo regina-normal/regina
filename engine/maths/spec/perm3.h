@@ -729,22 +729,10 @@ class Perm<3> {
          * This is true if and only if both permutations have the same
          * images for 0, 1 and 2.
          *
-         * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
          * are equal.
          */
-        constexpr bool operator == (const Perm<3>& other) const;
-
-        /**
-         * Determines if this differs from the given permutation.
-         * This is true if and only if the two permutations have
-         * different images for at least one of 0, 1 or 2.
-         *
-         * \param other the permutation with which to compare this.
-         * \return \c true if and only if this and the given permutation
-         * differ.
-         */
-        constexpr bool operator != (const Perm<3>& other) const;
+        constexpr bool operator == (const Perm&) const = default;
 
         /**
          * Lexicographically compares the images of (0,1,2) under this
@@ -796,18 +784,25 @@ class Perm<3> {
         constexpr Perm<3> operator ++(int);
 
         /**
-         * Determines if this appears earlier than the given permutation
-         * in the array Perm<3>::Sn.
+         * Compares two permutations according to which appears earlier in the
+         * array Perm<3>::Sn.
          *
          * Note that this is _not_ the same ordering of permutations as
-         * the ordering implied by compareWith().  This is, however,
+         * the ordering implied by compareWith().  This ordering is, however,
          * consistent with the ordering implied by the ++ operators,
-         * and this order is also faster to compute than compareWith().
+         * and this ordering is also faster to compute than compareWith().
          *
-         * \param rhs the permutation to compare this against.
-         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \return The result that indicates which permutation appears earlier
+         * in \a Sn.
          */
-        constexpr bool operator < (const Perm<3>& rhs) const;
+        constexpr std::strong_ordering operator <=> (const Perm&) const =
+            default;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -1382,14 +1377,6 @@ inline constexpr int Perm<3>::pre(int image) const {
     return imageTable[invS3[code_]][image];
 }
 
-inline constexpr bool Perm<3>::operator == (const Perm<3>& other) const {
-    return (code_ == other.code_);
-}
-
-inline constexpr bool Perm<3>::operator != (const Perm<3>& other) const {
-    return (code_ != other.code_);
-}
-
 inline constexpr int Perm<3>::compareWith(const Perm<3>& other) const {
     // Computing orderedS3Index() is very fast.
     // Use this instead of comparing images one at a time.
@@ -1413,10 +1400,6 @@ inline constexpr Perm<3> Perm<3>::operator ++(int) {
     if (++code_ == 6)
         code_ = 0;
     return ans;
-}
-
-inline constexpr bool Perm<3>::operator < (const Perm<3>& rhs) const {
-    return code_ < rhs.code_;
 }
 
 inline constexpr Perm<3> Perm<3>::rot(int i) {

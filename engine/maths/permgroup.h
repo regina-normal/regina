@@ -269,22 +269,6 @@ class PermGroup : public Output<PermGroup<n, cached>> {
                  * permutation, or \c false if they do not.
                  */
                 bool operator == (const iterator& rhs) const;
-                /**
-                 * Compares this with the given iterator for inequality.
-                 *
-                 * To be considered equal, two iterators must be pointing
-                 * to the same permutation within the same group.
-                 * (The second condition means that the underlying PermGroup
-                 * pointers must be the same - it is not enough to have
-                 * two distinct PermGorup objects with identical contents.)
-                 *
-                 * Two past-the-end iterators will always be considered equal.
-                 *
-                 * \param rhs the iterator to compare this with.
-                 * \return \c false if the iterators point to the same
-                 * permutation, or \c true if they do not.
-                 */
-                bool operator != (const iterator& rhs) const;
 
                 /**
                  * The preincrement operator.
@@ -481,23 +465,6 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * the same permutations.
          */
         bool operator == (const PermGroup& other) const;
-        /**
-         * Indicates whether this and the given group are different.
-         *
-         * This does _not_ test group isomorphism, and it does _not_
-         * test whether the two groups use the same internal representation.
-         * Instead it tests _membership_; that is, whether or not the two
-         * groups contain precisely the same set of permutations.
-         *
-         * As a result, this test is not trivial.  It _is_ small polynomial
-         * time in \a n, but it is not as fast as (for example) directly
-         * comparing the internal representations.
-         *
-         * \param other the group to compare this with.
-         * \return \c true if and only if there is some permutation that
-         * belongs to one group but not the other.
-         */
-        bool operator != (const PermGroup& other) const;
 
         /**
          * Returns a C++ iterator pointing to the first element of this group.
@@ -629,19 +596,6 @@ inline bool PermGroup<n, cached>::iterator::operator == (
     } else {
         // This is past-the-end.
         return (! rhs);
-    }
-}
-
-template <int n, bool cached>
-inline bool PermGroup<n, cached>::iterator::operator != (
-        const PermGroup<n, cached>::iterator& rhs) const {
-    // See the == operator for an explanation.
-    if (*this) {
-        // This is dereferenceable.
-        return (! rhs) || (current_ != rhs.current_) || (group_ != rhs.group_);
-    } else {
-        // This is past-the-end.
-        return rhs;
     }
 }
 
@@ -796,11 +750,6 @@ inline typename Perm<n>::Index PermGroup<n, cached>::size() const {
     for (int i = 1; i < n; ++i)
         ans *= static_cast<Index>(count_[i]);
     return ans;
-}
-
-template <int n, bool cached>
-inline bool PermGroup<n, cached>::operator != (const PermGroup& other) const {
-    return ! ((*this) == other);
 }
 
 template <int n, bool cached>

@@ -86,7 +86,7 @@ struct SFSFibre {
     /**
      * Creates a new uninitialised exceptional fibre.
      */
-    SFSFibre() = default;
+    constexpr SFSFibre() = default;
     /**
      * Creates a new exceptional fibre with the given parameters.
      *
@@ -95,49 +95,40 @@ struct SFSFibre {
      * \param newBeta the second parameter of this exceptional fibre;
      * this must have no common factors with the first parameter \a newAlpha.
      */
-    SFSFibre(long newAlpha, long newBeta);
+    constexpr SFSFibre(long newAlpha, long newBeta);
     /**
      * Creates a new exceptional fibre that is a clone of the given
      * fibre.
-     *
-     * \param cloneMe the exceptional fibre to clone.
      */
-    SFSFibre(const SFSFibre& cloneMe) = default;
+    constexpr SFSFibre(const SFSFibre&) = default;
 
     /**
      * Makes this exceptional fibre a clone of the given fibre.
-     *
-     * \param cloneMe the exceptional fibre to clone.
      */
-    SFSFibre& operator = (const SFSFibre& cloneMe) = default;
+    SFSFibre& operator = (const SFSFibre&) = default;
     /**
      * Determines if this and the given exceptional fibre are identical.
      * This requires both fibres to have the same values for \a alpha
      * and the same values for \a beta.
      *
-     * \param compare the fibre with which this will be compared.
      * \return \c true if and only if this and the given fibre are
      * identical.
      */
-    bool operator == (const SFSFibre& compare) const;
+    constexpr bool operator == (const SFSFibre&) const = default;
     /**
-     * Determines if this and the given exceptional fibre are different.
-     * This requires the fibres to have different values for \a alpha and/or
-     * to have different values for \a beta.
+     * Compares two exceptional fibres.
+     * Fibres are ordered first by \a alpha and then by \a beta.
      *
-     * \param compare the fibre with which this will be compared.
-     * \return \c true if and only if this and the given fibre are
-     * different.
-     */
-    bool operator != (const SFSFibre& compare) const;
-    /**
-     * Determines if this exceptional fibre is smaller than the given
-     * fibre.  Fibres are sorted by \a alpha and then by \a beta.
+     * This generates all of the usual comparison operators, including
+     * `<`, `<=`, `>`, and `>=`.
      *
-     * \param compare the fibre with which this will be compared.
-     * \return \c true if and only if this is smaller than the given fibre.
+     * \python This spaceship operator `x <=> y` is not available, but the
+     * other comparison operators that it generates _are_ available.
+     *
+     * \return The result of the comparison between this and the given fibre.
      */
-    bool operator < (const SFSFibre& compare) const;
+    constexpr std::strong_ordering operator <=> (const SFSFibre&) const =
+        default;
 };
 
 /**
@@ -773,41 +764,31 @@ class SFSpace : public Manifold {
         bool operator == (const SFSpace& compare) const;
 
         /**
-         * Determines whether this and the given object do not contain
-         * precisely the same presentations of the same Seifert fibred space.
+         * Compares representations of two Seifert fibred spaces according to
+         * an aesthetic ordering.
          *
-         * This routine does _not_ test for homeomorphism.  Instead it
-         * compares the exact presentations, including the precise details of
-         * the base orbifold and the exact parameters of the exceptional fibres,
-         * and determines whether or not these _presentations_ are identical.
-         * If you have two different presentations of the same Seifert fibred
-         * space, they will be treated as not equal by this routine.
+         * The only purpose of this routine is to implement a consistent
+         * ordering of Seifert fibred space representations.  The specific
+         * ordering used is purely aesthetic on the part of the author, and
+         * is subject to change in future versions of Regina.
          *
-         * \param compare the presentation with which this will be compared.
-         * \return \c true if and only if this and the given object do not
-         * contain identical presentations of the same Seifert fibred space.
+         * It does not matter whether the two spaces are homeomorphic; this
+         * routine compares the specific _representations_ of these spaces
+         * (and so in particular, different representations of the same
+         * Seifert fibred space will be ordered differently).
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other representation to compare this with.
+         * \return A result that indicates how this and the given Seifert
+         * fibred space representation should be ordered with respect to
+         * each other.
          */
-        bool operator != (const SFSpace& compare) const;
-
-        /**
-         * Determines in a fairly ad-hoc fashion whether this representation
-         * of this space is "smaller" than the given representation of the
-         * given space.
-         *
-         * The ordering imposed on Seifert fibred space representations
-         * is purely aesthetic on the part of the author, and is subject to
-         * change in future versions of Regina.  It also depends upon the
-         * particular representation, so that different representations
-         * of the same space may be ordered differently.
-         *
-         * All that this routine really offers is a well-defined way of
-         * ordering Seifert fibred space representations.
-         *
-         * \param compare the representation with which this will be compared.
-         * \return \c true if and only if this is "smaller" than the given
-         * Seifert fibred space representation.
-         */
-        bool operator < (const SFSpace& compare) const;
+        std::strong_ordering operator <=> (const SFSpace& rhs) const;
 
         Triangulation<3> construct() const override;
         AbelianGroup homology() const override;
@@ -895,19 +876,8 @@ void swap(SFSpace& a, SFSpace& b) noexcept;
 
 // Inline functions for SFSFibre
 
-inline SFSFibre::SFSFibre(long newAlpha, long newBeta) :
+inline constexpr SFSFibre::SFSFibre(long newAlpha, long newBeta) :
         alpha(newAlpha), beta(newBeta) {
-}
-
-inline bool SFSFibre::operator == (const SFSFibre& compare) const {
-    return (alpha == compare.alpha && beta == compare.beta);
-}
-inline bool SFSFibre::operator != (const SFSFibre& compare) const {
-    return (alpha != compare.alpha || beta != compare.beta);
-}
-inline bool SFSFibre::operator < (const SFSFibre& compare) const {
-    return (alpha < compare.alpha ||
-        (alpha == compare.alpha && beta < compare.beta));
 }
 
 // Inline functions for SFSpace
@@ -937,10 +907,6 @@ inline void SFSpace::swap(SFSpace& other) noexcept {
     fibres_.swap(other.fibres_);
     std::swap(nFibres_, other.nFibres_);
     std::swap(b_, other.b_);
-}
-
-inline bool SFSpace::operator != (const SFSpace& compare) const {
-    return ! ((*this) == compare);
 }
 
 inline SFSpace::ClassType SFSpace::baseClass() const {

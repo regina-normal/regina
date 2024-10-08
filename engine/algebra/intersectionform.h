@@ -194,21 +194,6 @@ class IntersectionForm : public Output<IntersectionForm> {
         bool operator == (const IntersectionForm& other) const;
 
         /**
-         * Determines if this and the given bilinear form are not represented
-         * by the same symmetric square integer matrices.
-         *
-         * This does _not_ test whether this and the given form are
-         * congruent (i.e., related by a change basis in the underlying
-         * free abelian group).  Instead it is equivalent to testing
-         * whether `matrix() != other.matrix()`.
-         *
-         * \param other the bilinear form to compare with this.
-         * \return \c true if and only if this and the given bilinear form
-         * are not represented by identical matrices.
-         */
-        bool operator != (const IntersectionForm& other) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -276,11 +261,6 @@ inline bool IntersectionForm::odd() const {
 inline bool IntersectionForm::operator == (const IntersectionForm& other)
         const {
     return matrix_ == other.matrix_;
-}
-
-inline bool IntersectionForm::operator != (const IntersectionForm& other)
-        const {
-    return matrix_ != other.matrix_;
 }
 
 inline void swap(IntersectionForm& a, IntersectionForm& b) noexcept {

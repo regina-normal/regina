@@ -38,33 +38,42 @@ Each subclass:
 
 namespace Manifold_ {
 
-// Docstring regina::python::doc::Manifold_::__lt
-static const char *__lt =
-R"doc(Determines in a fairly ad-hoc fashion whether this representation of
-this 3-manifold is "smaller" than the given representation of the
-given 3-manifold.
+// Docstring regina::python::doc::Manifold_::__cmp
+static const char *__cmp =
+R"doc(Compares representations of two 3-manifolds according to an aesthetic
+ordering.
 
-The ordering imposed on 3-manifolds is purely aesthetic on the part of
-the author, and is subject to change in future versions of Regina.
+The only purpose of this routine is to implement a consistent ordering
+of 3-manifold representations. The specific ordering used is purely
+aesthetic on the part of the author, and is subject to change in
+future versions of Regina.
 
-The ordering also depends on the particular representation of the
-3-manifold that is used. As an example, different representations of
-the same Seifert fibred space might well be ordered differently.
+It does not matter whether the two 3-manifolds are homeomorphic; this
+routine compares the specific _representations_ of these manifolds
+(and so in particular, different representations of the same
+3-manifold might well be ordered differently).
 
-All that this routine really offers is a well-defined way of ordering
-3-manifold representations.
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
 
 .. warning::
     Currently this routine is only implemented in full for closed
     3-manifolds. For most classes of bounded 3-manifolds, this routine
-    simply compares the strings returned by name().
+    simply compares the strings returned by name(). For this reason,
+    the return value is currently marked as a weak ordering, since it
+    is possible that different representations of the same 3-manifold
+    will produce the same string name.
 
-Parameter ``compare``:
-    the 3-manifold representation with which this will be compared.
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the 3-manifold representation to compare this with.
 
 Returns:
-    ``True`` if and only if this is "smaller" than the given
-    3-manifold representation.)doc";
+    A result that indicates how this and the given 3-manifold
+    representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::Manifold_::construct
 static const char *construct =

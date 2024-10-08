@@ -50,10 +50,6 @@ void addFacePair(pybind11::module_& m) {
         .def("isBeforeStart", &FacePair::isBeforeStart, rdoc::isBeforeStart)
         .def("isPastEnd", &FacePair::isPastEnd, rdoc::isPastEnd)
         .def("complement", &FacePair::complement, rdoc::complement)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
-        .def(pybind11::self > pybind11::self, rdoc::__gt)
-        .def(pybind11::self <= pybind11::self, rdoc::__le)
-        .def(pybind11::self >= pybind11::self, rdoc::__ge)
         .def("inc", [](FacePair& p) {
             return p++;
         }, rdoc::__inc)
@@ -64,7 +60,8 @@ void addFacePair(pybind11::module_& m) {
         .def("oppositeEdge", &FacePair::oppositeEdge, rdoc::oppositeEdge)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     RDOC_SCOPE_END
 }

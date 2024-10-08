@@ -65,7 +65,7 @@ void addVertex4(pybind11::module_& m) {
         .def("vertices", &VertexEmbedding<4>::vertices, rbase::vertices)
     ;
     regina::python::add_output(e);
-    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+    regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)

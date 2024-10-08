@@ -492,15 +492,6 @@ class NormalEncoding {
         constexpr bool operator == (const NormalEncoding& other) const {
             return flags_ == other.flags_;
         }
-        /**
-         * Determines whether this and the given encoding are different.
-         *
-         * \param other the encoding to compare with this.
-         * \return \c true if and only if both encodings are different.
-         */
-        constexpr bool operator != (const NormalEncoding& other) const {
-            return flags_ != other.flags_;
-        }
 
         /**
          * Returns whether this describes a vector encoding of normal

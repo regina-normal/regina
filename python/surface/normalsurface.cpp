@@ -169,10 +169,10 @@ void addNormalSurface(pybind11::module_& m) {
         .def(pybind11::self + pybind11::self, rdoc::__add)
         .def(pybind11::self * regina::LargeInteger(), rdoc::__mul)
         .def(pybind11::self *= regina::LargeInteger(), rdoc::__imul)
-        .def(pybind11::self < pybind11::self, rdoc::__lt)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     regina::python::add_global_swap<NormalSurface>(m, rdoc::global_swap);
 

@@ -87,7 +87,7 @@ void addHyperCoords(pybind11::module_& m) {
             return out.str();
         })
         ;
-    regina::python::add_eq_operators(e, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(e, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(HyperInfo)
 

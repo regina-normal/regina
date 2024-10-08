@@ -295,30 +295,6 @@ Precondition:
 Returns:
     the composition of both isomorphisms.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::__ne
-constexpr const char *__ne =
-R"doc(Determines whether this and the given isomorphism are not identical.
-
-Two isomorphisms are considered _identical_ if they act on the same
-number of top-dimensional simplices, and all destination simplex
-numbers and facet permutations are the same for both isomorphisms.
-
-In particular it is only the simplex, facet and vertex _labels_ that
-matter: an isomorphism does not refer to a specific triangulation, and
-there is no sense in which the two isomorphisms need to act on the
-same triangulations and/or point to the same destination Simplex
-objects.
-
-It is safe to compare isomorphisms of different sizes (in which case
-this routine will return ``True``).
-
-Parameter ``other``:
-    the isomorphism to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given isomorphism are not
-    identical.)doc";
-
 // Docstring regina::python::doc::Isomorphism_::apply
 constexpr const char *apply =
 R"doc(Deprecated routine that applies this isomorphism to the given

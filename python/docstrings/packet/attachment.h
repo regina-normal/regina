@@ -150,23 +150,6 @@ Parameter ``filename``:
     would be a filename only, with no directory prefixes. See
     filename() for details on how this string will be used.)doc";
 
-// Docstring regina::python::doc::Attachment_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given attachment hold different data.
-
-The filenames will not be compared.
-
-It is safe to call this operator if one or both attachments is empty
-(i.e., isNull() returns ``True``), in which case an empty attachment
-will compare as equal to any other empty attachment.
-
-Parameter ``other``:
-    the attachment to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given attachment contain
-    different data.)doc";
-
 // Docstring regina::python::doc::Attachment_::data
 static const char *data =
 R"doc(Returns a pointer to the block of raw data that forms this attachment.

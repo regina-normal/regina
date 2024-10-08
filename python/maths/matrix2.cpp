@@ -71,10 +71,6 @@ namespace regina {
                 return (row[0] == other.row[0] && row[1] == other.row[1]);
             }
 
-            bool operator != (const Matrix2Row& other) const {
-                return (row[0] != other.row[0] || row[1] != other.row[1]);
-            }
-
         friend std::ostream& operator << (std::ostream&, const Matrix2Row&);
     };
 
@@ -120,7 +116,7 @@ void addMatrix2(pybind11::module_& m) {
         .def("isIdentity", &Matrix2::isIdentity, rdoc::isIdentity)
         .def("isZero", &Matrix2::isZero, rdoc::isZero)
     ;
-    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_ostream(c);
 
     regina::python::add_global_swap<Matrix2>(m, rdoc::global_swap);
@@ -153,17 +149,36 @@ See the main class Matrix2 for further details.)doc")
 "Returns the number of entries in this row. This will always be 2.")
         ;
     regina::python::add_eq_operators(row,
-"Tests whether this and the given row contain the same integer entries.",
-"Tests whether this and the given row contain different integer entries.");
+"Tests whether this and the given row contain the same integer entries.");
     regina::python::add_output_ostream(row);
 
     RDOC_SCOPE_SWITCH_MAIN
 
-    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc::simpler);
-    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
-            const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc::simpler_2);
+    m.def("simplerThreeWay", [](const Matrix2& a, const Matrix2& b) {
+        auto ans = simplerThreeWay(a, b);
+        if (ans == std::strong_ordering::less)
+            return -1;
+        if (ans == std::strong_ordering::greater)
+            return 1;
+        return 0;
+    }, rdoc::simplerThreeWay);
+    m.def("simplerThreeWay", [](const Matrix2& a, const Matrix2& b,
+                                const Matrix2& c, const Matrix2& d) {
+        auto ans = simplerThreeWay(a, b, c, d);
+        if (ans == std::strong_ordering::less)
+            return -1;
+        if (ans == std::strong_ordering::greater)
+            return 1;
+        return 0;
+    }, rdoc::simplerThreeWay_2);
+
+    m.def("simpler", [](const Matrix2& a, const Matrix2& b) { // deprecated
+        return simplerThreeWay(a, b) == std::strong_ordering::less;
+    }, rdoc::simpler);
+    m.def("simpler", [](const Matrix2& a, const Matrix2& b,
+                        const Matrix2& c, const Matrix2& d) { // deprecated
+        return simplerThreeWay(a, b, c, d) == std::strong_ordering::less;
+    }, rdoc::simpler_2);
 
     RDOC_SCOPE_END
 }

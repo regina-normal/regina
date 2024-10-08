@@ -134,15 +134,6 @@ class Text : public Packet {
          */
         bool operator == (const Text& other) const;
 
-        /**
-         * Determines if this and the given packet do not contain the same text.
-         *
-         * \param other the text packet to compare with this.
-         * \return \c true if and only if this and the given packet
-         * do not contain the same text.
-         */
-        bool operator != (const Text& other) const;
-
         void writeTextShort(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
 
@@ -196,10 +187,6 @@ inline void Text::setText(std::string text) {
 
 inline bool Text::operator == (const Text& other) const {
     return text_ == other.text_;
-}
-
-inline bool Text::operator != (const Text& other) const {
-    return text_ != other.text_;
 }
 
 inline void Text::writeTextShort(std::ostream& o) const {

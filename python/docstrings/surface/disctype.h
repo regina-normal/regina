@@ -52,12 +52,24 @@ negative *type* (as explained in the class notes).
 Returns:
     ``True`` if and only if this is not a null disc type.)doc";
 
-// Docstring regina::python::doc::DiscType_::__copy
-static const char *__copy =
-R"doc(Creates a copy of the given disc type.
+// Docstring regina::python::doc::DiscType_::__cmp
+static const char *__cmp =
+R"doc(Compares two disc types. Types are ordered first by *tetrahedron* and
+then by *type*. The null disc type is considered less than all
+"meaningful" disc types.
 
-Parameter ``cloneMe``:
-    the disc type to clone.)doc";
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Returns:
+    The result of the comparison between this and the given disc type.)doc";
+
+// Docstring regina::python::doc::DiscType_::__copy
+static const char *__copy = R"doc(Creates a copy of the given disc type.)doc";
 
 // Docstring regina::python::doc::DiscType_::__default
 static const char *__default = R"doc(Creates a new null disc type, as described in the class notes.)doc";
@@ -86,27 +98,6 @@ Parameter ``newTetIndex``:
 Parameter ``newType``:
     the specific disc type within the given tetrahedron; see the class
     notes for the meaning of this field.)doc";
-
-// Docstring regina::python::doc::DiscType_::__lt
-static const char *__lt =
-R"doc(Provides an ordering of disc types. Types are ordered first by
-*tetrahedron* and then by *type*. The null disc type is considered
-less than all "meaningful" disc types.
-
-Returns:
-    ``True`` if this disc type appears before the given disc type in
-    the ordering, or ``False`` if not.)doc";
-
-// Docstring regina::python::doc::DiscType_::__ne
-static const char *__ne =
-R"doc(Determines if this and the given disc type are different.
-
-This is the negation of the equality test; see operator == for further
-details.
-
-Returns:
-    ``True`` if this and the given disc type are different, or
-    ``False`` if they are identical.)doc";
 
 }
 

@@ -243,23 +243,6 @@ struct SatAnnulus {
      * specific presentation of a saturated annulus.
      */
     bool operator == (const SatAnnulus& other) const;
-    /**
-     * Determines whether or not this and the given structure describe
-     * different specific presentations of a saturated annulus.
-     *
-     * Specifically, in order to compare as equal, two saturated annuli
-     * must use the same two numbered tetrahedra, presented in the same
-     * order, and with the same \a roles permutations.
-     *
-     * Because this operation compares tetrahedron _numbers_ and not
-     * the underlying Tetrahedron objects, it is meaningful to compare
-     * saturated annuli from different triangulations.
-     *
-     * \param other the structure to compare with this.
-     * \return \c true if and only if both structures describe different
-     * specific presentations of a saturated annulus.
-     */
-    bool operator != (const SatAnnulus& other) const;
 
     /**
      * Determines how many triangles of this annulus lie on the boundary
@@ -551,12 +534,6 @@ inline bool SatAnnulus::operator == (const SatAnnulus& other) const {
     return (tet[0]->index() == other.tet[0]->index() &&
             tet[1]->index() == other.tet[1]->index() &&
             roles[0] == other.roles[0] && roles[1] == other.roles[1]);
-}
-
-inline bool SatAnnulus::operator != (const SatAnnulus& other) const {
-    return (tet[0]->index() != other.tet[0]->index() ||
-            tet[1]->index() != other.tet[1]->index() ||
-            roles[0] != other.roles[0] || roles[1] != other.roles[1]);
 }
 
 inline SatAnnulus SatAnnulus::otherSide() const {
