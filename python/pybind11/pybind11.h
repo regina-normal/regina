@@ -26,6 +26,10 @@
 #include <utility>
 #include <vector>
 
+// This allows us to verify that we are #including our own patched pybind11,
+// not some other pybind11 that has been installed system-wide.
+#define REGINA_PYBIND11 1
+
 #if defined(__cpp_lib_launder) && !(defined(_MSC_VER) && (_MSC_VER < 1914))
 #    define PYBIND11_STD_LAUNDER std::launder
 #    define PYBIND11_HAS_STD_LAUNDER 1
