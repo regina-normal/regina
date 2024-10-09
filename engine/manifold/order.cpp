@@ -30,17 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-#if !(__cpp_lib_three_way_comparison >= 201907L)
-#warning "This compiler does not support <=> in the standard library; working around this."
-#include <cstring>
-#endif
-
 #include <manifold/graphloop.h>
 #include <manifold/graphpair.h>
 #include <manifold/graphtriple.h>
 #include <manifold/lensspace.h>
 #include <manifold/sfs.h>
 #include <manifold/torusbundle.h>
+
+#if !(__cpp_lib_three_way_comparison >= 201907L)
+#warning "This compiler does not support <=> in the standard library; working around this."
+#include <cstring>
+#endif
 
 namespace regina {
 
