@@ -37,6 +37,15 @@
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 
+// The constant regina::quadString is defined inline in the header.
+// However, it would be nice to issue a warning if the compiler does not
+// support constexpr strings, and it would be nice for that warning to appear
+// only once (as opposed to every time the header is included).
+// Therefore we put the warning here in normalsurface.cpp.
+#if !(__cpp_lib_constexpr_string >= 201907L)
+#warning "This compiler does not support constexpr strings, and so regina::quadString falls back to const."
+#endif
+
 namespace regina {
 
 NormalSurface::NormalSurface(const Triangulation<3>& tri) :
