@@ -159,7 +159,7 @@ inline constexpr int quadPartner[3][4] = {
 #if __cpp_lib_constexpr_string >= 201907L
 inline constexpr std::string quadString[3] = { "01/23", "02/13", "03/12" };
 #else
-#warning "Compiler does not support constexpr strings; falling back to const."
+// The compiler does not support constexpr strings. Fall back to const.
 inline const std::string quadString[3] = { "01/23", "02/13", "03/12" };
 #endif
 
