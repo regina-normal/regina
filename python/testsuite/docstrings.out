@@ -697,7 +697,7 @@ class ListView(pybind11_object)
  |      Creates a new copy of the given list view.
  |
  |  __iter__(...)
- |      __iter__(self: <internal>.ListView[regina.Vertex3]) -> Iterator
+ |      __iter__(self: <internal>.ListView[regina.Vertex3]) -> Iterator[regina.Vertex3]
  |
  |      Returns a Python iterator over the elements of this list.
  |
