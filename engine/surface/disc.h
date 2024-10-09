@@ -1113,6 +1113,7 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  *
  * \ingroup surfaces
  */
+// TODO: Iterator
 template <class TetData>
 class DiscSpecIterator {
     public:

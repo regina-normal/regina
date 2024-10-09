@@ -620,6 +620,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * of a different (hidden) class that supports the Python
          * iterable/iterator interface.
          */
+        // TODO: Iterator
         class VectorIterator {
             public:
                 using iterator_category = std::bidirectional_iterator_tag;

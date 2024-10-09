@@ -239,6 +239,7 @@ class TableView {
          * \nopython TableView is an iterable type, but its __iter__()
          * function returns an object of a different (hidden) iterator class.
          */
+        // TODO: Iterator
         class iterator {
             public:
                 using value_type = std::remove_reference_t<Subview>;

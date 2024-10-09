@@ -195,6 +195,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * Both \a iterator and \a const_iterator are the same type, since
          * a PermGroup only offers read-only access to its group members.
          */
+        // TODO: Iterator
         class iterator {
             public:
                 using value_type = Perm<n>;
