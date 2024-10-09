@@ -309,6 +309,9 @@ struct [[deprecated]] Base64SigEncoding {
  *
  * This base64 encoding uses the characters: `a..zA..Z0..9+-`
  *
+ * Baes64 encoders are single-use objects: they cannot be copied, moved or
+ * swapped.
+ *
  * \warning Note that this base64 encoding uses a different set of
  * printable symbols from the encoding used in utilities/base64.h.
  * This should not be a problem: Regina uses this encoding exclusively for
@@ -573,6 +576,9 @@ class Base64SigEncoder {
                 encodeSingle(packed);
             }
         }
+
+        Base64SigEncoder(const Base64SigEncoder&) = delete;
+        Base64SigEncoder& operator = (const Base64SigEncoder&) = delete;
 };
 
 /**
@@ -589,6 +595,9 @@ class Base64SigEncoder {
  * accordingly (but never beyond the end of the string).
  *
  * This base64 encoding uses the characters: `a..zA..Z0..9+-`
+ *
+ * Baes64 decoders are single-use objects: they cannot be copied, moved or
+ * swapped.
  *
  * \warning Note that this base64 encoding uses a different set of
  * printable symbols from the encoding used in utilities/base64.h.
@@ -960,6 +969,9 @@ class Base64SigDecoder {
             return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
                 (c >= '0' && c <= '9') || c == '+' || c == '-');
         }
+
+        Base64SigDecoder(const Base64SigDecoder&) = delete;
+        Base64SigDecoder& operator = (const Base64SigDecoder&) = delete;
 };
 
 } // namespace regina
