@@ -36,6 +36,9 @@
 #include "surface/normalsurfaces.h"
 #include "utilities/tableview.h"
 
+// Check that our hand-rolled iterator classes adhere to the requirements for
+// their relevant iterator categories.
+
 static_assert(std::forward_iterator<regina::ChildIterator<true>>);
 static_assert(std::forward_iterator<regina::ChildIterator<false>>);
 static_assert(std::forward_iterator<regina::SubtreeIterator<true>>);
@@ -53,4 +56,20 @@ static_assert(std::forward_iterator<
 
 static_assert(std::input_iterator<regina::TableView<int, 4>::iterator>);
 static_assert(std::input_iterator<regina::TableView<char, 2, 3>::iterator>);
+
+// Check that iterator traits appear to be working as expected.
+
+static_assert(std::is_same_v<
+    typename std::iterator_traits<regina::ChildIterator<true>>::value_type,
+    const regina::Packet>);
+static_assert(std::is_same_v<
+    std::iter_value_t<regina::ChildIterator<true>>,
+    const regina::Packet>);
+
+static_assert(std::is_same_v<
+    typename std::iterator_traits<regina::ChildIterator<false>>::value_type,
+    regina::Packet>);
+static_assert(std::is_same_v<
+    std::iter_value_t<regina::ChildIterator<false>>,
+    regina::Packet>);
 
