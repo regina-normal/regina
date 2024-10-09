@@ -102,8 +102,8 @@ MarkovProjectAndLift::MarkovProjectAndLift(Matrix<Integer>& LatticeIdeal, const 
     Weights.append(vector<Integer> (LItranspose.nr_of_columns(),1));
     vector<bool> absolute(1,1);
 
-    // GCC 13 gives the following warning when initialising StartPerm as a
-    // vector of bools:
+    // GCC 12 and 13 give the following warning when initialising StartPerm as
+    // a vector of bools:
     //   warning: 'void* __builtin_memmove(void*, const void*, long unsigned
     //   int)' writing between 9 and <very large number> bytes into a region
     //   of size 8 overflows the destination [-Wstringop-overflow=]
