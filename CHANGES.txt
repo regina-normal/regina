@@ -23,10 +23,11 @@ Version 7.4  [ (to be announced) ]
           automatically generated from equality tests (==) instead.
         - Explicit comparisons (<, <=, >, >=) have been removed, and are now
           automatically generated from the new spaceship operator (<=>).
-        - For hand-rolled iterator classes, the associated type aliases
+        - For several iterator classes, the associated type aliases
           (value_type, etc.) are no longer provided as class members, since
-          this confuses pybind11 into thinking they are container classes;
-          instead you should access these types through std::iterator_traits.
+          these were confusing pybind11.  Instead you can (and should) access
+          these through the C++ standard iterator library (e.g.,
+          std::iterator_traits<T>::value_type, or std::iter_value_t<T>).
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
         - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
@@ -81,6 +82,12 @@ Version 7.4  [ (to be announced) ]
             - Added a spaceship operator (<=>) for subset comparisons.
         Enum ChangeType:
             - New enum for internal use with triangulation/link change spans.
+        Class DiscSpecIterator:
+            - This class no longer provides its iterator-related type aliases
+              (value_type, etc.) as members, since these confused pybind11.
+              Instead you should access them through the C++ standard
+              iterator library (e.g., via std::iterator_traits).  The old
+              member type aliases have been removed completely.
         Struct DiscType:
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
@@ -278,6 +285,13 @@ Version 7.4  [ (to be announced) ]
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
               less-than (<) as before.
+        Class NormalSurfaces, NormalHypersurfaces:
+            - The inner class VectorIterator no longer provides its
+              iterator-related type aliases (value_type, etc.) as members,
+              since these confused pybind11.  Instead you should access them
+              through the C++ standard iterator library (e.g., via
+              std::iterator_traits).  The old member type aliases have been
+              removed completely.
         Enum NormalCoords:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., NS_STANDARD) have been
@@ -291,6 +305,12 @@ Version 7.4  [ (to be announced) ]
             - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
             - For Python users, added an alias makePacket() for make_packet().
+            - The inner classes ChildIterator and SubtreeIterator no longer
+              provides their iterator-related type aliases (value_type, etc.)
+              as members, since these confused pybind11.  Instead you should
+              access them through the C++ standard iterator library (e.g., via
+              std::iterator_traits).  The old member type aliases have been
+              removed completely.
         Class PacketData<Held>:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old

@@ -233,13 +233,19 @@ class TableView {
          *   by reference as usual: \a value_type is Element, and
          *   \a reference is `const Element&`.
          *
+         * For most iterator classes, Regina now uses specialisations of
+         * std::iterator_traits to provide access to their associated types
+         * (e.g., value_type).  However, this is not possible for
+         * TableView::iterator since TableView is templated.  Therefore,
+         * for TableView::iterator, we continue to provide these associated
+         * types directly as class members.
+         *
          * Both \a iterator and \a const_iterator are the same type, since
          * TableView only offers read-only access to the underlying data.
          *
          * \nopython TableView is an iterable type, but its __iter__()
          * function returns an object of a different (hidden) iterator class.
          */
-        // TODO: Iterator
         class iterator {
             public:
                 using value_type = std::remove_reference_t<Subview>;

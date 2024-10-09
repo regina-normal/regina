@@ -192,10 +192,16 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * based upon an internal group representation that is typically
          * _much_ smaller than the group itself.
          *
+         * For most iterator classes, Regina now uses specialisations of
+         * std::iterator_traits to provide access to their associated types
+         * (e.g., value_type).  However, this is not possible for
+         * PermGroup::iterator since PermGroup is templated.  Therefore,
+         * for PermGroup::iterator, we continue to provide these associated
+         * types directly as class members.
+         *
          * Both \a iterator and \a const_iterator are the same type, since
          * a PermGroup only offers read-only access to its group members.
          */
-        // TODO: Iterator
         class iterator {
             public:
                 using value_type = Perm<n>;
