@@ -131,7 +131,7 @@ void addPacket(pybind11::module_& m) {
 
     auto c1 = pybind11::class_<PacketChildren<false>>(m, "PacketChildren",
             rdoc_scope)
-        .def("__iter__", [](PacketChildren<false> c) {
+        .def("__iter__", [](const PacketChildren<false>& c) {
             return c.begin();
         }, rdoc::__iter__)
         ;
@@ -141,7 +141,7 @@ void addPacket(pybind11::module_& m) {
 
     auto c2 = pybind11::class_<PacketDescendants<false>>(m, "PacketDescendants",
             rdoc_scope)
-        .def("__iter__", [](PacketDescendants<false> d) {
+        .def("__iter__", [](const PacketDescendants<false>& d) {
             return d.begin();
         }, rdoc::__iter__)
         ;
