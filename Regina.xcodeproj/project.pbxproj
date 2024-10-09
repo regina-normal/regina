@@ -1528,6 +1528,8 @@
 		05BDA5722CB64CCD006F4738 /* collect_lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55B2CB64CCD006F4738 /* collect_lat.cpp */; };
 		05BDA5732CB64CCD006F4738 /* lattice_ideal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */; };
 		05BDA5752CB65B08006F4738 /* iterators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5742CB65B08006F4738 /* iterators.cpp */; };
+		05BDA5842CB6648D006F4738 /* spatiallinkui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */; };
+		05BDA5852CB664BE006F4738 /* spatiallinkui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5822CB6648D006F4738 /* spatiallinkui.h */; };
 		05C1BE981DCA7C77007C946B /* boundarycomponent-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */; };
 		05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE971DCA7C77007C946B /* skeleton-impl.h */; };
 		05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BE9B1DCA7CA9007C946B /* boundary2.cpp */; };
@@ -4196,6 +4198,8 @@
 		05BDA57E2CB663B6006F4738 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		05BDA57F2CB663B6006F4738 /* matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
 		05BDA5802CB663B6006F4738 /* tensor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tensor.h; sourceTree = "<group>"; };
+		05BDA5822CB6648D006F4738 /* spatiallinkui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spatiallinkui.h; sourceTree = "<group>"; };
+		05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallinkui.cpp; sourceTree = "<group>"; };
 		05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Toast.h"; path = "Toast/UIView+Toast.h"; sourceTree = "<group>"; };
 		05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Toast.m"; path = "Toast/UIView+Toast.m"; sourceTree = "<group>"; };
 		05C0643D1C55921E006E6483 /* HyperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperViewController.h; sourceTree = "<group>"; };
@@ -7330,6 +7334,8 @@
 				05A73CC719B2F1AB0099C617 /* snappeashapes.h */,
 				05A73CC819B2F1AB0099C617 /* snappeaui.cpp */,
 				05A73CC919B2F1AB0099C617 /* snappeaui.h */,
+				05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */,
+				05BDA5822CB6648D006F4738 /* spatiallinkui.h */,
 				0564A5A61811D920002CC2AE /* surfacescompatui.cpp */,
 				0564A5A71811D920002CC2AE /* surfacescompatui.h */,
 				0564A5A81811D920002CC2AE /* surfacescoordinateui.cpp */,
@@ -10121,6 +10127,7 @@
 				0591E8461C4F773500793A9C /* tri4gluings.h in Sources */,
 				0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */,
 				0591E8481C4F773C00793A9C /* tri4ui.h in Sources */,
+				05BDA5852CB664BE006F4738 /* spatiallinkui.h in Sources */,
 				0582FDF22731FEA300203AE7 /* attachmentui.h in Sources */,
 				0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */,
 				0543AE9B1811E12A002758F8 /* exportdialog.h in Sources */,
@@ -10264,6 +10271,7 @@
 				0564A9451811D921002CC2AE /* newpackets.cpp in Sources */,
 				0564A7FD1811D921002CC2AE /* edgeintchooser.cpp in Sources */,
 				0564A8121811D921002CC2AE /* snappeahandler.cpp in Sources */,
+				05BDA5842CB6648D006F4738 /* spatiallinkui.cpp in Sources */,
 				05A73CD519B2F2040099C617 /* columnlayout.cpp in Sources */,
 				0564A9431811D921002CC2AE /* messagelayer.cpp in Sources */,
 				0564A97E1811D921002CC2AE /* reginaabout.cpp in Sources */,
