@@ -107,12 +107,12 @@ MarkovProjectAndLift::MarkovProjectAndLift(Matrix<Integer>& LatticeIdeal, const 
     //   warning: 'void* __builtin_memmove(void*, const void*, long unsigned
     //   int)' writing between 9 and <very large number> bytes into a region
     //   of size 8 overflows the destination [-Wstringop-overflow=]
-    #if defined(__GNUC__) && (__GNUC__ == 13 || __GNUC__ == 12) && !defined(__clang__)
+    #if defined(__GNUC__) && __GNUC__ >= 12 && __GNUC__ <= 13 && !defined(__clang__)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wstringop-overflow"
     #endif
     StartPerm = LItranspose.perm_by_weights(Weights, absolute);
-    #if defined(__GNUC__) && (__GNUC__ == 13 || __GNUC__ == 12) && !defined(__clang__)
+    #if defined(__GNUC__) && __GNUC__ >= 12 && __GNUC__ <= 13 && !defined(__clang__)
     #pragma GCC diagnostic pop
     #endif
     LItranspose.order_rows_by_perm(StartPerm);

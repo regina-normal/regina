@@ -156,7 +156,7 @@ inline constexpr int quadPartner[3][4] = {
  *
  * \ingroup surfaces
  */
-#if __cpp_lib_constexpr_string >= 201907L
+#if defined(__APIDOCS) || __cpp_lib_constexpr_string >= 201907L
 inline constexpr std::string quadString[3] = { "01/23", "02/13", "03/12" };
 #else
 // The compiler does not support constexpr strings. Fall back to const.
