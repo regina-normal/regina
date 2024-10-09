@@ -273,6 +273,11 @@ CHECK_CXX_SOURCE_COMPILES("
 
 # Test for the C++20 function std::lexicographical_compare_three_way, which
 # is missing from some older versions of clang's libc++.
+# It's not clear to me whether there is a C++20 feature test that could replace
+# this; however, the only setting I've seen where this function is missing
+# (debian buster with libc++-13) is also missing std::string::operator <=>,
+# which is detected via __cpp_lib_three_way_comparison.  Anyway, let's just
+# keep the explicit test for now.
 CHECK_CXX_SOURCE_COMPILES("
   #include <algorithm>
   int x[3] = { 1, 2, 3 }, y[3] = { 1, 2, 3 };
@@ -280,13 +285,6 @@ CHECK_CXX_SOURCE_COMPILES("
     std::lexicographical_compare_three_way(x, x + 3, y, y + 3); return 0;
   }"
   LEXCMP_FOUND)
-
-# Test for the C++20 spaceship operator on std::string, which again is missing
-# from some older versions of clang's libc++.
-CHECK_CXX_SOURCE_COMPILES("
-  #include <string>
-  int main() { std::string a, b; a <=> b; return 0; }"
-  STRING_SPACESHIP_FOUND)
 
 # Dependencies used by all components of Regina
 
