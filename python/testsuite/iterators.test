@@ -86,6 +86,7 @@ print('Normal surface iteration:')
 surfaces = NormalSurfaces(Example3.figureEight(), NormalCoords.Quad)
 for s in surfaces:
     print(s)
+
 for s in surfaces.vectors():
     print(s)
 
@@ -97,6 +98,7 @@ print('Normal hypersurface iteration:')
 hypersurfaces = NormalHypersurfaces(Example4.rp4(), HyperCoords.Standard)
 for s in hypersurfaces:
     print(s)
+
 for s in hypersurfaces.vectors():
     print(s)
 
