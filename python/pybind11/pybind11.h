@@ -476,23 +476,35 @@ protected:
                     signature += name;
                 } else if (auto *tinfo = detail::get_type_info(*t)) {
                     handle th((PyObject *) tinfo->type);
+                    std::string qualname;
+                    try {
+                        qualname = th.attr("__qualname__").cast<std::string>();
+                    } catch (...) {
+                        // In Python 3.12 we get an error in our stripped-down
+                        // interpreter since PythonOutputStream is missing both
+                        // __qualname__ and __name__.  Do not make this fatal.
+                        qualname = "<unknown>";
+                    }
                     const auto m = th.attr("__module__").cast<std::string>();
                     if (m == "regina.engine")
-                        signature += "regina." +
-                            th.attr("__qualname__").cast<std::string>();
+                        signature += "regina." + qualname;
                     else
-                        signature += m + "." +
-                            th.attr("__qualname__").cast<std::string>();
+                        signature += m + "." + qualname;
                 } else if (rec->is_new_style_constructor && arg_index == 0) {
                     // A new-style `__init__` takes `self` as `value_and_holder`.
                     // Rewrite it to the proper class type.
+                    std::string qualname;
+                    try {
+                        qualname = rec->scope.attr("__qualname__").cast<std::string>();
+                    } catch (...) {
+                        // See above for the explanation here.
+                        qualname = "<unknown>";
+                    }
                     const auto m = rec->scope.attr("__module__").cast<std::string>();
                     if (m == "regina.engine")
-                        signature += "regina."
-                            + rec->scope.attr("__qualname__").cast<std::string>();
+                        signature += "regina." + qualname;
                     else
-                        signature += m + "."
-                            + rec->scope.attr("__qualname__").cast<std::string>();
+                        signature += m + "." + qualname;
                 } else {
                     signature += detail::quote_cpp_type_name(detail::clean_type_id(t->name()));
                 }
