@@ -2716,6 +2716,10 @@ std::shared_ptr<Packet> open(std::istream& in);
  * destroyed mid-iteration, but it also means that you must ensure that
  * you dispose of your iterators once you are finished with them.
  *
+ * As of Regina 7.4, this class no longer provides the iterator type aliases
+ * \a value_type, \a iterator_category, \a difference_type, \a pointer and
+ * \a reference. Instead you can access these through `std::iterator_traits`.
+ *
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the child packets.
  *
@@ -2734,21 +2738,12 @@ std::shared_ptr<Packet> open(std::istream& in);
 template <bool const_>
 class ChildIterator {
     public:
-        using value_type = std::conditional_t<const_, const Packet, Packet>;
+        using packet_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
                  This is either `Packet` or `const Packet`,
                  according to the template argument \a const_. */
-        using iterator_category = std::forward_iterator_tag;
-            /**< Declares this to be a forward iterator type. */
-        using difference_type = ptrdiff_t;
-            /**< The type obtained by subtracting iterators. */
-        using pointer = value_type*;
-            /**< A pointer to \a value_type. */
-        using reference = value_type&;
-            /**< A reference to \a value_type. */
-
     private:
-        std::shared_ptr<value_type> current_;
+        std::shared_ptr<packet_type> current_;
             /**< The child packet that this iterator is pointing to, or
                  \c null for a past-the-end iterator. */
 
@@ -2776,7 +2771,7 @@ class ChildIterator {
          * \param current the child packet that the new iterator should
          * point to, or \c null if the new iterator should be past-the-end.
          */
-        ChildIterator(std::shared_ptr<value_type> current);
+        ChildIterator(std::shared_ptr<packet_type> current);
 
         /**
          * Sets this to be a copy of the given iterator.
@@ -2841,7 +2836,7 @@ class ChildIterator {
          *
          * \return the current packet.
          */
-        value_type& operator * () const;
+        packet_type& operator * () const;
 
         /**
          * Identifies whether this iterator is dereferencable.
@@ -2855,6 +2850,19 @@ class ChildIterator {
         operator bool() const;
 };
 
+#ifndef __APIDOCS
+} namespace std {
+    template <bool const_>
+    struct iterator_traits<regina::ChildIterator<const_>> {
+        using value_type = typename regina::ChildIterator<const_>::packet_type;
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = ptrdiff_t;
+        using pointer = value_type*;
+        using reference = value_type&;
+    };
+} namespace regina {
+#endif
+
 /**
  * A forward iterator for iterating through the entire packet subtree
  * rooted at a given packet.
@@ -2866,6 +2874,10 @@ class ChildIterator {
  * it is iterating over.  This guarantees that the packet will not be
  * destroyed mid-iteration, but it also means that you must ensure that
  * you dispose of your iterators once you are finished with them.
+ *
+ * As of Regina 7.4, this class no longer provides the iterator type aliases
+ * \a value_type, \a iterator_category, \a difference_type, \a pointer and
+ * \a reference. Instead you can access these through `std::iterator_traits`.
  *
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the packet tree.
@@ -2884,23 +2896,15 @@ class ChildIterator {
 template <bool const_>
 class SubtreeIterator {
     public:
-        using value_type = std::conditional_t<const_, const Packet, Packet>;
+        using packet_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
                  This is either `Packet` or `const Packet`,
                  according to the template argument \a const_. */
-        using iterator_category = std::forward_iterator_tag;
-            /**< Declares this to be a forward iterator type. */
-        using difference_type = ptrdiff_t;
-            /**< The type obtained by subtracting iterators. */
-        using pointer = value_type*;
-            /**< A pointer to \a value_type. */
-        using reference = value_type&;
-            /**< A reference to \a value_type. */
 
     private:
-        std::shared_ptr<value_type> subtree_;
+        std::shared_ptr<packet_type> subtree_;
             /**< The root of the packet subtree that we are iterating over. */
-        std::shared_ptr<value_type> current_;
+        std::shared_ptr<packet_type> current_;
             /**< The packet that this iterator is pointing to, or
                  \c null for a past-the-end iterator. */
 
@@ -2934,7 +2938,7 @@ class SubtreeIterator {
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
          */
-        SubtreeIterator(std::shared_ptr<value_type> subtree);
+        SubtreeIterator(std::shared_ptr<packet_type> subtree);
         /**
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
@@ -2952,8 +2956,8 @@ class SubtreeIterator {
          * If \a current is not null, then it must be equal to or a
          * descendant of \a subtree.
          */
-        SubtreeIterator(std::shared_ptr<value_type> subtree,
-            std::shared_ptr<value_type> current);
+        SubtreeIterator(std::shared_ptr<packet_type> subtree,
+            std::shared_ptr<packet_type> current);
 
         /**
          * Sets this to be a copy of the given iterator.
@@ -3040,7 +3044,7 @@ class SubtreeIterator {
          *
          * \return the current packet.
          */
-        value_type& operator * () const;
+        packet_type& operator * () const;
 
         /**
          * Identifies whether this iterator is dereferencable.
@@ -3053,6 +3057,20 @@ class SubtreeIterator {
          */
         operator bool() const;
 };
+
+#ifndef __APIDOCS
+} namespace std {
+    template <bool const_>
+    struct iterator_traits<regina::SubtreeIterator<const_>> {
+        using value_type =
+            typename regina::SubtreeIterator<const_>::packet_type;
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = ptrdiff_t;
+        using pointer = value_type*;
+        using reference = value_type&;
+    };
+} namespace regina {
+#endif
 
 /**
  * A lightweight object that gives access to all immediate children of a
@@ -3976,14 +3994,14 @@ class PacketListener {
 
 template <bool const_>
 inline SubtreeIterator<const_>::SubtreeIterator(
-        std::shared_ptr<value_type> subtree) :
+        std::shared_ptr<packet_type> subtree) :
         subtree_(subtree), current_(subtree) {
 }
 
 template <bool const_>
 inline SubtreeIterator<const_>::SubtreeIterator(
-        std::shared_ptr<value_type> subtree,
-        std::shared_ptr<value_type> current) :
+        std::shared_ptr<packet_type> subtree,
+        std::shared_ptr<packet_type> current) :
         subtree_(std::move(subtree)), current_(std::move(current)) {
 }
 
@@ -4239,7 +4257,7 @@ inline Packet::PacketChangeSpan::~PacketChangeSpan() {
 
 template <bool const_>
 inline ChildIterator<const_>::ChildIterator(
-        std::shared_ptr<value_type> current) : current_(std::move(current)) {
+        std::shared_ptr<packet_type> current) : current_(std::move(current)) {
 }
 
 template <bool const_>
@@ -4256,7 +4274,7 @@ inline ChildIterator<const_> ChildIterator<const_>::operator ++ (int) {
 }
 
 template <bool const_>
-inline typename ChildIterator<const_>::value_type&
+inline typename ChildIterator<const_>::packet_type&
         ChildIterator<const_>::operator * () const {
     return *current_;
 }
@@ -4295,7 +4313,7 @@ inline SubtreeIterator<const_> SubtreeIterator<const_>::operator ++ (int) {
 }
 
 template <bool const_>
-inline typename SubtreeIterator<const_>::value_type&
+inline typename SubtreeIterator<const_>::packet_type&
         SubtreeIterator<const_>::operator * () const {
     return *current_;
 }

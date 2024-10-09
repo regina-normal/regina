@@ -23,6 +23,10 @@ Version 7.4  [ (to be announced) ]
           automatically generated from equality tests (==) instead.
         - Explicit comparisons (<, <=, >, >=) have been removed, and are now
           automatically generated from the new spaceship operator (<=>).
+        - For hand-rolled iterator classes, the associated type aliases
+          (value_type, etc.) are no longer provided as class members, since
+          this confuses pybind11 into thinking they are container classes;
+          instead you should access these types through std::iterator_traits.
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
         - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
