@@ -1509,6 +1509,25 @@
 		05B7FFCA25AC22D3003BAF5C /* descent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2A7229F376700B7B11C /* descent.cpp */; };
 		05B7FFCB25AC22D3003BAF5C /* cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F411C40F3C9009BC072 /* cone.cpp */; };
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
+		05BDA5622CB64CCD006F4738 /* binomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA5562CB64CCD006F4738 /* binomial.h */; };
+		05BDA5632CB64CCD006F4738 /* binomial_containers.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA5582CB64CCD006F4738 /* binomial_containers.h */; };
+		05BDA5642CB64CCD006F4738 /* nmz_polynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA5602CB64CCD006F4738 /* nmz_polynomial.h */; };
+		05BDA5652CB64CCD006F4738 /* fusion.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA55C2CB64CCD006F4738 /* fusion.h */; };
+		05BDA5662CB64CCD006F4738 /* collect_lat.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA55A2CB64CCD006F4738 /* collect_lat.h */; };
+		05BDA5672CB64CCD006F4738 /* lattice_ideal.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA55E2CB64CCD006F4738 /* lattice_ideal.h */; };
+		05BDA5682CB64CCD006F4738 /* binomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5572CB64CCD006F4738 /* binomial.cpp */; };
+		05BDA5692CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5612CB64CCD006F4738 /* nmz_polynomial.cpp */; };
+		05BDA56A2CB64CCD006F4738 /* binomial_containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5592CB64CCD006F4738 /* binomial_containers.cpp */; };
+		05BDA56B2CB64CCD006F4738 /* fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55D2CB64CCD006F4738 /* fusion.cpp */; };
+		05BDA56C2CB64CCD006F4738 /* collect_lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55B2CB64CCD006F4738 /* collect_lat.cpp */; };
+		05BDA56D2CB64CCD006F4738 /* lattice_ideal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */; };
+		05BDA56E2CB64CCD006F4738 /* binomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5572CB64CCD006F4738 /* binomial.cpp */; };
+		05BDA56F2CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5612CB64CCD006F4738 /* nmz_polynomial.cpp */; };
+		05BDA5702CB64CCD006F4738 /* binomial_containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5592CB64CCD006F4738 /* binomial_containers.cpp */; };
+		05BDA5712CB64CCD006F4738 /* fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55D2CB64CCD006F4738 /* fusion.cpp */; };
+		05BDA5722CB64CCD006F4738 /* collect_lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55B2CB64CCD006F4738 /* collect_lat.cpp */; };
+		05BDA5732CB64CCD006F4738 /* lattice_ideal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */; };
+		05BDA5752CB65B08006F4738 /* iterators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5742CB65B08006F4738 /* iterators.cpp */; };
 		05C1BE981DCA7C77007C946B /* boundarycomponent-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */; };
 		05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE971DCA7C77007C946B /* skeleton-impl.h */; };
 		05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BE9B1DCA7CA9007C946B /* boundary2.cpp */; };
@@ -4153,6 +4172,30 @@
 		05B7FF8625AC22AA003BAF5C /* face_lattice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face_lattice.cpp; sourceTree = "<group>"; };
 		05B7FF8725AC22AA003BAF5C /* nmz_nauty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nmz_nauty.cpp; sourceTree = "<group>"; };
 		05B9EC1A18245F2100DCACF3 /* euler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = euler.cpp; sourceTree = "<group>"; };
+		05BDA5562CB64CCD006F4738 /* binomial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = binomial.h; sourceTree = "<group>"; };
+		05BDA5572CB64CCD006F4738 /* binomial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = binomial.cpp; sourceTree = "<group>"; };
+		05BDA5582CB64CCD006F4738 /* binomial_containers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = binomial_containers.h; sourceTree = "<group>"; };
+		05BDA5592CB64CCD006F4738 /* binomial_containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = binomial_containers.cpp; sourceTree = "<group>"; };
+		05BDA55A2CB64CCD006F4738 /* collect_lat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = collect_lat.h; sourceTree = "<group>"; };
+		05BDA55B2CB64CCD006F4738 /* collect_lat.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = collect_lat.cpp; sourceTree = "<group>"; };
+		05BDA55C2CB64CCD006F4738 /* fusion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fusion.h; sourceTree = "<group>"; };
+		05BDA55D2CB64CCD006F4738 /* fusion.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fusion.cpp; sourceTree = "<group>"; };
+		05BDA55E2CB64CCD006F4738 /* lattice_ideal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lattice_ideal.h; sourceTree = "<group>"; };
+		05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = lattice_ideal.cpp; sourceTree = "<group>"; };
+		05BDA5602CB64CCD006F4738 /* nmz_polynomial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nmz_polynomial.h; sourceTree = "<group>"; };
+		05BDA5612CB64CCD006F4738 /* nmz_polynomial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = nmz_polynomial.cpp; sourceTree = "<group>"; };
+		05BDA5742CB65B08006F4738 /* iterators.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = iterators.cpp; sourceTree = "<group>"; };
+		05BDA5762CB662ED006F4738 /* comparison.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = comparison.out; sourceTree = "<group>"; };
+		05BDA5772CB662ED006F4738 /* comparison.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = comparison.test; sourceTree = "<group>"; };
+		05BDA5782CB66323006F4738 /* cpp_conduit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpp_conduit.h; sourceTree = "<group>"; };
+		05BDA5792CB66323006F4738 /* exception_translation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = exception_translation.h; sourceTree = "<group>"; };
+		05BDA57A2CB66323006F4738 /* value_and_holder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = value_and_holder.h; sourceTree = "<group>"; };
+		05BDA57B2CB66395006F4738 /* gil_safe_call_once.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gil_safe_call_once.h; sourceTree = "<group>"; };
+		05BDA57C2CB66395006F4738 /* type_caster_pyobject_ptr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = type_caster_pyobject_ptr.h; sourceTree = "<group>"; };
+		05BDA57D2CB66395006F4738 /* typing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = typing.h; sourceTree = "<group>"; };
+		05BDA57E2CB663B6006F4738 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		05BDA57F2CB663B6006F4738 /* matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
+		05BDA5802CB663B6006F4738 /* tensor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tensor.h; sourceTree = "<group>"; };
 		05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Toast.h"; path = "Toast/UIView+Toast.h"; sourceTree = "<group>"; };
 		05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Toast.m"; path = "Toast/UIView+Toast.m"; sourceTree = "<group>"; };
 		05C0643D1C55921E006E6483 /* HyperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperViewController.h; sourceTree = "<group>"; };
@@ -5465,6 +5508,8 @@
 				0598027D2667067C002D5D57 /* clone.out */,
 				0598027A2667067B002D5D57 /* clone.test */,
 				050F5D851B9BAB9C00C1F681 /* CMakeLists.txt */,
+				05BDA5762CB662ED006F4738 /* comparison.out */,
+				05BDA5772CB662ED006F4738 /* comparison.test */,
 				0553FB9A2AF2117200BE89A7 /* construction.out */,
 				0553FB9C2AF2117300BE89A7 /* construction.test */,
 				05A0251E25D48E500091372D /* constructors.out */,
@@ -5870,11 +5915,13 @@
 				05199A8325C63D200006B8FA /* common.h */,
 				05199A8925C63D200006B8FA /* complex.h */,
 				05199A7C25C63D200006B8FA /* detail */,
+				05BDA5812CB663B6006F4738 /* eigen */,
 				05199A8625C63D200006B8FA /* eigen.h */,
 				05199A7025C63D200006B8FA /* embed.h */,
 				05199A8425C63D200006B8FA /* eval.h */,
 				05199A7A25C63D200006B8FA /* functional.h */,
 				05CAE619274470FF007C93F3 /* gil.h */,
+				05BDA57B2CB66395006F4738 /* gil_safe_call_once.h */,
 				05199A7425C63D200006B8FA /* iostream.h */,
 				05199A7125C63D200006B8FA /* numpy.h */,
 				05199A7325C63D200006B8FA /* operators.h */,
@@ -5883,6 +5930,8 @@
 				05199A8825C63D200006B8FA /* pytypes.h */,
 				05199A7725C63D200006B8FA /* stl_bind.h */,
 				05199A7B25C63D200006B8FA /* stl.h */,
+				05BDA57C2CB66395006F4738 /* type_caster_pyobject_ptr.h */,
+				05BDA57D2CB66395006F4738 /* typing.h */,
 				05CAE61A274470FF007C93F3 /* stl */,
 			);
 			path = pybind11;
@@ -5893,11 +5942,14 @@
 			children = (
 				05199A8125C63D200006B8FA /* class.h */,
 				05199A8025C63D200006B8FA /* common.h */,
+				05BDA5782CB66323006F4738 /* cpp_conduit.h */,
 				05199A7E25C63D200006B8FA /* descr.h */,
+				05BDA5792CB66323006F4738 /* exception_translation.h */,
 				05199A8225C63D200006B8FA /* init.h */,
 				05199A7F25C63D200006B8FA /* internals.h */,
 				05CAE61C27447121007C93F3 /* type_caster_base.h */,
 				05199A7D25C63D200006B8FA /* typeid.h */,
+				05BDA57A2CB66323006F4738 /* value_and_holder.h */,
 			);
 			path = detail;
 			sourceTree = "<group>";
@@ -6799,9 +6851,15 @@
 			children = (
 				05B7FF8125AC22A9003BAF5C /* automorph.cpp */,
 				05B7002025AC2305003BAF5C /* automorph.h */,
+				05BDA5562CB64CCD006F4738 /* binomial.h */,
+				05BDA5572CB64CCD006F4738 /* binomial.cpp */,
+				05BDA5582CB64CCD006F4738 /* binomial_containers.h */,
+				05BDA5592CB64CCD006F4738 /* binomial_containers.cpp */,
 				05EDDA4727E3102A001743C1 /* chunk.cpp */,
 				05EDDA4A27E3102A001743C1 /* chunk.h */,
 				05431F3C1C40F3C9009BC072 /* CMakeLists.txt */,
+				05BDA55A2CB64CCD006F4738 /* collect_lat.h */,
+				05BDA55B2CB64CCD006F4738 /* collect_lat.cpp */,
 				05B7FF8325AC22A9003BAF5C /* collection.cpp */,
 				05B7001B25AC2304003BAF5C /* collection.h */,
 				05431F3D1C40F3C9009BC072 /* cone_dual_mode.cpp */,
@@ -6818,6 +6876,8 @@
 				05B7001A25AC2304003BAF5C /* face_lattice.h */,
 				05431F451C40F3C9009BC072 /* full_cone.cpp */,
 				05431F461C40F3C9009BC072 /* full_cone.h */,
+				05BDA55C2CB64CCD006F4738 /* fusion.h */,
+				05BDA55D2CB64CCD006F4738 /* fusion.cpp */,
 				05B7FF8425AC22AA003BAF5C /* general.cpp */,
 				05431F471C40F3C9009BC072 /* general.h */,
 				05431F481C40F3C9009BC072 /* HilbertSeries.cpp */,
@@ -6826,6 +6886,8 @@
 				05B7001E25AC2305003BAF5C /* input.h */,
 				05B7001F25AC2305003BAF5C /* input_type.h */,
 				05431F4B1C40F3C9009BC072 /* integer.h */,
+				05BDA55E2CB64CCD006F4738 /* lattice_ideal.h */,
+				05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */,
 				05431F4E1C40F3C9009BC072 /* libnormaliz.h */,
 				05B7001C25AC2305003BAF5C /* list_and_map_operations.h */,
 				05431F521C40F3C9009BC072 /* matrix.cpp */,
@@ -6838,6 +6900,8 @@
 				05B4D2A9229F376800B7B11C /* nmz_integrate.h */,
 				05B7001725AC2304003BAF5C /* nmz_nauty.h */,
 				05B7FF8725AC22AA003BAF5C /* nmz_nauty.cpp */,
+				05BDA5602CB64CCD006F4738 /* nmz_polynomial.h */,
+				05BDA5612CB64CCD006F4738 /* nmz_polynomial.cpp */,
 				05431F551C40F3C9009BC072 /* normaliz_exception.h */,
 				05431F561C40F3C9009BC072 /* offload_handler.cpp */,
 				05431F571C40F3C9009BC072 /* offload_handler.h */,
@@ -7682,6 +7746,7 @@
 				056AED4D2A431AE200EAF4FA /* disctype.cpp */,
 				056AED482A431AE200EAF4FA /* facenumbering.cpp */,
 				056AED4A2A431AE200EAF4FA /* intutils.cpp */,
+				05BDA5742CB65B08006F4738 /* iterators.cpp */,
 				056AED4F2A431AE200EAF4FA /* link.cpp */,
 				056AED4E2A431AE200EAF4FA /* perm.cpp */,
 				056AED452A431AE200EAF4FA /* snappea.cpp */,
@@ -8134,6 +8199,16 @@
 			path = core;
 			sourceTree = "<group>";
 		};
+		05BDA5812CB663B6006F4738 /* eigen */ = {
+			isa = PBXGroup;
+			children = (
+				05BDA57E2CB663B6006F4738 /* common.h */,
+				05BDA57F2CB663B6006F4738 /* matrix.h */,
+				05BDA5802CB663B6006F4738 /* tensor.h */,
+			);
+			path = eigen;
+			sourceTree = "<group>";
+		};
 		05BEB0C219CCE0BB006AB2C8 /* Toast */ = {
 			isa = PBXGroup;
 			children = (
@@ -8400,6 +8475,12 @@
 				051261A9278D65B9006A55B1 /* intersectionform.h in Headers */,
 				05721EFF1F9715C700A83FFC /* laurent2.h in Headers */,
 				055115011DCDF63000EC753C /* simplex.h in Headers */,
+				05BDA5622CB64CCD006F4738 /* binomial.h in Headers */,
+				05BDA5632CB64CCD006F4738 /* binomial_containers.h in Headers */,
+				05BDA5642CB64CCD006F4738 /* nmz_polynomial.h in Headers */,
+				05BDA5652CB64CCD006F4738 /* fusion.h in Headers */,
+				05BDA5662CB64CCD006F4738 /* collect_lat.h in Headers */,
+				05BDA5672CB64CCD006F4738 /* lattice_ideal.h in Headers */,
 				059802F626683C6D002D5D57 /* xmlpacketreader.h in Headers */,
 				055BC3E92653380600E5E34C /* sigutils.h in Headers */,
 				0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */,
@@ -9625,6 +9706,12 @@
 				0553FA962AEBE3AC00BE89A7 /* triangle3.cpp in Sources */,
 				0553FB3A2AEBE73A00BE89A7 /* txicore.cpp in Sources */,
 				0553FAF02AEBE6D800BE89A7 /* normalhypersurface.cpp in Sources */,
+				05BDA56E2CB64CCD006F4738 /* binomial.cpp in Sources */,
+				05BDA56F2CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */,
+				05BDA5702CB64CCD006F4738 /* binomial_containers.cpp in Sources */,
+				05BDA5712CB64CCD006F4738 /* fusion.cpp in Sources */,
+				05BDA5722CB64CCD006F4738 /* collect_lat.cpp in Sources */,
+				05BDA5732CB64CCD006F4738 /* lattice_ideal.cpp in Sources */,
 				0553FAFD2AEBE6ED00BE89A7 /* flype.cpp in Sources */,
 				0553FA842AEBE36E00BE89A7 /* xmlfilterreader.cpp in Sources */,
 				0529094C2AE5EA090028990D /* ReginaDocument.swift in Sources */,
@@ -9902,6 +9989,7 @@
 				056AED582A431AE200EAF4FA /* facetpairing3.cpp in Sources */,
 				056AED6A2A431AE200EAF4FA /* gtest.cc in Sources */,
 				056AED682A431AE200EAF4FA /* sfs.cpp in Sources */,
+				05BDA5752CB65B08006F4738 /* iterators.cpp in Sources */,
 				056AED812A431AE200EAF4FA /* facenumbering.cpp in Sources */,
 				056AED5A2A431AE200EAF4FA /* spans.cpp in Sources */,
 				056AED832A431AE200EAF4FA /* census.cpp in Sources */,
@@ -10291,6 +10379,12 @@
 				0591E7F31C4F75C300793A9C /* gluingpermsearcher4.cpp in Sources */,
 				05135AE128347BF600C4BFDC /* cut.cpp in Sources */,
 				05C265B9282C948700232420 /* facetpairing4.cpp in Sources */,
+				05BDA5682CB64CCD006F4738 /* binomial.cpp in Sources */,
+				05BDA5692CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */,
+				05BDA56A2CB64CCD006F4738 /* binomial_containers.cpp in Sources */,
+				05BDA56B2CB64CCD006F4738 /* fusion.cpp in Sources */,
+				05BDA56C2CB64CCD006F4738 /* collect_lat.cpp in Sources */,
+				05BDA56D2CB64CCD006F4738 /* lattice_ideal.cpp in Sources */,
 				054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */,
 				05B7FFCA25AC22D3003BAF5C /* descent.cpp in Sources */,
 				05C1BEAE1DCA7CA9007C946B /* boundary6.cpp in Sources */,
@@ -11626,6 +11720,7 @@
 					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/python\"",
 					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
@@ -11686,6 +11781,7 @@
 					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/python\"",
 					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
