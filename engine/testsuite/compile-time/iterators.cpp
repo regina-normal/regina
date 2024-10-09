@@ -30,10 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/packet.h"
+#include "hypersurface/normalhypersurfaces.h"
+#include "maths/permgroup.h"
+#include "surface/disc.h"
+#include "surface/normalsurfaces.h"
+#include "utilities/tableview.h"
 
 static_assert(std::forward_iterator<regina::ChildIterator<true>>);
 static_assert(std::forward_iterator<regina::ChildIterator<false>>);
 static_assert(std::forward_iterator<regina::SubtreeIterator<true>>);
 static_assert(std::forward_iterator<regina::SubtreeIterator<false>>);
+
+static_assert(std::bidirectional_iterator<
+    regina::NormalSurfaces::VectorIterator>);
+static_assert(std::bidirectional_iterator<
+    regina::NormalHypersurfaces::VectorIterator>);
+
+static_assert(std::input_iterator<regina::PermGroup<5>::iterator>);
+
+static_assert(std::forward_iterator<
+    regina::DiscSpecIterator<regina::DiscSetTet>>);
+
+static_assert(std::input_iterator<regina::TableView<int, 4>::iterator>);
+static_assert(std::input_iterator<regina::TableView<char, 2, 3>::iterator>);
 

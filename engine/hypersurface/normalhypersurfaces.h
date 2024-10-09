@@ -616,25 +616,16 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * A bidirectional iterator that runs through the raw vectors for
          * hypersurfaces in this list.
          *
+         * As of Regina 7.4, this class no longer provides the iterator type
+         * aliases \a value_type, \a iterator_category, \a difference_type,
+         * \a pointer and \a reference. Instead you can access these through
+         * `std::iterator_traits`.
+         *
          * \nopython Instead NormalHypersurfaces::vectors() returns an object
          * of a different (hidden) class that supports the Python
          * iterable/iterator interface.
          */
-        // TODO: Iterator
         class VectorIterator {
-            public:
-                using iterator_category = std::bidirectional_iterator_tag;
-                    /**< Declares this to be a bidirectional iterator type. */
-                using value_type = Vector<LargeInteger>;
-                    /**< Indicates what type the iterator points to. */
-                using difference_type = typename
-                    std::vector<NormalHypersurface>::const_iterator::difference_type;
-                    /**< The type obtained by subtracting iterators. */
-                using pointer = const Vector<LargeInteger>*;
-                    /**< A pointer to \a value_type. */
-                using reference = const Vector<LargeInteger>&;
-                    /**< The type obtained when dereferencing iterators. */
-
             private:
                 std::vector<NormalHypersurface>::const_iterator it_;
                     /**< An iterator into the underlying list of
@@ -902,6 +893,19 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
  * \ingroup hypersurface
  */
 void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
+
+#ifndef __APIDOCS
+} namespace std {
+    template <>
+    struct iterator_traits<regina::NormalHypersurfaces::VectorIterator> {
+        using value_type = regina::Vector<regina::LargeInteger>;
+        using iterator_category = std::bidirectional_iterator_tag;
+        using difference_type = typename std::vector<regina::NormalHypersurface>::const_iterator::difference_type;
+        using pointer = const value_type*;
+        using reference = const value_type&;
+    };
+} namespace regina {
+#endif
 
 /**
  * Generates the set of normal hypersurface matching equations for the
