@@ -150,9 +150,18 @@ inline constexpr int quadPartner[3][4] = {
  * is of the form `02/13`, which in this case is the quadrilateral type
  * that splits vertices 0,2 from vertices 1,3.
  *
+ * Some older compilers (such as GCC 10 and GCC 11) do not support constexpr
+ * strings.  In such cases, this constant will be marked `inline const`
+ * but not `constexpr`.
+ *
  * \ingroup surfaces
  */
+#if __cpp_lib_constexpr_string >= 201907L
 inline constexpr std::string quadString[3] = { "01/23", "02/13", "03/12" };
+#else
+#warning "Compiler does not support constexpr strings; falling back to const."
+inline const std::string quadString[3] = { "01/23", "02/13", "03/12" };
+#endif
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
