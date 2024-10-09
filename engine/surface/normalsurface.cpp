@@ -43,7 +43,7 @@
 // only once (as opposed to every time the header is included).
 // Therefore we put the warning here in normalsurface.cpp.
 #if !(__cpp_lib_constexpr_string >= 201907L)
-#warning "This compiler does not support constexpr strings, and so regina::quadString falls back to const."
+#warning "This compiler does not support constexpr strings, and so regina::quadString will merely be const."
 #endif
 
 namespace regina {
