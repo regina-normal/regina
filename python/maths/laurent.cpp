@@ -45,8 +45,7 @@ using regina::Laurent;
 void addLaurent(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Laurent)
 
-    auto c = pybind11::class_<Laurent<regina::Integer>>(m, "Laurent",
-            rdoc_scope)
+    auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<long>(), rdoc::__init)
         .def(pybind11::init<const Laurent<Integer>&>(), rdoc::__copy)
