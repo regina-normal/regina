@@ -227,24 +227,24 @@ SFSpace SatRegion::createSFS(bool reflect) const {
     countBoundaries(untwisted, twisted);
 
     // Go ahead and build the Seifert fibred space.
-    SFSpace::ClassType baseClass;
+    SFSpace::Class baseClass;
 
     bool bdry = (twisted || untwisted || twistedBlocks_);
     if (baseOrbl_) {
         if (hasTwist_)
-            baseClass = (bdry ? SFSpace::bo2 : SFSpace::o2);
+            baseClass = (bdry ? SFSpace::Class::bo2 : SFSpace::Class::o2);
         else
-            baseClass = (bdry ? SFSpace::bo1 : SFSpace::o1);
+            baseClass = (bdry ? SFSpace::Class::bo1 : SFSpace::Class::o1);
     } else if (! hasTwist_)
-        baseClass = (bdry ? SFSpace::bn1 : SFSpace::n1);
+        baseClass = (bdry ? SFSpace::Class::bn1 : SFSpace::Class::n1);
     else if (twistsMatchOrientation_)
-        baseClass = (bdry ? SFSpace::bn2 : SFSpace::n2);
+        baseClass = (bdry ? SFSpace::Class::bn2 : SFSpace::Class::n2);
     else {
         // In the no-boundary case, we might not be able to distinguish
         // between n3 and n4.  Just call it n3 for now, and if we discover
         // it might have been n4 instead then we call it off and throw
         // an exception.
-        baseClass = (bdry ? SFSpace::bn3 : SFSpace::n3);
+        baseClass = (bdry ? SFSpace::Class::bn3 : SFSpace::Class::n3);
     }
 
     // Recall that baseEuler_ assumes that each block contributes a plain
@@ -267,8 +267,8 @@ SFSpace SatRegion::createSFS(bool reflect) const {
         sfs.insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
 
     if ((sfs.baseGenus() >= 3) &&
-            (sfs.baseClass() == SFSpace::n3 ||
-             sfs.baseClass() == SFSpace::n4)) {
+            (sfs.baseClass() == SFSpace::Class::n3 ||
+             sfs.baseClass() == SFSpace::Class::n4)) {
         // Could still be either n3 or n4.
         // Shrug, give up.
         throw NotImplemented("SatRegion::createSFS() cannot yet "

@@ -209,7 +209,7 @@ class SFSpace : public Manifold {
          * \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base orbifolds
          * with boundaries.
          */
-        enum ClassType {
+        enum class Class {
             /**
              * Indicates that the base orbifold is orientable with
              * no punctures or reflector boundaries, and that none
@@ -284,8 +284,104 @@ class SFSpace : public Manifold {
             bn3 = 403
         };
 
+        /**
+         * A deprecated type alias that represents a class of base orbifold.
+         *
+         * \deprecated This has been renamed to Class, and is now a scoped
+         * enumeration.
+         */
+        using ClassType [[deprecated]] = Class;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::o1.
+         */
+        [[deprecated]] inline static constexpr Class o1 = Class::o1;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::o2.
+         */
+        [[deprecated]] inline static constexpr Class o2 = Class::o2;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::n1.
+         */
+        [[deprecated]] inline static constexpr Class n1 = Class::n1;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::n2.
+         */
+        [[deprecated]] inline static constexpr Class n2 = Class::n2;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::n3.
+         */
+        [[deprecated]] inline static constexpr Class n3 = Class::n3;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::n4.
+         */
+        [[deprecated]] inline static constexpr Class n4 = Class::n4;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::bo1.
+         */
+        [[deprecated]] inline static constexpr Class bo1 = Class::bo1;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::bo2.
+         */
+        [[deprecated]] inline static constexpr Class bo2 = Class::bo2;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::bn1.
+         */
+        [[deprecated]] inline static constexpr Class bn1 = Class::bn1;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::bn2.
+         */
+        [[deprecated]] inline static constexpr Class bn2 = Class::bn2;
+
+        /**
+         * A deprecated constant indicating one of the base orbifold classes.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Class::bn3.
+         */
+        [[deprecated]] inline static constexpr Class bn3 = Class::bn3;
+
     private:
-        ClassType class_;
+        Class class_;
             /**< Indicates which of the classes above this space belongs to. */
         unsigned long genus_;
             /**< The genus of the base orbifold.  For non-orientable
@@ -343,7 +439,7 @@ class SFSpace : public Manifold {
          * \param useClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
          * paths in the 3-manifold.  See the SFSpace class notes and the
-         * ClassType enumeration notes for details.
+         * Class enumeration notes for details.
          * \param genus the genus of the base orbifold (the
          * number of tori or projective planes that it contains).
          * Note that for non-orientable base surfaces, this is the
@@ -363,7 +459,7 @@ class SFSpace : public Manifold {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        SFSpace(ClassType useClass, unsigned long genus,
+        SFSpace(Class useClass, unsigned long genus,
             unsigned long punctures = 0, unsigned long puncturesTwisted = 0,
             unsigned long reflectors = 0, unsigned long reflectorsTwisted = 0);
         /**
@@ -409,11 +505,11 @@ class SFSpace : public Manifold {
          * addHandle(), addCrosscap(), addPuncture() or addReflector().
          *
          * For more information on the eleven predefined classes, see the
-         * SFSpace class notes or the ClassType enumeration notes.
+         * SFSpace class notes or the Class enumeration notes.
          *
          * \return the particular class to which this space belongs.
          */
-        ClassType baseClass() const;
+        Class baseClass() const;
         /**
          * Returns the genus of the base orbifold.  All punctures and
          * reflector boundaries in the base orbifold are ignored (i.e.,
@@ -573,7 +669,7 @@ class SFSpace : public Manifold {
          * a punctured torus.
          *
          * Note that this operation may alter which of the classes
-         * described by ClassType this space belongs to.
+         * described by Class this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -593,7 +689,7 @@ class SFSpace : public Manifold {
          * a Mobius band.
          *
          * Note that this operation may alter which of the classes
-         * described by ClassType this space belongs to.
+         * described by Class this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -882,13 +978,13 @@ inline constexpr SFSFibre::SFSFibre(long newAlpha, long newBeta) :
 
 // Inline functions for SFSpace
 
-inline SFSpace::SFSpace() : class_(o1), genus_(0),
+inline SFSpace::SFSpace() : class_(Class::o1), genus_(0),
         punctures_(0), puncturesTwisted_(0),
         reflectors_(0), reflectorsTwisted_(0),
         nFibres_(0), b_(0) {
 }
 
-inline SFSpace::SFSpace(SFSpace::ClassType useClass, unsigned long genus,
+inline SFSpace::SFSpace(SFSpace::Class useClass, unsigned long genus,
         unsigned long punctures, unsigned long puncturesTwisted,
         unsigned long reflectors, unsigned long reflectorsTwisted) :
         class_(useClass), genus_(genus),
@@ -909,7 +1005,7 @@ inline void SFSpace::swap(SFSpace& other) noexcept {
     std::swap(b_, other.b_);
 }
 
-inline SFSpace::ClassType SFSpace::baseClass() const {
+inline SFSpace::Class SFSpace::baseClass() const {
     return class_;
 }
 
@@ -918,15 +1014,18 @@ inline unsigned long SFSpace::baseGenus() const {
 }
 
 inline bool SFSpace::baseOrientable() const {
-    return (class_ == o1 || class_ == o2 || class_ == bo1 || class_ == bo2);
+    return (class_ == Class::o1 || class_ == Class::o2 ||
+        class_ == Class::bo1 || class_ == Class::bo2);
 }
 
 inline bool SFSpace::fibreReversing() const {
-    return ! (class_ == o1 || class_ == n1 || class_ == bo1 || class_ == bn1);
+    return ! (class_ == Class::o1 || class_ == Class::n1 ||
+        class_ == Class::bo1 || class_ == Class::bn1);
 }
 
 inline bool SFSpace::fibreNegating() const {
-    return ! (class_ == o1 || class_ == n2 || class_ == bo1 || class_ == bn2);
+    return ! (class_ == Class::o1 || class_ == Class::n2 ||
+        class_ == Class::bo1 || class_ == Class::bn2);
 }
 
 inline unsigned long SFSpace::punctures() const {

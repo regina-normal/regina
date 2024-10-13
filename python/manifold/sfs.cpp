@@ -62,7 +62,7 @@ void addSFSpace(pybind11::module_& m) {
     auto s = pybind11::class_<SFSpace, regina::Manifold>(m, "SFSpace",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
-        .def(pybind11::init<SFSpace::ClassType, unsigned long,
+        .def(pybind11::init<SFSpace::Class, unsigned long,
             unsigned long, unsigned long,
             unsigned long, unsigned long>(),
             pybind11::arg(), pybind11::arg(),
@@ -123,22 +123,36 @@ void addSFSpace(pybind11::module_& m) {
 
     regina::python::add_global_swap<SFSpace>(m, rdoc::global_swap);
 
-    RDOC_SCOPE_INNER_BEGIN(ClassType)
+    RDOC_SCOPE_INNER_BEGIN(Class)
 
-    pybind11::enum_<SFSpace::ClassType>(s, "ClassType", rdoc_inner_scope)
-        .value("o1", SFSpace::o1, rdoc_inner::o1)
-        .value("o2", SFSpace::o2, rdoc_inner::o2)
-        .value("n1", SFSpace::n1, rdoc_inner::n1)
-        .value("n2", SFSpace::n2, rdoc_inner::n2)
-        .value("n3", SFSpace::n3, rdoc_inner::n3)
-        .value("n4", SFSpace::n4, rdoc_inner::n4)
-        .value("bo1", SFSpace::bo1, rdoc_inner::bo1)
-        .value("bo2", SFSpace::bo2, rdoc_inner::bo2)
-        .value("bn1", SFSpace::bn1, rdoc_inner::bn1)
-        .value("bn2", SFSpace::bn2, rdoc_inner::bn2)
-        .value("bn3", SFSpace::bn3, rdoc_inner::bn3)
+    pybind11::enum_<SFSpace::Class>(s, "Class", rdoc_inner_scope)
+        .value("o1", SFSpace::Class::o1, rdoc_inner::o1)
+        .value("o2", SFSpace::Class::o2, rdoc_inner::o2)
+        .value("n1", SFSpace::Class::n1, rdoc_inner::n1)
+        .value("n2", SFSpace::Class::n2, rdoc_inner::n2)
+        .value("n3", SFSpace::Class::n3, rdoc_inner::n3)
+        .value("n4", SFSpace::Class::n4, rdoc_inner::n4)
+        .value("bo1", SFSpace::Class::bo1, rdoc_inner::bo1)
+        .value("bo2", SFSpace::Class::bo2, rdoc_inner::bo2)
+        .value("bn1", SFSpace::Class::bn1, rdoc_inner::bn1)
+        .value("bn2", SFSpace::Class::bn2, rdoc_inner::bn2)
+        .value("bn3", SFSpace::Class::bn3, rdoc_inner::bn3)
         .export_values()
         ;
+
+    // Deprecated type alias and constants:
+    s.attr("ClassType") = s.attr("Class");
+    s.attr("o1") = SFSpace::Class::o1;
+    s.attr("o2") = SFSpace::Class::o2;
+    s.attr("n1") = SFSpace::Class::n1;
+    s.attr("n2") = SFSpace::Class::n2;
+    s.attr("n3") = SFSpace::Class::n3;
+    s.attr("n4") = SFSpace::Class::n4;
+    s.attr("bo1") = SFSpace::Class::bo1;
+    s.attr("bo2") = SFSpace::Class::bo2;
+    s.attr("bn1") = SFSpace::Class::bn1;
+    s.attr("bn2") = SFSpace::Class::bn2;
+    s.attr("bn3") = SFSpace::Class::bn3;
 
     RDOC_SCOPE_INNER_END
     RDOC_SCOPE_END

@@ -140,8 +140,8 @@ Parameter ``newBeta``:
 
 namespace SFSpace_ {
 
-// Docstring regina::python::doc::SFSpace_::ClassType
-static const char *ClassType =
+// Docstring regina::python::doc::SFSpace_::Class
+static const char *Class =
 R"doc(Lists the six classes ``o1``, ``o2``, ``n1``, ``n2``, ``n3``, ``n4``
 for base orbifolds without boundaries, plus five classes ``bo1``,
 ``b02``, ``bn1``, ``bn2``, ``bn3`` for base orbifolds with boundaries.)doc";
@@ -221,8 +221,8 @@ Precondition:
 Parameter ``useClass``:
     indicates whether the base orbifold is closed and/or orientable,
     and gives information about fibre-reversing paths in the
-    3-manifold. See the SFSpace class notes and the ClassType
-    enumeration notes for details.
+    3-manifold. See the SFSpace class notes and the Class enumeration
+    notes for details.
 
 Parameter ``genus``:
     the genus of the base orbifold (the number of tori or projective
@@ -260,7 +260,7 @@ orientable genus by one. It is equivalent to removing a disc from the
 base orbifold and replacing it with a Mobius band.
 
 Note that this operation may alter which of the classes described by
-ClassType this space belongs to.
+Class this space belongs to.
 
 The exceptional fibres and the obstruction constant *b* are not
 modified by this routine.
@@ -279,7 +279,7 @@ the non-orientable genus by two. It is equivalent to removing a disc
 from the base orbifold and replacing it with a punctured torus.
 
 Note that this operation may alter which of the classes described by
-ClassType this space belongs to.
+Class this space belongs to.
 
 The exceptional fibres and the obstruction constant *b* are not
 modified by this routine.
@@ -346,7 +346,7 @@ The class can be (indirectly) modified by calling addHandle(),
 addCrosscap(), addPuncture() or addReflector().
 
 For more information on the eleven predefined classes, see the SFSpace
-class notes or the ClassType enumeration notes.
+class notes or the Class enumeration notes.
 
 Returns:
     the particular class to which this space belongs.)doc";
@@ -631,72 +631,72 @@ Parameter ``other``:
 
 }
 
-namespace SFSpace_::ClassType_ {
+namespace SFSpace_::Class_ {
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::bn1
+// Docstring regina::python::doc::SFSpace_::Class_::bn1
 static const char *bn1 =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is non-orientable, and that it contains no fibre-
 reversing paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::bn2
+// Docstring regina::python::doc::SFSpace_::Class_::bn2
 static const char *bn2 =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is non-orientable, and that its fibre-reversing
 paths correspond precisely to its orientation-reversing paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::bn3
+// Docstring regina::python::doc::SFSpace_::Class_::bn3
 static const char *bn3 =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is non-orientable, that it contains at least one
 fibre-reversing path, and that its fibre-reversing paths do not
 correspond precisely to its orientation-reversing paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::bo1
+// Docstring regina::python::doc::SFSpace_::Class_::bo1
 static const char *bo1 =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is orientable, and that it contains no fibre-
 reversing paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::bo2
+// Docstring regina::python::doc::SFSpace_::Class_::bo2
 static const char *bo2 =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is orientable, and that it contains at least one
 fibre-reversing path.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::n1
+// Docstring regina::python::doc::SFSpace_::Class_::n1
 static const char *n1 =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, and that none of its generators give fibre-
 reversing paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::n2
+// Docstring regina::python::doc::SFSpace_::Class_::n2
 static const char *n2 =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, and that all of its generators give fibre-
 reversing paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::n3
+// Docstring regina::python::doc::SFSpace_::Class_::n3
 static const char *n3 =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, that it has non-orientable genus at least
 two, and that precisely one of its generators gives a fibre-reversing
 path.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::n4
+// Docstring regina::python::doc::SFSpace_::Class_::n4
 static const char *n4 =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, that it has non-orientable genus at least
 three, and that precisely two of its generators give fibre-reversing
 paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::o1
+// Docstring regina::python::doc::SFSpace_::Class_::o1
 static const char *o1 =
 R"doc(Indicates that the base orbifold is orientable with no punctures or
 reflector boundaries, and that none of its generators give fibre-
 reversing paths.)doc";
 
-// Docstring regina::python::doc::SFSpace_::ClassType_::o2
+// Docstring regina::python::doc::SFSpace_::Class_::o2
 static const char *o2 =
 R"doc(Indicates that the base orbifold is orientable with no punctures or
 reflector boundaries, and that all of its generators give fibre-

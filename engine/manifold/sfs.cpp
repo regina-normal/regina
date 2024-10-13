@@ -78,17 +78,17 @@ void SFSpace::addHandle(bool fibreReversing) {
     if (fibreReversing) {
         // Fibre-reversing.
         switch (class_) {
-            case o1:
-                class_ = o2; break;
-            case n1:
-                class_ = (genus_ % 2 == 0 ? n4 : n3); break;
-            case n2:
-                class_ = n4; break;
-            case bo1:
-                class_ = bo2; break;
-            case bn1:
-            case bn2:
-                class_ = bn3; break;
+            case Class::o1:
+                class_ = Class::o2; break;
+            case Class::n1:
+                class_ = (genus_ % 2 == 0 ? Class::n4 : Class::n3); break;
+            case Class::n2:
+                class_ = Class::n4; break;
+            case Class::bo1:
+                class_ = Class::bo2; break;
+            case Class::bn1:
+            case Class::bn2:
+                class_ = Class::bn3; break;
             default:
                 // No change.
                 break;
@@ -123,17 +123,17 @@ void SFSpace::addCrosscap(bool fibreReversing) {
     if (fibreReversing) {
         // Fibre-reversing.
         switch(class_) {
-            case o1:
-                class_ = n2; break;
-            case o2:
-                class_ = n4; break;
-            case n1:
-                class_ = (genus_ % 2 == 0 ? n4 : n3); break;
-            case bo1:
-                class_ = bn2; break;
-            case bo2:
-            case bn1:
-                class_ = bn3; break;
+            case Class::o1:
+                class_ = Class::n2; break;
+            case Class::o2:
+                class_ = Class::n4; break;
+            case Class::n1:
+                class_ = (genus_ % 2 == 0 ? Class::n4 : Class::n3); break;
+            case Class::bo1:
+                class_ = Class::bn2; break;
+            case Class::bo2:
+            case Class::bn1:
+                class_ = Class::bn3; break;
             default:
                 // No change.
                 break;
@@ -141,19 +141,19 @@ void SFSpace::addCrosscap(bool fibreReversing) {
     } else {
         // Fibre-preserving.
         switch(class_) {
-            case o1:
-                class_ = n1; break;
-            case o2:
-            case n2:
-            case n4:
-                class_ = n3; break;
-            case n3:
-                class_ = n4; break;
-            case bo1:
-                class_ = bn1; break;
-            case bo2:
-            case bn2:
-                class_ = bn3; break;
+            case Class::o1:
+                class_ = Class::n1; break;
+            case Class::o2:
+            case Class::n2:
+            case Class::n4:
+                class_ = Class::n3; break;
+            case Class::n3:
+                class_ = Class::n4; break;
+            case Class::bo1:
+                class_ = Class::bn1; break;
+            case Class::bo2:
+            case Class::bn2:
+                class_ = Class::bn3; break;
             default:
                 // No change.
                 break;
@@ -170,24 +170,24 @@ void SFSpace::addPuncture(bool twisted, unsigned long nPunctures) {
         puncturesTwisted_ += nPunctures;
 
         if (baseOrientable())
-            class_ = bo2;
+            class_ = Class::bo2;
         else
-            class_ = bn3;
+            class_ = Class::bn3;
     } else {
         punctures_ += nPunctures;
 
         switch(class_) {
-            case o1:
-                class_ = bo1; break;
-            case o2:
-                class_ = bo2; break;
-            case n1:
-                class_ = bn1; break;
-            case n2:
-                class_ = bn2; break;
-            case n3:
-            case n4:
-                class_ = bn3; break;
+            case Class::o1:
+                class_ = Class::bo1; break;
+            case Class::o2:
+                class_ = Class::bo2; break;
+            case Class::n1:
+                class_ = Class::bn1; break;
+            case Class::n2:
+                class_ = Class::bn2; break;
+            case Class::n3:
+            case Class::n4:
+                class_ = Class::bn3; break;
             default:
                 // No change.
                 break;
@@ -200,24 +200,24 @@ void SFSpace::addReflector(bool twisted, unsigned long nReflectors) {
         reflectorsTwisted_ += nReflectors;
 
         if (baseOrientable())
-            class_ = bo2;
+            class_ = Class::bo2;
         else
-            class_ = bn3;
+            class_ = Class::bn3;
     } else {
         reflectors_ += nReflectors;
 
         switch(class_) {
-            case o1:
-                class_ = bo1; break;
-            case o2:
-                class_ = bo2; break;
-            case n1:
-                class_ = bn1; break;
-            case n2:
-                class_ = bn2; break;
-            case n3:
-            case n4:
-                class_ = bn3; break;
+            case Class::o1:
+                class_ = Class::bo1; break;
+            case Class::o2:
+                class_ = Class::bo2; break;
+            case Class::n1:
+                class_ = Class::bn1; break;
+            case Class::n2:
+                class_ = Class::bn2; break;
+            case Class::n3:
+            case Class::n4:
+                class_ = Class::bn3; break;
             default:
                 // No change.
                 break;
@@ -564,7 +564,7 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
         return std::nullopt;
     }
 
-    if (genus_ == 0 && class_ == o1) {
+    if (genus_ == 0 && class_ == Class::o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
             return LensSpace(b_ >= 0 ? b_ : -b_, 1);
@@ -597,7 +597,7 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
 
         // Not a lens space.
         return std::nullopt;
-    } else if (genus_ == 1 && class_ == n2) {
+    } else if (genus_ == 1 && class_ == Class::n2) {
         // Base orbifold is the projective plane.
         if (nFibres_ == 1) {
             // We have precisely one exceptional fibre.
@@ -720,7 +720,7 @@ Triangulation<3> SFSpace::construct() const {
         return lens->construct();
 
     // Currently we work over the 2-sphere only.
-    if (genus_ != 0 || class_ != o1)
+    if (genus_ != 0 || class_ != Class::o1)
         throw NotImplemented("SFSpace::construct() is currently not "
             "implemented for spaces whose base orbifold is not the 2-sphere");
 
@@ -972,13 +972,13 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
                 "twisted reflector", tex);
     }
 
-    if (class_ == o2 || class_ == bo2)
+    if (class_ == Class::o2 || class_ == Class::bo2)
         out << (tex ? "/o_2" : "/o2");
-    else if (class_ == n2 || class_ == bn2)
+    else if (class_ == Class::n2 || class_ == Class::bn2)
         out << (tex ? "/n_2" : "/n2");
-    else if (class_ == n3 || class_ == bn3)
+    else if (class_ == Class::n3 || class_ == Class::bn3)
         out << (tex ? "/n_3" : "/n3");
-    else if (class_ == n4)
+    else if (class_ == Class::n4)
         out << (tex ? "/n_4" : "/n4");
 
     return out;
@@ -1055,7 +1055,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // TODO: The four non-orientable flat manifolds are on Orlik p140.
 
     // SFS over the 2-sphere:
-    if (genus_ == 0 && class_ == o1) {
+    if (genus_ == 0 && class_ == Class::o1) {
         if (nFibres_ == 4 && fibre[0] == two && fibre[1] == two &&
                 fibre[2] == two && fibre[3] == two && b_ == -2) {
             // [ S2 : (2,1), (2,1), (2,-1), (2,-1) ]
@@ -1221,7 +1221,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     }
 
     // SFS over the real projective plane:
-    if (genus_ == 1 && class_ == n2) {
+    if (genus_ == 1 && class_ == Class::n2) {
         if (nFibres_ == 0) {
             // No exceptional fibres.
             if (b_ == 0) {

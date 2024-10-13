@@ -366,6 +366,11 @@ Version 7.4  [ (to be announced) ]
             - Added a spaceship operator (<=>) for aesthetic comparisons.
               This has the effect of implementing all comparison operators,
               not just less-than (<) as before.
+            - SFSpace::ClassType has been renamed to SFSpace::Class, and is now
+              a scoped enumeration for better type safety.  The old enum
+              constants (e.g., SFSpace::o1) have been renamed as scoped enum
+              values (e.g., SFSpace::Class::o1).  The old names have been kept
+              as deprecated compile-time class constants of SFSpace.
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().
