@@ -63,10 +63,10 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
 
     size_t nVertices = comp->countVertices();
     size_t nEdges = comp->countEdges();
-    int link;
     for (size_t i = 0; i < nVertices; i++) {
-        link = comp->vertex(i)->linkType();
-        if (link != Vertex<3>::TORUS && link != Vertex<3>::KLEIN_BOTTLE)
+        auto link = comp->vertex(i)->linkType();
+        if (link != Vertex<3>::Link::Torus &&
+                link != Vertex<3>::Link::KleinBottle)
             return nullptr;
     }
     for (size_t i = 0; i < nEdges; i++)
@@ -145,9 +145,9 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
                 return nullptr;
             if (comp->countEdges() != 4)
                 return nullptr;
-            if (comp->vertex(0)->linkType() != Vertex<3>::TORUS)
+            if (comp->vertex(0)->linkType() != Vertex<3>::Link::Torus)
                 return nullptr;
-            if (comp->vertex(1)->linkType() != Vertex<3>::TORUS)
+            if (comp->vertex(1)->linkType() != Vertex<3>::Link::Torus)
                 return nullptr;
             if (comp->vertex(0)->degree() != 8)
                 return nullptr;

@@ -212,10 +212,10 @@ void Triangulation<4>::calculateVertexLinks() {
         // spherical double cover at the vertex link).  We detect these
         // cases separately under calculateEdgeLinks() below.
         if (! vertex->isValid()) {
-            int type;
             for (Vertex<3>* v : vertex->link_->vertices()) {
-                type = v->linkType();
-                if (type != Vertex<3>::SPHERE && type != Vertex<3>::DISC) {
+                auto type = v->linkType();
+                if (type != Vertex<3>::Link::Sphere &&
+                        type != Vertex<3>::Link::Disc) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
 

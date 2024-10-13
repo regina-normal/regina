@@ -71,6 +71,7 @@
 
 using regina::Packet;
 using regina::Triangulation;
+using VertexLink = regina::Vertex<3>::Link;
 
 namespace {
     /**
@@ -1069,8 +1070,8 @@ void Tri3GluingsUI::drillEdge() {
                         e->vertex(1)->boundaryComponent()->isReal())) {
                 // We already connect with real boundary, so we must not
                 // combine this with new ideal boundary.
-                if (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
-                        e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE) {
+                if (e->vertex(0)->linkType() == VertexLink::Sphere ||
+                        e->vertex(1)->linkType() == VertexLink::Sphere) {
                     // We are drilling an edge that joins real boundary
                     // with an internal vertex.
                     // Topologically, this does nothing at all.
@@ -1101,8 +1102,8 @@ void Tri3GluingsUI::drillEdge() {
             } else {
                 // The edge does not connect with any real boundary.
                 if (e->vertex(0) != e->vertex(1) &&
-                        e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE &&
-                        e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE) {
+                        e->vertex(0)->linkType() == VertexLink::Sphere &&
+                        e->vertex(1)->linkType() == VertexLink::Sphere) {
                     // We are drilling an edge between two internal vertices.
                     // Topologically, this is just a puncture.
                     // Make sure that we puncture a tetrahedron that
@@ -1112,8 +1113,8 @@ void Tri3GluingsUI::drillEdge() {
                     size_t tet = e->front().tetrahedron()->index();
                     ans->puncture(ans->tetrahedron(tet)->triangle(0));
                 } else if (e->vertex(0) != e->vertex(1) &&
-                        (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
-                         e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE)) {
+                        (e->vertex(0)->linkType() == VertexLink::Sphere ||
+                         e->vertex(1)->linkType() == VertexLink::Sphere)) {
                     // We are drilling an edge between an internal
                     // vertex and an ideal vertex.  Topologically, this
                     // does nothing.

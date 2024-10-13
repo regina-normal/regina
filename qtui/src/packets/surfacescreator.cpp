@@ -132,7 +132,7 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
     if ((coordSystem == regina::NormalCoords::QuadClosed ||
                 coordSystem == regina::NormalCoords::QuadOctClosed) && ! (
             tri.countVertices() == 1 &&
-            tri.vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
+            tri.vertex(0)->linkType() == regina::Vertex<3>::Link::Torus &&
             tri.isOriented())) {
         QString name = Coordinates::adjective(coordSystem, false);
         ReginaSupport::sorry(ui,

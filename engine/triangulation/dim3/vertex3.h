@@ -80,41 +80,100 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          *
          * \see link
          */
-        enum LinkType {
+        enum class Link {
             /**
              * Specifies a vertex link that is a sphere.  In other words, the
              * vertex is internal.
              */
-            SPHERE = 1,
+            Sphere = 1,
             /**
              * Specifies a vertex link that is a disc.  In other words, the
              * vertex lies on a real boundary component.
              */
-            DISC = 2,
+            Disc = 2,
             /**
              * Specifies a vertex link that is a torus.  In other words, this
              * is an ideal vertex representing a torus cusp.
              */
-            TORUS = 3,
+            Torus = 3,
             /**
              * Specifies a vertex link that is a Klein bottle.  In other words,
              * this is an ideal vertex representing a Klein bottle cusp.
              */
-            KLEIN_BOTTLE = 4,
+            KleinBottle = 4,
             /**
              * Specifies a vertex link that is closed and is not a sphere,
              * torus or Klein bottle.  In other words, this is an ideal vertex
              * but not one of the standard ideal vertex types.
              */
-            NON_STANDARD_CUSP = 5,
+            NonStandardCusp = 5,
             /**
              * Specifies a vertex link that has boundary and is not a disc.
              * In other words, this vertex makes the triangulation invalid.
              */
-            INVALID = 6
+            Invalid = 6
         };
+
+        /**
+         * A deprecated type alias that represents a type of vertex link.
+         *
+         * \deprecated This has been renamed to Link, and is now a scoped
+         * enumeration.
+         */
+        using LinkType [[deprecated]] = Link;
+
+        /**
+         * A deprecated constant indicating one of the vertex link types.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Link::Sphere.
+         */
+        [[deprecated]] inline static constexpr Link SPHERE = Link::Sphere;
+
+        /**
+         * A deprecated constant indicating one of the vertex link types.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Link::Disc.
+         */
+        [[deprecated]] inline static constexpr Link DISC = Link::Disc;
+
+        /**
+         * A deprecated constant indicating one of the vertex link types.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Link::Torus.
+         */
+        [[deprecated]] inline static constexpr Link TORUS = Link::Torus;
+
+        /**
+         * A deprecated constant indicating one of the vertex link types.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Link::KleinBottle.
+         */
+        [[deprecated]] inline static constexpr Link KLEIN_BOTTLE =
+            Link::KleinBottle;
+
+        /**
+         * A deprecated constant indicating one of the vertex link types.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Link::NonStandardCusp.
+         */
+        [[deprecated]] inline static constexpr Link NON_STANDARD_CUSP =
+            Link::NonStandardCusp;
+
+        /**
+         * A deprecated constant indicating one of the vertex link types.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Link::Invalid.
+         */
+        [[deprecated]] inline static constexpr Link INVALID = Link::Invalid;
+
     private:
-        LinkType link_;
+        Link link_;
             /**< A broad categorisation of the topology of the vertex link. */
         long linkEulerChar_;
             /**< Specifies the Euler characteristic of the vertex link. */
@@ -145,7 +204,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          *
          * \return a broad categorisation of the vertex link.
          */
-        LinkType linkType() const;
+        Link linkType() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -296,21 +355,21 @@ inline Face<3, 0>::Face(Component<3>* component) :
         linkEulerChar_(0), linkTri_(nullptr) {
 }
 
-inline Vertex<3>::LinkType Face<3, 0>::linkType() const {
+inline Vertex<3>::Link Face<3, 0>::linkType() const {
     return link_;
 }
 
 inline bool Face<3, 0>::isLinkClosed() const {
-    return (link_ != DISC && link_ != INVALID);
+    return (link_ != Link::Disc && link_ != Link::Invalid);
 }
 
 inline bool Face<3, 0>::isIdeal() const {
-    return (link_ == TORUS || link_ == KLEIN_BOTTLE ||
-        link_ == NON_STANDARD_CUSP);
+    return (link_ == Link::Torus || link_ == Link::KleinBottle ||
+        link_ == Link::NonStandardCusp);
 }
 
 inline bool Face<3, 0>::isStandard() const {
-    return (link_ != NON_STANDARD_CUSP && link_ != INVALID);
+    return (link_ != Link::NonStandardCusp && link_ != Link::Invalid);
 }
 
 inline long Face<3, 0>::linkEulerChar() const {

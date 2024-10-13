@@ -747,11 +747,11 @@ static void verifyComplementBasic(const Link& link, const char* name) {
 
     size_t ideal = 0;
     for (auto v : c.vertices()) {
-        regina::Vertex<3>::LinkType t = v->linkType();
-        if (t == regina::Vertex<3>::TORUS)
+        auto t = v->linkType();
+        if (t == regina::Vertex<3>::Link::Torus)
             ++ideal;
         else
-            EXPECT_EQ(t, regina::Vertex<3>::SPHERE);
+            EXPECT_EQ(t, regina::Vertex<3>::Link::Sphere);
     }
     EXPECT_EQ(ideal, link.countComponents());
 }

@@ -90,7 +90,7 @@ void addVertex3(pybind11::module_& m) {
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("degree", &Vertex<3>::degree, rbase::degree)
         .def("linkType", &Vertex<3>::linkType, rdoc::linkType)
-        .def("link", [](const Vertex<3>&) -> Vertex<3>::LinkType {
+        .def("link", [](const Vertex<3>&) -> Vertex<3>::Link {
             // Removed completely in v7.0.  C++ does not get a deprecated
             // alias.  Keep this here for Python users for a little while so
             // that people can see what needs to be done.  Probably we can
@@ -140,19 +140,27 @@ being reserved for a different purpose in a future release.)doc")
     regina::python::addListView<
         decltype(std::declval<Vertex<3>>().embeddings())>(m);
 
-    RDOC_SCOPE_INNER_BEGIN(LinkType)
+    RDOC_SCOPE_INNER_BEGIN(Link)
 
-    pybind11::enum_<regina::Vertex<3>::LinkType>(c, "LinkType",
-            rdoc_inner_scope)
-        .value("SPHERE", regina::Vertex<3>::SPHERE, rdoc_inner::SPHERE)
-        .value("DISC", regina::Vertex<3>::DISC, rdoc_inner::DISC)
-        .value("TORUS", regina::Vertex<3>::TORUS, rdoc_inner::TORUS)
-        .value("KLEIN_BOTTLE", regina::Vertex<3>::KLEIN_BOTTLE,
-            rdoc_inner::KLEIN_BOTTLE)
-        .value("NON_STANDARD_CUSP", regina::Vertex<3>::NON_STANDARD_CUSP,
-            rdoc_inner::NON_STANDARD_CUSP)
-        .value("INVALID", regina::Vertex<3>::INVALID, rdoc_inner::INVALID)
+    pybind11::enum_<regina::Vertex<3>::Link>(c, "Link", rdoc_inner_scope)
+        .value("Sphere", regina::Vertex<3>::Link::Sphere, rdoc_inner::Sphere)
+        .value("Disc", regina::Vertex<3>::Link::Disc, rdoc_inner::Disc)
+        .value("Torus", regina::Vertex<3>::Link::Torus, rdoc_inner::Torus)
+        .value("KleinBottle", regina::Vertex<3>::Link::KleinBottle,
+            rdoc_inner::KleinBottle)
+        .value("NonStandardCusp", regina::Vertex<3>::Link::NonStandardCusp,
+            rdoc_inner::NonStandardCusp)
+        .value("Invalid", regina::Vertex<3>::Link::Invalid, rdoc_inner::Invalid)
         .export_values();
+
+    // Deprecated type alias and constants:
+    c.attr("LinkType") = c.attr("Link");
+    c.attr("SPHERE") = regina::Vertex<3>::Link::Sphere;
+    c.attr("DISC") = regina::Vertex<3>::Link::Disc;
+    c.attr("TORUS") = regina::Vertex<3>::Link::Torus;
+    c.attr("KLEIN_BOTTLE") = regina::Vertex<3>::Link::KleinBottle;
+    c.attr("NON_STANDARD_CUSP") = regina::Vertex<3>::Link::NonStandardCusp;
+    c.attr("INVALID") = regina::Vertex<3>::Link::Invalid;
 
     RDOC_SCOPE_INNER_END
     RDOC_SCOPE_END

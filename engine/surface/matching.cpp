@@ -160,7 +160,8 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
             if (! (triangulation.isOriented() && triangulation.isIdeal() &&
                     triangulation.countBoundaryComponents() == 1 &&
                     triangulation.countVertices() == 1 &&
-                    triangulation.vertex(0)->linkType() == Vertex<3>::TORUS))
+                    triangulation.vertex(0)->linkType() ==
+                        Vertex<3>::Link::Torus))
                 throw InvalidArgument(
                     "NormalCoords::QuadClosed and NormalCoords::QuadOctClosed "
                     "require an oriented ideal triangulation with "

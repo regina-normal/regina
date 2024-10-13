@@ -1365,17 +1365,17 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
     if constexpr (dim == 3 && subdim == 0) {
         // Identify vertex links in dimension 3 in more detail.
         switch (static_cast<const Face<dim, subdim>*>(this)->linkType()) {
-            case Face<dim, subdim>::SPHERE:
+            case Face<dim, subdim>::Link::Sphere:
                 out << "internal"; break;
-            case Face<dim, subdim>::DISC:
+            case Face<dim, subdim>::Link::Disc:
                 out << "boundary"; break;
-            case Face<dim, subdim>::TORUS:
+            case Face<dim, subdim>::Link::Torus:
                 out << "torus cusp"; break;
-            case Face<dim, subdim>::KLEIN_BOTTLE:
+            case Face<dim, subdim>::Link::KleinBottle:
                 out << "Klein bottle cusp"; break;
-            case Face<dim, subdim>::NON_STANDARD_CUSP:
+            case Face<dim, subdim>::Link::NonStandardCusp:
                 out << "ideal"; break;
-            case Face<dim, subdim>::INVALID:
+            case Face<dim, subdim>::Link::Invalid:
                 out << "invalid"; break;
         }
     } else if constexpr (dim == 4 && subdim == 0) {

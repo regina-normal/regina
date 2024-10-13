@@ -648,52 +648,54 @@ TEST_F(Dim3Test, vertexLinksBasic) {
     verifyVertexLinksBasic(disjoint3, 3, 3, 1);
 
     // Verify the specific surfaces for non-spheres/balls:
-    EXPECT_EQ(figure8.tri.vertex(0)->linkType(), Vertex<3>::TORUS);
-    EXPECT_EQ(trefoil.tri.vertex(0)->linkType(), Vertex<3>::TORUS);
-    EXPECT_EQ(knot18.tri.vertex(0)->linkType(), Vertex<3>::TORUS);
+    EXPECT_EQ(figure8.tri.vertex(0)->linkType(), Vertex<3>::Link::Torus);
+    EXPECT_EQ(trefoil.tri.vertex(0)->linkType(), Vertex<3>::Link::Torus);
+    EXPECT_EQ(knot18.tri.vertex(0)->linkType(), Vertex<3>::Link::Torus);
     {
         auto v = idealGenusTwoHandlebody.tri.vertex(1);
-        EXPECT_EQ(v->linkType(), Vertex<3>::NON_STANDARD_CUSP);
+        EXPECT_EQ(v->linkType(), Vertex<3>::Link::NonStandardCusp);
         EXPECT_EQ(v->linkEulerChar(), -2);
         EXPECT_TRUE(v->isLinkOrientable());
     }
-    EXPECT_EQ(figure8_bary.tri.vertex(0)->linkType(), Vertex<3>::TORUS);
+    EXPECT_EQ(figure8_bary.tri.vertex(0)->linkType(), Vertex<3>::Link::Torus);
 
-    EXPECT_EQ(gieseking.tri.vertex(0)->linkType(), Vertex<3>::KLEIN_BOTTLE);
+    EXPECT_EQ(gieseking.tri.vertex(0)->linkType(),
+        Vertex<3>::Link::KleinBottle);
     {
         auto v = idealRP2xI.tri.vertex(1);
-        EXPECT_EQ(v->linkType(), Vertex<3>::NON_STANDARD_CUSP);
+        EXPECT_EQ(v->linkType(), Vertex<3>::Link::NonStandardCusp);
         EXPECT_EQ(v->linkEulerChar(), 1);
         EXPECT_FALSE(v->isLinkOrientable());
     }
     {
         auto v = idealRP2xI.tri.vertex(8);
-        EXPECT_EQ(v->linkType(), Vertex<3>::NON_STANDARD_CUSP);
+        EXPECT_EQ(v->linkType(), Vertex<3>::Link::NonStandardCusp);
         EXPECT_EQ(v->linkEulerChar(), 1);
         EXPECT_FALSE(v->isLinkOrientable());
     }
 
     {
         auto v = pinchedSolidTorus.tri.vertex(0);
-        EXPECT_EQ(v->linkType(), Vertex<3>::INVALID);
+        EXPECT_EQ(v->linkType(), Vertex<3>::Link::Invalid);
         EXPECT_EQ(v->linkEulerChar(), 0);
         EXPECT_TRUE(v->isLinkOrientable());
     }
     {
         auto v = pinchedSolidKB.tri.vertex(0);
-        EXPECT_EQ(v->linkType(), Vertex<3>::INVALID);
+        EXPECT_EQ(v->linkType(), Vertex<3>::Link::Invalid);
         EXPECT_EQ(v->linkEulerChar(), 0);
         EXPECT_FALSE(v->isLinkOrientable());
     }
 
-    EXPECT_EQ(disjoint2.tri.vertex(0)->linkType(), Vertex<3>::KLEIN_BOTTLE);
+    EXPECT_EQ(disjoint2.tri.vertex(0)->linkType(),
+        Vertex<3>::Link::KleinBottle);
     {
         auto v = disjoint2.tri.vertex(2);
-        EXPECT_EQ(v->linkType(), Vertex<3>::NON_STANDARD_CUSP);
+        EXPECT_EQ(v->linkType(), Vertex<3>::Link::NonStandardCusp);
         EXPECT_EQ(v->linkEulerChar(), -2);
         EXPECT_TRUE(v->isLinkOrientable());
     }
-    EXPECT_EQ(disjoint3.tri.vertex(6)->linkType(), Vertex<3>::TORUS);
+    EXPECT_EQ(disjoint3.tri.vertex(6)->linkType(), Vertex<3>::Link::Torus);
 }
 
 static void verifyVertexLinks(const Triangulation<3>& tri, const char* name) {
@@ -1892,8 +1894,8 @@ static void verifyIdealToFinite(const Triangulation<3>& tri,
     EXPECT_EQ(finite.countBoundaryComponents(), tri.countBoundaryComponents());
 
     for (auto v : finite.vertices())
-        EXPECT_TRUE(v->linkType() == regina::Vertex<3>::SPHERE ||
-            v->linkType() == regina::Vertex<3>::DISC);
+        EXPECT_TRUE(v->linkType() == regina::Vertex<3>::Link::Sphere ||
+            v->linkType() == regina::Vertex<3>::Link::Disc);
 
     // Make sure any invalid edges are left alone.
     {

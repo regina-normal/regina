@@ -190,15 +190,15 @@ QVariant Vertex3Model::data(const QModelIndex& index, int role) const {
                 return index.row();
             case 1: {
                 switch (item->linkType()) {
-                    case Vertex<3>::SPHERE:
+                    case Vertex<3>::Link::Sphere:
                         return QString();
-                    case Vertex<3>::DISC:
+                    case Vertex<3>::Link::Disc:
                         return tr("Bdry");
-                    case Vertex<3>::TORUS:
+                    case Vertex<3>::Link::Torus:
                         return tr("Ideal: Torus");
-                    case Vertex<3>::KLEIN_BOTTLE:
+                    case Vertex<3>::Link::KleinBottle:
                         return tr("Ideal: Klein bottle");
-                    case Vertex<3>::NON_STANDARD_CUSP: {
+                    case Vertex<3>::Link::NonStandardCusp: {
                         if (item->isLinkOrientable())
                             return tr("Ideal: Genus %1 orbl").arg(
                                 1 - (item->linkEulerChar() / 2));
@@ -206,7 +206,7 @@ QVariant Vertex3Model::data(const QModelIndex& index, int role) const {
                             return tr("Ideal: Genus %1 non-orbl").arg(
                                 2 - item->linkEulerChar());
                     }
-                    case Vertex<3>::INVALID:
+                    case Vertex<3>::Link::Invalid:
                         return tr("Invalid");
                     default:
                         return tr("Unknown");

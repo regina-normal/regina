@@ -31,8 +31,8 @@ of by the Triangulation to which they belong.)doc";
 
 namespace Face_ {
 
-// Docstring regina::python::doc::Face_::LinkType
-static const char *LinkType =
+// Docstring regina::python::doc::Face_::Link
+static const char *Link =
 R"doc(Categorises the possible links of a vertex into a small number of
 common types. Here a vertex link is considered only up to its topology
 (not the combinatorics of its triangulation).
@@ -179,36 +179,36 @@ Returns:
 
 }
 
-namespace Face_::LinkType_ {
+namespace Face_::Link_ {
 
-// Docstring regina::python::doc::Face_::LinkType_::DISC
-static const char *DISC =
+// Docstring regina::python::doc::Face_::Link_::Disc
+static const char *Disc =
 R"doc(Specifies a vertex link that is a disc. In other words, the vertex
 lies on a real boundary component.)doc";
 
-// Docstring regina::python::doc::Face_::LinkType_::INVALID
-static const char *INVALID =
+// Docstring regina::python::doc::Face_::Link_::Invalid
+static const char *Invalid =
 R"doc(Specifies a vertex link that has boundary and is not a disc. In other
 words, this vertex makes the triangulation invalid.)doc";
 
-// Docstring regina::python::doc::Face_::LinkType_::KLEIN_BOTTLE
-static const char *KLEIN_BOTTLE =
+// Docstring regina::python::doc::Face_::Link_::KleinBottle
+static const char *KleinBottle =
 R"doc(Specifies a vertex link that is a Klein bottle. In other words, this
 is an ideal vertex representing a Klein bottle cusp.)doc";
 
-// Docstring regina::python::doc::Face_::LinkType_::NON_STANDARD_CUSP
-static const char *NON_STANDARD_CUSP =
+// Docstring regina::python::doc::Face_::Link_::NonStandardCusp
+static const char *NonStandardCusp =
 R"doc(Specifies a vertex link that is closed and is not a sphere, torus or
 Klein bottle. In other words, this is an ideal vertex but not one of
 the standard ideal vertex types.)doc";
 
-// Docstring regina::python::doc::Face_::LinkType_::SPHERE
-static const char *SPHERE =
+// Docstring regina::python::doc::Face_::Link_::Sphere
+static const char *Sphere =
 R"doc(Specifies a vertex link that is a sphere. In other words, the vertex
 is internal.)doc";
 
-// Docstring regina::python::doc::Face_::LinkType_::TORUS
-static const char *TORUS =
+// Docstring regina::python::doc::Face_::Link_::Torus
+static const char *Torus =
 R"doc(Specifies a vertex link that is a torus. In other words, this is an
 ideal vertex representing a torus cusp.)doc";
 

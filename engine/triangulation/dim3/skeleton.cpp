@@ -145,22 +145,22 @@ void Triangulation<3>::calculateVertexLinks() {
             // We haven't added ideal vertices to the boundary list yet,
             // so this must be real boundary.
             if (vertex->linkEulerChar_ == 1)
-                vertex->link_ = Vertex<3>::DISC;
+                vertex->link_ = Vertex<3>::Link::Disc;
             else {
-                vertex->link_ = Vertex<3>::INVALID;
+                vertex->link_ = Vertex<3>::Link::Invalid;
                 vertex->whyInvalid_.value |= Vertex<3>::INVALID_LINK;
                 valid_ = vertex->component_->valid_ = false;
                 standard_ = false;
             }
         } else {
             if (vertex->linkEulerChar_ == 2)
-                vertex->link_ = Vertex<3>::SPHERE;
+                vertex->link_ = Vertex<3>::Link::Sphere;
             else {
                 if (vertex->linkEulerChar_ == 0)
                     vertex->link_ = (vertex->isLinkOrientable() ?
-                        Vertex<3>::TORUS : Vertex<3>::KLEIN_BOTTLE);
+                        Vertex<3>::Link::Torus : Vertex<3>::Link::KleinBottle);
                 else {
-                    vertex->link_ = Vertex<3>::NON_STANDARD_CUSP;
+                    vertex->link_ = Vertex<3>::Link::NonStandardCusp;
                     standard_ = false;
                 }
 
