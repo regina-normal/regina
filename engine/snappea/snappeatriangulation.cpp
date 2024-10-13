@@ -167,7 +167,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(SnapPeaTriangulation&& src)
 SnapPeaTriangulation& SnapPeaTriangulation::operator = (
         SnapPeaTriangulation&& src) {
     // Use the Triangulation<3> assignment operator instead of sync().
-    SnapPeaChangeSpan<changeTriangulationNoSync> span(*this);
+    SnapPeaChangeSpan<ChangePolicy::TriangulationNoSync> span(*this);
     Triangulation<3>::operator = (std::move(src));
 
     // We have already moved out of src, but this only touches the
@@ -453,8 +453,8 @@ void SnapPeaTriangulation::swap(SnapPeaTriangulation& other) {
 
     // Instead of sync(), we use Triangulation<3>::swap() to update the
     // regina triangulations.
-    SnapPeaChangeSpan<changeTriangulationNoSync> span1(*this);
-    SnapPeaChangeSpan<changeTriangulationNoSync> span2(other);
+    SnapPeaChangeSpan<ChangePolicy::TriangulationNoSync> span1(*this);
+    SnapPeaChangeSpan<ChangePolicy::TriangulationNoSync> span2(other);
     Triangulation<3>::swap(other);
 
     std::swap(data_, other.data_);
@@ -556,7 +556,7 @@ void SnapPeaTriangulation::unfill(unsigned whichCusp) {
         return;
     }
 
-    SnapPeaChangeSpan<changeFillingsOnly> span(*this);
+    SnapPeaChangeSpan<ChangePolicy::FillingsOnly> span(*this);
 
     regina::snappea::set_cusp_info(data_, whichCusp, true, 0, 0);
 
@@ -600,7 +600,7 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
 
     // Do it.
 
-    SnapPeaChangeSpan<changeFillingsOnly> span(*this);
+    SnapPeaChangeSpan<ChangePolicy::FillingsOnly> span(*this);
 
     regina::snappea::set_cusp_info(data_, whichCusp, false, mReal, lReal);
 

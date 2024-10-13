@@ -446,9 +446,9 @@ class Cusp : public ShortOutput<Cusp> {
  * - The SnapPeaChangeSpan class takes an optional policy template argument.
  *   Do take care to ensure that you are using the correct policy - for example,
  *   if you are changing the combinatorics of the triangulation then you
- *   probably want the default \c changeTriangulation, but if you are only
- *   changing the fillings on the cusps then \c changeFillingsOnly is
- *   more appropriate.  See the inner ChangePolicy enumeration for details.
+ *   probably want the default `ChangePolicy::Triangulation`, but if you are
+ *   only changing the fillings on the cusps then `ChangePolicy::FillingsOnly`
+ *   is more appropriate.  See the inner ChangePolicy enumeration for details.
  *
  * The SnapPeaTriangulation class implements C++ move semantics and adheres
  * to the C++ Swappable requirement.  It is designed to avoid deep copies
@@ -2117,8 +2117,8 @@ class SnapPeaTriangulation :
          * _not_ call sync().  Instead, if a member function modifies the
          * triangulation, it should do so within the scope of a local
          * SnapPeaChangeSpan.  If the SnapPeaChangeSpan uses the
-         * \c changeTriangulation policy (which is the default), then it will
-         * call sync() in its destructor.
+         * `ChangePolicy::Triangulation` policy (which is the default),
+         * then it will call sync() in its destructor.
          *
          * Typically the only place you _would_ see a manual call to sync()
          * would be in a SnapPeaTriangulation class constructor - since the
@@ -2185,14 +2185,14 @@ class SnapPeaTriangulation :
          *
          * See the SnapPeaChangeSpan documentation for further details.
          */
-        enum ChangePolicy {
+        enum class ChangePolicy {
             /**
              * Indicates that the change only affects the filling data
              * stored alongside each cusp within the SnapPea kernel, and not
              * the combinatorics of the triangulation.  That is, the inherited
              * Regina triangulation data not change at all.
              */
-            changeFillingsOnly,
+            FillingsOnly,
             /**
              * Indicates that the change affects the combinatorics of the
              * triangulation stored in the SnapPea kernel, and that the
@@ -2200,7 +2200,7 @@ class SnapPeaTriangulation :
              * Regina triangulation data to match it.  Specifically, this
              * resync will happen within the SnapPeaChangeSpan destructor.
              */
-            changeTriangulation,
+            Triangulation,
             /**
              * Indicates that the change affects the combinatorics of the
              * triangulation stored in the SnapPea kernel, and that the
@@ -2211,7 +2211,7 @@ class SnapPeaTriangulation :
              * code to update the inherited Regina triangulation data some
              * other way before the SnapPeaChangeSpan is destroyed.
              */
-            changeTriangulationNoSync
+            TriangulationNoSync
         };
 
         /**
@@ -2233,17 +2233,18 @@ class SnapPeaTriangulation :
          *
          * - temporarily set Triangulation<3>::heldBy_ to PacketHeldBy::None
          *   for the lifetime of the SnapPeaChangeSpan, unless \a policy is
-         *   \c changeFillingsOnly (which means the inherited Triangulation<3>
-         *   data does not change);
+         *   `ChangePolicy::FillingsOnly` (which means the inherited
+         *   Triangulation<3> data does not change);
          *
          * - call sync() within the SnapPeaChangeSpan destructor to resync the
          *   inherited Triangulation<3> data to match the data stored in the
-         *   SnapPea kernel, but only if \a policy is \c changeTriangulation;
+         *   SnapPea kernel, but only if \a policy is
+         *   `ChangePolicy::Triangulation`;
          *
          * - call fillingsHaveChanged() within the SnapPeaChangeSpan destructor
          *   to clear and/or refresh computed properties that depend on the
          *   filling parameters stored in the SnapPea kernel, unless \a policy
-         *   is changeTriangulationNoSync;
+         *   is `ChangePolicy::TriangulationNoSync`;
          *
          * - fire packet change events on construction and destruction,
          *   in the same way that PacketChangeSpan does.
@@ -2263,14 +2264,14 @@ class SnapPeaTriangulation :
          * and is therefore able to nest with other PacketChangeSpan objects
          * in the usual way.
          */
-        template <ChangePolicy policy = changeTriangulation>
+        template <ChangePolicy policy = ChangePolicy::Triangulation>
         class SnapPeaChangeSpan {
             private:
                 PacketData<SnapPeaTriangulation>::PacketChangeSpan span_;
 
             public:
                 SnapPeaChangeSpan(SnapPeaTriangulation& tri) : span_(tri) {
-                    if constexpr (policy != changeFillingsOnly) {
+                    if constexpr (policy != ChangePolicy::FillingsOnly) {
                         // Temporarily ensure that syncing the regina
                         // triangulation will not cause the entire
                         // SnapPeaTriangulation to be nullified.
@@ -2280,14 +2281,14 @@ class SnapPeaTriangulation :
                 }
 
                 ~SnapPeaChangeSpan() {
-                    if constexpr (policy == changeTriangulation) {
+                    if constexpr (policy == ChangePolicy::Triangulation) {
                         // The triangulation has changed.
                         // Resync the regina triangulation to match what
                         // is now stored in the SnapPea kernel.
                         span_.held().sync();
                     }
 
-                    if constexpr (policy == changeFillingsOnly) {
+                    if constexpr (policy == ChangePolicy::FillingsOnly) {
                         // The regina triangulation should not have changed.
                         // However, the fillings have - we need to clear any
                         // computed properties that depend on the fillings
