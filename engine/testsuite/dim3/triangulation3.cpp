@@ -2123,7 +2123,7 @@ static void verifyAngleStructures(const Triangulation<3>& tri,
             // small cases such as these, so we will happily assume that
             // neither happens for the purpose of this test suite.
             if (regina::SnapPeaTriangulation(tri).solutionType() ==
-                    regina::SnapPeaTriangulation::geometric_solution)
+                    regina::SnapPeaTriangulation::Solution::Geometric)
                 expectStrict = true;
         } else {
             // SnapPea does not handle multiple components well.  Run the same
@@ -2131,7 +2131,7 @@ static void verifyAngleStructures(const Triangulation<3>& tri,
             expectStrict = true;
             for (const auto& c : tri.triangulateComponents()) {
                 if (regina::SnapPeaTriangulation(c).solutionType() !=
-                        regina::SnapPeaTriangulation::geometric_solution) {
+                        regina::SnapPeaTriangulation::Solution::Geometric) {
                     expectStrict = false;
                     break;
                 }

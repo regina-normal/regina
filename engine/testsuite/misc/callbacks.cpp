@@ -184,9 +184,9 @@ TEST(CallbacksTest, passByReference) {
     {
         Arg b;
         regina::ExampleSnapPea::figureEight().enumerateCovers(
-                2, regina::SnapPeaTriangulation::all_covers,
+                2, regina::SnapPeaTriangulation::CoverEnumeration::All,
                 [](const regina::SnapPeaTriangulation&,
-                    regina::SnapPeaTriangulation::CoverType, Arg& arg) {
+                    regina::SnapPeaTriangulation::Cover, Arg& arg) {
             arg.flag();
         }, b);
         verifyPassedByReference(b,

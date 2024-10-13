@@ -482,7 +482,7 @@ class SnapPeaTriangulation :
          * Describes the different types of solution that can be found when
          * solving for a hyperbolic structure.
          *
-         * This enumeration is identical to SnapPea's own SolutionType enum;
+         * This enumeration corresponds to SnapPea's own SolutionType enum;
          * it is declared again here because Regina code should not in
          * general interact directly with the SnapPea kernel.  Values may be
          * freely converted between the two enumeration types by simple
@@ -491,48 +491,146 @@ class SnapPeaTriangulation :
          * \warning This enumeration must always be kept in sync with
          * SnapPea's own SolutionType enumeration.
          */
-        enum SolutionType {
+        enum class Solution {
             /**
              * A solution has not been attempted.
+             * This corresponds to the SnapPea constant \a not_attempted.
              */
-            not_attempted,
+            NotAttempted,
             /**
              * All tetrahedra are positively oriented.
+             * This corresponds to the SnapPea constant \a geometric_solution.
              */
-            geometric_solution,
+            Geometric,
             /**
              * The overall volume is positive, but some tetrahedra are flat or
              * negatively oriented.  No tetrahedra have shape 0, 1 or infinity.
+             * This corresponds to the SnapPea constant
+             * \a nongeometric_solution.
              */
-            nongeometric_solution,
+            Nongeometric,
             /**
              * All tetrahedra are flat, but none have shape 0, 1 or infinity.
+             * This corresponds to the SnapPea constant \a flat_solution.
              */
-            flat_solution,
+            Flat,
             /**
              * At least one tetrahedron has shape 0, 1 or infinity.
+             * This corresponds to the SnapPea constant \a degenerate_solution.
              */
-            degenerate_solution,
+            Degenerate,
             /**
              * The volume is zero or negative, but the solution is neither
              * flat nor degenerate.
+             * This corresponds to the SnapPea constant \a other_solution.
              */
-            other_solution,
+            Other,
             /**
              * The gluing equations could not be solved.
+             * This corresponds to the SnapPea constant \a no_solution.
              */
-            no_solution,
+            None,
             /**
              * Tetrahedron shapes were inserted into the triangulation.
+             * This corresponds to the SnapPea constant \a externally_computed.
              */
-            externally_computed
+            External
         };
+
+        /**
+         * A deprecated type alias that represents a type of solution that can
+         * be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to Solution, and is now a
+         * scoped enumeration.
+         */
+        using SolutionType [[deprecated]] = Solution;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::NotAttempted.
+         */
+        [[deprecated]] inline static constexpr Solution not_attempted =
+            Solution::NotAttempted;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::Geometric.
+         */
+        [[deprecated]] inline static constexpr Solution geometric_solution =
+            Solution::Geometric;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::Nongeometric.
+         */
+        [[deprecated]] inline static constexpr Solution nongeometric_solution =
+            Solution::Nongeometric;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::Flat.
+         */
+        [[deprecated]] inline static constexpr Solution flat_solution =
+            Solution::Flat;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::Degenerate.
+         */
+        [[deprecated]] inline static constexpr Solution degenerate_solution =
+            Solution::Degenerate;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::Other.
+         */
+        [[deprecated]] inline static constexpr Solution other_solution =
+            Solution::Other;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::None.
+         */
+        [[deprecated]] inline static constexpr Solution no_solution =
+            Solution::None;
+
+        /**
+         * A deprecated constant indicating one of the types of solution that
+         * can be found when solving for a hyperbolic structure.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Solution::External.
+         */
+        [[deprecated]] inline static constexpr Solution externally_computed =
+            Solution::External;
 
         /**
          * Indicates which types of covers should be enumerated when calling
          * enumerateCovers().
          *
-         * This enumeration is identical to SnapPea's PermutationSubgroup enum,
+         * This enumeration corresponds to SnapPea's PermutationSubgroup enum,
          * though the values here are named differently.  The enumeration
          * is declared again here because Regina code should not in
          * general interact directly with the SnapPea kernel.  Values may be
@@ -542,24 +640,53 @@ class SnapPeaTriangulation :
          * \warning This enumeration must always be kept in sync with
          * SnapPea's PermutationSubgroup enumeration.
          */
-        enum CoverEnumerationType {
+        enum class CoverEnumeration {
             /**
              * Indicates that only cyclic covers should be enumerated.  This
              * corresponds to the SnapPea constant \a permutation_subgroup_Zn.
              */
-            cyclic_covers,
+            Cyclic,
             /**
              * Indicates that all covers should be enumerated.  This
              * corresponds to the SnapPea constant \a permutation_subgroup_Sn.
              */
-            all_covers
+            All
         };
+
+        /**
+         * A deprecated type alias that represents which types of covers
+         * should be enumerated when calling enumerateCovers().
+         *
+         * \deprecated This has been renamed to CoverEnumeration, and is now a
+         * scoped enumeration.
+         */
+        using CoverEnumerationType [[deprecated]] = CoverEnumeration;
+
+        /**
+         * A deprecated constant indicating one of the types of covers that
+         * can be enumerated when calling enumerateCovers().
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * CoverEnumeration::Cyclic.
+         */
+        [[deprecated]] inline static constexpr CoverEnumeration cyclic_covers =
+            CoverEnumeration::Cyclic;
+
+        /**
+         * A deprecated constant indicating one of the types of covers that
+         * can be enumerated when calling enumerateCovers().
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * CoverEnumeration::All.
+         */
+        [[deprecated]] inline static constexpr CoverEnumeration all_covers =
+            CoverEnumeration::All;
 
         /**
          * Indicates the different types of covers that can be produced
          * by enumerateCovers().
          *
-         * This enumeration is identical to SnapPea's own CoveringType enum;
+         * This enumeration corresponds to SnapPea's own CoveringType enum;
          * it is declared again here because Regina code should not in
          * general interact directly with the SnapPea kernel.  Values may be
          * freely converted between the two enumeration types by simple
@@ -568,28 +695,81 @@ class SnapPeaTriangulation :
          * \warning This enumeration must always be kept in sync with
          * SnapPea's own CoveringType enumeration.
          */
-        enum CoverType {
+        enum class Cover {
             /**
              * Indicates that SnapPea has not yet computed the covering type.
+             * This corresponds to the SnapPea constant \a unknown_cover.
              */
-            unknown_cover,
+            Unknown,
             /**
              * Indicates a covering where there exist two lifts of a point in
              * the base manifold with no covering transformation that takes
              * one to the other.
+             * This corresponds to the SnapPea constant \a irregular_cover.
              */
-            irregular_cover,
+            Irregular,
             /**
              * Indicates a covering that is not cyclic, and where for
              * any two lifts of a point in the base manfiold, there is a
              * covering transformation taking one to the other.
+             * This corresponds to the SnapPea constant \a regular_cover.
              */
-            regular_cover,
+            Regular,
             /**
              * Indicates a cyclic covering.
+             * This corresponds to the SnapPea constant \a cyclic_cover.
              */
-            cyclic_cover
+            Cyclic
         };
+
+        /**
+         * A deprecated type alias that represents a type of cover that could
+         * be produced by enumerateCovers().
+         *
+         * \deprecated This has been renamed to Cover, and is now a scoped
+         * enumeration.
+         */
+        using CoverType [[deprecated]] = Cover;
+
+        /**
+         * A deprecated constant indicating one of the types of cover that
+         * could be produced by enumerateCovers().
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Cover::Unknown.
+         */
+        [[deprecated]] inline static constexpr Cover unknown_cover =
+            Cover::Unknown;
+
+        /**
+         * A deprecated constant indicating one of the types of cover that
+         * could be produced by enumerateCovers().
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Cover::Irregular.
+         */
+        [[deprecated]] inline static constexpr Cover irregular_cover =
+            Cover::Irregular;
+
+        /**
+         * A deprecated constant indicating one of the types of cover that
+         * could be produced by enumerateCovers().
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Cover::Regular.
+         */
+        [[deprecated]] inline static constexpr Cover regular_cover =
+            Cover::Regular;
+
+        /**
+         * A deprecated constant indicating one of the types of cover that
+         * could be produced by enumerateCovers().
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Cover::Cyclic.
+         */
+        [[deprecated]] inline static constexpr Cover cyclic_cover =
+            Cover::Cyclic;
 
     private:
         regina::snappea::Triangulation* data_;
@@ -600,8 +780,8 @@ class SnapPeaTriangulation :
                  fixed coordinate system (fixed alignment in SnapPea's
                  terminology).  All shapes are with respect to the Dehn filled
                  hyperbolic structure.  If this is a null triangulation, or if
-                 the solution type is no_solution or not_attempted, then
-                 shape_ will be \c nullptr. */
+                 the solution type is `None` or `NotAttempted`, then shape_ will
+                 be \c nullptr. */
         Cusp* cusp_;
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
@@ -754,14 +934,14 @@ class SnapPeaTriangulation :
          * store or use peripheral curves themselves, and so this constructor
          * makes a default choice during the conversion process.  Specifically:
          *
-         * - If solution_type() is geometric_solution or nongeometric_solution,
+         * - If solutionType() is `Geometric` or `Nongeometric`,
          *   then on each torus cusp the meridian and longitude are chosen to
          *   be the (shortest, second shortest) basis, and their orientations
          *   follow the convention used by the \e SnapPy kernel.  Be warned,
          *   however, that this choice might not be unique for some cusp shapes,
          *   and the resolution of such ambiguities might be machine-dependent.
          *
-         * - If solution_type() is something else (e.g., degenerate or flat),
+         * - If solutionType() is something else (e.g., `Degenerate` or `Flat`),
          *   or if SnapPea throws a fatal error when attempting to install the
          *   (shortest, second shortest) basis as described above, then Regina
          *   will accept whatever basis SnapPea installs by default.  Be warned
@@ -998,7 +1178,7 @@ class SnapPeaTriangulation :
          *
          * \return the solution type.
          */
-        SolutionType solutionType() const;
+        Solution solutionType() const;
 
         /**
          * Computes the volume of the current solution to the hyperbolic
@@ -1052,8 +1232,8 @@ class SnapPeaTriangulation :
          * Tetrahedron shapes are given in rectangular form, and using a
          * fixed coordinate system (fixed alignment, in SnapPea's terminology).
          *
-         * If this is a null triangulation, or if solutionType() is no_solution
-         * or not_attempted (i.e., we did not or could not solve for a
+         * If this is a null triangulation, or if solutionType() is `None`
+         * or `NotAttempted` (i.e., we did not or could not solve for a
          * hyperbolic structure), then this routine will simply return zero.
          *
          * This routine is fast constant time (unlike in SnapPea, where
@@ -1077,8 +1257,8 @@ class SnapPeaTriangulation :
          * Tetrahedron shapes are given in rectangular form using a fixed
          * coordinate system, as described in the documentation for shape().
          *
-         * If this is a null triangulation, or if solutionType() is no_solution
-         * or not_attempted (i.e., we did not or could not solve for a
+         * If this is a null triangulation, or if solutionType() is `None`
+         * or `NotAttempted` (i.e., we did not or could not solve for a
          * hyperbolic structure), then this routine will simply return zero.
          *
          * \snappy This has no corresponding routine in SnapPy,
@@ -1703,9 +1883,9 @@ class SnapPeaTriangulation :
          *   storage.
          *
          * - The second argument to \a action must be of type
-         *   \a SnapPeaTriangulation::CoverType.
+         *   \a SnapPeaTriangulation::Cover.
          *   This will indicate the type of cover that has been constructed;
-         *   see the SnapPeaTriangulation::CoverType documentation for details.
+         *   see the SnapPeaTriangulation::Cover documentation for details.
          *   In the same call to enumerateCovers() you may observe different
          *   types of covers being produced (i.e., this value is computed
          *   individually for each cover).  You should, however, never see
@@ -1751,7 +1931,7 @@ class SnapPeaTriangulation :
          * addition argument list (\a args).  The second form is
          * `enumerateCovers(sheets, type)`, which returns a Python list
          * containing all of the triangulated covers, each given as a
-         * pair (SnapPeaTriangulation, SnapPeaTriangulation::CoverType).
+         * pair (SnapPeaTriangulation, SnapPeaTriangulation::Cover).
          *
          * \param sheets the number of sheets in the covers to produce
          * (i.e., the number \a k in the description above); this must
@@ -1765,7 +1945,7 @@ class SnapPeaTriangulation :
          * \return the total number of covers found.
          */
         template <typename Action, typename... Args>
-        size_t enumerateCovers(int sheets, CoverEnumerationType type,
+        size_t enumerateCovers(int sheets, CoverEnumeration type,
             Action&& action, Args&&... args) const;
 
         /*@}*/
@@ -2111,7 +2291,7 @@ class SnapPeaTriangulation :
          * call fillingsHaveChanged() immediately before returning.
          *
          * SnapPea will be asked to recompute the hyperbolic structure
-         * only if the current solution type is \a not_attempted.
+         * only if the current solution type is \a NotAttempted.
          *
          * Other member functions of SnapPeaTriangulation should typically
          * _not_ call sync().  Instead, if a member function modifies the
@@ -2175,8 +2355,8 @@ class SnapPeaTriangulation :
          * of the action function is now known precisely.  This means
          * that the implementation can be kept out of the main headers.
          */
-        size_t enumerateCoversInternal(int sheets, CoverEnumerationType type,
-            std::function<void(SnapPeaTriangulation&&, CoverType)>&& action)
+        size_t enumerateCoversInternal(int sheets, CoverEnumeration type,
+            std::function<void(SnapPeaTriangulation&&, Cover)>&& action)
             const;
 
         /**
@@ -2417,9 +2597,9 @@ inline void SnapPeaTriangulation::randomize() {
 
 template <typename Action, typename... Args>
 inline size_t SnapPeaTriangulation::enumerateCovers(int sheets,
-        CoverEnumerationType type, Action&& action, Args&&... args) const {
+        CoverEnumeration type, Action&& action, Args&&... args) const {
     return enumerateCoversInternal(sheets, type,
-        [&](SnapPeaTriangulation&& s, CoverType c) {
+        [&](SnapPeaTriangulation&& s, Cover c) {
             action(std::move(s), c, std::forward<Args>(args)...);
         });
 }

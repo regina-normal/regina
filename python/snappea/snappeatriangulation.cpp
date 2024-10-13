@@ -145,16 +145,16 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("randomise", &SnapPeaTriangulation::randomise, rdoc::randomise)
         .def("enumerateCovers", &SnapPeaTriangulation::enumerateCovers<
                 const std::function<void(SnapPeaTriangulation&&,
-                    SnapPeaTriangulation::CoverType)>&>,
+                    SnapPeaTriangulation::Cover)>&>,
             pybind11::arg("sheets"),
             pybind11::arg("type"),
             pybind11::arg("action"),
             rdoc::enumerateCovers)
         .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
-                int sheets, SnapPeaTriangulation::CoverEnumerationType type) {
+                int sheets, SnapPeaTriangulation::CoverEnumeration type) {
             pybind11::list ans;
             tri.enumerateCovers(sheets, type, [&](SnapPeaTriangulation&& c,
-                    SnapPeaTriangulation::CoverType t) {
+                    SnapPeaTriangulation::Cover t) {
                 pybind11::tuple pair(2);
                 pair[0] = pybind11::cast(new SnapPeaTriangulation(std::move(c)));
                 pair[1] = t;
@@ -198,61 +198,73 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     regina::python::add_packet_constructor<const regina::Link&>(wrap,
         rdoc::__init_3);
 
-    RDOC_SCOPE_INNER_BEGIN(SolutionType)
+    RDOC_SCOPE_INNER_BEGIN(Solution)
 
-    auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
-            c2, "SolutionType", rdoc_inner_scope)
-        .value("not_attempted", SnapPeaTriangulation::not_attempted,
-            rdoc_inner::not_attempted)
-        .value("geometric_solution",
-            SnapPeaTriangulation::geometric_solution,
-                rdoc_inner::geometric_solution)
-        .value("nongeometric_solution",
-            SnapPeaTriangulation::nongeometric_solution,
-                rdoc_inner::nongeometric_solution)
-        .value("flat_solution", SnapPeaTriangulation::flat_solution,
-            rdoc_inner::flat_solution)
-        .value("degenerate_solution",
-            SnapPeaTriangulation::degenerate_solution,
-                rdoc_inner::degenerate_solution)
-        .value("other_solution", SnapPeaTriangulation::other_solution,
-            rdoc_inner::other_solution)
-        .value("no_solution", SnapPeaTriangulation::no_solution,
-            rdoc_inner::no_solution)
-        .value("externally_computed",
-            SnapPeaTriangulation::externally_computed,
-                rdoc_inner::externally_computed)
-        .export_values()
-    ;
-
-    // For backward compatibility with the old boost.python bindings:
-    m.attr("SolutionType") = st;
-
-    RDOC_SCOPE_INNER_SWITCH(CoverEnumerationType)
-
-    auto cet = pybind11::enum_<SnapPeaTriangulation::CoverEnumerationType>(
-            c2, "CoverEnumerationType", rdoc_inner_scope)
-        .value("cyclic_covers", SnapPeaTriangulation::cyclic_covers,
-            rdoc_inner::cyclic_covers)
-        .value("all_covers", SnapPeaTriangulation::all_covers,
-            rdoc_inner::all_covers)
-        .export_values()
-    ;
-
-    RDOC_SCOPE_INNER_SWITCH(CoverType)
-
-    auto ct = pybind11::enum_<SnapPeaTriangulation::CoverType>(c2, "CoverType",
+    auto st = pybind11::enum_<SnapPeaTriangulation::Solution>(c2, "Solution",
             rdoc_inner_scope)
-        .value("unknown_cover", SnapPeaTriangulation::unknown_cover,
-            rdoc_inner::unknown_cover)
-        .value("irregular_cover", SnapPeaTriangulation::irregular_cover,
-            rdoc_inner::irregular_cover)
-        .value("regular_cover", SnapPeaTriangulation::regular_cover,
-            rdoc_inner::regular_cover)
-        .value("cyclic_cover", SnapPeaTriangulation::cyclic_cover,
-            rdoc_inner::cyclic_cover)
-        .export_values()
+        .value("NotAttempted", SnapPeaTriangulation::Solution::NotAttempted,
+            rdoc_inner::NotAttempted)
+        .value("Geometric", SnapPeaTriangulation::Solution::Geometric,
+            rdoc_inner::Geometric)
+        .value("Nongeometric", SnapPeaTriangulation::Solution::Nongeometric,
+            rdoc_inner::Nongeometric)
+        .value("Flat", SnapPeaTriangulation::Solution::Flat, rdoc_inner::Flat)
+        .value("Degenerate", SnapPeaTriangulation::Solution::Degenerate,
+            rdoc_inner::Degenerate)
+        .value("Other", SnapPeaTriangulation::Solution::Other,
+            rdoc_inner::Other)
+        .value("None", SnapPeaTriangulation::Solution::None, rdoc_inner::None)
+        .value("External", SnapPeaTriangulation::Solution::External,
+            rdoc_inner::External)
     ;
+
+    // Deprecated type alias and constants:
+    c2.attr("SolutionType") = c2.attr("Solution");
+    c2.attr("not_attempted") = SnapPeaTriangulation::Solution::NotAttempted;
+    c2.attr("geometric_solution") = SnapPeaTriangulation::Solution::Geometric;
+    c2.attr("nongeometric_solution") =
+        SnapPeaTriangulation::Solution::Nongeometric;
+    c2.attr("flat_solution") = SnapPeaTriangulation::Solution::Flat;
+    c2.attr("degenerate_solution") = SnapPeaTriangulation::Solution::Degenerate;
+    c2.attr("other_solution") = SnapPeaTriangulation::Solution::Other;
+    c2.attr("no_solution") = SnapPeaTriangulation::Solution::None;
+    c2.attr("externally_computed") = SnapPeaTriangulation::Solution::External;
+
+    RDOC_SCOPE_INNER_SWITCH(CoverEnumeration)
+
+    auto cet = pybind11::enum_<SnapPeaTriangulation::CoverEnumeration>(
+            c2, "CoverEnumeration", rdoc_inner_scope)
+        .value("Cyclic", SnapPeaTriangulation::CoverEnumeration::Cyclic,
+            rdoc_inner::Cyclic)
+        .value("All", SnapPeaTriangulation::CoverEnumeration::All,
+            rdoc_inner::All)
+    ;
+
+    // Deprecated type alias and constants:
+    c2.attr("CoverEnumerationType") = c2.attr("CoverEnumeration");
+    c2.attr("cyclic_covers") = SnapPeaTriangulation::CoverEnumeration::Cyclic;
+    c2.attr("all_covers") = SnapPeaTriangulation::CoverEnumeration::All;
+
+    RDOC_SCOPE_INNER_SWITCH(Cover)
+
+    auto ct = pybind11::enum_<SnapPeaTriangulation::Cover>(c2, "Cover",
+            rdoc_inner_scope)
+        .value("Unknown", SnapPeaTriangulation::Cover::Unknown,
+            rdoc_inner::Unknown)
+        .value("Irregular", SnapPeaTriangulation::Cover::Irregular,
+            rdoc_inner::Irregular)
+        .value("Regular", SnapPeaTriangulation::Cover::Regular,
+            rdoc_inner::Regular)
+        .value("Cyclic", SnapPeaTriangulation::Cover::Cyclic,
+            rdoc_inner::Cyclic)
+    ;
+
+    // Deprecated type alias and constants:
+    c2.attr("CoverType") = c2.attr("Cover");
+    c2.attr("unknown_cover") = SnapPeaTriangulation::Cover::Unknown;
+    c2.attr("irregular_cover") = SnapPeaTriangulation::Cover::Irregular;
+    c2.attr("regular_cover") = SnapPeaTriangulation::Cover::Regular;
+    c2.attr("cyclic_cover") = SnapPeaTriangulation::Cover::Cyclic;
 
     RDOC_SCOPE_INNER_END
 

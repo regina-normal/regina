@@ -99,16 +99,6 @@ class Tri3SnapPeaUI : public QObject, public PacketViewerTab {
          * Convert this to a full SnapPea triangulation.
          */
         void toSnapPea();
-
-    private:
-        /**
-         * These routines convert a SnapPeaTriangulation::SolutionType
-         * into various types of human-readable string.  They are declared
-         * to take an int so that the calculation engine headers need not
-         * be included.
-         */
-        static QString solutionTypeString(int solnType);
-        static QString solutionTypeExplanation(int solnType);
 };
 
 inline void Tri3SnapPeaUI::updatePreferences() {

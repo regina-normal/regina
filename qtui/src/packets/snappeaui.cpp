@@ -160,44 +160,44 @@ QString SnapPeaHeaderUI::summaryInfo(regina::SnapPeaTriangulation* tri) {
     }
 
     switch (tri->solutionType()) {
-        case SnapPeaTriangulation::not_attempted:
+        case SnapPeaTriangulation::Solution::NotAttempted:
             msg += QObject::tr("Solution not attempted");
             break;
-        case SnapPeaTriangulation::geometric_solution:
+        case SnapPeaTriangulation::Solution::Geometric:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Tetrahedra positively oriented");
             break;
-        case SnapPeaTriangulation::nongeometric_solution:
+        case SnapPeaTriangulation::Solution::Nongeometric:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Contains flat or negative tetrahedra");
             break;
-        case SnapPeaTriangulation::flat_solution:
+        case SnapPeaTriangulation::Solution::Flat:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("All tetrahedra flat");
             break;
-        case SnapPeaTriangulation::degenerate_solution:
+        case SnapPeaTriangulation::Solution::Degenerate:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Contains degenerate tetrahedra");
             break;
-        case SnapPeaTriangulation::other_solution:
+        case SnapPeaTriangulation::Solution::Other:
             msg += QObject::tr("Unrecognised solution type");
             break;
-        case SnapPeaTriangulation::externally_computed:
+        case SnapPeaTriangulation::Solution::External:
             msg += QObject::tr("Externally computed");
             break;
-        case SnapPeaTriangulation::no_solution:
+        case SnapPeaTriangulation::Solution::None:
             msg += QObject::tr("No solution found");
             break;
         default:

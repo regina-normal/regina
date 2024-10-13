@@ -245,9 +245,9 @@ changes takes place. Some notes on this:
   argument. Do take care to ensure that you are using the correct
   policy - for example, if you are changing the combinatorics of the
   triangulation then you probably want the default
-  ``changeTriangulation``, but if you are only changing the fillings
-  on the cusps then ``changeFillingsOnly`` is more appropriate. See
-  the inner ChangePolicy enumeration for details.
+  ``ChangePolicy::Triangulation``, but if you are only changing the
+  fillings on the cusps then ``ChangePolicy::FillingsOnly`` is more
+  appropriate. See the inner ChangePolicy enumeration for details.
 
 The SnapPeaTriangulation class implements C++ move semantics and
 adheres to the C++ Swappable requirement. It is designed to avoid deep
@@ -384,12 +384,27 @@ Returns:
 
 namespace SnapPeaTriangulation_ {
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumerationType
-static const char *CoverEnumerationType =
+// Docstring regina::python::doc::SnapPeaTriangulation_::Cover
+static const char *Cover =
+R"doc(Indicates the different types of covers that can be produced by
+enumerateCovers().
+
+This enumeration corresponds to SnapPea's own CoveringType enum; it is
+declared again here because Regina code should not in general interact
+directly with the SnapPea kernel. Values may be freely converted
+between the two enumeration types by simple assignment and/or
+typecasting.
+
+.. warning::
+    This enumeration must always be kept in sync with SnapPea's own
+    CoveringType enumeration.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumeration
+static const char *CoverEnumeration =
 R"doc(Indicates which types of covers should be enumerated when calling
 enumerateCovers().
 
-This enumeration is identical to SnapPea's PermutationSubgroup enum,
+This enumeration corresponds to SnapPea's PermutationSubgroup enum,
 though the values here are named differently. The enumeration is
 declared again here because Regina code should not in general interact
 directly with the SnapPea kernel. Values may be freely converted
@@ -400,31 +415,16 @@ typecasting.
     This enumeration must always be kept in sync with SnapPea's
     PermutationSubgroup enumeration.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType
-static const char *CoverType =
-R"doc(Indicates the different types of covers that can be produced by
-enumerateCovers().
-
-This enumeration is identical to SnapPea's own CoveringType enum; it
-is declared again here because Regina code should not in general
-interact directly with the SnapPea kernel. Values may be freely
-converted between the two enumeration types by simple assignment
-and/or typecasting.
-
-.. warning::
-    This enumeration must always be kept in sync with SnapPea's own
-    CoveringType enumeration.)doc";
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType
-static const char *SolutionType =
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution
+static const char *Solution =
 R"doc(Describes the different types of solution that can be found when
 solving for a hyperbolic structure.
 
-This enumeration is identical to SnapPea's own SolutionType enum; it
-is declared again here because Regina code should not in general
-interact directly with the SnapPea kernel. Values may be freely
-converted between the two enumeration types by simple assignment
-and/or typecasting.
+This enumeration corresponds to SnapPea's own SolutionType enum; it is
+declared again here because Regina code should not in general interact
+directly with the SnapPea kernel. Values may be freely converted
+between the two enumeration types by simple assignment and/or
+typecasting.
 
 .. warning::
     This enumeration must always be kept in sync with SnapPea's own
@@ -555,19 +555,19 @@ Regarding peripheral curves: native Regina triangulations do not store
 or use peripheral curves themselves, and so this constructor makes a
 default choice during the conversion process. Specifically:
 
-* If solution_type() is geometric_solution or nongeometric_solution,
-  then on each torus cusp the meridian and longitude are chosen to be
-  the (shortest, second shortest) basis, and their orientations follow
-  the convention used by the *SnapPy* kernel. Be warned, however, that
+* If solutionType() is ``Geometric`` or ``Nongeometric``, then on each
+  torus cusp the meridian and longitude are chosen to be the
+  (shortest, second shortest) basis, and their orientations follow the
+  convention used by the *SnapPy* kernel. Be warned, however, that
   this choice might not be unique for some cusp shapes, and the
   resolution of such ambiguities might be machine-dependent.
 
-* If solution_type() is something else (e.g., degenerate or flat), or
-  if SnapPea throws a fatal error when attempting to install the
-  (shortest, second shortest) basis as described above, then Regina
-  will accept whatever basis SnapPea installs by default. Be warned
-  that this default basis may change (and indeed has changed in the
-  past) across different versions of the SnapPea kernel.
+* If solutionType() is something else (e.g., ``Degenerate`` or
+  ``Flat``), or if SnapPea throws a fatal error when attempting to
+  install the (shortest, second shortest) basis as described above,
+  then Regina will accept whatever basis SnapPea installs by default.
+  Be warned that this default basis may change (and indeed has changed
+  in the past) across different versions of the SnapPea kernel.
 
 Regarding internal vertices (i.e., vertices whose links are spheres):
 SnapPea is designed to work only with triangulations where every
@@ -888,13 +888,12 @@ For each cover that is produced, this routine will call *action*
   it by rvalue reference and move it into more permanent storage.
 
 * The second argument to *action* must be of type
-  *SnapPeaTriangulation::CoverType*. This will indicate the type of
-  cover that has been constructed; see the
-  SnapPeaTriangulation::CoverType documentation for details. In the
-  same call to enumerateCovers() you may observe different types of
-  covers being produced (i.e., this value is computed individually for
-  each cover). You should, however, never see the value
-  *unknown_cover*.
+  *SnapPeaTriangulation::Cover*. This will indicate the type of cover
+  that has been constructed; see the SnapPeaTriangulation::Cover
+  documentation for details. In the same call to enumerateCovers() you
+  may observe different types of covers being produced (i.e., this
+  value is computed individually for each cover). You should, however,
+  never see the value *unknown_cover*.
 
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
@@ -944,7 +943,7 @@ Python:
     does _not_ take an addition argument list (*args*). The second
     form is ``enumerateCovers(sheets, type)``, which returns a Python
     list containing all of the triangulated covers, each given as a
-    pair (SnapPeaTriangulation, SnapPeaTriangulation::CoverType).
+    pair (SnapPeaTriangulation, SnapPeaTriangulation::Cover).
 
 Parameter ``sheets``:
     the number of sheets in the covers to produce (i.e., the number
@@ -1393,8 +1392,8 @@ shapes, with respect to the Dehn filled hyperbolic structure.
 Tetrahedron shapes are given in rectangular form using a fixed
 coordinate system, as described in the documentation for shape().
 
-If this is a null triangulation, or if solutionType() is no_solution
-or not_attempted (i.e., we did not or could not solve for a hyperbolic
+If this is a null triangulation, or if solutionType() is ``None`` or
+``NotAttempted`` (i.e., we did not or could not solve for a hyperbolic
 structure), then this routine will simply return zero.
 
 SnapPy:
@@ -1557,8 +1556,8 @@ filled hyperbolic structure.
 Tetrahedron shapes are given in rectangular form, and using a fixed
 coordinate system (fixed alignment, in SnapPea's terminology).
 
-If this is a null triangulation, or if solutionType() is no_solution
-or not_attempted (i.e., we did not or could not solve for a hyperbolic
+If this is a null triangulation, or if solutionType() is ``None`` or
+``NotAttempted`` (i.e., we did not or could not solve for a hyperbolic
 structure), then this routine will simply return zero.
 
 This routine is fast constant time (unlike in SnapPea, where the
@@ -1772,71 +1771,89 @@ Returns:
 
 }
 
-namespace SnapPeaTriangulation_::CoverEnumerationType_ {
+namespace SnapPeaTriangulation_::CoverEnumeration_ {
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumerationType_::all_covers
-static const char *all_covers =
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumeration_::All
+static const char *All =
 R"doc(Indicates that all covers should be enumerated. This corresponds to
 the SnapPea constant *permutation_subgroup_Sn*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumerationType_::cyclic_covers
-static const char *cyclic_covers =
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumeration_::Cyclic
+static const char *Cyclic =
 R"doc(Indicates that only cyclic covers should be enumerated. This
 corresponds to the SnapPea constant *permutation_subgroup_Zn*.)doc";
 
 }
 
-namespace SnapPeaTriangulation_::CoverType_ {
+namespace SnapPeaTriangulation_::Cover_ {
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::cyclic_cover
-static const char *cyclic_cover = R"doc(Indicates a cyclic covering.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Cyclic
+static const char *Cyclic =
+R"doc(Indicates a cyclic covering. This corresponds to the SnapPea constant
+*cyclic_cover*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::irregular_cover
-static const char *irregular_cover =
+// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Irregular
+static const char *Irregular =
 R"doc(Indicates a covering where there exist two lifts of a point in the
 base manifold with no covering transformation that takes one to the
-other.)doc";
+other. This corresponds to the SnapPea constant *irregular_cover*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::regular_cover
-static const char *regular_cover =
+// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Regular
+static const char *Regular =
 R"doc(Indicates a covering that is not cyclic, and where for any two lifts
 of a point in the base manfiold, there is a covering transformation
-taking one to the other.)doc";
+taking one to the other. This corresponds to the SnapPea constant
+*regular_cover*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::unknown_cover
-static const char *unknown_cover = R"doc(Indicates that SnapPea has not yet computed the covering type.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Unknown
+static const char *Unknown =
+R"doc(Indicates that SnapPea has not yet computed the covering type. This
+corresponds to the SnapPea constant *unknown_cover*.)doc";
 
 }
 
-namespace SnapPeaTriangulation_::SolutionType_ {
+namespace SnapPeaTriangulation_::Solution_ {
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::degenerate_solution
-static const char *degenerate_solution = R"doc(At least one tetrahedron has shape 0, 1 or infinity.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Degenerate
+static const char *Degenerate =
+R"doc(At least one tetrahedron has shape 0, 1 or infinity. This corresponds
+to the SnapPea constant *degenerate_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::externally_computed
-static const char *externally_computed = R"doc(Tetrahedron shapes were inserted into the triangulation.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::External
+static const char *External =
+R"doc(Tetrahedron shapes were inserted into the triangulation. This
+corresponds to the SnapPea constant *externally_computed*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::flat_solution
-static const char *flat_solution = R"doc(All tetrahedra are flat, but none have shape 0, 1 or infinity.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Flat
+static const char *Flat =
+R"doc(All tetrahedra are flat, but none have shape 0, 1 or infinity. This
+corresponds to the SnapPea constant *flat_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::geometric_solution
-static const char *geometric_solution = R"doc(All tetrahedra are positively oriented.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Geometric
+static const char *Geometric =
+R"doc(All tetrahedra are positively oriented. This corresponds to the
+SnapPea constant *geometric_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::no_solution
-static const char *no_solution = R"doc(The gluing equations could not be solved.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::None
+static const char *None =
+R"doc(The gluing equations could not be solved. This corresponds to the
+SnapPea constant *no_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::nongeometric_solution
-static const char *nongeometric_solution =
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Nongeometric
+static const char *Nongeometric =
 R"doc(The overall volume is positive, but some tetrahedra are flat or
-negatively oriented. No tetrahedra have shape 0, 1 or infinity.)doc";
+negatively oriented. No tetrahedra have shape 0, 1 or infinity. This
+corresponds to the SnapPea constant *nongeometric_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::not_attempted
-static const char *not_attempted = R"doc(A solution has not been attempted.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::NotAttempted
+static const char *NotAttempted =
+R"doc(A solution has not been attempted. This corresponds to the SnapPea
+constant *not_attempted*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::other_solution
-static const char *other_solution =
+// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Other
+static const char *Other =
 R"doc(The volume is zero or negative, but the solution is neither flat nor
-degenerate.)doc";
+degenerate. This corresponds to the SnapPea constant *other_solution*.)doc";
 
 }
 

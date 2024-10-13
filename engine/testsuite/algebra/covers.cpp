@@ -57,9 +57,10 @@ class CoversTest : public testing::Test {
                 return covers;
             }
 
-            s.enumerateCovers(degree, SnapPeaTriangulation::all_covers,
+            s.enumerateCovers(degree,
+                    SnapPeaTriangulation::CoverEnumeration::All,
                     [&](const SnapPeaTriangulation& cover,
-                    SnapPeaTriangulation::CoverType type) {
+                    SnapPeaTriangulation::Cover type) {
                 covers.push_back(cover.homologyFilled().str());
             });
             std::sort(covers.begin(), covers.end());

@@ -148,7 +148,7 @@ class SnapPeaTest : public testing::Test {
 
             ASSERT_FALSE(s.isNull());
 
-            EXPECT_EQ(s.solutionType(), SnapPeaTriangulation::flat_solution);
+            EXPECT_EQ(s.solutionType(), SnapPeaTriangulation::Solution::Flat);
 
             auto [foundVol, precision] = s.volumeWithPrecision();
             EXPECT_GE(precision, places);
@@ -170,7 +170,7 @@ class SnapPeaTest : public testing::Test {
             ASSERT_FALSE(s.isNull());
 
             EXPECT_EQ(s.solutionType(),
-                SnapPeaTriangulation::degenerate_solution);
+                SnapPeaTriangulation::Solution::Degenerate);
         }
 
         static void testFilledHomology(SnapPeaTriangulation s, int m, int l,

@@ -17,8 +17,11 @@ Version 7.4  [ (to be announced) ]
           potentially throw a LockViolation (and this is now explicitly noted
           in their respective docs); other routines now examine locks as part
           of their validity checks (e.g., local moves on triangulations).
-        - All global enumerations are now C++11 scoped enumerations, with the
-          old names kept as deprecated constants in the regina:: namespace.
+        - Most enumerations are now C++11 scoped enumerations, with the old
+          names kept as deprecated constants in the regina:: namespace (for
+          global enumerations) or the relevant class namespace (for class
+          enumerations).  The exceptions are those enumeration types that are
+          intended to be combined bitwise (e.g., NormalListFlags).
         - Explicit inequality tests (!=) have been removed, and are now
           automatically generated from equality tests (==) instead.
         - Explicit comparisons (<, <=, >, >=) have been removed, and are now
@@ -380,6 +383,14 @@ Version 7.4  [ (to be announced) ]
               if the file was created by some tool other than SnapPy).  The
               manifold will however be retriangulated (drilled and filled) upon
               creation since the SnapPea kernel requires an ideal triangulation.
+            - The class enumerations SolutionType, CoverEnumerationType and
+              CoverType have been renamed to Solution, CoverEnumeration and
+              Cover, and are now scoped enumerations for better type safety.
+              The old constants (e.g., SnapPeaTriangulation::geometric_solution)
+              have been renamed as scoped enum values (e.g.,
+              SnapPeaTriangulation::Solution::Geometric).  The old names have
+              been kept as deprecated compile-time class constants of
+              SnapPeaTriangulation.
         Class SpatialLink:
             - New packet class for specific embeddings of knots and links in
               the 3-sphere.  Currently this offers very limited features, but
