@@ -37,11 +37,6 @@
 #include <manifold/sfs.h>
 #include <manifold/torusbundle.h>
 
-#if !(__cpp_lib_three_way_comparison >= 201907L)
-#warning "This compiler does not support <=> in the standard library; working around this."
-#include <cstring>
-#endif
-
 namespace regina {
 
 std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
@@ -78,13 +73,7 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
     if (bundle1 && bundle2) {
         // TODO: Just sort by name here, since bundle parameters will
         // probably need to be made canonical anyway.
-#if __cpp_lib_three_way_comparison >= 201907L
         return name() <=> rhs.name();
-#else
-        const auto name1 = name();
-        const auto name2 = rhs.name();
-        return strcmp(name1.c_str(), name2.c_str()) <=> 0;
-#endif
     }
 
     // Finally graph manifolds (SFS pairs, triples and loops).
@@ -116,13 +105,7 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
         return (*loop1 <=> *loop2);
 
     // No idea.  Use the dictionary.
-#if __cpp_lib_three_way_comparison >= 201907L
     return name() <=> rhs.name();
-#else
-    const auto name1 = name();
-    const auto name2 = rhs.name();
-    return strcmp(name1.c_str(), name2.c_str()) <=> 0;
-#endif
 }
 
 } // namespace regina
