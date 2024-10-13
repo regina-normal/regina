@@ -389,7 +389,7 @@ QVariant Triangle3Model::data(const QModelIndex& index, int role) const {
                 if (item->isBoundary())
                     prefix = tr("(Bdry) ");
 
-                int type = item->type();
+                auto type = item->type();
                 if (type == Triangle<3>::Type::Triangle)
                     return prefix + tr("Triangle");
                 if (type == Triangle<3>::Type::Scarf)

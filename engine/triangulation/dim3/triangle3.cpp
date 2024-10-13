@@ -35,7 +35,7 @@
 namespace regina {
 
 Triangle<3>::Type Triangle<3>::type() {
-    if (type_)
+    if (type_ != Type::Unknown)
         return type_;
 
     subtype_ = -1;
