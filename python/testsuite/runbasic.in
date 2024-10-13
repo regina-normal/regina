@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite
+#
+# Copyright (c) 2007-2023, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: runbasic
+#
+# Runs the stripped-down basic Python interpreter, with all necessary paths
+# set in the environment.
+#
+# In most cases nobody should need this script.  It is provided mainly to help
+# debug Python issues that arise when using an embedded interpreter.
+#
+# This script runs everything directly out of the build tree.
+# It does not require regina to be installed on the system (and indeed
+# it ignores any installation that it might find).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+set -e
+
+path="`dirname "$0"`"
+executable="$path/basic"
+
+# Make sure Python will be able to import regina.
+os='@CMAKE_SYSTEM_NAME@'
+case "$os" in
+	Darwin )
+		export DYLD_LIBRARY_PATH="$path/../../engine:$DYLD_LIBRARY_PATH"
+		export PYTHONPATH="$path/..:$PYTHONPATH"
+		;;
+	Windows )
+		# The PYTHONHOME directory is incorrectly hard-coded in msys2.
+		# Work out the correct value by asking the python interpreter directly.
+		PYTHON='@BASH_Python_EXECUTABLE@'
+		if [ ! -e "$PYTHON" ]; then
+			echo "ERROR: Python interpreter not found: $PYTHON"
+			exit 1
+		fi
+		export PYTHONHOME="`"$PYTHON" -c 'import sys; print(sys.prefix)'`"
+		if [ ! -d "$PYTHONHOME" ]; then
+			echo "ERROR: Python home not found: $PYTHONHOME"
+			exit 1
+		fi
+
+		export PATH="$path/../../engine:$PATH"
+		export PYTHONPATH="$path/..;$PYTHONPATH"
+		;;
+	* )
+		export LD_LIBRARY_PATH="$path/../../engine:$LD_LIBRARY_PATH"
+		export PYTHONPATH="$path/..:$PYTHONPATH"
+		;;
+esac
+
+"$executable" "$@"

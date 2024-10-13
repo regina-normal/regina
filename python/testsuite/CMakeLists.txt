@@ -9,6 +9,11 @@ CONFIGURE_FILE(
   "${PROJECT_BINARY_DIR}/python/testsuite/testbasic"
   @ONLY
 )
+CONFIGURE_FILE(
+  runbasic.in
+  "${PROJECT_BINARY_DIR}/python/testsuite/runbasic"
+  @ONLY
+)
 
 # A very basic interpreter to use for testing:
 INCLUDE_DIRECTORIES(${Python_INCLUDE_DIRS} ${ENGINE_INCLUDES} "${PROJECT_BINARY_DIR}/engine")
