@@ -52,26 +52,26 @@ Triangle<3>::Type Triangle<3>::type() {
     if (e[0] != e[1] && e[1] != e[2] && e[2] != e[0]) {
         // Three distinct edges.
         if (v[0] == v[1] && v[1] == v[2])
-            return (type_ = PARACHUTE);
+            return (type_ = Type::Parachute);
         for (i = 0; i < 3; i++)
             if (v[(i+1)%3] == v[(i+2)%3]) {
                 subtype_ = i;
-                return (type_ = SCARF);
+                return (type_ = Type::Scarf);
             }
-        return (type_ = TRIANGLE);
+        return (type_ = Type::Triangle);
     }
 
     if (e[0] == e[1] && e[1] == e[2]) {
         // All edges identified.
         if (edgeMapping(0).sign() == edgeMapping(1).sign() &&
                 edgeMapping(1).sign() == edgeMapping(2).sign())
-            return (type_ = L31);
+            return (type_ = Type::L31);
 
         for (i = 0; i < 3; i++)
             if (edgeMapping((i+1)%3).sign() ==
                     edgeMapping((i+2)%3).sign()) {
                 subtype_ = i;
-                return (type_ = DUNCEHAT);
+                return (type_ = Type::DunceHat);
             }
     }
 
@@ -82,16 +82,16 @@ Triangle<3>::Type Triangle<3>::type() {
 
             if (edgeMapping((i+1)%3).sign() ==
                     edgeMapping((i+2)%3).sign())
-                return (type_ = MOBIUS);
+                return (type_ = Type::Mobius);
 
             if (v[0] == v[1] && v[1] == v[2])
-                return (type_ = HORN);
+                return (type_ = Type::Horn);
 
-            return (type_ = CONE);
+            return (type_ = Type::Cone);
         }
 
     // We should never reach this point.
-    return UNKNOWN_TYPE;
+    return Type::Unknown;
 }
 
 } // namespace regina

@@ -408,6 +408,12 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., TreeDecompositionAlg::Upper).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class Triangle<3>:
+            - Triangle<3>::Type is now a scoped enumeration, for better type
+              safety.  The old enum constants (e.g., Triangle<3>::CONE) are
+              now scoped enum values (e.g., Triangle<3>::Type::Cone).
+              The old names have been kept as deprecated compile-time class
+              constants of Triangle<3>.
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.

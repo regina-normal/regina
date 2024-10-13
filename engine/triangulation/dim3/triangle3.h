@@ -81,42 +81,42 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          *
          * \see type
          */
-        enum Type {
+        enum class Type {
             /**
              * Indicates that the triangle type has not yet been determined.
              */
-            UNKNOWN_TYPE = 0,
+            Unknown = 0,
             /**
              * Specifies a triangle with no identified vertices or edges.
              */
-            TRIANGLE = 1,
+            Triangle = 1,
             /**
              * Specifies a triangle with two identified vertices.
              */
-            SCARF = 2,
+            Scarf = 2,
             /**
              * Specifies a triangle with three identified vertices.
              */
-            PARACHUTE = 3,
+            Parachute = 3,
             /**
              * Specifies a triangle with two edges identified to form a cone.
              */
-            CONE = 4,
+            Cone = 4,
             /**
              * Specifies a triangle with two edges identified to form a
              * Mobius band.
              */
-            MOBIUS = 5,
+            Mobius = 5,
             /**
              * Specifies a triangle with two edges identified to form a cone
              * with all three vertices identified.
              */
-            HORN = 6,
+            Horn = 6,
             /**
              * Specifies a triangle with all three edges identified, some via
              * orientable and some via non-orientable gluings.
              */
-            DUNCEHAT = 7,
+            DunceHat = 7,
             /**
              * Specifies a triangle with all three edges identified using
              * non-orientable gluings.  Note that this forms a spine for the
@@ -125,9 +125,91 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
             L31 = 8
         };
 
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type UNKNOWN_TYPE =
+            Type::Unknown;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type TRIANGLE = Type::Triangle;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type SCARF = Type::Scarf;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type PARACHUTE = Type::Parachute;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type CONE = Type::Cone;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type MOBIUS = Type::Mobius;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type HORN = Type::Horn;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type DUNCEHAT = Type::DunceHat;
+
+        /**
+         * A deprecated constant indicating how the vertices and edges of a
+         * triangle are identified together.
+         *
+         * \deprecated This has been renamed to the scoped enumeration constant
+         * Type::Triangle.
+         */
+        [[deprecated]] inline static constexpr Type L31 = Type::L31;
+
     private:
         Type type_;
-            /**< Specifies the triangle type, or \a UNKNOWN_TYPE if the
+            /**< Specifies the triangle type, or \a Type::Unknown if the
                  type has not yet been determined. */
         int subtype_;
             /**< Specifies the vertex or edge that plays a special role
@@ -142,7 +224,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * triangle are identified.
          *
          * \return the type of this triangle.  This routine will never
-         * return UNKNOWN_TYPE.
+         * return Type::Unknown.
          */
         Type type();
 
@@ -216,7 +298,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
 // Inline functions for Triangle<3>
 
 inline Face<3, 2>::Face(Component<3>* component) :
-        FaceBase<3, 2>(component), type_(UNKNOWN_TYPE) {
+        FaceBase<3, 2>(component), type_(Type::Unknown) {
 }
 
 inline int Face<3, 2>::subtype() {
@@ -226,12 +308,14 @@ inline int Face<3, 2>::subtype() {
 
 inline bool Face<3, 2>::isMobiusBand() {
     type();
-    return (type_ == L31 || type_ == DUNCEHAT || type_ == MOBIUS);
+    return (type_ == Type::L31 || type_ == Type::DunceHat ||
+        type_ == Type::Mobius);
 }
 
 inline bool Face<3, 2>::isCone() {
     type();
-    return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
+    return (type_ == Type::DunceHat || type_ == Type::Cone ||
+        type_ == Type::Horn);
 }
 
 inline std::pair<NormalSurface, bool> Face<3, 2>::linkingSurface() const {

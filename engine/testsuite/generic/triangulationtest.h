@@ -731,17 +731,17 @@ class TriangulationTest : public testing::Test {
                 for (auto t : tri.triangles()) {
                     int sub = t->subtype();
                     switch (t->type()) {
-                        case regina::Triangle<dim>::TRIANGLE:
-                        case regina::Triangle<dim>::PARACHUTE:
-                        case regina::Triangle<dim>::L31:
+                        case regina::Triangle<dim>::Type::Triangle:
+                        case regina::Triangle<dim>::Type::Parachute:
+                        case regina::Triangle<dim>::Type::L31:
                             EXPECT_EQ(sub, -1);
                             break;
 
-                        case regina::Triangle<dim>::SCARF:
-                        case regina::Triangle<dim>::CONE:
-                        case regina::Triangle<dim>::MOBIUS:
-                        case regina::Triangle<dim>::HORN:
-                        case regina::Triangle<dim>::DUNCEHAT:
+                        case regina::Triangle<dim>::Type::Scarf:
+                        case regina::Triangle<dim>::Type::Cone:
+                        case regina::Triangle<dim>::Type::Mobius:
+                        case regina::Triangle<dim>::Type::Horn:
+                        case regina::Triangle<dim>::Type::DunceHat:
                             EXPECT_GE(sub, 0);
                             EXPECT_LE(sub, 2);
                             break;
