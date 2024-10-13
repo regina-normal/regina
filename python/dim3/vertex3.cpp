@@ -150,8 +150,9 @@ being reserved for a different purpose in a future release.)doc")
             rdoc_inner::KleinBottle)
         .value("NonStandardCusp", regina::Vertex<3>::Link::NonStandardCusp,
             rdoc_inner::NonStandardCusp)
-        .value("Invalid", regina::Vertex<3>::Link::Invalid, rdoc_inner::Invalid)
-        .export_values();
+        .value("Invalid", regina::Vertex<3>::Link::Invalid,
+            rdoc_inner::Invalid)
+        ;
 
     // Deprecated type alias and constants:
     c.attr("LinkType") = c.attr("Link");

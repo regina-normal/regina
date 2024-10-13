@@ -137,7 +137,6 @@ void addSFSpace(pybind11::module_& m) {
         .value("bn1", SFSpace::Class::bn1, rdoc_inner::bn1)
         .value("bn2", SFSpace::Class::bn2, rdoc_inner::bn2)
         .value("bn3", SFSpace::Class::bn3, rdoc_inner::bn3)
-        .export_values()
         ;
 
     // Deprecated type alias and constants:
