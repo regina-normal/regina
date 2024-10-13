@@ -79,7 +79,7 @@ void addRational(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-    regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
+    regina::python::add_output_ostream(c, regina::python::ReprStyle::Slim);
 
     regina::python::add_global_swap<Rational>(m, rdoc::global_swap);
 

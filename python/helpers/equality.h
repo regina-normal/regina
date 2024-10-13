@@ -54,7 +54,7 @@ namespace python {
  * test `x == y` or `x != y` under python, the possible
  * behaviours are:
  */
-enum EqualityType {
+enum class EqualityType {
     /**
      * The objects are compared by value.  This means that the underlying
      * C++ operators == and != for the class \a C are used.
@@ -375,7 +375,7 @@ namespace add_eq_operators_detail {
         // Instantion of this template means we know that T offers both
         // an operator == and an operator !=.
         static constexpr EqualityType equalityType() {
-            return BY_VALUE;
+            return EqualityType::BY_VALUE;
         }
 
         static bool are_equal(const T& a, const T& b) {
@@ -392,7 +392,7 @@ namespace add_eq_operators_detail {
         // Instantion of this template means we know that T offers neither
         // an operator == nor an operator !=.
         static constexpr EqualityType equalityType() {
-            return BY_REFERENCE;
+            return EqualityType::BY_REFERENCE;
         }
 
         static bool are_equal(const T& a, const T& b) {
@@ -414,7 +414,7 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c,
     constexpr EqualityType equalityType =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
 
-    static_assert(equalityType == BY_VALUE,
+    static_assert(equalityType == EqualityType::BY_VALUE,
         "The variant of add_eq_operators() that takes docstrings "
         "should only be used for classes that compare by value.");
 
@@ -437,7 +437,7 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c) {
     constexpr EqualityType equalityType =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
 
-    static_assert(equalityType == BY_REFERENCE,
+    static_assert(equalityType == EqualityType::BY_REFERENCE,
         "The variant of add_eq_operators() that takes docstrings "
         "should only be used for classes that compare by reference.");
 
@@ -535,7 +535,7 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
 template <class C, typename... options>
 void add_cmp_operators(pybind11::class_<C, options...>& c, const char* doc) {
     static_assert(add_eq_operators_detail::EqualityOperators<C>::equalityType()
-            == BY_VALUE,
+            == EqualityType::BY_VALUE,
         "The function add_cmp_operators() should only be used for classes "
         "that compare by value.");
 

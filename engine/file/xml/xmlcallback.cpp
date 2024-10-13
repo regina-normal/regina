@@ -45,10 +45,10 @@ void XMLCallback::start_document(regina::xml::XMLParser* parser) {
 }
 
 void XMLCallback::end_document() {
-    if (state_ == WAITING) {
+    if (state_ == State::Waiting) {
         errStream_ << "XML Fatal Error: File contains no tags." << std::endl;
         abort();
-    } else if (state_ == WORKING || ! readers_.empty()) {
+    } else if (state_ == State::Working || ! readers_.empty()) {
         errStream_ << "XML Fatal Error: Unfinished file." << std::endl;
         abort();
     }
@@ -56,16 +56,16 @@ void XMLCallback::end_document() {
 
 void XMLCallback::start_element(const std::string& n,
         const regina::xml::XMLPropertyDict& p) {
-    if (state_ == DONE) {
+    if (state_ == State::Done) {
         errStream_ << "XML Fatal Error: File contains multiple top-level tags."
             << std::endl;
         abort();
-    } else if (state_ == WAITING) {
+    } else if (state_ == State::Waiting) {
         currentReader()->startElement(n, p, nullptr);
         currChars_ = "";
         charsAreInitial_ = true;
-        state_ = WORKING;
-    } else if (state_ == WORKING) {
+        state_ = State::Working;
+    } else if (state_ == State::Working) {
         XMLElementReader* current = currentReader();
         if (charsAreInitial_)
             current->initialChars(currChars_);
@@ -79,7 +79,7 @@ void XMLCallback::start_element(const std::string& n,
 }
 
 void XMLCallback::end_element(const std::string& n) {
-    if (state_ == WORKING) {
+    if (state_ == State::Working) {
         XMLElementReader* current = currentReader();
 
         if (charsAreInitial_) {
@@ -90,7 +90,7 @@ void XMLCallback::end_element(const std::string& n) {
 
         if (readers_.empty()) {
             // In this case, current is the top-level reader.
-            state_ = DONE;
+            state_ = State::Done;
         } else {
             // In this case, current is at the top of the stack.
             readers_.pop();
@@ -101,7 +101,7 @@ void XMLCallback::end_element(const std::string& n) {
 }
 
 void XMLCallback::characters(const std::string& s) {
-    if (state_ == WORKING)
+    if (state_ == State::Working)
         if (charsAreInitial_)
             currChars_ += s;
 }
@@ -121,9 +121,9 @@ void XMLCallback::fatal_error(const std::string& s) {
 }
 
 void XMLCallback::abort() {
-    if (state_ == ABORTED)
+    if (state_ == State::Aborted)
         return;
-    state_ = ABORTED;
+    state_ = State::Aborted;
 
     // Make sure we don't delete a child reader until we've called
     // abortElement() on its parent.

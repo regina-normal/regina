@@ -162,7 +162,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         rdoc::tightDecoding, rdoc::hash);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-    regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
+    regina::python::add_output_ostream(c, regina::python::ReprStyle::Slim);
 
     m.def("tightEncoding", static_cast<std::string(&)(Int)>(
         regina::tightEncoding), rdoc_global::tightEncoding);

@@ -90,15 +90,15 @@ class Rational {
         /**
          * Represents the available flavours of rational number.
          */
-        enum flavourType {
-            f_infinity,
+        enum class Flavour {
+            Infinity,
                 /**< Infinity; there is only one rational of this type. */
-            f_undefined,
+            Undefined,
                 /**< Undefined; there is only one rational of this type. */
-            f_normal
+            Normal
                 /**< An ordinary rational (the denominator is non-zero). */
         };
-        flavourType flavour;
+        Flavour flavour;
             /**< Stores whether this rational is infinity, undefined or
              *   normal (non-zero denominator). */
         mpq_t data;
@@ -473,12 +473,12 @@ std::ostream& operator << (std::ostream& out, const Rational& rat);
 
 // Inline functions for Rational
 
-inline Rational::Rational() : flavour(f_normal) {
+inline Rational::Rational() : flavour(Flavour::Normal) {
     mpq_init(data);
 }
 inline Rational::Rational(const Rational& value) : flavour(value.flavour) {
     mpq_init(data);
-    if (flavour == f_normal)
+    if (flavour == Flavour::Normal)
         mpq_set(data, value.data);
 }
 inline Rational::Rational(Rational&& src) noexcept : flavour(src.flavour) {
@@ -487,16 +487,16 @@ inline Rational::Rational(Rational&& src) noexcept : flavour(src.flavour) {
 }
 template <bool withInfinity>
 inline Rational::Rational(const IntegerBase<withInfinity>& value) :
-        flavour(f_normal) {
+        flavour(Flavour::Normal) {
     mpq_init(data);
     if (value.isInfinite())
-        flavour = f_infinity;
+        flavour = Flavour::Infinity;
     else if (value.isNative())
         mpq_set_si(data, value.longValue(), 1);
     else
         mpq_set_z(data, value.rawData());
 }
-inline Rational::Rational(long value) : flavour(f_normal) {
+inline Rational::Rational(long value) : flavour(Flavour::Normal) {
     mpq_init(data);
     mpq_set_si(data, value, 1);
 }
@@ -506,11 +506,11 @@ Rational::Rational(const IntegerBase<withInfinity>& num,
     mpq_init(data);
     if (den.isZero()) {
         if (num.isZero())
-            flavour = f_undefined;
+            flavour = Flavour::Undefined;
         else
-            flavour = f_infinity;
+            flavour = Flavour::Infinity;
     } else {
-        flavour = f_normal;
+        flavour = Flavour::Normal;
         if (num.isNative() && den.isNative())
             mpq_set_si(data, num.longValue(), den.longValue());
         else if (num.isNative()) {
@@ -539,25 +539,25 @@ inline Rational& Rational::operator = (const Rational& value) {
     // - the libgmpxx classes do not special-case self-assignment.
     // The C++ test suite tests self-assignment of Rationals also.
     flavour = value.flavour;
-    if (flavour == f_normal)
+    if (flavour == Flavour::Normal)
         mpq_set(data, value.data);
     return *this;
 }
 template <bool withInfinity>
 inline Rational& Rational::operator = (const IntegerBase<withInfinity>& value) {
     if (value.isInfinite())
-        flavour = f_infinity;
+        flavour = Flavour::Infinity;
     else if (value.isNative()) {
-        flavour = f_normal;
+        flavour = Flavour::Normal;
         mpq_set_si(data, value.longValue(), 1);
     } else {
-        flavour = f_normal;
+        flavour = Flavour::Normal;
         mpq_set_z(data, value.rawData());
     }
     return *this;
 }
 inline Rational& Rational::operator = (long value) {
-    flavour = f_normal;
+    flavour = Flavour::Normal;
     mpq_set_si(data, value, 1);
     return *this;
 }
@@ -576,7 +576,7 @@ inline void Rational::swap(Rational& other) noexcept {
 }
 
 inline void Rational::negate() {
-    if (flavour == f_normal)
+    if (flavour == Flavour::Normal)
         mpq_neg(data, data);
 }
 

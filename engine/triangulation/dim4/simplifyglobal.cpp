@@ -74,7 +74,7 @@ bool Triangulation<4>::simplifyInternal() {
 
             // Make random 3-3 moves.
             static constexpr int COEFF_3_3 =
-                (context == simplifyUpDownDescent ? 200 : 10);
+                (context == SimplifyContext::UpDownDescent ? 200 : 10);
 
             threeThreeAttempts = threeThreeCap = 0;
             while (true) {
@@ -121,7 +121,7 @@ bool Triangulation<4>::simplifyInternal() {
             // At this point we have decided that 3-3 moves will help us
             // no more.
 
-            if constexpr (context == simplifyUpDownDescent) {
+            if constexpr (context == SimplifyContext::UpDownDescent) {
                 // In this context, we are not allowed to try any other moves.
                 break;
             }
@@ -178,9 +178,9 @@ bool Triangulation<4>::simplifyInternal() {
 
 // Instantiate all variants of simplifyInternal().
 template bool Triangulation<4>::simplifyInternal<
-    Triangulation<4>::simplifyBest>();
+    Triangulation<4>::SimplifyContext::Best>();
 template bool Triangulation<4>::simplifyInternal<
-    Triangulation<4>::simplifyUpDownDescent>();
+    Triangulation<4>::SimplifyContext::UpDownDescent>();
 
 template <Triangulation<4>::SimplifyContext context>
 bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
@@ -197,7 +197,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             changedNow = false;
             ensureSkeleton();
 
-            if constexpr (context != simplifyUpDownDescent) {
+            if constexpr (context != SimplifyContext::UpDownDescent) {
                 // Crush edges if we can.
                 if (countVertices() > countComponents() &&
                         countVertices() > countBoundaryComponents()) {
@@ -250,7 +250,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
                     return true;
             }
 
-            if constexpr (context == simplifyUpDownDescent) {
+            if constexpr (context == SimplifyContext::UpDownDescent) {
                 // In this context, we are not allowed to try any other moves.
                 break;
             }
@@ -313,9 +313,9 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
 
 // Instantiate all variants of simplifyToLocalMinimumInternal().
 template bool Triangulation<4>::simplifyToLocalMinimumInternal<
-    Triangulation<4>::simplifyBest>(bool);
+    Triangulation<4>::SimplifyContext::Best>(bool);
 template bool Triangulation<4>::simplifyToLocalMinimumInternal<
-    Triangulation<4>::simplifyUpDownDescent>(bool);
+    Triangulation<4>::SimplifyContext::UpDownDescent>(bool);
 
 bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
         bool alwaysModify) {
@@ -345,7 +345,7 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
         }
 
         // Simplify using only 2-0 edge/triangle moves and 3-3 moves.
-        working.simplifyInternal<simplifyUpDownDescent>();
+        working.simplifyInternal<SimplifyContext::UpDownDescent>();
 
         if (working.countEdges() < initEdges) {
             // We simplified!

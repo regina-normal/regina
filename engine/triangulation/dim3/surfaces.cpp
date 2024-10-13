@@ -244,10 +244,10 @@ bool Triangulation<3>::hasSplittingSurface() const {
 
     // We keep track of whether an edge has been assumed to be disjoint
     // or not from a putative splitting surface.
-    enum EdgeState {
-        EDGE_UNKNOWN = 0,
-        EDGE_DISJOINT = 1,
-        EDGE_INTERSECTING = 2
+    enum class EdgeState {
+        Unknown = 0,
+        Disjoint = 1,
+        Intersecting = 2
     };
     auto* state = new EdgeState[countEdges()];
 
@@ -264,7 +264,7 @@ bool Triangulation<3>::hasSplittingSurface() const {
 
     for (int i = 0; i < 3; i++){
         candidate_disjoint.clear();
-        std::fill(state, state + countEdges(), EDGE_UNKNOWN);
+        std::fill(state, state + countEdges(), EdgeState::Unknown);
 
         // Outset
         candidate_disjoint.push_back(tri->edge(i));
@@ -286,30 +286,30 @@ bool Triangulation<3>::hasSplittingSurface() const {
                 Edge<3>* lat03 = tet_e->edge(v_perm[0],v_perm[3]);
                 Edge<3>* lat12 = tet_e->edge(v_perm[1],v_perm[2]);
                 Edge<3>* lat13 = tet_e->edge(v_perm[1],v_perm[3]);
-                state[lat02->index()] = EDGE_INTERSECTING;
-                state[lat03->index()] = EDGE_INTERSECTING;
-                state[lat12->index()] = EDGE_INTERSECTING;
-                state[lat13->index()] = EDGE_INTERSECTING;
+                state[lat02->index()] = EdgeState::Intersecting;
+                state[lat03->index()] = EdgeState::Intersecting;
+                state[lat12->index()] = EdgeState::Intersecting;
+                state[lat13->index()] = EdgeState::Intersecting;
             }
 
             // Now we check for a local obstruction to a splitting surface
             // opposite e.
-            if (state[e->index()] == EDGE_INTERSECTING) {
+            if (state[e->index()] == EdgeState::Intersecting) {
                 broken = true;
                 break;
             } else {
-                state[e->index()] = EDGE_DISJOINT;
+                state[e->index()] = EdgeState::Disjoint;
                 // Regard the edges opposite e as candidates if they're not
                 // already assumed disjoint.
                 for (auto& emb : *e) {
                     Tetrahedron<3>* tet_e = emb.simplex();
                     Perm<4> v_perm = emb.vertices();
                     Edge<3>* opp = tet_e->edge(v_perm[2],v_perm[3]);
-                    if (state[opp->index()] == EDGE_INTERSECTING) {
+                    if (state[opp->index()] == EdgeState::Intersecting) {
                         broken = true;
                         break;
                     }
-                    if (state[opp->index()] != EDGE_DISJOINT)
+                    if (state[opp->index()] != EdgeState::Disjoint)
                         candidate_disjoint.push_back(opp);
                 }
             }

@@ -51,19 +51,19 @@ Rational::Rational(long num, unsigned long den) {
     mpq_init(data);
     if (den == 0) {
         if (num == 0)
-            flavour = f_undefined;
+            flavour = Flavour::Undefined;
         else
-            flavour = f_infinity;
+            flavour = Flavour::Infinity;
     } else {
-        flavour = f_normal;
+        flavour = Flavour::Normal;
         mpq_set_si(data, num, den);
     }
 }
 
 Integer Rational::numerator() const {
-    if (flavour == f_infinity)
+    if (flavour == Flavour::Infinity)
         return 1;
-    else if (flavour == f_undefined)
+    else if (flavour == Flavour::Undefined)
         return 0;
 
     Integer ans;
@@ -72,7 +72,7 @@ Integer Rational::numerator() const {
 }
 
 Integer Rational::denominator() const {
-    if (flavour != f_normal)
+    if (flavour != Flavour::Normal)
         return 0;
 
     Integer ans;
@@ -81,14 +81,14 @@ Integer Rational::denominator() const {
 }
 
 Rational Rational::operator *(const Rational& r) const {
-    if (flavour == f_undefined || r.flavour == f_undefined)
+    if (flavour == Flavour::Undefined || r.flavour == Flavour::Undefined)
         return undefined;
-    if (flavour == f_infinity) {
+    if (flavour == Flavour::Infinity) {
         if (r == zero)
             return undefined;
         return infinity;
     }
-    if (r.flavour == f_infinity) {
+    if (r.flavour == Flavour::Infinity) {
         if (*this == zero)
             return undefined;
         return infinity;
@@ -99,14 +99,14 @@ Rational Rational::operator *(const Rational& r) const {
 }
 
 Rational Rational::operator /(const Rational& r) const {
-    if (flavour == f_undefined || r.flavour == f_undefined)
+    if (flavour == Flavour::Undefined || r.flavour == Flavour::Undefined)
         return undefined;
-    if (flavour == f_infinity) {
-        if (r.flavour == f_infinity)
+    if (flavour == Flavour::Infinity) {
+        if (r.flavour == Flavour::Infinity)
             return undefined;
         return infinity;
     }
-    if (r.flavour == f_infinity)
+    if (r.flavour == Flavour::Infinity)
         return zero;
     if (r == zero) {
         if (*this == zero)
@@ -119,9 +119,9 @@ Rational Rational::operator /(const Rational& r) const {
 }
 
 Rational Rational::operator +(const Rational& r) const {
-    if (flavour == f_undefined || r.flavour == f_undefined)
+    if (flavour == Flavour::Undefined || r.flavour == Flavour::Undefined)
         return undefined;
-    if (flavour == f_infinity || r.flavour == f_infinity)
+    if (flavour == Flavour::Infinity || r.flavour == Flavour::Infinity)
         return infinity;
     Rational ans;
     mpq_add(ans.data, data, r.data);
@@ -129,9 +129,9 @@ Rational Rational::operator +(const Rational& r) const {
 }
 
 Rational Rational::operator -(const Rational& r) const {
-    if (flavour == f_undefined || r.flavour == f_undefined)
+    if (flavour == Flavour::Undefined || r.flavour == Flavour::Undefined)
         return undefined;
-    if (flavour == f_infinity || r.flavour == f_infinity)
+    if (flavour == Flavour::Infinity || r.flavour == Flavour::Infinity)
         return infinity;
     Rational ans;
     mpq_sub(ans.data, data, r.data);
@@ -139,7 +139,7 @@ Rational Rational::operator -(const Rational& r) const {
 }
 
 Rational Rational::operator - () const {
-    if (flavour != f_normal)
+    if (flavour != Flavour::Normal)
         return *this;
     Rational ans;
     mpq_neg(ans.data, data);
@@ -147,9 +147,9 @@ Rational Rational::operator - () const {
 }
 
 Rational Rational::inverse() const {
-    if (flavour == f_undefined)
+    if (flavour == Flavour::Undefined)
         return undefined;
-    if (flavour == f_infinity)
+    if (flavour == Flavour::Infinity)
         return zero;
     if (*this == zero)
         return infinity;
@@ -159,7 +159,7 @@ Rational Rational::inverse() const {
 }
 
 Rational Rational::abs() const {
-    if (flavour != f_normal || mpq_cmp(data, zero.data) >= 0)
+    if (flavour != Flavour::Normal || mpq_cmp(data, zero.data) >= 0)
         return *this;
     Rational ans;
     mpq_neg(ans.data, data);
@@ -167,71 +167,71 @@ Rational Rational::abs() const {
 }
 
 Rational& Rational::operator += (const Rational& other) {
-    if (flavour == f_undefined || other.flavour == f_undefined)
-        flavour = f_undefined;
-    else if (flavour == f_infinity || other.flavour == f_infinity)
-        flavour = f_infinity;
+    if (flavour == Flavour::Undefined || other.flavour == Flavour::Undefined)
+        flavour = Flavour::Undefined;
+    else if (flavour == Flavour::Infinity || other.flavour == Flavour::Infinity)
+        flavour = Flavour::Infinity;
     else
         mpq_add(data, data, other.data);
     return *this;
 }
 
 Rational& Rational::operator -= (const Rational& other) {
-    if (flavour == f_undefined || other.flavour == f_undefined)
-        flavour = f_undefined;
-    else if (flavour == f_infinity || other.flavour == f_infinity)
-        flavour = f_infinity;
+    if (flavour == Flavour::Undefined || other.flavour == Flavour::Undefined)
+        flavour = Flavour::Undefined;
+    else if (flavour == Flavour::Infinity || other.flavour == Flavour::Infinity)
+        flavour = Flavour::Infinity;
     else
         mpq_sub(data, data, other.data);
     return *this;
 }
 
 Rational& Rational::operator *= (const Rational& other) {
-    if (flavour == f_undefined || other.flavour == f_undefined)
-        flavour = f_undefined;
-    else if (flavour == f_infinity) {
+    if (flavour == Flavour::Undefined || other.flavour == Flavour::Undefined)
+        flavour = Flavour::Undefined;
+    else if (flavour == Flavour::Infinity) {
         if (other == zero)
-            flavour = f_undefined;
+            flavour = Flavour::Undefined;
         else
-            flavour = f_infinity;
-    } else if (other.flavour == f_infinity) {
+            flavour = Flavour::Infinity;
+    } else if (other.flavour == Flavour::Infinity) {
         if (*this == zero)
-            flavour = f_undefined;
+            flavour = Flavour::Undefined;
         else
-            flavour = f_infinity;
+            flavour = Flavour::Infinity;
     } else
         mpq_mul(data, data, other.data);
     return *this;
 }
 
 Rational& Rational::operator /= (const Rational& other) {
-    if (flavour == f_undefined || other.flavour == f_undefined)
-        flavour = f_undefined;
-    else if (flavour == f_infinity) {
-        if (other.flavour == f_infinity)
-            flavour = f_undefined;
+    if (flavour == Flavour::Undefined || other.flavour == Flavour::Undefined)
+        flavour = Flavour::Undefined;
+    else if (flavour == Flavour::Infinity) {
+        if (other.flavour == Flavour::Infinity)
+            flavour = Flavour::Undefined;
         else
-            flavour = f_infinity;
-    } else if (other.flavour == f_infinity)
+            flavour = Flavour::Infinity;
+    } else if (other.flavour == Flavour::Infinity)
         mpq_set(data, zero.data);
     else if (other == zero) {
         if (*this == zero)
-            flavour = f_undefined;
+            flavour = Flavour::Undefined;
         else
-            flavour = f_infinity;
+            flavour = Flavour::Infinity;
     } else
         mpq_div(data, data, other.data);
     return *this;
 }
 
 void Rational::invert() {
-    if (flavour == f_undefined)
+    if (flavour == Flavour::Undefined)
         return;
-    else if (flavour == f_infinity) {
-        flavour = f_normal;
+    else if (flavour == Flavour::Infinity) {
+        flavour = Flavour::Normal;
         mpq_set(data, zero.data);
     } else if (*this == zero) {
-        flavour = f_infinity;
+        flavour = Flavour::Infinity;
     } else
         mpq_inv(data, data);
 }
@@ -239,31 +239,31 @@ void Rational::invert() {
 bool Rational::operator == (const Rational& compare) const {
     if (flavour != compare.flavour)
         return false;
-    if (flavour != f_normal)
+    if (flavour != Flavour::Normal)
         return true;
     return mpq_equal(data, compare.data);
 }
 
 std::strong_ordering Rational::operator <=> (const Rational& compare) const {
-    if (flavour == f_infinity)
-        return (compare.flavour == f_infinity ? std::strong_ordering::equal :
-            std::strong_ordering::greater);
-    if (compare.flavour == f_infinity)
+    if (flavour == Flavour::Infinity)
+        return (compare.flavour == Flavour::Infinity ?
+            std::strong_ordering::equal : std::strong_ordering::greater);
+    if (compare.flavour == Flavour::Infinity)
         return std::strong_ordering::less;
 
-    if (flavour == f_undefined)
-        return (compare.flavour == f_undefined ? std::strong_ordering::equal :
-            std::strong_ordering::less);
-    if (compare.flavour == f_undefined)
+    if (flavour == Flavour::Undefined)
+        return (compare.flavour == Flavour::Undefined ?
+            std::strong_ordering::equal : std::strong_ordering::less);
+    if (compare.flavour == Flavour::Undefined)
         return std::strong_ordering::greater;
 
     return mpq_cmp(data, compare.data) <=> 0;
 }
 
 std::ostream& operator << (std::ostream& out, const Rational& rat) {
-    if (rat.flavour == Rational::f_infinity)
+    if (rat.flavour == Rational::Flavour::Infinity)
         out << "Inf";
-    else if (rat.flavour == Rational::f_undefined)
+    else if (rat.flavour == Rational::Flavour::Undefined)
         out << "Undef";
     else if (rat.denominator() == 1)
         out << rat.numerator();
@@ -285,9 +285,9 @@ std::string Rational::tex() const {
 }
 
 std::ostream& Rational::writeTeX(std::ostream &out) const {
-    if (flavour == Rational::f_infinity)
+    if (flavour == Rational::Flavour::Infinity)
         out << "\\infty";
-    else if (flavour == Rational::f_undefined)
+    else if (flavour == Rational::Flavour::Undefined)
         out << "0/0";
     else if (denominator() == 1)
         out << numerator();
@@ -300,11 +300,11 @@ double Rational::doubleApprox() const {
     // Initialise maxDouble and minDouble if this has not already been done.
     // Do this even if the current doubleApprox() call is trivial, since we
     // promise this initialisation on the very first call to doubleApprox().
-    if (maxDouble.flavour == f_undefined)
+    if (maxDouble.flavour == Flavour::Undefined)
         initDoubleBounds();
 
     // Trivial cases.
-    if (flavour == Rational::f_infinity || flavour == Rational::f_undefined)
+    if (flavour == Flavour::Infinity || flavour == Flavour::Undefined)
         throw UnsolvedCase("Rational is infinite or undefined");
 
     // Treat zero separately so that "abs < minDouble" is meaningful later on.

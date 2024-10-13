@@ -59,14 +59,14 @@ class XMLCallback : public regina::xml::XMLParserCallback {
         /**
          * Used to indicate the state of a callback object.
          */
-        enum State {
-            WAITING = 1,
+        enum class State {
+            Waiting = 1,
                 /**< The top-level XML element has not yet been seen. */
-            WORKING = 2,
+            Working = 2,
                 /**< XML elements are currently being processed. */
-            DONE = 3,
+            Done = 3,
                 /**< Processing of all XML elements has finished. */
-            ABORTED = 4
+            Aborted = 4
                 /**< XML processing was aborted. */
         };
 
@@ -92,14 +92,13 @@ class XMLCallback : public regina::xml::XMLParserCallback {
         /**
          * Creates a new callback object.
          *
-         * \param newTopReader the element reader to use for the
+         * \param topReader the element reader to use for the
          * top-level XML element.  This is the only element reader that
          * will not be destroyed once parsing has finished.
-         * \param newErrStream the output stream to which any warning or
+         * \param errStream the output stream to which any warning or
          * error messages should be sent.
          */
-        XMLCallback(XMLElementReader& newTopReader,
-            std::ostream& newErrStream);
+        XMLCallback(XMLElementReader& topReader, std::ostream& errStream);
         /**
          * Destroys this callback object.  Any element reader (aside from
          * the top-level reader) that has not yet been destroyed will
@@ -153,9 +152,9 @@ class XMLCallback : public regina::xml::XMLParserCallback {
 
 // Inline functions for XMLCallback
 
-inline XMLCallback::XMLCallback(XMLElementReader& newTopReader,
-        std::ostream& newErrStream) : topReader_(newTopReader),
-        errStream_(newErrStream), charsAreInitial_(true), state_(WAITING) {
+inline XMLCallback::XMLCallback(XMLElementReader& topReader,
+        std::ostream& errStream) : topReader_(topReader), errStream_(errStream),
+        charsAreInitial_(true), state_(State::Waiting) {
 }
 
 inline XMLElementReader* XMLCallback::currentReader() {

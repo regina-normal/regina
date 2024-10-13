@@ -615,10 +615,10 @@ class LPSystem : public ShortOutput<LPSystem> {
         /**
          * The three possible classes of vector encodings.
          */
-        enum System {
-            LP_STANDARD = 1,
-            LP_QUAD = 2,
-            LP_ANGLE = 4
+        enum class System {
+            Standard = 1,
+            Quad = 2,
+            Angle = 4
         } system_;
 
     public:
@@ -631,9 +631,9 @@ class LPSystem : public ShortOutput<LPSystem> {
          * structure encoding.
          */
         constexpr LPSystem(NormalEncoding enc) : system_(
-                enc.storesAngles() ? LP_ANGLE :
-                enc.storesTriangles() ? LP_STANDARD :
-                LP_QUAD) {
+                enc.storesAngles() ? System::Angle :
+                enc.storesTriangles() ? System::Standard :
+                System::Quad) {
         }
         /**
          * Creates a new copy of the given class of vector encodings.
@@ -669,7 +669,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * surface encodings.
          */
         constexpr bool normal() const {
-            return (system_ != LP_ANGLE);
+            return (system_ != System::Angle);
         };
         /**
          * Identifies whether this is the class of encodings that represent
@@ -680,7 +680,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * \return \c true if this is the class of angle encodings.
          */
         constexpr bool angle() const {
-            return (system_ == LP_ANGLE);
+            return (system_ == System::Angle);
         }
         /**
          * Identifies whether this is the class of standard encodings.
@@ -690,7 +690,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * \return \c true if this is the class of standard encodings.
          */
         constexpr bool standard() const {
-            return (system_ == LP_STANDARD);
+            return (system_ == System::Standard);
         }
         /**
          * Identifies whether this is the class of quad encodings.
@@ -700,7 +700,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * \return \c true if this is the class of quad encodings.
          */
         constexpr bool quad() const {
-            return (system_ == LP_QUAD);
+            return (system_ == System::Quad);
         }
         /**
          * Returns the number of coordinate columns that a tableaux will use
@@ -713,9 +713,9 @@ class LPSystem : public ShortOutput<LPSystem> {
          */
         constexpr size_t coords(size_t nTet) const {
             switch (system_) {
-                case LP_STANDARD: return 7 * nTet;
-                case LP_QUAD: return 3 * nTet;
-                case LP_ANGLE: return 3 * nTet + 1;
+                case System::Standard: return 7 * nTet;
+                case System::Quad: return 3 * nTet;
+                case System::Angle: return 3 * nTet + 1;
                 default: return 0;
             }
         }
@@ -730,9 +730,9 @@ class LPSystem : public ShortOutput<LPSystem> {
          */
         void writeTextShort(std::ostream& out) const {
             switch (system_) {
-                case LP_STANDARD: out << "standard"; return;
-                case LP_QUAD: out << "quad"; return;
-                case LP_ANGLE: out << "angle"; return;
+                case System::Standard: out << "standard"; return;
+                case System::Quad: out << "quad"; return;
+                case System::Angle: out << "angle"; return;
                 default: out << "invalid"; return;
             }
         }

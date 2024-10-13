@@ -97,18 +97,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Represents different contexts in which a member function might try
          * to simplify a triangulation.
          */
-        enum SimplifyContext {
+        enum class SimplifyContext {
             /**
              * Indicates that we want to use all available techniques to
              * simplify the triangulation as much as possible.
              */
-            simplifyBest,
+            Best,
             /**
              * Indicates that we are within a "down" sequence of
              * simplifyUpDown().  Only 2-0 edge moves, 2-0 triangle moves and
              * 3-3 moves will be considered.
              */
-            simplifyUpDownDescent
+            UpDownDescent
         };
 
         long vertexLinkSummary_ { -1 };
@@ -1565,15 +1565,15 @@ inline bool Triangulation<4>::isClosed() const {
 }
 
 inline bool Triangulation<4>::simplify() {
-    return simplifyInternal<simplifyBest>();
+    return simplifyInternal<SimplifyContext::Best>();
 }
 
 inline bool Triangulation<4>::intelligentSimplify() {
-    return simplifyInternal<simplifyBest>();
+    return simplifyInternal<SimplifyContext::Best>();
 }
 
 inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
-    return simplifyToLocalMinimumInternal<simplifyBest>(perform);
+    return simplifyToLocalMinimumInternal<SimplifyContext::Best>(perform);
 }
 
 template <typename Action, typename... Args>

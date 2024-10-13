@@ -45,7 +45,7 @@ namespace regina::python {
  * Indicates the style of output to use for the Python \a __repr__ function
  * when wrapping a C++ class.
  */
-enum ReprStyle {
+enum class ReprStyle {
     /**
      * Indicates a more detailed output style.
      *
@@ -57,7 +57,7 @@ enum ReprStyle {
      *
      * Most classes should use this output style.
      */
-    PYTHON_REPR_DETAILED = 1,
+    Detailed = 1,
     /**
      * Indicates a slimmed-down output style.
      *
@@ -70,14 +70,14 @@ enum ReprStyle {
      * documentation says \a __repr__ should do.  Ideally this would
      * only be used for simple numeric types (e.g., regina::Integer).
      */
-    PYTHON_REPR_SLIM,
+    Slim,
     /**
      * Indicates that there should be no custom \a __repr__ function at all.
      *
      * This will fall back to the (fairly uninformative) default provided by
      * pybind11 and/or python.
      */
-    PYTHON_REPR_NONE
+    None
 };
 
 /**
@@ -99,7 +99,7 @@ enum ReprStyle {
  */
 template <class C, typename... options>
 void add_output(pybind11::class_<C, options...>& c,
-        ReprStyle style = PYTHON_REPR_DETAILED) {
+        ReprStyle style = ReprStyle::Detailed) {
     // The messy std::conditional below is to resolve packets of type
     // PacketOf<...>, which inherit from Output<...> via both Packet and Held.
     using BaseType = std::conditional_t<std::is_base_of_v<regina::Packet, C>,
@@ -117,7 +117,7 @@ void add_output(pybind11::class_<C, options...>& c,
     c.def("__str__", static_cast<OutputFunctionType>(&BaseType::str));
 
     switch (style) {
-        case PYTHON_REPR_DETAILED:
+        case ReprStyle::Detailed:
             c.def("__repr__", [](const C& c) {
                 std::ostringstream s;
                 s << "<regina.";
@@ -129,11 +129,11 @@ void add_output(pybind11::class_<C, options...>& c,
             });
             break;
 
-        case PYTHON_REPR_SLIM:
+        case ReprStyle::Slim:
             c.def("__repr__", static_cast<OutputFunctionType>(&BaseType::str));
             break;
 
-        case PYTHON_REPR_NONE:
+        case ReprStyle::None:
             break;
     }
 }
@@ -158,7 +158,7 @@ void add_output(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
-        const char* doc, ReprStyle style = PYTHON_REPR_DETAILED) {
+        const char* doc, ReprStyle style = ReprStyle::Detailed) {
     using BaseType = typename regina::OutputBase<C>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
@@ -166,7 +166,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
     c.def("__str__", static_cast<OutputFunctionType>(&BaseType::str));
 
     switch (style) {
-        case PYTHON_REPR_DETAILED:
+        case ReprStyle::Detailed:
             c.def("__repr__", [](const C& c) {
                 std::ostringstream s;
                 s << "<regina."
@@ -177,11 +177,11 @@ void add_output_basic(pybind11::class_<C, options...>& c,
             });
             break;
 
-        case PYTHON_REPR_SLIM:
+        case ReprStyle::Slim:
             c.def("__repr__", static_cast<OutputFunctionType>(&BaseType::str));
             break;
 
-        case PYTHON_REPR_NONE:
+        case ReprStyle::None:
             break;
     }
 }
@@ -205,7 +205,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_output_ostream(pybind11::class_<C, options...>& c,
-        ReprStyle style = PYTHON_REPR_DETAILED) {
+        ReprStyle style = ReprStyle::Detailed) {
     auto func = [](const C& x) {
         std::ostringstream s;
         s << x;
@@ -215,7 +215,7 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
     c.def("__str__", func);
 
     switch (style) {
-        case PYTHON_REPR_DETAILED:
+        case ReprStyle::Detailed:
             c.def("__repr__", [](const C& c) {
                 std::ostringstream s;
                 s << "<regina."
@@ -226,11 +226,11 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
             });
             break;
 
-        case PYTHON_REPR_SLIM:
+        case ReprStyle::Slim:
             c.def("__repr__", func);
             break;
 
-        case PYTHON_REPR_NONE:
+        case ReprStyle::None:
             break;
     }
 }
@@ -245,7 +245,7 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
  *
  * This will also add a \a __repr__ function.  There is no choice of output
  * style: if you use add_output_custom() then the output style will always be
- * PYTHON_REPR_DETAILED.
+ * ReprStyle::Detailed.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * `regina::python::add_output_custom(c, style)`, where \a c is the

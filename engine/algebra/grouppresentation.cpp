@@ -582,72 +582,77 @@ GroupExpression::GroupExpression(const char* input, unsigned long nGens) {
     // interpret input as GroupExpression as one of forms a^7b^-2,
     // a^7B^2, aaaaaaaBB, g0^7g1^-2.
 
-    // WSNULL - at start of word, nothing has been input.
-    // WSVARLET - read a letter, but don't know if we're in an a^5 or g2^-2 sit.
-    // WSVARNUM - gk situation read.
-    // WSEXP - ^ read
-    // WSEXPSIG ^- read
-    // WSEXPNUM reading numbers after ^ or ^-
-    enum WORD_STATUS { WSNULL, WSVARLET, WSVARNUM, WSEXP, WSEXPSIG, WSEXPNUM };
+    enum class WordStatus {
+        Null,   //< at start of word, nothing has been input
+        VarLet, //< read a letter but don't know if it's an a^5 or g2^-2 sit.
+        VarNum, //< `gk` situation read
+        Exp,    //< `^` read
+        ExpSig, //< `^-` read
+        ExpNum  //< reading numbers after `^` or `^-`
+    };
 
     // a loop that goes through the entries of input.
-    WORD_STATUS WS(WSNULL);
+    WordStatus ws = WordStatus::Null;
     GroupExpressionTerm buildTerm;
     for (const char* i = input; *i; ++i) {
         // read *i, see what to do next.
         // case 1: it is a letter a..z or A..Z
         if ( ( *i >= 'a' && *i <= 'z' ) || ( *i >= 'A' && *i <= 'Z' ) ) {
-            if (WS==WSNULL) { // fresh letter
-                // build buildTerm.
-                if ( *i >= 'a' && *i <= 'z' ) {
-                    buildTerm.generator = *i - 'a';
-                    buildTerm.exponent = 1;
-                } else {
-                    buildTerm.generator = *i - 'A';
-                    buildTerm.exponent = -1;
-                }
-                WS=WSVARLET;
-                continue;
-            } else if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) {
-                // new letter but previous letter to finish
-                if (nGens && buildTerm.generator >= nGens)
+            switch (ws) {
+                case WordStatus::Null:
+                    // fresh letter
+                    // build buildTerm.
+                    if ( *i >= 'a' && *i <= 'z' ) {
+                        buildTerm.generator = *i - 'a';
+                        buildTerm.exponent = 1;
+                    } else {
+                        buildTerm.generator = *i - 'A';
+                        buildTerm.exponent = -1;
+                    }
+                    ws = WordStatus::VarLet;
+                    continue;
+                case WordStatus::VarLet:
+                case WordStatus::VarNum:
+                case WordStatus::ExpNum:
+                    // new letter but previous letter to finish
+                    if (nGens && buildTerm.generator >= nGens)
+                        throw InvalidArgument(
+                            "Generator out of range in group expression");
+                    terms_.push_back(buildTerm);
+                    if ( *i >= 'a' && *i <= 'z' ) {
+                        buildTerm.generator = *i - 'a';
+                        buildTerm.exponent = 1;
+                    } else {
+                        buildTerm.generator = *i - 'A';
+                        buildTerm.exponent = -1;
+                    }
+                    ws = WordStatus::VarLet;
+                    continue;
+                default:
+                    // anything else is a mistake.
                     throw InvalidArgument(
-                        "Generator out of range in group expression");
-                terms_.push_back(buildTerm);
-                if ( *i >= 'a' && *i <= 'z' ) {
-                    buildTerm.generator = *i - 'a';
-                    buildTerm.exponent = 1;
-                } else {
-                    buildTerm.generator = *i - 'A';
-                    buildTerm.exponent = -1;
-                }
-                WS=WSVARLET;
-                continue;
-            } else {
-                // anything else is a mistake.
-                throw InvalidArgument(
-                    "Unexpected letter found in group expression");
+                        "Unexpected letter found in group expression");
             }
         }
 
         // case 2: it is a ^, can only occur after a generator
         if ( *i == '^' ) {
-            if (!( (WS==WSVARLET) || (WS==WSVARNUM) ) ) {
+            if ( !(ws == WordStatus::VarLet || ws == WordStatus::VarNum) ) {
                 throw InvalidArgument(
                     "Unexpected exponent found in group expression");
             }
-            WS=WSEXP;
+            ws = WordStatus::Exp;
             continue;
         } // end case 2
 
         // case 3: it is a -, only valid after ^
         if ( *i == '-' ) {
-            if (!(WS==WSEXP)) {
+            if ( ws != WordStatus::Exp ) {
                 throw InvalidArgument(
                     "Unexpected minus sign found in group expression");
             }
             buildTerm.exponent = -buildTerm.exponent; // ok with A^-1.
-            WS=WSEXPSIG;
+            ws = WordStatus::ExpSig;
             continue;
         } // end case 3
 
@@ -655,23 +660,25 @@ GroupExpression::GroupExpression(const char* input, unsigned long nGens) {
         if ( ::isdigit(*i) ) {
             //  subcase (a) this is to build a variable
             // buildTerm.generator == 'g'
-            if ( (WS==WSVARLET) && (buildTerm.generator == ('g' - 'a') ) ) {
+            if ( ws == WordStatus::VarLet &&
+                    buildTerm.generator == ('g' - 'a') ) {
                 buildTerm.generator=(*i - '0');
-                WS=WSVARNUM;
+                ws = WordStatus::VarNum;
                 continue;
             } else // we've already started building the variable number
-                if ( WS==WSVARNUM ) {
+                if ( ws == WordStatus::VarNum ) {
                     buildTerm.generator=10*buildTerm.generator + (*i - '0');
                     continue;
                 } else //  subcase (b) this is to build an exponent.
-                    if ( (WS==WSEXP) || (WS==WSEXPSIG) ) { // ^num or ^-num
+                    if ( ws == WordStatus::Exp || ws == WordStatus::ExpSig ) {
+                        // ^num or ^-num
                         if (buildTerm.exponent<0)
                             buildTerm.exponent = - static_cast<long>(*i - '0');
                         else
                             buildTerm.exponent = (*i - '0');
-                        WS=WSEXPNUM;
+                        ws = WordStatus::ExpNum;
                         continue;
-                    } else if (WS==WSEXPNUM) {
+                    } else if ( ws == WordStatus::ExpNum ) {
                         // blah[num] previously dealt with numbers
                         if (buildTerm.exponent<0)
                             buildTerm.exponent = 10*buildTerm.exponent -
@@ -694,11 +701,11 @@ GroupExpression::GroupExpression(const char* input, unsigned long nGens) {
     } // end i loop
 
     // end of input
-    if (WS == WSNULL) {
+    if (ws == WordStatus::Null) {
         // Term is empty
         return;
     }
-    if (WS == WSEXP || WS == WSEXPSIG) {
+    if (ws == WordStatus::Exp || ws == WordStatus::ExpSig) {
         // Term ends with ^ or ^-
         throw InvalidArgument("Unexpected end of string in group expression");
     }

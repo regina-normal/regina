@@ -145,7 +145,7 @@ std::shared_ptr<Packet> open(std::istream& s) {
             buf = new char[regChunkSize];
             int chunkRead;
             bool seenFirstChunk = false;
-            while (callback.state() != XMLCallback::ABORTED) {
+            while (callback.state() != XMLCallback::State::Aborted) {
                 // Read in the next chunk.
                 try {
                     for (chunkRead = 0; chunkRead < regChunkSize; ++chunkRead) {

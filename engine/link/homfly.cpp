@@ -67,55 +67,55 @@ namespace {
     /**
      * Possible states of crossings.  Used by Kauffman's algorithm.
      */
-    enum CrossingState {
+    enum class CrossingState {
         /**
          * Not yet visited.  Moreover, this state indicates that - if there is
          * a decision to make - we should first attempt to switch this crossing.
          */
-        CROSSING_UNSEEN = 0,
+        Unseen = 0,
 
         /**
          * Not yet visited.  Moreover, this state indicates that - if there
          * is a decision to make - we have already attempted switching the
          * crossing, and we should now try to splice instead.
          */
-        CROSSING_TRIED = 1,
+        Tried = 1,
 
         /**
          * First seen on the upper strand, and so the crossing was kept intact.
          * Visited only once so far.
          */
-        CROSSING_KEEP_1 = 2,
+        Keep1 = 2,
 
         /**
          * First seen on the upper strand, and so the crossing was kept intact.
          * Visited twice (first upper, then lower).
          */
-        CROSSING_KEEP_2 = 3,
+        Keep2 = 3,
 
         /**
          * First seen on the lower strand, and the decision was made to
          * switch the crossing.  Visited only once so far.
          */
-        CROSSING_SWITCH_1 = 4,
+        Switch1 = 4,
 
         /**
          * First seen on the lower strand, and the decision was made to
          * switch the crossing.  Visited twice.
          */
-        CROSSING_SWITCH_2 = 5,
+        Switch2 = 5,
 
         /**
          * First seen on the lower strand, and the decision was made to
          * splice.  Visited only once so far.
          */
-        CROSSING_SPLICE_1 = 6,
+        Splice1 = 6,
 
         /**
          * First seen on the lower strand, and the decision was made to
          * splice.  Visited twice.
          */
-        CROSSING_SPLICE_2 = 7
+        Splice2 = 7
     };
 
     /**
@@ -989,7 +989,7 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 
     // Iterate through a tree of states:
     auto* state = new CrossingState[n];
-    std::fill(state, state + n, CROSSING_UNSEEN);
+    std::fill(state, state + n, CrossingState::Unseen);
 
     auto* first = new StrandRef[n + components_.size()];
     std::fill(first, first + n + components_.size(), StrandRef());
@@ -1080,8 +1080,10 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
                         break;
 
                     --s;
-                    if (state[s.crossing()->index()] == CROSSING_SPLICE_1 ||
-                            state[s.crossing()->index()] == CROSSING_SPLICE_2)
+                    if (state[s.crossing()->index()] ==
+                                CrossingState::Splice1 ||
+                            state[s.crossing()->index()] ==
+                                CrossingState::Splice2)
                         s.jump();
 
                     if (! seen[s.id()]) {
@@ -1095,38 +1097,42 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
                         seen[s.id()] = false;
 
                     switch (state[s.crossing()->index()]) {
-                        case CROSSING_KEEP_1:
-                            state[s.crossing()->index()] = CROSSING_UNSEEN;
+                        case CrossingState::Keep1:
+                            state[s.crossing()->index()] =
+                                CrossingState::Unseen;
                             break;
-                        case CROSSING_SWITCH_1:
+                        case CrossingState::Switch1:
                             // We switched this crossing the first time around.
                             // Set things up so that we splice this time.
                             writheAdj += 2 * s.crossing()->sign();
-                            state[s.crossing()->index()] = CROSSING_TRIED;
+                            state[s.crossing()->index()] = CrossingState::Tried;
 
                             // Resume iteration from here.
                             backtrack = false;
                             break;
-                        case CROSSING_SPLICE_1:
+                        case CrossingState::Splice1:
                             --splices;
                             if (s.crossing()->sign() < 0)
                                 --splicesNeg;
                             writheAdj += s.crossing()->sign();
                             --branchDepth;
 
-                            state[s.crossing()->index()] = CROSSING_UNSEEN;
+                            state[s.crossing()->index()] =
+                                CrossingState::Unseen;
                             break;
-                        case CROSSING_KEEP_2:
-                            state[s.crossing()->index()] = CROSSING_KEEP_1;
+                        case CrossingState::Keep2:
+                            state[s.crossing()->index()] = CrossingState::Keep1;
                             break;
-                        case CROSSING_SWITCH_2:
-                            state[s.crossing()->index()] = CROSSING_SWITCH_1;
+                        case CrossingState::Switch2:
+                            state[s.crossing()->index()] =
+                                CrossingState::Switch1;
                             break;
-                        case CROSSING_SPLICE_2:
-                            state[s.crossing()->index()] = CROSSING_SPLICE_1;
+                        case CrossingState::Splice2:
+                            state[s.crossing()->index()] =
+                                CrossingState::Splice1;
                             break;
-                        case CROSSING_UNSEEN:
-                        case CROSSING_TRIED:
+                        case CrossingState::Unseen:
+                        case CrossingState::Tried:
                             // Should never happen.
                             std::cerr << "ERROR: homfly() is backtracking "
                                 "through a crossing that does not seem to have "
@@ -1153,7 +1159,7 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
         seen[s.id()] = true;
 
         if (tracker && pos == PROGRESS_POS &&
-                state[s.crossing()->index()] != CROSSING_TRIED) {
+                state[s.crossing()->index()] != CrossingState::Tried) {
             progress += (1 << (PROGRESS_POS - branchDepth));
             if (! tracker->setPercent(
                     100.0 * double(progress) / double(PROGRESS_TOT))) {
@@ -1162,27 +1168,27 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
         }
 
         switch (state[s.crossing()->index()]) {
-            case CROSSING_UNSEEN:
+            case CrossingState::Unseen:
                 if (s.strand() == 1) {
                     // We first visit this crossing on the upper strand.
                     // There is nothing to do.
                     // Just pass through the crossing.
-                    state[s.crossing()->index()] = CROSSING_KEEP_1;
+                    state[s.crossing()->index()] = CrossingState::Keep1;
                 } else {
                     // We first visit this crossing on the lower strand.
                     // Our first option is to switch.
                     // Following this, we pass through the crossing.
-                    state[s.crossing()->index()] = CROSSING_SWITCH_1;
+                    state[s.crossing()->index()] = CrossingState::Switch1;
 
                     writheAdj -= 2 * s.crossing()->sign();
                     ++branchDepth;
                 }
                 break;
-            case CROSSING_TRIED:
+            case CrossingState::Tried:
                 // We previously switched this crossing.
                 // Splice, and then jump to the other strand and
                 // continue through the crossing.
-                state[s.crossing()->index()] = CROSSING_SPLICE_1;
+                state[s.crossing()->index()] = CrossingState::Splice1;
 
                 ++splices;
                 if (s.crossing()->sign() < 0)
@@ -1191,24 +1197,24 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 
                 s.jump();
                 break;
-            case CROSSING_KEEP_1:
+            case CrossingState::Keep1:
                 // Pass through the crossing.
-                state[s.crossing()->index()] = CROSSING_KEEP_2;
+                state[s.crossing()->index()] = CrossingState::Keep2;
                 break;
-            case CROSSING_SWITCH_1:
+            case CrossingState::Switch1:
                 // Pass through the crossing.
-                state[s.crossing()->index()] = CROSSING_SWITCH_2;
+                state[s.crossing()->index()] = CrossingState::Switch2;
                 break;
-            case CROSSING_SPLICE_1:
+            case CrossingState::Splice1:
                 // Jump to the other strand and continue through the
                 // crossing.
-                state[s.crossing()->index()] = CROSSING_SPLICE_2;
+                state[s.crossing()->index()] = CrossingState::Splice2;
                 s.jump();
                 break;
 
-            case CROSSING_KEEP_2:
-            case CROSSING_SWITCH_2:
-            case CROSSING_SPLICE_2:
+            case CrossingState::Keep2:
+            case CrossingState::Switch2:
+            case CrossingState::Splice2:
                 // Should never happen.
                 std::cerr << "ERROR: homfly() is visiting a "
                     "crossing for the third time." << std::endl;

@@ -222,12 +222,13 @@ a new Python session.)doc");
 
     RDOC_SCOPE_BEGIN(python::EqualityType)
 
-    pybind11::enum_<regina::python::EqualityType>(m, "EqualityType", rdoc_scope)
-        .value("BY_VALUE", regina::python::BY_VALUE, rdoc::BY_VALUE)
-        .value("BY_REFERENCE", regina::python::BY_REFERENCE, rdoc::BY_REFERENCE)
-        .value("NEVER_INSTANTIATED", regina::python::NEVER_INSTANTIATED,
+    using EqualityType = regina::python::EqualityType;
+    pybind11::enum_<EqualityType>(m, "EqualityType", rdoc_scope)
+        .value("BY_VALUE", EqualityType::BY_VALUE, rdoc::BY_VALUE)
+        .value("BY_REFERENCE", EqualityType::BY_REFERENCE, rdoc::BY_REFERENCE)
+        .value("NEVER_INSTANTIATED", EqualityType::NEVER_INSTANTIATED,
             rdoc::NEVER_INSTANTIATED)
-        .value("DISABLED", regina::python::DISABLED, rdoc::DISABLED)
+        .value("DISABLED", EqualityType::DISABLED, rdoc::DISABLED)
         ;
 
     // Core engine routines:
