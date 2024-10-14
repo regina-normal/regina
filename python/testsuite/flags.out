@@ -22,9 +22,9 @@ NormalAlgFlags.NS_ALG_DEFAULT -> False
 0x0000 -> False
 NormalAlgFlags.NS_VERTEX_TREE -> True
 0x0010 -> True
-SurfaceExportFields.surfaceExportNone -> False
+SurfaceExport.None -> False
 0x0000 -> False
-SurfaceExportFields.surfaceExportName -> True
+SurfaceExport.Name -> True
 0x0001 -> True
 NormalCoords.Standard -> True
 NormalCoords.Quad -> True
