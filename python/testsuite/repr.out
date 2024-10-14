@@ -110,9 +110,9 @@ CensusPurgeFlags
 CensusPurgeFlags.PURGE_NON_MINIMAL
 <CensusPurgeFlags.PURGE_NON_MINIMAL: 1>
 
-SurfaceExportFields
-SurfaceExportFields.surfaceExportName
-<SurfaceExportFields.surfaceExportName: 1>
+SurfaceExport
+SurfaceExport.Name
+<SurfaceExport.Name: 1>
 
 HyperList
 0x0004
@@ -138,9 +138,9 @@ CensusPurge
 0x03
 <regina.CensusPurge: 0x03>
 
-SurfaceExport
+SurfaceExportFlags
 0x0003
-<regina.SurfaceExport: 0x0003>
+<regina.SurfaceExportFlags: 0x0003>
 
 NormalEncoding
 0x0203
