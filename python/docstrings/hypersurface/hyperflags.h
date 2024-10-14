@@ -11,27 +11,39 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HyperAlgFlags
-static const char *HyperAlgFlags =
+// Docstring regina::python::doc::HyperAlg
+static const char *HyperAlg =
 R"doc(Represents options and variants of algorithms for enumerating various
-types of normal hypersurfaces in 4-manifold triangulations.
+types of normal hypersurfaces in 4-manifold triangulations. This
+enumeration type is used with normal hypersurface enumeration
+routines, such as the NormalHypersurfaces class constructor.
 
-These options can be combined using the bitwise OR operator, and then
-passed to enumeration routines such as the NormalHypersurfaces class
-constructor.)doc";
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<HyperAlg>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<HyperAlg>``, then you can pass a single HyperAlg constant, or
+a bitwise combination of such constants ``(flag1 | flag2)``, or empty
+braces ``{}`` to indicate no flags at all (which is equivalent to
+passing ``HyperAlg::Default``).)doc";
 
-// Docstring regina::python::doc::HyperListFlags
-static const char *HyperListFlags =
+// Docstring regina::python::doc::HyperList
+static const char *HyperList =
 R"doc(Represents different lists of normal hypersurfaces that might be
-constructed for a given 4-manifold triangulation.
+constructed for a given 4-manifold triangulation. This enumeration
+type is used with normal hypersurface enumeration routines, such as
+the NormalHypersurfaces class constructor.
 
 The HyperList enumeration refers to the _contents_ of the list,
-whereas the HyperAlgFlags enumeration refers to the _algorithm_ used
-to build it.
+whereas the HyperAlg enumeration refers to the _algorithm_ used to
+build it.
 
-These flags can be combined using the bitwise OR operator, and then
-passed to enumeration routines such as the NormalHypersurfaces class
-constructor.)doc";
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<HyperList>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<HyperList>``, then you can pass a single HyperList constant,
+or a bitwise combination of such constants ``(flag1 | flag2)``, or
+empty braces ``{}`` to indicate no flags at all (which is equivalent
+to passing ``HyperList::Default``).)doc";
 
 // Docstring regina::python::doc::__bor
 static const char *__bor =
@@ -59,10 +71,10 @@ Parameter ``rhs``:
 Returns:
     the combination of both flags.)doc";
 
-namespace HyperAlgFlags_ {
+namespace HyperAlg_ {
 
-// Docstring regina::python::doc::HyperAlgFlags_::HS_ALG_CUSTOM
-static const char *HS_ALG_CUSTOM =
+// Docstring regina::python::doc::HyperAlg_::Custom
+static const char *Custom =
 R"doc(Indicates that a normal hypersurface list was built using a customised
 algorithm. In such cases, no further details on the algorithm are
 available.
@@ -70,27 +82,14 @@ available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::HyperAlgFlags_::HS_ALG_DEFAULT
-static const char *HS_ALG_DEFAULT =
+// Docstring regina::python::doc::HyperAlg_::Default
+static const char *Default =
 R"doc(An empty flag, indicating to an enumeration routine that it should use
 its default behaviour. The numeric value of this flag is zero (i.e.,
 it has no effect when combined with other flags using bitwise OR).)doc";
 
-// Docstring regina::python::doc::HyperAlgFlags_::HS_ALG_LEGACY
-static const char *HS_ALG_LEGACY =
-R"doc(Indicates that a normal hypersurface list was enumerated using an
-older prerelease version of the 4-manifolds code (prior to Regina
-5.0).
-
-These prerelease versions did not retain details of the algorithm used
-to build each list, and so in such cases no further algorithmic
-information is available.
-
-If this flag is passed to an enumeration algorithm, it will be
-ignored.)doc";
-
-// Docstring regina::python::doc::HyperAlgFlags_::HS_HILBERT_DUAL
-static const char *HS_HILBERT_DUAL =
+// Docstring regina::python::doc::HyperAlg_::HilbertDual
+static const char *HilbertDual =
 R"doc(When enumerating fundamental normal hypersurfaces, this flag indicates
 that the dual method should be used for enumerating a Hilbert basis.
 
@@ -106,10 +105,10 @@ fundamental normal surfaces: Algorithms, experiments and invariants",
 ALENEX 2014: Proceedings of the Meeting on Algorithm Engineering &
 Experiments, SIAM, 2014, pp. 112-124.
 
-This flag is incompatible with HS_HILBERT_PRIMAL.)doc";
+This flag is incompatible with HilbertPrimal.)doc";
 
-// Docstring regina::python::doc::HyperAlgFlags_::HS_HILBERT_PRIMAL
-static const char *HS_HILBERT_PRIMAL =
+// Docstring regina::python::doc::HyperAlg_::HilbertPrimal
+static const char *HilbertPrimal =
 R"doc(When enumerating fundamental normal hypersurfaces, this flag indicates
 that the primal method should be used for enumerating a Hilbert basis.
 
@@ -123,10 +122,23 @@ fundamental normal surfaces: Algorithms, experiments and invariants",
 ALENEX 2014: Proceedings of the Meeting on Algorithm Engineering &
 Experiments, SIAM, 2014, pp. 112-124.
 
-This flag is incompatible with HS_HILBERT_DUAL.)doc";
+This flag is incompatible with HilbertDual.)doc";
 
-// Docstring regina::python::doc::HyperAlgFlags_::HS_VERTEX_DD
-static const char *HS_VERTEX_DD =
+// Docstring regina::python::doc::HyperAlg_::Legacy
+static const char *Legacy =
+R"doc(Indicates that a normal hypersurface list was enumerated using an
+older prerelease version of the 4-manifolds code (prior to Regina
+5.0).
+
+These prerelease versions did not retain details of the algorithm used
+to build each list, and so in such cases no further algorithmic
+information is available.
+
+If this flag is passed to an enumeration algorithm, it will be
+ignored.)doc";
+
+// Docstring regina::python::doc::HyperAlg_::VertexDD
+static const char *VertexDD =
 R"doc(When enumerating vertex normal hypersurfaces, this flag indicates that
 a modified double description method should be used.
 
@@ -147,31 +159,37 @@ enumeration", Mathematics of Computation 79 (2010), pp. 453-484.)doc";
 
 }
 
-namespace HyperListFlags_ {
+namespace HyperList_ {
 
-// Docstring regina::python::doc::HyperListFlags_::HS_CUSTOM
-static const char *HS_CUSTOM =
+// Docstring regina::python::doc::HyperList_::Custom
+static const char *Custom =
 R"doc(Indicates some other type of list, typically hand-crafted by the user
 or built by some customised algorithm.
 
 If this flag is passed to an enumeration routine, it will be ignored.)doc";
 
-// Docstring regina::python::doc::HyperListFlags_::HS_EMBEDDED_ONLY
-static const char *HS_EMBEDDED_ONLY =
+// Docstring regina::python::doc::HyperList_::Default
+static const char *Default =
+R"doc(An empty flag, indicating to an enumeration routine that it should use
+its default behaviour. The numeric value of this flag is zero (i.e.,
+it has no effect when combined with other flags using bitwise OR).)doc";
+
+// Docstring regina::python::doc::HyperList_::EmbeddedOnly
+static const char *EmbeddedOnly =
 R"doc(Indicates that this list is restricted to properly embedded
 hypersurfaces only.
 
-This flag is incompatible with HS_IMMERSED_SINGULAR.)doc";
+This flag is incompatible with ImmersedSingular.)doc";
 
-// Docstring regina::python::doc::HyperListFlags_::HS_FUNDAMENTAL
-static const char *HS_FUNDAMENTAL =
+// Docstring regina::python::doc::HyperList_::Fundamental
+static const char *Fundamental =
 R"doc(Indicates a list of all fundamental normal hypersurfaces, with respect
 to the particular normal coordinate system used by the list.
 
-This flag is incompatible with HS_VERTEX.)doc";
+This flag is incompatible with Vertex.)doc";
 
-// Docstring regina::python::doc::HyperListFlags_::HS_IMMERSED_SINGULAR
-static const char *HS_IMMERSED_SINGULAR =
+// Docstring regina::python::doc::HyperList_::ImmersedSingular
+static const char *ImmersedSingular =
 R"doc(Indicates that the scope of this list includes not just properly
 embedded hypersurfaces, but also immersed and/or branched
 hypersurfaces.
@@ -181,33 +199,27 @@ hypersurfaces; it merely states that such hypersurfaces have not been
 explicitly excluded (in particular, the prism constraints have not
 been enforced).
 
-This flag is incompatible with HS_EMBEDDED_ONLY.)doc";
+This flag is incompatible with EmbeddedOnly.)doc";
 
-// Docstring regina::python::doc::HyperListFlags_::HS_LEGACY
-static const char *HS_LEGACY =
+// Docstring regina::python::doc::HyperList_::Legacy
+static const char *Legacy =
 R"doc(Indicates a list that was constructed using an older prerelease
 version of the 4-manifolds code (prior to Regina 5.0).
 
 These prerelease versions did not retain details of how each list was
 constructed, beyond whether immersed and/or singular hypersurfaces
 were included. Therefore no information is available for such lists,
-other than the presence or absence of the HS_EMBEDDED_ONLY and/or
-HS_IMMERSED_SINGULAR flags.
+other than the presence or absence of the EmbeddedOnly and/or
+ImmersedSingular flags.
 
 If this flag is passed to an enumeration routine, it will be ignored.)doc";
 
-// Docstring regina::python::doc::HyperListFlags_::HS_LIST_DEFAULT
-static const char *HS_LIST_DEFAULT =
-R"doc(An empty flag, indicating to an enumeration routine that it should use
-its default behaviour. The numeric value of this flag is zero (i.e.,
-it has no effect when combined with other flags using bitwise OR).)doc";
-
-// Docstring regina::python::doc::HyperListFlags_::HS_VERTEX
-static const char *HS_VERTEX =
+// Docstring regina::python::doc::HyperList_::Vertex
+static const char *Vertex =
 R"doc(Indicates a list of all vertex normal hypersurfaces, with respect to
 the particular normal coordinate system used by the list.
 
-This flag is incompatible with HS_FUNDAMENTAL.)doc";
+This flag is incompatible with Fundamental.)doc";
 
 }
 

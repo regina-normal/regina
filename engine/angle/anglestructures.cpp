@@ -98,16 +98,16 @@ void AngleStructures::swap(AngleStructures& other) {
 void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         Packet* treeParent) {
     // Clean up the algorithms flag.
-    algorithm_ &= (AS_ALG_TREE | AS_ALG_DD);
+    algorithm_ &= (AngleAlg::Tree | AngleAlg::DD);
 
     if (tautOnly_ && (! triangulation_->isEmpty())) {
         // We can support either algorithm, but tree traversal should be faster.
-        algorithm_.ensureOne(AS_ALG_TREE, AS_ALG_DD);
+        algorithm_.ensureOne(AngleAlg::Tree, AngleAlg::DD);
 
         if (tracker)
             tracker->newStage("Enumerating taut angle structures");
 
-        if (algorithm_.has(AS_ALG_TREE)) {
+        if (algorithm_.has(AngleAlg::Tree)) {
             // For now just stick to arbitrary precision arithmetic.
             // TODO: Use native integer types when the angle equation matrix
             // is sufficiently small / simple.
@@ -139,7 +139,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
             tracker->setFinished();
     } else {
         // Use the double description method: it's all we support.
-        algorithm_ = AS_ALG_DD;
+        algorithm_ = AngleAlg::DD;
 
         // For the empty triangulation, we fall through here regardless
         // of whether we want taut or all vertex angle structures (but

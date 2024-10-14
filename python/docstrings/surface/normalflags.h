@@ -11,27 +11,39 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::NormalAlgFlags
-static const char *NormalAlgFlags =
+// Docstring regina::python::doc::NormalAlg
+static const char *NormalAlg =
 R"doc(Represents options and variants of algorithms for enumerating various
-types of normal surfaces in 3-manifold triangulations.
+types of normal surfaces in 3-manifold triangulations. This
+enumeration type is used with normal surface enumeration routines,
+such as the NormalSurfaces class constructor.
 
-These options can be combined using the bitwise OR operator, and then
-passed to enumeration routines such as the NormalSurfaces class
-constructor.)doc";
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<NormalAlg>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<NormalAlg>``, then you can pass a single NormalAlg constant,
+or a bitwise combination of such constants ``(flag1 | flag2)``, or
+empty braces ``{}`` to indicate no flags at all (which is equivalent
+to passing ``NormalAlg::Default``).)doc";
 
-// Docstring regina::python::doc::NormalListFlags
-static const char *NormalListFlags =
+// Docstring regina::python::doc::NormalList
+static const char *NormalList =
 R"doc(Represents different lists of normal surfaces that might be
-constructed for a given 3-manifold triangulation.
+constructed for a given 3-manifold triangulation. This enumeration
+type is used with normal surface enumeration routines, such as the
+NormalSurfaces class constructor.
 
 The NormalList enumeration refers to the _contents_ of the list,
-whereas the NormalAlgFlags enumeration refers to the _algorithm_ used
-to build it.
+whereas the NormalAlg enumeration refers to the _algorithm_ used to
+build it.
 
-These flags can be combined using the bitwise OR operator, and then
-passed to enumeration routines such as the NormalSurfaces class
-constructor.)doc";
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<NormalList>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<NormalList>``, then you can pass a single NormalList constant,
+or a bitwise combination of such constants ``(flag1 | flag2)``, or
+empty braces ``{}`` to indicate no flags at all (which is equivalent
+to passing ``NormalList::Default``).)doc";
 
 // Docstring regina::python::doc::NormalTransform
 static const char *NormalTransform =
@@ -69,10 +81,10 @@ Parameter ``rhs``:
 Returns:
     the combination of both flags.)doc";
 
-namespace NormalAlgFlags_ {
+namespace NormalAlg_ {
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_ALG_CUSTOM
-static const char *NS_ALG_CUSTOM =
+// Docstring regina::python::doc::NormalAlg_::Custom
+static const char *Custom =
 R"doc(Indicates that a normal surface list was built using a customised
 algorithm. In such cases, no further details on the algorithm are
 available.
@@ -80,26 +92,14 @@ available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_ALG_DEFAULT
-static const char *NS_ALG_DEFAULT =
+// Docstring regina::python::doc::NormalAlg_::Default
+static const char *Default =
 R"doc(An empty flag, indicating to an enumeration routine that it should use
 its default behaviour. The numeric value of this flag is zero (i.e.,
 it has no effect when combined with other flags using bitwise OR).)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_ALG_LEGACY
-static const char *NS_ALG_LEGACY =
-R"doc(Indicates that a normal surface list was enumerated using an older
-version of Regina (4.93 or earlier).
-
-These older versions did not retain details of the algorithm used to
-build each list, and so in such cases no further algorithmic
-information is available.
-
-If this flag is passed to an enumeration algorithm, it will be
-ignored.)doc";
-
-// Docstring regina::python::doc::NormalAlgFlags_::NS_HILBERT_CD
-static const char *NS_HILBERT_CD =
+// Docstring regina::python::doc::NormalAlg_::HilbertCD
+static const char *HilbertCD =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 a modified Contejean-Devie procedure should be used for enumerating a
 Hilbert basis.
@@ -114,11 +114,11 @@ fundamental normal surfaces: Algorithms, experiments and invariants",
 ALENEX 2014: Proceedings of the Meeting on Algorithm Engineering &
 Experiments, SIAM, 2014, pp. 112-124.
 
-This flag is incompatible with NS_HILBERT_PRIMAL, NS_HILBERT_DUAL and
-NS_HILBERT_FULLCONE.)doc";
+This flag is incompatible with HilbertPrimal, HilbertDual and
+HilbertFullCone.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_HILBERT_DUAL
-static const char *NS_HILBERT_DUAL =
+// Docstring regina::python::doc::NormalAlg_::HilbertDual
+static const char *HilbertDual =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 the dual method should be used for enumerating a Hilbert basis.
 
@@ -134,11 +134,11 @@ fundamental normal surfaces: Algorithms, experiments and invariants",
 ALENEX 2014: Proceedings of the Meeting on Algorithm Engineering &
 Experiments, SIAM, 2014, pp. 112-124.
 
-This flag is incompatible with NS_HILBERT_PRIMAL, NS_HILBERT_CD and
-NS_HILBERT_FULLCONE.)doc";
+This flag is incompatible with HilbertPrimal, HilbertCD and
+HilbertFullCone.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_HILBERT_FULLCONE
-static const char *NS_HILBERT_FULLCONE =
+// Docstring regina::python::doc::NormalAlg_::HilbertFullCone
+static const char *HilbertFullCone =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 a Hilbert basis for the full solution cone should be constructed, and
 additional combinatorial constraints (such as the quadrilateral
@@ -154,11 +154,11 @@ fundamental normal surfaces: Algorithms, experiments and invariants",
 ALENEX 2014: Proceedings of the Meeting on Algorithm Engineering &
 Experiments, SIAM, 2014, pp. 112-124.
 
-This flag is incompatible with NS_HILBERT_PRIMAL, NS_HILBERT_DUAL and
-NS_HILBERT_CD.)doc";
+This flag is incompatible with HilbertPrimal, HilbertDual and
+HilbertCD.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_HILBERT_PRIMAL
-static const char *NS_HILBERT_PRIMAL =
+// Docstring regina::python::doc::NormalAlg_::HilbertPrimal
+static const char *HilbertPrimal =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 the primal method should be used for enumerating a Hilbert basis.
 
@@ -172,11 +172,23 @@ fundamental normal surfaces: Algorithms, experiments and invariants",
 ALENEX 2014: Proceedings of the Meeting on Algorithm Engineering &
 Experiments, SIAM, 2014, pp. 112-124.
 
-This flag is incompatible with NS_HILBERT_DUAL, NS_HILBERT_CD and
-NS_HILBERT_FULLCONE.)doc";
+This flag is incompatible with HilbertDual, HilbertCD and
+HilbertFullCone.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_VERTEX_DD
-static const char *NS_VERTEX_DD =
+// Docstring regina::python::doc::NormalAlg_::Legacy
+static const char *Legacy =
+R"doc(Indicates that a normal surface list was enumerated using an older
+version of Regina (4.93 or earlier).
+
+These older versions did not retain details of the algorithm used to
+build each list, and so in such cases no further algorithmic
+information is available.
+
+If this flag is passed to an enumeration algorithm, it will be
+ignored.)doc";
+
+// Docstring regina::python::doc::NormalAlg_::VertexDD
+static const char *VertexDD =
 R"doc(When enumerating vertex normal surfaces, this flag indicates that a
 modified double description method should be used.
 
@@ -188,10 +200,10 @@ For details on the modified double description method, see B. A.
 Burton, "Optimizing the double description method for normal surface
 enumeration", Mathematics of Computation 79 (2010), pp. 453-484.
 
-This flag is incompatible with NS_VERTEX_TREE.)doc";
+This flag is incompatible with VertexTree.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_VERTEX_STD_DIRECT
-static const char *NS_VERTEX_STD_DIRECT =
+// Docstring regina::python::doc::NormalAlg_::VertexStdDirect
+static const char *VertexStdDirect =
 R"doc(When enumerating in standard normal or almost normal coordinates, this
 flag indicates that the algorithm should work directly in that
 coordinate system, and should not go via the "reduced" (quadrilateral
@@ -199,12 +211,12 @@ or quadrilateral-octagon) coordinate system.
 
 This is typically _much_ slower than going via the reduced system, and
 users should only request this if they have a specialised need. See
-NS_VERTEX_VIA_REDUCED for further information.
+VertexViaReduced for further information.
 
-This flag is incompatible with NS_VERTEX_VIA_REDUCED.)doc";
+This flag is incompatible with VertexViaReduced.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_VERTEX_TREE
-static const char *NS_VERTEX_TREE =
+// Docstring regina::python::doc::NormalAlg_::VertexTree
+static const char *VertexTree =
 R"doc(When enumerating vertex normal surfaces, this flag indicates that the
 tree traversal algorithm should be used.
 
@@ -217,10 +229,10 @@ For details on the tree traversal algorithm, see B. A. Burton and M.
 Ozlen, "A tree traversal algorithm for decision problems in knot
 theory and 3-manifold topology", Algorithmica 65 (2013), pp. 772-801.
 
-This flag is incompatible with NS_VERTEX_DD.)doc";
+This flag is incompatible with VertexDD.)doc";
 
-// Docstring regina::python::doc::NormalAlgFlags_::NS_VERTEX_VIA_REDUCED
-static const char *NS_VERTEX_VIA_REDUCED =
+// Docstring regina::python::doc::NormalAlg_::VertexViaReduced
+static const char *VertexViaReduced =
 R"doc(When enumerating in standard normal or almost normal coordinates, this
 flag indicates that the algorithm should first enumerate in
 quadrilateral or quadrilateral-octagon coordinates, and then expand
@@ -230,41 +242,47 @@ solution set.
 This is typically much faster than a direct enumeration in standard
 normal or almost normal coordinates, and enumeration routines will use
 this option where possible unless explicitly requested not to (via the
-flag NS_VERTEX_STD_DIRECT).
+flag VertexStdDirect).
 
 For an explanation of this procedure, see B. A. Burton, "Converting
 between quadrilateral and standard solution sets in normal surface
 theory", Algebr. Geom. Topol. 9 (2009), 2121-2174.
 
-This flag is incompatible with NS_VERTEX_STD_DIRECT.)doc";
+This flag is incompatible with VertexStdDirect.)doc";
 
 }
 
-namespace NormalListFlags_ {
+namespace NormalList_ {
 
-// Docstring regina::python::doc::NormalListFlags_::NS_CUSTOM
-static const char *NS_CUSTOM =
+// Docstring regina::python::doc::NormalList_::Custom
+static const char *Custom =
 R"doc(Indicates some other type of list, typically hand-crafted by the user
 or built by some customised algorithm.
 
 If this flag is passed to an enumeration routine, it will be ignored.)doc";
 
-// Docstring regina::python::doc::NormalListFlags_::NS_EMBEDDED_ONLY
-static const char *NS_EMBEDDED_ONLY =
+// Docstring regina::python::doc::NormalList_::Default
+static const char *Default =
+R"doc(An empty flag, indicating to an enumeration routine that it should use
+its default behaviour. The numeric value of this flag is zero (i.e.,
+it has no effect when combined with other flags using bitwise OR).)doc";
+
+// Docstring regina::python::doc::NormalList_::EmbeddedOnly
+static const char *EmbeddedOnly =
 R"doc(Indicates that this list is restricted to properly embedded surfaces
 only.
 
-This flag is incompatible with NS_IMMERSED_SINGULAR.)doc";
+This flag is incompatible with ImmersedSingular.)doc";
 
-// Docstring regina::python::doc::NormalListFlags_::NS_FUNDAMENTAL
-static const char *NS_FUNDAMENTAL =
+// Docstring regina::python::doc::NormalList_::Fundamental
+static const char *Fundamental =
 R"doc(Indicates a list of all fundamental normal surfaces, with respect to
 the particular normal coordinate system used by the list.
 
-This flag is incompatible with NS_VERTEX.)doc";
+This flag is incompatible with Vertex.)doc";
 
-// Docstring regina::python::doc::NormalListFlags_::NS_IMMERSED_SINGULAR
-static const char *NS_IMMERSED_SINGULAR =
+// Docstring regina::python::doc::NormalList_::ImmersedSingular
+static const char *ImmersedSingular =
 R"doc(Indicates that the scope of this list includes not just properly
 embedded surfaces, but also immersed and/or branched surfaces.
 
@@ -273,33 +291,27 @@ surfaces; it merely states that such surfaces have not been explicitly
 excluded (in particular, the quadrilateral constraints have not been
 enforced).
 
-This flag is incompatible with NS_EMBEDDED_ONLY.)doc";
+This flag is incompatible with EmbeddedOnly.)doc";
 
-// Docstring regina::python::doc::NormalListFlags_::NS_LEGACY
-static const char *NS_LEGACY =
+// Docstring regina::python::doc::NormalList_::Legacy
+static const char *Legacy =
 R"doc(Indicates a list that was constructed using an old version of Regina
 (4.93 or earlier).
 
 These older versions did not retain details of how each list was
 constructed, beyond whether immersed and/or singular surfaces were
 included. Therefore no information is available for such lists, other
-than the presence or absence of the NS_EMBEDDED_ONLY and/or
-NS_IMMERSED_SINGULAR flags.
+than the presence or absence of the EmbeddedOnly and/or
+ImmersedSingular flags.
 
 If this flag is passed to an enumeration routine, it will be ignored.)doc";
 
-// Docstring regina::python::doc::NormalListFlags_::NS_LIST_DEFAULT
-static const char *NS_LIST_DEFAULT =
-R"doc(An empty flag, indicating to an enumeration routine that it should use
-its default behaviour. The numeric value of this flag is zero (i.e.,
-it has no effect when combined with other flags using bitwise OR).)doc";
-
-// Docstring regina::python::doc::NormalListFlags_::NS_VERTEX
-static const char *NS_VERTEX =
+// Docstring regina::python::doc::NormalList_::Vertex
+static const char *Vertex =
 R"doc(Indicates a list of all vertex normal surfaces, with respect to the
 particular normal coordinate system used by the list.
 
-This flag is incompatible with NS_FUNDAMENTAL.)doc";
+This flag is incompatible with Fundamental.)doc";
 
 }
 

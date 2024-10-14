@@ -46,34 +46,38 @@ namespace regina {
 
 /**
  * Represents different lists of normal hypersurfaces that might be constructed
- * for a given 4-manifold triangulation.
- *
- * The HyperList enumeration refers to the _contents_ of the list,
- * whereas the HyperAlgFlags enumeration refers to the _algorithm_
- * used to build it.
- *
- * These flags can be combined using the bitwise OR operator, and then
- * passed to enumeration routines such as the NormalHypersurfaces
+ * for a given 4-manifold triangulation.  This enumeration type is used with
+ * normal hypersurface enumeration routines, such as the NormalHypersurfaces
  * class constructor.
+ *
+ * The HyperList enumeration refers to the _contents_ of the list, whereas the
+ * HyperAlg enumeration refers to the _algorithm_ used to build it.
+ *
+ * These values can be combined using the bitwise OR operator (resulting in an
+ * object of type `Flags<HyperList>`).  In particular, if a hypersurface
+ * enumeration function takes an argument of type `Flags<HyperList>`, then you
+ * can pass a single HyperList constant, or a bitwise combination of such
+ * constants `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at
+ * all (which is equivalent to passing `HyperList::Default`).
  *
  * \ingroup hypersurface
  */
-enum HyperListFlags {
+enum class HyperList {
     /**
      * An empty flag, indicating to an enumeration routine that it
      * should use its default behaviour.
      * The numeric value of this flag is zero (i.e., it has no effect
      * when combined with other flags using bitwise OR).
      */
-    HS_LIST_DEFAULT = 0x0000,
+    Default = 0x0000,
 
     /**
      * Indicates that this list is restricted to properly embedded
      * hypersurfaces only.
      *
-     * This flag is incompatible with HS_IMMERSED_SINGULAR.
+     * This flag is incompatible with ImmersedSingular.
      */
-    HS_EMBEDDED_ONLY = 0x0001,
+    EmbeddedOnly = 0x0001,
     /**
      * Indicates that the scope of this list includes not just properly
      * embedded hypersurfaces, but also immersed and/or branched hypersurfaces.
@@ -83,24 +87,24 @@ enum HyperListFlags {
      * have not been explicitly excluded (in particular, the prism
      * constraints have not been enforced).
      *
-     * This flag is incompatible with HS_EMBEDDED_ONLY.
+     * This flag is incompatible with EmbeddedOnly.
      */
-    HS_IMMERSED_SINGULAR = 0x0002,
+    ImmersedSingular = 0x0002,
 
     /**
      * Indicates a list of all vertex normal hypersurfaces, with respect to
      * the particular normal coordinate system used by the list.
      *
-     * This flag is incompatible with HS_FUNDAMENTAL.
+     * This flag is incompatible with Fundamental.
      */
-    HS_VERTEX = 0x0004,
+    Vertex = 0x0004,
     /**
      * Indicates a list of all fundamental normal hypersurfaces, with respect to
      * the particular normal coordinate system used by the list.
      *
-     * This flag is incompatible with HS_VERTEX.
+     * This flag is incompatible with Vertex.
      */
-    HS_FUNDAMENTAL = 0x0008,
+    Fundamental = 0x0008,
 
     /**
      * Indicates a list that was constructed using an older prerelease version
@@ -109,32 +113,103 @@ enum HyperListFlags {
      * These prerelease versions did not retain details of how each list was
      * constructed, beyond whether immersed and/or singular hypersurfaces were
      * included.  Therefore no information is available for such lists,
-     * other than the presence or absence of the HS_EMBEDDED_ONLY and/or
-     * HS_IMMERSED_SINGULAR flags.
+     * other than the presence or absence of the EmbeddedOnly and/or
+     * ImmersedSingular flags.
      *
      * If this flag is passed to an enumeration routine, it will be ignored.
      */
-    HS_LEGACY = 0x4000,
+    Legacy = 0x4000,
     /**
      * Indicates some other type of list, typically hand-crafted by the
      * user or built by some customised algorithm.
      *
      * If this flag is passed to an enumeration routine, it will be ignored.
      */
-    HS_CUSTOM = 0x8000
+    Custom = 0x8000
 };
 
 /**
- * A combination of flags for types of normal hypersurface lists.
+ * A deprecated type alias representing different lists of normal hypersurfaces
+ * that might be constructed in a 4-manifold triangulation.
  *
- * If a function requires a HyperList object as an argument, you can
- * pass a single HyperListFlags constant, or a combination of such
- * constants using the bitwise OR operator, or empty braces {} to indicate
- * no flags at all.
+ * \deprecated As of Regina 7.4, HyperListFlags is simply an alias for the
+ * enumeration type HyperList.  A bitwise _combination_ of such values will
+ * have the type `Flags<HyperList>`, though there is usually no need for end
+ * users to explicitly refer to the flags type by name.
  *
  * \ingroup hypersurface
  */
-using HyperList = regina::Flags<HyperListFlags>;
+using HyperListFlags [[deprecated]] = HyperList;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal
+ * hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperList::Default.
+ */
+[[deprecated]] inline static constexpr HyperList HS_LIST_DEFAULT =
+    HyperList::Default;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal
+ * hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperList::EmbeddedOnly.
+ */
+[[deprecated]] inline static constexpr HyperList HS_EMBEDDED_ONLY =
+    HyperList::EmbeddedOnly;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal
+ * hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperList::ImmersedSingular.
+ */
+[[deprecated]] inline static constexpr HyperList HS_IMMERSED_SINGULAR =
+    HyperList::ImmersedSingular;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal
+ * hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperList::Vertex.
+ */
+[[deprecated]] inline static constexpr HyperList HS_VERTEX =
+    HyperList::Vertex;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal
+ * hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperList::Fundamental.
+ */
+[[deprecated]] inline static constexpr HyperList HS_FUNDAMENTAL =
+    HyperList::Fundamental;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal
+ * hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperList::Legacy.
+ */
+[[deprecated]] inline static constexpr HyperList HS_LEGACY =
+    HyperList::Legacy;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal
+ * hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperList::Custom.
+ */
+[[deprecated]] inline static constexpr HyperList HS_CUSTOM =
+    HyperList::Custom;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -145,28 +220,33 @@ using HyperList = regina::Flags<HyperListFlags>;
  *
  * \ingroup hypersurface
  */
-inline HyperList operator | (HyperListFlags lhs, HyperListFlags rhs) {
-    return HyperList(lhs) | rhs;
+inline Flags<HyperList> operator | (HyperList lhs, HyperList rhs) {
+    return Flags<HyperList>(lhs) | rhs;
 }
 
 /**
  * Represents options and variants of algorithms for enumerating various
- * types of normal hypersurfaces in 4-manifold triangulations.
+ * types of normal hypersurfaces in 4-manifold triangulations.  This
+ * enumeration type is used with normal hypersurface enumeration routines,
+ * such as the NormalHypersurfaces class constructor.
  *
- * These options can be combined using the bitwise OR operator, and then
- * passed to enumeration routines such as the NormalHypersurfaces
- * class constructor.
+ * These values can be combined using the bitwise OR operator (resulting in an
+ * object of type `Flags<HyperAlg>`).  In particular, if a hypersurface
+ * enumeration function takes an argument of type `Flags<HyperAlg>`, then you
+ * can pass a single HyperAlg constant, or a bitwise combination of such
+ * constants `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at
+ * all (which is equivalent to passing `HyperAlg::Default`).
  *
  * \ingroup hypersurface
  */
-enum HyperAlgFlags {
+enum class HyperAlg {
     /**
      * An empty flag, indicating to an enumeration routine that it
      * should use its default behaviour.
      * The numeric value of this flag is zero (i.e., it has no effect
      * when combined with other flags using bitwise OR).
      */
-    HS_ALG_DEFAULT = 0x0000,
+    Default = 0x0000,
 
     /**
      * When enumerating vertex normal hypersurfaces,
@@ -189,7 +269,7 @@ enum HyperAlgFlags {
      * normal surface enumeration", Mathematics of Computation
      * 79 (2010), pp. 453-484.
      */
-    HS_VERTEX_DD = 0x0020,
+    VertexDD = 0x0020,
 
     /**
      * When enumerating fundamental normal hypersurfaces,
@@ -206,9 +286,9 @@ enum HyperAlgFlags {
      * ALENEX 2014: Proceedings of the Meeting on Algorithm
      * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
-     * This flag is incompatible with HS_HILBERT_DUAL.
+     * This flag is incompatible with HilbertDual.
      */
-    HS_HILBERT_PRIMAL = 0x0100,
+    HilbertPrimal = 0x0100,
     /**
      * When enumerating fundamental normal hypersurfaces,
      * this flag indicates that the dual method should be used for
@@ -227,9 +307,9 @@ enum HyperAlgFlags {
      * ALENEX 2014: Proceedings of the Meeting on Algorithm
      * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
-     * This flag is incompatible with HS_HILBERT_PRIMAL.
+     * This flag is incompatible with HilbertPrimal.
      */
-    HS_HILBERT_DUAL = 0x0200,
+    HilbertDual = 0x0200,
 
     /**
      * Indicates that a normal hypersurface list was enumerated using an
@@ -241,7 +321,7 @@ enum HyperAlgFlags {
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
-    HS_ALG_LEGACY = 0x4000,
+    Legacy = 0x4000,
     /**
      * Indicates that a normal hypersurface list was built using a customised
      * algorithm.  In such cases, no further details on the algorithm are
@@ -249,20 +329,81 @@ enum HyperAlgFlags {
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
-    HS_ALG_CUSTOM = 0x8000
+    Custom = 0x8000
 };
 
 /**
- * A combination of flags for normal hypersurface enumeration algorithms.
+ * A deprecated type alias representing options and variants of algorithms for
+ * enumerating normal hypersurfaces in 4-manifold triangulations.
  *
- * If a function requires a HyperAlg object as an argument, you can
- * pass a single HyperAlgFlags constant, or a combination of such
- * constants using the bitwise OR operator, or empty braces {} to indicate
- * no flags at all.
+ * \deprecated As of Regina 7.4, HyperAlgFlags is simply an alias for the
+ * enumeration type HyperAlg.  A bitwise _combination_ of such values will
+ * have the type `Flags<HyperAlg>`, though there is usually no need for end
+ * users to explicitly refer to the flags type by name.
  *
  * \ingroup hypersurface
  */
-using HyperAlg = regina::Flags<HyperAlgFlags>;
+using HyperAlgFlags [[deprecated]] = HyperAlg;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperAlg::Default.
+ */
+[[deprecated]] inline static constexpr HyperAlg HS_ALG_DEFAULT =
+    HyperAlg::Default;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperAlg::VertexDD.
+ */
+[[deprecated]] inline static constexpr HyperAlg HS_VERTEX_DD =
+    HyperAlg::VertexDD;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperAlg::HilbertPrimal.
+ */
+[[deprecated]] inline static constexpr HyperAlg HS_HILBERT_PRIMAL =
+    HyperAlg::HilbertPrimal;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperAlg::HilbertDual.
+ */
+[[deprecated]] inline static constexpr HyperAlg HS_HILBERT_DUAL =
+    HyperAlg::HilbertDual;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperAlg::Legacy.
+ */
+[[deprecated]] inline static constexpr HyperAlg HS_ALG_LEGACY =
+    HyperAlg::Legacy;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal hypersurfaces in a 4-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperAlg::Custom.
+ */
+[[deprecated]] inline static constexpr HyperAlg HS_ALG_CUSTOM =
+    HyperAlg::Custom;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -273,8 +414,8 @@ using HyperAlg = regina::Flags<HyperAlgFlags>;
  *
  * \ingroup hypersurface
  */
-inline HyperAlg operator | (HyperAlgFlags lhs, HyperAlgFlags rhs) {
-    return HyperAlg(lhs) | rhs;
+inline Flags<HyperAlg> operator | (HyperAlg lhs, HyperAlg rhs) {
+    return Flags<HyperAlg>(lhs) | rhs;
 }
 
 } // namespace regina

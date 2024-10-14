@@ -124,13 +124,13 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
         HyperCoords coords_;
             /**< The coordinate system that was originally used to enumerate
                  the normal hypersurfaces in this list. */
-        HyperList which_;
+        Flags<HyperList> which_;
             /**< Indicates which normal hypersurfaces these represent
                  within the underlying triangulation. */
-        HyperAlg algorithm_;
+        Flags<HyperAlg> algorithm_;
             /**< Stores the details of the enumeration algorithm that
                  was used to generate this list.  This might not be the
-                 same as the \a algorithmHints flag that was originally
+                 same as the \a algHints flag that was originally
                  passed to the enumeration routine (e.g., if invalid or
                  inappropriate flags were passed). */
 
@@ -146,21 +146,21 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * produced, since vertex/fundamental surfaces in one system are not
          * necessarily vertex/fundamental in another.
          *
-         * The HyperList argument is a combination of flags that
+         * The \a whichList argument is a combination of flags that
          * allows you to specify exactly which normal hypersurfaces you require.
-         * This includes (i) whether you want all vertex hypersurfaces
-         * or all fundamental hypersurfaces, which defaults to HS_VERTEX
+         * This includes (i) whether you want all vertex hypersurfaces or all
+         * fundamental hypersurfaces, which defaults to HyperList::Vertex
          * if you specify neither or both; and (ii) whether you want only
          * properly embedded surfaces or you also wish to include
          * immersed and/or singular hypersurfaces, which defaults to
-         * HS_EMBEDDED_ONLY if you specify neither or both.
+         * HyperList::EmbeddedOnly if you specify neither or both.
          *
-         * The HyperAlg argument is a combination of flags that allows
+         * The \a algHints argument is a combination of flags that allows
          * you to control the underlying enumeration algorithm.  These
          * flags are treated as hints only: if your selection of
          * algorithm is invalid, unavailable or unsupported then Regina
          * will choose something more appropriate.  Unless you have
-         * some specialised need, the default HS_ALG_DEFAULT (which
+         * some specialised need, the default HyperAlg::Default (which
          * makes no hints at all) will allow Regina to choose what it
          * thinks will be the most efficient method.
          *
@@ -229,8 +229,8 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
         NormalHypersurfaces(
             const Triangulation<4>& triangulation,
             HyperCoords coords,
-            HyperList which = HS_LIST_DEFAULT,
-            HyperAlg algHints = HS_ALG_DEFAULT,
+            Flags<HyperList> whichList = HyperList::Default,
+            Flags<HyperAlg> algHints = HyperAlg::Default,
             ProgressTracker* tracker = nullptr);
 
         /**
@@ -304,19 +304,19 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Returns details of which normal hypersurfaces this list represents
          * within the underlying triangulation.
          *
-         * This may not be the same HyperList that was passed to the class
+         * These may not be the same list flags that were passed to the class
          * constructor.  In particular, default values will have been explicitly
-         * filled in (such as HS_VERTEX and/or HS_EMBEDDED_ONLY), and
-         * invalid and/or redundant values will have been removed.
+         * filled in (such as HyperList::Vertex and/or HyperList::EmbeddedOnly),
+         * and invalid and/or redundant values will have been removed.
          *
          * \return details of what this list represents.
          */
-        HyperList which() const;
+        Flags<HyperList> which() const;
         /**
          * Returns details of the algorithm that was used to enumerate
          * this list.
          *
-         * These may not be the same HyperAlg flags that were passed to the
+         * These may not be the same algorithm flags that were passed to the
          * class constructor.  In particular, default values will have been
          * explicitly filled in, invalid and/or redundant values will have
          * been removed, and unavailable and/or unsupported combinations
@@ -325,7 +325,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * \return details of the algorithm used to enumerate this list.
          */
-        HyperAlg algorithm() const;
+        Flags<HyperAlg> algorithm() const;
         /**
          * Determines if the coordinate system that was used for enumeration
          * allows for non-compact hypersurfaces.
@@ -715,15 +715,15 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Creates an empty list of normal hypersurfaces with the given
          * parameters.
          */
-        NormalHypersurfaces(HyperCoords coords, HyperList which,
-            HyperAlg algorithm, const Triangulation<4>& triangulation);
+        NormalHypersurfaces(HyperCoords coords, Flags<HyperList> whichList,
+            Flags<HyperAlg> algorithm, const Triangulation<4>& triangulation);
 
         /**
          * Creates an empty list of normal hypersurfaces with the given
          * parameters.
          */
-        NormalHypersurfaces(HyperCoords coords, HyperList which,
-            HyperAlg algorithm,
+        NormalHypersurfaces(HyperCoords coords, Flags<HyperList> whichList,
+            Flags<HyperAlg> algorithm,
             const SnapshotRef<Triangulation<4>>& triangulation);
 
     private:
@@ -946,8 +946,8 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
  * relative to the given coordinate system.
  *
  * These are the constraints that will be used when enumerating embedded
- * hypersurfaces in the given coordinate system (i.e., when the default
- * HS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
+ * hypersurfaces in the given coordinate system (i.e., when the default flag
+ * HyperList::EmbeddedOnly is used).  They will not be used when the enumeration
  * allows for immersed and/or singular hypersurfaces.
  *
  * \param triangulation the triangulation upon which these validity constraints
@@ -966,9 +966,11 @@ ValidityConstraints makeEmbeddedConstraints(
 
 inline NormalHypersurfaces::NormalHypersurfaces(
         const Triangulation<4>& triangulation,
-        HyperCoords coords, HyperList which, HyperAlg algHints,
+        HyperCoords coords,
+        Flags<HyperList> whichList,
+        Flags<HyperAlg> algHints,
         ProgressTracker* tracker) :
-        triangulation_(triangulation), coords_(coords), which_(which),
+        triangulation_(triangulation), coords_(coords), which_(whichList),
         algorithm_(algHints) {
     try {
         Enumerator(this, makeMatchingEquations(triangulation, coords),
@@ -1012,16 +1014,16 @@ inline HyperCoords NormalHypersurfaces::coords() const {
     return coords_;
 }
 
-inline HyperList NormalHypersurfaces::which() const {
+inline Flags<HyperList> NormalHypersurfaces::which() const {
     return which_;
 }
 
-inline HyperAlg NormalHypersurfaces::algorithm() const {
+inline Flags<HyperAlg> NormalHypersurfaces::algorithm() const {
     return algorithm_;
 }
 
 inline bool NormalHypersurfaces::isEmbeddedOnly() const {
-    return which_.has(HS_EMBEDDED_ONLY);
+    return which_.has(HyperList::EmbeddedOnly);
 }
 
 inline const Triangulation<4>& NormalHypersurfaces::triangulation() const {
@@ -1112,16 +1114,16 @@ inline NormalHypersurfaces::VectorIterator
 }
 
 inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
-        HyperList which, HyperAlg algorithm,
+        Flags<HyperList> whichList, Flags<HyperAlg> algorithm,
         const Triangulation<4>& triangulation) :
-        triangulation_(triangulation), coords_(coords), which_(which),
+        triangulation_(triangulation), coords_(coords), which_(whichList),
         algorithm_(algorithm) {
 }
 
 inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
-        HyperList which, HyperAlg algorithm,
+        Flags<HyperList> whichList, Flags<HyperAlg> algorithm,
         const SnapshotRef<Triangulation<4>>& triangulation) :
-        triangulation_(triangulation), coords_(coords), which_(which),
+        triangulation_(triangulation), coords_(coords), which_(whichList),
         algorithm_(algorithm) {
 }
 

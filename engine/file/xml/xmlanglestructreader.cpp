@@ -90,10 +90,10 @@ XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
 
     int algorithm;
     if (! valueOf(props.lookup("algorithm"), algorithm))
-        algorithm = AS_ALG_LEGACY;
+        algorithm = AngleAlg::Legacy;
 
     list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-        AngleAlg::fromInt(algorithm), *tri_);
+        Flags<AngleAlg>::fromInt(algorithm), *tri_);
 }
 
 XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
@@ -159,9 +159,9 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
             if (! valueOf(props.lookup("tautonly"), tautOnly))
                 tautOnly = false;
             if (! valueOf(props.lookup("algorithm"), algorithm))
-                algorithm = AS_ALG_LEGACY;
+                algorithm = AngleAlg::Legacy;
             list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-                AngleAlg::fromInt(algorithm), tri_);
+                Flags<AngleAlg>::fromInt(algorithm), tri_);
         } else if (subTagName == "struct") {
             // Eep, we are getting angle structures but no parameters were
             // ever specified.  This was how data files looked in
@@ -169,7 +169,7 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
             // Set up a new list containing all default values, before
             // reading the first angle structure that we just bumped into.
             list_ = make_packet<AngleStructures>(std::in_place, false,
-                AS_ALG_LEGACY, tri_);
+                AngleAlg::Legacy, tri_);
             return new XMLAngleStructureReader(list_->triangulation_);
         }
 
@@ -198,7 +198,7 @@ void XMLLegacyAngleStructuresReader::endElement() {
     // everything in this XML element is optional.
     if (! list_)
         list_ = make_packet<AngleStructures>(std::in_place, false,
-            AS_ALG_LEGACY, tri_);
+            AngleAlg::Legacy, tri_);
 
     XMLPacketReader::endElement();
 }

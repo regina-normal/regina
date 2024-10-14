@@ -68,7 +68,8 @@ namespace {
         }
     }
 
-    inline NormalList transformList(NormalList src, NormalTransform t) {
+    inline Flags<NormalList> transformList(Flags<NormalList> src,
+            NormalTransform t) {
         switch (t) {
             case NS_CONV_REDUCED_TO_STD:
             case NS_CONV_STD_TO_REDUCED:
@@ -90,7 +91,8 @@ namespace {
         }
     }
 
-    inline NormalAlg transformAlg(NormalAlg src, NormalTransform t) {
+    inline Flags<NormalAlg> transformAlg(Flags<NormalAlg> src,
+            NormalTransform t) {
         switch (t) {
             case NS_CONV_REDUCED_TO_STD:
                 return src | NS_VERTEX_VIA_REDUCED;

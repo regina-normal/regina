@@ -38,46 +38,72 @@
 
 using pybind11::overload_cast;
 using regina::NormalAlg;
-using regina::NormalAlgFlags;
 using regina::NormalList;
-using regina::NormalListFlags;
 
 void addNormalFlags(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(NormalListFlags)
+    RDOC_SCOPE_BEGIN(NormalList)
 
-    regina::python::add_flags<regina::NormalListFlags>(m, "NormalList", {
-            { "NS_LIST_DEFAULT", regina::NS_LIST_DEFAULT,
-                rdoc::NS_LIST_DEFAULT },
-            { "NS_EMBEDDED_ONLY", regina::NS_EMBEDDED_ONLY,
-                rdoc::NS_EMBEDDED_ONLY },
-            { "NS_IMMERSED_SINGULAR", regina::NS_IMMERSED_SINGULAR,
-                rdoc::NS_IMMERSED_SINGULAR },
-            { "NS_VERTEX", regina::NS_VERTEX, rdoc::NS_VERTEX },
-            { "NS_FUNDAMENTAL", regina::NS_FUNDAMENTAL, rdoc::NS_FUNDAMENTAL },
-            { "NS_LEGACY", regina::NS_LEGACY, rdoc::NS_LEGACY },
-            { "NS_CUSTOM", regina::NS_CUSTOM, rdoc::NS_CUSTOM }
+    regina::python::add_flags<regina::NormalList>(m, "NormalList", {
+            { "Default", regina::NormalList::Default, rdoc::Default },
+            { "EmbeddedOnly", regina::NormalList::EmbeddedOnly,
+                rdoc::EmbeddedOnly },
+            { "ImmersedSingular", regina::NormalList::ImmersedSingular,
+                rdoc::ImmersedSingular },
+            { "Vertex", regina::NormalList::Vertex, rdoc::Vertex },
+            { "Fundamental", regina::NormalList::Fundamental,
+                rdoc::Fundamental },
+            { "Legacy", regina::NormalList::Legacy, rdoc::Legacy },
+            { "Custom", regina::NormalList::Custom, rdoc::Custom }
         }, rdoc_scope, rdoc_global::__bor);
 
-    RDOC_SCOPE_SWITCH(NormalAlgFlags)
+    RDOC_SCOPE_SWITCH_MAIN
 
-    regina::python::add_flags<regina::NormalAlgFlags>(m, "NormalAlg", {
-            { "NS_ALG_DEFAULT", regina::NS_ALG_DEFAULT, rdoc::NS_ALG_DEFAULT },
-            { "NS_VERTEX_VIA_REDUCED", regina::NS_VERTEX_VIA_REDUCED,
-                rdoc::NS_VERTEX_VIA_REDUCED },
-            { "NS_VERTEX_STD_DIRECT", regina::NS_VERTEX_STD_DIRECT,
-                rdoc::NS_VERTEX_STD_DIRECT },
-            { "NS_VERTEX_TREE", regina::NS_VERTEX_TREE, rdoc::NS_VERTEX_TREE },
-            { "NS_VERTEX_DD", regina::NS_VERTEX_DD, rdoc::NS_VERTEX_DD },
-            { "NS_HILBERT_PRIMAL", regina::NS_HILBERT_PRIMAL,
-                rdoc::NS_HILBERT_PRIMAL },
-            { "NS_HILBERT_DUAL", regina::NS_HILBERT_DUAL,
-                rdoc::NS_HILBERT_DUAL },
-            { "NS_HILBERT_CD", regina::NS_HILBERT_CD, rdoc::NS_HILBERT_CD },
-            { "NS_HILBERT_FULLCONE", regina::NS_HILBERT_FULLCONE,
-                rdoc::NS_HILBERT_FULLCONE },
-            { "NS_ALG_LEGACY", regina::NS_ALG_LEGACY, rdoc::NS_ALG_LEGACY },
-            { "NS_ALG_CUSTOM", regina::NS_ALG_CUSTOM, rdoc::NS_ALG_CUSTOM }
+    // Deprecated type alias and constants:
+    m.attr("NormalListFlags") = m.attr("NormalList");
+    m.attr("NS_LIST_DEFAULT") = regina::NormalList::Default;
+    m.attr("NS_EMBEDDED_ONLY") = regina::NormalList::EmbeddedOnly;
+    m.attr("NS_IMMERSED_SINGULAR") = regina::NormalList::ImmersedSingular;
+    m.attr("NS_VERTEX") = regina::NormalList::Vertex;
+    m.attr("NS_FUNDAMENTAL") = regina::NormalList::Fundamental;
+    m.attr("NS_LEGACY") = regina::NormalList::Legacy;
+    m.attr("NS_CUSTOM") = regina::NormalList::Custom;
+
+    RDOC_SCOPE_SWITCH(NormalAlg)
+
+    regina::python::add_flags<regina::NormalAlg>(m, "NormalAlg", {
+            { "Default", regina::NormalAlg::Default, rdoc::Default },
+            { "VertexViaReduced", regina::NormalAlg::VertexViaReduced,
+                rdoc::VertexViaReduced },
+            { "VertexStdDirect", regina::NormalAlg::VertexStdDirect,
+                rdoc::VertexStdDirect },
+            { "VertexTree", regina::NormalAlg::VertexTree, rdoc::VertexTree },
+            { "VertexDD", regina::NormalAlg::VertexDD, rdoc::VertexDD },
+            { "HilbertPrimal", regina::NormalAlg::HilbertPrimal,
+                rdoc::HilbertPrimal },
+            { "HilbertDual", regina::NormalAlg::HilbertDual,
+                rdoc::HilbertDual },
+            { "HilbertCD", regina::NormalAlg::HilbertCD, rdoc::HilbertCD },
+            { "HilbertFullCone", regina::NormalAlg::HilbertFullCone,
+                rdoc::HilbertFullCone },
+            { "Legacy", regina::NormalAlg::Legacy, rdoc::Legacy },
+            { "Custom", regina::NormalAlg::Custom, rdoc::Custom }
         }, rdoc_scope, rdoc_global::__bor);
+
+    RDOC_SCOPE_SWITCH_MAIN
+
+    // Deprecated type alias and constants:
+    m.attr("NormalAlgFlags") = m.attr("NormalAlg");
+    m.attr("NS_ALG_DEFAULT") = regina::NormalAlg::Default;
+    m.attr("NS_VERTEX_VIA_REDUCED") = regina::NormalAlg::VertexViaReduced;
+    m.attr("NS_VERTEX_STD_DIRECT") = regina::NormalAlg::VertexStdDirect;
+    m.attr("NS_VERTEX_TREE") = regina::NormalAlg::VertexTree;
+    m.attr("NS_VERTEX_DD") = regina::NormalAlg::VertexDD;
+    m.attr("NS_HILBERT_PRIMAL") = regina::NormalAlg::HilbertPrimal;
+    m.attr("NS_HILBERT_DUAL") = regina::NormalAlg::HilbertDual;
+    m.attr("NS_HILBERT_CD") = regina::NormalAlg::HilbertCD;
+    m.attr("NS_HILBERT_FULLCONE") = regina::NormalAlg::HilbertFullCone;
+    m.attr("NS_ALG_LEGACY") = regina::NormalAlg::Legacy;
+    m.attr("NS_ALG_CUSTOM") = regina::NormalAlg::Custom;
 
     RDOC_SCOPE_SWITCH(NormalTransform)
 

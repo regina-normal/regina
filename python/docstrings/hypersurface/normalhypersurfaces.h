@@ -71,7 +71,7 @@ expressed relative to the given coordinate system.
 
 These are the constraints that will be used when enumerating embedded
 hypersurfaces in the given coordinate system (i.e., when the default
-HS_EMBEDDED_ONLY flag is used). They will not be used when the
+flag HyperList::EmbeddedOnly is used). They will not be used when the
 enumeration allows for immersed and/or singular hypersurfaces.
 
 Parameter ``triangulation``:
@@ -185,19 +185,20 @@ will affect which surfaces are produced, since vertex/fundamental
 surfaces in one system are not necessarily vertex/fundamental in
 another.
 
-The HyperList argument is a combination of flags that allows you to
+The *whichList* argument is a combination of flags that allows you to
 specify exactly which normal hypersurfaces you require. This includes
 (i) whether you want all vertex hypersurfaces or all fundamental
-hypersurfaces, which defaults to HS_VERTEX if you specify neither or
-both; and (ii) whether you want only properly embedded surfaces or you
-also wish to include immersed and/or singular hypersurfaces, which
-defaults to HS_EMBEDDED_ONLY if you specify neither or both.
+hypersurfaces, which defaults to HyperList::Vertex if you specify
+neither or both; and (ii) whether you want only properly embedded
+surfaces or you also wish to include immersed and/or singular
+hypersurfaces, which defaults to HyperList::EmbeddedOnly if you
+specify neither or both.
 
-The HyperAlg argument is a combination of flags that allows you to
+The *algHints* argument is a combination of flags that allows you to
 control the underlying enumeration algorithm. These flags are treated
 as hints only: if your selection of algorithm is invalid, unavailable
 or unsupported then Regina will choose something more appropriate.
-Unless you have some specialised need, the default HS_ALG_DEFAULT
+Unless you have some specialised need, the default HyperAlg::Default
 (which makes no hints at all) will allow Regina to choose what it
 thinks will be the most efficient method.
 
@@ -292,11 +293,11 @@ Returns:
 static const char *algorithm =
 R"doc(Returns details of the algorithm that was used to enumerate this list.
 
-These may not be the same HyperAlg flags that were passed to the class
-constructor. In particular, default values will have been explicitly
-filled in, invalid and/or redundant values will have been removed, and
-unavailable and/or unsupported combinations of algorithm flags will be
-replaced with whatever algorithm was actually used.
+These may not be the same algorithm flags that were passed to the
+class constructor. In particular, default values will have been
+explicitly filled in, invalid and/or redundant values will have been
+removed, and unavailable and/or unsupported combinations of algorithm
+flags will be replaced with whatever algorithm was actually used.
 
 Returns:
     details of the algorithm used to enumerate this list.)doc";
@@ -486,10 +487,10 @@ static const char *which =
 R"doc(Returns details of which normal hypersurfaces this list represents
 within the underlying triangulation.
 
-This may not be the same HyperList that was passed to the class
+These may not be the same list flags that were passed to the class
 constructor. In particular, default values will have been explicitly
-filled in (such as HS_VERTEX and/or HS_EMBEDDED_ONLY), and invalid
-and/or redundant values will have been removed.
+filled in (such as HyperList::Vertex and/or HyperList::EmbeddedOnly),
+and invalid and/or redundant values will have been removed.
 
 Returns:
     details of what this list represents.)doc";

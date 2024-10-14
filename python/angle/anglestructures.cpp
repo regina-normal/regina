@@ -57,7 +57,7 @@ void addAngleStructures(pybind11::module_& m) {
                 ProgressTracker*>(),
             pybind11::arg(),
             pybind11::arg("tautOnly") = false,
-            pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
+            pybind11::arg("algHints") = regina::AngleAlg::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<GILScopedRelease>(),
             rdoc::__init)
@@ -96,7 +96,7 @@ void addAngleStructures(pybind11::module_& m) {
             regina::AngleAlg, ProgressTracker*>(wrap,
         pybind11::arg(),
         pybind11::arg("tautOnly") = false,
-        pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
+        pybind11::arg("algHints") = regina::AngleAlg::Default,
         pybind11::arg("tracker") = nullptr,
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);

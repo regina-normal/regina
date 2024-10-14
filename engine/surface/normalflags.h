@@ -46,34 +46,38 @@ namespace regina {
 
 /**
  * Represents different lists of normal surfaces that might be constructed
- * for a given 3-manifold triangulation.
+ * for a given 3-manifold triangulation.  This enumeration type is used with
+ * normal surface enumeration routines, such as the NormalSurfaces class
+ * constructor.
  *
- * The NormalList enumeration refers to the _contents_ of the list,
- * whereas the NormalAlgFlags enumeration refers to the _algorithm_
- * used to build it.
+ * The NormalList enumeration refers to the _contents_ of the list, whereas
+ * the NormalAlg enumeration refers to the _algorithm_ used to build it.
  *
- * These flags can be combined using the bitwise OR operator, and then
- * passed to enumeration routines such as the NormalSurfaces
- * class constructor.
+ * These values can be combined using the bitwise OR operator (resulting in an
+ * object of type `Flags<NormalList>`).  In particular, if a hypersurface
+ * enumeration function takes an argument of type `Flags<NormalList>`, then you
+ * can pass a single NormalList constant, or a bitwise combination of such
+ * constants `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at
+ * all (which is equivalent to passing `NormalList::Default`).
  *
  * \ingroup surfaces
  */
-enum NormalListFlags {
+enum class NormalList {
     /**
      * An empty flag, indicating to an enumeration routine that it
      * should use its default behaviour.
      * The numeric value of this flag is zero (i.e., it has no effect
      * when combined with other flags using bitwise OR).
      */
-    NS_LIST_DEFAULT = 0x0000,
+    Default = 0x0000,
 
     /**
      * Indicates that this list is restricted to properly embedded
      * surfaces only.
      *
-     * This flag is incompatible with NS_IMMERSED_SINGULAR.
+     * This flag is incompatible with ImmersedSingular.
      */
-    NS_EMBEDDED_ONLY = 0x0001,
+    EmbeddedOnly = 0x0001,
     /**
      * Indicates that the scope of this list includes not just properly
      * embedded surfaces, but also immersed and/or branched surfaces.
@@ -83,24 +87,24 @@ enum NormalListFlags {
      * been explicitly excluded (in particular, the quadrilateral
      * constraints have not been enforced).
      *
-     * This flag is incompatible with NS_EMBEDDED_ONLY.
+     * This flag is incompatible with EmbeddedOnly.
      */
-    NS_IMMERSED_SINGULAR = 0x0002,
+    ImmersedSingular = 0x0002,
 
     /**
      * Indicates a list of all vertex normal surfaces, with respect to
      * the particular normal coordinate system used by the list.
      *
-     * This flag is incompatible with NS_FUNDAMENTAL.
+     * This flag is incompatible with Fundamental.
      */
-    NS_VERTEX = 0x0004,
+    Vertex = 0x0004,
     /**
      * Indicates a list of all fundamental normal surfaces, with respect to
      * the particular normal coordinate system used by the list.
      *
-     * This flag is incompatible with NS_VERTEX.
+     * This flag is incompatible with Vertex.
      */
-    NS_FUNDAMENTAL = 0x0008,
+    Fundamental = 0x0008,
 
     /**
      * Indicates a list that was constructed using an old version of
@@ -109,32 +113,103 @@ enum NormalListFlags {
      * These older versions did not retain details of how each list was
      * constructed, beyond whether immersed and/or singular surfaces were
      * included.  Therefore no information is available for such lists,
-     * other than the presence or absence of the NS_EMBEDDED_ONLY and/or
-     * NS_IMMERSED_SINGULAR flags.
+     * other than the presence or absence of the EmbeddedOnly and/or
+     * ImmersedSingular flags.
      *
      * If this flag is passed to an enumeration routine, it will be ignored.
      */
-    NS_LEGACY = 0x4000,
+    Legacy = 0x4000,
     /**
      * Indicates some other type of list, typically hand-crafted by the
      * user or built by some customised algorithm.
      *
      * If this flag is passed to an enumeration routine, it will be ignored.
      */
-    NS_CUSTOM = 0x8000
+    Custom = 0x8000
 };
 
 /**
- * A combination of flags for types of normal surface lists.
+ * A deprecated type alias representing different lists of normal surfaces
+ * that might be constructed in a 3-manifold triangulation.
  *
- * If a function requires a NormalList object as an argument, you can
- * pass a single NormalListFlags constant, or a combination of such
- * constants using the bitwise OR operator, or empty braces {} to indicate
- * no flags at all.
+ * \deprecated As of Regina 7.4, NormalListFlags is simply an alias for the
+ * enumeration type NormalList.  A bitwise _combination_ of such values will
+ * have the type `Flags<NormalList>`, though there is usually no need for end
+ * users to explicitly refer to the flags type by name.
  *
  * \ingroup surfaces
  */
-using NormalList = regina::Flags<NormalListFlags>;
+using NormalListFlags [[deprecated]] = NormalList;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal surfaces
+ * in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalList::Default.
+ */
+[[deprecated]] inline static constexpr NormalList NS_LIST_DEFAULT =
+    NormalList::Default;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal surfaces
+ * in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalList::EmbeddedOnly.
+ */
+[[deprecated]] inline static constexpr NormalList NS_EMBEDDED_ONLY =
+    NormalList::EmbeddedOnly;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal surfaces
+ * in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalList::ImmersedSingular.
+ */
+[[deprecated]] inline static constexpr NormalList NS_IMMERSED_SINGULAR =
+    NormalList::ImmersedSingular;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal surfaces
+ * in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalList::Vertex.
+ */
+[[deprecated]] inline static constexpr NormalList NS_VERTEX =
+    NormalList::Vertex;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal surfaces
+ * in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalList::Fundamental.
+ */
+[[deprecated]] inline static constexpr NormalList NS_FUNDAMENTAL =
+    NormalList::Fundamental;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal surfaces
+ * in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalList::Legacy.
+ */
+[[deprecated]] inline static constexpr NormalList NS_LEGACY =
+    NormalList::Legacy;
+
+/**
+ * A deprecated constant indicating some aspect(s) of a list of normal surfaces
+ * in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalList::Custom.
+ */
+[[deprecated]] inline static constexpr NormalList NS_CUSTOM =
+    NormalList::Custom;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -145,28 +220,33 @@ using NormalList = regina::Flags<NormalListFlags>;
  *
  * \ingroup surfaces
  */
-inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
-    return NormalList(lhs) | rhs;
+inline Flags<NormalList> operator | (NormalList lhs, NormalList rhs) {
+    return Flags<NormalList>(lhs) | rhs;
 }
 
 /**
  * Represents options and variants of algorithms for enumerating various
- * types of normal surfaces in 3-manifold triangulations.
+ * types of normal surfaces in 3-manifold triangulations.  This enumeration
+ * type is used with normal surface enumeration routines, such as the
+ * NormalSurfaces class constructor.
  *
- * These options can be combined using the bitwise OR operator, and then
- * passed to enumeration routines such as the NormalSurfaces
- * class constructor.
+ * These values can be combined using the bitwise OR operator (resulting in an
+ * object of type `Flags<NormalAlg>`).  In particular, if a hypersurface
+ * enumeration function takes an argument of type `Flags<NormalAlg>`, then you
+ * can pass a single NormalAlg constant, or a bitwise combination of such
+ * constants `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at
+ * all (which is equivalent to passing `NormalAlg::Default`).
  *
  * \ingroup surfaces
  */
-enum NormalAlgFlags {
+enum class NormalAlg {
     /**
      * An empty flag, indicating to an enumeration routine that it
      * should use its default behaviour.
      * The numeric value of this flag is zero (i.e., it has no effect
      * when combined with other flags using bitwise OR).
      */
-    NS_ALG_DEFAULT = 0x0000,
+    Default = 0x0000,
 
     /**
      * When enumerating in standard normal or almost normal coordinates,
@@ -178,15 +258,15 @@ enum NormalAlgFlags {
      * This is typically much faster than a direct enumeration in
      * standard normal or almost normal coordinates, and enumeration
      * routines will use this option where possible unless explicitly
-     * requested not to (via the flag NS_VERTEX_STD_DIRECT).
+     * requested not to (via the flag VertexStdDirect).
      *
      * For an explanation of this procedure, see B. A. Burton,
      * "Converting between quadrilateral and standard solution sets in
      * normal surface theory", Algebr. Geom. Topol. 9 (2009), 2121-2174.
      *
-     * This flag is incompatible with NS_VERTEX_STD_DIRECT.
+     * This flag is incompatible with VertexStdDirect.
      */
-    NS_VERTEX_VIA_REDUCED = 0x0001,
+    VertexViaReduced = 0x0001,
 
     /**
      * When enumerating in standard normal or almost normal coordinates,
@@ -196,11 +276,11 @@ enum NormalAlgFlags {
      *
      * This is typically _much_ slower than going via the reduced
      * system, and users should only request this if they have a
-     * specialised need.  See NS_VERTEX_VIA_REDUCED for further information.
+     * specialised need.  See VertexViaReduced for further information.
      *
-     * This flag is incompatible with NS_VERTEX_VIA_REDUCED.
+     * This flag is incompatible with VertexViaReduced.
      */
-    NS_VERTEX_STD_DIRECT = 0x0002,
+    VertexStdDirect = 0x0002,
 
     /**
      * When enumerating vertex normal surfaces,
@@ -217,9 +297,9 @@ enum NormalAlgFlags {
      * knot theory and 3-manifold topology", Algorithmica 65 (2013),
      * pp. 772-801.
      *
-     * This flag is incompatible with NS_VERTEX_DD.
+     * This flag is incompatible with VertexDD.
      */
-    NS_VERTEX_TREE = 0x0010,
+    VertexTree = 0x0010,
     /**
      * When enumerating vertex normal surfaces,
      * this flag indicates that a modified double description method
@@ -235,9 +315,9 @@ enum NormalAlgFlags {
      * normal surface enumeration", Mathematics of Computation
      * 79 (2010), pp. 453-484.
      *
-     * This flag is incompatible with NS_VERTEX_TREE.
+     * This flag is incompatible with VertexTree.
      */
-    NS_VERTEX_DD = 0x0020,
+    VertexDD = 0x0020,
 
     /**
      * When enumerating fundamental normal surfaces,
@@ -254,10 +334,10 @@ enum NormalAlgFlags {
      * ALENEX 2014: Proceedings of the Meeting on Algorithm
      * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
-     * This flag is incompatible with NS_HILBERT_DUAL,
-     * NS_HILBERT_CD and NS_HILBERT_FULLCONE.
+     * This flag is incompatible with HilbertDual, HilbertCD and
+     * HilbertFullCone.
      */
-    NS_HILBERT_PRIMAL = 0x0100,
+    HilbertPrimal = 0x0100,
     /**
      * When enumerating fundamental normal surfaces,
      * this flag indicates that the dual method should be used for
@@ -276,10 +356,10 @@ enum NormalAlgFlags {
      * ALENEX 2014: Proceedings of the Meeting on Algorithm
      * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
-     * This flag is incompatible with NS_HILBERT_PRIMAL,
-     * NS_HILBERT_CD and NS_HILBERT_FULLCONE.
+     * This flag is incompatible with HilbertPrimal, HilbertCD and
+     * HilbertFullCone.
      */
-    NS_HILBERT_DUAL = 0x0200,
+    HilbertDual = 0x0200,
     /**
      * When enumerating fundamental normal surfaces,
      * this flag indicates that a modified Contejean-Devie procedure should
@@ -295,10 +375,10 @@ enum NormalAlgFlags {
      * ALENEX 2014: Proceedings of the Meeting on Algorithm
      * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
-     * This flag is incompatible with NS_HILBERT_PRIMAL,
-     * NS_HILBERT_DUAL and NS_HILBERT_FULLCONE.
+     * This flag is incompatible with HilbertPrimal, HilbertDual and
+     * HilbertFullCone.
      */
-    NS_HILBERT_CD = 0x0400,
+    HilbertCD = 0x0400,
     /**
      * When enumerating fundamental normal surfaces,
      * this flag indicates that a Hilbert basis for the full solution
@@ -316,10 +396,9 @@ enum NormalAlgFlags {
      * ALENEX 2014: Proceedings of the Meeting on Algorithm
      * Engineering & Experiments, SIAM, 2014, pp. 112-124.
      *
-     * This flag is incompatible with NS_HILBERT_PRIMAL,
-     * NS_HILBERT_DUAL and NS_HILBERT_CD.
+     * This flag is incompatible with HilbertPrimal, HilbertDual and HilbertCD.
      */
-    NS_HILBERT_FULLCONE = 0x0800,
+    HilbertFullCone = 0x0800,
 
     /**
      * Indicates that a normal surface list was enumerated using an
@@ -331,7 +410,7 @@ enum NormalAlgFlags {
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
-    NS_ALG_LEGACY = 0x4000,
+    Legacy = 0x4000,
     /**
      * Indicates that a normal surface list was built using a customised
      * algorithm.  In such cases, no further details on the algorithm are
@@ -339,20 +418,131 @@ enum NormalAlgFlags {
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
-    NS_ALG_CUSTOM = 0x8000
+    Custom = 0x8000
 };
 
 /**
- * A combination of flags for normal surface enumeration algorithms.
+ * A deprecated type alias representing options and variants of algorithms for
+ * enumerating normal surfaces in 3-manifold triangulations.
  *
- * If a function requires a NormalAlg object as an argument, you can
- * pass a single NormalAlgFlags constant, or a combination of such
- * constants using the bitwise OR operator, or empty braces {} to indicate
- * no flags at all.
+ * \deprecated As of Regina 7.4, NormalAlgFlags is simply an alias for the
+ * enumeration type NormalAlg.  A bitwise _combination_ of such values will
+ * have the type `Flags<NormalAlg>`, though there is usually no need for end
+ * users to explicitly refer to the flags type by name.
  *
  * \ingroup surfaces
  */
-using NormalAlg = regina::Flags<NormalAlgFlags>;
+using NormalAlgFlags [[deprecated]] = NormalAlg;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::Default.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_ALG_DEFAULT =
+    NormalAlg::Default;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::VertexViaReduced.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_VERTEX_VIA_REDUCED =
+    NormalAlg::VertexViaReduced;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::VertexStdDirect.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_VERTEX_STD_DIRECT =
+    NormalAlg::VertexStdDirect;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::VertexTree.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_VERTEX_TREE =
+    NormalAlg::VertexTree;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::VertexDD.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_VERTEX_DD =
+    NormalAlg::VertexDD;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::HilbertPrimal.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_HILBERT_PRIMAL =
+    NormalAlg::HilbertPrimal;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::HilbertDual.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_HILBERT_DUAL =
+    NormalAlg::HilbertDual;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::HilbertCD.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_HILBERT_CD =
+    NormalAlg::HilbertCD;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::HilbertFullCone.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_HILBERT_FULLCONE =
+    NormalAlg::HilbertFullCone;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::Legacy.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_ALG_LEGACY =
+    NormalAlg::Legacy;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * normal surfaces in a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalAlg::Custom.
+ */
+[[deprecated]] inline static constexpr NormalAlg NS_ALG_CUSTOM =
+    NormalAlg::Custom;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -363,8 +553,8 @@ using NormalAlg = regina::Flags<NormalAlgFlags>;
  *
  * \ingroup surfaces
  */
-inline NormalAlg operator | (NormalAlgFlags lhs, NormalAlgFlags rhs) {
-    return NormalAlg(lhs) | rhs;
+inline Flags<NormalAlg> operator | (NormalAlg lhs, NormalAlg rhs) {
+    return Flags<NormalAlg>(lhs) | rhs;
 }
 
 /**

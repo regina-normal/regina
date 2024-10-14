@@ -24,8 +24,8 @@ the OR operator.
 For some computations where the user can exert more fine-grained
 control over the underlying algorithm, a more specialised enumeration
 type is used instead. For example, see the NormalSurfaces class
-constructor, which uses the specialised algorithm types NormalAlg and
-NormalAlgFlags.)doc";
+constructor, which can take a combination of flags of the specialised
+algorithm type NormalAlg.)doc";
 
 // Docstring regina::python::doc::Language
 static const char *Language = R"doc(Represents different programming languages that Regina supports.)doc";

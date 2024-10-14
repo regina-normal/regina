@@ -91,7 +91,7 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
 
     std::thread t([&, this]() {
         ans = regina::make_packet<regina::AngleStructures>(std::in_place,
-            tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
+            tri, tautOnly->isChecked(), regina::AngleAlg::Default, &tracker);
     });
 
     if (dlg.run()) {

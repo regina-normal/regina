@@ -88,7 +88,7 @@ constexpr int maxDim() {
  * For some computations where the user can exert more fine-grained control
  * over the underlying algorithm, a more specialised enumeration type is
  * used instead.  For example, see the NormalSurfaces class constructor, which
- * uses the specialised algorithm types NormalAlg and NormalAlgFlags.
+ * can take a combination of flags of the specialised algorithm type NormalAlg.
  *
  * \ingroup engine
  */

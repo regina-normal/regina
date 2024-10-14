@@ -129,14 +129,14 @@ surfaces ::= (&xml-surface;*,
      </para>
      <para>
       This must be an integer, formed as a bitwise OR combination of
-      constants from the <classname>NormalAlgFlags</classname> enumeration
+      constants from the <classname>NormalAlg</classname> enumeration
       in &regina;'s calculation engine.
      </para>
      <para>
       An example of such an integer might be 17, which combines the
-      <classname>NormalAlgFlags</classname> constants
-      <literal>NS_VERTEX_VIA_REDUCED</literal> (1) and
-      <literal>NS_TREE</literal> (16), indicating that the enumeration used
+      constants <literal>NormalAlg::VertexViaReduced</literal> (1) and
+      <literal>NormalAlg::VertexTree</literal> (16),
+      indicating that the enumeration used
       the tree traversal method and did the bulk of its work in a
       smaller coordinate system.
      </para>
@@ -182,14 +182,13 @@ surfaces ::= (&xml-surface;*,
      </para>
      <para>
       This must be an integer, formed as a bitwise OR combination of
-      constants from the <classname>NormalListFlags</classname> enumeration
+      constants from the <classname>NormalList</classname> enumeration
       in &regina;'s calculation engine.
      </para>
      <para>
-      An example of such an integer might be 5, which combines the
-      <classname>NormalListFlags</classname> constants
-      <literal>NS_EMBEDDED_ONLY</literal> (1) and
-      <literal>NS_VERTEX</literal> (4).
+      An example of such an integer might be 5, which combines the constants
+      <literal>NormalList::EmbeddedOnly</literal> (1) and
+      <literal>NormalList::Vertex</literal> (4).
      </para>
     </listitem>
    </varlistentry>

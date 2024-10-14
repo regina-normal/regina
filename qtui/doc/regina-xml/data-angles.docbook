@@ -126,19 +126,18 @@ angles ::= (&xml-struct;*, &xml-spanstrict;?, &xml-spantaut;?,
      </para>
      <para>
       This must be an integer, formed as a bitwise OR combination of
-      constants from the <classname>AngleAlgFlags</classname> enumeration
+      constants from the <classname>AngleAlg</classname> enumeration
       in &regina;'s calculation engine.
      </para>
      <para>
       An example of such an integer might be 32, which represents the
-      <classname>AngleAlgFlags</classname> constant
-      <literal>AS_ALG_DD</literal>.
+      constant <literal>AngleAlg::DD</literal>.
      </para>
      <para>
       &regina; versions&nbsp;6.0.1 and earlier did not store this
       information in its data files at all.
       If it is not provided, it will be treated as
-      <literal>AS_ALG_LEGACY</literal>.
+      <literal>AngleAlg::Legacy</literal>.
      </para>
     </listitem>
    </varlistentry>

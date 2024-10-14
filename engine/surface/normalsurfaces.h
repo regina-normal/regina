@@ -357,10 +357,10 @@ class NormalSurfaces :
         NormalCoords coords_;
             /**< The coordinate system that was originally used to enumerate
                  the normal surfaces in this list. */
-        NormalList which_;
+        Flags<NormalList> which_;
             /**< Indicates which normal surfaces these represent within
                  the underlying triangulation. */
-        NormalAlg algorithm_;
+        Flags<NormalAlg> algorithm_;
             /**< Stores the details of the enumeration algorithm that
                  was used to generate this list.  This might not be the
                  same as the \a algHints flag that was originally
@@ -379,21 +379,21 @@ class NormalSurfaces :
          * produced, since vertex/fundamental surfaces in one system are not
          * necessarily vertex/fundamental in another.
          *
-         * The NormalList argument is a combination of flags that
+         * The \a whichList argument is a combination of flags that
          * allows you to specify exactly which normal surfaces you require.
          * This includes (i) whether you want all vertex surfaces
-         * or all fundamental surfaces, which defaults to NS_VERTEX
+         * or all fundamental surfaces, which defaults to NormalList::Vertex
          * if you specify neither or both; and (ii) whether you want only
          * properly embedded surfaces or you also wish to include
          * immersed and/or singular surfaces, which defaults to
-         * NS_EMBEDDED_ONLY if you specify neither or both.
+         * NormalList::EmbeddedOnly if you specify neither or both.
          *
-         * The NormalAlg argument is a combination of flags that allows
+         * The \a algHints argument is a combination of flags that allows
          * you to control the underlying enumeration algorithm.  These
          * flags are treated as hints only: if your selection of
          * algorithm is invalid, unavailable or unsupported then Regina
          * will choose something more appropriate.  Unless you have
-         * some specialised need, the default NS_ALG_DEFAULT (which
+         * some specialised need, the default NormalAlg::Default (which
          * makes no hints at all) will allow Regina to choose what it
          * thinks will be the most efficient method.
          *
@@ -461,8 +461,8 @@ class NormalSurfaces :
         NormalSurfaces(
             const Triangulation<3>& triangulation,
             NormalCoords coords,
-            NormalList which = NS_LIST_DEFAULT,
-            NormalAlg algHints = NS_ALG_DEFAULT,
+            Flags<NormalList> whichList = NormalList::Default,
+            Flags<NormalAlg> algHints = NormalAlg::Default,
             ProgressTracker* tracker = nullptr);
 
         /**
@@ -504,8 +504,9 @@ class NormalSurfaces :
          * Unlike the old filter() function, this constructor will _not_
          * insert the new normal surface list into the packet tree.
          *
-         * For this new filtered list, which() will include the NS_CUSTOM
-         * flag, and algorithm() will include the NS_ALG_CUSTOM flag.
+         * For this new filtered list, which() will include the
+         * NormalList::Custom flag, and algorithm() will include the
+         * NormalAlg::Custom flag.
          *
          * \param src the normal surface list that we wish to filter;
          * this will not be modified.
@@ -584,19 +585,20 @@ class NormalSurfaces :
          * Returns details of which normal surfaces this list represents
          * within the underlying triangulation.
          *
-         * This may not be the same NormalList that was passed to the
+         * These may not be the same list flags that were passed to the
          * class constructor.  In particular, default values will have been
-         * explicitly filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY),
-         * and invalid and/or redundant values will have been removed.
+         * explicitly filled in (such as NormalList::Vertex and/or
+         * NormalList::EmbeddedOnly), and invalid and/or redundant values
+         * will have been removed.
          *
          * \return details of what this list represents.
          */
-        NormalList which() const;
+        Flags<NormalList> which() const;
         /**
          * Returns details of the algorithm that was used to enumerate
          * this list.
          *
-         * These may not be the same NormalAlg flags that were passed to the
+         * These may not be the same algorithm flags that were passed to the
          * class constructor.  In particular, default values will have been
          * explicitly filled in, invalid and/or redundant values will have
          * been removed, and unavailable and/or unsupported combinations
@@ -605,7 +607,7 @@ class NormalSurfaces :
          *
          * \return details of the algorithm used to enumerate this list.
          */
-        NormalAlg algorithm() const;
+        Flags<NormalAlg> algorithm() const;
         /**
          * Determines if the coordinate system that was used for enumeration
          * allows for almost normal surfaces.
@@ -1080,15 +1082,15 @@ class NormalSurfaces :
          * Creates an empty list of normal surfaces with the given
          * parameters.
          */
-        NormalSurfaces(NormalCoords coords, NormalList which,
-            NormalAlg algorithm, const Triangulation<3>& triangulation);
+        NormalSurfaces(NormalCoords coords, Flags<NormalList> whichList,
+            Flags<NormalAlg> algorithm, const Triangulation<3>& triangulation);
 
         /**
          * Creates an empty list of normal surfaces with the given
          * parameters.
          */
-        NormalSurfaces(NormalCoords coords, NormalList which,
-            NormalAlg algorithm,
+        NormalSurfaces(NormalCoords coords, Flags<NormalList> whichList,
+            Flags<NormalAlg> algorithm,
             const SnapshotRef<Triangulation<3>>& triangulation);
 
     private:
@@ -1465,9 +1467,9 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
  * one octagon type is non-zero across the entire triangulation.
  *
  * These are the constraints that will be used when enumerating embedded
- * surfaces in the given coordinate system (i.e., when the default
- * NS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
- * allows for immersed and/or singular surfaces.
+ * surfaces in the given coordinate system (i.e., when the default flag
+ * NormalList::EmbeddedOnly is used).  They will not be used when the
+ * enumeration allows for immersed and/or singular surfaces.
  *
  * \param triangulation the triangulation upon which these validity constraints
  * will be based.
@@ -1482,9 +1484,9 @@ ValidityConstraints makeEmbeddedConstraints(
 // Inline functions for NormalSurfaces
 
 inline NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
-        NormalCoords coords, NormalList which, NormalAlg algHints,
-        ProgressTracker* tracker) :
-        triangulation_(triangulation), coords_(coords), which_(which),
+        NormalCoords coords, Flags<NormalList> whichList,
+        Flags<NormalAlg> algHints, ProgressTracker* tracker) :
+        triangulation_(triangulation), coords_(coords), which_(whichList),
         algorithm_(algHints) {
     try {
         Enumerator(this, makeMatchingEquations(triangulation, coords),
@@ -1526,16 +1528,16 @@ inline NormalCoords NormalSurfaces::coords() const {
     return coords_;
 }
 
-inline NormalList NormalSurfaces::which() const {
+inline Flags<NormalList> NormalSurfaces::which() const {
     return which_;
 }
 
-inline NormalAlg NormalSurfaces::algorithm() const {
+inline Flags<NormalAlg> NormalSurfaces::algorithm() const {
     return algorithm_;
 }
 
 inline bool NormalSurfaces::isEmbeddedOnly() const {
-    return which_.has(NS_EMBEDDED_ONLY);
+    return which_.has(NormalList::EmbeddedOnly);
 }
 
 inline const Triangulation<3>& NormalSurfaces::triangulation() const {
@@ -1615,16 +1617,17 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
 }
 
-inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,
-        NormalAlg algorithm, const Triangulation<3>& triangulation) :
-        triangulation_(triangulation), coords_(coords), which_(which),
+inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
+        Flags<NormalList> whichList, Flags<NormalAlg> algorithm,
+        const Triangulation<3>& triangulation) :
+        triangulation_(triangulation), coords_(coords), which_(whichList),
         algorithm_(algorithm) {
 }
 
-inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,
-        NormalAlg algorithm,
+inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
+        Flags<NormalList> whichList, Flags<NormalAlg> algorithm,
         const SnapshotRef<Triangulation<3>>& triangulation) :
-        triangulation_(triangulation), coords_(coords), which_(which),
+        triangulation_(triangulation), coords_(coords), which_(whichList),
         algorithm_(algorithm) {
 }
 

@@ -75,7 +75,7 @@ static void testManualCases(void (*f)(const Triangulation<3>&, const char*),
 
 TEST(NormalSurfacesTest, defaultArgs) {
     // Make sure that enumeration using default arguments falls through to the
-    // correct enumeration function, which takes NormalFlags and NormalAlg.
+    // correct enumeration function, which takes list and algorithm flags.
 
     Triangulation<3> t = Example<3>::ball();
 

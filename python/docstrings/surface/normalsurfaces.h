@@ -114,8 +114,8 @@ that at most one octagon type is non-zero across the entire
 triangulation.
 
 These are the constraints that will be used when enumerating embedded
-surfaces in the given coordinate system (i.e., when the default
-NS_EMBEDDED_ONLY flag is used). They will not be used when the
+surfaces in the given coordinate system (i.e., when the default flag
+NormalList::EmbeddedOnly is used). They will not be used when the
 enumeration allows for immersed and/or singular surfaces.
 
 Parameter ``triangulation``:
@@ -227,19 +227,19 @@ This choice of coordinate system will affect which surfaces are
 produced, since vertex/fundamental surfaces in one system are not
 necessarily vertex/fundamental in another.
 
-The NormalList argument is a combination of flags that allows you to
+The *whichList* argument is a combination of flags that allows you to
 specify exactly which normal surfaces you require. This includes (i)
 whether you want all vertex surfaces or all fundamental surfaces,
-which defaults to NS_VERTEX if you specify neither or both; and (ii)
-whether you want only properly embedded surfaces or you also wish to
-include immersed and/or singular surfaces, which defaults to
-NS_EMBEDDED_ONLY if you specify neither or both.
+which defaults to NormalList::Vertex if you specify neither or both;
+and (ii) whether you want only properly embedded surfaces or you also
+wish to include immersed and/or singular surfaces, which defaults to
+NormalList::EmbeddedOnly if you specify neither or both.
 
-The NormalAlg argument is a combination of flags that allows you to
+The *algHints* argument is a combination of flags that allows you to
 control the underlying enumeration algorithm. These flags are treated
 as hints only: if your selection of algorithm is invalid, unavailable
 or unsupported then Regina will choose something more appropriate.
-Unless you have some specialised need, the default NS_ALG_DEFAULT
+Unless you have some specialised need, the default NormalAlg::Default
 (which makes no hints at all) will allow Regina to choose what it
 thinks will be the most efficient method.
 
@@ -357,8 +357,9 @@ surfaces from the given list that pass the given filter.
 Unlike the old filter() function, this constructor will _not_ insert
 the new normal surface list into the packet tree.
 
-For this new filtered list, which() will include the NS_CUSTOM flag,
-and algorithm() will include the NS_ALG_CUSTOM flag.
+For this new filtered list, which() will include the
+NormalList::Custom flag, and algorithm() will include the
+NormalAlg::Custom flag.
 
 Parameter ``src``:
     the normal surface list that we wish to filter; this will not be
@@ -386,7 +387,7 @@ Returns:
 static const char *algorithm =
 R"doc(Returns details of the algorithm that was used to enumerate this list.
 
-These may not be the same NormalAlg flags that were passed to the
+These may not be the same algorithm flags that were passed to the
 class constructor. In particular, default values will have been
 explicitly filled in, invalid and/or redundant values will have been
 removed, and unavailable and/or unsupported combinations of algorithm
@@ -673,10 +674,11 @@ static const char *which =
 R"doc(Returns details of which normal surfaces this list represents within
 the underlying triangulation.
 
-This may not be the same NormalList that was passed to the class
+These may not be the same list flags that were passed to the class
 constructor. In particular, default values will have been explicitly
-filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY), and invalid
-and/or redundant values will have been removed.
+filled in (such as NormalList::Vertex and/or
+NormalList::EmbeddedOnly), and invalid and/or redundant values will
+have been removed.
 
 Returns:
     details of what this list represents.)doc";

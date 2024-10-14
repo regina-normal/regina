@@ -231,13 +231,13 @@ static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
 
     AngleStructures all(tri, false);
     AngleStructures tautTree(tri, true);
-    AngleStructures tautDD(tri, true, regina::AS_ALG_DD);
+    AngleStructures tautDD(tri, true, regina::AngleAlg::DD);
 
     EXPECT_FALSE(all.isTautOnly());
     EXPECT_TRUE(tautTree.isTautOnly());
     EXPECT_TRUE(tautDD.isTautOnly());
-    EXPECT_EQ(tautTree.algorithm(), regina::AS_ALG_TREE);
-    EXPECT_EQ(tautDD.algorithm(), regina::AS_ALG_DD);
+    EXPECT_EQ(tautTree.algorithm(), regina::AngleAlg::Tree);
+    EXPECT_EQ(tautDD.algorithm(), regina::AngleAlg::DD);
 
     EXPECT_EQ(all.spansTaut(), tautTree.spansTaut());
     EXPECT_EQ(all.spansTaut(), tautDD.spansTaut());

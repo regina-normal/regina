@@ -34,8 +34,8 @@ Bounded orientable 3-D triangulation, f = ( 1 20 37 18 )
 &gt;&gt;&gt; surfaces = None
 &gt;&gt;&gt; def run():
 ...     global surfaces, tracker
-...     surfaces = NormalSurfaces(tri, NormalCoords.Standard, NS_VERTEX,
-...         NS_ALG_DEFAULT, tracker)
+...     surfaces = NormalSurfaces(tri, NormalCoords.Standard, NormalList.Vertex,
+...         NormalAlg.Default, tracker)
 ...
 &gt;&gt;&gt; thread = threading.Thread(target = run)
 &gt;&gt;&gt; thread.start()

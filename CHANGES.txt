@@ -17,11 +17,10 @@ Version 7.4  [ (to be announced) ]
           potentially throw a LockViolation (and this is now explicitly noted
           in their respective docs); other routines now examine locks as part
           of their validity checks (e.g., local moves on triangulations).
-        - Most enumerations are now C++11 scoped enumerations, with the old
+        - All enumerations are now C++11 scoped enumerations, with the old
           names kept as deprecated constants in the regina:: namespace (for
           global enumerations) or the relevant class namespace (for class
-          enumerations).  The exceptions are those enumeration types that are
-          intended to be combined bitwise (e.g., NormalListFlags).
+          enumerations).
         - Explicit inequality tests (!=) have been removed, and are now
           automatically generated from equality tests (==) instead.
         - Explicit comparisons (<, <=, >, >=) have been removed, and are now
@@ -44,6 +43,17 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., Algorithm::Backtrack).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Enum AngleAlg, AngleAlgFlags:
+            - The individual flags now live inside AngleAlg, which is now a
+              scoped enumeration for better type safety.  In paticular, the
+              enum constants (e.g., AS_ALG_TREE) have been renamed as scoped
+              enum values (e.g., AngleAlg::Tree).  The old constants have
+              been kept as deprecated compile-time constants in the regina
+              namespace.
+            - Flags can still be combined bitwise; the resulting type is now
+              just Flags<AngleAlg>, and this should all be happening
+              automatically behind the scenes.  AngleAlgFlags is now
+              just a deprecated alias for AngleAlg.
         Class AngleStructure:
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::Integer.
@@ -170,12 +180,33 @@ Version 7.4  [ (to be announced) ]
               as deprecated aliases.
         Class HomologicalData:
             - New routine triangulation().
+        Enum HyperAlg, HyperAlgFlags:
+            - The individual flags now live inside HyperAlg, which is now a
+              scoped enumeration for better type safety.  In paticular, the
+              enum constants (e.g., HS_VERTEX_DD) have been renamed as scoped
+              enum values (e.g., HyperAlg::VertexDD).  The old constants have
+              been kept as deprecated compile-time constants in the regina
+              namespace.
+            - Flags can still be combined bitwise; the resulting type is now
+              just Flags<HyperAlg>, and this should all be happening
+              automatically behind the scenes.  HyperAlgFlags is now
+              just a deprecated alias for HyperAlg.
         Enum HyperCoords:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., HS_STANDARD) have been
               renamed as scoped enum values (e.g., HyperCoords::Standard).
               The old names have been kept as compile-time constants in the
               regina:: namespace (and are _not_ deprecated for the time being).
+        Enum HyperList, HyperListFlags:
+            - The individual flags now live inside HyperList, which is now a
+              scoped enumeration for better type safety.  In paticular, the
+              enum constants (e.g., HS_VERTEX) have been renamed as scoped enum
+              values (e.g., HyperList::Vertex).  The old constants have been
+              kept as deprecated compile-time constants in the regina namespace.
+            - Flags can still be combined bitwise; the resulting type is now
+              just Flags<HyperList>, and this should all be happening
+              automatically behind the scenes.  HyperListFlags is now
+              just a deprecated alias for HyperList.
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
@@ -283,6 +314,33 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., NiceType::INTRODUCE).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Enum NormalAlg, NormalAlgFlags:
+            - The individual flags now live inside NormalAlg, which is now a
+              scoped enumeration for better type safety.  In paticular, the
+              enum constants (e.g., NS_VERTEX_DD) have been renamed as scoped
+              enum values (e.g., NormalAlg::VertexDD).  The old constants have
+              been kept as deprecated compile-time constants in the regina
+              namespace.
+            - Flags can still be combined bitwise; the resulting type is now
+              just Flags<NormalAlg>, and this should all be happening
+              automatically behind the scenes.  NormalAlgFlags is now
+              just a deprecated alias for NormalAlg.
+        Enum NormalCoords:
+            - This is now a scoped enumeration, for better type safety.
+              The old enum constants (e.g., NS_STANDARD) have been
+              renamed as scoped enum values (e.g., NormalCoords::Standard).
+              The old names have been kept as compile-time constants in the
+              regina:: namespace (and are _not_ deprecated for the time being).
+        Enum NormalList, NormalListFlags:
+            - The individual flags now live inside NormalList, which is now a
+              scoped enumeration for better type safety.  In paticular, the
+              enum constants (e.g., NS_VERTEX) have been renamed as scoped enum
+              values (e.g., NormalList::Vertex).  The old constants have been
+              kept as deprecated compile-time constants in the regina namespace.
+            - Flags can still be combined bitwise; the resulting type is now
+              just Flags<NormalList>, and this should all be happening
+              automatically behind the scenes.  NormalListFlags is now
+              just a deprecated alias for NormalList.
         Class NormalSurface, NormalHypersurface:
             - Fixed a bug where, if a surface was a normalised triangle link
               but not a thin triangle link, then calling isThinTriangleLink()
@@ -306,12 +364,6 @@ Version 7.4  [ (to be announced) ]
               through the C++ standard iterator library (e.g., via
               std::iterator_traits).  The old member type aliases have been
               removed completely.
-        Enum NormalCoords:
-            - This is now a scoped enumeration, for better type safety.
-              The old enum constants (e.g., NS_STANDARD) have been
-              renamed as scoped enum values (e.g., NormalCoords::Standard).
-              The old names have been kept as compile-time constants in the
-              regina:: namespace (and are _not_ deprecated for the time being).
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old

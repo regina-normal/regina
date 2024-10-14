@@ -112,15 +112,14 @@ params ::=</synopsis>
       This must be an integer, formed as a bitwise OR combination of
       constants from &regina;'s calculation engine.
       For normal surfaces in a 3-manifold triangulation, these constants
-      are taken from the <classname>NormalAlgFlags</classname> enumeration;
+      are taken from the <classname>NormalAlg</classname> enumeration;
       for normal hypersurfaces in a 4-manifold triangulation, they
-      are taken from the <classname>HyperAlgFlags</classname> enumeration.
+      are taken from the <classname>HyperAlg</classname> enumeration.
      </para>
      <para>
-      An example of such an integer might be 17, which combines the
-      3-dimensional <classname>NormalAlgFlags</classname> constants
-      <literal>NS_VERTEX_VIA_REDUCED</literal> (1) and
-      <literal>NS_TREE</literal> (16).
+      An example of such an integer might be 17, which combines the constants
+      <literal>NormalAlg::VertexViaReduced</literal> (1) and
+      <literal>NormalAlg::VertexTree</literal> (16).
      </para>
     </listitem>
    </varlistentry>
@@ -191,15 +190,14 @@ params ::=</synopsis>
       This must be an integer, formed as a bitwise OR combination of
       constants from &regina;'s calculation engine.
       For normal surfaces in a 3-manifold triangulation, these constants
-      are taken from the <classname>NormalListFlags</classname> enumeration;
+      are taken from the <classname>NormalList</classname> enumeration;
       for normal hypersurfaces in a 4-manifold triangulation, they
-      are taken from the <classname>HyperListFlags</classname> enumeration.
+      are taken from the <classname>HyperList</classname> enumeration.
      </para>
      <para>
-      An example of such an integer might be 5, which combines the
-      3-dimensional <classname>NormalListFlags</classname> constants
-      <literal>NS_EMBEDDED_ONLY</literal> (1) and
-      <literal>NS_VERTEX</literal> (4).
+      An example of such an integer might be 5, which combines the constants
+      <literal>NormalList::EmbeddedOnly</literal> (1) and
+      <literal>NormalList::Vertex</literal> (4).
      </para>
     </listitem>
    </varlistentry>

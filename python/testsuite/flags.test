@@ -47,20 +47,20 @@ def evalFlag(x):
 evalFlag(regina.CensusPurge.Nil)
 evalFlag(regina.CensusPurge.NonMinimal)
 
-evalFlag(regina.AS_ALG_DEFAULT)
-evalFlag(regina.AS_ALG_TREE)
+evalFlag(regina.AngleAlg.Default)
+evalFlag(regina.AngleAlg.Tree)
 
-evalFlag(regina.HS_LIST_DEFAULT)
-evalFlag(regina.HS_VERTEX)
+evalFlag(regina.HyperList.Default)
+evalFlag(regina.HyperList.Vertex)
 
-evalFlag(regina.HS_ALG_DEFAULT)
-evalFlag(regina.HS_VERTEX_DD)
+evalFlag(regina.HyperAlg.Default)
+evalFlag(regina.HyperAlg.VertexDD)
 
-evalFlag(regina.NS_LIST_DEFAULT)
-evalFlag(regina.NS_FUNDAMENTAL)
+evalFlag(regina.NormalList.Default)
+evalFlag(regina.NormalList.Fundamental)
 
-evalFlag(regina.NS_ALG_DEFAULT)
-evalFlag(regina.NS_VERTEX_TREE)
+evalFlag(regina.NormalAlg.Default)
+evalFlag(regina.NormalAlg.VertexTree)
 
 evalFlag(regina.SurfaceExport.Nil)
 evalFlag(regina.SurfaceExport.Name)

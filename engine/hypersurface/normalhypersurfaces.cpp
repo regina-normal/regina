@@ -73,7 +73,7 @@ void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
         out << " fundamental";
     else if (which_.has(regina::HS_CUSTOM))
         out << " custom";
-    else if (which_.has(regina::HS_LEGACY))
+    else if (which_.has(regina::HyperList::Legacy))
         out << " legacy";
     else
         out << " unknown";
@@ -98,7 +98,7 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
         out << " fundamental";
     else if (which_.has(regina::HS_CUSTOM))
         out << " custom";
-    else if (which_.has(regina::HS_LEGACY))
+    else if (which_.has(regina::HyperList::Legacy))
         out << " legacy";
     else
         out << " unknown";

@@ -126,7 +126,7 @@ void HyperHeaderUI::refresh() {
         sType = header->tr("fundamental");
     else if (which.has(regina::HS_CUSTOM))
         sType = header->tr("custom");
-    else if (which.has(regina::HS_LEGACY))
+    else if (which.has(regina::HyperList::Legacy))
         sType = header->tr("legacy");
     else
         sType = header->tr("unknown");

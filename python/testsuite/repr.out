@@ -87,24 +87,24 @@ x^2 - y^2 - 1 + x^-2
 <regina.Laurent2: x^2 - y^2 - 1 + x^-2>
 
 HyperList
-HyperList.HS_VERTEX
-<HyperList.HS_VERTEX: 4>
+HyperList.Vertex
+<HyperList.Vertex: 4>
 
 HyperAlg
-HyperAlg.HS_VERTEX_DD
-<HyperAlg.HS_VERTEX_DD: 32>
+HyperAlg.VertexDD
+<HyperAlg.VertexDD: 32>
 
 NormalList
-NormalList.NS_VERTEX
-<NormalList.NS_VERTEX: 4>
+NormalList.Vertex
+<NormalList.Vertex: 4>
 
 NormalAlg
-NormalAlg.NS_VERTEX_DD
-<NormalAlg.NS_VERTEX_DD: 32>
+NormalAlg.VertexDD
+<NormalAlg.VertexDD: 32>
 
 AngleAlg
-AngleAlg.AS_ALG_DD
-<AngleAlg.AS_ALG_DD: 32>
+AngleAlg.DD
+<AngleAlg.DD: 32>
 
 CensusPurge
 CensusPurge.NonMinimal

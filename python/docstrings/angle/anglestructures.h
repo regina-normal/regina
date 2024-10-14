@@ -136,11 +136,11 @@ filled with all vertices of the angle structure solution space. If
 taut angle structures (a subset of the vertex angle structures); these
 are usually much faster to enumerate.
 
-The AngleAlg argument is a combination of flags that allows you to
+The *algHints* argument is a combination of flags that allows you to
 control the underlying enumeration algorithm. These flags are treated
 as hints only: if your selection of algorithm is invalid, unavailable
 or unsupported then Regina will choose something more appropriate.
-Unless you have some specialised need, the default AS_ALG_DEFAULT
+Unless you have some specialised need, the default AngleAlg::Default
 (which makes no hints at all) will allow Regina to choose what it
 thinks will be the most efficient method.
 
@@ -203,11 +203,11 @@ Returns:
 static const char *algorithm =
 R"doc(Returns details of the algorithm that was used to enumerate this list.
 
-These may not be the same AngleAlg flags that were passed to the class
-constructor. In particular, default values will have been explicitly
-filled in, invalid and/or redundant values will have been removed, and
-unavailable and/or unsupported combinations of algorithm flags will be
-replaced with whatever algorithm was actually used.
+These may not be the same algorithm flags that were passed to the
+class constructor. In particular, default values will have been
+explicitly filled in, invalid and/or redundant values will have been
+removed, and unavailable and/or unsupported combinations of algorithm
+flags will be replaced with whatever algorithm was actually used.
 
 Returns:
     details of the algorithm used to enumerate this list.)doc";

@@ -125,7 +125,7 @@ void SurfacesHeaderUI::refresh() {
         sType = header->tr("fundamental");
     else if (which.has(regina::NS_CUSTOM))
         sType = header->tr("custom");
-    else if (which.has(regina::NS_LEGACY))
+    else if (which.has(regina::NormalList::Legacy))
         sType = header->tr("legacy");
     else
         sType = header->tr("unknown");

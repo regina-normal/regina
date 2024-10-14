@@ -34,8 +34,8 @@ Python:
     Present only for some particular enumeration types *T*, when
     explicitly noted in the corresponding enum documentation. The
     Python name of the flags class will be the enumeration type name
-    with the suffix ``Flags``; for instance, the C++ type
-    ``Flags<NormalAlg>`` will appear in Python as ``NormalAlgFlags``.
+    with the prefix ``Flags_``; for instance, the C++ type
+    ``Flags<NormalAlg>`` will appear in Python as ``Flags_NormalAlg``.
 
 Template parameter ``T``:
     the enumeration type holding the individual flags that can be

@@ -77,7 +77,7 @@ void NormalSurfaces::writeTextShort(std::ostream& out) const {
         out << " fundamental";
     else if (which_.has(regina::NS_CUSTOM))
         out << " custom";
-    else if (which_.has(regina::NS_LEGACY))
+    else if (which_.has(regina::NormalList::Legacy))
         out << " legacy";
     else
         out << " unknown";
@@ -103,7 +103,7 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
         out << " fundamental";
     else if (which_.has(regina::NS_CUSTOM))
         out << " custom";
-    else if (which_.has(regina::NS_LEGACY))
+    else if (which_.has(regina::NormalList::Legacy))
         out << " legacy";
     else
         out << " unknown";

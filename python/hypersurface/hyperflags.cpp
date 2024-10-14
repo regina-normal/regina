@@ -37,33 +37,55 @@
 #include "../docstrings/hypersurface/hyperflags.h"
 
 void addHyperFlags(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(HyperListFlags)
+    RDOC_SCOPE_BEGIN(HyperList)
 
-    regina::python::add_flags<regina::HyperListFlags>(m, "HyperList", {
-            { "HS_LIST_DEFAULT", regina::HS_LIST_DEFAULT,
-                rdoc::HS_LIST_DEFAULT },
-            { "HS_EMBEDDED_ONLY", regina::HS_EMBEDDED_ONLY,
-                rdoc::HS_EMBEDDED_ONLY },
-            { "HS_IMMERSED_SINGULAR", regina::HS_IMMERSED_SINGULAR,
-                rdoc::HS_IMMERSED_SINGULAR },
-            { "HS_VERTEX", regina::HS_VERTEX, rdoc::HS_VERTEX },
-            { "HS_FUNDAMENTAL", regina::HS_FUNDAMENTAL, rdoc::HS_FUNDAMENTAL },
-            { "HS_LEGACY", regina::HS_LEGACY, rdoc::HS_LEGACY },
-            { "HS_CUSTOM", regina::HS_CUSTOM, rdoc::HS_CUSTOM }
+    regina::python::add_flags<regina::HyperList>(m, "HyperList", {
+            { "Default", regina::HyperList::Default, rdoc::Default },
+            { "EmbeddedOnly", regina::HyperList::EmbeddedOnly,
+                rdoc::EmbeddedOnly },
+            { "ImmersedSingular", regina::HyperList::ImmersedSingular,
+                rdoc::ImmersedSingular },
+            { "Vertex", regina::HyperList::Vertex, rdoc::Vertex },
+            { "Fundamental", regina::HyperList::Fundamental,
+                rdoc::Fundamental },
+            { "Legacy", regina::HyperList::Legacy, rdoc::Legacy },
+            { "Custom", regina::HyperList::Custom, rdoc::Custom }
         }, rdoc_scope, rdoc_global::__bor);
 
-    RDOC_SCOPE_SWITCH(HyperAlgFlags)
+    RDOC_SCOPE_SWITCH_MAIN
 
-    regina::python::add_flags<regina::HyperAlgFlags>(m, "HyperAlg", {
-            { "HS_ALG_DEFAULT", regina::HS_ALG_DEFAULT, rdoc::HS_ALG_DEFAULT },
-            { "HS_VERTEX_DD", regina::HS_VERTEX_DD, rdoc::HS_VERTEX_DD },
-            { "HS_HILBERT_PRIMAL", regina::HS_HILBERT_PRIMAL,
-                rdoc::HS_HILBERT_PRIMAL },
-            { "HS_HILBERT_DUAL", regina::HS_HILBERT_DUAL,
-                rdoc::HS_HILBERT_DUAL },
-            { "HS_ALG_LEGACY", regina::HS_ALG_LEGACY, rdoc::HS_ALG_LEGACY },
-            { "HS_ALG_CUSTOM", regina::HS_ALG_CUSTOM, rdoc::HS_ALG_CUSTOM }
+    // Deprecated type alias and constants:
+    m.attr("HyperListFlags") = m.attr("HyperList");
+    m.attr("HS_LIST_DEFAULT") = regina::HyperList::Default;
+    m.attr("HS_EMBEDDED_ONLY") = regina::HyperList::EmbeddedOnly;
+    m.attr("HS_IMMERSED_SINGULAR") = regina::HyperList::ImmersedSingular;
+    m.attr("HS_VERTEX") = regina::HyperList::Vertex;
+    m.attr("HS_FUNDAMENTAL") = regina::HyperList::Fundamental;
+    m.attr("HS_LEGACY") = regina::HyperList::Legacy;
+    m.attr("HS_CUSTOM") = regina::HyperList::Custom;
+
+    RDOC_SCOPE_SWITCH(HyperAlg)
+
+    regina::python::add_flags<regina::HyperAlg>(m, "HyperAlg", {
+            { "Default", regina::HyperAlg::Default, rdoc::Default },
+            { "VertexDD", regina::HyperAlg::VertexDD, rdoc::VertexDD },
+            { "HilbertPrimal", regina::HyperAlg::HilbertPrimal,
+                rdoc::HilbertPrimal },
+            { "HilbertDual", regina::HyperAlg::HilbertDual, rdoc::HilbertDual },
+            { "Legacy", regina::HyperAlg::Legacy, rdoc::Legacy },
+            { "Custom", regina::HyperAlg::Custom, rdoc::Custom }
         }, rdoc_scope, rdoc_global::__bor_2);
+
+    RDOC_SCOPE_SWITCH_MAIN
+
+    // Deprecated type alias and constants:
+    m.attr("HyperAlgFlags") = m.attr("HyperAlg");
+    m.attr("HS_ALG_DEFAULT") = regina::HyperAlg::Default;
+    m.attr("HS_VERTEX_DD") = regina::HyperAlg::VertexDD;
+    m.attr("HS_HILBERT_PRIMAL") = regina::HyperAlg::HilbertPrimal;
+    m.attr("HS_HILBERT_DUAL") = regina::HyperAlg::HilbertDual;
+    m.attr("HS_ALG_LEGACY") = regina::HyperAlg::Legacy;
+    m.attr("HS_ALG_CUSTOM") = regina::HyperAlg::Custom;
 
     RDOC_SCOPE_END
 }

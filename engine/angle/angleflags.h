@@ -46,22 +46,27 @@ namespace regina {
 
 /**
  * Represents options and variants of algorithms for enumerating various
- * types of angle structures on 3-manifold triangulations.
+ * types of angle structures on 3-manifold triangulations.  This enumeration
+ * type is used with angle structure enumeration routines, such as the
+ * AngleStructures class constructor.
  *
- * These options can be combined using the bitwise OR operator, and then
- * passed to enumeration routines such as the AngleStructures
- * class constructor.
+ * These values can be combined using the bitwise OR operator (resulting in an
+ * object of type `Flags<AngleAlg>`).  In particular, if a hypersurface
+ * enumeration function takes an argument of type `Flags<AngleAlg>`, then you
+ * can pass a single AngleAlg constant, or a bitwise combination of such
+ * constants `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at
+ * all (which is equivalent to passing `AngleAlg::Default`).
  *
  * \ingroup angle
  */
-enum AngleAlgFlags {
+enum class AngleAlg {
     /**
      * An empty flag, indicating to an enumeration routine that it
      * should use its default behaviour.
      * The numeric value of this flag is zero (i.e., it has no effect
      * when combined with other flags using bitwise OR).
      */
-    AS_ALG_DEFAULT = 0x0000,
+    Default = 0x0000,
     /**
      * When enumerating taut angle structures, this flag indicates that
      * the tree traversal algorithm should be used.
@@ -76,9 +81,9 @@ enum AngleAlgFlags {
      * knot theory and 3-manifold topology", Algorithmica 65 (2013),
      * pp. 772-801.
      *
-     * This flag is incompatible with AS_ALG_DD.
+     * This flag is incompatible with DD.
      */
-    AS_ALG_TREE = 0x0010,
+    Tree = 0x0010,
     /**
      * When enumerating vertex or taut angle structures, this flag indicates
      * that a modified double description method should be used.
@@ -86,9 +91,9 @@ enum AngleAlgFlags {
      * This is currently the only supported algorithm for enumerating
      * all vertex angle structures (not just taut structures).
      *
-     * This flag is incompatible with AS_ALG_TREE.
+     * This flag is incompatible with Tree.
      */
-    AS_ALG_DD = 0x0020,
+    DD = 0x0020,
     /**
      * Indicates that an angle structure list was enumerated using an
      * older version of Regina (6.0.1 or earlier).
@@ -99,7 +104,7 @@ enum AngleAlgFlags {
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
-    AS_ALG_LEGACY = 0x4000,
+    Legacy = 0x4000,
     /**
      * Indicates that an angle structure list was built using a customised
      * algorithm.  In such cases, no further details on the algorithm are
@@ -107,20 +112,71 @@ enum AngleAlgFlags {
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
-    AS_ALG_CUSTOM = 0x8000
+    Custom = 0x8000
 };
 
 /**
- * A combination of flags for angle structure enumeration algorithms.
+ * A deprecated type alias representing options and variants of algorithms for
+ * enumerating angle structures on 3-manifold triangulations.
  *
- * If a function requires an AngleAlg object as an argument, you can
- * pass a single AngleAlgFlags constant, or a combination of such
- * constants using the bitwise OR operator, or empty braces {} to indicate
- * no flags at all.
+ * \deprecated As of Regina 7.4, AngleAlgFlags is simply an alias for the
+ * enumeration type AngleAlg.  A bitwise _combination_ of such values will
+ * have the type `Flags<AngleAlg>`, though there is usually no need for end
+ * users to explicitly refer to the flags type by name.
  *
  * \ingroup angle
  */
-using AngleAlg = regina::Flags<AngleAlgFlags>;
+using AngleAlgFlags [[deprecated]] = AngleAlg;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * angle structures on a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * AngleAlg::Default.
+ */
+[[deprecated]] inline static constexpr AngleAlg AS_ALG_DEFAULT =
+    AngleAlg::Default;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * angle structures on a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * AngleAlg::Tree.
+ */
+[[deprecated]] inline static constexpr AngleAlg AS_ALG_TREE =
+    AngleAlg::Tree;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * angle structures on a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * AngleAlg::DD.
+ */
+[[deprecated]] inline static constexpr AngleAlg AS_ALG_DD =
+    AngleAlg::DD;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * angle structures on a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * AngleAlg::Legacy.
+ */
+[[deprecated]] inline static constexpr AngleAlg AS_ALG_LEGACY =
+    AngleAlg::Legacy;
+
+/**
+ * A deprecated constant indicating an algorithm variant for enumerating
+ * angle structures on a 3-manifold triangulation.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * AngleAlg::Custom.
+ */
+[[deprecated]] inline static constexpr AngleAlg AS_ALG_CUSTOM =
+    AngleAlg::Custom;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -131,8 +187,8 @@ using AngleAlg = regina::Flags<AngleAlgFlags>;
  *
  * \ingroup angle
  */
-inline AngleAlg operator | (AngleAlgFlags lhs, AngleAlgFlags rhs) {
-    return AngleAlg(lhs) | rhs;
+inline Flags<AngleAlg> operator | (AngleAlg lhs, AngleAlg rhs) {
+    return Flags<AngleAlg>(lhs) | rhs;
 }
 
 } // namespace regina

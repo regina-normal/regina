@@ -37,15 +37,25 @@
 #include "../docstrings/angle/angleflags.h"
 
 void addAngleFlags(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(AngleAlgFlags)
+    RDOC_SCOPE_BEGIN(AngleAlg)
 
-    regina::python::add_flags<regina::AngleAlgFlags>(m, "AngleAlg", {
-            { "AS_ALG_DEFAULT", regina::AS_ALG_DEFAULT, rdoc::AS_ALG_DEFAULT },
-            { "AS_ALG_TREE", regina::AS_ALG_TREE, rdoc::AS_ALG_TREE },
-            { "AS_ALG_DD", regina::AS_ALG_DD, rdoc::AS_ALG_DD },
-            { "AS_ALG_LEGACY", regina::AS_ALG_LEGACY, rdoc::AS_ALG_LEGACY },
-            { "AS_ALG_CUSTOM", regina::AS_ALG_CUSTOM, rdoc::AS_ALG_CUSTOM }
+    regina::python::add_flags<regina::AngleAlg>(m, "AngleAlg", {
+            { "Default", regina::AngleAlg::Default, rdoc::Default },
+            { "Tree", regina::AngleAlg::Tree, rdoc::Tree },
+            { "DD", regina::AngleAlg::DD, rdoc::DD },
+            { "Legacy", regina::AngleAlg::Legacy, rdoc::Legacy },
+            { "Custom", regina::AngleAlg::Custom, rdoc::Custom }
         }, rdoc_scope, rdoc_global::__bor);
+
+    RDOC_SCOPE_SWITCH_MAIN
+
+    // Deprecated type alias and constants:
+    m.attr("AngleAlgFlags") = m.attr("AngleAlg");
+    m.attr("AS_ALG_DEFAULT") = regina::AngleAlg::Default;
+    m.attr("AS_ALG_TREE") = regina::AngleAlg::Tree;
+    m.attr("AS_ALG_DD") = regina::AngleAlg::DD;
+    m.attr("AS_ALG_LEGACY") = regina::AngleAlg::Legacy;
+    m.attr("AS_ALG_CUSTOM") = regina::AngleAlg::Custom;
 
     RDOC_SCOPE_END
 }

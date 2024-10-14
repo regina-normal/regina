@@ -11,14 +11,20 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::AngleAlgFlags
-static const char *AngleAlgFlags =
+// Docstring regina::python::doc::AngleAlg
+static const char *AngleAlg =
 R"doc(Represents options and variants of algorithms for enumerating various
-types of angle structures on 3-manifold triangulations.
+types of angle structures on 3-manifold triangulations. This
+enumeration type is used with angle structure enumeration routines,
+such as the AngleStructures class constructor.
 
-These options can be combined using the bitwise OR operator, and then
-passed to enumeration routines such as the AngleStructures class
-constructor.)doc";
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<AngleAlg>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<AngleAlg>``, then you can pass a single AngleAlg constant, or
+a bitwise combination of such constants ``(flag1 | flag2)``, or empty
+braces ``{}`` to indicate no flags at all (which is equivalent to
+passing ``AngleAlg::Default``).)doc";
 
 // Docstring regina::python::doc::__bor
 static const char *__bor =
@@ -33,10 +39,10 @@ Parameter ``rhs``:
 Returns:
     the combination of both flags.)doc";
 
-namespace AngleAlgFlags_ {
+namespace AngleAlg_ {
 
-// Docstring regina::python::doc::AngleAlgFlags_::AS_ALG_CUSTOM
-static const char *AS_ALG_CUSTOM =
+// Docstring regina::python::doc::AngleAlg_::Custom
+static const char *Custom =
 R"doc(Indicates that an angle structure list was built using a customised
 algorithm. In such cases, no further details on the algorithm are
 available.
@@ -44,8 +50,8 @@ available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::AngleAlgFlags_::AS_ALG_DD
-static const char *AS_ALG_DD =
+// Docstring regina::python::doc::AngleAlg_::DD
+static const char *DD =
 R"doc(When enumerating vertex or taut angle structures, this flag indicates
 that a modified double description method should be used.
 
@@ -54,14 +60,14 @@ vertex angle structures (not just taut structures).
 
 This flag is incompatible with AS_ALG_TREE.)doc";
 
-// Docstring regina::python::doc::AngleAlgFlags_::AS_ALG_DEFAULT
-static const char *AS_ALG_DEFAULT =
+// Docstring regina::python::doc::AngleAlg_::Default
+static const char *Default =
 R"doc(An empty flag, indicating to an enumeration routine that it should use
 its default behaviour. The numeric value of this flag is zero (i.e.,
 it has no effect when combined with other flags using bitwise OR).)doc";
 
-// Docstring regina::python::doc::AngleAlgFlags_::AS_ALG_LEGACY
-static const char *AS_ALG_LEGACY =
+// Docstring regina::python::doc::AngleAlg_::Legacy
+static const char *Legacy =
 R"doc(Indicates that an angle structure list was enumerated using an older
 version of Regina (6.0.1 or earlier).
 
@@ -72,8 +78,8 @@ information is available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::AngleAlgFlags_::AS_ALG_TREE
-static const char *AS_ALG_TREE =
+// Docstring regina::python::doc::AngleAlg_::Tree
+static const char *Tree =
 R"doc(When enumerating taut angle structures, this flag indicates that the
 tree traversal algorithm should be used.
 

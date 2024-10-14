@@ -139,8 +139,8 @@ XMLNormalSurfacesReader::XMLNormalSurfacesReader(
         // Parameters look sane; create the empty list.
         list_ = make_packet<NormalSurfaces>(std::in_place,
             static_cast<NormalCoords>(coords),
-            NormalList::fromInt(listType),
-            NormalAlg::fromInt(algorithm),
+            Flags<NormalList>::fromInt(listType),
+            Flags<NormalAlg>::fromInt(algorithm),
             *tri_);
     }
 }
@@ -184,16 +184,17 @@ XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
                     // Parameters look sane; create the empty list.
                     list_ = make_packet<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
-                        NormalList::fromInt(listType),
-                        NormalAlg::fromInt(algorithm),
+                        Flags<NormalList>::fromInt(listType),
+                        Flags<NormalAlg>::fromInt(algorithm),
                         tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old format.
                     list_ = make_packet<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
-                        NS_LEGACY | (embedded ?
-                            NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-                        NS_ALG_LEGACY,
+                        NormalList::Legacy | (embedded ?
+                            NormalList::EmbeddedOnly :
+                            NormalList::ImmersedSingular),
+                        NormalAlg::Legacy,
                         tri_);
                 }
             }

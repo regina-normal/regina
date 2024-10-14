@@ -130,13 +130,12 @@ hypersurfaces ::= (&xml-hypersurface;*,
      </para>
      <para>
       This must be an integer, formed as a bitwise OR combination of
-      constants from the <classname>HyperAlgFlags</classname> enumeration
+      constants from the <classname>HyperAlg</classname> enumeration
       in &regina;'s calculation engine.
      </para>
      <para>
-      An example of such an integer might be 32, which is the
-      <classname>HyperAlgFlags</classname> constant
-      <literal>HS_VERTEX_DD</literal>, indicating that the double
+      An example of such an integer might be 32, which is the constant
+      <literal>HyperAlg::VertexDD</literal>, indicating that the double
       description method was used.
      </para>
     </listitem>
@@ -181,14 +180,13 @@ hypersurfaces ::= (&xml-hypersurface;*,
      </para>
      <para>
       This must be an integer, formed as a bitwise OR combination of
-      constants from the <classname>HyperListFlags</classname> enumeration
+      constants from the <classname>HyperList</classname> enumeration
       in &regina;'s calculation engine.
      </para>
      <para>
-      An example of such an integer might be 5, which combines the
-      <classname>HyperListFlags</classname> constants
-      <literal>HS_EMBEDDED_ONLY</literal> (1) and
-      <literal>HS_VERTEX</literal> (4).
+      An example of such an integer might be 5, which combines the constants
+      <literal>HyperList::EmbeddedOnly</literal> (1) and
+      <literal>HyperList::Vertex</literal> (4).
      </para>
     </listitem>
    </varlistentry>
