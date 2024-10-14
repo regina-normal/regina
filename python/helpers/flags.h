@@ -59,21 +59,20 @@ namespace regina::python {
  * bitwise OR of two individual flags.
  *
  * The corresponding flags class is assumed to be regina::Flags<Enum>,
- * and will be given the Python class name \a flagsName.
+ * and will be given the Python class name `Flags_enumName`.
  *
  * This routine will define __str__ and __repr__ functions for the flags class,
  * so that users can easily see what value a combination of flags holds.  The
  * flag will be written in hexadecimal, using a minimum of \a hexWidth digits.
  */
 template <typename Enum, int hexWidth = 4>
-void add_flags(pybind11::module_& m,
-        const char* enumName, const char* flagsName,
+void add_flags(pybind11::module_& m, const std::string& enumName,
         std::initializer_list<std::tuple<const char*, Enum, const char*>>
             values,
         const char* enumDoc, const char* borDoc) {
     using Flags = regina::Flags<Enum>;
 
-    auto e = pybind11::enum_<Enum>(m, enumName, enumDoc);
+    auto e = pybind11::enum_<Enum>(m, enumName.c_str(), enumDoc);
     for (const auto& v : values) {
         // This should be a job for std::apply, except that e.value() is
         // a non-static member function.
@@ -91,7 +90,8 @@ void add_flags(pybind11::module_& m,
 
     RDOC_SCOPE_BEGIN(Flags)
 
-    auto f = pybind11::class_<Flags>(m, flagsName, rdoc_scope)
+    auto f = pybind11::class_<Flags>(m,
+            ("Flags_" + enumName).c_str(), rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<Enum>(), rdoc::__init)
         .def(pybind11::init<const Flags&>(), rdoc::__copy)

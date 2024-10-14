@@ -213,7 +213,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
             rdoc_inner::Degenerate)
         .value("Other", SnapPeaTriangulation::Solution::Other,
             rdoc_inner::Other)
-        .value("None", SnapPeaTriangulation::Solution::None, rdoc_inner::None)
+        // Note: we cannot use "None", since this is reserved in Python.
+        .value("Nil", SnapPeaTriangulation::Solution::None, rdoc_inner::None)
         .value("External", SnapPeaTriangulation::Solution::External,
             rdoc_inner::External)
     ;

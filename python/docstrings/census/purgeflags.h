@@ -73,7 +73,12 @@ written as a non-trivial connected sum) and any bounded triangulation
 that is reducible over a disc may be ignored.)doc";
 
 // Docstring regina::python::doc::CensusPurge_::None
-static const char *None = R"doc(Indicates that no triangulations should be ignored.)doc";
+static const char *None =
+R"doc(Indicates that no triangulations should be ignored.
+
+Python:
+    This constant is called ``Nil``, since ``None`` is a reserved word
+    in Python.)doc";
 
 // Docstring regina::python::doc::CensusPurge_::P2Reducible
 static const char *P2Reducible =

@@ -1837,7 +1837,11 @@ SnapPea constant *geometric_solution*.)doc";
 // Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::None
 static const char *None =
 R"doc(The gluing equations could not be solved. This corresponds to the
-SnapPea constant *no_solution*.)doc";
+SnapPea constant *no_solution*.
+
+Python:
+    This constant is called ``Nil``, since ``None`` is a reserved word
+    in Python.)doc";
 
 // Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Nongeometric
 static const char *Nongeometric =

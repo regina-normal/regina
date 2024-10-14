@@ -51,8 +51,7 @@ using regina::Triangulation;
 void addNormalSurfaces(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SurfaceExport)
 
-    regina::python::add_flags<regina::SurfaceExport>(
-        m, "SurfaceExport", "SurfaceExportFlags", {
+    regina::python::add_flags<regina::SurfaceExport>(m, "SurfaceExport", {
             { "Name", regina::SurfaceExport::Name, rdoc::Name },
             { "Euler", regina::SurfaceExport::Euler, rdoc::Euler },
             { "Orient", regina::SurfaceExport::Orient, rdoc::Orient },
@@ -60,7 +59,8 @@ void addNormalSurfaces(pybind11::module_& m) {
             { "Bdry", regina::SurfaceExport::Bdry, rdoc::Bdry },
             { "Link", regina::SurfaceExport::Link, rdoc::Link },
             { "Type", regina::SurfaceExport::Type, rdoc::Type },
-            { "None", regina::SurfaceExport::None, rdoc::None },
+            // Note: we cannot use "None", since this is reserved in Python.
+            { "Nil", regina::SurfaceExport::None, rdoc::None },
             { "AllButName", regina::SurfaceExport::AllButName,
                 rdoc::AllButName },
             { "All", regina::SurfaceExport::All, rdoc::All }

@@ -86,25 +86,25 @@ Laurent2
 x^2 - y^2 - 1 + x^-2
 <regina.Laurent2: x^2 - y^2 - 1 + x^-2>
 
-HyperListFlags
-HyperListFlags.HS_VERTEX
-<HyperListFlags.HS_VERTEX: 4>
+HyperList
+HyperList.HS_VERTEX
+<HyperList.HS_VERTEX: 4>
 
-HyperAlgFlags
-HyperAlgFlags.HS_VERTEX_DD
-<HyperAlgFlags.HS_VERTEX_DD: 32>
+HyperAlg
+HyperAlg.HS_VERTEX_DD
+<HyperAlg.HS_VERTEX_DD: 32>
 
-NormalListFlags
-NormalListFlags.NS_VERTEX
-<NormalListFlags.NS_VERTEX: 4>
+NormalList
+NormalList.NS_VERTEX
+<NormalList.NS_VERTEX: 4>
 
-NormalAlgFlags
-NormalAlgFlags.NS_VERTEX_DD
-<NormalAlgFlags.NS_VERTEX_DD: 32>
+NormalAlg
+NormalAlg.NS_VERTEX_DD
+<NormalAlg.NS_VERTEX_DD: 32>
 
-AngleAlgFlags
-AngleAlgFlags.AS_ALG_DD
-<AngleAlgFlags.AS_ALG_DD: 32>
+AngleAlg
+AngleAlg.AS_ALG_DD
+<AngleAlg.AS_ALG_DD: 32>
 
 CensusPurge
 CensusPurge.NonMinimal
@@ -114,33 +114,33 @@ SurfaceExport
 SurfaceExport.Name
 <SurfaceExport.Name: 1>
 
-HyperList
+Flags_HyperList
 0x0004
-<regina.HyperList: 0x0004>
+<regina.Flags_HyperList: 0x0004>
 
-HyperAlg
+Flags_HyperAlg
 0x0020
-<regina.HyperAlg: 0x0020>
+<regina.Flags_HyperAlg: 0x0020>
 
-NormalList
+Flags_NormalList
 0x0004
-<regina.NormalList: 0x0004>
+<regina.Flags_NormalList: 0x0004>
 
-NormalAlg
+Flags_NormalAlg
 0x0020
-<regina.NormalAlg: 0x0020>
+<regina.Flags_NormalAlg: 0x0020>
 
-AngleAlg
+Flags_AngleAlg
 0x0020
-<regina.AngleAlg: 0x0020>
+<regina.Flags_AngleAlg: 0x0020>
 
-CensusPurge
+Flags_CensusPurge
 0x03
-<regina.CensusPurge: 0x03>
+<regina.Flags_CensusPurge: 0x03>
 
-SurfaceExportFlags
+Flags_SurfaceExport
 0x0003
-<regina.SurfaceExportFlags: 0x0003>
+<regina.Flags_SurfaceExport: 0x0003>
 
 NormalEncoding
 0x0203

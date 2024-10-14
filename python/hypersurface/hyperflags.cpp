@@ -39,8 +39,7 @@
 void addHyperFlags(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HyperListFlags)
 
-    regina::python::add_flags<regina::HyperListFlags>(
-        m, "HyperListFlags", "HyperList", {
+    regina::python::add_flags<regina::HyperListFlags>(m, "HyperList", {
             { "HS_LIST_DEFAULT", regina::HS_LIST_DEFAULT,
                 rdoc::HS_LIST_DEFAULT },
             { "HS_EMBEDDED_ONLY", regina::HS_EMBEDDED_ONLY,
@@ -55,8 +54,7 @@ void addHyperFlags(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(HyperAlgFlags)
 
-    regina::python::add_flags<regina::HyperAlgFlags>(
-        m, "HyperAlgFlags", "HyperAlg", {
+    regina::python::add_flags<regina::HyperAlgFlags>(m, "HyperAlg", {
             { "HS_ALG_DEFAULT", regina::HS_ALG_DEFAULT, rdoc::HS_ALG_DEFAULT },
             { "HS_VERTEX_DD", regina::HS_VERTEX_DD, rdoc::HS_VERTEX_DD },
             { "HS_HILBERT_PRIMAL", regina::HS_HILBERT_PRIMAL,

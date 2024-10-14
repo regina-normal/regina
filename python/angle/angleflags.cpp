@@ -39,8 +39,7 @@
 void addAngleFlags(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(AngleAlgFlags)
 
-    regina::python::add_flags<regina::AngleAlgFlags>(
-        m, "AngleAlgFlags", "AngleAlg", {
+    regina::python::add_flags<regina::AngleAlgFlags>(m, "AngleAlg", {
             { "AS_ALG_DEFAULT", regina::AS_ALG_DEFAULT, rdoc::AS_ALG_DEFAULT },
             { "AS_ALG_TREE", regina::AS_ALG_TREE, rdoc::AS_ALG_TREE },
             { "AS_ALG_DD", regina::AS_ALG_DD, rdoc::AS_ALG_DD },

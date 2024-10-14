@@ -40,8 +40,9 @@ void addPurgeFlags(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(CensusPurge)
 
     regina::python::add_flags<regina::CensusPurge, 2 /* hex digits */>(
-        m, "CensusPurge", "CensusPurgeFlags", {
-            { "None", regina::CensusPurge::None, rdoc::None },
+        m, "CensusPurge", {
+            // Note: we cannot use "None", since this is reserved in Python.
+            { "Nil", regina::CensusPurge::None, rdoc::None },
             { "NonMinimal", regina::CensusPurge::NonMinimal, rdoc::NonMinimal },
             { "NonPrime", regina::CensusPurge::NonPrime, rdoc::NonPrime },
             { "NonMinimalPrime", regina::CensusPurge::NonMinimalPrime,

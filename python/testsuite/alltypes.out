@@ -1,9 +1,6 @@
 AbelianGroup : class
 Equality type : EqualityType.BY_VALUE
 
-AngleAlg : class
-Equality type : EqualityType.BY_VALUE
-
 AngleStructure : class
 Equality type : EqualityType.BY_VALUE
 
@@ -101,9 +98,6 @@ CensusDB : class
 Equality type : EqualityType.BY_VALUE
 
 CensusHit : class
-Equality type : EqualityType.BY_VALUE
-
-CensusPurge : class
 Equality type : EqualityType.BY_VALUE
 
 ChildIterator : class
@@ -505,6 +499,27 @@ Exception type
 FileInfo : class
 Equality type : EqualityType.BY_VALUE
 
+Flags_AngleAlg : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_CensusPurge : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_HyperAlg : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_HyperList : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_NormalAlg : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_NormalList : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_SurfaceExport : class
+Equality type : EqualityType.BY_VALUE
+
 GlobalDirs : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -577,17 +592,11 @@ Equality type : EqualityType.DISABLED
 HomologicalData : class
 Equality type : EqualityType.DISABLED
 
-HyperAlg : class
-Equality type : EqualityType.BY_VALUE
-
 HyperEncoding : class
 Equality type : EqualityType.BY_VALUE
 
 HyperInfo : class
 Equality type : EqualityType.NEVER_INSTANTIATED
-
-HyperList : class
-Equality type : EqualityType.BY_VALUE
 
 HyperbolicMinSearcher : class
 Equality type : EqualityType.BY_REFERENCE
@@ -831,9 +840,6 @@ Equality type : EqualityType.BY_REFERENCE
 NoSolution : class
 Exception type
 
-NormalAlg : class
-Equality type : EqualityType.BY_VALUE
-
 NormalEncoding : class
 Equality type : EqualityType.BY_VALUE
 
@@ -845,9 +851,6 @@ Equality type : EqualityType.BY_VALUE
 
 NormalInfo : class
 Equality type : EqualityType.NEVER_INSTANTIATED
-
-NormalList : class
-Equality type : EqualityType.BY_VALUE
 
 NormalSurface : class
 Equality type : EqualityType.BY_VALUE
@@ -1294,9 +1297,6 @@ StrandRef : class
 Equality type : EqualityType.BY_VALUE
 
 SubtreeIterator : class
-Equality type : EqualityType.BY_VALUE
-
-SurfaceExportFlags : class
 Equality type : EqualityType.BY_VALUE
 
 SurfaceFilter : class

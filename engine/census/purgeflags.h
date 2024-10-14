@@ -69,6 +69,9 @@ namespace regina {
 enum class CensusPurge {
     /**
      * Indicates that no triangulations should be ignored.
+     *
+     * \python This constant is called `Nil`, since `None` is a reserved word
+     * in Python.
      */
     None = 0x00,
     /**

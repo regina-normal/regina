@@ -45,8 +45,7 @@ using regina::NormalListFlags;
 void addNormalFlags(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalListFlags)
 
-    regina::python::add_flags<regina::NormalListFlags>(
-        m, "NormalListFlags", "NormalList", {
+    regina::python::add_flags<regina::NormalListFlags>(m, "NormalList", {
             { "NS_LIST_DEFAULT", regina::NS_LIST_DEFAULT,
                 rdoc::NS_LIST_DEFAULT },
             { "NS_EMBEDDED_ONLY", regina::NS_EMBEDDED_ONLY,
@@ -61,8 +60,7 @@ void addNormalFlags(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(NormalAlgFlags)
 
-    regina::python::add_flags<regina::NormalAlgFlags>(
-        m, "NormalAlgFlags", "NormalAlg", {
+    regina::python::add_flags<regina::NormalAlgFlags>(m, "NormalAlg", {
             { "NS_ALG_DEFAULT", regina::NS_ALG_DEFAULT, rdoc::NS_ALG_DEFAULT },
             { "NS_VERTEX_VIA_REDUCED", regina::NS_VERTEX_VIA_REDUCED,
                 rdoc::NS_VERTEX_VIA_REDUCED },

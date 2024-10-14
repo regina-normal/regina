@@ -140,6 +140,9 @@ enum class SurfaceExport {
     /**
      * Indicates that no fields should be exported (except for the
      * normal coordinates, which are always exported).
+     *
+     * \python This constant is called `Nil`, since `None` is a reserved word
+     * in Python.
      */
     None = 0,
     /**

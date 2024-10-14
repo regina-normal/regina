@@ -731,7 +731,11 @@ static const char *Name = R"doc(Represents the user-assigned surface name.)doc";
 // Docstring regina::python::doc::SurfaceExport_::None
 static const char *None =
 R"doc(Indicates that no fields should be exported (except for the normal
-coordinates, which are always exported).)doc";
+coordinates, which are always exported).
+
+Python:
+    This constant is called ``Nil``, since ``None`` is a reserved word
+    in Python.)doc";
 
 // Docstring regina::python::doc::SurfaceExport_::Orient
 static const char *Orient =

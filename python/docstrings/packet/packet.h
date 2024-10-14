@@ -21,6 +21,11 @@ it is iterating over. This guarantees that the packet will not be
 destroyed mid-iteration, but it also means that you must ensure that
 you dispose of your iterators once you are finished with them.
 
+As of Regina 7.4, this class no longer provides the iterator type
+aliases *value_type*, *iterator_category*, *difference_type*,
+*pointer* and *reference*. Instead you can access these through
+``std::iterator_traits``.
+
 Template parameter ``const_``:
     Indicates whether this iterator should offer const or non-const
     access to the child packets.
@@ -427,6 +432,11 @@ Each iterator will hold a std::shared_ptr to the packet whose subtree
 it is iterating over. This guarantees that the packet will not be
 destroyed mid-iteration, but it also means that you must ensure that
 you dispose of your iterators once you are finished with them.
+
+As of Regina 7.4, this class no longer provides the iterator type
+aliases *value_type*, *iterator_category*, *difference_type*,
+*pointer* and *reference*. Instead you can access these through
+``std::iterator_traits``.
 
 Template parameter ``const_``:
     Indicates whether this iterator should offer const or non-const

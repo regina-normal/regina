@@ -528,6 +528,9 @@ class SnapPeaTriangulation :
             /**
              * The gluing equations could not be solved.
              * This corresponds to the SnapPea constant \a no_solution.
+             *
+             * \python This constant is called `Nil`, since `None` is a
+             * reserved word in Python.
              */
             None,
             /**
