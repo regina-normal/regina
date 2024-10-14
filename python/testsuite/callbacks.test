@@ -122,7 +122,7 @@ def testCollect(obj, name, height, threads):
 def testCovers(link, name, sheets):
     print(name + ' -> all covers, sheets = ' + str(sheets))
     tri = SnapPeaTriangulation(link.complement())
-    tri.enumerateCovers(sheets, SnapPeaTriangulation.all_covers, displayCover)
+    tri.enumerateCovers(sheets, SnapPeaTriangulation.CoverEnumeration.All, displayCover)
 
 def testIso(inner, innerName, outer, outerName, countOnly = False):
     comp = innerName + ' vs ' + outerName
@@ -273,7 +273,7 @@ print()
 print('Enumerating covers:')
 c = [ (a[0].isoSig(), a[1]) for a in \
     ExampleSnapPea.whiteheadLink().enumerateCovers(3, \
-    SnapPeaTriangulation.CoverEnumerationType.all_covers) ]
+    SnapPeaTriangulation.CoverEnumeration.All) ]
 c.sort()
 for i in c:
     print('  ' + i[0], i[1])

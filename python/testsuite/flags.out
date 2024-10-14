@@ -28,5 +28,5 @@ SurfaceExportFields.surfaceExportName -> True
 0x0001 -> True
 NormalCoords.Standard -> True
 NormalCoords.Quad -> True
-Type.UNKNOWN_TYPE -> True
-Type.PARACHUTE -> True
+Type.Unknown -> True
+Type.Parachute -> True

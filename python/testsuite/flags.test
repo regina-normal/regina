@@ -69,5 +69,5 @@ evalFlag(regina.surfaceExportName)
 
 evalObj(regina.NormalCoords.Standard)            # value is zero
 evalObj(regina.NormalCoords.Quad)                # value is non-zero
-evalObj(regina.Triangle3.UNKNOWN_TYPE) # value is zero
-evalObj(regina.Triangle3.PARACHUTE)    # value is non-zero
+evalObj(regina.Triangle3.Type.Unknown)           # value is zero
+evalObj(regina.Triangle3.Type.Parachute)         # value is non-zero

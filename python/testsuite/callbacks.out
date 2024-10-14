@@ -154,17 +154,17 @@ Monster unknot -> stop after 10, height = 1, threads = 2
     search terminated early, count: 10
 
 Trefoil -> all covers, sheets = 2
-    CoverType.cyclic_cover: Z + Z_3
+    Cover.Cyclic: Z + Z_3
 Trefoil -> all covers, sheets = 3
-    CoverType.irregular_cover: 2 Z
-    CoverType.cyclic_cover: Z + 2 Z_2
+    Cover.Irregular: 2 Z
+    Cover.Cyclic: Z + 2 Z_2
 Trefoil -> all covers, sheets = 4
-    CoverType.irregular_cover: 2 Z
-    CoverType.irregular_cover: Z + Z_2
-    CoverType.cyclic_cover: Z + Z_3
+    Cover.Irregular: 2 Z
+    Cover.Irregular: Z + Z_2
+    Cover.Cyclic: Z + Z_3
 Trefoil -> all covers, sheets = 5
-    CoverType.cyclic_cover: Z
-    CoverType.irregular_cover: Z + Z_3
+    Cover.Cyclic: Z
+    Cover.Irregular: Z + Z_3
 
 Enumerating facet pairings:
     0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 2:3 2:2  -> automorphisms:  32
@@ -506,10 +506,10 @@ Saturated region:
 
 
 Enumerating covers:
-  mLvALvQQQceegjlkjiljklhhahhaaaghahg CoverType.irregular_cover
-  mLvALvQQQceegjlkjiljklhhahhaaaghahg CoverType.irregular_cover
-  mLvwMMMPQbegfijhkkklllhaahbabhhahbg CoverType.cyclic_cover
-  mLvwMMMPQbegfijhkkklllhaahbabhhahbg CoverType.cyclic_cover
-  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb CoverType.cyclic_cover
-  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb CoverType.cyclic_cover
+  mLvALvQQQceegjlkjiljklhhahhaaaghahg Cover.Irregular
+  mLvALvQQQceegjlkjiljklhhahhaaaghahg Cover.Irregular
+  mLvwMMMPQbegfijhkkklllhaahbabhhahbg Cover.Cyclic
+  mLvwMMMPQbegfijhkkklllhaahbabhhahbg Cover.Cyclic
+  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb Cover.Cyclic
+  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb Cover.Cyclic
 
