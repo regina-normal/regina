@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 #ifndef Q_OS_MACX
     // Set a window icon for platforms that support it.
     // Not on macOS though, since that sets icons via Info.plist.
-    QApplication::setWindowIcon(IconCache::icon(IconCache::regina));
+    QApplication::setWindowIcon(IconCache::icon(IconCache::Icon::regina));
 #endif
 
     // No session management with the Qt GUI; just start up normally.
