@@ -46,70 +46,135 @@ namespace regina {
 
 /**
  * Represents different classes of triangulations that may be ignored by
- * census generation algorithms.
+ * census generation algorithms.  This enumeration type is used with census
+ * generation routines, such as those found in GluingPermSearcher<3>.
  *
  * Excluding a triangulation from a census is not a promise: for example,
- * a census that uses the flag PURGE_NON_MINIMAL might include some
+ * a census that uses the flag \a NonMinimal might include some
  * non-minimal triangulations and exclude others.
  *
  * However, _including_ a triangulation _is_ a promise: for example, a
- * census that uses the flag PURGE_NON_MINIMAL will promise to include
- * every _minimal_ triangulations.
+ * census that uses the flag \a NonMinimal will promise to include
+ * every _minimal_ triangulation.
  *
- * These flags can be combined using the bitwise OR operator.
- * See (for example) the GluingPermSearcher<3> constructor documentation for
- * further details on how these flags are used.
+ * These values can be combined using the bitwise OR operator (resulting in an
+ * object of type `Flags<CensusPurge>`).  In particular, if a census generation
+ * function takes an argument of type `Flags<CensusPurge>`, then you can pass a
+ * single CensusPurge constant, or a bitwise combination of such constants
+ * `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at all
+ * (which is equivalent to passing `CensusPurge::None`).
  *
  * \ingroup census
  */
-enum CensusPurgeFlags {
+enum class CensusPurge {
     /**
      * Indicates that no triangulations should be ignored.
      */
-    PURGE_NONE = 0x00,
+    None = 0x00,
     /**
      * Indicates that non-minimal triangulations may be ignored.
      */
-    PURGE_NON_MINIMAL = 0x01,
+    NonMinimal = 0x01,
     /**
      * Indicates that any triangulation that is not prime (i.e.,
      * can be written as a non-trivial connected sum) and any bounded
      * triangulation that is reducible over a disc may be ignored.
      */
-    PURGE_NON_PRIME = 0x02,
+    NonPrime = 0x02,
     /**
      * Indicates that any triangulation that is not prime (i.e.,
      * can be written as a non-trivial connected sum), any
      * bounded triangulation that is reducible over a disc and
      * any triangulation that is non-minimal may be ignored.
      * Note that this is simply a combination of the constants
-     * \a PURGE_NON_MINIMAL and \a PURGE_NON_PRIME.
+     * \a NonMinimal and \a NonPrime.
      */
-    PURGE_NON_MINIMAL_PRIME = 0x03,
+    NonMinimalPrime = 0x03,
     /**
      * Indicates that any triangulation that is not a minimal ideal
      * triangulation of a cusped finite-volume hyperbolic 3-manifold
      * may be ignored.
      */
-    PURGE_NON_MINIMAL_HYP = 0x09,
+    NonMinimalHyp = 0x09,
     /**
      * Indicates that any triangulation containing an embedded
      * two-sided projective plane may be ignored.
      */
-    PURGE_P2_REDUCIBLE = 0x04
+    P2Reducible = 0x04
 };
 
 /**
- * A combination of flags for census generation.
+ * A deprecated type alias representing a class of triangulations that may be
+ * ignored by census generation algorithms.
  *
- * If a function requires a CensusPurge object as an argument, you can
- * pass a single CensusPurgeFlags constant, or a combination of such
- * constants using the bitwise OR operator, or empty braces {} to indicate
- * no flags at all.
+ * \deprecated As of Regina 7.4, CensusPurgeFlags is simply an alias for
+ * the enumeration type CensusPurge.  A bitwise _combination_ of such values
+ * will have the type `Flags<CensusPurge>`, though there is usually no need
+ * for end users to explicitly refer to the flags type by name.
  *
  * \ingroup census
  */
-using CensusPurge = regina::Flags<CensusPurgeFlags>;
+using CensusPurgeFlags [[deprecated]] = CensusPurge;
+
+/**
+ * A deprecated constant indicating a class of triangulations that may be
+ * ignored by census generation algorithms.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * CensusPurge::None.
+ */
+[[deprecated]] inline static constexpr CensusPurge PURGE_NONE =
+    CensusPurge::None;
+
+/**
+ * A deprecated constant indicating a class of triangulations that may be
+ * ignored by census generation algorithms.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * CensusPurge::NonMinimal.
+ */
+[[deprecated]] inline static constexpr CensusPurge PURGE_NON_MINIMAL =
+    CensusPurge::NonMinimal;
+
+/**
+ * A deprecated constant indicating a class of triangulations that may be
+ * ignored by census generation algorithms.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * CensusPurge::NonPrime.
+ */
+[[deprecated]] inline static constexpr CensusPurge PURGE_NON_PRIME =
+    CensusPurge::NonPrime;
+
+/**
+ * A deprecated constant indicating a class of triangulations that may be
+ * ignored by census generation algorithms.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * CensusPurge::NonMinimalPrime.
+ */
+[[deprecated]] inline static constexpr CensusPurge PURGE_NON_MINIMAL_PRIME =
+    CensusPurge::NonMinimalPrime;
+
+/**
+ * A deprecated constant indicating a class of triangulations that may be
+ * ignored by census generation algorithms.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * CensusPurge::NonMinimalHyp.
+ */
+[[deprecated]] inline static constexpr CensusPurge PURGE_NON_MINIMAL_HYP =
+    CensusPurge::NonMinimalHyp;
+
+/**
+ * A deprecated constant indicating a class of triangulations that may be
+ * ignored by census generation algorithms.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * CensusPurge::P2Reducible.
+ */
+[[deprecated]] inline static constexpr CensusPurge PURGE_P2_REDUCIBLE =
+    CensusPurge::P2Reducible;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -120,8 +185,8 @@ using CensusPurge = regina::Flags<CensusPurgeFlags>;
  *
  * \ingroup census
  */
-inline CensusPurge operator | (CensusPurgeFlags lhs, CensusPurgeFlags rhs) {
-    return CensusPurge(lhs) | rhs;
+inline Flags<CensusPurge> operator | (CensusPurge lhs, CensusPurge rhs) {
+    return Flags<CensusPurge>(lhs) | rhs;
 }
 
 } // namespace regina

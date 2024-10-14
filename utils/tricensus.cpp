@@ -82,7 +82,7 @@ enum {
     OUTPUT_SIGS_CANONICAL,
     OUTPUT_TIGHT
 } outputType = OUTPUT_NONE; // default will be set later
-regina::CensusPurge whichPurge = regina::PURGE_NONE;
+regina::Flags<regina::CensusPurge> purge {};
 int threads = 1;
 std::string outFile;
 
@@ -116,7 +116,8 @@ void foundPartial(const regina::GluingPerms<dim>&,
 template <int dim>
 void findAllPerms(const regina::FacetPairing<dim>&,
     typename regina::FacetPairing<dim>::IsoList,
-    bool, bool, regina::CensusPurge, const std::shared_ptr<regina::Packet>&);
+    bool, bool, regina::Flags<regina::CensusPurge>,
+    const std::shared_ptr<regina::Packet>&);
 
 template <int dim>
 bool mightBeMinimal(regina::Triangulation<dim>&);
@@ -128,7 +129,7 @@ int runCensus();
 template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
         regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
-        bool /* finiteOnly */, regina::CensusPurge,
+        bool /* finiteOnly */, regina::Flags<regina::CensusPurge>,
         const std::shared_ptr<regina::Packet>& dest) {
     if (threads > 1) {
         constexpr int depth = 6; // want (dim!)^depth >> threads
@@ -149,7 +150,7 @@ inline bool mightBeMinimal<2>(regina::Triangulation<2>& tri) {
 template <>
 inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
         regina::FacetPairing<3>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, regina::CensusPurge usePurge,
+        bool finiteOnly, regina::Flags<regina::CensusPurge> usePurge,
         const std::shared_ptr<regina::Packet>& dest) {
     if (threads > 1) {
         constexpr int depth = 3; // want (dim!)^depth >> threads
@@ -170,7 +171,7 @@ inline bool mightBeMinimal<3>(regina::Triangulation<3>& tri) {
 template <>
 inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
         regina::FacetPairing<4>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, regina::CensusPurge,
+        bool finiteOnly, regina::Flags<regina::CensusPurge>,
         const std::shared_ptr<regina::Packet>& dest) {
     if (threads > 1) {
         constexpr int depth = 2; // want (dim!)^depth >> threads
@@ -196,7 +197,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         const std::shared_ptr<regina::Packet>& container) {
     regina::Triangulation<dim> tri = perms.triangulate();
 
-    // For PURGE_NON_MINIMAL_HYP, we don't run mightBeMinimal<dim>().
+    // For CensusPurge::NonMinimalHyp, we don't run mightBeMinimal<dim>().
     // This is because mightBeMinimal() only tests for immediate
     // reductions (i.e., it doesn't use 4-4 moves or well-climbing
     // techniques), and HyperbolicMinSearcher already ensures that
@@ -211,7 +212,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         return;
     if ((! orientability.hasTrue()) && tri.isOrientable())
         return;
-    if (whichPurge && whichPurge != regina::PURGE_NON_MINIMAL_HYP)
+    if (purge && purge != regina::CensusPurge::NonMinimalHyp)
         if (! mightBeMinimal<dim>(tri))
             return;
 
@@ -318,11 +319,11 @@ void foundFacePairing(const regina::FacetPairing<dim>& pairing,
 
         findAllPerms<dim>(pairing, std::move(autos),
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
-            whichPurge, subContainer);
+            purge, subContainer);
     } else {
         findAllPerms<dim>(pairing, std::move(autos),
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
-            whichPurge, container);
+            purge, container);
     }
 }
 
@@ -397,16 +398,16 @@ std::shared_ptr<regina::Text> parameterPacket() {
     else
         descStream << "Orientable and non-orientable\n";
 
-    if (whichPurge == regina::PURGE_NON_MINIMAL)
+    if (purge == regina::CensusPurge::NonMinimal)
         descStream << "Ignored obviously non-minimal triangulations\n";
-    else if (whichPurge == regina::PURGE_NON_MINIMAL_PRIME)
+    else if (purge == regina::CensusPurge::NonMinimalPrime)
         descStream << "Ignored obviously non-minimal, non-prime and/or "
             "disc-reducible triangulations\n";
-    else if (whichPurge ==
-            (regina::PURGE_NON_MINIMAL_PRIME | regina::PURGE_P2_REDUCIBLE))
+    else if (purge == (regina::CensusPurge::NonMinimalPrime |
+            regina::CensusPurge::P2Reducible))
         descStream << "Ignored obviously non-minimal, non-prime, "
             "disc-reducible and/or P2-reducible triangulations\n";
-    else if (whichPurge == regina::PURGE_NON_MINIMAL_HYP)
+    else if (purge == regina::CensusPurge::NonMinimalHyp)
         descStream << "Ignored triangulations that are obviously not "
             "minimal ideal triangulations of cusped finite-volume "
             "hyperbolic 3-manifolds\n";
@@ -575,17 +576,17 @@ int main(int argc, char* argv[]) {
                 finiteness = false;
                 break;
             case 'm':
-                whichPurge = regina::PURGE_NON_MINIMAL;
+                purge = regina::CensusPurge::NonMinimal;
                 break;
             case 'M':
-                whichPurge = regina::PURGE_NON_MINIMAL_PRIME;
+                purge = regina::CensusPurge::NonMinimalPrime;
                 break;
             case 'N':
-                whichPurge = regina::PURGE_NON_MINIMAL_PRIME |
-                    regina::PURGE_P2_REDUCIBLE;
+                purge = regina::CensusPurge::NonMinimalPrime |
+                    regina::CensusPurge::P2Reducible;
                 break;
             case 'h':
-                whichPurge = regina::PURGE_NON_MINIMAL_HYP;
+                purge = regina::CensusPurge::NonMinimalHyp;
                 break;
             case 'I':
                 allowInvalid = 1;
@@ -746,7 +747,7 @@ int main(int argc, char* argv[]) {
         outputType = (mode == MODE_GENPAIRS ? OUTPUT_PAIRINGS : OUTPUT_DATA);
 
     // Some options imply others.
-    if (whichPurge == regina::PURGE_NON_MINIMAL_HYP) {
+    if (purge == regina::CensusPurge::NonMinimalHyp) {
         if (! finiteness.hasFalse()) {
             std::cerr << "Options -f/--finite and -h/--minhyp "
                 "cannot be used together.\n\n";
@@ -778,7 +779,7 @@ int main(int argc, char* argv[]) {
     bool broken = false;
     switch (mode) {
         case MODE_GENPAIRS:
-            if (whichPurge) {
+            if (purge) {
                 std::cerr << "Minimality options cannot be used with "
                     "-p/--genpairs.\n";
                 broken = true;
@@ -829,17 +830,17 @@ int main(int argc, char* argv[]) {
     if (mode != MODE_GENPAIRS && outFile.empty()) {
         std::cerr << "An output file must be specified.\n";
         broken = true;
-    } else if (dimension == 2 && whichPurge == regina::PURGE_NON_MINIMAL_HYP) {
+    } else if (dimension == 2 && purge == regina::CensusPurge::NonMinimalHyp) {
         std::cerr << "Hyperbolicity options cannot be used with -2/--dim2.\n";
         broken = true;
-    } else if (dimension == 2 && (whichPurge & regina::PURGE_NON_PRIME)) {
+    } else if (dimension == 2 && (purge & regina::CensusPurge::NonPrime)) {
         std::cerr << "Primeness options cannot be used with -2/--dim2 "
             "(the weaker -m/--minimal can).\n";
         broken = true;
     } else if (dimension == 2 && ! finiteness.full()) {
         std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
         broken = true;
-    } else if (dimension == 4 && whichPurge) {
+    } else if (dimension == 4 && purge) {
         std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
     } else if (mode != MODE_USEPAIRS && nTop == 0) {
@@ -854,7 +855,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Option --allowinvalid cannot be used with finite/ideal "
             "options.\n";
         broken = true;
-    } else if (allowInvalid && whichPurge) {
+    } else if (allowInvalid && purge) {
         std::cerr << "Option --allowinvalid cannot be used with minimality "
             "options.\n";
         broken = true;

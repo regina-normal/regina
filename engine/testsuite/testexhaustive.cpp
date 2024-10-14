@@ -70,6 +70,7 @@
 #define DIM4_IDEAL_CENSUS_SIZE 2
 
 using regina::BoolSet;
+using regina::CensusPurge;
 using regina::FacetPairing;
 using regina::GluingPerms;
 using regina::GluingPermSearcher;
@@ -82,9 +83,8 @@ namespace {
         GluingPermSearcher<3>::findAllPerms(pairing, std::move(autos),
             false /* orientable only */,
             ! finite.hasFalse() /* finite only */,
-            (minimal ?
-                regina::PURGE_NON_MINIMAL_PRIME | regina::PURGE_P2_REDUCIBLE :
-                regina::PURGE_NONE),
+            (minimal ? CensusPurge::NonMinimalPrime | CensusPurge::P2Reducible :
+                CensusPurge::None),
             [&f, finite](const GluingPerms<3>& perms) {
                 Triangulation<3> tri = perms.triangulate();
                 if (tri.isValid() && finite.contains(! tri.isIdeal()))

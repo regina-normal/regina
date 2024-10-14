@@ -83,12 +83,13 @@ def foundGluings3(g):
 
 def auto3(p, isos):
 	print(p.str())
-	GluingPermSearcher3.findAllPerms(p, isos, True, True, PURGE_NON_MINIMAL, \
-		foundGluings3)
+	GluingPermSearcher3.findAllPerms(p, isos, True, True,
+		CensusPurge.NonMinimal, foundGluings3)
 
 def best3(p, isos):
 	print(p.str())
-	b = GluingPermSearcher3.bestSearcher(p, isos, True, True, PURGE_NON_MINIMAL)
+	b = GluingPermSearcher3.bestSearcher(p, isos, True, True,
+		CensusPurge.NonMinimal)
 	b.runSearch(foundGluings3)
 
 FacetPairing3.findAllPairings(2, False, 0, auto3)
@@ -106,7 +107,7 @@ def partial3(p, isos):
 	print(p.str())
 	
 	partial = []
-	s = CompactSearcher(p, isos, True, PURGE_NON_MINIMAL)
+	s = CompactSearcher(p, isos, True, CensusPurge.NonMinimal)
 	s.partialSearch(2, foundPartial3)
 	for i in partial:
 		s = GluingPermSearcher3.fromTaggedData(i)

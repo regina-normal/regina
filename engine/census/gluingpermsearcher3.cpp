@@ -38,11 +38,10 @@ namespace regina {
 
 GluingPermSearcher<3>::GluingPermSearcher(
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge) :
+        bool orientableOnly, bool finiteOnly, Flags<CensusPurge> purge) :
         perms_(std::move(pairing)), autos_(std::move(autos)),
         // pairing and autos are no longer usable
-        orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
-        whichPurge_(whichPurge),
+        orientableOnly_(orientableOnly), finiteOnly_(finiteOnly), purge_(purge),
         started(false), orientation(new int[perms_.size()]) {
     // Initialise arrays.
     size_t nTets = perms_.size();
@@ -136,7 +135,7 @@ void GluingPermSearcher<3>::searchImpl(long maxDepth, ActionWrapper&& action_) {
         // subclass of GluingPermSearcher<3> with its own custom
         // implementation of runSearch().
         if (lowDegreeEdge(face, false /* degree 1,2 */,
-                whichPurge_.has(PURGE_NON_MINIMAL)))
+                purge_.has(CensusPurge::NonMinimal)))
             continue;
         if (! orientableOnly_)
             if (badEdgeLink(face))
@@ -207,7 +206,7 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     out << (orientableOnly_ ? 'o' : '.');
     out << (finiteOnly_ ? 'f' : '.');
     out << (started ? 's' : '.');
-    out << ' ' << whichPurge_.intValue() << std::endl;
+    out << ' ' << purge_.intValue() << std::endl;
 
     size_t nTets = perms_.size();
 
@@ -237,9 +236,9 @@ void GluingPermSearcher<3>::writeTextShort(std::ostream& out) const {
         out << ", orientable only";
     if (finiteOnly_)
         out << ", finite only";
-    if (whichPurge_ != PURGE_NONE)
+    if (purge_ != CensusPurge::None)
         out << ", purge 0x" << std::hex << std::setw(2) << std::setfill('0')
-            << whichPurge_.intValue();
+            << purge_.intValue();
 
     out << ": stage " << orderElt << ", order:";
     for (size_t i = 0; i < orderSize; ++i)
@@ -280,9 +279,9 @@ GluingPermSearcher<3>::GluingPermSearcher(std::istream& in) :
             "while attempting to read GluingPermSearcher<3>");
 
     {
-        int whichPurge;
-        in >> whichPurge;
-        whichPurge_ = CensusPurge::fromInt(whichPurge);
+        int purge;
+        in >> purge;
+        purge_ = Flags<CensusPurge>::fromInt(purge);
     }
 
     size_t nTets = perms_.size();

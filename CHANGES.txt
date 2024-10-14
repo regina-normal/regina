@@ -83,6 +83,17 @@ Version 7.4  [ (to be announced) ]
               confusion with the more common pattern where empty() queries
               whether or not a container is empty.
             - Added a spaceship operator (<=>) for subset comparisons.
+        Enum CensusPurge, CensusPurgeFlags:
+            - The individual flags now live inside CensusPurge, which is now
+              a scoped enumeration for better type safety.  In paticular, the
+              enum constants (e.g., PURGE_NON_MINIMAL) have been renamed
+              as scoped enum values (e.g., CensusPurge::NonMinimal).  The old
+              constants have been kept as deprecated compile-time constants
+              in the regina namespace.
+            - Flags can still be combined bitwise; the resulting type is now
+              just Flags<CensusPurge>, and this should all be happening
+              automatically behind the scenes.  CensusPurgeFlags is now
+              just a deprecated alias for CensusPurge.
         Enum ChangeType:
             - New enum for internal use with triangulation/link change spans.
         Class DiscSpecIterator:

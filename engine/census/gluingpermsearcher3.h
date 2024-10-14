@@ -123,11 +123,10 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
         bool finiteOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to finite triangulations? */
-        CensusPurge whichPurge_;
+        Flags<CensusPurge> purge_;
             /**< Are there any types of triangulation that we may optionally
-                 avoid constructing?  This should be a bitwise OR of constants
-                 from the CensusPurgeFlags enumeration.  See the constructor
-                 documentation for further details on this search parameter. */
+                 avoid constructing?  See the constructor documentation for
+                 further details on this search parameter. */
 
         bool started;
             /**< Has the search started yet?  This helps distinguish
@@ -175,7 +174,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * The arguments to this constructor describe the search
          * parameters in detail.
          *
-         * Parameter \a whichPurge may be used to avoid constructing
+         * Parameter \a purge may be used to avoid constructing
          * permutation sets that correspond to triangulations satisfying
          * certain constraints (such as non-minimality).  The use of
          * this parameter, combined with parameters \a orientableOnly
@@ -184,15 +183,15 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * entirely different algorithms are used.
          *
          * Note that not all permutation sets described by parameter
-         * \a whichPurge will be avoided (i.e., you may get gluing
+         * \a purge will be avoided (i.e., you may get gluing
          * permutation sets that you did not want).  It is guaranteed however
          * that every permutation set whose corresonding triangulation does
-         * _not_ satisfy the \a whichPurge constraints will be generated.
+         * _not_ satisfy the \a purge constraints will be generated.
          *
          * Similarly, even if \a finiteOnly is set to \c true, some
          * non-finite triangulations might still slip through the net
          * (since the full vertex links are not always constructed).
-         * However, like \a whichPurge, setting \a finiteOnly to \c true
+         * However, like \a purge, setting \a finiteOnly to \c true
          * allow the census algorithm to take shortcuts and therefore
          * run faster.  The resulting triangulations may be tested for
          * finiteness (and other properties) by calling triangulate().
@@ -220,20 +219,20 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * \c false if there is no such requirement.  Note that
          * regardless of this value, some non-finite triangulations
          * might still be produced; see the notes above for details.
-         * \param whichPurge specifies which permutation sets we may avoid
+         * \param purge specifies which permutation sets we may avoid
          * constructing (see the function notes above for details).  This
-         * should be a bitwise OR of constants from the CensusPurgeFlags
-         * enumeration, or PURGE_NONE if we should simply generate every
-         * possible permutation set.
-         * If a variety of purge constants are bitwise ORed together, a
-         * permutation set whose triangulation satisfies _any_ of these
-         * constraints may be avoided.  Note that not all such
+         * should be a bitwise OR of constants from the CensusPurge
+         * enumeration, or else `CensusPurge::None` (or just empty braces `{}`)
+         * if we should simply generate every possible permutation set.
+         * If several purge constants are bitwise ORed together, then
+         * permutation sets whose triangulation satisfies _any_ of these
+         * constraints might be avoided.  Note that not _all_ such
          * permutation sets will be avoided, but enough are avoided that
          * the performance increase is noticeable.
          */
         GluingPermSearcher(FacetPairing<3> pairing,
                 FacetPairing<3>::IsoList autos, bool orientableOnly,
-                bool finiteOnly, CensusPurge whichPurge);
+                bool finiteOnly, Flags<CensusPurge> purge);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -519,7 +518,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
         template <typename Action, typename... Args>
         static void findAllPerms(FacetPairing<3> pairing,
                 FacetPairing<3>::IsoList autos, bool orientableOnly,
-                bool finiteOnly, CensusPurge whichPurge,
+                bool finiteOnly, Flags<CensusPurge> purge,
                 Action&& action, Args&&... args);
 
         /**
@@ -548,7 +547,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          */
         static std::unique_ptr<GluingPermSearcher<3>> bestSearcher(
                 FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-                bool orientableOnly, bool finiteOnly, CensusPurge whichPurge);
+                bool orientableOnly, bool finiteOnly, Flags<CensusPurge> purge);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -1219,7 +1218,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          */
         EulerSearcher(int useEuler, FacetPairing<3> pairing,
                 FacetPairing<3>::IsoList autos, bool orientableOnly,
-                CensusPurge whichPurge);
+                Flags<CensusPurge> purge);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2014,7 +2013,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          */
         CompactSearcher(FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-                bool orientableOnly, CensusPurge whichPurge);
+                bool orientableOnly, Flags<CensusPurge> purge);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2521,7 +2520,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          *
          * All constructor arguments are the same as for the
          * GluingPermSearcher<3> constructor, though some arguments (such as
-         * \a finiteOnly and \a whichPurge) are not needed here since they
+         * \a finiteOnly and \a purge) are not needed here since they
          * are already implied by the specialised search context.
          *
          * \pre The given face pairing is connected, i.e., it is possible
@@ -2665,7 +2664,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
          *
          * All constructor arguments are the same as for the
          * GluingPermSearcher<3> constructor, though some arguments (such as
-         * \a finiteOnly and \a whichPurge) are not needed here since they
+         * \a finiteOnly and \a purge) are not needed here since they
          * are already implied by the specialised search context.
          *
          * \pre The given face pairing is connected, i.e., it is possible
@@ -2837,36 +2836,36 @@ inline std::unique_ptr<GluingPermSearcher<3>>
 inline std::unique_ptr<GluingPermSearcher<3>>
         GluingPermSearcher<3>::bestSearcher(
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge) {
+        bool orientableOnly, bool finiteOnly, Flags<CensusPurge> purge) {
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
         if (pairing.isClosed() && pairing.size() >= 3 &&
-                whichPurge.has(PURGE_NON_MINIMAL) &&
-                whichPurge.has(PURGE_NON_PRIME) &&
-                (orientableOnly || whichPurge.has(PURGE_P2_REDUCIBLE))) {
+                purge.has(CensusPurge::NonMinimal) &&
+                purge.has(CensusPurge::NonPrime) &&
+                (orientableOnly || purge.has(CensusPurge::P2Reducible))) {
             // Closed prime minimal P2-irreducible triangulations with >= 3
             // tetrahedra.
             return std::make_unique<ClosedPrimeMinSearcher>(std::move(pairing),
                 std::move(autos), orientableOnly);
         }
         return std::make_unique<CompactSearcher>(std::move(pairing),
-            std::move(autos), orientableOnly, whichPurge);
+            std::move(autos), orientableOnly, purge);
     }
 
-    if (pairing.isClosed() && whichPurge.has(PURGE_NON_MINIMAL_HYP))
+    if (pairing.isClosed() && purge.has(CensusPurge::NonMinimalHyp))
         return std::make_unique<HyperbolicMinSearcher>(std::move(pairing),
             std::move(autos), orientableOnly);
 
     return std::make_unique<GluingPermSearcher<3>>(std::move(pairing),
-        std::move(autos), orientableOnly, finiteOnly, whichPurge);
+        std::move(autos), orientableOnly, finiteOnly, purge);
 }
 
 template <typename Action, typename... Args>
 inline void GluingPermSearcher<3>::findAllPerms(FacetPairing<3> pairing,
         FacetPairing<3>::IsoList autos, bool orientableOnly, bool finiteOnly,
-        CensusPurge whichPurge, Action&& action, Args&&... args) {
+        Flags<CensusPurge> purge, Action&& action, Args&&... args) {
     bestSearcher(std::move(pairing), std::move(autos), orientableOnly,
-        finiteOnly, whichPurge)->
+        finiteOnly, purge)->
         runSearch(std::forward<Action>(action), std::forward<Args>(args)...);
 }
 

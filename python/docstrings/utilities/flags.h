@@ -20,6 +20,12 @@ The enumeration type is given in the template parameter *T*. This
 class allows the user to form and test bitwise combinations of the
 individual enum values, without losing type safety.
 
+There is usually no need for end users to refer to the type
+``Flags<T>`` explicitly by name. If a function takes an argument of
+type ``Flags<T>``, then you can pass a single flag of type *T*, or a
+bitwise combination of such flags ``(flag1 | flag2)``, or empty braces
+``{}`` to indicate no flags at all.
+
 These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.
@@ -27,10 +33,9 @@ functions.
 Python:
     Present only for some particular enumeration types *T*, when
     explicitly noted in the corresponding enum documentation. The
-    enumeration type is typically the flag class name with the suffix
-    ``Flags`` or ``Fields``; for instance, the flags classes NormalAlg
-    and SurfaceExport work with the enum types NormalAlgFlags and
-    SurfaceExportFields respectively.
+    Python name of the flags class will be the enumeration type name
+    with the suffix ``Flags``; for instance, the C++ type
+    ``Flags<NormalAlg>`` will appear in Python as ``NormalAlgFlags``.
 
 Template parameter ``T``:
     the enumeration type holding the individual flags that can be

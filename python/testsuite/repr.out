@@ -106,9 +106,9 @@ AngleAlgFlags
 AngleAlgFlags.AS_ALG_DD
 <AngleAlgFlags.AS_ALG_DD: 32>
 
-CensusPurgeFlags
-CensusPurgeFlags.PURGE_NON_MINIMAL
-<CensusPurgeFlags.PURGE_NON_MINIMAL: 1>
+CensusPurge
+CensusPurge.NonMinimal
+<CensusPurge.NonMinimal: 1>
 
 SurfaceExport
 SurfaceExport.Name

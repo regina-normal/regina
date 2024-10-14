@@ -39,7 +39,7 @@ namespace regina {
 HyperbolicMinSearcher::HyperbolicMinSearcher(FacetPairing<3> pairing,
         FacetPairing<3>::IsoList autos, bool orientableOnly) :
         EulerSearcher(0, std::move(pairing), std::move(autos), orientableOnly,
-            PURGE_NON_MINIMAL_HYP) {
+            CensusPurge::NonMinimalHyp) {
 }
 
 void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {

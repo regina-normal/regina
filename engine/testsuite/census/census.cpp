@@ -53,13 +53,14 @@ class CensusTest : public testing::Test {
         struct CensusSpec {
             BoolSet orbl_;
             BoolSet finite_;
-            regina::CensusPurge purge_;
+            regina::Flags<regina::CensusPurge> purge_;
             bool minimal_;
 
             size_t count_ { 0 };
 
-            CensusSpec(BoolSet orbl, BoolSet finite, regina::CensusPurge purge,
-                    bool minimal) : orbl_(orbl), finite_(finite), purge_(purge),
+            CensusSpec(BoolSet orbl, BoolSet finite,
+                    regina::Flags<regina::CensusPurge> purge, bool minimal) :
+                    orbl_(orbl), finite_(finite), purge_(purge),
                     minimal_(minimal) {}
         };
 
@@ -105,7 +106,7 @@ class CensusTest : public testing::Test {
                 BoolSet finiteness,
                 BoolSet boundary,
                 int nBdryFacets,
-                regina::CensusPurge purge = regina::PURGE_NONE,
+                regina::Flags<regina::CensusPurge> purge = {},
                 bool minimal = false) {
             SCOPED_TRACE_BOOLSET(orientability);
             SCOPED_TRACE_BOOLSET(finiteness);
@@ -118,7 +119,7 @@ class CensusTest : public testing::Test {
             if constexpr (dim == 2)
                 ASSERT_TRUE(finiteness.full());
             if constexpr (dim != 3)
-                ASSERT_EQ(purge, regina::PURGE_NONE);
+                ASSERT_EQ(purge, regina::CensusPurge::None);
             if constexpr (dim >= 4)
                 ASSERT_EQ(minimal, false);
 
@@ -161,12 +162,12 @@ TEST_F(CensusTest, dim2RawCountsClosedMinimal) {
     static size_t nOrientable[] = { 1, 0, 3 /* sphere + torus */, 0, 0, 0,
         8, 0, 0, 0, 927 };
     rawCountsCompare<2>(1, 10, nOrientable,
-        true, BoolSet(true, true), false, 0, regina::PURGE_NONE, true);
+        true, BoolSet(true, true), false, 0, regina::CensusPurge::None, true);
 
     static size_t nNonOrientable[] = { 1, 0, 4 /* PP + KB */, 0, 11, 0,
         144, 0, 3627, 0, 149288 };
     rawCountsCompare<2>(1, 8, nNonOrientable,
-        false, BoolSet(true, true), false, 0, regina::PURGE_NONE, true);
+        false, BoolSet(true, true), false, 0, regina::CensusPurge::None, true);
 }
 
 TEST_F(CensusTest, dim3RawCounts) {
@@ -192,14 +193,15 @@ TEST_F(CensusTest, dim3RawCountsCompact) {
 TEST_F(CensusTest, dim3RawCountsPrimeMinimalOr) {
     static size_t nOrientable[] = { 1, 4, 11, 7, 17, 50 };
     rawCountsCompare<3>(1, 4, nOrientable,
-        true, true, false, 0, regina::PURGE_NON_MINIMAL_PRIME, true);
+        true, true, false, 0, regina::CensusPurge::NonMinimalPrime, true);
 }
 
 TEST_F(CensusTest, dim3RawCountsPrimeMinimalNor) {
     static size_t nNonOrientable[] = { 0, 0, 1, 0, 2, 4 };
     rawCountsCompare<3>(1, 4, nNonOrientable,
         false, true, false, 0,
-        regina::PURGE_NON_MINIMAL_PRIME | regina::PURGE_P2_REDUCIBLE, true);
+        regina::CensusPurge::NonMinimalPrime | regina::CensusPurge::P2Reducible,
+        true);
 }
 
 TEST_F(CensusTest, dim3RawCountsBounded) {
@@ -217,11 +219,11 @@ TEST_F(CensusTest, dim3RawCountsHypMin) {
     static size_t nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
     rawCountsCompare<3>(1, 4, nAll,
         BoolSet(true, true), false, false, -1,
-        regina::PURGE_NON_MINIMAL_HYP, false);
+        regina::CensusPurge::NonMinimalHyp, false);
 
     static size_t nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
     rawCountsCompare<3>(1, 5, nOrientable,
-        true, false, false, -1, regina::PURGE_NON_MINIMAL_HYP, false);
+        true, false, false, -1, regina::CensusPurge::NonMinimalHyp, false);
 }
 
 TEST_F(CensusTest, dim4RawCounts) {

@@ -1,6 +1,6 @@
-CensusPurgeFlags.PURGE_NONE -> False
+CensusPurge.None -> False
 0x00 -> False
-CensusPurgeFlags.PURGE_NON_MINIMAL -> True
+CensusPurge.NonMinimal -> True
 0x01 -> True
 AngleAlgFlags.AS_ALG_DEFAULT -> False
 0x0000 -> False

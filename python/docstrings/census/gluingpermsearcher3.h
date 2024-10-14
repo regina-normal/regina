@@ -157,8 +157,8 @@ no need for an end user to instantiate this class directly.
 
 All constructor arguments are the same as for the
 GluingPermSearcher<3> constructor, though some arguments (such as
-*finiteOnly* and *whichPurge*) are not needed here since they are
-already implied by the specialised search context.
+*finiteOnly* and *purge*) are not needed here since they are already
+implied by the specialised search context.
 
 Precondition:
     The given face pairing is connected, i.e., it is possible to reach
@@ -260,22 +260,22 @@ preferred entry point for end users.
 The arguments to this constructor describe the search parameters in
 detail.
 
-Parameter *whichPurge* may be used to avoid constructing permutation
-sets that correspond to triangulations satisfying certain constraints
-(such as non-minimality). The use of this parameter, combined with
+Parameter *purge* may be used to avoid constructing permutation sets
+that correspond to triangulations satisfying certain constraints (such
+as non-minimality). The use of this parameter, combined with
 parameters *orientableOnly* and *finiteOnly*, can significantly speed
 up the permutation set generation. For some combinations of these
 parameters entirely different algorithms are used.
 
-Note that not all permutation sets described by parameter *whichPurge*
-will be avoided (i.e., you may get gluing permutation sets that you
-did not want). It is guaranteed however that every permutation set
-whose corresonding triangulation does _not_ satisfy the *whichPurge*
-constraints will be generated.
+Note that not all permutation sets described by parameter *purge* will
+be avoided (i.e., you may get gluing permutation sets that you did not
+want). It is guaranteed however that every permutation set whose
+corresonding triangulation does _not_ satisfy the *purge* constraints
+will be generated.
 
 Similarly, even if *finiteOnly* is set to ``True``, some non-finite
 triangulations might still slip through the net (since the full vertex
-links are not always constructed). However, like *whichPurge*, setting
+links are not always constructed). However, like *purge*, setting
 *finiteOnly* to ``True`` allow the census algorithm to take shortcuts
 and therefore run faster. The resulting triangulations may be tested
 for finiteness (and other properties) by calling triangulate().
@@ -315,16 +315,17 @@ Parameter ``finiteOnly``:
     triangulations might still be produced; see the notes above for
     details.
 
-Parameter ``whichPurge``:
+Parameter ``purge``:
     specifies which permutation sets we may avoid constructing (see
     the function notes above for details). This should be a bitwise OR
-    of constants from the CensusPurgeFlags enumeration, or PURGE_NONE
-    if we should simply generate every possible permutation set. If a
-    variety of purge constants are bitwise ORed together, a
-    permutation set whose triangulation satisfies _any_ of these
-    constraints may be avoided. Note that not all such permutation
-    sets will be avoided, but enough are avoided that the performance
-    increase is noticeable.)doc";
+    of constants from the CensusPurge enumeration, or else
+    ``CensusPurge::None`` (or just empty braces ``{}``) if we should
+    simply generate every possible permutation set. If several purge
+    constants are bitwise ORed together, then permutation sets whose
+    triangulation satisfies _any_ of these constraints might be
+    avoided. Note that not _all_ such permutation sets will be
+    avoided, but enough are avoided that the performance increase is
+    noticeable.)doc";
 
 // Docstring regina::python::doc::GluingPermSearcher_::bestSearcher
 static const char *bestSearcher =
@@ -590,8 +591,8 @@ GluingPermSearcher<3> documentation.
 
 All constructor arguments are the same as for the
 GluingPermSearcher<3> constructor, though some arguments (such as
-*finiteOnly* and *whichPurge*) are not needed here since they are
-already implied by the specialised search context.
+*finiteOnly* and *purge*) are not needed here since they are already
+implied by the specialised search context.
 
 Precondition:
     The given face pairing is connected, i.e., it is possible to reach

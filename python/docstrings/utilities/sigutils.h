@@ -28,6 +28,9 @@ this position accordingly (but never beyond the end of the string).
 
 This base64 encoding uses the characters: ``a..zA..Z0..9+-``
 
+Baes64 decoders are single-use objects: they cannot be copied, moved
+or swapped.
+
 .. warning::
     Note that this base64 encoding uses a different set of printable
     symbols from the encoding used in utilities/base64.h. This should
@@ -54,6 +57,9 @@ its member functions to write values to the encoding, and then call
 str() to extract the resulting base64 string.
 
 This base64 encoding uses the characters: ``a..zA..Z0..9+-``
+
+Baes64 encoders are single-use objects: they cannot be copied, moved
+or swapped.
 
 .. warning::
     Note that this base64 encoding uses a different set of printable

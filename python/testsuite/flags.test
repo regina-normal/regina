@@ -44,8 +44,8 @@ def evalFlag(x):
 	# Evaluate as a rich flags object:
 	evalObj(x | x)
 
-evalFlag(regina.PURGE_NONE)
-evalFlag(regina.PURGE_NON_MINIMAL)
+evalFlag(regina.CensusPurge.None)
+evalFlag(regina.CensusPurge.NonMinimal)
 
 evalFlag(regina.AS_ALG_DEFAULT)
 evalFlag(regina.AS_ALG_TREE)
@@ -62,8 +62,8 @@ evalFlag(regina.NS_FUNDAMENTAL)
 evalFlag(regina.NS_ALG_DEFAULT)
 evalFlag(regina.NS_VERTEX_TREE)
 
-evalFlag(regina.surfaceExportNone)
-evalFlag(regina.surfaceExportName)
+evalFlag(regina.SurfaceExport.None)
+evalFlag(regina.SurfaceExport.Name)
 
 # Some enum types that are NOT intended to be used as flags:
 
