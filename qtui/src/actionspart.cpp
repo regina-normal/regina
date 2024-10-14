@@ -106,7 +106,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
-    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setIcon(IconCache::icon(IconCache::Icon::regina));
     act->setToolTip(tr("Import a Regina data file"));
     act->setWhatsThis(tr("Import an external Regina data file.  The "
         "imported packet tree will be grafted into this packet tree."));
@@ -197,7 +197,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
-    act->setIcon(IconCache::icon(IconCache::packet_script));
+    act->setIcon(IconCache::icon(IconCache::Icon::packet_script));
     act->setToolTip(tr("Import a Python script"));
     act->setWhatsThis(tr("Import an external Python file as a new script "
         "packet in this tree."));
@@ -207,7 +207,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Attachment"));
-    act->setIcon(IconCache::icon(IconCache::packet_attachment));
+    act->setIcon(IconCache::icon(IconCache::Icon::packet_attachment));
     act->setToolTip(tr("Import a file attachment"));
     act->setWhatsThis(tr("Import an external file as a new attachment "
         "in this packet tree."));
@@ -219,7 +219,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
-    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setIcon(IconCache::icon(IconCache::Icon::regina));
     act->setToolTip(tr("Export a compressed Regina data file"));
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
@@ -229,7 +229,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Regina Data File (&Uncompressed)"));
-    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setIcon(IconCache::icon(IconCache::Icon::regina));
     act->setToolTip(tr("Export an uncompressed Regina data file"));
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
@@ -239,7 +239,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Legacy Regina Data File (≤ 6.0.1)"));
-    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setIcon(IconCache::icon(IconCache::Icon::regina));
     act->setToolTip(tr("Export a data file that can be read by Regina "
         "≤ 6.0.1"));
     act->setWhatsThis(tr("Export all or part of this packet tree "
@@ -285,7 +285,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
-    act->setIcon(IconCache::icon(IconCache::packet_script));
+    act->setIcon(IconCache::icon(IconCache::Icon::packet_script));
     act->setToolTip(tr("Export a Python script"));
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));
@@ -344,7 +344,7 @@ void ReginaMain::setupActions() {
     // New packets:
     auto* actContainer = new QAction(this);
     actContainer->setText(tr("New &Container"));
-    actContainer->setIcon(IconCache::icon(IconCache::packet_container));
+    actContainer->setIcon(IconCache::icon(IconCache::Icon::packet_container));
     actContainer->setShortcut(tr("Alt+c"));
     actContainer->setToolTip(tr("New container"));
     actContainer->setWhatsThis(tr("Create a new container packet.  Containers "
@@ -357,7 +357,7 @@ void ReginaMain::setupActions() {
     auto* actTriangulation2 = new QAction(this);
     actTriangulation2->setText(tr("New &2-D Triangulation"));
     actTriangulation2->setIcon(IconCache::icon(
-        IconCache::packet_triangulation2));
+        IconCache::Icon::packet_triangulation2));
     actTriangulation2->setShortcut(tr("Alt+2"));
     actTriangulation2->setToolTip(tr("New 2-manifold triangulation"));
     actTriangulation2->setWhatsThis(
@@ -370,7 +370,7 @@ void ReginaMain::setupActions() {
     auto* actTriangulation3 = new QAction(this);
     actTriangulation3->setText(tr("New 3-D &Triangulation"));
     actTriangulation3->setIcon(IconCache::icon(
-        IconCache::packet_triangulation3));
+        IconCache::Icon::packet_triangulation3));
     actTriangulation3->setShortcut(tr("Alt+t"));
     actTriangulation3->setToolTip(tr("New 3-manifold triangulation"));
     actTriangulation3->setWhatsThis(
@@ -383,7 +383,7 @@ void ReginaMain::setupActions() {
     auto* actTriangulation4 = new QAction(this);
     actTriangulation4->setText(tr("New &4-D Triangulation"));
     actTriangulation4->setIcon(IconCache::icon(
-        IconCache::packet_triangulation4));
+        IconCache::Icon::packet_triangulation4));
     actTriangulation4->setShortcut(tr("Alt+4"));
     actTriangulation4->setToolTip(tr("New 4-manifold triangulation"));
     actTriangulation4->setWhatsThis(
@@ -395,7 +395,7 @@ void ReginaMain::setupActions() {
 
     auto* actSurfaces = new QAction(this);
     actSurfaces->setText(tr("New &Normal Surface List (3-D)"));
-    actSurfaces->setIcon(IconCache::icon(IconCache::packet_surfaces));
+    actSurfaces->setIcon(IconCache::icon(IconCache::Icon::packet_surfaces));
     actSurfaces->setShortcut(tr("Alt+n"));
     actSurfaces->setToolTip(tr("New normal surface list"));
     actSurfaces->setWhatsThis(tr("Create a new list of normal surfaces "
@@ -406,7 +406,7 @@ void ReginaMain::setupActions() {
 
     auto* actHypersurfaces = new QAction(this);
     actHypersurfaces->setText(tr("New Normal &Hypersurface List (4-D)"));
-    actHypersurfaces->setIcon(IconCache::icon(IconCache::packet_hypersurfaces));
+    actHypersurfaces->setIcon(IconCache::icon(IconCache::Icon::packet_hypersurfaces));
     actHypersurfaces->setShortcut(tr("Alt+h"));
     actHypersurfaces->setToolTip(tr("New normal hypersurface list"));
     actHypersurfaces->setWhatsThis(tr("Create a new list of "
@@ -418,7 +418,7 @@ void ReginaMain::setupActions() {
 
     auto* actAngleStructure = new QAction(this);
     actAngleStructure->setText(tr("New &Angle Structure Solutions"));
-    actAngleStructure->setIcon(IconCache::icon(IconCache::packet_angles));
+    actAngleStructure->setIcon(IconCache::icon(IconCache::Icon::packet_angles));
     actAngleStructure->setShortcut(tr("Alt+a"));
     actAngleStructure->setToolTip(tr("New angle structure solutions"));
     actAngleStructure->setWhatsThis(
@@ -430,7 +430,7 @@ void ReginaMain::setupActions() {
 
     auto* actSnapPeaTriangulation = new QAction(this);
     actSnapPeaTriangulation->setText(tr("New SnapP&ea Triangulation"));
-    actSnapPeaTriangulation->setIcon(IconCache::icon(IconCache::packet_snappea));
+    actSnapPeaTriangulation->setIcon(IconCache::icon(IconCache::Icon::packet_snappea));
     actSnapPeaTriangulation->setShortcut(tr("Alt+e"));
     actSnapPeaTriangulation->setToolTip(tr("New SnapPea triangulation"));
     actSnapPeaTriangulation->setWhatsThis(
@@ -442,7 +442,7 @@ void ReginaMain::setupActions() {
 
     auto* actLink = new QAction(this);
     actLink->setText(tr("New &Knot or Link"));
-    actLink->setIcon(IconCache::icon(IconCache::packet_link));
+    actLink->setIcon(IconCache::icon(IconCache::Icon::packet_link));
     actLink->setShortcut(tr("Alt+k"));
     actLink->setToolTip(tr("New knot or link"));
     actLink->setWhatsThis(tr("Create a new knot or link."));
@@ -452,7 +452,7 @@ void ReginaMain::setupActions() {
 
     auto* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
-    actFilter->setIcon(IconCache::icon(IconCache::packet_filter));
+    actFilter->setIcon(IconCache::icon(IconCache::Icon::packet_filter));
     actFilter->setShortcut(tr("Alt+f"));
     actFilter->setToolTip(tr("New surface filter"));
     actFilter->setWhatsThis(tr("Create a new normal surface filter.  Surface "
@@ -464,7 +464,7 @@ void ReginaMain::setupActions() {
 
     auto* actText = new QAction(this);
     actText->setText(tr("New Te&xt"));
-    actText->setIcon(IconCache::icon(IconCache::packet_text));
+    actText->setIcon(IconCache::icon(IconCache::Icon::packet_text));
     actText->setShortcut(tr("Alt+x"));
     actText->setToolTip(tr("New text packet"));
     actText->setWhatsThis(tr("Create a new piece of text to store within "
@@ -475,7 +475,7 @@ void ReginaMain::setupActions() {
 
     auto* actScript = new QAction(this);
     actScript->setText(tr("New &Script"));
-    actScript->setIcon(IconCache::icon(IconCache::packet_script));
+    actScript->setIcon(IconCache::icon(IconCache::Icon::packet_script));
     actScript->setShortcut(tr("Alt+s"));
     actScript->setToolTip(tr("New script packet"));
     actScript->setWhatsThis(tr("Create a new Python script that can work "
@@ -486,7 +486,7 @@ void ReginaMain::setupActions() {
 
     auto* actAttachment = new QAction(this);
     actAttachment->setText(tr("New Attachment"));
-    actAttachment->setIcon(IconCache::icon(IconCache::packet_attachment));
+    actAttachment->setIcon(IconCache::icon(IconCache::Icon::packet_attachment));
     actAttachment->setShortcut(tr("Alt++"));
     actAttachment->setToolTip(tr("New file attachment"));
     actAttachment->setWhatsThis(tr("Create a new attachment that "

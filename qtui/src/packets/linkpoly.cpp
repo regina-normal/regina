@@ -134,7 +134,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
         "one as a Laurent polynomial in the variables (<i>l</i>, <i>m</i>).  "
         "These buttons allow you to switch between these two variants."));
     sublayout->addWidget(btnLM);
-    if (ReginaPrefSet::global().linkHomflyType == ReginaPrefSet::HomflyLM)
+    if (ReginaPrefSet::global().linkHomflyType == ReginaPrefSet::HomflyStyle::LM)
         btnLM->setChecked(true);
     else
         btnAZ->setChecked(true);
@@ -425,7 +425,7 @@ void LinkPolynomialUI::copyBracketPlain() {
 void LinkPolynomialUI::homflyTypeChanged(bool checked) {
     if (checked) {
         ReginaPrefSet::global().linkHomflyType = (btnLM->isChecked() ?
-            ReginaPrefSet::HomflyLM : ReginaPrefSet::HomflyAZ);
+            ReginaPrefSet::HomflyStyle::LM : ReginaPrefSet::HomflyStyle::AZ);
         refresh();
     }
 }

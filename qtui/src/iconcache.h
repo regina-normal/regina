@@ -51,7 +51,7 @@ class IconCache {
         /**
          * The hard-coded list of cached icons.
          */
-        enum IconID {
+        enum class Icon {
             regina = 0,
             packet_angles,
             packet_container,
@@ -74,7 +74,7 @@ class IconCache {
         };
 
     private:
-        static QIcon cache_[END_OF_LIST];
+        static QIcon cache_[static_cast<int>(Icon::END_OF_LIST)];
             /**< The main icon cache. */
 
     public:
@@ -83,21 +83,19 @@ class IconCache {
          * It will be loaded from disk the first time, and then
          * pulled from the cache each time after that.
          */
-        static QIcon icon(IconID id);
+        static QIcon icon(Icon icon);
 
     private:
         /**
          * Load the given icon from disk.
          */
-        static void load(IconID id);
+        static void load(Icon icon);
 };
 
-inline QIcon IconCache::icon(IconID id) {
-    if (id < 0 || id >= END_OF_LIST)
-        return QIcon();
-    if (cache_[id].isNull())
-        load(id);
-    return cache_[id];
+inline QIcon IconCache::icon(Icon icon) {
+    if (cache_[static_cast<int>(icon)].isNull())
+        load(icon);
+    return cache_[static_cast<int>(icon)];
 }
 
 #endif

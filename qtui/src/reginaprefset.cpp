@@ -77,20 +77,20 @@ ReginaPrefSet::ReginaPrefSet() :
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HyperCoords::Standard),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
-        linkCodeType(Gauss),
+        linkCodeType(LinkCode::Gauss),
         linkCreationType(0),
-        linkCrossingsStyle(PictorialCrossings),
-        linkHomflyType(HomflyAZ),
-        linkInitialGraphType(TreeDecomposition),
+        linkCrossingsStyle(CrossingStyle::Pictorial),
+        linkHomflyType(HomflyStyle::AZ),
+        linkInitialGraphType(TriGraph::TreeDecomposition),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NormalCoords::Standard),
         surfacesCreationList(regina::NS_LIST_DEFAULT),
-        surfacesInitialCompat(LocalCompat),
+        surfacesInitialCompat(CompatMatrix::Local),
         surfacesSupportOriented(false),
-        threadCount(ThreadPolite),
+        threadCount(ThreadCount::Polite),
         treeJumpSize(10),
         tabDim2Tri(0),
         tabDim2TriSkeleton(0),
@@ -110,7 +110,7 @@ ReginaPrefSet::ReginaPrefSet() :
         triDim4CreationType(0),
         triGAPExec(defaultGAPExec),
         triGraphvizLabels(true),
-        triInitialGraphType(DualGraph),
+        triInitialGraphType(TriGraph::DualGraph),
         triSurfacePropsThreshold(6),
         warnOnNonEmbedded(true) {
 }
@@ -224,11 +224,11 @@ void ReginaPrefSet::readInternal() {
     settings.beginGroup("Compute");
     QString str = settings.value("ThreadCount").toString();
     if (str == "Single")
-        threadCount = ReginaPrefSet::ThreadSingle;
+        threadCount = ReginaPrefSet::ThreadCount::Single;
     else if (str == "All")
-        threadCount = ReginaPrefSet::ThreadAll;
+        threadCount = ReginaPrefSet::ThreadCount::All;
     else
-        threadCount = ReginaPrefSet::ThreadPolite; /* default */
+        threadCount = ReginaPrefSet::ThreadCount::Polite; /* default */
     settings.endGroup();
 
     settings.beginGroup("Display");
@@ -257,30 +257,30 @@ void ReginaPrefSet::readInternal() {
     linkCreationType = settings.value("CreationType", 0).toInt();
     str = settings.value("CodeType").toString();
     if (str == "DowkerThistlethwaite")
-        linkCodeType = ReginaPrefSet::DowkerThistlethwaite;
+        linkCodeType = ReginaPrefSet::LinkCode::DowkerThistlethwaite;
     else if (str == "KnotSig")
-        linkCodeType = ReginaPrefSet::KnotSig;
+        linkCodeType = ReginaPrefSet::LinkCode::KnotSig;
     else if (str == "PlanarDiagram")
-        linkCodeType = ReginaPrefSet::PlanarDiagram;
+        linkCodeType = ReginaPrefSet::LinkCode::PlanarDiagram;
     else if (str == "Jenkins")
-        linkCodeType = ReginaPrefSet::Jenkins;
+        linkCodeType = ReginaPrefSet::LinkCode::Jenkins;
     else
-        linkCodeType = ReginaPrefSet::Gauss; /* default */
+        linkCodeType = ReginaPrefSet::LinkCode::Gauss; /* default */
     str = settings.value("CrossingsStyle").toString();
     if (str == "Text")
-        linkCrossingsStyle = ReginaPrefSet::TextCrossings;
+        linkCrossingsStyle = ReginaPrefSet::CrossingStyle::Text;
     else
-        linkCrossingsStyle = ReginaPrefSet::PictorialCrossings; /* default */
+        linkCrossingsStyle = ReginaPrefSet::CrossingStyle::Pictorial; /* default */
     str = settings.value("HomflyType").toString();
     if (str == "LM")
-        linkHomflyType = ReginaPrefSet::HomflyLM;
+        linkHomflyType = ReginaPrefSet::HomflyStyle::LM;
     else
-        linkHomflyType = ReginaPrefSet::HomflyAZ; /* default */
+        linkHomflyType = ReginaPrefSet::HomflyStyle::AZ; /* default */
     str = settings.value("InitialGraphType").toString();
     if (str == "NiceTree")
-        linkInitialGraphType = ReginaPrefSet::NiceTreeDecomposition;
+        linkInitialGraphType = ReginaPrefSet::TriGraph::NiceTreeDecomposition;
     else
-        linkInitialGraphType = ReginaPrefSet::TreeDecomposition; /* default */
+        linkInitialGraphType = ReginaPrefSet::TriGraph::TreeDecomposition; /* default */
     settings.endGroup();
 
     settings.beginGroup("Python");
@@ -305,9 +305,9 @@ void ReginaPrefSet::readInternal() {
 
     str = settings.value("InitialCompat").toString();
     if (str == "Global")
-        surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
+        surfacesInitialCompat = ReginaPrefSet::CompatMatrix::Global;
     else
-        surfacesInitialCompat = ReginaPrefSet::LocalCompat; /* default */
+        surfacesInitialCompat = ReginaPrefSet::CompatMatrix::Local; /* default */
 
     surfacesSupportOriented = settings.value("SupportOriented", false).toBool();
     warnOnNonEmbedded = settings.value("WarnOnNonEmbedded", true).toBool();
@@ -341,11 +341,11 @@ void ReginaPrefSet::readInternal() {
 
     str = settings.value("InitialGraphType").toString();
     if (str == "Tree")
-        triInitialGraphType = ReginaPrefSet::TreeDecomposition;
+        triInitialGraphType = ReginaPrefSet::TriGraph::TreeDecomposition;
     else if (str == "NiceTree")
-        triInitialGraphType = ReginaPrefSet::NiceTreeDecomposition;
+        triInitialGraphType = ReginaPrefSet::TriGraph::NiceTreeDecomposition;
     else
-        triInitialGraphType = ReginaPrefSet::DualGraph; /* default */
+        triInitialGraphType = ReginaPrefSet::TriGraph::DualGraph; /* default */
 
     triSurfacePropsThreshold = settings.value(
         "SurfacePropsThreshold", 6).toInt();
@@ -385,9 +385,9 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Compute");
     switch (threadCount) {
-        case ReginaPrefSet::ThreadSingle:
+        case ReginaPrefSet::ThreadCount::Single:
             settings.setValue("ThreadCount", "Single"); break;
-        case ReginaPrefSet::ThreadAll:
+        case ReginaPrefSet::ThreadCount::All:
             settings.setValue("ThreadCount", "All"); break;
         default:
             settings.setValue("ThreadCount", "Polite"); break;
@@ -416,31 +416,31 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Link");
     settings.setValue("CreationType", linkCreationType);
     switch (linkCodeType) {
-        case ReginaPrefSet::DowkerThistlethwaite:
+        case ReginaPrefSet::LinkCode::DowkerThistlethwaite:
             settings.setValue("CodeType", "DowkerThistlethwaite"); break;
-        case ReginaPrefSet::KnotSig:
+        case ReginaPrefSet::LinkCode::KnotSig:
             settings.setValue("CodeType", "KnotSig"); break;
-        case ReginaPrefSet::PlanarDiagram:
+        case ReginaPrefSet::LinkCode::PlanarDiagram:
             settings.setValue("CodeType", "PlanarDiagram"); break;
-        case ReginaPrefSet::Jenkins:
+        case ReginaPrefSet::LinkCode::Jenkins:
             settings.setValue("CodeType", "Jenkins"); break;
         default:
             settings.setValue("CodeType", "Gauss"); break;
     }
     switch (linkCrossingsStyle) {
-        case ReginaPrefSet::TextCrossings:
+        case ReginaPrefSet::CrossingStyle::Text:
             settings.setValue("CrossingsStyle", "Text"); break;
         default:
             settings.setValue("CrossingsStyle", "Pictorial"); break;
     }
     switch (linkHomflyType) {
-        case ReginaPrefSet::HomflyLM:
+        case ReginaPrefSet::HomflyStyle::LM:
             settings.setValue("HomflyType", "LM"); break;
         default:
             settings.setValue("HomflyType", "AZ"); break;
     }
     switch (linkInitialGraphType) {
-        case ReginaPrefSet::NiceTreeDecomposition:
+        case ReginaPrefSet::TriGraph::NiceTreeDecomposition:
             settings.setValue("InitialGraphType", "NiceTree"); break;
         default:
             settings.setValue("InitialGraphType", "Tree"); break;
@@ -465,7 +465,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationList", surfacesCreationList.intValue());
 
     switch (surfacesInitialCompat) {
-        case ReginaPrefSet::GlobalCompat:
+        case ReginaPrefSet::CompatMatrix::Global:
             settings.setValue("InitialCompat", "Global"); break;
         default:
             settings.setValue("InitialCompat", "Local"); break;
@@ -502,9 +502,9 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("GraphvizLabels", triGraphvizLabels);
 
     switch (triInitialGraphType) {
-        case ReginaPrefSet::TreeDecomposition:
+        case ReginaPrefSet::TriGraph::TreeDecomposition:
             settings.setValue("InitialGraphType", "Tree"); break;
-        case ReginaPrefSet::NiceTreeDecomposition:
+        case ReginaPrefSet::TriGraph::NiceTreeDecomposition:
             settings.setValue("InitialGraphType", "NiceTree"); break;
         default:
             settings.setValue("InitialGraphType", "Dual"); break;
@@ -546,15 +546,15 @@ ReginaPrefSet::Codec ReginaPrefSet::importExportCodec() {
 
 int ReginaPrefSet::threads() {
     switch (global().threadCount) {
-        case ThreadSingle:
+        case ThreadCount::Single:
             return 1;
-        case ThreadAll:
+        case ThreadCount::All:
         {
             int ans = std::thread::hardware_concurrency();
             return (ans >= 1 ? ans : 1);
         }
         default:
-            // Use the ThreadPolite setting.
+            // Use the ThreadCount::Polite setting.
             return regina::politeThreads();
     }
 }

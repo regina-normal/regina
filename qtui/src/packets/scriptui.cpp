@@ -78,7 +78,7 @@ namespace {
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         const QStyleOptionViewItem&, const QModelIndex&) const {
     auto* e = new PacketChooser(script_->root(),
-        nullptr /* filter */, PacketChooser::ROOT_AS_SUBTREE,
+        nullptr /* filter */, PacketChooser::RootRole::Subtree,
         true /* allow "none" */, nullptr /* initial selection */, parent);
     e->setAutoUpdate(true);
     return e;

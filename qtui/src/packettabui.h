@@ -199,7 +199,7 @@ class PacketViewerTab : public PacketReadOnlyUI {
          * Events that can be delayed until just before the viewer
          * is made visible.
          */
-        enum Action { None = 0, Refresh };
+        enum class Action { None = 0, Refresh };
 
         /**
          * External components
@@ -372,12 +372,12 @@ inline void PacketTabbedUI::endEdit() {
 
 inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :
         PacketReadOnlyUI(useParentUI->getEnclosingPane()),
-        parentUI(useParentUI), queuedAction(None) {
+        parentUI(useParentUI), queuedAction(Action::None) {
 }
 
 inline PacketViewerTab::PacketViewerTab(PacketTabbedViewerTab* useParentUI) :
         PacketReadOnlyUI(useParentUI->getEnclosingPane()),
-        parentUI(useParentUI), queuedAction(None) {
+        parentUI(useParentUI), queuedAction(Action::None) {
 }
 
 inline QString PacketViewerTab::getPacketMenuText() const {

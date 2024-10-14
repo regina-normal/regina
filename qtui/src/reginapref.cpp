@@ -85,7 +85,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     setLayout(layout);
 
     generalPrefs = new ReginaPrefGeneral(this);
-    item->addTab(generalPrefs, IconCache::icon(IconCache::regina),
+    item->addTab(generalPrefs, IconCache::icon(IconCache::Icon::regina),
         tr("General"));
 
     pythonPrefs = new ReginaPrefPython(this);
@@ -102,10 +102,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     switch (prefSet.threadCount) {
         // These indices must be kept in sync with the combo box
         // construction in the ReginaPrefGeneral class constructor.
-        case ReginaPrefSet::ThreadSingle:
+        case ReginaPrefSet::ThreadCount::Single:
             generalPrefs->chooserThreadCount->setCurrentIndex(0);
             break;
-        case ReginaPrefSet::ThreadAll:
+        case ReginaPrefSet::ThreadCount::All:
             generalPrefs->chooserThreadCount->setCurrentIndex(2);
             break;
         default: /* ThreadPolite */
@@ -169,13 +169,13 @@ void ReginaPreferences::slotApply() {
         // These indices must be kept in sync with the combo box
         // construction in the ReginaPrefGeneral class constructor.
         case 0:
-            prefSet.threadCount = ReginaPrefSet::ThreadSingle;
+            prefSet.threadCount = ReginaPrefSet::ThreadCount::Single;
             break;
         case 2:
-            prefSet.threadCount = ReginaPrefSet::ThreadAll;
+            prefSet.threadCount = ReginaPrefSet::ThreadCount::All;
             break;
         default:
-            prefSet.threadCount = ReginaPrefSet::ThreadPolite;
+            prefSet.threadCount = ReginaPrefSet::ThreadCount::Polite;
             break;
     }
 

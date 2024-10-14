@@ -61,7 +61,7 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
          * Describes the type of isomorphism relationship that has been
          * discovered, if any.
          */
-        enum IsomorphismType
+        enum class IsomorphismType
             { NoRelationship, IsIsomorphic, IsSubcomplex, IsSupercomplex };
 
         /**

@@ -107,7 +107,7 @@ LinkGraphUI::LinkGraphUI(regina::PacketOf<regina::Link>* useLink,
     label->setWhatsThis(msg);
     chooseType->setWhatsThis(msg);
     switch (ReginaPrefSet::global().linkInitialGraphType) {
-        case ReginaPrefSet::NiceTreeDecomposition:
+        case ReginaPrefSet::TriGraph::NiceTreeDecomposition:
             chooseType->setCurrentIndex(1); break;
         default:
             chooseType->setCurrentIndex(0); break;
@@ -147,11 +147,11 @@ void LinkGraphUI::changeType(int index) {
     switch (index) {
         case 1:
             ReginaPrefSet::global().linkInitialGraphType =
-                ReginaPrefSet::NiceTreeDecomposition;
+                ReginaPrefSet::TriGraph::NiceTreeDecomposition;
             break;
         default:
             ReginaPrefSet::global().linkInitialGraphType =
-                ReginaPrefSet::TreeDecomposition;
+                ReginaPrefSet::TriGraph::TreeDecomposition;
             break;
     }
 

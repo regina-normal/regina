@@ -64,7 +64,7 @@ FilterCreator::FilterCreator(ReginaMain*) {
     QString msg;
 
     pic = new QLabel(ui);
-    pic->setPixmap(IconCache::icon(IconCache::filter_prop).pixmap(
+    pic->setPixmap(IconCache::icon(IconCache::Icon::filter_prop).pixmap(
         iconSize, iconSize));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
@@ -77,7 +77,7 @@ FilterCreator::FilterCreator(ReginaMain*) {
     props->setWhatsThis(msg);
 
     pic = new QLabel(ui);
-    pic->setPixmap(IconCache::icon(IconCache::filter_comb).pixmap(
+    pic->setPixmap(IconCache::icon(IconCache::Icon::filter_comb).pixmap(
         iconSize, iconSize));
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 

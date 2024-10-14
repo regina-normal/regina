@@ -88,7 +88,7 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
     chooseMatrix->setWhatsThis(msg);
     chooseMatrix->setCurrentIndex(
         ReginaPrefSet::global().surfacesInitialCompat ==
-        ReginaPrefSet::GlobalCompat ? 1 : 0);
+        ReginaPrefSet::CompatMatrix::Global ? 1 : 0);
     chooseMatrix->setEnabled(false);
 
     hdrLayout->addStretch(1);
@@ -157,11 +157,11 @@ void SurfacesCompatibilityUI::refresh() {
 
     // Are we able to compute the new matrices if we want to?
     if (surfaces->size() == 0) {
-        setMessage(EMPTY_LIST);
+        setMessage(Message::EmptyList);
         return;
     }
     if (! surfaces->isEmbeddedOnly()) {
-        setMessage(NON_EMBEDDED);
+        setMessage(Message::NonEmbedded);
         return;
     }
 
@@ -169,7 +169,7 @@ void SurfacesCompatibilityUI::refresh() {
     if ((! requestedCalculation) && surfaces->size() >
             ReginaPrefSet::global().surfacesCompatThreshold) {
         // Nope.
-        setMessage(TOO_LARGE);
+        setMessage(Message::TooLarge);
         btnCalculate->setEnabled(true);
         return;
     }
@@ -219,9 +219,9 @@ void SurfacesCompatibilityUI::refresh() {
     chooseMatrix->setEnabled(true);
 }
 
-void SurfacesCompatibilityUI::setMessage(MessageIndex msg) {
+void SurfacesCompatibilityUI::setMessage(Message msg) {
     switch (msg) {
-        case TOO_LARGE:
+        case Message::TooLarge:
             layerNone->setText(tr("<qt>The compatibility matrices "
                 "have not been computed automatically, because this "
                 "list contains a large number of surfaces.<p>"
@@ -230,14 +230,14 @@ void SurfacesCompatibilityUI::setMessage(MessageIndex msg) {
                 "<i>Calculate</i> button above.</qt>"));
             break;
 
-        case NON_EMBEDDED:
+        case Message::NonEmbedded:
             layerNone->setText(tr("<qt>This list "
                 "may contain immersed and/or singular surfaces.<p>"
                 "Compatibility matrices can only be shown for a list "
                 "of <i>embedded</i> normal or almost normal surfaces.</qt>"));
             break;
 
-        case EMPTY_LIST:
+        case Message::EmptyList:
             layerNone->setText(tr("<qt>This list of surfaces is empty.</qt>"));
             break;
     }
@@ -251,12 +251,12 @@ void SurfacesCompatibilityUI::changeLayer(int index) {
         stack->setCurrentWidget(layerLocal);
         matrixLocal->fillLocal(*surfaces);
         ReginaPrefSet::global().surfacesInitialCompat =
-            ReginaPrefSet::LocalCompat;
+            ReginaPrefSet::CompatMatrix::Local;
     } else {
         stack->setCurrentWidget(layerGlobal);
         matrixGlobal->fillGlobal(*surfaces);
         ReginaPrefSet::global().surfacesInitialCompat =
-            ReginaPrefSet::GlobalCompat;
+            ReginaPrefSet::CompatMatrix::Global;
     }
 }
 

@@ -228,7 +228,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     titleGrid->setColumnStretch(1, 1);
 
     auto* titleIcon = new QLabel(this);
-    titleIcon->setPixmap(IconCache::icon(IconCache::regina).pixmap(64));
+    titleIcon->setPixmap(IconCache::icon(IconCache::Icon::regina).pixmap(64));
     titleGrid->addWidget(titleIcon, 0, 0, 2, 1);
     auto* titleText = new QLabel(tr("<qt><font size=\"5\">Regina</font><p>"
         "<b>Version %1</b></qt>").arg(PACKAGE_VERSION));

@@ -147,11 +147,11 @@ void HyperCompatibilityUI::refresh() {
 
     // Are we able to compute the new matrices if we want to?
     if (surfaces->size() == 0) {
-        setMessage(EMPTY_LIST);
+        setMessage(Message::EmptyList);
         return;
     }
     if (! surfaces->isEmbeddedOnly()) {
-        setMessage(NON_EMBEDDED);
+        setMessage(Message::NonEmbedded);
         return;
     }
 
@@ -159,7 +159,7 @@ void HyperCompatibilityUI::refresh() {
     if ((! requestedCalculation) && surfaces->size() >
             ReginaPrefSet::global().surfacesCompatThreshold) {
         // Nope.
-        setMessage(TOO_LARGE);
+        setMessage(Message::TooLarge);
         btnCalculate->setEnabled(true);
         return;
     }
@@ -190,9 +190,9 @@ void HyperCompatibilityUI::refresh() {
     chooseMatrix->setEnabled(true);
 }
 
-void HyperCompatibilityUI::setMessage(MessageIndex msg) {
+void HyperCompatibilityUI::setMessage(Message msg) {
     switch (msg) {
-        case TOO_LARGE:
+        case Message::TooLarge:
             layerNone->setText(tr("<qt>The compatibility matrices "
                 "have not been computed automatically, because this "
                 "list contains a large number of hypersurfaces.<p>"
@@ -201,14 +201,14 @@ void HyperCompatibilityUI::setMessage(MessageIndex msg) {
                 "<i>Calculate</i> button above.</qt>"));
             break;
 
-        case NON_EMBEDDED:
+        case Message::NonEmbedded:
             layerNone->setText(tr("<qt>This list "
                 "may contain immersed and/or singular hypersurfaces.<p>"
                 "Compatibility matrices can only be shown for a list "
                 "of <i>embedded</i> normal hypersurfaces.</qt>"));
             break;
 
-        case EMPTY_LIST:
+        case Message::EmptyList:
             layerNone->setText(tr(
                 "<qt>This list of hypersurfaces is empty.</qt>"));
             break;
@@ -224,7 +224,7 @@ void HyperCompatibilityUI::changeLayer(int index) {
         stack->setCurrentWidget(layerLocal);
         matrixLocal->fillLocal(*surfaces);
         ReginaPrefSet::global().surfacesInitialCompat =
-            ReginaPrefSet::LocalCompat;
+            ReginaPrefSet::CompatMatrix::Local;
     }
 }
 

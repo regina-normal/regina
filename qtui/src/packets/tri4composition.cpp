@@ -132,7 +132,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     isoSelectArea->addWidget(label);
     isoTest = new PacketChooser(tri_->root(),
         new SingleTypeFilter<regina::PacketOf<regina::Triangulation<4>>>(),
-        PacketChooser::ROOT_AS_PACKET, true, nullptr, ui);
+        PacketChooser::RootRole::Packet, true, nullptr, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
     connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
@@ -203,28 +203,28 @@ void Tri4CompositionUI::updateIsoPanel() {
     if (compare_) {
         if ((isomorphism = tri_->isIsomorphicTo(*compare_))) {
             isoResult->setText(tr("Result: Isomorphic (this = T)"));
-            isoType = IsIsomorphic;
+            isoType = IsomorphismType::IsIsomorphic;
         } else if ((isomorphism = tri_->isContainedIn(*compare_))) {
             isoResult->setText(tr("Result: Subcomplex (this < T)"));
-            isoType = IsSubcomplex;
+            isoType = IsomorphismType::IsSubcomplex;
         } else if ((isomorphism = compare_->isContainedIn(*tri_))) {
             isoResult->setText(tr("Result: Subcomplex (T < this)"));
-            isoType = IsSupercomplex;
+            isoType = IsomorphismType::IsSupercomplex;
         } else {
             isoResult->setText(tr("Result: No relationship"));
-            isoType = NoRelationship;
+            isoType = IsomorphismType::NoRelationship;
         }
     } else {
         isomorphism.reset();
         isoResult->setText(tr("Result:"));
-        isoType = NoRelationship;
+        isoType = IsomorphismType::NoRelationship;
     }
 
     isoView->setEnabled(isomorphism.has_value());
 }
 
 void Tri4CompositionUI::viewIsomorphism() {
-    if (isoType == NoRelationship || ! compare_)
+    if (isoType == IsomorphismType::NoRelationship || ! compare_)
         return;
 
     QString title, msg;
@@ -234,7 +234,7 @@ void Tri4CompositionUI::viewIsomorphism() {
         arg(QString(tri_->humanLabel().c_str()).toHtmlEscaped()).
         arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
-    if (isoType == IsIsomorphic) {
+    if (isoType == IsomorphismType::IsIsomorphic) {
         title = tr("Details of the isomorphism between "
             "the two triangulations:");
         msg = tr("<qt>The left hand side refers to this "
@@ -261,7 +261,7 @@ void Tri4CompositionUI::viewIsomorphism() {
             "vertices.").
             arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
-        if (isoType == IsSubcomplex)
+        if (isoType == IsomorphismType::IsSubcomplex)
             for (size_t i = 0; i < isomorphism->size(); i++)
                 isoDetails += QString("%1 (01234)  &rarr;  %2 (%3)").
                     arg(i).

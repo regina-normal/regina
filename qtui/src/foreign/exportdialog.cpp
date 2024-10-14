@@ -59,7 +59,7 @@ ExportDialog::ExportDialog(QWidget* parent,
     auto* label = new QLabel(tr("Data to export:"));
     hStrip->addWidget(label);
     chooser = new PacketChooser(tree, useFilter,
-        PacketChooser::ROOT_AS_SUBTREE, false, std::move(defaultSelection));
+        PacketChooser::RootRole::Subtree, false, std::move(defaultSelection));
     hStrip->addWidget(chooser, 1);
     QString expln = tr("Select the piece of data that you wish to export.");
     label->setWhatsThis(expln);

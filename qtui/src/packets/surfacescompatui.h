@@ -62,7 +62,7 @@ class SurfacesCompatibilityUI : public QObject, public PacketViewerTab {
          * Constants for the various "computer says no" messages that can be
          * displayed.
          */
-        enum MessageIndex { TOO_LARGE, NON_EMBEDDED, EMPTY_LIST };
+        enum class Message { TooLarge, NonEmbedded, EmptyList };
 
         /**
          * Packet details
@@ -122,7 +122,7 @@ class SurfacesCompatibilityUI : public QObject, public PacketViewerTab {
         /**
          * Change the display to show the given message.
          */
-        void setMessage(MessageIndex msg);
+        void setMessage(Message msg);
 
     private slots:
         /**

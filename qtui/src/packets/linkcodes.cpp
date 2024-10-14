@@ -80,13 +80,13 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     type->addItem(tr("Jenkins format"));
     type->setWhatsThis(msg);
     switch (ReginaPrefSet::global().linkCodeType) {
-        case ReginaPrefSet::DowkerThistlethwaite:
+        case ReginaPrefSet::LinkCode::DowkerThistlethwaite:
             type->setCurrentIndex(1); break;
-        case ReginaPrefSet::KnotSig:
+        case ReginaPrefSet::LinkCode::KnotSig:
             type->setCurrentIndex(2); break;
-        case ReginaPrefSet::PlanarDiagram:
+        case ReginaPrefSet::LinkCode::PlanarDiagram:
             type->setCurrentIndex(3); break;
-        case ReginaPrefSet::Jenkins:
+        case ReginaPrefSet::LinkCode::Jenkins:
             type->setCurrentIndex(4); break;
         default:
             type->setCurrentIndex(0); break;
@@ -249,19 +249,23 @@ void LinkCodesUI::typeChanged(int) {
     switch (type->currentIndex()) {
         case 1:
             ReginaPrefSet::global().linkCodeType =
-                ReginaPrefSet::DowkerThistlethwaite;
+                ReginaPrefSet::LinkCode::DowkerThistlethwaite;
             break;
         case 2:
-            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::KnotSig;
+            ReginaPrefSet::global().linkCodeType =
+                ReginaPrefSet::LinkCode::KnotSig;
             break;
         case 3:
-            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::PlanarDiagram;
+            ReginaPrefSet::global().linkCodeType =
+                ReginaPrefSet::LinkCode::PlanarDiagram;
             break;
         case 4:
-            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::Jenkins;
+            ReginaPrefSet::global().linkCodeType =
+                ReginaPrefSet::LinkCode::Jenkins;
             break;
         default:
-            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::Gauss;
+            ReginaPrefSet::global().linkCodeType =
+                ReginaPrefSet::LinkCode::Gauss;
             break;
     }
 

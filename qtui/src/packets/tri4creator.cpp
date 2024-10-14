@@ -138,7 +138,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(label);
     iBundleFrom = new PacketChooser(mainWindow->getPacketTree(),
         new SubclassFilter<regina::Triangulation<3>>(),
-        PacketChooser::ROOT_AS_PACKET);
+        PacketChooser::RootRole::Packet);
     iBundleFrom->setWhatsThis(expln);
     iBundleFrom->selectPacket(mainWindow->selectedPacket());
     subLayout->addWidget(iBundleFrom, 1);
@@ -158,7 +158,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(label);
     s1BundleFrom = new PacketChooser(mainWindow->getPacketTree(),
         new SubclassFilter<regina::Triangulation<3>>(),
-        PacketChooser::ROOT_AS_PACKET);
+        PacketChooser::RootRole::Packet);
     s1BundleFrom->setWhatsThis(expln);
     s1BundleFrom->selectPacket(mainWindow->selectedPacket());
     subLayout->addWidget(s1BundleFrom, 1);

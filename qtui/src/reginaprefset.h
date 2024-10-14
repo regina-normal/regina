@@ -101,20 +101,20 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
-        enum LinkCodeType { Gauss, DowkerThistlethwaite, KnotSig, Jenkins,
-            PlanarDiagram };
-            /**< Possible export codes that can be displayed for links. */
-        enum LinkCrossingsStyle { PictorialCrossings, TextCrossings };
-            /**< Possible styles for displaying crossings for links. */
-        enum LinkHomflyType { HomflyAZ, HomflyLM };
-            /**< Possible flavours of the HOMFLY-PT polynomial to display. */
-        enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
+        enum class CompatMatrix { Local, Global };
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
-        enum ThreadCount { ThreadSingle, ThreadPolite, ThreadAll };
+        enum class CrossingStyle { Pictorial, Text };
+            /**< Possible styles for displaying crossings for links. */
+        enum class HomflyStyle { AZ, LM };
+            /**< Possible flavours of the HOMFLY-PT polynomial to display. */
+        enum class LinkCode { Gauss, DowkerThistlethwaite, KnotSig, Jenkins,
+            PlanarDiagram };
+            /**< Possible export codes that can be displayed for links. */
+        enum class ThreadCount { Single, Polite, All };
             /**< Options for how aggressively we use multithreading in long
                  computation. */
-        enum TriGraphType { DualGraph, TreeDecomposition,
+        enum class TriGraph { DualGraph, TreeDecomposition,
                 NiceTreeDecomposition };
             /**< Possible types of graph that can be displayed in a
                  (2,3,4)-manifold graph viewer. */
@@ -136,18 +136,18 @@ class ReginaPrefSet : public QObject {
         regina::HyperList hypersurfacesCreationList;
             /**< The default options for which normal hypersurfaces to
                  enumerate in a 4-manifold triangulation. */
-        LinkCodeType linkCodeType;
+        LinkCode linkCodeType;
             /**< The export code to display for knots and links. */
         int linkCreationType;
             /**< The initial option to select in the list of link types
                  when creating a new link.  This is given as an
                  index into the list of options. */
-        LinkCrossingsStyle linkCrossingsStyle;
+        CrossingStyle linkCrossingsStyle;
             /**< The style for displaying crossings for knots and links. */
-        LinkHomflyType linkHomflyType;
+        HomflyStyle linkHomflyType;
             /**< The flavour of HOMFLY-PT polynomial to display for
                  knots and links. */
-        TriGraphType linkInitialGraphType;
+        TriGraph linkInitialGraphType;
             /**< Indicates which graph to initially display in a
                  link viewer.  Must not be DualGraph. */
         bool pythonAutoIndent;
@@ -166,7 +166,7 @@ class ReginaPrefSet : public QObject {
         regina::NormalList surfacesCreationList;
             /**< The default options for which normal surfaces to enumerate
                  in a 3-manifold triangulation. */
-        SurfacesCompatMatrix surfacesInitialCompat;
+        CompatMatrix surfacesInitialCompat;
             /**< The matrix first shown when the compatibility tab is opened
                  for a normal surface list in a 3-manifold triangulation. */
         bool surfacesSupportOriented;
@@ -237,7 +237,7 @@ class ReginaPrefSet : public QObject {
             /**< Indicates whether tetrahedron/pentachoron numbers should
                  be used to label vertices in face/facet pairing graphs
                  for 3/4-manifold triangulations. */
-        TriGraphType triInitialGraphType;
+        TriGraph triInitialGraphType;
             /**< Indicates which graph to initially display in a
                  (2,3,4)-manifold graph viewer. */
         unsigned triSurfacePropsThreshold;

@@ -68,7 +68,7 @@ ImportDialog::ImportDialog(QWidget* parent,
     l->setWhatsThis(expln);
     hStrip->addWidget(l);
     chooser = new PacketChooser(tree, useFilter,
-        PacketChooser::ROOT_AS_INSERTION_POINT, false,
+        PacketChooser::RootRole::InsertionPoint, false,
         std::move(defaultParent));
     chooser->setWhatsThis(expln);
     hStrip->addWidget(chooser, 1);

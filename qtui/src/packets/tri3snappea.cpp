@@ -197,7 +197,7 @@ Tri3SnapPeaUI::Tri3SnapPeaUI(regina::PacketOf<Triangulation<3>>* packet,
     auto* buttonArea = new QHBoxLayout();
     buttonArea->addStretch(1);
     auto* btnToSnapPea = new QPushButton(
-        IconCache::icon(IconCache::packet_snappea),
+        IconCache::icon(IconCache::Icon::packet_snappea),
         tr("Convert to a SnapPea triangulation"));
     buttonArea->addWidget(btnToSnapPea);
     buttonArea->addStretch(1);

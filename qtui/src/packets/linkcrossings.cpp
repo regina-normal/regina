@@ -270,7 +270,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     type->addItem(tr("Pictures"));
     type->addItem(tr("Text"));
     switch (ReginaPrefSet::global().linkCrossingsStyle) {
-        case ReginaPrefSet::TextCrossings:
+        case ReginaPrefSet::CrossingStyle::Text:
             type->setCurrentIndex(1); break;
         default:
             type->setCurrentIndex(0); break;
@@ -841,8 +841,8 @@ void LinkCrossingsUI::snapPea() {
 void LinkCrossingsUI::typeChanged(int) {
     bool pictorial = (type->currentIndex() != 1);
     ReginaPrefSet::global().linkCrossingsStyle =
-        (pictorial ? ReginaPrefSet::PictorialCrossings :
-         ReginaPrefSet::TextCrossings);
+        (pictorial ? ReginaPrefSet::CrossingStyle::Pictorial :
+         ReginaPrefSet::CrossingStyle::Text);
 
     for (auto l : componentLists)
         if (l) {

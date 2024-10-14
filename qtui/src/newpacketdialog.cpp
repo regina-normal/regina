@@ -67,7 +67,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     createBeneath->setWhatsThis(expln);
     parentStrip->addWidget(createBeneath);
     chooser = new PacketChooser(tree, creator->filter(),
-        PacketChooser::ROOT_AS_INSERTION_POINT, false,
+        PacketChooser::RootRole::InsertionPoint, false,
         std::move(defaultParent));
     chooser->setWhatsThis(expln);
     parentStrip->addWidget(chooser, 1);

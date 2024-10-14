@@ -138,7 +138,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     subLayout->addWidget(label);
     convertFromRegina = new PacketChooser(mainWindow->getPacketTree(),
         new SingleTypeFilter<regina::PacketOf<regina::Triangulation<3>>>(),
-        PacketChooser::ROOT_AS_PACKET);
+        PacketChooser::RootRole::Packet);
     convertFromRegina->setWhatsThis(expln);
     convertFromRegina->selectPacket(mainWindow->selectedPacket());
     subLayout->addWidget(convertFromRegina, 1);
@@ -166,7 +166,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     subLayout->addWidget(label);
     convertFromLink = new PacketChooser(mainWindow->getPacketTree(),
         new SingleTypeFilter<regina::PacketOf<regina::Link>>(),
-        PacketChooser::ROOT_AS_PACKET);
+        PacketChooser::RootRole::Packet);
     convertFromLink->setWhatsThis(expln);
     convertFromLink->selectPacket(mainWindow->selectedPacket());
     subLayout->addWidget(convertFromLink, 1);

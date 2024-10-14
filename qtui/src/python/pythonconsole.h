@@ -71,11 +71,6 @@ class PythonConsole : public QMainWindow {
     friend class CommandEdit;
     private:
         /**
-         * Possible types of prompt.
-         */
-        enum PromptMode { PRIMARY, SECONDARY, PROCESSING };
-
-        /**
          * Internal components
          */
         QTextEdit* session;

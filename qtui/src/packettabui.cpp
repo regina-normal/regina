@@ -93,7 +93,7 @@ void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
     if (viewerTabs.empty() && ! editorTab)
         viewer->refresh();
     else
-        viewer->queuedAction = PacketViewerTab::Refresh;
+        viewer->queuedAction = PacketViewerTab::Action::Refresh;
 
     tabs->addTab(viewer->getInterface(), label);
 
@@ -171,9 +171,9 @@ void PacketTabbedUI::refresh() {
         if (v) {
             if (v == visibleViewer) {
                 v->refresh();
-                v->queuedAction = PacketViewerTab::None;
+                v->queuedAction = PacketViewerTab::Action::None;
             } else
-                v->queuedAction = PacketViewerTab::Refresh;
+                v->queuedAction = PacketViewerTab::Action::Refresh;
         }
 }
 
@@ -205,9 +205,9 @@ void PacketTabbedUI::notifyTabSelected(int newTab) {
 
     // Perform any pending actions.
     if (visibleViewer) {
-        if (visibleViewer->queuedAction == PacketViewerTab::Refresh)
+        if (visibleViewer->queuedAction == PacketViewerTab::Action::Refresh)
             visibleViewer->refresh();
-        visibleViewer->queuedAction = PacketViewerTab::None;
+        visibleViewer->queuedAction = PacketViewerTab::Action::None;
     }
 }
 
@@ -287,9 +287,9 @@ void PacketTabbedViewerTab::refresh() {
     for (PacketViewerTab* v : viewerTabs)
         if (v == visibleViewer) {
             v->refresh();
-            v->queuedAction = PacketViewerTab::None;
+            v->queuedAction = PacketViewerTab::Action::None;
         } else
-            v->queuedAction = PacketViewerTab::Refresh;
+            v->queuedAction = PacketViewerTab::Action::Refresh;
 }
 
 void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
@@ -305,8 +305,8 @@ void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
     visibleViewer = viewerTabs[newTab];
 
     // Perform any pending actions.
-    if (visibleViewer->queuedAction == PacketViewerTab::Refresh)
+    if (visibleViewer->queuedAction == PacketViewerTab::Action::Refresh)
         visibleViewer->refresh();
-    visibleViewer->queuedAction = PacketViewerTab::None;
+    visibleViewer->queuedAction = PacketViewerTab::Action::None;
 }
 

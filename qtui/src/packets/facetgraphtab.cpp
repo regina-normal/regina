@@ -123,9 +123,9 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     label->setWhatsThis(msg);
     chooseType->setWhatsThis(msg);
     switch (ReginaPrefSet::global().triInitialGraphType) {
-        case ReginaPrefSet::TreeDecomposition:
+        case ReginaPrefSet::TriGraph::TreeDecomposition:
             chooseType->setCurrentIndex(1); break;
-        case ReginaPrefSet::NiceTreeDecomposition:
+        case ReginaPrefSet::TriGraph::NiceTreeDecomposition:
             chooseType->setCurrentIndex(2); break;
         default: chooseType->setCurrentIndex(0); break;
     }
@@ -195,15 +195,15 @@ void FacetGraphTab::changeType(int index) {
     switch (index) {
         case 1:
             ReginaPrefSet::global().triInitialGraphType =
-                ReginaPrefSet::TreeDecomposition;
+                ReginaPrefSet::TriGraph::TreeDecomposition;
             break;
         case 2:
             ReginaPrefSet::global().triInitialGraphType =
-                ReginaPrefSet::NiceTreeDecomposition;
+                ReginaPrefSet::TriGraph::NiceTreeDecomposition;
             break;
         default:
             ReginaPrefSet::global().triInitialGraphType =
-                ReginaPrefSet::DualGraph;
+                ReginaPrefSet::TriGraph::DualGraph;
             break;
     }
 

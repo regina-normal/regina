@@ -88,11 +88,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * How do we describe the root of the packet (which is hidden to
          * the user)?
          */
-        enum RootRole {
-            ROOT_AS_INSERTION_POINT,
-            ROOT_AS_SUBTREE,
-            ROOT_AS_PACKET
-        };
+        enum class RootRole { InsertionPoint, Subtree, Packet };
 
     private:
         std::shared_ptr<regina::Packet> subtree;
@@ -127,7 +123,8 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         PacketChooser(std::shared_ptr<regina::Packet> newSubtree,
                 PacketFilter* newFilter, RootRole useRootRole, QWidget* parent);
         PacketChooser(std::shared_ptr<regina::Packet> newSubtree,
-                PacketFilter* newFilter, RootRole useRootRole = ROOT_AS_SUBTREE,
+                PacketFilter* newFilter,
+                RootRole useRootRole = RootRole::Subtree,
                 bool allowNone = false,
                 std::shared_ptr<regina::Packet> initialSelection = nullptr,
                 QWidget* parent = nullptr);
@@ -227,7 +224,7 @@ class PacketDialog : public QDialog {
             const QString& title,
             const QString& message,
             const QString& whatsThis,
-            PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
+            PacketChooser::RootRole rootRole = PacketChooser::RootRole::Subtree,
             bool allowNone = false,
             std::shared_ptr<regina::Packet> initialSelection = nullptr);
 
@@ -237,7 +234,7 @@ class PacketDialog : public QDialog {
             const QString& title,
             const QString& message,
             const QString& whatsThis,
-            PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
+            PacketChooser::RootRole rootRole = PacketChooser::RootRole::Subtree,
             bool allowNone = false,
             std::shared_ptr<regina::Packet> initialSelection = nullptr);
 };

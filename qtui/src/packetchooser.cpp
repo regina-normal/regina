@@ -204,15 +204,15 @@ void PacketChooser::fill(bool allowNone, std::shared_ptr<Packet> select) {
             if (p->parent())
                 addItem(PacketManager::icon(*p), p->humanLabel().c_str());
             else switch (rootRole) {
-                case ROOT_AS_INSERTION_POINT:
+                case RootRole::InsertionPoint:
                     // No icon for this role.
                     addItem(tr("<Top level>"));
                     break;
-                case ROOT_AS_SUBTREE:
+                case RootRole::Subtree:
                     // No icon for this role.
                     addItem(tr("<Entire tree>"));
                     break;
-                case ROOT_AS_PACKET:
+                case RootRole::Packet:
                     addItem(PacketManager::icon(*p), tr("<Root packet>"));
                     break;
             }

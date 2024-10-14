@@ -33,67 +33,68 @@
 #include "iconcache.h"
 #include "reginasupport.h"
 
-QIcon IconCache::cache_[IconCache::END_OF_LIST];
+QIcon IconCache::cache_[static_cast<int>(IconCache::Icon::END_OF_LIST)];
 
-void IconCache::load(IconID id) {
-    switch (id) {
-        case regina:
+void IconCache::load(Icon icon) {
+    const int id = static_cast<int>(icon);
+    switch (icon) {
+        case Icon::regina:
             cache_[id] = ReginaSupport::regIcon("regina");
             return;
-        case packet_angles:
+        case Icon::packet_angles:
             cache_[id] = ReginaSupport::regIcon("packet_angles");
             return;
-        case packet_attachment:
+        case Icon::packet_attachment:
             cache_[id] = ReginaSupport::regIcon("packet_attachment");
             return;
-        case packet_container:
+        case Icon::packet_container:
             cache_[id] = ReginaSupport::regIcon("packet_container");
             return;
-        case packet_filter:
+        case Icon::packet_filter:
             cache_[id] = ReginaSupport::regIcon("packet_filter");
             return;
-        case packet_hypersurfaces:
+        case Icon::packet_hypersurfaces:
             cache_[id] = ReginaSupport::regIcon("packet_hypersurfaces");
             return;
-        case packet_link:
+        case Icon::packet_link:
             cache_[id] = ReginaSupport::regIcon("packet_link");
             return;
-        case packet_script:
+        case Icon::packet_script:
             cache_[id] = ReginaSupport::regIcon("packet_script");
             return;
-        case packet_snappea:
+        case Icon::packet_snappea:
             cache_[id] = ReginaSupport::regIcon("packet_snappea");
             return;
-        case packet_spatiallink:
+        case Icon::packet_spatiallink:
             cache_[id] = ReginaSupport::regIcon("packet_spatiallink");
             return;
-        case packet_surfaces:
+        case Icon::packet_surfaces:
             cache_[id] = ReginaSupport::regIcon("packet_surfaces");
             return;
-        case packet_text:
+        case Icon::packet_text:
             cache_[id] = ReginaSupport::regIcon("packet_text");
             return;
-        case packet_triangulation2:
+        case Icon::packet_triangulation2:
             cache_[id] = ReginaSupport::regIcon("packet_triangulation2");
             return;
-        case packet_triangulation3:
+        case Icon::packet_triangulation3:
             cache_[id] = ReginaSupport::regIcon("packet_triangulation3");
             return;
-        case packet_triangulation4:
+        case Icon::packet_triangulation4:
             cache_[id] = ReginaSupport::regIcon("packet_triangulation4");
             return;
-        case filter_comb:
+        case Icon::filter_comb:
             cache_[id] = ReginaSupport::regIcon("filter_comb");
             return;
-        case filter_prop:
+        case Icon::filter_prop:
             cache_[id] = ReginaSupport::regIcon("filter_prop");
             return;
-        case lock:
+        case Icon::lock:
             cache_[id] = ReginaSupport::regIcon("lock");
             return;
 
         // Keep gcc happy: list all enumeration values.
-        case END_OF_LIST:
+        case Icon::END_OF_LIST:
             return;
     }
 }

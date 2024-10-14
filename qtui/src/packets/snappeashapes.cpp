@@ -390,8 +390,8 @@ void SnapPeaShapesUI::refresh() {
         updateNonNullActions();
         return;
     }
-    if (tri->solutionType() == SnapPeaTriangulation::not_attempted ||
-            tri->solutionType() == SnapPeaTriangulation::no_solution) {
+    if (tri->solutionType() == SnapPeaTriangulation::Solution::NotAttempted ||
+            tri->solutionType() == SnapPeaTriangulation::Solution::None) {
         updateNonNullActions();
         return;
     }

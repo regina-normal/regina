@@ -72,61 +72,61 @@
 using namespace regina;
 
 QIcon PacketManager::icon(const Packet& packet) {
-    IconCache::IconID id;
+    IconCache::Icon id;
 
     switch (packet.type()) {
         case PacketType::AngleStructures:
-            id = IconCache::packet_angles;
+            id = IconCache::Icon::packet_angles;
             break;
         case PacketType::Container:
-            id = (packet.parent() ? IconCache::packet_container :
-                IconCache::regina);
+            id = (packet.parent() ? IconCache::Icon::packet_container :
+                IconCache::Icon::regina);
             break;
         case PacketType::Link:
-            id = IconCache::packet_link;
+            id = IconCache::Icon::packet_link;
             break;
         case PacketType::SpatialLink:
-            id = IconCache::packet_spatiallink;
+            id = IconCache::Icon::packet_spatiallink;
             break;
         case PacketType::Attachment:
-            id = IconCache::packet_attachment;
+            id = IconCache::Icon::packet_attachment;
             break;
         case PacketType::SurfaceFilter:
             switch (((const SurfaceFilter&)packet).filterType()) {
                 case SurfaceFilterType::Combination:
-                    id = IconCache::filter_comb;
+                    id = IconCache::Icon::filter_comb;
                     break;
                 case SurfaceFilterType::Properties:
-                    id = IconCache::filter_prop;
+                    id = IconCache::Icon::filter_prop;
                     break;
                 default:
-                    id = IconCache::packet_filter;
+                    id = IconCache::Icon::packet_filter;
                     break;
                 }
             break;
         case PacketType::Script:
-            id = IconCache::packet_script;
+            id = IconCache::Icon::packet_script;
             break;
         case PacketType::SnapPea:
-            id = IconCache::packet_snappea;
+            id = IconCache::Icon::packet_snappea;
             break;
         case PacketType::NormalSurfaces:
-            id = IconCache::packet_surfaces;
+            id = IconCache::Icon::packet_surfaces;
             break;
         case PacketType::NormalHypersurfaces:
-            id = IconCache::packet_hypersurfaces;
+            id = IconCache::Icon::packet_hypersurfaces;
             break;
         case PacketType::Text:
-            id = IconCache::packet_text;
+            id = IconCache::Icon::packet_text;
             break;
         case PacketType::Triangulation2:
-            id = IconCache::packet_triangulation2;
+            id = IconCache::Icon::packet_triangulation2;
             break;
         case PacketType::Triangulation3:
-            id = IconCache::packet_triangulation3;
+            id = IconCache::Icon::packet_triangulation3;
             break;
         case PacketType::Triangulation4:
-            id = IconCache::packet_triangulation4;
+            id = IconCache::Icon::packet_triangulation4;
             break;
         // For generic dimensions, we don't cache the icons.
         case PacketType::Triangulation5:
