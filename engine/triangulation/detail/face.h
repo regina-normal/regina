@@ -326,6 +326,9 @@ class FaceBase :
         /**
          * Possible values of \a whyInvalid_.
          * These can be combined using bitwise OR.
+         *
+         * It would be nice to make this a scoped enumeration; if we do this,
+         * `whyInvalid_` would need to have type `Flags<Validity>`.
          */
         enum Validity {
             /**
