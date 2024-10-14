@@ -395,6 +395,17 @@ Version 7.4  [ (to be announced) ]
             - New packet class for specific embeddings of knots and links in
               the 3-sphere.  Currently this offers very limited features, but
               these should be expanded to become more useful over time.
+        Enum SurfaceExport, SurfaceExportFields:
+            - The individual flags now live inside SurfaceExport, which is now
+              a scoped enumeration for better type safety.  In paticular, the
+              enum constants (e.g., surfaceExportName) have been renamed
+              as scoped enum values (e.g., SurfaceExport::Name).  The old
+              constants have been kept as deprecated compile-time constants
+              in the regina namespace.
+            - Flags can still be combined bitwise; the resulting type is now
+              just Flags<SurfaceExport>, and this should all be happening
+              automatically behind the scenes.  SurfaceExportFields is now
+              just a deprecated alias for SurfaceExport.
         Enum SurfaceFilterType:
             - This is now a scoped enumeration, for better type safety.  The
               old enum constants (e.g., NS_FILTER_PROPERTIES) have been renamed

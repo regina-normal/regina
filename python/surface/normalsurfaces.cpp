@@ -49,33 +49,37 @@ using regina::SurfaceFilter;
 using regina::Triangulation;
 
 void addNormalSurfaces(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(SurfaceExportFields)
+    RDOC_SCOPE_BEGIN(SurfaceExport)
 
-    regina::python::add_flags<regina::SurfaceExportFields>(
-        m, "SurfaceExportFields", "SurfaceExport", {
-            { "surfaceExportName", regina::surfaceExportName,
-                rdoc::surfaceExportName },
-            { "surfaceExportEuler", regina::surfaceExportEuler,
-                rdoc::surfaceExportEuler },
-            { "surfaceExportOrient", regina::surfaceExportOrient,
-                rdoc::surfaceExportOrient },
-            { "surfaceExportSides", regina::surfaceExportSides,
-                rdoc::surfaceExportSides },
-            { "surfaceExportBdry", regina::surfaceExportBdry,
-                rdoc::surfaceExportBdry },
-            { "surfaceExportLink", regina::surfaceExportLink,
-                rdoc::surfaceExportLink },
-            { "surfaceExportType", regina::surfaceExportType,
-                rdoc::surfaceExportType },
-            { "surfaceExportNone", regina::surfaceExportNone,
-                rdoc::surfaceExportNone },
-            { "surfaceExportAllButName", regina::surfaceExportAllButName,
-                rdoc::surfaceExportAllButName },
-            { "surfaceExportAll", regina::surfaceExportAll,
-                rdoc::surfaceExportAll }
+    regina::python::add_flags<regina::SurfaceExport>(
+        m, "SurfaceExport", "SurfaceExportFlags", {
+            { "Name", regina::SurfaceExport::Name, rdoc::Name },
+            { "Euler", regina::SurfaceExport::Euler, rdoc::Euler },
+            { "Orient", regina::SurfaceExport::Orient, rdoc::Orient },
+            { "Sides", regina::SurfaceExport::Sides, rdoc::Sides },
+            { "Bdry", regina::SurfaceExport::Bdry, rdoc::Bdry },
+            { "Link", regina::SurfaceExport::Link, rdoc::Link },
+            { "Type", regina::SurfaceExport::Type, rdoc::Type },
+            { "None", regina::SurfaceExport::None, rdoc::None },
+            { "AllButName", regina::SurfaceExport::AllButName,
+                rdoc::AllButName },
+            { "All", regina::SurfaceExport::All, rdoc::All }
         }, rdoc_scope, rdoc_global::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
+
+    // Deprecated type alias and constants:
+    m.attr("SurfaceExportFields") = m.attr("SurfaceExport");
+    m.attr("surfaceExportName") = regina::SurfaceExport::Name;
+    m.attr("surfaceExportEuler") = regina::SurfaceExport::Euler;
+    m.attr("surfaceExportOrient") = regina::SurfaceExport::Orient;
+    m.attr("surfaceExportSides") = regina::SurfaceExport::Sides;
+    m.attr("surfaceExportBdry") = regina::SurfaceExport::Bdry;
+    m.attr("surfaceExportLink") = regina::SurfaceExport::Link;
+    m.attr("surfaceExportType") = regina::SurfaceExport::Type;
+    m.attr("surfaceExportNone") = regina::SurfaceExport::None;
+    m.attr("surfaceExportAllButName") = regina::SurfaceExport::AllButName;
+    m.attr("surfaceExportAll") = regina::SurfaceExport::All;
 
     m.def("makeMatchingEquations", regina::makeMatchingEquations,
         rdoc::makeMatchingEquations);
@@ -130,11 +134,11 @@ void addNormalSurfaces(pybind11::module_& m) {
             rdoc::recreateMatchingEquations)
         .def("saveCSVStandard", &NormalSurfaces::saveCSVStandard,
             pybind11::arg(),
-            pybind11::arg("additionalFields") = regina::surfaceExportAll,
+            pybind11::arg("additionalFields") = regina::SurfaceExport::All,
             rdoc::saveCSVStandard)
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
             pybind11::arg(),
-            pybind11::arg("additionalFields") = regina::surfaceExportAll,
+            pybind11::arg("additionalFields") = regina::SurfaceExport::All,
             rdoc::saveCSVEdgeWeight)
         .def("vectors", [](const NormalSurfaces& list) {
             return pybind11::make_iterator(

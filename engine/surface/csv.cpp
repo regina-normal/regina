@@ -61,20 +61,20 @@ namespace {
      * Writes a piece of the CSV header corresponding to the given set
      * of optional fields.
      */
-    void writePropHeader(std::ostream& out, SurfaceExport fields) {
-        if (fields.has(surfaceExportName))
+    void writePropHeader(std::ostream& out, Flags<SurfaceExport> fields) {
+        if (fields.has(SurfaceExport::Name))
             out << "name,";
-        if (fields.has(surfaceExportEuler))
+        if (fields.has(SurfaceExport::Euler))
             out << "euler,";
-        if (fields.has(surfaceExportOrient))
+        if (fields.has(SurfaceExport::Orient))
             out << "orientable,";
-        if (fields.has(surfaceExportSides))
+        if (fields.has(SurfaceExport::Sides))
             out << "sides,";
-        if (fields.has(surfaceExportBdry))
+        if (fields.has(SurfaceExport::Bdry))
             out << "boundary,";
-        if (fields.has(surfaceExportLink))
+        if (fields.has(SurfaceExport::Link))
             out << "link,";
-        if (fields.has(surfaceExportType))
+        if (fields.has(SurfaceExport::Type))
             out << "type,";
     }
 
@@ -83,30 +83,30 @@ namespace {
      * corresponding to the given set of optional fields.
      */
     void writePropData(std::ostream& out, const NormalSurface& s,
-            SurfaceExport fields) {
-        if (fields.has(surfaceExportName)) {
+            Flags<SurfaceExport> fields) {
+        if (fields.has(SurfaceExport::Name)) {
             if (! s.name().empty())
                 writeCSVQuotedString(out, s.name().c_str());
             out << ',';
         }
-        if (fields.has(surfaceExportEuler)) {
+        if (fields.has(SurfaceExport::Euler)) {
             if (s.isCompact())
                 out << s.eulerChar();
             out << ',';
         }
-        if (fields.has(surfaceExportOrient)) {
+        if (fields.has(SurfaceExport::Orient)) {
             if (s.isCompact()) {
                 out << (s.isOrientable() ? "TRUE" : "FALSE");
             }
             out << ',';
         }
-        if (fields.has(surfaceExportSides)) {
+        if (fields.has(SurfaceExport::Sides)) {
             if (s.isCompact()) {
                 out << (s.isTwoSided() ? '2' : '1');
             }
             out << ',';
         }
-        if (fields.has(surfaceExportBdry)) {
+        if (fields.has(SurfaceExport::Bdry)) {
             if (! s.isCompact()) {
                 try {
                     MatrixInt slopes = s.boundaryIntersections();
@@ -126,7 +126,7 @@ namespace {
                 out << "none";
             out << ',';
         }
-        if (fields.has(surfaceExportLink)) {
+        if (fields.has(SurfaceExport::Link)) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
             const Vertex<3>* v = s.isVertexLink();
@@ -143,7 +143,7 @@ namespace {
             }
             out << ',';
         }
-        if (fields.has(surfaceExportType)) {
+        if (fields.has(SurfaceExport::Type)) {
             // Mirror the information that gets shown in the Type column
             // in the GUI.
             if (s.isSplitting())
@@ -158,7 +158,7 @@ namespace {
 }
 
 bool NormalSurfaces::saveCSVStandard(const char* filename,
-        SurfaceExport additionalFields) const {
+        Flags<SurfaceExport> additionalFields) const {
     std::ofstream out(filename);
     if (! out)
         return false;
@@ -229,7 +229,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 }
 
 bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
-        SurfaceExport additionalFields) const {
+        Flags<SurfaceExport> additionalFields) const {
     std::ofstream out(filename);
     if (! out)
         return false;

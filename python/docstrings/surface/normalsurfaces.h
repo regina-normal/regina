@@ -63,21 +63,27 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields
-static const char *SurfaceExportFields =
+// Docstring regina::python::doc::SurfaceExport
+static const char *SurfaceExport =
 R"doc(Used to describe a field, or a set of fields, that can be exported
-alongside a normal surface list. This enumeration type, and the
-corresponding flags class SurfaceExport, is used with export routines
-such as NormalSurfaces::saveCSVStandard() or
+alongside a normal surface list. This enumeration type is used with
+export routines such as NormalSurfaces::saveCSVStandard() or
 NormalSurfaces::saveCSVEdgeWeight().
 
-This type describes fields in addition to normal coordinates, not the
-normal coordinates themselves (which are always exported). Each field
-describes some property of a single normal surface, and corresponds to
-a single column in a table of normal surfaces.
+This type describes fields to export _in addition_ to normal
+coordinates, not the normal coordinates themselves (which are always
+exported). Each field describes some property of a single normal
+surface, and corresponds to a single column in a table of normal
+surfaces.
 
-You can describe a set of fields by combining the values for
-individual fields using the bitwise OR operator.
+This enumeration names individual fields, as well as some common
+combinations of fields (such as ``None`` and ``All``). Fields can be
+combined using the bitwise OR operator (resulting in an object of type
+``Flags<SurfaceExport>``). In particular, if a surface export function
+takes an argument of type ``Flags<SurfaceExport>``, then you can pass
+a single SurfaceExport constant, or a bitwise combination of such
+constants ``(field1 | field2)``, or empty braces ``{}`` to indicate no
+fields at all.
 
 The list of available fields may grow with future releases of Regina.)doc";
 
@@ -490,8 +496,8 @@ As well as the normal surface coordinates, additional properties of
 the normal surfaces (such as Euler characteristic, orientability, and
 so on) can be included as extra fields in the export. Users can select
 precisely which properties to include by passing a bitwise OR
-combination of constants from the regina::SurfaceExportFields
-enumeration type.
+combination of constants from the regina::SurfaceExport enumeration
+type.
 
 The CSV format used here begins with a header row, and uses commas as
 field separators. Text fields with arbitrary contents are placed
@@ -510,9 +516,9 @@ Parameter ``filename``:
     the name of the CSV file to export to.
 
 Parameter ``additionalFields``:
-    a bitwise OR combination of constants from
-    regina::SurfaceExportFields indicating which additional properties
-    of surfaces should be included in the export.
+    a bitwise OR combination of constants from regina::SurfaceExport
+    indicating which additional properties of surfaces should be
+    included in the export.
 
 Returns:
     ``True`` if the export was successful, or ``False`` otherwise.)doc";
@@ -533,8 +539,8 @@ As well as the normal surface coordinates, additional properties of
 the normal surfaces (such as Euler characteristic, orientability, and
 so on) can be included as extra fields in the export. Users can select
 precisely which properties to include by passing a bitwise OR
-combination of constants from the regina::SurfaceExportFields
-enumeration type.
+combination of constants from the regina::SurfaceExport enumeration
+type.
 
 The CSV format used here begins with a header row, and uses commas as
 field separators. Text fields with arbitrary contents are placed
@@ -553,9 +559,9 @@ Parameter ``filename``:
     the name of the CSV file to export to.
 
 Parameter ``additionalFields``:
-    a bitwise OR combination of constants from
-    regina::SurfaceExportFields indicating which additional properties
-    of surfaces should be included in the export.
+    a bitwise OR combination of constants from regina::SurfaceExport
+    indicating which additional properties of surfaces should be
+    included in the export.
 
 Returns:
     ``True`` if the export was successful, or ``False`` otherwise.)doc";
@@ -677,24 +683,24 @@ Returns:
 
 }
 
-namespace SurfaceExportFields_ {
+namespace SurfaceExport_ {
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportAll
-static const char *surfaceExportAll =
+// Docstring regina::python::doc::SurfaceExport_::All
+static const char *All =
 R"doc(Indicates that all available fields should be exported, including the
 user-assigned surface name. Since the list of available fields may
 grow with future releases, the numerical value of this constant may
 change as a result.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportAllButName
-static const char *surfaceExportAllButName =
+// Docstring regina::python::doc::SurfaceExport_::AllButName
+static const char *AllButName =
 R"doc(Indicates that all available fields should be exported, except for the
 user-assigned surface name. Since the list of available fields may
 grow with future releases, the numerical value of this constant may
 change as a result.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportBdry
-static const char *surfaceExportBdry =
+// Docstring regina::python::doc::SurfaceExport_::Bdry
+static const char *Bdry =
 R"doc(Represents the calculated property of whether a surface is bounded. In
 most cases, this will be one of the strings "closed", "real bdry" or
 "infinite" (where "infinite" indicates a surface with infinitely many
@@ -706,39 +712,41 @@ around the meridian and *q* times around the longitude. See
 NormalSurface::boundaryIntersections() for further information on
 interpreting these values.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportEuler
-static const char *surfaceExportEuler =
+// Docstring regina::python::doc::SurfaceExport_::Euler
+static const char *Euler =
 R"doc(Represents the calculated Euler characteristic of a surface. This will
 be an integer, and will be left empty if the Euler characteristic
 cannot be computed.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportLink
-static const char *surfaceExportLink =
+// Docstring regina::python::doc::SurfaceExport_::Link
+static const char *Link =
 R"doc(Represents whether a surface is a single vertex link or a thin edge
 link. See NormalSurface::isVertexLink() and
 NormalSurface::isThinEdgeLink() for details. This will be written as a
 human-readable string.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportName
-static const char *surfaceExportName = R"doc(Represents the user-assigned surface name.)doc";
+// Docstring regina::python::doc::SurfaceExport_::Name
+static const char *Name = R"doc(Represents the user-assigned surface name.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportNone
-static const char *surfaceExportNone = R"doc(Indicates that no additional fields should be exported.)doc";
+// Docstring regina::python::doc::SurfaceExport_::None
+static const char *None =
+R"doc(Indicates that no fields should be exported (except for the normal
+coordinates, which are always exported).)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportOrient
-static const char *surfaceExportOrient =
+// Docstring regina::python::doc::SurfaceExport_::Orient
+static const char *Orient =
 R"doc(Represents the calculated property of whether a surface is orientable.
 This will be the string ``TRUE`` or ``FALSE``, or will be left empty
 if the orientability cannot be computed.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportSides
-static const char *surfaceExportSides =
+// Docstring regina::python::doc::SurfaceExport_::Sides
+static const char *Sides =
 R"doc(Represents the calculated property of whether a surface is one-sided
 or two-sided. This will be the integer 1 or 2, or will be left empty
 if the "sidedness" cannot be computed.)doc";
 
-// Docstring regina::python::doc::SurfaceExportFields_::surfaceExportType
-static const char *surfaceExportType =
+// Docstring regina::python::doc::SurfaceExport_::Type
+static const char *Type =
 R"doc(Represents any additional high-level properties of a surface, such as
 whether it is a splitting surface or a central surface. This will be
 written as a human-readable string. This field is somewhat arbitrary,

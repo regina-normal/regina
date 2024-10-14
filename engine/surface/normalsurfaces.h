@@ -62,45 +62,50 @@ class SurfaceFilter;
 
 /**
  * Used to describe a field, or a set of fields, that can be exported
- * alongside a normal surface list.  This enumeration type, and the
- * corresponding flags class SurfaceExport, is used with export routines such
- * as NormalSurfaces::saveCSVStandard() or NormalSurfaces::saveCSVEdgeWeight().
+ * alongside a normal surface list.  This enumeration type is used with
+ * export routines such as NormalSurfaces::saveCSVStandard() or
+ * NormalSurfaces::saveCSVEdgeWeight().
  *
- * This type describes fields in addition to normal coordinates, not the
- * normal coordinates themselves (which are always exported).  Each field
- * describes some property of a single normal surface, and corresponds to a
- * single column in a table of normal surfaces.
+ * This type describes fields to export _in addition_ to normal coordinates,
+ * not the normal coordinates themselves (which are always exported).
+ * Each field describes some property of a single normal surface, and
+ * corresponds to a single column in a table of normal surfaces.
  *
- * You can describe a set of fields by combining the values for individual
- * fields using the bitwise OR operator.
+ * This enumeration names individual fields, as well as some common
+ * combinations of fields (such as `None` and `All`).  Fields can be combined
+ * using the bitwise OR operator (resulting in an object of type
+ * `Flags<SurfaceExport>`).  In particular, if a surface export function takes
+ * an argument of type `Flags<SurfaceExport>`, then you can pass a single
+ * SurfaceExport constant, or a bitwise combination of such constants
+ * `(field1 | field2)`, or empty braces `{}` to indicate no fields at all.
  *
  * The list of available fields may grow with future releases of Regina.
  *
  * \ingroup surfaces
  */
-enum SurfaceExportFields {
+enum class SurfaceExport {
     /**
      * Represents the user-assigned surface name.
      */
-    surfaceExportName = 0x0001,
+    Name = 0x0001,
     /**
      * Represents the calculated Euler characteristic of a
      * surface.  This will be an integer, and will be left empty
      * if the Euler characteristic cannot be computed.
      */
-    surfaceExportEuler = 0x0002,
+    Euler = 0x0002,
     /**
      * Represents the calculated property of whether a surface is
      * orientable.  This will be the string \c TRUE or \c FALSE, or
      * will be left empty if the orientability cannot be computed.
      */
-    surfaceExportOrient = 0x0004,
+    Orient = 0x0004,
     /**
      * Represents the calculated property of whether a surface is
      * one-sided or two-sided.  This will be the integer 1 or 2,
      * or will be left empty if the "sidedness" cannot be computed.
      */
-    surfaceExportSides = 0x0008,
+    Sides = 0x0008,
     /**
      * Represents the calculated property of whether a surface is
      * bounded.  In most cases, this will be one of the strings "closed",
@@ -114,14 +119,14 @@ enum SurfaceExportFields {
      * around the longitude.  See NormalSurface::boundaryIntersections()
      * for further information on interpreting these values.
      */
-    surfaceExportBdry = 0x0010,
+    Bdry = 0x0010,
     /**
      * Represents whether a surface is a single vertex link or a
      * thin edge link.  See NormalSurface::isVertexLink() and
      * NormalSurface::isThinEdgeLink() for details.  This will be
      * written as a human-readable string.
      */
-    surfaceExportLink = 0x0020,
+    Link = 0x0020,
     /**
      * Represents any additional high-level properties of a
      * surface, such as whether it is a splitting surface or a
@@ -130,39 +135,141 @@ enum SurfaceExportFields {
      * properties it describes are subject to change in future
      * releases of Regina.
      */
-    surfaceExportType = 0x0040,
+    Type = 0x0040,
 
     /**
-     * Indicates that no additional fields should be exported.
+     * Indicates that no fields should be exported (except for the
+     * normal coordinates, which are always exported).
      */
-    surfaceExportNone = 0,
+    None = 0,
     /**
      * Indicates that all available fields should be exported,
      * except for the user-assigned surface name.  Since the list
      * of available fields may grow with future releases, the numerical
      * value of this constant may change as a result.
      */
-    surfaceExportAllButName = 0x007e,
+    AllButName = 0x007e,
     /**
      * Indicates that all available fields should be exported,
      * including the user-assigned surface name.  Since the list
      * of available fields may grow with future releases, the numerical
      * value of this constant may change as a result.
      */
-    surfaceExportAll = 0x007f
+    All = 0x007f
 };
 
 /**
- * A set of fields to export alongside a normal surface list.
+ * A deprecated type alias for a field, or a set of fields, that can be
+ * exported alongside a normal surface list.
  *
- * If a function requires a SurfaceExport object as an argument, you can
- * pass a single SurfaceExportFields constant, or a combination of such
- * constants using the bitwise OR operator, or empty braces {} to indicate
- * no fields at all.
+ * \deprecated As of Regina 7.4, SurfaceExportFields is simply an alias for
+ * the enumeration type SurfaceExport.  A bitwise _combination_ of such fields
+ * will have the type `Flags<SurfaceExport>`, though there is usually no need
+ * for end users to explicitly refer to the flags type by name.
  *
  * \ingroup surfaces
  */
-using SurfaceExport = regina::Flags<SurfaceExportFields>;
+using SurfaceExportFields [[deprecated]] = SurfaceExport;
+
+/**
+ * A deprecated constant indicating one of the fields that can be exported
+ * alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::Name.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportName =
+    SurfaceExport::Name;
+
+/**
+ * A deprecated constant indicating one of the fields that can be exported
+ * alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::Orient.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportOrient =
+    SurfaceExport::Orient;
+
+/**
+ * A deprecated constant indicating one of the fields that can be exported
+ * alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::Euler.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportEuler =
+    SurfaceExport::Euler;
+
+/**
+ * A deprecated constant indicating one of the fields that can be exported
+ * alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::Sides.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportSides =
+    SurfaceExport::Sides;
+
+/**
+ * A deprecated constant indicating one of the fields that can be exported
+ * alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::Bdry.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportBdry =
+    SurfaceExport::Bdry;
+
+/**
+ * A deprecated constant indicating one of the fields that can be exported
+ * alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::Link.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportLink =
+    SurfaceExport::Link;
+
+/**
+ * A deprecated constant indicating one of the fields that can be exported
+ * alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::Type.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportType =
+    SurfaceExport::Type;
+
+/**
+ * A deprecated constant indicating one of the sets of fields that can be
+ * exported alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::None.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportNone =
+    SurfaceExport::None;
+
+/**
+ * A deprecated constant indicating one of the sets of fields that can be
+ * exported alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::AllButName.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportAllButName =
+    SurfaceExport::AllButName;
+
+/**
+ * A deprecated constant indicating one of the sets of fields that can be
+ * exported alongside a normal surface list.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * SurfaceExport::All.
+ */
+[[deprecated]] inline static constexpr SurfaceExport surfaceExportAll =
+    SurfaceExport::All;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -173,9 +280,8 @@ using SurfaceExport = regina::Flags<SurfaceExportFields>;
  *
  * \ingroup surfaces
  */
-inline SurfaceExport operator | (
-        SurfaceExportFields lhs, SurfaceExportFields rhs) {
-    return SurfaceExport(lhs) | rhs;
+inline Flags<SurfaceExport> operator | (SurfaceExport lhs, SurfaceExport rhs) {
+    return Flags<SurfaceExport>(lhs) | rhs;
 }
 
 /**
@@ -761,9 +867,9 @@ class NormalSurfaces :
          * As well as the normal surface coordinates, additional properties
          * of the normal surfaces (such as Euler characteristic, orientability,
          * and so on) can be included as extra fields in the export.  Users can
-         * select precisely which properties to include by passing a
-         * bitwise OR combination of constants from the
-         * regina::SurfaceExportFields enumeration type.
+         * select precisely which properties to include by passing a bitwise OR
+         * combination of constants from the regina::SurfaceExport enumeration
+         * type.
          *
          * The CSV format used here begins with a header row, and uses commas
          * as field separators.  Text fields with arbitrary contents are
@@ -780,12 +886,12 @@ class NormalSurfaces :
          *
          * \param filename the name of the CSV file to export to.
          * \param additionalFields a bitwise OR combination of constants from
-         * regina::SurfaceExportFields indicating which additional properties
-         * of surfaces should be included in the export.
+         * regina::SurfaceExport indicating which additional properties of
+         * surfaces should be included in the export.
          * \return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVStandard(const char* filename,
-            SurfaceExport additionalFields = regina::surfaceExportAll) const;
+            Flags<SurfaceExport> additionalFields = SurfaceExport::All) const;
 
         /**
          * Exports the given list of normal surfaces as a plain text CSV
@@ -801,9 +907,9 @@ class NormalSurfaces :
          * As well as the normal surface coordinates, additional properties
          * of the normal surfaces (such as Euler characteristic, orientability,
          * and so on) can be included as extra fields in the export.  Users can
-         * select precisely which properties to include by passing a
-         * bitwise OR combination of constants from the
-         * regina::SurfaceExportFields enumeration type.
+         * select precisely which properties to include by passing a bitwise OR
+         * combination of constants from the regina::SurfaceExport enumeration
+         * type.
          *
          * The CSV format used here begins with a header row, and uses commas
          * as field separators.  Text fields with arbitrary contents are
@@ -820,12 +926,12 @@ class NormalSurfaces :
          *
          * \param filename the name of the CSV file to export to.
          * \param additionalFields a bitwise OR combination of constants from
-         * regina::SurfaceExportFields indicating which additional properties
-         * of surfaces should be included in the export.
+         * regina::SurfaceExport indicating which additional properties of
+         * surfaces should be included in the export.
          * \return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVEdgeWeight(const char* filename,
-            SurfaceExport additionalFields = regina::surfaceExportAll) const;
+            Flags<SurfaceExport> additionalFields = SurfaceExport::All) const;
 
         /**
          * A C++ iterator that gives access to the raw vectors for surfaces
