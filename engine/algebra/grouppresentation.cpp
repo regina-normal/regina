@@ -583,12 +583,12 @@ GroupExpression::GroupExpression(const char* input, unsigned long nGens) {
     // a^7B^2, aaaaaaaBB, g0^7g1^-2.
 
     enum class WordStatus {
-        Null,   //< at start of word, nothing has been input
-        VarLet, //< read a letter but don't know if it's an a^5 or g2^-2 sit.
-        VarNum, //< `gk` situation read
-        Exp,    //< `^` read
-        ExpSig, //< `^-` read
-        ExpNum  //< reading numbers after `^` or `^-`
+        Null,   /**< at start of word, nothing has been input */
+        VarLet, /**< read a letter but unknown if it's like a^5 or g2^-2 */
+        VarNum, /**< `gk` situation read */
+        Exp,    /**< `^` read */
+        ExpSig, /**< `^-` read */
+        ExpNum  /**< reading numbers after `^` or `^-` */
     };
 
     // a loop that goes through the entries of input.
