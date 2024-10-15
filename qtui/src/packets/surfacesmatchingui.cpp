@@ -98,7 +98,7 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
 }
 
 SurfacesMatchingUI::SurfacesMatchingUI(
-        regina::PacketOf<regina::NormalSurfaces>* packet,
+        regina::PacketOf<NormalSurfaces>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet), currentlyAutoResizing(false), everRefreshed(false) {
     model = new MatchingModel(packet);

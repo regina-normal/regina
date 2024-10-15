@@ -45,6 +45,7 @@
 
 using regina::HyperCoords;
 using regina::NormalCoords;
+using regina::NormalHypersurfaces;
 using regina::NormalSurfaces;
 
 void CoordinateChooser::insertSystem(NormalCoords coordSystem) {
@@ -69,7 +70,7 @@ void CoordinateChooser::insertAllCreators() {
 #endif
 }
 
-void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
+void CoordinateChooser::insertAllViewers(NormalSurfaces* surfaces) {
     if (surfaces->allowsAlmostNormal()) {
         // For lists created with Regina 4.5.1 or earlier, we have
         // already taken out surfaces with multiple octagons.  Make this
@@ -134,8 +135,7 @@ void HyperCoordinateChooser::insertAllCreators() {
     insertSystem(HyperCoords::Prism);
 }
 
-void HyperCoordinateChooser::insertAllViewers(
-        regina::NormalHypersurfaces*) {
+void HyperCoordinateChooser::insertAllViewers(NormalHypersurfaces*) {
     insertSystem(HyperCoords::Standard);
     insertSystem(HyperCoords::Prism);
     insertSystem(HyperCoords::Edge);

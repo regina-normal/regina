@@ -44,7 +44,7 @@ using regina::HyperInfo;
 void addHyperCoords(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HyperCoords)
 
-    pybind11::enum_<regina::HyperCoords>(m, "HyperCoords", rdoc_scope)
+    pybind11::enum_<HyperCoords>(m, "HyperCoords", rdoc_scope)
         .value("Standard", HyperCoords::Standard, rdoc::Standard)
         .value("Prism", HyperCoords::Prism, rdoc::Prism)
         .value("Edge", HyperCoords::Edge, rdoc::Edge)

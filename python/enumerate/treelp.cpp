@@ -175,7 +175,7 @@ void addTreeLP(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(LPSystem)
 
     auto s = pybind11::class_<LPSystem>(m, "LPSystem", rdoc_scope)
-        .def(pybind11::init<regina::NormalEncoding>(), rdoc::__init)
+        .def(pybind11::init<NormalEncoding>(), rdoc::__init)
         .def(pybind11::init<const LPSystem&>(), rdoc::__copy)
         .def("normal", &LPSystem::normal, rdoc::normal)
         .def("angle", &LPSystem::angle, rdoc::angle)

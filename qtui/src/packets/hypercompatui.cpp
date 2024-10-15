@@ -57,7 +57,7 @@ using regina::NormalHypersurfaces;
 using regina::Packet;
 
 HyperCompatibilityUI::HyperCompatibilityUI(
-        regina::PacketOf<regina::NormalHypersurfaces>* packet,
+        regina::PacketOf<NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(nullptr), layerLocal(nullptr), requestedCalculation(false) {

@@ -98,7 +98,7 @@ QVariant HyperMatchingModel::headerData(int section,
 }
 
 HyperMatchingUI::HyperMatchingUI(
-        regina::PacketOf<regina::NormalHypersurfaces>* packet,
+        regina::PacketOf<NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces_(packet), currentlyAutoResizing(false), everRefreshed(false) {
     model = new HyperMatchingModel(packet);

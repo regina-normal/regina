@@ -54,7 +54,7 @@
 using regina::NormalSurfaces;
 using regina::Packet;
 
-SurfaceModel::SurfaceModel(regina::NormalSurfaces* surfaces) :
+SurfaceModel::SurfaceModel(NormalSurfaces* surfaces) :
         surfaces_(surfaces), coordSystem_(surfaces->coords()) {
     nFiltered = surfaces_->size();
     if (nFiltered == 0)
@@ -390,7 +390,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NormalSurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::NormalSurfaces::PacketChangeSpan span(*surfaces_);
+        NormalSurfaces::PacketChangeSpan span(*surfaces_);
         const_cast<regina::NormalSurface&>(
             (*surfaces_)[realIndex[index.row()]]).
             setName(value.toString().toUtf8().constData());
@@ -475,7 +475,7 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
 }
 
 SurfacesCoordinateUI::SurfacesCoordinateUI(
-        regina::PacketOf<regina::NormalSurfaces>* packet,
+        regina::PacketOf<NormalSurfaces>* packet,
         PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(nullptr),
         currentlyResizing(false) {
