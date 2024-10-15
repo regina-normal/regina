@@ -23,6 +23,7 @@ FULL_PATH_NAMES      = YES
 STRIP_FROM_PATH      = "@PROJECT_SOURCE_DIR@/engine" "@PROJECT_SOURCE_DIR@"
 STRIP_FROM_INC_PATH  = "@PROJECT_SOURCE_DIR@/engine" "@PROJECT_SOURCE_DIR@"
 
+# CLASS_DIAGRAMS became obsolete in Doxygen 1.9.3.
 CLASS_DIAGRAMS       = YES
 SOURCE_BROWSER       = NO
 GENERATE_TODOLIST    = YES
@@ -94,7 +95,6 @@ ALPHABETICAL_INDEX   = YES
 GENERATE_HTML        = YES
 HTML_OUTPUT          = .
 HTML_FOOTER          = "@PROJECT_SOURCE_DIR@/engine/doxygen/doc-footer.html"
-HTML_ALIGN_MEMBERS   = YES
 GENERATE_HTMLHELP    = NO
 
 # LaTeX related options:
@@ -129,7 +129,6 @@ INCLUDE_PATH         = "@PROJECT_SOURCE_DIR@/engine"
 # External reference options:
 
 ALLEXTERNALS         = NO
-PERL_PATH            = /usr/bin/perl
 
 # Dot options:
 
