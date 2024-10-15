@@ -73,8 +73,8 @@ void addNormalFlags(pybind11::module_& m) {
             { "Default", NormalAlg::Default, rdoc::Default },
             { "VertexViaReduced", NormalAlg::VertexViaReduced,
                 rdoc::VertexViaReduced },
-            { "VertexStdDirect", NormalAlg::VertexStdDirect,
-                rdoc::VertexStdDirect },
+            { "VertexStandardDirect", NormalAlg::VertexStandardDirect,
+                rdoc::VertexStandardDirect },
             { "VertexTree", NormalAlg::VertexTree, rdoc::VertexTree },
             { "VertexDD", NormalAlg::VertexDD, rdoc::VertexDD },
             { "HilbertPrimal", NormalAlg::HilbertPrimal, rdoc::HilbertPrimal },
@@ -92,7 +92,7 @@ void addNormalFlags(pybind11::module_& m) {
     m.attr("NormalAlgFlags") = m.attr("NormalAlg");
     m.attr("NS_ALG_DEFAULT") = NormalAlg::Default;
     m.attr("NS_VERTEX_VIA_REDUCED") = NormalAlg::VertexViaReduced;
-    m.attr("NS_VERTEX_STD_DIRECT") = NormalAlg::VertexStdDirect;
+    m.attr("NS_VERTEX_STD_DIRECT") = NormalAlg::VertexStandardDirect;
     m.attr("NS_VERTEX_TREE") = NormalAlg::VertexTree;
     m.attr("NS_VERTEX_DD") = NormalAlg::VertexDD;
     m.attr("NS_HILBERT_PRIMAL") = NormalAlg::HilbertPrimal;

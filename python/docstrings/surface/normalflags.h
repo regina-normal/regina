@@ -202,8 +202,8 @@ enumeration", Mathematics of Computation 79 (2010), pp. 453-484.
 
 This flag is incompatible with VertexTree.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::VertexStdDirect
-static const char *VertexStdDirect =
+// Docstring regina::python::doc::NormalAlg_::VertexStandardDirect
+static const char *VertexStandardDirect =
 R"doc(When enumerating in standard normal or almost normal coordinates, this
 flag indicates that the algorithm should work directly in that
 coordinate system, and should not go via the "reduced" (quadrilateral
@@ -242,13 +242,13 @@ solution set.
 This is typically much faster than a direct enumeration in standard
 normal or almost normal coordinates, and enumeration routines will use
 this option where possible unless explicitly requested not to (via the
-flag VertexStdDirect).
+flag VertexStandardDirect).
 
 For an explanation of this procedure, see B. A. Burton, "Converting
 between quadrilateral and standard solution sets in normal surface
 theory", Algebr. Geom. Topol. 9 (2009), 2121-2174.
 
-This flag is incompatible with VertexStdDirect.)doc";
+This flag is incompatible with VertexStandardDirect.)doc";
 
 }
 

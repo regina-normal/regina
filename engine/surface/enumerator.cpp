@@ -146,7 +146,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
     // First clear out all irrelevant options.
     list_->algorithm_ &= (
-        NormalAlg::VertexViaReduced | NormalAlg::VertexStdDirect |
+        NormalAlg::VertexViaReduced | NormalAlg::VertexStandardDirect |
         NormalAlg::VertexTree | NormalAlg::VertexDD);
 
     // For standard normal / almost normal coordinates, choose between
@@ -154,7 +154,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
     if (list_->coords_ == NormalCoords::Standard ||
             list_->coords_ == NormalCoords::AlmostNormal) {
         list_->algorithm_.ensureOne(
-            NormalAlg::VertexViaReduced, NormalAlg::VertexStdDirect);
+            NormalAlg::VertexViaReduced, NormalAlg::VertexStandardDirect);
 
         // If we've chosen via-reduced, check that this is actually available.
         // If not, switch back to standard-direct.
@@ -163,16 +163,16 @@ void NormalSurfaces::Enumerator::fillVertex() {
                     triang.isValid() &&
                     (! triang.isIdeal())))
                 list_->algorithm_ ^=
-                    (NormalAlg::VertexViaReduced | NormalAlg::VertexStdDirect);
+                    (NormalAlg::VertexViaReduced | NormalAlg::VertexStandardDirect);
     } else {
         // Standard-direct vs standard-via-reduced is not relevant here.
         list_->algorithm_.clear(
-            NormalAlg::VertexViaReduced | NormalAlg::VertexStdDirect);
+            NormalAlg::VertexViaReduced | NormalAlg::VertexStandardDirect);
     }
 
     // Choose between double description and tree traversal.
     // Which is the default will depend upon the underlying coordinate system.
-    if (list_->algorithm_.has(NormalAlg::VertexStdDirect)) {
+    if (list_->algorithm_.has(NormalAlg::VertexStandardDirect)) {
         // Tree traversal is at its best when every coordinate is involved
         // in branching decisions (i.e., we are in quad or quad-oct
         // coordinates).  It can be slower when working with triangles,

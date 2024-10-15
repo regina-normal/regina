@@ -258,13 +258,13 @@ enum class NormalAlg {
      * This is typically much faster than a direct enumeration in
      * standard normal or almost normal coordinates, and enumeration
      * routines will use this option where possible unless explicitly
-     * requested not to (via the flag VertexStdDirect).
+     * requested not to (via the flag VertexStandardDirect).
      *
      * For an explanation of this procedure, see B. A. Burton,
      * "Converting between quadrilateral and standard solution sets in
      * normal surface theory", Algebr. Geom. Topol. 9 (2009), 2121-2174.
      *
-     * This flag is incompatible with VertexStdDirect.
+     * This flag is incompatible with VertexStandardDirect.
      */
     VertexViaReduced = 0x0001,
 
@@ -280,7 +280,7 @@ enum class NormalAlg {
      *
      * This flag is incompatible with VertexViaReduced.
      */
-    VertexStdDirect = 0x0002,
+    VertexStandardDirect = 0x0002,
 
     /**
      * When enumerating vertex normal surfaces,
@@ -459,10 +459,10 @@ using NormalAlgFlags [[deprecated]] = NormalAlg;
  * normal surfaces in a 3-manifold triangulation.
  *
  * \deprecated This has been renamed to the scoped enumeration constant
- * NormalAlg::VertexStdDirect.
+ * NormalAlg::VertexStandardDirect.
  */
 [[deprecated]] inline static constexpr NormalAlg NS_VERTEX_STD_DIRECT =
-    NormalAlg::VertexStdDirect;
+    NormalAlg::VertexStandardDirect;
 
 /**
  * A deprecated constant indicating an algorithm variant for enumerating

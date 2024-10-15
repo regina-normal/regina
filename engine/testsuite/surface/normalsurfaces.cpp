@@ -593,19 +593,19 @@ static void verifyConversions(const Triangulation<3>& tri, const char* name) {
     bool conversionSupported = tri.isValid() && ! tri.isIdeal();
 
     NormalSurfaces stdDirect(tri, standardCoords, NormalList::Vertex,
-        NormalAlg::VertexStdDirect);
+        NormalAlg::VertexStandardDirect);
     NormalSurfaces stdConv(tri, standardCoords, NormalList::Vertex,
         NormalAlg::VertexViaReduced);
 
     if (! tri.isEmpty()) {
         EXPECT_FALSE(stdDirect.algorithm().has(NormalAlg::VertexViaReduced));
-        EXPECT_TRUE(stdDirect.algorithm().has(NormalAlg::VertexStdDirect));
+        EXPECT_TRUE(stdDirect.algorithm().has(NormalAlg::VertexStandardDirect));
 
         if (conversionSupported) {
-            EXPECT_FALSE(stdConv.algorithm().has(NormalAlg::VertexStdDirect));
+            EXPECT_FALSE(stdConv.algorithm().has(NormalAlg::VertexStandardDirect));
             EXPECT_TRUE(stdConv.algorithm().has(NormalAlg::VertexViaReduced));
         } else {
-            EXPECT_TRUE(stdConv.algorithm().has(NormalAlg::VertexStdDirect));
+            EXPECT_TRUE(stdConv.algorithm().has(NormalAlg::VertexStandardDirect));
             EXPECT_FALSE(stdConv.algorithm().has(NormalAlg::VertexViaReduced));
         }
     }
@@ -651,13 +651,13 @@ static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
 
     try {
         dd = std::make_unique<NormalSurfaces>(tri, coords, NormalList::Vertex,
-            NormalAlg::VertexDD | NormalAlg::VertexStdDirect);
+            NormalAlg::VertexDD | NormalAlg::VertexStandardDirect);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
     try {
         tree = std::make_unique<NormalSurfaces>(tri, coords, NormalList::Vertex,
-            NormalAlg::VertexTree | NormalAlg::VertexStdDirect);
+            NormalAlg::VertexTree | NormalAlg::VertexStandardDirect);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
