@@ -33,31 +33,25 @@
 
 import re
 
-regex = re.compile("^<class 'regina\\.engine\\.(.+)'>$")
-
 def classInfo(name, object):
-    m = regex.match(str(object))
-    if not m:
-        print(name, ': ERROR - could not determine real class name.')
+    realName = object.__name__
+    if realName == name:
+        if name == 'Bitmask256' or name == 'Qitmask256':
+            # These classes are only present on 64-bit machines.
+            # Omit them here so that this test generates the same output
+            # across all platforms.
+            return
+        print(name, ': class')
+        try:
+            print('Equality type :', object.equalityType)
+        except:
+            # We allow this for exception types.
+            if object.__base__ is RuntimeError:
+                print('Exception type')
+            else:
+                print('ERROR: No equality type')
     else:
-        realName = m.group(1)
-        if realName == name:
-            if name == 'Bitmask256' or name == 'Qitmask256':
-                # These classes are only present on 64-bit machines.
-                # Omit them here so that this test generates the same output
-                # across all platforms.
-                return
-            print(name, ': class')
-            try:
-                print('Equality type :', object.equalityType)
-            except:
-                # We allow this for exception types.
-                if object.__base__ is RuntimeError:
-                    print('Exception type')
-                else:
-                    print('ERROR: No equality type')
-        else:
-            print(name, ': alias -> ', realName)
+        print(name, ': alias -> ', realName)
     print()
 
 def enumInfo(name, object):
