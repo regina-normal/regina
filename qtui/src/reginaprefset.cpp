@@ -250,8 +250,8 @@ void ReginaPrefSet::readInternal() {
     hypersurfacesCreationCoords = static_cast<regina::HyperCoords>(
         settings.value("CreationCoordinates",
             static_cast<int>(regina::HyperCoords::Standard)).toInt());
-    hypersurfacesCreationList = regina::HyperList::fromInt(settings.value(
-        "CreationList", regina::HyperList::Default).toInt());
+    hypersurfacesCreationList = regina::Flags<regina::HyperList>::fromInt(
+        settings.value("CreationList", 0 /* HyperList.Default */).toInt());
 
     settings.beginGroup("Link");
     linkCreationType = settings.value("CreationType", 0).toInt();
@@ -300,8 +300,8 @@ void ReginaPrefSet::readInternal() {
     surfacesCreationCoords = static_cast<regina::NormalCoords>(
         settings.value("CreationCoordinates",
             static_cast<int>(regina::NormalCoords::Standard)).toInt());
-    surfacesCreationList = regina::NormalList::fromInt(settings.value(
-        "CreationList", regina::NormalList::Default).toInt());
+    surfacesCreationList = regina::Flags<regina::NormalList>::fromInt(
+        settings.value("CreationList", 0 /* NormalList::Default */).toInt());
 
     str = settings.value("InitialCompat").toString();
     if (str == "Global")

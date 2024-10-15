@@ -90,7 +90,7 @@ XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
 
     int algorithm;
     if (! valueOf(props.lookup("algorithm"), algorithm))
-        algorithm = AngleAlg::Legacy;
+        algorithm = static_cast<int>(AngleAlg::Legacy);
 
     list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
         Flags<AngleAlg>::fromInt(algorithm), *tri_);
@@ -159,7 +159,7 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
             if (! valueOf(props.lookup("tautonly"), tautOnly))
                 tautOnly = false;
             if (! valueOf(props.lookup("algorithm"), algorithm))
-                algorithm = AngleAlg::Legacy;
+                algorithm = static_cast<int>(AngleAlg::Legacy);
             list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
                 Flags<AngleAlg>::fromInt(algorithm), tri_);
         } else if (subTagName == "struct") {

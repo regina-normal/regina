@@ -172,7 +172,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating %1 normal hypersurfaces").arg(sType), parentWidget);
 
-    HyperList which =
+    regina::Flags<HyperList> which =
         (basisId == BASIS_VERTEX ?
             HyperList::Vertex : HyperList::Fundamental) |
         (embedded->isChecked() ?
@@ -180,7 +180,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
     std::thread t([&, coordSystem, which, this]() {
         try {
             ans = regina::make_packet<NormalHypersurfaces>(std::in_place,
-                tri, coordSystem, which, {}, &tracker);
+                tri, coordSystem, which, regina::HyperAlg::Default, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.
         }

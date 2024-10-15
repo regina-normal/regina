@@ -133,7 +133,7 @@ class ReginaPrefSet : public QObject {
         regina::HyperCoords hypersurfacesCreationCoords;
             /**< The default coordinate system for normal hypersurface
                  creation in a 4-manifold triangulation. */
-        regina::HyperList hypersurfacesCreationList;
+        regina::Flags<regina::HyperList> hypersurfacesCreationList;
             /**< The default options for which normal hypersurfaces to
                  enumerate in a 4-manifold triangulation. */
         LinkCode linkCodeType;
@@ -163,7 +163,7 @@ class ReginaPrefSet : public QObject {
         regina::NormalCoords surfacesCreationCoords;
             /**< The default coordinate system for normal surface creation
                  in a 3-manifold triangulation. */
-        regina::NormalList surfacesCreationList;
+        regina::Flags<regina::NormalList> surfacesCreationList;
             /**< The default options for which normal surfaces to enumerate
                  in a 3-manifold triangulation. */
         CompatMatrix surfacesInitialCompat;

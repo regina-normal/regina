@@ -111,7 +111,7 @@ QWidget* HyperHeaderUI::getInterface() {
 }
 
 void HyperHeaderUI::refresh() {
-    regina::HyperList which = surfaces->which();
+    regina::Flags<regina::HyperList> which = surfaces->which();
 
     QString sEmb, sType;
     if (which.has(regina::HyperList::EmbeddedOnly))

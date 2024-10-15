@@ -199,7 +199,7 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating %1 normal surfaces").arg(sType), parentWidget);
 
-    NormalList which =
+    regina::Flags<NormalList> which =
         (basisId == BASIS_VERTEX ?
             NormalList::Vertex : NormalList::Fundamental) |
         (embedded->isChecked() ?
@@ -207,7 +207,7 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
     std::thread t([&, coordSystem, which, this]() {
         try {
             ans = regina::make_packet<NormalSurfaces>(std::in_place,
-                tri, coordSystem, which, {}, &tracker);
+                tri, coordSystem, which, regina::NormalAlg::Default, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.
         }

@@ -110,7 +110,7 @@ QWidget* SurfacesHeaderUI::getInterface() {
 }
 
 void SurfacesHeaderUI::refresh() {
-    regina::NormalList which = surfaces->which();
+    regina::Flags<regina::NormalList> which = surfaces->which();
 
     QString sEmb, sType;
     if (which.has(regina::NormalList::EmbeddedOnly))
