@@ -50,6 +50,7 @@ void addHyperCoords(pybind11::module_& m) {
         .value("Edge", HyperCoords::Edge, rdoc::Edge)
         ;
 
+    // Deprecated constants:
     m.attr("HS_STANDARD") = HyperCoords::Standard;
     m.attr("HS_PRISM") = HyperCoords::Prism;
     m.attr("HS_EDGE_WEIGHT") = HyperCoords::Edge;

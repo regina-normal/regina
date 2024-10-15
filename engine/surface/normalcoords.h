@@ -213,110 +213,99 @@ enum class NormalCoords {
 };
 
 /**
- * An alias for standard triangle-quad coordinates for normal surfaces.
+ * A deprecated alias for standard triangle-quad coordinates for
+ * normal surfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::Standard.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::Standard.
  */
-inline constexpr NormalCoords NS_STANDARD = NormalCoords::Standard;
+[[deprecated]] inline constexpr NormalCoords NS_STANDARD =
+    NormalCoords::Standard;
 
 /**
- * An alias for quadrilateral coordinates for normal surfaces.
+ * A deprecated alias for quadrilateral coordinates for normal surfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::Quad.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::Quad.
  */
-inline constexpr NormalCoords NS_QUAD = NormalCoords::Quad;
+[[deprecated]] inline constexpr NormalCoords NS_QUAD = NormalCoords::Quad;
 
 /**
- * An alias for quadrilateral coordinates in ideal triangulations for
+ * A deprecated alias for quadrilateral coordinates in ideal triangulations for
  * closed (non-spun) normal surfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::QuadClosed.  However, these old names for the coordinate
- * system constants have been kept in the regina:: namespace for convenience
- * and compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::QuadClosed.
  */
-inline constexpr NormalCoords NS_QUAD_CLOSED = NormalCoords::QuadClosed;
+[[deprecated]] inline constexpr NormalCoords NS_QUAD_CLOSED =
+    NormalCoords::QuadClosed;
 
 /**
- * An alias for standard triangle-quadrilateral-octagon coordinates for
- * octagonal almost normal surfaces.
+ * A deprecated alias for standard triangle-quadrilateral-octagon coordinates
+ * for octagonal almost normal surfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::AlmostNormal.  However, these old names for the coordinate
- * system constants have been kept in the regina:: namespace for convenience
- * and compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::AlmostNormal.
  */
-inline constexpr NormalCoords NS_AN_STANDARD = NormalCoords::AlmostNormal;
+[[deprecated]] inline constexpr NormalCoords NS_AN_STANDARD =
+    NormalCoords::AlmostNormal;
 
 /**
- * An alias for the "coordinate system" indicating almost normal surfaces that
- * were enumerated using Regina 4.5.1 or earlier, where surfaces with more
- * than one octagon of the same type were stripped from solution sets.
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::ANLegacy.  However, these old names for the coordinate
- * system constants have been kept in the regina:: namespace for convenience
- * and compatibility with older code.
- */
-inline constexpr NormalCoords NS_AN_LEGACY = NormalCoords::LegacyAlmostNormal;
-
-/**
- * An alias for quadrilateral-octagon coordinates for octagonal almost normal
- * surfaces.
+ * A deprecated alias for the "coordinate system" indicating almost normal
+ * surfaces that were enumerated using Regina 4.5.1 or earlier, where surfaces
+ * with more than one octagon of the same type were stripped from solution sets.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::QuadOct.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::ANLegacy.
  */
-inline constexpr NormalCoords NS_AN_QUAD_OCT = NormalCoords::QuadOct;
+[[deprecated]] inline constexpr NormalCoords NS_AN_LEGACY =
+    NormalCoords::LegacyAlmostNormal;
 
 /**
- * An alias for quadrilateral-octagon coordinates in ideal triangulations for
- * closed (non-spun) octagonal almost normal surfaces.
+ * A deprecated alias for quadrilateral-octagon coordinates for octagonal
+ * almost normal surfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::QuadOctClosed.  However, these old names for the coordinate
- * system constants have been kept in the regina:: namespace for convenience
- * and compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::QuadOct.
  */
-inline constexpr NormalCoords NS_AN_QUAD_OCT_CLOSED =
+[[deprecated]] inline constexpr NormalCoords NS_AN_QUAD_OCT =
+    NormalCoords::QuadOct;
+
+/**
+ * A deprecated alias for quadrilateral-octagon coordinates in ideal
+ * triangulations for closed (non-spun) octagonal almost normal surfaces.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::QuadOctClosed.
+ */
+[[deprecated]] inline constexpr NormalCoords NS_AN_QUAD_OCT_CLOSED =
     NormalCoords::QuadOctClosed;
 
 /**
- * An alias for edge weight coordinates for normal surfaces.
+ * A deprecated alias for edge weight coordinates for normal surfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::Edge.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::Edge.
  */
-inline constexpr NormalCoords NS_EDGE_WEIGHT = NormalCoords::Edge;
+[[deprecated]] inline constexpr NormalCoords NS_EDGE_WEIGHT =
+    NormalCoords::Edge;
 
 /**
- * An alias for triangle arc coordinates for normal surfaces.
+ * A deprecated alias for triangle arc coordinates for normal surfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::Arc.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::Arc.
  */
-inline constexpr NormalCoords NS_TRIANGLE_ARCS = NormalCoords::Arc;
+[[deprecated]] inline constexpr NormalCoords NS_TRIANGLE_ARCS =
+    NormalCoords::Arc;
 
 /**
- * An alias for angle structure coordinates.
+ * A deprecated alias for angle structure coordinates.
  *
- * The preferred way to access this constant is using the scoped enum value
- * NormalCoords::Angle.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalCoords::Angle.
  */
-inline constexpr NormalCoords NS_ANGLE = NormalCoords::Angle;
+[[deprecated]] inline constexpr NormalCoords NS_ANGLE = NormalCoords::Angle;
 
 /**
  * Indicates precisely how a normal surface is encoded by an integer vector.

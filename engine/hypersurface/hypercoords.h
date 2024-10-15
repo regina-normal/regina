@@ -83,35 +83,29 @@ enum class HyperCoords {
 };
 
 /**
- * An alias for standard tetrahedron-prism coordinates for normal
+ * A deprecated alias for standard tetrahedron-prism coordinates for normal
  * hypersurfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * HyperCoords::Standard.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperCoords::Standard.
  */
-inline constexpr HyperCoords HS_STANDARD = HyperCoords::Standard;
+[[deprecated]] inline constexpr HyperCoords HS_STANDARD = HyperCoords::Standard;
 
 /**
- * An alias for prism coordinates for normal hypersurfaces.
+ * A deprecated alias for prism coordinates for normal hypersurfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * HyperCoords::Prism.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperCoords::Prism.
  */
-inline constexpr HyperCoords HS_PRISM = HyperCoords::Prism;
+[[deprecated]] inline constexpr HyperCoords HS_PRISM = HyperCoords::Prism;
 
 /**
- * An alias for edge weight coordinates for normal hypersurfaces.
+ * A deprecated alias for edge weight coordinates for normal hypersurfaces.
  *
- * The preferred way to access this constant is using the scoped enum value
- * HyperCoords::Edge.  However, these old names for the coordinate system
- * constants have been kept in the regina:: namespace for convenience and
- * compatibility with older code.
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * HyperCoords::Edge.
  */
-inline constexpr HyperCoords HS_EDGE_WEIGHT = HyperCoords::Edge;
+[[deprecated]] inline constexpr HyperCoords HS_EDGE_WEIGHT = HyperCoords::Edge;
 
 /**
  * Indicates precisely how a normal hypersurface within a 4-manifold

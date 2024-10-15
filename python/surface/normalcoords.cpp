@@ -59,6 +59,7 @@ void addNormalCoords(pybind11::module_& m) {
         .value("Angle", NormalCoords::Angle, rdoc::Angle)
         ;
 
+    // Deprecated constants:
     m.attr("NS_STANDARD") = NormalCoords::Standard;
     m.attr("NS_QUAD") = NormalCoords::Quad;
     m.attr("NS_QUAD_CLOSED") = NormalCoords::QuadClosed;

@@ -195,8 +195,8 @@ Version 7.4  [ (to be announced) ]
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., HS_STANDARD) have been
               renamed as scoped enum values (e.g., HyperCoords::Standard).
-              The old names have been kept as compile-time constants in the
-              regina:: namespace (and are _not_ deprecated for the time being).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Enum HyperList, HyperListFlags:
             - The individual flags now live inside HyperList, which is now a
               scoped enumeration for better type safety.  In paticular, the
@@ -329,8 +329,8 @@ Version 7.4  [ (to be announced) ]
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., NS_STANDARD) have been
               renamed as scoped enum values (e.g., NormalCoords::Standard).
-              The old names have been kept as compile-time constants in the
-              regina:: namespace (and are _not_ deprecated for the time being).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Enum NormalList, NormalListFlags:
             - The individual flags now live inside NormalList, which is now a
               scoped enumeration for better type safety.  In paticular, the
