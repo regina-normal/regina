@@ -39,6 +39,7 @@
 using pybind11::overload_cast;
 using regina::NormalAlg;
 using regina::NormalList;
+using regina::NormalTransform;
 
 void addNormalFlags(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalList)
@@ -108,17 +109,28 @@ void addNormalFlags(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(NormalTransform)
 
     pybind11::enum_<regina::NormalTransform>(m, "NormalTransform", rdoc_scope)
-        .value("NS_CONV_REDUCED_TO_STD", regina::NS_CONV_REDUCED_TO_STD,
-            rdoc::NS_CONV_REDUCED_TO_STD)
-        .value("NS_CONV_STD_TO_REDUCED", regina::NS_CONV_STD_TO_REDUCED,
-            rdoc::NS_CONV_STD_TO_REDUCED)
-        .value("NS_FILTER_COMPATIBLE", regina::NS_FILTER_COMPATIBLE,
-            rdoc::NS_FILTER_COMPATIBLE)
-        .value("NS_FILTER_DISJOINT", regina::NS_FILTER_DISJOINT,
-            rdoc::NS_FILTER_DISJOINT)
-        .value("NS_FILTER_INCOMPRESSIBLE", regina::NS_FILTER_INCOMPRESSIBLE,
-            rdoc::NS_FILTER_INCOMPRESSIBLE)
-        .export_values();
+        .value("ConvertReducedToStandard",
+            NormalTransform::ConvertReducedToStandard,
+            rdoc::ConvertReducedToStandard)
+        .value("ConvertStandardToReduced",
+            NormalTransform::ConvertStandardToReduced,
+            rdoc::ConvertStandardToReduced)
+        .value("FilterCompatible", NormalTransform::FilterCompatible,
+            rdoc::FilterCompatible)
+        .value("FilterDisjoint", NormalTransform::FilterDisjoint,
+            rdoc::FilterDisjoint)
+        .value("FilterIncompressible", NormalTransform::FilterIncompressible,
+            rdoc::FilterIncompressible)
+        ;
+
+    // Deprecated constants:
+    m.attr("NS_CONV_REDUCED_TO_STD") =
+        NormalTransform::ConvertReducedToStandard;
+    m.attr("NS_CONV_STD_TO_REDUCED") =
+        NormalTransform::ConvertStandardToReduced;
+    m.attr("NS_FILTER_COMPATIBLE") = NormalTransform::FilterCompatible;
+    m.attr("NS_FILTER_DISJOINT") = NormalTransform::FilterDisjoint;
+    m.attr("NS_FILTER_INCOMPRESSIBLE") = NormalTransform::FilterIncompressible;
 
     RDOC_SCOPE_END
 }

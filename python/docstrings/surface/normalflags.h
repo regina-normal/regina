@@ -317,8 +317,8 @@ This flag is incompatible with Fundamental.)doc";
 
 namespace NormalTransform_ {
 
-// Docstring regina::python::doc::NormalTransform_::NS_CONV_REDUCED_TO_STD
-static const char *NS_CONV_REDUCED_TO_STD =
+// Docstring regina::python::doc::NormalTransform_::ConvertReducedToStandard
+static const char *ConvertReducedToStandard =
 R"doc(Converts the set of all embedded vertex normal surfaces in
 quadrilateral or quadrilateral-octagon coordinates to the set of all
 embedded vertex normal surfaces in standard normal or standard almost
@@ -359,8 +359,8 @@ The preconditions for using this transformation:
   coordinates. This will be checked by examining
   NormalSurface::coords() and NormalSurface::which().)doc";
 
-// Docstring regina::python::doc::NormalTransform_::NS_CONV_STD_TO_REDUCED
-static const char *NS_CONV_STD_TO_REDUCED =
+// Docstring regina::python::doc::NormalTransform_::ConvertStandardToReduced
+static const char *ConvertStandardToReduced =
 R"doc(Converts the set of all embedded vertex normal surfaces in standard
 normal or standard almost normal coordinates to the set of all
 embedded vertex normal surfaces in quadrilateral or quadrilateral-
@@ -386,8 +386,8 @@ The preconditions for using this transformation:
   This will be checked by examining NormalSurface::coords() and
   NormalSurface::which().)doc";
 
-// Docstring regina::python::doc::NormalTransform_::NS_FILTER_COMPATIBLE
-static const char *NS_FILTER_COMPATIBLE =
+// Docstring regina::python::doc::NormalTransform_::FilterCompatible
+static const char *FilterCompatible =
 R"doc(Selects only the surfaces in the input list that have at least one
 locally compatible partner. That is, a surface *S* from the input list
 will be included in the output list if and only if there is some other
@@ -399,16 +399,16 @@ Be aware that, since vertex links are compatible with everything, if
 the input list contains a vertex link plus at least one other surface,
 then the output list will be identical to the input.
 
-For the output list, which() will include the NS_CUSTOM flag, and
-algorithm() will be precisely NS_ALG_CUSTOM.
+For the output list, which() will include the flag NormalList::Custom,
+and algorithm() will be precisely NormalAlg::Custom.
 
 The preconditions for using this transformation:
 
 * The input list contains only embedded normal or almost normal
   surfaces. This will be checked by examining NormalSurface::which().)doc";
 
-// Docstring regina::python::doc::NormalTransform_::NS_FILTER_DISJOINT
-static const char *NS_FILTER_DISJOINT =
+// Docstring regina::python::doc::NormalTransform_::FilterDisjoint
+static const char *FilterDisjoint =
 R"doc(Selects only the surfaces in the input list that have at least one
 disjoint partner. That is, a surface *S* from the input list will be
 included in the output list if and only if there is some other surface
@@ -427,16 +427,16 @@ This transformation comes with some caveats:
   if the input list contains a vertex link plus at least one other
   surface, then the output list will be identical to the input.
 
-For the output list, which() will include the NS_CUSTOM flag, and
-algorithm() will be precisely NS_ALG_CUSTOM.
+For the output list, which() will include the flag NormalList::Custom,
+and algorithm() will be precisely NormalAlg::Custom.
 
 The preconditions for using this transformation:
 
 * The input list contains only embedded normal or almost normal
   surfaces. This will be checked by examining NormalSurface::which().)doc";
 
-// Docstring regina::python::doc::NormalTransform_::NS_FILTER_INCOMPRESSIBLE
-static const char *NS_FILTER_INCOMPRESSIBLE =
+// Docstring regina::python::doc::NormalTransform_::FilterIncompressible
+static const char *FilterIncompressible =
 R"doc(Selects only the surfaces in the input list that "might" represent
 two-sided incompressible surfaces.
 
@@ -470,8 +470,8 @@ see "The Weber-Seifert dodecahedral space is non-Haken", Benjamin A.
 Burton, J. Hyam Rubinstein and Stephan Tillmann, Trans. Amer. Math.
 Soc. 364:2 (2012), pp. 911-932.
 
-For the output list, which() will include the NS_CUSTOM flag, and
-algorithm() will be precisely NS_ALG_CUSTOM.
+For the output list, which() will include the flag NormalList::Custom,
+and algorithm() will be precisely NormalAlg::Custom.
 
 The preconditions for using this transformation:
 

@@ -567,7 +567,7 @@ inline Flags<NormalAlg> operator | (NormalAlg lhs, NormalAlg rhs) {
  *
  * \ingroup surfaces
  */
-enum NormalTransform {
+enum class NormalTransform {
     /**
      * Converts the set of all embedded vertex normal surfaces in quadrilateral
      * or quadrilateral-octagon coordinates to the set of all embedded vertex
@@ -609,7 +609,7 @@ enum NormalTransform {
      *   This will be checked by examining NormalSurface::coords() and
      *   NormalSurface::which().
      */
-    NS_CONV_REDUCED_TO_STD = 0x01,
+    ConvertReducedToStandard = 0x01,
     /**
      * Converts the set of all embedded vertex normal surfaces in standard
      * normal or standard almost normal coordinates to the set of all embedded
@@ -636,7 +636,7 @@ enum NormalTransform {
      *   This will be checked by examining NormalSurface::coords() and
      *   NormalSurface::which().
      */
-    NS_CONV_STD_TO_REDUCED = 0x02,
+    ConvertStandardToReduced = 0x02,
     /**
      * Selects only the surfaces in the input list that have at least one
      * locally compatible partner.  That is, a surface \a S from the input
@@ -649,15 +649,15 @@ enum NormalTransform {
      * if the input list contains a vertex link plus at least one other
      * surface, then the output list will be identical to the input.
      *
-     * For the output list, which() will include the NS_CUSTOM flag, and
-     * algorithm() will be precisely NS_ALG_CUSTOM.
+     * For the output list, which() will include the flag NormalList::Custom,
+     * and algorithm() will be precisely NormalAlg::Custom.
      *
      * The preconditions for using this transformation:
      *
      * - The input list contains only embedded normal or almost normal surfaces.
      *   This will be checked by examining NormalSurface::which().
      */
-    NS_FILTER_COMPATIBLE = 0x10,
+    FilterCompatible = 0x10,
     /**
      * Selects only the surfaces in the input list that have at least one
      * disjoint partner.  That is, a surface \a S from the input list will
@@ -678,15 +678,15 @@ enum NormalTransform {
      *   if the input list contains a vertex link plus at least one other
      *   surface, then the output list will be identical to the input.
      *
-     * For the output list, which() will include the NS_CUSTOM flag, and
-     * algorithm() will be precisely NS_ALG_CUSTOM.
+     * For the output list, which() will include the flag NormalList::Custom,
+     * and algorithm() will be precisely NormalAlg::Custom.
      *
      * The preconditions for using this transformation:
      *
      * - The input list contains only embedded normal or almost normal surfaces.
      *   This will be checked by examining NormalSurface::which().
      */
-    NS_FILTER_DISJOINT = 0x20,
+    FilterDisjoint = 0x20,
     /**
      * Selects only the surfaces in the input list that "might" represent
      * two-sided incompressible surfaces.
@@ -721,8 +721,8 @@ enum NormalTransform {
      * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
      * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
      *
-     * For the output list, which() will include the NS_CUSTOM flag, and
-     * algorithm() will be precisely NS_ALG_CUSTOM.
+     * For the output list, which() will include the flag NormalList::Custom,
+     * and algorithm() will be precisely NormalAlg::Custom.
      *
      * The preconditions for using this transformation:
      *
@@ -735,8 +735,58 @@ enum NormalTransform {
      * in future versions of Regina, since additional tests may be added to
      * improve the power of this filtering.
      */
-    NS_FILTER_INCOMPRESSIBLE = 0x30
+    FilterIncompressible = 0x30
 };
+
+/**
+ * A deprecated constant indicating some way in which Regina can transform
+ * one normal surface list into another.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalTransform::ConvertReducedToStandard.
+ */
+[[deprecated]] inline static constexpr NormalTransform NS_CONV_REDUCED_TO_STD =
+    NormalTransform::ConvertReducedToStandard;
+
+/**
+ * A deprecated constant indicating some way in which Regina can transform
+ * one normal surface list into another.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalTransform::ConvertStandardToReduced.
+ */
+[[deprecated]] inline static constexpr NormalTransform NS_CONV_STD_TO_REDUCED =
+    NormalTransform::ConvertStandardToReduced;
+
+/**
+ * A deprecated constant indicating some way in which Regina can transform
+ * one normal surface list into another.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalTransform::FilterCompatible.
+ */
+[[deprecated]] inline static constexpr NormalTransform NS_FILTER_COMPATIBLE =
+    NormalTransform::FilterCompatible;
+
+/**
+ * A deprecated constant indicating some way in which Regina can transform
+ * one normal surface list into another.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalTransform::FilterIncompressible.
+ */
+[[deprecated]] inline static constexpr NormalTransform NS_FILTER_INCOMPRESSIBLE =
+    NormalTransform::FilterIncompressible;
+
+/**
+ * A deprecated constant indicating some way in which Regina can transform
+ * one normal surface list into another.
+ *
+ * \deprecated This has been renamed to the scoped enumeration constant
+ * NormalTransform::FilterDisjoint.
+ */
+[[deprecated]] inline static constexpr NormalTransform NS_FILTER_DISJOINT =
+    NormalTransform::FilterDisjoint;
 
 } // namespace regina
 

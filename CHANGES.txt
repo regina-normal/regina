@@ -364,6 +364,12 @@ Version 7.4  [ (to be announced) ]
               through the C++ standard iterator library (e.g., via
               std::iterator_traits).  The old member type aliases have been
               removed completely.
+        Enum NormalTransform:
+            - This is now a scoped enumeration, for better type safety.  The
+              old enum constants (e.g., NS_FILTER_DISJOINT) are now scoped
+              enum values (e.g., NormalTransform::FilterDisjoint).
+              The old names have been kept as deprecated compile-time constants
+              in the regina:: namespace.
         Class Packet:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old
