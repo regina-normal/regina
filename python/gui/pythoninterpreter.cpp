@@ -96,7 +96,6 @@ static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
 PyThreadState* mainState;
-pybind11::scoped_interpreter* mainInterpreter;
 
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
@@ -154,14 +153,13 @@ PythonInterpreter::PythonInterpreter(
         }
 #endif
 
-        // We create a pybind11::scoped_interpreter instead of calling
-        // Py_Initialize() directly, since this allows pybind11 to set up some
-        // of its own internal structures also.  This interpreter must exist
-        // for the lifetime of the program, so we just set-and-forget here.
-        mainInterpreter = new pybind11::scoped_interpreter;
-
-        // We do not call PyEval_InitThreads(), since this is done
-        // via pybind11's internals in the code below.
+        // We call pybind11::initialize_interpreter() instead of calling
+        // Py_Initialize() directly, since this allows pybind11 to do some of
+        // its own internal setup also.  For now we will never call
+        // pybind11::finalize_interpreter(), since we don't know when we will
+        // or will not need more subinterpreters.  Probably it would be good
+        // to fix this.
+        pybind11::initialize_interpreter();
 
         // Subinterpreters are supposed to share extension modules
         // without repeatedly calling the modules' init functions.
@@ -169,8 +167,8 @@ PythonInterpreter::PythonInterpreter(
         // destroyed, unless we keep the extension module loaded here in
         // the main interpreter also.
         //
-        // If this fails, do so silently; we'll see the same error again
-        // immediately in the first subinterpreter.
+        // If this import fails, do so silently; we'll see the same error
+        // again immediately in the first subinterpreter.
         importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
             "__main__")), fixPythonPath);
 
