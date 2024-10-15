@@ -91,7 +91,8 @@ void addNormalSurfaces(pybind11::module_& m) {
     auto l = pybind11::class_<NormalSurfaces,
             std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces", rdoc_scope)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
-                regina::NormalList, regina::NormalAlg, ProgressTracker*>(),
+                regina::Flags<regina::NormalList>,
+                regina::Flags<regina::NormalAlg>, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::NormalList::Default,
             pybind11::arg("algHints") = regina::NormalAlg::Default,
@@ -153,8 +154,8 @@ void addNormalSurfaces(pybind11::module_& m) {
     auto wrap = regina::python::add_packet_wrapper<NormalSurfaces>(
         m, "PacketOfNormalSurfaces");
     regina::python::add_packet_constructor<const Triangulation<3>&,
-            regina::NormalCoords, regina::NormalList, regina::NormalAlg,
-            ProgressTracker*>(wrap,
+            regina::NormalCoords, regina::Flags<regina::NormalList>,
+            regina::Flags<regina::NormalAlg>, ProgressTracker*>(wrap,
         pybind11::arg(), pybind11::arg(),
         pybind11::arg("which") = regina::NormalList::Default,
         pybind11::arg("algHints") = regina::NormalAlg::Default,

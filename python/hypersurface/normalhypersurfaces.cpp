@@ -59,7 +59,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces",
             rdoc_scope)
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
-                regina::HyperList, regina::HyperAlg, ProgressTracker*>(),
+                regina::Flags<regina::HyperList>,
+                regina::Flags<regina::HyperAlg>, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HyperList::Default,
             pybind11::arg("algHints") = regina::HyperAlg::Default,
@@ -108,7 +109,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     auto wrap = regina::python::add_packet_wrapper<NormalHypersurfaces>(
         m, "PacketOfNormalHypersurfaces");
     regina::python::add_packet_constructor<const Triangulation<4>&, HyperCoords,
-            regina::HyperList, regina::HyperAlg, ProgressTracker*>(wrap,
+            regina::Flags<regina::HyperList>, regina::Flags<regina::HyperAlg>,
+            ProgressTracker*>(wrap,
         pybind11::arg(), pybind11::arg(),
         pybind11::arg("which") = regina::HyperList::Default,
         pybind11::arg("algHints") = regina::HyperAlg::Default,

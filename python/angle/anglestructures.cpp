@@ -53,8 +53,8 @@ void addAngleStructures(pybind11::module_& m) {
 
     auto l = pybind11::class_<AngleStructures,
             std::shared_ptr<AngleStructures>>(m, "AngleStructures", rdoc_scope)
-        .def(pybind11::init<const Triangulation<3>&, bool, regina::AngleAlg,
-                ProgressTracker*>(),
+        .def(pybind11::init<const Triangulation<3>&, bool,
+                regina::Flags<regina::AngleAlg>, ProgressTracker*>(),
             pybind11::arg(),
             pybind11::arg("tautOnly") = false,
             pybind11::arg("algHints") = regina::AngleAlg::Default,
@@ -93,7 +93,7 @@ void addAngleStructures(pybind11::module_& m) {
     auto wrap = regina::python::add_packet_wrapper<AngleStructures>(
         m, "PacketOfAngleStructures");
     regina::python::add_packet_constructor<const Triangulation<3>&, bool,
-            regina::AngleAlg, ProgressTracker*>(wrap,
+            regina::Flags<regina::AngleAlg>, ProgressTracker*>(wrap,
         pybind11::arg(),
         pybind11::arg("tautOnly") = false,
         pybind11::arg("algHints") = regina::AngleAlg::Default,
