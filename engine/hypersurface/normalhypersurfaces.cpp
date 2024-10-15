@@ -60,20 +60,20 @@ void NormalHypersurfaces::swap(NormalHypersurfaces& other) {
 void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
     out << surfaces_.size();
 
-    if (which_.has(regina::HS_EMBEDDED_ONLY))
+    if (which_.has(HyperList::EmbeddedOnly))
         out << " embedded,";
-    else if (which_.has(regina::HS_IMMERSED_SINGULAR))
+    else if (which_.has(HyperList::ImmersedSingular))
         out << " embedded / immersed / singular,";
     else
         out << " unknown,";
 
-    if (which_.has(regina::HS_VERTEX))
+    if (which_.has(HyperList::Vertex))
         out << " vertex";
-    else if (which_.has(regina::HS_FUNDAMENTAL))
+    else if (which_.has(HyperList::Fundamental))
         out << " fundamental";
-    else if (which_.has(regina::HS_CUSTOM))
+    else if (which_.has(HyperList::Custom))
         out << " custom";
-    else if (which_.has(regina::HyperList::Legacy))
+    else if (which_.has(HyperList::Legacy))
         out << " legacy";
     else
         out << " unknown";
@@ -85,20 +85,20 @@ void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
 }
 
 void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
-    if (which_.has(regina::HS_EMBEDDED_ONLY))
+    if (which_.has(HyperList::EmbeddedOnly))
         out << "Embedded,";
-    else if (which_.has(regina::HS_IMMERSED_SINGULAR))
+    else if (which_.has(HyperList::ImmersedSingular))
         out << "Embedded / immersed / singular,";
     else
         out << "Unknown,";
 
-    if (which_.has(regina::HS_VERTEX))
+    if (which_.has(HyperList::Vertex))
         out << " vertex";
-    else if (which_.has(regina::HS_FUNDAMENTAL))
+    else if (which_.has(HyperList::Fundamental))
         out << " fundamental";
-    else if (which_.has(regina::HS_CUSTOM))
+    else if (which_.has(HyperList::Custom))
         out << " custom";
-    else if (which_.has(regina::HyperList::Legacy))
+    else if (which_.has(HyperList::Legacy))
         out << " legacy";
     else
         out << " unknown";

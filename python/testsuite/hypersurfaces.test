@@ -31,7 +31,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-def dumpSurfaces(name, tri, triName, coords = regina.HyperCoords.Standard, which = regina.HS_LIST_DEFAULT, alg = regina.HS_ALG_DEFAULT):
+def dumpSurfaces(name, tri, triName, coords = regina.HyperCoords.Standard, which = regina.HyperList.Default, alg = regina.HyperAlg.Default):
 	try:
 		slist = regina.NormalHypersurfaces(tri, coords, which)
 	except:
@@ -62,20 +62,21 @@ def dumpSurfaces(name, tri, triName, coords = regina.HyperCoords.Standard, which
 
 def surfaceStats(tri, triName):
 	dumpSurfaces('Vertex hypersurfaces (std)',
-		tri, triName, regina.HyperCoords.Standard, regina.HS_VERTEX)
+		tri, triName, regina.HyperCoords.Standard, regina.HyperList.Vertex)
 	dumpSurfaces('Vertex hypersurfaces (prism)',
-		tri, triName, regina.HyperCoords.Prism, regina.HS_VERTEX)
+		tri, triName, regina.HyperCoords.Prism, regina.HyperList.Vertex)
 	dumpSurfaces('Fundamental surfaces (std, primal)',
-		tri, triName, regina.HyperCoords.Standard, regina.HS_FUNDAMENTAL,
-		regina.HS_HILBERT_PRIMAL)
+		tri, triName, regina.HyperCoords.Standard, regina.HyperList.Fundamental,
+		regina.HyperAlg.HilbertPrimal)
 	dumpSurfaces('Fundamental surfaces (std, dual)',
-		tri, triName, regina.HyperCoords.Standard, regina.HS_FUNDAMENTAL,
-		regina.HS_HILBERT_DUAL)
+		tri, triName, regina.HyperCoords.Standard, regina.HyperList.Fundamental,
+		regina.HyperAlg.HilbertDual)
 	dumpSurfaces('Fundamental surfaces (prism, primal)',
-		tri, triName, regina.HyperCoords.Prism, regina.HS_FUNDAMENTAL,
-		regina.HS_HILBERT_PRIMAL)
+		tri, triName, regina.HyperCoords.Prism, regina.HyperList.Fundamental,
+		regina.HyperAlg.HilbertPrimal)
 	dumpSurfaces('Fundamental surfaces (prism, dual)',
-		tri, triName, regina.HyperCoords.Prism, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL)
+		tri, triName, regina.HyperCoords.Prism, regina.HyperList.Fundamental,
+		regina.HyperAlg.HilbertDual)
 
 t = regina.Triangulation4()
 surfaceStats(t, 'Empty triangulation')

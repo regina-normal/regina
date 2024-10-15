@@ -1101,7 +1101,7 @@ class NormalSurfaces :
          * The original surfaces are passed in the argument \a reducedList,
          * and the resulting surfaces will be inserted directly into this list.
          *
-         * See NormalTransform::NS_CONV_REDUCED_TO_STD for full details
+         * See NormalTransform::ConvertReducedToStandard for full details
          * and preconditions for this procedure.
          *
          * An optional progress tracker may be passed.  If so, this routine
@@ -1160,7 +1160,7 @@ class NormalSurfaces :
          * The original surfaces are passed in the argument \a stdList, and the
          * resulting surfaces will be inserted directly into this list.
          *
-         * See NormalTransform::NS_CONV_STD_TO_REDUCED for full details
+         * See NormalTransform::ConvertStandardToReduced for full details
          * and preconditions for this procedure.
          *
          * \pre The coordinate system for this surface list is set to

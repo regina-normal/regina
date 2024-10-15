@@ -61,8 +61,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
                 regina::HyperList, regina::HyperAlg, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
-            pybind11::arg("which") = regina::HS_LIST_DEFAULT,
-            pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
+            pybind11::arg("which") = regina::HyperList::Default,
+            pybind11::arg("algHints") = regina::HyperAlg::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<GILScopedRelease>(),
             rdoc::__init)
@@ -110,8 +110,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     regina::python::add_packet_constructor<const Triangulation<4>&, HyperCoords,
             regina::HyperList, regina::HyperAlg, ProgressTracker*>(wrap,
         pybind11::arg(), pybind11::arg(),
-        pybind11::arg("which") = regina::HS_LIST_DEFAULT,
-        pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
+        pybind11::arg("which") = regina::HyperList::Default,
+        pybind11::arg("algHints") = regina::HyperAlg::Default,
         pybind11::arg("tracker") = nullptr,
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);

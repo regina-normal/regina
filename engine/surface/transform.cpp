@@ -41,7 +41,7 @@ namespace {
     inline constexpr NormalCoords transformCoords(NormalCoords src,
             NormalTransform t) {
         switch (t) {
-            case NS_CONV_REDUCED_TO_STD:
+            case NormalTransform::ConvertReducedToStandard:
                 switch (src) {
                     case NormalCoords::Quad: return NormalCoords::Standard;
                     case NormalCoords::QuadOct:
@@ -52,7 +52,7 @@ namespace {
                             "systems NormalCoords::Quad and "
                             "NormalCoords::QuadOct");
                 }
-            case NS_CONV_STD_TO_REDUCED:
+            case NormalTransform::ConvertStandardToReduced:
                 switch (src) {
                     case NormalCoords::Standard: return NormalCoords::Quad;
                     case NormalCoords::AlmostNormal:
@@ -71,33 +71,33 @@ namespace {
     inline Flags<NormalList> transformList(Flags<NormalList> src,
             NormalTransform t) {
         switch (t) {
-            case NS_CONV_REDUCED_TO_STD:
-            case NS_CONV_STD_TO_REDUCED:
-                if (src != (NS_EMBEDDED_ONLY | NS_VERTEX))
+            case NormalTransform::ConvertReducedToStandard:
+            case NormalTransform::ConvertStandardToReduced:
+                if (src != (NormalList::EmbeddedOnly | NormalList::Vertex))
                     throw FailedPrecondition("Conversion between "
                         "standard and reduced coordinate systems requires "
                         "the source list to contain exactly all "
                         "embedded vertex surfaces");
                 return src;
-            case NS_FILTER_COMPATIBLE:
-            case NS_FILTER_DISJOINT:
-            case NS_FILTER_INCOMPRESSIBLE:
-                if (! src.has(NS_EMBEDDED_ONLY))
+            case NormalTransform::FilterCompatible:
+            case NormalTransform::FilterDisjoint:
+            case NormalTransform::FilterIncompressible:
+                if (! src.has(NormalList::EmbeddedOnly))
                     throw FailedPrecondition("This filter requires "
                         "the input list to contain only embedded surfaces");
-                return NS_CUSTOM | NS_EMBEDDED_ONLY;
+                return NormalList::Custom | NormalList::EmbeddedOnly;
             default:
-                return NS_CUSTOM;
+                return NormalList::Custom;
         }
     }
 
     inline Flags<NormalAlg> transformAlg(Flags<NormalAlg> src,
             NormalTransform t) {
         switch (t) {
-            case NS_CONV_REDUCED_TO_STD:
-                return src | NS_VERTEX_VIA_REDUCED;
+            case NormalTransform::ConvertReducedToStandard:
+                return src | NormalAlg::VertexViaReduced;
             default:
-                return NS_ALG_CUSTOM;
+                return NormalAlg::Custom;
         }
     }
 }
@@ -108,7 +108,7 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
             transformList(src.which_, transform),
             transformAlg(src.algorithm_, transform), src.triangulation_) {
     switch (transform) {
-        case NS_CONV_REDUCED_TO_STD:
+        case NormalTransform::ConvertReducedToStandard:
             if (src.triangulation_->isIdeal() ||
                     ! src.triangulation_->isValid())
                 throw FailedPrecondition("Conversion from reduced to "
@@ -117,7 +117,7 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
 
             buildStandardFromReduced(src.surfaces_);
             break;
-        case NS_CONV_STD_TO_REDUCED:
+        case NormalTransform::ConvertStandardToReduced:
             if (src.triangulation_->isIdeal() ||
                     ! src.triangulation_->isValid())
                 throw FailedPrecondition("Conversion from standard to "
@@ -126,7 +126,7 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
 
             buildReducedFromStandard(src.surfaces_);
             break;
-        case NS_FILTER_COMPATIBLE:
+        case NormalTransform::FilterCompatible:
             for (const auto& a : src.surfaces_)
                 for (const auto& b : src.surfaces_)
                     if (&a != &b && a.locallyCompatible(b)) {
@@ -134,7 +134,7 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
                         break;
                     }
             break;
-        case NS_FILTER_DISJOINT:
+        case NormalTransform::FilterDisjoint:
             {
                 std::vector<const NormalSurface*> interesting;
                 for (const NormalSurface& s : src.surfaces_)
@@ -148,7 +148,7 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
                         }
             }
             break;
-        case NS_FILTER_INCOMPRESSIBLE:
+        case NormalTransform::FilterIncompressible:
             for (const NormalSurface& s : src.surfaces_) {
                 if (s.isVertexLinking() || s.isThinEdgeLink().first)
                     continue;
@@ -172,9 +172,10 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
         const SurfaceFilter& filter) :
         NormalSurfaces(
             src.coords_,
-            (src.which_ & (NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR)) |
-                NS_CUSTOM,
-            src.algorithm_ | NS_ALG_CUSTOM,
+            (src.which_ &
+                (NormalList::EmbeddedOnly | NormalList::ImmersedSingular)) |
+                NormalList::Custom,
+            src.algorithm_ | NormalAlg::Custom,
             src.triangulation_) {
     for (const NormalSurface& s : src.surfaces_)
         if (filter.accept(s))

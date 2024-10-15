@@ -51,6 +51,7 @@
 #include <QMessageBox>
 #include <QWhatsThis>
 
+using regina::NormalList;
 using regina::NormalSurfaces;
 
 namespace {
@@ -97,13 +98,13 @@ SurfacesCreator::SurfacesCreator(ReginaMain*) {
     basis->addItem(ui->tr("Vertex surfaces"));
     basis->addItem(ui->tr("Fundamental surfaces"));
     basis->setCurrentIndex(ReginaPrefSet::global().surfacesCreationList.has(
-        regina::NS_FUNDAMENTAL) ? BASIS_FUND : BASIS_VERTEX);
+        NormalList::Fundamental) ? BASIS_FUND : BASIS_VERTEX);
     basis->setWhatsThis(expln);
     basisArea->addWidget(basis, 1);
 
     embedded = new QCheckBox(ui->tr("Embedded surfaces only"), ui);
     embedded->setChecked(! ReginaPrefSet::global().surfacesCreationList.has(
-        regina::NS_IMMERSED_SINGULAR));
+        NormalList::ImmersedSingular));
     embedded->setWhatsThis(ui->tr("Specifies whether only embedded "
         "normal surfaces should be enumerated, or whether all normal "
         "surfaces (embedded, immersed and singular) should be enumerated."));
@@ -185,9 +186,9 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
     // Remember our selections for next time.
     ReginaPrefSet::global().surfacesCreationCoords = coordSystem;
     ReginaPrefSet::global().surfacesCreationList =
-        (embedded->isChecked() ? regina::NS_EMBEDDED_ONLY :
-            regina::NS_IMMERSED_SINGULAR) |
-        (basisId == BASIS_VERTEX ? regina::NS_VERTEX : regina::NS_FUNDAMENTAL);
+        (embedded->isChecked() ? NormalList::EmbeddedOnly :
+            NormalList::ImmersedSingular) |
+        (basisId == BASIS_VERTEX ? NormalList::Vertex : NormalList::Fundamental);
 
     std::shared_ptr<regina::Packet> ans;
     regina::ProgressTracker tracker;
@@ -198,15 +199,15 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating %1 normal surfaces").arg(sType), parentWidget);
 
-    regina::NormalList which =
+    NormalList which =
         (basisId == BASIS_VERTEX ?
-            regina::NS_VERTEX : regina::NS_FUNDAMENTAL) |
+            NormalList::Vertex : NormalList::Fundamental) |
         (embedded->isChecked() ?
-            regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR);
+            NormalList::EmbeddedOnly : NormalList::ImmersedSingular);
     std::thread t([&, coordSystem, which, this]() {
         try {
             ans = regina::make_packet<NormalSurfaces>(std::in_place,
-                tri, coordSystem, which, regina::NS_ALG_DEFAULT, &tracker);
+                tri, coordSystem, which, {}, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.
         }

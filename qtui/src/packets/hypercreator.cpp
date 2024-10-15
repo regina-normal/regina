@@ -51,6 +51,7 @@
 #include <QMessageBox>
 #include <QWhatsThis>
 
+using regina::HyperList;
 using regina::NormalHypersurfaces;
 
 namespace {
@@ -99,14 +100,14 @@ HyperCreator::HyperCreator(ReginaMain*) {
     basis->addItem(ui->tr("Fundamental hypersurfaces"));
     basis->setCurrentIndex(
         ReginaPrefSet::global().hypersurfacesCreationList.has(
-        regina::HS_FUNDAMENTAL) ? BASIS_FUND : BASIS_VERTEX);
+        HyperList::Fundamental) ? BASIS_FUND : BASIS_VERTEX);
     basis->setWhatsThis(expln);
     basisArea->addWidget(basis, 1);
 
     embedded = new QCheckBox(ui->tr("Embedded hypersurfaces only"), ui);
     embedded->setChecked(
         ! ReginaPrefSet::global().hypersurfacesCreationList.has(
-        regina::HS_IMMERSED_SINGULAR));
+        HyperList::ImmersedSingular));
     embedded->setWhatsThis(ui->tr("Specifies whether only embedded "
         "normal hypersurfaces should be enumerated, or whether all normal "
         "hypersurfaces (embedded, immersed and singular) should be "
@@ -158,9 +159,9 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
     // Remember our selections for next time.
     ReginaPrefSet::global().hypersurfacesCreationCoords = coordSystem;
     ReginaPrefSet::global().hypersurfacesCreationList =
-        (embedded->isChecked() ? regina::HS_EMBEDDED_ONLY :
-            regina::HS_IMMERSED_SINGULAR) |
-        (basisId == BASIS_VERTEX ? regina::HS_VERTEX : regina::HS_FUNDAMENTAL);
+        (embedded->isChecked() ? HyperList::EmbeddedOnly :
+            HyperList::ImmersedSingular) |
+        (basisId == BASIS_VERTEX ? HyperList::Vertex : HyperList::Fundamental);
 
     std::shared_ptr<regina::Packet> ans;
     regina::ProgressTracker tracker;
@@ -171,15 +172,15 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating %1 normal hypersurfaces").arg(sType), parentWidget);
 
-    regina::HyperList which =
+    HyperList which =
         (basisId == BASIS_VERTEX ?
-            regina::HS_VERTEX : regina::HS_FUNDAMENTAL) |
+            HyperList::Vertex : HyperList::Fundamental) |
         (embedded->isChecked() ?
-            regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR);
+            HyperList::EmbeddedOnly : HyperList::ImmersedSingular);
     std::thread t([&, coordSystem, which, this]() {
         try {
             ans = regina::make_packet<NormalHypersurfaces>(std::in_place,
-                tri, coordSystem, which, regina::HS_ALG_DEFAULT, &tracker);
+                tri, coordSystem, which, {}, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.
         }

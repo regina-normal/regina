@@ -71,7 +71,7 @@ TEST(IncompressibleTest, isHaken) {
 
 static bool hasIncompressibleSurface(const Triangulation<3>& tri) {
     NormalSurfaces s(tri, regina::NormalCoords::Standard,
-        regina::NS_EMBEDDED_ONLY);
+        regina::NormalList::EmbeddedOnly);
     for (const auto& f : s)
         if (f.isIncompressible())
             return true;

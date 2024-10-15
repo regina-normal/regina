@@ -92,13 +92,15 @@ namespace {
 void NormalHypersurfaces::Enumerator::enumerate() {
     // Clean up the "type of list" flag.
     list_->which_ &= (
-        HS_EMBEDDED_ONLY | HS_IMMERSED_SINGULAR | HS_VERTEX | HS_FUNDAMENTAL);
+        HyperList::EmbeddedOnly | HyperList::ImmersedSingular |
+        HyperList::Vertex | HyperList::Fundamental);
 
-    list_->which_.ensureOne(HS_VERTEX, HS_FUNDAMENTAL);
-    list_->which_.ensureOne(HS_EMBEDDED_ONLY, HS_IMMERSED_SINGULAR);
+    list_->which_.ensureOne(HyperList::Vertex, HyperList::Fundamental);
+    list_->which_.ensureOne(HyperList::EmbeddedOnly,
+        HyperList::ImmersedSingular);
 
     // Farm out the real work to list-type-specific routines.
-    if (list_->which_.has(HS_VERTEX))
+    if (list_->which_.has(HyperList::Vertex))
         fillVertex();
     else
         fillFundamental();
@@ -117,7 +119,7 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
     // For now, we only support double description in 4-D.  So this is easy.
-    list_->algorithm_ = HS_VERTEX_DD;
+    list_->algorithm_ = HyperAlg::VertexDD;
 
     // ----- Run the enumeration algorithm -----
 
@@ -134,7 +136,7 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
 }
 
 void NormalHypersurfaces::Enumerator::fillVertexDD() {
-    if (list_->which_.has(HS_EMBEDDED_ONLY)) {
+    if (list_->which_.has(HyperList::EmbeddedOnly)) {
         ValidityConstraints c = makeEmbeddedConstraints(
             *list_->triangulation_, list_->coords_);
         DoubleDescription::enumerate<Vector<LargeInteger>>(
@@ -154,23 +156,25 @@ void NormalHypersurfaces::Enumerator::fillVertexDD() {
 void NormalHypersurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
     if (list_->triangulation_->isEmpty()) {
-        list_->algorithm_ = HS_HILBERT_DUAL; /* shrug */
+        list_->algorithm_ = HyperAlg::HilbertDual; /* shrug */
         return;
     }
 
     // ----- Decide upon and run an appropriate algorithm -----
 
     // This is where we make the "default" decision for the user.
-    if (list_->which_.has(HS_IMMERSED_SINGULAR)) {
+    if (list_->which_.has(HyperList::ImmersedSingular)) {
         // The primal method makes no sense without the quadrilateral
         // constraints.
-        list_->algorithm_.ensureOne(HS_HILBERT_DUAL, HS_HILBERT_PRIMAL);
+        list_->algorithm_.ensureOne(HyperAlg::HilbertDual,
+            HyperAlg::HilbertPrimal);
     } else {
-        list_->algorithm_.ensureOne(HS_HILBERT_PRIMAL, HS_HILBERT_DUAL);
+        list_->algorithm_.ensureOne(HyperAlg::HilbertPrimal,
+            HyperAlg::HilbertDual);
     }
 
     // Run the chosen algorithm.
-    if (list_->algorithm_.has(HS_HILBERT_PRIMAL))
+    if (list_->algorithm_.has(HyperAlg::HilbertPrimal))
         fillFundamentalPrimal();
     else
         fillFundamentalDual();
@@ -189,8 +193,8 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Enumerating extremal rays", 0.4);
 
     NormalHypersurfaces vtx(list_->coords_,
-        HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
-            HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
+        HyperList::Vertex | (list_->which_.has(HyperList::EmbeddedOnly) ?
+            HyperList::EmbeddedOnly : HyperList::ImmersedSingular),
         list_->algorithm_ /* passes through any vertex enumeration flags */,
         list_->triangulation_);
     Enumerator e(&vtx, eqns_, nullptr, nullptr);
@@ -208,15 +212,15 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         shadows.emplace_back(s.vector(), s.encoding(),
             HyperEncoding(list_->coords_));
 
-    // Finalise the algorithm flags for this list: combine HS_HILBERT_PRIMAL
+    // Finalise the algorithm flags for this list: combine HilbertPrimal
     // with whatever vertex enumeration flags were used.
-    list_->algorithm_ = e.list_->algorithm_ | HS_HILBERT_PRIMAL;
+    list_->algorithm_ = e.list_->algorithm_ | HyperAlg::HilbertPrimal;
 
     // Expand this list to a full Hilbert basis.
     if (tracker_)
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
-    if (list_->which_.has(HS_EMBEDDED_ONLY)) {
+    if (list_->which_.has(HyperList::EmbeddedOnly)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertPrimal::enumerate<Vector<LargeInteger>>(
@@ -235,12 +239,12 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
 }
 
 void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
-    list_->algorithm_ = HS_HILBERT_DUAL;
+    list_->algorithm_ = HyperAlg::HilbertDual;
 
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
-    if (list_->which_.has(HS_EMBEDDED_ONLY)) {
+    if (list_->which_.has(HyperList::EmbeddedOnly)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertDual::enumerate<Vector<LargeInteger>>(

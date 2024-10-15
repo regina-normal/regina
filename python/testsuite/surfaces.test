@@ -31,7 +31,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-def dumpSurfaces(name, tri, triName, coords = regina.NormalCoords.Standard, which = regina.NS_LIST_DEFAULT):
+def dumpSurfaces(name, tri, triName, coords = regina.NormalCoords.Standard, which = regina.NormalList.Default):
 	try:
 		slist = regina.NormalSurfaces(tri, coords, which)
 	except:
@@ -74,17 +74,17 @@ def surfaceStats(tri, triName):
 	dumpSurfaces('Vertex surfaces (closed quad-oct)',
 		tri, triName, regina.NormalCoords.QuadOctClosed)
 	dumpSurfaces('Fundamental surfaces (std)',
-		tri, triName, regina.NormalCoords.Standard, regina.NS_FUNDAMENTAL)
+		tri, triName, regina.NormalCoords.Standard, regina.NormalList.Fundamental)
 	dumpSurfaces('Fundamental surfaces (quad)',
-		tri, triName, regina.NormalCoords.Quad, regina.NS_FUNDAMENTAL)
+		tri, triName, regina.NormalCoords.Quad, regina.NormalList.Fundamental)
 	dumpSurfaces('Fundamental surfaces (std almost normal)',
-		tri, triName, regina.NormalCoords.AlmostNormal, regina.NS_FUNDAMENTAL)
+		tri, triName, regina.NormalCoords.AlmostNormal, regina.NormalList.Fundamental)
 	dumpSurfaces('Fundamental surfaces (quad-oct almost normal)',
-		tri, triName, regina.NormalCoords.QuadOct, regina.NS_FUNDAMENTAL)
+		tri, triName, regina.NormalCoords.QuadOct, regina.NormalList.Fundamental)
 	dumpSurfaces('Fundamental surfaces (closed quad)',
-		tri, triName, regina.NormalCoords.QuadClosed, regina.NS_FUNDAMENTAL)
+		tri, triName, regina.NormalCoords.QuadClosed, regina.NormalList.Fundamental)
 	dumpSurfaces('Fundamental surfaces (closed quad-oct)',
-		tri, triName, regina.NormalCoords.QuadOctClosed, regina.NS_FUNDAMENTAL)
+		tri, triName, regina.NormalCoords.QuadOctClosed, regina.NormalList.Fundamental)
 
 # Start with the tables of constants for disc types.
 print(quadSeparating)

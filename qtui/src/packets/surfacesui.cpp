@@ -113,17 +113,17 @@ void SurfacesHeaderUI::refresh() {
     regina::NormalList which = surfaces->which();
 
     QString sEmb, sType;
-    if (which.has(regina::NS_EMBEDDED_ONLY))
+    if (which.has(regina::NormalList::EmbeddedOnly))
         sEmb = header->tr("embedded");
-    else if (which.has(regina::NS_IMMERSED_SINGULAR))
+    else if (which.has(regina::NormalList::ImmersedSingular))
         sEmb = header->tr("embedded / immersed / singular");
     else
         sEmb = header->tr("unknown");
-    if (which.has(regina::NS_VERTEX))
+    if (which.has(regina::NormalList::Vertex))
         sType = header->tr("vertex");
-    else if (which.has(regina::NS_FUNDAMENTAL))
+    else if (which.has(regina::NormalList::Fundamental))
         sType = header->tr("fundamental");
-    else if (which.has(regina::NS_CUSTOM))
+    else if (which.has(regina::NormalList::Custom))
         sType = header->tr("custom");
     else if (which.has(regina::NormalList::Legacy))
         sType = header->tr("legacy");

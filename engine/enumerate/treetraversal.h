@@ -625,7 +625,8 @@ class TreeTraversal : public ShortOutput<
  * _much_ slower than in quadrilateral or quadrilateral-octagon coordinates
  * respectively.  Instead you should enumerate vertex solutions using
  * quadrilateral or quadrilateral-octagon coordinates, and then use the
- * "transform constructor" `NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)`.
+ * "transform constructor"
+ * `NormalSurfaces(..., NormalTransform::ConvertReducedToStandard)`.
  *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.

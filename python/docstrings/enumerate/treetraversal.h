@@ -159,7 +159,8 @@ Precondition:
     octagon coordinates respectively. Instead you should enumerate
     vertex solutions using quadrilateral or quadrilateral-octagon
     coordinates, and then use the "transform constructor"
-    ``NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)``.
+    ``NormalSurfaces(...,
+    NormalTransform::ConvertReducedToStandard)``.
 
 Python:
     This is a heavily templated class; nevertheless, many variants are

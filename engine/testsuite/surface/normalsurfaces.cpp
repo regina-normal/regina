@@ -40,7 +40,9 @@
 #include "testexhaustive.h"
 
 using regina::Example;
+using regina::NormalAlg;
 using regina::NormalCoords;
+using regina::NormalList;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Triangulation;
@@ -80,10 +82,10 @@ TEST(NormalSurfacesTest, defaultArgs) {
     Triangulation<3> t = Example<3>::ball();
 
     NormalSurfaces l1(t, NormalCoords::Quad);
-    EXPECT_EQ(l1.which(), (regina::NS_VERTEX | regina::NS_EMBEDDED_ONLY));
+    EXPECT_EQ(l1.which(), (NormalList::Vertex | NormalList::EmbeddedOnly));
 
-    NormalSurfaces l2(t, NormalCoords::Quad, regina::NS_IMMERSED_SINGULAR);
-    EXPECT_EQ(l2.which(), (regina::NS_VERTEX | regina::NS_IMMERSED_SINGULAR));
+    NormalSurfaces l2(t, NormalCoords::Quad, NormalList::ImmersedSingular);
+    EXPECT_EQ(l2.which(), (NormalList::Vertex | NormalList::ImmersedSingular));
 }
 
 // Use std::tuple for the free comparison operators.
@@ -590,21 +592,21 @@ static void verifyConversions(const Triangulation<3>& tri, const char* name) {
 
     bool conversionSupported = tri.isValid() && ! tri.isIdeal();
 
-    NormalSurfaces stdDirect(tri, standardCoords, regina::NS_VERTEX,
-        regina::NS_VERTEX_STD_DIRECT);
-    NormalSurfaces stdConv(tri, standardCoords, regina::NS_VERTEX,
-        regina::NS_VERTEX_VIA_REDUCED);
+    NormalSurfaces stdDirect(tri, standardCoords, NormalList::Vertex,
+        NormalAlg::VertexStdDirect);
+    NormalSurfaces stdConv(tri, standardCoords, NormalList::Vertex,
+        NormalAlg::VertexViaReduced);
 
     if (! tri.isEmpty()) {
-        EXPECT_FALSE(stdDirect.algorithm().has(regina::NS_VERTEX_VIA_REDUCED));
-        EXPECT_TRUE(stdDirect.algorithm().has(regina::NS_VERTEX_STD_DIRECT));
+        EXPECT_FALSE(stdDirect.algorithm().has(NormalAlg::VertexViaReduced));
+        EXPECT_TRUE(stdDirect.algorithm().has(NormalAlg::VertexStdDirect));
 
         if (conversionSupported) {
-            EXPECT_FALSE(stdConv.algorithm().has(regina::NS_VERTEX_STD_DIRECT));
-            EXPECT_TRUE(stdConv.algorithm().has(regina::NS_VERTEX_VIA_REDUCED));
+            EXPECT_FALSE(stdConv.algorithm().has(NormalAlg::VertexStdDirect));
+            EXPECT_TRUE(stdConv.algorithm().has(NormalAlg::VertexViaReduced));
         } else {
-            EXPECT_TRUE(stdConv.algorithm().has(regina::NS_VERTEX_STD_DIRECT));
-            EXPECT_FALSE(stdConv.algorithm().has(regina::NS_VERTEX_VIA_REDUCED));
+            EXPECT_TRUE(stdConv.algorithm().has(NormalAlg::VertexStdDirect));
+            EXPECT_FALSE(stdConv.algorithm().has(NormalAlg::VertexViaReduced));
         }
     }
 
@@ -612,7 +614,8 @@ static void verifyConversions(const Triangulation<3>& tri, const char* name) {
 
     if (conversionSupported) {
         NormalSurfaces quadDirect(tri, reducedCoords);
-        NormalSurfaces quadConv(stdDirect, regina::NS_CONV_STD_TO_REDUCED);
+        NormalSurfaces quadConv(stdDirect,
+            regina::NormalTransform::ConvertStandardToReduced);
         EXPECT_EQ(quadDirect, quadConv);
     }
 }
@@ -647,14 +650,14 @@ static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
     std::unique_ptr<NormalSurfaces> tree;
 
     try {
-        dd = std::make_unique<NormalSurfaces>(tri, coords, regina::NS_VERTEX,
-            regina::NS_VERTEX_DD | regina::NS_VERTEX_STD_DIRECT);
+        dd = std::make_unique<NormalSurfaces>(tri, coords, NormalList::Vertex,
+            NormalAlg::VertexDD | NormalAlg::VertexStdDirect);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
     try {
-        tree = std::make_unique<NormalSurfaces>(tri, coords, regina::NS_VERTEX,
-            regina::NS_VERTEX_TREE | regina::NS_VERTEX_STD_DIRECT);
+        tree = std::make_unique<NormalSurfaces>(tri, coords, NormalList::Vertex,
+            NormalAlg::VertexTree | NormalAlg::VertexStdDirect);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
@@ -673,11 +676,11 @@ static void verifyTreeVsDD(const Triangulation<3>& tri, const char* name) {
         ASSERT_TRUE(tree);
 
         if (! tri.isEmpty()) {
-            EXPECT_TRUE(dd->algorithm().has(regina::NS_VERTEX_DD));
-            EXPECT_FALSE(dd->algorithm().has(regina::NS_VERTEX_TREE));
+            EXPECT_TRUE(dd->algorithm().has(NormalAlg::VertexDD));
+            EXPECT_FALSE(dd->algorithm().has(NormalAlg::VertexTree));
 
-            EXPECT_FALSE(tree->algorithm().has(regina::NS_VERTEX_DD));
-            EXPECT_TRUE(tree->algorithm().has(regina::NS_VERTEX_TREE));
+            EXPECT_FALSE(tree->algorithm().has(NormalAlg::VertexDD));
+            EXPECT_TRUE(tree->algorithm().has(NormalAlg::VertexTree));
         }
 
         EXPECT_EQ(*dd, *tree);
@@ -713,13 +716,13 @@ static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
 
     try {
         primal = std::make_unique<NormalSurfaces>(tri, coords,
-            regina::NS_FUNDAMENTAL, regina::NS_HILBERT_PRIMAL);
+            NormalList::Fundamental, NormalAlg::HilbertPrimal);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
     try {
         dual = std::make_unique<NormalSurfaces>(tri, coords,
-            regina::NS_FUNDAMENTAL, regina::NS_HILBERT_DUAL);
+            NormalList::Fundamental, NormalAlg::HilbertDual);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
@@ -738,11 +741,11 @@ static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
         ASSERT_TRUE(dual);
 
         if (! tri.isEmpty()) {
-            EXPECT_TRUE(primal->algorithm().has(regina::NS_HILBERT_PRIMAL));
-            EXPECT_FALSE(primal->algorithm().has(regina::NS_HILBERT_DUAL));
+            EXPECT_TRUE(primal->algorithm().has(NormalAlg::HilbertPrimal));
+            EXPECT_FALSE(primal->algorithm().has(NormalAlg::HilbertDual));
 
-            EXPECT_FALSE(dual->algorithm().has(regina::NS_HILBERT_PRIMAL));
-            EXPECT_TRUE(dual->algorithm().has(regina::NS_HILBERT_DUAL));
+            EXPECT_FALSE(dual->algorithm().has(NormalAlg::HilbertPrimal));
+            EXPECT_TRUE(dual->algorithm().has(NormalAlg::HilbertDual));
         }
 
         EXPECT_EQ(*primal, *dual);

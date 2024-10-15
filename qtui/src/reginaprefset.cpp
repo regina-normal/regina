@@ -76,7 +76,7 @@ ReginaPrefSet::ReginaPrefSet() :
         fileImportExportCodec("UTF-8"),
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HyperCoords::Standard),
-        hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
+        hypersurfacesCreationList(regina::HyperList::Default),
         linkCodeType(LinkCode::Gauss),
         linkCreationType(0),
         linkCrossingsStyle(CrossingStyle::Pictorial),
@@ -87,7 +87,7 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonWordWrap(false),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NormalCoords::Standard),
-        surfacesCreationList(regina::NS_LIST_DEFAULT),
+        surfacesCreationList(regina::NormalList::Default),
         surfacesInitialCompat(CompatMatrix::Local),
         surfacesSupportOriented(false),
         threadCount(ThreadCount::Polite),
@@ -251,7 +251,7 @@ void ReginaPrefSet::readInternal() {
         settings.value("CreationCoordinates",
             static_cast<int>(regina::HyperCoords::Standard)).toInt());
     hypersurfacesCreationList = regina::HyperList::fromInt(settings.value(
-        "CreationList", regina::HS_LIST_DEFAULT).toInt());
+        "CreationList", regina::HyperList::Default).toInt());
 
     settings.beginGroup("Link");
     linkCreationType = settings.value("CreationType", 0).toInt();
@@ -301,7 +301,7 @@ void ReginaPrefSet::readInternal() {
         settings.value("CreationCoordinates",
             static_cast<int>(regina::NormalCoords::Standard)).toInt());
     surfacesCreationList = regina::NormalList::fromInt(settings.value(
-        "CreationList", regina::NS_LIST_DEFAULT).toInt());
+        "CreationList", regina::NormalList::Default).toInt());
 
     str = settings.value("InitialCompat").toString();
     if (str == "Global")

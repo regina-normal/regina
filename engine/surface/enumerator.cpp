@@ -113,13 +113,15 @@ namespace {
 void NormalSurfaces::Enumerator::enumerate() {
     // Clean up the "type of list" flag.
     list_->which_ &= (
-        NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR | NS_VERTEX | NS_FUNDAMENTAL);
+        NormalList::EmbeddedOnly | NormalList::ImmersedSingular |
+        NormalList::Vertex | NormalList::Fundamental);
 
-    list_->which_.ensureOne(NS_VERTEX, NS_FUNDAMENTAL);
-    list_->which_.ensureOne(NS_EMBEDDED_ONLY, NS_IMMERSED_SINGULAR);
+    list_->which_.ensureOne(NormalList::Vertex, NormalList::Fundamental);
+    list_->which_.ensureOne(NormalList::EmbeddedOnly,
+        NormalList::ImmersedSingular);
 
     // Farm out the real work to list-type-specific routines.
-    if (list_->which_.has(NS_VERTEX))
+    if (list_->which_.has(NormalList::Vertex))
         fillVertex();
     else
         fillFundamental();
@@ -144,58 +146,61 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
     // First clear out all irrelevant options.
     list_->algorithm_ &= (
-        NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
-        NS_VERTEX_TREE | NS_VERTEX_DD);
+        NormalAlg::VertexViaReduced | NormalAlg::VertexStdDirect |
+        NormalAlg::VertexTree | NormalAlg::VertexDD);
 
     // For standard normal / almost normal coordinates, choose between
     // standard-direct vs standard-via-reduced.
     if (list_->coords_ == NormalCoords::Standard ||
             list_->coords_ == NormalCoords::AlmostNormal) {
         list_->algorithm_.ensureOne(
-            NS_VERTEX_VIA_REDUCED, NS_VERTEX_STD_DIRECT);
+            NormalAlg::VertexViaReduced, NormalAlg::VertexStdDirect);
 
         // If we've chosen via-reduced, check that this is actually available.
         // If not, switch back to standard-direct.
-        if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED) &&
-                ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
+        if (list_->algorithm_.has(NormalAlg::VertexViaReduced) &&
+                ! (list_->which_.has(NormalList::EmbeddedOnly) &&
                     triang.isValid() &&
                     (! triang.isIdeal())))
                 list_->algorithm_ ^=
-                    (NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
+                    (NormalAlg::VertexViaReduced | NormalAlg::VertexStdDirect);
     } else {
         // Standard-direct vs standard-via-reduced is not relevant here.
-        list_->algorithm_.clear(NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
+        list_->algorithm_.clear(
+            NormalAlg::VertexViaReduced | NormalAlg::VertexStdDirect);
     }
 
     // Choose between double description and tree traversal.
     // Which is the default will depend upon the underlying coordinate system.
-    if (list_->algorithm_.has(NS_VERTEX_STD_DIRECT)) {
+    if (list_->algorithm_.has(NormalAlg::VertexStdDirect)) {
         // Tree traversal is at its best when every coordinate is involved
         // in branching decisions (i.e., we are in quad or quad-oct
         // coordinates).  It can be slower when working with triangles,
         // so default to the older double description method.
-        list_->algorithm_.ensureOne(NS_VERTEX_DD, NS_VERTEX_TREE);
+        list_->algorithm_.ensureOne(NormalAlg::VertexDD, NormalAlg::VertexTree);
     } else {
         // Use the new technology.
-        list_->algorithm_.ensureOne(NS_VERTEX_TREE, NS_VERTEX_DD);
+        list_->algorithm_.ensureOne(NormalAlg::VertexTree, NormalAlg::VertexDD);
     }
 
     // Check whether tree traversal supports our enumeration arguments.
     // If not, switch back to double description.
     // The integer template argument for TreeTraversal::supported()
     // is unimportant here; we just use Integer.
-    if (list_->algorithm_.has(NS_VERTEX_TREE)) {
-        if (! list_->which_.has(NS_EMBEDDED_ONLY)) {
+    if (list_->algorithm_.has(NormalAlg::VertexTree)) {
+        if (! list_->which_.has(NormalList::EmbeddedOnly)) {
             // Tree traversal is not supported for immersed/singular surfaces.
-            list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+            list_->algorithm_ ^= (NormalAlg::VertexTree | NormalAlg::VertexDD);
         } else if (useNonSpunConstraint(list_->coords_)) {
             if (! TreeTraversal<LPConstraintNonSpun, BanNone, Integer>::
                     supported(list_->coords_))
-                list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+                list_->algorithm_ ^=
+                    (NormalAlg::VertexTree | NormalAlg::VertexDD);
         } else {
             if (! TreeTraversal<LPConstraintNone, BanNone, Integer>::
                     supported(list_->coords_))
-                list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+                list_->algorithm_ ^=
+                    (NormalAlg::VertexTree | NormalAlg::VertexDD);
         }
     }
 
@@ -203,11 +208,11 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
     if (triang.isEmpty()) {
         // Handle the empty triangulation separately.
-        list_->algorithm_ = NS_VERTEX_DD; /* shrug */
+        list_->algorithm_ = NormalAlg::VertexDD; /* shrug */
         // Nothing to do.
-    } else if (! list_->algorithm_.has(NS_VERTEX_VIA_REDUCED)) {
+    } else if (! list_->algorithm_.has(NormalAlg::VertexViaReduced)) {
         // A direct enumeration in the chosen coordinate system.
-        if (list_->algorithm_.has(NS_VERTEX_TREE)) {
+        if (list_->algorithm_.has(NormalAlg::VertexTree)) {
             if (tracker_)
                 tracker_->newStage(
                     "Enumerating vertex surfaces\n(tree traversal method)");
@@ -231,12 +236,12 @@ void NormalSurfaces::Enumerator::fillVertex() {
             NormalCoords::Quad : NormalCoords::QuadOct);
         Enumerator e(
             new NormalSurfaces(small, list_->which_,
-                list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED,
+                list_->algorithm_ ^ NormalAlg::VertexViaReduced,
                 list_->triangulation_),
             makeMatchingEquations(triang, small) /* always succeeds */,
             tracker_,
             nullptr);
-        if (list_->algorithm_.has(NS_VERTEX_TREE)) {
+        if (list_->algorithm_.has(NormalAlg::VertexTree)) {
             if (tracker_)
                 tracker_->newStage("Enumerating reduced solution set\n"
                     "(tree traversal method)", 0.9);
@@ -264,7 +269,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
 }
 
 void NormalSurfaces::Enumerator::fillVertexDD() {
-    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+    if (list_->which_.has(NormalList::EmbeddedOnly)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         DoubleDescription::enumerate<Vector<LargeInteger>>(
@@ -476,41 +481,43 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
 void NormalSurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
     if (list_->triangulation_->isEmpty()) {
-        list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
+        list_->algorithm_ = NormalAlg::HilbertDual; /* shrug */
         return;
     }
 
     // ----- Decide upon and run an appropriate algorithm -----
 
     // This is where we make the "default" decision for the user.
-    if (list_->which_.has(NS_IMMERSED_SINGULAR)) {
+    if (list_->which_.has(NormalList::ImmersedSingular)) {
         // The primal method makes no sense without the quadrilateral
         // constraints.
-        list_->algorithm_.ensureOne(NS_HILBERT_DUAL, NS_HILBERT_FULLCONE,
-            NS_HILBERT_PRIMAL, NS_HILBERT_CD);
+        list_->algorithm_.ensureOne(NormalAlg::HilbertDual,
+            NormalAlg::HilbertFullCone, NormalAlg::HilbertPrimal,
+            NormalAlg::HilbertCD);
     } else {
-        list_->algorithm_.ensureOne(NS_HILBERT_PRIMAL, NS_HILBERT_DUAL,
-            NS_HILBERT_FULLCONE, NS_HILBERT_CD);
+        list_->algorithm_.ensureOne(NormalAlg::HilbertPrimal,
+            NormalAlg::HilbertDual, NormalAlg::HilbertFullCone,
+            NormalAlg::HilbertCD);
     }
 
     // Run the chosen algorithm.
-    if (list_->algorithm_.has(NS_HILBERT_PRIMAL))
+    if (list_->algorithm_.has(NormalAlg::HilbertPrimal))
         fillFundamentalPrimal();
-    else if (list_->algorithm_.has(NS_HILBERT_DUAL))
+    else if (list_->algorithm_.has(NormalAlg::HilbertDual))
         fillFundamentalDual();
-    else if (list_->algorithm_.has(NS_HILBERT_CD))
+    else if (list_->algorithm_.has(NormalAlg::HilbertCD))
         fillFundamentalCD();
     else
         fillFundamentalFullCone();
 }
 
 void NormalSurfaces::Enumerator::fillFundamentalDual() {
-    list_->algorithm_ = NS_HILBERT_DUAL;
+    list_->algorithm_ = NormalAlg::HilbertDual;
 
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
-    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+    if (list_->which_.has(NormalList::EmbeddedOnly)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertDual::enumerate<Vector<LargeInteger>>(
@@ -528,13 +535,13 @@ void NormalSurfaces::Enumerator::fillFundamentalDual() {
 }
 
 void NormalSurfaces::Enumerator::fillFundamentalCD() {
-    list_->algorithm_ = NS_HILBERT_CD;
+    list_->algorithm_ = NormalAlg::HilbertCD;
 
     if (tracker_)
         tracker_->newStage(
             "Enumerating Hilbert basis\n(Contejean-Devie method)");
 
-    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+    if (list_->which_.has(NormalList::EmbeddedOnly)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertCD::enumerate<Vector<LargeInteger>>(
@@ -564,8 +571,8 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Enumerating extremal rays", 0.4);
 
     NormalSurfaces vtx(list_->coords_,
-        NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
-            NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NormalList::Vertex | (list_->which_.has(NormalList::EmbeddedOnly) ?
+            NormalList::EmbeddedOnly : NormalList::ImmersedSingular),
         list_->algorithm_ /* passes through any vertex enumeration flags */,
         list_->triangulation_);
     Enumerator e(&vtx, eqns_, nullptr, nullptr);
@@ -583,15 +590,15 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
         shadows.emplace_back(s.vector(), s.encoding(),
             NormalEncoding(list_->coords_));
 
-    // Finalise the algorithm flags for this list: combine NS_HILBERT_PRIMAL
+    // Finalise the algorithm flags for this list: combine HilbertPrimal
     // with whatever vertex enumeration flags were used.
-    list_->algorithm_ = e.list_->algorithm_ | NS_HILBERT_PRIMAL;
+    list_->algorithm_ = e.list_->algorithm_ | NormalAlg::HilbertPrimal;
 
     // Expand this list to a full Hilbert basis.
     if (tracker_)
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
-    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+    if (list_->which_.has(NormalList::EmbeddedOnly)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertPrimal::enumerate<Vector<LargeInteger>>(
@@ -610,7 +617,7 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
 }
 
 void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
-    list_->algorithm_ = NS_HILBERT_FULLCONE;
+    list_->algorithm_ = NormalAlg::HilbertFullCone;
 
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis of full cone", 0.8);
@@ -652,7 +659,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
 
         // Fetch validity constraints from the registry.
         std::unique_ptr<ValidityConstraints> constraints =
-            (list_->which_.has(NS_EMBEDDED_ONLY) ?
+            (list_->which_.has(NormalList::EmbeddedOnly) ?
             std::make_unique<ValidityConstraints>(makeEmbeddedConstraints(
                 *list_->triangulation_, list_->coords_)) :
             nullptr);

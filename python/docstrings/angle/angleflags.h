@@ -58,7 +58,7 @@ that a modified double description method should be used.
 This is currently the only supported algorithm for enumerating all
 vertex angle structures (not just taut structures).
 
-This flag is incompatible with AS_ALG_TREE.)doc";
+This flag is incompatible with Tree.)doc";
 
 // Docstring regina::python::doc::AngleAlg_::Default
 static const char *Default =
@@ -93,7 +93,7 @@ and M. Ozlen, "A tree traversal algorithm for decision problems in
 knot theory and 3-manifold topology", Algorithmica 65 (2013), pp.
 772-801.
 
-This flag is incompatible with AS_ALG_DD.)doc";
+This flag is incompatible with DD.)doc";
 
 }
 

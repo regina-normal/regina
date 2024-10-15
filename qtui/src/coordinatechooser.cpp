@@ -63,8 +63,8 @@ void CoordinateChooser::insertAllCreators() {
     insertSystem(NormalCoords::QuadOctClosed);
 #ifdef SUPPORT_TONS
     if (ReginaPrefSet::global().surfacesSupportOriented) {
-        insertSystem(regina::NS_ORIENTED);
-        insertSystem(regina::NS_ORIENTED_QUAD);
+        insertSystem(NormalCoords::Oriented);
+        insertSystem(NormalCoords::OrientedQuad);
     }
 #endif
 }
@@ -86,8 +86,8 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
 
 #ifdef SUPPORT_TONS
         if (surfaces->allowsOriented()) {
-            insertSystem(regina::NS_ORIENTED);
-            insertSystem(regina::NS_ORIENTED_QUAD);
+            insertSystem(NormalCoords::Oriented);
+            insertSystem(NormalCoords::OrientedQuad);
         }
 #endif
     }
@@ -104,14 +104,14 @@ void CoordinateChooser::setCurrentSystem(NormalCoords newSystem) {
         if (newSystem == NormalCoords::QuadClosed)
             it = std::find(systems.begin(), systems.end(), NormalCoords::Quad);
 #ifdef SUPPORT_TONS
-        else if (newSystem == regina::NS_ORIENTED_QUAD)
+        else if (newSystem == NormalCoords::OrientedQuad)
             it = std::find(systems.begin(), systems.end(), NormalCoords::Quad);
 #endif
         else if (newSystem == NormalCoords::QuadOctClosed)
             it = std::find(systems.begin(), systems.end(),
                 NormalCoords::QuadOct);
 #ifdef SUPPORT_TONS
-        else if (newSystem == regina::NS_ORIENTED)
+        else if (newSystem == NormalCoords::Oriented)
             it = std::find(systems.begin(), systems.end(),
                 NormalCoords::Standard);
 #endif

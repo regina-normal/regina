@@ -64,20 +64,20 @@ void NormalSurfaces::swap(NormalSurfaces& other) {
 void NormalSurfaces::writeTextShort(std::ostream& out) const {
     out << surfaces_.size();
 
-    if (which_.has(regina::NS_EMBEDDED_ONLY))
+    if (which_.has(NormalList::EmbeddedOnly))
         out << " embedded,";
-    else if (which_.has(regina::NS_IMMERSED_SINGULAR))
+    else if (which_.has(NormalList::ImmersedSingular))
         out << " embedded / immersed / singular,";
     else
         out << " unknown,";
 
-    if (which_.has(regina::NS_VERTEX))
+    if (which_.has(NormalList::Vertex))
         out << " vertex";
-    else if (which_.has(regina::NS_FUNDAMENTAL))
+    else if (which_.has(NormalList::Fundamental))
         out << " fundamental";
-    else if (which_.has(regina::NS_CUSTOM))
+    else if (which_.has(NormalList::Custom))
         out << " custom";
-    else if (which_.has(regina::NormalList::Legacy))
+    else if (which_.has(NormalList::Legacy))
         out << " legacy";
     else
         out << " unknown";
@@ -90,20 +90,20 @@ void NormalSurfaces::writeTextShort(std::ostream& out) const {
 }
 
 void NormalSurfaces::writeTextLong(std::ostream& out) const {
-    if (which_.has(regina::NS_EMBEDDED_ONLY))
+    if (which_.has(NormalList::EmbeddedOnly))
         out << "Embedded,";
-    else if (which_.has(regina::NS_IMMERSED_SINGULAR))
+    else if (which_.has(NormalList::ImmersedSingular))
         out << "Embedded / immersed / singular,";
     else
         out << "Unknown,";
 
-    if (which_.has(regina::NS_VERTEX))
+    if (which_.has(NormalList::Vertex))
         out << " vertex";
-    else if (which_.has(regina::NS_FUNDAMENTAL))
+    else if (which_.has(NormalList::Fundamental))
         out << " fundamental";
-    else if (which_.has(regina::NS_CUSTOM))
+    else if (which_.has(NormalList::Custom))
         out << " custom";
-    else if (which_.has(regina::NormalList::Legacy))
+    else if (which_.has(NormalList::Legacy))
         out << " legacy";
     else
         out << " unknown";

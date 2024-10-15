@@ -93,8 +93,8 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
                 regina::NormalList, regina::NormalAlg, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
-            pybind11::arg("which") = regina::NS_LIST_DEFAULT,
-            pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
+            pybind11::arg("which") = regina::NormalList::Default,
+            pybind11::arg("algHints") = regina::NormalAlg::Default,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<GILScopedRelease>(),
             rdoc::__init)
@@ -156,8 +156,8 @@ void addNormalSurfaces(pybind11::module_& m) {
             regina::NormalCoords, regina::NormalList, regina::NormalAlg,
             ProgressTracker*>(wrap,
         pybind11::arg(), pybind11::arg(),
-        pybind11::arg("which") = regina::NS_LIST_DEFAULT,
-        pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
+        pybind11::arg("which") = regina::NormalList::Default,
+        pybind11::arg("algHints") = regina::NormalAlg::Default,
         pybind11::arg("tracker") = nullptr,
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);

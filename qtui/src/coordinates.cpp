@@ -49,54 +49,54 @@ using regina::Triangle;
 namespace Coordinates {
     const char* name(NormalCoords coordSystem, bool capitalise) {
         if (capitalise) {
-            if (coordSystem == regina::NormalCoords::Standard)
+            if (coordSystem == NormalCoords::Standard)
                 return QT_TR_NOOP("Standard normal (tri-quad)");
-            if (coordSystem == regina::NormalCoords::AlmostNormal)
+            if (coordSystem == NormalCoords::AlmostNormal)
                 return QT_TR_NOOP("Standard almost normal (tri-quad-oct)");
-            if (coordSystem == regina::NormalCoords::LegacyAlmostNormal)
+            if (coordSystem == NormalCoords::LegacyAlmostNormal)
                 return QT_TR_NOOP("Legacy almost normal (pruned tri-quad-oct)");
-            if (coordSystem == regina::NormalCoords::Quad)
+            if (coordSystem == NormalCoords::Quad)
                 return QT_TR_NOOP("Quad normal");
-            if (coordSystem == regina::NormalCoords::QuadClosed)
+            if (coordSystem == NormalCoords::QuadClosed)
                 return QT_TR_NOOP("Closed quad (non-spun)");
-            if (coordSystem == regina::NormalCoords::QuadOct)
+            if (coordSystem == NormalCoords::QuadOct)
                 return QT_TR_NOOP("Quad-oct almost normal");
-            if (coordSystem == regina::NormalCoords::QuadOctClosed)
+            if (coordSystem == NormalCoords::QuadOctClosed)
                 return QT_TR_NOOP("Closed quad-oct (non-spun)");
-            if (coordSystem == regina::NormalCoords::Edge)
+            if (coordSystem == NormalCoords::Edge)
                 return QT_TR_NOOP("Edge weight");
-            if (coordSystem == regina::NormalCoords::Arc)
+            if (coordSystem == NormalCoords::Arc)
                 return QT_TR_NOOP("Triangle arc");
 #ifdef SUPPORT_TONS
-            if (coordSystem == regina::NS_ORIENTED)
+            if (coordSystem == NormalCoords::Oriented)
                 return QT_TR_NOOP("Transversely oriented normal");
-            if (coordSystem == regina::NS_ORIENTED_QUAD)
+            if (coordSystem == NormalCoords::OrientedQuad)
                 return QT_TR_NOOP("Transversely oriented quad normal");
 #endif
             return QT_TR_NOOP("Unknown");
         } else {
-            if (coordSystem == regina::NormalCoords::Standard)
+            if (coordSystem == NormalCoords::Standard)
                 return QT_TR_NOOP("standard normal (tri-quad)");
-            if (coordSystem == regina::NormalCoords::AlmostNormal)
+            if (coordSystem == NormalCoords::AlmostNormal)
                 return QT_TR_NOOP("standard almost normal (tri-quad-oct)");
-            if (coordSystem == regina::NormalCoords::LegacyAlmostNormal)
+            if (coordSystem == NormalCoords::LegacyAlmostNormal)
                 return QT_TR_NOOP("legacy almost normal (pruned tri-quad-oct)");
-            if (coordSystem == regina::NormalCoords::Quad)
+            if (coordSystem == NormalCoords::Quad)
                 return QT_TR_NOOP("quad normal");
-            if (coordSystem == regina::NormalCoords::QuadClosed)
+            if (coordSystem == NormalCoords::QuadClosed)
                 return QT_TR_NOOP("closed quad (non-spun)");
-            if (coordSystem == regina::NormalCoords::QuadOct)
+            if (coordSystem == NormalCoords::QuadOct)
                 return QT_TR_NOOP("quad-oct almost normal");
-            if (coordSystem == regina::NormalCoords::QuadOctClosed)
+            if (coordSystem == NormalCoords::QuadOctClosed)
                 return QT_TR_NOOP("closed quad-oct (non-spun)");
-            if (coordSystem == regina::NormalCoords::Edge)
+            if (coordSystem == NormalCoords::Edge)
                 return QT_TR_NOOP("edge weight");
-            if (coordSystem == regina::NormalCoords::Arc)
+            if (coordSystem == NormalCoords::Arc)
                 return QT_TR_NOOP("triangle arc");
 #ifdef SUPPORT_TONS
-            if (coordSystem == regina::NS_ORIENTED)
+            if (coordSystem == NormalCoords::Oriented)
                 return QT_TR_NOOP("transversely oriented normal");
-            if (coordSystem == regina::NS_ORIENTED_QUAD)
+            if (coordSystem == NormalCoords::OrientedQuad)
                 return QT_TR_NOOP("transversely oriented quad normal");
 #endif
             return QT_TR_NOOP("unknown");
@@ -105,54 +105,54 @@ namespace Coordinates {
 
     const char* adjective(NormalCoords coordSystem, bool capitalise) {
         if (capitalise) {
-            if (coordSystem == regina::NormalCoords::Standard)
+            if (coordSystem == NormalCoords::Standard)
                 return QT_TR_NOOP("Standard");
-            if (coordSystem == regina::NormalCoords::AlmostNormal)
+            if (coordSystem == NormalCoords::AlmostNormal)
                 return QT_TR_NOOP("Almost normal");
-            if (coordSystem == regina::NormalCoords::LegacyAlmostNormal)
+            if (coordSystem == NormalCoords::LegacyAlmostNormal)
                 return QT_TR_NOOP("Legacy");
-            if (coordSystem == regina::NormalCoords::Quad)
+            if (coordSystem == NormalCoords::Quad)
                 return QT_TR_NOOP("Quad");
-            if (coordSystem == regina::NormalCoords::QuadClosed)
+            if (coordSystem == NormalCoords::QuadClosed)
                 return QT_TR_NOOP("Closed quad");
-            if (coordSystem == regina::NormalCoords::QuadOct)
+            if (coordSystem == NormalCoords::QuadOct)
                 return QT_TR_NOOP("Quad-oct");
-            if (coordSystem == regina::NormalCoords::QuadOctClosed)
+            if (coordSystem == NormalCoords::QuadOctClosed)
                 return QT_TR_NOOP("Closed quad-oct");
-            if (coordSystem == regina::NormalCoords::Edge)
+            if (coordSystem == NormalCoords::Edge)
                 return QT_TR_NOOP("Edge weight");
-            if (coordSystem == regina::NormalCoords::Arc)
+            if (coordSystem == NormalCoords::Arc)
                 return QT_TR_NOOP("Triangle arc");
 #ifdef SUPPORT_TONS
-            if (coordSystem == regina::NS_ORIENTED)
+            if (coordSystem == NormalCoords::Oriented)
                 return QT_TR_NOOP("Transversely oriented");
-            if (coordSystem == regina::NS_ORIENTED_QUAD)
+            if (coordSystem == NormalCoords::OrientedQuad)
                 return QT_TR_NOOP("Transversely oriented quad");
 #endif
             return QT_TR_NOOP("Unknown");
         } else {
-            if (coordSystem == regina::NormalCoords::Standard)
+            if (coordSystem == NormalCoords::Standard)
                 return QT_TR_NOOP("standard");
-            if (coordSystem == regina::NormalCoords::AlmostNormal)
+            if (coordSystem == NormalCoords::AlmostNormal)
                 return QT_TR_NOOP("almost normal");
-            if (coordSystem == regina::NormalCoords::LegacyAlmostNormal)
+            if (coordSystem == NormalCoords::LegacyAlmostNormal)
                 return QT_TR_NOOP("legacy");
-            if (coordSystem == regina::NormalCoords::Quad)
+            if (coordSystem == NormalCoords::Quad)
                 return QT_TR_NOOP("quad");
-            if (coordSystem == regina::NormalCoords::QuadClosed)
+            if (coordSystem == NormalCoords::QuadClosed)
                 return QT_TR_NOOP("closed quad");
-            if (coordSystem == regina::NormalCoords::QuadOct)
+            if (coordSystem == NormalCoords::QuadOct)
                 return QT_TR_NOOP("quad-oct");
-            if (coordSystem == regina::NormalCoords::QuadOctClosed)
+            if (coordSystem == NormalCoords::QuadOctClosed)
                 return QT_TR_NOOP("closed quad-oct");
-            if (coordSystem == regina::NormalCoords::Edge)
+            if (coordSystem == NormalCoords::Edge)
                 return QT_TR_NOOP("edge weight");
-            if (coordSystem == regina::NormalCoords::Arc)
+            if (coordSystem == NormalCoords::Arc)
                 return QT_TR_NOOP("triangle arc");
 #ifdef SUPPORT_TONS
-            if (coordSystem == regina::NS_ORIENTED)
+            if (coordSystem == NormalCoords::Oriented)
                 return QT_TR_NOOP("transversely oriented");
-            if (coordSystem == regina::NS_ORIENTED_QUAD)
+            if (coordSystem == NormalCoords::OrientedQuad)
                 return QT_TR_NOOP("transversely oriented quad");
 #endif
             return QT_TR_NOOP("unknown");
@@ -161,19 +161,19 @@ namespace Coordinates {
 
     const char* name(HyperCoords coordSystem, bool capitalise) {
         if (capitalise) {
-            if (coordSystem == regina::HyperCoords::Standard)
+            if (coordSystem == HyperCoords::Standard)
                 return QT_TR_NOOP("Standard normal (tet-prism)");
-            if (coordSystem == regina::HyperCoords::Prism)
+            if (coordSystem == HyperCoords::Prism)
                 return QT_TR_NOOP("Prism normal");
-            if (coordSystem == regina::HyperCoords::Edge)
+            if (coordSystem == HyperCoords::Edge)
                 return QT_TR_NOOP("Edge weight");
             return QT_TR_NOOP("Unknown");
         } else {
-            if (coordSystem == regina::HyperCoords::Standard)
+            if (coordSystem == HyperCoords::Standard)
                 return QT_TR_NOOP("standard normal (tet-prism)");
-            if (coordSystem == regina::HyperCoords::Prism)
+            if (coordSystem == HyperCoords::Prism)
                 return QT_TR_NOOP("prism normal");
-            if (coordSystem == regina::HyperCoords::Edge)
+            if (coordSystem == HyperCoords::Edge)
                 return QT_TR_NOOP("edge weight");
             return QT_TR_NOOP("unknown");
         }
@@ -181,55 +181,55 @@ namespace Coordinates {
 
     const char* adjective(HyperCoords coordSystem, bool capitalise) {
         if (capitalise) {
-            if (coordSystem == regina::HyperCoords::Standard)
+            if (coordSystem == HyperCoords::Standard)
                 return QT_TR_NOOP("Standard");
-            if (coordSystem == regina::HyperCoords::Prism)
+            if (coordSystem == HyperCoords::Prism)
                 return QT_TR_NOOP("Prism");
-            if (coordSystem == regina::HyperCoords::Edge)
+            if (coordSystem == HyperCoords::Edge)
                 return QT_TR_NOOP("Edge weight");
             return QT_TR_NOOP("Unknown");
         } else {
-            if (coordSystem == regina::HyperCoords::Standard)
+            if (coordSystem == HyperCoords::Standard)
                 return QT_TR_NOOP("standard");
-            if (coordSystem == regina::HyperCoords::Prism)
+            if (coordSystem == HyperCoords::Prism)
                 return QT_TR_NOOP("prism");
-            if (coordSystem == regina::HyperCoords::Edge)
+            if (coordSystem == HyperCoords::Edge)
                 return QT_TR_NOOP("edge weight");
             return QT_TR_NOOP("unknown");
         }
     }
 
     bool generatesAlmostNormal(NormalCoords coordSystem) {
-        return (coordSystem == regina::NormalCoords::AlmostNormal ||
-                coordSystem == regina::NormalCoords::LegacyAlmostNormal ||
-                coordSystem == regina::NormalCoords::QuadOct ||
-                coordSystem == regina::NormalCoords::QuadOctClosed);
+        return (coordSystem == NormalCoords::AlmostNormal ||
+                coordSystem == NormalCoords::LegacyAlmostNormal ||
+                coordSystem == NormalCoords::QuadOct ||
+                coordSystem == NormalCoords::QuadOctClosed);
     }
 
     size_t numColumns(NormalCoords coordSystem,
             const regina::Triangulation<3>& tri) {
-        if (coordSystem == regina::NormalCoords::Standard)
+        if (coordSystem == NormalCoords::Standard)
             return tri.size() * 7;
-        else if (coordSystem == regina::NormalCoords::AlmostNormal)
+        else if (coordSystem == NormalCoords::AlmostNormal)
             return tri.size() * 10;
-        else if (coordSystem == regina::NormalCoords::LegacyAlmostNormal)
+        else if (coordSystem == NormalCoords::LegacyAlmostNormal)
             return tri.size() * 10;
-        else if (coordSystem == regina::NormalCoords::Quad)
+        else if (coordSystem == NormalCoords::Quad)
             return tri.size() * 3;
-        else if (coordSystem == regina::NormalCoords::QuadClosed)
+        else if (coordSystem == NormalCoords::QuadClosed)
             return tri.size() * 3;
-        else if (coordSystem == regina::NormalCoords::QuadOct)
+        else if (coordSystem == NormalCoords::QuadOct)
             return tri.size() * 6;
-        else if (coordSystem == regina::NormalCoords::QuadOctClosed)
+        else if (coordSystem == NormalCoords::QuadOctClosed)
             return tri.size() * 6;
-        else if (coordSystem == regina::NormalCoords::Edge)
+        else if (coordSystem == NormalCoords::Edge)
             return tri.countEdges();
-        else if (coordSystem == regina::NormalCoords::Arc)
+        else if (coordSystem == NormalCoords::Arc)
             return tri.countTriangles() * 3;
 #ifdef SUPPORT_TONS
-        else if (coordSystem == regina::NS_ORIENTED)
+        else if (coordSystem == NormalCoords::Oriented)
             return tri.size() * 14;
-        else if (coordSystem == regina::NS_ORIENTED_QUAD)
+        else if (coordSystem == NormalCoords::OrientedQuad)
             return tri.size() * 6;
 #endif
         else
@@ -238,11 +238,11 @@ namespace Coordinates {
 
     size_t numColumns(HyperCoords coordSystem,
             const regina::Triangulation<4>& tri) {
-        if (coordSystem == regina::HyperCoords::Standard)
+        if (coordSystem == HyperCoords::Standard)
             return tri.size() * 15;
-        else if (coordSystem == regina::HyperCoords::Prism)
+        else if (coordSystem == HyperCoords::Prism)
             return tri.size() * 10;
-        else if (coordSystem == regina::HyperCoords::Edge)
+        else if (coordSystem == HyperCoords::Edge)
             return tri.countEdges();
         else
             return 0;
@@ -250,15 +250,15 @@ namespace Coordinates {
 
     QString columnName(NormalCoords coordSystem, size_t whichCoord,
             const regina::Triangulation<3>& tri) {
-        if (coordSystem == regina::NormalCoords::Standard) {
+        if (coordSystem == NormalCoords::Standard) {
             if (whichCoord % 7 < 4)
                 return QString("%1: %2").arg(whichCoord / 7).
                     arg(whichCoord % 7);
             else
                 return QString("%1: %2").arg(whichCoord / 7).
                     arg(regina::quadString[(whichCoord % 7) - 4].c_str());
-        } else if (coordSystem == regina::NormalCoords::AlmostNormal ||
-                coordSystem == regina::NormalCoords::LegacyAlmostNormal) {
+        } else if (coordSystem == NormalCoords::AlmostNormal ||
+                coordSystem == NormalCoords::LegacyAlmostNormal) {
             if (whichCoord % 10 < 4)
                 return QString("T%1: %2").arg(whichCoord / 10).
                     arg(whichCoord % 10);
@@ -268,26 +268,26 @@ namespace Coordinates {
             else
                 return QString("K%1: %2").arg(whichCoord / 10).
                     arg(regina::quadString[(whichCoord % 10) - 7].c_str());
-        } else if (coordSystem == regina::NormalCoords::Quad ||
-                coordSystem == regina::NormalCoords::QuadClosed) {
+        } else if (coordSystem == NormalCoords::Quad ||
+                coordSystem == NormalCoords::QuadClosed) {
             return QString("%1: %2").arg(whichCoord / 3).
                 arg(regina::quadString[whichCoord % 3].c_str());
-        } else if (coordSystem == regina::NormalCoords::QuadOct ||
-                coordSystem == regina::NormalCoords::QuadOctClosed) {
+        } else if (coordSystem == NormalCoords::QuadOct ||
+                coordSystem == NormalCoords::QuadOctClosed) {
             if (whichCoord % 6 < 3)
                 return QString("Q%1: %2").arg(whichCoord / 6).
                     arg(regina::quadString[whichCoord % 6].c_str());
             else
                 return QString("K%1: %2").arg(whichCoord / 6).
                     arg(regina::quadString[(whichCoord % 6) - 3].c_str());
-        } else if (coordSystem == regina::NormalCoords::Edge) {
+        } else if (coordSystem == NormalCoords::Edge) {
             if (! tri.edge(whichCoord)->isBoundary())
                 return QString::number(whichCoord);
             else if (ReginaPrefSet::global().displayUnicode)
                 return QString("%1: \u2202").arg(whichCoord);
             else
                 return QString("%1 (B)").arg(whichCoord);
-        } else if (coordSystem == regina::NormalCoords::Arc) {
+        } else if (coordSystem == NormalCoords::Arc) {
             if (! tri.triangle(whichCoord / 3)->isBoundary())
                 return QString("%1: %2").
                     arg(whichCoord / 3).arg(whichCoord % 3);
@@ -298,7 +298,7 @@ namespace Coordinates {
                 return QString("B %1: %2").
                     arg(whichCoord / 3).arg(whichCoord % 3);
 #ifdef SUPPORT_TONS
-        } else if (coordSystem == regina::NS_ORIENTED) {
+        } else if (coordSystem == NormalCoords::Oriented) {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -320,7 +320,7 @@ namespace Coordinates {
                         arg(regina::quadDefn[(stdCoord % 7) - 4][2]).
                         arg(regina::quadDefn[(stdCoord % 7) - 4][3]);
             }
-        } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
+        } else if (coordSystem == NormalCoords::OrientedQuad) {
             size_t quadCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -342,7 +342,7 @@ namespace Coordinates {
 
     QString columnName(HyperCoords coordSystem, size_t whichCoord,
             const regina::Triangulation<4>& tri) {
-        if (coordSystem == regina::HyperCoords::Standard) {
+        if (coordSystem == HyperCoords::Standard) {
             if (whichCoord % 15 < 5)
                 return QString("%1: %2").arg(whichCoord / 15).
                     arg(whichCoord % 15);
@@ -352,13 +352,13 @@ namespace Coordinates {
                         [(whichCoord % 15) - 5][0]).
                     arg(regina::FaceNumbering<4, 1>::edgeVertex
                         [(whichCoord % 15) - 5][1]);
-        } else if (coordSystem == regina::HyperCoords::Prism) {
+        } else if (coordSystem == HyperCoords::Prism) {
             return QString("%1: %2%3").arg(whichCoord / 10).
                 arg(regina::FaceNumbering<4, 1>::edgeVertex
                     [whichCoord % 10][0]).
                 arg(regina::FaceNumbering<4, 1>::edgeVertex
                     [whichCoord % 10][1]);
-        } else if (coordSystem == regina::HyperCoords::Edge) {
+        } else if (coordSystem == HyperCoords::Edge) {
             if (! tri.edge(whichCoord)->isBoundary())
                 return QString::number(whichCoord);
             else if (ReginaPrefSet::global().displayUnicode)
@@ -372,7 +372,7 @@ namespace Coordinates {
 
     QString columnDesc(NormalCoords coordSystem, size_t whichCoord,
             const QObject *context, const regina::Triangulation<3>& tri) {
-        if (coordSystem == regina::NormalCoords::Standard) {
+        if (coordSystem == NormalCoords::Standard) {
             if (whichCoord % 7 < 4)
                 return context->tr("Tetrahedron %1, triangle about vertex %2").
                     arg(whichCoord / 7).arg(whichCoord % 7);
@@ -380,8 +380,8 @@ namespace Coordinates {
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 7).
                     arg(regina::quadString[(whichCoord % 7) - 4].c_str());
-        } else if (coordSystem == regina::NormalCoords::AlmostNormal ||
-                coordSystem == regina::NormalCoords::LegacyAlmostNormal) {
+        } else if (coordSystem == NormalCoords::AlmostNormal ||
+                coordSystem == NormalCoords::LegacyAlmostNormal) {
             if (whichCoord % 10 < 4)
                 return context->tr("Tetrahedron %1, triangle about vertex %2").
                     arg(whichCoord / 10).arg(whichCoord % 10);
@@ -393,13 +393,13 @@ namespace Coordinates {
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 10).
                     arg(regina::quadString[(whichCoord % 10) - 7].c_str());
-        } else if (coordSystem == regina::NormalCoords::Quad ||
-                coordSystem == regina::NormalCoords::QuadClosed) {
+        } else if (coordSystem == NormalCoords::Quad ||
+                coordSystem == NormalCoords::QuadClosed) {
             return context->tr("Tetrahedron %1, quad splitting vertices %2").
                 arg(whichCoord / 3).
                 arg(regina::quadString[whichCoord % 3].c_str());
-        } else if (coordSystem == regina::NormalCoords::QuadOct ||
-                coordSystem == regina::NormalCoords::QuadOctClosed) {
+        } else if (coordSystem == NormalCoords::QuadOct ||
+                coordSystem == NormalCoords::QuadOctClosed) {
             if (whichCoord % 6 < 3)
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 6).
@@ -408,14 +408,14 @@ namespace Coordinates {
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 6).
                     arg(regina::quadString[(whichCoord % 6) - 3].c_str());
-        } else if (coordSystem == regina::NormalCoords::Edge) {
+        } else if (coordSystem == NormalCoords::Edge) {
             if (tri.edge(whichCoord)->isBoundary())
                 return context->tr("Weight of (boundary) edge %1").
                     arg(whichCoord);
             else
                 return context->tr("Weight of (internal) edge %1").
                     arg(whichCoord);
-        } else if (coordSystem == regina::NormalCoords::Arc) {
+        } else if (coordSystem == NormalCoords::Arc) {
             if (! tri.triangle(whichCoord / 3)->isBoundary())
                 return context->tr(
                     "Arcs on (internal) triangle %1 crossing triangle vertex %2").
@@ -425,7 +425,7 @@ namespace Coordinates {
                     "Arcs on (boundary) triangle %1 crossing triangle vertex %2").
                     arg(whichCoord / 3).arg(whichCoord % 3);
 #ifdef SUPPORT_TONS
-        } else if (coordSystem == regina::NS_ORIENTED) {
+        } else if (coordSystem == NormalCoords::Oriented) {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -455,7 +455,7 @@ namespace Coordinates {
                         arg(regina::quadDefn[(stdCoord % 7) - 4][2]).
                         arg(regina::quadDefn[(stdCoord % 7) - 4][3]);
             }
-        } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
+        } else if (coordSystem == NormalCoords::OrientedQuad) {
             size_t quadCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -481,7 +481,7 @@ namespace Coordinates {
 
     QString columnDesc(HyperCoords coordSystem, size_t whichCoord,
             const QObject *context, const regina::Triangulation<4>& tri) {
-        if (coordSystem == regina::HyperCoords::Standard) {
+        if (coordSystem == HyperCoords::Standard) {
             if (whichCoord % 15 < 5)
                 return context->tr(
                     "Pentachoron %1, tetrahedron about vertex %2").
@@ -494,7 +494,7 @@ namespace Coordinates {
                         [(whichCoord % 15) - 5][0]).
                     arg(regina::FaceNumbering<4, 1>::edgeVertex
                         [(whichCoord % 15) - 5][1]);
-        } else if (coordSystem == regina::HyperCoords::Prism) {
+        } else if (coordSystem == HyperCoords::Prism) {
             return context->tr(
                 "Pentachoron %1, prism beside vertices %2 and %3").
                 arg(whichCoord / 10).
@@ -502,7 +502,7 @@ namespace Coordinates {
                     [whichCoord % 10][0]).
                 arg(regina::FaceNumbering<4, 1>::edgeVertex
                     [whichCoord % 10][1]);
-        } else if (coordSystem == regina::HyperCoords::Edge) {
+        } else if (coordSystem == HyperCoords::Edge) {
             if (tri.edge(whichCoord)->isBoundary())
                 return context->tr("Weight of (boundary) edge %1").
                     arg(whichCoord);
@@ -516,34 +516,34 @@ namespace Coordinates {
 
     regina::LargeInteger getCoordinate(NormalCoords coordSystem,
             const regina::NormalSurface& surface, size_t whichCoord) {
-        if (coordSystem == regina::NormalCoords::Standard) {
+        if (coordSystem == NormalCoords::Standard) {
             if (whichCoord % 7 < 4)
                 return surface.triangles(whichCoord / 7, whichCoord % 7);
             else
                 return surface.quads(whichCoord / 7, (whichCoord % 7) - 4);
-        } else if (coordSystem == regina::NormalCoords::AlmostNormal ||
-                coordSystem == regina::NormalCoords::LegacyAlmostNormal) {
+        } else if (coordSystem == NormalCoords::AlmostNormal ||
+                coordSystem == NormalCoords::LegacyAlmostNormal) {
             if (whichCoord % 10 < 4)
                 return surface.triangles(whichCoord / 10, whichCoord % 10);
             else if (whichCoord % 10 < 7)
                 return surface.quads(whichCoord / 10, (whichCoord % 10) - 4);
             else
                 return surface.octs(whichCoord / 10, (whichCoord % 10) - 7);
-        } else if (coordSystem == regina::NormalCoords::Quad ||
-                coordSystem == regina::NormalCoords::QuadClosed) {
+        } else if (coordSystem == NormalCoords::Quad ||
+                coordSystem == NormalCoords::QuadClosed) {
             return surface.quads(whichCoord / 3, whichCoord % 3);
-        } else if (coordSystem == regina::NormalCoords::QuadOct ||
-                coordSystem == regina::NormalCoords::QuadOctClosed) {
+        } else if (coordSystem == NormalCoords::QuadOct ||
+                coordSystem == NormalCoords::QuadOctClosed) {
             if (whichCoord % 6 < 3)
                 return surface.quads(whichCoord / 6, whichCoord % 6);
             else
                 return surface.octs(whichCoord / 6, (whichCoord % 6) - 3);
-        } else if (coordSystem == regina::NormalCoords::Edge) {
+        } else if (coordSystem == NormalCoords::Edge) {
             return surface.edgeWeight(whichCoord);
-        } else if (coordSystem == regina::NormalCoords::Arc) {
+        } else if (coordSystem == NormalCoords::Arc) {
             return surface.arcs(whichCoord / 3, whichCoord % 3);
 #ifdef SUPPORT_TONS
-        } else if (coordSystem == regina::NS_ORIENTED) {
+        } else if (coordSystem == NormalCoords::Oriented) {
             bool orientation = (whichCoord % 2 == 0);
             whichCoord /= 2;
             if (whichCoord % 7 < 4)
@@ -552,7 +552,7 @@ namespace Coordinates {
             else
                 return surface.orientedQuads(
                     whichCoord / 7, (whichCoord % 7) - 4, orientation);
-        } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
+        } else if (coordSystem == NormalCoords::OrientedQuad) {
             bool orientation = (whichCoord % 2 == 0);
             whichCoord /= 2;
             return surface.orientedQuads(
@@ -565,14 +565,14 @@ namespace Coordinates {
 
     regina::LargeInteger getCoordinate(HyperCoords coordSystem,
             const regina::NormalHypersurface& surface, size_t whichCoord) {
-        if (coordSystem == regina::HyperCoords::Standard) {
+        if (coordSystem == HyperCoords::Standard) {
             if (whichCoord % 15 < 5)
                 return surface.tetrahedra(whichCoord / 15, whichCoord % 15);
             else
                 return surface.prisms(whichCoord / 15, (whichCoord % 15) - 5);
-        } else if (coordSystem == regina::HyperCoords::Prism) {
+        } else if (coordSystem == HyperCoords::Prism) {
             return surface.prisms(whichCoord / 10, whichCoord % 10);
-        } else if (coordSystem == regina::HyperCoords::Edge) {
+        } else if (coordSystem == HyperCoords::Edge) {
             return surface.edgeWeight(whichCoord);
         }
 
