@@ -53,8 +53,12 @@ def classInfo(name, object):
     print()
 
 def enumInfo(name, object):
-    # print name, ': enum'
-    pass
+    realName = object.__name__
+    if realName == name:
+        print(name, ': enum')
+    else:
+        print(name, ': alias -> enum', realName)
+    print()
 
 def functionInfo(name, object):
     # print name, ': function'

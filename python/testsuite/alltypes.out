@@ -1,6 +1,12 @@
 AbelianGroup : class
 Equality type : EqualityType.BY_VALUE
 
+Algorithm : enum
+
+AngleAlg : enum
+
+AngleAlgFlags : alias -> enum AngleAlg
+
 AngleStructure : class
 Equality type : EqualityType.BY_VALUE
 
@@ -12,6 +18,8 @@ Equality type : EqualityType.BY_VALUE
 
 AugTriSolidTorus : class
 Equality type : EqualityType.BY_VALUE
+
+BagComparison : enum
 
 BanBoundary : class
 Equality type : EqualityType.BY_VALUE
@@ -99,6 +107,10 @@ Equality type : EqualityType.BY_VALUE
 
 CensusHit : class
 Equality type : EqualityType.BY_VALUE
+
+CensusPurge : enum
+
+CensusPurgeFlags : alias -> enum CensusPurge
 
 ChildIterator : class
 Equality type : EqualityType.BY_VALUE
@@ -190,6 +202,8 @@ EdgeEmbedding6 : alias ->  FaceEmbedding6_1
 EdgeEmbedding7 : alias ->  FaceEmbedding7_1
 
 EdgeEmbedding8 : alias ->  FaceEmbedding8_1
+
+EqualityType : enum
 
 EulerSearcher : class
 Equality type : EqualityType.BY_REFERENCE
@@ -496,6 +510,8 @@ Exception type
 FileError : class
 Exception type
 
+FileFormat : enum
+
 FileInfo : class
 Equality type : EqualityType.BY_VALUE
 
@@ -519,6 +535,8 @@ Equality type : EqualityType.BY_VALUE
 
 Flags_SurfaceExport : class
 Equality type : EqualityType.BY_VALUE
+
+Framing : enum
 
 GlobalDirs : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -592,11 +610,21 @@ Equality type : EqualityType.DISABLED
 HomologicalData : class
 Equality type : EqualityType.DISABLED
 
+HyperAlg : enum
+
+HyperAlgFlags : alias -> enum HyperAlg
+
+HyperCoords : enum
+
 HyperEncoding : class
 Equality type : EqualityType.BY_VALUE
 
 HyperInfo : class
 Equality type : EqualityType.NEVER_INSTANTIATED
+
+HyperList : enum
+
+HyperListFlags : alias -> enum HyperList
 
 HyperbolicMinSearcher : class
 Equality type : EqualityType.BY_REFERENCE
@@ -759,6 +787,8 @@ Equality type : EqualityType.BY_VALUE
 LPSystem : class
 Equality type : EqualityType.BY_VALUE
 
+Language : enum
+
 LargeInteger : class
 Equality type : EqualityType.BY_VALUE
 
@@ -837,8 +867,18 @@ Equality type : EqualityType.BY_VALUE
 ModelLinkGraphNode : class
 Equality type : EqualityType.BY_REFERENCE
 
+NamedPermGroup : enum
+
+NiceType : enum
+
 NoSolution : class
 Exception type
+
+NormalAlg : enum
+
+NormalAlgFlags : alias -> enum NormalAlg
+
+NormalCoords : enum
 
 NormalEncoding : class
 Equality type : EqualityType.BY_VALUE
@@ -852,11 +892,17 @@ Equality type : EqualityType.BY_VALUE
 NormalInfo : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
+NormalList : enum
+
+NormalListFlags : alias -> enum NormalList
+
 NormalSurface : class
 Equality type : EqualityType.BY_VALUE
 
 NormalSurfaces : class
 Equality type : EqualityType.BY_VALUE
+
+NormalTransform : enum
 
 NotImplemented : class
 Exception type
@@ -917,6 +963,8 @@ Equality type : EqualityType.BY_VALUE
 
 PacketShell : class
 Equality type : EqualityType.BY_VALUE
+
+PacketType : enum
 
 Pentachoron4 : alias ->  Simplex4
 
@@ -1025,6 +1073,8 @@ Equality type : EqualityType.BY_VALUE
 
 PermClass9 : class
 Equality type : EqualityType.BY_VALUE
+
+PermCodeType : enum
 
 PermGroup10 : class
 Equality type : EqualityType.BY_VALUE
@@ -1299,6 +1349,10 @@ Equality type : EqualityType.BY_VALUE
 SubtreeIterator : class
 Equality type : EqualityType.BY_VALUE
 
+SurfaceExport : enum
+
+SurfaceExportFields : alias -> enum SurfaceExport
+
 SurfaceFilter : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -1307,6 +1361,8 @@ Equality type : EqualityType.BY_VALUE
 
 SurfaceFilterProperties : class
 Equality type : EqualityType.BY_VALUE
+
+SurfaceFilterType : enum
 
 Tangle : class
 Equality type : EqualityType.BY_VALUE
@@ -1347,6 +1403,8 @@ Equality type : EqualityType.BY_REFERENCE
 
 TreeDecomposition : class
 Equality type : EqualityType.BY_VALUE
+
+TreeDecompositionAlg : enum
 
 TreeEnumeration : class
 Equality type : EqualityType.BY_REFERENCE
