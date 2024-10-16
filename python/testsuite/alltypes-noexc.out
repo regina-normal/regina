@@ -1,0 +1,1581 @@
+AbelianGroup : class
+Equality type : EqualityType.BY_VALUE
+
+AngleStructure : class
+Equality type : EqualityType.BY_VALUE
+
+AngleStructures : class
+Equality type : EqualityType.BY_VALUE
+
+Attachment : class
+Equality type : EqualityType.BY_VALUE
+
+AugTriSolidTorus : class
+Equality type : EqualityType.BY_VALUE
+
+BanBoundary : class
+Equality type : EqualityType.BY_VALUE
+
+BanEdge : class
+Equality type : EqualityType.BY_VALUE
+
+BanNone : class
+Equality type : EqualityType.BY_VALUE
+
+BanTorusBoundary : class
+Equality type : EqualityType.BY_VALUE
+
+Base64SigDecoder : class
+Equality type : EqualityType.BY_REFERENCE
+
+Base64SigEncoder : class
+Equality type : EqualityType.BY_REFERENCE
+
+Base64SigEncoding : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+BitManipulator : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Bitmask : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask128 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask16 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask32 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask64 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask8 : class
+Equality type : EqualityType.BY_VALUE
+
+BlockedSFS : class
+Equality type : EqualityType.BY_VALUE
+
+BlockedSFSLoop : class
+Equality type : EqualityType.BY_VALUE
+
+BlockedSFSPair : class
+Equality type : EqualityType.BY_VALUE
+
+BlockedSFSTriple : class
+Equality type : EqualityType.BY_VALUE
+
+BoolSet : class
+Equality type : EqualityType.BY_VALUE
+
+BoundaryComponent2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+BoundaryComponent3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+BoundaryComponent4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+BoundaryComponent5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+BoundaryComponent6 : class
+Equality type : EqualityType.BY_REFERENCE
+
+BoundaryComponent7 : class
+Equality type : EqualityType.BY_REFERENCE
+
+BoundaryComponent8 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Census : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+CensusDB : class
+Equality type : EqualityType.BY_VALUE
+
+CensusHit : class
+Equality type : EqualityType.BY_VALUE
+
+ChildIterator : class
+Equality type : EqualityType.BY_VALUE
+
+ClosedPrimeMinSearcher : class
+Equality type : EqualityType.BY_REFERENCE
+
+CompactSearcher : class
+Equality type : EqualityType.BY_REFERENCE
+
+Component2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Component3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Component4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Component5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Component6 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Component7 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Component8 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Container : class
+Equality type : EqualityType.DISABLED
+
+Crossing : class
+Equality type : EqualityType.BY_REFERENCE
+
+Cusp : class
+Equality type : EqualityType.BY_VALUE
+
+Cut : class
+Equality type : EqualityType.BY_VALUE
+
+Cyclotomic : class
+Equality type : EqualityType.BY_VALUE
+
+DiscSetSurface : class
+Equality type : EqualityType.BY_VALUE
+
+DiscSetTet : class
+Equality type : EqualityType.BY_VALUE
+
+DiscSpec : class
+Equality type : EqualityType.BY_VALUE
+
+DiscSpecIterator : class
+Equality type : EqualityType.BY_VALUE
+
+DiscType : class
+Equality type : EqualityType.BY_VALUE
+
+DoubleDescription : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Edge2 : alias ->  Face2_1
+
+Edge3 : alias ->  Face3_1
+
+Edge4 : alias ->  Face4_1
+
+Edge5 : alias ->  Face5_1
+
+Edge6 : alias ->  Face6_1
+
+Edge7 : alias ->  Face7_1
+
+Edge8 : alias ->  Face8_1
+
+EdgeEmbedding2 : alias ->  FaceEmbedding2_1
+
+EdgeEmbedding3 : alias ->  FaceEmbedding3_1
+
+EdgeEmbedding4 : alias ->  FaceEmbedding4_1
+
+EdgeEmbedding5 : alias ->  FaceEmbedding5_1
+
+EdgeEmbedding6 : alias ->  FaceEmbedding6_1
+
+EdgeEmbedding7 : alias ->  FaceEmbedding7_1
+
+EdgeEmbedding8 : alias ->  FaceEmbedding8_1
+
+EulerSearcher : class
+Equality type : EqualityType.BY_REFERENCE
+
+Example2 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Example3 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Example4 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Example5 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Example6 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Example7 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Example8 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+ExampleLink : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+ExampleSnapPea : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Face2_0 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face2_1 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face2_2 : alias ->  Simplex2
+
+Face3_0 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face3_1 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face3_2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face3_3 : alias ->  Simplex3
+
+Face4_0 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face4_1 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face4_2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face4_3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face4_4 : alias ->  Simplex4
+
+Face5_0 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face5_1 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face5_2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face5_3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face5_4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face5_5 : alias ->  Simplex5
+
+Face6_0 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face6_1 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face6_2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face6_3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face6_4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face6_5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face6_6 : alias ->  Simplex6
+
+Face7_0 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face7_1 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face7_2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face7_3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face7_4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face7_5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face7_6 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face7_7 : alias ->  Simplex7
+
+Face8_0 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_1 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_6 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_7 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Face8_8 : alias ->  Simplex8
+
+FaceEmbedding2_0 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding2_1 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding3_0 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding3_1 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding3_2 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding4_0 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding4_1 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding4_2 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding4_3 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding5_0 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding5_1 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding5_2 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding5_3 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding5_4 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding6_0 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding6_1 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding6_2 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding6_3 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding6_4 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding6_5 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding7_0 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding7_1 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding7_2 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding7_3 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding7_4 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding7_5 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding7_6 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_0 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_1 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_2 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_3 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_4 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_5 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_6 : class
+Equality type : EqualityType.BY_VALUE
+
+FaceEmbedding8_7 : class
+Equality type : EqualityType.BY_VALUE
+
+FacePair : class
+Equality type : EqualityType.BY_VALUE
+
+FacetPairing2 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetPairing3 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetPairing4 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetPairing5 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetPairing6 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetPairing7 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetPairing8 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetSpec2 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetSpec3 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetSpec4 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetSpec5 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetSpec6 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetSpec7 : class
+Equality type : EqualityType.BY_VALUE
+
+FacetSpec8 : class
+Equality type : EqualityType.BY_VALUE
+
+FailedPrecondition : class
+Exception type
+
+FileError : class
+Exception type
+
+FileInfo : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_AngleAlg : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_CensusPurge : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_HyperAlg : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_HyperList : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_NormalAlg : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_NormalList : class
+Equality type : EqualityType.BY_VALUE
+
+Flags_SurfaceExport : class
+Equality type : EqualityType.BY_VALUE
+
+GlobalDirs : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+GluingPermSearcher2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPermSearcher3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPermSearcher4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms2 : class
+Equality type : EqualityType.BY_VALUE
+
+GluingPerms3 : class
+Equality type : EqualityType.BY_VALUE
+
+GluingPerms4 : class
+Equality type : EqualityType.BY_VALUE
+
+GluingPerms5 : class
+Equality type : EqualityType.BY_VALUE
+
+GluingPerms6 : class
+Equality type : EqualityType.BY_VALUE
+
+GluingPerms7 : class
+Equality type : EqualityType.BY_VALUE
+
+GluingPerms8 : class
+Equality type : EqualityType.BY_VALUE
+
+GraphLoop : class
+Equality type : EqualityType.BY_VALUE
+
+GraphPair : class
+Equality type : EqualityType.BY_VALUE
+
+GraphTriple : class
+Equality type : EqualityType.BY_VALUE
+
+GroupExpression : class
+Equality type : EqualityType.BY_VALUE
+
+GroupExpressionTerm : class
+Equality type : EqualityType.BY_VALUE
+
+GroupPresentation : class
+Equality type : EqualityType.BY_VALUE
+
+Handlebody : class
+Equality type : EqualityType.BY_VALUE
+
+HilbertCD : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+HilbertDual : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+HilbertPrimal : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+HomGroupPresentation : class
+Equality type : EqualityType.BY_VALUE
+
+HomMarkedAbelianGroup : class
+Equality type : EqualityType.DISABLED
+
+HomologicalData : class
+Equality type : EqualityType.DISABLED
+
+HyperEncoding : class
+Equality type : EqualityType.BY_VALUE
+
+HyperInfo : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+HyperbolicMinSearcher : class
+Equality type : EqualityType.BY_REFERENCE
+
+Integer : class
+Equality type : EqualityType.BY_VALUE
+
+IntersectionForm : class
+Equality type : EqualityType.BY_VALUE
+
+InvalidArgument : class
+Exception type
+
+InvalidInput : class
+Exception type
+
+IsoSigClassic2 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigClassic3 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigClassic4 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigClassic5 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigClassic6 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigClassic7 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigClassic8 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigEdgeDegrees2 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigEdgeDegrees3 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigEdgeDegrees4 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigEdgeDegrees5 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigEdgeDegrees6 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigEdgeDegrees7 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigEdgeDegrees8 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigPrintable2 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable3 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable4 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable5 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable6 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable7 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable8 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees2 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigRidgeDegrees3 : alias ->  IsoSigEdgeDegrees3
+
+IsoSigRidgeDegrees4 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigRidgeDegrees5 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigRidgeDegrees6 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigRidgeDegrees7 : class
+Equality type : EqualityType.DISABLED
+
+IsoSigRidgeDegrees8 : class
+Equality type : EqualityType.DISABLED
+
+Isomorphism2 : class
+Equality type : EqualityType.BY_VALUE
+
+Isomorphism3 : class
+Equality type : EqualityType.BY_VALUE
+
+Isomorphism4 : class
+Equality type : EqualityType.BY_VALUE
+
+Isomorphism5 : class
+Equality type : EqualityType.BY_VALUE
+
+Isomorphism6 : class
+Equality type : EqualityType.BY_VALUE
+
+Isomorphism7 : class
+Equality type : EqualityType.BY_VALUE
+
+Isomorphism8 : class
+Equality type : EqualityType.BY_VALUE
+
+LPConstraintEulerPositive : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LPConstraintEulerZero : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LPConstraintNonSpun : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LPConstraintNone : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LPData : class
+Equality type : EqualityType.DISABLED
+
+LPData_EulerPositive : class
+Equality type : EqualityType.DISABLED
+
+LPData_EulerZero : class
+Equality type : EqualityType.DISABLED
+
+LPData_NonSpun : class
+Equality type : EqualityType.DISABLED
+
+LPInitialTableaux : class
+Equality type : EqualityType.DISABLED
+
+LPInitialTableaux_EulerPositive : class
+Equality type : EqualityType.DISABLED
+
+LPInitialTableaux_EulerZero : class
+Equality type : EqualityType.DISABLED
+
+LPInitialTableaux_NonSpun : class
+Equality type : EqualityType.DISABLED
+
+LPMatrix : class
+Equality type : EqualityType.BY_VALUE
+
+LPSystem : class
+Equality type : EqualityType.BY_VALUE
+
+LargeInteger : class
+Equality type : EqualityType.BY_VALUE
+
+Laurent : class
+Equality type : EqualityType.BY_VALUE
+
+Laurent2 : class
+Equality type : EqualityType.BY_VALUE
+
+LayeredChain : class
+Equality type : EqualityType.BY_VALUE
+
+LayeredChainPair : class
+Equality type : EqualityType.BY_VALUE
+
+LayeredLensSpace : class
+Equality type : EqualityType.BY_VALUE
+
+LayeredLoop : class
+Equality type : EqualityType.BY_VALUE
+
+LayeredSolidTorus : class
+Equality type : EqualityType.BY_VALUE
+
+LayeredTorusBundle : class
+Equality type : EqualityType.BY_VALUE
+
+Layering : class
+Equality type : EqualityType.BY_VALUE
+
+LensSpace : class
+Equality type : EqualityType.BY_VALUE
+
+Link : class
+Equality type : EqualityType.BY_VALUE
+
+Locale : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LockViolation : class
+Exception type
+
+Manifold : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+MarkedAbelianGroup : class
+Equality type : EqualityType.BY_VALUE
+
+Matrix2 : class
+Equality type : EqualityType.BY_VALUE
+
+Matrix3D : class
+Equality type : EqualityType.BY_VALUE
+
+MatrixBool : class
+Equality type : EqualityType.BY_VALUE
+
+MatrixInt : class
+Equality type : EqualityType.BY_VALUE
+
+MatrixReal : class
+Equality type : EqualityType.BY_VALUE
+
+MaxAdmissible : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+ModelLinkGraph : class
+Equality type : EqualityType.BY_VALUE
+
+ModelLinkGraphArc : class
+Equality type : EqualityType.BY_VALUE
+
+ModelLinkGraphCells : class
+Equality type : EqualityType.BY_VALUE
+
+ModelLinkGraphNode : class
+Equality type : EqualityType.BY_REFERENCE
+
+NoSolution : class
+Exception type
+
+NormalEncoding : class
+Equality type : EqualityType.BY_VALUE
+
+NormalHypersurface : class
+Equality type : EqualityType.BY_VALUE
+
+NormalHypersurfaces : class
+Equality type : EqualityType.BY_VALUE
+
+NormalInfo : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+NormalSurface : class
+Equality type : EqualityType.BY_VALUE
+
+NormalSurfaces : class
+Equality type : EqualityType.BY_VALUE
+
+NotImplemented : class
+Exception type
+
+Packet : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+PacketChildren : class
+Equality type : EqualityType.BY_VALUE
+
+PacketDescendants : class
+Equality type : EqualityType.BY_VALUE
+
+PacketInfo : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+PacketListener : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfAngleStructures : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfLink : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfNormalHypersurfaces : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfNormalSurfaces : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfSnapPeaTriangulation : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfSpatialLink : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfTriangulation2 : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfTriangulation3 : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfTriangulation4 : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfTriangulation5 : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfTriangulation6 : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfTriangulation7 : class
+Equality type : EqualityType.BY_VALUE
+
+PacketOfTriangulation8 : class
+Equality type : EqualityType.BY_VALUE
+
+PacketShell : class
+Equality type : EqualityType.BY_VALUE
+
+Pentachoron4 : alias ->  Simplex4
+
+Pentachoron5 : alias ->  Face5_4
+
+Pentachoron6 : alias ->  Face6_4
+
+Pentachoron7 : alias ->  Face7_4
+
+Pentachoron8 : alias ->  Face8_4
+
+PentachoronEmbedding5 : alias ->  FaceEmbedding5_4
+
+PentachoronEmbedding6 : alias ->  FaceEmbedding6_4
+
+PentachoronEmbedding7 : alias ->  FaceEmbedding7_4
+
+PentachoronEmbedding8 : alias ->  FaceEmbedding8_4
+
+Perm10 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm11 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm12 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm13 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm14 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm15 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm16 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm2 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm3 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm4 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm5 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm6 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm7 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm8 : class
+Equality type : EqualityType.BY_VALUE
+
+Perm9 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass10 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass11 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass12 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass13 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass14 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass15 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass16 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass2 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass3 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass4 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass5 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass6 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass7 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass8 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass9 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup10 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup10_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup11 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup11_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup12 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup12_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup13 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup13_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup14 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup14_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup15 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup15_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup16 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup16_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup2 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup2_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup3 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup3_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup4 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup4_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup5 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup5_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup6 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup6_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup7 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup7_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup8 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup8_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup9 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup9_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PillowTwoSphere : class
+Equality type : EqualityType.BY_VALUE
+
+PlugTriSolidTorus : class
+Equality type : EqualityType.BY_VALUE
+
+PluggedTorusBundle : class
+Equality type : EqualityType.BY_VALUE
+
+Polynomial : class
+Equality type : EqualityType.BY_VALUE
+
+PosOrder : class
+Equality type : EqualityType.DISABLED
+
+Primes : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+PrismSpec : class
+Equality type : EqualityType.BY_VALUE
+
+ProgressTracker : class
+Equality type : EqualityType.BY_REFERENCE
+
+ProgressTrackerBase : class
+Equality type : EqualityType.BY_REFERENCE
+
+ProgressTrackerOpen : class
+Equality type : EqualityType.BY_REFERENCE
+
+Qitmask128 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask16 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask32 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask64 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask8 : class
+Equality type : EqualityType.BY_VALUE
+
+RandomEngine : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+Rational : class
+Equality type : EqualityType.BY_VALUE
+
+ReginaException : class
+Exception type
+
+Rotation3D : class
+Equality type : EqualityType.BY_VALUE
+
+SFSAlt : class
+Equality type : EqualityType.BY_VALUE
+
+SFSFibre : class
+Equality type : EqualityType.BY_VALUE
+
+SFSpace : class
+Equality type : EqualityType.BY_VALUE
+
+SatAnnulus : class
+Equality type : EqualityType.BY_VALUE
+
+SatBlock : class
+Equality type : EqualityType.BY_VALUE
+
+SatBlockModel : class
+Equality type : EqualityType.BY_VALUE
+
+SatBlockSpec : class
+Equality type : EqualityType.BY_VALUE
+
+SatCube : class
+Equality type : EqualityType.BY_VALUE
+
+SatLST : class
+Equality type : EqualityType.BY_VALUE
+
+SatLayering : class
+Equality type : EqualityType.BY_VALUE
+
+SatMobius : class
+Equality type : EqualityType.BY_VALUE
+
+SatReflectorStrip : class
+Equality type : EqualityType.BY_VALUE
+
+SatRegion : class
+Equality type : EqualityType.BY_VALUE
+
+SatTriPrism : class
+Equality type : EqualityType.BY_VALUE
+
+Script : class
+Equality type : EqualityType.BY_VALUE
+
+Segment3D : class
+Equality type : EqualityType.BY_VALUE
+
+SigCensus : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+SigPartialIsomorphism : class
+Equality type : EqualityType.BY_VALUE
+
+Signature : class
+Equality type : EqualityType.BY_VALUE
+
+SimpleSurfaceBundle : class
+Equality type : EqualityType.BY_VALUE
+
+Simplex2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Simplex3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Simplex4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Simplex5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Simplex6 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Simplex7 : class
+Equality type : EqualityType.BY_REFERENCE
+
+Simplex8 : class
+Equality type : EqualityType.BY_REFERENCE
+
+SnapPeaCensusManifold : class
+Equality type : EqualityType.BY_VALUE
+
+SnapPeaCensusTri : class
+Equality type : EqualityType.BY_VALUE
+
+SnapPeaFatalError : class
+Exception type
+
+SnapPeaIsNull : class
+Exception type
+
+SnapPeaMemoryFull : class
+Exception type
+
+SnapPeaTriangulation : class
+Equality type : EqualityType.BY_VALUE
+
+SnapPeaUnsolvedCase : class
+Exception type
+
+SnappedBall : class
+Equality type : EqualityType.BY_VALUE
+
+SnappedTwoSphere : class
+Equality type : EqualityType.BY_VALUE
+
+SnapshotWriteError : class
+Exception type
+
+SpatialLink : class
+Equality type : EqualityType.BY_VALUE
+
+SpiralSolidTorus : class
+Equality type : EqualityType.BY_VALUE
+
+StandardTriangulation : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+StrandRef : class
+Equality type : EqualityType.BY_VALUE
+
+SubtreeIterator : class
+Equality type : EqualityType.BY_VALUE
+
+SurfaceFilter : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+SurfaceFilterCombination : class
+Equality type : EqualityType.BY_VALUE
+
+SurfaceFilterProperties : class
+Equality type : EqualityType.BY_VALUE
+
+Tangle : class
+Equality type : EqualityType.BY_VALUE
+
+TautEnumeration : class
+Equality type : EqualityType.BY_REFERENCE
+
+Tetrahedron3 : alias ->  Simplex3
+
+Tetrahedron4 : alias ->  Face4_3
+
+Tetrahedron5 : alias ->  Face5_3
+
+Tetrahedron6 : alias ->  Face6_3
+
+Tetrahedron7 : alias ->  Face7_3
+
+Tetrahedron8 : alias ->  Face8_3
+
+TetrahedronEmbedding4 : alias ->  FaceEmbedding4_3
+
+TetrahedronEmbedding5 : alias ->  FaceEmbedding5_3
+
+TetrahedronEmbedding6 : alias ->  FaceEmbedding6_3
+
+TetrahedronEmbedding7 : alias ->  FaceEmbedding7_3
+
+TetrahedronEmbedding8 : alias ->  FaceEmbedding8_3
+
+Text : class
+Equality type : EqualityType.BY_VALUE
+
+TorusBundle : class
+Equality type : EqualityType.BY_VALUE
+
+TreeBag : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeDecomposition : class
+Equality type : EqualityType.BY_VALUE
+
+TreeEnumeration : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerPositive_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerPositive_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_NonSpun : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerPositive_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerPositive_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_NonSpun : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerPositive_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerPositive_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_NonSpun : class
+Equality type : EqualityType.BY_REFERENCE
+
+TriSolidTorus : class
+Equality type : EqualityType.BY_VALUE
+
+Triangle2 : alias ->  Simplex2
+
+Triangle3 : alias ->  Face3_2
+
+Triangle4 : alias ->  Face4_2
+
+Triangle5 : alias ->  Face5_2
+
+Triangle6 : alias ->  Face6_2
+
+Triangle7 : alias ->  Face7_2
+
+Triangle8 : alias ->  Face8_2
+
+TriangleEmbedding3 : alias ->  FaceEmbedding3_2
+
+TriangleEmbedding4 : alias ->  FaceEmbedding4_2
+
+TriangleEmbedding5 : alias ->  FaceEmbedding5_2
+
+TriangleEmbedding6 : alias ->  FaceEmbedding6_2
+
+TriangleEmbedding7 : alias ->  FaceEmbedding7_2
+
+TriangleEmbedding8 : alias ->  FaceEmbedding8_2
+
+Triangulation2 : class
+Equality type : EqualityType.BY_VALUE
+
+Triangulation3 : class
+Equality type : EqualityType.BY_VALUE
+
+Triangulation4 : class
+Equality type : EqualityType.BY_VALUE
+
+Triangulation5 : class
+Equality type : EqualityType.BY_VALUE
+
+Triangulation6 : class
+Equality type : EqualityType.BY_VALUE
+
+Triangulation7 : class
+Equality type : EqualityType.BY_VALUE
+
+Triangulation8 : class
+Equality type : EqualityType.BY_VALUE
+
+TrieSet : class
+Equality type : EqualityType.BY_VALUE
+
+TrivialTri : class
+Equality type : EqualityType.BY_VALUE
+
+TxICore : class
+Equality type : EqualityType.BY_VALUE
+
+TxIDiagonalCore : class
+Equality type : EqualityType.BY_VALUE
+
+TxIParallelCore : class
+Equality type : EqualityType.BY_VALUE
+
+TypeTrie4 : class
+Equality type : EqualityType.BY_VALUE
+
+TypeTrie7 : class
+Equality type : EqualityType.BY_VALUE
+
+UnsolvedCase : class
+Exception type
+
+ValidityConstraints : class
+Equality type : EqualityType.BY_VALUE
+
+Vector3D : class
+Equality type : EqualityType.BY_VALUE
+
+VectorInt : class
+Equality type : EqualityType.BY_VALUE
+
+VectorLarge : class
+Equality type : EqualityType.BY_VALUE
+
+Vertex2 : alias ->  Face2_0
+
+Vertex3 : alias ->  Face3_0
+
+Vertex4 : alias ->  Face4_0
+
+Vertex5 : alias ->  Face5_0
+
+Vertex6 : alias ->  Face6_0
+
+Vertex7 : alias ->  Face7_0
+
+Vertex8 : alias ->  Face8_0
+
+VertexEmbedding2 : alias ->  FaceEmbedding2_0
+
+VertexEmbedding3 : alias ->  FaceEmbedding3_0
+
+VertexEmbedding4 : alias ->  FaceEmbedding4_0
+
+VertexEmbedding5 : alias ->  FaceEmbedding5_0
+
+VertexEmbedding6 : alias ->  FaceEmbedding6_0
+
+VertexEmbedding7 : alias ->  FaceEmbedding7_0
+
+VertexEmbedding8 : alias ->  FaceEmbedding8_0
+
