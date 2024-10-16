@@ -1637,3 +1637,129 @@ VertexEmbedding7 : alias ->  FaceEmbedding7_0
 
 VertexEmbedding8 : alias ->  FaceEmbedding8_0
 
+base64Decode : function
+
+base64Encode : function
+
+base64Length : function
+
+basicTokenise : function
+
+binomMedium : function
+
+binomSmall : function
+
+bitsRequired : function
+
+buildInfo : function
+
+columnEchelonForm : function
+
+digit : function
+
+discOrientationFollowsEdge : function
+
+faceOppositeEdge : function
+
+factorial : function
+
+gcd : function
+
+gcdWithCoeffs : function
+
+hasInt128 : function
+
+isBase64 : function
+
+lcm : function
+
+makeAngleEquations : function
+
+makeEmbeddedConstraints : function
+
+makeMatchingEquations : function
+
+makePacket : function
+
+make_packet : function
+
+maxDim : function
+
+metricalSmithNormalForm : function
+
+modularInverse : function
+
+nextPowerOfTwo : function
+
+numberDiscsAwayFromVertex : function
+
+open : function
+
+politeThreads : function
+
+preImageOfLattice : function
+
+readDehydrationList : function
+
+readOrb : function
+
+readSigList : function
+
+reducedMod : function
+
+resUsage : function
+
+rowBasis : function
+
+rowBasisAndOrthComp : function
+
+simpler : function
+
+simplerThreeWay : function
+
+smithNormalForm : function
+
+standardDim : function
+
+startsWith : function
+
+stringToToken : function
+
+stripWhitespace : function
+
+subscript : function
+
+superscript : function
+
+swap : function
+
+testEngine : function
+
+tightDecoding : function
+
+tightEncoding : function
+
+timeExceptions : function
+
+torsionAutInverse : function
+
+utf8ValidTo : function
+
+versionMajor : function
+
+versionMinor : function
+
+versionSnapPea : function
+
+versionSnapPy : function
+
+versionString : function
+
+versionUsesUTF8 : function
+
+welcome : function
+
+xmlEncodeComment : function
+
+xmlEncodeSpecialChars : function
+

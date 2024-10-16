@@ -61,11 +61,12 @@ def enumInfo(name, object):
     print()
 
 def functionInfo(name, object):
-    # print name, ': function'
-    pass
+    if not name.startswith('__'):
+        print(name, ': function')
+        print()
 
 def objectInfo(name, object):
-    # print name, ': object'
+    # print(name, ': object')
     pass
 
 keys = sorted(regina.__dict__)
