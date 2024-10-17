@@ -45,7 +45,7 @@ def classInfo(name, object):
         else:
             print(name, ': class ->', object.equalityType)
     else:
-        print(name, ': alias -> ', realName)
+        print(name, ': alias ->', realName)
 
 def enumInfo(name, object):
     realName = object.__name__
