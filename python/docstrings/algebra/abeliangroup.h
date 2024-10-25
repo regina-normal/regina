@@ -29,6 +29,34 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace AbelianGroup_ {
 
+// Docstring regina::python::doc::AbelianGroup_::__cmp
+static const char *__cmp =
+R"doc(Compares this against the given group under a total ordering of all
+abelian groups.
+
+Like the equality test, this operator compares _isomorphism types_ of
+abelian groups (as opposed to GroupPresentation or MarkedAbelianGroup,
+where specific group presentations are stored).
+
+The particular total order that Regina uses is not important, and may
+change between Regina releases (though such changes should be very
+infrequent). The main purpose of this routine is to support algorithms
+and data structures for which such an ordering is required (e.g., when
+using abelian groups as keys in a map).
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the group to compare this with.
+
+Returns:
+    The result of the comparison between this and the given group.)doc";
+
 // Docstring regina::python::doc::AbelianGroup_::__copy
 static const char *__copy = R"doc(Creates a clone of the given group.)doc";
 
@@ -37,8 +65,7 @@ static const char *__default = R"doc(Creates a new trivial group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__eq
 static const char *__eq =
-R"doc(Determines whether this and the given abelian group have identical
-presentations (which means they are isomorphic).
+R"doc(Determines whether this and the given abelian group are isomorphic.
 
 Since the AbelianGroup class stores _only_ the invariants required to
 identify the isomorphism type, two groups will compare as equal if and
@@ -47,12 +74,11 @@ for GroupPresentation (which tests for identical generators and
 relations), or for MarkedAbelianGroup (which tests for identical chain
 complex presentations).
 
-Parameter ``other``:
-    the group with which this should be compared.
+Parameter ``rhs``:
+    the group to compare this with.
 
 Returns:
-    ``True`` if and only if the two groups have identical
-    presentations (i.e., they are isomorphic).)doc";
+    ``True`` if and only if the two groups are isomorphic.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init
 static const char *__init =
@@ -91,6 +117,10 @@ R"doc(Creates the abelian group defined by the given presentation matrix.
 Each column of the matrix represents a generator, and each row of the
 matrix represents a relation.
 
+Note that this presentation is _not_ stored: once the rank and
+invariant factors are computed, the presentation matrix will be
+forgotten.
+
 Parameter ``presentation``:
     a presentation matrix for the new group.)doc";
 
@@ -103,6 +133,10 @@ The matrices should be thought of as acting on column vectors: this
 means that the product ``B×A`` applies the linear transformation *A*,
 then the linear transformation *B*. This is consistent (for example)
 with the convention that Regina uses for for multiplying permutations.
+
+Note that this presentation is _not_ stored: once the rank and
+invariant factors are computed, the original chain complex will be
+forgotten.
 
 Precondition:
     M.columns() = N.rows(). This condition will be tested, and an
@@ -135,6 +169,10 @@ The matrices should be thought of as acting on column vectors: this
 means that the product ``B×A`` applies the linear transformation *A*,
 then the linear transformation *B*. This is consistent (for example)
 with the convention that Regina uses for for multiplying permutations.
+
+Note that this presentation is _not_ stored: once the rank and
+invariant factors are computed, the original chain complex will be
+forgotten.
 
 Precondition:
     M.columns() = N.rows(). This condition will be tested, and an

@@ -86,6 +86,7 @@ void addAbelianGroup(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     regina::python::add_global_swap<AbelianGroup>(m, rdoc::global_swap);
 

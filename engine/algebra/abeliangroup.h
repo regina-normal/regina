@@ -163,6 +163,10 @@ class AbelianGroup :
          * Each column of the matrix represents a generator, and each
          * row of the matrix represents a relation.
          *
+         * Note that this presentation is _not_ stored: once the rank and
+         * invariant factors are computed, the presentation matrix will be
+         * forgotten.
+         *
          * \param presentation a presentation matrix for the new group.
          */
         AbelianGroup(MatrixInt presentation);
@@ -175,6 +179,10 @@ class AbelianGroup :
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
+         *
+         * Note that this presentation is _not_ stored: once the rank and
+         * invariant factors are computed, the original chain complex will be
+         * forgotten.
          *
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
@@ -202,6 +210,10 @@ class AbelianGroup :
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
+         *
+         * Note that this presentation is _not_ stored: once the rank and
+         * invariant factors are computed, the original chain complex will be
+         * forgotten.
          *
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
@@ -374,8 +386,7 @@ class AbelianGroup :
          */
         bool isZn(size_t n) const;
         /**
-         * Determines whether this and the given abelian group have
-         * identical presentations (which means they are isomorphic).
+         * Determines whether this and the given abelian group are isomorphic.
          *
          * Since the AbelianGroup class stores _only_ the invariants required
          * to identify the isomorphism type, two groups will compare as equal
@@ -384,11 +395,35 @@ class AbelianGroup :
          * generators and relations), or for MarkedAbelianGroup (which tests
          * for identical chain complex presentations).
          *
-         * \param other the group with which this should be compared.
-         * \return \c true if and only if the two groups have identical
-         * presentations (i.e., they are isomorphic).
+         * \param rhs the group to compare this with.
+         * \return \c true if and only if the two groups are isomorphic.
          */
-        bool operator == (const AbelianGroup& other) const;
+        bool operator == (const AbelianGroup& rhs) const;
+        /**
+         * Compares this against the given group under a total ordering of all
+         * abelian groups.
+         *
+         * Like the equality test, this operator compares _isomorphism types_
+         * of abelian groups (as opposed to GroupPresentation or
+         * MarkedAbelianGroup, where specific group presentations are stored).
+         *
+         * The particular total order that Regina uses is not important, and
+         * may change between Regina releases (though such changes should be
+         * very infrequent).  The main purpose of this routine is to support
+         * algorithms and data structures for which such an ordering is
+         * required (e.g., when using abelian groups as keys in a map).
+         *
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the group to compare this with.
+         * \return The result of the comparison between this and the given
+         * group.
+         */
+        std::strong_ordering operator <=> (const AbelianGroup& rhs) const;
 
         /**
          * Sets this to be a clone of the given group.
@@ -579,8 +614,18 @@ inline bool AbelianGroup::isZn(size_t n) const {
             revInvFactors_.front() == n));
 }
 
-inline bool AbelianGroup::operator == (const AbelianGroup& other) const {
-    return (rank_ == other.rank_ && revInvFactors_ == other.revInvFactors_);
+inline bool AbelianGroup::operator == (const AbelianGroup& rhs) const {
+    return (rank_ == rhs.rank_ && revInvFactors_ == rhs.revInvFactors_);
+}
+
+inline std::strong_ordering AbelianGroup::operator <=> (const AbelianGroup& rhs)
+        const {
+    if (rank_ < rhs.rank_)
+        return std::strong_ordering::less;
+    else if (rank_ > rhs.rank_)
+        return std::strong_ordering::greater;
+    else
+        return revInvFactors_ <=> rhs.revInvFactors_;
 }
 
 inline void AbelianGroup::tightEncode(std::ostream& out) const {

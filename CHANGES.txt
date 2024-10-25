@@ -37,6 +37,7 @@ Version 7.4  [ (to be announced) ]
     ENGINE:
         Class AbelianGroup:
             - New routine hash(), which uses the tight encoding.
+            - Added a spaceship operator (<=>) for comparisons.
         Enum Algorithm:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., ALG_BACKTRACK) have been
