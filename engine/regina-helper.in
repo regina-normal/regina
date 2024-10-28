@@ -46,6 +46,9 @@ if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
 
 my @final_messages = ();
 
+# Extensions that the makefile should support:
+my @cxx_extensions = ('cc', 'cpp');
+
 #------------------------------------------------------------------------------
 #  Helper functions
 #------------------------------------------------------------------------------
@@ -184,10 +187,6 @@ __END__
 #------------------------------------------------------------------------------
 
 sub makefile {
-    # The preferred extension (e.g., cpp or cc) can be passed as an argument.
-    my $extension = shift;
-    $extension or $extension = 'cpp';
-
     if (has_option('--help')) {
         print STDERR <<__END__;
 Usage: $prog_name makefile [-f, --force] [-r, --rpath]
@@ -243,10 +242,14 @@ __END__
         print MAKEFILE <<__END__;
 # Compile C++ programs that use Regina.
 # This uses the installation of Regina beneath $display_prefix/.
+__END__
+        foreach (@cxx_extensions) {
+            print MAKEFILE <<__END__;
 
-% : %.$extension
+% : %.$_
 	c++ -O3 '\$<' \`$make_regina_config --cflags --libs\` $rpath_flags -o '\$\@'
 __END__
+        }
     } else {
         # When running directly from the source tree, we cannot trust
         # regina-engine-config (since that outputs installation paths), and we
@@ -275,8 +278,12 @@ __END__
         print MAKEFILE <<__END__;
 # Compile C++ programs that use Regina.
 # This uses the build of Regina from $prog_dir/.
+__END__
 
-% : %.$extension
+        foreach (@cxx_extensions) {
+            print MAKEFILE <<__END__;
+
+% : %.$_
 	c++ @CMAKE_CXX20_STANDARD_COMPILE_OPTION@ -O3 '\$<' \\
 		-I$make_src_dir/engine -I$make_prog_dir \\
 		$include_flags \\
@@ -285,27 +292,28 @@ __END__
 		-Wl,-rpath $make_prog_dir \\
 		-o '\$\@'
 __END__
-        if ($os eq 'Darwin') {
-            # We need to put GMP on the rpath also, since this will not be
-            # coming from a standard system installation.
-            my $gmp = '@PERL_GMP_LIBRARIES@';
-            my $gmpxx = '@PERL_GMPXX_LIBRARIES@';
+            if ($os eq 'Darwin') {
+                # We need to put GMP on the rpath also, since this will not be
+                # coming from a standard system installation.
+                my $gmp = '@PERL_GMP_LIBRARIES@';
+                my $gmpxx = '@PERL_GMPXX_LIBRARIES@';
 
-            my ($gmp_dir, $gmpxx_dir);
-            -e $gmp and $gmp_dir = abs_path(dirname($gmp));
-            -e $gmpxx and $gmpxx_dir = abs_path(dirname($gmpxx));
+                my ($gmp_dir, $gmpxx_dir);
+                -e $gmp and $gmp_dir = abs_path(dirname($gmp));
+                -e $gmpxx and $gmpxx_dir = abs_path(dirname($gmpxx));
 
-            if ($gmp_dir) {
-                my $make_gmp_dir = sanitise_for_makefile_recipe($gmp_dir);
-                print MAKEFILE <<__END__;
+                if ($gmp_dir) {
+                    my $make_gmp_dir = sanitise_for_makefile_recipe($gmp_dir);
+                    print MAKEFILE <<__END__;
 		install_name_tool -add_rpath $make_gmp_dir '\$\@'
 __END__
-            }
-            if ($gmpxx_dir and $gmpxx_dir ne $gmp_dir) {
-                my $make_gmpxx_dir = sanitise_for_makefile_recipe($gmpxx_dir);
-                print MAKEFILE <<__END__;
+                }
+                if ($gmpxx_dir and $gmpxx_dir ne $gmp_dir) {
+                    my $make_gmpxx_dir = sanitise_for_makefile_recipe($gmpxx_dir);
+                    print MAKEFILE <<__END__;
 		install_name_tool -add_rpath $make_gmpxx_dir '\$\@'
 __END__
+                }
             }
         }
     }
@@ -391,7 +399,7 @@ if ($action eq 'help' || $action eq '-h' || $action eq '--help') {
     $retval |= makefile();
 } elsif ($action eq 'cpp' || $action eq 'cc') {
     $retval |= samplecode($action);
-    $retval |= makefile($action);
+    $retval |= makefile();
 } else {
     print STDERR "ERROR: Unknown action ($action).\n\n";
     usage();
