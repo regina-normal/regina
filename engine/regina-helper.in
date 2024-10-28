@@ -399,7 +399,8 @@ if ($action eq 'help' || $action eq '-h' || $action eq '--help') {
     $retval |= makefile();
 } elsif ($action eq 'cpp' || $action eq 'cc') {
     $retval |= samplecode($action);
-    $retval |= makefile();
+    # If we are just asking for help, don't output the makefile help also.
+    has_option('--help') or $retval |= makefile();
 } else {
     print STDERR "ERROR: Unknown action ($action).\n\n";
     usage();
