@@ -38,7 +38,6 @@
 void addBinom(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
-    m.def("binomSmall", regina::binomSmall, rdoc::binomSmall);
     m.def("binomMedium", regina::binomMedium, rdoc::binomMedium);
 
     RDOC_SCOPE_END

@@ -39,7 +39,8 @@
  *  \brief Provides small binomial coefficients.
  */
 
-#include "regina-core.h"
+#include <cstdint>
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -54,6 +55,11 @@ namespace regina {
  * triangulations in Regina, since Regina restricts its triangulations to
  * dimension ≤ 15 (where each simplex has 16 vertices).
  *
+ * \nopython As of Regina 7.4, this function is \c consteval which means it
+ * cannot be used at runtime, and therefore cannot be used in Python at all.
+ * Python users should call binomMedium() instead, which will be just as fast
+ * for arguments n ≤ 16.
+ *
  * \param n the parameter \a n in (\a n choose \a k); this must be
  * between 0 and 16 inclusive.
  * \param k the parameter \a k in (\a n choose \a k); this must be
@@ -62,30 +68,34 @@ namespace regina {
  *
  * \ingroup maths
  */
-constexpr int binomSmall(int n, int k);
+consteval int binomSmall(int n, int k);
 
 /**
  * Returns the binomial coefficient \a n choose \a k in linear time
- * for medium-sized arguments (\a n ≤ 29).
+ * for medium-sized arguments (\a n ≤ 61).
  *
  * This routine computes the binomial coefficient using the standard
- * formula.  It works entirely with native long integers; the constraint
- * \a n ≤ 29 is designed to avoid overflow (since all intermediate
- * results are guaranteed to stay below 2^31).
+ * formula.  It works entirely with native integers of a large enough size;
+ * the constraint \a n ≤ 61 is designed to avoid overflow (since all
+ * intermediate results are guaranteed to stay below 2^63).
  *
  * If \a n ≤ 16 then this routine will use the same constant-time
  * lookup as binomSmall() (i.e., there is no penalty for calling this
  * routine with very small arguments).
  *
+ * If \a k is outside the usual range (i.e., \a k is negative or greater
+ * than \a n), then this routine will return 0.
+ *
+ * \exception InvalidArgument The argument \a n is negative or greater than 61.
+ *
  * \param n the parameter \a n in (\a n choose \a k); this must be
- * between 0 and 29 inclusive.
- * \param k the parameter \a k in (\a n choose \a k); this must be
- * between 0 and \a n inclusive.
+ * between 0 and 61 inclusive.
+ * \param k the parameter \a k in (\a n choose \a k).
  * \return the binomial coefficient \a n choose \a k.
  *
  * \ingroup maths
  */
-constexpr long binomMedium(int n, int k);
+constexpr int_fast64_t binomMedium(int n, int k);
 
 namespace detail {
 
@@ -125,18 +135,23 @@ inline constexpr int binomSmall_[17][17] = {
 
 // Inline functions
 
-inline constexpr int binomSmall(int n, int k) {
+inline consteval int binomSmall(int n, int k) {
     return detail::binomSmall_[n][k];
 }
 
-inline constexpr long binomMedium(int n, int k) {
+inline constexpr int_fast64_t binomMedium(int n, int k) {
+    if (n < 0 || n > 61)
+        throw InvalidArgument("binomMedium() requires 0 ≤ n ≤ 61");
+    if (k < 0 || k > n)
+        return 0;
+
     if (n <= 16)
         return detail::binomSmall_[n][k];
 
     if (k + k > n)
         k = n - k;
 
-    long ans = 1;
+    int_fast64_t ans = 1;
     for (int i = 1; i <= k; ++i) {
         ans *= (n + 1 - i);
         ans /= i;

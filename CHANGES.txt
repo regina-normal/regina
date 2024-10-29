@@ -588,6 +588,16 @@ Version 7.4  [ (to be announced) ]
               constants (e.g., Vertex<3>::SPHERE) have been renamed as scoped
               enum values (e.g., Vertex<3>::Link::Sphere).  The old names have
               been kept as deprecated compile-time class constants of Vertex<3>.
+        Function binomMedium():
+            - Now supports arguments n ≤ 61 (not n ≤ 29), and uses a return
+              type large enough to support this (i.e., at least 64 bits).
+            - Now supports k < 0 or k > n (returning 0 as expected).
+            - Now throws an exception if n is outside the allowed range.
+        Function binomSmall():
+            - This is now consteval, which means it cannot be called at
+              runtime.  As a result, Python users can no longer use this
+              function at all: if you are in Python you should call
+              binomMedium() instead.
         Function columnEchelonForm():
             - Cleaned up and relaxed the preconditions.
             - Now checks its preconditions and throws an exception if they fail.

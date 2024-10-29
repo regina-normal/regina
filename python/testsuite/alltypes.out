@@ -582,7 +582,6 @@ base64Encode : function
 base64Length : function
 basicTokenise : function
 binomMedium : function
-binomSmall : function
 bitsRequired : function
 buildInfo : function
 columnEchelonForm : function

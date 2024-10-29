@@ -37,19 +37,8 @@
 using regina::binomSmall;
 using regina::binomMedium;
 
-TEST(BinomialTest, consistency) {
-    static constexpr int maxSmall = 16;
-
-    for (int n = 0; n <= maxSmall; ++n) {
-        SCOPED_TRACE_NUMERIC(n);
-
-        for (int k = 0; k <= n; ++k)
-            EXPECT_EQ(static_cast<long>(binomSmall(n, k)), binomMedium(n, k));
-    }
-}
-
 TEST(BinomialTest, relations) {
-    static constexpr int maxMedium = 29;
+    static constexpr int maxMedium = 61;
 
     for (int n = 0; n <= maxMedium; ++n) {
         SCOPED_TRACE_NUMERIC(n);

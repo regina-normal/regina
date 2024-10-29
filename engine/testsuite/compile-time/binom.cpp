@@ -37,4 +37,7 @@ static_assert(regina::binomMedium(5, 3) == 10);
 static_assert(regina::binomSmall(16, 8) == 12870);
 static_assert(regina::binomMedium(16, 8) == 12870);
 static_assert(regina::binomMedium(29, 14) == 77558760);
+static_assert(regina::binomMedium(29, 15) == 77558760);
+static_assert(regina::binomMedium(61, 30) == 232714176627630544);
+static_assert(regina::binomMedium(61, 31) == 232714176627630544);
 
