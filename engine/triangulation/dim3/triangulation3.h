@@ -891,6 +891,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
+         * \exception FailedPrecondition This triangulation is not valid,
+         * closed and non-empty.
+         *
+         * \exception InvalidArgument The argument \a r is less than 3.
+         *
          * \param r the integer \a r as described above; this must be at
          * least 3.
          * \param parity determines for odd \a r whether \a q₀ is a primitive
@@ -945,8 +950,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * double.
          *
          * \pre This triangulation is valid, closed and non-empty.
-         * \pre The argument \a whichRoot is strictly between 0 and <i>2r</i>,
+         * \pre The argument \a whichRoot is strictly between 0 and `2r`,
          * and has no common factors with \a r.
+         *
+         * \exception FailedPrecondition This triangulation is not valid,
+         * closed and non-empty.
+         *
+         * \exception InvalidArgument the argument \a r is less than 3, or
+         * the argument \a whichRoot is not both coprime to \a r and between
+         * 0 and `2r`.
          *
          * \param r the integer \a r as described above; this must be at
          * least 3.

@@ -1337,12 +1337,17 @@ namespace {
 double Triangulation<3>::turaevViroApprox(unsigned long r,
         unsigned long whichRoot, Algorithm alg) const {
     // Do some basic parameter checks.
+    if (isEmpty() || ! (isValid() && isClosed()))
+        throw FailedPrecondition("turaevViroApprox() requires a "
+            "valid, closed, non-empty triangulation");
     if (r < 3)
-        return 0;
-    if (whichRoot >= 2 * r)
-        return 0;
+        throw InvalidArgument("turaevViroApprox() requires the argument r ≥ 3");
+    if (whichRoot <= 0 || whichRoot >= 2 * r)
+        throw InvalidArgument("turaevViroApprox() requires the argument "
+            "whichRoot to be strictly between 0 and 2r");
     if (std::gcd(r, whichRoot) > 1)
-        return 0;
+        throw InvalidArgument("turaevViroApprox() requires the arguments "
+            "r and whichRoot to be coprime");
 
     // Set up our initial data.
     InitialData<false> init(r, whichRoot);
@@ -1382,10 +1387,16 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
         Algorithm alg, ProgressTracker* tracker) const {
     // Do some basic parameter checks.
+    if (isEmpty() || ! (isValid() && isClosed())) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "turaevViro() requires a valid, closed, non-empty triangulation");
+    }
     if (r < 3) {
         if (tracker)
             tracker->setFinished();
-        return Cyclotomic();
+        throw InvalidArgument("turaevViro() requires the argument r ≥ 3");
     }
     if (r % 2 == 0)
         parity = false; // As required by allCalculatedTuraevViroInvariants().
