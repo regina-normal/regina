@@ -322,6 +322,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner);
+        c.def("tryPachner", &Triangulation<dim>::template tryPachner<k>,
+            rbase::tryPachner);
     });
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);

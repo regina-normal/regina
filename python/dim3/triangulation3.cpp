@@ -480,6 +480,10 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner)
+        .def("tryPachner", &Triangulation<3>::tryPachner<0>, rbase::tryPachner)
+        .def("tryPachner", &Triangulation<3>::tryPachner<1>, rbase::tryPachner)
+        .def("tryPachner", &Triangulation<3>::tryPachner<2>, rbase::tryPachner)
+        .def("tryPachner", &Triangulation<3>::tryPachner<3>, rbase::tryPachner)
         .def("fourFourMove", &Triangulation<3>::fourFourMove,
             pybind11::arg(),
             pybind11::arg(),

@@ -1270,23 +1270,25 @@ Returns:
 static const char *isOneEfficient =
 R"doc(Determines if this triangulation is 1-efficient.
 
-For now, 1-efficiency testing is only available for ideal
-triangulations. In this setting, an ideal triangulation *T* is
-1-efficient if, amongst all closed embedded normal surfaces in *T*,
-there are no surfaces at all of positive Euler characteristic, and the
-only surfaces with zero Euler characteristic are vertex linking.
+For now, 1-efficiency testing is _only_ available for ideal
+triangulations in which every vertex link is a torus or Klein bottle.
+In this setting, an ideal triangulation *T* is _1-efficient_ if,
+amongst all closed embedded normal surfaces in *T*, there are no
+surfaces at all of positive Euler characteristic, and the only
+surfaces with zero Euler characteristic are vertex linking.
 
 The scope of 1-efficiency testing might be expanded to a broader class
 of triangulations in future versions of Regina; what is currently
-holding this back is the need to choose from the several slightly
-different definitions available in the literature.
+holding this back is the need to choose from the several different
+definitions available in the literature.
 
 Precondition:
-    This is a valid ideal triangulation with no boundary triangles.
+    This is a valid ideal triangulation in which the link of every
+    vertex is a torus or Klein bottle.
 
 Exception ``FailedPrecondition``:
-    This triangulation is not both valid and ideal, and/or it has one
-    or more boundary triangles.
+    This triangulation is invalid, empty, and/or has some vertex whose
+    link is not a torus or Klein bottle.
 
 Returns:
     ``True`` if and only if this triangulation is 1-efficient.)doc";
@@ -1560,13 +1562,18 @@ See isOneEfficient() for further details.
 If this property is already known, future calls to isOneEfficient()
 will be very fast (simply returning the precalculated value).
 
-If the preconditions for isOneEfficient() do not hold, then this
-routine is still safe to call (it will simply return ``False``).
+Precondition:
+    This is a valid ideal triangulation in which the link of every
+    vertex is a torus or Klein bottle.
 
 .. warning::
     This routine does not actually tell you _whether_ this
     triangulation is 1-efficient; it merely tells you whether the
     answer has already been computed.
+
+Exception ``FailedPrecondition``:
+    This triangulation is invalid, empty, and/or has some vertex whose
+    link is not a torus or Klein bottle.
 
 Returns:
     ``True`` if and only if this property is already known.)doc";

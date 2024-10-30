@@ -357,6 +357,11 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner)
+        .def("tryPachner", &Triangulation<4>::tryPachner<0>, rbase::tryPachner)
+        .def("tryPachner", &Triangulation<4>::tryPachner<1>, rbase::tryPachner)
+        .def("tryPachner", &Triangulation<4>::tryPachner<2>, rbase::tryPachner)
+        .def("tryPachner", &Triangulation<4>::tryPachner<3>, rbase::tryPachner)
+        .def("tryPachner", &Triangulation<4>::tryPachner<4>, rbase::tryPachner)
         .def("twoZeroMove",
             overload_cast<regina::Triangle<4>*, bool, bool>(
             &Triangulation<4>::twoZeroMove),
