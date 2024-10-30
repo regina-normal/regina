@@ -533,6 +533,10 @@ inline XMLElementReader*
             bool b;
             if (valueOf(props.lookup("value"), b))
                 tri_->prop_.zeroEfficient_ = b;
+        } else if (subTagName == "oneeff") {
+            bool b;
+            if (valueOf(props.lookup("value"), b))
+                tri_->prop_.oneEfficient_ = b;
         } else if (subTagName == "splitsfce") {
             bool b;
             if (valueOf(props.lookup("value"), b))

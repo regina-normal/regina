@@ -74,6 +74,7 @@ void Triangulation<3>::clearAllProperties() {
 
     // Properties of the triangulation:
     prop_.zeroEfficient_.reset();
+    prop_.oneEfficient_.reset();
     prop_.splittingSurface_.reset();
     prop_.niceTreeDecomposition_.reset();
 
@@ -125,6 +126,7 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
         other.prop_.negativeIdealBoundaryComponents_);
 
     prop_.zeroEfficient_.swap(other.prop_.zeroEfficient_);
+    prop_.oneEfficient_.swap(other.prop_.oneEfficient_);
     prop_.splittingSurface_.swap(other.prop_.splittingSurface_);
 
     prop_.threeSphere_.swap(other.prop_.threeSphere_);

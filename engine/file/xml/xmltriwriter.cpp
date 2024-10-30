@@ -194,6 +194,9 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         if (data_.prop_.zeroEfficient_.has_value())
             out_ << "  " << xmlValueTag("zeroeff", *data_.prop_.zeroEfficient_)
                 << '\n';
+        if (data_.prop_.oneEfficient_.has_value())
+            out_ << "  " << xmlValueTag("oneeff", *data_.prop_.oneEfficient_)
+                << '\n';
         if (data_.prop_.splittingSurface_.has_value())
             out_ << "  " << xmlValueTag("splitsfce",
                 *data_.prop_.splittingSurface_) << '\n';

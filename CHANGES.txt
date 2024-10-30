@@ -534,6 +534,8 @@ Version 7.4  [ (to be announced) ]
         Class Triangulation<2>:
             - New routine twoZeroMove().
         Class Triangulation<3>:
+            - New routines isOneEfficient() and knowsOneEfficient().  For now,
+              1-efficiency testing is only available for ideal triangulations.
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routine puncture() now takes an optional triangle, not an

@@ -146,6 +146,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
 
             std::optional<bool> zeroEfficient_;
                 /**< Is the triangulation zero-efficient? */
+            std::optional<bool> oneEfficient_;
+                /**< Is the triangulation one-efficient? */
             std::optional<bool> splittingSurface_;
                 /**< Does the triangulation have a normal splitting surface? */
 
@@ -1290,7 +1292,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
 
         /**
          * Determines if this triangulation is 0-efficient.
-         * A triangulation is 0-efficient if its only normal spheres and
+         * A triangulation is _0-efficient_ if its only normal spheres and
          * discs are vertex linking, and if it has no 2-sphere boundary
          * components.
          *
@@ -1300,8 +1302,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool isZeroEfficient() const;
         /**
          * Is it already known whether or not this triangulation is
-         * 0-efficient?
-         * See isZeroEfficient() for further details.
+         * 0-efficient?  See isZeroEfficient() for further details.
          *
          * If this property is already known, future calls to
          * isZeroEfficient() will be very fast (simply returning the
@@ -1314,6 +1315,46 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \return \c true if and only if this property is already known.
          */
         bool knowsZeroEfficient() const;
+        /**
+         * Determines if this triangulation is 1-efficient.
+         *
+         * For now, 1-efficiency testing is only available for ideal
+         * triangulations.  In this setting, an ideal triangulation \a T is
+         * 1-efficient if, amongst all closed embedded normal surfaces in \a T,
+         * there are no surfaces at all of positive Euler characteristic, and
+         * the only surfaces with zero Euler characteristic are vertex linking.
+         *
+         * The scope of 1-efficiency testing might be expanded to a broader
+         * class of triangulations in future versions of Regina; what is
+         * currently holding this back is the need to choose from the several
+         * slightly different definitions available in the literature.
+         *
+         * \pre This is a valid ideal triangulation with no boundary triangles.
+         *
+         * \exception FailedPrecondition This triangulation is not both valid
+         * and ideal, and/or it has one or more boundary triangles.
+         *
+         * \return \c true if and only if this triangulation is 1-efficient.
+         */
+        bool isOneEfficient() const;
+        /**
+         * Is it already known whether or not this triangulation is
+         * 1-efficient?  See isOneEfficient() for further details.
+         *
+         * If this property is already known, future calls to
+         * isOneEfficient() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * If the preconditions for isOneEfficient() do not hold, then this
+         * routine is still safe to call (it will simply return \c false).
+         *
+         * \warning This routine does not actually tell you _whether_
+         * this triangulation is 1-efficient; it merely tells you whether
+         * the answer has already been computed.
+         *
+         * \return \c true if and only if this property is already known.
+         */
+        bool knowsOneEfficient() const;
         /**
          * Determines whether this triangulation has a normal splitting
          * surface.  See NormalSurface::isSplitting() for details
@@ -4408,6 +4449,10 @@ inline void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
 
 inline bool Triangulation<3>::knowsZeroEfficient() const {
     return prop_.zeroEfficient_.has_value();
+}
+
+inline bool Triangulation<3>::knowsOneEfficient() const {
+    return prop_.oneEfficient_.has_value();
 }
 
 inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {

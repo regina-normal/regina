@@ -385,6 +385,10 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::isZeroEfficient)
         .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient,
             rdoc::knowsZeroEfficient)
+        .def("isOneEfficient", &Triangulation<3>::isOneEfficient,
+            rdoc::isOneEfficient)
+        .def("knowsOneEfficient", &Triangulation<3>::knowsOneEfficient,
+            rdoc::knowsOneEfficient)
         .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface,
             rdoc::hasSplittingSurface)
         .def("nonTrivialSphereOrDisc",

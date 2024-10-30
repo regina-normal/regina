@@ -1266,6 +1266,31 @@ Precondition:
 Returns:
     ``True`` if and only if the underlying 3-manifold is irreducible.)doc";
 
+// Docstring regina::python::doc::Triangulation_::isOneEfficient
+static const char *isOneEfficient =
+R"doc(Determines if this triangulation is 1-efficient.
+
+For now, 1-efficiency testing is only available for ideal
+triangulations. In this setting, an ideal triangulation *T* is
+1-efficient if, amongst all closed embedded normal surfaces in *T*,
+there are no surfaces at all of positive Euler characteristic, and the
+only surfaces with zero Euler characteristic are vertex linking.
+
+The scope of 1-efficiency testing might be expanded to a broader class
+of triangulations in future versions of Regina; what is currently
+holding this back is the need to choose from the several slightly
+different definitions available in the literature.
+
+Precondition:
+    This is a valid ideal triangulation with no boundary triangles.
+
+Exception ``FailedPrecondition``:
+    This triangulation is not both valid and ideal, and/or it has one
+    or more boundary triangles.
+
+Returns:
+    ``True`` if and only if this triangulation is 1-efficient.)doc";
+
 // Docstring regina::python::doc::Triangulation_::isOrdered
 static const char *isOrdered =
 R"doc(Determines if this triangulation is ordered; that is, if tetrahedron
@@ -1389,7 +1414,7 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::isZeroEfficient
 static const char *isZeroEfficient =
 R"doc(Determines if this triangulation is 0-efficient. A triangulation is
-0-efficient if its only normal spheres and discs are vertex linking,
+_0-efficient_ if its only normal spheres and discs are vertex linking,
 and if it has no 2-sphere boundary components.
 
 Returns:
@@ -1526,6 +1551,25 @@ Precondition:
 Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
+
+// Docstring regina::python::doc::Triangulation_::knowsOneEfficient
+static const char *knowsOneEfficient =
+R"doc(Is it already known whether or not this triangulation is 1-efficient?
+See isOneEfficient() for further details.
+
+If this property is already known, future calls to isOneEfficient()
+will be very fast (simply returning the precalculated value).
+
+If the preconditions for isOneEfficient() do not hold, then this
+routine is still safe to call (it will simply return ``False``).
+
+.. warning::
+    This routine does not actually tell you _whether_ this
+    triangulation is 1-efficient; it merely tells you whether the
+    answer has already been computed.
+
+Returns:
+    ``True`` if and only if this property is already known.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsSolidTorus
 static const char *knowsSolidTorus =
@@ -3349,6 +3393,12 @@ Python:
     The global interpreter lock will be released while this function
     runs, so you can use it with Python-based multithreading.
 
+Exception ``FailedPrecondition``:
+    This triangulation is not valid, closed and non-empty.
+
+Exception ``InvalidArgument``:
+    The argument *r* is less than 3.
+
 Parameter ``r``:
     the integer *r* as described above; this must be at least 3.
 
@@ -3410,8 +3460,15 @@ Precondition:
     This triangulation is valid, closed and non-empty.
 
 Precondition:
-    The argument *whichRoot* is strictly between 0 and *2r*, and has
+    The argument *whichRoot* is strictly between 0 and ``2r``, and has
     no common factors with *r*.
+
+Exception ``FailedPrecondition``:
+    This triangulation is not valid, closed and non-empty.
+
+Exception ``InvalidArgument``:
+    the argument *r* is less than 3, or the argument *whichRoot* is
+    not both coprime to *r* and between 0 and ``2r``.
 
 Parameter ``r``:
     the integer *r* as described above; this must be at least 3.

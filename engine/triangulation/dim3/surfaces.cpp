@@ -222,6 +222,13 @@ bool Triangulation<3>::isZeroEfficient() const {
     return *prop_.zeroEfficient_;
 }
 
+bool Triangulation<3>::isOneEfficient() const {
+    if (prop_.oneEfficient_.has_value())
+        return *prop_.oneEfficient_;
+
+    throw NotImplemented("1-efficiency testing is not yet implemented");
+}
+
 bool Triangulation<3>::hasSplittingSurface() const {
     if (prop_.splittingSurface_.has_value())
         return *prop_.splittingSurface_;
