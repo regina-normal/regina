@@ -81,6 +81,7 @@
  &data-irreducible;
  &data-link;
  &data-node;
+ &data-oneeff;
  &data-orbl-surface;
  &data-realbdry-surface;
  &data-regina;

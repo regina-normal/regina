@@ -26,7 +26,7 @@
 <synopsis>
 tri ::= (&xml-simplex;*,
          &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
-         &xml-splitsfce;?, &xml-zeroeff;?,
+         &xml-splitsfce;?, &xml-zeroeff;?, &xml-oneeff;?,
          &xml-threesphere;?, &xml-handlebody;?, &xml-txi;?,
          &xml-irreducible;?, &xml-compressingdisc;?, &xml-haken;?,
          &xml-tag;*,
@@ -127,6 +127,7 @@ tri ::= (&xml-simplex;*,
      <member>&xml-haken;</member>
      <member>&xml-handlebody;</member>
      <member>&xml-irreducible;</member>
+     <member>&xml-oneeff;</member>
      <member>&xml-splitsfce;</member>
      <member>&xml-threesphere;</member>
      <member>&xml-txi;</member>

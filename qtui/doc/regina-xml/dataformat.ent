@@ -43,6 +43,7 @@
 <!ENTITY data-line SYSTEM "data-line.docbook">
 <!ENTITY data-link SYSTEM "data-link.docbook">
 <!ENTITY data-node SYSTEM "data-node.docbook">
+<!ENTITY data-oneeff SYSTEM "data-oneeff.docbook">
 <!ENTITY data-op SYSTEM "data-op.docbook">
 <!ENTITY data-orbl-filter SYSTEM "data-orbl-filter.docbook">
 <!ENTITY data-orbl-surface SYSTEM "data-orbl-surface.docbook">
@@ -179,6 +180,8 @@
  '<link linkend="data-link"><sgmltag>link</sgmltag></link>'>
 <!ENTITY xml-node
  '<link linkend="data-node"><sgmltag>node</sgmltag></link>'>
+<!ENTITY xml-oneeff
+ '<link linkend="data-oneeff"><sgmltag>oneeff</sgmltag></link>'>
 <!ENTITY xml-op
  '<link linkend="data-op"><sgmltag>op</sgmltag></link>'>
 <!ENTITY xml-orbl-filter
