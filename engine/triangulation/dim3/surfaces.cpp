@@ -223,10 +223,64 @@ bool Triangulation<3>::isZeroEfficient() const {
 }
 
 bool Triangulation<3>::isOneEfficient() const {
+    // Check the preconditions before examining the cached value, since it's
+    // possible the 1-efficiency value was cached from a newer calculation
+    // engine that supports 1-efficiency testing in more settings.
+    if (! isValid()) {
+        throw FailedPrecondition(
+            "1-efficiency testing requires a valid triangulation");
+    }
+    if (! isIdeal()) {
+        // The empty triangulation is eliminated here.
+        throw FailedPrecondition(
+            "1-efficiency testing requires an ideal triangulation");
+    }
+    for (auto v : vertices()) {
+        if (v->linkType() != Vertex<3>::Link::Torus &&
+                v->linkType() != Vertex<3>::Link::KleinBottle)
+            throw FailedPrecondition(
+                "1-efficiency testing requires a triangulation whose "
+                "vertex links are all tori and/or Klein bottles");
+    }
+
     if (prop_.oneEfficient_.has_value())
         return *prop_.oneEfficient_;
 
-    throw NotImplemented("1-efficiency testing is not yet implemented");
+    // We might already know the answer from the 0-efficiency property,
+    // since for the settings in which we are able to test 1-efficiency,
+    // 0-efficiency is a necessary condition.
+    if (prop_.zeroEfficient_.has_value() && ! *prop_.zeroEfficient_)
+        return *(prop_.oneEfficient_ = false);
+
+    // For now we just enumerate and test all vertex normal surfaces.
+    // In the future we should consider fetching one surface at a time using
+    // the tree traversal method, which will allow us to fail early if a bad
+    // surface is discovered.
+
+    // TODO: Do this in quad closed coordinates if we can.
+
+    for (const auto& s : NormalSurfaces(*this, NormalCoords::Standard)) {
+        auto euler = s.eulerChar();
+        if (euler > 0) {
+            // Note: due to the preconditions on the triangulation, this
+            // surface cannot be vertex linking.
+            if (isOrientable() || euler == 2 || ! s.isTwoSided()) {
+                // Either this is a non-trivial sphere, or its double cover is.
+                // Record the 0-efficiency failure also.
+                // Note: the only way this test can _fail_ is if we have a
+                // two-sided projective plane in a non-orientable manifold
+                // (which does not actually violate our definition of
+                // 0-efficiency, but which _does_ violate our definition of
+                // 1-efficiency).
+                prop_.zeroEfficient_ = false;
+            }
+            return *(prop_.oneEfficient_ = false);
+        } else if (euler == 0 && ! s.isVertexLinking()) {
+            return *(prop_.oneEfficient_ = false);
+        }
+    }
+
+    return *(prop_.oneEfficient_ = true);
 }
 
 bool Triangulation<3>::hasSplittingSurface() const {

@@ -1304,9 +1304,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Is it already known whether or not this triangulation is
          * 0-efficient?  See isZeroEfficient() for further details.
          *
-         * If this property is already known, future calls to
-         * isZeroEfficient() will be very fast (simply returning the
-         * precalculated value).
+         * If this property is already known, future calls to isZeroEfficient()
+         * will be very fast (simply returning the precalculated value).
          *
          * \warning This routine does not actually tell you _whether_
          * this triangulation is 0-efficient; it merely tells you whether
@@ -1318,21 +1317,23 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Determines if this triangulation is 1-efficient.
          *
-         * For now, 1-efficiency testing is only available for ideal
-         * triangulations.  In this setting, an ideal triangulation \a T is
-         * 1-efficient if, amongst all closed embedded normal surfaces in \a T,
-         * there are no surfaces at all of positive Euler characteristic, and
-         * the only surfaces with zero Euler characteristic are vertex linking.
+         * For now, 1-efficiency testing is _only_ available for ideal
+         * triangulations in which every vertex link is a torus or Klein bottle.
+         * In this setting, an ideal triangulation \a T is _1-efficient_ if,
+         * amongst all closed embedded normal surfaces in \a T, there are no
+         * surfaces at all of positive Euler characteristic, and the only
+         * surfaces with zero Euler characteristic are vertex linking.
          *
          * The scope of 1-efficiency testing might be expanded to a broader
          * class of triangulations in future versions of Regina; what is
          * currently holding this back is the need to choose from the several
-         * slightly different definitions available in the literature.
+         * different definitions available in the literature.
          *
-         * \pre This is a valid ideal triangulation with no boundary triangles.
+         * \pre This is a valid ideal triangulation in which the link of every
+         * vertex is a torus or Klein bottle.
          *
-         * \exception FailedPrecondition This triangulation is not both valid
-         * and ideal, and/or it has one or more boundary triangles.
+         * \exception FailedPrecondition This triangulation is invalid, empty,
+         * and/or has some vertex whose link is not a torus or Klein bottle.
          *
          * \return \c true if and only if this triangulation is 1-efficient.
          */
@@ -1341,16 +1342,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Is it already known whether or not this triangulation is
          * 1-efficient?  See isOneEfficient() for further details.
          *
-         * If this property is already known, future calls to
-         * isOneEfficient() will be very fast (simply returning the
-         * precalculated value).
+         * If this property is already known, future calls to isOneEfficient()
+         * will be very fast (simply returning the precalculated value).
          *
-         * If the preconditions for isOneEfficient() do not hold, then this
-         * routine is still safe to call (it will simply return \c false).
+         * \pre This is a valid ideal triangulation in which the link of every
+         * vertex is a torus or Klein bottle.
          *
          * \warning This routine does not actually tell you _whether_
          * this triangulation is 1-efficient; it merely tells you whether
          * the answer has already been computed.
+         *
+         * \exception FailedPrecondition This triangulation is invalid, empty,
+         * and/or has some vertex whose link is not a torus or Klein bottle.
          *
          * \return \c true if and only if this property is already known.
          */
@@ -4452,7 +4455,39 @@ inline bool Triangulation<3>::knowsZeroEfficient() const {
 }
 
 inline bool Triangulation<3>::knowsOneEfficient() const {
-    return prop_.oneEfficient_.has_value();
+    // Check the preconditions before examining the cached value, since it's
+    // possible the 1-efficiency value was cached from a newer calculation
+    // engine that supports 1-efficiency testing in more settings.
+    if (! isValid()) {
+        throw FailedPrecondition(
+            "1-efficiency testing requires a valid triangulation");
+    }
+    if (! isIdeal()) {
+        // The empty triangulation is eliminated here.
+        throw FailedPrecondition(
+            "1-efficiency testing requires an ideal triangulation");
+    }
+    for (auto v : vertices()) {
+        if (v->linkType() != Vertex<3>::Link::Torus &&
+                v->linkType() != Vertex<3>::Link::KleinBottle)
+            throw FailedPrecondition(
+                "1-efficiency testing requires a triangulation whose "
+                "vertex links are all tori and/or Klein bottles");
+    }
+
+    if (prop_.oneEfficient_.has_value())
+        return true;
+
+    // We might already know the answer from the 0-efficiency property,
+    // since for the settings in which we are able to test 1-efficiency,
+    // 0-efficiency is a necessary condition.
+    if (prop_.zeroEfficient_.has_value() && ! *prop_.zeroEfficient_) {
+        prop_.oneEfficient_ = false;
+        return true;
+    }
+
+    // We don't know.
+    return false;
 }
 
 inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {
