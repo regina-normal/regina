@@ -4976,10 +4976,11 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::tryPachner(
 
     // In general pachner() is non-const, but we are not asking it to perform
     // the move, just to check whether it's legal.
-    if (! const_cast<TriangulationBase<dim>>(this)->pachner(f, true, false))
+    if (! const_cast<TriangulationBase<dim>*>(this)->pachner(f, true, false))
         return {};
 
-    std::optional<Triangulation<dim>> ans(*this);
+    std::optional<Triangulation<dim>> ans(
+        static_cast<const Triangulation<dim>&>(*this));
     if constexpr (k < dim)
         ans->pachner(ans->translate(f), false, true);
     else
