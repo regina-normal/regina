@@ -167,10 +167,21 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rbase::vertex)
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal, rbase::edge)
-        .def("translate", &Triangulation<2>::translate<0>,
+        .def("translate", overload_cast<const regina::Face<2, 0>*>(
+                &Triangulation<2>::translate<0>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", &Triangulation<2>::translate<1>,
+        .def("translate", overload_cast<const regina::Face<2, 1>*>(
+                &Triangulation<2>::translate<1>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::translate)
+        .def("translate", overload_cast<const regina::Simplex<2>*>(
+                &Triangulation<2>::translate<2>, pybind11::const_),
+            pybind11::return_value_policy::reference_internal, rbase::translate)
+        .def("translate", overload_cast<const regina::FaceEmbedding<2, 0>&>(
+                &Triangulation<2>::translate<0>, pybind11::const_),
+            rbase::translate_2)
+        .def("translate", overload_cast<const regina::FaceEmbedding<2, 1>&>(
+                &Triangulation<2>::translate<1>, pybind11::const_),
+            rbase::translate_2)
         .def("pairing", &Triangulation<2>::pairing, rbase::pairing)
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo,
             rbase::isIsomorphicTo)
@@ -291,6 +302,7 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::twoZeroMove)
+        .def("tryTwoZero", &Triangulation<2>::tryTwoZero, rdoc::tryTwoZero)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<2>::doubleCover, rbase::doubleCover)

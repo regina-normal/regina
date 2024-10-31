@@ -1038,6 +1038,29 @@ class Link :
         auto componentsByStrand() const;
 
         /**
+         * Translates a crossing from some other link into the corresponding
+         * crossing in this link.
+         *
+         * Typically this routine would be used when the given crossing comes
+         * from a link that is combinatorially identical to this, and you wish
+         * to obtain the corresponding crossing in this link.
+         *
+         * Specifically: if \a other refers to crossing number \a k of some
+         * other link, then the return value will refer to crossing number \a k
+         * of this link.
+         *
+         * This routine behaves correctly even if \a other is a null pointer.
+         *
+         * \pre This link contains at least as many crossings as the link
+         * containing \a other (though, as noted above, in typical scenarios
+         * both links would actually be combinatorially identical).
+         *
+         * \param other the crossing to translate.
+         * \return the corresponding crossing in this link.
+         */
+        Crossing* translate(Crossing* other) const;
+
+        /**
          * Translates a strand reference from some other link into the
          * corresponding strand reference from this link.
          *
@@ -1950,6 +1973,177 @@ class Link :
          */
         bool r3(Crossing* crossing, int side, bool check = true,
             bool perform = true);
+        /**
+         * If possible, returns the diagram obtained by performing a type I
+         * Reidemeister move at the given location to remove a crossing.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on type I moves and when they can be performed,
+         * see r1(Crossing*, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing to be removed.
+         * See r1(Crossing*, bool, bool) for details on exactly how this will
+         * be interpreted.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> tryR1(Crossing* crossing) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type I
+         * Reidemeister move at the given location to add a new crossing.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on type I moves and when they can be performed,
+         * see r1(StrandRef, int, int, bool, bool).
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies the arc of the link in which the new
+         * twist will be introduced.  See r1(StrandRef, int, int, bool, bool)
+         * for details on exactly how this will be interpreted.
+         * \param side 0 if the twist should be introduced on the left
+         * of the arc (when walking along the arc in the forward direction),
+         * or 1 if the twist should be introduced on the right of the arc.
+         * \param sign the sign of the new crossing that will be
+         * introduced as part of the twist; this must be +1 or -1.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> tryR1(StrandRef arc, int side, int sign) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type II
+         * Reidemeister move at the given location to remove two crossings.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(StrandRef, bool, bool).
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies one of the arcs of the bigon about
+         * which the move will be performed.  See r2(StrandRef, bool, bool)
+         * for details on exactly how this will be interpreted.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> tryR2(StrandRef arc) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type II
+         * Reidemeister move at the given location to remove two crossings.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(Crossing*, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing at the beginning of
+         * the "upper" arc that features in this move.
+         * See r2(Crossing*, bool, bool) for details on exactly how this will
+         * be interpreted.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> tryR2(Crossing* crossing) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type II
+         * Reidemeister move at the given location to add two new crossings.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(StrandRef, int, StrandRef, int, bool, bool).
+         *
+         * \pre Each of the given strand references is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \warning The check for this move is expensive (linear time),
+         * since it includes testing whether both sides-of-arcs belong
+         * to the same 2-cell of the knot diagram.
+         *
+         * \param upperArc identifies which arc of the link will be passed
+         * over another.  See r2(StrandRef, int, StrandRef, int, bool, bool)
+         * for details on exactly how this will be interpreted.
+         * \param upperSide 0 if the new overlap should take place on the left
+         * of \a upperArc (when walking along \a upperArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a upperArc.
+         * \param lowerArc identifies which arc of the link will be passed
+         * beneath another.  See r2(StrandRef, int, StrandRef, int, bool, bool)
+         * for details on exactly how this will be interpreted.
+         * \param lowerSide 0 if the new overlap should take place on the left
+         * of \a lowerArc (when walking along \a lowerArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a lowerArc.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> tryR2(StrandRef upperArc, int upperSide,
+            StrandRef lowerArc, int lowerSide) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type III
+         * Reidemeister move at the given location.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on type III moves and when they can be performed,
+         * see r3(StrandRef, int, bool, bool).
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies one of the arcs of the triangle about which
+         * the move will be performed.  See r3(StrandRef, int, bool, bool)
+         * for details on exactly how this will be interpreted.
+         * \param side 0 if the third crossing of the triangle is located to
+         * the left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the third crossing is located on the right of
+         * the arc.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> tryR3(StrandRef arc, int side) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type III
+         * Reidemeister move at the given location.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on type III moves and when they can be performed,
+         * see r3(Crossing*, int, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing at the beginning of
+         * the "uppermost" arc that features in this move.  See
+         * r3(Crossing*, int, bool, bool) for details on exactly what this
+         * means.
+         * \param side 0 if the third crossing of the triangle is located to
+         * the left of the uppermost arc (when walking along the arc in the
+         * forward direction), or 1 if the third crossing is located on the
+         * right of the uppermost arc.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> tryR3(Crossing* crossing, int side) const;
 
         /**
          * Tests whether this link has a pass move that will reduce the
@@ -5333,6 +5527,86 @@ inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
     return r3(s, side, check, perform);
 }
 
+inline std::optional<Link> Link::tryR1(Crossing* crossing) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Link*>(this)->r1(crossing, true, false))
+        return {};
+
+    std::optional<Link> ans(*this);
+    ans->r1(ans->translate(crossing), false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::tryR1(StrandRef arc, int side, int sign) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Link*>(this)->r1(arc, side, sign, true, false))
+        return {};
+
+    std::optional<Link> ans(*this);
+    ans->r1(ans->translate(arc), side, sign, false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::tryR2(StrandRef arc) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Link*>(this)->r2(arc, true, false))
+        return {};
+
+    std::optional<Link> ans(*this);
+    ans->r2(ans->translate(arc), false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::tryR2(Crossing* crossing) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Link*>(this)->r2(crossing, true, false))
+        return {};
+
+    std::optional<Link> ans(*this);
+    ans->r2(ans->translate(crossing), false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::tryR2(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Link*>(this)->r2(upperArc, upperSide, lowerArc, lowerSide,
+            true, false))
+        return {};
+
+    std::optional<Link> ans(*this);
+    ans->r2(ans->translate(upperArc), upperSide,
+        ans->translate(lowerArc), lowerSide, false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::tryR3(StrandRef arc, int side) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Link*>(this)->r3(arc, side, true, false))
+        return {};
+
+    std::optional<Link> ans(*this);
+    ans->r3(ans->translate(arc), side, false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::tryR3(Crossing* crossing, int side) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Link*>(this)->r3(crossing, side, true, false))
+        return {};
+
+    std::optional<Link> ans(*this);
+    ans->r3(ans->translate(crossing), side, false, true);
+    return ans;
+}
+
 inline const TreeDecomposition& Link::niceTreeDecomposition() const {
     if (niceTreeDecomposition_)
         return *niceTreeDecomposition_;
@@ -5347,6 +5621,10 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
 inline void Link::useTreeDecomposition(TreeDecomposition td) {
     prepareTreeDecomposition(td);
     niceTreeDecomposition_ = std::move(td);
+}
+
+inline Crossing* Link::translate(Crossing* other) const {
+    return (other ? crossings_[other->index()] : nullptr);
 }
 
 inline StrandRef Link::translate(const StrandRef& other) const {

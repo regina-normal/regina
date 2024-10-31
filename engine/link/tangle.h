@@ -320,6 +320,29 @@ class Tangle : public Output<Tangle> {
         bool operator == (const Tangle& other) const;
 
         /**
+         * Translates a crossing from some other tangle into the corresponding
+         * crossing in this tangle.
+         *
+         * Typically this routine would be used when the given crossing comes
+         * from a tangle that is combinatorially identical to this, and you
+         * wish to obtain the corresponding crossing in this tangle.
+         *
+         * Specifically: if \a other refers to crossing number \a k of some
+         * other tangle, then the return value will refer to crossing
+         * number \a k of this tangle.
+         *
+         * This routine behaves correctly even if \a other is a null pointer.
+         *
+         * \pre This tangle contains at least as many crossings as the tangle
+         * containing \a other (though, as noted above, in typical scenarios
+         * both tangles would actually be combinatorially identical).
+         *
+         * \param other the crossing to translate.
+         * \return the corresponding crossing in this tangle.
+         */
+        Crossing* translate(Crossing* other) const;
+
+        /**
          * Translates a strand reference from some other tangle into the
          * corresponding strand reference from this tangle.
          *
@@ -494,6 +517,76 @@ class Tangle : public Output<Tangle> {
          * this function always returns \c true.
          */
         bool r2(Crossing* crossing, bool check = true, bool perform = true);
+        /**
+         * If possible, returns the diagram obtained by performing a type I
+         * Reidemeister move at the given location to remove a crossing.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This tangle diagram will not be changed.
+         *
+         * Unlike links, which implement the full suite of Reidemeister
+         * moves, tangles (at present) only offer the simplifying versions
+         * of Reidemeister moves I and II.
+         *
+         * For more detail on type I moves and when they can be performed,
+         * see Link::r1(Crossing*, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this tangle.
+         *
+         * \param crossing identifies the crossing to be removed.
+         * \return The new tangle diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Tangle> tryR1(Crossing* crossing) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type II
+         * Reidemeister move at the given location to remove two crossings.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This tangle diagram will not be changed.
+         *
+         * Unlike links, which implement the full suite of Reidemeister
+         * moves, tangles (at present) only offer the simplifying versions
+         * of Reidemeister moves I and II.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see Link::r2(StrandRef, bool, bool).
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this tangle.
+         *
+         * \param arc identifies one of the arcs of the bigon about
+         * which the move will be performed.
+         * \return The new tangle diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Tangle> tryR2(StrandRef arc) const;
+        /**
+         * If possible, returns the diagram obtained by performing a type II
+         * Reidemeister move at the given location to remove two crossings.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This tangle diagram will not be changed.
+         *
+         * Unlike links, which implement the full suite of Reidemeister
+         * moves, tangles (at present) only offer the simplifying versions
+         * of Reidemeister moves I and II.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see Link::r2(Crossing*, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this tangle.
+         *
+         * \param crossing identifies the crossing at the beginning of
+         * the "upper" arc that features in this move.
+         * See Link::r2(Crossing*, bool, bool) for details on exactly what
+         * this means.
+         * \return The new tangle diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Tangle> tryR2(Crossing* crossing) const;
 
         /**
          * Uses type I and II Reidemeister moves to reduce the tangle
@@ -1024,6 +1117,10 @@ inline StrandRef Tangle::end(int string) const {
     return end_[string][1];
 }
 
+inline Crossing* Tangle::translate(Crossing* other) const {
+    return (other ? crossings_[other->index()] : nullptr);
+}
+
 inline StrandRef Tangle::translate(const StrandRef& other) const {
     return (other.crossing() ?
         crossings_[other.crossing()->index()]->strand(other.strand()) :
@@ -1034,6 +1131,38 @@ inline bool Tangle::r2(Crossing* crossing, bool check, bool perform) {
     return r2(StrandRef(crossing, 1), check, perform);
 }
 
+inline std::optional<Tangle> Tangle::tryR1(Crossing* crossing) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Tangle*>(this)->r1(crossing, true, false))
+        return {};
+
+    std::optional<Tangle> ans(*this);
+    ans->r1(ans->translate(crossing), false, true);
+    return ans;
+}
+
+inline std::optional<Tangle> Tangle::tryR2(StrandRef arc) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Tangle*>(this)->r2(arc, true, false))
+        return {};
+
+    std::optional<Tangle> ans(*this);
+    ans->r2(ans->translate(arc), false, true);
+    return ans;
+}
+
+inline std::optional<Tangle> Tangle::tryR2(Crossing* crossing) const {
+    // In general Reidemeister moves are non-const, but we are not asking
+    // to perform the move, just to check whether it's legal.
+    if (! const_cast<Tangle*>(this)->r2(crossing, true, false))
+        return {};
+
+    std::optional<Tangle> ans(*this);
+    ans->r2(ans->translate(crossing), false, true);
+    return ans;
+}
 inline void swap(Tangle& lhs, Tangle& rhs) noexcept {
     lhs.swap(rhs);
 }

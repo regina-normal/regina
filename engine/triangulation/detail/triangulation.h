@@ -1085,13 +1085,20 @@ class TriangulationBase :
          * from a triangulation that is combinatorially identical to this,
          * and you wish to obtain the corresponding face of this triangulation.
          *
-         * Specifically: if \a other refers to face \a i of top-dimensional
-         * simplex number \a k of some other triangulation, then this routine
-         * will return face \a i of top-dimensional simplex number \a k of this
-         * triangulation.  Note that this routine does _not_ use the face
-         * indices within each triangulation (which is outside the user's
-         * control), but rather the simplex numbering (which the user has
-         * full control over).
+         * Specifically:
+         *
+         * - For faces of dimension `k < dim`, if \a other refers to face \a i
+         *   of top-dimensional simplex number \a k of some other triangulation,
+         *   then this routine will return face \a i of top-dimensional simplex
+         *   number \a k of this triangulation.  Note that this routine does
+         *   _not_ use the face indices within each triangulation (which is
+         *   outside the user's control), but rather the simplex numbering
+         *   (which the user has full control over).
+         *
+         * - For top-dimensional simplices (i.e., faces of dimension `k = dim`),
+         *   this routine will simply translate top-dimensional simplex
+         *   number \a k of some other triangulation into top-dimensional
+         *   simplex number \a k of this triangulation.
          *
          * This routine behaves correctly even if \a other is a null pointer.
          *
@@ -1101,13 +1108,43 @@ class TriangulationBase :
          * combinatorially identical).
          *
          * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * <i>dim</i> inclusive.
          *
          * \param other the face to translate.
          * \return the corresponding face of this triangulation.
          */
         template <int subdim>
         Face<dim, subdim>* translate(const Face<dim, subdim>* other) const;
+
+        /**
+         * Translates a face embedding from some other triangulation into the
+         * corresponding face embedding with respect to this triangulation,
+         * using simplex numbers for the translation.
+         *
+         * Typically this routine would be used when the given embedding comes
+         * from a triangulation that is combinatorially identical to this, and
+         * you wish to obtain the corresponding face embedding within this
+         * triangulation.
+         *
+         * Specifically: if the embedding \a other refers to face \a i of
+         * top-dimensional simplex number \a k of some other triangulation,
+         * then the embedding that is returned will refer to face \a i of
+         * top-dimensional simplex number \a k of this triangulation.
+         *
+         * \pre This triangulation contains at least as many top-dimensional
+         * simplices as the triangulation containing \a other (though, as noted
+         * above, in typical scenarios both triangulations would actually be
+         * combinatorially identical).
+         *
+         * \tparam subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
+         *
+         * \param other the face embedding to translate.
+         * \return the corresponding face embedding in this triangulation.
+         */
+        template <int subdim>
+        FaceEmbedding<dim, subdim> translate(
+            const FaceEmbedding<dim, subdim>& other) const;
 
         /**
          * Returns the dual graph of this triangulation, expressed as a
@@ -2055,6 +2092,9 @@ class TriangulationBase :
          * Simplex<dim>::lockFacet() for further details on how locks work and
          * what their implications are.
          *
+         * \tparam k the dimension of the given face.  This must be
+         * between 0 and (\a dim) inclusive.
+         *
          * \param f the <i>k</i>-face about which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
@@ -2064,9 +2104,6 @@ class TriangulationBase :
          * if and only if the requested move may be performed without changing
          * the topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
-         *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
          */
         template <int k>
         bool pachner(Face<dim, k>* f, bool check = true, bool perform = true);
@@ -4525,15 +4562,29 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::translate(
         const Face<dim, subdim>* other) const {
-    static_assert(0 <= subdim && subdim < dim, "translate() requires a "
-        "facial dimension between 0 and dim-1 inclusive.");
+    static_assert(0 <= subdim && subdim <= dim, "translate() for faces "
+        "requires a facial dimension between 0 and dim inclusive.");
 
     if (other) {
-        const auto& emb = other->front();
-        return simplices_[emb.simplex()->index()]->template face<subdim>(
-            emb.face());
+        if constexpr (subdim < dim) {
+            const auto& emb = other->front();
+            return simplices_[emb.simplex()->index()]->template face<subdim>(
+                emb.face());
+        } else
+            return simplices_[other->index()];
     } else
         return nullptr;
+}
+
+template <int dim>
+template <int subdim>
+inline FaceEmbedding<dim, subdim> TriangulationBase<dim>::translate(
+        const FaceEmbedding<dim, subdim>& other) const {
+    static_assert(0 <= subdim && subdim < dim,
+        "translate() for face embeddings requires a facial dimension between "
+        "0 and dim-1 inclusive.");
+
+    return { simplices_[other.simplex()->index()], other.vertices() };
 }
 
 template <int dim>
@@ -4981,10 +5032,7 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::tryPachner(
 
     std::optional<Triangulation<dim>> ans(
         static_cast<const Triangulation<dim>&>(*this));
-    if constexpr (k < dim)
-        ans->pachner(ans->translate(f), false, true);
-    else
-        ans->pachner(ans->simplex(f->index()), false, true);
+    ans->pachner(ans->translate(f), false, true);
     return ans;
 }
 

@@ -721,6 +721,32 @@ Parameter ``other``:
 
 // Docstring regina::python::doc::Tangle_::translate
 static const char *translate =
+R"doc(Translates a crossing from some other tangle into the corresponding
+crossing in this tangle.
+
+Typically this routine would be used when the given crossing comes
+from a tangle that is combinatorially identical to this, and you wish
+to obtain the corresponding crossing in this tangle.
+
+Specifically: if *other* refers to crossing number *k* of some other
+tangle, then the return value will refer to crossing number *k* of
+this tangle.
+
+This routine behaves correctly even if *other* is a null pointer.
+
+Precondition:
+    This tangle contains at least as many crossings as the tangle
+    containing *other* (though, as noted above, in typical scenarios
+    both tangles would actually be combinatorially identical).
+
+Parameter ``other``:
+    the crossing to translate.
+
+Returns:
+    the corresponding crossing in this tangle.)doc";
+
+// Docstring regina::python::doc::Tangle_::translate_2
+static const char *translate_2 =
 R"doc(Translates a strand reference from some other tangle into the
 corresponding strand reference from this tangle.
 
@@ -745,6 +771,87 @@ Parameter ``other``:
 
 Returns:
     the corresponding strand reference for this tangle.)doc";
+
+// Docstring regina::python::doc::Tangle_::tryR1
+static const char *tryR1 =
+R"doc(If possible, returns the diagram obtained by performing a type I
+Reidemeister move at the given location to remove a crossing. If such
+a move is not allowed, then this routine returns no value.
+
+This tangle diagram will not be changed.
+
+Unlike links, which implement the full suite of Reidemeister moves,
+tangles (at present) only offer the simplifying versions of
+Reidemeister moves I and II.
+
+For more detail on type I moves and when they can be performed, see
+Link::r1(Crossing*, bool, bool).
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this tangle.
+
+Parameter ``crossing``:
+    identifies the crossing to be removed.
+
+Returns:
+    The new tangle diagram obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Tangle_::tryR2
+static const char *tryR2 =
+R"doc(If possible, returns the diagram obtained by performing a type II
+Reidemeister move at the given location to remove two crossings. If
+such a move is not allowed, then this routine returns no value.
+
+This tangle diagram will not be changed.
+
+Unlike links, which implement the full suite of Reidemeister moves,
+tangles (at present) only offer the simplifying versions of
+Reidemeister moves I and II.
+
+For more detail on type II moves and when they can be performed, see
+Link::r2(StrandRef, bool, bool).
+
+Precondition:
+    The given strand reference is either a null reference, or else
+    refers to some strand of some crossing in this tangle.
+
+Parameter ``arc``:
+    identifies one of the arcs of the bigon about which the move will
+    be performed.
+
+Returns:
+    The new tangle diagram obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Tangle_::tryR2_2
+static const char *tryR2_2 =
+R"doc(If possible, returns the diagram obtained by performing a type II
+Reidemeister move at the given location to remove two crossings. If
+such a move is not allowed, then this routine returns no value.
+
+This tangle diagram will not be changed.
+
+Unlike links, which implement the full suite of Reidemeister moves,
+tangles (at present) only offer the simplifying versions of
+Reidemeister moves I and II.
+
+For more detail on type II moves and when they can be performed, see
+Link::r2(Crossing*, bool, bool).
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this tangle.
+
+Parameter ``crossing``:
+    identifies the crossing at the beginning of the "upper" arc that
+    features in this move. See Link::r2(Crossing*, bool, bool) for
+    details on exactly what this means.
+
+Returns:
+    The new tangle diagram obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Tangle_::turn
 static const char *turn =

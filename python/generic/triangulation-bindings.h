@@ -312,10 +312,17 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
     regina::for_constexpr<0, dim>([&c](auto k) {
-        c.def("translate", &Triangulation<dim>::template translate<k>,
+        c.def("translate", overload_cast<const regina::Face<dim, k>*>(
+                &Triangulation<dim>::template translate<k>, pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             rbase::translate);
+        c.def("translate", overload_cast<const regina::FaceEmbedding<dim, k>&>(
+                &Triangulation<dim>::template translate<k>, pybind11::const_),
+            rbase::translate_2);
     });
+    c.def("translate", overload_cast<const regina::Simplex<dim>*>(
+            &Triangulation<dim>::template translate<dim>, pybind11::const_),
+        pybind11::return_value_policy::reference_internal, rbase::translate);
     regina::for_constexpr<0, dim + 1>([&c](auto k) {
         c.def("pachner", &Triangulation<dim>::template pachner<k>,
             pybind11::arg(),

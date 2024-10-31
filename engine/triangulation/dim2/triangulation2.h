@@ -493,6 +493,24 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Vertex<2>* v, bool check = true, bool perform = true);
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * 2-0 move about the given vertex of this triangulation.
+         * If such a move is not allowed, or if such a move would violate any
+         * simplex and/or facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on 2-0 vertex moves and when they can be performed,
+         * see twoZeroMove().
+         *
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \param v the vertex about which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<2>> tryTwoZero(Vertex<2>* v) const;
 
         /*@}*/
 
@@ -606,6 +624,18 @@ inline bool Triangulation<2>::isSphere() const {
 
 inline bool Triangulation<2>::isBall() const {
     return (eulerChar() == 1 && isOrientable() && components_.size() == 1);
+}
+
+inline std::optional<Triangulation<2>> Triangulation<2>::tryTwoZero(
+        Vertex<2>* v) const {
+    // In general twoZeroMove() is non-const, but we are not asking it to
+    // perform the move, just to check whether it's legal.
+    if (! const_cast<Triangulation<2>*>(this)->twoZeroMove(v, true, false))
+        return {};
+
+    std::optional<Triangulation<2>> ans(*this);
+    ans->twoZeroMove(ans->translate(v), false, true);
+    return ans;
 }
 
 } // namespace regina

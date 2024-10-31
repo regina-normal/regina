@@ -192,14 +192,33 @@ void addTriangulation4(pybind11::module_& m) {
             overload_cast<size_t>(&Triangulation<4>::face<3>, pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             rbase::tetrahedron)
-        .def("translate", &Triangulation<4>::translate<0>,
+        .def("translate", overload_cast<const regina::Face<4, 0>*>(
+                &Triangulation<4>::translate<0>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", &Triangulation<4>::translate<1>,
+        .def("translate", overload_cast<const regina::Face<4, 1>*>(
+                &Triangulation<4>::translate<1>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", &Triangulation<4>::translate<2>,
+        .def("translate", overload_cast<const regina::Face<4, 2>*>(
+                &Triangulation<4>::translate<2>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", &Triangulation<4>::translate<3>,
+        .def("translate", overload_cast<const regina::Face<4, 3>*>(
+                &Triangulation<4>::translate<3>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::translate)
+        .def("translate", overload_cast<const regina::Simplex<4>*>(
+                &Triangulation<4>::translate<4>, pybind11::const_),
+            pybind11::return_value_policy::reference_internal, rbase::translate)
+        .def("translate", overload_cast<const regina::FaceEmbedding<4, 0>&>(
+                &Triangulation<4>::translate<0>, pybind11::const_),
+            rbase::translate_2)
+        .def("translate", overload_cast<const regina::FaceEmbedding<4, 1>&>(
+                &Triangulation<4>::translate<1>, pybind11::const_),
+            rbase::translate_2)
+        .def("translate", overload_cast<const regina::FaceEmbedding<4, 2>&>(
+                &Triangulation<4>::translate<2>, pybind11::const_),
+            rbase::translate_2)
+        .def("translate", overload_cast<const regina::FaceEmbedding<4, 3>&>(
+                &Triangulation<4>::translate<3>, pybind11::const_),
+            rbase::translate_2)
         .def("pairing", &Triangulation<4>::pairing, rbase::pairing)
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo,
             rbase::isIsomorphicTo)
@@ -383,26 +402,47 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::twoZeroMove_3)
+        .def("tryTwoZero", overload_cast<regina::Triangle<4>*>(
+                &Triangulation<4>::tryTwoZero, pybind11::const_),
+            rdoc::tryTwoZero)
+        .def("tryTwoZero", overload_cast<regina::Edge<4>*>(
+                &Triangulation<4>::tryTwoZero, pybind11::const_),
+            rdoc::tryTwoZero_2)
+        .def("tryTwoZero", overload_cast<regina::Vertex<4>*>(
+                &Triangulation<4>::tryTwoZero, pybind11::const_),
+            rdoc::tryTwoZero_3)
         .def("fourFourMove", &Triangulation<4>::fourFourMove,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::fourFourMove)
+        .def("tryFourFour", &Triangulation<4>::tryFourFour, rdoc::tryFourFour)
         .def("openBook", &Triangulation<4>::openBook,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::openBook)
+        .def("tryOpenBook", &Triangulation<4>::tryOpenBook, rdoc::tryOpenBook)
         .def("shellBoundary", &Triangulation<4>::shellBoundary,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::shellBoundary)
+        .def("tryShellBoundary", &Triangulation<4>::tryShellBoundary,
+            rdoc::tryShellBoundary)
         .def("collapseEdge", &Triangulation<4>::collapseEdge,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::collapseEdge)
+        .def("tryCollapseEdge", &Triangulation<4>::tryCollapseEdge,
+            rdoc::tryCollapseEdge)
+        .def("snapEdge", &Triangulation<4>::snapEdge,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::snapEdge)
+        .def("trySnapEdge", &Triangulation<4>::trySnapEdge, rdoc::trySnapEdge)
         .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<4>::doubleCover, rbase::doubleCover)
@@ -414,11 +454,6 @@ void addTriangulation4(pybind11::module_& m) {
             &Triangulation<4>::subdivide, rbase::barycentricSubdivision)
         .def("idealToFinite", &Triangulation<4>::idealToFinite,
             rdoc::idealToFinite)
-        .def("snapEdge", &Triangulation<4>::snapEdge,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::snapEdge)
         .def("linkingSurface", &Triangulation<4>::linkingSurface<0>,
             rdoc::linkingSurface)
         .def("linkingSurface", &Triangulation<4>::linkingSurface<1>,

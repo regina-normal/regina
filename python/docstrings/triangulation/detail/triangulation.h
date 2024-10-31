@@ -1969,6 +1969,10 @@ Exception ``LockViolation``:
     Simplex<dim>::lockFacet() for further details on how locks work
     and what their implications are.
 
+Template parameter ``k``:
+    the dimension of the given face. This must be between 0 and
+    (*dim*) inclusive.
+
 Parameter ``f``:
     the *k*-face about which to perform the move.
 
@@ -1983,11 +1987,7 @@ Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
     topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.
-
-Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.)doc";
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::pairing
 constexpr const char *pairing =
@@ -2414,14 +2414,53 @@ Typically this routine would be used when the given face comes from a
 triangulation that is combinatorially identical to this, and you wish
 to obtain the corresponding face of this triangulation.
 
-Specifically: if *other* refers to face *i* of top-dimensional simplex
-number *k* of some other triangulation, then this routine will return
-face *i* of top-dimensional simplex number *k* of this triangulation.
-Note that this routine does _not_ use the face indices within each
-triangulation (which is outside the user's control), but rather the
-simplex numbering (which the user has full control over).
+Specifically:
+
+* For faces of dimension ``k < dim``, if *other* refers to face *i* of
+  top-dimensional simplex number *k* of some other triangulation, then
+  this routine will return face *i* of top-dimensional simplex number
+  *k* of this triangulation. Note that this routine does _not_ use the
+  face indices within each triangulation (which is outside the user's
+  control), but rather the simplex numbering (which the user has full
+  control over).
+
+* For top-dimensional simplices (i.e., faces of dimension ``k =
+  dim``), this routine will simply translate top-dimensional simplex
+  number *k* of some other triangulation into top-dimensional simplex
+  number *k* of this triangulation.
 
 This routine behaves correctly even if *other* is a null pointer.
+
+Precondition:
+    This triangulation contains at least as many top-dimensional
+    simplices as the triangulation containing *other* (though, as
+    noted above, in typical scenarios both triangulations would
+    actually be combinatorially identical).
+
+Template parameter ``subdim``:
+    the face dimension; this must be between 0 and *dim* inclusive.
+
+Parameter ``other``:
+    the face to translate.
+
+Returns:
+    the corresponding face of this triangulation.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::translate_2
+constexpr const char *translate_2 =
+R"doc(Translates a face embedding from some other triangulation into the
+corresponding face embedding with respect to this triangulation, using
+simplex numbers for the translation.
+
+Typically this routine would be used when the given embedding comes
+from a triangulation that is combinatorially identical to this, and
+you wish to obtain the corresponding face embedding within this
+triangulation.
+
+Specifically: if the embedding *other* refers to face *i* of top-
+dimensional simplex number *k* of some other triangulation, then the
+embedding that is returned will refer to face *i* of top-dimensional
+simplex number *k* of this triangulation.
 
 Precondition:
     This triangulation contains at least as many top-dimensional
@@ -2433,10 +2472,10 @@ Template parameter ``subdim``:
     the face dimension; this must be between 0 and *dim*-1 inclusive.
 
 Parameter ``other``:
-    the face to translate.
+    the face embedding to translate.
 
 Returns:
-    the corresponding face of this triangulation.)doc";
+    the corresponding face embedding in this triangulation.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::triangle
 constexpr const char *triangle =

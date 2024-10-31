@@ -248,6 +248,7 @@ Version 7.4  [ (to be announced) ]
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
             - New routine componentsByStrand().
+            - New routines tryR1(), tryR2() and tryR3().
             - Extended knotSig(), rewrite() and simplifyExhaustive() to work
               with all link diagrams with fewer than 64 link components.
               It is now recommended to use sig() and fromSig() instead of
@@ -255,6 +256,8 @@ Version 7.4  [ (to be announced) ]
               scope of these routines.  The original names knotSig() and
               fromKnotSig() have been kept (and are _not_ deprecated).
             - Routine hasReducingPass() can now handle multiple-component links.
+            - Added a variant of translate() that takes crossings instead of
+              strand references.
             - Added an alias sig() for knotSig().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
@@ -482,6 +485,10 @@ Version 7.4  [ (to be announced) ]
               as scoped enum values (e.g., SurfaceFilterType::Properties).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class Tangle:
+            - New routines tryR1(), tryR2() and tryR3().
+            - Added a variant of translate() that takes crossings instead of
+              strand references.
         Class TightEncodable<T>:
             - Now provides a hash() function also, based on the tight encoding.
         Class TopologyLockable, TopologyLock:
@@ -517,6 +524,9 @@ Version 7.4  [ (to be announced) ]
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
             - New alias sig(), which is is identical to isoSig().
+            - Extended translate() to support top-dimensional simplices (not
+              just lower-dimensional faces), and added a variant of translate()
+              that takes face embeddings instead of faces.
             - Renamed dumpConstruction() to source(), and extended it to produce
               either C++ and Python code via an optional language argument.
               The old C++-only dumpConstruction() is kept but deprecated.
@@ -533,8 +543,11 @@ Version 7.4  [ (to be announced) ]
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
         Class Triangulation<2>:
-            - New routine twoZeroMove().
+            - New routines twoZeroMove() and tryTwoZero().
         Class Triangulation<3>:
+            - New routines tryFourFour(), tryTwoZero(), tryTwoOne(),
+              tryZeroTwo(), tryOpenBook(), tryCloseBook(), tryShellBoundary(),
+              tryCollapseEdge().
             - New routines isOneEfficient() and knowsOneEfficient().  For now,
               1-efficiency testing is only available for ideal triangulations.
             - Renamed intelligentSimplify() to simplify().  The old name is
@@ -572,6 +585,8 @@ Version 7.4  [ (to be announced) ]
               triangulation happens on the calling thread.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
+            - New routines tryTwoZero(), tryFourFour(), tryOpenBook(),
+              tryShellBoundary(), tryCollapseEdge(), trySnapEdge().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer

@@ -58,7 +58,13 @@ void addTangle(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>(), rdoc::crossings)
         .def("begin", &Tangle::begin, rdoc::begin)
         .def("end", &Tangle::end, rdoc::end)
-        .def("translate", &Tangle::translate, rdoc::translate)
+        .def("translate",
+            overload_cast<const StrandRef&>(
+                &Tangle::translate, pybind11::const_),
+            rdoc::translate)
+        .def("translate",
+            overload_cast<Crossing*>(&Tangle::translate, pybind11::const_),
+            rdoc::translate_2)
         .def("swap", &Tangle::swap, rdoc::swap)
         .def("twist", &Tangle::twist,
             pybind11::arg("sign") = 1, rdoc::twist)
@@ -85,6 +91,13 @@ void addTangle(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::r2_2)
+        .def("tryR1", &Tangle::tryR1, rdoc::tryR1)
+        .def("tryR2",
+            overload_cast<StrandRef>(&Tangle::tryR2, pybind11::const_),
+            rdoc::tryR2)
+        .def("tryR2",
+            overload_cast<Crossing*>(&Tangle::tryR2, pybind11::const_),
+            rdoc::tryR2_2)
         .def("simplifyToLocalMinimum", &Tangle::simplifyToLocalMinimum,
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
         .def("brief", overload_cast<>(&Tangle::brief, pybind11::const_),

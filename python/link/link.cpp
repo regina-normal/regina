@@ -127,7 +127,12 @@ void addLink(pybind11::module_& m) {
                 ans.append(val);
             return ans;
         }, rdoc::componentsByStrand)
-        .def("translate", &Link::translate, rdoc::translate)
+        .def("translate",
+            overload_cast<const StrandRef&>(&Link::translate, pybind11::const_),
+            rdoc::translate)
+        .def("translate",
+            overload_cast<Crossing*>(&Link::translate, pybind11::const_),
+            rdoc::translate_2)
         .def("graph", &Link::graph, rdoc::graph)
         // In the following overloads, we define functions twice because
         // overload_cast gets confused between templated/non-templated variants.
@@ -363,6 +368,28 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::r3_2)
+        .def("tryR1",
+            overload_cast<Crossing*>(&Link::tryR1, pybind11::const_),
+            rdoc::tryR1)
+        .def("tryR1",
+            overload_cast<StrandRef, int, int>(&Link::tryR1, pybind11::const_),
+            rdoc::tryR1_2)
+        .def("tryR2",
+            overload_cast<StrandRef>(&Link::tryR2, pybind11::const_),
+            rdoc::tryR2)
+        .def("tryR2",
+            overload_cast<Crossing*>(&Link::tryR2, pybind11::const_),
+            rdoc::tryR2_2)
+        .def("tryR2",
+            overload_cast<StrandRef, int, StrandRef, int>(&Link::tryR2,
+                pybind11::const_),
+            rdoc::tryR2_3)
+        .def("tryR3",
+            overload_cast<StrandRef, int>(&Link::tryR3, pybind11::const_),
+            rdoc::tryR3)
+        .def("tryR3",
+            overload_cast<Crossing*, int>(&Link::tryR3, pybind11::const_),
+            rdoc::tryR3_2)
         .def("hasReducingPass", &Link::hasReducingPass, rdoc::hasReducingPass)
         .def("selfFrame", &Link::selfFrame, rdoc::selfFrame)
         .def("simplify", &Link::simplify, rdoc::simplify)

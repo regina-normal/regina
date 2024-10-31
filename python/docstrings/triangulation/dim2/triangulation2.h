@@ -286,6 +286,28 @@ triangulation.
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
 
+// Docstring regina::python::doc::Triangulation_::tryTwoZero
+static const char *tryTwoZero =
+R"doc(If possible, returns the triangulation obtained by performing a 2-0
+move about the given vertex of this triangulation. If such a move is
+not allowed, or if such a move would violate any simplex and/or facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on 2-0 vertex moves and when they can be performed,
+see twoZeroMove().
+
+Precondition:
+    The given vertex is a vertex of this triangulation.
+
+Parameter ``v``:
+    the vertex about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
 // Docstring regina::python::doc::Triangulation_::twoZeroMove
 static const char *twoZeroMove =
 R"doc(Checks the eligibility of and/or performs a 2-0 move about the given
