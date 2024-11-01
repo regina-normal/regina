@@ -123,6 +123,24 @@ This returns the same result as eulerCharTri().
 Returns:
     the Euler characteristic of this triangulation.)doc";
 
+// Docstring regina::python::doc::Triangulation_::has20
+static const char *has20 =
+R"doc(Determines whether it is possible to perform a 2-0 move about the
+given vertex of this triangulation, without violating any simplex
+and/or facet locks.
+
+For more detail on 2-0 vertex moves and when they can be performed,
+see twoZeroMove().
+
+Precondition:
+    The given vertex is a vertex of this triangulation.
+
+Parameter ``v``:
+    the vertex about which to perform the candidate move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
 // Docstring regina::python::doc::Triangulation_::hasBoundaryEdges
 static const char *hasBoundaryEdges =
 R"doc(A dimension-specific alias for hasBoundaryFacets().

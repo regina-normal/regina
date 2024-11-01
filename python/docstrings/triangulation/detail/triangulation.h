@@ -1201,6 +1201,28 @@ Returns:
     dimensional simplex or at least one locked facet of a top-
     dimensional simplex within this triangulation.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::hasPachner
+constexpr const char *hasPachner =
+R"doc(Determines whether it is possible to perform a (*dim* + 1 - *k*)-(*k*
++ 1) Pachner move about the given *k*-face of this triangulation,
+without violating any simplex and/or facet locks.
+
+For more detail on Pachner moves and when they can be performed, see
+pachner().
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face. This must be between 0 and
+    (*dim*) inclusive.
+
+Parameter ``f``:
+    the *k*-face about which to perform the candidate move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::homology
 constexpr const char *homology =
 R"doc(Returns the *k*th homology group of this triangulation, treating any

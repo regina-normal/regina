@@ -376,16 +376,6 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner)
-        .def("withPachner", &Triangulation<4>::withPachner<0>,
-            rbase::withPachner)
-        .def("withPachner", &Triangulation<4>::withPachner<1>,
-            rbase::withPachner)
-        .def("withPachner", &Triangulation<4>::withPachner<2>,
-            rbase::withPachner)
-        .def("withPachner", &Triangulation<4>::withPachner<3>,
-            rbase::withPachner)
-        .def("withPachner", &Triangulation<4>::withPachner<4>,
-            rbase::withPachner)
         .def("twoZeroMove",
             overload_cast<regina::Triangle<4>*, bool, bool>(
             &Triangulation<4>::twoZeroMove),
@@ -407,6 +397,62 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::twoZeroMove_3)
+        .def("fourFourMove", &Triangulation<4>::fourFourMove,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::fourFourMove)
+        .def("openBook", &Triangulation<4>::openBook,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::openBook)
+        .def("shellBoundary", &Triangulation<4>::shellBoundary,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::shellBoundary)
+        .def("collapseEdge", &Triangulation<4>::collapseEdge,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::collapseEdge)
+        .def("snapEdge", &Triangulation<4>::snapEdge,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::snapEdge)
+        .def("hasPachner", &Triangulation<4>::hasPachner<0>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<4>::hasPachner<1>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<4>::hasPachner<2>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<4>::hasPachner<3>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<4>::hasPachner<4>, rbase::hasPachner)
+        .def("has20", overload_cast<regina::Triangle<4>*>(
+                &Triangulation<4>::has20, pybind11::const_),
+            rdoc::has20)
+        .def("has20", overload_cast<regina::Edge<4>*>(
+                &Triangulation<4>::has20, pybind11::const_),
+            rdoc::has20_2)
+        .def("has20", overload_cast<regina::Vertex<4>*>(
+                &Triangulation<4>::has20, pybind11::const_),
+            rdoc::has20_3)
+        .def("has44", &Triangulation<4>::has44, rdoc::has44)
+        .def("hasOpenBook", &Triangulation<4>::hasOpenBook, rdoc::hasOpenBook)
+        .def("hasShellBoundary", &Triangulation<4>::hasShellBoundary,
+            rdoc::hasShellBoundary)
+        .def("hasCollapseEdge", &Triangulation<4>::hasCollapseEdge,
+            rdoc::hasCollapseEdge)
+        .def("hasSnapEdge", &Triangulation<4>::hasSnapEdge, rdoc::hasSnapEdge)
+        .def("withPachner", &Triangulation<4>::withPachner<0>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<4>::withPachner<1>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<4>::withPachner<2>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<4>::withPachner<3>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<4>::withPachner<4>,
+            rbase::withPachner)
         .def("with20", overload_cast<regina::Triangle<4>*>(
                 &Triangulation<4>::with20, pybind11::const_),
             rdoc::with20)
@@ -416,38 +462,13 @@ void addTriangulation4(pybind11::module_& m) {
         .def("with20", overload_cast<regina::Vertex<4>*>(
                 &Triangulation<4>::with20, pybind11::const_),
             rdoc::with20_3)
-        .def("fourFourMove", &Triangulation<4>::fourFourMove,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::fourFourMove)
         .def("with44", &Triangulation<4>::with44, rdoc::with44)
-        .def("openBook", &Triangulation<4>::openBook,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::openBook)
         .def("withOpenBook", &Triangulation<4>::withOpenBook,
             rdoc::withOpenBook)
-        .def("shellBoundary", &Triangulation<4>::shellBoundary,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::shellBoundary)
         .def("withShellBoundary", &Triangulation<4>::withShellBoundary,
             rdoc::withShellBoundary)
-        .def("collapseEdge", &Triangulation<4>::collapseEdge,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::collapseEdge)
         .def("withCollapseEdge", &Triangulation<4>::withCollapseEdge,
             rdoc::withCollapseEdge)
-        .def("snapEdge", &Triangulation<4>::snapEdge,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::snapEdge)
         .def("withSnapEdge", &Triangulation<4>::withSnapEdge,
             rdoc::withSnapEdge)
         .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal,

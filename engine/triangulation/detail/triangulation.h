@@ -2109,6 +2109,27 @@ class TriangulationBase :
         bool pachner(Face<dim, k>* f, bool check = true, bool perform = true);
 
         /**
+         * Determines whether it is possible to perform a
+         * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
+         * <i>k</i>-face of this triangulation, without violating any
+         * simplex and/or facet locks.
+         *
+         * For more detail on Pachner moves and when they can be performed,
+         * see pachner().
+         *
+         * \pre The given <i>k</i>-face is a <i>k</i>-face of this
+         * triangulation.
+         *
+         * \tparam k the dimension of the given face.  This must be
+         * between 0 and (\a dim) inclusive.
+         *
+         * \param f the <i>k</i>-face about which to perform the candidate move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        template <int k>
+        bool hasPachner(Face<dim, k>* f) const;
+
+        /**
          * If possible, returns the triangulation obtained by performing a
          * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
          * <i>k</i>-face of this triangulation.  If such a move is not allowed,
@@ -5020,14 +5041,21 @@ inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
 
 template <int dim>
 template <int k>
+bool TriangulationBase<dim>::hasPachner(Face<dim, k>* f) const {
+    static_assert(0 <= k && k <= dim, "hasPachner() requires a "
+        "facial dimension between 0 and dim inclusive.");
+
+    return const_cast<TriangulationBase<dim>*>(this)->pachner(f, true, false);
+}
+
+template <int dim>
+template <int k>
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
         Face<dim, k>* f) const {
     static_assert(0 <= k && k <= dim, "withPachner() requires a "
         "facial dimension between 0 and dim inclusive.");
 
-    // In general pachner() is non-const, but we are not asking it to perform
-    // the move, just to check whether it's legal.
-    if (! const_cast<TriangulationBase<dim>*>(this)->pachner(f, true, false))
+    if (! hasPachner(f))
         return {};
 
     std::optional<Triangulation<dim>> ans(

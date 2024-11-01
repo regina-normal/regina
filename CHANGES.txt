@@ -521,7 +521,7 @@ Version 7.4  [ (to be announced) ]
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
-            - New routine withPachner().
+            - New routines hasPachner() and withPachner().
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
@@ -545,8 +545,10 @@ Version 7.4  [ (to be announced) ]
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
         Class Triangulation<2>:
-            - New routines twoZeroMove() and with20().
+            - New routines twoZeroMove(), has20() and with20().
         Class Triangulation<3>:
+            - New routines has44(), has20(), has21(), has02(), hasOpenBook(),
+              hasCloseBook(), hasShellBoundary(), hasCollapseEdge().
             - New routines with44(), with20(), with21(), with02(),
               withOpenBook(), withCloseBook(), withShellBoundary(),
               withCollapseEdge().
@@ -587,6 +589,8 @@ Version 7.4  [ (to be announced) ]
               triangulation happens on the calling thread.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
+            - New routines has20(), has44(), hasOpenBook(), hasShellBoundary(),
+              hasCollapseEdge(), hasSnapEdge().
             - New routines with20(), with44(), withOpenBook(),
               withShellBoundary(), withCollapseEdge(), withSnapEdge().
             - Renamed intelligentSimplify() to simplify().  The old name is

@@ -1033,60 +1033,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool twoZeroMove(Vertex<4>* v, bool check = true, bool perform = true);
         /**
-         * If possible, returns the triangulation obtained by performing a
-         * 2-0 move about the given triangle of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 2-0 triangle moves and when they can be performed,
-         * see twoZeroMove(Triangle<4>*).
-         *
-         * \pre The given triangle is a triangle of this triangulation.
-         *
-         * \param t the triangle about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> with20(Triangle<4>* t) const;
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * 2-0 move about the given edge of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 2-0 edge moves and when they can be performed,
-         * see twoZeroMove(Edge<4>*).
-         *
-         * \pre The given edge is a edge of this triangulation.
-         *
-         * \param e the edge about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> with20(Edge<4>* e) const;
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * 2-0 move about the given vertex of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 2-0 vertex moves and when they can be performed,
-         * see twoZeroMove(Vertex<4>*).
-         *
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \param v the vertex about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> with20(Vertex<4>* v) const;
-        /**
          * Checks the eligibility of and/or performs a 4-4 move about the
          * given edge.
          *
@@ -1141,24 +1087,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \author Alex He
          */
         bool fourFourMove(Edge<4>* e, bool check = true, bool perform = true);
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * 4-4 move about the given edge of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 4-4 moves and when they can be performed,
-         * see fourFourMove().
-         *
-         * \pre The given edge is an edge of this triangulation.
-         *
-         * \param e the edge about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> with44(Edge<4>* e) const;
         /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
@@ -1224,24 +1152,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool openBook(Tetrahedron<4>* t,
             bool check = true, bool perform = true);
         /**
-         * If possible, returns the triangulation obtained by performing a
-         * book opening move about the given tetrahedron of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on book opening moves and when they can be
-         * performed, see openBook().
-         *
-         * \pre The given tetrahedron is a tetrahedron of this triangulation.
-         *
-         * \param t the tetrahedron about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> withOpenBook(Tetrahedron<4>* t) const;
-        /**
          * Checks the eligibility of and/or performs a boundary shelling
          * move on the given pentachoron.
          * This involves simply popping off a pentachoron that touches
@@ -1305,25 +1215,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool shellBoundary(Pentachoron<4>* p,
             bool check = true, bool perform = true);
         /**
-         * If possible, returns the triangulation obtained by performing a
-         * boundary shelling move on the given pentachoron.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on boundary shelling moves and when they can be
-         * performed, see shellBoundary().
-         *
-         * \pre The given pentachoron is a pentachoron of this triangulation.
-         *
-         * \param p the pentachoron upon which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> withShellBoundary(Pentachoron<4>* p)
-            const;
-        /**
          * Checks the eligibility of and/or performs a collapse of
          * an edge in such a way that the topology of the manifold
          * does not change and the number of vertices of the triangulation
@@ -1382,25 +1273,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * is \c false, the function simply returns \c true.
          */
         bool collapseEdge(Edge<4>* e, bool check = true, bool perform = true);
-        /**
-         * If possible, returns the triangulation obtained by collapsing the
-         * given edge of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on edge collapse moves and when they can be
-         * performed, see collapseEdge().
-         *
-         * \pre The given edge is an edge of this triangulation.
-         *
-         * \param e the edge to collapse.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> withCollapseEdge(Edge<4>* e) const;
-
         /**
          * Snaps together the endpoints of an edge connecting an internal
          * vertex with some different (possibly boundary) vertex, which reduces
@@ -1461,6 +1333,246 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \author Alex He
          */
         bool snapEdge(Edge<4>* e, bool check = true, bool perform = true);
+
+        /**
+         * Determines whether it is possible to perform a 2-0 move about the
+         * given triangle of this triangulation, without violating any
+         * simplex and/or facet locks.
+         *
+         * For more detail on 2-0 triangle moves and when they can be performed,
+         * see twoZeroMove(Triangle<4>*).
+         *
+         * \pre The given triangle is a triangle of this triangulation.
+         *
+         * \param t the candidate triangle about which to perform the move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool has20(Triangle<4>* t) const;
+        /**
+         * Determines whether it is possible to perform a 2-0 move about the
+         * given edge of this triangulation, without violating any simplex
+         * and/or facet locks.
+         *
+         * For more detail on 2-0 edge moves and when they can be performed,
+         * see twoZeroMove(Edge<4>*).
+         *
+         * \pre The given edge is a edge of this triangulation.
+         *
+         * \param e the candidate edge about which to perform the move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool has20(Edge<4>* e) const;
+        /**
+         * Determines whether it is possible to perform a 2-0 move about the
+         * given vertex of this triangulation, without violating any simplex
+         * and/or facet locks.
+         *
+         * For more detail on 2-0 vertex moves and when they can be performed,
+         * see twoZeroMove(Vertex<4>*).
+         *
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \param v the candidate vertex about which to perform the move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool has20(Vertex<4>* v) const;
+        /**
+         * Determines whether it is possible to perform a 4-4 move about the
+         * given edge of this triangulation, without violating any simplex
+         * and/or facet locks.
+         *
+         * For more detail on 4-4 moves and when they can be performed,
+         * see fourFourMove().
+         *
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * \param e the candidate edge about which to perform the move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool has44(Edge<4>* e) const;
+        /**
+         * Determines whether it is possible to perform a book opening move
+         * about the given tetrahedron of this triangulation, without
+         * violating any facet locks.
+         *
+         * For more detail on book opening moves and when they can be
+         * performed, see openBook().
+         *
+         * \pre The given tetrahedron is a tetrahedron of this triangulation.
+         *
+         * \param t the candidate tetrahedron about which to perform the move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasOpenBook(Tetrahedron<4>* t) const;
+        /**
+         * Determines whether it is possible to perform a boundary shelling
+         * move on the given pentachoron, without violating any simplex and/or
+         * facet locks.
+         *
+         * For more detail on boundary shelling moves and when they can be
+         * performed, see shellBoundary().
+         *
+         * \pre The given pentachoron is a pentachoron of this triangulation.
+         *
+         * \param p the candidate pentachoron upon which to perform the move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasShellBoundary(Pentachoron<4>* p) const;
+        /**
+         * Determines whether it is possible to collapse the given edge of
+         * this triangulation, without violating any simplex and/or facet locks.
+         *
+         * For more detail on edge collapse moves and when they can be
+         * performed, see collapseEdge().
+         *
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * \param e the candidate edge to collapse.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasCollapseEdge(Edge<4>* e) const;
+        /**
+         * Determines whether it is possible to snap together the endpoints of
+         * the given edge of this triangulation.
+         *
+         * For more detail on snapping moves on edges and when they can be
+         * performed, see snapEdge().
+         *
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * \param e the candidate edge whose endpoints would be snapped
+         * together.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasSnapEdge(Edge<4>* e) const;
+
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * 2-0 move about the given triangle of this triangulation.
+         * If such a move is not allowed, or if such a move would violate any
+         * simplex and/or facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on 2-0 triangle moves and when they can be performed,
+         * see twoZeroMove(Triangle<4>*).
+         *
+         * \pre The given triangle is a triangle of this triangulation.
+         *
+         * \param t the triangle about which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<4>> with20(Triangle<4>* t) const;
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * 2-0 move about the given edge of this triangulation.
+         * If such a move is not allowed, or if such a move would violate any
+         * simplex and/or facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on 2-0 edge moves and when they can be performed,
+         * see twoZeroMove(Edge<4>*).
+         *
+         * \pre The given edge is a edge of this triangulation.
+         *
+         * \param e the edge about which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<4>> with20(Edge<4>* e) const;
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * 2-0 move about the given vertex of this triangulation.
+         * If such a move is not allowed, or if such a move would violate any
+         * simplex and/or facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on 2-0 vertex moves and when they can be performed,
+         * see twoZeroMove(Vertex<4>*).
+         *
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \param v the vertex about which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<4>> with20(Vertex<4>* v) const;
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * 4-4 move about the given edge of this triangulation.
+         * If such a move is not allowed, or if such a move would violate any
+         * simplex and/or facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on 4-4 moves and when they can be performed,
+         * see fourFourMove().
+         *
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * \param e the edge about which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<4>> with44(Edge<4>* e) const;
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * book opening move about the given tetrahedron of this triangulation.
+         * If such a move is not allowed, or if such a move would violate any
+         * facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on book opening moves and when they can be
+         * performed, see openBook().
+         *
+         * \pre The given tetrahedron is a tetrahedron of this triangulation.
+         *
+         * \param t the tetrahedron about which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<4>> withOpenBook(Tetrahedron<4>* t) const;
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * boundary shelling move on the given pentachoron.
+         * If such a move is not allowed, or if such a move would violate any
+         * simplex and/or facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on boundary shelling moves and when they can be
+         * performed, see shellBoundary().
+         *
+         * \pre The given pentachoron is a pentachoron of this triangulation.
+         *
+         * \param p the pentachoron upon which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<4>> withShellBoundary(Pentachoron<4>* p)
+            const;
+        /**
+         * If possible, returns the triangulation obtained by collapsing the
+         * given edge of this triangulation.
+         * If such a move is not allowed, or if such a move would violate any
+         * simplex and/or facet locks, then this routine returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on edge collapse moves and when they can be
+         * performed, see collapseEdge().
+         *
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * \param e the edge to collapse.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<4>> withCollapseEdge(Edge<4>* e) const;
         /**
          * If possible, returns the triangulation obtained by snapping together
          * the endpoints of the given edge of this triangulation.
@@ -1765,11 +1877,41 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
         *this, height, threads, tracker);
 }
 
+inline bool Triangulation<4>::has20(Triangle<4>* t) const {
+    return const_cast<Triangulation<4>*>(this)->twoZeroMove(t, true, false);
+}
+
+inline bool Triangulation<4>::has20(Edge<4>* e) const {
+    return const_cast<Triangulation<4>*>(this)->twoZeroMove(e, true, false);
+}
+
+inline bool Triangulation<4>::has20(Vertex<4>* v) const {
+    return const_cast<Triangulation<4>*>(this)->twoZeroMove(v, true, false);
+}
+
+inline bool Triangulation<4>::has44(Edge<4>* e) const {
+    return const_cast<Triangulation<4>*>(this)->fourFourMove(e, true, false);
+}
+
+inline bool Triangulation<4>::hasOpenBook(Tetrahedron<4>* t) const {
+    return const_cast<Triangulation<4>*>(this)->openBook(t, true, false);
+}
+
+inline bool Triangulation<4>::hasShellBoundary(Pentachoron<4>* p) const {
+    return const_cast<Triangulation<4>*>(this)->shellBoundary(p, true, false);
+}
+
+inline bool Triangulation<4>::hasCollapseEdge(Edge<4>* e) const {
+    return const_cast<Triangulation<4>*>(this)->collapseEdge(e, true, false);
+}
+
+inline bool Triangulation<4>::hasSnapEdge(Edge<4>* e) const {
+    return const_cast<Triangulation<4>*>(this)->snapEdge(e, true, false);
+}
+
 inline std::optional<Triangulation<4>> Triangulation<4>::with20(Triangle<4>* t)
         const {
-    // In general twoZeroMove() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->twoZeroMove(t, true, false))
+    if (! has20(t))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);
@@ -1779,9 +1921,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with20(Triangle<4>* t)
 
 inline std::optional<Triangulation<4>> Triangulation<4>::with20(Edge<4>* e)
         const {
-    // In general twoZeroMove() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->twoZeroMove(e, true, false))
+    if (! has20(e))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);
@@ -1791,9 +1931,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with20(Edge<4>* e)
 
 inline std::optional<Triangulation<4>> Triangulation<4>::with20(Vertex<4>* v)
         const {
-    // In general twoZeroMove() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->twoZeroMove(v, true, false))
+    if (! has20(v))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);
@@ -1803,9 +1941,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with20(Vertex<4>* v)
 
 inline std::optional<Triangulation<4>> Triangulation<4>::with44(Edge<4>* e)
         const {
-    // In general fourFourMove() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->fourFourMove(e, true, false))
+    if (! has44(e))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);
@@ -1815,9 +1951,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with44(Edge<4>* e)
 
 inline std::optional<Triangulation<4>> Triangulation<4>::withOpenBook(
         Tetrahedron<4>* t) const {
-    // In general openBook() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->openBook(t, true, false))
+    if (! hasOpenBook(t))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);
@@ -1827,9 +1961,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withOpenBook(
 
 inline std::optional<Triangulation<4>> Triangulation<4>::withShellBoundary(
         Pentachoron<4>* p) const {
-    // In general shellBoundary() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->shellBoundary(p, true, false))
+    if (! hasShellBoundary(p))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);
@@ -1839,9 +1971,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withShellBoundary(
 
 inline std::optional<Triangulation<4>> Triangulation<4>::withCollapseEdge(
         Edge<4>* e) const {
-    // In general collapseEdge() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->collapseEdge(e, true, false))
+    if (! hasCollapseEdge(e))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);
@@ -1851,9 +1981,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withCollapseEdge(
 
 inline std::optional<Triangulation<4>> Triangulation<4>::withSnapEdge(
         Edge<4>* e) const {
-    // In general snapEdge() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<4>*>(this)->snapEdge(e, true, false))
+    if (! hasSnapEdge(e))
         return {};
 
     std::optional<Triangulation<4>> ans(*this);

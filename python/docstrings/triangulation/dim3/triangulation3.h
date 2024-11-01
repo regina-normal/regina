@@ -723,11 +723,220 @@ Returns:
     a generalised angle structure on this triangulation, if one
     exists.)doc";
 
+// Docstring regina::python::doc::Triangulation_::has02
+static const char *has02 =
+R"doc(Determines whether it is possible to perform a 0-2 move about the two
+specified triangles of this triangulation, without violating any facet
+locks.
+
+For more detail on 0-2 moves and when they can be performed, and for
+full details on what the arguments to this function mean, see
+zeroTwoMove(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int, bool, bool).
+
+Precondition:
+    The given embeddings refer to edges of this triangulation.
+
+Parameter ``e0``:
+    an embedding of the common edge *e* of the two candidate triangles
+    about which to perform the move.
+
+Parameter ``t0``:
+    indicates one of the candidate triangles about which to perform
+    the move, with respect to the edge embedding *e0*; this must be 2
+    or 3.
+
+Parameter ``e1``:
+    another embedding of the edge *e*.
+
+Parameter ``t1``:
+    indicates the other candidate triangle about which to perform the
+    move, with respect to the edge embedding *e1*; this must be 2 or
+    3.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has02_2
+static const char *has02_2 =
+R"doc(Determines whether it is possible to perform a 0-2 move about the two
+specified triangles of this triangulation, without violating any facet
+locks.
+
+For more detail on 0-2 moves and when they can be performed, and for
+full details on what the arguments to this function mean, see
+zeroTwoMove(Edge<3>*, size_t, size_t, bool, bool).
+
+Precondition:
+    The given edge is a edge of this triangulation.
+
+Parameter ``e``:
+    the common edge of the two candidate triangles about which to
+    perform the move.
+
+Parameter ``t0``:
+    the number assigned to one of two candidate triangles about which
+    to perform the move.
+
+Parameter ``t1``:
+    the number assigned to the other candidate triangle about which to
+    perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has02_3
+static const char *has02_3 =
+R"doc(Determines whether it is possible to perform a 0-2 move about the two
+given triangles of this triangulation, without violating any facet
+locks.
+
+For more detail on 0-2 moves and when they can be performed, and for
+full details on what the arguments to this function mean, see
+zeroTwoMove(Triangle<3>*, int, Triangle<3>*, int, bool, bool).
+
+Precondition:
+    The given triangles are both triangles of this triangulation.
+
+Parameter ``t0``:
+    one of the two candidate triangles about which to perform the
+    move.
+
+Parameter ``e0``:
+    the edge at which *t0* meets the other triangle *t1*; this must be
+    0, 1 or 2.
+
+Parameter ``t1``:
+    the other candidate triangle about which to perform the move.
+
+Parameter ``e1``:
+    the edge at which *t1* meets the other triangle *t0*; this must be
+    0, 1 or 2.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has20
+static const char *has20 =
+R"doc(Determines whether it is possible to perform a 2-0 move about the
+given edge of this triangulation, without violating any simplex and/or
+facet locks.
+
+For more detail on 2-0 edge moves and when they can be performed, see
+twoZeroMove(Edge<3>*).
+
+Precondition:
+    The given edge is a edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has20_2
+static const char *has20_2 =
+R"doc(Determines whether it is possible to perform a 2-0 move about the
+given vertex of this triangulation, without violating any simplex
+and/or facet locks.
+
+For more detail on 2-0 vertex moves and when they can be performed,
+see twoZeroMove(Vertex<3>*).
+
+Precondition:
+    The given vertex is a vertex of this triangulation.
+
+Parameter ``v``:
+    the candidate vertex about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has21
+static const char *has21 =
+R"doc(Determines whether it is possible to perform a 2-1 move about the
+given edge of this triangulation, without violating any simplex and/or
+facet locks.
+
+For more detail on 2-1 moves and when they can be performed, see
+twoOneMove().
+
+Precondition:
+    The given edge is a edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge about which to perform the move.
+
+Parameter ``edgeEnd``:
+    indicates at which end of the edge *e* the move does _not_ involve
+    the adjacent tetrahedron; this should be 0 or 1. See twoOneMove()
+    for details on exactly what this means.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has44
+static const char *has44 =
+R"doc(Determines whether it is possible to perform a 4-4 move about the
+given edge of this triangulation, without violating any simplex and/or
+facet locks.
+
+For more detail on 4-4 moves and when they can be performed, see
+fourFourMove().
+
+Precondition:
+    The given edge is a edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge about which to perform the move.
+
+Parameter ``newAxis``:
+    When performing the move, specifies which axis of the octahedron
+    the new tetrahedra should meet along; this should be 0 or 1. See
+    fourFourMove() for details on exactly what this means.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
 // Docstring regina::python::doc::Triangulation_::hasBoundaryTriangles
 static const char *hasBoundaryTriangles =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasCloseBook
+static const char *hasCloseBook =
+R"doc(Determines whether it is possible to perform a book closing move about
+the given edge of this triangulation, without violating any facet
+locks.
+
+For more detail on book closing moves and when they can be performed,
+see closeBook().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasCollapseEdge
+static const char *hasCollapseEdge =
+R"doc(Determines whether it is possible to collapse the given edge of this
+triangulation, without violating any simplex and/or facet locks.
+
+For more detail on edge collapse moves and when they can be performed,
+see collapseEdge().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge to collapse.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::hasCompressingDisc
 static const char *hasCompressingDisc =
@@ -883,6 +1092,42 @@ components with negative Euler characteristic.
 Returns:
     ``True`` if and only if there is at least one such boundary
     component.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasOpenBook
+static const char *hasOpenBook =
+R"doc(Determines whether it is possible to perform a book opening move about
+the given triangle of this triangulation, without violating any facet
+locks.
+
+For more detail on book opening moves and when they can be performed,
+see openBook().
+
+Precondition:
+    The given triangle is a triangle of this triangulation.
+
+Parameter ``t``:
+    the candidate triangle about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasShellBoundary
+static const char *hasShellBoundary =
+R"doc(Determines whether it is possible to perform a boundary shelling move
+on the given tetrahedron, without violating any simplex and/or facet
+locks.
+
+For more detail on boundary shelling moves and when they can be
+performed, see shellBoundary().
+
+Precondition:
+    The given tetrahedron is a tetrahedron of this triangulation.
+
+Parameter ``t``:
+    the candidate tetrahedron upon which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::hasSimpleCompressingDisc
 static const char *hasSimpleCompressingDisc =

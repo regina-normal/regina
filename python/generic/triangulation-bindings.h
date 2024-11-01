@@ -329,6 +329,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner);
+        c.def("hasPachner", &Triangulation<dim>::template hasPachner<k>,
+            rbase::hasPachner);
         c.def("withPachner", &Triangulation<dim>::template withPachner<k>,
             rbase::withPachner);
     });

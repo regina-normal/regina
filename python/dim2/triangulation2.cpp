@@ -294,17 +294,21 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner)
+        .def("twoZeroMove", &Triangulation<2>::twoZeroMove,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::twoZeroMove)
+        .def("hasPachner", &Triangulation<2>::hasPachner<0>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<2>::hasPachner<1>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<2>::hasPachner<2>, rbase::hasPachner)
+        .def("has20", &Triangulation<2>::has20, rdoc::has20)
         .def("withPachner", &Triangulation<2>::withPachner<0>,
             rbase::withPachner)
         .def("withPachner", &Triangulation<2>::withPachner<1>,
             rbase::withPachner)
         .def("withPachner", &Triangulation<2>::withPachner<2>,
             rbase::withPachner)
-        .def("twoZeroMove", &Triangulation<2>::twoZeroMove,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::twoZeroMove)
         .def("with20", &Triangulation<2>::with20, rdoc::with20)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)

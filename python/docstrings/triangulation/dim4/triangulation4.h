@@ -277,11 +277,153 @@ Returns:
 Author:
     Alex He)doc";
 
+// Docstring regina::python::doc::Triangulation_::has20
+static const char *has20 =
+R"doc(Determines whether it is possible to perform a 2-0 move about the
+given triangle of this triangulation, without violating any simplex
+and/or facet locks.
+
+For more detail on 2-0 triangle moves and when they can be performed,
+see twoZeroMove(Triangle<4>*).
+
+Precondition:
+    The given triangle is a triangle of this triangulation.
+
+Parameter ``t``:
+    the candidate triangle about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has20_2
+static const char *has20_2 =
+R"doc(Determines whether it is possible to perform a 2-0 move about the
+given edge of this triangulation, without violating any simplex and/or
+facet locks.
+
+For more detail on 2-0 edge moves and when they can be performed, see
+twoZeroMove(Edge<4>*).
+
+Precondition:
+    The given edge is a edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has20_3
+static const char *has20_3 =
+R"doc(Determines whether it is possible to perform a 2-0 move about the
+given vertex of this triangulation, without violating any simplex
+and/or facet locks.
+
+For more detail on 2-0 vertex moves and when they can be performed,
+see twoZeroMove(Vertex<4>*).
+
+Precondition:
+    The given vertex is a vertex of this triangulation.
+
+Parameter ``v``:
+    the candidate vertex about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::has44
+static const char *has44 =
+R"doc(Determines whether it is possible to perform a 4-4 move about the
+given edge of this triangulation, without violating any simplex and/or
+facet locks.
+
+For more detail on 4-4 moves and when they can be performed, see
+fourFourMove().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
 // Docstring regina::python::doc::Triangulation_::hasBoundaryTetrahedra
 static const char *hasBoundaryTetrahedra =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasCollapseEdge
+static const char *hasCollapseEdge =
+R"doc(Determines whether it is possible to collapse the given edge of this
+triangulation, without violating any simplex and/or facet locks.
+
+For more detail on edge collapse moves and when they can be performed,
+see collapseEdge().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge to collapse.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasOpenBook
+static const char *hasOpenBook =
+R"doc(Determines whether it is possible to perform a book opening move about
+the given tetrahedron of this triangulation, without violating any
+facet locks.
+
+For more detail on book opening moves and when they can be performed,
+see openBook().
+
+Precondition:
+    The given tetrahedron is a tetrahedron of this triangulation.
+
+Parameter ``t``:
+    the candidate tetrahedron about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasShellBoundary
+static const char *hasShellBoundary =
+R"doc(Determines whether it is possible to perform a boundary shelling move
+on the given pentachoron, without violating any simplex and/or facet
+locks.
+
+For more detail on boundary shelling moves and when they can be
+performed, see shellBoundary().
+
+Precondition:
+    The given pentachoron is a pentachoron of this triangulation.
+
+Parameter ``p``:
+    the candidate pentachoron upon which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::hasSnapEdge
+static const char *hasSnapEdge =
+R"doc(Determines whether it is possible to snap together the endpoints of
+the given edge of this triangulation.
+
+For more detail on snapping moves on edges and when they can be
+performed, see snapEdge().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the candidate edge whose endpoints would be snapped together.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::idealToFinite
 static const char *idealToFinite =

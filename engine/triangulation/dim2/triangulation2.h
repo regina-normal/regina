@@ -494,6 +494,20 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         bool twoZeroMove(Vertex<2>* v, bool check = true, bool perform = true);
         /**
+         * Determines whether it is possible to perform a 2-0 move about the
+         * given vertex of this triangulation, without violating any
+         * simplex and/or facet locks.
+         *
+         * For more detail on 2-0 vertex moves and when they can be performed,
+         * see twoZeroMove().
+         *
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \param v the vertex about which to perform the candidate move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool has20(Vertex<2>* v) const;
+        /**
          * If possible, returns the triangulation obtained by performing a
          * 2-0 move about the given vertex of this triangulation.
          * If such a move is not allowed, or if such a move would violate any
@@ -626,11 +640,13 @@ inline bool Triangulation<2>::isBall() const {
     return (eulerChar() == 1 && isOrientable() && components_.size() == 1);
 }
 
+inline bool Triangulation<2>::has20(Vertex<2>* v) const {
+    return const_cast<Triangulation<2>*>(this)->twoZeroMove(v, true, false);
+}
+
 inline std::optional<Triangulation<2>> Triangulation<2>::with20(Vertex<2>* v)
         const {
-    // In general twoZeroMove() is non-const, but we are not asking it to
-    // perform the move, just to check whether it's legal.
-    if (! const_cast<Triangulation<2>*>(this)->twoZeroMove(v, true, false))
+    if (! has20(v))
         return {};
 
     std::optional<Triangulation<2>> ans(*this);
