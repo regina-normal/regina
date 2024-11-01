@@ -91,6 +91,13 @@ void addTangle(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::r2_2)
+        .def("hasR1", &Tangle::hasR1, rdoc::hasR1)
+        .def("hasR2",
+            overload_cast<StrandRef>(&Tangle::hasR2, pybind11::const_),
+            rdoc::hasR2)
+        .def("hasR2",
+            overload_cast<Crossing*>(&Tangle::hasR2, pybind11::const_),
+            rdoc::hasR2_2)
         .def("withR1", &Tangle::withR1, rdoc::withR1)
         .def("withR2",
             overload_cast<StrandRef>(&Tangle::withR2, pybind11::const_),

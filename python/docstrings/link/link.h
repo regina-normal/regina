@@ -1819,6 +1819,185 @@ future versions of Regina.
 Returns:
     the group of this link.)doc";
 
+// Docstring regina::python::doc::Link_::hasR1
+static const char *hasR1 =
+R"doc(Determines whether it is possible to perform a type I Reidemeister
+move at the given location to remove a crossing.
+
+For more detail on type I moves and when they can be performed, see
+r1(Crossing*, bool, bool).
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this link.
+
+Parameter ``crossing``:
+    identifies the candidate crossing to be removed. See r1(Crossing*,
+    bool, bool) for details on exactly how this will be interpreted.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Link_::hasR1_2
+static const char *hasR1_2 =
+R"doc(Determines whether it is possible to perform a type I Reidemeister
+move at the given location to add a new crossing.
+
+For more detail on type I moves and when they can be performed, see
+r1(StrandRef, int, int, bool, bool).
+
+Precondition:
+    The given strand reference is either a null reference, or else
+    refers to some strand of some crossing in this link.
+
+Parameter ``arc``:
+    identifies the arc of the link in which the new candidate twist
+    will be introduced. See r1(StrandRef, int, int, bool, bool) for
+    details on exactly how this will be interpreted.
+
+Parameter ``side``:
+    0 if the candidate twist should be introduced on the left of the
+    arc (when walking along the arc in the forward direction), or 1 if
+    the candidate twist should be introduced on the right of the arc.
+
+Parameter ``sign``:
+    the sign of the new crossing that would be introduced as part of
+    the candidate twist; this must be +1 or -1.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Link_::hasR2
+static const char *hasR2 =
+R"doc(Determines whether it is possible to perform a type II Reidemeister
+move at the given location to remove two crossings.
+
+For more detail on type II moves and when they can be performed, see
+r2(StrandRef, bool, bool).
+
+Precondition:
+    The given strand reference is either a null reference, or else
+    refers to some strand of some crossing in this link.
+
+Parameter ``arc``:
+    identifies one of the arcs of the bigon about which the candidate
+    move will be performed. See r2(StrandRef, bool, bool) for details
+    on exactly how this will be interpreted.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Link_::hasR2_2
+static const char *hasR2_2 =
+R"doc(Determines whether it is possible to perform a type II Reidemeister
+move at the given location to remove two crossings.
+
+For more detail on type II moves and when they can be performed, see
+r2(Crossing*, bool, bool).
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this link.
+
+Parameter ``crossing``:
+    identifies the crossing at the beginning of the "upper" arc that
+    features in this candidate move. See r2(Crossing*, bool, bool) for
+    details on exactly how this will be interpreted.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Link_::hasR2_3
+static const char *hasR2_3 =
+R"doc(Determines whether it is possible to perform a type II Reidemeister
+move at the given location to add two new crossings.
+
+For more detail on type II moves and when they can be performed, see
+r2(StrandRef, int, StrandRef, int, bool, bool).
+
+Precondition:
+    Each of the given strand references is either a null reference, or
+    else refers to some strand of some crossing in this link.
+
+.. warning::
+    The check for this move is expensive (linear time), since it
+    includes testing whether both sides-of-arcs belong to the same
+    2-cell of the knot diagram.
+
+Parameter ``upperArc``:
+    identifies which arc of the link would be passed over another in
+    this candidate move. See r2(StrandRef, int, StrandRef, int, bool,
+    bool) for details on exactly how this will be interpreted.
+
+Parameter ``upperSide``:
+    0 if the new overlap would take place on the left of *upperArc*
+    (when walking along *upperArc* in the forward direction), or 1 if
+    the new overlap would take place on the right of *upperArc*.
+
+Parameter ``lowerArc``:
+    identifies which arc of the link would be passed beneath another
+    in this candidate move. See r2(StrandRef, int, StrandRef, int,
+    bool, bool) for details on exactly how this will be interpreted.
+
+Parameter ``lowerSide``:
+    0 if the new overlap would take place on the left of *lowerArc*
+    (when walking along *lowerArc* in the forward direction), or 1 if
+    the new overlap would take place on the right of *lowerArc*.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Link_::hasR3
+static const char *hasR3 =
+R"doc(Determines whether it is possible to perform a type III Reidemeister
+move at the given location.
+
+For more detail on type III moves and when they can be performed, see
+r3(StrandRef, int, bool, bool).
+
+Precondition:
+    The given strand reference is either a null reference, or else
+    refers to some strand of some crossing in this link.
+
+Parameter ``arc``:
+    identifies one of the arcs of the triangle about which the
+    candidate move would be performed. See r3(StrandRef, int, bool,
+    bool) for details on exactly how this will be interpreted.
+
+Parameter ``side``:
+    0 if the third crossing of the triangle is located to the left of
+    the arc (when walking along the arc in the forward direction), or
+    1 if the third crossing is located on the right of the arc.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Link_::hasR3_2
+static const char *hasR3_2 =
+R"doc(Determines whether it is possible to perform a type III Reidemeister
+move at the given location.
+
+For more detail on type III moves and when they can be performed, see
+r3(Crossing*, int, bool, bool).
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this link.
+
+Parameter ``crossing``:
+    identifies the crossing at the beginning of the "uppermost" arc
+    that features in this candidate move. See r3(Crossing*, int, bool,
+    bool) for details on exactly what this means.
+
+Parameter ``side``:
+    0 if the third crossing of the triangle is located to the left of
+    the uppermost arc (when walking along the arc in the forward
+    direction), or 1 if the third crossing is located on the right of
+    the uppermost arc.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
 // Docstring regina::python::doc::Link_::hasReducingPass
 static const char *hasReducingPass =
 R"doc(Tests whether this link has a pass move that will reduce the number of

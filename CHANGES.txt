@@ -248,6 +248,7 @@ Version 7.4  [ (to be announced) ]
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
             - New routine componentsByStrand().
+            - New routines hasR1(), hasR2() and hasR3().
             - New routines withR1(), withR2() and withR3().
             - Extended knotSig(), rewrite() and simplifyExhaustive() to work
               with all link diagrams with fewer than 64 link components.
@@ -486,6 +487,7 @@ Version 7.4  [ (to be announced) ]
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
         Class Tangle:
+            - New routines hasR1() and hasR2().
             - New routines withR1() and withR2().
             - Added a variant of translate() that takes crossings instead of
               strand references.

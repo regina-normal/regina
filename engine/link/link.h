@@ -1973,6 +1973,156 @@ class Link :
          */
         bool r3(Crossing* crossing, int side, bool check = true,
             bool perform = true);
+
+        /**
+         * Determines whether it is possible to perform a type I Reidemeister
+         * move at the given location to remove a crossing.
+         *
+         * For more detail on type I moves and when they can be performed,
+         * see r1(Crossing*, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the candidate crossing to be removed.
+         * See r1(Crossing*, bool, bool) for details on exactly how this will
+         * be interpreted.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR1(Crossing* crossing) const;
+        /**
+         * Determines whether it is possible to perform a type I Reidemeister
+         * move at the given location to add a new crossing.
+         *
+         * For more detail on type I moves and when they can be performed,
+         * see r1(StrandRef, int, int, bool, bool).
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies the arc of the link in which the new
+         * candidate twist will be introduced.  See
+         * r1(StrandRef, int, int, bool, bool) for details on exactly how
+         * this will be interpreted.
+         * \param side 0 if the candidate twist should be introduced on the
+         * left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the candidate twist should be introduced on the
+         * right of the arc.
+         * \param sign the sign of the new crossing that would be
+         * introduced as part of the candidate twist; this must be +1 or -1.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR1(StrandRef arc, int side, int sign) const;
+        /**
+         * Determines whether it is possible to perform a type II Reidemeister
+         * move at the given location to remove two crossings.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(StrandRef, bool, bool).
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies one of the arcs of the bigon about which the
+         * candidate move will be performed.  See r2(StrandRef, bool, bool)
+         * for details on exactly how this will be interpreted.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR2(StrandRef arc) const;
+        /**
+         * Determines whether it is possible to perform a type II Reidemeister
+         * move at the given location to remove two crossings.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(Crossing*, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing at the beginning of
+         * the "upper" arc that features in this candidate move.
+         * See r2(Crossing*, bool, bool) for details on exactly how this will
+         * be interpreted.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR2(Crossing* crossing) const;
+        /**
+         * Determines whether it is possible to perform a type II Reidemeister
+         * move at the given location to add two new crossings.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(StrandRef, int, StrandRef, int, bool, bool).
+         *
+         * \pre Each of the given strand references is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \warning The check for this move is expensive (linear time),
+         * since it includes testing whether both sides-of-arcs belong
+         * to the same 2-cell of the knot diagram.
+         *
+         * \param upperArc identifies which arc of the link would be passed
+         * over another in this candidate move.  See
+         * r2(StrandRef, int, StrandRef, int, bool, bool) for details on
+         * exactly how this will be interpreted.
+         * \param upperSide 0 if the new overlap would take place on the left
+         * of \a upperArc (when walking along \a upperArc in the forward
+         * direction), or 1 if the new overlap would take place on the right
+         * of \a upperArc.
+         * \param lowerArc identifies which arc of the link would be passed
+         * beneath another in this candidate move.  See
+         * r2(StrandRef, int, StrandRef, int, bool, bool) for details on
+         * exactly how this will be interpreted.
+         * \param lowerSide 0 if the new overlap would take place on the left
+         * of \a lowerArc (when walking along \a lowerArc in the forward
+         * direction), or 1 if the new overlap would take place on the right
+         * of \a lowerArc.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR2(StrandRef upperArc, int upperSide,
+            StrandRef lowerArc, int lowerSide) const;
+        /**
+         * Determines whether it is possible to perform a type III Reidemeister
+         * move at the given location.
+         *
+         * For more detail on type III moves and when they can be performed,
+         * see r3(StrandRef, int, bool, bool).
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies one of the arcs of the triangle about which
+         * the candidate move would be performed.  See
+         * r3(StrandRef, int, bool, bool) for details on exactly how this will
+         * be interpreted.
+         * \param side 0 if the third crossing of the triangle is located to
+         * the left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the third crossing is located on the right of
+         * the arc.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR3(StrandRef arc, int side) const;
+        /**
+         * Determines whether it is possible to perform a type III Reidemeister
+         * move at the given location.
+         *
+         * For more detail on type III moves and when they can be performed,
+         * see r3(Crossing*, int, bool, bool).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing at the beginning of
+         * the "uppermost" arc that features in this candidate move.  See
+         * r3(Crossing*, int, bool, bool) for details on exactly what this
+         * means.
+         * \param side 0 if the third crossing of the triangle is located to
+         * the left of the uppermost arc (when walking along the arc in the
+         * forward direction), or 1 if the third crossing is located on the
+         * right of the uppermost arc.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR3(Crossing* crossing, int side) const;
+
         /**
          * If possible, returns the diagram obtained by performing a type I
          * Reidemeister move at the given location to remove a crossing.
@@ -5527,10 +5677,38 @@ inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
     return r3(s, side, check, perform);
 }
 
+inline bool Link::hasR1(Crossing* crossing) const {
+    return const_cast<Link*>(this)->r1(crossing, true, false);
+}
+
+inline bool Link::hasR1(StrandRef arc, int side, int sign) const {
+    return const_cast<Link*>(this)->r1(arc, side, sign, true, false);
+}
+
+inline bool Link::hasR2(StrandRef arc) const {
+    return const_cast<Link*>(this)->r2(arc, true, false);
+}
+
+inline bool Link::hasR2(Crossing* crossing) const {
+    return const_cast<Link*>(this)->r2(crossing, true, false);
+}
+
+inline bool Link::hasR2(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide) const {
+    return const_cast<Link*>(this)->r2(upperArc, upperSide, lowerArc, lowerSide,
+        true, false);
+}
+
+inline bool Link::hasR3(StrandRef arc, int side) const {
+    return const_cast<Link*>(this)->r3(arc, side, true, false);
+}
+
+inline bool Link::hasR3(Crossing* crossing, int side) const {
+    return const_cast<Link*>(this)->r3(crossing, side, true, false);
+}
+
 inline std::optional<Link> Link::withR1(Crossing* crossing) const {
-    // In general Reidemeister moves are non-const, but we are not asking
-    // to perform the move, just to check whether it's legal.
-    if (! const_cast<Link*>(this)->r1(crossing, true, false))
+    if (! hasR1(crossing))
         return {};
 
     std::optional<Link> ans(*this);
@@ -5540,9 +5718,7 @@ inline std::optional<Link> Link::withR1(Crossing* crossing) const {
 
 inline std::optional<Link> Link::withR1(StrandRef arc, int side, int sign)
         const {
-    // In general Reidemeister moves are non-const, but we are not asking
-    // to perform the move, just to check whether it's legal.
-    if (! const_cast<Link*>(this)->r1(arc, side, sign, true, false))
+    if (! hasR1(arc, side, sign))
         return {};
 
     std::optional<Link> ans(*this);
@@ -5551,9 +5727,7 @@ inline std::optional<Link> Link::withR1(StrandRef arc, int side, int sign)
 }
 
 inline std::optional<Link> Link::withR2(StrandRef arc) const {
-    // In general Reidemeister moves are non-const, but we are not asking
-    // to perform the move, just to check whether it's legal.
-    if (! const_cast<Link*>(this)->r2(arc, true, false))
+    if (! hasR2(arc))
         return {};
 
     std::optional<Link> ans(*this);
@@ -5562,9 +5736,7 @@ inline std::optional<Link> Link::withR2(StrandRef arc) const {
 }
 
 inline std::optional<Link> Link::withR2(Crossing* crossing) const {
-    // In general Reidemeister moves are non-const, but we are not asking
-    // to perform the move, just to check whether it's legal.
-    if (! const_cast<Link*>(this)->r2(crossing, true, false))
+    if (! hasR2(crossing))
         return {};
 
     std::optional<Link> ans(*this);
@@ -5574,10 +5746,7 @@ inline std::optional<Link> Link::withR2(Crossing* crossing) const {
 
 inline std::optional<Link> Link::withR2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) const {
-    // In general Reidemeister moves are non-const, but we are not asking
-    // to perform the move, just to check whether it's legal.
-    if (! const_cast<Link*>(this)->r2(upperArc, upperSide, lowerArc, lowerSide,
-            true, false))
+    if (! hasR2(upperArc, upperSide, lowerArc, lowerSide))
         return {};
 
     std::optional<Link> ans(*this);
@@ -5587,9 +5756,7 @@ inline std::optional<Link> Link::withR2(StrandRef upperArc, int upperSide,
 }
 
 inline std::optional<Link> Link::withR3(StrandRef arc, int side) const {
-    // In general Reidemeister moves are non-const, but we are not asking
-    // to perform the move, just to check whether it's legal.
-    if (! const_cast<Link*>(this)->r3(arc, side, true, false))
+    if (! hasR3(arc, side))
         return {};
 
     std::optional<Link> ans(*this);
@@ -5598,9 +5765,7 @@ inline std::optional<Link> Link::withR3(StrandRef arc, int side) const {
 }
 
 inline std::optional<Link> Link::withR3(Crossing* crossing, int side) const {
-    // In general Reidemeister moves are non-const, but we are not asking
-    // to perform the move, just to check whether it's legal.
-    if (! const_cast<Link*>(this)->r3(crossing, side, true, false))
+    if (! hasR3(crossing, side))
         return {};
 
     std::optional<Link> ans(*this);

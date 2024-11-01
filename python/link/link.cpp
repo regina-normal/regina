@@ -368,6 +368,28 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::r3_2)
+        .def("hasR1",
+            overload_cast<Crossing*>(&Link::hasR1, pybind11::const_),
+            rdoc::hasR1)
+        .def("hasR1",
+            overload_cast<StrandRef, int, int>(&Link::hasR1, pybind11::const_),
+            rdoc::hasR1_2)
+        .def("hasR2",
+            overload_cast<StrandRef>(&Link::hasR2, pybind11::const_),
+            rdoc::hasR2)
+        .def("hasR2",
+            overload_cast<Crossing*>(&Link::hasR2, pybind11::const_),
+            rdoc::hasR2_2)
+        .def("hasR2",
+            overload_cast<StrandRef, int, StrandRef, int>(&Link::hasR2,
+                pybind11::const_),
+            rdoc::hasR2_3)
+        .def("hasR3",
+            overload_cast<StrandRef, int>(&Link::hasR3, pybind11::const_),
+            rdoc::hasR3)
+        .def("hasR3",
+            overload_cast<Crossing*, int>(&Link::hasR3, pybind11::const_),
+            rdoc::hasR3_2)
         .def("withR1",
             overload_cast<Crossing*>(&Link::withR1, pybind11::const_),
             rdoc::withR1)
