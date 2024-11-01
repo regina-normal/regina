@@ -294,15 +294,18 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner)
-        .def("tryPachner", &Triangulation<2>::tryPachner<0>, rbase::tryPachner)
-        .def("tryPachner", &Triangulation<2>::tryPachner<1>, rbase::tryPachner)
-        .def("tryPachner", &Triangulation<2>::tryPachner<2>, rbase::tryPachner)
+        .def("withPachner", &Triangulation<2>::withPachner<0>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<2>::withPachner<1>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<2>::withPachner<2>,
+            rbase::withPachner)
         .def("twoZeroMove", &Triangulation<2>::twoZeroMove,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::twoZeroMove)
-        .def("tryTwoZero", &Triangulation<2>::tryTwoZero, rdoc::tryTwoZero)
+        .def("with20", &Triangulation<2>::with20, rdoc::with20)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<2>::doubleCover, rbase::doubleCover)

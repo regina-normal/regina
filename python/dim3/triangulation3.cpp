@@ -495,17 +495,21 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner)
-        .def("tryPachner", &Triangulation<3>::tryPachner<0>, rbase::tryPachner)
-        .def("tryPachner", &Triangulation<3>::tryPachner<1>, rbase::tryPachner)
-        .def("tryPachner", &Triangulation<3>::tryPachner<2>, rbase::tryPachner)
-        .def("tryPachner", &Triangulation<3>::tryPachner<3>, rbase::tryPachner)
+        .def("withPachner", &Triangulation<3>::withPachner<0>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<3>::withPachner<1>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<3>::withPachner<2>,
+            rbase::withPachner)
+        .def("withPachner", &Triangulation<3>::withPachner<3>,
+            rbase::withPachner)
         .def("fourFourMove", &Triangulation<3>::fourFourMove,
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::fourFourMove)
-        .def("tryFourFour", &Triangulation<3>::tryFourFour, rdoc::tryFourFour)
+        .def("with44", &Triangulation<3>::with44, rdoc::with44)
         .def("twoZeroMove",
             overload_cast<regina::Edge<3>*, bool, bool>(
             &Triangulation<3>::twoZeroMove),
@@ -520,19 +524,19 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::twoZeroMove_2)
-        .def("tryTwoZero", overload_cast<regina::Edge<3>*>(
-                &Triangulation<3>::tryTwoZero, pybind11::const_),
-            rdoc::tryTwoZero)
-        .def("tryTwoZero", overload_cast<regina::Vertex<3>*>(
-                &Triangulation<3>::tryTwoZero, pybind11::const_),
-            rdoc::tryTwoZero_2)
+        .def("with20", overload_cast<regina::Edge<3>*>(
+                &Triangulation<3>::with20, pybind11::const_),
+            rdoc::with20)
+        .def("with20", overload_cast<regina::Vertex<3>*>(
+                &Triangulation<3>::with20, pybind11::const_),
+            rdoc::with20_2)
         .def("twoOneMove", &Triangulation<3>::twoOneMove,
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::twoOneMove)
-        .def("tryTwoOne", &Triangulation<3>::tryTwoOne, rdoc::tryTwoOne)
+        .def("with21", &Triangulation<3>::with21, rdoc::with21)
         .def("zeroTwoMove",
             overload_cast<regina::EdgeEmbedding<3>, int,
                 regina::EdgeEmbedding<3>, int, bool, bool>(
@@ -564,46 +568,47 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::zeroTwoMove_3)
-        .def("tryZeroTwo",
+        .def("with02",
             overload_cast<regina::EdgeEmbedding<3>, int,
                 regina::EdgeEmbedding<3>, int>(
-                &Triangulation<3>::tryZeroTwo, pybind11::const_),
-            rdoc::tryZeroTwo)
-        .def("tryZeroTwo",
+                &Triangulation<3>::with02, pybind11::const_),
+            rdoc::with02)
+        .def("with02",
             overload_cast<regina::Edge<3>*, size_t, size_t>(
-                &Triangulation<3>::tryZeroTwo, pybind11::const_),
-            rdoc::tryZeroTwo_2)
-        .def("tryZeroTwo",
+                &Triangulation<3>::with02, pybind11::const_),
+            rdoc::with02_2)
+        .def("with02",
             overload_cast<regina::Triangle<3>*, int, regina::Triangle<3>*, int>(
-                &Triangulation<3>::tryZeroTwo, pybind11::const_),
-            rdoc::tryZeroTwo_3)
+                &Triangulation<3>::with02, pybind11::const_),
+            rdoc::with02_3)
         .def("openBook", &Triangulation<3>::openBook,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::openBook)
-        .def("tryOpenBook", &Triangulation<3>::tryOpenBook, rdoc::tryOpenBook)
+        .def("withOpenBook", &Triangulation<3>::withOpenBook,
+            rdoc::withOpenBook)
         .def("closeBook", &Triangulation<3>::closeBook,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::closeBook)
-        .def("tryCloseBook", &Triangulation<3>::tryCloseBook,
-            rdoc::tryCloseBook)
+        .def("withCloseBook", &Triangulation<3>::withCloseBook,
+            rdoc::withCloseBook)
         .def("shellBoundary", &Triangulation<3>::shellBoundary,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::shellBoundary)
-        .def("tryShellBoundary", &Triangulation<3>::tryShellBoundary,
-            rdoc::tryShellBoundary)
+        .def("withShellBoundary", &Triangulation<3>::withShellBoundary,
+            rdoc::withShellBoundary)
         .def("collapseEdge", &Triangulation<3>::collapseEdge,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::collapseEdge)
-        .def("tryCollapseEdge", &Triangulation<3>::tryCollapseEdge,
-            rdoc::tryCollapseEdge)
+        .def("withCollapseEdge", &Triangulation<3>::withCollapseEdge,
+            rdoc::withCollapseEdge)
         .def("reorderBFS", &Triangulation<3>::reorderBFS,
             pybind11::arg("reverse") = false, rbase::reorderBFS)
         .def("reorderTetrahedraBFS",

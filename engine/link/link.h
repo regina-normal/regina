@@ -1992,7 +1992,7 @@ class Link :
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Link> tryR1(Crossing* crossing) const;
+        std::optional<Link> withR1(Crossing* crossing) const;
         /**
          * If possible, returns the diagram obtained by performing a type I
          * Reidemeister move at the given location to add a new crossing.
@@ -2017,7 +2017,7 @@ class Link :
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Link> tryR1(StrandRef arc, int side, int sign) const;
+        std::optional<Link> withR1(StrandRef arc, int side, int sign) const;
         /**
          * If possible, returns the diagram obtained by performing a type II
          * Reidemeister move at the given location to remove two crossings.
@@ -2037,7 +2037,7 @@ class Link :
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Link> tryR2(StrandRef arc) const;
+        std::optional<Link> withR2(StrandRef arc) const;
         /**
          * If possible, returns the diagram obtained by performing a type II
          * Reidemeister move at the given location to remove two crossings.
@@ -2058,7 +2058,7 @@ class Link :
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Link> tryR2(Crossing* crossing) const;
+        std::optional<Link> withR2(Crossing* crossing) const;
         /**
          * If possible, returns the diagram obtained by performing a type II
          * Reidemeister move at the given location to add two new crossings.
@@ -2093,7 +2093,7 @@ class Link :
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Link> tryR2(StrandRef upperArc, int upperSide,
+        std::optional<Link> withR2(StrandRef upperArc, int upperSide,
             StrandRef lowerArc, int lowerSide) const;
         /**
          * If possible, returns the diagram obtained by performing a type III
@@ -2118,7 +2118,7 @@ class Link :
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Link> tryR3(StrandRef arc, int side) const;
+        std::optional<Link> withR3(StrandRef arc, int side) const;
         /**
          * If possible, returns the diagram obtained by performing a type III
          * Reidemeister move at the given location.
@@ -2143,7 +2143,7 @@ class Link :
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Link> tryR3(Crossing* crossing, int side) const;
+        std::optional<Link> withR3(Crossing* crossing, int side) const;
 
         /**
          * Tests whether this link has a pass move that will reduce the
@@ -5527,7 +5527,7 @@ inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
     return r3(s, side, check, perform);
 }
 
-inline std::optional<Link> Link::tryR1(Crossing* crossing) const {
+inline std::optional<Link> Link::withR1(Crossing* crossing) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Link*>(this)->r1(crossing, true, false))
@@ -5538,7 +5538,8 @@ inline std::optional<Link> Link::tryR1(Crossing* crossing) const {
     return ans;
 }
 
-inline std::optional<Link> Link::tryR1(StrandRef arc, int side, int sign) const {
+inline std::optional<Link> Link::withR1(StrandRef arc, int side, int sign)
+        const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Link*>(this)->r1(arc, side, sign, true, false))
@@ -5549,7 +5550,7 @@ inline std::optional<Link> Link::tryR1(StrandRef arc, int side, int sign) const 
     return ans;
 }
 
-inline std::optional<Link> Link::tryR2(StrandRef arc) const {
+inline std::optional<Link> Link::withR2(StrandRef arc) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Link*>(this)->r2(arc, true, false))
@@ -5560,7 +5561,7 @@ inline std::optional<Link> Link::tryR2(StrandRef arc) const {
     return ans;
 }
 
-inline std::optional<Link> Link::tryR2(Crossing* crossing) const {
+inline std::optional<Link> Link::withR2(Crossing* crossing) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Link*>(this)->r2(crossing, true, false))
@@ -5571,7 +5572,7 @@ inline std::optional<Link> Link::tryR2(Crossing* crossing) const {
     return ans;
 }
 
-inline std::optional<Link> Link::tryR2(StrandRef upperArc, int upperSide,
+inline std::optional<Link> Link::withR2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
@@ -5585,7 +5586,7 @@ inline std::optional<Link> Link::tryR2(StrandRef upperArc, int upperSide,
     return ans;
 }
 
-inline std::optional<Link> Link::tryR3(StrandRef arc, int side) const {
+inline std::optional<Link> Link::withR3(StrandRef arc, int side) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Link*>(this)->r3(arc, side, true, false))
@@ -5596,7 +5597,7 @@ inline std::optional<Link> Link::tryR3(StrandRef arc, int side) const {
     return ans;
 }
 
-inline std::optional<Link> Link::tryR3(Crossing* crossing, int side) const {
+inline std::optional<Link> Link::withR3(Crossing* crossing, int side) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Link*>(this)->r3(crossing, side, true, false))

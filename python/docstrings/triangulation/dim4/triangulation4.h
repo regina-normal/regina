@@ -1071,181 +1071,6 @@ triangulation.
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Triangulation_::tryCollapseEdge
-static const char *tryCollapseEdge =
-R"doc(If possible, returns the triangulation obtained by collapsing the
-given edge of this triangulation. If such a move is not allowed, or if
-such a move would violate any simplex and/or facet locks, then this
-routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on edge collapse moves and when they can be performed,
-see collapseEdge().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the edge to collapse.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::tryFourFour
-static const char *tryFourFour =
-R"doc(If possible, returns the triangulation obtained by performing a 4-4
-move about the given edge of this triangulation. If such a move is not
-allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on 4-4 moves and when they can be performed, see
-fourFourMove().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the edge about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::tryOpenBook
-static const char *tryOpenBook =
-R"doc(If possible, returns the triangulation obtained by performing a book
-opening move about the given tetrahedron of this triangulation. If
-such a move is not allowed, or if such a move would violate any facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on book opening moves and when they can be performed,
-see openBook().
-
-Precondition:
-    The given tetrahedron is a tetrahedron of this triangulation.
-
-Parameter ``t``:
-    the tetrahedron about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::tryShellBoundary
-static const char *tryShellBoundary =
-R"doc(If possible, returns the triangulation obtained by performing a
-boundary shelling move on the given pentachoron. If such a move is not
-allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on boundary shelling moves and when they can be
-performed, see shellBoundary().
-
-Precondition:
-    The given pentachoron is a pentachoron of this triangulation.
-
-Parameter ``p``:
-    the pentachoron upon which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::trySnapEdge
-static const char *trySnapEdge =
-R"doc(If possible, returns the triangulation obtained by snapping together
-the endpoints of the given edge of this triangulation. If such a move
-is not allowed, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on snapping moves on edges and when they can be
-performed, see snapEdge().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the edge whose endpoints are to be snapped together.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::tryTwoZero
-static const char *tryTwoZero =
-R"doc(If possible, returns the triangulation obtained by performing a 2-0
-move about the given triangle of this triangulation. If such a move is
-not allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on 2-0 triangle moves and when they can be performed,
-see twoZeroMove(Triangle<4>*).
-
-Precondition:
-    The given triangle is a triangle of this triangulation.
-
-Parameter ``t``:
-    the triangle about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::tryTwoZero_2
-static const char *tryTwoZero_2 =
-R"doc(If possible, returns the triangulation obtained by performing a 2-0
-move about the given edge of this triangulation. If such a move is not
-allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on 2-0 edge moves and when they can be performed, see
-twoZeroMove(Edge<4>*).
-
-Precondition:
-    The given edge is a edge of this triangulation.
-
-Parameter ``e``:
-    the edge about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::tryTwoZero_3
-static const char *tryTwoZero_3 =
-R"doc(If possible, returns the triangulation obtained by performing a 2-0
-move about the given vertex of this triangulation. If such a move is
-not allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on 2-0 vertex moves and when they can be performed,
-see twoZeroMove(Vertex<4>*).
-
-Precondition:
-    The given vertex is a vertex of this triangulation.
-
-Parameter ``v``:
-    the vertex about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
 // Docstring regina::python::doc::Triangulation_::twoZeroMove
 static const char *twoZeroMove =
 R"doc(Checks the eligibility of and/or performs a 2-0 move about the given
@@ -1428,6 +1253,181 @@ Returns:
     if the requested move may be performed without changing the
     topology of the manifold or violating any locks. If *check* is
     ``False``, the function simply returns ``True``.)doc";
+
+// Docstring regina::python::doc::Triangulation_::with20
+static const char *with20 =
+R"doc(If possible, returns the triangulation obtained by performing a 2-0
+move about the given triangle of this triangulation. If such a move is
+not allowed, or if such a move would violate any simplex and/or facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on 2-0 triangle moves and when they can be performed,
+see twoZeroMove(Triangle<4>*).
+
+Precondition:
+    The given triangle is a triangle of this triangulation.
+
+Parameter ``t``:
+    the triangle about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::with20_2
+static const char *with20_2 =
+R"doc(If possible, returns the triangulation obtained by performing a 2-0
+move about the given edge of this triangulation. If such a move is not
+allowed, or if such a move would violate any simplex and/or facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on 2-0 edge moves and when they can be performed, see
+twoZeroMove(Edge<4>*).
+
+Precondition:
+    The given edge is a edge of this triangulation.
+
+Parameter ``e``:
+    the edge about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::with20_3
+static const char *with20_3 =
+R"doc(If possible, returns the triangulation obtained by performing a 2-0
+move about the given vertex of this triangulation. If such a move is
+not allowed, or if such a move would violate any simplex and/or facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on 2-0 vertex moves and when they can be performed,
+see twoZeroMove(Vertex<4>*).
+
+Precondition:
+    The given vertex is a vertex of this triangulation.
+
+Parameter ``v``:
+    the vertex about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::with44
+static const char *with44 =
+R"doc(If possible, returns the triangulation obtained by performing a 4-4
+move about the given edge of this triangulation. If such a move is not
+allowed, or if such a move would violate any simplex and/or facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on 4-4 moves and when they can be performed, see
+fourFourMove().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the edge about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::withCollapseEdge
+static const char *withCollapseEdge =
+R"doc(If possible, returns the triangulation obtained by collapsing the
+given edge of this triangulation. If such a move is not allowed, or if
+such a move would violate any simplex and/or facet locks, then this
+routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on edge collapse moves and when they can be performed,
+see collapseEdge().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the edge to collapse.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::withOpenBook
+static const char *withOpenBook =
+R"doc(If possible, returns the triangulation obtained by performing a book
+opening move about the given tetrahedron of this triangulation. If
+such a move is not allowed, or if such a move would violate any facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on book opening moves and when they can be performed,
+see openBook().
+
+Precondition:
+    The given tetrahedron is a tetrahedron of this triangulation.
+
+Parameter ``t``:
+    the tetrahedron about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::withShellBoundary
+static const char *withShellBoundary =
+R"doc(If possible, returns the triangulation obtained by performing a
+boundary shelling move on the given pentachoron. If such a move is not
+allowed, or if such a move would violate any simplex and/or facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on boundary shelling moves and when they can be
+performed, see shellBoundary().
+
+Precondition:
+    The given pentachoron is a pentachoron of this triangulation.
+
+Parameter ``p``:
+    the pentachoron upon which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::withSnapEdge
+static const char *withSnapEdge =
+R"doc(If possible, returns the triangulation obtained by snapping together
+the endpoints of the given edge of this triangulation. If such a move
+is not allowed, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on snapping moves on edges and when they can be
+performed, see snapEdge().
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the edge whose endpoints are to be snapped together.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
 
 }
 

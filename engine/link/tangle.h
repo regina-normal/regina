@@ -538,7 +538,7 @@ class Tangle : public Output<Tangle> {
          * \return The new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Tangle> tryR1(Crossing* crossing) const;
+        std::optional<Tangle> withR1(Crossing* crossing) const;
         /**
          * If possible, returns the diagram obtained by performing a type II
          * Reidemeister move at the given location to remove two crossings.
@@ -561,7 +561,7 @@ class Tangle : public Output<Tangle> {
          * \return The new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Tangle> tryR2(StrandRef arc) const;
+        std::optional<Tangle> withR2(StrandRef arc) const;
         /**
          * If possible, returns the diagram obtained by performing a type II
          * Reidemeister move at the given location to remove two crossings.
@@ -586,7 +586,7 @@ class Tangle : public Output<Tangle> {
          * \return The new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Tangle> tryR2(Crossing* crossing) const;
+        std::optional<Tangle> withR2(Crossing* crossing) const;
 
         /**
          * Uses type I and II Reidemeister moves to reduce the tangle
@@ -1131,7 +1131,7 @@ inline bool Tangle::r2(Crossing* crossing, bool check, bool perform) {
     return r2(StrandRef(crossing, 1), check, perform);
 }
 
-inline std::optional<Tangle> Tangle::tryR1(Crossing* crossing) const {
+inline std::optional<Tangle> Tangle::withR1(Crossing* crossing) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Tangle*>(this)->r1(crossing, true, false))
@@ -1142,7 +1142,7 @@ inline std::optional<Tangle> Tangle::tryR1(Crossing* crossing) const {
     return ans;
 }
 
-inline std::optional<Tangle> Tangle::tryR2(StrandRef arc) const {
+inline std::optional<Tangle> Tangle::withR2(StrandRef arc) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Tangle*>(this)->r2(arc, true, false))
@@ -1153,7 +1153,7 @@ inline std::optional<Tangle> Tangle::tryR2(StrandRef arc) const {
     return ans;
 }
 
-inline std::optional<Tangle> Tangle::tryR2(Crossing* crossing) const {
+inline std::optional<Tangle> Tangle::withR2(Crossing* crossing) const {
     // In general Reidemeister moves are non-const, but we are not asking
     // to perform the move, just to check whether it's legal.
     if (! const_cast<Tangle*>(this)->r2(crossing, true, false))

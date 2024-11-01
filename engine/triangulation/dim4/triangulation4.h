@@ -1049,7 +1049,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> tryTwoZero(Triangle<4>* t) const;
+        std::optional<Triangulation<4>> with20(Triangle<4>* t) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * 2-0 move about the given edge of this triangulation.
@@ -1067,7 +1067,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> tryTwoZero(Edge<4>* e) const;
+        std::optional<Triangulation<4>> with20(Edge<4>* e) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * 2-0 move about the given vertex of this triangulation.
@@ -1085,7 +1085,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> tryTwoZero(Vertex<4>* v) const;
+        std::optional<Triangulation<4>> with20(Vertex<4>* v) const;
         /**
          * Checks the eligibility of and/or performs a 4-4 move about the
          * given edge.
@@ -1158,7 +1158,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> tryFourFour(Edge<4>* e) const;
+        std::optional<Triangulation<4>> with44(Edge<4>* e) const;
         /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
@@ -1240,7 +1240,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> tryOpenBook(Tetrahedron<4>* t) const;
+        std::optional<Triangulation<4>> withOpenBook(Tetrahedron<4>* t) const;
         /**
          * Checks the eligibility of and/or performs a boundary shelling
          * move on the given pentachoron.
@@ -1321,7 +1321,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> tryShellBoundary(Pentachoron<4>* p)
+        std::optional<Triangulation<4>> withShellBoundary(Pentachoron<4>* p)
             const;
         /**
          * Checks the eligibility of and/or performs a collapse of
@@ -1399,7 +1399,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> tryCollapseEdge(Edge<4>* e) const;
+        std::optional<Triangulation<4>> withCollapseEdge(Edge<4>* e) const;
 
         /**
          * Snaps together the endpoints of an edge connecting an internal
@@ -1477,7 +1477,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> trySnapEdge(Edge<4>* e) const;
+        std::optional<Triangulation<4>> withSnapEdge(Edge<4>* e) const;
 
         /*@}*/
         /**
@@ -1765,8 +1765,8 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
         *this, height, threads, tracker);
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::tryTwoZero(
-        Triangle<4>* t) const {
+inline std::optional<Triangulation<4>> Triangulation<4>::with20(Triangle<4>* t)
+        const {
     // In general twoZeroMove() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
     if (! const_cast<Triangulation<4>*>(this)->twoZeroMove(t, true, false))
@@ -1777,8 +1777,8 @@ inline std::optional<Triangulation<4>> Triangulation<4>::tryTwoZero(
     return ans;
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::tryTwoZero(
-        Edge<4>* e) const {
+inline std::optional<Triangulation<4>> Triangulation<4>::with20(Edge<4>* e)
+        const {
     // In general twoZeroMove() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
     if (! const_cast<Triangulation<4>*>(this)->twoZeroMove(e, true, false))
@@ -1789,8 +1789,8 @@ inline std::optional<Triangulation<4>> Triangulation<4>::tryTwoZero(
     return ans;
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::tryTwoZero(
-        Vertex<4>* v) const {
+inline std::optional<Triangulation<4>> Triangulation<4>::with20(Vertex<4>* v)
+        const {
     // In general twoZeroMove() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
     if (! const_cast<Triangulation<4>*>(this)->twoZeroMove(v, true, false))
@@ -1801,8 +1801,8 @@ inline std::optional<Triangulation<4>> Triangulation<4>::tryTwoZero(
     return ans;
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::tryFourFour(
-        Edge<4>* e) const {
+inline std::optional<Triangulation<4>> Triangulation<4>::with44(Edge<4>* e)
+        const {
     // In general fourFourMove() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
     if (! const_cast<Triangulation<4>*>(this)->fourFourMove(e, true, false))
@@ -1813,7 +1813,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::tryFourFour(
     return ans;
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::tryOpenBook(
+inline std::optional<Triangulation<4>> Triangulation<4>::withOpenBook(
         Tetrahedron<4>* t) const {
     // In general openBook() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
@@ -1825,7 +1825,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::tryOpenBook(
     return ans;
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::tryShellBoundary(
+inline std::optional<Triangulation<4>> Triangulation<4>::withShellBoundary(
         Pentachoron<4>* p) const {
     // In general shellBoundary() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
@@ -1837,7 +1837,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::tryShellBoundary(
     return ans;
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::tryCollapseEdge(
+inline std::optional<Triangulation<4>> Triangulation<4>::withCollapseEdge(
         Edge<4>* e) const {
     // In general collapseEdge() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
@@ -1849,7 +1849,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::tryCollapseEdge(
     return ans;
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::trySnapEdge(
+inline std::optional<Triangulation<4>> Triangulation<4>::withSnapEdge(
         Edge<4>* e) const {
     // In general snapEdge() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.

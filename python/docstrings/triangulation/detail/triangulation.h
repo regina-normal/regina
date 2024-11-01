@@ -2528,33 +2528,6 @@ newly-triangulated components.
 Returns:
     a list of individual component triangulations.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::tryPachner
-constexpr const char *tryPachner =
-R"doc(If possible, returns the triangulation obtained by performing a (*dim*
-+ 1 - *k*)-(*k* + 1) Pachner move about the given *k*-face of this
-triangulation. If such a move is not allowed, or if such a move would
-violate any simplex and/or facet locks, then this routine returns no
-value.
-
-This triangulation will not be changed.
-
-For more detail on Pachner moves and when they can be performed, see
-pachner().
-
-Precondition:
-    The given *k*-face is a *k*-face of this triangulation.
-
-Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
-
-Parameter ``f``:
-    the *k*-face about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
 // Docstring regina::python::doc::detail::TriangulationBase_::unlockAll
 constexpr const char *unlockAll =
 R"doc(Unlocks all top-dimensional simplices and their facets.
@@ -2581,6 +2554,33 @@ R"doc(A dimension-specific alias for faces<0>().
 This alias is available for all dimensions *dim*.
 
 See faces() for further information.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::withPachner
+constexpr const char *withPachner =
+R"doc(If possible, returns the triangulation obtained by performing a (*dim*
++ 1 - *k*)-(*k* + 1) Pachner move about the given *k*-face of this
+triangulation. If such a move is not allowed, or if such a move would
+violate any simplex and/or facet locks, then this routine returns no
+value.
+
+This triangulation will not be changed.
+
+For more detail on Pachner moves and when they can be performed, see
+pachner().
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face. This must be between 0 and
+    (*dim*) inclusive.
+
+Parameter ``f``:
+    the *k*-face about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
 
 }
 

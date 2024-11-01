@@ -510,7 +510,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<2>> tryTwoZero(Vertex<2>* v) const;
+        std::optional<Triangulation<2>> with20(Vertex<2>* v) const;
 
         /*@}*/
 
@@ -626,8 +626,8 @@ inline bool Triangulation<2>::isBall() const {
     return (eulerChar() == 1 && isOrientable() && components_.size() == 1);
 }
 
-inline std::optional<Triangulation<2>> Triangulation<2>::tryTwoZero(
-        Vertex<2>* v) const {
+inline std::optional<Triangulation<2>> Triangulation<2>::with20(Vertex<2>* v)
+        const {
     // In general twoZeroMove() is non-const, but we are not asking it to
     // perform the move, just to check whether it's legal.
     if (! const_cast<Triangulation<2>*>(this)->twoZeroMove(v, true, false))

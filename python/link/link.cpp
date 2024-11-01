@@ -368,28 +368,28 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::r3_2)
-        .def("tryR1",
-            overload_cast<Crossing*>(&Link::tryR1, pybind11::const_),
-            rdoc::tryR1)
-        .def("tryR1",
-            overload_cast<StrandRef, int, int>(&Link::tryR1, pybind11::const_),
-            rdoc::tryR1_2)
-        .def("tryR2",
-            overload_cast<StrandRef>(&Link::tryR2, pybind11::const_),
-            rdoc::tryR2)
-        .def("tryR2",
-            overload_cast<Crossing*>(&Link::tryR2, pybind11::const_),
-            rdoc::tryR2_2)
-        .def("tryR2",
-            overload_cast<StrandRef, int, StrandRef, int>(&Link::tryR2,
+        .def("withR1",
+            overload_cast<Crossing*>(&Link::withR1, pybind11::const_),
+            rdoc::withR1)
+        .def("withR1",
+            overload_cast<StrandRef, int, int>(&Link::withR1, pybind11::const_),
+            rdoc::withR1_2)
+        .def("withR2",
+            overload_cast<StrandRef>(&Link::withR2, pybind11::const_),
+            rdoc::withR2)
+        .def("withR2",
+            overload_cast<Crossing*>(&Link::withR2, pybind11::const_),
+            rdoc::withR2_2)
+        .def("withR2",
+            overload_cast<StrandRef, int, StrandRef, int>(&Link::withR2,
                 pybind11::const_),
-            rdoc::tryR2_3)
-        .def("tryR3",
-            overload_cast<StrandRef, int>(&Link::tryR3, pybind11::const_),
-            rdoc::tryR3)
-        .def("tryR3",
-            overload_cast<Crossing*, int>(&Link::tryR3, pybind11::const_),
-            rdoc::tryR3_2)
+            rdoc::withR2_3)
+        .def("withR3",
+            overload_cast<StrandRef, int>(&Link::withR3, pybind11::const_),
+            rdoc::withR3)
+        .def("withR3",
+            overload_cast<Crossing*, int>(&Link::withR3, pybind11::const_),
+            rdoc::withR3_2)
         .def("hasReducingPass", &Link::hasReducingPass, rdoc::hasReducingPass)
         .def("selfFrame", &Link::selfFrame, rdoc::selfFrame)
         .def("simplify", &Link::simplify, rdoc::simplify)

@@ -91,13 +91,13 @@ void addTangle(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::r2_2)
-        .def("tryR1", &Tangle::tryR1, rdoc::tryR1)
-        .def("tryR2",
-            overload_cast<StrandRef>(&Tangle::tryR2, pybind11::const_),
-            rdoc::tryR2)
-        .def("tryR2",
-            overload_cast<Crossing*>(&Tangle::tryR2, pybind11::const_),
-            rdoc::tryR2_2)
+        .def("withR1", &Tangle::withR1, rdoc::withR1)
+        .def("withR2",
+            overload_cast<StrandRef>(&Tangle::withR2, pybind11::const_),
+            rdoc::withR2)
+        .def("withR2",
+            overload_cast<Crossing*>(&Tangle::withR2, pybind11::const_),
+            rdoc::withR2_2)
         .def("simplifyToLocalMinimum", &Tangle::simplifyToLocalMinimum,
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
         .def("brief", overload_cast<>(&Tangle::brief, pybind11::const_),

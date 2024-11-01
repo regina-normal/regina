@@ -248,7 +248,7 @@ Version 7.4  [ (to be announced) ]
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
             - New routine componentsByStrand().
-            - New routines tryR1(), tryR2() and tryR3().
+            - New routines withR1(), withR2() and withR3().
             - Extended knotSig(), rewrite() and simplifyExhaustive() to work
               with all link diagrams with fewer than 64 link components.
               It is now recommended to use sig() and fromSig() instead of
@@ -486,7 +486,7 @@ Version 7.4  [ (to be announced) ]
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
         Class Tangle:
-            - New routines tryR1(), tryR2() and tryR3().
+            - New routines withR1() and withR2().
             - Added a variant of translate() that takes crossings instead of
               strand references.
         Class TightEncodable<T>:
@@ -519,7 +519,7 @@ Version 7.4  [ (to be announced) ]
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
-            - New routine tryPachner().
+            - New routine withPachner().
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
@@ -543,11 +543,11 @@ Version 7.4  [ (to be announced) ]
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
         Class Triangulation<2>:
-            - New routines twoZeroMove() and tryTwoZero().
+            - New routines twoZeroMove() and with20().
         Class Triangulation<3>:
-            - New routines tryFourFour(), tryTwoZero(), tryTwoOne(),
-              tryZeroTwo(), tryOpenBook(), tryCloseBook(), tryShellBoundary(),
-              tryCollapseEdge().
+            - New routines with44(), with20(), with21(), with02(),
+              withOpenBook(), withCloseBook(), withShellBoundary(),
+              withCollapseEdge().
             - New routines isOneEfficient() and knowsOneEfficient().  For now,
               1-efficiency testing is only available for ideal triangulations.
             - Renamed intelligentSimplify() to simplify().  The old name is
@@ -585,8 +585,8 @@ Version 7.4  [ (to be announced) ]
               triangulation happens on the calling thread.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
-            - New routines tryTwoZero(), tryFourFour(), tryOpenBook(),
-              tryShellBoundary(), tryCollapseEdge(), trySnapEdge().
+            - New routines with20(), with44(), withOpenBook(),
+              withShellBoundary(), withCollapseEdge(), withSnapEdge().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer

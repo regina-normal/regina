@@ -2131,7 +2131,7 @@ class TriangulationBase :
          * move, or no value if the requested move cannot be performed.
          */
         template <int k>
-        std::optional<Triangulation<dim>> tryPachner(Face<dim, k>* f) const;
+        std::optional<Triangulation<dim>> withPachner(Face<dim, k>* f) const;
 
         /*@}*/
         /**
@@ -5020,9 +5020,9 @@ inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
 
 template <int dim>
 template <int k>
-std::optional<Triangulation<dim>> TriangulationBase<dim>::tryPachner(
+std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
         Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= dim, "tryPachner() requires a "
+    static_assert(0 <= k && k <= dim, "withPachner() requires a "
         "facial dimension between 0 and dim inclusive.");
 
     // In general pachner() is non-const, but we are not asking it to perform
