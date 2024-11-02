@@ -612,7 +612,7 @@ bool Link::selfFrame() {
     //
     // We arbitrarily decide to put all twists on the left.
     //
-    // We do not check r1 moves for validity, since these are always legal.
+    // Note: the r1 moves we use are always legal.
     //
     // We are safe to iterate through components_ while we add our twists,
     // since r1 does not change the components_ array and does not invalidate
@@ -624,13 +624,13 @@ bool Link::selfFrame() {
         if (w > 0) {
             changed = true;
             do {
-                r1(c, 0 /* left */, -1, false, true);
+                r1(c, 0 /* left */, -1);
                 --w;
             } while (w != 0);
         } else if (w < 0) {
             changed = true;
             do {
-                r1(c, 0 /* left */, 1, false, true);
+                r1(c, 0 /* left */, 1);
                 ++w;
             } while (w != 0);
         }

@@ -1084,13 +1084,13 @@ int main(int argc, char* argv[]) {
         if (w > inputFramingVect[i]) {
             std::cout << "Self-framing component " << i << "...\n";
             do {
-                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1);
                 --w;
             } while (w != inputFramingVect[i]);
         } else if (w < inputFramingVect[i]) {
             std::cout << "Self-framing component " << i << "...\n";
             do {
-                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1);
                 ++w;
             } while (w != inputFramingVect[i]);
         }
@@ -1098,8 +1098,8 @@ int main(int argc, char* argv[]) {
         // Check number of crossings in i-th component: if < |framing|+2, suggest adding pair of cancelling twists (in order to guarantee existence of a quadricolour).
         if ((dim_flag_int == 4) && (compCrossingNums[i] < abs(inputFramingVect[i])+2)) {
             std::cout << "Adding additional pair of cancelling curls to component " << i << " to guarantee existence of a quadricolour...\n";
-            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
-            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1);
         }
         
     }

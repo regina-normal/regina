@@ -248,8 +248,14 @@ Version 7.4  [ (to be announced) ]
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
             - New routine componentsByStrand().
-            - New routines hasR1(), hasR2() and hasR3().
-            - New routines withR1(), withR2() and withR3().
+            - Regarding Reidemeister moves:
+              + The (check, perform) variants of r1(), r2() and r3() are
+                deprecated.  You should now use these routines _without_ extra
+                check/perform arguments: they will always check for and (if
+                possible) perform the relevant moves.
+              + New routines hasR1(), hasR2() and hasR3() for checking only.
+              + New read-only routines withR1(), withR2() and withR3() that (if
+                possible) return a new link with the relevant moves performed.
             - Extended knotSig(), rewrite() and simplifyExhaustive() to work
               with all link diagrams with fewer than 64 link components.
               It is now recommended to use sig() and fromSig() instead of
@@ -421,6 +427,9 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., PermCodeType::Images).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Struct Unprotected:
+            - New C++-only type that allows in-built safety checks to be
+              disabled in some specific circumstances.
         Class Rational:
             - New function str().
             - Added a spaceship operator (<=>) for comparisons.
@@ -487,8 +496,14 @@ Version 7.4  [ (to be announced) ]
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
         Class Tangle:
-            - New routines hasR1() and hasR2().
-            - New routines withR1() and withR2().
+            - Regarding Reidemeister moves:
+              + The (check, perform) variants of r1(), r2() are deprecated.
+                You should now use these routines _without_ extra check/perform
+                arguments: they will always check for and (if possible) perform
+                the relevant moves.
+              + New routines hasR1(), hasR2() for checking only.
+              + New read-only routines withR1() and withR2() that (if possible)
+                return a new link with the relevant moves performed.
             - Added a variant of translate() that takes crossings instead of
               strand references.
         Class TightEncodable<T>:

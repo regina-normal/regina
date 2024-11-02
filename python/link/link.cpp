@@ -325,49 +325,14 @@ void addLink(pybind11::module_& m) {
             // Deprecated, so reimplement this ourselves.
             return link.source(regina::Language::Cxx);
         }, rdoc::dumpConstruction)
-        .def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r1)
-        .def("r1", overload_cast<StrandRef, int, int, bool, bool>(&Link::r1),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r1_2)
-        .def("r2", overload_cast<StrandRef, bool, bool>(&Link::r2),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r2)
-        .def("r2", overload_cast<Crossing*, bool, bool>(&Link::r2),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r2_2)
-        .def("r2", overload_cast<StrandRef, int, StrandRef, int, bool, bool>(
-                &Link::r2),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("r1", overload_cast<Crossing*>(&Link::r1), rdoc::r1)
+        .def("r1", overload_cast<StrandRef, int, int>(&Link::r1), rdoc::r1_2)
+        .def("r2", overload_cast<StrandRef>(&Link::r2), rdoc::r2)
+        .def("r2", overload_cast<Crossing*>(&Link::r2), rdoc::r2_2)
+        .def("r2", overload_cast<StrandRef, int, StrandRef, int>(&Link::r2),
             rdoc::r2_3)
-        .def("r3", overload_cast<StrandRef, int, bool, bool>(&Link::r3),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r3)
-        .def("r3", overload_cast<Crossing*, int, bool, bool>(&Link::r3),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r3_2)
+        .def("r3", overload_cast<StrandRef, int>(&Link::r3), rdoc::r3)
+        .def("r3", overload_cast<Crossing*, int>(&Link::r3), rdoc::r3_2)
         .def("hasR1",
             overload_cast<Crossing*>(&Link::hasR1, pybind11::const_),
             rdoc::hasR1)
@@ -412,6 +377,62 @@ void addLink(pybind11::module_& m) {
         .def("withR3",
             overload_cast<Crossing*, int>(&Link::withR3, pybind11::const_),
             rdoc::withR3_2)
+        #if defined(__GNUC__)
+        // The following routines are deprecated, but we still need to bind
+        // them.  Silence the inevitable deprecation warnings that will occur.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        .def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r1_3) // deprecated
+        .def("r1", overload_cast<StrandRef, int, int, bool, bool>(&Link::r1),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r1_4) // deprecated
+        .def("r2", overload_cast<StrandRef, bool, bool>(&Link::r2),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r2_4) // deprecated
+        .def("r2", overload_cast<Crossing*, bool, bool>(&Link::r2),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r2_5) // deprecated
+        .def("r2", overload_cast<StrandRef, int, StrandRef, int, bool, bool>(
+                &Link::r2),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r2_6) // deprecated
+        .def("r3", overload_cast<StrandRef, int, bool, bool>(&Link::r3),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r3_3) // deprecated
+        .def("r3", overload_cast<Crossing*, int, bool, bool>(&Link::r3),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r3_4) // deprecated
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
         .def("hasReducingPass", &Link::hasReducingPass, rdoc::hasReducingPass)
         .def("selfFrame", &Link::selfFrame, rdoc::selfFrame)
         .def("simplify", &Link::simplify, rdoc::simplify)

@@ -34,7 +34,7 @@
 
 namespace regina {
 
-bool Tangle::r1(Crossing* crossing, bool check, bool perform) {
+bool Tangle::internalR1(Crossing* crossing, bool check, bool perform) {
     // Note that, for a planar knot or tangle diagram, if crossing->next(1)
     // returns to the same crossing then it must be the lower strand.
 
@@ -83,7 +83,7 @@ bool Tangle::r1(Crossing* crossing, bool check, bool perform) {
     return true;
 }
 
-bool Tangle::r2(StrandRef arc, bool check, bool perform) {
+bool Tangle::internalR2(StrandRef arc, bool check, bool perform) {
     if (! arc) {
         // The move cannot be performed.
         // We should just return false, but only if check is true.

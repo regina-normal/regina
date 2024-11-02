@@ -1914,7 +1914,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with20(Triangle<4>* t)
     if (! has20(t))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->twoZeroMove(ans->translate(t), false, true);
     return ans;
 }
@@ -1924,7 +1924,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with20(Edge<4>* e)
     if (! has20(e))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->twoZeroMove(ans->translate(e), false, true);
     return ans;
 }
@@ -1934,7 +1934,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with20(Vertex<4>* v)
     if (! has20(v))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->twoZeroMove(ans->translate(v), false, true);
     return ans;
 }
@@ -1944,7 +1944,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::with44(Edge<4>* e)
     if (! has44(e))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->fourFourMove(ans->translate(e), false, true);
     return ans;
 }
@@ -1954,7 +1954,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withOpenBook(
     if (! hasOpenBook(t))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->openBook(ans->translate(t), false, true);
     return ans;
 }
@@ -1964,7 +1964,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withShellBoundary(
     if (! hasShellBoundary(p))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->shellBoundary(ans->simplex(p->index()), false, true);
     return ans;
 }
@@ -1974,7 +1974,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withCollapseEdge(
     if (! hasCollapseEdge(e))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->collapseEdge(ans->translate(e), false, true);
     return ans;
 }
@@ -1984,7 +1984,7 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withSnapEdge(
     if (! hasSnapEdge(e))
         return {};
 
-    std::optional<Triangulation<4>> ans(*this);
+    std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->snapEdge(ans->translate(e), false, true);
     return ans;
 }

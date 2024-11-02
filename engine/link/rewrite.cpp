@@ -65,8 +65,7 @@ namespace detail {
                     // pre-existing crossings, and so the two options are
                     // equivalent under reflection of the entire diagram.
                     Link alt(t, false);
-                    alt.r1(regina::StrandRef(), 0 /* side */, 1 /* sign */,
-                        false, true);
+                    alt.r1(regina::StrandRef(), 0 /* side */, 1 /* sign */);
                     if (retriang->candidate(std::move(alt), sig))
                         return;
                 }
@@ -77,7 +76,7 @@ namespace detail {
                     // components.
                     Link alt(t, false);
                     alt.r2(regina::StrandRef(), 0 /* left side */,
-                        regina::StrandRef(), 0 /* left side */, false, true);
+                        regina::StrandRef(), 0 /* left side */);
                     if (retriang->candidate(std::move(alt), sig))
                         return;
                 }
@@ -91,31 +90,22 @@ namespace detail {
             // Moves that reduce the number of crossings:
 
             for (i = 0; i < t.size(); ++i)
-                if (t.r1(t.crossing(i), true, false)) {
-                    Link alt(t, false);
-                    alt.r1(alt.crossing(i), false, true);
-                    if (retriang->candidate(std::move(alt), sig))
+                if (auto alt = t.withR1(t.crossing(i)))
+                    if (retriang->candidate(std::move(*alt), sig))
                         return;
-                }
 
             for (i = 0; i < t.size(); ++i)
-                if (t.r2(t.crossing(i), true, false)) {
-                    Link alt(t, false);
-                    alt.r2(alt.crossing(i), false, true);
-                    if (retriang->candidate(std::move(alt), sig))
+                if (auto alt = t.withR2(t.crossing(i)))
+                    if (retriang->candidate(std::move(*alt), sig))
                         return;
-                }
 
             // Moves that preserve the number of crossings:
 
             for (i = 0; i < t.size(); ++i)
                 for (side = 0; side < 2; ++side)
-                    if (t.r3(t.crossing(i), side, true, false)) {
-                        Link alt(t, false);
-                        alt.r3(alt.crossing(i), side, false, true);
-                        if (retriang->candidate(std::move(alt), sig))
+                    if (auto alt = t.withR3(t.crossing(i), side))
+                        if (retriang->candidate(std::move(*alt), sig))
                             return;
-                    }
 
             // All that remains is moves that increase the number of crossings.
             if (t.size() >= maxSize)
@@ -135,8 +125,7 @@ namespace detail {
                     for (side = 0; side < 2; ++side)
                         for (sign = -1; sign <= 1; sign += 2) {
                             Link alt(t, false);
-                            alt.r1(alt.crossing(i)->strand(strand),
-                                side, sign, false, true);
+                            alt.r1(alt.crossing(i)->strand(strand), side, sign);
                             if (retriang->candidate(std::move(alt), sig))
                                 return;
                         }
@@ -145,7 +134,7 @@ namespace detail {
                     // The side does not matter, since both options are
                     // equivalent under reversal of individual link components.
                     Link alt(t, false);
-                    alt.r1(regina::StrandRef(), 0, sign, false, true);
+                    alt.r1(regina::StrandRef(), 0, sign);
                     if (retriang->candidate(std::move(alt), sig))
                         return;
                 }
@@ -230,10 +219,14 @@ namespace detail {
                                 // Make sure we're on the correct side.
                                 lowerSide = (forward ? 0 : 1);
 
+                                // The r2() check is expensive when adding
+                                // two crossings - use the variant where we
+                                // promise that it's going to be legal.
                                 Link alt(t, false);
-                                alt.r2(alt.translate(upperArc), upperSide,
+                                alt.r2(
+                                    alt.translate(upperArc), upperSide,
                                     alt.translate(lowerArc), lowerSide,
-                                    false, true);
+                                    regina::unprotected);
                                 if (retriang->candidate(std::move(alt), sig))
                                     return;
                             }
@@ -254,16 +247,14 @@ namespace detail {
                             {
                                 Link alt(t, false);
                                 alt.r2(alt.translate(arc), 0 /* left side */,
-                                    StrandRef(), 0 /* left side */,
-                                    false, true);
+                                    StrandRef(), 0 /* left side */);
                                 if (retriang->candidate(std::move(alt), sig))
                                     return;
                             }
                             {
                                 Link alt(t, false);
                                 alt.r2(StrandRef(), 0 /* left side */,
-                                    alt.translate(arc), 0 /* left side */,
-                                    false, true);
+                                    alt.translate(arc), 0 /* left side */);
                                 if (retriang->candidate(std::move(alt), sig))
                                     return;
                             }
@@ -275,8 +266,7 @@ namespace detail {
                         // of side are equivalent under component reversal.
                         Link alt(t, false);
                         alt.r2(regina::StrandRef(), 0 /* left side */,
-                            regina::StrandRef(), 0 /* left side */,
-                            false, true);
+                            regina::StrandRef(), 0 /* left side */);
                         if (retriang->candidate(std::move(alt), sig))
                             return;
                     }

@@ -34,7 +34,7 @@
 
 namespace regina {
 
-bool Link::r1(Crossing* crossing, bool check, bool perform) {
+bool Link::internalR1(Crossing* crossing, bool check, bool perform) {
     // Note that, for a planar knot projection, if crossing->next(1)
     // returns to the same crossing then it must be the lower strand.
 
@@ -112,7 +112,8 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
     return true;
 }
 
-bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
+bool Link::internalR1(StrandRef arc, int side, int sign, bool check,
+        bool perform) {
     if (! arc) {
         // A null reference.  Find the first zero-crossing component.
         for (StrandRef& comp : components_)
@@ -173,7 +174,7 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     return true;
 }
 
-bool Link::r2(StrandRef arc, bool check, bool perform) {
+bool Link::internalR2(StrandRef arc, bool check, bool perform) {
     if (! arc) {
         // The move cannot be performed.
         // We should just return false, but only if check is true.
@@ -371,7 +372,7 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     return true;
 }
 
-bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
+bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
         int lowerSide, bool check, bool perform) {
     std::vector<StrandRef>::iterator upperUnknot, lowerUnknot;
 
@@ -589,7 +590,7 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     return true;
 }
 
-bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
+bool Link::internalR3(StrandRef arc, int side, bool check, bool perform) {
     if (! arc) {
         // The move cannot be performed.
         // We should just return false, but only if check is true.

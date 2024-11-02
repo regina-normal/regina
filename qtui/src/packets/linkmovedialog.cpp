@@ -357,13 +357,13 @@ void LinkMoveDialog::clicked(QAbstractButton* btn) {
         use = box1up->currentIndex();
         if (use >= 0 && use < options1up.size()) {
             const R1UpArg& a(options1up[use]);
-            link->r1(a.strand, a.side, a.sign, true, true);
+            link->r1(a.strand, a.side, a.sign);
         }
     } else if (use1down->isChecked()) {
         use = box1down->currentIndex();
         if (use >= 0 && use < options1down.size()) {
             const R1DownArg& a(options1down[use]);
-            link->r1(a.crossing, true, true);
+            link->r1(a.crossing);
         }
     } else if (use2up->isChecked()) {
         use = box2upOver->currentIndex();
@@ -375,18 +375,18 @@ void LinkMoveDialog::clicked(QAbstractButton* btn) {
 
         const R2UpArg& over(options2upOver[use]);
         const R2UpArg& under(options2upUnder[useUnder]);
-        link->r2(over.strand, over.side, under.strand, under.side, true, true);
+        link->r2(over.strand, over.side, under.strand, under.side);
     } else if (use2down->isChecked()) {
         use = box2down->currentIndex();
         if (use >= 0 && use < options2down.size()) {
             const R2DownArg& a(options2down[use]);
-            link->r2(a.crossing, true, true);
+            link->r2(a.crossing);
         }
     } else if (use3->isChecked()) {
         use = box3->currentIndex();
         if (use >= 0 && use < options3.size()) {
             const R3Arg& a(options3[use]);
-            link->r3(a.crossing, a.side, true, true);
+            link->r3(a.crossing, a.side);
         }
     } else
         ReginaSupport::info(this, tr("Please select a move."));
@@ -419,7 +419,7 @@ void LinkMoveDialog::fill() {
                 options1up.emplace_back(c->strand(strand), side, 1);
                 options1up.emplace_back(c->strand(strand), side, -1);
             }
-    if (link->r1(regina::StrandRef(), 0, 1, true, false)) {
+    if (link->hasR1(regina::StrandRef(), 0, 1)) {
         // We have unknot component(s) that we can use for R1 twists also.
         options1up.emplace_back(regina::StrandRef(), 0, 1);
         options1up.emplace_back(regina::StrandRef(), 0, -1);
@@ -428,7 +428,7 @@ void LinkMoveDialog::fill() {
         box1up->addItem(o.display());
 
     for (regina::Crossing* c : link->crossings())
-        if (link->r1(c, true, false))
+        if (link->hasR1(c))
             options1down.emplace_back(c);
     for (const auto& o : options1down)
         box1down->addItem(o.display());
@@ -455,8 +455,7 @@ void LinkMoveDialog::fill() {
             }
         }
     }
-    if (link->countComponents() > 1 &&
-            link->r1(regina::StrandRef(), 0, 1, true, false)) {
+    if (link->countComponents() > 1 && link->hasR1(regina::StrandRef(), 0, 1)) {
         // We have unknot component(s), as identified by the R1 test, and we
         // can use R2 on this with any *different* component.
         options2upOver.emplace_back(regina::StrandRef(), 0);
@@ -469,7 +468,7 @@ void LinkMoveDialog::fill() {
     changedR2UpOver(-1);
 
     for (regina::Crossing* c : link->crossings())
-        if (link->r2(c, true, false))
+        if (link->hasR2(c))
             options2down.emplace_back(c);
     std::sort(options2down.begin(), options2down.end());
     for (const auto& o : options2down)
@@ -477,7 +476,7 @@ void LinkMoveDialog::fill() {
 
     for (regina::Crossing* c : link->crossings())
         for (side = 0; side < 2; ++side)
-            if (link->r3(c, side, true, false))
+            if (link->hasR3(c, side))
                 options3.emplace_back(c, side);
     std::sort(options3.begin(), options3.end());
     for (const auto& o : options3)
@@ -510,12 +509,11 @@ void LinkMoveDialog::changedR2UpOver(int) {
     for (regina::Crossing* c : link->crossings())
         for (strand = 0; strand < 2; ++strand)
             for (side = 0; side < 2; ++side)
-                if (link->r2(over.strand, over.side,
-                        c->strand(strand), side, true, false))
+                if (link->hasR2(over.strand, over.side,
+                        c->strand(strand), side))
                     options2upUnder.emplace_back(c->strand(strand), side);
     for (side = 0; side < 2; ++side)
-        if (link->r2(over.strand, over.side, regina::StrandRef(), side,
-                true, false))
+        if (link->hasR2(over.strand, over.side, regina::StrandRef(), side))
             options2upUnder.emplace_back(regina::StrandRef(), side);
     for (const auto& o : options2upUnder)
         box2upUnder->addItem(o.display(0));

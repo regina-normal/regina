@@ -216,6 +216,49 @@ enum class ChangeType {
     Cosmetic = 2
 };
 
+/**
+ * An empty type that can be used to disable in-built safety checks in some
+ * specific circumstances.
+ *
+ * There are many settings in which Regina checks that an operation is safe or
+ * legal before performing it.  However, in some settings these checks are
+ * expensive.  Therefore some particular functions may offer a variant that
+ * takes an extra Unprotected argument, allowing the programmer to indicate
+ * that they promise the checks will succeed, and there is no need to perform
+ * them.
+ *
+ * An example is type II Reidemeister moves for links that add crossings,
+ * where the legality check is linear time (since it must essentially walk
+ * around a 2-cell of the link diagram).
+ *
+ * Functions that offer an unprotected variant are rare, and are typically
+ * functions that are used in speed-critical scenarios (such as Reidemeister
+ * moves being used as atomic operations within the exponential-time
+ * Link::rewrite()).
+ *
+ * The Unprotected type itself is an empty type.  Typically you would just
+ * use the constant `regina::unprotected`.
+ *
+ * \nopython By design, Python users are not able to circumvent any of
+ * Regina's automatic checks.  If speed is essential, you should be using C++.
+ */
+struct Unprotected {
+    /**
+     * Creates a new empty object.  Typically there is no need to create your
+     * own objects; you can just use the constant `regina::unprotected`.
+     */
+    explicit Unprotected() = default;
+};
+
+/**
+ * An empty object that can be used to disable Regina's in-built safety checks
+ * in some specific circumstances.  See the Unprotected class notes for details.
+ *
+ * \nopython By design, Python users are not able to circumvent any of
+ * Regina's automatic checks.  If speed is essential, you should be using C++.
+ */
+inline constexpr Unprotected unprotected;
+
 } // namespace regina
 
 #endif

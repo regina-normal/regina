@@ -5058,7 +5058,7 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
     if (! hasPachner(f))
         return {};
 
-    std::optional<Triangulation<dim>> ans(
+    std::optional<Triangulation<dim>> ans(std::in_place,
         static_cast<const Triangulation<dim>&>(*this));
     ans->pachner(ans->translate(f), false, true);
     return ans;

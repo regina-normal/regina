@@ -5028,7 +5028,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::with44(
     if (! has44(e, newAxis))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->fourFourMove(ans->translate(e), newAxis, false, true);
     return ans;
 }
@@ -5038,7 +5038,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::with20(Edge<3>* e)
     if (! has20(e))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->twoZeroMove(ans->translate(e), false, true);
     return ans;
 }
@@ -5048,7 +5048,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::with20(Vertex<3>* v)
     if (! has20(v))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->twoZeroMove(ans->translate(v), false, true);
     return ans;
 }
@@ -5058,7 +5058,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::with21(
     if (! has21(e, edgeEnd))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->twoOneMove(ans->translate(e), edgeEnd, false, true);
     return ans;
 }
@@ -5068,7 +5068,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::with02(
     if (! has02(e0, t0, e1, t1))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->zeroTwoMove(ans->translate(e0), t0, ans->translate(e1), t1,
         false, true);
     return ans;
@@ -5079,7 +5079,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::with02(
     if (! has02(e, t0, t1))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->zeroTwoMove(ans->translate(e), t0, t1, false, true);
     return ans;
 }
@@ -5089,7 +5089,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::with02(
     if (! has02(t0, e0, t1, e1))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->zeroTwoMove(ans->translate(t0), e0, ans->translate(t1), e1,
         false, true);
     return ans;
@@ -5100,7 +5100,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::withOpenBook(
     if (! hasOpenBook(t))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->openBook(ans->translate(t), false, true);
     return ans;
 }
@@ -5110,7 +5110,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::withCloseBook(
     if (! hasCloseBook(e))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->closeBook(ans->translate(e), false, true);
     return ans;
 }
@@ -5120,7 +5120,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::withShellBoundary(
     if (! hasShellBoundary(t))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->shellBoundary(ans->simplex(t->index()), false, true);
     return ans;
 }
@@ -5130,7 +5130,7 @@ inline std::optional<Triangulation<3>> Triangulation<3>::withCollapseEdge(
     if (! hasCollapseEdge(e))
         return {};
 
-    std::optional<Triangulation<3>> ans(*this);
+    std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->collapseEdge(ans->translate(e), false, true);
     return ans;
 }

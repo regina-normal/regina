@@ -72,7 +72,7 @@ bool Link::simplify() {
                 type3Available.clear();
                 for (Crossing* c : use->crossings_)
                     for (side = 0; side < 2; ++side)
-                        if (use->r3(c, side, true, false))
+                        if (use->hasR3(c, side))
                             type3Available.emplace_back(c, side);
 
                 // Increment type3Cap if needed.
@@ -86,7 +86,8 @@ bool Link::simplify() {
                 // Perform a random type III move on the clone.
                 type3Choice = type3Available[
                     RandomEngine::rand(type3Available.size())];
-                use->r3(type3Choice.first, type3Choice.second, false, true);
+                use->internalR3(type3Choice.first, type3Choice.second,
+                    false /* do not check */, true);
 
                 // See if we can simplify now.
                 if (use->simplifyToLocalMinimum(true)) {
@@ -117,39 +118,19 @@ bool Link::simplify() {
 }
 
 bool Link::simplifyToLocalMinimum(bool perform) {
-    bool changed = false;   // Has anything changed ever (for return value)?
-    bool changedNow = true; // Did we just change something (for loop control)?
-
-    { // Begin scope for change event span.
-        PacketChangeGroup span(*this);
-
-        while (changedNow) {
-            changedNow = false;
-
-            // Look for type I or II Reidemeister moves.
-            for (Crossing* c : crossings_) {
-                if (r1(c, true, perform)) {
-                    changedNow = changed = true;
-                    break;
-                }
-                if (r2(c, true, perform)) {
-                    changedNow = changed = true;
-                    break;
-                }
-            }
-            if (changedNow) {
-                if (perform)
-                    continue;
-                else
-                    return true;
-            }
+    if (! perform) {
+        // Look for type I or II Reidemeister moves.
+        for (Crossing* c : crossings_) {
+            if (hasR1(c))
+                return true;
+            if (hasR2(StrandRef(c, 1)))
+                return true;
         }
-    } // End scope for change event span.
+        return false;
+    }
 
-    return changed;
-}
+    PacketChangeGroup span(*this);
 
-bool Tangle::simplifyToLocalMinimum(bool perform) {
     bool changed = false;   // Has anything changed ever (for return value)?
     bool changedNow = true; // Did we just change something (for loop control)?
 
@@ -158,21 +139,53 @@ bool Tangle::simplifyToLocalMinimum(bool perform) {
 
         // Look for type I or II Reidemeister moves.
         for (Crossing* c : crossings_) {
-            if (r1(c, true, perform)) {
+            if (r1(c)) {
                 changedNow = changed = true;
                 break;
             }
-            if (r2(c, true, perform)) {
+            if (r2(StrandRef(c, 1))) {
                 changedNow = changed = true;
                 break;
             }
         }
-        if (changedNow) {
-            if (perform)
-                continue;
-            else
+        if (changedNow)
+            continue;
+    }
+
+    return changed;
+}
+
+bool Tangle::simplifyToLocalMinimum(bool perform) {
+    if (! perform) {
+        // Look for type I or II Reidemeister moves.
+        for (Crossing* c : crossings_) {
+            if (hasR1(c))
+                return true;
+            if (hasR2(StrandRef(c, 1)))
                 return true;
         }
+        return false;
+    }
+
+    bool changed = false;   // Has anything changed ever (for return value)?
+    bool changedNow = true; // Did we just change something (for loop control)?
+
+    while (changedNow) {
+        changedNow = false;
+
+        // Look for type I or II Reidemeister moves.
+        for (Crossing* c : crossings_) {
+            if (r1(c)) {
+                changedNow = changed = true;
+                break;
+            }
+            if (r2(StrandRef(c, 1))) {
+                changedNow = changed = true;
+                break;
+            }
+        }
+        if (changedNow)
+            continue;
     }
 
     return changed;

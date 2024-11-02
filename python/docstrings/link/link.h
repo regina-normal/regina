@@ -1825,15 +1825,15 @@ R"doc(Determines whether it is possible to perform a type I Reidemeister
 move at the given location to remove a crossing.
 
 For more detail on type I moves and when they can be performed, see
-r1(Crossing*, bool, bool).
+r1(Crossing*).
 
 Precondition:
     The given crossing is either a null pointer, or else some crossing
     in this link.
 
 Parameter ``crossing``:
-    identifies the candidate crossing to be removed. See r1(Crossing*,
-    bool, bool) for details on exactly how this will be interpreted.
+    identifies the candidate crossing to be removed. See r1(Crossing*)
+    for details on exactly how this will be interpreted.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
@@ -1844,7 +1844,7 @@ R"doc(Determines whether it is possible to perform a type I Reidemeister
 move at the given location to add a new crossing.
 
 For more detail on type I moves and when they can be performed, see
-r1(StrandRef, int, int, bool, bool).
+r1(StrandRef, int, int).
 
 Precondition:
     The given strand reference is either a null reference, or else
@@ -1852,8 +1852,8 @@ Precondition:
 
 Parameter ``arc``:
     identifies the arc of the link in which the new candidate twist
-    will be introduced. See r1(StrandRef, int, int, bool, bool) for
-    details on exactly how this will be interpreted.
+    will be introduced. See r1(StrandRef, int, int) for details on
+    exactly how this will be interpreted.
 
 Parameter ``side``:
     0 if the candidate twist should be introduced on the left of the
@@ -1873,7 +1873,7 @@ R"doc(Determines whether it is possible to perform a type II Reidemeister
 move at the given location to remove two crossings.
 
 For more detail on type II moves and when they can be performed, see
-r2(StrandRef, bool, bool).
+r2(StrandRef).
 
 Precondition:
     The given strand reference is either a null reference, or else
@@ -1881,8 +1881,8 @@ Precondition:
 
 Parameter ``arc``:
     identifies one of the arcs of the bigon about which the candidate
-    move will be performed. See r2(StrandRef, bool, bool) for details
-    on exactly how this will be interpreted.
+    move will be performed. See r2(StrandRef) for details on exactly
+    how this will be interpreted.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
@@ -1893,7 +1893,7 @@ R"doc(Determines whether it is possible to perform a type II Reidemeister
 move at the given location to remove two crossings.
 
 For more detail on type II moves and when they can be performed, see
-r2(Crossing*, bool, bool).
+r2(Crossing*).
 
 Precondition:
     The given crossing is either a null pointer, or else some crossing
@@ -1901,8 +1901,8 @@ Precondition:
 
 Parameter ``crossing``:
     identifies the crossing at the beginning of the "upper" arc that
-    features in this candidate move. See r2(Crossing*, bool, bool) for
-    details on exactly how this will be interpreted.
+    features in this candidate move. See r2(Crossing*) for details on
+    exactly how this will be interpreted.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
@@ -1913,7 +1913,7 @@ R"doc(Determines whether it is possible to perform a type II Reidemeister
 move at the given location to add two new crossings.
 
 For more detail on type II moves and when they can be performed, see
-r2(StrandRef, int, StrandRef, int, bool, bool).
+r2(StrandRef, int, StrandRef, int).
 
 Precondition:
     Each of the given strand references is either a null reference, or
@@ -1926,8 +1926,8 @@ Precondition:
 
 Parameter ``upperArc``:
     identifies which arc of the link would be passed over another in
-    this candidate move. See r2(StrandRef, int, StrandRef, int, bool,
-    bool) for details on exactly how this will be interpreted.
+    this candidate move. See r2(StrandRef, int, StrandRef, int) for
+    details on exactly how this will be interpreted.
 
 Parameter ``upperSide``:
     0 if the new overlap would take place on the left of *upperArc*
@@ -1936,8 +1936,8 @@ Parameter ``upperSide``:
 
 Parameter ``lowerArc``:
     identifies which arc of the link would be passed beneath another
-    in this candidate move. See r2(StrandRef, int, StrandRef, int,
-    bool, bool) for details on exactly how this will be interpreted.
+    in this candidate move. See r2(StrandRef, int, StrandRef, int) for
+    details on exactly how this will be interpreted.
 
 Parameter ``lowerSide``:
     0 if the new overlap would take place on the left of *lowerArc*
@@ -1953,7 +1953,7 @@ R"doc(Determines whether it is possible to perform a type III Reidemeister
 move at the given location.
 
 For more detail on type III moves and when they can be performed, see
-r3(StrandRef, int, bool, bool).
+r3(StrandRef, int).
 
 Precondition:
     The given strand reference is either a null reference, or else
@@ -1961,8 +1961,8 @@ Precondition:
 
 Parameter ``arc``:
     identifies one of the arcs of the triangle about which the
-    candidate move would be performed. See r3(StrandRef, int, bool,
-    bool) for details on exactly how this will be interpreted.
+    candidate move would be performed. See r3(StrandRef, int) for
+    details on exactly how this will be interpreted.
 
 Parameter ``side``:
     0 if the third crossing of the triangle is located to the left of
@@ -1978,7 +1978,7 @@ R"doc(Determines whether it is possible to perform a type III Reidemeister
 move at the given location.
 
 For more detail on type III moves and when they can be performed, see
-r3(Crossing*, int, bool, bool).
+r3(Crossing*, int).
 
 Precondition:
     The given crossing is either a null pointer, or else some crossing
@@ -1986,8 +1986,8 @@ Precondition:
 
 Parameter ``crossing``:
     identifies the crossing at the beginning of the "uppermost" arc
-    that features in this candidate move. See r3(Crossing*, int, bool,
-    bool) for details on exactly what this means.
+    that features in this candidate move. See r3(Crossing*, int) for
+    details on exactly how this will be interpreted.
 
 Parameter ``side``:
     0 if the third crossing of the triangle is located to the left of
@@ -2980,29 +2980,11 @@ Returns:
 
 // Docstring regina::python::doc::Link_::r1
 static const char *r1 =
-R"doc(Tests for and/or performs a type I Reidemeister move to remove a
-crossing.
+R"doc(If possible, performs a type I Reidemeister move to remove a crossing
+at the given location. If such a move is not allowed, then this
+routine does nothing.
 
-There are two boolean arguments that control the behaviour of this
-routine: *check* and *perform*.
-
-* If *check* and *perform* are both ``True`` (the default), then this
-  routine will first check whether this move can be performed at the
-  given location. If so, it will perform the move and return ``True``.
-  If not, it will do nothing and return ``False``.
-
-* If *check* is ``True`` but *perform* is ``False``, then this routine
-  will simply check whether this move can be performed at the given
-  location and return ``True`` or ``False`` accordingly.
-
-* If *check* is ``False`` but *perform* is ``True``, then this routine
-  will perform the move without any prior checks, and will always
-  return ``True``. In this case, it must be known in advance that the
-  move can be performed at the given location.
-
-* If *check* and *perform* are both ``False``, then this routine does
-  nothing and just returns ``True``. (There is no reason to use this
-  combination of arguments.)
+This link diagram will be changed directly.
 
 The location of this move is specified by the argument *crossing*,
 which indicates the crossing that will be removed. Specifically, this
@@ -3019,54 +3001,23 @@ and therefore (ii) this routine will do nothing and return ``False``.
     will be destroyed.
 
 Precondition:
-    If *perform* is ``True`` but *check* is ``False``, then it must be
-    known in advance that this move can be performed at the given
-    location.
-
-Precondition:
     The given crossing is either a null pointer, or else some crossing
     in this link.
 
 Parameter ``crossing``:
     identifies the crossing to be removed.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move can be performed at
-    the given location.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move.
-
 Returns:
-    If *check* is ``True``, this function returns ``True`` if and only
-    if the move can be performed. If *check* is ``False``, this
-    function always returns ``True``.)doc";
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
 
 // Docstring regina::python::doc::Link_::r1_2
 static const char *r1_2 =
-R"doc(Tests for and/or performs a type I Reidemeister move to add a new
-crossing.
+R"doc(If possible, performs a type I Reidemeister move to add a new crossing
+at the given location. If such a move is not allowed, then this
+routine does nothing.
 
-There are two boolean arguments that control the behaviour of this
-routine: *check* and *perform*.
-
-* If *check* and *perform* are both ``True`` (the default), then this
-  routine will first check whether this move can be performed at the
-  given location. If so, it will perform the move and return ``True``.
-  If not, it will do nothing and return ``False``.
-
-* If *check* is ``True`` but *perform* is ``False``, then this routine
-  will simply check whether this move can be performed at the given
-  location and return ``True`` or ``False`` accordingly.
-
-* If *check* is ``False`` but *perform* is ``True``, then this routine
-  will perform the move without any prior checks, and will always
-  return ``True``. In this case, it must be known in advance that the
-  move can be performed at the given location.
-
-* If *check* and *perform* are both ``False``, then this routine does
-  nothing and just returns ``True``. (There is no reason to use this
-  combination of arguments.)
+This link diagram will be changed directly.
 
 The location of this move is specified by the argument *arc*.
 Specifically, this move involves adding a trivial twist to the given
@@ -3090,11 +3041,6 @@ The existing crossings in this link will keep the same indices, and
 the new crossing will be given the next index that is available.
 
 Precondition:
-    If *perform* is ``True`` but *check* is ``False``, then it must be
-    known in advance that this move can be performed at the given
-    location.
-
-Precondition:
     The given strand reference is either a null reference, or else
     refers to some strand of some crossing in this link.
 
@@ -3111,22 +3057,107 @@ Parameter ``sign``:
     the sign of the new crossing that will be introduced as part of
     the twist; this must be +1 or -1.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move can be performed at
-    the given location.
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::Link_::r1_3
+static const char *r1_3 =
+R"doc(Deprecated routine that tests for and optionally performs a type I
+Reidemeister move to remove a crossing.
+
+For more detail on type I moves and when they can be performed, see
+r1(Crossing*).
+
+This routine will always _check_ whether the requested move is
+allowed. If it is, and if the argument *perform* is ``True``, this
+routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasR1(). If you wish to both check and perform the move, call r1()
+    without the two additional boolean arguments.
+
+.. warning::
+    A side-effect of this move is that, because one crossing is being
+    removed, the other crossings in the link may be reindexed.
+    However, no crossings other than the one involved in this move
+    will be destroyed.
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this link.
+
+Parameter ``crossing``:
+    identifies the crossing to be removed. See r1(crossing*) for
+    details on exactly how this will be interpreted.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we should actually perform the move.
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, this function returns ``True`` if and only
-    if the move can be performed. If *check* is ``False``, this
-    function always returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
+
+// Docstring regina::python::doc::Link_::r1_4
+static const char *r1_4 =
+R"doc(Deprecated routine that tests for and optionally performs a type I
+Reidemeister move to add a new crossing.
+
+For more detail on type I moves and when they can be performed, see
+r1(StrandRef, int, int).
+
+This routine will always _check_ whether the requested move is
+allowed. If it is, and if the argument *perform* is ``True``, this
+routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasR1(). If you wish to both check and perform the move, call r1()
+    without the two additional boolean arguments.
+
+Precondition:
+    The given strand reference is either a null reference, or else
+    refers to some strand of some crossing in this link.
+
+Parameter ``arc``:
+    identifies the arc of the link in which the new twist will be
+    introduced. See r1(StrandRef, int, int) for details on exactly how
+    this will be interpreted.
+
+Parameter ``side``:
+    0 if the twist should be introduced on the left of the arc (when
+    walking along the arc in the forward direction), or 1 if the twist
+    should be introduced on the right of the arc.
+
+Parameter ``sign``:
+    the sign of the new crossing that will be introduced as part of
+    the twist; this must be +1 or -1.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2
 static const char *r2 =
-R"doc(Tests for and/or performs a type II Reidemeister move to remove two
-crossings.
+R"doc(If possible, performs a type II Reidemeister move to remove two
+crossings at the given location. If such a move is not allowed, then
+this routine does nothing.
+
+This link diagram will be changed directly.
 
 There are two variants of this routine: one that takes an arc, and one
 that takes a crossing. This variant, which takes an arc, is more
@@ -3134,27 +3165,6 @@ flexible (since either of the two arcs involved in this move can be
 passed). The other variant, which takes a crossing, offers a canonical
 way of performing the move (since for each move there is exactly one
 crossing that describes it).
-
-There are two boolean arguments that control the behaviour of this
-routine: *check* and *perform*.
-
-* If *check* and *perform* are both ``True`` (the default), then this
-  routine will first check whether this move can be performed at the
-  given location. If so, it will perform the move and return ``True``.
-  If not, it will do nothing and return ``False``.
-
-* If *check* is ``True`` but *perform* is ``False``, then this routine
-  will simply check whether this move can be performed at the given
-  location and return ``True`` or ``False`` accordingly.
-
-* If *check* is ``False`` but *perform* is ``True``, then this routine
-  will perform the move without any prior checks, and will always
-  return ``True``. In this case, it must be known in advance that the
-  move can be performed at the given location.
-
-* If *check* and *perform* are both ``False``, then this routine does
-  nothing and just returns ``True``. (There is no reason to use this
-  combination of arguments.)
 
 The location of this move is specified by the argument *arc*.
 Specifically, this move involves pulling apart two arcs of the link
@@ -3173,11 +3183,6 @@ and therefore (ii) this routine will do nothing and return ``False``.
     will be destroyed.
 
 Precondition:
-    If *perform* is ``True`` but *check* is ``False``, then it must be
-    known in advance that this move can be performed at the given
-    location.
-
-Precondition:
     The given strand reference is either a null reference, or else
     refers to some strand of some crossing in this link.
 
@@ -3185,21 +3190,17 @@ Parameter ``arc``:
     identifies one of the arcs of the bigon about which the move will
     be performed, as described above.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is legal.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move.
-
 Returns:
-    If *check* is ``True``, this function returns ``True`` if and only
-    if the requested move is legal. If *check* is ``False``, this
-    function always returns ``True``.)doc";
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2_2
 static const char *r2_2 =
-R"doc(Tests for and/or performs a type II Reidemeister move to remove two
-crossings.
+R"doc(If possible, performs a type II Reidemeister move to remove two
+crossings at the given location. If such a move is not allowed, then
+this routine does nothing.
+
+This link diagram will be changed directly.
 
 There are two variants of this routine: one that takes an arc, and one
 that takes a crossing. The other variant, which takes an arc, is more
@@ -3207,27 +3208,6 @@ flexible (since either of the two arcs involved in this move can be
 passed). This variant, which takes a crossing, offers a canonical way
 of performing the move (since for each move there is exactly one
 crossing that describes it).
-
-There are two boolean arguments that control the behaviour of this
-routine: *check* and *perform*.
-
-* If *check* and *perform* are both ``True`` (the default), then this
-  routine will first check whether this move can be performed at the
-  given location. If so, it will perform the move and return ``True``.
-  If not, it will do nothing and return ``False``.
-
-* If *check* is ``True`` but *perform* is ``False``, then this routine
-  will simply check whether this move can be performed at the given
-  location and return ``True`` or ``False`` accordingly.
-
-* If *check* is ``False`` but *perform* is ``True``, then this routine
-  will perform the move without any prior checks, and will always
-  return ``True``. In this case, it must be known in advance that the
-  move can be performed at the given location.
-
-* If *check* and *perform* are both ``False``, then this routine does
-  nothing and just returns ``True``. (There is no reason to use this
-  combination of arguments.)
 
 The location of this move is specified by the argument *crossing*,
 Specifically, this move involves pulling apart two arcs of the link
@@ -3249,11 +3229,6 @@ and therefore (ii) this routine will do nothing and return ``False``.
     will be destroyed.
 
 Precondition:
-    If *perform* is ``True`` but *check* is ``False``, then it must be
-    known in advance that this move can be performed at the given
-    location.
-
-Precondition:
     The given crossing is either a null pointer, or else some crossing
     in this link.
 
@@ -3261,42 +3236,17 @@ Parameter ``crossing``:
     identifies the crossing at the beginning of the "upper" arc that
     features in this move, as described above.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is legal.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move.
-
 Returns:
-    If *check* is ``True``, this function returns ``True`` if and only
-    if the requested move is legal. If *check* is ``False``, this
-    function always returns ``True``.)doc";
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2_3
 static const char *r2_3 =
-R"doc(Tests for and/or performs a type II Reidemeister move to add two new
-crossings.
+R"doc(If possible, performs a type II Reidemeister move to add two new
+crossings at the given location. If such a move is not allowed, then
+this routine does nothing.
 
-There are two boolean arguments that control the behaviour of this
-routine: *check* and *perform*.
-
-* If *check* and *perform* are both ``True`` (the default), then this
-  routine will first check whether this move can be performed at the
-  given location. If so, it will perform the move and return ``True``.
-  If not, it will do nothing and return ``False``.
-
-* If *check* is ``True`` but *perform* is ``False``, then this routine
-  will simply check whether this move can be performed at the given
-  location and return ``True`` or ``False`` accordingly.
-
-* If *check* is ``False`` but *perform* is ``True``, then this routine
-  will perform the move without any prior checks, and will always
-  return ``True``. In this case, it must be known in advance that the
-  move can be performed at the given location.
-
-* If *check* and *perform* are both ``False``, then this routine does
-  nothing and just returns ``True``. (There is no reason to use this
-  combination of arguments.)
+This link diagram will be changed directly.
 
 The location of this move is specified by the arguments *upperArc*,
 *upperSide*, *lowerArc* and *lowerSide*. Specifically, this move
@@ -3330,11 +3280,6 @@ the two new crossings will be given the next two indices that are
 available.
 
 Precondition:
-    If *perform* is ``True`` but *check* is ``False``, then it must be
-    known in advance that this move can be performed at the given
-    location.
-
-Precondition:
     Each of the given strand references is either a null reference, or
     else refers to some strand of some crossing in this link.
 
@@ -3361,21 +3306,163 @@ Parameter ``lowerSide``:
     (when walking along *lowerArc* in the forward direction), or 1 if
     the new overlap should take place on the right of *lowerArc*.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move can be performed at
-    the given location.
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::Link_::r2_4
+static const char *r2_4 =
+R"doc(Deprecated routine that tests for and optionally performs a type II
+Reidemeister move to remove two crossings.
+
+For more detail on type II moves and when they can be performed, see
+r2(StrandRef).
+
+This routine will always _check_ whether the requested move is
+allowed. If it is, and if the argument *perform* is ``True``, this
+routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasR2(). If you wish to both check and perform the move, call r2()
+    without the two additional boolean arguments.
+
+.. warning::
+    A side-effect of this move is that, because two crossings are
+    being removed, the other crossings in the link may be reindexed.
+    However, no crossings other than the two involved in this move
+    will be destroyed.
+
+Precondition:
+    The given strand reference is either a null reference, or else
+    refers to some strand of some crossing in this link.
+
+Parameter ``arc``:
+    identifies one of the arcs of the bigon about which the move will
+    be performed. See r2(StrandRef) for details on exactly how this
+    will be interpreted.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we should actually perform the move.
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, this function returns ``True`` if and only
-    if the move can be performed. If *check* is ``False``, this
-    function always returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
+
+// Docstring regina::python::doc::Link_::r2_5
+static const char *r2_5 =
+R"doc(Deprecated routine that tests for and optionally performs a type II
+Reidemeister move to remove two crossings.
+
+For more detail on type II moves and when they can be performed, see
+r2(Crossing*).
+
+This routine will always _check_ whether the requested move is
+allowed. If it is, and if the argument *perform* is ``True``, this
+routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasR2(). If you wish to both check and perform the move, call r2()
+    without the two additional boolean arguments.
+
+.. warning::
+    A side-effect of this move is that, because two crossings are
+    being removed, the other crossings in the link may be reindexed.
+    However, no crossings other than the two involved in this move
+    will be destroyed.
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this link.
+
+Parameter ``crossing``:
+    identifies the crossing at the beginning of the "upper" arc that
+    features in this move. See r2(Crossing*) for details on exactly
+    how this will be interpreted.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
+
+// Docstring regina::python::doc::Link_::r2_6
+static const char *r2_6 =
+R"doc(Deprecated routine that tests for and optionally performs a type II
+Reidemeister move to add two new crossings.
+
+For more detail on type II moves and when they can be performed, see
+r2(StrandRef, int, StrandRef, int).
+
+This routine will always _check_ whether the requested move is
+allowed. If it is, and if the argument *perform* is ``True``, this
+routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasR2(). If you wish to both check and perform the move, call r2()
+    without the two additional boolean arguments.
+
+Precondition:
+    Each of the given strand references is either a null reference, or
+    else refers to some strand of some crossing in this link.
+
+.. warning::
+    The check for this move is expensive (linear time), since it
+    includes testing whether both sides-of-arcs belong to the same
+    2-cell of the knot diagram.
+
+Parameter ``upperArc``:
+    identifies which arc of the link would be passed over another in
+    this move. See r2(StrandRef, int, StrandRef, int) for details on
+    exactly how this will be interpreted.
+
+Parameter ``upperSide``:
+    0 if the new overlap should take place on the left of *upperArc*
+    (when walking along *upperArc* in the forward direction), or 1 if
+    the new overlap should take place on the right of *upperArc*.
+
+Parameter ``lowerArc``:
+    identifies which arc of the link would be passed beneath another
+    in this move. See r2(StrandRef, int, StrandRef, int) for details
+    on exactly how this will be interpreted.
+
+Parameter ``lowerSide``:
+    0 if the new overlap should take place on the left of *lowerArc*
+    (when walking along *lowerArc* in the forward direction), or 1 if
+    the new overlap should take place on the right of *lowerArc*.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r3
 static const char *r3 =
-R"doc(Tests for and/or performs a type III Reidemeister move.
+R"doc(If possible, performs a type III Reidemeister move at the given
+location. If such a move is not allowed, then this routine does
+nothing.
+
+This link diagram will be changed directly.
 
 There are two variants of this routine: one that takes an arc, and one
 that takes a crossing. This variant, which takes an arc, is more
@@ -3383,27 +3470,6 @@ flexible (since any of the three arcs involved in this move can be
 passed). The other variant, which takes a crossing, offers a canonical
 way of performing the move (since for each move there is exactly one
 crossing that describes it).
-
-There are two boolean arguments that control the behaviour of this
-routine: *check* and *perform*.
-
-* If *check* and *perform* are both ``True`` (the default), then this
-  routine will first check whether this move can be performed at the
-  given location. If so, it will perform the move and return ``True``.
-  If not, it will do nothing and return ``False``.
-
-* If *check* is ``True`` but *perform* is ``False``, then this routine
-  will simply check whether this move can be performed at the given
-  location and return ``True`` or ``False`` accordingly.
-
-* If *check* is ``False`` but *perform* is ``True``, then this routine
-  will perform the move without any prior checks, and will always
-  return ``True``. In this case, it must be known in advance that the
-  move can be performed at the given location.
-
-* If *check* and *perform* are both ``False``, then this routine does
-  nothing and just returns ``True``. (There is no reason to use this
-  combination of arguments.)
 
 The location of this move is specified by the arguments *arc* and
 *side*. Specifically, this move takes place around a triangle; the
@@ -3422,11 +3488,6 @@ involved in this move will simply be reordered along the various
 segments of the link.
 
 Precondition:
-    If *perform* is ``True`` but *check* is ``False``, then it must be
-    known in advance that this move can be performed at the given
-    location.
-
-Precondition:
     The given strand reference is either a null reference, or else
     refers to some strand of some crossing in this link.
 
@@ -3439,21 +3500,17 @@ Parameter ``side``:
     the arc (when walking along the arc in the forward direction), or
     1 if the third crossing is located on the right of the arc.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move can be performed at
-    the given location.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move.
-
 Returns:
-    If *check* is ``True``, this function returns ``True`` if and only
-    if the move can be performed. If *check* is ``False``, this
-    function always returns ``True``.)doc";
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
 
 // Docstring regina::python::doc::Link_::r3_2
 static const char *r3_2 =
-R"doc(Tests for and/or performs a type III Reidemeister move.
+R"doc(If possible, performs a type III Reidemeister move at the given
+location. If such a move is not allowed, then this routine does
+nothing.
+
+This link diagram will be changed directly.
 
 There are two variants of this routine: one that takes an arc, and one
 that takes a crossing. The other variant, which takes an arc, is more
@@ -3461,27 +3518,6 @@ flexible (since any of the three arcs involved in this move can be
 passed). This variant, which takes a crossing, offers a canonical way
 of performing the move (since for each move there is exactly one
 crossing that describes it).
-
-There are two boolean arguments that control the behaviour of this
-routine: *check* and *perform*.
-
-* If *check* and *perform* are both ``True`` (the default), then this
-  routine will first check whether this move can be performed at the
-  given location. If so, it will perform the move and return ``True``.
-  If not, it will do nothing and return ``False``.
-
-* If *check* is ``True`` but *perform* is ``False``, then this routine
-  will simply check whether this move can be performed at the given
-  location and return ``True`` or ``False`` accordingly.
-
-* If *check* is ``False`` but *perform* is ``True``, then this routine
-  will perform the move without any prior checks, and will always
-  return ``True``. In this case, it must be known in advance that the
-  move can be performed at the given location.
-
-* If *check* and *perform* are both ``False``, then this routine does
-  nothing and just returns ``True``. (There is no reason to use this
-  combination of arguments.)
 
 The location of this move is specified by the arguments *crossing* and
 *side*. Specifically, this move takes place around a triangle, and one
@@ -3502,11 +3538,6 @@ involved in this move will simply be reordered along the various
 segments of the link.
 
 Precondition:
-    If *perform* is ``True`` but *check* is ``False``, then it must be
-    known in advance that this move can be performed at the given
-    location.
-
-Precondition:
     The given crossing is either a null pointer, or else some crossing
     in this link.
 
@@ -3520,17 +3551,96 @@ Parameter ``side``:
     direction), or 1 if the third crossing is located on the right of
     the uppermost arc.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move can be performed at
-    the given location.
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::Link_::r3_3
+static const char *r3_3 =
+R"doc(Deprecated routine that tests for and optionally performs a type III
+Reidemeister move.
+
+For more detail on type III moves and when they can be performed, see
+r3(StrandRef, int).
+
+This routine will always _check_ whether the requested move is
+allowed. If it is, and if the argument *perform* is ``True``, this
+routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasR3(). If you wish to both check and perform the move, call r3()
+    without the two additional boolean arguments.
+
+Precondition:
+    The given strand reference is either a null reference, or else
+    refers to some strand of some crossing in this link.
+
+Parameter ``arc``:
+    identifies one of the arcs of the triangle about which the move
+    would be performed. See r3(StrandRef, int) for details on exactly
+    how this will be interpreted.
+
+Parameter ``side``:
+    0 if the third crossing of the triangle is located to the left of
+    the arc (when walking along the arc in the forward direction), or
+    1 if the third crossing is located on the right of the arc.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we should actually perform the move.
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, this function returns ``True`` if and only
-    if the move can be performed. If *check* is ``False``, this
-    function always returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
+
+// Docstring regina::python::doc::Link_::r3_4
+static const char *r3_4 =
+R"doc(Deprecated routine that tests for and optionally performs a type III
+Reidemeister move.
+
+For more detail on type III moves and when they can be performed, see
+r3(Crossing*, int).
+
+This routine will always _check_ whether the requested move is
+allowed. If it is, and if the argument *perform* is ``True``, this
+routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasR3(). If you wish to both check and perform the move, call r3()
+    without the two additional boolean arguments.
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this link.
+
+Parameter ``crossing``:
+    identifies the crossing at the beginning of the "uppermost" arc
+    that features in this move. See r3(Crossing*, int) for details on
+    exactly how this will be interpreted.
+
+Parameter ``side``:
+    0 if the third crossing of the triangle is located to the left of
+    the uppermost arc (when walking along the arc in the forward
+    direction), or 1 if the third crossing is located on the right of
+    the uppermost arc.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::reflect
 static const char *reflect =
@@ -4135,15 +4245,15 @@ a move is not allowed, then this routine returns no value.
 This link diagram will not be changed.
 
 For more detail on type I moves and when they can be performed, see
-r1(Crossing*, bool, bool).
+r1(Crossing*).
 
 Precondition:
     The given crossing is either a null pointer, or else some crossing
     in this link.
 
 Parameter ``crossing``:
-    identifies the crossing to be removed. See r1(Crossing*, bool,
-    bool) for details on exactly how this will be interpreted.
+    identifies the crossing to be removed. See r1(Crossing*) for
+    details on exactly how this will be interpreted.
 
 Returns:
     The new link diagram obtained by performing the requested move, or
@@ -4158,7 +4268,7 @@ a move is not allowed, then this routine returns no value.
 This link diagram will not be changed.
 
 For more detail on type I moves and when they can be performed, see
-r1(StrandRef, int, int, bool, bool).
+r1(StrandRef, int, int).
 
 Precondition:
     The given strand reference is either a null reference, or else
@@ -4166,8 +4276,8 @@ Precondition:
 
 Parameter ``arc``:
     identifies the arc of the link in which the new twist will be
-    introduced. See r1(StrandRef, int, int, bool, bool) for details on
-    exactly how this will be interpreted.
+    introduced. See r1(StrandRef, int, int) for details on exactly how
+    this will be interpreted.
 
 Parameter ``side``:
     0 if the twist should be introduced on the left of the arc (when
@@ -4191,7 +4301,7 @@ such a move is not allowed, then this routine returns no value.
 This link diagram will not be changed.
 
 For more detail on type II moves and when they can be performed, see
-r2(StrandRef, bool, bool).
+r2(StrandRef).
 
 Precondition:
     The given strand reference is either a null reference, or else
@@ -4199,8 +4309,8 @@ Precondition:
 
 Parameter ``arc``:
     identifies one of the arcs of the bigon about which the move will
-    be performed. See r2(StrandRef, bool, bool) for details on exactly
-    how this will be interpreted.
+    be performed. See r2(StrandRef) for details on exactly how this
+    will be interpreted.
 
 Returns:
     The new link diagram obtained by performing the requested move, or
@@ -4215,7 +4325,7 @@ such a move is not allowed, then this routine returns no value.
 This link diagram will not be changed.
 
 For more detail on type II moves and when they can be performed, see
-r2(Crossing*, bool, bool).
+r2(Crossing*).
 
 Precondition:
     The given crossing is either a null pointer, or else some crossing
@@ -4223,8 +4333,8 @@ Precondition:
 
 Parameter ``crossing``:
     identifies the crossing at the beginning of the "upper" arc that
-    features in this move. See r2(Crossing*, bool, bool) for details
-    on exactly how this will be interpreted.
+    features in this move. See r2(Crossing*) for details on exactly
+    how this will be interpreted.
 
 Returns:
     The new link diagram obtained by performing the requested move, or
@@ -4239,7 +4349,7 @@ such a move is not allowed, then this routine returns no value.
 This link diagram will not be changed.
 
 For more detail on type II moves and when they can be performed, see
-r2(StrandRef, int, StrandRef, int, bool, bool).
+r2(StrandRef, int, StrandRef, int).
 
 Precondition:
     Each of the given strand references is either a null reference, or
@@ -4252,8 +4362,8 @@ Precondition:
 
 Parameter ``upperArc``:
     identifies which arc of the link will be passed over another. See
-    r2(StrandRef, int, StrandRef, int, bool, bool) for details on
-    exactly how this will be interpreted.
+    r2(StrandRef, int, StrandRef, int) for details on exactly how this
+    will be interpreted.
 
 Parameter ``upperSide``:
     0 if the new overlap should take place on the left of *upperArc*
@@ -4262,8 +4372,8 @@ Parameter ``upperSide``:
 
 Parameter ``lowerArc``:
     identifies which arc of the link will be passed beneath another.
-    See r2(StrandRef, int, StrandRef, int, bool, bool) for details on
-    exactly how this will be interpreted.
+    See r2(StrandRef, int, StrandRef, int) for details on exactly how
+    this will be interpreted.
 
 Parameter ``lowerSide``:
     0 if the new overlap should take place on the left of *lowerArc*
@@ -4283,7 +4393,7 @@ allowed, then this routine returns no value.
 This link diagram will not be changed.
 
 For more detail on type III moves and when they can be performed, see
-r3(StrandRef, int, bool, bool).
+r3(StrandRef, int).
 
 Precondition:
     The given strand reference is either a null reference, or else
@@ -4291,8 +4401,8 @@ Precondition:
 
 Parameter ``arc``:
     identifies one of the arcs of the triangle about which the move
-    will be performed. See r3(StrandRef, int, bool, bool) for details
-    on exactly how this will be interpreted.
+    will be performed. See r3(StrandRef, int) for details on exactly
+    how this will be interpreted.
 
 Parameter ``side``:
     0 if the third crossing of the triangle is located to the left of
@@ -4312,7 +4422,7 @@ allowed, then this routine returns no value.
 This link diagram will not be changed.
 
 For more detail on type III moves and when they can be performed, see
-r3(Crossing*, int, bool, bool).
+r3(Crossing*, int).
 
 Precondition:
     The given crossing is either a null pointer, or else some crossing
@@ -4320,8 +4430,8 @@ Precondition:
 
 Parameter ``crossing``:
     identifies the crossing at the beginning of the "uppermost" arc
-    that features in this move. See r3(Crossing*, int, bool, bool) for
-    details on exactly what this means.
+    that features in this move. See r3(Crossing*, int) for details on
+    exactly how this will be interpreted.
 
 Parameter ``side``:
     0 if the third crossing of the triangle is located to the left of

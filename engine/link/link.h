@@ -1491,29 +1491,11 @@ class Link :
         bool makeAlternating();
 
         /**
-         * Tests for and/or performs a type I Reidemeister move to remove a
-         * crossing.
+         * If possible, performs a type I Reidemeister move to remove a
+         * crossing at the given location.
+         * If such a move is not allowed, then this routine does nothing.
          *
-         * There are two boolean arguments that control the behaviour of
-         * this routine: \a check and \a perform.
-         *
-         * - If \a check and \a perform are both \c true (the default), then
-         *   this routine will first check whether this move can be performed
-         *   at the given location.  If so, it will perform the move and
-         *   return \c true.  If not, it will do nothing and return \c false.
-         *
-         * - If \a check is \c true but \a perform is \c false, then this
-         *   routine will simply check whether this move can be performed at
-         *   the given location and return \c true or \c false accordingly.
-         *
-         * - If \a check is \c false but \a perform is \c true, then this
-         *   routine will perform the move without any prior checks, and will
-         *   always return \c true.  In this case, it must be known in advance
-         *   that the move can be performed at the given location.
-         *
-         * - If \a check and \a perform are both \c false, then this
-         *   routine does nothing and just returns \c true.  (There is
-         *   no reason to use this combination of arguments.)
+         * This link diagram will be changed directly.
          *
          * The location of this move is specified by the argument \a crossing,
          * which indicates the crossing that will be removed.  Specifically,
@@ -1529,45 +1511,20 @@ class Link :
          * However, no crossings other than the one involved in this move
          * will be destroyed.
          *
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
          * \param crossing identifies the crossing to be removed.
-         * \param check \c true if we are to check whether the move can
-         * be performed at the given location.
-         * \param perform \c true if we should actually perform the move.
-         * \return If \a check is \c true, this function returns \c true
-         * if and only if the move can be performed.  If \a check is \c false,
-         * this function always returns \c true.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
-        bool r1(Crossing* crossing, bool check = true, bool perform = true);
+        bool r1(Crossing* crossing);
         /**
-         * Tests for and/or performs a type I Reidemeister move to add a
-         * new crossing.
+         * If possible, performs a type I Reidemeister move to add a
+         * new crossing at the given location.
+         * If such a move is not allowed, then this routine does nothing.
          *
-         * There are two boolean arguments that control the behaviour of
-         * this routine: \a check and \a perform.
-         *
-         * - If \a check and \a perform are both \c true (the default), then
-         *   this routine will first check whether this move can be performed
-         *   at the given location.  If so, it will perform the move and
-         *   return \c true.  If not, it will do nothing and return \c false.
-         *
-         * - If \a check is \c true but \a perform is \c false, then this
-         *   routine will simply check whether this move can be performed at
-         *   the given location and return \c true or \c false accordingly.
-         *
-         * - If \a check is \c false but \a perform is \c true, then this
-         *   routine will perform the move without any prior checks, and will
-         *   always return \c true.  In this case, it must be known in advance
-         *   that the move can be performed at the given location.
-         *
-         * - If \a check and \a perform are both \c false, then this
-         *   routine does nothing and just returns \c true.  (There is
-         *   no reason to use this combination of arguments.)
+         * This link diagram will be changed directly.
          *
          * The location of this move is specified by the argument \a arc.
          * Specifically, this move involves adding a trivial twist to the
@@ -1591,9 +1548,6 @@ class Link :
          * The existing crossings in this link will keep the same indices,
          * and the new crossing will be given the next index that is available.
          *
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
@@ -1604,18 +1558,16 @@ class Link :
          * or 1 if the twist should be introduced on the right of the arc.
          * \param sign the sign of the new crossing that will be
          * introduced as part of the twist; this must be +1 or -1.
-         * \param check \c true if we are to check whether the move can
-         * be performed at the given location.
-         * \param perform \c true if we should actually perform the move.
-         * \return If \a check is \c true, this function returns \c true
-         * if and only if the move can be performed.  If \a check is \c false,
-         * this function always returns \c true.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
-        bool r1(StrandRef arc, int side, int sign,
-            bool check = true, bool perform = true);
+        bool r1(StrandRef arc, int side, int sign);
         /**
-         * Tests for and/or performs a type II Reidemeister move to remove
-         * two crossings.
+         * If possible, performs a type II Reidemeister move to remove
+         * two crossings at the given location.
+         * If such a move is not allowed, then this routine does nothing.
+         *
+         * This link diagram will be changed directly.
          *
          * There are two variants of this routine: one that takes an
          * arc, and one that takes a crossing.  This variant, which takes
@@ -1623,27 +1575,6 @@ class Link :
          * this move can be passed).  The other variant, which takes a
          * crossing, offers a canonical way of performing the move (since for
          * each move there is exactly one crossing that describes it).
-         *
-         * There are two boolean arguments that control the behaviour of
-         * this routine: \a check and \a perform.
-         *
-         * - If \a check and \a perform are both \c true (the default), then
-         *   this routine will first check whether this move can be performed
-         *   at the given location.  If so, it will perform the move and
-         *   return \c true.  If not, it will do nothing and return \c false.
-         *
-         * - If \a check is \c true but \a perform is \c false, then this
-         *   routine will simply check whether this move can be performed at
-         *   the given location and return \c true or \c false accordingly.
-         *
-         * - If \a check is \c false but \a perform is \c true, then this
-         *   routine will perform the move without any prior checks, and will
-         *   always return \c true.  In this case, it must be known in advance
-         *   that the move can be performed at the given location.
-         *
-         * - If \a check and \a perform are both \c false, then this
-         *   routine does nothing and just returns \c true.  (There is
-         *   no reason to use this combination of arguments.)
          *
          * The location of this move is specified by the argument \a arc.
          * Specifically, this move involves pulling apart two arcs of
@@ -1661,24 +1592,21 @@ class Link :
          * However, no crossings other than the two involved in this move
          * will be destroyed.
          *
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
          * \param arc identifies one of the arcs of the bigon about
          * which the move will be performed, as described above.
-         * \param check \c true if we are to check whether the move is legal.
-         * \param perform \c true if we should actually perform the move.
-         * \return If \a check is \c true, this function returns \c true
-         * if and only if the requested move is legal.  If \a check is \c false,
-         * this function always returns \c true.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
-        bool r2(StrandRef arc, bool check = true, bool perform = true);
+        bool r2(StrandRef arc);
         /**
-         * Tests for and/or performs a type II Reidemeister move to remove
-         * two crossings.
+         * If possible, performs a type II Reidemeister move to remove
+         * two crossings at the given location.
+         * If such a move is not allowed, then this routine does nothing.
+         *
+         * This link diagram will be changed directly.
          *
          * There are two variants of this routine: one that takes an
          * arc, and one that takes a crossing.  The other variant, which takes
@@ -1686,27 +1614,6 @@ class Link :
          * this move can be passed).  This variant, which takes a
          * crossing, offers a canonical way of performing the move (since for
          * each move there is exactly one crossing that describes it).
-         *
-         * There are two boolean arguments that control the behaviour of
-         * this routine: \a check and \a perform.
-         *
-         * - If \a check and \a perform are both \c true (the default), then
-         *   this routine will first check whether this move can be performed
-         *   at the given location.  If so, it will perform the move and
-         *   return \c true.  If not, it will do nothing and return \c false.
-         *
-         * - If \a check is \c true but \a perform is \c false, then this
-         *   routine will simply check whether this move can be performed at
-         *   the given location and return \c true or \c false accordingly.
-         *
-         * - If \a check is \c false but \a perform is \c true, then this
-         *   routine will perform the move without any prior checks, and will
-         *   always return \c true.  In this case, it must be known in advance
-         *   that the move can be performed at the given location.
-         *
-         * - If \a check and \a perform are both \c false, then this
-         *   routine does nothing and just returns \c true.  (There is
-         *   no reason to use this combination of arguments.)
          *
          * The location of this move is specified by the argument \a crossing,
          * Specifically, this move involves pulling apart two arcs of the link
@@ -1727,45 +1634,21 @@ class Link :
          * However, no crossings other than the two involved in this move
          * will be destroyed.
          *
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
          * \param crossing identifies the crossing at the beginning of
          * the "upper" arc that features in this move, as described above.
-         * \param check \c true if we are to check whether the move is legal.
-         * \param perform \c true if we should actually perform the move.
-         * \return If \a check is \c true, this function returns \c true
-         * if and only if the requested move is legal.  If \a check is \c false,
-         * this function always returns \c true.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
-        bool r2(Crossing* crossing, bool check = true, bool perform = true);
+        bool r2(Crossing* crossing);
         /**
-         * Tests for and/or performs a type II Reidemeister move to add
-         * two new crossings.
+         * If possible, performs a type II Reidemeister move to add
+         * two new crossings at the given location.
+         * If such a move is not allowed, then this routine does nothing.
          *
-         * There are two boolean arguments that control the behaviour of
-         * this routine: \a check and \a perform.
-         *
-         * - If \a check and \a perform are both \c true (the default), then
-         *   this routine will first check whether this move can be performed
-         *   at the given location.  If so, it will perform the move and
-         *   return \c true.  If not, it will do nothing and return \c false.
-         *
-         * - If \a check is \c true but \a perform is \c false, then this
-         *   routine will simply check whether this move can be performed at
-         *   the given location and return \c true or \c false accordingly.
-         *
-         * - If \a check is \c false but \a perform is \c true, then this
-         *   routine will perform the move without any prior checks, and will
-         *   always return \c true.  In this case, it must be known in advance
-         *   that the move can be performed at the given location.
-         *
-         * - If \a check and \a perform are both \c false, then this
-         *   routine does nothing and just returns \c true.  (There is
-         *   no reason to use this combination of arguments.)
+         * This link diagram will be changed directly.
          *
          * The location of this move is specified by the arguments \a upperArc,
          * \a upperSide, \a lowerArc and \a lowerSide.  Specifically, this
@@ -1800,15 +1683,15 @@ class Link :
          * and the two new crossings will be given the next two indices
          * that are available.
          *
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
          * \warning The check for this move is expensive (linear time),
          * since it includes testing whether both sides-of-arcs belong
-         * to the same 2-cell of the knot diagram.
+         * to the same 2-cell of the knot diagram.  If you are certain that
+         * the move is legal, and you wish to circumvent this check, C++ users
+         * can call the variant of this function that takes an extra
+         * Unprotected argument.
          *
          * \param upperArc identifies the arc of the link which will be
          * passed over the other, as described above.
@@ -1822,17 +1705,69 @@ class Link :
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
-         * \param check \c true if we are to check whether the move can
-         * be performed at the given location.
-         * \param perform \c true if we should actually perform the move.
-         * \return If \a check is \c true, this function returns \c true
-         * if and only if the move can be performed.  If \a check is \c false,
-         * this function always returns \c true.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
         bool r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
-            int lowerSide, bool check = true, bool perform = true);
+            int lowerSide);
         /**
-         * Tests for and/or performs a type III Reidemeister move.
+         * Performs a type II Reidemeister move at the given location to add
+         * two crossings, without any safety checks.
+         *
+         * This variant of r2() is offered because it is expensive to test
+         * whether a type II move can be performed at a given location
+         * (essentially one must walk around an entire 2-cell of the link
+         * diagram, which takes linear time).
+         *
+         * This function will _always_ perform the requested Reidemeister move
+         * directy on this link, _without_ first testing whether it is legal.
+         * The onus is on the programmer to ensure the legality of the move
+         * beforehand.  Getting this wrong could be disastrous (essentially
+         * you could end up with a link diagram that does not actually embed
+         * in the plane).
+         *
+         * The (unnamed) Unprotected argument would typically be the constant
+         * `regina::unprotected`.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(StrandRef, int, StrandRef, int).
+         *
+         * \pre Each of the given strand references is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         * \pre It is known in advance that this move is in fact legal
+         * (i.e., the given sides of the given arcs bound the same 2-cell of
+         * the link diagram, _and_ \a upperArc and \a lowerArc do not represent
+         * the same arc (or the same zero-crossing unknot component).
+         *
+         * \nopython By design, Python users are not able to circumvent the
+         * legality checks for Reidemeister moves.  If speed is essential, you
+         * should be using C++.
+         *
+         * \param upperArc identifies the arc of the link which will be
+         * passed over the other.  See r2(StrandRef, int, StrandRef, int)
+         * for details on how this will be interpreted.
+         * \param upperSide 0 if the new overlap should take place on the left
+         * of \a upperArc (when walking along \a upperArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a upperArc.
+         * \param lowerArc identifies the arc of the link which will be
+         * passed beneath the other.  See r2(StrandRef, int, StrandRef, int)
+         * for details on how this will be interpreted.
+         * \param lowerSide 0 if the new overlap should take place on the left
+         * of \a lowerArc (when walking along \a lowerArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a lowerArc.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
+         */
+        bool r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
+            int lowerSide, Unprotected);
+        /**
+         * If possible, performs a type III Reidemeister move at the given
+         * location.
+         * If such a move is not allowed, then this routine does nothing.
+         *
+         * This link diagram will be changed directly.
          *
          * There are two variants of this routine: one that takes an
          * arc, and one that takes a crossing.  This variant, which takes
@@ -1840,27 +1775,6 @@ class Link :
          * this move can be passed).  The other variant, which takes a
          * crossing, offers a canonical way of performing the move (since for
          * each move there is exactly one crossing that describes it).
-         *
-         * There are two boolean arguments that control the behaviour of
-         * this routine: \a check and \a perform.
-         *
-         * - If \a check and \a perform are both \c true (the default), then
-         *   this routine will first check whether this move can be performed
-         *   at the given location.  If so, it will perform the move and
-         *   return \c true.  If not, it will do nothing and return \c false.
-         *
-         * - If \a check is \c true but \a perform is \c false, then this
-         *   routine will simply check whether this move can be performed at
-         *   the given location and return \c true or \c false accordingly.
-         *
-         * - If \a check is \c false but \a perform is \c true, then this
-         *   routine will perform the move without any prior checks, and will
-         *   always return \c true.  In this case, it must be known in advance
-         *   that the move can be performed at the given location.
-         *
-         * - If \a check and \a perform are both \c false, then this
-         *   routine does nothing and just returns \c true.  (There is
-         *   no reason to use this combination of arguments.)
          *
          * The location of this move is specified by the arguments \a arc
          * and \a side.  Specifically, this move takes place around a
@@ -1880,9 +1794,6 @@ class Link :
          * crossings involved in this move will simply be reordered
          * along the various segments of the link.
          *
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
@@ -1892,17 +1803,16 @@ class Link :
          * the left of the arc (when walking along the arc in the forward
          * direction), or 1 if the third crossing is located on the right of
          * the arc.
-         * \param check \c true if we are to check whether the move can
-         * be performed at the given location.
-         * \param perform \c true if we should actually perform the move.
-         * \return If \a check is \c true, this function returns \c true
-         * if and only if the move can be performed.  If \a check is \c false,
-         * this function always returns \c true.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
-        bool r3(StrandRef arc, int side, bool check = true,
-            bool perform = true);
+        bool r3(StrandRef arc, int side);
         /**
-         * Tests for and/or performs a type III Reidemeister move.
+         * If possible, performs a type III Reidemeister move at the given
+         * location.
+         * If such a move is not allowed, then this routine does nothing.
+         *
+         * This link diagram will be changed directly.
          *
          * There are two variants of this routine: one that takes an
          * arc, and one that takes a crossing.  The other variant, which takes
@@ -1910,27 +1820,6 @@ class Link :
          * this move can be passed).  This variant, which takes a
          * crossing, offers a canonical way of performing the move (since for
          * each move there is exactly one crossing that describes it).
-         *
-         * There are two boolean arguments that control the behaviour of
-         * this routine: \a check and \a perform.
-         *
-         * - If \a check and \a perform are both \c true (the default), then
-         *   this routine will first check whether this move can be performed
-         *   at the given location.  If so, it will perform the move and
-         *   return \c true.  If not, it will do nothing and return \c false.
-         *
-         * - If \a check is \c true but \a perform is \c false, then this
-         *   routine will simply check whether this move can be performed at
-         *   the given location and return \c true or \c false accordingly.
-         *
-         * - If \a check is \c false but \a perform is \c true, then this
-         *   routine will perform the move without any prior checks, and will
-         *   always return \c true.  In this case, it must be known in advance
-         *   that the move can be performed at the given location.
-         *
-         * - If \a check and \a perform are both \c false, then this
-         *   routine does nothing and just returns \c true.  (There is
-         *   no reason to use this combination of arguments.)
          *
          * The location of this move is specified by the arguments \a crossing
          * and \a side.  Specifically, this move takes place around a
@@ -1952,9 +1841,6 @@ class Link :
          * crossings involved in this move will simply be reordered
          * along the various segments of the link.
          *
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
@@ -1964,29 +1850,24 @@ class Link :
          * the left of the uppermost arc (when walking along the arc in the
          * forward direction), or 1 if the third crossing is located on the
          * right of the uppermost arc.
-         * \param check \c true if we are to check whether the move can
-         * be performed at the given location.
-         * \param perform \c true if we should actually perform the move.
-         * \return If \a check is \c true, this function returns \c true
-         * if and only if the move can be performed.  If \a check is \c false,
-         * this function always returns \c true.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
-        bool r3(Crossing* crossing, int side, bool check = true,
-            bool perform = true);
+        bool r3(Crossing* crossing, int side);
 
         /**
          * Determines whether it is possible to perform a type I Reidemeister
          * move at the given location to remove a crossing.
          *
          * For more detail on type I moves and when they can be performed,
-         * see r1(Crossing*, bool, bool).
+         * see r1(Crossing*).
          *
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
          * \param crossing identifies the candidate crossing to be removed.
-         * See r1(Crossing*, bool, bool) for details on exactly how this will
-         * be interpreted.
+         * See r1(Crossing*) for details on exactly how this will be
+         * interpreted.
          * \return \c true if and only if the requested move can be performed.
          */
         bool hasR1(Crossing* crossing) const;
@@ -1995,15 +1876,14 @@ class Link :
          * move at the given location to add a new crossing.
          *
          * For more detail on type I moves and when they can be performed,
-         * see r1(StrandRef, int, int, bool, bool).
+         * see r1(StrandRef, int, int).
          *
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
          * \param arc identifies the arc of the link in which the new
-         * candidate twist will be introduced.  See
-         * r1(StrandRef, int, int, bool, bool) for details on exactly how
-         * this will be interpreted.
+         * candidate twist will be introduced.  See r1(StrandRef, int, int)
+         * for details on exactly how this will be interpreted.
          * \param side 0 if the candidate twist should be introduced on the
          * left of the arc (when walking along the arc in the forward
          * direction), or 1 if the candidate twist should be introduced on the
@@ -2018,14 +1898,14 @@ class Link :
          * move at the given location to remove two crossings.
          *
          * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, bool, bool).
+         * see r2(StrandRef).
          *
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
          * \param arc identifies one of the arcs of the bigon about which the
-         * candidate move will be performed.  See r2(StrandRef, bool, bool)
-         * for details on exactly how this will be interpreted.
+         * candidate move will be performed.  See r2(StrandRef) for details on
+         * exactly how this will be interpreted.
          * \return \c true if and only if the requested move can be performed.
          */
         bool hasR2(StrandRef arc) const;
@@ -2034,15 +1914,14 @@ class Link :
          * move at the given location to remove two crossings.
          *
          * For more detail on type II moves and when they can be performed,
-         * see r2(Crossing*, bool, bool).
+         * see r2(Crossing*).
          *
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
          * \param crossing identifies the crossing at the beginning of
-         * the "upper" arc that features in this candidate move.
-         * See r2(Crossing*, bool, bool) for details on exactly how this will
-         * be interpreted.
+         * the "upper" arc that features in this candidate move.  See
+         * r2(Crossing*) for details on exactly how this will be interpreted.
          * \return \c true if and only if the requested move can be performed.
          */
         bool hasR2(Crossing* crossing) const;
@@ -2051,7 +1930,7 @@ class Link :
          * move at the given location to add two new crossings.
          *
          * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, int, StrandRef, int, bool, bool).
+         * see r2(StrandRef, int, StrandRef, int).
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
@@ -2062,16 +1941,16 @@ class Link :
          *
          * \param upperArc identifies which arc of the link would be passed
          * over another in this candidate move.  See
-         * r2(StrandRef, int, StrandRef, int, bool, bool) for details on
-         * exactly how this will be interpreted.
+         * r2(StrandRef, int, StrandRef, int) for details on exactly how this
+         * will be interpreted.
          * \param upperSide 0 if the new overlap would take place on the left
          * of \a upperArc (when walking along \a upperArc in the forward
          * direction), or 1 if the new overlap would take place on the right
          * of \a upperArc.
          * \param lowerArc identifies which arc of the link would be passed
          * beneath another in this candidate move.  See
-         * r2(StrandRef, int, StrandRef, int, bool, bool) for details on
-         * exactly how this will be interpreted.
+         * r2(StrandRef, int, StrandRef, int) for details on exactly how this
+         * will be interpreted.
          * \param lowerSide 0 if the new overlap would take place on the left
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap would take place on the right
@@ -2085,15 +1964,14 @@ class Link :
          * move at the given location.
          *
          * For more detail on type III moves and when they can be performed,
-         * see r3(StrandRef, int, bool, bool).
+         * see r3(StrandRef, int).
          *
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
          * \param arc identifies one of the arcs of the triangle about which
-         * the candidate move would be performed.  See
-         * r3(StrandRef, int, bool, bool) for details on exactly how this will
-         * be interpreted.
+         * the candidate move would be performed.  See r3(StrandRef, int) for
+         * details on exactly how this will be interpreted.
          * \param side 0 if the third crossing of the triangle is located to
          * the left of the arc (when walking along the arc in the forward
          * direction), or 1 if the third crossing is located on the right of
@@ -2106,15 +1984,15 @@ class Link :
          * move at the given location.
          *
          * For more detail on type III moves and when they can be performed,
-         * see r3(Crossing*, int, bool, bool).
+         * see r3(Crossing*, int).
          *
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
-         * \param crossing identifies the crossing at the beginning of
-         * the "uppermost" arc that features in this candidate move.  See
-         * r3(Crossing*, int, bool, bool) for details on exactly what this
-         * means.
+         * \param crossing identifies the crossing at the beginning of the
+         * "uppermost" arc that features in this candidate move.  See
+         * r3(Crossing*, int) for details on exactly how this will be
+         * interpreted.
          * \param side 0 if the third crossing of the triangle is located to
          * the left of the uppermost arc (when walking along the arc in the
          * forward direction), or 1 if the third crossing is located on the
@@ -2131,14 +2009,13 @@ class Link :
          * This link diagram will not be changed.
          *
          * For more detail on type I moves and when they can be performed,
-         * see r1(Crossing*, bool, bool).
+         * see r1(Crossing*).
          *
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
-         * \param crossing identifies the crossing to be removed.
-         * See r1(Crossing*, bool, bool) for details on exactly how this will
-         * be interpreted.
+         * \param crossing identifies the crossing to be removed.  See
+         * r1(Crossing*) for details on exactly how this will be interpreted.
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
@@ -2151,14 +2028,14 @@ class Link :
          * This link diagram will not be changed.
          *
          * For more detail on type I moves and when they can be performed,
-         * see r1(StrandRef, int, int, bool, bool).
+         * see r1(StrandRef, int, int).
          *
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \param arc identifies the arc of the link in which the new
-         * twist will be introduced.  See r1(StrandRef, int, int, bool, bool)
-         * for details on exactly how this will be interpreted.
+         * \param arc identifies the arc of the link in which the new twist
+         * will be introduced.  See r1(StrandRef, int, int) for details on
+         * exactly how this will be interpreted.
          * \param side 0 if the twist should be introduced on the left
          * of the arc (when walking along the arc in the forward direction),
          * or 1 if the twist should be introduced on the right of the arc.
@@ -2176,14 +2053,14 @@ class Link :
          * This link diagram will not be changed.
          *
          * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, bool, bool).
+         * see r2(StrandRef).
          *
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \param arc identifies one of the arcs of the bigon about
-         * which the move will be performed.  See r2(StrandRef, bool, bool)
-         * for details on exactly how this will be interpreted.
+         * \param arc identifies one of the arcs of the bigon about which the
+         * move will be performed.  See r2(StrandRef) for details on exactly
+         * how this will be interpreted.
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
@@ -2196,15 +2073,14 @@ class Link :
          * This link diagram will not be changed.
          *
          * For more detail on type II moves and when they can be performed,
-         * see r2(Crossing*, bool, bool).
+         * see r2(Crossing*).
          *
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
-         * \param crossing identifies the crossing at the beginning of
-         * the "upper" arc that features in this move.
-         * See r2(Crossing*, bool, bool) for details on exactly how this will
-         * be interpreted.
+         * \param crossing identifies the crossing at the beginning of the
+         * "upper" arc that features in this move.  See r2(Crossing*) for
+         * details on exactly how this will be interpreted.
          * \return The new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
@@ -2217,7 +2093,7 @@ class Link :
          * This link diagram will not be changed.
          *
          * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, int, StrandRef, int, bool, bool).
+         * see r2(StrandRef, int, StrandRef, int).
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
@@ -2227,15 +2103,15 @@ class Link :
          * to the same 2-cell of the knot diagram.
          *
          * \param upperArc identifies which arc of the link will be passed
-         * over another.  See r2(StrandRef, int, StrandRef, int, bool, bool)
-         * for details on exactly how this will be interpreted.
+         * over another.  See r2(StrandRef, int, StrandRef, int) for details
+         * on exactly how this will be interpreted.
          * \param upperSide 0 if the new overlap should take place on the left
          * of \a upperArc (when walking along \a upperArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a upperArc.
          * \param lowerArc identifies which arc of the link will be passed
-         * beneath another.  See r2(StrandRef, int, StrandRef, int, bool, bool)
-         * for details on exactly how this will be interpreted.
+         * beneath another.  See r2(StrandRef, int, StrandRef, int) for details
+         * on exactly how this will be interpreted.
          * \param lowerSide 0 if the new overlap should take place on the left
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
@@ -2253,14 +2129,14 @@ class Link :
          * This link diagram will not be changed.
          *
          * For more detail on type III moves and when they can be performed,
-         * see r3(StrandRef, int, bool, bool).
+         * see r3(StrandRef, int).
          *
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
          * \param arc identifies one of the arcs of the triangle about which
-         * the move will be performed.  See r3(StrandRef, int, bool, bool)
-         * for details on exactly how this will be interpreted.
+         * the move will be performed.  See r3(StrandRef, int) for details on
+         * exactly how this will be interpreted.
          * \param side 0 if the third crossing of the triangle is located to
          * the left of the arc (when walking along the arc in the forward
          * direction), or 1 if the third crossing is located on the right of
@@ -2277,15 +2153,14 @@ class Link :
          * This link diagram will not be changed.
          *
          * For more detail on type III moves and when they can be performed,
-         * see r3(Crossing*, int, bool, bool).
+         * see r3(Crossing*, int).
          *
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
-         * \param crossing identifies the crossing at the beginning of
-         * the "uppermost" arc that features in this move.  See
-         * r3(Crossing*, int, bool, bool) for details on exactly what this
-         * means.
+         * \param crossing identifies the crossing at the beginning of the
+         * "uppermost" arc that features in this move.  See r3(Crossing*, int)
+         * for details on exactly how this will be interpreted.
          * \param side 0 if the third crossing of the triangle is located to
          * the left of the uppermost arc (when walking along the arc in the
          * forward direction), or 1 if the third crossing is located on the
@@ -2294,6 +2169,260 @@ class Link :
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR3(Crossing* crossing, int side) const;
+
+        /**
+         * Deprecated routine that tests for and optionally performs a type I
+         * Reidemeister move to remove a crossing.
+         *
+         * For more detail on type I moves and when they can be performed,
+         * see r1(Crossing*).
+         *
+         * This routine will always _check_ whether the requested move is
+         * allowed.  If it is, and if the argument \a perform is \c true,
+         * this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasR1().  If you wish to both check and perform the move,
+         * call r1() without the two additional boolean arguments.
+         *
+         * \warning A side-effect of this move is that, because one crossing
+         * is being removed, the other crossings in the link may be reindexed.
+         * However, no crossings other than the one involved in this move
+         * will be destroyed.
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing to be removed.  See
+         * r1(crossing*) for details on exactly how this will be interpreted.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool r1(Crossing* crossing,
+            bool ignored, bool perform = true);
+        /**
+         * Deprecated routine that tests for and optionally performs a type I
+         * Reidemeister move to add a new crossing.
+         *
+         * For more detail on type I moves and when they can be performed,
+         * see r1(StrandRef, int, int).
+         *
+         * This routine will always _check_ whether the requested move is
+         * allowed.  If it is, and if the argument \a perform is \c true,
+         * this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasR1().  If you wish to both check and perform the move,
+         * call r1() without the two additional boolean arguments.
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies the arc of the link in which the new twist
+         * will be introduced.  See r1(StrandRef, int, int) for details on
+         * exactly how this will be interpreted.
+         * \param side 0 if the twist should be introduced on the left
+         * of the arc (when walking along the arc in the forward direction),
+         * or 1 if the twist should be introduced on the right of the arc.
+         * \param sign the sign of the new crossing that will be
+         * introduced as part of the twist; this must be +1 or -1.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool r1(StrandRef arc, int side, int sign,
+            bool ignored, bool perform = true);
+        /**
+         * Deprecated routine that tests for and optionally performs a type II
+         * Reidemeister move to remove two crossings.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(StrandRef).
+         *
+         * This routine will always _check_ whether the requested move is
+         * allowed.  If it is, and if the argument \a perform is \c true,
+         * this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasR2().  If you wish to both check and perform the move,
+         * call r2() without the two additional boolean arguments.
+         *
+         * \warning A side-effect of this move is that, because two crossings
+         * are being removed, the other crossings in the link may be reindexed.
+         * However, no crossings other than the two involved in this move
+         * will be destroyed.
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies one of the arcs of the bigon about which the
+         * move will be performed.  See r2(StrandRef) for details on exactly
+         * how this will be interpreted.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool r2(StrandRef arc,
+            bool ignored, bool perform = true);
+        /**
+         * Deprecated routine that tests for and optionally performs a type II
+         * Reidemeister move to remove two crossings.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(Crossing*).
+         *
+         * This routine will always _check_ whether the requested move is
+         * allowed.  If it is, and if the argument \a perform is \c true,
+         * this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasR2().  If you wish to both check and perform the move,
+         * call r2() without the two additional boolean arguments.
+         *
+         * \warning A side-effect of this move is that, because two crossings
+         * are being removed, the other crossings in the link may be reindexed.
+         * However, no crossings other than the two involved in this move
+         * will be destroyed.
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing at the beginning of
+         * the "upper" arc that features in this move.  See r2(Crossing*)
+         * for details on exactly how this will be interpreted.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool r2(Crossing* crossing,
+            bool ignored, bool perform = true);
+        /**
+         * Deprecated routine that tests for and optionally performs a type II
+         * Reidemeister move to add two new crossings.
+         *
+         * For more detail on type II moves and when they can be performed,
+         * see r2(StrandRef, int, StrandRef, int).
+         *
+         * This routine will always _check_ whether the requested move is
+         * allowed.  If it is, and if the argument \a perform is \c true,
+         * this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasR2().  If you wish to both check and perform the move,
+         * call r2() without the two additional boolean arguments.
+         *
+         * \pre Each of the given strand references is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \warning The check for this move is expensive (linear time),
+         * since it includes testing whether both sides-of-arcs belong
+         * to the same 2-cell of the knot diagram.
+         *
+         * \param upperArc identifies which arc of the link would be passed
+         * over another in this move.  See r2(StrandRef, int, StrandRef, int)
+         * for details on exactly how this will be interpreted.
+         * \param upperSide 0 if the new overlap should take place on the left
+         * of \a upperArc (when walking along \a upperArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a upperArc.
+         * \param lowerArc identifies which arc of the link would be passed
+         * beneath another in this move.  See r2(StrandRef, int, StrandRef, int)
+         * for details on exactly how this will be interpreted.
+         * \param lowerSide 0 if the new overlap should take place on the left
+         * of \a lowerArc (when walking along \a lowerArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a lowerArc.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool r2(StrandRef upperArc, int upperSide,
+            StrandRef lowerArc, int lowerSide,
+            bool ignored, bool perform = true);
+        /**
+         * Deprecated routine that tests for and optionally performs a type III
+         * Reidemeister move.
+         *
+         * For more detail on type III moves and when they can be performed,
+         * see r3(StrandRef, int).
+         *
+         * This routine will always _check_ whether the requested move is
+         * allowed.  If it is, and if the argument \a perform is \c true,
+         * this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasR3().  If you wish to both check and perform the move,
+         * call r3() without the two additional boolean arguments.
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies one of the arcs of the triangle about which
+         * the move would be performed.  See r3(StrandRef, int) for details on
+         * exactly how this will be interpreted.
+         * \param side 0 if the third crossing of the triangle is located to
+         * the left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the third crossing is located on the right of
+         * the arc.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool r3(StrandRef arc, int side,
+            bool ignored, bool perform = true);
+        /**
+         * Deprecated routine that tests for and optionally performs a type III
+         * Reidemeister move.
+         *
+         * For more detail on type III moves and when they can be performed,
+         * see r3(Crossing*, int).
+         *
+         * This routine will always _check_ whether the requested move is
+         * allowed.  If it is, and if the argument \a perform is \c true,
+         * this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasR3().  If you wish to both check and perform the move,
+         * call r3() without the two additional boolean arguments.
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing identifies the crossing at the beginning of the
+         * "uppermost" arc that features in this move.  See r3(Crossing*, int)
+         * for details on exactly how this will be interpreted.
+         * \param side 0 if the third crossing of the triangle is located to
+         * the left of the uppermost arc (when walking along the arc in the
+         * forward direction), or 1 if the third crossing is located on the
+         * right of the uppermost arc.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool r3(Crossing* crossing, int side,
+            bool ignored, bool perform = true);
 
         /**
          * Tests whether this link has a pass move that will reduce the
@@ -5161,6 +5290,68 @@ class Link :
         void addComponents(size_t strandsRemaining);
 
         /**
+         * Implements testing for and/or performing Reidemeister moves.
+         * See r1() for details on what the arguments mean.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         */
+        bool internalR1(Crossing* crossing, bool check, bool perform);
+
+        /**
+         * Implements testing for and/or performing Reidemeister moves.
+         * See r1() for details on what the arguments mean.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         */
+        bool internalR1(StrandRef arc, int side, int sign, bool check,
+            bool perform);
+
+        /**
+         * Implements testing for and/or performing Reidemeister moves.
+         * See r2() for details on what the arguments mean.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         */
+        bool internalR2(StrandRef arc, bool check, bool perform);
+
+        /**
+         * Implements testing for and/or performing Reidemeister moves.
+         * See r2() for details on what the arguments mean.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         */
+        bool internalR2(StrandRef upperArc, int upperSide,
+            StrandRef lowerArc, int lowerSide, bool check, bool perform);
+
+        /**
+         * Implements testing for and/or performing Reidemeister moves.
+         * See r3() for details on what the arguments mean.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         */
+        bool internalR3(StrandRef arc, int side, bool check, bool perform);
+
+        /**
+         * Implements testing for and/or performing Reidemeister moves.
+         * See r3() for details on what the arguments mean.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         */
+        bool internalR3(Crossing* crossing, int side, bool check, bool perform);
+
+        /**
          * Internal to bracketNaive().
          *
          * Returns the number of loops in the link produced by resolving
@@ -5659,11 +5850,169 @@ inline bool Link::knowsHomfly() const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
     return homflyAZ_.has_value();
 }
-inline bool Link::r2(Crossing* crossing, bool check, bool perform) {
-    return r2(StrandRef(crossing, 1), check, perform);
+
+inline bool Link::r1(Crossing* crossing) {
+    return internalR1(crossing, true, true);
 }
 
-inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
+inline bool Link::r1(StrandRef arc, int side, int sign) {
+    return internalR1(arc, side, sign, true, true);
+}
+
+inline bool Link::r2(StrandRef arc) {
+    return internalR2(arc, true, true);
+}
+
+inline bool Link::r2(Crossing* crossing) {
+    return internalR2(StrandRef(crossing, 1), true, true);
+}
+
+inline bool Link::r2(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide) {
+    return internalR2(upperArc, upperSide, lowerArc, lowerSide, true, true);
+}
+
+inline bool Link::r2(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide, Unprotected) {
+    return internalR2(upperArc, upperSide, lowerArc, lowerSide, false, true);
+}
+
+inline bool Link::r3(StrandRef arc, int side) {
+    return internalR3(arc, side, true, true);
+}
+
+inline bool Link::r3(Crossing* crossing, int side) {
+    return internalR3(crossing, side, true, true);
+}
+
+inline bool Link::hasR1(Crossing* crossing) const {
+    return const_cast<Link*>(this)->internalR1(crossing, true, false);
+}
+
+inline bool Link::hasR1(StrandRef arc, int side, int sign) const {
+    return const_cast<Link*>(this)->internalR1(arc, side, sign, true, false);
+}
+
+inline bool Link::hasR2(StrandRef arc) const {
+    return const_cast<Link*>(this)->internalR2(arc, true, false);
+}
+
+inline bool Link::hasR2(Crossing* crossing) const {
+    return const_cast<Link*>(this)->internalR2(StrandRef(crossing, 1),
+        true, false);
+}
+
+inline bool Link::hasR2(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide) const {
+    return const_cast<Link*>(this)->internalR2(upperArc, upperSide,
+        lowerArc, lowerSide, true, false);
+}
+
+inline bool Link::hasR3(StrandRef arc, int side) const {
+    return const_cast<Link*>(this)->internalR3(arc, side, true, false);
+}
+
+inline bool Link::hasR3(Crossing* crossing, int side) const {
+    return const_cast<Link*>(this)->internalR3(crossing, side, true, false);
+}
+
+inline std::optional<Link> Link::withR1(Crossing* crossing) const {
+    if (! hasR1(crossing))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR1(ans->translate(crossing), false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::withR1(StrandRef arc, int side, int sign)
+        const {
+    if (! hasR1(arc, side, sign))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR1(ans->translate(arc), side, sign, false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::withR2(StrandRef arc) const {
+    if (! hasR2(arc))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR2(ans->translate(arc), false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::withR2(Crossing* crossing) const {
+    if (! hasR2(crossing))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR2(StrandRef(ans->translate(crossing), 1), false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::withR2(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide) const {
+    if (! hasR2(upperArc, upperSide, lowerArc, lowerSide))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR2(ans->translate(upperArc), upperSide,
+        ans->translate(lowerArc), lowerSide, false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::withR3(StrandRef arc, int side) const {
+    if (! hasR3(arc, side))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR3(ans->translate(arc), side, false, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::withR3(Crossing* crossing, int side) const {
+    if (! hasR3(crossing, side))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR3(ans->translate(crossing), side, false, true);
+    return ans;
+}
+
+inline bool Link::r1(Crossing* crossing, bool, bool perform) {
+    return internalR1(crossing, true, perform);
+}
+
+inline bool Link::r1(StrandRef arc, int side, int sign, bool, bool perform) {
+    return internalR1(arc, side, sign, true, perform);
+}
+
+inline bool Link::r2(StrandRef arc, bool, bool perform) {
+    return internalR2(arc, true, perform);
+}
+
+inline bool Link::r2(Crossing* crossing, bool, bool perform) {
+    return internalR2(StrandRef(crossing, 1), true, perform);
+}
+
+inline bool Link::r2(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide, bool, bool perform) {
+    return internalR2(upperArc, upperSide, lowerArc, lowerSide, true, perform);
+}
+
+inline bool Link::r3(StrandRef arc, int side, bool, bool perform) {
+    return internalR3(arc, side, true, perform);
+}
+
+inline bool Link::r3(Crossing* crossing, int side, bool, bool perform) {
+    return internalR3(crossing, side, true, perform);
+}
+
+inline bool Link::internalR3(Crossing* crossing, int side, bool check,
+        bool perform) {
     StrandRef s(crossing, 1);
 
     // If we are testing, then make sure this is an uppermost arc.
@@ -5674,103 +6023,7 @@ inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
             return false;
     }
 
-    return r3(s, side, check, perform);
-}
-
-inline bool Link::hasR1(Crossing* crossing) const {
-    return const_cast<Link*>(this)->r1(crossing, true, false);
-}
-
-inline bool Link::hasR1(StrandRef arc, int side, int sign) const {
-    return const_cast<Link*>(this)->r1(arc, side, sign, true, false);
-}
-
-inline bool Link::hasR2(StrandRef arc) const {
-    return const_cast<Link*>(this)->r2(arc, true, false);
-}
-
-inline bool Link::hasR2(Crossing* crossing) const {
-    return const_cast<Link*>(this)->r2(crossing, true, false);
-}
-
-inline bool Link::hasR2(StrandRef upperArc, int upperSide,
-        StrandRef lowerArc, int lowerSide) const {
-    return const_cast<Link*>(this)->r2(upperArc, upperSide, lowerArc, lowerSide,
-        true, false);
-}
-
-inline bool Link::hasR3(StrandRef arc, int side) const {
-    return const_cast<Link*>(this)->r3(arc, side, true, false);
-}
-
-inline bool Link::hasR3(Crossing* crossing, int side) const {
-    return const_cast<Link*>(this)->r3(crossing, side, true, false);
-}
-
-inline std::optional<Link> Link::withR1(Crossing* crossing) const {
-    if (! hasR1(crossing))
-        return {};
-
-    std::optional<Link> ans(*this);
-    ans->r1(ans->translate(crossing), false, true);
-    return ans;
-}
-
-inline std::optional<Link> Link::withR1(StrandRef arc, int side, int sign)
-        const {
-    if (! hasR1(arc, side, sign))
-        return {};
-
-    std::optional<Link> ans(*this);
-    ans->r1(ans->translate(arc), side, sign, false, true);
-    return ans;
-}
-
-inline std::optional<Link> Link::withR2(StrandRef arc) const {
-    if (! hasR2(arc))
-        return {};
-
-    std::optional<Link> ans(*this);
-    ans->r2(ans->translate(arc), false, true);
-    return ans;
-}
-
-inline std::optional<Link> Link::withR2(Crossing* crossing) const {
-    if (! hasR2(crossing))
-        return {};
-
-    std::optional<Link> ans(*this);
-    ans->r2(ans->translate(crossing), false, true);
-    return ans;
-}
-
-inline std::optional<Link> Link::withR2(StrandRef upperArc, int upperSide,
-        StrandRef lowerArc, int lowerSide) const {
-    if (! hasR2(upperArc, upperSide, lowerArc, lowerSide))
-        return {};
-
-    std::optional<Link> ans(*this);
-    ans->r2(ans->translate(upperArc), upperSide,
-        ans->translate(lowerArc), lowerSide, false, true);
-    return ans;
-}
-
-inline std::optional<Link> Link::withR3(StrandRef arc, int side) const {
-    if (! hasR3(arc, side))
-        return {};
-
-    std::optional<Link> ans(*this);
-    ans->r3(ans->translate(arc), side, false, true);
-    return ans;
-}
-
-inline std::optional<Link> Link::withR3(Crossing* crossing, int side) const {
-    if (! hasR3(crossing, side))
-        return {};
-
-    std::optional<Link> ans(*this);
-    ans->r3(ans->translate(crossing), side, false, true);
-    return ans;
+    return internalR3(s, side, check, perform);
 }
 
 inline const TreeDecomposition& Link::niceTreeDecomposition() const {

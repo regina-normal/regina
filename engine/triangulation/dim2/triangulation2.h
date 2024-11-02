@@ -649,7 +649,7 @@ inline std::optional<Triangulation<2>> Triangulation<2>::with20(Vertex<2>* v)
     if (! has20(v))
         return {};
 
-    std::optional<Triangulation<2>> ans(*this);
+    std::optional<Triangulation<2>> ans(std::in_place, *this);
     ans->twoZeroMove(ans->translate(v), false, true);
     return ans;
 }
