@@ -1219,21 +1219,37 @@ class Tangle : public Output<Tangle> {
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r1() for details on what the arguments mean.
+         * See r1() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR1(Crossing* crossing, bool check, bool perform);
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r2() for details on what the arguments mean.
+         * See r2() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR2(StrandRef arc, bool check, bool perform);
 };

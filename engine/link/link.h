@@ -1757,10 +1757,8 @@ class Link :
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
-         * \return \c true if and only if the requested move was able to
-         * be performed.
          */
-        bool r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
+        void r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
             int lowerSide, Unprotected);
         /**
          * If possible, performs a type III Reidemeister move at the given
@@ -5291,63 +5289,111 @@ class Link :
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r1() for details on what the arguments mean.
+         * See r1() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR1(Crossing* crossing, bool check, bool perform);
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r1() for details on what the arguments mean.
+         * See r1() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR1(StrandRef arc, int side, int sign, bool check,
             bool perform);
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r2() for details on what the arguments mean.
+         * See r2() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR2(StrandRef arc, bool check, bool perform);
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r2() for details on what the arguments mean.
+         * See r2() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR2(StrandRef upperArc, int upperSide,
             StrandRef lowerArc, int lowerSide, bool check, bool perform);
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r3() for details on what the arguments mean.
+         * See r3() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR3(StrandRef arc, int side, bool check, bool perform);
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
-         * See r3() for details on what the arguments mean.
+         * See r3() for details on what the location arguments mean.
          *
+         * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
          */
         bool internalR3(Crossing* crossing, int side, bool check, bool perform);
 
@@ -5872,9 +5918,9 @@ inline bool Link::r2(StrandRef upperArc, int upperSide,
     return internalR2(upperArc, upperSide, lowerArc, lowerSide, true, true);
 }
 
-inline bool Link::r2(StrandRef upperArc, int upperSide,
+inline void Link::r2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide, Unprotected) {
-    return internalR2(upperArc, upperSide, lowerArc, lowerSide, false, true);
+    internalR2(upperArc, upperSide, lowerArc, lowerSide, false, true);
 }
 
 inline bool Link::r3(StrandRef arc, int side) {
