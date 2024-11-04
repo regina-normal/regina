@@ -334,9 +334,9 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
     // things worse, not better.
     Triangulation<4> working(*this, false, true);
 
-    for (size_t attempts = 1; attempts <= max24; ++attempts) {
+    for (ssize_t attempts = 1; attempts <= max24; ++attempts) {
         // Do attempts successive 2-4 moves.
-        for (int i=0; i<attempts; i++) {
+        for (ssize_t i=0; i<attempts; i++) {
             for (auto tet : working.tetrahedra()) {
                 if (working.pachner(tet)) {
                     break;
