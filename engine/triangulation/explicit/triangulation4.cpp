@@ -73,11 +73,11 @@ template void TriangulationBase<4>::cloneSkeleton(const TriangulationBase<4>&);
 template void TriangulationBase<4>::clearBaseProperties();
 template void TriangulationBase<4>::swapBaseData(TriangulationBase<4>&);
 
-template bool TriangulationBase<4>::pachner(Face<4, 0>*, bool, bool);
-template bool TriangulationBase<4>::pachner(Face<4, 1>*, bool, bool);
-template bool TriangulationBase<4>::pachner(Face<4, 2>*, bool, bool);
-template bool TriangulationBase<4>::pachner(Face<4, 3>*, bool, bool);
-template bool TriangulationBase<4>::pachner(Face<4, 4>*, bool, bool);
+template bool TriangulationBase<4>::internalPachner(Face<4, 0>*, bool, bool);
+template bool TriangulationBase<4>::internalPachner(Face<4, 1>*, bool, bool);
+template bool TriangulationBase<4>::internalPachner(Face<4, 2>*, bool, bool);
+template bool TriangulationBase<4>::internalPachner(Face<4, 3>*, bool, bool);
+template bool TriangulationBase<4>::internalPachner(Face<4, 4>*, bool, bool);
 
 template void TriangulationBase<4>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<4>::writeTextLong(std::ostream&) const;

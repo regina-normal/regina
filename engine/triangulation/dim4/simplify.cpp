@@ -591,8 +591,8 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
 
     PacketChangeGroup span(*this);
 
-    pachner( tet24, false, true );
-    pachner( backPent->edge(edge42), false, true );
+    pachner(tet24, regina::unprotected);
+    pachner(backPent->edge(edge42), regina::unprotected);
 
     // Done!
     return true;

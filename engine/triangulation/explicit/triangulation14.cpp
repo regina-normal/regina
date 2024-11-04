@@ -113,21 +113,21 @@ template void TriangulationBase<14>::cloneSkeleton(
 template void TriangulationBase<14>::clearBaseProperties();
 template void TriangulationBase<14>::swapBaseData(TriangulationBase<14>&);
 
-template bool TriangulationBase<14>::pachner(Face<14, 0>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 1>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 2>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 3>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 4>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 5>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 6>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 7>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 8>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 9>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 10>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 11>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 12>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 13>*, bool, bool);
-template bool TriangulationBase<14>::pachner(Face<14, 14>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 0>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 1>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 2>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 3>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 4>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 5>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 6>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 7>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 8>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 9>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 10>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 11>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 12>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 13>*, bool, bool);
+template bool TriangulationBase<14>::internalPachner(Face<14, 14>*, bool, bool);
 
 template void TriangulationBase<14>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<14>::writeTextLong(std::ostream&) const;

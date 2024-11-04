@@ -1940,25 +1940,32 @@ for those simplices that originally had negative orientation).)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::pachner
 constexpr const char *pachner =
-R"doc(Checks the eligibility of and/or performs a (*dim* + 1 - *k*)-(*k* +
-1) Pachner move about the given *k*-face. This involves replacing the
-(*dim* + 1 - *k*) top-dimensional simplices meeting that *k*-face with
-(*k* + 1) new top-dimensional simplices joined along a new internal
-(*dim* - *k*)-face. This can be done iff (i) the given *k*-face is
-valid and non-boundary; (ii) the (*dim* + 1 - *k*) top-dimensional
-simplices that contain it are distinct; and (iii) these simplices are
-joined in such a way that the link of the given *k*-face is the
-standard triangulation of the (*dim* - 1 - *k*)-sphere as the boundary
-of a (*dim* - *k*)-simplex.
+R"doc(If possible, performs a (*dim* + 1 - *k*)-(*k* + 1) Pachner move about
+the given *k*-face. This involves replacing the (*dim* + 1 - *k*) top-
+dimensional simplices meeting that *k*-face with (*k* + 1) new top-
+dimensional simplices joined along a new internal (*dim* - *k*)-face.
 
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-simplex and/or facet locks (see Simplex<dim>::lock() and
-Simplex<dim>::lockFacet() for further details on locks).
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as outlined below), _and_ it will not violate any
+simplex and/or facet locks. See Simplex<dim>::lock() and
+Simplex<dim>::lockFacet() for further details on locks.
+
+In order to not change the topology, we require that:
+
+* the given *k*-face is valid and non-boundary;
+
+* the (*dim* + 1 - *k*) top-dimensional simplices that contain it are
+  distinct; and
+
+* these simplices are joined in such a way that the link of the given
+  *k*-face is the standard triangulation of the `(dim - 1 - k)`-sphere
+  as the boundary of a `(dim - k)`-simplex.
 
 Note that after performing this move, all skeletal objects (facets,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *v*) can no longer be used.
+old skeletal objects (such as the argument *f*) can no longer be used.
 
 If this triangulation is currently oriented, then this Pachner move
 will label the new top-dimensional simplices in a way that preserves
@@ -1970,6 +1977,14 @@ face will be formed from vertices 0,1,...,(*dim* - *k*) of
 ``simplices().back()``.
 
 .. warning::
+    The check for this move takes quadratic time in the number of top-
+    dimensional simplices involved (which may become expensive when
+    *dim* is large and *k* is small). If you are certain that the move
+    is legal, and you wish to circumvent this check, C++ users can
+    call the variant of this function that takes an extra Unprotected
+    argument.
+
+.. warning::
     For the case *k* = *dim* in Regina's standard dimensions, the
     labelling of the belt face has changed as of Regina 5.96 (the
     first prerelease for Regina 6.0). In versions 5.1 and earlier, the
@@ -1977,19 +1992,7 @@ face will be formed from vertices 0,1,...,(*dim* - *k*) of
     version 5.96 it is now ``simplices().back()->vertex(0)``.
 
 Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any simplex and/or facet locks.
-
-Precondition:
     The given *k*-face is a *k*-face of this triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a simplex or facet lock, and *check* was
-    passed as ``False``. This exception will be thrown before any
-    changes are made. See Simplex<dim>::lock() and
-    Simplex<dim>::lockFacet() for further details on how locks work
-    and what their implications are.
 
 Template parameter ``k``:
     the dimension of the given face. This must be between 0 and
@@ -1998,18 +2001,51 @@ Template parameter ``k``:
 Parameter ``f``:
     the *k*-face about which to perform the move.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::pachner_2
+constexpr const char *pachner_2 =
+R"doc(Deprecated routine that tests for and optionally performs a (*dim* + 1
+- *k*)-(*k* + 1) Pachner move about the given *k*-face of this
+triangulation.
+
+For more detail on Pachner moves and when they can be performed, see
+the variant of pachner() without the extra boolean arguments.
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex and/or facet locks (see
+Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
+on locks). If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasPachner(). If you wish to both check and perform the move, call
+    pachner() without the two extra boolean arguments.
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face. This must be between 0 and
+    (*dim*) inclusive.
+
+Parameter ``f``:
+    the *k*-face about which to perform the move.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::pairing
 constexpr const char *pairing =

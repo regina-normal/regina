@@ -54,7 +54,7 @@ namespace regina::detail {
 #ifndef __DOXYGEN
     // The template function movePerm(), which is implemented and then
     // specialised below, is purely for use within the generic implementation
-    // of pachner(), and does not form part of Regina's public API.
+    // of internalPachner(), and does not form part of Regina's public API.
     //
     // It is not a private member of the PachnerHelper class, because we
     // wish to specialise it for standard dimensions without causing the
@@ -195,10 +195,11 @@ namespace regina::detail {
 
 template <int dim>
 template <int k>
-bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
+bool TriangulationBase<dim>::internalPachner(Face<dim, k>* f, bool check,
         bool perform) {
     static_assert(0 <= k && k <= dim,
-        "pachner() requires a facial dimension between 0 and dim inclusive.");
+        "Pachner moves require a facial dimension between "
+        "0 and dim inclusive.");
 
     using LockMask = typename Simplex<dim>::LockMask;
 

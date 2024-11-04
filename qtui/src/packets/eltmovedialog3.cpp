@@ -49,7 +49,7 @@
 
 namespace {
     bool has41(regina::Vertex<3>* v) {
-        return v->triangulation().pachner(v, true, false);
+        return v->triangulation().hasPachner(v);
     }
 
     bool has20v(regina::Vertex<3>* v) {
@@ -57,7 +57,7 @@ namespace {
     }
 
     bool has32(regina::Edge<3>* e) {
-        return e->triangulation().pachner(e, true, false);
+        return e->triangulation().hasPachner(e);
     }
 
     bool has20e(regina::Edge<3>* e) {
@@ -81,11 +81,11 @@ namespace {
     }
 
     bool has23(regina::Triangle<3>* f) {
-        return f->triangulation().pachner(f, true, false);
+        return f->triangulation().hasPachner(f);
     }
 
     bool has14(regina::Tetrahedron<3>* f) {
-        return f->triangulation().pachner(f, true, false);
+        return f->triangulation().hasPachner(f);
     }
 
     bool hasOpenBook(regina::Triangle<3>* f) {

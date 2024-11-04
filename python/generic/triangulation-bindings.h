@@ -46,6 +46,7 @@
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
+using regina::Face;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
@@ -324,15 +325,34 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::template translate<dim>, pybind11::const_),
         pybind11::return_value_policy::reference_internal, rbase::translate);
     regina::for_constexpr<0, dim + 1>([&c](auto k) {
-        c.def("pachner", &Triangulation<dim>::template pachner<k>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        c.def("pachner",
+            overload_cast<Face<dim, k>*>(
+                &Triangulation<dim>::template pachner<k>),
             rbase::pachner);
         c.def("hasPachner", &Triangulation<dim>::template hasPachner<k>,
             rbase::hasPachner);
         c.def("withPachner", &Triangulation<dim>::template withPachner<k>,
             rbase::withPachner);
+        #if defined(__GNUC__)
+        // The following routines are deprecated, but we still need to bind
+        // them.  Silence the inevitable deprecation warnings that will occur.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        c.def("pachner",
+            overload_cast<Face<dim, k>*, bool, bool>(
+                &Triangulation<dim>::template pachner<k>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2); // deprecated
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
     });
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);

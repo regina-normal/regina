@@ -48,23 +48,23 @@
 
 namespace {
     bool has51(regina::Vertex<4>* v) {
-        return v->triangulation().pachner(v, true, false);
+        return v->triangulation().hasPachner(v);
     }
 
     bool has42(regina::Edge<4>* e) {
-        return e->triangulation().pachner(e, true, false);
+        return e->triangulation().hasPachner(e);
     }
 
     bool has33(regina::Triangle<4>* f) {
-        return f->triangulation().pachner(f, true, false);
+        return f->triangulation().hasPachner(f);
     }
 
     bool has24(regina::Tetrahedron<4>* f) {
-        return f->triangulation().pachner(f, true, false);
+        return f->triangulation().hasPachner(f);
     }
 
     bool has15(regina::Pentachoron<4>* f) {
-        return f->triangulation().pachner(f, true, false);
+        return f->triangulation().hasPachner(f);
     }
 
     bool has44(regina::Edge<4>* e) {

@@ -50,6 +50,7 @@
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
 using regina::AbelianGroup;
+using regina::Face;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
@@ -351,30 +352,20 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("threads"),
             pybind11::arg("action"),
             rdoc::retriangulate)
-        .def("pachner", &Triangulation<4>::pachner<4>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<4, 4>*>(&Triangulation<4>::pachner<4>),
             rbase::pachner)
-        .def("pachner", &Triangulation<4>::pachner<3>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<4, 3>*>(&Triangulation<4>::pachner<3>),
             rbase::pachner)
-        .def("pachner", &Triangulation<4>::pachner<2>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<4, 2>*>(&Triangulation<4>::pachner<2>),
             rbase::pachner)
-        .def("pachner", &Triangulation<4>::pachner<1>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<4, 1>*>(&Triangulation<4>::pachner<1>),
             rbase::pachner)
-        .def("pachner", &Triangulation<4>::pachner<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<4, 0>*>(&Triangulation<4>::pachner<0>),
             rbase::pachner)
         .def("twoZeroMove",
             overload_cast<regina::Triangle<4>*, bool, bool>(
@@ -471,6 +462,54 @@ void addTriangulation4(pybind11::module_& m) {
             rdoc::withCollapseEdge)
         .def("withSnapEdge", &Triangulation<4>::withSnapEdge,
             rdoc::withSnapEdge)
+        #if defined(__GNUC__)
+        // The following routines are deprecated, but we still need to bind
+        // them.  Silence the inevitable deprecation warnings that will occur.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        .def("pachner",
+            overload_cast<Face<4, 4>*, bool, bool>(
+                &Triangulation<4>::pachner<4>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<4, 3>*, bool, bool>(
+                &Triangulation<4>::pachner<3>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<4, 2>*, bool, bool>(
+                &Triangulation<4>::pachner<2>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<4, 1>*, bool, bool>(
+                &Triangulation<4>::pachner<1>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<4, 0>*, bool, bool>(
+                &Triangulation<4>::pachner<0>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
         .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<4>::doubleCover, rbase::doubleCover)

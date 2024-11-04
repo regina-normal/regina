@@ -75,12 +75,12 @@ template void TriangulationBase<5>::cloneSkeleton(const TriangulationBase<5>&);
 template void TriangulationBase<5>::clearBaseProperties();
 template void TriangulationBase<5>::swapBaseData(TriangulationBase<5>&);
 
-template bool TriangulationBase<5>::pachner(Face<5, 0>*, bool, bool);
-template bool TriangulationBase<5>::pachner(Face<5, 1>*, bool, bool);
-template bool TriangulationBase<5>::pachner(Face<5, 2>*, bool, bool);
-template bool TriangulationBase<5>::pachner(Face<5, 3>*, bool, bool);
-template bool TriangulationBase<5>::pachner(Face<5, 4>*, bool, bool);
-template bool TriangulationBase<5>::pachner(Face<5, 5>*, bool, bool);
+template bool TriangulationBase<5>::internalPachner(Face<5, 0>*, bool, bool);
+template bool TriangulationBase<5>::internalPachner(Face<5, 1>*, bool, bool);
+template bool TriangulationBase<5>::internalPachner(Face<5, 2>*, bool, bool);
+template bool TriangulationBase<5>::internalPachner(Face<5, 3>*, bool, bool);
+template bool TriangulationBase<5>::internalPachner(Face<5, 4>*, bool, bool);
+template bool TriangulationBase<5>::internalPachner(Face<5, 5>*, bool, bool);
 
 template void TriangulationBase<5>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<5>::writeTextLong(std::ostream&) const;

@@ -83,14 +83,14 @@ template void TriangulationBase<7>::cloneSkeleton(const TriangulationBase<7>&);
 template void TriangulationBase<7>::clearBaseProperties();
 template void TriangulationBase<7>::swapBaseData(TriangulationBase<7>&);
 
-template bool TriangulationBase<7>::pachner(Face<7, 0>*, bool, bool);
-template bool TriangulationBase<7>::pachner(Face<7, 1>*, bool, bool);
-template bool TriangulationBase<7>::pachner(Face<7, 2>*, bool, bool);
-template bool TriangulationBase<7>::pachner(Face<7, 3>*, bool, bool);
-template bool TriangulationBase<7>::pachner(Face<7, 4>*, bool, bool);
-template bool TriangulationBase<7>::pachner(Face<7, 5>*, bool, bool);
-template bool TriangulationBase<7>::pachner(Face<7, 6>*, bool, bool);
-template bool TriangulationBase<7>::pachner(Face<7, 7>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 0>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 1>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 2>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 3>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 4>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 5>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 6>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Face<7, 7>*, bool, bool);
 
 template void TriangulationBase<7>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<7>::writeTextLong(std::ostream&) const;

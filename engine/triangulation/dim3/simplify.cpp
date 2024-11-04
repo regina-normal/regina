@@ -120,8 +120,8 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
 
     PacketChangeGroup span(*this);
 
-    pachner(tri23, false, true);
-    pachner(oldTet[3]->edge(edge32), false, true);
+    pachner(tri23, regina::unprotected);
+    pachner(oldTet[3]->edge(edge32), regina::unprotected);
 
     // Done!
     return true;

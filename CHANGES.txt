@@ -536,7 +536,14 @@ Version 7.4  [ (to be announced) ]
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
-            - New routines hasPachner() and withPachner().
+            - Regarding Pachner moves:
+              + The (check, perform) variant of pachner() is deprecated.
+                You should now call pachner() _without_ extra check/perform
+                arguments: the function will always check for and (if possible)
+                perform the relevant move.
+              + New routine hasPachner() for checking only.
+              + New read-only routine withPachner() that (if possible) returns
+                a new triangulation with the relevant move performed.
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().

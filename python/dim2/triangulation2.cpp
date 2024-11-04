@@ -47,6 +47,7 @@
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
+using regina::Face;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
@@ -279,20 +280,14 @@ void addTriangulation2(pybind11::module_& m) {
         .def("dualToPrimal",
             static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::dualToPrimal), rbase::dualToPrimal)
-        .def("pachner", &Triangulation<2>::pachner<2>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<2, 2>*>(&Triangulation<2>::pachner<2>),
             rbase::pachner)
-        .def("pachner", &Triangulation<2>::pachner<1>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<2, 1>*>(&Triangulation<2>::pachner<1>),
             rbase::pachner)
-        .def("pachner", &Triangulation<2>::pachner<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("pachner",
+            overload_cast<Face<2, 0>*>(&Triangulation<2>::pachner<0>),
             rbase::pachner)
         .def("twoZeroMove", &Triangulation<2>::twoZeroMove,
             pybind11::arg(),
@@ -310,6 +305,40 @@ void addTriangulation2(pybind11::module_& m) {
         .def("withPachner", &Triangulation<2>::withPachner<2>,
             rbase::withPachner)
         .def("with20", &Triangulation<2>::with20, rdoc::with20)
+        #if defined(__GNUC__)
+        // The following routines are deprecated, but we still need to bind
+        // them.  Silence the inevitable deprecation warnings that will occur.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        .def("pachner",
+            overload_cast<Face<2, 2>*, bool, bool>(
+                &Triangulation<2>::pachner<2>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<2, 1>*, bool, bool>(
+                &Triangulation<2>::pachner<1>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<2, 0>*, bool, bool>(
+                &Triangulation<2>::pachner<0>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<2>::doubleCover, rbase::doubleCover)

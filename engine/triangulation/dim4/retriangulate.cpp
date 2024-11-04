@@ -54,43 +54,31 @@ namespace detail {
             size_t i;
 
             for (i = 0; i < t.countVertices(); ++i)
-                if (t.pachner(t.vertex(i), true, false)) {
-                    Triangulation<4> alt(t, false, true);
-                    alt.pachner(alt.vertex(i), false, true);
-                    if (retriang->candidate(std::move(alt), sig))
+                if (auto alt = t.withPachner(t.vertex(i)))
+                    if (retriang->candidate(std::move(*alt), sig))
                         return;
-                }
 
             for (i = 0; i < t.countEdges(); ++i)
-                if (t.pachner(t.edge(i), true, false)) {
-                    Triangulation<4> alt(t, false, true);
-                    alt.pachner(alt.edge(i), false, true);
-                    if (retriang->candidate(std::move(alt), sig))
+                if (auto alt = t.withPachner(t.edge(i)))
+                    if (retriang->candidate(std::move(*alt), sig))
                         return;
-                }
 
             for (i = 0; i < t.countTriangles(); ++i)
-                if (t.pachner(t.triangle(i), true, false)) {
-                    Triangulation<4> alt(t, false, true);
-                    alt.pachner(alt.triangle(i), false, true);
-                    if (retriang->candidate(std::move(alt), sig))
+                if (auto alt = t.withPachner(t.triangle(i)))
+                    if (retriang->candidate(std::move(*alt), sig))
                         return;
-                }
 
             if (t.size() + 2 <= maxSize)
                 for (i = 0; i < t.countTetrahedra(); ++i)
-                    if (t.pachner(t.tetrahedron(i), true, false)) {
-                        Triangulation<4> alt(t, false, true);
-                        alt.pachner(alt.tetrahedron(i), false, true);
-                        if (retriang->candidate(std::move(alt), sig))
+                    if (auto alt = t.withPachner(t.tetrahedron(i)))
+                        if (retriang->candidate(std::move(*alt), sig))
                             return;
-                    }
 
             if (t.size() + 4 <= maxSize)
                 for (i = 0; i < t.size(); ++i) {
                     // 1-5 moves are always legal.
                     Triangulation<4> alt(t, false, true);
-                    alt.pachner(alt.pentachoron(i), true, true);
+                    alt.pachner(alt.pentachoron(i));
                     if (retriang->candidate(std::move(alt), sig))
                         return;
                 }

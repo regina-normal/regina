@@ -82,7 +82,7 @@ bool Triangulation<4>::simplifyInternal() {
                 threeThreeAvailable.clear();
                 // Use triangles() to ensure the skeleton has been calculated.
                 for (Triangle<4>* triangle : use->triangles())
-                    if (use->pachner(triangle, true, false))
+                    if (use->hasPachner(triangle))
                         threeThreeAvailable.push_back(triangle);
 
                 // Increment threeThreeCap if needed.
@@ -96,7 +96,7 @@ bool Triangulation<4>::simplifyInternal() {
                 // Perform a random 3-3 move on the clone.
                 threeThreeChoice = threeThreeAvailable[
                     RandomEngine::rand(threeThreeAvailable.size())];
-                use->pachner(threeThreeChoice, false, true);
+                use->pachner(threeThreeChoice, regina::unprotected);
 
                 // See if we can simplify now.
                 if (use->simplifyToLocalMinimumInternal<context>(true)) {
@@ -338,7 +338,7 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
         // Do attempts successive 2-4 moves.
         for (int i=0; i<attempts; i++) {
             for (auto tet : working.tetrahedra()) {
-                if (working.pachner(tet,true,true)) {
+                if (working.pachner(tet)) {
                     break;
                 }
             }
@@ -356,7 +356,7 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
         // Make the requested number of 3-3 moves.
         for (int i=0; i<max33; i++) {
             for (auto tri : working.triangles()) {
-                if (working.pachner(tri,true,true)) {
+                if (working.pachner(tri)) {
                     break;
                 }
             }

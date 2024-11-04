@@ -1217,14 +1217,13 @@ class TriangulationTest : public testing::Test {
                 regina::Triangulation<dim> inv(result);
                 if constexpr (k == 0) {
                     performed = inv.pachner(
-                        inv.simplex(iso.simpImage(result.size() - 1)),
-                        true, true);
+                        inv.simplex(iso.simpImage(result.size() - 1)));
                 } else {
                     auto face = inv.simplex(iso.simpImage(result.size() - 1))->
                         template face<dim - k>(
                             regina::Face<dim, dim - k>::faceNumber(
                                 iso.facetPerm(result.size() - 1)));
-                    performed = inv.pachner(face, true, true);
+                    performed = inv.pachner(face);
                 }
                 EXPECT_TRUE(performed);
 
