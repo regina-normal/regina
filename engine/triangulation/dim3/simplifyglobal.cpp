@@ -370,11 +370,58 @@ bool Triangulation<3>::simplify() {
 }
 
 bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
-    size_t nTriangles;
-    size_t iTriangle;
-    // size_t nEdges;
-    // size_t iEdge;
-    // std::deque<EdgeEmbedding<3>>::const_iterator embit, embbeginit, embendit;
+    if (! perform) {
+        ensureSkeleton();
+
+        // Try to reduce the number of vertices.
+        if (countVertices() > components().size() &&
+                countVertices() > countBoundaryComponents()) {
+            for (Edge<3>* edge : edges()) {
+#ifdef PINCH_NOT_COLLAPSE
+                if (edge->vertex(0) != edge->vertex(1) &&
+                        (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
+                         edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
+                    // There must be a pinch-edge move here.
+                    // Note: this *increases* the number of tetrahedra.
+                    // We return true anyway, since this matches the behaviour
+                    // when perform == true.
+                    return true;
+                }
+#else
+                if (hasCollapseEdge(edge))
+                    return true;
+#endif
+            }
+        }
+
+        // Look for internal simplifications.
+        for (Edge<3>* edge : edges()) {
+            if (hasPachner(edge))
+                return true;
+            if (has20(edge))
+                return true;
+            if (has21(edge, 0))
+                return true;
+            if (has21(edge, 1))
+                return true;
+        }
+        for (Vertex<3>* vertex : vertices())
+            if (has20(vertex))
+                return true;
+
+        // Look for boundary simplifications.
+        if (hasBoundaryTriangles()) {
+            for (BoundaryComponent<3>* bc : boundaryComponents()) {
+                // Run through triangles of this boundary component looking
+                // for shell boundary moves.
+                for (Triangle<3>* f : bc->facets())
+                    if (hasShellBoundary(f->front().tetrahedron()))
+                        return true;
+            }
+        }
+
+        return false;
+    }
 
     bool changed = false;   // Has anything changed ever (for return value)?
     bool changedNow = true; // Did we just change something (for loop control)?
@@ -400,7 +447,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                         break;
                     }
 #else
-                    if (collapseEdge(edge, true, perform)) {
+                    if (collapseEdge(edge)) {
                         changedNow = changed = true;
                         break;
                     }
@@ -416,19 +463,19 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
 
             // Look for internal simplifications.
             for (Edge<3>* edge : edges()) {
-                if (pachner(edge, true, perform)) {
+                if (pachner(edge)) {
                     changedNow = changed = true;
                     break;
                 }
-                if (twoZeroMove(edge, true, perform)) {
+                if (twoZeroMove(edge)) {
                     changedNow = changed = true;
                     break;
                 }
-                if (twoOneMove(edge, 0, true, perform)) {
+                if (twoOneMove(edge, 0)) {
                     changedNow = changed = true;
                     break;
                 }
-                if (twoOneMove(edge, 1, true, perform)) {
+                if (twoOneMove(edge, 1)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -440,7 +487,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
             for (Vertex<3>* vertex : vertices())
-                if (twoZeroMove(vertex, true, perform)) {
+                if (twoZeroMove(vertex)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -456,15 +503,11 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                 for (BoundaryComponent<3>* bc : boundaryComponents()) {
                     // Run through triangles of this boundary component looking
                     // for shell boundary moves.
-                    nTriangles = bc->countTriangles();
-                    for (iTriangle = 0; iTriangle < nTriangles; iTriangle++) {
-                        if (shellBoundary(bc->triangle(iTriangle)->
-                                front().tetrahedron(),
-                                true, perform)) {
+                    for (Triangle<3>* f : bc->facets())
+                        if (shellBoundary(f->front().tetrahedron())) {
                             changedNow = changed = true;
                             break;
                         }
-                    }
                     if (changedNow)
                         break;
                 }

@@ -184,8 +184,51 @@ template bool Triangulation<4>::simplifyInternal<
 
 template <Triangulation<4>::SimplifyContext context>
 bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
-    unsigned long nTetrahedra;
-    unsigned long iTet;
+    if (! perform) {
+        ensureSkeleton();
+
+        if constexpr (context != SimplifyContext::UpDownDescent) {
+            // Crush edges if we can.
+            if (countVertices() > countComponents() &&
+                    countVertices() > countBoundaryComponents())
+                for (Edge<4>* e : edges())
+                    if (hasCollapseEdge(e))
+                        return true;
+        }
+
+        // Look for internal simplifications.
+        // Our order of tests follows the case where perform is true.
+        for (Edge<4>* e : edges())
+            if (has20(e))
+                return true;
+
+        for (Triangle<4>* t : triangles())
+            if (has20(t))
+                return true;
+
+        if constexpr (context == SimplifyContext::UpDownDescent) {
+            // In this context, we are not allowed to try any other moves.
+            return false;
+        }
+
+        for (Vertex<4>* v : vertices())
+            if (has20(v))
+                return true;
+
+        for (Edge<4>* e : edges())
+            if (hasPachner(e))
+                return true;
+
+        // Look for boundary simplifications.
+        if (hasBoundaryTetrahedra()) {
+            for (BoundaryComponent<4>* bc : boundaryComponents())
+                for (Tetrahedron<4>* f : bc->facets())
+                    if (hasShellBoundary(f->front().pentachoron()))
+                        return true;
+        }
+
+        return false;
+    }
 
     bool changed = false;   // Has anything changed ever (for return value)?
     bool changedNow = true; // Did we just change something (for loop control)?
@@ -202,7 +245,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
                 if (countVertices() > countComponents() &&
                         countVertices() > countBoundaryComponents()) {
                     for (Edge<4>* e : edges()) {
-                        if (collapseEdge(e, true, perform)) {
+                        if (collapseEdge(e)) {
                             changedNow = changed = true;
                             break;
                         }
@@ -225,7 +268,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             // We prioritise edge moves, since in general we are trying to
             // reduce the number of edges.
             for (Edge<4>* e : edges()) {
-                if (twoZeroMove(e, true, perform)) {
+                if (twoZeroMove(e)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -238,7 +281,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             }
 
             for (Triangle<4>* t : triangles()) {
-                if (twoZeroMove(t, true, perform)) {
+                if (twoZeroMove(t)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -256,7 +299,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             }
 
             for (Vertex<4>* v : vertices()) {
-                if (twoZeroMove(v, true, perform)) {
+                if (twoZeroMove(v)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -269,7 +312,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             }
 
             for (Edge<4>* e : edges()) {
-                if (pachner(e, true, perform)) {
+                if (pachner(e)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -286,15 +329,11 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
                 for (BoundaryComponent<4>* bc : boundaryComponents()) {
                     // Run through facets of this boundary component looking
                     // for shell boundary moves.
-                    nTetrahedra = bc->countTetrahedra();
-                    for (iTet = 0; iTet < nTetrahedra; ++iTet) {
-                        if (shellBoundary(bc->tetrahedron(iTet)->
-                                front().pentachoron(),
-                                true, perform)) {
+                    for (Tetrahedron<4>* f : bc->facets())
+                        if (shellBoundary(f->front().pentachoron())) {
                             changedNow = changed = true;
                             break;
                         }
-                    }
                     if (changedNow)
                         break;
                 }
