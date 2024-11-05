@@ -40,6 +40,29 @@
 
 #include "testhelper.h"
 
+namespace {
+    /**
+     * We need a way to compute (n choose k) where n could be large but
+     * either k or n-k is very small.
+     *
+     * Our binomMedium() is not helpful since it puts a cap on the size of n.
+     */
+    int binomEdge(int n, int k) {
+        if (k < 0 || k > n)
+            return 0;
+        if (k == 0 || k == n)
+            return 1;
+        if (k == 1 || k == n - 1)
+            return n;
+        if (k == 2 || k == n - 2)
+            return (n * (n - 1)) / 2;
+        if (k == 3 || k == n - 3)
+            return (n * (n - 1) * (n - 2)) / 6;
+        throw regina::NotImplemented("The test suite's binomEdge(n,k) is only "
+            "implemented for small k or small n-k");
+    }
+}
+
 TEST(BitmaskTest, assignment) {
     // Try using assignment to initialise a bitmask.
     regina::Bitmask a;
@@ -262,17 +285,14 @@ static void verifyNextPermutationFor() {
             if (last == k - 1) {
                 EXPECT_EQ(count, 0);
             } else {
-                EXPECT_GE(count, regina::binomMedium(last, k));
-                EXPECT_LT(count, regina::binomMedium(last + 1, k));
+                EXPECT_GE(count, binomEdge(last, k));
+                EXPECT_LT(count, binomEdge(last + 1, k));
             }
         }
         ++count;
     }
 
-    // Yes, binonMedium is only supposed to work for n <= 29.
-    // But in reality, it works for all sufficiently small
-    // values of (n choose k).  So we are fine to use it here.
-    EXPECT_EQ(count, regina::binomMedium(sizeof(T) * 8, k));
+    EXPECT_EQ(count, binomEdge(sizeof(T) * 8, k));
 }
 
 template <typename T>
