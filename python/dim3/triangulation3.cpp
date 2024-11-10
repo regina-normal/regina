@@ -494,20 +494,8 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::fourFourMove)
-        .def("twoZeroMove",
-            overload_cast<regina::Edge<3>*, bool, bool>(
-            &Triangulation<3>::twoZeroMove),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::twoZeroMove)
-        .def("twoZeroMove",
-            overload_cast<regina::Vertex<3>*, bool, bool>(
-            &Triangulation<3>::twoZeroMove),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::twoZeroMove_2)
+        .def("move20", &Triangulation<3>::move20<0>, rbase::move20)
+        .def("move20", &Triangulation<3>::move20<1>, rbase::move20)
         .def("twoOneMove", &Triangulation<3>::twoOneMove,
             pybind11::arg(),
             pybind11::arg(),
@@ -570,12 +558,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("hasPachner", &Triangulation<3>::hasPachner<2>, rbase::hasPachner)
         .def("hasPachner", &Triangulation<3>::hasPachner<3>, rbase::hasPachner)
         .def("has44", &Triangulation<3>::has44, rdoc::has44)
-        .def("has20", overload_cast<regina::Edge<3>*>(
-                &Triangulation<3>::has20, pybind11::const_),
-            rdoc::has20)
-        .def("has20", overload_cast<regina::Vertex<3>*>(
-                &Triangulation<3>::has20, pybind11::const_),
-            rdoc::has20_2)
+        .def("has20", &Triangulation<3>::has20<0>, rbase::has20)
+        .def("has20", &Triangulation<3>::has20<1>, rbase::has20)
         .def("has21", &Triangulation<3>::has21, rdoc::has21)
         .def("has02",
             overload_cast<regina::EdgeEmbedding<3>, int,
@@ -607,12 +591,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("withPachner", &Triangulation<3>::withPachner<3>,
             rbase::withPachner)
         .def("with44", &Triangulation<3>::with44, rdoc::with44)
-        .def("with20", overload_cast<regina::Edge<3>*>(
-                &Triangulation<3>::with20, pybind11::const_),
-            rdoc::with20)
-        .def("with20", overload_cast<regina::Vertex<3>*>(
-                &Triangulation<3>::with20, pybind11::const_),
-            rdoc::with20_2)
+        .def("with20", &Triangulation<3>::with20<0>, rbase::with20)
+        .def("with20", &Triangulation<3>::with20<1>, rbase::with20)
         .def("with21", &Triangulation<3>::with21, rdoc::with21)
         .def("with02",
             overload_cast<regina::EdgeEmbedding<3>, int,
@@ -673,6 +653,16 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
+        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<0>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<1>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif

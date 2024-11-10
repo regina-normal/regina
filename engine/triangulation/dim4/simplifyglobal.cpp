@@ -268,7 +268,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             // We prioritise edge moves, since in general we are trying to
             // reduce the number of edges.
             for (Edge<4>* e : edges()) {
-                if (twoZeroMove(e)) {
+                if (move20(e)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -281,7 +281,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             }
 
             for (Triangle<4>* t : triangles()) {
-                if (twoZeroMove(t)) {
+                if (move20(t)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -299,7 +299,7 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             }
 
             for (Vertex<4>* v : vertices()) {
-                if (twoZeroMove(v)) {
+                if (move20(v)) {
                     changedNow = changed = true;
                     break;
                 }

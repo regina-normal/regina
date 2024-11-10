@@ -440,94 +440,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         bool isBall() const;
 
-        /*@}*/
-        /**
-         * \name Skeletal Transformations
-         */
-        /*@{*/
-
-        /**
-         * Checks the eligibility of and/or performs a 2-0 move about the
-         * given vertex of degree 2.  This involves taking the two triangles
-         * joined at that vertex and squashing them flat.  This can be done if:
-         *
-         * - the vertex is non-boundary;
-         *
-         * - the two triangles are distinct;
-         *
-         * - the edges opposite \a v in each triangle are distinct and
-         *   not both boundary.
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal and will not
-         * violate any simplex and/or facet locks (see Simplex<2>::lock() and
-         * Simplex<2>::lockFacet() for further details on locks).
-         *
-         * If this triangulation is currently oriented, then this operation
-         * will preserve the orientation.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (edges, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a v)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no check is being run, it
-         * must be known in advance that the move is legal and will not
-         * violate any simplex and/or facet locks.
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \exception LockViolation This move would violate a simplex or facet
-         * lock, and \a check was passed as \c false.  This exception will be
-         * thrown before any changes are made.  See Simplex<2>::lock() and
-         * Simplex<2>::lockFacet() for further details on how locks work and
-         * what their implications are.
-         *
-         * \param v the vertex about which to perform the move.
-         * \param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * \param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true if and
-         * only if the requested move may be performed without changing the
-         * topology of the manifold or violating any locks.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool twoZeroMove(Vertex<2>* v, bool check = true, bool perform = true);
-        /**
-         * Determines whether it is possible to perform a 2-0 move about the
-         * given vertex of this triangulation, without violating any
-         * simplex and/or facet locks.
-         *
-         * For more detail on 2-0 vertex moves and when they can be performed,
-         * see twoZeroMove().
-         *
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \param v the vertex about which to perform the candidate move.
-         * \return \c true if and only if the requested move can be performed.
-         */
-        bool has20(Vertex<2>* v) const;
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * 2-0 move about the given vertex of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 2-0 vertex moves and when they can be performed,
-         * see twoZeroMove().
-         *
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \param v the vertex about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<2>> with20(Vertex<2>* v) const;
-
-        /*@}*/
-
     private:
         /**
          * Clears any calculated properties, including skeletal data,
@@ -638,20 +550,6 @@ inline bool Triangulation<2>::isSphere() const {
 
 inline bool Triangulation<2>::isBall() const {
     return (eulerChar() == 1 && isOrientable() && components_.size() == 1);
-}
-
-inline bool Triangulation<2>::has20(Vertex<2>* v) const {
-    return const_cast<Triangulation<2>*>(this)->twoZeroMove(v, true, false);
-}
-
-inline std::optional<Triangulation<2>> Triangulation<2>::with20(Vertex<2>* v)
-        const {
-    if (! has20(v))
-        return {};
-
-    std::optional<Triangulation<2>> ans(std::in_place, *this);
-    ans->twoZeroMove(ans->translate(v), false, true);
-    return ans;
 }
 
 } // namespace regina

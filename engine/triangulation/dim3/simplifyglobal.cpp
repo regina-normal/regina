@@ -467,7 +467,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                     changedNow = changed = true;
                     break;
                 }
-                if (twoZeroMove(edge)) {
+                if (move20(edge)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -487,7 +487,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
             for (Vertex<3>* vertex : vertices())
-                if (twoZeroMove(vertex)) {
+                if (move20(vertex)) {
                     changedNow = changed = true;
                     break;
                 }

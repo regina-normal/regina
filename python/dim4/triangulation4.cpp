@@ -367,27 +367,9 @@ void addTriangulation4(pybind11::module_& m) {
         .def("pachner",
             overload_cast<Face<4, 0>*>(&Triangulation<4>::pachner<0>),
             rbase::pachner)
-        .def("twoZeroMove",
-            overload_cast<regina::Triangle<4>*, bool, bool>(
-            &Triangulation<4>::twoZeroMove),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::twoZeroMove)
-        .def("twoZeroMove",
-            overload_cast<regina::Edge<4>*, bool, bool>(
-            &Triangulation<4>::twoZeroMove),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::twoZeroMove_2)
-        .def("twoZeroMove",
-            overload_cast<regina::Vertex<4>*, bool, bool>(
-            &Triangulation<4>::twoZeroMove),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::twoZeroMove_3)
+        .def("move20", &Triangulation<4>::move20<0>, rbase::move20)
+        .def("move20", &Triangulation<4>::move20<1>, rbase::move20)
+        .def("move20", &Triangulation<4>::move20<2>, rbase::move20)
         .def("fourFourMove", &Triangulation<4>::fourFourMove,
             pybind11::arg(),
             pybind11::arg("check") = true,
@@ -418,15 +400,9 @@ void addTriangulation4(pybind11::module_& m) {
         .def("hasPachner", &Triangulation<4>::hasPachner<2>, rbase::hasPachner)
         .def("hasPachner", &Triangulation<4>::hasPachner<3>, rbase::hasPachner)
         .def("hasPachner", &Triangulation<4>::hasPachner<4>, rbase::hasPachner)
-        .def("has20", overload_cast<regina::Triangle<4>*>(
-                &Triangulation<4>::has20, pybind11::const_),
-            rdoc::has20)
-        .def("has20", overload_cast<regina::Edge<4>*>(
-                &Triangulation<4>::has20, pybind11::const_),
-            rdoc::has20_2)
-        .def("has20", overload_cast<regina::Vertex<4>*>(
-                &Triangulation<4>::has20, pybind11::const_),
-            rdoc::has20_3)
+        .def("has20", &Triangulation<4>::has20<0>, rbase::has20)
+        .def("has20", &Triangulation<4>::has20<1>, rbase::has20)
+        .def("has20", &Triangulation<4>::has20<2>, rbase::has20)
         .def("has44", &Triangulation<4>::has44, rdoc::has44)
         .def("hasOpenBook", &Triangulation<4>::hasOpenBook, rdoc::hasOpenBook)
         .def("hasShellBoundary", &Triangulation<4>::hasShellBoundary,
@@ -444,15 +420,9 @@ void addTriangulation4(pybind11::module_& m) {
             rbase::withPachner)
         .def("withPachner", &Triangulation<4>::withPachner<4>,
             rbase::withPachner)
-        .def("with20", overload_cast<regina::Triangle<4>*>(
-                &Triangulation<4>::with20, pybind11::const_),
-            rdoc::with20)
-        .def("with20", overload_cast<regina::Edge<4>*>(
-                &Triangulation<4>::with20, pybind11::const_),
-            rdoc::with20_2)
-        .def("with20", overload_cast<regina::Vertex<4>*>(
-                &Triangulation<4>::with20, pybind11::const_),
-            rdoc::with20_3)
+        .def("with20", &Triangulation<4>::with20<0>, rbase::with20)
+        .def("with20", &Triangulation<4>::with20<1>, rbase::with20)
+        .def("with20", &Triangulation<4>::with20<2>, rbase::with20)
         .def("with44", &Triangulation<4>::with44, rdoc::with44)
         .def("withOpenBook", &Triangulation<4>::withOpenBook,
             rdoc::withOpenBook)
@@ -507,6 +477,21 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
+        .def("twoZeroMove", &Triangulation<4>::twoZeroMove<0>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<4>::twoZeroMove<1>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<4>::twoZeroMove<2>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif

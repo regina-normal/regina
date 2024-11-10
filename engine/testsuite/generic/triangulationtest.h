@@ -1263,14 +1263,14 @@ class TriangulationTest : public testing::Test {
 
                 Vertex<dim>* v = oriented.vertex(i);
                 if (v->degree() != 2 || v->isBoundary()) {
-                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    EXPECT_FALSE(oriented.has20(v));
                     continue;
                 }
 
                 regina::VertexEmbedding<dim> emb0 = v->front();
                 regina::VertexEmbedding<dim> emb1 = v->back();
                 if (emb0.simplex() == emb1.simplex()) {
-                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    EXPECT_FALSE(oriented.has20(v));
                     continue;
                 }
 
@@ -1280,7 +1280,7 @@ class TriangulationTest : public testing::Test {
                 auto opp1 = emb1.simplex()->template face<dim-1>(v1);
                 if (opp0 == opp1 ||
                         (opp0->isBoundary() && opp1->isBoundary())) {
-                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    EXPECT_FALSE(oriented.has20(v));
                     continue;
                 }
 
@@ -1295,13 +1295,13 @@ class TriangulationTest : public testing::Test {
                         break;
                     }
                 if (! correctLink) {
-                    EXPECT_FALSE(oriented.twoZeroMove(v, true, false));
+                    EXPECT_FALSE(oriented.has20(v));
                     continue;
                 }
 
                 // The move should be legal.
                 Triangulation<dim> alt(oriented);
-                EXPECT_TRUE(alt.twoZeroMove(alt.vertex(i)));
+                EXPECT_TRUE(alt.move20(alt.vertex(i)));
                 EXPECT_EQ(alt.isOriented(), alt.isOrientable());
 
                 // Verify that the move did the right thing.

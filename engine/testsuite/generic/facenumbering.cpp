@@ -82,6 +82,10 @@ static void faceNumberDetail() {
         SCOPED_TRACE_NUMERIC(f);
         Perm<dim + 1> ordering = FaceNumbering<dim, subdim>::ordering(f);
         EXPECT_EQ(Impl::faceNumber(ordering), f);
+        if constexpr (subdim == 1) {
+            EXPECT_EQ(Impl::faceNumber(ordering[0], ordering[1]), f);
+            EXPECT_EQ(Impl::faceNumber(ordering[1], ordering[0]), f);
+        }
 
         // Check that we can correctly identify face number f under many
         // possible permutations of the vertices in the face and many possible

@@ -229,6 +229,43 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::dualToPrimal), rbase::dualToPrimal)
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal,
             rbase::finiteToIdeal)
+        .def("move20", &Triangulation<dim>::template move20<0>, rbase::move20)
+        .def("move20", &Triangulation<dim>::template move20<1>, rbase::move20)
+        .def("move20", &Triangulation<dim>::template move20<2>, rbase::move20)
+        .def("has20", &Triangulation<dim>::template has20<0>, rbase::has20)
+        .def("has20", &Triangulation<dim>::template has20<1>, rbase::has20)
+        .def("has20", &Triangulation<dim>::template has20<2>, rbase::has20)
+        .def("with20", &Triangulation<dim>::template with20<0>, rbase::with20)
+        .def("with20", &Triangulation<dim>::template with20<1>, rbase::with20)
+        .def("with20", &Triangulation<dim>::template with20<2>, rbase::with20)
+        #if defined(__GNUC__)
+        // The following routines are deprecated, but we still need to bind
+        // them.  Silence the inevitable deprecation warnings that will occur.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<0>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<1>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<2>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
         .def("doubleCover", &Triangulation<dim>::doubleCover,
             rbase::doubleCover)
         .def("makeDoubleCover", [](Triangulation<dim>& tri) { // deprecated

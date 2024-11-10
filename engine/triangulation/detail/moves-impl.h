@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/detail/pachner-impl.h
+/*! \file triangulation/detail/moves-impl.h
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
@@ -42,9 +42,9 @@
  *  classes it defines are not inadvertently made accessible to end users.
  */
 
-#ifndef __REGINA_PACHNER_IMPL_H_DETAIL
+#ifndef __REGINA_MOVES_IMPL_H_DETAIL
 #ifndef __DOXYGEN
-#define __REGINA_PACHNER_IMPL_H_DETAIL
+#define __REGINA_MOVES_IMPL_H_DETAIL
 #endif
 
 #include "triangulation/generic/triangulation.h"
@@ -704,6 +704,327 @@ bool TriangulationBase<dim>::internalPachner(Face<dim, k>* f, bool check,
         // All done!
         return true;
     }
+}
+
+template <int dim>
+template <int k>
+bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
+        bool perform) {
+    static_assert(0 <= k && k <= 2 && k <= dim - 2,
+        "2-0 moves require a facial dimension of 0, 1 or 2 that does "
+        "not exceed dim - 2.");
+
+    using LockMask = Simplex<dim>::LockMask;
+
+    if (check) {
+        if (f->isBoundary() || ! f->isValid())
+            return false;
+        if (f->degree() != 2)
+            return false;
+    }
+
+    Simplex<dim>* simplex[2];
+    Perm<dim + 1> perm[2];
+    int face[2];
+
+    // This variable will record whether _any_ of the exterior facets are
+    // locked.  This allows us to quickly circumvent non-trivial lock tests
+    // later on when we actually perform the move, in the common case where
+    // the user is not using locks at all.
+    bool hasLocks = false;
+
+    int i = 0;
+    for (auto& emb : *f) {
+        simplex[i] = emb.simplex();
+        perm[i] = emb.vertices();
+        face[i] = emb.face();
+
+        if (simplex[i]->locks_) {
+            // The only things we allow to be locked are the k+1
+            // exterior facets.
+            if constexpr (k == 0) {
+                // For vertices, there is only one lock bit allowed, which
+                // makes this test very simple.
+                if (simplex[i]->locks_ != (LockMask(1) << emb.vertex())) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "2-0 move using a locked simplex and/or facet");
+                }
+            } else {
+                if (simplex[i]->isLocked()) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "2-0 move using a locked simplex");
+                }
+                for (int v = k + 1; v <= dim; ++v)
+                    if (simplex[i]->isFacetLocked(perm[i][v])) {
+                        if (check)
+                            return false;
+                        if (perform)
+                            throw LockViolation("An attempt was made to "
+                                "perform a 2-0 move around a locked facet");
+                    }
+            }
+            hasLocks = true;
+        }
+
+        ++i;
+    }
+
+    if (check) {
+        // Check the two top-dimensional simplices containing f.
+        if (simplex[0] == simplex[1])
+            return false;
+
+        // Check the two (dim-k-1)-faces opposite f in each simplex.
+        Face<dim, dim-k-1>* opposite[2];
+        for (i = 0; i < 2; ++i) {
+            if constexpr (k == dim - k - 1) {
+                // Opposite each k-face is another k-face, which means the
+                // face numbers are different but add to (dim+1 choose k+1).
+                opposite[i] = simplex[i]->template face<dim-k-1>(
+                    Face<dim, k>::nFaces - face[i]);
+            } else {
+                // Opposite each k-face is a face of different dimension.
+                // Specifically, k-face j is always opposite (dim-k-1)-face j.
+                opposite[i] = simplex[i]->template face<dim-k-1>(face[i]);
+            }
+        }
+        if (opposite[0] == opposite[1])
+            return false;
+        if (opposite[0]->isBoundary() && opposite[1]->isBoundary())
+            return false;
+
+        // Check for bad chains of identifications in the exterior j-faces, for
+        // dim - k - 1 < j < dim.
+        if constexpr (k == 1) {
+            // Look at chains of identifications of (dim-1)-faces.
+            // We are interested specifically in those faces in each simplex
+            // that contain the (dim-2)-face opposite f.
+            Face<dim, dim-1>* facet[2][2];
+            for (i = 0; i < 2; ++i) {
+                // Collect the (dim-1)-faces opposite some vertex in f.
+                facet[i][0] = simplex[i]->template face<dim-1>(perm[i][0]);
+                facet[i][1] = simplex[i]->template face<dim-1>(perm[i][1]);
+            }
+
+            if (facet[0][0] == facet[1][0] || facet[0][1] == facet[1][1])
+                return false;
+
+            // The cases with two pairs of identified facets and with one
+            // pair of identified facets plus one pair of boundary facets
+            // are all covered by the following check.
+            if (simplex[0]->component()->size() == 2)
+                return false;
+        } else if constexpr (k == 2) {
+            // From our constraints on k, we have dim ≥ 4.
+            // Look at chains of identifications of (dim-1)-faces and
+            // (dim-2)-faces.
+            // We are interested specifically in those faces in each simplex
+            // that contain the (dim-2)-face opposite f.
+            Face<dim, dim-2>* ridge[2][3]; // (≥ 2)-faces
+            Face<dim, dim-1>* facet[2][3]; // (≥ 3)-faces
+
+            for (i = 0; i < 2; ++i) {
+                // Collect the (dim-2)-faces opposite some edge in f.
+                ridge[i][0] = simplex[i]->template face<dim-2>(
+                    Edge<dim>::faceNumber(perm[i][1], perm[i][2]));
+                ridge[i][1] = simplex[i]->template face<dim-2>(
+                    Edge<dim>::faceNumber(perm[i][0], perm[i][2]));
+                ridge[i][2] = simplex[i]->template face<dim-2>(
+                    Edge<dim>::faceNumber(perm[i][0], perm[i][1]));
+                // Collect the (dim-1)-faces opposite some vertex in f.
+                facet[i][0] = simplex[i]->template face<dim-1>(perm[i][0]);
+                facet[i][1] = simplex[i]->template face<dim-1>(perm[i][1]);
+                facet[i][2] = simplex[i]->template face<dim-1>(perm[i][2]);
+            }
+
+            // Look for bad identification chains of (dim-1)-faces.
+            // Closed loops of length 1:
+            for (i = 0; i < 3; ++i)
+                if (ridge[0][i] == ridge[1][i])
+                    return false;
+            // Closed loops of length 2:
+            for (i = 0; i < 3; ++i) {
+                if (ridge[0][i] == ridge[0][(i + 1) % 3] &&
+                        ridge[1][i] == ridge[1][(i + 1) % 3])
+                    return false;
+                if (ridge[0][i] == ridge[1][(i + 1) % 3] &&
+                        ridge[1][i] == ridge[0][(i + 1) % 3])
+                    return false;
+            }
+            // Closed loops of length 3:
+            if (ridge[0][0] == ridge[1][1] && ridge[0][1] == ridge[1][2] &&
+                    ridge[0][2] == ridge[1][0])
+                return false;
+            if (ridge[1][0] == ridge[0][1] && ridge[1][1] == ridge[0][2] &&
+                    ridge[1][2] == ridge[0][0])
+                return false;
+            for (auto p : Perm<3>::S3)
+                if (ridge[0][p[0]] == ridge[0][p[1]] &&
+                        ridge[1][p[1]] == ridge[1][p[2]] &&
+                        ridge[0][p[2]] == ridge[1][p[0]])
+                    return false;
+            // Bounded chains not already covered by the earlier test on
+            // opposite (dim-3)-faces:
+            for (i = 0; i < 3; ++i) {
+                if (ridge[0][i]->isBoundary() &&
+                        ridge[1][i] == ridge[1][(i + 1) % 3] &&
+                        ridge[0][(i + 1) % 3]->isBoundary())
+                    return false;
+                if (ridge[1][i]->isBoundary() &&
+                        ridge[0][i] == ridge[0][(i + 1) % 3] &&
+                        ridge[1][(i + 1) % 3]->isBoundary())
+                    return false;
+            }
+            for (auto p : Perm<3>::S3) {
+                if (ridge[0][p[0]]->isBoundary() &&
+                        ridge[1][p[0]] == ridge[1][p[1]] &&
+                        ridge[0][p[1]] == ridge[1][p[2]] &&
+                        ridge[0][p[2]]->isBoundary())
+                    return false;
+                if (ridge[1][p[0]]->isBoundary() &&
+                        ridge[0][p[0]] == ridge[0][p[1]] &&
+                        ridge[1][p[1]] == ridge[0][p[2]] &&
+                        ridge[1][p[2]]->isBoundary())
+                    return false;
+            }
+
+            // Look for bad identification chains of (dim-1)-faces.
+            // Closed loops of length 1:
+            for (i = 0; i < 3; ++i)
+                if (facet[0][i] == facet[1][i])
+                    return false;
+            // Closed loops of length 2:
+            for (i = 0; i < 3; ++i) {
+                if (facet[0][i] == facet[0][(i + 1) % 3] &&
+                        facet[1][i] == facet[1][(i + 1) % 3])
+                    return false;
+                if (facet[0][i] == facet[1][(i + 1) % 3] &&
+                        facet[1][i] == facet[0][(i + 1) % 3])
+                    return false;
+            }
+            // Bounded chains of length 2 not already covered by the earlier
+            // test on opposite (dim-3)-faces:
+            for (i = 0; i < 3; ++i) {
+                if (facet[0][i]->isBoundary() &&
+                        facet[1][i] == facet[1][(i + 1) % 3] &&
+                        facet[0][(i + 1) % 3]->isBoundary())
+                    return false;
+                if (facet[1][i]->isBoundary() &&
+                        facet[0][i] == facet[0][(i + 1) % 3] &&
+                        facet[1][(i + 1) % 3]->isBoundary())
+                    return false;
+            }
+            // Closed and bounded chains of length 3 are all covered by the
+            // following check:
+            if (simplex[0]->component()->size() == 2)
+                return false;
+        }
+
+        // Check the combinatorics of the link of f.
+        //
+        // So far we know that f is valid, non-boundary, and degree 2.
+        // In particular, the link is a connected (dim-k-1)-dimensional
+        // triangulation with two top-dimensional simplices and
+        // no boundary facets.
+        if constexpr (dim <= k + 2) {
+            // In fact dim == k + 2 (from our constraints on k), and so the
+            // link is 1-dimensional.  There is only one link possible (which
+            // is the one we want).  Therefore there is nothing more to test.
+        } else if constexpr (dim <= k + 4 && standardDim(dim)) {
+            // The link is (2 or 3)-dimensional, and this is a dimension where
+            // regina does test whether links are spheres.
+            //
+            // Since the face is valid and non-boundary (and therefore also not
+            // an ideal vertex), we do know that the link is a sphere, but we
+            // do not know if it is the correct _triangulation_ of a sphere.
+            //
+            // However, the test is simple.  From the census, we know that in
+            // both dimensions 2 and 3 there is only one sphere triangulation
+            // with two top-dimensional simplices that are each glued to the
+            // other along _all_ of their facets -- and this is precisely the
+            // link that we are looking for.
+            for (i = k + 1; i <= dim; ++i)
+                if (simplex[0]->adjacentSimplex(perm[0][i]) != simplex[1])
+                    return false;
+        } else {
+            // Either the link has dimension ≥ 4, or dim is sufficiently high
+            // that regina will not distinguish between links that are spheres
+            // vs other closed manifolds.  We will need to check the gluings
+            // precisely.
+
+            for (i = k + 1; i <= dim; ++i)
+                if (simplex[0]->adjacentSimplex(perm[0][i]) != simplex[1])
+                    return false;
+
+            Perm<dim+1> crossover = simplex[0]->adjacentGluing(perm[0][dim]);
+            for (i = k + 1; i < dim; ++i)
+                if (simplex[0]->adjacentGluing(perm[0][i]) != crossover)
+                    return false;
+        }
+    }
+
+    if (! perform)
+        return true;
+
+    // Actually perform the move.
+
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
+
+    // Get the vertex mapping from simplex[0] to simplex[1].
+    Perm<dim+1> crossover = simplex[0]->adjacentGluing(perm[0][dim]);
+
+    // Join the neighbours of simplex[0,1] directly to each other.
+    for (int i = 0; i <= k; ++i) {
+        // Process the facets opposite vertex i of the central face f.
+        Simplex<dim>* top = simplex[0]->adjacentSimplex(perm[0][i]);
+        Simplex<dim>* bottom = simplex[1]->adjacentSimplex(perm[1][i]);
+
+        int facet0 = perm[0][i];
+        int facet1 = perm[1][i];
+
+        if (! top) {
+            // Bottom facet becomes boundary.
+            if (hasLocks && simplex[0]->isFacetLocked(facet0))
+                bottom->lockFacetRaw(simplex[1]->adjacentFacet(facet1));
+            simplex[1]->unjoinRaw(facet1);
+        } else if (! bottom) {
+            // Top facet becomes boundary.
+            if (hasLocks && simplex[1]->isFacetLocked(facet1))
+                top->lockFacetRaw(simplex[0]->adjacentFacet(facet0));
+            simplex[0]->unjoinRaw(facet0);
+        } else {
+            // Bottom and top facets join.
+            int topFacet = simplex[0]->adjacentFacet(facet0);
+            int bottomFacet = simplex[1]->adjacentFacet(facet1);
+
+            if (hasLocks) {
+                if (simplex[0]->isFacetLocked(facet0))
+                    bottom->lockFacetRaw(bottomFacet);
+                if (simplex[1]->isFacetLocked(facet1))
+                    top->lockFacetRaw(topFacet);
+            }
+
+            Perm<dim+1> gluing = simplex[1]->adjacentGluing(facet1) *
+                crossover * top->adjacentGluing(topFacet);
+            simplex[0]->unjoinRaw(facet0);
+            simplex[1]->unjoinRaw(facet1);
+            top->joinRaw(topFacet, bottom, gluing);
+        }
+    }
+
+    // Finally remove and dispose of the two simplices that surround f.
+    removeSimplexRaw(simplex[0]);
+    removeSimplexRaw(simplex[1]);
+
+    return true;
 }
 
 } // namespace regina::detail

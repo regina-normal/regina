@@ -832,7 +832,7 @@ static void verifyTwoZeroEdgeMove(Triangulation<3> tri, size_t whichEdge,
         const Triangulation<3>& result, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    EXPECT_TRUE(tri.twoZeroMove(tri.edge(whichEdge)));
+    EXPECT_TRUE(tri.move20(tri.edge(whichEdge)));
     EXPECT_TRUE(tri.isIsomorphicTo(result));
     // Note: in all but one of our 2-0 tests, the triangulations are not just
     // isomorphic but also identical.  (The exception is internal-flat-lens.)
@@ -849,8 +849,7 @@ static void verifyTwoZeroEdgeInvalid(const Triangulation<3>& tri,
     for (auto e : tri.edges()) {
         if (e->degree() == 2 && ! e->isBoundary())
             found = true;
-        // Use a const_cast for now: the move should be illegal.
-        ASSERT_FALSE(const_cast<Triangulation<3>&>(tri).twoZeroMove(e));
+        ASSERT_FALSE(tri.has20(e));
     }
     EXPECT_TRUE(found);
 }
@@ -1125,7 +1124,7 @@ static void verifyZeroTwoMove(const Triangulation<3>& tri, const char* name ) {
 
                 // Test the inverse 2-0 move.
                 regina::Triangulation<3> inv(alt);
-                EXPECT_TRUE(inv.twoZeroMove(
+                EXPECT_TRUE(inv.move20(
                     inv.tetrahedron(iso.simpImage(inv.size() - 1))->edge(
                         iso.facetPerm(inv.size() - 1)[2],
                         iso.facetPerm(inv.size() - 1)[3])));

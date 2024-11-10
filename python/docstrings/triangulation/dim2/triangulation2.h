@@ -123,24 +123,6 @@ This returns the same result as eulerCharTri().
 Returns:
     the Euler characteristic of this triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::has20
-static const char *has20 =
-R"doc(Determines whether it is possible to perform a 2-0 move about the
-given vertex of this triangulation, without violating any simplex
-and/or facet locks.
-
-For more detail on 2-0 vertex moves and when they can be performed,
-see twoZeroMove().
-
-Precondition:
-    The given vertex is a vertex of this triangulation.
-
-Parameter ``v``:
-    the vertex about which to perform the candidate move.
-
-Returns:
-    ``True`` if and only if the requested move can be performed.)doc";
-
 // Docstring regina::python::doc::Triangulation_::hasBoundaryEdges
 static const char *hasBoundaryEdges =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
@@ -303,84 +285,6 @@ triangulation.
 
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
-
-// Docstring regina::python::doc::Triangulation_::twoZeroMove
-static const char *twoZeroMove =
-R"doc(Checks the eligibility of and/or performs a 2-0 move about the given
-vertex of degree 2. This involves taking the two triangles joined at
-that vertex and squashing them flat. This can be done if:
-
-* the vertex is non-boundary;
-
-* the two triangles are distinct;
-
-* the edges opposite *v* in each triangle are distinct and not both
-  boundary.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-simplex and/or facet locks (see Simplex<2>::lock() and
-Simplex<2>::lockFacet() for further details on locks).
-
-If this triangulation is currently oriented, then this operation will
-preserve the orientation.
-
-Note that after performing this move, all skeletal objects (edges,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *v*) can no longer be used.
-
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any simplex and/or facet locks.
-
-Precondition:
-    The given vertex is a vertex of this triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a simplex or facet lock, and *check* was
-    passed as ``False``. This exception will be thrown before any
-    changes are made. See Simplex<2>::lock() and
-    Simplex<2>::lockFacet() for further details on how locks work and
-    what their implications are.
-
-Parameter ``v``:
-    the vertex about which to perform the move.
-
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
-
-Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
-
-Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.)doc";
-
-// Docstring regina::python::doc::Triangulation_::with20
-static const char *with20 =
-R"doc(If possible, returns the triangulation obtained by performing a 2-0
-move about the given vertex of this triangulation. If such a move is
-not allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on 2-0 vertex moves and when they can be performed,
-see twoZeroMove().
-
-Precondition:
-    The given vertex is a vertex of this triangulation.
-
-Parameter ``v``:
-    the vertex about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
 
 }
 

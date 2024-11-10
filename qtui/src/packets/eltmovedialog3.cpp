@@ -53,7 +53,7 @@ namespace {
     }
 
     bool has20v(regina::Vertex<3>* v) {
-        return v->triangulation().twoZeroMove(v, true, false);
+        return v->triangulation().has20(v);
     }
 
     bool has32(regina::Edge<3>* e) {
@@ -61,23 +61,23 @@ namespace {
     }
 
     bool has20e(regina::Edge<3>* e) {
-        return e->triangulation().twoZeroMove(e, true, false);
+        return e->triangulation().has20(e);
     }
 
     bool hasCloseBook(regina::Edge<3>* e) {
-        return e->triangulation().closeBook(e, true, false);
+        return e->triangulation().hasCloseBook(e);
     }
 
     bool hasCollapseEdge(regina::Edge<3>* e) {
-        return e->triangulation().collapseEdge(e, true, false);
+        return e->triangulation().hasCollapseEdge(e);
     }
 
     bool has44(regina::Edge<3>* e, int axis) {
-        return e->triangulation().fourFourMove(e, axis, true, false);
+        return e->triangulation().has44(e, axis);
     }
 
     bool has21(regina::Edge<3>* e, int end) {
-        return e->triangulation().twoOneMove(e, end, true, false);
+        return e->triangulation().has21(e, end);
     }
 
     bool has23(regina::Triangle<3>* f) {
@@ -89,11 +89,11 @@ namespace {
     }
 
     bool hasOpenBook(regina::Triangle<3>* f) {
-        return f->triangulation().openBook(f, true, false);
+        return f->triangulation().hasOpenBook(f);
     }
 
     bool hasShellBoundary(regina::Tetrahedron<3>* t) {
-        return t->triangulation().shellBoundary(t, true, false);
+        return t->triangulation().hasShellBoundary(t);
     }
 }
 
@@ -386,11 +386,11 @@ void EltMoveDialog3::clicked(QAbstractButton* btn) {
     } else if (use20e->isChecked()) {
         regina::Edge<3>* e = box20e->selected();
         if (e)
-            tri->twoZeroMove(e);
+            tri->move20(e);
     } else if (use20v->isChecked()) {
         regina::Vertex<3>* v = box20v->selected();
         if (v)
-            tri->twoZeroMove(v);
+            tri->move20(v);
     } else if (use21->isChecked()) {
         std::pair<regina::Edge<3>*, int> s = box21->selected();
         if (s.first)

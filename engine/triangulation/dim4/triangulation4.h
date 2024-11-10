@@ -876,163 +876,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
             Action&& action, Args&&... args) const;
 
         /**
-         * Checks the eligibility of and/or performs a 2-0 move about the given
-         * triangle of degree 2.  This involves taking the two pentachora
-         * joined at that triangle and squashing them flat.
-         *
-         * The eligibility requirements for this move are somewhat
-         * involved, and are discussed in detail in the source code for
-         * those who are interested.
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal and will not
-         * violate any simplex and/or facet locks (see Simplex<4>::lock()
-         * and Simplex<4>::lockFacet() for further details on locks).
-         *
-         * If this triangulation is currently oriented, then this operation
-         * will preserve the orientation.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (tetrahedra, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal and will not
-         * violate any simplex and/or facet locks.
-         * \pre The given triangle is a triangle of this triangulation.
-         *
-         * \exception LockViolation This move would violate a simplex or facet
-         * lock, and \a check was passed as \c false.  This exception will be
-         * thrown before any changes are made.  See Simplex<4>::lock() and
-         * Simplex<4>::lockFacet() for further details on how locks work and
-         * what their implications are.
-         *
-         * \param t the triangle about which to perform the move.
-         * \param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * \param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true if and
-         * only if the requested move may be performed without changing the
-         * topology of the manifold or violating any locks.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool twoZeroMove(Triangle<4>* t, bool check = true,
-            bool perform = true);
-        /**
-         * Checks the eligibility of and/or performs a 2-0 move about the
-         * given edge of degree 2.  This involves taking the two pentachora
-         * joined at that edge and squashing them flat.  This can be done if:
-         *
-         * - the edge is valid and non-boundary and has a 2-sphere edge link;
-         *
-         * - the two pentachora are distinct;
-         *
-         * - the triangles opposite \a e in each pentachoron are
-         *   distinct and not both boundary;
-         *
-         * - if facets \a f1 and \a f2 of one pentachoron are to be
-         *   flattened onto facets \a g1 and \a g2 of the other
-         *   respectively, then
-         *   (a) \a f1 and \a g1 are distinct,
-         *   (b) \a f2 and \a g2 are distinct,
-         *   (c) we do not have both \a f1 = \a g2 and \a g1 = \a f2,
-         *   (d) we do not have both \a f1 = \a f2 and \a g1 = \a g2, and
-         *   (e) we do not have two of the facets boundary and the other
-         *   two identified;
-         *
-         * - the two pentachora meet each other on all three facets
-         *   touching the edge (as opposed to meeting each other on one
-         *   facet and being glued to themselves along the other two).
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal and will not
-         * violate any simplex and/or facet locks (see Simplex<4>::lock()
-         * and Simplex<4>::lockFacet() for further details on locks).
-         *
-         * If this triangulation is currently oriented, then this operation
-         * will preserve the orientation.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (tetrahedra, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal and will not
-         * violate any simplex and/or facet locks.
-         * \pre The given edge is an edge of this triangulation.
-         *
-         * \exception LockViolation This move would violate a simplex or facet
-         * lock, and \a check was passed as \c false.  This exception will be
-         * thrown before any changes are made.  See Simplex<4>::lock() and
-         * Simplex<4>::lockFacet() for further details on how locks work and
-         * what their implications are.
-         *
-         * \param e the edge about which to perform the move.
-         * \param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * \param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true if and
-         * only if the requested move may be performed without changing the
-         * topology of the manifold or violating any locks.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool twoZeroMove(Edge<4>* e, bool check = true, bool perform = true);
-        /**
-         * Checks the eligibility of and/or performs a 2-0 move about the
-         * given vertex of degree 2.  This involves taking the two pentachora
-         * joined at that vertex and squashing them flat.  This can be done if:
-         *
-         * - the vertex is non-boundary and has a 3-sphere vertex link;
-         *
-         * - the two pentachora are distinct;
-         *
-         * - the tetrahedra opposite \a v in each pentachoron are distinct and
-         *   not both boundary;
-         *
-         * - the two pentachora meet each other on all four facets touching
-         *   the vertex (as opposed to meeting each other on two facets and
-         *   being glued to themselves along the other two).
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal and will not
-         * violate any simplex and/or facet locks (see Simplex<4>::lock()
-         * and Simplex<4>::lockFacet() for further details on locks).
-         *
-         * If this triangulation is currently oriented, then this operation
-         * will preserve the orientation.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (tetrahedra, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a v)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal and will not
-         * violate any simplex and/or facet locks.
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \exception LockViolation This move would violate a simplex or facet
-         * lock, and \a check was passed as \c false.  This exception will be
-         * thrown before any changes are made.  See Simplex<4>::lock() and
-         * Simplex<4>::lockFacet() for further details on how locks work and
-         * what their implications are.
-         *
-         * \param v the vertex about which to perform the move.
-         * \param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * \param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true if and
-         * only if the requested move may be performed without changing the
-         * topology of the manifold or violating any locks.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool twoZeroMove(Vertex<4>* v, bool check = true, bool perform = true);
-        /**
          * Checks the eligibility of and/or performs a 4-4 move about the
          * given edge.
          *
@@ -1335,48 +1178,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool snapEdge(Edge<4>* e, bool check = true, bool perform = true);
 
         /**
-         * Determines whether it is possible to perform a 2-0 move about the
-         * given triangle of this triangulation, without violating any
-         * simplex and/or facet locks.
-         *
-         * For more detail on 2-0 triangle moves and when they can be performed,
-         * see twoZeroMove(Triangle<4>*).
-         *
-         * \pre The given triangle is a triangle of this triangulation.
-         *
-         * \param t the candidate triangle about which to perform the move.
-         * \return \c true if and only if the requested move can be performed.
-         */
-        bool has20(Triangle<4>* t) const;
-        /**
-         * Determines whether it is possible to perform a 2-0 move about the
-         * given edge of this triangulation, without violating any simplex
-         * and/or facet locks.
-         *
-         * For more detail on 2-0 edge moves and when they can be performed,
-         * see twoZeroMove(Edge<4>*).
-         *
-         * \pre The given edge is a edge of this triangulation.
-         *
-         * \param e the candidate edge about which to perform the move.
-         * \return \c true if and only if the requested move can be performed.
-         */
-        bool has20(Edge<4>* e) const;
-        /**
-         * Determines whether it is possible to perform a 2-0 move about the
-         * given vertex of this triangulation, without violating any simplex
-         * and/or facet locks.
-         *
-         * For more detail on 2-0 vertex moves and when they can be performed,
-         * see twoZeroMove(Vertex<4>*).
-         *
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \param v the candidate vertex about which to perform the move.
-         * \return \c true if and only if the requested move can be performed.
-         */
-        bool has20(Vertex<4>* v) const;
-        /**
          * Determines whether it is possible to perform a 4-4 move about the
          * given edge of this triangulation, without violating any simplex
          * and/or facet locks.
@@ -1446,60 +1247,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool hasSnapEdge(Edge<4>* e) const;
 
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * 2-0 move about the given triangle of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 2-0 triangle moves and when they can be performed,
-         * see twoZeroMove(Triangle<4>*).
-         *
-         * \pre The given triangle is a triangle of this triangulation.
-         *
-         * \param t the triangle about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> with20(Triangle<4>* t) const;
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * 2-0 move about the given edge of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 2-0 edge moves and when they can be performed,
-         * see twoZeroMove(Edge<4>*).
-         *
-         * \pre The given edge is a edge of this triangulation.
-         *
-         * \param e the edge about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> with20(Edge<4>* e) const;
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * 2-0 move about the given vertex of this triangulation.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on 2-0 vertex moves and when they can be performed,
-         * see twoZeroMove(Vertex<4>*).
-         *
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \param v the vertex about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> with20(Vertex<4>* v) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * 4-4 move about the given edge of this triangulation.
@@ -1877,18 +1624,6 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
         *this, height, threads, tracker);
 }
 
-inline bool Triangulation<4>::has20(Triangle<4>* t) const {
-    return const_cast<Triangulation<4>*>(this)->twoZeroMove(t, true, false);
-}
-
-inline bool Triangulation<4>::has20(Edge<4>* e) const {
-    return const_cast<Triangulation<4>*>(this)->twoZeroMove(e, true, false);
-}
-
-inline bool Triangulation<4>::has20(Vertex<4>* v) const {
-    return const_cast<Triangulation<4>*>(this)->twoZeroMove(v, true, false);
-}
-
 inline bool Triangulation<4>::has44(Edge<4>* e) const {
     return const_cast<Triangulation<4>*>(this)->fourFourMove(e, true, false);
 }
@@ -1907,36 +1642,6 @@ inline bool Triangulation<4>::hasCollapseEdge(Edge<4>* e) const {
 
 inline bool Triangulation<4>::hasSnapEdge(Edge<4>* e) const {
     return const_cast<Triangulation<4>*>(this)->snapEdge(e, true, false);
-}
-
-inline std::optional<Triangulation<4>> Triangulation<4>::with20(Triangle<4>* t)
-        const {
-    if (! has20(t))
-        return {};
-
-    std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->twoZeroMove(ans->translate(t), false, true);
-    return ans;
-}
-
-inline std::optional<Triangulation<4>> Triangulation<4>::with20(Edge<4>* e)
-        const {
-    if (! has20(e))
-        return {};
-
-    std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->twoZeroMove(ans->translate(e), false, true);
-    return ans;
-}
-
-inline std::optional<Triangulation<4>> Triangulation<4>::with20(Vertex<4>* v)
-        const {
-    if (! has20(v))
-        return {};
-
-    std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->twoZeroMove(ans->translate(v), false, true);
-    return ans;
 }
 
 inline std::optional<Triangulation<4>> Triangulation<4>::with44(Edge<4>* e)

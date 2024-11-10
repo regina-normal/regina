@@ -1175,6 +1175,28 @@ Precondition:
 Returns:
     the fundamental group.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::has20
+constexpr const char *has20 =
+R"doc(Determines whether it is possible to perform a 2-0 move about the
+given *k*-face of this triangulation, without violating any simplex
+and/or facet locks.
+
+For more detail on 2-0 moves and when they can be performed, see
+move20().
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face. This must be 0, 1 or 2, and must
+    not exceed ``dim - 2``.
+
+Parameter ``f``:
+    the *k*-face about which to perform the candidate move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::hasBoundaryFacets
 constexpr const char *hasBoundaryFacets =
 R"doc(Determines if this triangulation has any boundary facets.
@@ -1783,6 +1805,79 @@ Returns:
     the *k*th homology group of the union of all simplices in this
     triangulation, as described above.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::move20
+constexpr const char *move20 =
+R"doc(If possible, performs a 2-0 move about the given *k*-face of degree
+two. This involves taking the two top-dimensional simplices joined
+along that face and squashing them flat.
+
+This move is currently only implemented for vertices, edges and
+triangles (i.e., facial dimension ``k ≤ 2``).
+
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as outlined below), _and_ it will not violate any
+simplex and/or facet locks. See Simplex<dim>::lock() and
+Simplex<dim>::lockFacet() for further details on locks.
+
+The requirements for the move to not change the topology depend upon
+the facial dimension *k*. In all cases:
+
+* the face *f* must be valid and non-boundary, and must have degree 2;
+
+* the two top-dimensional simplices on either side of *f* must be
+  distinct;
+
+* the link of *f* must be the standard sphere obtained by identifying
+  the boundaries of two `(dim - k - 1)`-simplices using the identity
+  map;
+
+* the two `(dim - k - 1)`-faces opposite *f* in each top-dimensional
+  simplex must be distinct and not both boundary.
+
+Moreover, there are further requirements depending on the facial
+dimension *k:*
+
+* When performing the move on a vertex (``k = 0``), there are no
+  additional requirements.
+
+* When performing the move on an edge (``k = 1``), there are
+  additional requirements on the `(dim - 1)`-faces. Specifically: the
+  move would effectively flatten facets *f1* and *f2* of one top-
+  dimensional simplex onto facets *g1* and *g2* of the other top-
+  dimensional simplex respectiveyl, and we require that: (a) *f1* and
+  *g1* are distinct, (b) *f2* and *g2* are distinct, (c) we do not
+  have both *f1* = *g2* and *g1* = *f2*, (d) we do not have both *f1*
+  = *f2* and *g1* = *g2*, and (e) we do not have two of the facets
+  boundary and the other two identified.
+
+* When performing the move on a triangle (``k = 2``), there are
+  additional requirements on both the `(dim - 1)`-faces and the `(dim
+  - 2)`-faces. These are move involved, and are discussed in detail in
+  the source code for those who are interested.
+
+If this triangulation is currently oriented, then this 2-0 move will
+preserve the orientation.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects (such as the argument *f*) can no longer be used.
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face. This must be 0, 1 or 2, and must
+    not exceed ``dim - 2``.
+
+Parameter ``f``:
+    the *k*-face about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::moveContentsTo
 constexpr const char *moveContentsTo =
 R"doc(Moves the contents of this triangulation into the given destination
@@ -1963,13 +2058,13 @@ In order to not change the topology, we require that:
   *k*-face is the standard triangulation of the `(dim - 1 - k)`-sphere
   as the boundary of a `(dim - k)`-simplex.
 
-Note that after performing this move, all skeletal objects (facets,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *f*) can no longer be used.
-
 If this triangulation is currently oriented, then this Pachner move
 will label the new top-dimensional simplices in a way that preserves
 the orientation.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects (such as the argument *f*) can no longer be used.
 
 See the page on Pachner moves on triangulations for definitions and
 terminology relating to Pachner moves. After the move, the new belt
@@ -2586,6 +2681,47 @@ newly-triangulated components.
 Returns:
     a list of individual component triangulations.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::twoZeroMove
+constexpr const char *twoZeroMove =
+R"doc(Deprecated routine that tests for and optionally performs a 2-0 move
+about the given *k*-face of this triangulation.
+
+For more detail on 2-0 moves and when they can be performed, see
+move20().
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex and/or facet locks (see
+Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
+on locks). If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    has20(). If you wish to both check and perform the move, call
+    move20(), which does not take the two extra boolean arguments.
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face. This must be 0, 1 or 2, and must
+    not exceed ``dim - 2``.
+
+Parameter ``f``:
+    the *k*-face about which to perform the move.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::unlockAll
 constexpr const char *unlockAll =
 R"doc(Unlocks all top-dimensional simplices and their facets.
@@ -2612,6 +2748,32 @@ R"doc(A dimension-specific alias for faces<0>().
 This alias is available for all dimensions *dim*.
 
 See faces() for further information.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::with20
+constexpr const char *with20 =
+R"doc(If possible, returns the triangulation obtained by performing a 2-0
+move about the given *k*-face of this triangulation. If such a move is
+not allowed, or if such a move would violate any simplex and/or facet
+locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on 2-0 moves and when they can be performed, see
+move20().
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face. This must be 0, 1 or 2, and must
+    not exceed ``dim - 2``.
+
+Parameter ``f``:
+    the *k*-face about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::withPachner
 constexpr const char *withPachner =

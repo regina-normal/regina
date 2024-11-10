@@ -152,6 +152,13 @@ class FaceNumberingAPI {
          * number within a <i>dim</i>-dimensional simplex spans vertices
          * `vertices[0, ..., subdim]`.
          *
+         * For the special case `subdim == 1` (i.e., _edges_ in a
+         * <i>dim</i>-dimensional simplex), you can also call this function in
+         * the form `faceNumber(u, v)`, where \a u and \a v are two distinct
+         * vertex numbers in the range `0 ≤ u,v ≤ dim`: this will return the
+         * number of the edge spanned by simplex vertices \a u and \a v.
+         * It does not matter whether \a u is smaller or larger than \a v.
+         *
          * \param vertices a permutation whose first (\a subdim + 1)
          * elements represent some vertex numbers in a <i>dim</i>-simplex.
          * \return the corresponding <i>subdim</i>-face number in the
@@ -467,10 +474,91 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
 #endif // ! __DOXYGEN
 };
 
+template <int dim, int codim>
+class FaceNumberingImpl<dim, 1, codim> : public FaceNumberingAPI<dim, 1> {
+    static_assert(codim + 2 == dim,
+        "The FaceNumberingImpl<dim, 1, codim> template specialisation "
+        "has mismatched face dimension and codimension.");
+    static_assert(! standardDim(dim),
+        "The partial specialisation FaceNumberingImpl<dim, 1> "
+        "should not be used for Regina's standard dimensions.");
+    static_assert(FaceNumberingAPI<dim, 1>::lexNumbering);
+
+    public:
+#ifndef __DOXYGEN
+        // The following routines are documented in FaceNumberingAPI.
+        static constexpr Perm<dim + 1> ordering(int face) {
+            std::array<int, dim + 1> image;
+
+            // Find the lower and upper numbered vertices on this face.
+            // See containsVertex() for the logic behind it.
+            int threshold = binomSmall_[dim+1][2] - face;
+            int i = dim;
+            while (binomSmall_[i][2] >= threshold)
+                --i;
+            image[0] = dim - i;
+            image[1] = image[0] + binomSmall_[i+1][2] - threshold + 1;
+
+            // Following the generic implementation of ordering(), we now list
+            // the remaining elements of the permutation in descending order.
+            int pos = 2;
+            int nextToAvoid = image[1];
+            for (i = dim; i >= 0; --i) {
+                if (i == nextToAvoid) {
+                    // If we found the upper vertex, then now we need to avoid
+                    // the lower vertex.
+                    // If we found the lower vertex, this assignment is harmless
+                    // since there are no other vertices to avoid.
+                    nextToAvoid = image[0];
+                } else
+                    image[pos++] = i;
+            }
+            return Perm<dim + 1>(image);
+        }
+
+        static constexpr int faceNumber(int vertex0, int vertex1) {
+            // Let (u, v) = (vertex0, vertex1), where u < v.
+            // Then the edge number is:
+            //     [dim + (dim-1) + ... + (dim-u+1)] + (v-u-1)
+            //   = (dim+1 choose 2) - (dim-u+1 choose 2) + (v-u-1).
+
+            if (vertex0 > vertex1)
+                std::swap(vertex0, vertex1);
+            return binomSmall_[dim + 1][2] - binomSmall_[dim - vertex0 + 1][2]
+                + vertex1 - vertex0 - 1;
+        }
+
+        static constexpr int faceNumber(Perm<dim + 1> vertices) {
+            return faceNumber(vertices[0], vertices[1]);
+        }
+
+        static constexpr bool containsVertex(int face, int vertex) {
+            // Find the lower numbered vertex on this face.
+            // This is the largest u for which
+            //     face ≥ [dim + (dim-1) + ... + (dim-u+1)].
+            // Equivalently:
+            //     (dim-u+1 choose 2) ≥ (dim+1 choose 2) - face.
+
+            int threshold = binomSmall_[dim+1][2] - face;
+            int i = dim;
+            while (binomSmall_[i][2] >= threshold)
+                --i;
+
+            // The lower vertex is now u = dim - i.
+            int u = dim - i;
+            if (vertex == u)
+                return true;
+
+            // The upper vertex is now u + binomSmall_[i+1][2] - threshold + 1.
+            return (vertex == u + binomSmall_[i+1][2] - threshold + 1);
+        }
+#endif // ! __DOXYGEN
+};
+
 template <int dim, int subdim>
 class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> {
     static_assert(! standardDim(dim),
-        "The specialisation FaceNumberingImpl<dim, dim-1> "
+        "The partial specialisation FaceNumberingImpl<dim, dim-1> "
         "should not be used for Regina's standard dimensions.");
     static_assert(subdim + 1 == dim,
         "The FaceNumberingImpl<dim, subdim, 0> template specialisation "
@@ -552,6 +640,10 @@ class FaceNumberingImpl<2, 1, 0> : public FaceNumberingAPI<2, 1> {
             return vertices[2];
         }
 
+        static constexpr int faceNumber(int u, int v) {
+            return 3 - u - v;
+        }
+
         static constexpr bool containsVertex(int face, int vertex) {
             return (face != vertex);
         }
@@ -616,6 +708,10 @@ class FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
 
         static constexpr int faceNumber(Perm<4> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
+        }
+
+        static constexpr int faceNumber(int u, int v) {
+            return edgeNumber[u][v];
         }
 
         static constexpr bool containsVertex(int face, int vertex) {
@@ -713,6 +809,10 @@ class FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
 
         static constexpr int faceNumber(Perm<5> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
+        }
+
+        static constexpr int faceNumber(int u, int v) {
+            return edgeNumber[u][v];
         }
 
         static constexpr bool containsVertex(int face, int vertex) {

@@ -112,7 +112,10 @@ void addEdge2(pybind11::module_& m) {
         .def("inMaximalForest", &Edge<2>::inMaximalForest,
             rbase::inMaximalForest)
         .def_static("ordering", &Edge<2>::ordering)
-        .def_static("faceNumber", &Edge<2>::faceNumber)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<3>>(&Edge<2>::faceNumber))
+        .def_static("faceNumber",
+            pybind11::overload_cast<int, int>(&Edge<2>::faceNumber))
         .def_static("containsVertex", &Edge<2>::containsVertex)
         .def_readonly_static("nFaces", &Edge<2>::nFaces)
         .def_readonly_static("lexNumbering", &Edge<2>::lexNumbering)

@@ -108,7 +108,10 @@ void addEdge3(pybind11::module_& m) {
             rbase::isLinkOrientable)
         .def("linkingSurface", &Edge<3>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Edge<3>::ordering)
-        .def_static("faceNumber", &Edge<3>::faceNumber)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<4>>(&Edge<3>::faceNumber))
+        .def_static("faceNumber",
+            pybind11::overload_cast<int, int>(&Edge<3>::faceNumber))
         .def_static("containsVertex", &Edge<3>::containsVertex)
         .def_readonly_static("nFaces", &Edge<3>::nFaces)
         .def_readonly_static("lexNumbering", &Edge<3>::lexNumbering)

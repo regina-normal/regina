@@ -32,7 +32,7 @@
 
 #include "triangulation/detail/algebra-impl.h"
 #include "triangulation/detail/isosig-impl.h"
-#include "triangulation/detail/pachner-impl.h"
+#include "triangulation/detail/moves-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
 #include "triangulation/detail/triangulation-impl.h"
 #include "triangulation/generic.h"
@@ -123,6 +123,10 @@ template bool TriangulationBase<13>::internalPachner(Face<13, 10>*, bool, bool);
 template bool TriangulationBase<13>::internalPachner(Face<13, 11>*, bool, bool);
 template bool TriangulationBase<13>::internalPachner(Face<13, 12>*, bool, bool);
 template bool TriangulationBase<13>::internalPachner(Face<13, 13>*, bool, bool);
+
+template bool TriangulationBase<13>::internal20(Face<13, 0>*, bool, bool);
+template bool TriangulationBase<13>::internal20(Face<13, 1>*, bool, bool);
+template bool TriangulationBase<13>::internal20(Face<13, 2>*, bool, bool);
 
 template void TriangulationBase<13>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<13>::writeTextLong(std::ostream&) const;

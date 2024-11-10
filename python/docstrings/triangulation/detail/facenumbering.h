@@ -113,6 +113,13 @@ In other words, this routine identifies which *subdim*-face number
 within a *dim*-dimensional simplex spans vertices ``vertices[0, ...,
 subdim]``.
 
+For the special case ``subdim == 1`` (i.e., _edges_ in a
+*dim*-dimensional simplex), you can also call this function in the
+form ``faceNumber(u, v)``, where *u* and *v* are two distinct vertex
+numbers in the range `0 ≤ u,v ≤ dim`: this will return the number of
+the edge spanned by simplex vertices *u* and *v*. It does not matter
+whether *u* is smaller or larger than *v*.
+
 Parameter ``vertices``:
     a permutation whose first (*subdim* + 1) elements represent some
     vertex numbers in a *dim*-simplex.

@@ -127,6 +127,10 @@ Version 7.4  [ (to be announced) ]
             - New routine chen().
             - Added several new routines that return 3-dimensional embeddings
               of links (i.e., SpatialLink objects).
+        Class Face<dim, 1>, FaceNumbering<dim, 1>:
+            - New static routine faceNumber(u, v) to return the edge number in
+              a simplex spanned by vertices u and v.  This is implemented in
+              FaceNumbering<dim, 1> and is also accessible to Face<dim, 1>.
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
         Class FacePair:
@@ -544,6 +548,16 @@ Version 7.4  [ (to be announced) ]
               + New routine hasPachner() for checking only.
               + New read-only routine withPachner() that (if possible) returns
                 a new triangulation with the relevant move performed.
+            - Regarding 2-0 moves:
+              + These moves are now available for triangulations of all
+                dimensions, but only for facial dimensions ≤ max(2, dim-2).
+              + The (check, perform) function twoZeroMove() is deprecated.
+                You should now call move20() instead, which does _not_ take
+                extra check/perform arguments: move20() will always check for
+                and (if possible) perform the relevant move.
+              + New routine has20() for checking only.
+              + New read-only routine with20() that (if possible) returns
+                a new triangulation with the relevant move performed.
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
@@ -566,14 +580,11 @@ Version 7.4  [ (to be announced) ]
               The old name is deprecated but kept for backwards compatibility.
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
-        Class Triangulation<2>:
-            - New routines twoZeroMove(), has20() and with20().
         Class Triangulation<3>:
-            - New routines has44(), has20(), has21(), has02(), hasOpenBook(),
+            - New routines has44(), has21(), has02(), hasOpenBook(),
               hasCloseBook(), hasShellBoundary(), hasCollapseEdge().
-            - New routines with44(), with20(), with21(), with02(),
-              withOpenBook(), withCloseBook(), withShellBoundary(),
-              withCollapseEdge().
+            - New routines with44(), with21(), with02(), withOpenBook(),
+              withCloseBook(), withShellBoundary(), withCollapseEdge().
             - New routines isOneEfficient() and knowsOneEfficient().  For now,
               1-efficiency testing is only available for ideal triangulations.
             - Renamed intelligentSimplify() to simplify().  The old name is
@@ -611,10 +622,10 @@ Version 7.4  [ (to be announced) ]
               triangulation happens on the calling thread.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
-            - New routines has20(), has44(), hasOpenBook(), hasShellBoundary(),
+            - New routines has44(), hasOpenBook(), hasShellBoundary(),
               hasCollapseEdge(), hasSnapEdge().
-            - New routines with20(), with44(), withOpenBook(),
-              withShellBoundary(), withCollapseEdge(), withSnapEdge().
+            - New routines with44(), withOpenBook(), withShellBoundary(),
+              withCollapseEdge(), withSnapEdge().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer

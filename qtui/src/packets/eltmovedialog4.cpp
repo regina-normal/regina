@@ -68,35 +68,35 @@ namespace {
     }
 
     bool has44(regina::Edge<4>* e) {
-        return e->triangulation().fourFourMove(e, true, false);
+        return e->triangulation().has44(e);
     }
 
     bool has20t(regina::Triangle<4>* t) {
-        return t->triangulation().twoZeroMove(t, true, false);
+        return t->triangulation().has20(t);
     }
 
     bool has20e(regina::Edge<4>* e) {
-        return e->triangulation().twoZeroMove(e, true, false);
+        return e->triangulation().has20(e);
     }
 
     bool has20v(regina::Vertex<4>* v) {
-        return v->triangulation().twoZeroMove(v, true, false);
+        return v->triangulation().has20(v);
     }
 
     bool hasOpenBook(regina::Tetrahedron<4>* t) {
-        return t->triangulation().openBook(t, true, false);
+        return t->triangulation().hasOpenBook(t);
     }
 
     bool hasShellBoundary(regina::Pentachoron<4>* p) {
-        return p->triangulation().shellBoundary(p, true, false);
+        return p->triangulation().hasShellBoundary(p);
     }
 
     bool hasCollapseEdge(regina::Edge<4>* e) {
-        return e->triangulation().collapseEdge(e, true, false);
+        return e->triangulation().hasCollapseEdge(e);
     }
 
     bool hasSnapEdge(regina::Edge<4>* e) {
-        return e->triangulation().snapEdge(e, true, false);
+        return e->triangulation().hasSnapEdge(e);
     }
 }
 
@@ -406,15 +406,15 @@ void EltMoveDialog4::clicked(QAbstractButton* btn) {
     } else if (use20t->isChecked()) {
         regina::Triangle<4>* t = box20t->selected();
         if (t)
-            tri->twoZeroMove(t);
+            tri->move20(t);
     } else if (use20e->isChecked()) {
         regina::Edge<4>* e = box20e->selected();
         if (e)
-            tri->twoZeroMove(e);
+            tri->move20(e);
     } else if (use20v->isChecked()) {
         regina::Vertex<4>* v = box20v->selected();
         if (v)
-            tri->twoZeroMove(v);
+            tri->move20(v);
     } else if (useOpenBook->isChecked()) {
         regina::Tetrahedron<4>* f = boxOpenBook->selected();
         if (f)
