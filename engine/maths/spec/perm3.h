@@ -69,6 +69,18 @@ namespace regina {
  * permutation in the array Perm<3>::S3.  This is consistent with the
  * second-generation codes used in classes Perm<4>,...,Perm<7>.
  *
+ * You can iterate through all permutations using a range-based \c for loop
+ * over \a S3, and this will be extremely fast in both C++ and Python:
+ *
+ * \code{.cpp}
+ * for (auto p : Perm<3>::S3) { ... }
+ * \endcode
+ *
+ * This behaviour does not generalise to the large permutation classes Perm<n>
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * loops are still supported for \a n ≥ 8 but will be significantly slower in
+ * Python than in C++.  See the generic Perm class notes for further details.
+ *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \python Since Python does not support templates, this class is
@@ -121,29 +133,6 @@ class Perm<3> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<3>::S3.
-         */
-        struct S3Lookup {
-            /**
-             * Returns the permutation at the given index in the array S3.
-             * See Perm<3>::S3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 5 inclusive.
-             * \return the corresponding permutation in S3.
-             */
-            constexpr Perm<3> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S3.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 6; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<3>::orderedS3.
          */
         struct OrderedS3Lookup {
@@ -161,9 +150,12 @@ class Perm<3> {
             /**
              * Returns the number of permutations in the array orderedS3.
              *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
+             *
              * \return the size of this array.
              */
-            static constexpr Index size() { return 6; }
+            static constexpr Index size() { return nPerms; }
         };
 
         /**
@@ -184,6 +176,9 @@ class Perm<3> {
             /**
              * Returns the number of permutations in the array S2.
              *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
+             *
              * \return the size of this array.
              */
             static constexpr Index size() { return 2; }
@@ -191,18 +186,26 @@ class Perm<3> {
 
     public:
         /**
-         * Gives fast array-like access to all possible permutations of
-         * three elements.
+         * Gives fast access to all possible permutations of three elements,
+         * with support for both array-like indexing and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 5 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * You can also iterate over all permutations in \a Sn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<3>::Sn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * The permutations with even indices in the array are the even
-         * permutations, and those with odd indices in the array are the
-         * odd permutations.
+         * permutations, and those with odd indices in the array are the odd
+         * permutations.  The first permutation (at index 0) is the identity.
          *
          * This array is different from Perm<3>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
@@ -213,8 +216,11 @@ class Perm<3> {
          * described above remains extremely fast.  This is now a lightweight
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
+         *
+         * See the PermSn documentation for further details, including time
+         * complexity of lookup and iteration.
          */
-        static constexpr S3Lookup Sn {};
+        static constexpr PermSn<3> Sn {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -223,13 +229,13 @@ class Perm<3> {
          * This is a dimension-specific alias for Perm<3>::Sn; see that member
          * for further information.  In general, for every \a n there will be
          * a static member Perm<n>::Sn; however, these numerical aliases
-         * Perm<2>::S2, ..., Perm<5>::S5 are only available for small \a n.
+         * Perm<2>::S2, ..., Perm<7>::S7 are only available for small \a n.
          *
          * Note that small permutation classes (Perm<3>, Perm<4>, Perm<5>)
          * have an \a S3 array: these all store the same six permutations in
          * the same order (but of course using different data types).
          */
-        static constexpr S3Lookup S3 {};
+        static constexpr PermSn<3> S3 {};
 
         /**
          * Gives fast array-like access to all possible permutations of three
@@ -240,6 +246,10 @@ class Perm<3> {
          * must be between 0 and 5 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a orderedSn in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], \a p[1], \a p[2]).
@@ -263,7 +273,7 @@ class Perm<3> {
          * This is a dimension-specific alias for Perm<3>::orderedSn; see that
          * member for further information.  In general, for every \a n there
          * will be a static member Perm<n>::orderedSn; however, these numerical
-         * aliases Perm<2>::orderedS2, ..., Perm<5>::orderedS5 are only
+         * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
         static constexpr OrderedS3Lookup orderedS3 {};
@@ -275,6 +285,10 @@ class Perm<3> {
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn_1[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a Sn_1 in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -1214,6 +1228,8 @@ class Perm<3> {
         template <typename iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
+
+    friend class PermSn<3>;
 };
 
 // Inline functions for Perm<3>
@@ -1223,10 +1239,6 @@ inline constexpr Int Perm<3>::convOrderedUnordered(Int index) {
     // S5 is almost the same as orderedS5, except that we
     // swap indices 2 <--> 3.
     return ((index == 2 || index == 3) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<3> Perm<3>::S3Lookup::operator[] (int index) const {
-    return Perm<3>(static_cast<Code>(index));
 }
 
 inline constexpr Perm<3> Perm<3>::OrderedS3Lookup::operator[] (int index)

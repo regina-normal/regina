@@ -425,12 +425,17 @@ Version 7.4  [ (to be announced) ]
             - Added a spaceship operator (<=>) for comparisons under the Sn
               ordering.  This has the effect of implementing all comparison
               operators, not just less-than (<) as before.
+            - Sn now uses the new public type PermSn<n> (see below), which now
+              supports both iteration and array-like access.
         Enum PermCodeType:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_CODE_IMAGES) have been
               renamed as scoped enum values (e.g., PermCodeType::Images).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Class PermSn<n>:
+            - New type to support Perm<n>::Sn.  This is now a public type, and
+              it now supports both iteration and array-like access.
         Struct Unprotected:
             - New C++-only type that allows in-built safety checks to be
               disabled in some specific circumstances.

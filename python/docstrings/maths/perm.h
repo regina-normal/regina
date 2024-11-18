@@ -52,6 +52,21 @@ some extra functionality but not as much as Perm<5> and below. For *n*
 ≥ 8, this template is generic and most operations require more time
 (in particular, there are no harded-coded lookup tables).
 
+You can iterate through all permutations using a range-based ``for``
+loop over `Perm<n>::Sn`:
+
+```
+for (auto p : Perm<n>::Sn) { ... }
+```
+
+For the optimised permutation classes *n* ≤ 7, this iteration will be
+extremely fast in both C++ and Python. For the larger permutation
+classes *n* ≥ 8, this will still be reasonably fast in C++ (since it
+uses the increment operator internally), but it will be slower in
+Python (since it reconstructs ``Sn[i]`` for each integer *i*). If you
+are in Python and you need to iterate over all permutations for *n* ≥
+8, you may wish to implement a loop using ``Perm<n>.inc()``.
+
 Python:
     Python does not support templates. For each *n* = 2,...,16, this
     class is available in Python under the corresponding name Perm2,
@@ -313,9 +328,6 @@ See Sn for further information on how these permutations are indexed.
 Returns:
     the index *i* for which this permutation is equal to
     Perm<n>::Sn[i]. This will be between 0 and *n*!-1 inclusive.)doc";
-
-// Docstring regina::python::doc::Perm_::SnLookup
-static const char *SnLookup = R"doc(A lightweight array-like object used to implement Perm<n>::Sn.)doc";
 
 // Docstring regina::python::doc::Perm_::__array
 static const char *__array =
@@ -1078,31 +1090,9 @@ Returns:
 static const char *size =
 R"doc(Returns the number of permutations in the array orderedSn.
 
-Returns:
-    the size of this array.)doc";
-
-}
-
-namespace Perm_::SnLookup_ {
-
-// Docstring regina::python::doc::Perm_::SnLookup_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index in the array Sn. See
-Perm<n>::Sn for details.
-
-For *n* ≤ 7, this operator is very fast (and constant time). However,
-for *n* ≥ 8 it is not constant time; the current implementation is
-quadratic in *n*.
-
-Parameter ``index``:
-    an index between 0 and *n*!-1 inclusive.
-
-Returns:
-    the corresponding permutation in Sn.)doc";
-
-// Docstring regina::python::doc::Perm_::SnLookup_::size
-static const char *size =
-R"doc(Returns the number of permutations in the array Sn.
+Python:
+    This is also used to implement the Python special method
+    __len__().
 
 Returns:
     the size of this array.)doc";

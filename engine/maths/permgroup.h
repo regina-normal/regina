@@ -300,9 +300,9 @@ class PermGroup : public Output<PermGroup<n, cached>> {
                 /**
                  * Returns the current permutation and increments this iterator.
                  *
-                 * \nocpp For C++ users, ChildIterator provides the usual
-                 * iterator preincrement, postincrement and dereferencing
-                 * operators (++ and *) instead.
+                 * \nocpp For C++ users, this iterator class provides the usual
+                 * preincrement, postincrement and dereferencing operators
+                 * (++ and *) instead.
                  *
                  * \exception StopIteration The iterator is already past-the-end
                  * when this function is called.
@@ -439,6 +439,9 @@ class PermGroup : public Output<PermGroup<n, cached>> {
 
         /**
          * Returns the total number of elements in this group.
+         *
+         * \python This is also used to implement the Python special
+         * method __len__().
          *
          * \return the size of this group.
          */

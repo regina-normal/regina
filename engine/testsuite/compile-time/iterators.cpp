@@ -49,6 +49,15 @@ static_assert(std::bidirectional_iterator<
 static_assert(std::bidirectional_iterator<
     regina::NormalHypersurfaces::VectorIterator>);
 
+static_assert(std::random_access_iterator<regina::PermSn<2>::iterator>);
+static_assert(std::random_access_iterator<regina::PermSn<3>::iterator>);
+static_assert(std::random_access_iterator<regina::PermSn<4>::iterator>);
+static_assert(std::random_access_iterator<regina::PermSn<5>::iterator>);
+static_assert(std::random_access_iterator<regina::PermSn<6>::iterator>);
+static_assert(std::random_access_iterator<regina::PermSn<7>::iterator>);
+static_assert(std::forward_iterator<regina::PermSn<8>::iterator>);
+static_assert(std::forward_iterator<regina::PermSn<16>::iterator>);
+
 static_assert(std::input_iterator<regina::PermGroup<5>::iterator>);
 
 static_assert(std::forward_iterator<

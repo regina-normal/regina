@@ -192,14 +192,16 @@ class PermTestImpl {
             Index i = 0;
             Perm<n> p;
             Perm<n> q;
-            do {
-                EXPECT_EQ(p, q);
+            for (auto r : Perm<n>::Sn) {
+                EXPECT_EQ(p, r);
+                EXPECT_EQ(q, r);
                 EXPECT_FALSE(p != q);
-                EXPECT_EQ(p.SnIndex(), i);
+                EXPECT_EQ(r.SnIndex(), i);
                 ++i; ++p; q++; // test both pre- and post-increments
-            } while (! p.isIdentity());
+            }
 
             EXPECT_EQ(i, Perm<n>::nPerms);
+            EXPECT_TRUE(p.isIdentity());
             EXPECT_TRUE(q.isIdentity());
         }
 
@@ -207,19 +209,16 @@ class PermTestImpl {
             static_assert(iterationFeasible);
             SCOPED_TRACE_NUMERIC(n);
 
-            Perm<n> p;
-            do {
+            for (auto p : Perm<n>::Sn) {
                 EXPECT_EQ(p.inverse(), p.cachedInverse());
-                ++p;
-            } while (! p.isIdentity());
+            }
         }
 
         static void conjugacyMinimal() {
             static_assert(iterationFeasible);
             SCOPED_TRACE_NUMERIC(n);
 
-            Perm<n> p;
-            do {
+            for (auto p : Perm<n>::Sn) {
                 // Manually decide if p is conjugacy minimal.
                 bool min = true;
                 int prevCycle = 0;
@@ -243,8 +242,7 @@ class PermTestImpl {
                 }
 
                 EXPECT_EQ(p.isConjugacyMinimal(), min);
-                ++p;
-            } while (! p.isIdentity());
+            }
         }
 
         static void rot() {

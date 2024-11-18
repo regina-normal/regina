@@ -50,6 +50,20 @@ because the first-generation routines incur additional overhead in
 converting back and forth between the second-generation codes (which
 are used internally by Perm<5>).
 
+You can iterate through all permutations using a range-based ``for``
+loop over *S5*, and this will be extremely fast in both C++ and
+Python:
+
+```
+for (auto p : Perm<5>::S5) { ... }
+```
+
+This behaviour does not generalise to the large permutation classes
+Perm<n> with *n* ≥ 8, which are not as tightly optimised: such range-
+based ``for`` loops are still supported for *n* ≥ 8 but will be
+significantly slower in Python than in C++. See the generic Perm class
+notes for further details.
+
 To use this class, simply include the main permutation header
 maths/perm.h.
 
@@ -91,9 +105,6 @@ See Sn for further information on how these permutations are indexed.
 Returns:
     the index *i* for which this permutation is equal to
     Perm<5>::S5[i]. This will be between 0 and 119 inclusive.)doc";
-
-// Docstring regina::python::doc::Perm_::S5Lookup
-static const char *S5Lookup = R"doc(A lightweight array-like object used to implement Perm<5>::S5.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =
@@ -1004,6 +1015,10 @@ Returns:
 static const char *size =
 R"doc(Returns the number of permutations in the array orderedS3.
 
+Python:
+    This is called ``__len__``, following the expected Python
+    interface for array-like objects.
+
 Returns:
     the size of this array.)doc";
 
@@ -1027,6 +1042,10 @@ Returns:
 // Docstring regina::python::doc::Perm_::OrderedS4Lookup_::size
 static const char *size =
 R"doc(Returns the number of permutations in the array orderedS4.
+
+Python:
+    This is called ``__len__``, following the expected Python
+    interface for array-like objects.
 
 Returns:
     the size of this array.)doc";
@@ -1052,6 +1071,10 @@ Returns:
 static const char *size =
 R"doc(Returns the number of permutations in the array orderedS5.
 
+Python:
+    This is called ``__len__``, following the expected Python
+    interface for array-like objects.
+
 Returns:
     the size of this array.)doc";
 
@@ -1075,6 +1098,10 @@ Returns:
 // Docstring regina::python::doc::Perm_::S2Lookup_::size
 static const char *size =
 R"doc(Returns the number of permutations in the array S2.
+
+Python:
+    This is called ``__len__``, following the expected Python
+    interface for array-like objects.
 
 Returns:
     the size of this array.)doc";
@@ -1100,6 +1127,10 @@ Returns:
 static const char *size =
 R"doc(Returns the number of permutations in the array S3.
 
+Python:
+    This is called ``__len__``, following the expected Python
+    interface for array-like objects.
+
 Returns:
     the size of this array.)doc";
 
@@ -1124,29 +1155,9 @@ Returns:
 static const char *size =
 R"doc(Returns the number of permutations in the array S4.
 
-Returns:
-    the size of this array.)doc";
-
-}
-
-namespace Perm_::S5Lookup_ {
-
-// Docstring regina::python::doc::Perm_::S5Lookup_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index in the array S5. See
-Perm<5>::S5 for details.
-
-This operation is extremely fast (and constant time).
-
-Parameter ``index``:
-    an index between 0 and 119 inclusive.
-
-Returns:
-    the corresponding permutation in S5.)doc";
-
-// Docstring regina::python::doc::Perm_::S5Lookup_::size
-static const char *size =
-R"doc(Returns the number of permutations in the array S5.
+Python:
+    This is called ``__len__``, following the expected Python
+    interface for array-like objects.
 
 Returns:
     the size of this array.)doc";

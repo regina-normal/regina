@@ -250,6 +250,10 @@ PermGroup only offers read-only access to its group members.)doc";
 static const char *size =
 R"doc(Returns the total number of elements in this group.
 
+Python:
+    This is also used to implement the Python special method
+    __len__().
+
 Returns:
     the size of this group.)doc";
 

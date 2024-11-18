@@ -32,6 +32,20 @@ identity permutation, or 1 for the (unique) non-identity permutation.
 This is consistent with the second-generation codes used in classes
 Perm<4>,...,Perm<7>.
 
+You can iterate through all permutations using a range-based ``for``
+loop over *S2*, and this will be extremely fast in both C++ and
+Python:
+
+```
+for (auto p : Perm<2>::S2) { ... }
+```
+
+This behaviour does not generalise to the large permutation classes
+Perm<n> with *n* ≥ 8, which are not as tightly optimised: such range-
+based ``for`` loops are still supported for *n* ≥ 8 but will be
+significantly slower in Python than in C++. See the generic Perm class
+notes for further details.
+
 To use this class, simply include the main permutation header
 maths/perm.h.
 
@@ -70,9 +84,6 @@ See Sn for further information on how these permutations are indexed.
 Returns:
     the index *i* for which this permutation is equal to
     Perm<2>::S2[i]. This will be 0 or 1.)doc";
-
-// Docstring regina::python::doc::Perm_::S2Lookup
-static const char *S2Lookup = R"doc(A lightweight array-like object used to implement Perm<2>::S2.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =
@@ -735,29 +746,9 @@ Returns:
 static const char *size =
 R"doc(Returns the number of permutations in the array S1.
 
-Returns:
-    the size of this array.)doc";
-
-}
-
-namespace Perm_::S2Lookup_ {
-
-// Docstring regina::python::doc::Perm_::S2Lookup_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index in the array S2. See
-Perm<2>::S2 for details.
-
-This operation is extremely fast (and constant time).
-
-Parameter ``index``:
-    an index between 0 and 1 inclusive.
-
-Returns:
-    the corresponding permutation in S2.)doc";
-
-// Docstring regina::python::doc::Perm_::S2Lookup_::size
-static const char *size =
-R"doc(Returns the number of permutations in the array S2.
+Python:
+    This is called ``__len__``, following the expected Python
+    interface for array-like objects.
 
 Returns:
     the size of this array.)doc";

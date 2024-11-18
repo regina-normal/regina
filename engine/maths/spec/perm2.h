@@ -69,6 +69,18 @@ namespace regina {
  * This is consistent with the second-generation codes used in classes
  * Perm<4>,...,Perm<7>.
  *
+ * You can iterate through all permutations using a range-based \c for loop
+ * over \a S2, and this will be extremely fast in both C++ and Python:
+ *
+ * \code{.cpp}
+ * for (auto p : Perm<2>::S2) { ... }
+ * \endcode
+ *
+ * This behaviour does not generalise to the large permutation classes Perm<n>
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * loops are still supported for \a n ≥ 8 but will be significantly slower in
+ * Python than in C++.  See the generic Perm class notes for further details.
+ *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \warning Every permutation class Perm<n> provides a transposition
@@ -132,29 +144,6 @@ class Perm<2> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<2>::S2.
-         */
-        struct S2Lookup {
-            /**
-             * Returns the permutation at the given index in the array S2.
-             * See Perm<2>::S2 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 1 inclusive.
-             * \return the corresponding permutation in S2.
-             */
-            constexpr Perm<2> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S2.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 2; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<2>::S1.
          */
         struct S1Lookup {
@@ -172,6 +161,9 @@ class Perm<2> {
             /**
              * Returns the number of permutations in the array S1.
              *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
+             *
              * \return the size of this array.
              */
             static constexpr Index size() { return 1; }
@@ -179,14 +171,22 @@ class Perm<2> {
 
     public:
         /**
-         * Gives fast array-like access to all possible permutations of
-         * two elements.
+         * Gives fast access to all possible permutations of two elements,
+         * with support for both array-like indexing and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * You can also iterate over all permutations in \a Sn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<3>::Sn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * The identity permutation has index 0, and the non-identity
          * permutation has index 1.  As a result, Sn[\a i] is an even
@@ -203,8 +203,11 @@ class Perm<2> {
          * described above remains extremely fast.  This is now a lightweight
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
+         *
+         * See the PermSn documentation for further details, including time
+         * complexity of lookup and iteration.
          */
-        static constexpr S2Lookup Sn {};
+        static constexpr PermSn<2> Sn {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -213,13 +216,13 @@ class Perm<2> {
          * This is a dimension-specific alias for Perm<2>::Sn; see that member
          * for further information.  In general, for every \a n there will be
          * a static member Perm<n>::Sn; however, these numerical aliases
-         * Perm<2>::S2, ..., Perm<5>::S5 are only available for small \a n.
+         * Perm<2>::S2, ..., Perm<7>::S7 are only available for small \a n.
          *
          * Note that all small permutation classes (Perm<2>, ..., Perm<5>)
          * have an \a S2 array: these all store the same two permutations in
          * the same order (but of course using different data types).
          */
-        static constexpr S2Lookup S2 {};
+        static constexpr PermSn<2> S2 {};
 
         /**
          * Gives fast array-like access to all possible permutations of two
@@ -230,6 +233,11 @@ class Perm<2> {
          * must be between 0 and 1 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * Since Perm<2>::orderedSn is identical to Perm<2>::Sn, you can also
+         * iterate over it in the same way as \a Sn.  However, this fact is
+         * not true for \a n ≥ 3, where \a Sn and \a orderedSn become different
+         * (see below).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], \a p[1]).
@@ -248,7 +256,7 @@ class Perm<2> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S2Lookup orderedSn {};
+        static constexpr PermSn<2> orderedSn {};
 
         /**
          * Gives fast array-like access to all possible permutations of two
@@ -257,10 +265,10 @@ class Perm<2> {
          * This is a dimension-specific alias for Perm<2>::orderedSn; see that
          * member for further information.  In general, for every \a n there
          * will be a static member Perm<n>::orderedSn; however, these numerical
-         * aliases Perm<2>::orderedS2, ..., Perm<5>::orderedS5 are only
+         * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
-        static constexpr S2Lookup orderedS2 {};
+        static constexpr PermSn<2> orderedS2 {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -272,6 +280,10 @@ class Perm<2> {
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn_1[i]`.  The index \a i must be 0.
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a Sn_1 in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -1054,13 +1066,11 @@ class Perm<2> {
         template <typename iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
+
+    friend class PermSn<2>;
 };
 
 // Inline functions for Perm<2>
-
-inline constexpr Perm<2> Perm<2>::S2Lookup::operator[] (int index) const {
-    return Perm<2>(static_cast<Code>(index));
-}
 
 inline constexpr Perm<2> Perm<2>::S1Lookup::operator[] (int) const {
     return Perm<2>();

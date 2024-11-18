@@ -87,6 +87,18 @@ namespace regina {
  * in converting back and forth between the second-generation codes
  * (which are used internally by Perm<7>).
  *
+ * You can iterate through all permutations using a range-based \c for loop
+ * over \a S7, and this will be extremely fast in both C++ and Python:
+ *
+ * \code{.cpp}
+ * for (auto p : Perm<7>::S7) { ... }
+ * \endcode
+ *
+ * This behaviour does not generalise to the large permutation classes Perm<n>
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * loops are still supported for \a n ≥ 8 but will be significantly slower in
+ * Python than in C++.  See the generic Perm class notes for further details.
+ *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \python Since Python does not support templates, this class is
@@ -170,29 +182,6 @@ class Perm<7> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<7>::S7.
-         */
-        struct S7Lookup {
-            /**
-             * Returns the permutation at the given index in the array S7.
-             * See Perm<7>::S7 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 5039 inclusive.
-             * \return the corresponding permutation in S7.
-             */
-            constexpr Perm<7> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S7.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 5040; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<7>::orderedS7.
          */
         struct OrderedS7Lookup {
@@ -210,25 +199,36 @@ class Perm<7> {
             /**
              * Returns the number of permutations in the array orderedS7.
              *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
+             *
              * \return the size of this array.
              */
-            static constexpr Index size() { return 5040; }
+            static constexpr Index size() { return nPerms; }
         };
 
     public:
         /**
-         * Gives fast array-like access to all possible permutations of
-         * seven elements.
+         * Gives fast access to all possible permutations of seven elements,
+         * with support for both array-like indexing and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 5039 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * You can also iterate over all permutations in \a Sn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<7>::Sn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * The permutations with even indices in the array are the even
-         * permutations, and those with odd indices in the array are the
-         * odd permutations.
+         * permutations, and those with odd indices in the array are the odd
+         * permutations.  The first permutation (at index 0) is the identity.
          *
          * This array is different from Perm<7>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
@@ -237,8 +237,11 @@ class Perm<7> {
          * This is a lightweight object, and it is defined in the headers only.
          * In particular, you cannot make a reference to it (but it is cheap
          * to make a copy).
+         *
+         * See the PermSn documentation for further details, including time
+         * complexity of lookup and iteration.
          */
-        static constexpr S7Lookup Sn {};
+        static constexpr PermSn<7> Sn {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -249,7 +252,7 @@ class Perm<7> {
          * a static member Perm<n>::Sn; however, these numerical aliases
          * Perm<2>::S2, ..., Perm<7>::S7 are only available for small \a n.
          */
-        static constexpr S7Lookup S7 {};
+        static constexpr PermSn<7> S7 {};
 
         /**
          * Gives fast array-like access to all possible permutations of seven
@@ -260,6 +263,10 @@ class Perm<7> {
          * must be between 0 and 5039 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a orderedSn in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[6]).
@@ -1856,6 +1863,8 @@ class Perm<7> {
         template <typename iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
+
+    friend class PermSn<7>;
 };
 
 // Inline functions for Perm<7>
@@ -1876,10 +1885,6 @@ inline constexpr Int Perm<7>::convOrderedUnordered(Int index) {
     //
     return ((((index >> 1) ^ (index / 24) ^ (index / 720)) & 1) ?
         (index ^ 1) : index);
-}
-
-inline constexpr Perm<7> Perm<7>::S7Lookup::operator[] (int index) const {
-    return Perm<7>(static_cast<Code2>(index));
 }
 
 inline constexpr Perm<7> Perm<7>::OrderedS7Lookup::operator[] (int index)

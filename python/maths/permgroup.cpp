@@ -57,6 +57,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
         }), pybind11::arg("parent"), pybind11::arg("test"),
             rdoc::__init_3)
         .def("size", &Group::size, rdoc::size)
+        .def("__len__", &Group::size, rdoc::size)
         .def("contains", &Group::contains, rdoc::contains)
         .def("__iter__", [](const Group& g) {
             return g.begin();

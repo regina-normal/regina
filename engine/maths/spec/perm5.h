@@ -86,6 +86,18 @@ namespace regina {
  * in converting back and forth between the second-generation codes
  * (which are used internally by Perm<5>).
  *
+ * You can iterate through all permutations using a range-based \c for loop
+ * over \a S5, and this will be extremely fast in both C++ and Python:
+ *
+ * \code{.cpp}
+ * for (auto p : Perm<5>::S5) { ... }
+ * \endcode
+ *
+ * This behaviour does not generalise to the large permutation classes Perm<n>
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * loops are still supported for \a n ≥ 8 but will be significantly slower in
+ * Python than in C++.  See the generic Perm class notes for further details.
+ *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \python Since Python does not support templates, this class is
@@ -169,29 +181,6 @@ class Perm<5> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<5>::S5.
-         */
-        struct S5Lookup {
-            /**
-             * Returns the permutation at the given index in the array S5.
-             * See Perm<5>::S5 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 119 inclusive.
-             * \return the corresponding permutation in S5.
-             */
-            constexpr Perm<5> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S5.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 120; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<5>::orderedS5.
          */
         struct OrderedS5Lookup {
@@ -209,9 +198,12 @@ class Perm<5> {
             /**
              * Returns the number of permutations in the array orderedS5.
              *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
+             *
              * \return the size of this array.
              */
-            static constexpr Index size() { return 120; }
+            static constexpr Index size() { return nPerms; }
         };
 
         /**
@@ -231,6 +223,9 @@ class Perm<5> {
 
             /**
              * Returns the number of permutations in the array S4.
+             *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
              *
              * \return the size of this array.
              */
@@ -255,6 +250,9 @@ class Perm<5> {
             /**
              * Returns the number of permutations in the array orderedS4.
              *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
+             *
              * \return the size of this array.
              */
             static constexpr Index size() { return 24; }
@@ -277,6 +275,9 @@ class Perm<5> {
 
             /**
              * Returns the number of permutations in the array S3.
+             *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
              *
              * \return the size of this array.
              */
@@ -301,6 +302,9 @@ class Perm<5> {
             /**
              * Returns the number of permutations in the array orderedS3.
              *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
+             *
              * \return the size of this array.
              */
             static constexpr Index size() { return 6; }
@@ -323,6 +327,9 @@ class Perm<5> {
 
             /**
              * Returns the number of permutations in the array S2.
+             *
+             * \python This is called `__len__`, following the expected
+             * Python interface for array-like objects.
              *
              * \return the size of this array.
              */
@@ -353,18 +360,26 @@ class Perm<5> {
         static constexpr void precompute();
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * five elements.
+         * Gives fast access to all possible permutations of five elements,
+         * with support for both array-like indexing and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 119 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * You can also iterate over all permutations in \a Sn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<5>::Sn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * The permutations with even indices in the array are the even
-         * permutations, and those with odd indices in the array are the
-         * odd permutations.
+         * permutations, and those with odd indices in the array are the odd
+         * permutations.  The first permutation (at index 0) is the identity.
          *
          * This array is different from Perm<5>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
@@ -375,8 +390,11 @@ class Perm<5> {
          * described above remains extremely fast.  This is now a lightweight
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
+         *
+         * See the PermSn documentation for further details, including time
+         * complexity of lookup and iteration.
          */
-        static constexpr S5Lookup Sn {};
+        static constexpr PermSn<5> Sn {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -385,9 +403,9 @@ class Perm<5> {
          * This is a dimension-specific alias for Perm<5>::Sn; see that member
          * for further information.  In general, for every \a n there will be
          * a static member Perm<n>::Sn; however, these numerical aliases
-         * Perm<2>::S2, ..., Perm<5>::S5 are only available for small \a n.
+         * Perm<2>::S2, ..., Perm<7>::S7 are only available for small \a n.
          */
-        static constexpr S5Lookup S5 {};
+        static constexpr PermSn<5> S5 {};
 
         /**
          * Gives fast array-like access to all possible permutations of five
@@ -398,6 +416,10 @@ class Perm<5> {
          * must be between 0 and 119 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n ≥ 8).
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a orderedSn in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[4]).
@@ -421,7 +443,7 @@ class Perm<5> {
          * This is a dimension-specific alias for Perm<5>::orderedSn; see that
          * member for further information.  In general, for every \a n there
          * will be a static member Perm<n>::orderedSn; however, these numerical
-         * aliases Perm<2>::orderedS2, ..., Perm<5>::orderedS5 are only
+         * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
         static constexpr OrderedS5Lookup orderedS5 {};
@@ -433,6 +455,10 @@ class Perm<5> {
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn_1[i]`.  The index \a i must be
          * between 0 and 23 inclusive.
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a Sn_1 in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -472,6 +498,10 @@ class Perm<5> {
          * square bracket operator: `orderedS4[i]`.  The index \a i
          * must be between 0 and 23 inclusive.
          *
+         * Unlike \a Sn, you cannot (for now) iterate over \a orderedS4 in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
+         *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[3]).
          *
@@ -498,6 +528,10 @@ class Perm<5> {
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `S3[i]`.  The index \a i must be
          * between 0 and 5 inclusive.
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a S3 in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -528,6 +562,10 @@ class Perm<5> {
          * square bracket operator: `orderedS3[i]`.  The index \a i
          * must be between 0 and 5 inclusive.
          *
+         * Unlike \a Sn, you cannot (for now) iterate over \a orderedS3 in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
+         *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[2]).
          *
@@ -556,6 +594,10 @@ class Perm<5> {
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `S2[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
+         *
+         * Unlike \a Sn, you cannot (for now) iterate over \a S2 in C++
+         * (though you can still do this in Python since Python detects and
+         * uses the array-like behaviour).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -1789,6 +1831,8 @@ class Perm<5> {
         template <typename iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
+
+    friend class PermSn<5>;
 };
 
 // Inline functions for Perm<5>
@@ -1804,10 +1848,6 @@ inline constexpr Int Perm<5>::convOrderedUnordered(Int index) {
     // Here we use (index >> 1), which is equivalent to (index / 2).
     //
     return ((((index >> 1) ^ (index / 24)) & 1) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<5> Perm<5>::S5Lookup::operator[] (int index) const {
-    return Perm<5>(static_cast<Code2>(index));
 }
 
 inline constexpr Perm<5> Perm<5>::OrderedS5Lookup::operator[] (int index)

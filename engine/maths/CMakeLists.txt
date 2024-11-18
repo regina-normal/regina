@@ -36,6 +36,7 @@ if (${REGINA_INSTALL_DEV})
     numbertheory.h
     perm.h
     permgroup.h
+    permsn.h
     polynomial.h
     primes.h
     rational.h

@@ -120,8 +120,6 @@ void addPerm(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 
-    regina::python::add_lightweight_array<decltype(Perm<n>::Sn)>(c,
-        "_Sn", rdoc::SnLookup);
     regina::python::add_lightweight_array<decltype(Perm<n>::orderedSn)>(c,
         "_OrderedSn", rdoc::OrderedSnLookup);
 
