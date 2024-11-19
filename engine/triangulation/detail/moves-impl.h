@@ -787,7 +787,7 @@ bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
                 // Opposite each k-face is another k-face, which means the
                 // face numbers are different but add to (dim+1 choose k+1).
                 opposite[i] = simplex[i]->template face<dim-k-1>(
-                    Face<dim, k>::nFaces - face[i]);
+                    Face<dim, k>::nFaces - face[i] - 1);
             } else {
                 // Opposite each k-face is a face of different dimension.
                 // Specifically, k-face j is always opposite (dim-k-1)-face j.
