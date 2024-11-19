@@ -398,10 +398,12 @@ class Perm {
         static constexpr Index nPerms = factorial(n);
 
         /**
-         * The total number of permutations on <i>n</i>-1 elements.  This is
-         * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
+         * Deprecated constant holding the total number of permutations on
+         * `n-1` elements.
+         *
+         * \deprecated Just use `Perm<n-1>::nPerms` instead.
          */
-        static constexpr Index nPerms_1 = factorial(n-1);
+        [[deprecated]] static constexpr Index nPerms_1 = factorial(n-1);
 
     private:
         /**

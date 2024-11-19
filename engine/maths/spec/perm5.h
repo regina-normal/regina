@@ -137,10 +137,12 @@ class Perm<5> {
         static constexpr Index nPerms = 120;
 
         /**
-         * The total number of permutations on four elements.
-         * This is the size of the array Sn_1.
+         * Deprecated constant holding the total number of permutations on
+         * four elements.
+         *
+         * \deprecated Just use Perm<4>::nPerms instead.
          */
-        static constexpr Index nPerms_1 = 24;
+        [[deprecated]] static constexpr Index nPerms_1 = 24;
 
         /**
          * Indicates the number of bits used in an image pack to store the

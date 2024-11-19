@@ -42,6 +42,10 @@
 using pybind11::overload_cast;
 using regina::Perm;
 
+namespace {
+    static const int nPerms_1 = 1; // supporting deprecated constant below
+}
+
 void addPerm2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Perm)
 
@@ -95,7 +99,7 @@ void addPerm2(pybind11::module_& m) {
         .def_readonly_static("degree", &Perm<2>::degree)
         .def_readonly_static("codeType", &Perm<2>::codeType)
         .def_readonly_static("nPerms", &Perm<2>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<2>::nPerms_1)
+        .def_readonly_static("nPerms_1", &nPerms_1) // deprecated
         .def_readonly_static("S2", &Perm<2>::S2)
         .def_readonly_static("Sn", &Perm<2>::Sn)
         .def_readonly_static("orderedS2", &Perm<2>::orderedS2)

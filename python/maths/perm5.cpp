@@ -117,7 +117,7 @@ void addPerm5(pybind11::module_& m) {
         .def_readonly_static("imageBits", &Perm<5>::imageBits)
         .def_readonly_static("imageMask", &Perm<5>::imageMask)
         .def_readonly_static("nPerms", &Perm<5>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<5>::nPerms_1)
+        .def_readonly_static("nPerms_1", &Perm<4>::nPerms) // deprecated
         .def_readonly_static("S5", &Perm<5>::S5)
         .def_readonly_static("Sn", &Perm<5>::Sn)
         .def_readonly_static("orderedS5", &Perm<5>::orderedS5)

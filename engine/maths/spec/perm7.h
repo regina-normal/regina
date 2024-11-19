@@ -138,10 +138,12 @@ class Perm<7> {
         static constexpr Index nPerms = 5040;
 
         /**
-         * The total number of permutations on six elements.
-         * This is the size of the symmetric group <i>S<sub>6</sub></i>.
+         * Deprecated constant holding the total number of permutations on
+         * six elements.
+         *
+         * \deprecated Just use Perm<6>::nPerms instead.
          */
-        static constexpr Index nPerms_1 = 720;
+        [[deprecated]] static constexpr Index nPerms_1 = 720;
 
         /**
          * Indicates the number of bits used in an image pack to store the

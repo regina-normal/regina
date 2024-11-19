@@ -138,10 +138,12 @@ class Perm<4> {
         static constexpr Index nPerms = 24;
 
         /**
-         * The total number of permutations on three elements.
-         * This is the size of the array Sn_1.
+         * Deprecated constant holding the total number of permutations on
+         * three elements.
+         *
+         * \deprecated Just use Perm<3>::nPerms instead.
          */
-        static constexpr Index nPerms_1 = 6;
+        [[deprecated]] static constexpr Index nPerms_1 = 6;
 
         /**
          * Indicates the native unsigned integer type used to store a

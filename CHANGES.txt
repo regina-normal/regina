@@ -429,6 +429,7 @@ Version 7.4  [ (to be announced) ]
               below), which now supports both iteration and array-like access.
             - Classes Perm<2,3> now have a type alias Code2 (which is identical
               to Code), to help with generic programming.
+            - The constant nPerms_1 is now deprecated.
         Enum PermCodeType:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_CODE_IMAGES) have been

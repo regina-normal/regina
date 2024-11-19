@@ -71,9 +71,8 @@ namespace regina {
  * full Triangulation<dim> object, you can call triangulate().
  *
  * Internally, this class stores each permutation as an index into
- * Perm<dim+1>::Sn_1 (that is, an index into the permutation group \a S_dim).
- * Importantly, you can only _set_ permutations using these indices,
- * via the non-const permIndex() function - access to the permutations
+ * Perm<dim>::Sn.  Importantly, you can only _set_ permutations using these
+ * indices, via the non-const permIndex() function - access to the permutations
  * themselves is read-only.  You can use indexToGluing() and gluingToIndex()
  * to convert between indicex and permutations, or you can use the read-only
  * member function perm() which returns the permutation directly.  Note
@@ -115,7 +114,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
                  This is guaranteed to be the minimal representative of
                  its facet pairing isomorphism class. */
         Index* permIndices_;
-            /**< The index into array Perm<dim+1>::Sn_1 describing how each
+            /**< The index into array Perm<dim>::Sn describing how each
                  simplex facet is glued to its partner.  Note that this
                  is not a gluing permutation as such but rather a permutation
                  of 0,...,\a dim-1 only (see the routines gluingToIndex() and
@@ -284,7 +283,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         Perm<dim+1> perm(size_t simp, int facet) const;
 
         /**
-         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
+         * Returns the index into array Perm<dim>::Sn describing how the
          * the given facet is joined to its partner.
          *
          * Note that this is not the \a S_n index of the gluing permutation
@@ -295,7 +294,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * permutation directly.
          *
          * As described in the class notes, this index could be a real
-         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * permutation index between 0 and `dim!-1` inclusive, or it
          * could be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
@@ -308,7 +307,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         Index permIndex(const FacetSpec<dim>& source) const;
 
         /**
-         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
+         * Returns the index into array Perm<dim>::Sn describing how the
          * the given facet is joined to its partner.
          *
          * Note that this is not the \a S_n index of the gluing permutation
@@ -319,7 +318,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * permutation directly.
          *
          * As described in the class notes, this index could be a real
-         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * permutation index between 0 and `dim!-1` inclusive, or it
          * could be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
@@ -333,7 +332,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         Index permIndex(size_t simp, int facet) const;
 
         /**
-         * Offers write access to the index into array Perm<dim+1>::Sn_1
+         * Offers write access to the index into array Perm<dim>::Sn
          * describing how the the given facet is joined to its partner.
          *
          * Note that this is not the \a S_n index of the gluing permutation
@@ -344,7 +343,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * gluing permutation directly.
          *
          * As described in the class notes, this index can be a real
-         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * permutation index between 0 and `dim!-1` inclusive, or it
          * may be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
@@ -361,7 +360,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         Index& permIndex(const FacetSpec<dim>& source);
 
         /**
-         * Offers write access to the index into array Perm<dim+1>::Sn_1
+         * Offers write access to the index into array Perm<dim>::Sn
          * describing how the the given facet is joined to its partner.
          *
          * Note that this is not the \a S_n index of the gluing permutation
@@ -372,7 +371,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * gluing permutation directly.
          *
          * As described in the class notes, this index can be a real
-         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * permutation index between 0 and `dim!-1` inclusive, or it
          * may be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
@@ -391,7 +390,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
 
 #ifdef __APIDOCS
         /**
-         * Python-only routine that sets the index into array Perm<dim+1>::Sn_1
+         * Python-only routine that sets the index into array Perm<dim>::Sn
          * describing how the the given facet is joined to its partner.
          *
          * Note that this is not the \a S_n index of the gluing permutation on
@@ -400,7 +399,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * to convert between these indices and gluing permutations.
          *
          * As described in the class notes, this index can be a real
-         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * permutation index between 0 and `dim!-1` inclusive, or it
          * may be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
@@ -416,7 +415,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         void setPermIndex(const FacetSpec<dim>& source, Index index);
 
         /**
-         * Python-only routine that sets the index into array Perm<dim+1>::Sn_1
+         * Python-only routine that sets the index into array Perm<dim>::Sn
          * describing how the the given facet is joined to its partner.
          *
          * Note that this is not the \a S_n index of the gluing permutation on
@@ -425,7 +424,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * to convert between these indices and gluing permutations.
          *
          * As described in the class notes, this index can be a real
-         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * permutation index between 0 and `dim!-1` inclusive, or it
          * may be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
@@ -503,12 +502,12 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         std::string data() const;
 
         /**
-         * Returns the index into array Perm<dim+1>::Sn_1 corresponding to
+         * Returns the index into array Perm<dim>::Sn corresponding to
          * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into Perm<dim+1>::Sn_1 that
+         * partner.  This need not be the index into Perm<dim>::Sn that
          * is currently stored for the given facet.
          *
-         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim>::Sn are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -522,20 +521,20 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \param gluing a possible gluing permutation from the given
          * simplex facet to its partner according to the underlying
          * facet pairing.
-         * \return the index into Perm<dim+1>::Sn_1 corresponding to the
-         * given gluing permutation; this will be between 0 and \a dim!-1
+         * \return the index into Perm<dim>::Sn corresponding to the
+         * given gluing permutation; this will be between 0 and `dim!-1`
          * inclusive.
          */
         Index gluingToIndex(const FacetSpec<dim>& source,
             const Perm<dim+1>& gluing) const;
 
         /**
-         * Returns the index into array Perm<dim+1>::Sn_1 corresponding to
+         * Returns the index into array Perm<dim>::Sn corresponding to
          * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into Perm<dim+1>::Sn_1 that
+         * partner.  This need not be the index into Perm<dim>::Sn that
          * is currently stored for the given facet.
          *
-         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim>::Sn are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -553,8 +552,8 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \param gluing a possible gluing permutation from the given
          * simplex facet to its partner according to the underlying
          * facet pairing.
-         * \return the index into Perm<dim+1>::Sn_1 corresponding to the
-         * given gluing permutation; this will be between 0 and \a dim!-1
+         * \return the index into Perm<dim>::Sn corresponding to the
+         * given gluing permutation; this will be between 0 and `dim!-1`
          * inclusive.
          */
         Index gluingToIndex(size_t simp, int facet,
@@ -563,10 +562,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         /**
          * Returns the gluing permutation from the given facet to its
          * partner that corresponds to the given index into array
-         * Perm<dim+1>::Sn_1.  This index into Perm<dim+1>::Sn_1 need not
+         * Perm<dim>::Sn.  This index into Perm<dim>::Sn need not
          * be the index that is currently stored for the given facet.
          *
-         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim>::Sn are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -579,10 +578,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * the underlying facet pairing, i.e., is not a boundary facet.
          *
          * \param source the simplex facet under investigation.
-         * \param index an index into Perm<dim+1>::Sn_1; this must be
-         * between 0 and \a dim!-1 inclusive.
+         * \param index an index into Perm<dim>::Sn; this must be
+         * between 0 and `dim!-1` inclusive.
          * \return the gluing permutation corresponding to the given
-         * index into Perm<dim+1>::Sn_1.
+         * index into Perm<dim>::Sn.
          */
         Perm<dim+1> indexToGluing(const FacetSpec<dim>& source, Index index)
             const;
@@ -590,10 +589,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         /**
          * Returns the gluing permutation from the given facet to its
          * partner that corresponds to the given index into array
-         * Perm<dim+1>::Sn_1.  This index into Perm<dim+1>::Sn_1 need not
+         * Perm<dim>::Sn.  This index into Perm<dim>::Sn need not
          * be the index that is currently stored for the given facet.
          *
-         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim>::Sn are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -610,10 +609,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * consideration.
          * \param facet the facet of the given simplex under
          * investigation; this must be between 0 and \a dim inclusive.
-         * \param index an index into Perm<dim+1>::Sn_1; this must be
-         * between 0 and \a dim!-1 inclusive.
+         * \param index an index into Perm<dim>::Sn; this must be
+         * between 0 and `dim!-1` inclusive.
          * \return the gluing permutation corresponding to the given
-         * index into Perm<dim+1>::Sn_1.
+         * index into Perm<dim>::Sn.
          */
         Perm<dim+1> indexToGluing(size_t simp, int facet, Index index) const;
 

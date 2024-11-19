@@ -99,7 +99,7 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("degree", &Perm<3>::degree)
         .def_readonly_static("codeType", &Perm<3>::codeType)
         .def_readonly_static("nPerms", &Perm<3>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<3>::nPerms_1)
+        .def_readonly_static("nPerms_1", &Perm<2>::nPerms) // deprecated
         .def_readonly_static("S3", &Perm<3>::S3)
         .def_readonly_static("Sn", &Perm<3>::Sn)
         .def_readonly_static("orderedS3", &Perm<3>::orderedS3)
