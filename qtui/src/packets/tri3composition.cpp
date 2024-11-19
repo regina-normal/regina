@@ -919,15 +919,13 @@ void Tri3CompositionUI::findSpiralSolidTori() {
     QTreeWidgetItem* detailsItem = nullptr;
 
     regina::Tetrahedron<3>* tet;
-    int whichPerm;
     for (size_t i = 0; i < nTets; i++) {
         tet = tri_->tetrahedron(i);
-        for (whichPerm = 0; whichPerm < 24 /* size of S4 */; ++whichPerm) {
-            if (Perm<4>::S4[whichPerm][0] > Perm<4>::S4[whichPerm][3])
+        for (auto whichPerm: Perm<4>::Sn) {
+            if (whichPerm[0] > whichPerm[3])
                 continue;
 
-            auto spiral = regina::SpiralSolidTorus::recognise(tet,
-                Perm<4>::S4[whichPerm]);
+            auto spiral = regina::SpiralSolidTorus::recognise(tet, whichPerm);
             if (! spiral)
                 continue;
             if (! spiral->isCanonical())

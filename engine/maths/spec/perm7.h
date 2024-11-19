@@ -1143,7 +1143,7 @@ class Perm<7> {
         constexpr Index SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<7>::S7 array.
+         * Returns the index of this permutation in the Perm<7>::Sn array.
          *
          * This is a dimension-specific alias for SnIndex().  In general,
          * for every \a n there will be a member function Perm<n>::SnIndex();
@@ -1153,7 +1153,7 @@ class Perm<7> {
          * See Sn for further information on how these permutations are indexed.
          *
          * \return the index \a i for which this permutation is equal to
-         * Perm<7>::S7[i].  This will be between 0 and 5039 inclusive.
+         * Perm<7>::Sn[i].  This will be between 0 and 5039 inclusive.
          */
         constexpr Index S7Index() const;
 
@@ -1786,7 +1786,7 @@ class Perm<7> {
 
     private:
         /**
-         * Returns the index into the Perm<7>::S7 array of the permutation that
+         * Returns the index into the Perm<7>::Sn array of the permutation that
          * maps (0,...,6) to (<i>a</i>,...,<i>f</i>,<i>g</i>) respectively.
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>,<i>f</i>,<i>g</i>}
@@ -1800,7 +1800,7 @@ class Perm<7> {
          * \param f the desired image of 5.
          * \param g the desired image of 6.
          * \return the index \a i for which the given permutation is equal to
-         * Perm<7>::S7[i].  This will be between 0 and 5039 inclusive.
+         * Perm<7>::Sn[i].  This will be between 0 and 5039 inclusive.
          */
         static constexpr int S7Index(int a, int b, int c, int d, int e, int f,
             int g);

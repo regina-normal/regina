@@ -138,7 +138,6 @@ std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
     // Hunt for a core.  Make sure we find each triangular solid torus
     // just once.
     size_t tetIndex;
-    int coreIndex;
     std::unique_ptr<TriSolidTorus> core;
     Tetrahedron<3>* coreTet[3];
     Edge<3>* axis[3];
@@ -157,13 +156,12 @@ std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
     int equatorType = 0;
 
     for (tetIndex = 0; tetIndex < nTet - 2; tetIndex++)
-        for (coreIndex = 0; coreIndex < 24; coreIndex++) {
-            coreRoles[0] = Perm<4>::S4[coreIndex];
-            if (coreRoles[0][0] > coreRoles[0][3])
+        for (auto corePerm: Perm<4>::Sn) {
+            if (corePerm[0] > corePerm[3])
                 continue;
 
             core = TriSolidTorus::recognise(
-                comp->tetrahedron(tetIndex), coreRoles[0]);
+                comp->tetrahedron(tetIndex), corePerm);
             if (! core)
                 continue;
 

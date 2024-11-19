@@ -1115,7 +1115,7 @@ class Perm<6> {
         constexpr Index SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<6>::S6 array.
+         * Returns the index of this permutation in the Perm<6>::Sn array.
          *
          * This is a dimension-specific alias for SnIndex().  In general,
          * for every \a n there will be a member function Perm<n>::SnIndex();
@@ -1125,7 +1125,7 @@ class Perm<6> {
          * See Sn for further information on how these permutations are indexed.
          *
          * \return the index \a i for which this permutation is equal to
-         * Perm<6>::S6[i].  This will be between 0 and 719 inclusive.
+         * Perm<6>::Sn[i].  This will be between 0 and 719 inclusive.
          */
         constexpr Index S6Index() const;
 
@@ -3145,7 +3145,7 @@ class Perm<6> {
 
     private:
         /**
-         * Returns the index into the Perm<6>::S6 array of the permutation that
+         * Returns the index into the Perm<6>::Sn array of the permutation that
          * maps (0,...,5) to (<i>a</i>,...,<i>f</i>) respectively.
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>,<i>f</i>} =
@@ -3158,7 +3158,7 @@ class Perm<6> {
          * \param e the desired image of 4.
          * \param f the desired image of 5.
          * \return the index \a i for which the given permutation is equal to
-         * Perm<6>::S6[i].  This will be between 0 and 719 inclusive.
+         * Perm<6>::Sn[i].  This will be between 0 and 719 inclusive.
          */
         static constexpr int S6Index(int a, int b, int c, int d, int e, int f);
 

@@ -1411,7 +1411,7 @@ class Perm<5> {
         constexpr Index SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<5>::S5 array.
+         * Returns the index of this permutation in the Perm<5>::Sn array.
          *
          * This is a dimension-specific alias for SnIndex().  In general,
          * for every \a n there will be a member function Perm<n>::SnIndex();
@@ -1421,7 +1421,7 @@ class Perm<5> {
          * See Sn for further information on how these permutations are indexed.
          *
          * \return the index \a i for which this permutation is equal to
-         * Perm<5>::S5[i].  This will be between 0 and 119 inclusive.
+         * Perm<5>::Sn[i].  This will be between 0 and 119 inclusive.
          */
         constexpr Index S5Index() const;
 
@@ -1760,7 +1760,7 @@ class Perm<5> {
 
     private:
         /**
-         * Returns the index into the Perm<5>::S5 array of the permutation that
+         * Returns the index into the Perm<5>::Sn array of the permutation that
          * maps (0,...,5) to (<i>a</i>,...,<i>e</i>) respectively.
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>} = {0,1,2,3,4}.
@@ -1771,7 +1771,7 @@ class Perm<5> {
          * \param d the desired image of 3.
          * \param e the desired image of 4.
          * \return the index \a i for which the given permutation is equal to
-         * Perm<5>::S5[i].  This will be between 0 and 119 inclusive.
+         * Perm<5>::Sn[i].  This will be between 0 and 119 inclusive.
          */
         static constexpr int S5Index(int a, int b, int c, int d, int e);
 

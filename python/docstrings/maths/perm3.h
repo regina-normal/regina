@@ -60,7 +60,7 @@ static const char *S2Lookup = R"doc(A lightweight array-like object used to impl
 
 // Docstring regina::python::doc::Perm_::S3Index
 static const char *S3Index =
-R"doc(Returns the index of this permutation in the Perm<3>::S3 array.
+R"doc(Returns the index of this permutation in the Perm<3>::Sn array.
 
 This is a dimension-specific alias for SnIndex(). In general, for
 every *n* there will be a member function Perm<n>::SnIndex(); however,
@@ -71,7 +71,7 @@ See Sn for further information on how these permutations are indexed.
 
 Returns:
     the index *i* for which this permutation is equal to
-    Perm<3>::S3[i]. This will be between 0 and 5 inclusive.)doc";
+    Perm<3>::Sn[i]. This will be between 0 and 5 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =

@@ -75,7 +75,7 @@ namespace Perm_ {
 
 // Docstring regina::python::doc::Perm_::S7Index
 static const char *S7Index =
-R"doc(Returns the index of this permutation in the Perm<7>::S7 array.
+R"doc(Returns the index of this permutation in the Perm<7>::Sn array.
 
 This is a dimension-specific alias for SnIndex(). In general, for
 every *n* there will be a member function Perm<n>::SnIndex(); however,
@@ -86,7 +86,7 @@ See Sn for further information on how these permutations are indexed.
 
 Returns:
     the index *i* for which this permutation is equal to
-    Perm<7>::S7[i]. This will be between 0 and 5039 inclusive.)doc";
+    Perm<7>::Sn[i]. This will be between 0 and 5039 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =

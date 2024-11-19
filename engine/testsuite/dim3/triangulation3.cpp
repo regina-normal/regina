@@ -3257,13 +3257,13 @@ static void verifyMeridian(const Triangulation<3>& tri, const char* name) {
         // and appears under all possible edge labellings.
         auto s = use.boundaryComponent(0)->edge(i)->front().simplex();
 
-        for (int j = 0; j < 24; ++j) {
+        for (auto p: Perm<4>::Sn) {
             auto iso = Isomorphism<3>::identity(use.size());
             if (s->index() != 0) {
                 iso.simpImage(0) = s->index();
                 iso.simpImage(s->index()) = 0;
             }
-            iso.facetPerm(s->index()) = Perm<4>::S4[j];
+            iso.facetPerm(s->index()) = p;
             Triangulation<3> t = iso(use);
 
             // And now to actually test the meridian.  For this, we use the

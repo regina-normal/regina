@@ -938,7 +938,7 @@ class Perm<2> {
         constexpr Index SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<2>::S2 array.
+         * Returns the index of this permutation in the Perm<2>::Sn array.
          *
          * This is a dimension-specific alias for SnIndex().  In general,
          * for every \a n there will be a member function Perm<n>::SnIndex();
@@ -948,7 +948,7 @@ class Perm<2> {
          * See Sn for further information on how these permutations are indexed.
          *
          * \return the index \a i for which this permutation is equal to
-         * Perm<2>::S2[i].  This will be 0 or 1.
+         * Perm<2>::Sn[i].  This will be 0 or 1.
          */
         constexpr Index S2Index() const;
 

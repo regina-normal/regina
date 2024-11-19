@@ -1294,7 +1294,7 @@ class Perm<4> {
         constexpr Index SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<4>::S4 array.
+         * Returns the index of this permutation in the Perm<4>::Sn array.
          *
          * This is a dimension-specific alias for SnIndex().  In general,
          * for every \a n there will be a member function Perm<n>::SnIndex();
@@ -1304,7 +1304,7 @@ class Perm<4> {
          * See Sn for further information on how these permutations are indexed.
          *
          * \return the index \a i for which this permutation is equal to
-         * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
+         * Perm<4>::Sn[i].  This will be between 0 and 23 inclusive.
          */
         constexpr Index S4Index() const;
 
@@ -1525,7 +1525,7 @@ class Perm<4> {
 
     private:
         /**
-         * Returns the index into the Perm<4>::S4 array of the permutation that
+         * Returns the index into the Perm<4>::Sn array of the permutation that
          * maps (0,1,2,3) to (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>) respectively.
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>} = {0,1,2,3}.
@@ -1535,7 +1535,7 @@ class Perm<4> {
          * \param c the desired image of 2.
          * \param d the desired image of 3.
          * \return the index \a i for which the given permutation is equal to
-         * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
+         * Perm<4>::Sn[i].  This will be between 0 and 23 inclusive.
          */
         static constexpr int S4Index(int a, int b, int c, int d);
 

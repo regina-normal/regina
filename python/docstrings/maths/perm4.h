@@ -85,7 +85,7 @@ static const char *S3Lookup = R"doc(A lightweight array-like object used to impl
 
 // Docstring regina::python::doc::Perm_::S4Index
 static const char *S4Index =
-R"doc(Returns the index of this permutation in the Perm<4>::S4 array.
+R"doc(Returns the index of this permutation in the Perm<4>::Sn array.
 
 This is a dimension-specific alias for SnIndex(). In general, for
 every *n* there will be a member function Perm<n>::SnIndex(); however,
@@ -96,7 +96,7 @@ See Sn for further information on how these permutations are indexed.
 
 Returns:
     the index *i* for which this permutation is equal to
-    Perm<4>::S4[i]. This will be between 0 and 23 inclusive.)doc";
+    Perm<4>::Sn[i]. This will be between 0 and 23 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =

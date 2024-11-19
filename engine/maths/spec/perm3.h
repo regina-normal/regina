@@ -1022,7 +1022,7 @@ class Perm<3> {
         constexpr Index SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<3>::S3 array.
+         * Returns the index of this permutation in the Perm<3>::Sn array.
          *
          * This is a dimension-specific alias for SnIndex().  In general,
          * for every \a n there will be a member function Perm<n>::SnIndex();
@@ -1032,7 +1032,7 @@ class Perm<3> {
          * See Sn for further information on how these permutations are indexed.
          *
          * \return the index \a i for which this permutation is equal to
-         * Perm<3>::S3[i].  This will be between 0 and 5 inclusive.
+         * Perm<3>::Sn[i].  This will be between 0 and 5 inclusive.
          */
         constexpr Index S3Index() const;
 
