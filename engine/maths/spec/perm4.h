@@ -192,32 +192,6 @@ class Perm<4> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<4>::S3.
-         */
-        struct S3Lookup {
-            /**
-             * Returns the permutation at the given index in the array S3.
-             * See Perm<4>::S3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 5 inclusive.
-             * \return the corresponding permutation in S3.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S3.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 6; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<4>::orderedS3.
          */
         struct OrderedS3Lookup {
@@ -376,7 +350,7 @@ class Perm<4> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S3Lookup S3 {};
+        static constexpr PermSubSn<4, 3> S3 {};
 
         /**
          * Deprecated alias for \a S3, which gives fast array-like access to
@@ -385,7 +359,7 @@ class Perm<4> {
          * \deprecated This is identical to `Perm<4>::S3`; see that member
          * for further information.
          */
-        [[deprecated]] static constexpr S3Lookup Sn_1 {};
+        [[deprecated]] static constexpr PermSubSn<4, 3> Sn_1 {};
 
         /**
          * Gives fast array-like access to all possible permutations of three
@@ -1462,12 +1436,6 @@ class Perm<4> {
         };
 
         /**
-         * Contains the S4 indices of the elements of S3, where the
-         * element 3 maps to itself.
-         */
-        static constexpr Code2 S3Table[6] = { 0, 3, 8, 7, 12, 15 };
-
-        /**
          * Contains a full table of induced permutations on six
          * elements, as returned by pairs().  This array is indexed
          * according to S4, and its values are indices in S6.
@@ -1565,13 +1533,9 @@ inline constexpr Int Perm<4>::convOrderedUnordered(Int index) {
     return ((index & 2) ? (index ^ 1) : index);
 }
 
-inline constexpr Perm<4> Perm<4>::S3Lookup::operator[] (int index) const {
-    return Perm<4>(S3Table[index]);
-}
-
 inline constexpr Perm<4> Perm<4>::OrderedS3Lookup::operator[] (int index)
         const {
-    return Perm<4>(S3Table[Perm<3>::orderedSn[index].SnIndex()]);
+    return S3[Perm<3>::orderedSn[index].SnIndex()];
 }
 
 inline constexpr void Perm<4>::precompute() {

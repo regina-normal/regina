@@ -235,32 +235,6 @@ class Perm<5> {
         };
 
         /**
-         * A lightweight array-like object used to implement Perm<5>::S3.
-         */
-        struct S3Lookup {
-            /**
-             * Returns the permutation at the given index in the array S3.
-             * See Perm<5>::S3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 5 inclusive.
-             * \return the corresponding permutation in S3.
-             */
-            constexpr Perm<5> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S3.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 6; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<5>::orderedS3.
          */
         struct OrderedS3Lookup {
@@ -510,7 +484,7 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S3Lookup S3 {};
+        static constexpr PermSubSn<5, 3> S3 {};
 
         /**
          * Gives fast array-like access to all possible permutations of three
@@ -1706,12 +1680,6 @@ class Perm<5> {
             48, 51, 56, 55, 60, 63, 74, 73, 78, 81, 86, 85
         };
 
-        /**
-         * Contains the S5 indices of the elements of S3, where the
-         * elements 3 and 4 map to themselves.
-         */
-        static constexpr Code2 S3Table[6] = { 0, 7, 30, 25, 48, 55 };
-
     protected:
         /**
          * Creates a permutation from the given second-generation
@@ -1812,13 +1780,9 @@ inline constexpr Perm<5> Perm<5>::OrderedS4Lookup::operator[] (int index)
     return Perm<5>(S4Table[Perm<4>::orderedSn[index].SnIndex()]);
 }
 
-inline constexpr Perm<5> Perm<5>::S3Lookup::operator[] (int index) const {
-    return Perm<5>(S3Table[index]);
-}
-
 inline constexpr Perm<5> Perm<5>::OrderedS3Lookup::operator[] (int index)
         const {
-    return Perm<5>(S3Table[Perm<3>::orderedSn[index].SnIndex()]);
+    return S3[Perm<3>::orderedSn[index].SnIndex()];
 }
 
 inline constexpr void Perm<5>::precompute() {

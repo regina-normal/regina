@@ -77,9 +77,6 @@ namespace Perm_ {
 // Docstring regina::python::doc::Perm_::OrderedS3Lookup
 static const char *OrderedS3Lookup = R"doc(A lightweight array-like object used to implement Perm<4>::orderedS3.)doc";
 
-// Docstring regina::python::doc::Perm_::S3Lookup
-static const char *S3Lookup = R"doc(A lightweight array-like object used to implement Perm<4>::S3.)doc";
-
 // Docstring regina::python::doc::Perm_::S4Index
 static const char *S4Index =
 R"doc(Returns the index of this permutation in the Perm<4>::Sn array.
@@ -1001,34 +998,6 @@ Returns:
 // Docstring regina::python::doc::Perm_::OrderedS3Lookup_::size
 static const char *size =
 R"doc(Returns the number of permutations in the array orderedS3.
-
-Python:
-    This is called ``__len__``, following the expected Python
-    interface for array-like objects.
-
-Returns:
-    the size of this array.)doc";
-
-}
-
-namespace Perm_::S3Lookup_ {
-
-// Docstring regina::python::doc::Perm_::S3Lookup_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index in the array S3. See
-Perm<4>::S3 for details.
-
-This operation is extremely fast (and constant time).
-
-Parameter ``index``:
-    an index between 0 and 5 inclusive.
-
-Returns:
-    the corresponding permutation in S3.)doc";
-
-// Docstring regina::python::doc::Perm_::S3Lookup_::size
-static const char *size =
-R"doc(Returns the number of permutations in the array S3.
 
 Python:
     This is called ``__len__``, following the expected Python

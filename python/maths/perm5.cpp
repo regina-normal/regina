@@ -156,8 +156,6 @@ void addPerm5(pybind11::module_& m) {
         "_S4", rdoc::S4Lookup);
     regina::python::add_lightweight_array<decltype(Perm<5>::orderedS4)>(c,
         "_orderedS4", rdoc::OrderedS4Lookup);
-    regina::python::add_lightweight_array<decltype(Perm<5>::S3)>(c,
-        "_S3", rdoc::S3Lookup);
     regina::python::add_lightweight_array<decltype(Perm<5>::orderedS3)>(c,
         "_orderedS3", rdoc::OrderedS3Lookup);
 
