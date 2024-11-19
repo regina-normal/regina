@@ -115,7 +115,6 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     unsigned permIndex;         // The index of the gluing permutation to use.
     Perm<4> adjPerm;              // The gluing permutation to use.
     Perm<4> identity;             // The identity permutation.
-    Perm<4> reverse(3,2,1,0);     // The reverse permutation.
 
     while (currTet < nTet) {
         // Is this face already glued?
@@ -158,7 +157,7 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
                 break;
             }
 
-            adjPerm = Perm<4>::orderedS4[permIndex] * reverse;
+            adjPerm = Perm<4>::orderedS4[permIndex].reverse();
 
             if (tet[adjTet]->adjacentTetrahedron(adjPerm[currFace]) ||
                     (adjTet == currTet && adjPerm[currFace] == currFace)) {
@@ -291,17 +290,10 @@ std::string Triangulation<3>::dehydrate() const {
                 // Don't forget that our permutation abcd becomes dcba
                 // in dehydration language.
                 destChars[currGluingPos] = LETTER(image[dest]);
-                Perm<4> map = vertexMap[dest] *
+                Perm<4> map = (vertexMap[dest] *
                     simplices_[tet]->adjacentGluing(face) *
-                    vertexMap[tet].inverse() * Perm<4>(3, 2, 1, 0);
-                // Just loop to find the index of the corresponding
-                // gluing permutation.  There's only 24 permutations and
-                // at most 25 tetrahedra; we'll live with it.
-                int mapIndex;
-                for (mapIndex = 0; mapIndex < 24; mapIndex++)
-                    if (map == Perm<4>::orderedS4[mapIndex])
-                        break;
-                permChars[currGluingPos] = LETTER(mapIndex);
+                    vertexMap[tet].inverse()).reverse();
+                permChars[currGluingPos] = LETTER(map.orderedS4Index());
 
                 currGluingPos++;
             }

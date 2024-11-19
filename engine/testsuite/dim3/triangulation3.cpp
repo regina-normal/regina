@@ -811,6 +811,13 @@ static void verifyDehydration(const Triangulation<3>& tri, const char* name) {
 
 TEST_F(Dim3Test, dehydration) {
     testManualCases(verifyDehydration);
+
+    // Add some ad-hoc tests for known cases:
+    EXPECT_EQ(Example<3>::figureEight().dehydrate(), "cabbbbaei");
+    EXPECT_EQ(Example<3>::poincare().dehydrate(), "fapaadecedenbokbo");
+    EXPECT_EQ(Example<3>::rp2xs1().dehydrate(), "dadbcccfxfh");
+    EXPECT_EQ(Example<3>::augTriSolidTorus(2,3,1,0,4,5).dehydrate(),
+        "mmpkebeedgehfijhklklfsajaxqhkxhnk");
 }
 
 TEST_F(Dim3Test, pachner) {

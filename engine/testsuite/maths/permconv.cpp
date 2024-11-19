@@ -47,8 +47,7 @@ TEST(PermConvTest, identity) {
             using Low = Perm<from.value>;
             using High = Perm<to>;
 
-            for (typename Low::Index i = 0; i < Low::nPerms; ++i) {
-                Low p = Low::orderedSn[i];
+            for (Low p: Low::orderedSn) {
                 Low q = Low::contract(High::extend(p));
                 EXPECT_EQ(p, q);
                 EXPECT_EQ(p.str(), q.str());
@@ -56,9 +55,7 @@ TEST(PermConvTest, identity) {
 
             {
                 int done = 0;
-                for (typename High::Index i = 0; i < High::nPerms; ++i) {
-                    High p = High::orderedSn[i];
-
+                for (High p: High::orderedSn) {
                     bool id = true;
                     for (int j = Low::degree; j < High::degree; ++j)
                         if (p[j] != j) {
@@ -97,20 +94,17 @@ TEST(PermConvTest, strings) {
             using Low = Perm<from.value>;
             using High = Perm<to>;
 
-            for (typename Low::Index i = 0; i < Low::nPerms; ++i) {
-                Low p = Low::orderedSn[i];
+            for (Low p: Low::orderedSn) {
                 std::string s1 = p.str();
                 for (int j = Low::degree; j < High::degree; ++j)
-                    s1 += (j < 10 ? ('0' + j) : ('a' + j - 10));
+                    s1 += (j < 10 ? char('0' + j) : char('a' + j - 10));
                 std::string s2 = High::extend(p).str();
                 EXPECT_EQ(s1, s2);
             }
 
             {
                 int done = 0;
-                for (typename High::Index i = 0; i < High::nPerms; ++i) {
-                    High p = High::orderedSn[i];
-
+                for (High p: High::orderedSn) {
                     bool id = true;
                     for (int j = Low::degree; j < High::degree; ++j)
                         if (p[j] != j) {
@@ -123,7 +117,7 @@ TEST(PermConvTest, strings) {
                     std::string s1 = p.str();
                     std::string s2 = Low::contract(p).str();
                     for (int j = Low::degree; j < High::degree; ++j)
-                        s2 += (j < 10 ? ('0' + j) : ('a' + j - 10));
+                        s2 += (j < 10 ? char('0' + j) : char('a' + j - 10));
                     EXPECT_EQ(s1, s2);
                     ++done;
                 }

@@ -86,6 +86,8 @@ void testPerm() {
 
     static_assert(Perm<n>::Sn[0] == Perm<n>());
     static_assert(Perm<n>::orderedSn[0] == Perm<n>());
+    static_assert((*Perm<n>::Sn.begin()).isIdentity());
+    static_assert((*Perm<n>::orderedSn.begin()).isIdentity());
     if constexpr (n <= 5) {
         static_assert(Perm<n>::Sn_1[0] == Perm<n>());
     }
@@ -93,8 +95,13 @@ void testPerm() {
     if constexpr (n == 2) {
         // For n = 2, Sn and orderedSn are identical.
         static_assert(Perm<n>::Sn[index] == Perm<n>::orderedSn[index]);
+        static_assert(*(Perm<n>::Sn.begin() + index) ==
+            *(Perm<n>::orderedSn.begin() + index));
         static_assert(Perm<n>::Sn[index].SnIndex() == index);
         static_assert(Perm<n>::orderedSn[index].orderedSnIndex() == index);
+        static_assert((*(Perm<n>::Sn.begin() + index)).SnIndex() == index);
+        static_assert((*(Perm<n>::orderedSn.begin() + index)).orderedSnIndex()
+            == index);
         static_assert(Perm<n>::Sn[index].orderedSnIndex() == index);
         static_assert(Perm<n>::orderedSn[index].SnIndex() == index);
     } else {
@@ -103,6 +110,14 @@ void testPerm() {
         static_assert(Perm<n>::orderedSn[index].orderedSnIndex() == index);
         static_assert(Perm<n>::Sn[index].orderedSnIndex() == (index ^ 1));
         static_assert(Perm<n>::orderedSn[index].SnIndex() == (index ^ 1));
+
+        if constexpr (Perm<n>::codeType == regina::PermCodeType::Index) {
+            static_assert(*(Perm<n>::Sn.begin() + index) !=
+                *(Perm<n>::orderedSn.begin() + index));
+            static_assert((*(Perm<n>::Sn.begin() + index)).SnIndex() == index);
+            static_assert((*(Perm<n>::orderedSn.begin() + index)).
+                orderedSnIndex() == index);
+        }
     }
 }
 

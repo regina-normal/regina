@@ -429,10 +429,11 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     if (isUnmatched(0, 0)) {
         // We must have just one simplex with no facet gluings at all.
         if (list) {
-            for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
+            // TODO: Probably this should use Sn, not orderedSn.
+            for (auto p: Perm<dim+1>::orderedSn) {
                 Isomorphism<dim> ans(1);
                 ans.simpImage(0) = 0;
-                ans.facetPerm(0) = Perm<dim+1>::orderedSn[i];
+                ans.facetPerm(0) = p;
                 list->push_back(std::move(ans));
             }
         }

@@ -198,16 +198,16 @@ bool TriangulationBase<dim>::makeCanonical() {
     }
 
     // Run through potential preimages of simplex 0.
-    typename Perm<dim+1>::Index perm;
     for (simp = 0; simp < nSimp; ++simp) {
-        for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
+        // TODO: Can we use Sn instead of orderedSn?
+        for (auto perm: Perm<dim+1>::orderedSn) {
             // Build a "perhaps canonical" isomorphism based on this
             // preimage of simplex 0.
             current.simpImage(simp) = 0;
             currentInv.simpImage(0) = simp;
 
-            currentInv.facetPerm(0) = Perm<dim+1>::orderedSn[perm];
-            current.facetPerm(simp) = currentInv.facetPerm(0).inverse();
+            currentInv.facetPerm(0) = perm;
+            current.facetPerm(simp) = perm.inverse();
 
             if (CanonicalHelper::extendIsomorphism<dim>(this, current,
                     currentInv, best, bestInv)) {
