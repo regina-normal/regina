@@ -1842,7 +1842,7 @@ inline constexpr Perm<5> Perm<5>::S4Lookup::operator[] (int index) const {
 
 inline constexpr Perm<5> Perm<5>::OrderedS4Lookup::operator[] (int index)
         const {
-    return Perm<5>(S4Table[Perm<4>::orderedS4[index].S4Index()]);
+    return Perm<5>(S4Table[Perm<4>::orderedSn[index].SnIndex()]);
 }
 
 inline constexpr Perm<5> Perm<5>::S3Lookup::operator[] (int index) const {
@@ -1851,7 +1851,7 @@ inline constexpr Perm<5> Perm<5>::S3Lookup::operator[] (int index) const {
 
 inline constexpr Perm<5> Perm<5>::OrderedS3Lookup::operator[] (int index)
         const {
-    return Perm<5>(S3Table[Perm<3>::orderedS3[index].S3Index()]);
+    return Perm<5>(S3Table[Perm<3>::orderedSn[index].SnIndex()]);
 }
 
 inline constexpr Perm<5> Perm<5>::S2Lookup::operator[] (int index) const {

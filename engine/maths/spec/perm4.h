@@ -1604,7 +1604,7 @@ inline constexpr Perm<4> Perm<4>::S3Lookup::operator[] (int index) const {
 
 inline constexpr Perm<4> Perm<4>::OrderedS3Lookup::operator[] (int index)
         const {
-    return Perm<4>(S3Table[Perm<3>::orderedS3[index].S3Index()]);
+    return Perm<4>(S3Table[Perm<3>::orderedSn[index].SnIndex()]);
 }
 
 inline constexpr Perm<4> Perm<4>::S2Lookup::operator[] (int index) const {

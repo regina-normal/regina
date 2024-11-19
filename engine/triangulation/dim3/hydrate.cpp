@@ -293,7 +293,7 @@ std::string Triangulation<3>::dehydrate() const {
                 Perm<4> map = (vertexMap[dest] *
                     simplices_[tet]->adjacentGluing(face) *
                     vertexMap[tet].inverse()).reverse();
-                permChars[currGluingPos] = LETTER(map.orderedS4Index());
+                permChars[currGluingPos] = LETTER(map.orderedSnIndex());
 
                 currGluingPos++;
             }
