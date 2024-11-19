@@ -143,7 +143,12 @@ enum class PermOrder {
      * ordering, then the identity will have index 0, all even permutations
      * will have even indices, and all odd permutations will have odd indices.
      *
-     * This is the ordering used by `Perm<n>::Sn`.
+     * More specifically: for each \a i, the permutations at indices `2i` and
+     * `2i+1` will be the same under both ordering methods \a Sign and \a Lex,
+     * but they might be swapped to ensure the correct signs and/or
+     * lexicographical ordering.
+     *
+     * PermOrder::Sign is the ordering used by `Perm<n>::Sn`.
      */
     Sign = 0,
     /**
@@ -154,7 +159,7 @@ enum class PermOrder {
      * sequence of images `p[0],p[1],...,p[n-1]` (where \a p denotes an
      * arbitrary permutation on \a n objects).
      *
-     * This is the ordering used by `Perm<n>::orderedSn`.
+     * PermOrder::Lex is the ordering used by `Perm<n>::orderedSn`.
      */
     Lex = 1
 };

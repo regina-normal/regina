@@ -66,14 +66,14 @@ namespace regina {
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  For Perm<3>, the internal code is an
  * integer between 0 and 5 inclusive that gives the index of the
- * permutation in the array Perm<3>::S3.  This is consistent with the
+ * permutation in the array Perm<3>::Sn.  This is consistent with the
  * second-generation codes used in classes Perm<4>,...,Perm<7>.
  *
  * You can iterate through all permutations using a range-based \c for loop
- * over \a S3, and this will be extremely fast in both C++ and Python:
+ * over \a Sn, and this will be extremely fast in both C++ and Python:
  *
  * \code{.cpp}
- * for (auto p : Perm<3>::S3) { ... }
+ * for (auto p : Perm<3>::Sn) { ... }
  * \endcode
  *
  * This behaviour does not generalise to the large permutation classes Perm<n>
@@ -1181,8 +1181,8 @@ class Perm<3> {
 
     private:
         /**
-         * Converts between an index into Perm<3>::S3 and an index into
-         * Perm<3>::orderedS3.  This conversion works in either direction.
+         * Converts between an index into Perm<3>::Sn and an index into
+         * Perm<3>::orderedSn.  This conversion works in either direction.
          *
          * \tparam Int a native integer type; this would typically be
          * either \c int or \a Code.

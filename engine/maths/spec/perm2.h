@@ -70,10 +70,10 @@ namespace regina {
  * Perm<4>,...,Perm<7>.
  *
  * You can iterate through all permutations using a range-based \c for loop
- * over \a S2, and this will be extremely fast in both C++ and Python:
+ * over \a Sn, and this will be extremely fast in both C++ and Python:
  *
  * \code{.cpp}
- * for (auto p : Perm<2>::S2) { ... }
+ * for (auto p : Perm<2>::Sn) { ... }
  * \endcode
  *
  * This behaviour does not generalise to the large permutation classes Perm<n>

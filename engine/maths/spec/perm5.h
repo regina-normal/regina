@@ -76,7 +76,7 @@ namespace regina {
  *
  * - _Second-generation_ codes are used internally in Regina 7.0 and above.
  *   These codes are integers between 0 and 119 inclusive, representing the
- *   index of the permutation in the array Perm<5>::S5.  The routines
+ *   index of the permutation in the array Perm<5>::Sn.  The routines
  *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
  *   work with second-generation codes.
  *
@@ -87,10 +87,10 @@ namespace regina {
  * (which are used internally by Perm<5>).
  *
  * You can iterate through all permutations using a range-based \c for loop
- * over \a S5, and this will be extremely fast in both C++ and Python:
+ * over \a Sn, and this will be extremely fast in both C++ and Python:
  *
  * \code{.cpp}
- * for (auto p : Perm<5>::S5) { ... }
+ * for (auto p : Perm<5>::Sn) { ... }
  * \endcode
  *
  * This behaviour does not generalise to the large permutation classes Perm<n>
@@ -1775,8 +1775,8 @@ class Perm<5> {
         static constexpr int S5Index(int a, int b, int c, int d, int e);
 
         /**
-         * Converts between an index into Perm<5>::S5 and an index into
-         * Perm<5>::orderedS5.  This conversion works in either direction.
+         * Converts between an index into Perm<5>::Sn and an index into
+         * Perm<5>::orderedSn.  This conversion works in either direction.
          *
          * \tparam Int a native integer type; this would typically be
          * either \c int or \a Code2.

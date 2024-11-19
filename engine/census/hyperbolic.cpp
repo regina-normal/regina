@@ -107,7 +107,7 @@ void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
 
         // We are sitting on a new permutation to try.
         perms_.permIndex(adj) =
-            Perm<3>::S3[perms_.permIndex(face)].inverse().S3Index();
+            Perm<3>::Sn[perms_.permIndex(face)].inverse().S3Index();
 
         // Merge edge links and run corresponding tests.
         if (mergeEdgeClasses()) {

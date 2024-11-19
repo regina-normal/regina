@@ -864,7 +864,7 @@ bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
             if (ridge[1][0] == ridge[0][1] && ridge[1][1] == ridge[0][2] &&
                     ridge[1][2] == ridge[0][0])
                 return false;
-            for (auto p : Perm<3>::S3)
+            for (auto p : Perm<3>::Sn)
                 if (ridge[0][p[0]] == ridge[0][p[1]] &&
                         ridge[1][p[1]] == ridge[1][p[2]] &&
                         ridge[0][p[2]] == ridge[1][p[0]])
@@ -881,7 +881,7 @@ bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
                         ridge[1][(i + 1) % 3]->isBoundary())
                     return false;
             }
-            for (auto p : Perm<3>::S3) {
+            for (auto p : Perm<3>::Sn) {
                 if (ridge[0][p[0]]->isBoundary() &&
                         ridge[1][p[0]] == ridge[1][p[1]] &&
                         ridge[0][p[1]] == ridge[1][p[2]] &&

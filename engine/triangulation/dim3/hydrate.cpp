@@ -157,7 +157,7 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
                 break;
             }
 
-            adjPerm = Perm<4>::orderedS4[permIndex].reverse();
+            adjPerm = Perm<4>::orderedSn[permIndex].reverse();
 
             if (tet[adjTet]->adjacentTetrahedron(adjPerm[currFace]) ||
                     (adjTet == currTet && adjPerm[currFace] == currFace)) {
