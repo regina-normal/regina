@@ -38,9 +38,8 @@ permutations. To convert this into a full Triangulation<dim> object,
 you can call triangulate().
 
 Internally, this class stores each permutation as an index into
-Perm<dim+1>::Sn_1 (that is, an index into the permutation group
-*S_dim*). Importantly, you can only _set_ permutations using these
-indices, via the non-const permIndex() function - access to the
+Perm<dim>::Sn. Importantly, you can only _set_ permutations using
+these indices, via the non-const permIndex() function - access to the
 permutations themselves is read-only. You can use indexToGluing() and
 gluingToIndex() to convert between indicex and permutations, or you
 can use the read-only member function perm() which returns the
@@ -184,14 +183,14 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::GluingPerms_::gluingToIndex
 constexpr const char *gluingToIndex =
-R"doc(Returns the index into array Perm<dim+1>::Sn_1 corresponding to the
-given gluing permutation from the given facet to its partner. This
-need not be the index into Perm<dim+1>::Sn_1 that is currently stored
-for the given facet.
+R"doc(Returns the index into array Perm<dim>::Sn corresponding to the given
+gluing permutation from the given facet to its partner. This need not
+be the index into Perm<dim>::Sn that is currently stored for the given
+facet.
 
-Indices into array Perm<dim+1>::Sn_1 are stored internally in the
-array *permIndices_*. Full gluing permutations on the other hand are
-used in constructing triangulations.
+Indices into array Perm<dim>::Sn are stored internally in the array
+*permIndices_*. Full gluing permutations on the other hand are used in
+constructing triangulations.
 
 Precondition:
     The given simplex facet has a partner according to the underlying
@@ -210,19 +209,19 @@ Parameter ``gluing``:
     partner according to the underlying facet pairing.
 
 Returns:
-    the index into Perm<dim+1>::Sn_1 corresponding to the given gluing
-    permutation; this will be between 0 and *dim*!-1 inclusive.)doc";
+    the index into Perm<dim>::Sn corresponding to the given gluing
+    permutation; this will be between 0 and ``dim!-1`` inclusive.)doc";
 
 // Docstring regina::python::doc::GluingPerms_::gluingToIndex_2
 constexpr const char *gluingToIndex_2 =
-R"doc(Returns the index into array Perm<dim+1>::Sn_1 corresponding to the
-given gluing permutation from the given facet to its partner. This
-need not be the index into Perm<dim+1>::Sn_1 that is currently stored
-for the given facet.
+R"doc(Returns the index into array Perm<dim>::Sn corresponding to the given
+gluing permutation from the given facet to its partner. This need not
+be the index into Perm<dim>::Sn that is currently stored for the given
+facet.
 
-Indices into array Perm<dim+1>::Sn_1 are stored internally in the
-array *permIndices_*. Full gluing permutations on the other hand are
-used in constructing triangulations.
+Indices into array Perm<dim>::Sn are stored internally in the array
+*permIndices_*. Full gluing permutations on the other hand are used in
+constructing triangulations.
 
 Precondition:
     The given simplex facet has a partner according to the underlying
@@ -246,19 +245,19 @@ Parameter ``gluing``:
     partner according to the underlying facet pairing.
 
 Returns:
-    the index into Perm<dim+1>::Sn_1 corresponding to the given gluing
-    permutation; this will be between 0 and *dim*!-1 inclusive.)doc";
+    the index into Perm<dim>::Sn corresponding to the given gluing
+    permutation; this will be between 0 and ``dim!-1`` inclusive.)doc";
 
 // Docstring regina::python::doc::GluingPerms_::indexToGluing
 constexpr const char *indexToGluing =
 R"doc(Returns the gluing permutation from the given facet to its partner
-that corresponds to the given index into array Perm<dim+1>::Sn_1. This
-index into Perm<dim+1>::Sn_1 need not be the index that is currently
+that corresponds to the given index into array Perm<dim>::Sn. This
+index into Perm<dim>::Sn need not be the index that is currently
 stored for the given facet.
 
-Indices into array Perm<dim+1>::Sn_1 are stored internally in the
-array *permIndices_*. Full gluing permutations on the other hand are
-used in constructing triangulations.
+Indices into array Perm<dim>::Sn are stored internally in the array
+*permIndices_*. Full gluing permutations on the other hand are used in
+constructing triangulations.
 
 If the given simplex facet and its partner according to the underlying
 facet pairing are facets *x* and *y* of their respective simplices,
@@ -272,23 +271,23 @@ Parameter ``source``:
     the simplex facet under investigation.
 
 Parameter ``index``:
-    an index into Perm<dim+1>::Sn_1; this must be between 0 and
-    *dim*!-1 inclusive.
+    an index into Perm<dim>::Sn; this must be between 0 and ``dim!-1``
+    inclusive.
 
 Returns:
     the gluing permutation corresponding to the given index into
-    Perm<dim+1>::Sn_1.)doc";
+    Perm<dim>::Sn.)doc";
 
 // Docstring regina::python::doc::GluingPerms_::indexToGluing_2
 constexpr const char *indexToGluing_2 =
 R"doc(Returns the gluing permutation from the given facet to its partner
-that corresponds to the given index into array Perm<dim+1>::Sn_1. This
-index into Perm<dim+1>::Sn_1 need not be the index that is currently
+that corresponds to the given index into array Perm<dim>::Sn. This
+index into Perm<dim>::Sn need not be the index that is currently
 stored for the given facet.
 
-Indices into array Perm<dim+1>::Sn_1 are stored internally in the
-array *permIndices_*. Full gluing permutations on the other hand are
-used in constructing triangulations.
+Indices into array Perm<dim>::Sn are stored internally in the array
+*permIndices_*. Full gluing permutations on the other hand are used in
+constructing triangulations.
 
 If the given simplex facet and its partner according to the underlying
 facet pairing are facets *x* and *y* of their respective simplices,
@@ -307,12 +306,12 @@ Parameter ``facet``:
     between 0 and *dim* inclusive.
 
 Parameter ``index``:
-    an index into Perm<dim+1>::Sn_1; this must be between 0 and
-    *dim*!-1 inclusive.
+    an index into Perm<dim>::Sn; this must be between 0 and ``dim!-1``
+    inclusive.
 
 Returns:
     the gluing permutation corresponding to the given index into
-    Perm<dim+1>::Sn_1.)doc";
+    Perm<dim>::Sn.)doc";
 
 // Docstring regina::python::doc::GluingPerms_::pairing
 constexpr const char *pairing =
@@ -371,7 +370,7 @@ Returns:
 
 // Docstring regina::python::doc::GluingPerms_::permIndex
 constexpr const char *permIndex =
-R"doc(Returns the index into array Perm<dim+1>::Sn_1 describing how the the
+R"doc(Returns the index into array Perm<dim>::Sn describing how the the
 given facet is joined to its partner.
 
 Note that this is not the *S_n* index of the gluing permutation on
@@ -381,8 +380,8 @@ convert between these indices and gluing permutations, or you can call
 perm() to read the gluing permutation directly.
 
 As described in the class notes, this index could be a real
-permutation index between 0 and (dim!)-1 inclusive, or it could be the
-special value -1 indicating that the permutation has not yet been
+permutation index between 0 and ``dim!-1`` inclusive, or it could be
+the special value -1 indicating that the permutation has not yet been
 chosen.
 
 Precondition:
@@ -397,7 +396,7 @@ Returns:
 
 // Docstring regina::python::doc::GluingPerms_::permIndex_2
 constexpr const char *permIndex_2 =
-R"doc(Returns the index into array Perm<dim+1>::Sn_1 describing how the the
+R"doc(Returns the index into array Perm<dim>::Sn describing how the the
 given facet is joined to its partner.
 
 Note that this is not the *S_n* index of the gluing permutation on
@@ -407,8 +406,8 @@ convert between these indices and gluing permutations, or you can call
 perm() to read the gluing permutation directly.
 
 As described in the class notes, this index could be a real
-permutation index between 0 and (dim!)-1 inclusive, or it could be the
-special value -1 indicating that the permutation has not yet been
+permutation index between 0 and ``dim!-1`` inclusive, or it could be
+the special value -1 indicating that the permutation has not yet been
 chosen.
 
 Parameter ``simp``:
@@ -424,8 +423,8 @@ Returns:
 
 // Docstring regina::python::doc::GluingPerms_::permIndex_3
 constexpr const char *permIndex_3 =
-R"doc(Offers write access to the index into array Perm<dim+1>::Sn_1
-describing how the the given facet is joined to its partner.
+R"doc(Offers write access to the index into array Perm<dim>::Sn describing
+how the the given facet is joined to its partner.
 
 Note that this is not the *S_n* index of the gluing permutation on
 (*dim* + 1) elements, but rather the index of a permutation on just
@@ -434,8 +433,8 @@ convert between these indices and gluing permutations, or you can call
 perm() for read-only access to the gluing permutation directly.
 
 As described in the class notes, this index can be a real permutation
-index between 0 and (dim!)-1 inclusive, or it may be the special value
--1 indicating that the permutation has not yet been chosen.
+index between 0 and ``dim!-1`` inclusive, or it may be the special
+value -1 indicating that the permutation has not yet been chosen.
 
 Precondition:
     The given facet is a real simplex facet (not boundary, before-the-
@@ -454,8 +453,8 @@ Returns:
 
 // Docstring regina::python::doc::GluingPerms_::permIndex_4
 constexpr const char *permIndex_4 =
-R"doc(Offers write access to the index into array Perm<dim+1>::Sn_1
-describing how the the given facet is joined to its partner.
+R"doc(Offers write access to the index into array Perm<dim>::Sn describing
+how the the given facet is joined to its partner.
 
 Note that this is not the *S_n* index of the gluing permutation on
 (*dim* + 1) elements, but rather the index of a permutation on just
@@ -464,8 +463,8 @@ convert between these indices and gluing permutations, or you can call
 perm() for read-only access to the gluing permutation directly.
 
 As described in the class notes, this index can be a real permutation
-index between 0 and (dim!)-1 inclusive, or it may be the special value
--1 indicating that the permutation has not yet been chosen.
+index between 0 and ``dim!-1`` inclusive, or it may be the special
+value -1 indicating that the permutation has not yet been chosen.
 
 Python:
     For Python users, permIndex() is a read-only function that returns
@@ -485,7 +484,7 @@ Returns:
 
 // Docstring regina::python::doc::GluingPerms_::setPermIndex
 constexpr const char *setPermIndex =
-R"doc(Python-only routine that sets the index into array Perm<dim+1>::Sn_1
+R"doc(Python-only routine that sets the index into array Perm<dim>::Sn
 describing how the the given facet is joined to its partner.
 
 Note that this is not the *S_n* index of the gluing permutation on
@@ -494,8 +493,8 @@ Note that this is not the *S_n* index of the gluing permutation on
 convert between these indices and gluing permutations.
 
 As described in the class notes, this index can be a real permutation
-index between 0 and (dim!)-1 inclusive, or it may be the special value
--1 indicating that the permutation has not yet been chosen.
+index between 0 and ``dim!-1`` inclusive, or it may be the special
+value -1 indicating that the permutation has not yet been chosen.
 
 Precondition:
     The given facet is a real simplex facet (not boundary, before-the-
@@ -509,7 +508,7 @@ Parameter ``index``:
 
 // Docstring regina::python::doc::GluingPerms_::setPermIndex_2
 constexpr const char *setPermIndex_2 =
-R"doc(Python-only routine that sets the index into array Perm<dim+1>::Sn_1
+R"doc(Python-only routine that sets the index into array Perm<dim>::Sn
 describing how the the given facet is joined to its partner.
 
 Note that this is not the *S_n* index of the gluing permutation on
@@ -518,8 +517,8 @@ Note that this is not the *S_n* index of the gluing permutation on
 convert between these indices and gluing permutations.
 
 As described in the class notes, this index can be a real permutation
-index between 0 and (dim!)-1 inclusive, or it may be the special value
--1 indicating that the permutation has not yet been chosen.
+index between 0 and ``dim!-1`` inclusive, or it may be the special
+value -1 indicating that the permutation has not yet been chosen.
 
 Parameter ``simp``:
     the simplex under consideration (this must be strictly less than

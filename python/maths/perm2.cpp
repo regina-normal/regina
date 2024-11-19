@@ -105,7 +105,20 @@ void addPerm2(pybind11::module_& m) {
         .def_readonly_static("orderedS2", &Perm<2>::orderedS2)
         .def_readonly_static("orderedSn", &Perm<2>::orderedSn)
         .def_readonly_static("S1", &Perm<2>::S1)
-        .def_readonly_static("Sn_1", &Perm<2>::Sn_1)
+        #if defined(__GNUC__)
+        // The following members are deprecated, but we still need to bind
+        // them.  Silence the inevitable deprecation warnings that will occur.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        .def_readonly_static("Sn_1", &Perm<2>::Sn_1) // deprecated
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
     ;
     regina::for_constexpr<3, 17>([&c](auto i) {
         c.def_static("contract", &Perm<2>::template contract<i>,

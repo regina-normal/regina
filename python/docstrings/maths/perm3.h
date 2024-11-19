@@ -29,15 +29,15 @@ integer that is sufficient to reconstruct the permutation. Thus the
 internal code may be a useful means for passing permutation objects to
 and from the engine. For Perm<3>, the internal code is an integer
 between 0 and 5 inclusive that gives the index of the permutation in
-the array Perm<3>::S3. This is consistent with the second-generation
+the array Perm<3>::Sn. This is consistent with the second-generation
 codes used in classes Perm<4>,...,Perm<7>.
 
 You can iterate through all permutations using a range-based ``for``
-loop over *S3*, and this will be extremely fast in both C++ and
+loop over *Sn*, and this will be extremely fast in both C++ and
 Python:
 
 ```
-for (auto p : Perm<3>::S3) { ... }
+for (auto p : Perm<3>::Sn) { ... }
 ```
 
 This behaviour does not generalise to the large permutation classes

@@ -333,7 +333,7 @@ Specifically, we order permutations lexicographically according to the
 sequence of images ``p[0],p[1],...,p[n-1]`` (where *p* denotes an
 arbitrary permutation on *n* objects).
 
-This is the ordering used by ``Perm<n>::orderedSn``.)doc";
+PermOrder::Lex is the ordering used by ``Perm<n>::orderedSn``.)doc";
 
 // Docstring regina::python::doc::PermOrder_::Sign
 static const char *Sign =
@@ -346,7 +346,12 @@ this ordering, then the identity will have index 0, all even
 permutations will have even indices, and all odd permutations will
 have odd indices.
 
-This is the ordering used by ``Perm<n>::Sn``.)doc";
+More specifically: for each *i*, the permutations at indices ``2i``
+and ``2i+1`` will be the same under both ordering methods *Sign* and
+*Lex*, but they might be swapped to ensure the correct signs and/or
+lexicographical ordering.
+
+PermOrder::Sign is the ordering used by ``Perm<n>::Sn``.)doc";
 
 }
 

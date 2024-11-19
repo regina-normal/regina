@@ -377,10 +377,10 @@ class Perm<4> {
          * 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: `Sn_1[i]`.  The index \a i must be
+         * square bracket operator: `S3[i]`.  The index \a i must be
          * between 0 and 5 inclusive.
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a Sn_1 in C++
+         * Unlike \a Sn, you cannot (for now) iterate over \a S3 in C++
          * (though you can still do this in Python since Python detects and
          * uses the array-like behaviour).
          *
@@ -388,10 +388,13 @@ class Perm<4> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This array is different from Perm<4>::orderedS3, since \a Sn_1
-         * (or equivalently, \a S3) alternates between even and odd
-         * permutations, whereas \a orderedS3 accesses permutations in
-         * lexicographical order.
+         * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
+         * all have an \a S3 array; these all store the same six permutations
+         * in the same order (but of course using different data types).
+         *
+         * This array is different from Perm<4>::orderedS3, since \a S3
+         * alternates between even and odd permutations, whereas \a orderedS3
+         * accesses permutations in lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -399,20 +402,16 @@ class Perm<4> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S3Lookup Sn_1 {};
+        static constexpr S3Lookup S3 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * three elements in a sign-based order.
+         * Deprecated alias for \a S3, which gives fast array-like access to
+         * all possible permutations of three elements in a sign-based order.
          *
-         * This is a dimension-specific alias for Perm<4>::Sn_1; see that
-         * member for further information.
-         *
-         * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
-         * all have an \a S3 array; these all store the same six permutations
-         * in the same order (but of course using different data types).
+         * \deprecated This is identical to `Perm<4>::S3`; see that member
+         * for further information.
          */
-        static constexpr S3Lookup S3 {};
+        [[deprecated]] static constexpr S3Lookup Sn_1 {};
 
         /**
          * Gives fast array-like access to all possible permutations of three
@@ -430,8 +429,8 @@ class Perm<4> {
          * ordered pair (\a p[0], ..., \a p[2]).
          *
          * This array is different from Perm<4>::S3, since \a orderedS3 accesses
-         * permutations in lexicographical order, whereas \a S3 (or
-         * equivalently, \a Sn_1) alternates between even and odd permutations.
+         * permutations in lexicographical order, whereas \a S3 alternates
+         * between even and odd permutations.
          *
          * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
          * all have an \a orderedS3 array; these all store the same six

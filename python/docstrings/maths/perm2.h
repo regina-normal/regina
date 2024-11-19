@@ -33,11 +33,11 @@ This is consistent with the second-generation codes used in classes
 Perm<4>,...,Perm<7>.
 
 You can iterate through all permutations using a range-based ``for``
-loop over *S2*, and this will be extremely fast in both C++ and
+loop over *Sn*, and this will be extremely fast in both C++ and
 Python:
 
 ```
-for (auto p : Perm<2>::S2) { ... }
+for (auto p : Perm<2>::Sn) { ... }
 ```
 
 This behaviour does not generalise to the large permutation classes

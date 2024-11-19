@@ -1258,26 +1258,14 @@ TEST_F(PermTestSmall, tightEncoding) {
 TEST_F(PermTestSmall, aliases) {
     for (int i = 0; i < 2; ++i)
         EXPECT_EQ(Perm<2>::S2[i], Perm<2>::Sn[i]);
-    EXPECT_EQ(Perm<2>::S1[0], Perm<2>::Sn_1[0]);
-
     for (int i = 0; i < 6; ++i)
         EXPECT_EQ(Perm<3>::S3[i], Perm<3>::Sn[i]);
-    for (int i = 0; i < 2; ++i)
-        EXPECT_EQ(Perm<3>::S2[i], Perm<3>::Sn_1[i]);
-
     for (int i = 0; i < 24; ++i)
         EXPECT_EQ(Perm<4>::S4[i], Perm<4>::Sn[i]);
-    for (int i = 0; i < 6; ++i)
-        EXPECT_EQ(Perm<4>::S3[i], Perm<4>::Sn_1[i]);
-
     for (int i = 0; i < 120; ++i)
         EXPECT_EQ(Perm<5>::S5[i], Perm<5>::Sn[i]);
-    for (int i = 0; i < 24; ++i)
-        EXPECT_EQ(Perm<5>::S4[i], Perm<5>::Sn_1[i]);
-
     for (Perm<6>::Index i = 0; i < Perm<6>::nPerms; ++i)
         EXPECT_EQ(Perm<6>::S6[i], Perm<6>::Sn[i]);
-
     for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
         EXPECT_EQ(Perm<7>::S7[i], Perm<7>::Sn[i]);
 }

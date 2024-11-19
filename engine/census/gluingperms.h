@@ -792,29 +792,17 @@ inline typename GluingPerms<dim>::Index GluingPerms<dim>::permIndex(
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         const FacetSpec<dim>& source, Index index) const {
-    if constexpr (standardDim(dim)) {
-        return Perm<dim+1>(pairing_.dest(source).facet, dim) *
-            Perm<dim+1>::Sn_1[index] * Perm<dim+1>(source.facet, dim);
-    } else {
-        // The fast Sn_1 lookup is only provided in standard dimensions.
-        return Perm<dim+1>(pairing_.dest(source).facet, dim) *
-            Perm<dim+1>::extend(Perm<dim>::Sn[index]) *
-            Perm<dim+1>(source.facet, dim);
-    }
+    return Perm<dim+1>(pairing_.dest(source).facet, dim) *
+        Perm<dim+1>::extend(Perm<dim>::Sn[index]) *
+        Perm<dim+1>(source.facet, dim);
 }
 
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         size_t simp, int facet, Index index) const {
-    if constexpr (standardDim(dim)) {
-        return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
-            Perm<dim+1>::Sn_1[index] * Perm<dim+1>(facet, dim);
-    } else {
-        // The fast Sn_1 lookup is only provided in standard dimensions.
-        return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
-            Perm<dim+1>::extend(Perm<dim>::Sn[index]) *
-            Perm<dim+1>(facet, dim);
-    }
+    return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
+        Perm<dim+1>::extend(Perm<dim>::Sn[index]) *
+        Perm<dim+1>(facet, dim);
 }
 
 template <int dim>

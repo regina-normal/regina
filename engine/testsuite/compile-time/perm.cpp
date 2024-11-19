@@ -88,9 +88,6 @@ void testPerm() {
     static_assert(Perm<n>::orderedSn[0] == Perm<n>());
     static_assert((*Perm<n>::Sn.begin()).isIdentity());
     static_assert((*Perm<n>::orderedSn.begin()).isIdentity());
-    if constexpr (n <= 5) {
-        static_assert(Perm<n>::Sn_1[0] == Perm<n>());
-    }
 
     if constexpr (n == 2) {
         // For n = 2, Sn and orderedSn are identical.

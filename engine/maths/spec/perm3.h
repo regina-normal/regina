@@ -278,10 +278,10 @@ class Perm<3> {
          * two elements.  In each permutation, 2 maps to 2.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: `Sn_1[i]`.  The index \a i must be
+         * square bracket operator: `S2[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a Sn_1 in C++
+         * Unlike \a Sn, you cannot (for now) iterate over \a S2 in C++
          * (though you can still do this in Python since Python detects and
          * uses the array-like behaviour).
          *
@@ -289,29 +289,29 @@ class Perm<3> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  This is now a lightweight
-         * object, and is defined in the headers only; in particular, you
-         * cannot make a reference to it (but you can always make a copy).
-         */
-        static constexpr S2Lookup Sn_1 {};
-
-        /**
-         * Gives fast array-like access to all possible permutations of
-         * two elements.
-         *
-         * This is a dimension-specific alias for Perm<3>::Sn_1; see that
-         * member for further information.
-         *
          * Note that all small permutation classes (Perm<2>, ..., Perm<5>)
          * have an \a S2 array: these all store the same two permutations in
          * the same order (but of course using different data types).
          *
          * There is no corresponding \a orderedS2 array, since the
          * (trivial) arrays \a S2 and \a orderedS2 are identical.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S2Lookup S2 {};
+
+        /**
+         * Deprecated alias for \a S2, which gives fast array-like access to
+         * all possible permutations of two elements in a sign-based order.
+         *
+         * \deprecated This is identical to `Perm<3>::S2`; see that member
+         * for further information.
+         */
+        [[deprecated]] static constexpr S2Lookup Sn_1 {};
 
         /**
          * The internal code for the permutation (0,1,2).

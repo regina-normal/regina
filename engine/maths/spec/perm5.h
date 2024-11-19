@@ -438,10 +438,10 @@ class Perm<5> {
          * 4 maps to 4.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: `Sn_1[i]`.  The index \a i must be
+         * square bracket operator: `S4[i]`.  The index \a i must be
          * between 0 and 23 inclusive.
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a Sn_1 in C++
+         * Unlike \a Sn, you cannot (for now) iterate over \a S4 in C++
          * (though you can still do this in Python since Python detects and
          * uses the array-like behaviour).
          *
@@ -449,10 +449,13 @@ class Perm<5> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This array is different from Perm<5>::orderedS4, since \a Sn_1
-         * (or equivalently, \a S4) alternates between even and odd
-         * permutations, whereas \a orderedS4 accesses permutations in
-         * lexicographical order.
+         * Note that both permutation classes Perm<4> and Perm<5> have an
+         * \a S4 array; these both store the same 24 permutations in the
+         * same order (but of course using different data types).
+         *
+         * This array is different from Perm<5>::orderedS4, since \a S4
+         * alternates between even and odd permutations, whereas \a orderedS4
+         * accesses permutations in lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -460,20 +463,16 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S4Lookup Sn_1 {};
+        static constexpr S4Lookup S4 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * four elements in a sign-based order.
+         * Deprecated alias for \a S4, which gives fast array-like access to
+         * all possible permutations of four elements in a sign-based order.
          *
-         * This is a dimension-specific alias for Perm<5>::Sn_1; see that
-         * member for further information.
-         *
-         * Note that both permutation classes Perm<4> and Perm<5> have
-         * an \a S4 array; these both store the same 24 permutations in the
-         * same order (but of course using different data types).
+         * \deprecated This is identical to `Perm<5>::S4`; see that member
+         * for further information.
          */
-        static constexpr S4Lookup S4 {};
+        [[deprecated]] static constexpr S4Lookup Sn_1 {};
 
         /**
          * Gives fast array-like access to all possible permutations of four
@@ -491,8 +490,8 @@ class Perm<5> {
          * ordered pair (\a p[0], ..., \a p[3]).
          *
          * This array is different from Perm<5>::S4, since \a orderedS4 accesses
-         * permutations in lexicographical order, whereas \a S4 (or
-         * equivalently, \a Sn_1) alternates between even and odd permutations.
+         * permutations in lexicographical order, whereas \a S4 alternates
+         * between even and odd permutations.
          *
          * Note that both permutation classes Perm<4> and Perm<5> have an
          * \a orderedS4 array; these both store the same 24 permutations

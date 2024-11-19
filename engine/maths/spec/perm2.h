@@ -273,9 +273,9 @@ class Perm<2> {
          * larger permutation classes Perm<n>.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: `Sn_1[i]`.  The index \a i must be 0.
+         * square bracket operator: `S1[i]`.  The index \a i must be 0.
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a Sn_1 in C++
+         * Unlike \a Sn, you cannot (for now) iterate over \a S1 in C++
          * (though you can still do this in Python since Python detects and
          * uses the array-like behaviour).
          *
@@ -285,16 +285,16 @@ class Perm<2> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S1Lookup Sn_1 {};
+        static constexpr S1Lookup S1 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * one element.
+         * Deprecated alias for \a S1, which gives fast array-like access to
+         * all possible permutations of one element.
          *
-         * This is a dimension-specific alias for Perm<2>::Sn_1; see that
-         * member for further information.
+         * \deprecated This is identical to `Perm<2>::S1`; see that member
+         * for further information.
          */
-        static constexpr S1Lookup S1 {};
+        [[deprecated]] static constexpr S1Lookup Sn_1 {};
 
     protected:
         Code code_;

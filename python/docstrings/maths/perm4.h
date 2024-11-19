@@ -41,7 +41,7 @@ changed as of Regina 4.6.1:
 
 * _Second-generation_ codes are used internally in Regina 4.6.1 and
   above. These codes are integers between 0 and 23 inclusive,
-  representing the index of the permutation in the array Perm<4>::S4.
+  representing the index of the permutation in the array Perm<4>::Sn.
   The routines permCode2(), setPermCode2(), fromPermCode2() and
   isPermCode2() work with second-generation codes.
 
@@ -52,11 +52,11 @@ converting back and forth between the second-generation codes (which
 are used internally by Perm<4>).
 
 You can iterate through all permutations using a range-based ``for``
-loop over *S4*, and this will be extremely fast in both C++ and
+loop over *Sn*, and this will be extremely fast in both C++ and
 Python:
 
 ```
-for (auto p : Perm<4>::S4) { ... }
+for (auto p : Perm<4>::Sn) { ... }
 ```
 
 This behaviour does not generalise to the large permutation classes
