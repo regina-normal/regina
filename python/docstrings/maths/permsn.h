@@ -106,6 +106,17 @@ Parameter ``index``:
 Returns:
     the corresponding permutation.)doc";
 
+// Docstring regina::python::doc::PermSn_::__eq
+static const char *__eq =
+R"doc(A trivial equality test that always returns ``True``.
+
+Since PermSn contains no data of its own, any two PermSn objects of
+the same type (i.e., using the same template parameters) will always
+describe the same sequence of permutations in the same order.
+
+Returns:
+    ``True``, always.)doc";
+
 // Docstring regina::python::doc::PermSn_::__iter__
 static const char *__iter__ =
 R"doc(Returns a Python iterator over all permutations of *n* objects.

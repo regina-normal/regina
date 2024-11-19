@@ -514,6 +514,19 @@ struct PermSn {
      */
     auto __iter__() const;
 #endif
+
+    /**
+     * A trivial equality test that always returns \c true.
+     *
+     * Since PermSn contains no data of its own, any two PermSn objects of the
+     * same type (i.e., using the same template parameters) will always
+     * describe the same sequence of permutations in the same order.
+     *
+     * \return \c true, always.
+     */
+    constexpr bool operator == (const PermSn&) const {
+        return true;
+    }
 };
 
 #ifndef __DOXYGEN
@@ -544,6 +557,10 @@ struct PermSn<n, order, PermCodeType::Index> {
 
     constexpr iterator end() const {
         return { false };
+    }
+
+    constexpr bool operator == (const PermSn&) const {
+        return true;
     }
 
     // Any additions to the generic PermSn<n>::iterator API (documented above)

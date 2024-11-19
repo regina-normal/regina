@@ -77,7 +77,7 @@ void addPermSn(pybind11::module_& m, const char* name) {
         }
         out << "]";
     });
-    regina::python::disable_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_INNER_BEGIN(iterator)
 
