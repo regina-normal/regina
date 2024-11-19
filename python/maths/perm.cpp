@@ -43,6 +43,7 @@ using pybind11::overload_cast;
 using regina::Perm;
 using regina::PermClass;
 using regina::PermCodeType;
+using regina::PermOrder;
 
 template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
@@ -120,9 +121,6 @@ void addPerm(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 
-    regina::python::add_lightweight_array<decltype(Perm<n>::orderedSn)>(c,
-        "_OrderedSn", rdoc::OrderedSnLookup);
-
     RDOC_SCOPE_END
 }
 
@@ -165,6 +163,13 @@ void addPerm(pybind11::module_& m) {
     // Deprecated constants:
     m.attr("PERM_CODE_IMAGES") = PermCodeType::Images;
     m.attr("PERM_CODE_INDEX") = PermCodeType::Index;
+
+    RDOC_SCOPE_SWITCH(PermOrder)
+
+    pybind11::enum_<regina::PermOrder>(m, "PermOrder", rdoc_scope)
+        .value("Sign", PermOrder::Sign, rdoc::Sign)
+        .value("Lex", PermOrder::Lex, rdoc::Lex)
+        ;
 
     RDOC_SCOPE_END
 

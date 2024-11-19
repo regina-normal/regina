@@ -180,37 +180,11 @@ class Perm<6> {
          */
         using Code2 = uint16_t;
 
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<6>::orderedS6.
-         */
-        struct OrderedS6Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS6.  See Perm<6>::orderedS6 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 719 inclusive.
-             * \return the corresponding permutation in orderedS6.
-             */
-            constexpr Perm<6> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array orderedS6.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return nPerms; }
-        };
-
     public:
         /**
-         * Gives fast access to all possible permutations of six elements,
-         * with support for both array-like indexing and iteration.
+         * Gives fast access to all possible permutations of six elements in a
+         * sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
@@ -232,7 +206,7 @@ class Perm<6> {
          *
          * This array is different from Perm<6>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
-         * stores permutations in lexicographical order.
+         * accesses permutations in lexicographical order.
          *
          * This is a lightweight object, and it is defined in the headers only.
          * In particular, you cannot make a reference to it (but it is cheap
@@ -241,37 +215,43 @@ class Perm<6> {
          * See the PermSn documentation for further details, including time
          * complexity of lookup and iteration.
          */
-        static constexpr PermSn<6> Sn {};
+        static constexpr PermSn<6, PermOrder::Sign> Sn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * six elements.
+         * Gives fast access to all possible permutations of six elements in a
+         * sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * This is a dimension-specific alias for Perm<6>::Sn; see that member
          * for further information.  In general, for every \a n there will be
          * a static member Perm<n>::Sn; however, these numerical aliases
          * Perm<2>::S2, ..., Perm<7>::S7 are only available for small \a n.
          */
-        static constexpr PermSn<6> S6 {};
+        static constexpr PermSn<6, PermOrder::Sign> S6 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of six
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of six elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 719 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a orderedSn in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
+         * You can also iterate over all permutations in \a orderedSn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<6>::orderedSn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[5]).
          *
-         * This array is different from Perm<6>::Sn, since \a orderedSn stores
+         * This array is different from Perm<6>::Sn, since \a orderedSn accesses
          * permutations in lexicographical order, whereas \a Sn alternates
          * between even and odd permutations.
          *
@@ -279,11 +259,12 @@ class Perm<6> {
          * In particular, you cannot make a reference to it (but it is cheap
          * to make a copy).
          */
-        static constexpr OrderedS6Lookup orderedSn {};
+        static constexpr PermSn<6, PermOrder::Lex> orderedSn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of six
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of six elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * This is a dimension-specific alias for Perm<6>::orderedSn; see that
          * member for further information.  In general, for every \a n there
@@ -291,7 +272,7 @@ class Perm<6> {
          * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
-        static constexpr OrderedS6Lookup orderedS6 {};
+        static constexpr PermSn<6, PermOrder::Lex> orderedS6 {};
 
     protected:
         Code2 code2_;
@@ -3221,7 +3202,8 @@ class Perm<6> {
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
-    friend class PermSn<6>;
+    friend class PermSn<6, PermOrder::Sign>;
+    friend class PermSn<6, PermOrder::Lex>;
 };
 
 // Inline functions for Perm<6>
@@ -3241,11 +3223,6 @@ inline constexpr Int Perm<6>::convOrderedUnordered(Int index) {
     // (index / 2!), (index / 4!), (index / 6!), etc., up to (index / (n-1)!).
     //
     return ((((index >> 1) ^ (index / 24)) & 1) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<6> Perm<6>::OrderedS6Lookup::operator[] (int index)
-        const {
-    return Perm<6>(static_cast<Code2>(convOrderedUnordered(index)));
 }
 
 inline constexpr Perm<6>::Perm() : code2_(0) {

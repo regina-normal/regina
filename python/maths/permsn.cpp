@@ -38,28 +38,31 @@
 #include "../docstrings/maths/permsn.h"
 
 using regina::Perm;
+using regina::PermOrder;
 using regina::PermSn;
 
-template <int n>
+template <int n, regina::PermOrder order>
 void addPermSn(pybind11::module_& m, const char* name) {
+    using Class = PermSn<n, order>;
+
     RDOC_SCOPE_BEGIN(PermSn)
 
-    auto c = pybind11::class_<PermSn<n>>(m, name, rdoc_scope)
-        .def("__getitem__", [](const PermSn<n>& sn, typename Perm<n>::Index i) {
+    auto c = pybind11::class_<Class>(m, name, rdoc_scope)
+        .def("__getitem__", [](const Class& sn, typename Perm<n>::Index i) {
             // Give Python users range checking, for consistency with
             // Regina ≤ 7.3 (before the class PermSn<n> was introduced).
             if (i < 0 || i >= sn.size())
                 throw pybind11::index_error("Array index out of range");
             return sn[i];
         })
-        .def("size", &PermSn<n>::size, rdoc::size)
-        .def("__len__", &PermSn<n>::size, rdoc::size)
-        .def("__iter__", [](const PermSn<n>& sn) {
+        .def("size", &Class::size, rdoc::size)
+        .def("__len__", &Class::size, rdoc::size)
+        .def("__iter__", [](const Class& sn) {
             return sn.begin();
-        }, pybind11::keep_alive<0, 1>(), // iterator keeps Sn alive
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps sn alive
             rdoc::__iter__)
     ;
-    regina::python::add_output_custom(c, [](const PermSn<n>& sn,
+    regina::python::add_output_custom(c, [](const Class& sn,
             std::ostream& out) {
         out << "[ ";
         // For small n, output the entire array.
@@ -78,7 +81,7 @@ void addPermSn(pybind11::module_& m, const char* name) {
 
     RDOC_SCOPE_INNER_BEGIN(iterator)
 
-    using iterator = typename PermSn<n>::iterator;
+    using iterator = typename Class::iterator;
     auto it = pybind11::class_<iterator>(c, "iterator", rdoc_inner_scope)
         .def(pybind11::init<>(), rdoc_inner::__default)
         .def(pybind11::init<bool>(), rdoc_inner::__init)
@@ -98,20 +101,36 @@ void addPermSn(pybind11::module_& m, const char* name) {
 }
 
 void addPermSn(pybind11::module_& m) {
-    addPermSn<2>(m, "PermSn2");
-    addPermSn<3>(m, "PermSn3");
-    addPermSn<4>(m, "PermSn4");
-    addPermSn<5>(m, "PermSn5");
-    addPermSn<6>(m, "PermSn6");
-    addPermSn<7>(m, "PermSn7");
-    addPermSn<8>(m, "PermSn8");
-    addPermSn<9>(m, "PermSn9");
-    addPermSn<10>(m, "PermSn10");
-    addPermSn<11>(m, "PermSn11");
-    addPermSn<12>(m, "PermSn12");
-    addPermSn<13>(m, "PermSn13");
-    addPermSn<14>(m, "PermSn14");
-    addPermSn<15>(m, "PermSn15");
-    addPermSn<16>(m, "PermSn16");
+    addPermSn<2, PermOrder::Sign>(m, "PermSn2_Sign");
+    addPermSn<3, PermOrder::Sign>(m, "PermSn3_Sign");
+    addPermSn<4, PermOrder::Sign>(m, "PermSn4_Sign");
+    addPermSn<5, PermOrder::Sign>(m, "PermSn5_Sign");
+    addPermSn<6, PermOrder::Sign>(m, "PermSn6_Sign");
+    addPermSn<7, PermOrder::Sign>(m, "PermSn7_Sign");
+    addPermSn<8, PermOrder::Sign>(m, "PermSn8_Sign");
+    addPermSn<9, PermOrder::Sign>(m, "PermSn9_Sign");
+    addPermSn<10, PermOrder::Sign>(m, "PermSn10_Sign");
+    addPermSn<11, PermOrder::Sign>(m, "PermSn11_Sign");
+    addPermSn<12, PermOrder::Sign>(m, "PermSn12_Sign");
+    addPermSn<13, PermOrder::Sign>(m, "PermSn13_Sign");
+    addPermSn<14, PermOrder::Sign>(m, "PermSn14_Sign");
+    addPermSn<15, PermOrder::Sign>(m, "PermSn15_Sign");
+    addPermSn<16, PermOrder::Sign>(m, "PermSn16_Sign");
+
+    addPermSn<2, PermOrder::Lex>(m, "PermSn2_Lex");
+    addPermSn<3, PermOrder::Lex>(m, "PermSn3_Lex");
+    addPermSn<4, PermOrder::Lex>(m, "PermSn4_Lex");
+    addPermSn<5, PermOrder::Lex>(m, "PermSn5_Lex");
+    addPermSn<6, PermOrder::Lex>(m, "PermSn6_Lex");
+    addPermSn<7, PermOrder::Lex>(m, "PermSn7_Lex");
+    addPermSn<8, PermOrder::Lex>(m, "PermSn8_Lex");
+    addPermSn<9, PermOrder::Lex>(m, "PermSn9_Lex");
+    addPermSn<10, PermOrder::Lex>(m, "PermSn10_Lex");
+    addPermSn<11, PermOrder::Lex>(m, "PermSn11_Lex");
+    addPermSn<12, PermOrder::Lex>(m, "PermSn12_Lex");
+    addPermSn<13, PermOrder::Lex>(m, "PermSn13_Lex");
+    addPermSn<14, PermOrder::Lex>(m, "PermSn14_Lex");
+    addPermSn<15, PermOrder::Lex>(m, "PermSn15_Lex");
+    addPermSn<16, PermOrder::Lex>(m, "PermSn16_Lex");
 }
 

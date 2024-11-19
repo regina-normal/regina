@@ -941,7 +941,7 @@ TreeEnumeration_NonSpun
 Level 1 of 0..1, types: 11
 <regina.TreeEnumeration_NonSpun: Level 1 of 0..1, types: 11>
 
-Perm8._Sn
+PermSn8_Sign
 [ 01234567 01234576 01234675 01234657 ... 76543201 ]
-<regina.Perm8._Sn: [ 01234567 01234576 01234675 01234657 ... 76543201 ]>
+<regina.PermSn8_Sign: [ 01234567 01234576 01234675 01234657 ... 76543201 ]>
 

@@ -68,7 +68,7 @@ void Perm<n>::precompute() {
             for (int i = 0; i < LowerSlice::length; ++i)
                 d |= (static_cast<ImagePack>(i) << (imageBits * lower.image[i]));
             invLower_[lower.pack()] = d;
-        } while (lower.inc());
+        } while (lower.lexInc());
 
         UpperSlice upper;
         do {
@@ -77,14 +77,55 @@ void Perm<n>::precompute() {
                 d |= (static_cast<ImagePack>(i + LowerSlice::length)
                     << (imageBits * upper.image[i]));
             invUpper_[upper.pack()] = d;
-        } while (upper.inc());
+        } while (upper.lexInc());
     }
 }
 
 template <int n>
+void Perm<n>::lexInc() {
+    // The algorithm for lexicographical "next permutation": find the *last*
+    // point in the sequence of images where successive images increase:
+    // ..... p < q > r > s > ... > z
+    // We then change p to whichever of z,...,s,r,q first exceeds it,
+    // and then place the remaining images (along with p) in increasing order.
+
+    int q = (*this)[n - 1];
+    int p = (*this)[n - 2];
+    if (p < q) {
+        // The next permutation just swaps the last two images.
+        swapImages(n - 2, n - 1);
+        return;
+    }
+
+    int pIdx = n - 2;
+    while (p > q && pIdx > 0) {
+        q = p;
+        --pIdx;
+        p = (*this)[pIdx];
+    }
+    if (p > q) {
+        // The sequence was entirely decreasing.
+        // We have reached the end of our iteration.
+        code_ = idCode_;
+        return;
+    }
+
+    // Reverse the sequence from pIdx onwards.
+    for (int i = 1; pIdx + i < n - i; ++i)
+        swapImages(pIdx + i, n - i);
+
+    // Now identify which element needs to be swapped with p.
+    for (int i = pIdx + 1; i < n; ++i)
+        if ((*this)[i] > p) {
+            swapImages(pIdx, i);
+            return;
+        }
+}
+
+template <int n>
 Perm<n>& Perm<n>::operator ++() {
-    // We implement a lexicographic "next permutation" algorithm; however,
-    // we want to increment according to Sn index, not orderedSn index.
+    // We implement a lexicographic "next permutation" algorithm as above;
+    // however, we want to increment according to Sn index, not orderedSn index.
     // Thus some mod 2 fiddling around signs is required.
 
     if (sign() > 0) {

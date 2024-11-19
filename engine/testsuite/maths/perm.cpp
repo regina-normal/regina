@@ -118,7 +118,7 @@ class PermTestImpl {
     protected:
         using Index = typename Perm<n>::Index;
         static constexpr bool usesCode2 = (n >= 4 && n <= 7);
-        static constexpr bool iterationFeasible = (n <= 11);
+        static constexpr bool iterationFeasible = (n <= 10);
 
         static bool looksLikeIdentity(const Perm<n>& p) {
             if ((! p.isIdentity()) || (! (p == Perm<n>())))
@@ -203,6 +203,50 @@ class PermTestImpl {
             EXPECT_EQ(i, Perm<n>::nPerms);
             EXPECT_TRUE(p.isIdentity());
             EXPECT_TRUE(q.isIdentity());
+        }
+
+        static void iterationSign() {
+            static_assert(iterationFeasible);
+            SCOPED_TRACE_NUMERIC(n);
+
+            Index i = 0;
+            auto p = Perm<n>::Sn.begin();
+            auto q = Perm<n>::Sn.begin();
+            for (auto r : Perm<n>::Sn) {
+                EXPECT_TRUE(p);
+                EXPECT_TRUE(q);
+                EXPECT_EQ(*p, r);
+                EXPECT_EQ(*q, r);
+                EXPECT_FALSE(*p != *q);
+                EXPECT_EQ(r.SnIndex(), i);
+                ++i; ++p; q++; // test both pre- and post-increments
+            }
+
+            EXPECT_EQ(i, Perm<n>::nPerms);
+            EXPECT_EQ(p, Perm<n>::Sn.end());
+            EXPECT_EQ(q, Perm<n>::Sn.end());
+        }
+
+        static void iterationLex() {
+            static_assert(iterationFeasible);
+            SCOPED_TRACE_NUMERIC(n);
+
+            Index i = 0;
+            auto p = Perm<n>::orderedSn.begin();
+            auto q = Perm<n>::orderedSn.begin();
+            for (auto r : Perm<n>::orderedSn) {
+                EXPECT_TRUE(p);
+                EXPECT_TRUE(q);
+                EXPECT_EQ(*p, r);
+                EXPECT_EQ(*q, r);
+                EXPECT_FALSE(*p != *q);
+                EXPECT_EQ(r.orderedSnIndex(), i);
+                ++i; ++p; q++; // test both pre- and post-increments
+            }
+
+            EXPECT_EQ(i, Perm<n>::nPerms);
+            EXPECT_EQ(p, Perm<n>::orderedSn.end());
+            EXPECT_EQ(q, Perm<n>::orderedSn.end());
         }
 
         static void cachedInverse() {
@@ -538,15 +582,15 @@ class PermTestSmallImpl : public PermTestImpl<n> {
         static void compareWith() {
             SCOPED_TRACE_NUMERIC(n);
 
-            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
-                auto p = Perm<n>::orderedSn[i];
-                EXPECT_EQ(p.compareWith(p), 0);
-            }
+            const auto orderedSn = Perm<n>::orderedSn;
 
-            for (Index i = 0; i < Perm<n>::nPerms; ++i) {
-                auto p = Perm<n>::orderedSn[i];
-                for (Index j = i + 1; j < Perm<n>::nPerms; ++j) {
-                    auto q = Perm<n>::orderedSn[j];
+            for (auto p: orderedSn)
+                EXPECT_EQ(p.compareWith(p), 0);
+
+            for (auto i = orderedSn.begin(); i != orderedSn.end(); ++i) {
+                auto p = *i;
+                for (auto j = std::next(i); j != orderedSn.end(); ++j) {
+                    auto q = *j;
                     EXPECT_EQ(p.compareWith(q), -1);
                     EXPECT_EQ(q.compareWith(p), 1);
                 }
@@ -1126,6 +1170,16 @@ TEST_F(PermTestSmall, increment) {
         PermTestSmallImpl<n>::increment();
     });
 }
+TEST_F(PermTestSmall, iterationSign) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        PermTestSmallImpl<n>::iterationSign();
+    });
+}
+TEST_F(PermTestSmall, iterationLex) {
+    regina::for_constexpr<2, 8>([](auto n) {
+        PermTestSmallImpl<n>::iterationLex();
+    });
+}
 TEST_F(PermTestSmall, products) {
     regina::for_constexpr<2, 8>([](auto n) {
         PermTestSmallImpl<n>::products();
@@ -1285,7 +1339,7 @@ class PermTestLarge : public testing::Test {
         using allSizes = std::integer_sequence<int, 8, 9, 10, 11, 13, 14, 16>;
 
         // Exhaustive iteration takes too much time for larger n.
-        using iterableSizes = std::integer_sequence<int, 8, 9, 10, 11>;
+        using iterableSizes = std::integer_sequence<int, 8, 9, 10>;
 
         // Precomputation consumes too much space for larger n.
         using precomputableSizes = std::integer_sequence<int, 8, 9, 10, 11>;
@@ -1319,6 +1373,16 @@ TEST_F(PermTestLarge, swaps) {
 TEST_F(PermTestLarge, increment) {
     regina::foreach_constexpr(iterableSizes(), [](auto n) {
         PermTestImpl<n>::increment();
+    });
+}
+TEST_F(PermTestLarge, iterationSign) {
+    regina::foreach_constexpr(iterableSizes(), [](auto n) {
+        PermTestImpl<n>::iterationSign();
+    });
+}
+TEST_F(PermTestLarge, iterationLex) {
+    regina::foreach_constexpr(iterableSizes(), [](auto n) {
+        PermTestImpl<n>::iterationLex();
     });
 }
 TEST_F(PermTestLarge, products) {

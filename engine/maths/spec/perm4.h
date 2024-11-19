@@ -190,32 +190,6 @@ class Perm<4> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<4>::orderedS4.
-         */
-        struct OrderedS4Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS4.  See Perm<4>::orderedS4 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 23 inclusive.
-             * \return the corresponding permutation in orderedS4.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array orderedS4.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return nPerms; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<4>::S3.
          */
         struct S3Lookup {
@@ -295,8 +269,9 @@ class Perm<4> {
 
     public:
         /**
-         * Gives fast access to all possible permutations of four elements,
-         * with support for both array-like indexing and iteration.
+         * Gives fast access to all possible permutations of four elements in
+         * a sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
@@ -318,7 +293,7 @@ class Perm<4> {
          *
          * This array is different from Perm<4>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
-         * stores permutations in lexicographical order.
+         * accesses permutations in lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -329,11 +304,12 @@ class Perm<4> {
          * See the PermSn documentation for further details, including time
          * complexity of lookup and iteration.
          */
-        static constexpr PermSn<4> Sn {};
+        static constexpr PermSn<4, PermOrder::Sign> Sn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * four elements.
+         * Gives fast access to all possible permutations of four elements in
+         * a sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * This is a dimension-specific alias for Perm<4>::Sn; see that member
          * for further information.  In general, for every \a n there will be
@@ -344,26 +320,31 @@ class Perm<4> {
          * an \a S4 array; these both store the same 24 permutations in the
          * same order (but of course using different data types).
          */
-        static constexpr PermSn<4> S4 {};
+        static constexpr PermSn<4, PermOrder::Sign> S4 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of four
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of four elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 23 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a orderedSn in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
+         * You can also iterate over all permutations in \a orderedSn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<4>::orderedSn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[3]).
          *
-         * This array is different from Perm<4>::Sn, since \a orderedSn stores
+         * This array is different from Perm<4>::Sn, since \a orderedSn accesses
          * permutations in lexicographical order, whereas \a Sn alternates
          * between even and odd permutations.
          *
@@ -373,11 +354,12 @@ class Perm<4> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr OrderedS4Lookup orderedSn {};
+        static constexpr PermSn<4, PermOrder::Lex> orderedSn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of four
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of four elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * This is a dimension-specific alias for Perm<4>::orderedSn; see that
          * member for further information.  In general, for every \a n there
@@ -385,11 +367,12 @@ class Perm<4> {
          * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
-        static constexpr OrderedS4Lookup orderedS4 {};
+        static constexpr PermSn<4, PermOrder::Lex> orderedS4 {};
 
         /**
          * Gives fast array-like access to all possible permutations of
-         * three elements.  In each permutation, 3 maps to 3.
+         * three elements in a sign-based order.  In each permutation,
+         * 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn_1[i]`.  The index \a i must be
@@ -405,7 +388,7 @@ class Perm<4> {
          *
          * This array is different from Perm<4>::orderedS3, since \a Sn_1
          * (or equivalently, \a S3) alternates between even and odd
-         * permutations, whereas \a orderedS3 stores permutations in
+         * permutations, whereas \a orderedS3 accesses permutations in
          * lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
@@ -418,7 +401,7 @@ class Perm<4> {
 
         /**
          * Gives fast array-like access to all possible permutations of
-         * three elements.
+         * three elements in a sign-based order.
          *
          * This is a dimension-specific alias for Perm<4>::Sn_1; see that
          * member for further information.
@@ -444,7 +427,7 @@ class Perm<4> {
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[2]).
          *
-         * This array is different from Perm<4>::S3, since \a orderedS3 stores
+         * This array is different from Perm<4>::S3, since \a orderedS3 accesses
          * permutations in lexicographical order, whereas \a S3 (or
          * equivalently, \a Sn_1) alternates between even and odd permutations.
          *
@@ -1597,7 +1580,8 @@ class Perm<4> {
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
-    friend class PermSn<4>;
+    friend class PermSn<4, PermOrder::Sign>;
+    friend class PermSn<4, PermOrder::Lex>;
 };
 
 // Inline functions for Perm<4>
@@ -1611,11 +1595,6 @@ inline constexpr Int Perm<4>::convOrderedUnordered(Int index) {
     // Specifically, we must interchange all pairs 4i+2 <--> 4i+3.
     //
     return ((index & 2) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<4> Perm<4>::OrderedS4Lookup::operator[] (int index)
-        const {
-    return Perm<4>(static_cast<Code2>(convOrderedUnordered(index)));
 }
 
 inline constexpr Perm<4> Perm<4>::S3Lookup::operator[] (int index) const {

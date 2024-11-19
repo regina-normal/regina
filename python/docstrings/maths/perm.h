@@ -116,6 +116,14 @@ class notes for more information on exactly how these codes are
 constructed. The class constant Perm<n>::codeType indicates which type
 of code is used for which *n*.)doc";
 
+// Docstring regina::python::doc::PermOrder
+static const char *PermOrder =
+R"doc(Represents different ways in which permutations on *n* objects can be
+ordered.
+
+In all of these orderings, it is guaranteed that the identity
+permutation comes first.)doc";
+
 // Docstring regina::python::doc::digit
 static const char *digit =
 R"doc(Returns the character used to express the integer *i* in a
@@ -314,10 +322,35 @@ permutations can be recreated from them by indexing into Perm<n>::Sn.
 
 }
 
-namespace Perm_ {
+namespace PermOrder_ {
 
-// Docstring regina::python::doc::Perm_::OrderedSnLookup
-static const char *OrderedSnLookup = R"doc(A lightweight array-like object used to implement Perm<n>::orderedSn.)doc";
+// Docstring regina::python::doc::PermOrder_::Lex
+static const char *Lex =
+R"doc(Indicates that permutations should be ordered lexicographically,
+beginning with the identity permutation.
+
+Specifically, we order permutations lexicographically according to the
+sequence of images ``p[0],p[1],...,p[n-1]`` (where *p* denotes an
+arbitrary permutation on *n* objects).
+
+This is the ordering used by ``Perm<n>::orderedSn``.)doc";
+
+// Docstring regina::python::doc::PermOrder_::Sign
+static const char *Sign =
+R"doc(Indicates that permutations should be ordered by sign, beginning with
+the identity permutation and then alternating between even and odd
+permutations.
+
+In particular, if we assign each permutation an index according to
+this ordering, then the identity will have index 0, all even
+permutations will have even indices, and all odd permutations will
+have odd indices.
+
+This is the ordering used by ``Perm<n>::Sn``.)doc";
+
+}
+
+namespace Perm_ {
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =
@@ -1066,36 +1099,6 @@ Parameter ``len``:
 Returns:
     the corresponding prefix of the string representation of this
     permutation.)doc";
-
-}
-
-namespace Perm_::OrderedSnLookup_ {
-
-// Docstring regina::python::doc::Perm_::OrderedSnLookup_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index in the array orderedSn. See
-Perm<n>::orderedSn for details.
-
-For *n* ≤ 7, this operator is very fast (and constant time). However,
-for *n* ≥ 8 it is not constant time; the current implementation is
-quadratic in *n*.
-
-Parameter ``index``:
-    an index between 0 and *n*!-1 inclusive.
-
-Returns:
-    the corresponding permutation in orderedSn.)doc";
-
-// Docstring regina::python::doc::Perm_::OrderedSnLookup_::size
-static const char *size =
-R"doc(Returns the number of permutations in the array orderedSn.
-
-Python:
-    This is also used to implement the Python special method
-    __len__().
-
-Returns:
-    the size of this array.)doc";
 
 }
 

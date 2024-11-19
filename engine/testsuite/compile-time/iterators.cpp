@@ -49,14 +49,39 @@ static_assert(std::bidirectional_iterator<
 static_assert(std::bidirectional_iterator<
     regina::NormalHypersurfaces::VectorIterator>);
 
-static_assert(std::random_access_iterator<regina::PermSn<2>::iterator>);
-static_assert(std::random_access_iterator<regina::PermSn<3>::iterator>);
-static_assert(std::random_access_iterator<regina::PermSn<4>::iterator>);
-static_assert(std::random_access_iterator<regina::PermSn<5>::iterator>);
-static_assert(std::random_access_iterator<regina::PermSn<6>::iterator>);
-static_assert(std::random_access_iterator<regina::PermSn<7>::iterator>);
-static_assert(std::forward_iterator<regina::PermSn<8>::iterator>);
-static_assert(std::forward_iterator<regina::PermSn<16>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<2, regina::PermOrder::Sign>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<3, regina::PermOrder::Sign>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<4, regina::PermOrder::Sign>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<5, regina::PermOrder::Sign>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<6, regina::PermOrder::Sign>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<7, regina::PermOrder::Sign>::iterator>);
+static_assert(std::forward_iterator<
+    regina::PermSn<8, regina::PermOrder::Sign>::iterator>);
+static_assert(std::forward_iterator<
+    regina::PermSn<16, regina::PermOrder::Sign>::iterator>);
+
+static_assert(std::random_access_iterator<
+    regina::PermSn<2, regina::PermOrder::Lex>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<3, regina::PermOrder::Lex>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<4, regina::PermOrder::Lex>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<5, regina::PermOrder::Lex>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<6, regina::PermOrder::Lex>::iterator>);
+static_assert(std::random_access_iterator<
+    regina::PermSn<7, regina::PermOrder::Lex>::iterator>);
+static_assert(std::forward_iterator<
+    regina::PermSn<8, regina::PermOrder::Lex>::iterator>);
+static_assert(std::forward_iterator<
+    regina::PermSn<16, regina::PermOrder::Lex>::iterator>);
 
 static_assert(std::input_iterator<regina::PermGroup<5>::iterator>);
 

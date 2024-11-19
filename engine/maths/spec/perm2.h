@@ -142,6 +142,17 @@ class Perm<2> {
          */
         using Code = uint8_t;
 
+        /**
+         * An alias for \a Code, indicating the native unsigned integer type
+         * used to store the internal permutation code.
+         *
+         * This alias is provided to assist with generic programming, since
+         * permutation codes for `Perm<2>` are (and always have been) consistent
+         * with the second-generation permutation codes used with medium-sized
+         * permutation types `Perm<4..7>', which represent indices into \a Sn.
+         */
+        using Code2 = Code;
+
     private:
         /**
          * A lightweight array-like object used to implement Perm<2>::S1.
@@ -182,21 +193,22 @@ class Perm<2> {
          * range-based \c for loop:
          *
          * \code{.cpp}
-         * for (auto p : Perm<3>::Sn) { ... }
+         * for (auto p : Perm<2>::Sn) { ... }
          * \endcode
          *
          * For this class (and all Perm<n> with \a n ≤ 7), such index-based
          * access and iteration are both extremely fast.
          *
-         * The identity permutation has index 0, and the non-identity
-         * permutation has index 1.  As a result, Sn[\a i] is an even
-         * permutation if and only if \a i is even.
+         * The ordering is both sign-based and lexicographical (which means
+         * there is no distinction between Sn and orderedSn): the identity
+         * permutation (which is even) has index 0, and the unique non-identity
+         * permutation (which is odd) has index 1.
          *
-         * This ordered array is identical to Perm<2>::orderedSn.
-         * Note however that for \a n ≥ 3, the arrays Perm<n>::Sn and
-         * Perm<n>::orderedSn are different: \a Sn alternates between even
-         * and odd permutations, whereas \a orderedSn stores permutations in
-         * lexicographical order.
+         * Therefore this array holds the same permutations in the same order
+         * as Perm<2>::orderedSn.  Note however that for \a n ≥ 3, the arrays
+         * Perm<n>::Sn and Perm<n>::orderedSn are different: \a Sn alternates
+         * between even and odd permutations, whereas \a orderedSn accesses
+         * permutations in lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -207,11 +219,11 @@ class Perm<2> {
          * See the PermSn documentation for further details, including time
          * complexity of lookup and iteration.
          */
-        static constexpr PermSn<2> Sn {};
+        static constexpr PermSn<2, PermOrder::Sign> Sn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * two elements.
+         * Gives fast access to all possible permutations of two elements,
+         * with support for both array-like indexing and iteration.
          *
          * This is a dimension-specific alias for Perm<2>::Sn; see that member
          * for further information.  In general, for every \a n there will be
@@ -222,45 +234,25 @@ class Perm<2> {
          * have an \a S2 array: these all store the same two permutations in
          * the same order (but of course using different data types).
          */
-        static constexpr PermSn<2> S2 {};
+        static constexpr PermSn<2, PermOrder::Sign> S2 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of two
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of two elements,
+         * with support for both array-like indexing and iteration.
          *
-         * To access the permutation at index \a i, you simply use the
-         * square bracket operator: `orderedSn[i]`.  The index \a i
-         * must be between 0 and 1 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
+         * This array contains the same permutations in the same order as
+         * \a Sn, since for permutations of two elements, sign-based ordering
+         * and lexicographical ordering are the same (this is not true for
+         * Perm<n> when \a n ≥ 3).
          *
-         * Since Perm<2>::orderedSn is identical to Perm<2>::Sn, you can also
-         * iterate over it in the same way as \a Sn.  However, this fact is
-         * not true for \a n ≥ 3, where \a Sn and \a orderedSn become different
-         * (see below).
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * ordered pair (\a p[0], \a p[1]).
-         * Therefore the identity permutation has index 0, and the
-         * (unique) non-identity permutation has index 1.
-         *
-         * This ordered array is identical to Perm<2>::Sn.
-         * Note however that for \a n ≥ 3, the arrays Perm<n>::Sn and
-         * Perm<n>::orderedSn are different: \a Sn alternates between even
-         * and odd permutations, whereas \a orderedSn stores permutations in
-         * lexicographical order.
-         *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  This is now a lightweight
-         * object, and is defined in the headers only; in particular, you
-         * cannot make a reference to it (but you can always make a copy).
+         * See the documentation for \a Sn for further information on how to
+         * this object (since \a Sn and \a orderedSn are used in the same way).
          */
-        static constexpr PermSn<2> orderedSn {};
+        static constexpr PermSn<2, PermOrder::Lex> orderedSn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of two
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of two elements,
+         * with support for both array-like indexing and iteration.
          *
          * This is a dimension-specific alias for Perm<2>::orderedSn; see that
          * member for further information.  In general, for every \a n there
@@ -268,7 +260,7 @@ class Perm<2> {
          * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
-        static constexpr PermSn<2> orderedS2 {};
+        static constexpr PermSn<2, PermOrder::Lex> orderedS2 {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -1067,7 +1059,8 @@ class Perm<2> {
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
-    friend class PermSn<2>;
+    friend class PermSn<2, PermOrder::Sign>;
+    friend class PermSn<2, PermOrder::Lex>;
 };
 
 // Inline functions for Perm<2>

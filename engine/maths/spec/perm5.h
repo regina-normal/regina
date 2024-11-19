@@ -181,32 +181,6 @@ class Perm<5> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<5>::orderedS5.
-         */
-        struct OrderedS5Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS5.  See Perm<5>::orderedS5 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 119 inclusive.
-             * \return the corresponding permutation in orderedS5.
-             */
-            constexpr Perm<5> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array orderedS5.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return nPerms; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<5>::S4.
          */
         struct S4Lookup {
@@ -360,8 +334,9 @@ class Perm<5> {
         static constexpr void precompute();
 
         /**
-         * Gives fast access to all possible permutations of five elements,
-         * with support for both array-like indexing and iteration.
+         * Gives fast access to all possible permutations of five elements in
+         * a sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
@@ -383,7 +358,7 @@ class Perm<5> {
          *
          * This array is different from Perm<5>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
-         * stores permutations in lexicographical order.
+         * accesses permutations in lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -394,37 +369,43 @@ class Perm<5> {
          * See the PermSn documentation for further details, including time
          * complexity of lookup and iteration.
          */
-        static constexpr PermSn<5> Sn {};
+        static constexpr PermSn<5, PermOrder::Sign> Sn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * five elements.
+         * Gives fast access to all possible permutations of five elements in
+         * a sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * This is a dimension-specific alias for Perm<5>::Sn; see that member
          * for further information.  In general, for every \a n there will be
          * a static member Perm<n>::Sn; however, these numerical aliases
          * Perm<2>::S2, ..., Perm<7>::S7 are only available for small \a n.
          */
-        static constexpr PermSn<5> S5 {};
+        static constexpr PermSn<5, PermOrder::Sign> S5 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of five
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of five elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 119 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a orderedSn in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
+         * You can also iterate over all permutations in \a orderedSn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<5>::orderedSn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[4]).
          *
-         * This array is different from Perm<5>::Sn, since \a orderedSn stores
+         * This array is different from Perm<5>::Sn, since \a orderedSn accesses
          * permutations in lexicographical order, whereas \a Sn alternates
          * between even and odd permutations.
          *
@@ -434,11 +415,12 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr OrderedS5Lookup orderedSn {};
+        static constexpr PermSn<5, PermOrder::Lex> orderedSn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of five
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of five elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * This is a dimension-specific alias for Perm<5>::orderedSn; see that
          * member for further information.  In general, for every \a n there
@@ -446,11 +428,12 @@ class Perm<5> {
          * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
-        static constexpr OrderedS5Lookup orderedS5 {};
+        static constexpr PermSn<5, PermOrder::Lex> orderedS5 {};
 
         /**
          * Gives fast array-like access to all possible permutations of
-         * four elements.  In each permutation, 4 maps to 4.
+         * four elements in a sign-based order.  In each permutation,
+         * 4 maps to 4.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn_1[i]`.  The index \a i must be
@@ -466,7 +449,7 @@ class Perm<5> {
          *
          * This array is different from Perm<5>::orderedS4, since \a Sn_1
          * (or equivalently, \a S4) alternates between even and odd
-         * permutations, whereas \a orderedS4 stores permutations in
+         * permutations, whereas \a orderedS4 accesses permutations in
          * lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
@@ -479,7 +462,7 @@ class Perm<5> {
 
         /**
          * Gives fast array-like access to all possible permutations of
-         * four elements.
+         * four elements in a sign-based order.
          *
          * This is a dimension-specific alias for Perm<5>::Sn_1; see that
          * member for further information.
@@ -505,7 +488,7 @@ class Perm<5> {
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[3]).
          *
-         * This array is different from Perm<5>::S4, since \a orderedS4 stores
+         * This array is different from Perm<5>::S4, since \a orderedS4 accesses
          * permutations in lexicographical order, whereas \a S4 (or
          * equivalently, \a Sn_1) alternates between even and odd permutations.
          *
@@ -523,7 +506,8 @@ class Perm<5> {
 
         /**
          * Gives fast array-like access to all possible permutations of three
-         * elements.  In each permutation, 3 maps to 3 and 4 maps to 4.
+         * elements in a sign-based order.  In each permutation, 3 maps to 3
+         * and 4 maps to 4.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `S3[i]`.  The index \a i must be
@@ -539,7 +523,7 @@ class Perm<5> {
          *
          * This array is different from Perm<5>::orderedS3, since \a S3
          * alternates between even and odd permutations, whereas \a orderedS3
-         * stores permutations in lexicographical order.
+         * accesses permutations in lexicographical order.
          *
          * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
          * all have an \a S3 array; these all store the same six permutations
@@ -569,7 +553,7 @@ class Perm<5> {
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[2]).
          *
-         * This array is different from Perm<5>::S3, since \a orderedS3 stores
+         * This array is different from Perm<5>::S3, since \a orderedS3 accesses
          * permutations in lexicographical order, whereas \a S3 alternates
          * between even and odd permutations.
          *
@@ -1832,7 +1816,8 @@ class Perm<5> {
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
-    friend class PermSn<5>;
+    friend class PermSn<5, PermOrder::Sign>;
+    friend class PermSn<5, PermOrder::Lex>;
 };
 
 // Inline functions for Perm<5>
@@ -1848,11 +1833,6 @@ inline constexpr Int Perm<5>::convOrderedUnordered(Int index) {
     // Here we use (index >> 1), which is equivalent to (index / 2).
     //
     return ((((index >> 1) ^ (index / 24)) & 1) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<5> Perm<5>::OrderedS5Lookup::operator[] (int index)
-        const {
-    return Perm<5>(static_cast<Code2>(convOrderedUnordered(index)));
 }
 
 inline constexpr Perm<5> Perm<5>::S4Lookup::operator[] (int index) const {

@@ -131,33 +131,18 @@ class Perm<3> {
          */
         using Code = uint8_t;
 
-    private:
         /**
-         * A lightweight array-like object used to implement Perm<3>::orderedS3.
+         * An alias for \a Code, indicating the native unsigned integer type
+         * used to store the internal permutation code.
+         *
+         * This alias is provided to assist with generic programming, since
+         * permutation codes for `Perm<3>` are (and always have been) consistent
+         * with the second-generation permutation codes used with medium-sized
+         * permutation types `Perm<4..7>', which represent indices into \a Sn.
          */
-        struct OrderedS3Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS3.  See Perm<3>::orderedS3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 5 inclusive.
-             * \return the corresponding permutation in orderedS3.
-             */
-            constexpr Perm<3> operator[] (int index) const;
+        using Code2 = Code;
 
-            /**
-             * Returns the number of permutations in the array orderedS3.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return nPerms; }
-        };
-
+    private:
         /**
          * A lightweight array-like object used to implement Perm<3>::S2.
          */
@@ -186,8 +171,9 @@ class Perm<3> {
 
     public:
         /**
-         * Gives fast access to all possible permutations of three elements,
-         * with support for both array-like indexing and iteration.
+         * Gives fast access to all possible permutations of three elements in
+         * a sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `Sn[i]`.  The index \a i must be
@@ -209,7 +195,7 @@ class Perm<3> {
          *
          * This array is different from Perm<3>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
-         * stores permutations in lexicographical order.
+         * accesses permutations in lexicographical order.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -220,11 +206,12 @@ class Perm<3> {
          * See the PermSn documentation for further details, including time
          * complexity of lookup and iteration.
          */
-        static constexpr PermSn<3> Sn {};
+        static constexpr PermSn<3, PermOrder::Sign> Sn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * three elements.
+         * Gives fast access to all possible permutations of three elements in
+         * a sign-based order, with support for both array-like indexing and
+         * iteration.
          *
          * This is a dimension-specific alias for Perm<3>::Sn; see that member
          * for further information.  In general, for every \a n there will be
@@ -235,26 +222,31 @@ class Perm<3> {
          * have an \a S3 array: these all store the same six permutations in
          * the same order (but of course using different data types).
          */
-        static constexpr PermSn<3> S3 {};
+        static constexpr PermSn<3, PermOrder::Sign> S3 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of three
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of three elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 5 inclusive.
-         * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a orderedSn in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
+         * You can also iterate over all permutations in \a orderedSn using a
+         * range-based \c for loop:
+         *
+         * \code{.cpp}
+         * for (auto p : Perm<3>::orderedSn) { ... }
+         * \endcode
+         *
+         * For this class (and all Perm<n> with \a n ≤ 7), such index-based
+         * access and iteration are both extremely fast.
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], \a p[1], \a p[2]).
          *
-         * This array is different from Perm<3>::Sn, since \a orderedSn stores
+         * This array is different from Perm<3>::Sn, since \a orderedSn accesses
          * permutations in lexicographical order, whereas \a Sn alternates
          * between even and odd permutations.
          *
@@ -264,11 +256,12 @@ class Perm<3> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr OrderedS3Lookup orderedSn {};
+        static constexpr PermSn<3, PermOrder::Lex> orderedSn {};
 
         /**
-         * Gives fast array-like access to all possible permutations of three
-         * elements in lexicographical order.
+         * Gives fast access to all possible permutations of three elements
+         * in lexicographical order, with support for both array-like indexing
+         * and iteration.
          *
          * This is a dimension-specific alias for Perm<3>::orderedSn; see that
          * member for further information.  In general, for every \a n there
@@ -276,7 +269,7 @@ class Perm<3> {
          * aliases Perm<2>::orderedS2, ..., Perm<7>::orderedS7 are only
          * available for small \a n.
          */
-        static constexpr OrderedS3Lookup orderedS3 {};
+        static constexpr PermSn<3, PermOrder::Lex> orderedS3 {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -1229,7 +1222,8 @@ class Perm<3> {
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
-    friend class PermSn<3>;
+    friend class PermSn<3, PermOrder::Sign>;
+    friend class PermSn<3, PermOrder::Lex>;
 };
 
 // Inline functions for Perm<3>
@@ -1239,11 +1233,6 @@ inline constexpr Int Perm<3>::convOrderedUnordered(Int index) {
     // S5 is almost the same as orderedS5, except that we
     // swap indices 2 <--> 3.
     return ((index == 2 || index == 3) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<3> Perm<3>::OrderedS3Lookup::operator[] (int index)
-        const {
-    return Perm<3>(static_cast<Code>(convOrderedUnordered(index)));
 }
 
 inline constexpr Perm<3> Perm<3>::S2Lookup::operator[] (int index) const {

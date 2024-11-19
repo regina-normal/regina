@@ -55,32 +55,36 @@ template <int n> class Perm;
  * A lightweight array-like object that supports fast lookup and iteration
  * for permutations on \a n objects.
  *
- * Typically you would access this object through the static constant
- * `Perm<n>::Sn`.  There should be no need for end users to refer to this type
- * directly.
+ * Typically you would access this object through static constants such as
+ * `Perm<n>::Sn` or `Perm<n>::orderedSn`.  There should be no need for end users
+ * to refer to this type directly.
  *
- * The two main ways in which you can use this object are:
+ * There are two main ways in which you can use this object.  For the examples
+ * below, we assume that we are accessing `Perm<n>::Sn`.
  *
- * - Array-style lookup, using `Perm<n>::Sn[i]` and `Perm<n>::Sn::size()`
- *   (or the usual `len()` function in Python);
+ * - Array-style lookup.  Here you would use accessors such as
+ *   `Perm<n>::Sn[i]` and `Perm<n>::Sn::size()`.  Instead of size(), you can
+ *   also use the standard `len()` function in Python.
  *
- * - Iteration, by iterating over `Perm<n>::Sn` in a range-based \c for loop
- *   (or by using the iterators `Perm<n>::Sn.begin()` and `Perm<n>::Sn.end()`
- *   directly).
+ * - Iteration.  Here you would typically iterate over `Perm<n>::Sn` in a
+ *   range-based \c for loop, or use begin/end pairs such as
+ *   `Perm<n>::Sn.begin()` and `Perm<n>::Sn.end()`.
  *
  * Regarding indices and iteration:
  *
- * - The permutations with even indices are the even permutations, and the
- *   permutations with odd indices are the odd permutations.  The identity
- *   permutation will have index 0.
+ * - Indices are between 0 and `(n!-1)` inclusive, and permutations are indexed
+ *   according to the chosen ordering, i.e., the template parameter \a order.
+ *   In particular: `Perm<n>::Sn` uses sign-based ordering, beginning with the
+ *   identity permutation at index 0 and alternating between even and odd
+ *   permutations, whereas `Perm<n>::orderedSn` uses lexicographical ordering
+ *   according the images of `0,...,n-1` under each permutation.
  *
- * - The order of iteration is the same ordering used by index-based lookup.
- *   In particular, iteration will start with the identity and alternate
- *   between even and odd permutations.
+ * - The order of iteration is the same as the order used for indexing.
  *
- * - Iterating is typically faster than calling `Sn[i]` for each index \a i in
- *   turn, particularly for larger \a n.  See the notes on time complexity
- *   below.
+ * - Iterating directly over this object (e.g., iterating over `Perm<n>::Sn`)
+ *   is typically faster than using array-like access for each index in turn
+ *   (e.g., accessing `Sn[0]`, `Sn[1]`, etc.).  This is particularly true when
+ *   \a n is larger.  See the notes on time complexity below.
  *
  * Regarding time complexity:
  *
@@ -95,29 +99,37 @@ template <int n> class Perm;
  * Objects of this type contain no data at all, which means they are trivial to
  * pass by value or swap with std::swap(), and all objects of this type are
  * essentially identical.  As mentioned above, you would typically just use
- * `Perm<n>::Sn` instead of creating an object of this type yourself.
+ * `Perm<n>::Sn` or `Perm<n>::orderedSn` instead of creating an object of
+ * this type yourself.
  *
  * \python Python does not support templates.  In Python, the various classes
- * `PermSn<n>` are available under the names PermSn2, PermSn3, ..., PermSn16.
+ * `PermSn<n, PermOrder::Sign>` are available under the names
+ * PermSn2_Sign, PermSn3_Sign, ..., PermSn16_Sign, and the various classes
+ * `PermSn<n, PermOrder::Lex>` are available under the names
+ * PermSn2_Lex, PermSn3_Lex, ..., PermSn16_Lex.
  *
  * \tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
+ * \tparam order the way in which we should order permutations for the
+ * purposes of indexing and iteration.
+ * \tparam codeType the constant `Perm<n>::codeType`.  You should allow the
+ * compiler to deduce this and not attempt to set it yourself.
  *
  * \ingroup maths
  */
-template <int n, PermCodeType codeType = Perm<n>::codeType>
+template <int n, PermOrder order, PermCodeType codeType = Perm<n>::codeType>
 struct PermSn {
-    // This is a generic implementation for n ≥ 8 (where codeType is Images).
-    // There is a specialisation below for n ≤ 7 (where codeType is Index).
+    // This generic implementation is for n ≥ 8 (where codeType is Images).
+    // There is a specialisation below for n ≤ 7.
     static_assert(Perm<n>::codeType == PermCodeType::Images,
-        "The generic implementation of PermSn<n> should only be used for "
-        "larger n, where permutations are stored using image packs.");
+        "The generic implementation of PermSn<n, order> should only be used "
+        "for larger n, where permutations are stored using image packs.");
 
     /**
-     * An iterator over all permutations in \a Sn.
+     * An iterator over all permutations of \a n objects.
      *
-     * See the PermSn class notes for further details on how iteration works
-     * over \a Sn.  In particular:
+     * See the PermSn class notes for further details on how iteration works.
+     * In particular:
      *
      * - For smaller permutations (\a n ≤ 7), these iterators are random-access,
      *   and all of the expected operations are fast constant time.
@@ -143,15 +155,16 @@ struct PermSn {
      * it changes according to both \a n and your programming language:
      *
      * - In C++, this class implements the full interface for either a random
-     *   access iterator (\a n ≤ 7) or a forward iterator (\a n ≥ 8), and
-     *   you would typically access iterators either via `Perm<n>::Sn.begin()`
-     *   and `Perm<n>::Sn.end()`, or by using a range-based \c for loop over
-     *   `Perm<n>::Sn`.
+     *   access iterator (\a n ≤ 7) or a forward iterator (\a n ≥ 8).  Using
+     *   `Perm<n>::Sn` as an example, you would typically access iterators
+     *   either via `Perm<n>::Sn.begin()` and `Perm<n>::Sn.end()`, or by using
+     *   a range-based \c for loop over `Perm<n>::Sn`.
      *
      * - In Python, this class and PermSn together implement the expected
-     *   iterface for Python iterators: you would typically create and use
-     *   iterators by iterating over `Perm<n>.Sn`, which internally uses
-     *   `PermSn.__iter__()` and `PermSn.iterator.__next__()`.
+     *   interface for Python iterators.  Using `Perm4.Sn` as an example, you
+     *   would typically create and use iterators by iterating over `Perm4.Sn`,
+     *   which internally uses `PermSn4_Sign.__iter__()` and
+     *   `PermSn4_Sign.iterator.__next__()`.
      */
     class iterator {
         public:
@@ -168,7 +181,7 @@ struct PermSn {
             using reference = Perm<n>;
                 /**< The type returned by the dereference operator, which for
                      this iterator type is by value.  This is because
-                     permutations in \a Sn are generated, not stored. */
+                     permutations are generated, not stored. */
 
         private:
             Perm<n> perm_;
@@ -182,19 +195,22 @@ struct PermSn {
             /**
              * Creates a begin iterator.
              *
-             * This iterator will point to the identity permutation; that is,
-             * it will be equal to `Perm<n>::Sn.begin()`.
+             * This iterator will point to the identity permutation.
+             * So, for example, if you are iterating over `Perm<n>::Sn`, then
+             * this iterator will be equal to `Perm<n>::Sn.begin()`.
              */
             constexpr iterator() : perm_(), valid_(true) {}
             /**
              * Creates either a begin or end iterator.
              *
              * If no arguments are given or if \a valid is \c true, then this
-             * iterator will point to the identity permutation; that is, it
-             * will be equal to `Perm<n>::Sn.begin()`.
+             * iterator will point to the identity permutation.  For example,
+             * if you are iterating over `Perm<n>::Sn`, then this iterator will
+             * be equal to `Perm<n>::Sn.begin()`.
              *
-             * If \a valid is \c false, then this iterator will be past-the-end;
-             * that is, it will be equal to `Perm<n>::Sn.end()`.
+             * If \a valid is \c false, then this iterator will be past-the-end.
+             * For example, if you are iterating over `Perm<n>::Sn`, then this
+             * iterator will be equal to `Perm<n>::Sn.end()`.
              *
              * \param valid \c true if this should be a begin iterator, or
              * \c false if this should be an end iterator.
@@ -203,8 +219,8 @@ struct PermSn {
             /**
              * Creates a copy of the given iterator.
              *
-             * \nopython The only way to create an iterator over \a Sn is to
-             * iterate over `Perm<n>::Sn`.
+             * \nopython The only way to create an iterator is to iterate over
+             * an object such as `Perm<n>::Sn` or `Perm<n>::orderedSn`.
              */
             constexpr iterator(const iterator&) = default;
             /**
@@ -216,10 +232,9 @@ struct PermSn {
             /**
              * Compares this with the given iterator for equality.
              *
-             * To be considered equal, two iterators must be pointing
-             * to the same permutation in \a Sn.
-             *
-             * Two past-the-end iterators will be considered equal.
+             * To be considered equal, two iterators must both be
+             * dereferencable and pointing to the same permutation, or must
+             * both be past-the-end.
              *
              * \param rhs the iterator to compare this with.
              * \return \c true if and only if the two iterators are equal.
@@ -264,7 +279,10 @@ struct PermSn {
              * \return a reference to this iterator after the increment.
              */
             iterator& operator ++ () {
-                ++perm_;
+                if constexpr (order == PermOrder::Sign)
+                    ++perm_;
+                else
+                    perm_.lexInc();
                 if (perm_.isIdentity())
                     valid_ = false;
                 return *this;
@@ -279,10 +297,18 @@ struct PermSn {
              * \return a copy of this iterator before the increment took place.
              */
             iterator operator ++ (int) {
-                Perm<n> ans = perm_++;
-                if (perm_.isIdentity())
-                    valid_ = false;
-                return ans;
+                if constexpr (order == PermOrder::Sign) {
+                    Perm<n> ans = perm_++;
+                    if (perm_.isIdentity())
+                        valid_ = false;
+                    return ans;
+                } else {
+                    Perm<n> ans = perm_;
+                    perm_.lexInc();
+                    if (perm_.isIdentity())
+                        valid_ = false;
+                    return ans;
+                }
             }
 
 #ifdef __APIDOCS
@@ -311,7 +337,7 @@ struct PermSn {
     };
 
     /**
-     * An iterator over all permutations in \a Sn.
+     * An iterator over all permutations of \a n objects.
      *
      * Both \a iterator and \a const_iterator are the same type, since PermSn
      * only offers read-only access to its permutations.  See the
@@ -320,16 +346,19 @@ struct PermSn {
     using const_iterator = iterator;
 
     /**
-     * Returns the permutation at the given index in \a Sn.
+     * Returns the permutation at the given index in \a Sn, according to the
+     * chosen ordering.
      *
      * See the PermSn class notes for further details on how array-like
-     * indexing works over \a Sn.
+     * indexing works for permutations of \a n objects.  In particular, note
+     * that which permutation corresponds to which index will depend upon the
+     * template parameter \a order.
      *
      * For \a n ≤ 7, this operator is very fast constant time.
      * However, for \a n ≥ 8 the current implementation is quadratic in \a n.
      *
      * \param index an index between 0 and `n!-1` inclusive.
-     * \return the corresponding permutation in Sn.
+     * \return the corresponding permutation.
      */
     constexpr Perm<n> operator[] (Perm<n>::Index index) const {
         // This is the generic implementation for n ≥ 8.
@@ -338,61 +367,73 @@ struct PermSn {
         using Code = typename Perm<n>::Code;
         Code code = 0;
 
-        // We begin by constructing a code whose successive digits are "base"
-        // n, n-1, ... 2, 1.
-        // We can already see whether the resulting permutation will be even
-        // or odd just from the parity of the sum of these "digits".
-        bool parity = (index % 2 == 0);
-        bool even = true;
-        for (int p = 1; p <= n; ++p) {
-            // Here p tells us how far back from the *end* of the code we are.
-            int digit = index % p;
-            // n - p -> digit
-            code |= (static_cast<Code>(digit) <<
-                ((n - p) * Perm<n>::imageBits));
-            if (digit % 2)
-                even = ! even;
-            index /= p;
-        }
+        if constexpr (order == PermOrder::Lex) {
+            // We begin by constructing a code whose successive digits are
+            // "base" n, n-1, ... 2, 1.
+            for (int p = 1; p <= n; ++p) {
+                // p tells us how far back from the *end* of the code we are.
+                // n - p -> index % p;
+                code |= (static_cast<Code>(index % p) <<
+                    ((n - p) * Perm<n>::imageBits));
+                index /= p;
+            }
+        } else {
+            // As above, construct a code whose successive digits are
+            // "base" n, n-1, ... 2, 1.
+            // We can already see whether the resulting permutation will be even
+            // or odd just from the parity of the sum of these "digits".
+            bool parity = (index % 2 == 0);
+            bool even = true;
+            for (int p = 1; p <= n; ++p) {
+                // p tells us how far back from the *end* of the code we are.
+                int digit = index % p;
+                // n - p -> digit
+                code |= (static_cast<Code>(digit) <<
+                    ((n - p) * Perm<n>::imageBits));
+                if (digit % 2)
+                    even = ! even;
+                index /= p;
+            }
 
-        if (even != parity) {
-            // Our algorithm below computes orderedSn, not Sn, and these
-            // differ at index.  We adjust the code now to compensate.
-            if (even) {
-                // index is odd: move to the previous permutation.
-                for (int p = 1; p <= n; ++p) {
-                    int digit = ((code >> ((n - p) * Perm<n>::imageBits)) &
-                        Perm<n>::imageMask);
-                    // This digit is treated mod p.
-                    if (digit > 0) {
-                        // Decrement digit and stop.
-                        code -= (Code(1) << ((n - p) * Perm<n>::imageBits));
-                        break;
-                    } else {
-                        // Set digit to (p-1) and carry.
-                        code |= (Code(p - 1) << ((n - p) * Perm<n>::imageBits));
+            if (even != parity) {
+                // Our algorithm below computes orderedSn, not Sn, and these
+                // differ at index.  We adjust the code now to compensate.
+                if (even) {
+                    // index is odd: move to the previous permutation.
+                    for (int p = 1; p <= n; ++p) {
+                        int digit = ((code >> ((n - p) * Perm<n>::imageBits)) &
+                            Perm<n>::imageMask);
+                        // This digit is treated mod p.
+                        if (digit > 0) {
+                            // Decrement digit and stop.
+                            code -= (Code(1) << ((n - p) * Perm<n>::imageBits));
+                            break;
+                        } else {
+                            // Set digit to (p-1) and carry.
+                            code |= (Code(p - 1) <<
+                                ((n - p) * Perm<n>::imageBits));
+                        }
                     }
-                }
-            } else {
-                // i is even: move to the next permutation.
-                for (int p = 1; p <= n; ++p) {
-                    int digit = ((code >> ((n - p) * Perm<n>::imageBits)) &
-                        Perm<n>::imageMask);
-                    // This digit is treated mod p.
-                    if (digit < p - 1) {
-                        // Increment digit and stop.
-                        code += (Code(1) << ((n - p) * Perm<n>::imageBits));
-                        break;
-                    } else {
-                        // Set digit to zero and carry.
-                        code ^= (static_cast<Code>(digit) <<
-                            ((n - p) * Perm<n>::imageBits));
+                } else {
+                    // i is even: move to the next permutation.
+                    for (int p = 1; p <= n; ++p) {
+                        int digit = ((code >> ((n - p) * Perm<n>::imageBits)) &
+                            Perm<n>::imageMask);
+                        // This digit is treated mod p.
+                        if (digit < p - 1) {
+                            // Increment digit and stop.
+                            code += (Code(1) << ((n - p) * Perm<n>::imageBits));
+                            break;
+                        } else {
+                            // Set digit to zero and carry.
+                            code ^= (static_cast<Code>(digit) <<
+                                ((n - p) * Perm<n>::imageBits));
+                        }
                     }
                 }
             }
         }
 
-        // Carry on as with do with orderedSn.
         for (int pos1 = Perm<n>::imageBits * (n - 1); pos1 >= 0;
                 pos1 -= Perm<n>::imageBits) {
             for (int pos2 = pos1 + Perm<n>::imageBits;
@@ -402,49 +443,58 @@ struct PermSn {
                     code += (Code(1) << pos2); // increment image at pos2
             }
         }
+
         return Perm<n>(code);
     }
 
     /**
-     * Returns the total number of permutations in \a Sn.
+     * Returns the total number of permutations of \a n objects.
      * This is of course just `n!`.
      *
      * \python This is also used to implement the Python special
      * method __len__().
      *
-     * \return the size of \a Sn.
+     * \return the total number of permutations.
      */
     constexpr Perm<n>::Index size() const {
         return Perm<n>::nPerms;
     }
 
     /**
-     * Returns an iterator pointing to the first permutation in \a Sn.
+     * Returns an iterator pointing to the first permutation according to
+     * the chosen ordering.
+     *
+     * For all supported orderings, this first permutation is the identity
+     * permutation; however, as the iterator steps through from begin() to
+     * end(), the order in which subsequent permutations appear will depend
+     * upon the template parameter \a order.
      *
      * See the PermSn class notes for further details on how iteration works
-     * over \a Sn.
+     * over all permutations of \a n objects.
      *
      * \nopython For Python users, PermSn implements the Python iterable
-     * interface.  You can iterate over the elements of \a Sn in the same
-     * way that you would iterate over any native Python container.
+     * interface.  You can iterate over all permutations in the same way
+     * that you would iterate over any native Python container.
      *
-     * \return a starting iterator for iterating over all of \a Sn.
+     * \return a starting iterator for iterating over all permutations of
+     * \a n objects.
      */
     constexpr iterator begin() const {
         return {};
     }
 
     /**
-     * Returns an iterator pointing beyond the last permutation in \a Sn.
+     * Returns an iterator pointing beyond the last permutation.
      *
      * See the PermSn class notes for further details on how iteration works
-     * over \a Sn.
+     * over all permutations of \a n objects.
      *
      * \nopython For Python users, PermSn implements the Python iterable
-     * interface.  You can iterate over the elements of \a Sn in the same
-     * way that you would iterate over any native Python container.
+     * interface.  You can iterate over all permutations in the same way
+     * that you would iterate over any native Python container.
      *
-     * \return a past-the-end iterator for iterating over all of \a Sn.
+     * \return a past-the-end iterator for iterating over all permutations
+     * of \a n objects.
      */
     constexpr iterator end() const {
         return { false };
@@ -452,16 +502,15 @@ struct PermSn {
 
 #ifdef __APIDOCS
     /**
-     * Returns a Python iterator over all permutations in \a Sn.
+     * Returns a Python iterator over all permutations of \a n objects.
      *
-     * See the PermSn class notes for further details on how iteration works
-     * over \a Sn.
+     * See the PermSn class notes for further details on how iteration works.
      *
      * \nocpp For C++ users, PermSn provides the usual begin() and end()
-     * functions instead.  In particular, you can iterate over \a Sn in the
-     * usual way using a range-based \c for loop.
+     * functions instead.  In particular, you can iterate over all permutations
+     * in the usual way using a range-based \c for loop.
      *
-     * \return an iterator over all permutations in \a Sn.
+     * \return an iterator over all permutations of \a n objects.
      */
     auto __iter__() const;
 #endif
@@ -469,18 +518,20 @@ struct PermSn {
 
 #ifndef __DOXYGEN
 // Hide the details of template specialisations from doxygen.
-template <int n>
-struct PermSn<n, PermCodeType::Index> {
+template <int n, PermOrder order>
+struct PermSn<n, order, PermCodeType::Index> {
     static_assert(Perm<n>::codeType == PermCodeType::Index);
 
     class iterator;
     using const_iterator = iterator;
 
     constexpr Perm<n> operator[] (Perm<n>::Index index) const {
-        if constexpr (n < 4)
-            return { static_cast<Perm<n>::Code>(index) };
-        else
+        if constexpr (order == PermOrder::Sign || n == 2) {
             return { static_cast<Perm<n>::Code2>(index) };
+        } else {
+            return Perm<n>(static_cast<Perm<n>::Code2>(
+                Perm<n>::convOrderedUnordered(index)));
+        }
     }
 
     constexpr Perm<n>::Index size() const {
@@ -508,9 +559,9 @@ struct PermSn<n, PermCodeType::Index> {
 
         private:
             Perm<n>::Index index_;
-                /**< The Sn index of the permutation that this iterator
-                     currently points to, or Perm<n>::nPerms for a
-                     past-the-end iterator. */
+                /**< The index of the permutation that this iterator currently
+                     points to, using the chosen ordering, or Perm<n>::nPerms
+                     for a past-the-end iterator. */
 
         public:
             constexpr iterator() : index_(0) {}
@@ -527,10 +578,12 @@ struct PermSn<n, PermCodeType::Index> {
             }
 
             constexpr Perm<n> operator * () const {
-                if constexpr (n < 4)
-                    return { static_cast<Perm<n>::Code>(index_) };
-                else
+                if constexpr (order == PermOrder::Sign || n == 2) {
                     return { static_cast<Perm<n>::Code2>(index_) };
+                } else {
+                    return { static_cast<Perm<n>::Code2>(
+                        Perm<n>::convOrderedUnordered(index_)) };
+                }
             }
 
             iterator& operator ++ () {
@@ -578,17 +631,20 @@ struct PermSn<n, PermCodeType::Index> {
             }
 
             constexpr Perm<n> operator [] (difference_type k) const {
-                if constexpr (n < 4)
-                    return { static_cast<Perm<n>::Code>(index_ + k) };
-                else
+                if constexpr (order == PermOrder::Sign || n == 2) {
                     return { static_cast<Perm<n>::Code2>(index_ + k) };
+                } else {
+                    return { static_cast<Perm<n>::Code2>(
+                        Perm<n>::convOrderedUnordered(index_ + k)) };
+                }
             }
 
         private:
             /**
              * Creates a new iterator pointing to the permutation at the given
-             * index in \a Sn.  An index of Perm<n>::nPerms indicates that the
-             * iterator should be past-the-end.
+             * index according to the chosen ordering.  An index of
+             * Perm<n>::nPerms indicates that the iterator should be
+             * past-the-end.
              *
              * \param index the index of the permutation to point to; this
              * must be between 0 and Perm<n>::nPerms inclusive.
