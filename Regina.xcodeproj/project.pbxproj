@@ -1620,6 +1620,8 @@
 		05E0F1CE2582428800965440 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEC258241E100965440 /* libiconv.tbd */; };
 		05E0F1DE2582428C00965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
 		05E0F1EE2582429000965440 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
+		05E221D52CEC24F3009D5D4E /* permsn.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E221D42CEC24F3009D5D4E /* permsn.h */; };
+		05E221D82CEC2525009D5D4E /* permsn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E221D72CEC2525009D5D4E /* permsn.cpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -4397,6 +4399,18 @@
 		05E0EFEC258241E100965440 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		05E0EFED258241E100965440 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		05E0EFEE258241E100965440 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		05E221D42CEC24F3009D5D4E /* permsn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = permsn.h; sourceTree = "<group>"; };
+		05E221D62CEC250D009D5D4E /* permsn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = permsn.h; sourceTree = "<group>"; };
+		05E221D72CEC2525009D5D4E /* permsn.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = permsn.cpp; sourceTree = "<group>"; };
+		05E221D92CEC2545009D5D4E /* alltypes-exc.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = "alltypes-exc.out"; sourceTree = "<group>"; };
+		05E221DA2CEC2545009D5D4E /* alltypes-exc.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = "alltypes-exc.test"; sourceTree = "<group>"; };
+		05E221DB2CEC2545009D5D4E /* alltypes-noexc.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = "alltypes-noexc.out"; sourceTree = "<group>"; };
+		05E221DC2CEC2545009D5D4E /* alltypes-noexc.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = "alltypes-noexc.test"; sourceTree = "<group>"; };
+		05E221DD2CEC2545009D5D4E /* binom.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = binom.out; sourceTree = "<group>"; };
+		05E221DE2CEC2545009D5D4E /* binom.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = binom.test; sourceTree = "<group>"; };
+		05E221DF2CEC2545009D5D4E /* whitehead.tri */ = {isa = PBXFileReference; lastKnownFileType = text; path = whitehead.tri; sourceTree = "<group>"; };
+		05E221E02CEC258D009D5D4E /* poincare.tri */ = {isa = PBXFileReference; lastKnownFileType = text; path = poincare.tri; sourceTree = "<group>"; };
+		05E221E12CEC258D009D5D4E /* runbasic.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = runbasic.in; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
@@ -4934,6 +4948,7 @@
 				05098AA128F44AAD005E4716 /* perm6.h */,
 				05098AAB28F44AAF005E4716 /* perm7.h */,
 				0594930F2922E93D00940F0D /* permgroup.h */,
+				05E221D62CEC250D009D5D4E /* permsn.h */,
 				05098A9228F24D98005E4716 /* polynomial.h */,
 				05098A9328F24D98005E4716 /* primes.h */,
 				05098AA928F44AAE005E4716 /* rational.h */,
@@ -5380,6 +5395,7 @@
 				05772EEC270CFB2000D26D8A /* perm6.cpp */,
 				05772EED270CFB2000D26D8A /* perm7.cpp */,
 				0594930C2920B21600940F0D /* permgroup.cpp */,
+				05E221D72CEC2525009D5D4E /* permsn.cpp */,
 				050F5D371B9BAB9C00C1F681 /* polynomial.cpp */,
 				050F5D381B9BAB9C00C1F681 /* primes.cpp */,
 				050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */,
@@ -5496,11 +5512,17 @@
 			children = (
 				05431FD01C40F67C009BC072 /* alltypes.out */,
 				05431FD11C40F67C009BC072 /* alltypes.test */,
+				05E221D92CEC2545009D5D4E /* alltypes-exc.out */,
+				05E221DA2CEC2545009D5D4E /* alltypes-exc.test */,
+				05E221DB2CEC2545009D5D4E /* alltypes-noexc.out */,
+				05E221DC2CEC2545009D5D4E /* alltypes-noexc.test */,
 				05772F03270CFB6000D26D8A /* angles.out */,
 				05772F08270CFB6000D26D8A /* angles.test */,
 				051806AE2C2CF65D001470F1 /* base64.out */,
 				051806AF2C2CF65D001470F1 /* base64.test */,
 				054DF94028CABC2800EC3D81 /* basic.cpp */,
+				05E221DD2CEC2545009D5D4E /* binom.out */,
+				05E221DE2CEC2545009D5D4E /* binom.test */,
 				054F7DF1278EA2970036B923 /* bool.out */,
 				054F7DF0278EA2970036B923 /* bool.test */,
 				05CAE6842746878C007C93F3 /* bytes.out */,
@@ -5598,6 +5620,7 @@
 				050F5D9D1B9BAB9C00C1F681 /* pdf.test */,
 				05098B0528FECBD8005E4716 /* plantri.out */,
 				05098B0928FECBD9005E4716 /* plantri.test */,
+				05E221E02CEC258D009D5D4E /* poincare.tri */,
 				059802772667067B002D5D57 /* presentations.out */,
 				0598027F2667067C002D5D57 /* presentations.test */,
 				050F5D9E1B9BAB9C00C1F681 /* README.txt */,
@@ -5605,6 +5628,7 @@
 				05772F02270CFB6000D26D8A /* refs.test */,
 				05E7DA3C2766D42600B01C09 /* repr.out */,
 				05E7DA3B2766D42600B01C09 /* repr.test */,
+				05E221E12CEC258D009D5D4E /* runbasic.in */,
 				0577E6DE1F97087900CBDF15 /* safeheldtype_basic.out */,
 				0577E6E71F97087E00CBDF15 /* safeheldtype_basic.test */,
 				0577E6E01F97087A00CBDF15 /* safeheldtype_packet.out */,
@@ -5641,6 +5665,7 @@
 				050F5DA51B9BAB9C00C1F681 /* trigeneral.test */,
 				0577E6EB1F97088000CBDF15 /* utf8.out */,
 				0577E6ED1F97088200CBDF15 /* utf8.test */,
+				05E221DF2CEC2545009D5D4E /* whitehead.tri */,
 			);
 			path = testsuite;
 			sourceTree = "<group>";
@@ -6238,6 +6263,7 @@
 				05431F2A1C40F2DB009BC072 /* perm.h */,
 				059493042920B1C200940F0D /* permgroup.cpp */,
 				059493052920B1C300940F0D /* permgroup.h */,
+				05E221D42CEC24F3009D5D4E /* permsn.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
@@ -8554,6 +8580,7 @@
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
 				051806AC2C2B9512001470F1 /* fixedarray.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
+				05E221D52CEC24F3009D5D4E /* permsn.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
 				059802F126683C6D002D5D57 /* xmlanglestructreader.h in Headers */,
 				05CBE6ED273B6504009F0674 /* validityconstraints.h in Headers */,
@@ -9481,6 +9508,7 @@
 				05A0669A1DFA67D40047872E /* blockedsfstriple.cpp in Sources */,
 				05A066A31DFA67D40047872E /* pillowtwosphere.cpp in Sources */,
 				05166B8A2C36140A0014CE97 /* 3d.cpp in Sources */,
+				05E221D82CEC2525009D5D4E /* permsn.cpp in Sources */,
 				050F5DD71B9BAB9C00C1F681 /* pyalgebra.cpp in Sources */,
 				050F5DDE1B9BAB9C00C1F681 /* example2.cpp in Sources */,
 				051261AB278D65D8006A55B1 /* intersectionform.cpp in Sources */,
