@@ -67,9 +67,6 @@ Python:
 
 namespace Perm_ {
 
-// Docstring regina::python::doc::Perm_::S1Lookup
-static const char *S1Lookup = R"doc(A lightweight array-like object used to implement Perm<2>::S1.)doc";
-
 // Docstring regina::python::doc::Perm_::S2Index
 static const char *S2Index =
 R"doc(Returns the index of this permutation in the Perm<2>::Sn array.
@@ -724,34 +721,6 @@ Parameter ``len``:
 Returns:
     the corresponding prefix of the string representation of this
     permutation.)doc";
-
-}
-
-namespace Perm_::S1Lookup_ {
-
-// Docstring regina::python::doc::Perm_::S1Lookup_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index in the array S1. See
-Perm<2>::S1 for details.
-
-This operation is extremely fast (and constant time).
-
-Parameter ``index``:
-    an index; the only allowed value is 0.
-
-Returns:
-    the corresponding permutation in S1.)doc";
-
-// Docstring regina::python::doc::Perm_::S1Lookup_::size
-static const char *size =
-R"doc(Returns the number of permutations in the array S1.
-
-Python:
-    This is called ``__len__``, following the expected Python
-    interface for array-like objects.
-
-Returns:
-    the size of this array.)doc";
 
 }
 

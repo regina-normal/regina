@@ -243,32 +243,6 @@ class Perm<4> {
             static constexpr Index size() { return 6; }
         };
 
-        /**
-         * A lightweight array-like object used to implement Perm<4>::S2.
-         */
-        struct S2Lookup {
-            /**
-             * Returns the permutation at the given index in the array S2.
-             * See Perm<4>::S2 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 1 inclusive.
-             * \return the corresponding permutation in S2.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S2.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 2; }
-        };
-
     public:
         /**
          * Gives fast access to all possible permutations of four elements in
@@ -446,35 +420,28 @@ class Perm<4> {
         static constexpr OrderedS3Lookup orderedS3 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
+         * Deprecated array-like object that lists all possible permutations of
          * two elements.  In each permutation, 2 maps to 2 and 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `S2[i]`.  The index \a i must be
-         * between 0 and 1 inclusive.
+         * between 0 and 1 inclusive.  Unlike \a Sn, you cannot iterate over
+         * \a S2 in C++ (though you can still do this in Python).
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a S2 in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
-         *
-         * The permutations with even indices in the array are the even
-         * permutations, and those with odd indices in the array are the
-         * odd permutations.
-         *
-         * Note that all small permutation classes (Perm<2>, ..., Perm<5>)
-         * have an \a S2 array: these all store the same two permutations in
-         * the same order (but of course using different data types).
-         *
-         * There is no corresponding \a orderedS2 array, since the
-         * (trivial) arrays \a S2 and \a orderedS2 are identical.
+         * This array uses the same sign-based ordering as `Perm<2>::S2`:
+         * it begins with the identity and alternates between even and odd
+         * permutations.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  This is now a lightweight
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
+         *
+         * \deprecated This array is trivial, and will be removed in a future
+         * version of Regina.
          */
-        static constexpr S2Lookup S2 {};
+        [[deprecated]] static constexpr PermSubSn<4, 2> S2 {};
 
     protected:
         Code2 code_;
@@ -1605,10 +1572,6 @@ inline constexpr Perm<4> Perm<4>::S3Lookup::operator[] (int index) const {
 inline constexpr Perm<4> Perm<4>::OrderedS3Lookup::operator[] (int index)
         const {
     return Perm<4>(S3Table[Perm<3>::orderedSn[index].SnIndex()]);
-}
-
-inline constexpr Perm<4> Perm<4>::S2Lookup::operator[] (int index) const {
-    return Perm<4>(index == 0 ? 0 : 7);
 }
 
 inline constexpr void Perm<4>::precompute() {

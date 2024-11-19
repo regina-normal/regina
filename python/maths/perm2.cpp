@@ -104,7 +104,6 @@ void addPerm2(pybind11::module_& m) {
         .def_readonly_static("Sn", &Perm<2>::Sn)
         .def_readonly_static("orderedS2", &Perm<2>::orderedS2)
         .def_readonly_static("orderedSn", &Perm<2>::orderedSn)
-        .def_readonly_static("S1", &Perm<2>::S1)
         #if defined(__GNUC__)
         // The following members are deprecated, but we still need to bind
         // them.  Silence the inevitable deprecation warnings that will occur.
@@ -115,7 +114,8 @@ void addPerm2(pybind11::module_& m) {
         #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         #endif
         #endif
-        .def_readonly_static("Sn_1", &Perm<2>::Sn_1) // deprecated
+        .def_readonly_static("S1", &Perm<2>::S1) // deprecated
+        .def_readonly_static("Sn_1", &Perm<2>::S1) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif
@@ -129,9 +129,6 @@ void addPerm2(pybind11::module_& m) {
         rdoc::tightDecoding, rdoc::hash);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-
-    regina::python::add_lightweight_array<decltype(Perm<2>::S1)>(c,
-        "_S1", rdoc::S1Lookup);
 
     RDOC_SCOPE_END
 }

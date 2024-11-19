@@ -671,6 +671,120 @@ struct PermSn<n, order, PermCodeType::Index> {
 };
 #endif
 
+/**
+ * A lightweight array-like object that indexes smaller permutations within
+ * larger permutation groups; that is, it embeds the group \a S_m inside
+ * \a S_n for some `n > m`.
+ *
+ * The only purpose of this class is to support some specific permutation
+ * class constants such as `Perm<4>::S3`.  It is hard-coded for those
+ * corresponding values of \a m and \a n, and is not available at all for
+ * other parameter combinations.  You would typically access this class
+ * through those constants such as `Perm<4>::S3`, and there should be no need
+ * for end users to refer to this type directly.
+ *
+ * This class supports array-style lookup, using accessors such as
+ * `Perm<4>::S3[i]` and `Perm<4>::S3::size()`.  Instead of size(), you can
+ * also use the standard `len()` function in Python.  This class does not
+ * support iteration in C++ (although Python still allows it because it detects
+ * the array-like structure).
+ *
+ * The indexing of permutations in `PermSubSn<n, m>` uses sign-based ordering;
+ * that is, it uses the same indexing as `PermSn<m, PermOrder::Sign>`.
+ *
+ * All operations in this class are fast constant time.
+ *
+ * Objects of this type contain no data at all, which means they are trivial to
+ * pass by value or swap with std::swap(), and all objects of this type are
+ * essentially identical.  As mentioned above, you would typically just use
+ * a class constant such as `Perm<4>::S3` instead of creating an object of
+ * this type yourself.
+ *
+ * \python Python does not support templates.  Instead this class can be
+ * accessed by appending \a n and \a m as suffixes (e.g., PermSubSn4_3).
+ *
+ * \tparam n indicates the return type: permutations of \a m objects will be
+ * returned as the larger type `Perm<n>`.  It is required that `2 ≤ n ≤ 5`.
+ * \tparam m the number of objects being permuted in the group \a S_m that we
+ * are enumerating.  It is required that `1 ≤ m < n`.
+ *
+ * \ingroup maths
+ */
+template <int n, int m>
+#ifdef __APIDOCS
+struct PermSubSn {
+    /**
+     * Returns the permutation at the given index.
+     *
+     * This is a permutation on \a m objects being returned as the larger type
+     * `Perm<n>`, and so the unused elements `m,m+1,...,n-1` will all be
+     * mapped to themselves.
+     *
+     * \param index an index between 0 and `m!-1` inclusive.
+     * \return the corresponding permutation of \a m objects.
+     */
+    constexpr Perm<n> operator[] (int index) const;
+
+    /**
+     * Returns the total number of permutations on \a m objects.
+     * This of course is just `m!`.
+     *
+     * \python This is also used to implement the Python special
+     * method __len__().
+     *
+     * \return the total number of permutations.
+     */
+    static constexpr int size();
+
+    /**
+     * A trivial equality test that always returns \c true.
+     *
+     * Since PermSubSn contains no data of its own, any two PermSubSn objects
+     * of the same type (i.e., using the same template parameters) will always
+     * describe the same sequence of permutations in the same order.
+     *
+     * \return \c true, always.
+     */
+    constexpr bool operator == (const PermSubSn&) const;
+};
+#else
+struct PermSubSn;
+
+template <int n>
+struct PermSubSn<n, 1> {
+    static_assert(n > 1);
+
+    constexpr Perm<n> operator[] (int) const {
+        return {};
+    }
+
+    static constexpr int size() {
+        return 1;
+    }
+
+    constexpr bool operator == (const PermSubSn&) const {
+        return true;
+    }
+};
+
+template <int n>
+struct PermSubSn<n, 2> {
+    static_assert(n > 2);
+
+    constexpr Perm<n> operator[] (int index) const {
+        return (index == 0 ? Perm<n>() : Perm<n>(0, 1) /* pair swap */);
+    }
+
+    static constexpr int size() {
+        return 2;
+    }
+
+    constexpr bool operator == (const PermSubSn&) const {
+        return true;
+    }
+};
+#endif
+
 } // namespace regina
 
 #endif

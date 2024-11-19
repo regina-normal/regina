@@ -1269,14 +1269,6 @@ TEST_F(PermTestSmall, aliases) {
     for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
         EXPECT_EQ(Perm<7>::S7[i], Perm<7>::Sn[i]);
 }
-TEST_F(PermTestSmall, S2) {
-    regina::for_constexpr<3, 6>([](auto n) {
-        for (int i = 0; i < 2; ++i) {
-            EXPECT_EQ(Perm<n>::S2[i], Perm<n>::extend(Perm<2>::S2[i]));
-            EXPECT_EQ(Perm<2>::S2[i], Perm<2>::contract(Perm<n>::S2[i]));
-        }
-    });
-}
 TEST_F(PermTestSmall, S3) {
     regina::for_constexpr<4, 6>([](auto n) {
         for (int i = 0; i < 6; ++i) {

@@ -155,33 +155,6 @@ class Perm<2> {
          */
         using Code2 = Code;
 
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<2>::S1.
-         */
-        struct S1Lookup {
-            /**
-             * Returns the permutation at the given index in the array S1.
-             * See Perm<2>::S1 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index; the only allowed value is 0.
-             * \return the corresponding permutation in S1.
-             */
-            constexpr Perm<2> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S1.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 1; }
-        };
-
     public:
         /**
          * Gives fast access to all possible permutations of two elements,
@@ -265,27 +238,24 @@ class Perm<2> {
         static constexpr PermSn<2, PermOrder::Lex> orderedS2 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * one element.
-         *
-         * Of course, this array is trivial: it contains just the identity
-         * permutation.  This array is provided for consistency with
-         * larger permutation classes Perm<n>.
+         * Deprecated array-like object that lists all possible permutations of
+         * one element.  Of course, this list is trivial: it contains just the
+         * identity permutation.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `S1[i]`.  The index \a i must be 0.
-         *
-         * Unlike \a Sn, you cannot (for now) iterate over \a S1 in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
+         * Unlike \a Sn, you cannot iterate over \a S1 in C++ (though you can
+         * still do this in Python).
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  This is now a lightweight
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
+         *
+         * \deprecated Just use the identity permutation directly.
          */
-        static constexpr S1Lookup S1 {};
+        [[deprecated]] static constexpr PermSubSn<2, 1> S1 {};
 
         /**
          * Deprecated alias for \a S1, which gives fast array-like access to
@@ -294,7 +264,7 @@ class Perm<2> {
          * \deprecated This is identical to `Perm<2>::S1`; see that member
          * for further information.
          */
-        [[deprecated]] static constexpr S1Lookup Sn_1 {};
+        [[deprecated]] static constexpr PermSubSn<2, 1> Sn_1 {};
 
     protected:
         Code code_;
@@ -1066,10 +1036,6 @@ class Perm<2> {
 };
 
 // Inline functions for Perm<2>
-
-inline constexpr Perm<2> Perm<2>::S1Lookup::operator[] (int) const {
-    return Perm<2>();
-}
 
 inline constexpr void Perm<2>::precompute() {
 }

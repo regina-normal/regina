@@ -85,6 +85,51 @@ Template parameter ``codeType``:
     the constant ``Perm<n>::codeType``. You should allow the compiler
     to deduce this and not attempt to set it yourself.)doc";
 
+// Docstring regina::python::doc::PermSubSn
+static const char *PermSubSn =
+R"doc(A lightweight array-like object that indexes smaller permutations
+within larger permutation groups; that is, it embeds the group *S_m*
+inside *S_n* for some ``n > m``.
+
+The only purpose of this class is to support some specific permutation
+class constants such as ``Perm<4>::S3``. It is hard-coded for those
+corresponding values of *m* and *n*, and is not available at all for
+other parameter combinations. You would typically access this class
+through those constants such as ``Perm<4>::S3``, and there should be
+no need for end users to refer to this type directly.
+
+This class supports array-style lookup, using accessors such as
+``Perm<4>::S3[i]`` and ``Perm<4>::S3::size()``. Instead of size(), you
+can also use the standard ``len()`` function in Python. This class
+does not support iteration in C++ (although Python still allows it
+because it detects the array-like structure).
+
+The indexing of permutations in ``PermSubSn<n, m>`` uses sign-based
+ordering; that is, it uses the same indexing as ``PermSn<m,
+PermOrder::Sign>``.
+
+All operations in this class are fast constant time.
+
+Objects of this type contain no data at all, which means they are
+trivial to pass by value or swap with std::swap(), and all objects of
+this type are essentially identical. As mentioned above, you would
+typically just use a class constant such as ``Perm<4>::S3`` instead of
+creating an object of this type yourself.
+
+Python:
+    Python does not support templates. Instead this class can be
+    accessed by appending *n* and *m* as suffixes (e.g.,
+    PermSubSn4_3).
+
+Template parameter ``n``:
+    indicates the return type: permutations of *m* objects will be
+    returned as the larger type ``Perm<n>``. It is required that ``2 ≤
+    n ≤ 5``.
+
+Template parameter ``m``:
+    the number of objects being permuted in the group *S_m* that we
+    are enumerating. It is required that ``1 ≤ m < n``.)doc";
+
 namespace PermSn_ {
 
 // Docstring regina::python::doc::PermSn_::__array
@@ -231,6 +276,47 @@ Exception ``StopIteration``:
 Returns:
     the permutation that this iterator is pointing to, before the
     increment takes place.)doc";
+
+}
+
+namespace PermSubSn_ {
+
+// Docstring regina::python::doc::PermSubSn_::__array
+static const char *__array =
+R"doc(Returns the permutation at the given index.
+
+This is a permutation on *m* objects being returned as the larger type
+``Perm<n>``, and so the unused elements ``m,m+1,...,n-1`` will all be
+mapped to themselves.
+
+Parameter ``index``:
+    an index between 0 and ``m!-1`` inclusive.
+
+Returns:
+    the corresponding permutation of *m* objects.)doc";
+
+// Docstring regina::python::doc::PermSubSn_::__eq
+static const char *__eq =
+R"doc(A trivial equality test that always returns ``True``.
+
+Since PermSubSn contains no data of its own, any two PermSubSn objects
+of the same type (i.e., using the same template parameters) will
+always describe the same sequence of permutations in the same order.
+
+Returns:
+    ``True``, always.)doc";
+
+// Docstring regina::python::doc::PermSubSn_::size
+static const char *size =
+R"doc(Returns the total number of permutations on *m* objects. This of
+course is just ``m!``.
+
+Python:
+    This is also used to implement the Python special method
+    __len__().
+
+Returns:
+    the total number of permutations.)doc";
 
 }
 

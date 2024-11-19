@@ -39,16 +39,15 @@
 
 using regina::Perm;
 using regina::PermOrder;
-using regina::PermSn;
 
 template <int n, regina::PermOrder order>
 void addPermSn(pybind11::module_& m, const char* name) {
-    using Class = PermSn<n, order>;
+    using Class = regina::PermSn<n, order>;
 
     RDOC_SCOPE_BEGIN(PermSn)
 
     auto c = pybind11::class_<Class>(m, name, rdoc_scope)
-        .def("__getitem__", [](const Class& sn, typename Perm<n>::Index i) {
+        .def("__getitem__", [](Class sn, typename Perm<n>::Index i) {
             // Give Python users range checking, for consistency with
             // Regina ≤ 7.3 (before the class PermSn<n> was introduced).
             if (i < 0 || i >= sn.size())
@@ -57,13 +56,12 @@ void addPermSn(pybind11::module_& m, const char* name) {
         })
         .def("size", &Class::size, rdoc::size)
         .def("__len__", &Class::size, rdoc::size)
-        .def("__iter__", [](const Class& sn) {
+        .def("__iter__", [](Class sn) {
             return sn.begin();
         }, pybind11::keep_alive<0, 1>(), // iterator keeps sn alive
             rdoc::__iter__)
     ;
-    regina::python::add_output_custom(c, [](const Class& sn,
-            std::ostream& out) {
+    regina::python::add_output_custom(c, [](Class sn, std::ostream& out) {
         out << "[ ";
         // For small n, output the entire array.
         // For large n, do not output everything.
@@ -100,6 +98,36 @@ void addPermSn(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
+template <int n, int m>
+void addPermSubSn(pybind11::module_& mod, const char* name) {
+    using Class = regina::PermSubSn<n, m>;
+
+    RDOC_SCOPE_BEGIN(PermSubSn)
+
+    auto c = pybind11::class_<Class>(mod, name, rdoc_scope)
+        .def("__getitem__", [](Class sub, int i) {
+            // Give Python users range checking, for consistency with
+            // Regina ≤ 7.3 (before the class PermSubSn<n> was introduced).
+            if (i < 0 || i >= sub.size())
+                throw pybind11::index_error("Array index out of range");
+            return sub[i];
+        })
+        .def("size", &Class::size, rdoc::size)
+        .def("__len__", &Class::size, rdoc::size)
+    ;
+    regina::python::add_output_custom(c, [](Class sub, std::ostream& out) {
+        // All of these classes use small m.
+        // Just output the entire array.
+        out << "[ ";
+        for (int i = 0; i < sub.size(); ++i)
+            out << sub[i] << ' ';
+        out << "]";
+    });
+    regina::python::add_eq_operators(c, rdoc::__eq);
+
+    RDOC_SCOPE_END
+}
+
 void addPermSn(pybind11::module_& m) {
     addPermSn<2, PermOrder::Sign>(m, "PermSn2_Sign");
     addPermSn<3, PermOrder::Sign>(m, "PermSn3_Sign");
@@ -132,5 +160,10 @@ void addPermSn(pybind11::module_& m) {
     addPermSn<14, PermOrder::Lex>(m, "PermSn14_Lex");
     addPermSn<15, PermOrder::Lex>(m, "PermSn15_Lex");
     addPermSn<16, PermOrder::Lex>(m, "PermSn16_Lex");
+
+    addPermSubSn<2, 1>(m, "PermSubSn2_1");
+    addPermSubSn<3, 2>(m, "PermSubSn3_2");
+    addPermSubSn<4, 2>(m, "PermSubSn4_2");
+    addPermSubSn<5, 2>(m, "PermSubSn5_2");
 }
 

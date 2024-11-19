@@ -134,13 +134,13 @@ void addPerm5(pybind11::module_& m) {
         #endif
         #endif
         .def_readonly_static("Sn_1", &Perm<5>::Sn_1) // deprecated
+        .def_readonly_static("S2", &Perm<5>::S2) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif
         .def_readonly_static("orderedS4", &Perm<5>::orderedS4)
         .def_readonly_static("S3", &Perm<5>::S3)
         .def_readonly_static("orderedS3", &Perm<5>::orderedS3)
-        .def_readonly_static("S2", &Perm<5>::S2)
     ;
     regina::for_constexpr<6, 17>([&c](auto i) {
         c.def_static("contract", &Perm<5>::template contract<i>,
@@ -160,8 +160,6 @@ void addPerm5(pybind11::module_& m) {
         "_S3", rdoc::S3Lookup);
     regina::python::add_lightweight_array<decltype(Perm<5>::orderedS3)>(c,
         "_orderedS3", rdoc::OrderedS3Lookup);
-    regina::python::add_lightweight_array<decltype(Perm<5>::S2)>(c,
-        "_S2", rdoc::S2Lookup);
 
     RDOC_SCOPE_END
 }
