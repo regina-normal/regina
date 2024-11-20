@@ -1738,12 +1738,12 @@ inline constexpr Int Perm<5>::convOrderedUnordered(Int index) {
 
 inline constexpr Perm<5> Perm<5>::OrderedS4Lookup::operator[] (int index)
         const {
-    return S4[Perm<4>::orderedSn[index].SnIndex()];
+    return PermSubSn<5, 4>::at(Perm<4>::orderedSn[index].SnIndex());
 }
 
 inline constexpr Perm<5> Perm<5>::OrderedS3Lookup::operator[] (int index)
         const {
-    return S3[Perm<3>::orderedSn[index].SnIndex()];
+    return PermSubSn<5, 3>::at(Perm<3>::orderedSn[index].SnIndex());
 }
 
 inline constexpr void Perm<5>::precompute() {
