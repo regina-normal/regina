@@ -338,12 +338,12 @@ std::vector<Link> Link::diagramComponents() const {
 
     // Now distribute crossings, which will change their indices and make our
     // comp[] array useless.
-    for (auto i = 0; i < n; ++i)
+    for (size_t i = 0; i < n; ++i)
         ans[comp[i]].crossings_.push_back(clone.crossings_[i]);
     clone.crossings_.clear();
 
     // Finally add the trivial (0-crossing) diagram components.
-    for (auto i = 0; i < nTrivial; ++i)
+    for (size_t i = 0; i < nTrivial; ++i)
         ans[nComp + i].components_.emplace_back();
 
     return ans;

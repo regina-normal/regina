@@ -254,7 +254,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     strcpy(cmdBuffer, fullCommand.c_str());
 
     // Acquire the global interpreter lock.
-    ScopedThreadRestore thread(*this);
+    ScopedThreadRestore pyThread(*this);
 
     // Attempt to compile the command with no additional newlines.
     PyObject* code = Py_CompileStringFlags(
@@ -406,7 +406,7 @@ void PythonInterpreter::prependReginaToSysPath() {
 }
 
 bool PythonInterpreter::importRegina(bool fixPythonPath) {
-    ScopedThreadRestore thread(*this);
+    ScopedThreadRestore pyThread(*this);
 
     bool ok = importReginaIntoNamespace(mainNamespace, fixPythonPath);
 
@@ -454,7 +454,7 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
 
 bool PythonInterpreter::setVar(const char* name,
         std::shared_ptr<Packet> value) {
-    ScopedThreadRestore thread(*this);
+    ScopedThreadRestore pyThread(*this);
 
     bool ok = false;
     try {
@@ -483,7 +483,7 @@ bool PythonInterpreter::setVar(const char* name,
 }
 
 bool PythonInterpreter::runCode(const char* code) {
-    ScopedThreadRestore thread(*this);
+    ScopedThreadRestore pyThread(*this);
 
     PyObject* ans = PyRun_String(const_cast<char*>(code), Py_file_input,
         mainNamespace, mainNamespace);
@@ -552,7 +552,7 @@ int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
     if (! completerFunc)
         return -1;
 
-    ScopedThreadRestore thread(*this);
+    ScopedThreadRestore pyThread(*this);
 
     try {
         pybind11::handle func(completerFunc);

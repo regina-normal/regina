@@ -2322,8 +2322,6 @@ void verifyCopyMove(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     if (link.size() == 0) {
-        Crossing* c0 = nullptr;
-
         Link copy(link);
         EXPECT_EQ(copy.size(), 0);
         EXPECT_TRUE(looksIdentical(copy, link));

@@ -529,7 +529,7 @@ std::string GroupPresentation::WordSubstitutionData::substitutionString(
     reducer.reserve( word_length );
     // splay word
     for (auto it = word.terms().begin(); it!=word.terms().end(); it++) {
-        for (unsigned long i=0; i<std::abs((*it).exponent); i++)
+        for (long i=0; i<std::abs((*it).exponent); i++)
             reducer.push_back( GroupExpressionTerm( (*it).generator,
                 ((*it).exponent>0) ? 1 : -1 ) );
     }
