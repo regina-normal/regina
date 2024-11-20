@@ -3286,7 +3286,10 @@ Precondition:
 .. warning::
     The check for this move is expensive (linear time), since it
     includes testing whether both sides-of-arcs belong to the same
-    2-cell of the knot diagram.
+    2-cell of the knot diagram. If you are certain that the move is
+    legal, and you wish to circumvent this check, C++ users can call
+    the variant of this function that takes an extra Unprotected
+    argument.
 
 Parameter ``upperArc``:
     identifies the arc of the link which will be passed over the
