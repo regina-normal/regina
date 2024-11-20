@@ -2226,7 +2226,6 @@
 		05098AFF28FC0E03005E4716 /* tableview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tableview.h; sourceTree = "<group>"; };
 		05098B0128FC0E1A005E4716 /* tableview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tableview.h; sourceTree = "<group>"; };
 		05098B0228FC110B005E4716 /* flags.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = flags.h; sourceTree = "<group>"; };
-		05098B0428FC12F4005E4716 /* arraylike.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arraylike.h; sourceTree = "<group>"; };
 		05098B0528FECBD8005E4716 /* plantri.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = plantri.out; sourceTree = "<group>"; };
 		05098B0628FECBD8005E4716 /* docstrings.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = docstrings.filter; sourceTree = "<group>"; };
 		05098B0728FECBD8005E4716 /* special.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = special.out; sourceTree = "<group>"; };
@@ -7040,7 +7039,6 @@
 		05431FC71C40F5EE009BC072 /* helpers */ = {
 			isa = PBXGroup;
 			children = (
-				05098B0428FC12F4005E4716 /* arraylike.h */,
 				05098A6428EA891E005E4716 /* docstrings.h */,
 				05431FC81C40F607009BC072 /* equality.h */,
 				05098B0228FC110B005E4716 /* flags.h */,
