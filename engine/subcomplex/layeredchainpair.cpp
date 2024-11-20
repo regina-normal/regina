@@ -59,8 +59,8 @@ std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
 
     // Note that we only need check permutations in S3 since we can
     // arbitrarily assign the role of one vertex in the tetrahedron.
-    for (int p = 0; p < 6; p++) {
-        LayeredChain first(base, Perm<4>::S3[p]);
+    for (auto p3: Perm<3>::S3) {
+        LayeredChain first(base, Perm<4>::extend(p3));
         first.extendMaximal();
 
         Tetrahedron<3>* firstTop = first.top();

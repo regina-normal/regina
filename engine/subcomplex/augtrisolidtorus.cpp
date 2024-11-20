@@ -255,7 +255,6 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
         // Run through all possible cores to which it might belong.
         std::optional<Perm<4>> gluing;
         std::unique_ptr<TriSolidTorus> core;
-        int torusAnnulus;
         size_t chainLen;
         for (auto p: Perm<4>::Sn) {
             if (p[0] > p[3])
@@ -266,7 +265,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
             // Let's try this core.
             // Look for an identified annulus.
-            for (torusAnnulus = 0; torusAnnulus < 3; torusAnnulus++)
+            for (int torusAnnulus = 0; torusAnnulus < 3; torusAnnulus++)
                 if ((gluing = core->isAnnulusSelfIdentified(torusAnnulus))) {
                     // Look now for a layered chain.
                     // If we don't find it, the entire core must be wrong.
@@ -305,14 +304,9 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
         }
 
         // Wasn't the core.  Must have been the chain.
-        Tetrahedron<3>* top;
-        Tetrahedron<3>* bottom;
-        Perm<4> topRoles;
-        Perm<4> bottomRoles;
         int chainType;
-        for (int i = 0; i < 6; i++) {
-            Perm<4> p = Perm<4>::S3[i];
-            LayeredChain chain(tet, p);
+        for (auto p3: Perm<3>::S3) {
+            LayeredChain chain(tet, Perm<4>::extend(p3));
             chain.extendMaximal();
 
             // Note that the chain will run into one of the core tetrahedra.
@@ -332,8 +326,8 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                         chain.bottomVertexRoles() * Perm<4>(2, 3, 0, 1));
                     if (core) {
                         // Test that everything is put together properly.
-                        top = chain.top();
-                        topRoles = chain.topVertexRoles();
+                        Tetrahedron<3>* top = chain.top();
+                        Perm<4> topRoles = chain.topVertexRoles();
 
                         if ((top->adjacentTetrahedron(topRoles[0]) ==
                                     core->tetrahedron(1)) &&
@@ -367,8 +361,8 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                         }
                     }
                 } else if (chainType == CHAIN_AXIS) {
-                    bottom = chain.bottom();
-                    bottomRoles = chain.bottomVertexRoles();
+                    Tetrahedron<3>* bottom = chain.bottom();
+                    Perm<4> bottomRoles = chain.bottomVertexRoles();
 
                     Tetrahedron<3>* startCore = bottom->adjacentTetrahedron(
                         bottomRoles[2]);
@@ -382,8 +376,8 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
                     if (core) {
                         // Test that everything is put together properly.
-                        top = chain.top();
-                        topRoles = chain.topVertexRoles();
+                        Tetrahedron<3>* top = chain.top();
+                        Perm<4> topRoles = chain.topVertexRoles();
 
                         if ((bottom->adjacentTetrahedron(bottomRoles[1]) ==
                                     core->tetrahedron(1)) &&
@@ -469,12 +463,10 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
     Tetrahedron<3>* coreTets[3];
     Perm<4> coreVertexRoles[3];
     int whichLayered[3];
-    int usedLayered;
     Perm<3> edgeGroupRoles[3];
-    int torusAnnulus;
-    for (int p = 0; p < 6; p++) {
+    for (auto p3: Perm<3>::S3) {
         core = TriSolidTorus::recognise(coreTet,
-            swap3Top * Perm<4>::S3[p] * swap23);
+            swap3Top * Perm<4>::extend(p3) * swap23);
         if (core) {
             // We have a potential core.
             // Now all that remains is to ensure that the layered solid
@@ -483,8 +475,8 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 coreTets[j] = core->tetrahedron(j);
                 coreVertexRoles[j] = core->vertexRoles(j);
             }
-            usedLayered = 0;
-            torusAnnulus = -1;
+            int usedLayered = 0;
+            int torusAnnulus = -1;
             for (int j = 0; j < 3; j++) {
                 // Check annulus j.
                 // Recall that the 3-manifold is orientable so we don't
