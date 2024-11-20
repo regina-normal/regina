@@ -437,6 +437,13 @@ PermSn8_Lex : class -> EqualityType.BY_VALUE
 PermSn8_Sign : class -> EqualityType.BY_VALUE
 PermSn9_Lex : class -> EqualityType.BY_VALUE
 PermSn9_Sign : class -> EqualityType.BY_VALUE
+PermSubSn2_1 : class -> EqualityType.BY_VALUE
+PermSubSn3_2 : class -> EqualityType.BY_VALUE
+PermSubSn4_2 : class -> EqualityType.BY_VALUE
+PermSubSn4_3 : class -> EqualityType.BY_VALUE
+PermSubSn5_2 : class -> EqualityType.BY_VALUE
+PermSubSn5_3 : class -> EqualityType.BY_VALUE
+PermSubSn5_4 : class -> EqualityType.BY_VALUE
 PillowTwoSphere : class -> EqualityType.BY_VALUE
 PlugTriSolidTorus : class -> EqualityType.BY_VALUE
 PluggedTorusBundle : class -> EqualityType.BY_VALUE
