@@ -810,6 +810,40 @@ struct PermSubSn<n, 3> {
             return true;
         }
 };
+
+template <int n>
+struct PermSubSn<n, 4> {
+    static_assert(n > 4);
+    static_assert(Perm<n>::codeType == PermCodeType::Index);
+
+    private:
+        using Code = typename Perm<n>::Code2;
+        static constexpr Code fact1 = Perm<n-1>::nPerms;
+        static constexpr Code fact2 = Perm<n-2>::nPerms;
+        static constexpr Code fact3 = Perm<n-3>::nPerms;
+        static constexpr Code table[24] {
+            0, fact3+1, fact2+fact3, fact2+1, 2*fact2, 2*fact2+fact3+1,
+            fact1+fact3, fact1+1, fact1+fact2, fact1+fact2+fact3+1,
+                fact1+2*fact2+fact3, fact1+2*fact2+1,
+            2*fact1, 2*fact1+fact3+1, 2*fact1+fact2+fact3, 2*fact1+fact2+1,
+                2*fact1+2*fact2, 2*fact1+2*fact2+fact3+1,
+            3*fact1+fact3, 3*fact1+1, 3*fact1+fact2, 3*fact1+fact2+fact3+1,
+                3*fact1+2*fact2+fact3, 3*fact1+2*fact2+1
+        };
+
+    public:
+        constexpr Perm<n> operator[] (int index) const {
+            return Perm<n>::fromPermCode2(table[index]);
+        }
+
+        static constexpr int size() {
+            return 24;
+        }
+
+        constexpr bool operator == (const PermSubSn&) const {
+            return true;
+        }
+};
 #endif
 
 } // namespace regina

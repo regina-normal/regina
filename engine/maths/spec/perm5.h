@@ -183,32 +183,6 @@ class Perm<5> {
 
     private:
         /**
-         * A lightweight array-like object used to implement Perm<5>::S4.
-         */
-        struct S4Lookup {
-            /**
-             * Returns the permutation at the given index in the array S4.
-             * See Perm<5>::S4 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 23 inclusive.
-             * \return the corresponding permutation in S4.
-             */
-            constexpr Perm<5> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array S4.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 24; }
-        };
-
-        /**
          * A lightweight array-like object used to implement Perm<5>::orderedS4.
          */
         struct OrderedS4Lookup {
@@ -411,7 +385,7 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S4Lookup S4 {};
+        static constexpr PermSubSn<5, 4> S4 {};
 
         /**
          * Deprecated alias for \a S4, which gives fast array-like access to
@@ -420,7 +394,7 @@ class Perm<5> {
          * \deprecated This is identical to `Perm<5>::S4`; see that member
          * for further information.
          */
-        [[deprecated]] static constexpr S4Lookup Sn_1 {};
+        [[deprecated]] static constexpr PermSubSn<5, 4> Sn_1 {};
 
         /**
          * Gives fast array-like access to all possible permutations of four
@@ -1671,15 +1645,6 @@ class Perm<5> {
             5, 6, 3, 4, 3, 2, 2, 4, 5, 4, 2, 6, 5, 6, 5, 6, 5, 6, 2, 4
         };
 
-        /**
-         * Contains the S5 indices of the elements of S4, where the
-         * element 4 maps to itself.
-         */
-        static constexpr Code2 S4Table[24] = {
-            0, 3, 8, 7, 12, 15, 26, 25, 30, 33, 38, 37,
-            48, 51, 56, 55, 60, 63, 74, 73, 78, 81, 86, 85
-        };
-
     protected:
         /**
          * Creates a permutation from the given second-generation
@@ -1771,13 +1736,9 @@ inline constexpr Int Perm<5>::convOrderedUnordered(Int index) {
     return ((((index >> 1) ^ (index / 24)) & 1) ? (index ^ 1) : index);
 }
 
-inline constexpr Perm<5> Perm<5>::S4Lookup::operator[] (int index) const {
-    return Perm<5>(S4Table[index]);
-}
-
 inline constexpr Perm<5> Perm<5>::OrderedS4Lookup::operator[] (int index)
         const {
-    return Perm<5>(S4Table[Perm<4>::orderedSn[index].SnIndex()]);
+    return S4[Perm<4>::orderedSn[index].SnIndex()];
 }
 
 inline constexpr Perm<5> Perm<5>::OrderedS3Lookup::operator[] (int index)

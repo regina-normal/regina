@@ -167,5 +167,6 @@ void addPermSn(pybind11::module_& m) {
     addPermSubSn<5, 2>(m, "PermSubSn5_2");
     addPermSubSn<4, 3>(m, "PermSubSn4_3");
     addPermSubSn<5, 3>(m, "PermSubSn5_3");
+    addPermSubSn<5, 4>(m, "PermSubSn5_4");
 }
 

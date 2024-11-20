@@ -152,8 +152,6 @@ void addPerm5(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 
-    regina::python::add_lightweight_array<decltype(Perm<5>::S4)>(c,
-        "_S4", rdoc::S4Lookup);
     regina::python::add_lightweight_array<decltype(Perm<5>::orderedS4)>(c,
         "_orderedS4", rdoc::OrderedS4Lookup);
     regina::python::add_lightweight_array<decltype(Perm<5>::orderedS3)>(c,
