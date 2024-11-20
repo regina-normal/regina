@@ -427,10 +427,9 @@ Version 7.4  [ (to be announced) ]
               operators, not just less-than (<) as before.
             - Sn and orderedSn now use the new public type PermSn<...> (see
               below), which now supports both iteration and array-like access.
-            - For n > m, Perm<n>::Sm now uses the new public type PermSubSn<...>
-              (see below).
-            - The constants Sn_1, nPerms_1, S1 and S2 are now deprecated in
-              those classes where they appear.
+            - For n > m, Perm<n>::Sm and Perm<n>::orderedSm are now deprecated,
+              and they now use the new internal type PermSubSn<...> (see below).
+              Likewise, the constants Sn_1 and nPerms_1 are now deprecated.
             - Classes Perm<2,3> now have a type alias Code2 (which is identical
               to Code), to help with generic programming.
         Enum PermCodeType:
@@ -447,7 +446,8 @@ Version 7.4  [ (to be announced) ]
               now a public type, and it now supports both iteration and
               array-like access.
         Class PermSubSn<n, m>:
-            - New public type to support Perm<n>::Sm where n > m.
+            - New internal type to support Perm<n>::Sm where n > m.  This
+              supports array-like access only, not iteration.
         Struct Unprotected:
             - New C++-only type that allows in-built safety checks to be
               disabled in some specific circumstances.

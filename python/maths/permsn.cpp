@@ -98,11 +98,11 @@ void addPermSn(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <int n, int m>
+template <int n, int m, PermOrder order>
 void addPermSubSn(pybind11::module_& mod, const char* name) {
-    using Class = regina::PermSubSn<n, m>;
+    using Class = regina::detail::PermSubSn<n, m, order>;
 
-    RDOC_SCOPE_BEGIN(PermSubSn)
+    RDOC_SCOPE_BEGIN(detail::PermSubSn)
 
     auto c = pybind11::class_<Class>(mod, name, rdoc_scope)
         .def("__getitem__", [](Class sub, int i) {
@@ -162,12 +162,16 @@ void addPermSn(pybind11::module_& m) {
     addPermSn<15, PermOrder::Lex>(m, "PermSn15_Lex");
     addPermSn<16, PermOrder::Lex>(m, "PermSn16_Lex");
 
-    addPermSubSn<2, 1>(m, "PermSubSn2_1");
-    addPermSubSn<3, 2>(m, "PermSubSn3_2");
-    addPermSubSn<4, 2>(m, "PermSubSn4_2");
-    addPermSubSn<5, 2>(m, "PermSubSn5_2");
-    addPermSubSn<4, 3>(m, "PermSubSn4_3");
-    addPermSubSn<5, 3>(m, "PermSubSn5_3");
-    addPermSubSn<5, 4>(m, "PermSubSn5_4");
+    addPermSubSn<2, 1, PermOrder::Sign>(m, "PermSubSn2_1_Sign");
+    addPermSubSn<3, 2, PermOrder::Sign>(m, "PermSubSn3_2_Sign");
+    addPermSubSn<4, 2, PermOrder::Sign>(m, "PermSubSn4_2_Sign");
+    addPermSubSn<5, 2, PermOrder::Sign>(m, "PermSubSn5_2_Sign");
+    addPermSubSn<4, 3, PermOrder::Sign>(m, "PermSubSn4_3_Sign");
+    addPermSubSn<5, 3, PermOrder::Sign>(m, "PermSubSn5_3_Sign");
+    addPermSubSn<5, 4, PermOrder::Sign>(m, "PermSubSn5_4_Sign");
+
+    addPermSubSn<4, 3, PermOrder::Lex>(m, "PermSubSn4_3_Lex");
+    addPermSubSn<5, 3, PermOrder::Lex>(m, "PermSubSn5_3_Lex");
+    addPermSubSn<5, 4, PermOrder::Lex>(m, "PermSubSn5_4_Lex");
 }
 

@@ -2604,7 +2604,7 @@ inline constexpr Perm<4> Perm<4>::extend(Perm<2> p) {
 
 template <>
 inline constexpr Perm<4> Perm<4>::extend(Perm<3> p) {
-    return PermSubSn<4, 3>::at(p.SnIndex());
+    return detail::PermSubSn<4, 3>::at(p.SnIndex());
 }
 
 template <int k>
@@ -2629,12 +2629,12 @@ inline constexpr Perm<5> Perm<5>::extend(Perm<2> p) {
 
 template <>
 inline constexpr Perm<5> Perm<5>::extend(Perm<3> p) {
-    return PermSubSn<5, 3>::at(p.SnIndex());
+    return detail::PermSubSn<5, 3>::at(p.SnIndex());
 }
 
 template <>
 inline constexpr Perm<5> Perm<5>::extend(Perm<4> p) {
-    return PermSubSn<5, 4>::at(p.SnIndex());
+    return detail::PermSubSn<5, 4>::at(p.SnIndex());
 }
 
 template <int k>

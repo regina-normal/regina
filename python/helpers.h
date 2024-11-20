@@ -64,7 +64,6 @@
 #error "A system installation of pybind11 is being included instead of Regina's own patched version."
 #endif
 
-// #include "helpers/arraylike.h"
 #include "helpers/docstrings.h"
 #include "helpers/equality.h"
 // #include "helpers/flags.h"

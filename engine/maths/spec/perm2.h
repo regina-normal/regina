@@ -255,7 +255,7 @@ class Perm<2> {
          *
          * \deprecated Just use the identity permutation directly.
          */
-        [[deprecated]] static constexpr PermSubSn<2, 1> S1 {};
+        [[deprecated]] static constexpr detail::PermSubSn<2, 1> S1 {};
 
         /**
          * Deprecated alias for \a S1, which gives fast array-like access to
@@ -264,7 +264,7 @@ class Perm<2> {
          * \deprecated This is identical to `Perm<2>::S1`; see that member
          * for further information.
          */
-        [[deprecated]] static constexpr PermSubSn<2, 1> Sn_1 {};
+        [[deprecated]] static constexpr detail::PermSubSn<2, 1> Sn_1 {};
 
     protected:
         Code code_;

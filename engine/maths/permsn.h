@@ -98,19 +98,15 @@ template <int n> class Perm;
  *
  * Objects of this type contain no data at all, which means they are trivial to
  * pass by value or swap with std::swap(), and all objects of this type are
- * essentially identical.  As mentioned above, you would typically just use
- * `Perm<n>::Sn` or `Perm<n>::orderedSn` instead of creating an object of
- * this type yourself.
+ * essentially identical.
  *
- * \python Python does not support templates.  In Python, the various classes
- * `PermSn<n, PermOrder::Sign>` are available under the names
- * PermSn2_Sign, PermSn3_Sign, ..., PermSn16_Sign, and the various classes
- * `PermSn<n, PermOrder::Lex>` are available under the names
- * PermSn2_Lex, PermSn3_Lex, ..., PermSn16_Lex.
+ * \python Python does not support templates.  Instead this class can be
+ * accessed by appending \a n and \a order as suffixes (e.g., PermSn3_Sign,
+ * or PermSn5_Lex).
  *
  * \tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
- * \tparam order the way in which we should order permutations for the
+ * \tparam order the way in which this class orders permutations for the
  * purposes of indexing and iteration.
  * \tparam codeType the constant `Perm<n>::codeType`.  You should allow the
  * compiler to deduce this and not attempt to set it yourself.
@@ -671,46 +667,62 @@ struct PermSn<n, order, PermCodeType::Index> {
 };
 #endif
 
+namespace detail {
+
 /**
  * A lightweight array-like object that indexes smaller permutations within
  * larger permutation groups; that is, it embeds the group \a S_m inside
  * \a S_n for some `n > m`.
  *
- * The only purpose of this class is to support some specific permutation
- * class constants such as `Perm<4>::S3`.  It is hard-coded for those
- * corresponding values of \a m and \a n, and is not available at all for
- * other parameter combinations.  You would typically access this class
- * through those constants such as `Perm<4>::S3`, and there should be no need
- * for end users to refer to this type directly.
+ * This class is not intended for end users.  Its main purpose is to support
+ * other parts of Regina's API, such as `Perm<n>::extend()`, and some old (and
+ * now deprecated) permutation class constants such as `Perm<4>::S3`.  This
+ * class is hard-coded only for some specific small values of \a n and \a m
+ * (where the operations are trivial or the compiler can use small lookup
+ * tables).  If you need to express a smaller permutation using a larger
+ * permutation class, you should use `Perm<n>::extend()` instead.
  *
- * This class supports array-style lookup, using accessors such as
- * `Perm<4>::S3[i]` and `Perm<4>::S3::size()`.  Instead of size(), you can
- * also use the standard `len()` function in Python.  This class does not
- * support iteration in C++ (although Python still allows it because it detects
- * the array-like structure).
+ * This class only offers index-based lookup: you can either use the static
+ * function `at(index)`, or you can treat an object \c of this class like a
+ * container and use `c[index]` and `c.size()` (and in Python, `len(c)`).
+ * This class does not support iteration in C++ (although Python still allows
+ * it because Python detects the array-like structure).
  *
- * The indexing of permutations in `PermSubSn<n, m>` uses sign-based ordering;
- * that is, it uses the same indexing as `PermSn<m, PermOrder::Sign>`.
+ * Permutations are indexed according to the template parameter \a order.
+ * In particular, `PermSubSn<n, m, order>` indexes permutations in the same
+ * order as `PermSn<m, order>`.
  *
  * All operations in this class are fast constant time.
  *
  * Objects of this type contain no data at all, which means they are trivial to
  * pass by value or swap with std::swap(), and all objects of this type are
- * essentially identical.  As mentioned above, you would typically just use
- * a class constant such as `Perm<4>::S3` instead of creating an object of
- * this type yourself.
+ * essentially identical.
  *
- * \python Python does not support templates.  Instead this class can be
- * accessed by appending \a n and \a m as suffixes (e.g., PermSubSn4_3).
+ * \warning This class may be altered or removed without notice from a future
+ * version of Regina, since this is essentially an internal class designed to
+ * support deprecated constants such as `Perm<4>::S3`.  The "officially
+ * supported" way of accessing the <i>i</i>th permutation of \a m objects
+ * using the type `Perm<n>` is `Perm<n>::extend(Perm<m>::Sn[i])`.
+ *
+ * \python This class does not live inside an inner `detail` namespace, though
+ * as an internal class it is subject to change or removal without notice
+ * (see the warning above).  Moreover, Python does not support templates,
+ * and so the name of this class is constructed by appending \a n, \a m and
+ * \a order as suffixes (e.g., PermSubSn4_3_Sign, or PermSubSn5_3_Lex).
+ * The only template parameters that are bound in Python are those that are
+ * used in Regina's public-facing API (specifically, those that are used by
+ * deprecated constants such as `Perm4.S3`).
  *
  * \tparam n indicates the return type: permutations of \a m objects will be
  * returned as the larger type `Perm<n>`.  It is required that `2 ≤ n ≤ 5`.
  * \tparam m the number of objects being permuted in the group \a S_m that we
  * are enumerating.  It is required that `1 ≤ m < n`.
+ * \tparam order the way in which this class orders permutations for the
+ * purposes of indexing.
  *
  * \ingroup maths
  */
-template <int n, int m>
+template <int n, int m, PermOrder order = PermOrder::Sign>
 #ifdef __APIDOCS
 struct PermSubSn {
     /**
@@ -723,20 +735,23 @@ struct PermSubSn {
      * \param index an index between 0 and `m!-1` inclusive.
      * \return the corresponding permutation of \a m objects.
      */
-    constexpr Perm<n> operator[] (int index) const;
+    static constexpr Perm<n> at(int index);
 
     /**
      * Returns the permutation at the given index.
      *
-     * This is identical to using the square bracket operator; see that
-     * operator for further details.  This function at() is provided for
-     * convenience as a static function, which means it can be used in the
-     * absence of a concrete PermSubSn object.
+     * This is a permutation on \a m objects being returned as the larger type
+     * `Perm<n>`, and so the unused elements `m,m+1,...,n-1` will all be
+     * mapped to themselves.
+     *
+     * This operator is identical to calling the static member function at().
+     * It is provided for convenience so that permutations can be accessed
+     * using array-like syntax.
      *
      * \param index an index between 0 and `m!-1` inclusive.
      * \return the corresponding permutation of \a m objects.
      */
-    static constexpr Perm<n> at(int index);
+    constexpr Perm<n> operator[] (int index) const;
 
     /**
      * Returns the total number of permutations on \a m objects.
@@ -763,15 +778,15 @@ struct PermSubSn {
 #else
 struct PermSubSn;
 
-template <int n>
-struct PermSubSn<n, 1> {
+template <int n, PermOrder order>
+struct PermSubSn<n, 1, order> {
     static_assert(n > 1);
 
-    constexpr Perm<n> operator[] (int) const {
+    static constexpr Perm<n> at(int) {
         return {};
     }
 
-    static constexpr Perm<n> at(int) {
+    constexpr Perm<n> operator[] (int) const {
         return {};
     }
 
@@ -784,16 +799,16 @@ struct PermSubSn<n, 1> {
     }
 };
 
-template <int n>
-struct PermSubSn<n, 2> {
+template <int n, PermOrder order>
+struct PermSubSn<n, 2, order> {
     static_assert(n > 2);
-
-    constexpr Perm<n> operator[] (int index) const {
-        return (index == 0 ? Perm<n>() : Perm<n>(0, 1) /* pair swap */);
-    }
 
     static constexpr Perm<n> at(int index) {
         return (index == 0 ? Perm<n>() : Perm<n>(0, 1) /* pair swap */);
+    }
+
+    constexpr Perm<n> operator[] (int index) const {
+        return at(index);
     }
 
     constexpr int size() {
@@ -805,8 +820,8 @@ struct PermSubSn<n, 2> {
     }
 };
 
-template <int n>
-struct PermSubSn<n, 3> {
+template <int n, PermOrder order>
+struct PermSubSn<n, 3, order> {
     static_assert(n > 3);
     static_assert(Perm<n>::codeType == PermCodeType::Index);
 
@@ -816,15 +831,21 @@ struct PermSubSn<n, 3> {
         static constexpr Code fact2 = Perm<n-2>::nPerms;
         static constexpr Code table[6] {
             0, fact2+1, fact1+fact2, fact1+1, 2*fact1, 2*fact1+fact2+1
-        };
+        }; /**< Maps sign-based indices from S3 into Sn. */
 
     public:
-        constexpr Perm<n> operator[] (int index) const {
-            return Perm<n>::fromPermCode2(table[index]);
+        static constexpr Perm<n> at(int index) {
+            if constexpr (order == PermOrder::Sign)
+                return Perm<n>::fromPermCode2(table[index]);
+            else {
+                // Sign vs lex orderings differ only at indices 2,3.
+                return Perm<n>::fromPermCode2(table[
+                    (index & 2) ? (index ^ 1) : index]);
+            }
         }
 
-        static constexpr Perm<n> at(int index) {
-            return Perm<n>::fromPermCode2(table[index]);
+        constexpr Perm<n> operator[] (int index) const {
+            return at(index);
         }
 
         constexpr int size() {
@@ -836,8 +857,8 @@ struct PermSubSn<n, 3> {
         }
 };
 
-template <int n>
-struct PermSubSn<n, 4> {
+template <int n, PermOrder order>
+struct PermSubSn<n, 4, order> {
     static_assert(n > 4);
     static_assert(Perm<n>::codeType == PermCodeType::Index);
 
@@ -854,15 +875,21 @@ struct PermSubSn<n, 4> {
                 2*fact1+2*fact2, 2*fact1+2*fact2+fact3+1,
             3*fact1+fact3, 3*fact1+1, 3*fact1+fact2, 3*fact1+fact2+fact3+1,
                 3*fact1+2*fact2+fact3, 3*fact1+2*fact2+1
-        };
+        }; /**< Maps sign-based indices from S4 into Sn. */
 
     public:
-        constexpr Perm<n> operator[] (int index) const {
-            return Perm<n>::fromPermCode2(table[index]);
+        static constexpr Perm<n> at(int index) {
+            if constexpr (order == PermOrder::Sign)
+                return Perm<n>::fromPermCode2(table[index]);
+            else {
+                // Sign vs lex orderings differ at indices {2,3} mod 4.
+                return Perm<n>::fromPermCode2(table[
+                    (index & 2) ? (index ^ 1) : index]);
+            }
         }
 
-        static constexpr Perm<n> at(int index) {
-            return Perm<n>::fromPermCode2(table[index]);
+        constexpr Perm<n> operator[] (int index) const {
+            return at(index);
         }
 
         constexpr int size() {
@@ -875,6 +902,7 @@ struct PermSubSn<n, 4> {
 };
 #endif
 
+} // namespace detail
 } // namespace regina
 
 #endif

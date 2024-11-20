@@ -181,59 +181,6 @@ class Perm<5> {
          */
         using Code2 = uint8_t;
 
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<5>::orderedS4.
-         */
-        struct OrderedS4Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS4.  See Perm<5>::orderedS4 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 23 inclusive.
-             * \return the corresponding permutation in orderedS4.
-             */
-            constexpr Perm<5> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array orderedS4.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 24; }
-        };
-
-        /**
-         * A lightweight array-like object used to implement Perm<5>::orderedS3.
-         */
-        struct OrderedS3Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS3.  See Perm<5>::orderedS3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 5 inclusive.
-             * \return the corresponding permutation in orderedS3.
-             */
-            constexpr Perm<5> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array orderedS3.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 6; }
-        };
-
     public:
         /**
          * A do-nothing routine that assists with writing generic code.
@@ -385,7 +332,7 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr PermSubSn<5, 4> S4 {};
+        static constexpr detail::PermSubSn<5, 4> S4 {};
 
         /**
          * Deprecated alias for \a S4, which gives fast array-like access to
@@ -394,7 +341,7 @@ class Perm<5> {
          * \deprecated This is identical to `Perm<5>::S4`; see that member
          * for further information.
          */
-        [[deprecated]] static constexpr PermSubSn<5, 4> Sn_1 {};
+        [[deprecated]] static constexpr detail::PermSubSn<5, 4> Sn_1 {};
 
         /**
          * Gives fast array-like access to all possible permutations of four
@@ -425,7 +372,7 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr OrderedS4Lookup orderedS4 {};
+        static constexpr detail::PermSubSn<5, 4, PermOrder::Lex> orderedS4 {};
 
         /**
          * Gives fast array-like access to all possible permutations of three
@@ -458,7 +405,7 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr PermSubSn<5, 3> S3 {};
+        static constexpr detail::PermSubSn<5, 3> S3 {};
 
         /**
          * Gives fast array-like access to all possible permutations of three
@@ -491,7 +438,7 @@ class Perm<5> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr OrderedS3Lookup orderedS3 {};
+        static constexpr detail::PermSubSn<5, 3, PermOrder::Lex> orderedS3 {};
 
         /**
          * Deprecated array-like object that lists all possible permutations of
@@ -516,7 +463,7 @@ class Perm<5> {
          * \deprecated This array is trivial, and will be removed in a future
          * version of Regina.
          */
-        [[deprecated]] static constexpr PermSubSn<5, 2> S2 {};
+        [[deprecated]] static constexpr detail::PermSubSn<5, 2> S2 {};
 
     protected:
         Code2 code2_;
@@ -1734,16 +1681,6 @@ inline constexpr Int Perm<5>::convOrderedUnordered(Int index) {
     // Here we use (index >> 1), which is equivalent to (index / 2).
     //
     return ((((index >> 1) ^ (index / 24)) & 1) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<5> Perm<5>::OrderedS4Lookup::operator[] (int index)
-        const {
-    return PermSubSn<5, 4>::at(Perm<4>::orderedSn[index].SnIndex());
-}
-
-inline constexpr Perm<5> Perm<5>::OrderedS3Lookup::operator[] (int index)
-        const {
-    return PermSubSn<5, 3>::at(Perm<3>::orderedSn[index].SnIndex());
 }
 
 inline constexpr void Perm<5>::precompute() {

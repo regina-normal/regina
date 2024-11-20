@@ -36,7 +36,6 @@
 #include "maths/perm.h"
 #include "utilities/typeutils.h"
 #include "../helpers.h"
-#include "../helpers/arraylike.h"
 #include "../docstrings/maths/perm4.h"
 
 using pybind11::overload_cast;
@@ -148,9 +147,6 @@ void addPerm4(pybind11::module_& m) {
         rdoc::tightDecoding, rdoc::hash);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-
-    regina::python::add_lightweight_array<decltype(Perm<4>::orderedS3)>(c,
-        "_orderedS3", rdoc::OrderedS3Lookup);
 
     RDOC_SCOPE_END
 }

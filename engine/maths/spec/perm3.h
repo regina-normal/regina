@@ -268,7 +268,7 @@ class Perm<3> {
          * \deprecated This array is trivial, and will be removed in a future
          * version of Regina.
          */
-        [[deprecated]] static constexpr PermSubSn<3, 2> S2 {};
+        [[deprecated]] static constexpr detail::PermSubSn<3, 2> S2 {};
 
         /**
          * Deprecated alias for \a S2, which gives fast array-like access to
@@ -277,7 +277,7 @@ class Perm<3> {
          * \deprecated This is identical to `Perm<3>::S2`; see that member
          * for further information.
          */
-        [[deprecated]] static constexpr PermSubSn<3, 2> Sn_1 {};
+        [[deprecated]] static constexpr detail::PermSubSn<3, 2> Sn_1 {};
 
         /**
          * The internal code for the permutation (0,1,2).
@@ -1198,9 +1198,9 @@ class Perm<3> {
 
 template <typename Int>
 inline constexpr Int Perm<3>::convOrderedUnordered(Int index) {
-    // S5 is almost the same as orderedS5, except that we
+    // S3 is almost the same as orderedS3, except that we
     // swap indices 2 <--> 3.
-    return ((index == 2 || index == 3) ? (index ^ 1) : index);
+    return ((index & 2) ? (index ^ 1) : index);
 }
 
 inline constexpr void Perm<3>::precompute() {

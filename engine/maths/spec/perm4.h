@@ -190,33 +190,6 @@ class Perm<4> {
          */
         using Code2 = uint8_t;
 
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<4>::orderedS3.
-         */
-        struct OrderedS3Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS3.  See Perm<4>::orderedS3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * \param index an index between 0 and 5 inclusive.
-             * \return the corresponding permutation in orderedS3.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-
-            /**
-             * Returns the number of permutations in the array orderedS3.
-             *
-             * \python This is called `__len__`, following the expected
-             * Python interface for array-like objects.
-             *
-             * \return the size of this array.
-             */
-            static constexpr Index size() { return 6; }
-        };
-
     public:
         /**
          * Gives fast access to all possible permutations of four elements in
@@ -350,7 +323,7 @@ class Perm<4> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr PermSubSn<4, 3> S3 {};
+        static constexpr detail::PermSubSn<4, 3> S3 {};
 
         /**
          * Deprecated alias for \a S3, which gives fast array-like access to
@@ -359,7 +332,7 @@ class Perm<4> {
          * \deprecated This is identical to `Perm<4>::S3`; see that member
          * for further information.
          */
-        [[deprecated]] static constexpr PermSubSn<4, 3> Sn_1 {};
+        [[deprecated]] static constexpr detail::PermSubSn<4, 3> Sn_1 {};
 
         /**
          * Gives fast array-like access to all possible permutations of three
@@ -391,7 +364,7 @@ class Perm<4> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr OrderedS3Lookup orderedS3 {};
+        static constexpr detail::PermSubSn<4, 3, PermOrder::Lex> orderedS3 {};
 
         /**
          * Deprecated array-like object that lists all possible permutations of
@@ -415,7 +388,7 @@ class Perm<4> {
          * \deprecated This array is trivial, and will be removed in a future
          * version of Regina.
          */
-        [[deprecated]] static constexpr PermSubSn<4, 2> S2 {};
+        [[deprecated]] static constexpr detail::PermSubSn<4, 2> S2 {};
 
     protected:
         Code2 code_;
@@ -1531,11 +1504,6 @@ inline constexpr Int Perm<4>::convOrderedUnordered(Int index) {
     // Specifically, we must interchange all pairs 4i+2 <--> 4i+3.
     //
     return ((index & 2) ? (index ^ 1) : index);
-}
-
-inline constexpr Perm<4> Perm<4>::OrderedS3Lookup::operator[] (int index)
-        const {
-    return PermSubSn<4, 3>::at(Perm<3>::orderedSn[index].SnIndex());
 }
 
 inline constexpr void Perm<4>::precompute() {
