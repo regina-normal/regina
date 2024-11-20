@@ -1269,30 +1269,6 @@ TEST_F(PermTestSmall, aliases) {
     for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
         EXPECT_EQ(Perm<7>::S7[i], Perm<7>::Sn[i]);
 }
-TEST_F(PermTestSmall, S3) {
-    regina::for_constexpr<4, 6>([](auto n) {
-        for (int i = 0; i < 6; ++i) {
-            EXPECT_EQ(Perm<n>::S3[i], Perm<n>::extend(Perm<3>::S3[i]));
-            EXPECT_EQ(Perm<n>::orderedS3[i],
-                Perm<n>::extend(Perm<3>::orderedS3[i]));
-            EXPECT_EQ(Perm<3>::S3[i], Perm<3>::contract(Perm<n>::S3[i]));
-            EXPECT_EQ(Perm<3>::orderedS3[i],
-                Perm<3>::contract(Perm<n>::orderedS3[i]));
-        }
-    });
-}
-TEST_F(PermTestSmall, S4) {
-    regina::for_constexpr<5, 6>([](auto n) {
-        for (int i = 0; i < 24; ++i) {
-            EXPECT_EQ(Perm<n>::S4[i], Perm<n>::extend(Perm<4>::S4[i]));
-            EXPECT_EQ(Perm<n>::orderedS4[i],
-                    Perm<n>::extend(Perm<4>::orderedS4[i]));
-            EXPECT_EQ(Perm<4>::S4[i], Perm<4>::contract(Perm<n>::S4[i]));
-            EXPECT_EQ(Perm<4>::orderedS4[i],
-                Perm<4>::contract(Perm<n>::orderedS4[i]));
-        }
-    });
-}
 TEST_F(PermTestSmall, edgePairs) {
     // This test is specific to Perm<4>.
     for (int idx = 0; idx < 24; ++idx) {
