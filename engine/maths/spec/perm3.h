@@ -219,7 +219,7 @@ class Perm<3> {
          * access and iteration are both extremely fast.
          *
          * Lexicographical ordering treats each permutation \a p as the
-         * ordered pair (\a p[0], \a p[1], \a p[2]).
+         * ordered tuple `(p[0], p[1], p[2])`.
          *
          * This array is different from Perm<3>::Sn, since \a orderedSn accesses
          * permutations in lexicographical order, whereas \a Sn alternates
@@ -265,8 +265,8 @@ class Perm<3> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          *
-         * \deprecated This array is trivial, and will be removed in a future
-         * version of Regina.
+         * \deprecated Instead of `Perm<3>::S2[i]`, you can use
+         * `Perm<3>::extend(Perm<2>::Sn[i])`.
          */
         [[deprecated]] static constexpr detail::PermSubSn<3, 2> S2 {};
 
@@ -274,8 +274,10 @@ class Perm<3> {
          * Deprecated alias for \a S2, which gives fast array-like access to
          * all possible permutations of two elements in a sign-based order.
          *
-         * \deprecated This is identical to `Perm<3>::S2`; see that member
-         * for further information.
+         * See the S2 documentation for further information.
+         *
+         * \deprecated Instead of `Perm<3>::Sn_1[i]`, you can use
+         * `Perm<3>::extend(Perm<2>::Sn[i])`.
          */
         [[deprecated]] static constexpr detail::PermSubSn<3, 2> Sn_1 {};
 

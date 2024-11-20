@@ -251,7 +251,7 @@ class Perm<6> {
          * access and iteration are both extremely fast.
          *
          * Lexicographical ordering treats each permutation \a p as the
-         * ordered pair (\a p[0], ..., \a p[5]).
+         * ordered tuple `(p[0], ..., p[5])`.
          *
          * This array is different from Perm<6>::Sn, since \a orderedSn accesses
          * permutations in lexicographical order, whereas \a Sn alternates

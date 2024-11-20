@@ -261,8 +261,9 @@ class Perm<2> {
          * Deprecated alias for \a S1, which gives fast array-like access to
          * all possible permutations of one element.
          *
-         * \deprecated This is identical to `Perm<2>::S1`; see that member
-         * for further information.
+         * See the S1 documentation for further information.
+         *
+         * \deprecated Just use the identity permutation directly.
          */
         [[deprecated]] static constexpr detail::PermSubSn<2, 1> Sn_1 {};
 

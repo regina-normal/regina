@@ -265,7 +265,7 @@ class Perm<4> {
          * access and iteration are both extremely fast.
          *
          * Lexicographical ordering treats each permutation \a p as the
-         * ordered pair (\a p[0], ..., \a p[3]).
+         * ordered tuple `(p[0], ..., p[3])`.
          *
          * This array is different from Perm<4>::Sn, since \a orderedSn accesses
          * permutations in lexicographical order, whereas \a Sn alternates
@@ -293,78 +293,66 @@ class Perm<4> {
         static constexpr PermSn<4, PermOrder::Lex> orderedS4 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of
-         * three elements in a sign-based order.  In each permutation,
+         * Deprecated array-like object that lists all possible permutations
+         * of three elements in a sign-based order.  In each permutation,
          * 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `S3[i]`.  The index \a i must be
-         * between 0 and 5 inclusive.
+         * between 0 and 5 inclusive.  Unlike \a Sn, you cannot iterate over
+         * \a S3 in C++ (though you can still do this in Python).
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a S3 in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
-         *
-         * The permutations with even indices in the array are the even
-         * permutations, and those with odd indices in the array are the
-         * odd permutations.
-         *
-         * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
-         * all have an \a S3 array; these all store the same six permutations
-         * in the same order (but of course using different data types).
-         *
-         * This array is different from Perm<4>::orderedS3, since \a S3
-         * alternates between even and odd permutations, whereas \a orderedS3
-         * accesses permutations in lexicographical order.
+         * This array uses the same sign-based ordering as `Perm<3>::S3`:
+         * it begins with the identity and alternates between even and odd
+         * permutations.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  This is now a lightweight
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
+         *
+         * \deprecated Instead of `Perm<4>::S3[i]`, you can use
+         * `Perm<4>::extend(Perm<3>::Sn[i])`.
          */
-        static constexpr detail::PermSubSn<4, 3> S3 {};
+        [[deprecated]] static constexpr detail::PermSubSn<4, 3> S3 {};
 
         /**
          * Deprecated alias for \a S3, which gives fast array-like access to
          * all possible permutations of three elements in a sign-based order.
          *
-         * \deprecated This is identical to `Perm<4>::S3`; see that member
-         * for further information.
+         * See the S3 documentation for further information.
+         *
+         * \deprecated Instead of `Perm<4>::Sn_1[i]`, you can use
+         * `Perm<4>::extend(Perm<3>::Sn[i])`.
          */
         [[deprecated]] static constexpr detail::PermSubSn<4, 3> Sn_1 {};
 
         /**
-         * Gives fast array-like access to all possible permutations of three
-         * elements in lexicographical order.  In each permutation, 3 maps to 3.
+         * Deprecated array-like object that lists all possible permutations
+         * of three elements in lexicographical order.  In each permutation,
+         * 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: `orderedS3[i]`.  The index \a i
-         * must be between 0 and 5 inclusive.
+         * must be between 0 and 5 inclusive.  Unlike \a Sn, you cannot iterate
+         * over \a orderedS3 in C++ (though you can still do this in Python).
          *
-         * Unlike \a Sn, you cannot (for now) iterate over \a orderedS3 in C++
-         * (though you can still do this in Python since Python detects and
-         * uses the array-like behaviour).
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * ordered pair (\a p[0], ..., \a p[2]).
-         *
-         * This array is different from Perm<4>::S3, since \a orderedS3 accesses
-         * permutations in lexicographical order, whereas \a S3 alternates
-         * between even and odd permutations.
-         *
-         * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
-         * all have an \a orderedS3 array; these all store the same six
-         * permutations in the same order (but of course using different data
-         * types).
+         * This array uses the same lexicographical ordering as
+         * `Perm<3>::orderedS3`: specifically, it treats each permutation
+         * \a p as the ordered tuple `(p[0], ..., p[2])`.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  This is now a lightweight
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
+         *
+         * \deprecated Instead of `Perm<4>::orderedS3[i]`, you can use
+         * `Perm<4>::extend(Perm<3>::orderedSn[i])`.
          */
-        static constexpr detail::PermSubSn<4, 3, PermOrder::Lex> orderedS3 {};
+        [[deprecated]] static constexpr detail::PermSubSn<4, 3, PermOrder::Lex>
+            orderedS3 {};
 
         /**
          * Deprecated array-like object that lists all possible permutations of
@@ -385,8 +373,8 @@ class Perm<4> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          *
-         * \deprecated This array is trivial, and will be removed in a future
-         * version of Regina.
+         * \deprecated Instead of `Perm<4>::S2[i]`, you can use
+         * `Perm<4>::extend(Perm<2>::Sn[i])`.
          */
         [[deprecated]] static constexpr detail::PermSubSn<4, 2> S2 {};
 
