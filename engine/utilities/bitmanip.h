@@ -41,6 +41,7 @@
 #endif
 
 #include <bit>
+#include <compare>
 #include "utilities/intutils.h"
 
 namespace regina {
