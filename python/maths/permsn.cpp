@@ -106,12 +106,13 @@ void addPermSubSn(pybind11::module_& mod, const char* name) {
 
     auto c = pybind11::class_<Class>(mod, name, rdoc_scope)
         .def("__getitem__", [](Class sub, int i) {
-            // Give Python users range checking, for consistency with
-            // Regina ≤ 7.3 (before the class PermSubSn<n> was introduced).
+            // Give Python users range checking, since the exception that we
+            // throw here allows Python to use iteration.
             if (i < 0 || i >= sub.size())
                 throw pybind11::index_error("Array index out of range");
             return sub[i];
-        })
+        }, rdoc::__array)
+        .def_static("at", &Class::at, rdoc::at)
         .def("size", &Class::size, rdoc::size)
         .def("__len__", &Class::size, rdoc::size)
     ;

@@ -726,6 +726,19 @@ struct PermSubSn {
     constexpr Perm<n> operator[] (int index) const;
 
     /**
+     * Returns the permutation at the given index.
+     *
+     * This is identical to using the square bracket operator; see that
+     * operator for further details.  This function at() is provided for
+     * convenience as a static function, which means it can be used in the
+     * absence of a concrete PermSubSn object.
+     *
+     * \param index an index between 0 and `m!-1` inclusive.
+     * \return the corresponding permutation of \a m objects.
+     */
+    static constexpr Perm<n> at(int index);
+
+    /**
      * Returns the total number of permutations on \a m objects.
      * This of course is just `m!`.
      *
@@ -734,7 +747,7 @@ struct PermSubSn {
      *
      * \return the total number of permutations.
      */
-    static constexpr int size();
+    constexpr int size();
 
     /**
      * A trivial equality test that always returns \c true.
@@ -758,7 +771,11 @@ struct PermSubSn<n, 1> {
         return {};
     }
 
-    static constexpr int size() {
+    static constexpr Perm<n> at(int) {
+        return {};
+    }
+
+    constexpr int size() {
         return 1;
     }
 
@@ -775,7 +792,11 @@ struct PermSubSn<n, 2> {
         return (index == 0 ? Perm<n>() : Perm<n>(0, 1) /* pair swap */);
     }
 
-    static constexpr int size() {
+    static constexpr Perm<n> at(int index) {
+        return (index == 0 ? Perm<n>() : Perm<n>(0, 1) /* pair swap */);
+    }
+
+    constexpr int size() {
         return 2;
     }
 
@@ -802,7 +823,11 @@ struct PermSubSn<n, 3> {
             return Perm<n>::fromPermCode2(table[index]);
         }
 
-        static constexpr int size() {
+        static constexpr Perm<n> at(int index) {
+            return Perm<n>::fromPermCode2(table[index]);
+        }
+
+        constexpr int size() {
             return 6;
         }
 
@@ -836,7 +861,11 @@ struct PermSubSn<n, 4> {
             return Perm<n>::fromPermCode2(table[index]);
         }
 
-        static constexpr int size() {
+        static constexpr Perm<n> at(int index) {
+            return Perm<n>::fromPermCode2(table[index]);
+        }
+
+        constexpr int size() {
             return 24;
         }
 

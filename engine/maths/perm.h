@@ -2604,8 +2604,7 @@ inline constexpr Perm<4> Perm<4>::extend(Perm<2> p) {
 
 template <>
 inline constexpr Perm<4> Perm<4>::extend(Perm<3> p) {
-    // This is implemented as an array lookup.
-    return Perm<4>::S3[p.S3Index()];
+    return PermSubSn<4, 3>::at(p.SnIndex());
 }
 
 template <int k>
@@ -2630,14 +2629,12 @@ inline constexpr Perm<5> Perm<5>::extend(Perm<2> p) {
 
 template <>
 inline constexpr Perm<5> Perm<5>::extend(Perm<3> p) {
-    // This is implemented as an array lookup.
-    return Perm<5>::S3[p.S3Index()];
+    return PermSubSn<5, 3>::at(p.SnIndex());
 }
 
 template <>
 inline constexpr Perm<5> Perm<5>::extend(Perm<4> p) {
-    // This is implemented as an array lookup.
-    return Perm<5>::S4[p.S4Index()];
+    return PermSubSn<5, 4>::at(p.SnIndex());
 }
 
 template <int k>

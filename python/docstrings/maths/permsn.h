@@ -306,6 +306,21 @@ always describe the same sequence of permutations in the same order.
 Returns:
     ``True``, always.)doc";
 
+// Docstring regina::python::doc::PermSubSn_::at
+static const char *at =
+R"doc(Returns the permutation at the given index.
+
+This is identical to using the square bracket operator; see that
+operator for further details. This function at() is provided for
+convenience as a static function, which means it can be used in the
+absence of a concrete PermSubSn object.
+
+Parameter ``index``:
+    an index between 0 and ``m!-1`` inclusive.
+
+Returns:
+    the corresponding permutation of *m* objects.)doc";
+
 // Docstring regina::python::doc::PermSubSn_::size
 static const char *size =
 R"doc(Returns the total number of permutations on *m* objects. This of
