@@ -1,0 +1,100 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-oneeff">
+ <refmeta>
+  <refentrytitle>oneeff</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>oneeff</refname>
+  <refpurpose>Is a triangulation 1-efficient?</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+oneeff ::=</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>value</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.4</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-oneeff; element stores whether or not the parent
+   triangulation is 1-efficient.
+  </para>
+  <para>
+   For now, 1-efficiency is only tested for ideal triangulations in which
+   every vertex link is a torus or Klein bottle.  In this setting, an ideal
+   triangulation <replaceable>T</replaceable> is
+   <firstterm>1-efficient</firstterm> if, amongst all closed embedded normal
+   surfaces in <replaceable>T</replaceable>, there are no surfaces at all of
+   positive Euler characteristic, and the only surfaces with zero Euler
+   characteristic are vertex linking.
+  </para>
+  <para>
+   1-efficiency testing might be expanded to a broader class of triangulations
+   in future versions of &regina;; see the calculation engine documentation for
+   details.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>oneeff</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-tri;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>oneeff</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>value</sgmltag></term>
+    <listitem>
+     <para>
+      Either <literal>T</literal> or <literal>F</literal>, according to
+      whether the parent triangulation is or is not 1-efficient as described
+      above.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+</refentry>

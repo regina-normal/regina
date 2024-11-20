@@ -877,8 +877,6 @@
 		0553FB962AEBE86300BE89A7 /* automorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8125AC22A9003BAF5C /* automorph.cpp */; };
 		0553FB972AEBE86300BE89A7 /* general.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8425AC22AA003BAF5C /* general.cpp */; };
 		0553FBA32AF2544E00BE89A7 /* TreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA22AF2544E00BE89A7 /* TreeView.swift */; };
-		0553FBA52AF2BDA500BE89A7 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA42AF2BDA500BE89A7 /* simplify.cpp */; };
-		0553FBA62AF2BDAD00BE89A7 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA42AF2BDA500BE89A7 /* simplify.cpp */; };
 		0553FBA92AF50F0700BE89A7 /* PacketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBA82AF50F0700BE89A7 /* PacketWrapper.swift */; };
 		0553FBAB2AF5F38F00BE89A7 /* closed-hyp-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECB19F9360200855238 /* closed-hyp-census.rga */; };
 		0553FBAC2AF5F38F00BE89A7 /* closed-nor-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05998ECC19F9360200855238 /* closed-nor-census.rga */; };
@@ -3135,7 +3133,6 @@
 		0553FBA02AF2117300BE89A7 /* hash.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.out; sourceTree = "<group>"; };
 		0553FBA12AF2117300BE89A7 /* flags.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.test; sourceTree = "<group>"; };
 		0553FBA22AF2544E00BE89A7 /* TreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeView.swift; sourceTree = "<group>"; };
-		0553FBA42AF2BDA500BE89A7 /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		0553FBA82AF50F0700BE89A7 /* PacketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketWrapper.swift; sourceTree = "<group>"; };
 		0553FBB32AF680AE00BE89A7 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		0553FBB52AF6A4E700BE89A7 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
@@ -4410,6 +4407,10 @@
 		05E221DF2CEC2545009D5D4E /* whitehead.tri */ = {isa = PBXFileReference; lastKnownFileType = text; path = whitehead.tri; sourceTree = "<group>"; };
 		05E221E02CEC258D009D5D4E /* poincare.tri */ = {isa = PBXFileReference; lastKnownFileType = text; path = poincare.tri; sourceTree = "<group>"; };
 		05E221E12CEC258D009D5D4E /* runbasic.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = runbasic.in; sourceTree = "<group>"; };
+		05E221E22CEE104E009D5D4E /* data-component.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-component.docbook"; sourceTree = "<group>"; };
+		05E221E32CEE106D009D5D4E /* data-node.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-node.docbook"; sourceTree = "<group>"; };
+		05E221E42CEE107B009D5D4E /* data-spatiallink.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-spatiallink.docbook"; sourceTree = "<group>"; };
+		05E221E52CEE124E009D5D4E /* data-oneeff.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-oneeff.docbook"; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
@@ -5840,6 +5841,7 @@
 				0549B4AC2907D39200C911AF /* data-code.docbook */,
 				05685FC51F9710FA00085B44 /* data-compact-filter.docbook */,
 				05685FA41F9710F000085B44 /* data-compact-surface.docbook */,
+				05E221E22CEE104E009D5D4E /* data-component.docbook */,
 				0549B4AA2907D39100C911AF /* data-components.docbook */,
 				05685FB61F9710F500085B44 /* data-compressingdisc.docbook */,
 				05685FA31F9710F000085B44 /* data-connected.docbook */,
@@ -5868,6 +5870,8 @@
 				05685FB21F9710F400085B44 /* data-irreducible.docbook */,
 				05685FB11F9710F400085B44 /* data-line.docbook */,
 				0549B49F2907D38F00C911AF /* data-link.docbook */,
+				05E221E32CEE106D009D5D4E /* data-node.docbook */,
+				05E221E52CEE124E009D5D4E /* data-oneeff.docbook */,
 				05685FDA1F97110000085B44 /* data-op.docbook */,
 				05685FBA1F9710F600085B44 /* data-orbl-filter.docbook */,
 				05685FA51F9710F000085B44 /* data-orbl-surface.docbook */,
@@ -5903,6 +5907,7 @@
 				05685FE81F97110400085B44 /* data-solidtorus.docbook */,
 				05685FAB1F9710F200085B44 /* data-spanstrict.docbook */,
 				05685FAF1F9710F300085B44 /* data-spantaut.docbook */,
+				05E221E42CEE107B009D5D4E /* data-spatiallink.docbook */,
 				05685FE21F97110200085B44 /* data-splitsfce.docbook */,
 				05685FD21F9710FE00085B44 /* data-struct.docbook */,
 				05685FEC1F97110500085B44 /* data-surface.docbook */,
@@ -8345,7 +8350,6 @@
 			children = (
 				05F09FC71DBF01B600117BFC /* CMakeLists.txt */,
 				05F09FC81DBF01B600117BFC /* component2.h */,
-				0553FBA42AF2BDA500BE89A7 /* simplify.cpp */,
 				05F09FCC1DBF01B600117BFC /* skeleton.cpp */,
 				05F09FCD1DBF01B600117BFC /* triangle2.h */,
 				05F09FCE1DBF01B600117BFC /* triangulation2.cpp */,
@@ -9787,7 +9791,6 @@
 				0553FAF92AEBE6ED00BE89A7 /* gauss.cpp in Sources */,
 				0553FAA02AEBE3B500BE89A7 /* simplifyglobal.cpp in Sources */,
 				0553FAE82AEBE6C400BE89A7 /* treeconstraint.cpp in Sources */,
-				0553FBA52AF2BDA500BE89A7 /* simplify.cpp in Sources */,
 				0553FB842AEBE86300BE89A7 /* offload_handler.cpp in Sources */,
 				05A628142AE920510049739E /* memstream.cpp in Sources */,
 				05A628272AE921740049739E /* stringutils.cpp in Sources */,
@@ -10343,7 +10346,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0553FBA62AF2BDAD00BE89A7 /* simplify.cpp in Sources */,
 				059802E226683C6D002D5D57 /* xmlpacketreader.cpp in Sources */,
 				05C1BEDA1DCA89DA007C946B /* triangulation8.cpp in Sources */,
 				05C1BEAC1DCA7CA9007C946B /* boundary4.cpp in Sources */,
