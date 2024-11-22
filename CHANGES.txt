@@ -575,6 +575,16 @@ Version 7.4  [ (to be announced) ]
               + New routine has20() for checking only.
               + New read-only routine with20() that (if possible) returns
                 a new triangulation with the relevant move performed.
+            - Regarding boundary shelling moves:
+              + These moves are likewise now available for triangulations of
+                all dimensions.
+              + The (check, perform) variant of shellBoundary() is deprecated.
+                You should now call shellBoundary() _without_ extra
+                check/perform arguments: the function will always check for
+                and (if possible) perform the relevant move.
+              + New routine hasShellBoundary() for checking only.
+              + New read-only routine withShellBoundary() that (if possible)
+                returns a new triangulation with the relevant move performed.
             - New routine randomiseLabelling().
             - New routine hash(), which uses the tight encoding.
             - New routines dot() and writeDot().
@@ -599,9 +609,9 @@ Version 7.4  [ (to be announced) ]
               inner class ChangeAndClearSpan.
         Class Triangulation<3>:
             - New routines has44(), has21(), has02(), hasOpenBook(),
-              hasCloseBook(), hasShellBoundary(), hasCollapseEdge().
+              hasCloseBook(), hasCollapseEdge().
             - New routines with44(), with21(), with02(), withOpenBook(),
-              withCloseBook(), withShellBoundary(), withCollapseEdge().
+              withCloseBook(), withCollapseEdge().
             - New routines isOneEfficient() and knowsOneEfficient().  For now,
               1-efficiency testing is only available for ideal triangulations.
             - Renamed intelligentSimplify() to simplify().  The old name is
@@ -639,10 +649,10 @@ Version 7.4  [ (to be announced) ]
               triangulation happens on the calling thread.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
-            - New routines has44(), hasOpenBook(), hasShellBoundary(),
-              hasCollapseEdge(), hasSnapEdge().
-            - New routines with44(), withOpenBook(), withShellBoundary(),
-              withCollapseEdge(), withSnapEdge().
+            - New routines has44(), hasOpenBook(), hasCollapseEdge(),
+              hasSnapEdge().
+            - New routines with44(), withOpenBook(), withCollapseEdge(),
+              withSnapEdge().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer

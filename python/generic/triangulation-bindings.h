@@ -232,12 +232,19 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("move20", &Triangulation<dim>::template move20<0>, rbase::move20)
         .def("move20", &Triangulation<dim>::template move20<1>, rbase::move20)
         .def("move20", &Triangulation<dim>::template move20<2>, rbase::move20)
+        .def("shellBoundary",
+            overload_cast<Simplex<dim>*>(&Triangulation<dim>::shellBoundary),
+            rbase::shellBoundary)
         .def("has20", &Triangulation<dim>::template has20<0>, rbase::has20)
         .def("has20", &Triangulation<dim>::template has20<1>, rbase::has20)
         .def("has20", &Triangulation<dim>::template has20<2>, rbase::has20)
+        .def("hasShellBoundary", &Triangulation<dim>::hasShellBoundary,
+            rbase::hasShellBoundary)
         .def("with20", &Triangulation<dim>::template with20<0>, rbase::with20)
         .def("with20", &Triangulation<dim>::template with20<1>, rbase::with20)
         .def("with20", &Triangulation<dim>::template with20<2>, rbase::with20)
+        .def("withShellBoundary", &Triangulation<dim>::withShellBoundary,
+            rbase::withShellBoundary)
         #if defined(__GNUC__)
         // The following routines are deprecated, but we still need to bind
         // them.  Silence the inevitable deprecation warnings that will occur.
@@ -263,6 +270,13 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
+        .def("shellBoundary",
+            overload_cast<Simplex<dim>*, bool, bool>(
+                &Triangulation<dim>::shellBoundary),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::shellBoundary_2) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif

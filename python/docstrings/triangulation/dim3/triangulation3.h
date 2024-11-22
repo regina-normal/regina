@@ -1075,24 +1075,6 @@ Parameter ``t``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasShellBoundary
-static const char *hasShellBoundary =
-R"doc(Determines whether it is possible to perform a boundary shelling move
-on the given tetrahedron, without violating any simplex and/or facet
-locks.
-
-For more detail on boundary shelling moves and when they can be
-performed, see shellBoundary().
-
-Precondition:
-    The given tetrahedron is a tetrahedron of this triangulation.
-
-Parameter ``t``:
-    the candidate tetrahedron upon which to perform the move.
-
-Returns:
-    ``True`` if and only if the requested move can be performed.)doc";
-
 // Docstring regina::python::doc::Triangulation_::hasSimpleCompressingDisc
 static const char *hasSimpleCompressingDisc =
 R"doc(Searches for a "simple" compressing disc inside this triangulation.
@@ -3115,68 +3097,6 @@ Parameter ``filename``:
 Returns:
     ``True`` if and only if the file was successfully written.)doc";
 
-// Docstring regina::python::doc::Triangulation_::shellBoundary
-static const char *shellBoundary =
-R"doc(Checks the eligibility of and/or performs a boundary shelling move on
-the given tetrahedron. This involves simply popping off a tetrahedron
-that touches the boundary. This can be done if:
-
-* all edges of the tetrahedron are valid;
-
-* precisely one, two or three faces of the tetrahedron lie in the
-  boundary;
-
-* if one face lies in the boundary, then the opposite vertex does not
-  lie in the boundary, and no two of the remaining three edges are
-  identified;
-
-* if two faces lie in the boundary, then the remaining edge does not
-  lie in the boundary, and the remaining two faces of the tetrahedron
-  are not identified.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-simplex and/or facet locks (see Simplex<3>::lock() and
-Simplex<3>::lockFacet() for further details on locks).
-
-If this triangulation is currently oriented, then this operation will
-(trivially) preserve the orientation.
-
-Note that after performing this move, all skeletal objects (triangles,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects can no longer be used.
-
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any simplex and/or facet locks.
-
-Precondition:
-    The given tetrahedron is a tetrahedron of this triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a simplex or facet lock, and *check* was
-    passed as ``False``. This exception will be thrown before any
-    changes are made. See Simplex<3>::lock() and
-    Simplex<3>::lockFacet() for further details on how locks work and
-    what their implications are.
-
-Parameter ``t``:
-    the tetrahedron upon which to perform the move.
-
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
-
-Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
-
-Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.)doc";
-
 // Docstring regina::python::doc::Triangulation_::simplify
 static const char *simplify =
 R"doc(Attempts to simplify this triangulation as intelligently as possible
@@ -3998,28 +3918,6 @@ Precondition:
 
 Parameter ``t``:
     the triangle about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::withShellBoundary
-static const char *withShellBoundary =
-R"doc(If possible, returns the triangulation obtained by performing a
-boundary shelling move on the given tetrahedron. If such a move is not
-allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on boundary shelling moves and when they can be
-performed, see shellBoundary().
-
-Precondition:
-    The given tetrahedron is a tetrahedron of this triangulation.
-
-Parameter ``t``:
-    the tetrahedron upon which to perform the move.
 
 Returns:
     The new triangulation obtained by performing the requested move,

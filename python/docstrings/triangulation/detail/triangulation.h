@@ -1245,6 +1245,25 @@ Parameter ``f``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::hasShellBoundary
+constexpr const char *hasShellBoundary =
+R"doc(Determines whether it is possible to perform a boundary shelling move
+upon the given top-dimensional simplex of this triangulation, without
+violating any simplex and/or facet locks.
+
+For more detail on boundary shelling moves and when they can be
+performed, see shellBoundary().
+
+Precondition:
+    The given simplex is a simplex of this triangulation.
+
+Parameter ``s``:
+    the top-dimensional simplex upon which to perform the candidate
+    move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::homology
 constexpr const char *homology =
 R"doc(Returns the *k*th homology group of this triangulation, treating any
@@ -2337,6 +2356,104 @@ Precondition:
 Parameter ``pres``:
     a new presentation of the fundamental group of this triangulation.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::shellBoundary
+constexpr const char *shellBoundary =
+R"doc(If possible, performs a boundary shelling move upon the given top-
+dimensional simplex of this triangulation. This involves popping off a
+top-dimensional simplex with one or more facets on the boundary.
+
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as outlined below), _and_ it will not violate any
+simplex and/or facet locks. See Simplex<dim>::lock() and
+Simplex<dim>::lockFacet() for further details on locks.
+
+In order to not change the topology, we require the conditions below.
+These are conditions are stricter than necessary, but the resulting
+"lost opportunities" only affect invalid triangulations.
+
+In this list of conditions, we let *s* denote the given top-
+dimensional simplex, and we let *f* denote the face of *s* opposite
+the intersection of all its boundary facets. For example, for a
+4-manifold triangulation where *s* has exactly two boundary facets
+meeting in a common boundary triangle, *f* would denote the edge of
+*s* opposite this common triangle. Put differently: *f* is the
+(unique) smallest face of *s* that _might_ not be entirely contained
+in the triangulation boundary. Note that the dimension of *f* will be
+one less than the number of boundary facets of *s*.
+
+Having said all of this, our conditions are:
+
+* all faces of all dimensions of the simplex *s*, except possibly its
+  vertices, are valid;
+
+* at least one but not all of the facets of *s* lie in the boundary of
+  the triangulation;
+
+* the face *f* (defined above) does not lie entirely in the boundary
+  of the triangulation;
+
+* for each facial dimension *k*, no two *k*-faces of *s* that both
+  contain *f* are identified (testing this for ``k = dim(f)+1`` is
+  enough to ensure it holds for all *k*).
+
+If this triangulation is currently oriented, then this operation will
+(trivially) preserve the orientation.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects can no longer be used.
+
+Precondition:
+    The given simplex is a simplex of this triangulation.
+
+Parameter ``s``:
+    the top-dimensional simplex upon which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::shellBoundary_2
+constexpr const char *shellBoundary_2 =
+R"doc(Deprecated routine that tests for and optionally performs a boundary
+shelling move on the given top-dimensional simplex.
+
+For more detail on boundary shelling moves and when they can be
+performed, see the variant of shellBoundary() without the extra
+boolean arguments.
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex and/or facet locks (see
+Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
+on locks). If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether a such move is possible, call
+    hasShellBoundary(). If you wish to both check and perform the
+    move, call shellBoundary() without the two extra boolean
+    arguments.
+
+Precondition:
+    The given simplex is a simplex of this triangulation.
+
+Parameter ``s``:
+    the top-dimensional simplex upon which to perform the move.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::sig
 constexpr const char *sig =
 R"doc(Alias for isoSig(), which constructs the isomorphism signature of the
@@ -2797,6 +2914,29 @@ Template parameter ``k``:
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
+
+Returns:
+    The new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::withShellBoundary
+constexpr const char *withShellBoundary =
+R"doc(If possible, returns the triangulation obtained by performing a
+boundary shelling move on the given top-dimensional simplex of this
+triangulation. If such a move is not allowed, or if such a move would
+violate any simplex and/or facet locks, then this routine returns no
+value.
+
+This triangulation will not be changed.
+
+For more detail on boundary shelling moves and when they can be
+performed, see shellBoundary().
+
+Precondition:
+    The given simplex is a simplex of this triangulation.
+
+Parameter ``s``:
+    the top-dimensional simplex upon which to perform the move.
 
 Returns:
     The new triangulation obtained by performing the requested move,

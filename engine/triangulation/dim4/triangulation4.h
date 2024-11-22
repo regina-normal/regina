@@ -995,69 +995,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool openBook(Tetrahedron<4>* t,
             bool check = true, bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a boundary shelling
-         * move on the given pentachoron.
-         * This involves simply popping off a pentachoron that touches
-         * the boundary.
-         * This can be done if:
-         *
-         * - all edges and triangles of the pentachoron are valid;
-         *
-         * - precisely one, two, three or four facets of the pentachoron
-         *   lie in the boundary;
-         *
-         * - if one facet lies in the boundary, then the opposite vertex
-         *   does not lie in the boundary, and no two of the remaining
-         *   four edges are identified;
-         *
-         * - if two facets lie in the boundary, then the edge that sits
-         *   opposite their common triangle does not lie in the boundary, and
-         *   no two of the remaining three triangles are identified;
-         *
-         * - if three facets lie in the boundary, then the triangle that sits
-         *   opposite their common edge does not lie in the boundary, and
-         *   the remaining two facets of the tetrahedron are not identified.
-         *
-         * The validity condition in particular is stronger than it
-         * needs to be, but the resulting "lost opportunities" only
-         * affect invalid triangulations.
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal and will not
-         * violate any simplex and/or facet locks (see Simplex<4>::lock()
-         * and Simplex<4>::lockFacet() for further details on locks).
-         *
-         * If this triangulation is currently oriented, then this operation
-         * will (trivially) preserve the orientation.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (edges, components, etc.) will be reconstructed, which means
-         * that any pointers to old skeletal objects can no longer be used.
-         *
-         * \pre If the move is being performed and no check is being run, it
-         * must be known in advance that the move is legal and will not
-         * violate any simplex and/or facet locks.
-         * \pre The given pentachoron is a pentachoron of this triangulation.
-         *
-         * \exception LockViolation This move would violate a simplex or facet
-         * lock, and \a check was passed as \c false.  This exception will be
-         * thrown before any changes are made.  See Simplex<4>::lock() and
-         * Simplex<4>::lockFacet() for further details on how locks work and
-         * what their implications are.
-         *
-         * \param p the pentachoron upon which to perform the move.
-         * \param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * \param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * \return If \a check is \a true, this function returns \c true if and
-         * only if the requested move may be performed without changing the
-         * topology of the manifold or violating any locks.  If \a check is
-         * \c false, this function simply returns \c true.
-         */
-        bool shellBoundary(Pentachoron<4>* p,
-            bool check = true, bool perform = true);
-        /**
          * Checks the eligibility of and/or performs a collapse of
          * an edge in such a way that the topology of the manifold
          * does not change and the number of vertices of the triangulation
@@ -1206,20 +1143,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool hasOpenBook(Tetrahedron<4>* t) const;
         /**
-         * Determines whether it is possible to perform a boundary shelling
-         * move on the given pentachoron, without violating any simplex and/or
-         * facet locks.
-         *
-         * For more detail on boundary shelling moves and when they can be
-         * performed, see shellBoundary().
-         *
-         * \pre The given pentachoron is a pentachoron of this triangulation.
-         *
-         * \param p the candidate pentachoron upon which to perform the move.
-         * \return \c true if and only if the requested move can be performed.
-         */
-        bool hasShellBoundary(Pentachoron<4>* p) const;
-        /**
          * Determines whether it is possible to collapse the given edge of
          * this triangulation, without violating any simplex and/or facet locks.
          *
@@ -1283,25 +1206,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<4>> withOpenBook(Tetrahedron<4>* t) const;
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * boundary shelling move on the given pentachoron.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on boundary shelling moves and when they can be
-         * performed, see shellBoundary().
-         *
-         * \pre The given pentachoron is a pentachoron of this triangulation.
-         *
-         * \param p the pentachoron upon which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<4>> withShellBoundary(Pentachoron<4>* p)
-            const;
         /**
          * If possible, returns the triangulation obtained by collapsing the
          * given edge of this triangulation.
@@ -1632,10 +1536,6 @@ inline bool Triangulation<4>::hasOpenBook(Tetrahedron<4>* t) const {
     return const_cast<Triangulation<4>*>(this)->openBook(t, true, false);
 }
 
-inline bool Triangulation<4>::hasShellBoundary(Pentachoron<4>* p) const {
-    return const_cast<Triangulation<4>*>(this)->shellBoundary(p, true, false);
-}
-
 inline bool Triangulation<4>::hasCollapseEdge(Edge<4>* e) const {
     return const_cast<Triangulation<4>*>(this)->collapseEdge(e, true, false);
 }
@@ -1661,16 +1561,6 @@ inline std::optional<Triangulation<4>> Triangulation<4>::withOpenBook(
 
     std::optional<Triangulation<4>> ans(std::in_place, *this);
     ans->openBook(ans->translate(t), false, true);
-    return ans;
-}
-
-inline std::optional<Triangulation<4>> Triangulation<4>::withShellBoundary(
-        Pentachoron<4>* p) const {
-    if (! hasShellBoundary(p))
-        return {};
-
-    std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->shellBoundary(ans->simplex(p->index()), false, true);
     return ans;
 }
 

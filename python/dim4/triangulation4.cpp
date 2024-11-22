@@ -380,11 +380,9 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::openBook)
-        .def("shellBoundary", &Triangulation<4>::shellBoundary,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::shellBoundary)
+        .def("shellBoundary",
+            overload_cast<Simplex<4>*>(&Triangulation<4>::shellBoundary),
+            rbase::shellBoundary)
         .def("collapseEdge", &Triangulation<4>::collapseEdge,
             pybind11::arg(),
             pybind11::arg("check") = true,
@@ -406,7 +404,7 @@ void addTriangulation4(pybind11::module_& m) {
         .def("has44", &Triangulation<4>::has44, rdoc::has44)
         .def("hasOpenBook", &Triangulation<4>::hasOpenBook, rdoc::hasOpenBook)
         .def("hasShellBoundary", &Triangulation<4>::hasShellBoundary,
-            rdoc::hasShellBoundary)
+            rbase::hasShellBoundary)
         .def("hasCollapseEdge", &Triangulation<4>::hasCollapseEdge,
             rdoc::hasCollapseEdge)
         .def("hasSnapEdge", &Triangulation<4>::hasSnapEdge, rdoc::hasSnapEdge)
@@ -427,7 +425,7 @@ void addTriangulation4(pybind11::module_& m) {
         .def("withOpenBook", &Triangulation<4>::withOpenBook,
             rdoc::withOpenBook)
         .def("withShellBoundary", &Triangulation<4>::withShellBoundary,
-            rdoc::withShellBoundary)
+            rbase::withShellBoundary)
         .def("withCollapseEdge", &Triangulation<4>::withCollapseEdge,
             rdoc::withCollapseEdge)
         .def("withSnapEdge", &Triangulation<4>::withSnapEdge,
@@ -492,6 +490,13 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
+        .def("shellBoundary",
+            overload_cast<Simplex<4>*, bool, bool>(
+                &Triangulation<4>::shellBoundary),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::shellBoundary_2) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif

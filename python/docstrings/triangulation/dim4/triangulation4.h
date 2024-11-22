@@ -336,24 +336,6 @@ Parameter ``t``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasShellBoundary
-static const char *hasShellBoundary =
-R"doc(Determines whether it is possible to perform a boundary shelling move
-on the given pentachoron, without violating any simplex and/or facet
-locks.
-
-For more detail on boundary shelling moves and when they can be
-performed, see shellBoundary().
-
-Precondition:
-    The given pentachoron is a pentachoron of this triangulation.
-
-Parameter ``p``:
-    the candidate pentachoron upon which to perform the move.
-
-Returns:
-    ``True`` if and only if the requested move can be performed.)doc";
-
 // Docstring regina::python::doc::Triangulation_::hasSnapEdge
 static const char *hasSnapEdge =
 R"doc(Determines whether it is possible to snap together the endpoints of
@@ -770,76 +752,6 @@ Returns:
     terminating the search early), or ``False`` if the search ran to
     completion.)doc";
 
-// Docstring regina::python::doc::Triangulation_::shellBoundary
-static const char *shellBoundary =
-R"doc(Checks the eligibility of and/or performs a boundary shelling move on
-the given pentachoron. This involves simply popping off a pentachoron
-that touches the boundary. This can be done if:
-
-* all edges and triangles of the pentachoron are valid;
-
-* precisely one, two, three or four facets of the pentachoron lie in
-  the boundary;
-
-* if one facet lies in the boundary, then the opposite vertex does not
-  lie in the boundary, and no two of the remaining four edges are
-  identified;
-
-* if two facets lie in the boundary, then the edge that sits opposite
-  their common triangle does not lie in the boundary, and no two of
-  the remaining three triangles are identified;
-
-* if three facets lie in the boundary, then the triangle that sits
-  opposite their common edge does not lie in the boundary, and the
-  remaining two facets of the tetrahedron are not identified.
-
-The validity condition in particular is stronger than it needs to be,
-but the resulting "lost opportunities" only affect invalid
-triangulations.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-simplex and/or facet locks (see Simplex<4>::lock() and
-Simplex<4>::lockFacet() for further details on locks).
-
-If this triangulation is currently oriented, then this operation will
-(trivially) preserve the orientation.
-
-Note that after performing this move, all skeletal objects (edges,
-components, etc.) will be reconstructed, which means that any pointers
-to old skeletal objects can no longer be used.
-
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any simplex and/or facet locks.
-
-Precondition:
-    The given pentachoron is a pentachoron of this triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a simplex or facet lock, and *check* was
-    passed as ``False``. This exception will be thrown before any
-    changes are made. See Simplex<4>::lock() and
-    Simplex<4>::lockFacet() for further details on how locks work and
-    what their implications are.
-
-Parameter ``p``:
-    the pentachoron upon which to perform the move.
-
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
-
-Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
-
-Returns:
-    If *check* is *true*, this function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, this function simply returns ``True``.)doc";
-
 // Docstring regina::python::doc::Triangulation_::simplify
 static const char *simplify =
 R"doc(Attempts to simplify this triangulation as intelligently as possible
@@ -1220,28 +1132,6 @@ Precondition:
 
 Parameter ``t``:
     the tetrahedron about which to perform the move.
-
-Returns:
-    The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::withShellBoundary
-static const char *withShellBoundary =
-R"doc(If possible, returns the triangulation obtained by performing a
-boundary shelling move on the given pentachoron. If such a move is not
-allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
-
-This triangulation will not be changed.
-
-For more detail on boundary shelling moves and when they can be
-performed, see shellBoundary().
-
-Precondition:
-    The given pentachoron is a pentachoron of this triangulation.
-
-Parameter ``p``:
-    the pentachoron upon which to perform the move.
 
 Returns:
     The new triangulation obtained by performing the requested move,

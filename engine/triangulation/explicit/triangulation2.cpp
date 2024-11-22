@@ -71,6 +71,9 @@ template bool TriangulationBase<2>::internalPachner(Face<2, 2>*, bool, bool);
 
 template bool TriangulationBase<2>::internal20(Face<2, 0>*, bool, bool);
 
+template bool TriangulationBase<2>::internalShellBoundary(Simplex<2>*,
+    bool, bool);
+
 template void TriangulationBase<2>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<2>::writeTextLong(std::ostream&) const;
 

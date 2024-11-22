@@ -2540,61 +2540,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool closeBook(Edge<3>* e, bool check = true, bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a boundary shelling
-         * move on the given tetrahedron.
-         * This involves simply popping off a tetrahedron that touches
-         * the boundary.
-         * This can be done if:
-         *
-         * - all edges of the tetrahedron are valid;
-         *
-         * - precisely one, two or three faces of the tetrahedron lie in
-         *   the boundary;
-         *
-         * - if one face lies in the boundary, then the opposite vertex
-         *   does not lie in the boundary, and no two of the remaining three
-         *   edges are identified;
-         *
-         * - if two faces lie in the boundary, then the remaining edge does
-         *   not lie in the boundary, and the remaining two faces of the
-         *   tetrahedron are not identified.
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal and will not
-         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
-         * Simplex<3>::lockFacet() for further details on locks).
-         *
-         * If this triangulation is currently oriented, then this operation
-         * will (trivially) preserve the orientation.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (triangles, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects can no longer be used.
-         *
-         * \pre If the move is being performed and no check is being run, it
-         * must be known in advance that the move is legal and will not
-         * violate any simplex and/or facet locks.
-         * \pre The given tetrahedron is a tetrahedron of this triangulation.
-         *
-         * \exception LockViolation This move would violate a simplex or facet
-         * lock, and \a check was passed as \c false.  This exception will be
-         * thrown before any changes are made.  See Simplex<3>::lock() and
-         * Simplex<3>::lockFacet() for further details on how locks work and
-         * what their implications are.
-         *
-         * \param t the tetrahedron upon which to perform the move.
-         * \param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * \param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true if and
-         * only if the requested move may be performed without changing the
-         * topology of the manifold or violating any locks.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool shellBoundary(Tetrahedron<3>* t,
-                bool check = true, bool perform = true);
-        /**
          * Checks the eligibility of and/or performs a collapse of an edge
          * between two distinct vertices.  This operation (when it is allowed)
          * does not change the topology of the manifold, decreases the
@@ -2785,20 +2730,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool hasCloseBook(Edge<3>* e) const;
         /**
-         * Determines whether it is possible to perform a boundary shelling
-         * move on the given tetrahedron, without violating any simplex and/or
-         * facet locks.
-         *
-         * For more detail on boundary shelling moves and when they can be
-         * performed, see shellBoundary().
-         *
-         * \pre The given tetrahedron is a tetrahedron of this triangulation.
-         *
-         * \param t the candidate tetrahedron upon which to perform the move.
-         * \return \c true if and only if the requested move can be performed.
-         */
-        bool hasShellBoundary(Tetrahedron<3>* t) const;
-        /**
          * Determines whether it is possible to collapse the given edge of
          * this triangulation, without violating any simplex and/or facet locks.
          *
@@ -2966,25 +2897,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<3>> withCloseBook(Edge<3>* e) const;
-        /**
-         * If possible, returns the triangulation obtained by performing a
-         * boundary shelling move on the given tetrahedron.
-         * If such a move is not allowed, or if such a move would violate any
-         * simplex and/or facet locks, then this routine returns no value.
-         *
-         * This triangulation will not be changed.
-         *
-         * For more detail on boundary shelling moves and when they can be
-         * performed, see shellBoundary().
-         *
-         * \pre The given tetrahedron is a tetrahedron of this triangulation.
-         *
-         * \param t the tetrahedron upon which to perform the move.
-         * \return The new triangulation obtained by performing the requested
-         * move, or no value if the requested move cannot be performed.
-         */
-        std::optional<Triangulation<3>> withShellBoundary(Tetrahedron<3>* t)
-            const;
         /**
          * If possible, returns the triangulation obtained by collapsing the
          * given edge of this triangulation.
@@ -4806,41 +4718,42 @@ inline bool Triangulation<3>::minimizeVertices() {
 }
 
 inline bool Triangulation<3>::has44(Edge<3>* e, int newAxis) const {
-    return const_cast<Triangulation<3>*>(this)->fourFourMove(e, newAxis);
+    return const_cast<Triangulation<3>*>(this)->fourFourMove(e, newAxis,
+        true, false);
 }
 
 inline bool Triangulation<3>::has21(Edge<3>* e, int edgeEnd) const {
-    return const_cast<Triangulation<3>*>(this)->twoOneMove(e, edgeEnd);
+    return const_cast<Triangulation<3>*>(this)->twoOneMove(e, edgeEnd,
+        true, false);
 }
 
 inline bool Triangulation<3>::has02(EdgeEmbedding<3> e0, int t0,
         EdgeEmbedding<3> e1, int t1) const {
-    return const_cast<Triangulation<3>*>(this)->zeroTwoMove(e0, t0, e1, t1);
+    return const_cast<Triangulation<3>*>(this)->zeroTwoMove(e0, t0, e1, t1,
+        true, false);
 }
 
 inline bool Triangulation<3>::has02(Edge<3>* e, size_t t0, size_t t1) const {
-    return const_cast<Triangulation<3>*>(this)->zeroTwoMove(e, t0, t1);
+    return const_cast<Triangulation<3>*>(this)->zeroTwoMove(e, t0, t1,
+        true, false);
 }
 
 inline bool Triangulation<3>::has02(Triangle<3>* t0, int e0,
         Triangle<3>* t1, int e1) const {
-    return const_cast<Triangulation<3>*>(this)->zeroTwoMove(t0, e0, t1, e1);
+    return const_cast<Triangulation<3>*>(this)->zeroTwoMove(t0, e0, t1, e1,
+        true, false);
 }
 
 inline bool Triangulation<3>::hasOpenBook(Triangle<3>* t) const {
-    return const_cast<Triangulation<3>*>(this)->openBook(t);
+    return const_cast<Triangulation<3>*>(this)->openBook(t, true, false);
 }
 
 inline bool Triangulation<3>::hasCloseBook(Edge<3>* e) const {
-    return const_cast<Triangulation<3>*>(this)->closeBook(e);
-}
-
-inline bool Triangulation<3>::hasShellBoundary(Tetrahedron<3>* t) const {
-    return const_cast<Triangulation<3>*>(this)->shellBoundary(t);
+    return const_cast<Triangulation<3>*>(this)->closeBook(e, true, false);
 }
 
 inline bool Triangulation<3>::hasCollapseEdge(Edge<3>* e) const {
-    return const_cast<Triangulation<3>*>(this)->collapseEdge(e);
+    return const_cast<Triangulation<3>*>(this)->collapseEdge(e, true, false);
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::with44(
@@ -4912,16 +4825,6 @@ inline std::optional<Triangulation<3>> Triangulation<3>::withCloseBook(
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
     ans->closeBook(ans->translate(e), false, true);
-    return ans;
-}
-
-inline std::optional<Triangulation<3>> Triangulation<3>::withShellBoundary(
-        Tetrahedron<3>* t) const {
-    if (! hasShellBoundary(t))
-        return {};
-
-    std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->shellBoundary(ans->simplex(t->index()), false, true);
     return ans;
 }
 

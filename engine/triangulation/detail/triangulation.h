@@ -2221,6 +2221,64 @@ class TriangulationBase :
         bool move20(Face<dim, k>* f);
 
         /**
+         * If possible, performs a boundary shelling move upon the given
+         * top-dimensional simplex of this triangulation.  This involves
+         * popping off a top-dimensional simplex with one or more facets on
+         * the boundary.
+         *
+         * This triangulation will be changed directly.
+         *
+         * This move will only be performed if it will not change the topology
+         * of the manifold (as outlined below), _and_ it will not violate any
+         * simplex and/or facet locks.  See Simplex<dim>::lock() and
+         * Simplex<dim>::lockFacet() for further details on locks.
+         *
+         * In order to not change the topology, we require the conditions below.
+         * These are conditions are stricter than necessary, but the resulting
+         * "lost opportunities" only affect invalid triangulations.
+         *
+         * In this list of conditions, we let \a s denote the given
+         * top-dimensional simplex, and we let \a f denote the face of \a s
+         * opposite the intersection of all its boundary facets.
+         * For example, for a 4-manifold triangulation where \a s has
+         * exactly two boundary facets meeting in a common boundary triangle,
+         * \a f would denote the edge of \a s opposite this common triangle.
+         * Put differently: \a f is the (unique) smallest face of \a s that
+         * _might_ not be entirely contained in the triangulation boundary.
+         * Note that the dimension of \a f will be one less than the number of
+         * boundary facets of \a s.
+         *
+         * Having said all of this, our conditions are:
+         *
+         * - all faces of all dimensions of the simplex \a s, except possibly
+         *   its vertices, are valid;
+         *
+         * - at least one but not all of the facets of \a s lie in the
+         *   boundary of the triangulation;
+         *
+         * - the face \a f (defined above) does not lie entirely in the
+         *   boundary of the triangulation;
+         *
+         * - for each facial dimension \a k, no two <i>k</i>-faces of \a s
+         *   that both contain \a f are identified (testing this for
+         *   `k = dim(f)+1` is enough to ensure it holds for all \a k).
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects can no longer be used.
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \param s the top-dimensional simplex upon which to perform the move.
+         * \return \c true if and only if the requested move was able to be
+         * performed.
+         */
+        bool shellBoundary(Simplex<dim>* s);
+
+        /**
          * Determines whether it is possible to perform a
          * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
          * <i>k</i>-face of this triangulation, without violating any
@@ -2260,6 +2318,22 @@ class TriangulationBase :
          */
         template <int k>
         bool has20(Face<dim, k>* f) const;
+
+        /**
+         * Determines whether it is possible to perform a boundary shelling
+         * move upon the given top-dimensional simplex of this triangulation,
+         * without violating any simplex and/or facet locks.
+         *
+         * For more detail on boundary shelling moves and when they can be
+         * performed, see shellBoundary().
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \param s the top-dimensional simplex upon which to perform the
+         * candidate move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasShellBoundary(Simplex<dim>* s) const;
 
         /**
          * If possible, returns the triangulation obtained by performing a
@@ -2309,6 +2383,27 @@ class TriangulationBase :
          */
         template <int k>
         std::optional<Triangulation<dim>> with20(Face<dim, k>* f) const;
+
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * boundary shelling move on the given top-dimensional simplex of this
+         * triangulation.  If such a move is not allowed, or if such a move
+         * would violate any simplex and/or facet locks, then this routine
+         * returns no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on boundary shelling moves and when they can be
+         * performed, see shellBoundary().
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \param s the top-dimensional simplex upon which to perform the move.
+         * \return The new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<dim>> withShellBoundary(Simplex<dim>* s)
+            const;
 
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -2379,6 +2474,37 @@ class TriangulationBase :
          */
         template <int k>
         [[deprecated]] bool twoZeroMove(Face<dim, k>* f, bool ignored,
+            bool perform = true);
+
+        /**
+         * Deprecated routine that tests for and optionally performs a
+         * boundary shelling move on the given top-dimensional simplex.
+         *
+         * For more detail on boundary shelling moves and when they can be
+         * performed, see the variant of shellBoundary() without the extra
+         * boolean arguments.
+         *
+         * This routine will always _check_ whether the requested move is
+         * legal and will not violate any simplex and/or facet locks (see
+         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+         * details on locks).  If the move _is_ allowed, and if the argument
+         * \a perform is \c true, this routine will also _perform_ the move.
+         *
+         * \deprecated If you just wish to test whether a such move is possible,
+         * call hasShellBoundary().  If you wish to both check and perform the
+         * move, call shellBoundary() without the two extra boolean arguments.
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \param s the top-dimensional simplex upon which to perform the move.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool shellBoundary(Simplex<dim>* s, bool ignored,
             bool perform = true);
 
         /*@}*/
@@ -3852,6 +3978,28 @@ class TriangulationBase :
          */
         template <int k>
         bool internal20(Face<dim, k>* f, bool check, bool perform);
+
+        /**
+         * Implements testing for and/or performing boundary shelling moves.
+         * See shellBoundary() for details on what the location arguments mean.
+         *
+         * \pre The arguments \a check and \a perform are not both \c false.
+         * \pre If \a perform is \c true but \a check is \c false, then it must
+         * be known in advance that the requested move is legal and will not
+         * violate any simplex and/or facet locks.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.
+         *
+         * \param check indicates whether we should check whether the move is
+         * legal and will not violate any locks.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
+         */
+        bool internalShellBoundary(Simplex<dim>* s, bool check, bool perform);
 
         /**
          * Internal to isoSig().
@@ -5341,6 +5489,11 @@ inline bool TriangulationBase<dim>::move20(Face<dim, k>* f) {
 }
 
 template <int dim>
+inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s) {
+    return internalShellBoundary(s, true, true);
+}
+
+template <int dim>
 template <int k>
 bool TriangulationBase<dim>::hasPachner(Face<dim, k>* f) const {
     static_assert(0 <= k && k <= dim, "hasPachner() requires a "
@@ -5358,6 +5511,12 @@ bool TriangulationBase<dim>::has20(Face<dim, k>* f) const {
         "not exceed dim - 2.");
 
     return const_cast<TriangulationBase<dim>*>(this)->internal20(f,
+        true, false);
+}
+
+template <int dim>
+bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* s) const {
+    return const_cast<TriangulationBase<dim>*>(this)->internalShellBoundary(s,
         true, false);
 }
 
@@ -5395,6 +5554,18 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::with20(
 }
 
 template <int dim>
+std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
+        Simplex<dim>* s) const {
+    if (! hasShellBoundary(s))
+        return {};
+
+    std::optional<Triangulation<dim>> ans(std::in_place,
+        static_cast<const Triangulation<dim>&>(*this));
+    ans->internalShellBoundary(ans->simplex(s->index()), false, true);
+    return ans;
+}
+
+template <int dim>
 template <int k>
 inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool,
         bool perform) {
@@ -5413,6 +5584,12 @@ inline bool TriangulationBase<dim>::twoZeroMove(Face<dim, k>* f, bool,
         "not exceed dim - 2.");
 
     return internal20(f, true, perform);
+}
+
+template <int dim>
+inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s, bool,
+        bool perform) {
+    return internalShellBoundary(s, true, perform);
 }
 
 template <int dim>

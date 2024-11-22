@@ -123,6 +123,9 @@ template bool TriangulationBase<12>::internal20(Face<12, 0>*, bool, bool);
 template bool TriangulationBase<12>::internal20(Face<12, 1>*, bool, bool);
 template bool TriangulationBase<12>::internal20(Face<12, 2>*, bool, bool);
 
+template bool TriangulationBase<12>::internalShellBoundary(Simplex<12>*,
+    bool, bool);
+
 template void TriangulationBase<12>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<12>::writeTextLong(std::ostream&) const;
 

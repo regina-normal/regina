@@ -290,10 +290,15 @@ void addTriangulation2(pybind11::module_& m) {
             overload_cast<Face<2, 0>*>(&Triangulation<2>::pachner<0>),
             rbase::pachner)
         .def("move20", &Triangulation<2>::move20<0>, rbase::move20)
+        .def("shellBoundary",
+            overload_cast<Simplex<2>*>(&Triangulation<2>::shellBoundary),
+            rbase::shellBoundary)
         .def("hasPachner", &Triangulation<2>::hasPachner<0>, rbase::hasPachner)
         .def("hasPachner", &Triangulation<2>::hasPachner<1>, rbase::hasPachner)
         .def("hasPachner", &Triangulation<2>::hasPachner<2>, rbase::hasPachner)
         .def("has20", &Triangulation<2>::has20<0>, rbase::has20)
+        .def("hasShellBoundary", &Triangulation<2>::hasShellBoundary,
+            rbase::hasShellBoundary)
         .def("withPachner", &Triangulation<2>::withPachner<0>,
             rbase::withPachner)
         .def("withPachner", &Triangulation<2>::withPachner<1>,
@@ -301,6 +306,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("withPachner", &Triangulation<2>::withPachner<2>,
             rbase::withPachner)
         .def("with20", &Triangulation<2>::with20<0>, rbase::with20)
+        .def("withShellBoundary", &Triangulation<2>::withShellBoundary,
+            rbase::withShellBoundary)
         #if defined(__GNUC__)
         // The following routines are deprecated, but we still need to bind
         // them.  Silence the inevitable deprecation warnings that will occur.
@@ -337,6 +344,13 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
+        .def("shellBoundary",
+            overload_cast<Simplex<2>*, bool, bool>(
+                &Triangulation<2>::shellBoundary),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::shellBoundary_2) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif

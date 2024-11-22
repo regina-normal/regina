@@ -1027,6 +1027,184 @@ bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
     return true;
 }
 
+template <int dim>
+bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
+        bool check, bool perform) {
+    if (s->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform a "
+                "boundary shelling move on a locked simplex");
+    }
+    for (int i = 0; i <= dim; ++i)
+        if ((! s->adjacentSimplex(i)) && s->isFacetLocked(i)) {
+            if (check)
+                return false;
+            if (perform)
+                throw LockViolation("An attempt was made to perform a "
+                    "boundary shelling move that would remove a "
+                    "locked boundary facet");
+        }
+
+    // To perform the move we don't even need a skeleton.
+    if (check) {
+        ensureSkeleton();
+
+        // We need between 1 and dim boundary facets inclusive.
+        int nBdry = 0;
+        int bdry[dim + 1];
+        for (int i = 0; i <= dim; ++i)
+            if (s->facet(i)->isBoundary())
+                bdry[nBdry++] = i;
+        if (nBdry < 1 || nBdry > dim)
+            return false;
+
+        // The dimension of the opposite face f (the one that we must check is
+        // non-boundary) is nBdry - 1.
+        //
+        // Now we need to check the conditions on face validity, boundary,
+        // and face identifications.
+
+        if (nBdry == dim) {
+            // dim(f) == dim - 1 (i.e., f is a facet of s).
+            //
+            // We already know that f is non-boundary, and there are no
+            // face identifications to check.
+            // We just need to check validity of the (non-vertex) faces of s.
+            //
+            // Actually, we will only need to check the faces of f (since all
+            // other faces of s are boundary with degree 1).  As a (dim-1)-face,
+            // f is always valid; moreover, all (dim-2)-faces of f are boundary
+            // and so must have 1-ball links and will therefore also be valid.
+            // What remains is to check subfaces of dimensions 1..(dim-3).
+            if constexpr (dim >= 4) {
+                // TODO: Check validity of 1..(dim-3)-faces of f.
+            }
+        } else if (nBdry == dim - 1) {
+            // dim(f) == dim - 2.
+            // This means that there are precisely two faces of s containing f.
+            //
+            // TODO
+        } else if (nBdry == 1) {
+            // f is a vertex.
+            //
+            // TODO
+            if (s->vertex(bdry[0])->isBoundary())
+                return false;
+        } else {
+            // TODO
+        }
+
+        // TODO: HERE DOWN
+        // All faces of s, excluding vertices, must be valid.
+        // Note:
+        // - Faces of dimension ≥ dim-1 and _boundary_ faces of dimension dim-2
+        //   are automatically valid; there is nothing that can go wrong.
+
+
+
+#if 0
+        // Remaining code for dimension 3:
+        if (nBdry == 1) {
+            if (t->vertex(bdry[0])->isBoundary())
+                return false;
+
+            Edge<3>* internal[3];
+            int j = 0;
+            for (int i = 0; i < 4; ++i)
+                if (i != bdry[0])
+                    internal[j++] = t->edge(Edge<3>::edgeNumber[bdry[0]][i]);
+
+            if (! (internal[0]->isValid() &&
+                    internal[1]->isValid() &&
+                    internal[2]->isValid()))
+                return false;
+
+            if (internal[0] == internal[1] ||
+                    internal[1] == internal[2] ||
+                    internal[2] == internal[0])
+                return false;
+        } else if (nBdry == 2) {
+            int i = Edge<3>::edgeNumber[bdry[0]][bdry[1]];
+            if (t->edge(i)->isBoundary())
+                return false;
+            if (! t->edge(i)->isValid())
+                return false;
+            if (t->adjacentTetrahedron(Edge<3>::edgeVertex[5 - i][0]) == t)
+                return false;
+        }
+
+
+        // Remaining code for dimension 4:
+        for (int i = 0; i < 10; ++i)
+            if (! p->edge(i)->isValid())
+                return false;
+        for (int i = 0; i < 10; ++i)
+            if (! p->triangle(i)->isValid())
+                return false;
+
+        if (nBdry == 1) {
+            // Opposite vertex not in boundary.
+            if (p->vertex(bdry[0])->isBoundary())
+                return false;
+
+            // No two of the remaining four edges identified.
+            Edge<4>* internal[4];
+            int j = 0;
+            for (int i = 0; i < 5; ++i)
+                if (i != bdry[0])
+                    internal[j++] = p->edge(Edge<4>::edgeNumber[bdry[0]][i]);
+
+            for (int i = 0; i < 4; ++i)
+                for (j = i + 1; j < 4; ++j)
+                    if (internal[i] == internal[j])
+                        return false;
+        } else if (nBdry == 2) {
+            // Opposite edge not in boundary.
+            int i = Edge<4>::edgeNumber[bdry[0]][bdry[1]];
+            if (p->edge(i)->isBoundary())
+                return false;
+
+            // No two of the remaining three triangles identified.
+            Triangle<4>* internal[3];
+            int j = 0;
+            for (int i = 0; i < 5; ++i)
+                if (i != bdry[0] && i != bdry[1])
+                    internal[j++] = p->triangle(
+                        Triangle<4>::triangleNumber[bdry[0]][bdry[1]][i]);
+
+            if (internal[0] == internal[1] ||
+                    internal[1] == internal[2] ||
+                    internal[2] == internal[0])
+                return false;
+        } else if (nBdry == 3) {
+            // Opposite triangle not in boundary.
+            int i = Triangle<4>::triangleNumber[bdry[0]][bdry[1]][bdry[2]];
+            if (p->triangle(i)->isBoundary())
+                return false;
+
+            // Remaining two facets not identified.
+            if (p->adjacentPentachoron(Edge<4>::edgeVertex[i][0]) == p)
+                return false;
+        }
+#endif
+    }
+
+    if (! perform)
+        return true;
+
+    // Actually perform the move.
+    // The following ChangeAndClearSpan is essential, since we use the
+    // "raw" routine removeSimplexRaw() below.  This is because
+    // the facets on the internal side of the shelling _are_ allowed
+    // to be locked, and we do not want to throw an exception because of this.
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
+
+    removeSimplexRaw(s);
+    return true;
+}
+
 } // namespace regina::detail
 
 #endif

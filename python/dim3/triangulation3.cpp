@@ -543,11 +543,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::closeBook)
-        .def("shellBoundary", &Triangulation<3>::shellBoundary,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::shellBoundary)
+        .def("shellBoundary",
+            overload_cast<Simplex<3>*>(&Triangulation<3>::shellBoundary),
+            rbase::shellBoundary)
         .def("collapseEdge", &Triangulation<3>::collapseEdge,
             pybind11::arg(),
             pybind11::arg("check") = true,
@@ -579,7 +577,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def("hasCloseBook", &Triangulation<3>::hasCloseBook,
             rdoc::hasCloseBook)
         .def("hasShellBoundary", &Triangulation<3>::hasShellBoundary,
-            rdoc::hasShellBoundary)
+            rbase::hasShellBoundary)
         .def("hasCollapseEdge", &Triangulation<3>::hasCollapseEdge,
             rdoc::hasCollapseEdge)
         .def("withPachner", &Triangulation<3>::withPachner<0>,
@@ -612,7 +610,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def("withCloseBook", &Triangulation<3>::withCloseBook,
             rdoc::withCloseBook)
         .def("withShellBoundary", &Triangulation<3>::withShellBoundary,
-            rdoc::withShellBoundary)
+            rbase::withShellBoundary)
         .def("withCollapseEdge", &Triangulation<3>::withCollapseEdge,
             rdoc::withCollapseEdge)
         #if defined(__GNUC__)
@@ -663,6 +661,13 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
+        .def("shellBoundary",
+            overload_cast<Simplex<3>*, bool, bool>(
+                &Triangulation<3>::shellBoundary),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::shellBoundary_2) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif
