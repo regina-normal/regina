@@ -716,6 +716,11 @@ bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
 
     using LockMask = Simplex<dim>::LockMask;
 
+    // Note: In general we do not know how to check validity or boundary in
+    // higher dimensions since we do not have sphere recognition.  However,
+    // this code checks the precise combinatorics of the link of f, which
+    // gives us all the topological information that we need.
+
     if (check) {
         if (f->isBoundary() || ! f->isValid())
             return false;
