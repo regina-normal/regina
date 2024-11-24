@@ -576,8 +576,8 @@ Version 7.4  [ (to be announced) ]
               + New read-only routine with20() that (if possible) returns
                 a new triangulation with the relevant move performed.
             - Regarding boundary shelling moves:
-              + These moves are likewise now available for triangulations of
-                all dimensions.
+              + These moves are now available for triangulations of all
+                _standard_ dimensions (2, 3 and 4).
               + The (check, perform) variant of shellBoundary() is deprecated.
                 You should now call shellBoundary() _without_ extra
                 check/perform arguments: the function will always check for

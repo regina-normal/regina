@@ -2226,6 +2226,11 @@ class TriangulationBase :
          * popping off a top-dimensional simplex with one or more facets on
          * the boundary.
          *
+         * This move is _only available in standard dimensions_, since Regina's
+         * notion of "valid faces" is weaker in higher dimensions (due to the
+         * need to solve undecidable problems).  See Face::isValid() for
+         * further discussion.
+         *
          * This triangulation will be changed directly.
          *
          * This move will only be performed if it will not change the topology
@@ -2270,6 +2275,8 @@ class TriangulationBase :
          * (faces, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects can no longer be used.
          *
+         * \pre The dimension \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the move.
@@ -2324,9 +2331,16 @@ class TriangulationBase :
          * move upon the given top-dimensional simplex of this triangulation,
          * without violating any simplex and/or facet locks.
          *
+         * This test is _only available in standard dimensions_, since Regina's
+         * notion of "valid faces" is weaker in higher dimensions (due to the
+         * need to solve undecidable problems).  See Face::isValid() for
+         * further discussion.
+         *
          * For more detail on boundary shelling moves and when they can be
          * performed, see shellBoundary().
          *
+         * \pre The dimension \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the
@@ -2391,11 +2405,18 @@ class TriangulationBase :
          * would violate any simplex and/or facet locks, then this routine
          * returns no value.
          *
+         * This operation is _only available in standard dimensions_, since
+         * Regina's notion of "valid faces" is weaker in higher dimensions
+         * (due to the need to solve undecidable problems).
+         * See Face::isValid() for further discussion.
+         *
          * This triangulation will not be changed.
          *
          * For more detail on boundary shelling moves and when they can be
          * performed, see shellBoundary().
          *
+         * \pre The dimension \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the move.
@@ -2490,10 +2511,17 @@ class TriangulationBase :
          * details on locks).  If the move _is_ allowed, and if the argument
          * \a perform is \c true, this routine will also _perform_ the move.
          *
+         * This move is _only available in standard dimensions_, since Regina's
+         * notion of "valid faces" is weaker in higher dimensions (due to the
+         * need to solve undecidable problems).  See Face::isValid() for
+         * further discussion.
+         *
          * \deprecated If you just wish to test whether a such move is possible,
          * call hasShellBoundary().  If you wish to both check and perform the
          * move, call shellBoundary() without the two extra boolean arguments.
          *
+         * \pre The dimension \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the move.
@@ -3983,6 +4011,8 @@ class TriangulationBase :
          * Implements testing for and/or performing boundary shelling moves.
          * See shellBoundary() for details on what the location arguments mean.
          *
+         * \pre The dimension \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
          * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then it must
          * be known in advance that the requested move is legal and will not
