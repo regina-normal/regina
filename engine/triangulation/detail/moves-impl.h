@@ -1056,10 +1056,12 @@ bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
 
         // We need between 1 and dim boundary facets inclusive.
         int nBdry = 0;
-        int bdry[dim + 1];
+        std::array<int, dim+1> bdry;
         for (int i = 0; i <= dim; ++i)
             if (s->facet(i)->isBoundary())
                 bdry[nBdry++] = i;
+            else
+                bdry[dim - i + nBdry] = i;
         if (nBdry < 1 || nBdry > dim)
             return false;
 
@@ -1086,90 +1088,81 @@ bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
             }
         } else if (nBdry == dim - 1) {
             // dim(f) == dim - 2.
-            // This means that there are precisely two faces of s containing f.
-            //
-            // TODO
+            // Therefore there are precisely two facets of s containing f.
+            // These are facets bdry[dim], bdry[dim-1].
+            if (s->adjacentSimplex(bdry[dim]) == s)
+                return false;
+
+            // Get the (dim-2)-face number of f, which is opposite the edge
+            // connecting vertices bdry[dim-1,dim].
+            // In all dimensions except for 3, this means we can just use the
+            // opposite edge number (which is faster to compute).
+            Face<dim, dim-2>* f;
+            if constexpr (dim == 3) {
+                f = s->template face<dim-2>(
+                    Edge<dim>::faceNumber(bdry[0], bdry[1]));
+            } else {
+                f = s->template face<dim-2>(
+                    Edge<dim>::faceNumber(bdry[dim-1], bdry[dim]));
+            }
+            if (f->isBoundary())
+                return false;
+
+            // We need to check the validity of all non-vertex faces of s.
+            // (dim-1)-faces are always valid, and all boundary (dim-2)-faces
+            // are valid (which leaves only f to check).  We will still need
+            // to check all faces of dimension 1..(dim-3).
+            if (! f->isValid())
+                return false;
+            if constexpr (dim >= 4) {
+                // TODO: Check validity of 1..(dim-3)-faces of s (not just f)?
+            }
         } else if (nBdry == 1) {
+            // We must be in dimension >= 3.
             // f is a vertex.
-            //
-            // TODO
             if (s->vertex(bdry[0])->isBoundary())
                 return false;
-        } else {
-            // TODO
-        }
 
-        // TODO: HERE DOWN
-        // All faces of s, excluding vertices, must be valid.
-        // Note:
-        // - Faces of dimension ≥ dim-1 and _boundary_ faces of dimension dim-2
-        //   are automatically valid; there is nothing that can go wrong.
+            // TODO: Validity of faces of s
 
-
-
-#if 0
-        // Remaining code for dimension 3:
-        if (nBdry == 1) {
-            if (t->vertex(bdry[0])->isBoundary())
-                return false;
-
-            Edge<3>* internal[3];
+            // We need no two edges containing f to be identified.
+            Edge<dim>* internal[dim];
             int j = 0;
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i <= dim; ++i)
                 if (i != bdry[0])
-                    internal[j++] = t->edge(Edge<3>::edgeNumber[bdry[0]][i]);
-
-            if (! (internal[0]->isValid() &&
-                    internal[1]->isValid() &&
-                    internal[2]->isValid()))
-                return false;
-
-            if (internal[0] == internal[1] ||
-                    internal[1] == internal[2] ||
-                    internal[2] == internal[0])
-                return false;
-        } else if (nBdry == 2) {
-            int i = Edge<3>::edgeNumber[bdry[0]][bdry[1]];
-            if (t->edge(i)->isBoundary())
-                return false;
-            if (! t->edge(i)->isValid())
-                return false;
-            if (t->adjacentTetrahedron(Edge<3>::edgeVertex[5 - i][0]) == t)
-                return false;
-        }
-
-
-        // Remaining code for dimension 4:
-        for (int i = 0; i < 10; ++i)
-            if (! p->edge(i)->isValid())
-                return false;
-        for (int i = 0; i < 10; ++i)
-            if (! p->triangle(i)->isValid())
-                return false;
-
-        if (nBdry == 1) {
-            // Opposite vertex not in boundary.
-            if (p->vertex(bdry[0])->isBoundary())
-                return false;
-
-            // No two of the remaining four edges identified.
-            Edge<4>* internal[4];
-            int j = 0;
-            for (int i = 0; i < 5; ++i)
-                if (i != bdry[0])
-                    internal[j++] = p->edge(Edge<4>::edgeNumber[bdry[0]][i]);
-
-            for (int i = 0; i < 4; ++i)
-                for (j = i + 1; j < 4; ++j)
+                    internal[j++] = s->edge(Edge<dim>::faceNumber(bdry[0], i));
+            for (int i = 0; i < dim; ++i)
+                for (j = i + 1; j < dim; ++j)
                     if (internal[i] == internal[j])
                         return false;
-        } else if (nBdry == 2) {
-            // Opposite edge not in boundary.
+
+            // We need to check the validity of all non-vertex faces of s.
+            if constexpr (dim == 3) {
+                // 2-faces are always valid, and all boundary 1-faces are valid.
+                // This leaves just the edges containing f, which are precisely
+                // the edges in our internal[] array.
+                for (int i = 0; i < dim; ++i)
+                    if (! internal[i]->isValid())
+                        return false;
+            } else {
+                // (dim-1)-faces are always valid.
+                // For now just check all faces of dimension 1..(dim-2).
+                // TODO: Validity of 1..(dim-2)-faces.
+            }
+        } else {
+            // We must be in dimension >= 4.
+
+            // Start with face validity.
+            // (dim-1)-faces are always valid.
+            // For now, we check all faces of dimension 1..(dim-2).
+            // TODO: Validity of 1..(dim-2)-faces.
+
+            // TODO: Opposite edge not in boundary.
             int i = Edge<4>::edgeNumber[bdry[0]][bdry[1]];
             if (p->edge(i)->isBoundary())
                 return false;
 
-            // No two of the remaining three triangles identified.
+            // TODO: No two of the remaining three triangles identified.
             Triangle<4>* internal[3];
             int j = 0;
             for (int i = 0; i < 5; ++i)
@@ -1181,17 +1174,7 @@ bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
                     internal[1] == internal[2] ||
                     internal[2] == internal[0])
                 return false;
-        } else if (nBdry == 3) {
-            // Opposite triangle not in boundary.
-            int i = Triangle<4>::triangleNumber[bdry[0]][bdry[1]][bdry[2]];
-            if (p->triangle(i)->isBoundary())
-                return false;
-
-            // Remaining two facets not identified.
-            if (p->adjacentPentachoron(Edge<4>::edgeVertex[i][0]) == p)
-                return false;
         }
-#endif
     }
 
     if (! perform)
