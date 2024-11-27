@@ -69,9 +69,15 @@
     #define DIM3_SMALL_IDEAL_CENSUS_SIZE 2
 #endif
 
-#define DIM4_CLOSED_CENSUS_SIZE 2
-#define DIM4_BOUNDED_CENSUS_SIZE 2
-#define DIM4_IDEAL_CENSUS_SIZE 2
+#ifdef LARGE_CENSUS
+    #define DIM4_CLOSED_CENSUS_SIZE 2
+    #define DIM4_BOUNDED_CENSUS_SIZE 3
+    #define DIM4_IDEAL_CENSUS_SIZE 2
+#else
+    #define DIM4_CLOSED_CENSUS_SIZE 2
+    #define DIM4_BOUNDED_CENSUS_SIZE 2
+    #define DIM4_IDEAL_CENSUS_SIZE 2
+#endif
 
 using regina::BoolSet;
 using regina::CensusPurge;
