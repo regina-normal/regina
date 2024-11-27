@@ -34,6 +34,7 @@
 #include "triangulation/example2.h"
 
 #include "generic/triangulationtest.h"
+#include "testexhaustive.h"
 
 using regina::Triangulation;
 using regina::Example;
@@ -169,6 +170,10 @@ TEST_F(Dim2Test, pachner) {
 }
 TEST_F(Dim2Test, twoZeroVertexMove) {
     testManualCases(TriangulationTest<2>::verifyTwoZeroVertex);
+}
+TEST_F(Dim2Test, shellBoundary) {
+    testManualCases(TriangulationTest<2>::verifyShellBoundary);
+    runCensusAllBounded(TriangulationTest<2>::verifyShellBoundary);
 }
 TEST_F(Dim2Test, barycentricSubdivision) {
     testManualCases(TriangulationTest<2>::verifyBarycentricSubdivision);

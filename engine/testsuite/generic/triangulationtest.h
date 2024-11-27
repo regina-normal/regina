@@ -1321,6 +1321,52 @@ class TriangulationTest : public testing::Test {
             }
         }
 
+        static void verifyShellBoundary(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+
+            // Don't worry about testing orientation, since the move itself
+            // only involves removing top-dimensional simplices.
+            for (size_t i = 0; i < tri.size(); ++i) {
+                SCOPED_TRACE_NAMED_NUMERIC("simplex", i);
+
+                Triangulation<dim> result(tri);
+
+                // Perform the move (if we can).
+                bool performed = result.shellBoundary(result.simplex(i));
+
+                // Ensure that properties we are about to verify have been
+                // explicitly recomputed.
+                clearProperties(result);
+
+                if (! performed) {
+                    // Verify that the move was indeed not performed.
+                    EXPECT_EQ(result, tri);
+                    continue;
+                }
+
+                // The move was performed.
+
+                EXPECT_EQ(result.size(), tri.size() - 1);
+                EXPECT_EQ(result.isValid(), tri.isValid());
+                EXPECT_EQ(result.isIdeal(), tri.isIdeal());
+                EXPECT_EQ(result.isOrientable(), tri.isOrientable());
+                EXPECT_EQ(result.countBoundaryComponents(),
+                    tri.countBoundaryComponents());
+                EXPECT_EQ(result.eulerCharTri(), tri.eulerCharTri());
+
+                // Homology can only be tested for valid triangulations.
+                if (tri.size() <= HOMOLOGY_THRESHOLD && tri.isValid()) {
+                    EXPECT_EQ(result.homology(), tri.homology());
+                    // We only test H2 in small dimensions, since for higher
+                    // dimensions this becomes too slow.
+                    if constexpr (dim == 3 || dim == 4)
+                        EXPECT_EQ(result.template homology<2>(),
+                            tri.template homology<2>());
+                }
+            }
+        }
+
         static void verifyBarycentricSubdivision(const Triangulation<dim>& tri,
                 const char* name) {
             SCOPED_TRACE_CSTRING(name);

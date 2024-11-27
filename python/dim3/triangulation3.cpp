@@ -59,6 +59,7 @@ using regina::Face;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
+using regina::Simplex;
 using regina::Triangulation;
 
 /**
@@ -667,7 +668,7 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
-            rdoc::shellBoundary_2) // deprecated
+            rbase::shellBoundary_2) // deprecated
         #if defined(__GNUC__)
         #pragma GCC diagnostic pop
         #endif

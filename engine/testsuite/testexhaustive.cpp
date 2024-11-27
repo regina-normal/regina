@@ -30,10 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "census/gluingpermsearcher4.h"
 #include "census/census.h"
+#include "census/gluingpermsearcher2.h"
 #include "census/gluingpermsearcher3.h"
+#include "census/gluingpermsearcher4.h"
 #include "packet/container.h"
+#include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
@@ -42,6 +44,8 @@
 // When we run tests over an entire census, do we use a larger census
 // (which takes a long time to run), or a smaller census?
 // #define LARGE_CENSUS
+
+#define DIM2_BOUNDED_CENSUS_SIZE 6
 
 #ifdef LARGE_CENSUS
     #define DIM3_MIN_CLOSED_CENSUS_SIZE 6
@@ -77,6 +81,17 @@ using regina::GluingPermSearcher;
 using regina::Triangulation;
 
 namespace {
+    void foundFacetPairing2(const FacetPairing<2>& pairing,
+            FacetPairing<2>::IsoList autos,
+            Triangulation2TestFunction f) {
+        GluingPermSearcher<2>::findAllPerms(pairing, std::move(autos),
+            false /* orientable only */,
+            [&f](const GluingPerms<2>& perms) {
+                Triangulation<2> tri = perms.triangulate();
+                f(tri, tri.isoSig().c_str());
+            });
+    }
+
     void foundFacetPairing3(const FacetPairing<3>& pairing,
             FacetPairing<3>::IsoList autos,
             Triangulation3TestFunction f, BoolSet finite, bool minimal) {
@@ -104,6 +119,12 @@ namespace {
                     f(tri, tri.isoSig().c_str());
             });
     }
+}
+
+void runCensusAllBounded(Triangulation2TestFunction testFunction) {
+    FacetPairing<2>::findAllPairings(DIM2_BOUNDED_CENSUS_SIZE,
+        true /* bounded */, -1 /* bdry faces */,
+        &foundFacetPairing2, testFunction);
 }
 
 void runCensusMinClosed(Triangulation3TestFunction testFunction, bool small_) {

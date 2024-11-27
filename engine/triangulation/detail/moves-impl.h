@@ -1063,7 +1063,7 @@ bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
         int nBdry = 0;
         std::array<int, dim+1> bdry;
         for (int i = 0; i <= dim; ++i)
-            if (s->facet(i)->isBoundary())
+            if (! s->adjacentSimplex(i))
                 bdry[nBdry++] = i;
             else
                 bdry[dim - i + nBdry] = i;
@@ -1089,7 +1089,19 @@ bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
             // and so must have 1-ball links and will therefore also be valid.
             // What remains is to check subfaces of dimensions 1..(dim-3).
             if constexpr (dim >= 4) {
-                // TODO: Check validity of 1..(dim-3)-faces of f.
+                Face<dim, dim-1>* f = s->template face<dim-1>(bdry[dim]);
+
+                bool invalid = false;
+                for_constexpr<1, dim - 2>([f, &invalid](auto subdim) {
+                    for (int i = 0; i < FaceNumbering<dim-1, subdim>::nFaces;
+                            ++i)
+                        if (! f->template face<subdim>(i)->isValid()) {
+                            invalid = true;
+                            return;
+                        }
+                });
+                if (invalid)
+                    return false;
             }
         } else if (nBdry == dim - 1) {
             // dim(f) == dim - 2.
@@ -1120,15 +1132,24 @@ bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
             if (! f->isValid())
                 return false;
             if constexpr (dim >= 4) {
-                // TODO: Check validity of 1..(dim-3)-faces of s (not just f)?
+                bool invalid = false;
+                for_constexpr<1, dim - 2>([s, &invalid](auto subdim) {
+                    for (int i = 0; i < FaceNumbering<dim, subdim>::nFaces; ++i)
+                        if (! s->template face<subdim>(i)->isValid()) {
+                            invalid = true;
+                            return;
+                        }
+                });
+                if (invalid)
+                    return false;
             }
         } else if (nBdry == 1) {
             // We must be in dimension >= 3.
             // f is a vertex.
+            // Since we are in a standard dimension, the boundary test below
+            // will effectively ensure that f is valid also.
             if (s->vertex(bdry[0])->isBoundary())
                 return false;
-
-            // TODO: Validity of faces of s
 
             // We need no two edges containing f to be identified.
             Edge<dim>* internal[dim];
@@ -1149,36 +1170,68 @@ bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
                 for (int i = 0; i < dim; ++i)
                     if (! internal[i]->isValid())
                         return false;
-            } else {
+            } else if constexpr (dim > 3) {
                 // (dim-1)-faces are always valid.
                 // For now just check all faces of dimension 1..(dim-2).
-                // TODO: Validity of 1..(dim-2)-faces.
+                bool invalid = false;
+                for_constexpr<1, dim - 1>([s, &invalid](auto subdim) {
+                    for (int i = 0; i < FaceNumbering<dim, subdim>::nFaces; ++i)
+                        if (! s->template face<subdim>(i)->isValid()) {
+                            invalid = true;
+                            return;
+                        }
+                });
+                if (invalid)
+                    return false;
             }
         } else {
             // We must be in dimension >= 4.
+            // Wrap this all in a constexpr if, so that the compiler doesn't
+            // even try to build it in lower dimensions.
+            if constexpr (dim >= 4) {
+                // Start with face validity.
+                // (dim-1)-faces are always valid.
+                // For now, just check all faces of s of dimension 1..(dim-2).
+                bool invalid = false;
+                for_constexpr<1, dim - 1>([s, &invalid](auto subdim) {
+                    for (int i = 0; i < FaceNumbering<dim, subdim>::nFaces; ++i)
+                        if (! s->template face<subdim>(i)->isValid()) {
+                            invalid = true;
+                            return;
+                        }
+                });
+                if (invalid)
+                    return false;
 
-            // Start with face validity.
-            // (dim-1)-faces are always valid.
-            // For now, we check all faces of dimension 1..(dim-2).
-            // TODO: Validity of 1..(dim-2)-faces.
+                // Move on to tests involving the (nBdry - 1)-face f.
+                Perm<dim + 1> fPerm(bdry);
+                if (! select_constexpr<1, dim - 2, bool>(nBdry - 1,
+                        [s, fPerm, &bdry](auto subdim) {
+                            // f has dimension subdim.
+                            Face<dim, subdim>* f = s->template face<subdim>(
+                                Face<dim, subdim>::faceNumber(fPerm));
+                            if (f->isBoundary())
+                                return false;
 
-            // TODO: Opposite edge not in boundary.
-            int i = Edge<4>::edgeNumber[bdry[0]][bdry[1]];
-            if (p->edge(i)->isBoundary())
-                return false;
+                            // No two of the (subdim+1)-faces containing f
+                            // should be identified.
+                            // There are precisely (dim - subdim) such faces.
+                            Face<dim, subdim+1>* g[dim - subdim];
+                            for (int i = 0; i < dim - subdim; ++i)
+                                g[i] = s->template face<subdim+1>(
+                                    Face<dim, subdim+1>::faceNumber(
+                                    fPerm * Perm<dim+1>(subdim + 1,
+                                        subdim + 1 + i)));
 
-            // TODO: No two of the remaining three triangles identified.
-            Triangle<4>* internal[3];
-            int j = 0;
-            for (int i = 0; i < 5; ++i)
-                if (i != bdry[0] && i != bdry[1])
-                    internal[j++] = p->triangle(
-                        Triangle<4>::triangleNumber[bdry[0]][bdry[1]][i]);
+                            for (int i = 0; i < dim - subdim; ++i)
+                                for (int j = i + 1; j < dim - subdim; ++j)
+                                    if (g[i] == g[j])
+                                        return false;
 
-            if (internal[0] == internal[1] ||
-                    internal[1] == internal[2] ||
-                    internal[2] == internal[0])
-                return false;
+                            return true;
+                        }))
+                    return false;
+            }
         }
     }
 

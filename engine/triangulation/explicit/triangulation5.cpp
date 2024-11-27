@@ -86,9 +86,6 @@ template bool TriangulationBase<5>::internal20(Face<5, 0>*, bool, bool);
 template bool TriangulationBase<5>::internal20(Face<5, 1>*, bool, bool);
 template bool TriangulationBase<5>::internal20(Face<5, 2>*, bool, bool);
 
-template bool TriangulationBase<5>::internalShellBoundary(Simplex<5>*,
-    bool, bool);
-
 template void TriangulationBase<5>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<5>::writeTextLong(std::ostream&) const;
 

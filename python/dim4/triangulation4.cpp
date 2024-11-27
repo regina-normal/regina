@@ -54,6 +54,7 @@ using regina::Face;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
+using regina::Simplex;
 using regina::Triangulation;
 
 void addTriangulation4(pybind11::module_& m) {

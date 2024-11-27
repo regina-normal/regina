@@ -724,6 +724,25 @@ TEST_F(Dim4Test, twoZeroVertexMove) {
     runCensusAllNoBdry(TriangulationTest<4>::verifyTwoZeroVertex);
 }
 
+TEST_F(Dim4Test, shellBoundary) {
+    testManualCases(TriangulationTest<4>::verifyShellBoundary);
+    runCensusAllBounded(TriangulationTest<4>::verifyShellBoundary);
+    runCensusAllNoBdry(TriangulationTest<4>::verifyShellBoundary);
+
+    // Some additional cases where the subface identification criterion
+    // matters but none of the other criteria fail.  These are included here
+    // because such a scenario is not picked up by the small census used by
+    // runCensusAllBounded().
+    std::string sigs[] = {
+        "dHHIbcccWakaka2a", "dHHIbccc4asasa2a", "dHHIbcccWa0a0a2a",
+        "dHHIbccc4aebeb2a", "dHHcaacccalb1a", "dHHcaacccaZanb"
+    };
+    for (const auto& sig: sigs) {
+        TriangulationTest<4>::verifyShellBoundary(
+            Triangulation<4>::fromIsoSig(sig), sig.c_str());
+    }
+}
+
 TEST_F(Dim4Test, barycentricSubdivision) {
     testManualCases(TriangulationTest<4>::verifyBarycentricSubdivision,
         false /* small triangulations only */);

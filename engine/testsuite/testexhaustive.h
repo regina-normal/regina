@@ -53,6 +53,8 @@ using Triangulation3TestFunction = void (*)(const regina::Triangulation<3>&,
 using Triangulation4TestFunction = void (*)(const regina::Triangulation<4>&,
     const char*);
 
+void runCensusAllBounded(Triangulation2TestFunction f);
+
 void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);
 void runCensusAllClosed(Triangulation3TestFunction f, bool small_ = false);
 void runCensusAllBounded(Triangulation3TestFunction f, bool small_ = false);

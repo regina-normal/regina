@@ -1220,6 +1220,12 @@ TEST_F(Dim3Test, pinchEdge) {
     }
 }
 
+TEST_F(Dim3Test, shellBoundary) {
+    testManualCases(TriangulationTest<3>::verifyShellBoundary);
+    runCensusAllBounded(TriangulationTest<3>::verifyShellBoundary);
+    runCensusAllIdeal(TriangulationTest<3>::verifyShellBoundary);
+}
+
 TEST_F(Dim3Test, barycentricSubdivision) {
     testManualCases(TriangulationTest<3>::verifyBarycentricSubdivision);
 }

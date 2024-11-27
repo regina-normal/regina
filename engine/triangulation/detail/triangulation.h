@@ -2261,8 +2261,8 @@ class TriangulationBase :
          * - at least one but not all of the facets of \a s lie in the
          *   boundary of the triangulation;
          *
-         * - the face \a f (defined above) does not lie entirely in the
-         *   boundary of the triangulation;
+         * - the face \a f (defined above) is valid (even if it is a vertex),
+         *   and does not lie entirely in the boundary of the triangulation;
          *
          * - for each facial dimension \a k, no two <i>k</i>-faces of \a s
          *   that both contain \a f are identified (testing this for

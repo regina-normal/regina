@@ -106,9 +106,6 @@ template bool TriangulationBase<9>::internal20(Face<9, 0>*, bool, bool);
 template bool TriangulationBase<9>::internal20(Face<9, 1>*, bool, bool);
 template bool TriangulationBase<9>::internal20(Face<9, 2>*, bool, bool);
 
-template bool TriangulationBase<9>::internalShellBoundary(Simplex<9>*,
-    bool, bool);
-
 template void TriangulationBase<9>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<9>::writeTextLong(std::ostream&) const;
 
