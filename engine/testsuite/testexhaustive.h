@@ -42,6 +42,9 @@
  * The \a small parameter indicates that a smaller census should be
  * used; this is appropriate when the corresponding test is extremely slow.
  *
+ * The \a size parameter can be used to manually set the maximum number of
+ * top-dimensional simplices; a value of 0 means the default should be used.
+ *
  * Each test function takes as arguments a triangulation and its
  * human-readable name.
  */
@@ -61,8 +64,8 @@ void runCensusAllBounded(Triangulation3TestFunction f, bool small_ = false);
 void runCensusAllIdeal(Triangulation3TestFunction f, bool small_ = false);
 void runCensusAllNoBdry(Triangulation3TestFunction f, bool small_ = false);
 
-void runCensusAllClosed(Triangulation4TestFunction f);
-void runCensusAllBounded(Triangulation4TestFunction f);
-void runCensusAllNoBdry(Triangulation4TestFunction f);
+void runCensusAllClosed(Triangulation4TestFunction f, int size = 0);
+void runCensusAllBounded(Triangulation4TestFunction f, int size = 0);
+void runCensusAllNoBdry(Triangulation4TestFunction f, int size = 0);
 
 #endif

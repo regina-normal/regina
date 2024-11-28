@@ -1115,6 +1115,79 @@ class TriangulationTest : public testing::Test {
             verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(tri);
         }
 
+        /**
+         * Tests local moves of the form tri.move(f), where f is a
+         * subdim-face of the triangulation tri.
+         *
+         * It should surely be possible to deduce subdim automatically, and even
+         * to make move and sizeChange template parameters (so that verifyMove
+         * can be plugged into exhaustive testing code), but I am struggling
+         * to work out how to do this.  I think the fact that Triangulation is
+         * templated is not helping here.
+         */
+        template <int subdim>
+        static void verifyMove(const Triangulation<dim>& tri,
+                const char* name,
+                bool(Triangulation<dim>::*move)(regina::Face<dim, subdim>*),
+                int sizeChange) {
+            static_assert(0 <= subdim && subdim <= dim);
+            SCOPED_TRACE_CSTRING(name);
+            SCOPED_TRACE_NAMED_NUMERIC("subdim", subdim);
+
+            Triangulation<dim> oriented(tri);
+            if (tri.isOrientable())
+                oriented.orient();
+
+            for (size_t i = 0; i < tri.template countFaces<subdim>(); ++i) {
+                SCOPED_TRACE_NAMED_NUMERIC("face", i);
+
+                Triangulation<dim> result(oriented);
+
+                // Perform the move (if we can).
+                bool performed;
+                if constexpr (subdim == dim)
+                    performed = (result.*move)(result.simplex(i));
+                else
+                    performed = (result.*move)(result.template face<subdim>(i));
+
+                // Ensure that properties we are about to verify have been
+                // explicitly recomputed.
+                clearProperties(result);
+
+                if (! performed) {
+                    // Verify that the move was indeed not performed.
+                    EXPECT_EQ(result, oriented);
+                    continue;
+                }
+
+                // The move was performed.
+
+                EXPECT_EQ(result.size(), tri.size() + sizeChange);
+                EXPECT_EQ(result.isValid(), tri.isValid());
+                EXPECT_EQ(result.isIdeal(), tri.isIdeal());
+                EXPECT_EQ(result.isOrientable(), tri.isOrientable());
+                if (tri.isOrientable())
+                    EXPECT_TRUE(result.isOriented());
+                EXPECT_EQ(result.countBoundaryComponents(),
+                    tri.countBoundaryComponents());
+                EXPECT_EQ(result.eulerCharTri(), tri.eulerCharTri());
+
+                // Closedness can only be tested in standard dimensions.
+                if constexpr (regina::standardDim(dim))
+                    EXPECT_EQ(result.isClosed(), tri.isClosed());
+
+                // Homology can only be tested for valid triangulations.
+                if (tri.size() <= HOMOLOGY_THRESHOLD && tri.isValid()) {
+                    EXPECT_EQ(result.homology(), tri.homology());
+                    // We only test H2 in small dimensions, since for higher
+                    // dimensions this becomes too slow.
+                    if constexpr (dim == 3 || dim == 4)
+                        EXPECT_EQ(result.template homology<2>(),
+                            tri.template homology<2>());
+                }
+            }
+        }
+
         template <int k>
         static void verifyPachnerDetail(const Triangulation<dim>& tri,
                 bool standardSimplex) {
@@ -1323,48 +1396,7 @@ class TriangulationTest : public testing::Test {
 
         static void verifyShellBoundary(const Triangulation<dim>& tri,
                 const char* name) {
-            SCOPED_TRACE_CSTRING(name);
-
-            // Don't worry about testing orientation, since the move itself
-            // only involves removing top-dimensional simplices.
-            for (size_t i = 0; i < tri.size(); ++i) {
-                SCOPED_TRACE_NAMED_NUMERIC("simplex", i);
-
-                Triangulation<dim> result(tri);
-
-                // Perform the move (if we can).
-                bool performed = result.shellBoundary(result.simplex(i));
-
-                // Ensure that properties we are about to verify have been
-                // explicitly recomputed.
-                clearProperties(result);
-
-                if (! performed) {
-                    // Verify that the move was indeed not performed.
-                    EXPECT_EQ(result, tri);
-                    continue;
-                }
-
-                // The move was performed.
-
-                EXPECT_EQ(result.size(), tri.size() - 1);
-                EXPECT_EQ(result.isValid(), tri.isValid());
-                EXPECT_EQ(result.isIdeal(), tri.isIdeal());
-                EXPECT_EQ(result.isOrientable(), tri.isOrientable());
-                EXPECT_EQ(result.countBoundaryComponents(),
-                    tri.countBoundaryComponents());
-                EXPECT_EQ(result.eulerCharTri(), tri.eulerCharTri());
-
-                // Homology can only be tested for valid triangulations.
-                if (tri.size() <= HOMOLOGY_THRESHOLD && tri.isValid()) {
-                    EXPECT_EQ(result.homology(), tri.homology());
-                    // We only test H2 in small dimensions, since for higher
-                    // dimensions this becomes too slow.
-                    if constexpr (dim == 3 || dim == 4)
-                        EXPECT_EQ(result.template homology<2>(),
-                            tri.template homology<2>());
-                }
-            }
+            verifyMove<dim>(tri, name, &Triangulation<dim>::shellBoundary, -1);
         }
 
         static void verifyBarycentricSubdivision(const Triangulation<dim>& tri,

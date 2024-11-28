@@ -170,23 +170,23 @@ void runCensusAllNoBdry(Triangulation3TestFunction testFunction, bool small_) {
             false /* min */);
 }
 
-void runCensusAllClosed(Triangulation4TestFunction testFunction) {
+void runCensusAllClosed(Triangulation4TestFunction testFunction, int size) {
     FacetPairing<4>::findAllPairings(
-        DIM4_CLOSED_CENSUS_SIZE,
+        size == 0 ? DIM4_CLOSED_CENSUS_SIZE : size,
         false /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing4, testFunction, true /* finite */);
 }
 
-void runCensusAllBounded(Triangulation4TestFunction testFunction) {
+void runCensusAllBounded(Triangulation4TestFunction testFunction, int size) {
     FacetPairing<4>::findAllPairings(
-        DIM4_BOUNDED_CENSUS_SIZE,
+        size == 0 ? DIM4_BOUNDED_CENSUS_SIZE : size,
         true /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing4, testFunction, true /* finite */);
 }
 
-void runCensusAllNoBdry(Triangulation4TestFunction testFunction) {
+void runCensusAllNoBdry(Triangulation4TestFunction testFunction, int size) {
     FacetPairing<4>::findAllPairings(
-        DIM4_IDEAL_CENSUS_SIZE,
+        size == 0 ? DIM4_IDEAL_CENSUS_SIZE : size,
         false /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing4, testFunction, BoolSet(true, true) /* finite */);
 }
