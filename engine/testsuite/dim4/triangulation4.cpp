@@ -718,10 +718,25 @@ TEST_F(Dim4Test, pachner) {
     TriangulationTest<4>::verifyPachnerSimplicial();
 }
 
-TEST_F(Dim4Test, twoZeroVertexMove) {
-    testManualCases(TriangulationTest<4>::verifyTwoZeroVertex);
-    runCensusAllBounded(TriangulationTest<4>::verifyTwoZeroVertex);
-    runCensusAllNoBdry(TriangulationTest<4>::verifyTwoZeroVertex);
+TEST_F(Dim4Test, move20Vertex) {
+    // Note: we need at least 3 pentachora for 2-0 moves to become legal.
+    testManualCases(TriangulationTest<4>::verify20Vertex);
+    runCensusAllBounded(TriangulationTest<4>::verify20Vertex);
+    runCensusAllNoBdry(TriangulationTest<4>::verify20Vertex);
+}
+
+TEST_F(Dim4Test, move20Edge) {
+    // Note: we need at least 3 pentachora for 2-0 moves to become legal.
+    testManualCases(TriangulationTest<4>::verify20Edge);
+    runCensusAllBounded(TriangulationTest<4>::verify20Edge);
+    runCensusAllNoBdry(TriangulationTest<4>::verify20Edge);
+}
+
+TEST_F(Dim4Test, move20Triangle) {
+    // Note: we need at least 3 pentachora for 2-0 moves to become legal.
+    testManualCases(TriangulationTest<4>::verify20Triangle);
+    runCensusAllBounded(TriangulationTest<4>::verify20Triangle);
+    runCensusAllNoBdry(TriangulationTest<4>::verify20Triangle);
 }
 
 TEST_F(Dim4Test, shellBoundary) {

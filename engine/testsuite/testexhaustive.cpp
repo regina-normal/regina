@@ -45,6 +45,7 @@
 // (which takes a long time to run), or a smaller census?
 // #define LARGE_CENSUS
 
+#define DIM2_CLOSED_CENSUS_SIZE 8
 #define DIM2_BOUNDED_CENSUS_SIZE 6
 
 #ifdef LARGE_CENSUS
@@ -125,6 +126,12 @@ namespace {
                     f(tri, tri.isoSig().c_str());
             });
     }
+}
+
+void runCensusAllClosed(Triangulation2TestFunction testFunction) {
+    FacetPairing<2>::findAllPairings(DIM2_CLOSED_CENSUS_SIZE,
+        false /* bounded */, -1 /* bdry faces */,
+        &foundFacetPairing2, testFunction);
 }
 
 void runCensusAllBounded(Triangulation2TestFunction testFunction) {

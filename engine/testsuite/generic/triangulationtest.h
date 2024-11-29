@@ -1116,20 +1116,32 @@ class TriangulationTest : public testing::Test {
         }
 
         /**
-         * Tests local moves of the form tri.move(f), where f is a
-         * subdim-face of the triangulation tri.
+         * Tests all potential local moves of the form tri.move(f), where f is
+         * a subdim-face of the triangulation tri.
+         *
+         * These tests are of a general nature that can be used with any type
+         * of move (e.g., verifying that the move does not change topology).
+         * If there are additional tests specific to this particular type of
+         * move (e.g., verifying the combinatorics of the resulting
+         * triangulation), these can be performed using the postTest argument.
+         * Specifically, if the move is legal when performed on the ith face,
+         * then this routine will call postTest(pre_move_tri, post_move_tri, i).
+         *
+         * There is another version of this routine that does not have the
+         * postTest argument.
          *
          * It should surely be possible to deduce subdim automatically, and even
          * to make move and sizeChange template parameters (so that verifyMove
          * can be plugged into exhaustive testing code), but I am struggling
-         * to work out how to do this.  I think the fact that Triangulation is
-         * templated is not helping here.
+         * to work out how to do this with pointers to member functions.
+         * I think the fact that Triangulation is templated is not helping.
          */
-        template <int subdim>
+        template <int subdim, typename PostTest>
         static void verifyMove(const Triangulation<dim>& tri,
                 const char* name,
                 bool(Triangulation<dim>::*move)(regina::Face<dim, subdim>*),
-                int sizeChange) {
+                int sizeChange,
+                PostTest&& postTest) {
             static_assert(0 <= subdim && subdim <= dim);
             SCOPED_TRACE_CSTRING(name);
             SCOPED_TRACE_NAMED_NUMERIC("subdim", subdim);
@@ -1185,7 +1197,21 @@ class TriangulationTest : public testing::Test {
                         EXPECT_EQ(result.template homology<2>(),
                             tri.template homology<2>());
                 }
+
+                postTest(oriented, result, i);
             }
+        }
+
+        template <int subdim>
+        static void verifyMove(const Triangulation<dim>& tri,
+                const char* name,
+                bool(Triangulation<dim>::*move)(regina::Face<dim, subdim>*),
+                int sizeChange) {
+            verifyMove(tri, name, move, sizeChange,
+                [](const Triangulation<dim>&, const Triangulation<dim>&,
+                        size_t) {
+                    // No additional move-specific tests.
+                });
         }
 
         template <int k>
@@ -1323,75 +1349,54 @@ class TriangulationTest : public testing::Test {
             });
         }
 
-        static void verifyTwoZeroVertex(const Triangulation<dim>& tri,
+        static void verify20Vertex(const Triangulation<dim>& tri,
                 const char* name) {
-            SCOPED_TRACE_CSTRING(name);
+            verifyMove<0>(tri, name,
+                &Triangulation<dim>::template move20<0>,
+                -2,
+                [](const Triangulation<dim>& pre,
+                        const Triangulation<dim>& post, size_t i) {
+                    // Verify that the vertex link was correct, and that
+                    // the move did the right thing.
+                    // Here the "right thing" is a 2-dim Pachner move followed
+                    // by a (dim+1)-1 Pachner move.
+                    Triangulation<dim> alt(pre);
 
-            Triangulation<dim> oriented(tri);
-            if (oriented.isOrientable())
-                oriented.orient();
+                    Vertex<dim>* v = alt.vertex(i);
+                    auto emb0 = v->front();
+                    auto emb1 = v->back();
+                    if (! emb0.simplex()->adjacentSimplex(emb0.face()))
+                        std::swap(emb0, emb1);
 
-            for (size_t i = 0; i < oriented.countVertices(); ++i) {
-                SCOPED_TRACE_NUMERIC(i);
-
-                Vertex<dim>* v = oriented.vertex(i);
-                if (v->degree() != 2 || v->isBoundary()) {
-                    EXPECT_FALSE(oriented.has20(v));
-                    continue;
-                }
-
-                regina::VertexEmbedding<dim> emb0 = v->front();
-                regina::VertexEmbedding<dim> emb1 = v->back();
-                if (emb0.simplex() == emb1.simplex()) {
-                    EXPECT_FALSE(oriented.has20(v));
-                    continue;
-                }
-
-                int v0 = emb0.face();
-                int v1 = emb1.face();
-                auto opp0 = emb0.simplex()->template face<dim-1>(v0);
-                auto opp1 = emb1.simplex()->template face<dim-1>(v1);
-                if (opp0 == opp1 ||
-                        (opp0->isBoundary() && opp1->isBoundary())) {
-                    EXPECT_FALSE(oriented.has20(v));
-                    continue;
-                }
-
-                auto glue = emb0.simplex()->adjacentGluing(v0 != 0 ? 0 : 1);
-                bool correctLink = true;
-                for (int i = 0; i <= dim; ++i)
-                    if (i != v0 && ! (
-                            emb0.simplex()->adjacentSimplex(i) ==
-                                emb1.simplex() &&
-                            emb0.simplex()->adjacentGluing(i) == glue)) {
-                        correctLink = false;
-                        break;
+                    auto glue = emb0.simplex()->adjacentGluing(
+                        emb0.vertices()[dim]);
+                    for (int i = 1; i <= dim; ++i) {
+                        int f = emb0.vertices()[i];
+                        EXPECT_EQ(emb0.simplex()->adjacentSimplex(f),
+                            emb1.simplex());
+                        EXPECT_EQ(emb0.simplex()->adjacentGluing(f), glue);
                     }
-                if (! correctLink) {
-                    EXPECT_FALSE(oriented.has20(v));
-                    continue;
-                }
 
-                // The move should be legal.
-                Triangulation<dim> alt(oriented);
-                EXPECT_TRUE(alt.move20(alt.vertex(i)));
-                EXPECT_EQ(alt.isOriented(), alt.isOrientable());
+                    EXPECT_TRUE(alt.pachner(
+                        emb0.simplex()->template face<dim-1>(emb0.face())));
+                    EXPECT_TRUE(alt.pachner(
+                        emb1.simplex()->vertex(emb1.face())));
+                    EXPECT_TRUE(alt.isIsomorphicTo(post));
+                });
+        }
 
-                // Verify that the move did the right thing.
-                // Here the "right thing" is a 2-dim Pachner move followed by a
-                // (dim+1)-1 Pachner move.
-                Triangulation<dim> alt2(oriented);
-                Simplex<dim>* simp0 = alt2.simplex(emb0.simplex()->index());
-                Simplex<dim>* simp1 = alt2.simplex(emb1.simplex()->index());
-                if (simp0->adjacentSimplex(v0)) {
-                    EXPECT_TRUE(alt2.pachner(simp0->template face<dim-1>(v0)));
-                    EXPECT_TRUE(alt2.pachner(simp1->vertex(v1)));
-                } else {
-                    EXPECT_TRUE(alt2.pachner(simp1->template face<dim-1>(v1)));
-                    EXPECT_TRUE(alt2.pachner(simp0->vertex(v0)));
-                }
-                EXPECT_TRUE(alt.isIsomorphicTo(alt2));
-            }
+        static void verify20Edge(const Triangulation<dim>& tri,
+                const char* name) {
+            verifyMove<1>(tri, name,
+                &Triangulation<dim>::template move20<1>,
+                -2);
+        }
+
+        static void verify20Triangle(const Triangulation<dim>& tri,
+                const char* name) {
+            verifyMove<2>(tri, name,
+                &Triangulation<dim>::template move20<2>,
+                -2);
         }
 
         static void verifyShellBoundary(const Triangulation<dim>& tri,
