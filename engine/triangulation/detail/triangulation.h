@@ -660,7 +660,7 @@ class TriangulationBase :
          *
          * This routine takes linear time in the dimension \a dim.  For C++
          * programmers who know \a subdim at compile time, you are better off
-         * using the template function countFaces<subdim>() instead, which
+         * using the template function `countFaces<subdim>()` instead, which
          * is fast constant time.
          *
          * For convenience, this routine explicitly supports the case
@@ -1263,7 +1263,7 @@ class TriangulationBase :
          *
          * This routine takes linear time in the dimension \a dim.  For C++
          * programmers who know \a subdim at compile time, you are better off
-         * using the template function countBoundaryFaces<subdim>() instead,
+         * using the template function `countBoundaryFaces<subdim>()` instead,
          * which is fast constant time.
          *
          * Specifically, this counts the number of <i>subdim</i>-faces
@@ -1511,7 +1511,7 @@ class TriangulationBase :
          * where the parameter \a k does not need to be known until runtime.
          *
          * For C++ programmers who know \a k at compile time, you are better
-         * off using the template function homology<k>() instead, which
+         * off using the template function `homology<k>()` instead, which
          * is slightly faster.
          *
          * A problem with computing homology is that, if \a dim is not one of
@@ -1559,7 +1559,7 @@ class TriangulationBase :
          * dimension \a dim; for details see the documentation below for the
          * argument \a k.
          *
-         * \python Like the C++ template function homology<k>(),
+         * \python Like the C++ template function `homology<k>()`,
          * you can omit the homology dimension \a k; this will default to 1.
          *
          * \param k the dimension of the homology group to return;
@@ -1606,7 +1606,7 @@ class TriangulationBase :
          * where the parameter \a k does not need to be known until runtime.
          *
          * For C++ programmers who know \a k at compile time, you are better
-         * off using the template function markedHomology<k>() instead, which
+         * off using the template function `markedHomology<k>()` instead, which
          * is slightly faster.
          *
          * This is a specialised homology routine; you should only use
@@ -1643,7 +1643,7 @@ class TriangulationBase :
          * the supported range (i.e., less than 1 or greater than or
          * equal to \a dim).
          *
-         * \python Like the C++ template function markedHomology<k>(),
+         * \python Like the C++ template function `markedHomology<k>()`,
          * you can omit the homology dimension \a k; this will default to 1.
          *
          * \param k the dimension of the homology group to compute; this must
@@ -1685,7 +1685,7 @@ class TriangulationBase :
          * face dimension does not need to be known until runtime.
          *
          * For C++ programmers who know \a subdim at compile time, you are
-         * better off using the template function boundaryMap<subdim>()
+         * better off using the template function `boundaryMap<subdim>()`
          * instead, which is slightly faster.
          *
          * This is the boundary map that you would use if you were building
@@ -1771,7 +1771,7 @@ class TriangulationBase :
          * face dimension does not need to be known until runtime.
          *
          * For C++ programmers who know \a subdim at compile time, you are
-         * better off using the template function dualBoundaryMap<subdim>()
+         * better off using the template function `dualBoundaryMap<subdim>()`
          * instead, which is slightly faster.
          *
          * This function is analogous to boundaryMap(), but is designed to
@@ -1896,7 +1896,7 @@ class TriangulationBase :
          * known until runtime.
          *
          * For C++ programmers who know \a subdim at compile time, you are
-         * better off using the template function dualToPrimal<subdim>()
+         * better off using the template function `dualToPrimal<subdim>()`
          * instead, which is slightly faster.
          *
          * The matrix that is returned should be thought of as acting on

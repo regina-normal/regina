@@ -259,6 +259,8 @@ tetrahedra. See "Face pairing graphs and 3-manifold enumeration",
 Benjamin A. Burton, J. Knot Theory Ramifications 13 (2004), 1057--
 1101.
 
+This routine is identical to calling ``hasMultiEdge<3>()``.
+
 Returns:
     ``True`` if and only if this face pairing contains a triple edge.)doc";
 

@@ -123,7 +123,7 @@ TEST(FacetPairing3Test, badSubgraphs) {
 
         regina::FacetPairing<3>::findAllPairings(nTets, false, 0,
                 [&](const FacetPairing<3>& pair, FacetPairing<3>::IsoList) {
-            if (pair.hasTripleEdge())
+            if (pair.hasMultiEdge<3>())
                 ++tripleEdge;
             if (pair.hasBrokenDoubleEndedChain())
                 ++brokenDoubleEndedChain;

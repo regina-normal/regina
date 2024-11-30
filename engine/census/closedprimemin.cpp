@@ -317,7 +317,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
 
         // Begin by testing for face pairings that can never lead to such a
         // triangulation.
-        if (perms_.pairing().hasTripleEdge() ||
+        if (perms_.pairing().hasMultiEdge<3>() ||
                 perms_.pairing().hasBrokenDoubleEndedChain() ||
                 perms_.pairing().hasOneEndedChainWithDoubleHandle() ||
                 perms_.pairing().hasOneEndedChainWithStrayBigon() ||

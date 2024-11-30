@@ -304,6 +304,55 @@ class FacetPairingBase :
         bool isClosed() const;
 
         /**
+         * Determines whether the underlying graph for this facet pairing
+         * contains an edge of multiplicity \a k.
+         *
+         * This corresponds to two distinct top-dimensional simplices
+         * joined to each other along \a k of their facets.
+         *
+         * Note that this routine does not consider loops in the underlying
+         * graph, only edges between distinct nodes.
+         *
+         * This routine is the fastest way to detect edges of multiplicity \a k
+         * if you know \a k at compile time.
+         *
+         * \nopython Instead use the variant `hasMultiEdge(k)`.
+         *
+         * \tparam k the multiplicity of edges to search for; this must be
+         * between 2 and `dim+1` inclusive.
+         *
+         * \return \c true if and only if the underyling graph has an edge of
+         * multiplicity \a k.
+         */
+        template <int k>
+        bool hasMultiEdge() const;
+
+        /**
+         * Determines whether the underlying graph for this facet pairing
+         * contains an edge of multiplicity \a k, where \a k does not need to
+         * be known until runtime.
+         *
+         * An edge of multiplicity \a k corresponds to two distinct
+         * top-dimensional simplices joined to each other along \a k of their
+         * facets.
+         *
+         * Note that this routine does not consider loops in the underlying
+         * graph, only edges between distinct nodes.
+         *
+         * For C++ programmers who know \a k at compile time, it is faster to
+         * call the template function `hasMultiEdge<k>()` instead.
+         *
+         * \exception InvalidArgument The argument \a k is outside the
+         * supported range.
+         *
+         * \param k the multiplicity of edges to search for; this must be
+         * between 2 and `dim+1` inclusive.
+         * \return \c true if and only if the underyling graph has an edge of
+         * multiplicity \a k.
+         */
+        bool hasMultiEdge(int k) const;
+
+        /**
          * Determines if this and the given facet pairing are identical.
          *
          * \param other the facet pairing to compare with this.

@@ -242,8 +242,8 @@ the triangulation, where the face dimension does not need to be known
 until runtime.
 
 For C++ programmers who know *subdim* at compile time, you are better
-off using the template function boundaryMap<subdim>() instead, which
-is slightly faster.
+off using the template function ``boundaryMap<subdim>()`` instead,
+which is slightly faster.
 
 This is the boundary map that you would use if you were building the
 homology groups manually from a chain complex.
@@ -356,7 +356,7 @@ where the face dimension does not need to be known until runtime.
 
 This routine takes linear time in the dimension *dim*. For C++
 programmers who know *subdim* at compile time, you are better off
-using the template function countBoundaryFaces<subdim>() instead,
+using the template function ``countBoundaryFaces<subdim>()`` instead,
 which is fast constant time.
 
 Specifically, this counts the number of *subdim*-faces for which
@@ -418,7 +418,7 @@ face dimension does not need to be known until runtime.
 
 This routine takes linear time in the dimension *dim*. For C++
 programmers who know *subdim* at compile time, you are better off
-using the template function countFaces<subdim>() instead, which is
+using the template function ``countFaces<subdim>()`` instead, which is
 fast constant time.
 
 For convenience, this routine explicitly supports the case *subdim* =
@@ -525,7 +525,7 @@ R"doc(Returns the boundary map from dual *subdim*-faces to dual
 not need to be known until runtime.
 
 For C++ programmers who know *subdim* at compile time, you are better
-off using the template function dualBoundaryMap<subdim>() instead,
+off using the template function ``dualBoundaryMap<subdim>()`` instead,
 which is slightly faster.
 
 This function is analogous to boundaryMap(), but is designed to work
@@ -622,8 +622,8 @@ homology classes, where the chain dimension does not need to be known
 until runtime.
 
 For C++ programmers who know *subdim* at compile time, you are better
-off using the template function dualToPrimal<subdim>() instead, which
-is slightly faster.
+off using the template function ``dualToPrimal<subdim>()`` instead,
+which is slightly faster.
 
 The matrix that is returned should be thought of as acting on column
 vectors. Specifically, the *c*th column of the matrix corresponds to
@@ -1251,8 +1251,16 @@ R"doc(Determines whether it is possible to perform a boundary shelling move
 upon the given top-dimensional simplex of this triangulation, without
 violating any simplex and/or facet locks.
 
+This test is _only available in standard dimensions_, since Regina's
+notion of "valid faces" is weaker in higher dimensions (due to the
+need to solve undecidable problems). See Face::isValid() for further
+discussion.
+
 For more detail on boundary shelling moves and when they can be
 performed, see shellBoundary().
+
+Precondition:
+    The dimension *dim* is one of Regina's standard dimensions.
 
 Precondition:
     The given simplex is a simplex of this triangulation.
@@ -1271,8 +1279,8 @@ ideal vertices as though they had been truncated, where the parameter
 *k* does not need to be known until runtime.
 
 For C++ programmers who know *k* at compile time, you are better off
-using the template function homology<k>() instead, which is slightly
-faster.
+using the template function ``homology<k>()`` instead, which is
+slightly faster.
 
 A problem with computing homology is that, if *dim* is not one of
 Regina's standard dimensions, then Regina cannot actually _detect_
@@ -1321,7 +1329,7 @@ Exception ``InvalidArgument``:
     see the documentation below for the argument *k*.
 
 Python:
-    Like the C++ template function homology<k>(), you can omit the
+    Like the C++ template function ``homology<k>()``, you can omit the
     homology dimension *k*; this will default to 1.
 
 Parameter ``k``:
@@ -1775,7 +1783,7 @@ the individual *k*-faces of this triangulation, where the parameter
 *k* does not need to be known until runtime.
 
 For C++ programmers who know *k* at compile time, you are better off
-using the template function markedHomology<k>() instead, which is
+using the template function ``markedHomology<k>()`` instead, which is
 slightly faster.
 
 This is a specialised homology routine; you should only use it if you
@@ -1813,8 +1821,8 @@ Exception ``InvalidArgument``:
     less than 1 or greater than or equal to *dim*).
 
 Python:
-    Like the C++ template function markedHomology<k>(), you can omit
-    the homology dimension *k*; this will default to 1.
+    Like the C++ template function ``markedHomology<k>()``, you can
+    omit the homology dimension *k*; this will default to 1.
 
 Parameter ``k``:
     the dimension of the homology group to compute; this must be
@@ -2362,6 +2370,11 @@ R"doc(If possible, performs a boundary shelling move upon the given top-
 dimensional simplex of this triangulation. This involves popping off a
 top-dimensional simplex with one or more facets on the boundary.
 
+This move is _only available in standard dimensions_, since Regina's
+notion of "valid faces" is weaker in higher dimensions (due to the
+need to solve undecidable problems). See Face::isValid() for further
+discussion.
+
 This triangulation will be changed directly.
 
 This move will only be performed if it will not change the topology of
@@ -2391,8 +2404,8 @@ Having said all of this, our conditions are:
 * at least one but not all of the facets of *s* lie in the boundary of
   the triangulation;
 
-* the face *f* (defined above) does not lie entirely in the boundary
-  of the triangulation;
+* the face *f* (defined above) is valid (even if it is a vertex), and
+  does not lie entirely in the boundary of the triangulation;
 
 * for each facial dimension *k*, no two *k*-faces of *s* that both
   contain *f* are identified (testing this for ``k = dim(f)+1`` is
@@ -2404,6 +2417,9 @@ If this triangulation is currently oriented, then this operation will
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
 old skeletal objects can no longer be used.
+
+Precondition:
+    The dimension *dim* is one of Regina's standard dimensions.
 
 Precondition:
     The given simplex is a simplex of this triangulation.
@@ -2430,11 +2446,19 @@ Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
 on locks). If the move _is_ allowed, and if the argument *perform* is
 ``True``, this routine will also _perform_ the move.
 
+This move is _only available in standard dimensions_, since Regina's
+notion of "valid faces" is weaker in higher dimensions (due to the
+need to solve undecidable problems). See Face::isValid() for further
+discussion.
+
 .. deprecated::
     If you just wish to test whether a such move is possible, call
     hasShellBoundary(). If you wish to both check and perform the
     move, call shellBoundary() without the two extra boolean
     arguments.
+
+Precondition:
+    The dimension *dim* is one of Regina's standard dimensions.
 
 Precondition:
     The given simplex is a simplex of this triangulation.
@@ -2927,10 +2951,18 @@ triangulation. If such a move is not allowed, or if such a move would
 violate any simplex and/or facet locks, then this routine returns no
 value.
 
+This operation is _only available in standard dimensions_, since
+Regina's notion of "valid faces" is weaker in higher dimensions (due
+to the need to solve undecidable problems). See Face::isValid() for
+further discussion.
+
 This triangulation will not be changed.
 
 For more detail on boundary shelling moves and when they can be
 performed, see shellBoundary().
+
+Precondition:
+    The dimension *dim* is one of Regina's standard dimensions.
 
 Precondition:
     The given simplex is a simplex of this triangulation.

@@ -238,6 +238,8 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * enumeration", Benjamin A. Burton, J. Knot Theory Ramifications
          * 13 (2004), 1057--1101.
          *
+         * This routine is identical to calling `hasMultiEdge<3>()`.
+         *
          * \return \c true if and only if this face pairing contains a
          * triple edge.
          */
@@ -621,6 +623,10 @@ inline FacetPairing<3>::FacetPairing(std::istream& in) :
 
 inline FacetPairing<3>::FacetPairing(size_t size) :
         detail::FacetPairingBase<3>(size) {
+}
+
+inline bool FacetPairing<3>::hasTripleEdge() const {
+    return hasMultiEdge<3>();
 }
 
 inline void FacetPairing<3>::followChain(size_t& tet, FacePair& faces) const {

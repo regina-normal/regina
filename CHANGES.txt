@@ -136,6 +136,8 @@ Version 7.4  [ (to be announced) ]
         Class FacePair:
             - Added a spaceship operator (<=>) for comparisons.
         Class FacetPairing<dim>:
+            - New generic routine hasMultiEdge(), which generalises the
+              3-D routine hasTripleEdge().
             - New routine hash(), which uses the tight encoding.
         Class FacetSpec<dim>:
             - New routine hash(), which uses the tight encoding.

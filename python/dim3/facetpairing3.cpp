@@ -72,6 +72,9 @@ void addFacetPairing3(pybind11::module_& m) {
             &FacetPairing<3>::isUnmatched, pybind11::const_),
             rbase::isUnmatched_2)
         .def("isConnected", &FacetPairing<3>::isConnected, rbase::isConnected)
+        .def("hasMultiEdge", (bool (FacetPairing<3>::*)(int) const)(
+                &FacetPairing<3>::hasMultiEdge),
+            rbase::hasMultiEdge)
         .def("isCanonical", &FacetPairing<3>::isCanonical, rbase::isCanonical)
         .def("canonical", &FacetPairing<3>::canonical, rbase::canonical)
         .def("canonicalAll", &FacetPairing<3>::canonicalAll,

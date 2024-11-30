@@ -50,6 +50,7 @@
 #include "triangulation/generic/facetpairing.h"
 #include "maths/perm.h"
 #include "utilities/exception.h"
+#include "utilities/fixedarray.h"
 #include "utilities/stringutils.h"
 #include "utilities/typeutils.h"
 
@@ -150,6 +151,53 @@ bool FacetPairingBase<dim>::isConnected() const {
     delete[] stack;
     delete[] seen;
     return false;
+}
+
+template <int dim>
+template <int k>
+bool FacetPairingBase<dim>::hasMultiEdge() const {
+    static_assert(2 <= k && k <= dim + 1,
+        "FacetPairing::hasMultiEdge() requires the edge multiplicity to be "
+        "between 2 and dim+1 inclusive.");
+
+    // Let n be the size of this facet pairing (i.e., the number of nodes).
+    // The running time must be at least O(n*dim), which is the number of
+    // edges in the underlying graph.  We want to engineer this test so that
+    // it runs in time O(n*dim) and nothing worse.
+
+    FixedArray<int> freq(size_, 0);
+
+    size_t index = 0;
+    for (size_t i = 0; i < size_; ++i) {
+        // Build a frequency array for this simplex.
+        for (int j = 0; j <= dim; ++j) {
+            const auto& dest = pairs_[index++];
+            if (! (dest.isBoundary(size_) || dest.simp == i)) {
+                if (++freq[dest.simp] >= k)
+                    return true;
+            }
+        }
+        // Reset the frequency array for the next simplex.
+        index -= (dim + 1);
+        for (int j = 0; j <= dim; ++j) {
+            const auto& dest = pairs_[index++];
+            if (! (dest.isBoundary(size_) || dest.simp == i)) {
+                --freq[dest.simp];
+            }
+        }
+    }
+
+    return false;
+}
+
+template <int dim>
+bool FacetPairingBase<dim>::hasMultiEdge(int k) const {
+    if (k < 2 || k > dim + 1)
+        throw InvalidArgument("hasMultiEdge(): unsupported multiplicity k");
+
+    return select_constexpr<2, dim + 2, bool>(k, [this](auto k) {
+        return hasMultiEdge<k>();
+    });
 }
 
 template <int dim>

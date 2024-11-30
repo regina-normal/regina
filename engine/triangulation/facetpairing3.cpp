@@ -40,28 +40,6 @@
 
 namespace regina {
 
-bool FacetPairing<3>::hasTripleEdge() const {
-    for (size_t tet = 0; tet < size_; tet++) {
-        // Is there a triple edge coming from this tetrahedron?
-        int equal = 0;
-        for (int i = 0; i < 4; i++)
-            if ((! isUnmatched(tet, i)) &&
-                    dest(tet, i).simp > static_cast<ssize_t>(tet)) {
-                // This face joins to a real face of a later tetrahedron.
-                for (int j = i + 1; j < 4; j++)
-                    if (dest(tet, i).simp == dest(tet, j).simp)
-                        equal++;
-            }
-
-        // Did we find at least three pairs {i,j} joining to the same
-        // real later tetrahedron?  A little case analysis shows that the
-        // only way we can achieve this is through a triple edge.
-        if (equal >= 3)
-            return true;
-    }
-    return false;
-}
-
 void FacetPairing<3>::followChain(ssize_t& tet, FacePair& faces) const {
     FacetSpec<3> dest1, dest2;
     while (true) {
