@@ -68,5 +68,7 @@ void runCensusAllNoBdry(Triangulation3TestFunction f, bool small_ = false);
 void runCensusAllClosed(Triangulation4TestFunction f, int size = 0);
 void runCensusAllBounded(Triangulation4TestFunction f, int size = 0);
 void runCensusAllNoBdry(Triangulation4TestFunction f, int size = 0);
+void runCensus(bool (*pairingFilter)(const regina::FacetPairing<4>&),
+    Triangulation4TestFunction f, int size);
 
 #endif

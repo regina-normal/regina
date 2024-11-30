@@ -197,3 +197,16 @@ void runCensusAllNoBdry(Triangulation4TestFunction testFunction, int size) {
         false /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing4, testFunction, BoolSet(true, true) /* finite */);
 }
+
+void runCensus(bool (*pairingFilter)(const regina::FacetPairing<4>&),
+        Triangulation4TestFunction f, int size) {
+    FacetPairing<4>::findAllPairings(size,
+        { true, true } /* bounded */, -1 /* bdry faces */,
+        [pairingFilter, f](const FacetPairing<4>& pairing,
+                FacetPairing<4>::IsoList autos) {
+            if (pairingFilter(pairing))
+                foundFacetPairing4(pairing, autos, f,
+                    { true, true } /* finite */);
+        });
+}
+
