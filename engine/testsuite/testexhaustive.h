@@ -45,6 +45,11 @@
  * The \a size parameter can be used to manually set the maximum number of
  * top-dimensional simplices; a value of 0 means the default should be used.
  *
+ * The \a pairingFilter parameter allows you to run the census over an
+ * arbitrary subset of facet pairings (those for which the filter returns
+ * \c true).  If a pairing filter is used then \a size must be explicitly
+ * specified (it cannot be 0).
+ *
  * Each test function takes as arguments a triangulation and its
  * human-readable name.
  */
@@ -69,6 +74,6 @@ void runCensusAllClosed(Triangulation4TestFunction f, int size = 0);
 void runCensusAllBounded(Triangulation4TestFunction f, int size = 0);
 void runCensusAllNoBdry(Triangulation4TestFunction f, int size = 0);
 void runCensus(bool (*pairingFilter)(const regina::FacetPairing<4>&),
-    Triangulation4TestFunction f, int size);
+    Triangulation4TestFunction f, int size, bool orblOnly = false);
 
 #endif

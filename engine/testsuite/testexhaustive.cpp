@@ -93,7 +93,7 @@ namespace {
             Triangulation2TestFunction f) {
         GluingPermSearcher<2>::findAllPerms(pairing, std::move(autos),
             false /* orientable only */,
-            [&f](const GluingPerms<2>& perms) {
+            [f](const GluingPerms<2>& perms) {
                 Triangulation<2> tri = perms.triangulate();
                 f(tri, tri.isoSig().c_str());
             });
@@ -107,7 +107,7 @@ namespace {
             ! finite.hasFalse() /* finite only */,
             (minimal ? CensusPurge::NonMinimalPrime | CensusPurge::P2Reducible :
                 CensusPurge::None),
-            [&f, finite](const GluingPerms<3>& perms) {
+            [f, finite](const GluingPerms<3>& perms) {
                 Triangulation<3> tri = perms.triangulate();
                 if (tri.isValid() && finite.contains(! tri.isIdeal()))
                     f(tri, tri.isoSig().c_str());
@@ -120,7 +120,7 @@ namespace {
         GluingPermSearcher<4>::findAllPerms(pairing, std::move(autos),
             false /* orientable only */,
             ! finite.hasFalse() /* finite only */,
-            [&f, finite](const GluingPerms<4>& perms) {
+            [f, finite](const GluingPerms<4>& perms) {
                 Triangulation<4> tri = perms.triangulate();
                 if (tri.isValid() && finite.contains(! tri.isIdeal()))
                     f(tri, tri.isoSig().c_str());
@@ -199,14 +199,19 @@ void runCensusAllNoBdry(Triangulation4TestFunction testFunction, int size) {
 }
 
 void runCensus(bool (*pairingFilter)(const regina::FacetPairing<4>&),
-        Triangulation4TestFunction f, int size) {
+        Triangulation4TestFunction f, int size, bool orblOnly) {
     FacetPairing<4>::findAllPairings(size,
         { true, true } /* bounded */, -1 /* bdry faces */,
-        [pairingFilter, f](const FacetPairing<4>& pairing,
+        [pairingFilter, f, orblOnly](const FacetPairing<4>& pairing,
                 FacetPairing<4>::IsoList autos) {
             if (pairingFilter(pairing))
-                foundFacetPairing4(pairing, autos, f,
-                    { true, true } /* finite */);
+                GluingPermSearcher<4>::findAllPerms(pairing,
+                    std::move(autos), orblOnly, false /* finite only */,
+                    [f](const GluingPerms<4>& perms) {
+                        Triangulation<4> tri = perms.triangulate();
+                        if (tri.isValid())
+                            f(tri, tri.isoSig().c_str());
+                    });
         });
 }
 

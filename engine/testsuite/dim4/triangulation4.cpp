@@ -38,6 +38,7 @@
 #include "triangulation/dim4.h"
 #include "triangulation/example3.h"
 #include "triangulation/example4.h"
+#include "triangulation/facetpairing.h"
 
 #include "generic/triangulationtest.h"
 #include "testexhaustive.h"
@@ -719,24 +720,60 @@ TEST_F(Dim4Test, pachner) {
 }
 
 TEST_F(Dim4Test, move20Vertex) {
-    // Note: we need at least 3 pentachora for 2-0 moves to become legal.
+    // Note: we need at least 3 pentachora and a quadruple edge for
+    // 2-0 vertex moves to become legal.
     testManualCases(TriangulationTest<4>::verify20Vertex);
-    runCensusAllBounded(TriangulationTest<4>::verify20Vertex);
-    runCensusAllNoBdry(TriangulationTest<4>::verify20Vertex);
+
+    // The exhaustive cases below are slow, and so we disable them for now.
+    // On my machine (December 2024) they take around 45 seconds.
+    #if 0
+    // Exhaustive, with boundary facets:
+    runCensus([](const regina::FacetPairing<4>& p) {
+        return p.hasMultiEdge<4>() && ! p.isClosed();
+    }, TriangulationTest<4>::verify20Vertex, 3, true /* orientable only */);
+    // Exhaustive, without boundary facets:
+    runCensus([](const regina::FacetPairing<4>& p) {
+        return p.hasMultiEdge<4>() && p.isClosed();
+    }, TriangulationTest<4>::verify20Vertex, 4, true /* orientable only */);
+    #endif
 }
 
 TEST_F(Dim4Test, move20Edge) {
-    // Note: we need at least 3 pentachora for 2-0 moves to become legal.
+    // Note: we need at least 3 pentachora and a triple edge for
+    // 2-0 edge moves to become legal.
     testManualCases(TriangulationTest<4>::verify20Edge);
-    runCensusAllBounded(TriangulationTest<4>::verify20Edge);
-    runCensusAllNoBdry(TriangulationTest<4>::verify20Edge);
+
+    // The exhaustive cases below are slow, and so we disable them for now.
+    // On my machine (December 2024) they take around 3.5 minutes.
+    #if 0
+    // Exhaustive, with boundary facets:
+    runCensus([](const regina::FacetPairing<4>& p) {
+        return p.hasMultiEdge<3>() && ! p.isClosed();
+    }, TriangulationTest<4>::verify20Edge, 3, true /* orientable only */);
+    // Exhaustive, without boundary facets:
+    runCensus([](const regina::FacetPairing<4>& p) {
+        return p.hasMultiEdge<3>() && p.isClosed();
+    }, TriangulationTest<4>::verify20Edge, 4, true /* orientable only */);
+    #endif
 }
 
 TEST_F(Dim4Test, move20Triangle) {
-    // Note: we need at least 3 pentachora for 2-0 moves to become legal.
+    // Note: we need at least 3 pentachora and a double edge for
+    // 2-0 triangle moves to become legal.
     testManualCases(TriangulationTest<4>::verify20Triangle);
-    runCensusAllBounded(TriangulationTest<4>::verify20Triangle);
-    runCensusAllNoBdry(TriangulationTest<4>::verify20Triangle);
+
+    // The exhaustive cases below are slow, and so we disable them for now.
+    // On my machine (December 2024) they take around 6 minutes.
+    #if 0
+    // Exhaustive, with boundary facets:
+    runCensus([](const regina::FacetPairing<4>& p) {
+        return p.hasMultiEdge<2>() && ! p.isClosed();
+    }, TriangulationTest<4>::verify20Triangle, 3, true /* orientable only */);
+    // Exhaustive, without boundary facets:
+    runCensus([](const regina::FacetPairing<4>& p) {
+        return p.hasMultiEdge<2>() && p.isClosed();
+    }, TriangulationTest<4>::verify20Triangle, 4, true /* orientable only */);
+    #endif
 }
 
 TEST_F(Dim4Test, shellBoundary) {
