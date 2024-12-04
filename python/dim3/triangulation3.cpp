@@ -614,64 +614,6 @@ void addTriangulation3(pybind11::module_& m) {
             rbase::withShellBoundary)
         .def("withCollapseEdge", &Triangulation<3>::withCollapseEdge,
             rdoc::withCollapseEdge)
-        #if defined(__GNUC__)
-        // The following routines are deprecated, but we still need to bind
-        // them.  Silence the inevitable deprecation warnings that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        .def("pachner",
-            overload_cast<Face<3, 3>*, bool, bool>(
-                &Triangulation<3>::pachner<3>),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("pachner",
-            overload_cast<Face<3, 2>*, bool, bool>(
-                &Triangulation<3>::pachner<2>),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("pachner",
-            overload_cast<Face<3, 1>*, bool, bool>(
-                &Triangulation<3>::pachner<1>),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("pachner",
-            overload_cast<Face<3, 0>*, bool, bool>(
-                &Triangulation<3>::pachner<0>),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::twoZeroMove) // deprecated
-        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<1>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::twoZeroMove) // deprecated
-        .def("shellBoundary",
-            overload_cast<Simplex<3>*, bool, bool>(
-                &Triangulation<3>::shellBoundary),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::shellBoundary_2) // deprecated
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
         .def("reorderBFS", &Triangulation<3>::reorderBFS,
             pybind11::arg("reverse") = false, rbase::reorderBFS)
         .def("reorderTetrahedraBFS",
@@ -836,6 +778,65 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rdoc::fromSnapPea)
         .def_readonly_static("dimension", &Triangulation<3>::dimension)
     ;
+    #if defined(__GNUC__)
+    // The following routines are deprecated, but we still need to bind
+    // them.  Silence the inevitable deprecation warnings that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    c.def("pachner",
+            overload_cast<Face<3, 3>*, bool, bool>(
+                &Triangulation<3>::pachner<3>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<3, 2>*, bool, bool>(
+                &Triangulation<3>::pachner<2>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<3, 1>*, bool, bool>(
+                &Triangulation<3>::pachner<1>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<3, 0>*, bool, bool>(
+                &Triangulation<3>::pachner<0>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<0>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<1>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("shellBoundary",
+            overload_cast<Simplex<3>*, bool, bool>(
+                &Triangulation<3>::shellBoundary),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::shellBoundary_2) // deprecated
+    ;
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);

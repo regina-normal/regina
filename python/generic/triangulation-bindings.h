@@ -238,34 +238,6 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("with20", &Triangulation<dim>::template with20<0>, rbase::with20)
         .def("with20", &Triangulation<dim>::template with20<1>, rbase::with20)
         .def("with20", &Triangulation<dim>::template with20<2>, rbase::with20)
-        #if defined(__GNUC__)
-        // The following routines are deprecated, but we still need to bind
-        // them.  Silence the inevitable deprecation warnings that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::twoZeroMove) // deprecated
-        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<1>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::twoZeroMove) // deprecated
-        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<2>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::twoZeroMove) // deprecated
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
         .def("doubleCover", &Triangulation<dim>::doubleCover,
             rbase::doubleCover)
         .def("makeDoubleCover", [](Triangulation<dim>& tri) { // deprecated
@@ -349,6 +321,35 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
+    #if defined(__GNUC__)
+    // The following routines are deprecated, but we still need to bind
+    // them.  Silence the inevitable deprecation warnings that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    c.def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<0>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<1>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<2>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+    ;
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
     regina::for_constexpr<0, dim>([&c](auto k) {
         c.def("translate", overload_cast<const regina::Face<dim, k>*>(
                 &Triangulation<dim>::template translate<k>, pybind11::const_),
