@@ -1120,15 +1120,22 @@ class TriangulationTest : public testing::Test {
          * a subdim-face of the triangulation tri.
          *
          * These tests are of a general nature that can be used with any type
-         * of move (e.g., verifying that the move does not change topology).
-         * If there are additional tests specific to this particular type of
-         * move (e.g., verifying the combinatorics of the resulting
-         * triangulation), these can be performed using the postTest argument.
-         * Specifically, if the move is legal when performed on the ith face,
-         * then this routine will call postTest(pre_move_tri, post_move_tri, i).
+         * of move - essentialy they verify that, if the move was performed,
+         * it did not change the topology.
          *
-         * There is another version of this routine that does not have the
-         * postTest argument.
+         * More specific tests can be included through the optional preTest and
+         * postTest arguments.  Specifically, when attempting to perform the
+         * move on the ith face:
+         *
+         * - preTest(tri, i) will be called to determine in advance whether
+         *   the move should be legal.  This returns a std::optional<bool>,
+         *   which is true if the move should be legal, false if the move
+         *   should be illegal, or has no value if the legality is not known
+         *   in advance.
+         *
+         * - If the move was performed, postTest(pre_move_tri, post_move_tri, i)
+         *   will be called.  This may run any additional tests (e.g,. verifying
+         *   the combinatorics of the resulting triangulation).
          *
          * It should surely be possible to deduce subdim automatically, and even
          * to make move and sizeChange template parameters (so that verifyMove
@@ -1136,12 +1143,15 @@ class TriangulationTest : public testing::Test {
          * to work out how to do this with pointers to member functions.
          * I think the fact that Triangulation is templated is not helping.
          */
-        template <int subdim, typename PostTest>
+        template <int subdim>
         static void verifyMove(const Triangulation<dim>& tri,
                 const char* name,
                 bool(Triangulation<dim>::*move)(regina::Face<dim, subdim>*),
                 int sizeChange,
-                PostTest&& postTest) {
+                std::optional<bool>(*preTest)(const Triangulation<dim>&,
+                    size_t) = nullptr,
+                void(*postTest)(const Triangulation<dim>&,
+                    const Triangulation<dim>&, size_t) = nullptr) {
             static_assert(0 <= subdim && subdim <= dim);
             SCOPED_TRACE_CSTRING(name);
             SCOPED_TRACE_NAMED_NUMERIC("subdim", subdim);
@@ -1156,11 +1166,15 @@ class TriangulationTest : public testing::Test {
                 Triangulation<dim> result(oriented);
 
                 // Perform the move (if we can).
+                std::optional<bool> expect =
+                    (preTest ? preTest(tri, i) : std::nullopt);
                 bool performed;
                 if constexpr (subdim == dim)
                     performed = (result.*move)(result.simplex(i));
                 else
                     performed = (result.*move)(result.template face<subdim>(i));
+                if (expect.has_value())
+                    EXPECT_EQ(performed, *expect);
 
                 // Ensure that properties we are about to verify have been
                 // explicitly recomputed.
@@ -1198,20 +1212,9 @@ class TriangulationTest : public testing::Test {
                             tri.template homology<2>());
                 }
 
-                postTest(oriented, result, i);
+                if (postTest)
+                    postTest(oriented, result, i);
             }
-        }
-
-        template <int subdim>
-        static void verifyMove(const Triangulation<dim>& tri,
-                const char* name,
-                bool(Triangulation<dim>::*move)(regina::Face<dim, subdim>*),
-                int sizeChange) {
-            verifyMove(tri, name, move, sizeChange,
-                [](const Triangulation<dim>&, const Triangulation<dim>&,
-                        size_t) {
-                    // No additional move-specific tests.
-                });
         }
 
         template <int k>
@@ -1354,6 +1357,7 @@ class TriangulationTest : public testing::Test {
             verifyMove<0>(tri, name,
                 &Triangulation<dim>::template move20<0>,
                 -2,
+                nullptr /* preTest */,
                 [](const Triangulation<dim>& pre,
                         const Triangulation<dim>& post, size_t i) {
                     // Verify that the vertex link was correct, and that
@@ -1370,8 +1374,8 @@ class TriangulationTest : public testing::Test {
 
                     auto glue = emb0.simplex()->adjacentGluing(
                         emb0.vertices()[dim]);
-                    for (int i = 1; i <= dim; ++i) {
-                        int f = emb0.vertices()[i];
+                    for (int j = 1; j <= dim; ++j) {
+                        int f = emb0.vertices()[j];
                         EXPECT_EQ(emb0.simplex()->adjacentSimplex(f),
                             emb1.simplex());
                         EXPECT_EQ(emb0.simplex()->adjacentGluing(f), glue);
