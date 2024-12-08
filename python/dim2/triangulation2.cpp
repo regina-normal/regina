@@ -309,52 +309,6 @@ void addTriangulation2(pybind11::module_& m) {
         .def("with20", &Triangulation<2>::with20<0>, rbase::with20)
         .def("withShellBoundary", &Triangulation<2>::withShellBoundary,
             rbase::withShellBoundary)
-        #if defined(__GNUC__)
-        // The following routines are deprecated, but we still need to bind
-        // them.  Silence the inevitable deprecation warnings that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        .def("pachner",
-            overload_cast<Face<2, 2>*, bool, bool>(
-                &Triangulation<2>::pachner<2>),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("pachner",
-            overload_cast<Face<2, 1>*, bool, bool>(
-                &Triangulation<2>::pachner<1>),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("pachner",
-            overload_cast<Face<2, 0>*, bool, bool>(
-                &Triangulation<2>::pachner<0>),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("twoZeroMove", &Triangulation<2>::twoZeroMove<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::twoZeroMove) // deprecated
-        .def("shellBoundary",
-            overload_cast<Simplex<2>*, bool, bool>(
-                &Triangulation<2>::shellBoundary),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rbase::shellBoundary_2) // deprecated
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<2>::doubleCover, rbase::doubleCover)
@@ -409,6 +363,53 @@ void addTriangulation2(pybind11::module_& m) {
         }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
+    #if defined(__GNUC__)
+    // The following routines are deprecated, but we still need to bind
+    // them.  Silence the inevitable deprecation warnings that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    c.def("pachner",
+            overload_cast<Face<2, 2>*, bool, bool>(
+                &Triangulation<2>::pachner<2>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<2, 1>*, bool, bool>(
+                &Triangulation<2>::pachner<1>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("pachner",
+            overload_cast<Face<2, 0>*, bool, bool>(
+                &Triangulation<2>::pachner<0>),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::pachner_2) // deprecated
+        .def("twoZeroMove", &Triangulation<2>::twoZeroMove<0>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::twoZeroMove) // deprecated
+        .def("shellBoundary",
+            overload_cast<Simplex<2>*, bool, bool>(
+                &Triangulation<2>::shellBoundary),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rbase::shellBoundary_2) // deprecated
+    ;
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);

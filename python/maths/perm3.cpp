@@ -103,21 +103,6 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("Sn", &Perm<3>::Sn)
         .def_readonly_static("orderedS3", &Perm<3>::orderedS3)
         .def_readonly_static("orderedSn", &Perm<3>::orderedSn)
-        #if defined(__GNUC__)
-        // The following members are deprecated, but we still need to bind
-        // them.  Silence the inevitable deprecation warnings that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        .def_readonly_static("S2", &Perm<3>::S2) // deprecated
-        .def_readonly_static("Sn_1", &Perm<3>::S2) // deprecated
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
         .def_readonly_static("code012", &Perm<3>::code012)
         .def_readonly_static("code021", &Perm<3>::code021)
         .def_readonly_static("code102", &Perm<3>::code102)
@@ -125,6 +110,22 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("code201", &Perm<3>::code201)
         .def_readonly_static("code210", &Perm<3>::code210)
     ;
+    #if defined(__GNUC__)
+    // The following members are deprecated, but we still need to bind
+    // them.  Silence the inevitable deprecation warnings that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    c.def_readonly_static("S2", &Perm<3>::S2) // deprecated
+        .def_readonly_static("Sn_1", &Perm<3>::S2) // deprecated
+    ;
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
     regina::for_constexpr<4, 17>([&c](auto i) {
         c.def_static("contract", &Perm<3>::template contract<i>,
             rdoc::contract);

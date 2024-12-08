@@ -121,26 +121,27 @@ void addPerm5(pybind11::module_& m) {
         .def_readonly_static("Sn", &Perm<5>::Sn)
         .def_readonly_static("orderedS5", &Perm<5>::orderedS5)
         .def_readonly_static("orderedSn", &Perm<5>::orderedSn)
-        #if defined(__GNUC__)
-        // The following members are deprecated, but we still need to bind
-        // them.  Silence the inevitable deprecation warnings that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        .def_readonly_static("Sn_1", &Perm<5>::S4) // deprecated
+    ;
+    #if defined(__GNUC__)
+    // The following members are deprecated, but we still need to bind
+    // them.  Silence the inevitable deprecation warnings that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    c.def_readonly_static("Sn_1", &Perm<5>::S4) // deprecated
         .def_readonly_static("S4", &Perm<5>::S4) // deprecated
         .def_readonly_static("orderedS4", &Perm<5>::orderedS4) // deprecated
         .def_readonly_static("S3", &Perm<5>::S3) // deprecated
         .def_readonly_static("orderedS3", &Perm<5>::orderedS3) // deprecated
         .def_readonly_static("S2", &Perm<5>::S2) // deprecated
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
     ;
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
     regina::for_constexpr<6, 17>([&c](auto i) {
         c.def_static("contract", &Perm<5>::template contract<i>,
             rdoc::contract);

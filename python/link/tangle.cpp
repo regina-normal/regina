@@ -93,34 +93,6 @@ void addTangle(pybind11::module_& m) {
         .def("withR2",
             overload_cast<Crossing*>(&Tangle::withR2, pybind11::const_),
             rdoc::withR2_2)
-        #if defined(__GNUC__)
-        // The following routines are deprecated, but we still need to bind
-        // them.  Silence the inevitable deprecation warnings that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        .def("r1", overload_cast<Crossing*, bool, bool>(&Tangle::r1),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r1_2) // deprecated
-        .def("r2", overload_cast<StrandRef, bool, bool>(&Tangle::r2),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r2_3) // deprecated
-        .def("r2", overload_cast<Crossing*, bool, bool>(&Tangle::r2),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::r2_4) // deprecated
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
         .def("simplifyToLocalMinimum", &Tangle::simplifyToLocalMinimum,
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
         .def("brief", overload_cast<>(&Tangle::brief, pybind11::const_),
@@ -140,6 +112,35 @@ void addTangle(pybind11::module_& m) {
             return Tangle::fromOrientedGauss(v.begin(), v.end());
         }, pybind11::arg("tokens"), rdoc::fromOrientedGauss_2)
     ;
+    #if defined(__GNUC__)
+    // The following routines are deprecated, but we still need to bind
+    // them.  Silence the inevitable deprecation warnings that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    c.def("r1", overload_cast<Crossing*, bool, bool>(&Tangle::r1),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r1_2) // deprecated
+        .def("r2", overload_cast<StrandRef, bool, bool>(&Tangle::r2),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r2_3) // deprecated
+        .def("r2", overload_cast<Crossing*, bool, bool>(&Tangle::r2),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true,
+            rdoc::r2_4) // deprecated
+    ;
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
     regina::python::add_output(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
