@@ -297,11 +297,11 @@ QVariant Edge3Model::data(const QModelIndex& index, int role) const {
                 return index.row();
             case 1:
                 if (! item->isValid())
-                    return tr("Invalid");
+                    return item->isLoop() ? tr("Invalid, loop") : tr("Invalid");
                 else if (item->isBoundary())
-                    return tr("Bdry");
+                    return item->isLoop() ? tr("Bdry, loop") : tr("Bdry");
                 else
-                    return QString();
+                    return item->isLoop() ? tr("Loop") : QString();
             case 2:
                 return static_cast<unsigned>(item->degree());
             case 3:
@@ -776,9 +776,9 @@ QVariant Edge2Model::data(const QModelIndex& index, int role) const {
                 return index.row();
             case 1:
                 if (item->isBoundary())
-                    return tr("Bdry");
+                    return item->isLoop() ? tr("Bdry, loop") : tr("Bdry");
                 else
-                    return QString();
+                    return item->isLoop() ? tr("Loop") : QString();
             case 2:
                 return static_cast<unsigned>(item->degree());
             case 3:
@@ -1120,17 +1120,19 @@ QVariant Edge4Model::data(const QModelIndex& index, int role) const {
                 return index.row();
             case 1:
                 if (! item->isValid()) {
+                    QString suffix = (item->isLoop() ? tr(", loop") :
+                        QString());
                     if (item->hasBadIdentification())
-                        return tr("Invalid (reverse gluing)");
+                        return tr("Invalid (reverse gluing)") + suffix;
                     else if (item->hasBadLink())
-                        return tr("Invalid (bad link)");
+                        return tr("Invalid (bad link)") + suffix;
                     else // should never happen
-                        return tr("Invalid (unknown reason)");
+                        return tr("Invalid (unknown reason)") + suffix;
                 }
                 else if (item->isBoundary())
-                    return tr("Bdry");
+                    return item->isLoop() ? tr("Bdry, loop") : tr("Bdry");
                 else
-                    return QString();
+                    return item->isLoop() ? tr("Loop") : QString();
             case 2:
                 return static_cast<unsigned>(item->degree());
             case 3:

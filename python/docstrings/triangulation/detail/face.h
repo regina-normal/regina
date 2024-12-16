@@ -495,6 +495,17 @@ Precondition:
 Returns:
     ``True`` if and only if this (*dim*-1)-face is locked.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase_::isLoop
+constexpr const char *isLoop =
+R"doc(For edges, determines whether this face is a loop. A _loop_ is an edge
+whose two endpoints are identified.
+
+Precondition:
+    The facial dimension *subdim* is precisely 1.
+
+Returns:
+    ``True`` if and only if this edge is a loop.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase_::isValid
 constexpr const char *isValid =
 R"doc(Determines if this face is valid.

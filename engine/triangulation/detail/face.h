@@ -964,6 +964,16 @@ class FaceBase :
         Perm<dim + 1> pentachoronMapping(int face) const;
 
         /**
+         * For edges, determines whether this face is a loop.
+         * A _loop_ is an edge whose two endpoints are identified.
+         *
+         * \pre The facial dimension \a subdim is precisely 1.
+         *
+         * \return \c true if and only if this edge is a loop.
+         */
+        bool isLoop() const;
+
+        /**
          * Locks this codimension-1-face.
          *
          * Essentially, locking a face of dimension (<i>dim</i>-1) means
@@ -1328,6 +1338,15 @@ inline Perm<dim + 1> FaceBase<dim, subdim>::pentachoronMapping(int face) const {
     static_assert(subdim >= 5, "pentachoronMapping() is only available "
         "for faces of dimension >= 5.");
     return faceMapping<4>(face);
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::isLoop() const {
+    static_assert(subdim == 1, "isLoop() is only available for edges.");
+
+    const auto& emb = front();
+    const Simplex<dim>* simp = emb.simplex();
+    return simp->vertex(emb.vertices()[0]) == simp->vertex(emb.vertices()[1]);
 }
 
 template <int dim, int subdim>

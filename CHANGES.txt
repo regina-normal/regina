@@ -131,6 +131,7 @@ Version 7.4  [ (to be announced) ]
             - New static routine faceNumber(u, v) to return the edge number in
               a simplex spanned by vertices u and v.  This is implemented in
               FaceNumbering<dim, 1> and is also accessible to Face<dim, 1>.
+            - New routine Face<dim, 1>::isLoop().
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
         Class FacePair:

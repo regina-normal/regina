@@ -165,6 +165,9 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         c.def("vertexMapping", &Face<dim, subdim>::vertexMapping,
             rbase::vertexMapping);
     }
+    if constexpr (subdim == 1) {
+        c.def("isLoop", &Face<dim, subdim>::isLoop, rbase::isLoop);
+    }
     if constexpr (dim - subdim == 1) {
         c.def("lock", &Face<dim, subdim>::lock, rbase::lock);
         c.def("unlock", &Face<dim, subdim>::unlock, rbase::unlock);

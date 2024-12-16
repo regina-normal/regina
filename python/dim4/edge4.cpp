@@ -99,6 +99,7 @@ void addEdge4(pybind11::module_& m) {
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Edge<4>::vertexMapping, rbase::vertexMapping)
+        .def("isLoop", &Edge<4>::isLoop, rbase::isLoop)
         .def("degree", &Edge<4>::degree, rbase::degree)
         .def("isBoundary", &Edge<4>::isBoundary, rbase::isBoundary)
         .def("isLinkOrientable", &Edge<4>::isLinkOrientable,
