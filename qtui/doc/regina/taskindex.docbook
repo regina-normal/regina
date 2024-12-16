@@ -1255,6 +1255,11 @@
   <seeie>See: search</seeie>
  </indexentry>
 
+ <indexentry>
+  <primaryie><link linkend="tri-faces-loop">loop edges,
+   testing for</link></primaryie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-M'><title>&mdash; M &mdash;</title>
 
  <indexentry>

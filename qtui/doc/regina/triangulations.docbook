@@ -928,6 +928,15 @@
             </para>
            </glossdef>
           </glossentry>
+          <glossentry id="tri-faces-loop">
+           <glossterm><guilabel>Loop</guilabel></glossterm>
+           <glossdef>
+            <para>
+             Indicates that this face is an edge whose two endpoints
+             are identified.
+            </para>
+           </glossdef>
+          </glossentry>
          </glosslist>
         </para>
         <para>
