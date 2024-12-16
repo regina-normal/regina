@@ -120,3 +120,23 @@ index 1f436109c..ed67a9292 100644
  
  template <typename T>
  T v_permute_coordinates(const T& vec, const vector<key_t>& perm){
+diff --git a/engine/libnormaliz/collect_lat.cpp b/engine/libnormaliz/collect_lat.cpp
+index 28cb6e008..4879810be 100644
+--- a/engine/libnormaliz/collect_lat.cpp
++++ b/engine/libnormaliz/collect_lat.cpp
+@@ -386,6 +386,7 @@ string expand_project(const string& project){
+     return result;
+ }
+ 
++#if 0
+ void collect_lat(const string& project, const long given_nr_subsplits) {
+ 
+     string name;
+@@ -627,6 +628,6 @@ void collect_lat(const string& project, const long given_nr_subsplits) {
+     }
+     new_split_data.write_data();
+ }
+-
++#endif
+ 
+ }  // namespace libnormaliz

@@ -386,6 +386,7 @@ string expand_project(const string& project){
     return result;
 }
 
+#if 0
 void collect_lat(const string& project, const long given_nr_subsplits) {
 
     string name;
@@ -627,6 +628,6 @@ void collect_lat(const string& project, const long given_nr_subsplits) {
     }
     new_split_data.write_data();
 }
-
+#endif
 
 }  // namespace libnormaliz
