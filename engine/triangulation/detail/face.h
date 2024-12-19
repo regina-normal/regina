@@ -62,7 +62,7 @@ namespace regina {
  * the combinatorial type).
  *
  * This is the result of calling `f.triangleType()`, where \a f is a 2-face
- * within a triangulation of any dimension.
+ * within a triangulation of any dimension ≥ 3.
  *
  * \ingroup triangulation
  */

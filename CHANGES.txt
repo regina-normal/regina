@@ -561,7 +561,7 @@ Version 7.4  [ (to be announced) ]
         Enum TriangleType:
             - New scoped enumeration to replace the old non-scoped enumeration
               Triangle<3>::Type.  The new TriangleType enumeration is used for
-              triangles within triangulations of all dimensions.
+              triangles within triangulations of all dimensions ≥ 3.
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.

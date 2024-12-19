@@ -81,8 +81,8 @@ type.
 
 .. deprecated::
     This has been renamed to triangleSubtype(), and is now available
-    for triangulations of all dimensions. See triangleSubtype() for
-    further information.
+    for triangulations of all dimensions ≥ 3. See triangleSubtype()
+    for further information.
 
 Returns:
     The vertex or edge number (0, 1 or 2) that plays a special role,
@@ -96,8 +96,8 @@ triangle.
 
 .. deprecated::
     This has been renamed to triangleType(), and is now available for
-    triangulations of all dimensions. See triangleType() for further
-    information.
+    triangulations of all dimensions ≥ 3. See triangleType() for
+    further information.
 
 Returns:
     the combinatorial type of this triangle, which will never be

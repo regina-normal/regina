@@ -19,7 +19,7 @@ vertices of the triangle are considered unlabelled (so a relabelling
 will not change the combinatorial type).
 
 This is the result of calling ``f.triangleType()``, where *f* is a
-2-face within a triangulation of any dimension.)doc";
+2-face within a triangulation of any dimension ≥ 3.)doc";
 
 namespace TriangleType_ {
 
@@ -690,7 +690,8 @@ The reason this routine is non-const is because the triangle type and
 subtype are cached when first computed.
 
 Precondition:
-    The facial dimension *subdim* is precisely 2.
+    The facial dimension *subdim* is precisely 2, and the
+    triangulation dimension *dim* is at least 3.
 
 Returns:
     The vertex or edge number (0, 1 or 2) that plays a special role,
@@ -712,7 +713,8 @@ The reason this routine is non-const is because the triangle type and
 subtype are cached when first computed.
 
 Precondition:
-    The facial dimension *subdim* is precisely 2.
+    The facial dimension *subdim* is precisely 2, and the
+    triangulation dimension *dim* is at least 3.
 
 Returns:
     the combinatorial type of this triangle. This routine will never
