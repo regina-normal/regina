@@ -585,6 +585,7 @@ TriangleEmbedding5 : alias -> FaceEmbedding5_2
 TriangleEmbedding6 : alias -> FaceEmbedding6_2
 TriangleEmbedding7 : alias -> FaceEmbedding7_2
 TriangleEmbedding8 : alias -> FaceEmbedding8_2
+TriangleType : enum
 Triangulation2 : class -> EqualityType.BY_VALUE
 Triangulation3 : class -> EqualityType.BY_VALUE
 Triangulation4 : class -> EqualityType.BY_VALUE
