@@ -46,6 +46,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 using regina::Triangle;
 using regina::TriangleEmbedding;
+using regina::TriangleType;
 
 void addTriangle3(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
@@ -134,33 +135,18 @@ void addTriangle3(pybind11::module_& m) {
     regina::python::addListView<
         decltype(std::declval<Triangle<3>>().embeddings())>(m);
 
-    RDOC_SCOPE_INNER_BEGIN(Type)
+    // Deprecated types and constants:
+    c.attr("Type") = m.attr("TriangleType");
+    c.attr("UNKNOWN_TYPE") = TriangleType::Unknown;
+    c.attr("TRIANGLE") = TriangleType::Triangle;
+    c.attr("SCARF") = TriangleType::Scarf;
+    c.attr("PARACHUTE") = TriangleType::Parachute;
+    c.attr("CONE") = TriangleType::Cone;
+    c.attr("MOBIUS") = TriangleType::Mobius;
+    c.attr("HORN") = TriangleType::Horn;
+    c.attr("DUNCEHAT") = TriangleType::DunceHat;
+    c.attr("L31") = TriangleType::L31;
 
-    // Embed this enum in the Triangle3 class.
-    pybind11::enum_<Triangle<3>::Type>(c, "Type", rdoc_inner_scope)
-        .value("Unknown", Triangle<3>::Type::Unknown, rdoc_inner::Unknown)
-        .value("Triangle", Triangle<3>::Type::Triangle, rdoc_inner::Triangle)
-        .value("Scarf", Triangle<3>::Type::Scarf, rdoc_inner::Scarf)
-        .value("Parachute", Triangle<3>::Type::Parachute, rdoc_inner::Parachute)
-        .value("Cone", Triangle<3>::Type::Cone, rdoc_inner::Cone)
-        .value("Mobius", Triangle<3>::Type::Mobius, rdoc_inner::Mobius)
-        .value("Horn", Triangle<3>::Type::Horn, rdoc_inner::Horn)
-        .value("DunceHat", Triangle<3>::Type::DunceHat, rdoc_inner::DunceHat)
-        .value("L31", Triangle<3>::Type::L31, rdoc_inner::L31)
-        ;
-
-    // Deprecated constants:
-    c.attr("UNKNOWN_TYPE") = Triangle<3>::Type::Unknown;
-    c.attr("TRIANGLE") = Triangle<3>::Type::Triangle;
-    c.attr("SCARF") = Triangle<3>::Type::Scarf;
-    c.attr("PARACHUTE") = Triangle<3>::Type::Parachute;
-    c.attr("CONE") = Triangle<3>::Type::Cone;
-    c.attr("MOBIUS") = Triangle<3>::Type::Mobius;
-    c.attr("HORN") = Triangle<3>::Type::Horn;
-    c.attr("DUNCEHAT") = Triangle<3>::Type::DunceHat;
-    c.attr("L31") = Triangle<3>::Type::L31;
-
-    RDOC_SCOPE_INNER_END
     RDOC_SCOPE_END
 
     m.attr("TriangleEmbedding3") = m.attr("FaceEmbedding3_2");

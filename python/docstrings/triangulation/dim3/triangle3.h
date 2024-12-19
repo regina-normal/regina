@@ -31,16 +31,6 @@ of by the Triangulation to which they belong.)doc";
 
 namespace Face_ {
 
-// Docstring regina::python::doc::Face_::Type
-static const char *Type =
-R"doc(The _type_ of a triangle, which indicates how the vertices and edges
-of the triangle are identified together. Here the vertices of a
-triangle are considered unlabelled (so a relabelling will not change
-the triangle type).
-
-See also:
-    type)doc";
-
 // Docstring regina::python::doc::Face_::isCone
 static const char *isCone =
 R"doc(Determines whether this triangle is wrapped up to form a cone.
@@ -97,50 +87,12 @@ Returns:
 // Docstring regina::python::doc::Face_::type
 static const char *type =
 R"doc(Returns a description of the triangle type. This will be one of the
-eight shapes described by the Type enumeration, indicating how the
-edges and vertices of the triangle are identified.
+eight shapes described by the TriangleType enumeration, indicating how
+the edges and vertices of the triangle are identified.
 
 Returns:
     the type of this triangle. This routine will never return
-    Type::Unknown.)doc";
-
-}
-
-namespace Face_::Type_ {
-
-// Docstring regina::python::doc::Face_::Type_::Cone
-static const char *Cone = R"doc(Specifies a triangle with two edges identified to form a cone.)doc";
-
-// Docstring regina::python::doc::Face_::Type_::DunceHat
-static const char *DunceHat =
-R"doc(Specifies a triangle with all three edges identified, some via
-orientable and some via non-orientable gluings.)doc";
-
-// Docstring regina::python::doc::Face_::Type_::Horn
-static const char *Horn =
-R"doc(Specifies a triangle with two edges identified to form a cone with all
-three vertices identified.)doc";
-
-// Docstring regina::python::doc::Face_::Type_::L31
-static const char *L31 =
-R"doc(Specifies a triangle with all three edges identified using non-
-orientable gluings. Note that this forms a spine for the lens space
-L(3,1).)doc";
-
-// Docstring regina::python::doc::Face_::Type_::Mobius
-static const char *Mobius = R"doc(Specifies a triangle with two edges identified to form a Mobius band.)doc";
-
-// Docstring regina::python::doc::Face_::Type_::Parachute
-static const char *Parachute = R"doc(Specifies a triangle with three identified vertices.)doc";
-
-// Docstring regina::python::doc::Face_::Type_::Scarf
-static const char *Scarf = R"doc(Specifies a triangle with two identified vertices.)doc";
-
-// Docstring regina::python::doc::Face_::Type_::Triangle
-static const char *Triangle = R"doc(Specifies a triangle with no identified vertices or edges.)doc";
-
-// Docstring regina::python::doc::Face_::Type_::Unknown
-static const char *Unknown = R"doc(Indicates that the triangle type has not yet been determined.)doc";
+    TriangleType::Unknown.)doc";
 
 }
 

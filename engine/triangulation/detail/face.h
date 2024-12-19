@@ -53,7 +53,70 @@
 #include <deque>
 #include <vector>
 
-namespace regina::detail {
+namespace regina {
+
+/**
+ * The combinatorial _type_ of a triangle, which indicates how the vertices
+ * and edges of the triangle are identified together.  Here the vertices of
+ * the triangle are considered unlabelled (so a relabelling will not change
+ * the combinatorial type).
+ *
+ * This is the result of calling `f.triangleType()`, where \a f is a 2-face
+ * within a triangulation of any dimension.
+ *
+ * \ingroup triangulation
+ */
+enum class TriangleType {
+        /**
+         * Indicates that the triangle type has not yet been determined.
+         */
+        Unknown = 0,
+        /**
+         * Specifies a triangle with no identified vertices or edges.
+         */
+        Triangle = 1,
+        /**
+         * Specifies a triangle with two identified vertices, and no other
+         * edge or vertex identifications.
+         */
+        Scarf = 2,
+        /**
+         * Specifies a triangle with three identified vertices, but no edge
+         * identifications.
+         */
+        Parachute = 3,
+        /**
+         * Specifies a triangle with two edges identified to form a cone.
+         * The apex of the cone is not identified with the other two vertices,
+         * and the base of the cone is not identified with the other two edges.
+         */
+        Cone = 4,
+        /**
+         * Specifies a triangle with two edges identified to form a Möbius band.
+         * The boundary of the Möbius band is not identified with the other
+         * two edges.
+         */
+        Mobius = 5,
+        /**
+         * Specifies a triangle with two edges identified to form a cone, and
+         * with all three vertices identified.  The base of the cone is not
+         * identified with the other two edges.
+         */
+        Horn = 6,
+        /**
+         * Specifies a triangle with all three edges identified, some via
+         * orientation-preserving and some via orientation-reversing gluings.
+         */
+        DunceHat = 7,
+        /**
+         * Specifies a triangle with all three edges identified using
+         * orientation-reversing gluings.  Note that this forms a spine
+         * for the lens space `L(3,1)`.
+         */
+        L31 = 8
+};
+
+namespace detail {
 
 template <int dim> class TriangulationBase;
 
@@ -366,6 +429,15 @@ class FaceBase :
             /**< Is this face valid?  This is for use in non-standard
                  dimensions, where we only test for one type of validity
                  (bad self-identifications). */
+        EnableIf<subdim == 2, TriangleType, TriangleType::Unknown>
+                triangleType_;
+            /**< The combinatorial type of this triangle, or
+                 TriangleType::Unknown if this has not yet been determined. */
+        EnableIf<subdim == 2, int, -1> triangleSubtype_;
+            /**< Indicates the vertex or edge number that plays a special role
+                 for the triangle type specified by triangleType_.  This is only
+                 relevant for some triangle types, and it will be -1 if this is
+                 either irrelevant or not yet determined. */
 
     public:
         /**
@@ -974,6 +1046,33 @@ class FaceBase :
         bool isLoop() const;
 
         /**
+         * For triangles, returns the combinatorial type of this face.
+         * This will be one of the eight shapes described by the TriangleType
+         * enumeration, which indicates how the edges and vertices of the
+         * triangle are identified.
+         *
+         * \pre The facial dimension \a subdim is precisely 2.
+         *
+         * \return the combinatorial type of this triangle.  This routine will
+         * never return TriangleType::Unknown.
+         */
+        TriangleType triangleType() const;
+
+        /**
+         * For triangles, returns the vertex or edge number in this face
+         * that plays a special role for this triangle's combinatorial type.
+         * Note that only some triangle types have a special vertex or edge.
+         * The triangle type itself is returned by triangleType().
+         *
+         * \pre The facial dimension \a subdim is precisely 2.
+         *
+         * \return The vertex or edge number (0, 1 or 2) that plays a special
+         * role, or -1 if this triangle's combinatorial type has no special
+         * vertex or edge.
+         */
+        int triangleSubtype() const;
+
+        /**
          * Locks this codimension-1-face.
          *
          * Essentially, locking a face of dimension (<i>dim</i>-1) means
@@ -1432,7 +1531,7 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
 

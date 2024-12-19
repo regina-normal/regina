@@ -74,142 +74,109 @@ template <>
 class Face<3, 2> : public detail::FaceBase<3, 2> {
     public:
         /**
-         * The _type_ of a triangle, which indicates how the vertices and
-         * edges of the triangle are identified together.  Here the vertices
-         * of a triangle are considered unlabelled (so a relabelling
-         * will not change the triangle type).
+         * Deprecated alias for the combinatorial type of a triangle, which
+         * indicates how the vertices and edges of the triangle are identified
+         * together.
          *
-         * \see type
+         * \deprecated This enumeration is now used for triangles within
+         * triangulations of all dimensions, and so it has been renamed to the
+         * global type TriangleType.
          */
-        enum class Type {
-            /**
-             * Indicates that the triangle type has not yet been determined.
-             */
-            Unknown = 0,
-            /**
-             * Specifies a triangle with no identified vertices or edges.
-             */
-            Triangle = 1,
-            /**
-             * Specifies a triangle with two identified vertices.
-             */
-            Scarf = 2,
-            /**
-             * Specifies a triangle with three identified vertices.
-             */
-            Parachute = 3,
-            /**
-             * Specifies a triangle with two edges identified to form a cone.
-             */
-            Cone = 4,
-            /**
-             * Specifies a triangle with two edges identified to form a
-             * Mobius band.
-             */
-            Mobius = 5,
-            /**
-             * Specifies a triangle with two edges identified to form a cone
-             * with all three vertices identified.
-             */
-            Horn = 6,
-            /**
-             * Specifies a triangle with all three edges identified, some via
-             * orientable and some via non-orientable gluings.
-             */
-            DunceHat = 7,
-            /**
-             * Specifies a triangle with all three edges identified using
-             * non-orientable gluings.  Note that this forms a spine for the
-             * lens space L(3,1).
-             */
-            L31 = 8
-        };
+        using Type [[deprecated]] = TriangleType;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::Unknown.
          */
-        [[deprecated]] inline static constexpr Type UNKNOWN_TYPE =
-            Type::Unknown;
+        [[deprecated]] inline static constexpr TriangleType UNKNOWN_TYPE =
+            TriangleType::Unknown;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::Triangle.
          */
-        [[deprecated]] inline static constexpr Type TRIANGLE = Type::Triangle;
+        [[deprecated]] inline static constexpr TriangleType TRIANGLE =
+            TriangleType::Triangle;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::Scarf.
          */
-        [[deprecated]] inline static constexpr Type SCARF = Type::Scarf;
+        [[deprecated]] inline static constexpr TriangleType SCARF =
+            TriangleType::Scarf;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::Parachute.
          */
-        [[deprecated]] inline static constexpr Type PARACHUTE = Type::Parachute;
+        [[deprecated]] inline static constexpr TriangleType PARACHUTE =
+            TriangleType::Parachute;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::Cone.
          */
-        [[deprecated]] inline static constexpr Type CONE = Type::Cone;
+        [[deprecated]] inline static constexpr TriangleType CONE =
+            TriangleType::Cone;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::Mobius.
          */
-        [[deprecated]] inline static constexpr Type MOBIUS = Type::Mobius;
+        [[deprecated]] inline static constexpr TriangleType MOBIUS =
+            TriangleType::Mobius;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::Horn.
          */
-        [[deprecated]] inline static constexpr Type HORN = Type::Horn;
+        [[deprecated]] inline static constexpr TriangleType HORN =
+            TriangleType::Horn;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::DunceHat.
          */
-        [[deprecated]] inline static constexpr Type DUNCEHAT = Type::DunceHat;
+        [[deprecated]] inline static constexpr TriangleType DUNCEHAT =
+            TriangleType::DunceHat;
 
         /**
          * A deprecated constant indicating how the vertices and edges of a
          * triangle are identified together.
          *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Type::Triangle.
+         * \deprecated This is now an alias for the scoped enumeration constant
+         * TriangleType::L31.
          */
-        [[deprecated]] inline static constexpr Type L31 = Type::L31;
+        [[deprecated]] inline static constexpr TriangleType L31 =
+            TriangleType::L31;
 
     private:
-        Type type_;
-            /**< Specifies the triangle type, or \a Type::Unknown if the
+        TriangleType type_;
+            /**< Specifies the triangle type, or \a TriangleType::Unknown if the
                  type has not yet been determined. */
         int subtype_;
             /**< Specifies the vertex or edge that plays a special role
@@ -219,14 +186,14 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
     public:
         /**
          * Returns a description of the triangle type.
-         * This will be one of the eight shapes described by the Type
+         * This will be one of the eight shapes described by the TriangleType
          * enumeration, indicating how the edges and vertices of the
          * triangle are identified.
          *
          * \return the type of this triangle.  This routine will never
-         * return Type::Unknown.
+         * return TriangleType::Unknown.
          */
-        Type type();
+        TriangleType type();
 
         /**
          * Return the triangle vertex or triangle edge that plays a special role
@@ -298,7 +265,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
 // Inline functions for Triangle<3>
 
 inline Face<3, 2>::Face(Component<3>* component) :
-        FaceBase<3, 2>(component), type_(Type::Unknown) {
+        FaceBase<3, 2>(component), type_(TriangleType::Unknown) {
 }
 
 inline int Face<3, 2>::subtype() {
@@ -308,14 +275,14 @@ inline int Face<3, 2>::subtype() {
 
 inline bool Face<3, 2>::isMobiusBand() {
     type();
-    return (type_ == Type::L31 || type_ == Type::DunceHat ||
-        type_ == Type::Mobius);
+    return (type_ == TriangleType::L31 || type_ == TriangleType::DunceHat ||
+        type_ == TriangleType::Mobius);
 }
 
 inline bool Face<3, 2>::isCone() {
     type();
-    return (type_ == Type::DunceHat || type_ == Type::Cone ||
-        type_ == Type::Horn);
+    return (type_ == TriangleType::DunceHat || type_ == TriangleType::Cone ||
+        type_ == TriangleType::Horn);
 }
 
 inline std::pair<NormalSurface, bool> Face<3, 2>::linkingSurface() const {

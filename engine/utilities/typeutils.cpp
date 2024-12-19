@@ -373,7 +373,6 @@ namespace {
 
         // Enums that live within individual face classes:
         registerType(typeid(Vertex<3>::Link), "regina.Vertex3.Link");
-        registerType(typeid(Triangle<3>::Type), "regina.Triangle3.Type");
 
         registerType(typeid(PacketOf<Link>),
             "regina.PacketOfLink");

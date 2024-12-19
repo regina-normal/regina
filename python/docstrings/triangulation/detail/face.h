@@ -11,6 +11,65 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::TriangleType
+constexpr const char *TriangleType =
+R"doc(The combinatorial _type_ of a triangle, which indicates how the
+vertices and edges of the triangle are identified together. Here the
+vertices of the triangle are considered unlabelled (so a relabelling
+will not change the combinatorial type).
+
+This is the result of calling ``f.triangleType()``, where *f* is a
+2-face within a triangulation of any dimension.)doc";
+
+namespace TriangleType_ {
+
+// Docstring regina::python::doc::TriangleType_::Cone
+constexpr const char *Cone =
+R"doc(Specifies a triangle with two edges identified to form a cone. The
+apex of the cone is not identified with the other two vertices, and
+the base of the cone is not identified with the other two edges.)doc";
+
+// Docstring regina::python::doc::TriangleType_::DunceHat
+constexpr const char *DunceHat =
+R"doc(Specifies a triangle with all three edges identified, some via
+orientation-preserving and some via orientation-reversing gluings.)doc";
+
+// Docstring regina::python::doc::TriangleType_::Horn
+constexpr const char *Horn =
+R"doc(Specifies a triangle with two edges identified to form a cone, and
+with all three vertices identified. The base of the cone is not
+identified with the other two edges.)doc";
+
+// Docstring regina::python::doc::TriangleType_::L31
+constexpr const char *L31 =
+R"doc(Specifies a triangle with all three edges identified using
+orientation-reversing gluings. Note that this forms a spine for the
+lens space ``L(3,1)``.)doc";
+
+// Docstring regina::python::doc::TriangleType_::Mobius
+constexpr const char *Mobius =
+R"doc(Specifies a triangle with two edges identified to form a Möbius band.
+The boundary of the Möbius band is not identified with the other two
+edges.)doc";
+
+// Docstring regina::python::doc::TriangleType_::Parachute
+constexpr const char *Parachute =
+R"doc(Specifies a triangle with three identified vertices, but no edge
+identifications.)doc";
+
+// Docstring regina::python::doc::TriangleType_::Scarf
+constexpr const char *Scarf =
+R"doc(Specifies a triangle with two identified vertices, and no other edge
+or vertex identifications.)doc";
+
+// Docstring regina::python::doc::TriangleType_::Triangle
+constexpr const char *Triangle = R"doc(Specifies a triangle with no identified vertices or edges.)doc";
+
+// Docstring regina::python::doc::TriangleType_::Unknown
+constexpr const char *Unknown = R"doc(Indicates that the triangle type has not yet been determined.)doc";
+
+}
+
 namespace detail {
 
 // Docstring regina::python::doc::detail::FaceBase
