@@ -390,21 +390,21 @@ QVariant Triangle3Model::data(const QModelIndex& index, int role) const {
                     prefix = tr("(Bdry) ");
 
                 auto type = item->type();
-                if (type == Triangle<3>::Type::Triangle)
+                if (type == regina::TriangleType::Triangle)
                     return prefix + tr("Triangle");
-                if (type == Triangle<3>::Type::Scarf)
+                if (type == regina::TriangleType::Scarf)
                     return prefix + tr("Scarf");
-                if (type == Triangle<3>::Type::Parachute)
+                if (type == regina::TriangleType::Parachute)
                     return prefix + tr("Parachute");
-                if (type == Triangle<3>::Type::Mobius)
+                if (type == regina::TriangleType::Mobius)
                     return prefix + tr("Möbius band");
-                if (type == Triangle<3>::Type::Cone)
+                if (type == regina::TriangleType::Cone)
                     return prefix + tr("Cone");
-                if (type == Triangle<3>::Type::Horn)
+                if (type == regina::TriangleType::Horn)
                     return prefix + tr("Horn");
-                if (type == Triangle<3>::Type::DunceHat)
+                if (type == regina::TriangleType::DunceHat)
                     return prefix + tr("Dunce hat");
-                if (type == Triangle<3>::Type::L31)
+                if (type == regina::TriangleType::L31)
                     return prefix + tr("L(3,1)");
                 return prefix + tr("UNKNOWN");
             }

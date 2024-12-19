@@ -131,6 +131,12 @@ Version 7.4  [ (to be announced) ]
             - New static routine faceNumber(u, v) to return the edge number in
               a simplex spanned by vertices u and v.  This is implemented in
               FaceNumbering<dim, 1> and is also accessible to Face<dim, 1>.
+        Class Face<dim, 2>:
+            - Triangle<3>::Type is deprecated, and is now an alias for the new
+              global type TriangleType.  Moreover, this is now a scoped
+              enumeration for better type safety.  The old enum constants
+              (e.g., Triangle<3>::CONE) are likewise now deprecated aliases for
+              the new scoped enum values (e.g., TriangleType::Cone).
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
         Class FacePair:
@@ -547,12 +553,10 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., TreeDecompositionAlg::Upper).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
-        Class Triangle<3>:
-            - Triangle<3>::Type is now a scoped enumeration, for better type
-              safety.  The old enum constants (e.g., Triangle<3>::CONE) are
-              now scoped enum values (e.g., Triangle<3>::Type::Cone).
-              The old names have been kept as deprecated compile-time class
-              constants of Triangle<3>.
+        Enum TriangleType:
+            - New scoped enumeration to replace the old non-scoped enumeration
+              Triangle<3>::Type.  The new TriangleType enumeration is used for
+              triangles within triangulations of all dimensions.
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.

@@ -34,10 +34,13 @@
 
 #include "regina-config.h"
 #include "core/engine.h"
+#include "triangulation/generic.h" // for TriangleType
+
 #include "helpers.h"
 #include "docstrings/core/engine.h"
 #include "docstrings/core/regina-core.h"
 #include "docstrings/python/equality.h"
+#include "docstrings/triangulation/detail/face.h" // for TriangleType
 
 // Additional headers for timeExceptions():
 #include "maths/perm.h"
@@ -322,6 +325,20 @@ Returns:
             // We therefore hard-code its value as Language::Python below.
             regina::Language::Python,
             rdoc::Current)
+        ;
+
+    RDOC_SCOPE_SWITCH(TriangleType)
+
+    pybind11::enum_<regina::TriangleType>(m, "TriangleType", rdoc_scope)
+        .value("Unknown", regina::TriangleType::Unknown, rdoc::Unknown)
+        .value("Triangle", regina::TriangleType::Triangle, rdoc::Triangle)
+        .value("Scarf", regina::TriangleType::Scarf, rdoc::Scarf)
+        .value("Parachute", regina::TriangleType::Parachute, rdoc::Parachute)
+        .value("Cone", regina::TriangleType::Cone, rdoc::Cone)
+        .value("Mobius", regina::TriangleType::Mobius, rdoc::Mobius)
+        .value("Horn", regina::TriangleType::Horn, rdoc::Horn)
+        .value("DunceHat", regina::TriangleType::DunceHat, rdoc::DunceHat)
+        .value("L31", regina::TriangleType::L31, rdoc::L31)
         ;
 
     RDOC_SCOPE_END

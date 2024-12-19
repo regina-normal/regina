@@ -53,7 +53,70 @@
 #include <deque>
 #include <vector>
 
-namespace regina::detail {
+namespace regina {
+
+/**
+ * The combinatorial _type_ of a triangle, which indicates how the vertices
+ * and edges of the triangle are identified together.  Here the vertices of
+ * the triangle are considered unlabelled (so a relabelling will not change
+ * the combinatorial type).
+ *
+ * This is the result of calling `f.triangleType()`, where \a f is a 2-face
+ * within a triangulation of any dimension.
+ *
+ * \ingroup triangulation
+ */
+enum class TriangleType {
+        /**
+         * Indicates that the triangle type has not yet been determined.
+         */
+        Unknown = 0,
+        /**
+         * Specifies a triangle with no identified vertices or edges.
+         */
+        Triangle = 1,
+        /**
+         * Specifies a triangle with two identified vertices, and no other
+         * edge or vertex identifications.
+         */
+        Scarf = 2,
+        /**
+         * Specifies a triangle with three identified vertices, but no edge
+         * identifications.
+         */
+        Parachute = 3,
+        /**
+         * Specifies a triangle with two edges identified to form a cone.
+         * The apex of the cone is not identified with the other two vertices,
+         * and the base of the cone is not identified with the other two edges.
+         */
+        Cone = 4,
+        /**
+         * Specifies a triangle with two edges identified to form a Möbius band.
+         * The boundary of the Möbius band is not identified with the other
+         * two edges.
+         */
+        Mobius = 5,
+        /**
+         * Specifies a triangle with two edges identified to form a cone, and
+         * with all three vertices identified.  The base of the cone is not
+         * identified with the other two edges.
+         */
+        Horn = 6,
+        /**
+         * Specifies a triangle with all three edges identified, some via
+         * orientation-preserving and some via orientation-reversing gluings.
+         */
+        DunceHat = 7,
+        /**
+         * Specifies a triangle with all three edges identified using
+         * orientation-reversing gluings.  Note that this forms a spine
+         * for the lens space `L(3,1)`.
+         */
+        L31 = 8
+};
+
+namespace detail {
 
 template <int dim> class TriangulationBase;
 
@@ -1413,7 +1476,7 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
 
