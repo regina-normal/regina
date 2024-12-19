@@ -429,6 +429,15 @@ class FaceBase :
             /**< Is this face valid?  This is for use in non-standard
                  dimensions, where we only test for one type of validity
                  (bad self-identifications). */
+        EnableIf<subdim == 2, TriangleType, TriangleType::Unknown>
+                triangleType_;
+            /**< The combinatorial type of this triangle, or
+                 TriangleType::Unknown if this has not yet been determined. */
+        EnableIf<subdim == 2, int, -1> triangleSubtype_;
+            /**< Indicates the vertex or edge number that plays a special role
+                 for the triangle type specified by triangleType_.  This is only
+                 relevant for some triangle types, and it will be -1 if this is
+                 either irrelevant or not yet determined. */
 
     public:
         /**
@@ -1025,6 +1034,33 @@ class FaceBase :
          * See faceMapping() for further information.
          */
         Perm<dim + 1> pentachoronMapping(int face) const;
+
+        /**
+         * Returns the combinatorial type of this 2-face (i.e., triangle).
+         * This will be one of the eight shapes described by the TriangleType
+         * enumeration, which indicates how the edges and vertices of the
+         * triangle are identified.
+         *
+         * \pre This face is a triangle; that is, \a subdim is 2.
+         *
+         * \return the combinatorial type of this triangle.  This routine will
+         * never return TriangleType::Unknown.
+         */
+        TriangleType triangleType();
+
+        /**
+         * Return the vertex or edge number in this 2-face (i.e., triangle)
+         * that plays a special role for this triangle's combinatorial type.
+         * Note that only some triangle types have a special vertex or edge.
+         * The triangle type itself is returned by triangleType().
+         *
+         * \pre This face is a triangle; that is, \a subdim is 2.
+         *
+         * \return The vertex or edge number (0, 1 or 2) that plays a special
+         * role, or -1 if this triangle's combinatorial type has no special
+         * vertex or edge.
+         */
+        int triangleSubtype();
 
         /**
          * Locks this codimension-1-face.
