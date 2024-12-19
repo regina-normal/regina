@@ -729,8 +729,8 @@ class TriangulationTest : public testing::Test {
                 // All triangle types should, at this point, be not yet
                 // determined.
                 for (auto t : tri.triangles()) {
-                    int sub = t->subtype();
-                    switch (t->type()) {
+                    int sub = t->triangleSubtype();
+                    switch (t->triangleType()) {
                         case regina::TriangleType::Triangle:
                         case regina::TriangleType::Parachute:
                         case regina::TriangleType::L31:

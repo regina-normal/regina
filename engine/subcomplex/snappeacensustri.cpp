@@ -97,7 +97,7 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
             // Now we know it's either m003 or m004.  We distinguish
             // between them by triangle types, since all of m003's triangles
             // are Mobius bands and all of m004's triangles are horns.
-            if (comp->triangle(0)->type() == TriangleType::Mobius)
+            if (comp->triangle(0)->triangleType() == TriangleType::Mobius)
                 return std::unique_ptr<SnapPeaCensusTri>(
                     new SnapPeaCensusTri(SEC_5, 3));
             else
@@ -116,7 +116,7 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
                     return nullptr;
                 // Census says it's m001 if no triangle forms a dunce hat.
                 for (int t = 0; t < 4; ++t)
-                    if (comp->triangle(t)->type() ==
+                    if (comp->triangle(t)->triangleType() ==
                             TriangleType::DunceHat)
                         return nullptr;
                 return std::unique_ptr<SnapPeaCensusTri>(
@@ -130,7 +130,7 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
                     return nullptr;
                 // Census says it's m002 if some triangle forms a dunce hat.
                 for (int t = 0; t < 4; ++t)
-                    if (comp->triangle(t)->type() ==
+                    if (comp->triangle(t)->triangleType() ==
                             TriangleType::DunceHat)
                         return std::unique_ptr<SnapPeaCensusTri>(
                             new SnapPeaCensusTri(SEC_5, 2));

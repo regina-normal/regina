@@ -17,7 +17,6 @@ SET ( FILES
   snappea.cpp
   subdivide.cpp
   surfaces.cpp
-  triangle3.cpp
   triangulation3.cpp
   turaevviro.cpp
   vertex3.cpp

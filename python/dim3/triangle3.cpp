@@ -87,8 +87,6 @@ void addTriangle3(pybind11::module_& m) {
         .def("isBoundary", &Triangle<3>::isBoundary, rbase::isBoundary)
         .def("inMaximalForest", &Triangle<3>::inMaximalForest,
             rbase::inMaximalForest)
-        .def("type", &Triangle<3>::type, rdoc::type)
-        .def("subtype", &Triangle<3>::subtype, rdoc::subtype)
         .def("isMobiusBand", &Triangle<3>::isMobiusBand, rdoc::isMobiusBand)
         .def("isCone", &Triangle<3>::isCone, rdoc::isCone)
         .def("linkingSurface", &Triangle<3>::linkingSurface,
@@ -117,6 +115,12 @@ void addTriangle3(pybind11::module_& m) {
             rbase::faceMapping)
         .def("vertexMapping", &Triangle<3>::vertexMapping, rbase::vertexMapping)
         .def("edgeMapping", &Triangle<3>::edgeMapping, rbase::edgeMapping)
+        .def("triangleType", &Triangle<3>::triangleType, rbase::triangleType)
+        .def("type", &Triangle<3>::triangleType, rdoc::type) // deprecated
+        .def("triangleSubtype", &Triangle<3>::triangleSubtype,
+            rbase::triangleSubtype)
+        .def("subtype", &Triangle<3>::triangleSubtype,
+            rdoc::subtype) // deprecated
         .def("lock", &Triangle<3>::lock, rbase::lock)
         .def("unlock", &Triangle<3>::unlock, rbase::unlock)
         .def("isLocked", &Triangle<3>::isLocked, rbase::isLocked)

@@ -79,8 +79,8 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * together.
          *
          * \deprecated This enumeration is now used for triangles within
-         * triangulations of all dimensions, and so it has been renamed to the
-         * global type TriangleType.
+         * triangulations of all dimensions ≥ 3, and so it has been renamed
+         * to the global type TriangleType.
          */
         using Type [[deprecated]] = TriangleType;
 
@@ -185,27 +185,32 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
 
     public:
         /**
-         * Returns a description of the triangle type.
-         * This will be one of the eight shapes described by the TriangleType
-         * enumeration, indicating how the edges and vertices of the
-         * triangle are identified.
+         * Deprecated function that returns the combinatorial type of this
+         * triangle.
          *
-         * \return the type of this triangle.  This routine will never
-         * return TriangleType::Unknown.
+         * \deprecated This has been renamed to triangleType(), and is now
+         * available for triangulations of all dimensions ≥ 3.
+         * See triangleType() for further information.
+         *
+         * \return the combinatorial type of this triangle, which will never
+         * be TriangleType::Unknown.
          */
-        TriangleType type();
+        [[deprecated]] TriangleType type();
 
         /**
-         * Return the triangle vertex or triangle edge that plays a special role
-         * for the triangle type of this triangle.  Note that this routine is
-         * only relevant for some triangle types.  The triangle type is
-         * returned by type().
+         * Deprecated function that returns the vertex or edge number in
+         * this triangle that plays a special role for this triangle's
+         * combinatorial type.
          *
-         * \return The vertex or edge that plays a special role (this
-         * will be 0, 1 or 2), or -1 if this triangle type has no special
+         * \deprecated This has been renamed to triangleSubtype(), and is now
+         * available for triangulations of all dimensions ≥ 3.
+         * See triangleSubtype() for further information.
+         *
+         * \return The vertex or edge number (0, 1 or 2) that plays a special
+         * role, or -1 if this triangle's combinatorial type has no special
          * vertex or edge.
          */
-        int subtype();
+        [[deprecated]] int subtype();
 
         /**
          * Determines whether this triangle is wrapped up to form a Mobius band.
@@ -268,19 +273,22 @@ inline Face<3, 2>::Face(Component<3>* component) :
         FaceBase<3, 2>(component), type_(TriangleType::Unknown) {
 }
 
+inline TriangleType Face<3, 2>::type() {
+    return triangleType();
+}
+
 inline int Face<3, 2>::subtype() {
-    type();
-    return subtype_;
+    return triangleSubtype();
 }
 
 inline bool Face<3, 2>::isMobiusBand() {
-    type();
+    auto type_ = triangleType();
     return (type_ == TriangleType::L31 || type_ == TriangleType::DunceHat ||
         type_ == TriangleType::Mobius);
 }
 
 inline bool Face<3, 2>::isCone() {
-    type();
+    auto type_ = triangleType();
     return (type_ == TriangleType::DunceHat || type_ == TriangleType::Cone ||
         type_ == TriangleType::Horn);
 }

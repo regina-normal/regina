@@ -1051,12 +1051,20 @@ class FaceBase :
          * enumeration, which indicates how the edges and vertices of the
          * triangle are identified.
          *
-         * \pre The facial dimension \a subdim is precisely 2.
+         * If one or more edges of this triangle are invalid due to bad
+         * self-identifications, then the triangle type might not be
+         * well-defined and so the return value will likewise be undefined.
+         *
+         * The reason this routine is non-const is because the triangle type
+         * and subtype are cached when first computed.
+         *
+         * \pre The facial dimension \a subdim is precisely 2, and the
+         * triangulation dimension \a dim is at least 3.
          *
          * \return the combinatorial type of this triangle.  This routine will
          * never return TriangleType::Unknown.
          */
-        TriangleType triangleType() const;
+        TriangleType triangleType();
 
         /**
          * For triangles, returns the vertex or edge number in this face
@@ -1064,13 +1072,21 @@ class FaceBase :
          * Note that only some triangle types have a special vertex or edge.
          * The triangle type itself is returned by triangleType().
          *
-         * \pre The facial dimension \a subdim is precisely 2.
+         * If one or more edges of this triangle are invalid due to bad
+         * self-identifications, then the triangle type might not be
+         * well-defined and so the return value will likewise be undefined.
+         *
+         * The reason this routine is non-const is because the triangle type
+         * and subtype are cached when first computed.
+         *
+         * \pre The facial dimension \a subdim is precisely 2, and the
+         * triangulation dimension \a dim is at least 3.
          *
          * \return The vertex or edge number (0, 1 or 2) that plays a special
          * role, or -1 if this triangle's combinatorial type has no special
          * vertex or edge.
          */
-        int triangleSubtype() const;
+        int triangleSubtype();
 
         /**
          * Locks this codimension-1-face.
@@ -1446,6 +1462,83 @@ inline bool FaceBase<dim, subdim>::isLoop() const {
     const auto& emb = front();
     const Simplex<dim>* simp = emb.simplex();
     return simp->vertex(emb.vertices()[0]) == simp->vertex(emb.vertices()[1]);
+}
+
+template <int dim, int subdim>
+inline TriangleType FaceBase<dim, subdim>::triangleType() {
+    static_assert(subdim == 2,
+        "triangleType() is only available for triangles.");
+    static_assert(dim >= 3,
+        "triangleType() is only available in triangulations of dimension ≥ 3.");
+
+    if (triangleType_.value != TriangleType::Unknown)
+        return triangleType_.value;
+
+    triangleSubtype_.value = -1;
+
+    // Determine the triangle type.
+    Vertex<dim>* v[3];
+    Edge<dim>* e[3];
+    for (int i = 0; i < 3; i++) {
+        v[i] = vertex(i);
+        e[i] = edge(i);
+    }
+
+    if (e[0] != e[1] && e[1] != e[2] && e[2] != e[0]) {
+        // Three distinct edges.
+        if (v[0] == v[1] && v[1] == v[2])
+            return (triangleType_.value = TriangleType::Parachute);
+        for (int i = 0; i < 3; i++)
+            if (v[(i+1)%3] == v[(i+2)%3]) {
+                triangleSubtype_.value = i;
+                return (triangleType_.value = TriangleType::Scarf);
+            }
+        return (triangleType_.value = TriangleType::Triangle);
+    }
+
+    if (e[0] == e[1] && e[1] == e[2]) {
+        // All edges identified.
+        if (edgeMapping(0).sign() == edgeMapping(1).sign() &&
+                edgeMapping(1).sign() == edgeMapping(2).sign())
+            return (triangleType_.value = TriangleType::L31);
+
+        for (int i = 0; i < 3; i++)
+            if (edgeMapping((i+1)%3).sign() ==
+                    edgeMapping((i+2)%3).sign()) {
+                triangleSubtype_.value = i;
+                return (triangleType_.value = TriangleType::DunceHat);
+            }
+    }
+
+    // Two edges identified.
+    for (int i = 0; i < 3; i++)
+        if (e[(i+1)%3] == e[(i+2)%3]) {
+            triangleSubtype_.value = i;
+
+            if (edgeMapping((i+1)%3).sign() ==
+                    edgeMapping((i+2)%3).sign())
+                return (triangleType_.value = TriangleType::Mobius);
+
+            if (v[0] == v[1] && v[1] == v[2])
+                return (triangleType_.value = TriangleType::Horn);
+
+            return (triangleType_.value = TriangleType::Cone);
+        }
+
+    // We should never reach this point.
+    return TriangleType::Unknown;
+}
+
+template <int dim, int subdim>
+inline int FaceBase<dim, subdim>::triangleSubtype() {
+    static_assert(subdim == 2,
+        "triangleSubtype() is only available for triangles.");
+    static_assert(dim >= 3,
+        "triangleSubtype() is only available in triangulations of "
+        "dimension ≥ 3.");
+
+    triangleType();
+    return triangleSubtype_.value;
 }
 
 template <int dim, int subdim>

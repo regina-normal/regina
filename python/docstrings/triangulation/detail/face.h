@@ -675,6 +675,49 @@ This alias is available for facial dimensions *subdim* ≥ 3.
 
 See faceMapping() for further information.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase_::triangleSubtype
+constexpr const char *triangleSubtype =
+R"doc(For triangles, returns the vertex or edge number in this face that
+plays a special role for this triangle's combinatorial type. Note that
+only some triangle types have a special vertex or edge. The triangle
+type itself is returned by triangleType().
+
+If one or more edges of this triangle are invalid due to bad self-
+identifications, then the triangle type might not be well-defined and
+so the return value will likewise be undefined.
+
+The reason this routine is non-const is because the triangle type and
+subtype are cached when first computed.
+
+Precondition:
+    The facial dimension *subdim* is precisely 2.
+
+Returns:
+    The vertex or edge number (0, 1 or 2) that plays a special role,
+    or -1 if this triangle's combinatorial type has no special vertex
+    or edge.)doc";
+
+// Docstring regina::python::doc::detail::FaceBase_::triangleType
+constexpr const char *triangleType =
+R"doc(For triangles, returns the combinatorial type of this face. This will
+be one of the eight shapes described by the TriangleType enumeration,
+which indicates how the edges and vertices of the triangle are
+identified.
+
+If one or more edges of this triangle are invalid due to bad self-
+identifications, then the triangle type might not be well-defined and
+so the return value will likewise be undefined.
+
+The reason this routine is non-const is because the triangle type and
+subtype are cached when first computed.
+
+Precondition:
+    The facial dimension *subdim* is precisely 2.
+
+Returns:
+    the combinatorial type of this triangle. This routine will never
+    return TriangleType::Unknown.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase_::triangulation
 constexpr const char *triangulation =
 R"doc(Returns the triangulation to which this face belongs.

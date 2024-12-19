@@ -168,6 +168,12 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
     if constexpr (subdim == 1) {
         c.def("isLoop", &Face<dim, subdim>::isLoop, rbase::isLoop);
     }
+    if constexpr (subdim == 2) {
+        c.def("triangleType", &Face<dim, subdim>::triangleType,
+            rbase::triangleType);
+        c.def("triangleSubtype", &Face<dim, subdim>::triangleSubtype,
+            rbase::triangleSubtype);
+    }
     if constexpr (dim - subdim == 1) {
         c.def("lock", &Face<dim, subdim>::lock, rbase::lock);
         c.def("unlock", &Face<dim, subdim>::unlock, rbase::unlock);

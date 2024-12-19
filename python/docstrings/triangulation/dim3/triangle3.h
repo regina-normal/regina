@@ -75,23 +75,32 @@ Returns:
 
 // Docstring regina::python::doc::Face_::subtype
 static const char *subtype =
-R"doc(Return the triangle vertex or triangle edge that plays a special role
-for the triangle type of this triangle. Note that this routine is only
-relevant for some triangle types. The triangle type is returned by
-type().
+R"doc(Deprecated function that returns the vertex or edge number in this
+triangle that plays a special role for this triangle's combinatorial
+type.
+
+.. deprecated::
+    This has been renamed to triangleSubtype(), and is now available
+    for triangulations of all dimensions. See triangleSubtype() for
+    further information.
 
 Returns:
-    The vertex or edge that plays a special role (this will be 0, 1 or
-    2), or -1 if this triangle type has no special vertex or edge.)doc";
+    The vertex or edge number (0, 1 or 2) that plays a special role,
+    or -1 if this triangle's combinatorial type has no special vertex
+    or edge.)doc";
 
 // Docstring regina::python::doc::Face_::type
 static const char *type =
-R"doc(Returns a description of the triangle type. This will be one of the
-eight shapes described by the TriangleType enumeration, indicating how
-the edges and vertices of the triangle are identified.
+R"doc(Deprecated function that returns the combinatorial type of this
+triangle.
+
+.. deprecated::
+    This has been renamed to triangleType(), and is now available for
+    triangulations of all dimensions. See triangleType() for further
+    information.
 
 Returns:
-    the type of this triangle. This routine will never return
+    the combinatorial type of this triangle, which will never be
     TriangleType::Unknown.)doc";
 
 }

@@ -101,6 +101,9 @@ void addTriangle4(pybind11::module_& m) {
             rbase::faceMapping)
         .def("vertexMapping", &Triangle<4>::vertexMapping, rbase::vertexMapping)
         .def("edgeMapping", &Triangle<4>::edgeMapping, rbase::edgeMapping)
+        .def("triangleType", &Triangle<4>::triangleType, rbase::triangleType)
+        .def("triangleSubtype", &Triangle<4>::triangleSubtype,
+            rbase::triangleSubtype)
         .def("degree", &Triangle<4>::degree, rbase::degree)
         .def("isBoundary", &Triangle<4>::isBoundary, rbase::isBoundary)
         .def("isLinkOrientable", &Triangle<4>::isLinkOrientable,
