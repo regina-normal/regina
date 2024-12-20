@@ -1215,13 +1215,33 @@ QVariant Triangle4Model::data(const QModelIndex& index, int role) const {
         switch (index.column()) {
             case 0:
                 return index.row();
-            case 1:
+            case 1: {
                 if (! item->isValid())
                     return tr("Invalid");
-                else if (item->isBoundary())
-                    return tr("Bdry");
-                else
-                    return QString();
+
+                QString prefix;
+                if (item->isBoundary())
+                    prefix = tr("(Bdry) ");
+
+                auto type = item->triangleType();
+                if (type == regina::TriangleType::Triangle)
+                    return prefix + tr("Triangle");
+                if (type == regina::TriangleType::Scarf)
+                    return prefix + tr("Scarf");
+                if (type == regina::TriangleType::Parachute)
+                    return prefix + tr("Parachute");
+                if (type == regina::TriangleType::Mobius)
+                    return prefix + tr("Möbius band");
+                if (type == regina::TriangleType::Cone)
+                    return prefix + tr("Cone");
+                if (type == regina::TriangleType::Horn)
+                    return prefix + tr("Horn");
+                if (type == regina::TriangleType::DunceHat)
+                    return prefix + tr("Dunce hat");
+                if (type == regina::TriangleType::L31)
+                    return prefix + tr("L(3,1)");
+                return prefix + tr("UNKNOWN");
+            }
             case 2:
                 return static_cast<unsigned>(item->degree());
             case 3:
