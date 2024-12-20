@@ -213,26 +213,30 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
         [[deprecated]] int subtype();
 
         /**
-         * Determines whether this triangle is wrapped up to form a Mobius band.
+         * Deprecated function that determines whether this triangle is
+         * wrapped up to form a Möbius band, possibly with or without
+         * additional identifications between its vertices and/or edges.
          *
-         * Note that several different triangle types (as returned by
-         * type()) can produce this result.
-         * Note also that a triangle can be both a Mobius band \a and a cone.
+         * \deprecated This has been renamed to formsMobiusBand(), and is now
+         * available for triangulations of all dimensions ≥ 3.
+         * See formsMobiusBand() for further information.
          *
-         * \return \c true if and only if this triangle is a Mobius band.
+         * \return \c true if and only if this triangle forms a Möbius band.
          */
-        bool isMobiusBand();
+        [[deprecated]] bool isMobiusBand();
 
         /**
-         * Determines whether this triangle is wrapped up to form a cone.
+         * Deprecated function that determines whether this triangle is
+         * wrapped up to form a cone, possibly with or without additional
+         * identifications between its vertices and/or edges.
          *
-         * Note that several different triangle types (as returned by
-         * type()) can produce this result.
-         * Note also that a triangle can be both a Mobius band \a and a cone.
+         * \deprecated This has been renamed to formsCone(), and is now
+         * available for triangulations of all dimensions ≥ 3.
+         * See formsCone() for further information.
          *
-         * \return \c true if and only if this triangle is a cone.
+         * \return \c true if and only if this triangle forms a cone.
          */
-        bool isCone();
+        [[deprecated]] bool isCone();
 
         /**
          * Returns the link of this triangle as a normal surface.
@@ -282,15 +286,11 @@ inline int Face<3, 2>::subtype() {
 }
 
 inline bool Face<3, 2>::isMobiusBand() {
-    auto type_ = triangleType();
-    return (type_ == TriangleType::L31 || type_ == TriangleType::DunceHat ||
-        type_ == TriangleType::Mobius);
+    return formsMobiusBand();
 }
 
 inline bool Face<3, 2>::isCone() {
-    auto type_ = triangleType();
-    return (type_ == TriangleType::DunceHat || type_ == TriangleType::Cone ||
-        type_ == TriangleType::Horn);
+    return formsCone();
 }
 
 inline std::pair<NormalSurface, bool> Face<3, 2>::linkingSurface() const {

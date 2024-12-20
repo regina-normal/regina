@@ -133,7 +133,7 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
                 // Search for Mobius band triangles.
                 size_t nTriangles = comp->countTriangles();
                 for (size_t i = 0; i < nTriangles; i++)
-                    if (comp->triangle(i)->isMobiusBand())
+                    if (comp->triangle(i)->formsMobiusBand())
                         return std::unique_ptr<TrivialTri>(
                             new TrivialTri(N3_2));
                 return std::unique_ptr<TrivialTri>(new TrivialTri(N3_1));

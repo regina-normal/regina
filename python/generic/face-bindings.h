@@ -173,6 +173,9 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
             rbase::triangleType);
         c.def("triangleSubtype", &Face<dim, subdim>::triangleSubtype,
             rbase::triangleSubtype);
+        c.def("formsMobiusBand", &Face<dim, subdim>::formsMobiusBand,
+            rbase::formsMobiusBand);
+        c.def("formsCone", &Face<dim, subdim>::formsCone, rbase::formsCone);
     }
     if constexpr (dim - subdim == 1) {
         c.def("lock", &Face<dim, subdim>::lock, rbase::lock);

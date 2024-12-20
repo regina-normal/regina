@@ -1089,6 +1089,46 @@ class FaceBase :
         int triangleSubtype();
 
         /**
+         * For triangles, determines whether this face is wrapped up to form
+         * a Möbius band, possibly with or without additional identifications
+         * between its vertices and/or edges.
+         *
+         * Note that several different triangle types (as returned by
+         * triangleType()) can produce this result.
+         * Note also that a triangle can satisfy both formsMobiusBand() and
+         * formsCone().
+         *
+         * The reason this routine is non-const is because the triangle type
+         * is cached when first computed.
+         *
+         * \pre The facial dimension \a subdim is precisely 2, and the
+         * triangulation dimension \a dim is at least 3.
+         *
+         * \return \c true if and only if this triangle forms a Mobius band.
+         */
+        bool formsMobiusBand();
+
+        /**
+         * For triangles, determines whether this face is wrapped up to form
+         * a cone, possibly with or without additional identifications between
+         * its vertices and/or edges.
+         *
+         * Note that several different triangle types (as returned by
+         * triangleType()) can produce this result.
+         * Note also that a triangle can satisfy both formsMobiusBand() and
+         * formsCone().
+         *
+         * The reason this routine is non-const is because the triangle type
+         * is cached when first computed.
+         *
+         * \pre The facial dimension \a subdim is precisely 2, and the
+         * triangulation dimension \a dim is at least 3.
+         *
+         * \return \c true if and only if this triangle forms a cone.
+         */
+        bool formsCone();
+
+        /**
          * Locks this codimension-1-face.
          *
          * Essentially, locking a face of dimension (<i>dim</i>-1) means
@@ -1539,6 +1579,41 @@ inline int FaceBase<dim, subdim>::triangleSubtype() {
 
     triangleType();
     return triangleSubtype_.value;
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::formsMobiusBand() {
+    static_assert(subdim == 2,
+        "formsMobiusBand() is only available for triangles.");
+    static_assert(dim >= 3,
+        "formsMobiusBand() is only available in triangulations of "
+        "dimension ≥ 3.");
+
+    switch (triangleType()) {
+        case TriangleType::L31:
+        case TriangleType::DunceHat:
+        case TriangleType::Mobius:
+            return true;
+        default:
+            return false;
+    }
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::formsCone() {
+    static_assert(subdim == 2,
+        "formsCone() is only available for triangles.");
+    static_assert(dim >= 3,
+        "formsCone() is only available in triangulations of dimension ≥ 3.");
+
+    switch (triangleType()) {
+        case TriangleType::DunceHat:
+        case TriangleType::Cone:
+        case TriangleType::Horn:
+            return true;
+        default:
+            return false;
+    }
 }
 
 template <int dim, int subdim>

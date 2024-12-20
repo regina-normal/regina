@@ -138,8 +138,9 @@ Version 7.4  [ (to be announced) ]
               enumeration for better type safety.  The old enum constants
               (e.g., Triangle<3>::CONE) are likewise now deprecated aliases for
               the new scoped enum values (e.g., TriangleType::Cone).
-            - The 3-D routines Triangle<3>::type() and Triangle<3>::subtype()
-              have been renamed to triangleType() and triangleSubtype(), and
+            - The 3-D routines Triangle<3>::type(), Triangle<3>::subtype(),
+              isMobiusBand() and isCone() have been renamed to triangleType(),
+              triangleSubtype(), formsMobiusBand() and formsCone(), and
               are now available for triangles within triangulations of any
               dimension ≥ 3.  The old 3-D routines are now deprecated.
         Class Face<dim, dim-1>:

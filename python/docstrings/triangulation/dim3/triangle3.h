@@ -33,25 +33,31 @@ namespace Face_ {
 
 // Docstring regina::python::doc::Face_::isCone
 static const char *isCone =
-R"doc(Determines whether this triangle is wrapped up to form a cone.
+R"doc(Deprecated function that determines whether this triangle is wrapped
+up to form a cone, possibly with or without additional identifications
+between its vertices and/or edges.
 
-Note that several different triangle types (as returned by type()) can
-produce this result. Note also that a triangle can be both a Mobius
-band *and* a cone.
+.. deprecated::
+    This has been renamed to formsCone(), and is now available for
+    triangulations of all dimensions ≥ 3. See formsCone() for further
+    information.
 
 Returns:
-    ``True`` if and only if this triangle is a cone.)doc";
+    ``True`` if and only if this triangle forms a cone.)doc";
 
 // Docstring regina::python::doc::Face_::isMobiusBand
 static const char *isMobiusBand =
-R"doc(Determines whether this triangle is wrapped up to form a Mobius band.
+R"doc(Deprecated function that determines whether this triangle is wrapped
+up to form a Möbius band, possibly with or without additional
+identifications between its vertices and/or edges.
 
-Note that several different triangle types (as returned by type()) can
-produce this result. Note also that a triangle can be both a Mobius
-band *and* a cone.
+.. deprecated::
+    This has been renamed to formsMobiusBand(), and is now available
+    for triangulations of all dimensions ≥ 3. See formsMobiusBand()
+    for further information.
 
 Returns:
-    ``True`` if and only if this triangle is a Mobius band.)doc";
+    ``True`` if and only if this triangle forms a Möbius band.)doc";
 
 // Docstring regina::python::doc::Face_::linkingSurface
 static const char *linkingSurface =

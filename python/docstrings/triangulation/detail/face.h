@@ -411,6 +411,46 @@ Returns:
     a mapping from the vertices of the underlying *lowerdim*-face of
     the triangulation to the vertices of this *subdim*-face.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase_::formsCone
+constexpr const char *formsCone =
+R"doc(For triangles, determines whether this face is wrapped up to form a
+cone, possibly with or without additional identifications between its
+vertices and/or edges.
+
+Note that several different triangle types (as returned by
+triangleType()) can produce this result. Note also that a triangle can
+satisfy both formsMobiusBand() and formsCone().
+
+The reason this routine is non-const is because the triangle type is
+cached when first computed.
+
+Precondition:
+    The facial dimension *subdim* is precisely 2, and the
+    triangulation dimension *dim* is at least 3.
+
+Returns:
+    ``True`` if and only if this triangle forms a cone.)doc";
+
+// Docstring regina::python::doc::detail::FaceBase_::formsMobiusBand
+constexpr const char *formsMobiusBand =
+R"doc(For triangles, determines whether this face is wrapped up to form a
+Möbius band, possibly with or without additional identifications
+between its vertices and/or edges.
+
+Note that several different triangle types (as returned by
+triangleType()) can produce this result. Note also that a triangle can
+satisfy both formsMobiusBand() and formsCone().
+
+The reason this routine is non-const is because the triangle type is
+cached when first computed.
+
+Precondition:
+    The facial dimension *subdim* is precisely 2, and the
+    triangulation dimension *dim* is at least 3.
+
+Returns:
+    ``True`` if and only if this triangle forms a Mobius band.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase_::front
 constexpr const char *front =
 R"doc(Returns the first appearance of this face within a top-dimensional
