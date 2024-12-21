@@ -65,6 +65,7 @@ namespace {
         TRI_EMPTY,
         TRI_IBUNDLE,
         TRI_S1BUNDLE,
+        TRI_SINGLECONE,
         TRI_ISOSIG,
         TRI_EXAMPLE
     };
@@ -75,6 +76,7 @@ namespace {
     std::vector<ExampleCreator<4>> examples = {
         ExampleCreator<4>(QObject::tr("4-sphere (minimal)"), &regina::Example<4>::sphere),
         ExampleCreator<4>(QObject::tr("4-sphere (simplex boundary)"), &regina::Example<4>::simplicialFourSphere),
+        ExampleCreator<4>(QObject::tr("4-torus"), &regina::Example<4>::fourTorus),
         ExampleCreator<4>(QObject::tr("Cappell-Shaneson knot complement"), &regina::Example<4>::cappellShaneson),
         ExampleCreator<4>(QObject::tr("ℂP²"), &regina::Example<4>::cp2),
         ExampleCreator<4>(QObject::tr("K3 surface"), &regina::Example<4>::k3),
@@ -162,6 +164,24 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     s1BundleFrom->setWhatsThis(expln);
     s1BundleFrom->selectPacket(mainWindow->selectedPacket());
     subLayout->addWidget(s1BundleFrom, 1);
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("Cone"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::tr("Select the 3-manifold triangulation that you wish "
+        "to cone over.");
+    label = new QLabel(QObject::tr("Select a 3-manifold to cone over:"));
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    singleConeFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Triangulation<3>>(),
+        PacketChooser::RootRole::Packet);
+    singleConeFrom->setWhatsThis(expln);
+    singleConeFrom->selectPacket(mainWindow->selectedPacket());
+    subLayout->addWidget(singleConeFrom, 1);
     details->addWidget(area);
 
     type->addItem(QObject::tr("From isomorphism signature"));
@@ -270,6 +290,21 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
             ans->setLabel("S¹-bundle");
         else
             ans->setLabel(fromPacket->label() + " × S¹");
+        return ans;
+    } else if (typeId == TRI_SINGLECONE) {
+        auto fromPacket = singleConeFrom->selectedPacket();
+        if (! fromPacket) {
+            ReginaSupport::info(parentWidget, QObject::tr(
+                "Please select a 3-manifold triangulation to cone over."));
+            return nullptr;
+        }
+        auto& from = regina::static_triangulation3_cast(*fromPacket);
+        auto ans = regina::make_packet(Example<4>::singleCone(from));
+        ans->simplify();
+        if (fromPacket->label().empty())
+            ans->setLabel("Cone");
+        else
+            ans->setLabel("Cone over " + fromPacket->label());
         return ans;
     } else if (typeId == TRI_ISOSIG) {
         auto match = reIsoSig.match(isoSig->text());

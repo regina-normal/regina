@@ -62,6 +62,7 @@ void addExample3(pybind11::module_& m) {
         .def_static("bingsHouse", &Example<3>::bingsHouse, rdoc::bingsHouse)
         .def_static("s2xs1", &Example<3>::s2xs1, rdoc::s2xs1)
         .def_static("rp2xs1", &Example<3>::rp2xs1, rdoc::rp2xs1)
+        .def_static("threeTorus", &Example<3>::threeTorus, rdoc::threeTorus)
         .def_static("rp3rp3", &Example<3>::rp3rp3, rdoc::rp3rp3)
         .def_static("lens", &Example<3>::lens, rdoc::lens)
         .def_static("layeredLoop", &Example<3>::layeredLoop,

@@ -70,6 +70,7 @@ void addExample4(pybind11::module_& m) {
         .def_static("s3xs1", &Example<4>::s3xs1, rdoc::s3xs1)
         .def_static("s3xs1Twisted", &Example<4>::s3xs1Twisted,
             rdoc::s3xs1Twisted)
+        .def_static("fourTorus", &Example<4>::fourTorus, rdoc::fourTorus)
         .def_static("k3", &Example<4>::k3, rdoc::k3)
         .def_static("cappellShaneson", &Example<4>::cappellShaneson,
             rdoc::cappellShaneson)

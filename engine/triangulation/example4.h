@@ -144,6 +144,14 @@ class Example<4> : public detail::ExampleBase<4> {
         static Triangulation<4> s3xs1Twisted();
 
         /**
+         * Returns a triangulation of the standard 4-torus; that is, the
+         * product space `T² x T²`.
+         *
+         * \return the product space `T² x T²`.
+         */
+        static Triangulation<4> fourTorus();
+
+        /**
          * Returns a triangulation of the standard K3 surface.
          *
          * Be warned: this triangulation is fairly large.

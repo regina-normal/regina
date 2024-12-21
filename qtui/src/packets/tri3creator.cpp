@@ -83,6 +83,7 @@ namespace {
         ExampleCreator<3>(QObject::tr("3-sphere (dual to Bing's house)"), &regina::Example<3>::bingsHouse),
         ExampleCreator<3>(QObject::tr("3-sphere (simplex boundary)"), &regina::Example<3>::simplicialSphere),
         ExampleCreator<3>(QObject::tr("3-sphere (600-cell)"), &regina::Example<3>::sphere600),
+        ExampleCreator<3>(QObject::tr("3-torus"), &regina::Example<3>::threeTorus),
         ExampleCreator<3>(QObject::tr("Connected sum ℝP³ # ℝP³"), &regina::Example<3>::rp3rp3),
         ExampleCreator<3>(QObject::tr("Figure eight knot complement"), &regina::Example<3>::figureEight),
         ExampleCreator<3>(QObject::tr("Gieseking manifold"), &regina::Example<3>::gieseking),

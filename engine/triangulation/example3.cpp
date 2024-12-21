@@ -69,6 +69,16 @@ Triangulation<3> Example<3>::rp2xs1() {
     return ans;
 }
 
+Triangulation<3> Example<3>::threeTorus() {
+    return Triangulation<3>::fromGluings(6, {
+        { 0, 0, 1, {0,1,2,3} }, { 0, 1, 2, {0,1,2,3} },
+        { 0, 2, 3, {0,1,2,3} }, { 0, 3, 4, {0,1,2,3} },
+        { 1, 1, 5, {0,1,2,3} }, { 1, 2, 4, {2,3,1,0} },
+        { 1, 3, 3, {3,2,0,1} }, { 2, 0, 5, {0,1,2,3} },
+        { 2, 2, 4, {3,2,0,1} }, { 2, 3, 3, {2,3,1,0} },
+        { 3, 3, 5, {1,0,3,2} }, { 4, 2, 5, {1,0,3,2} }});
+}
+
 Triangulation<3> Example<3>::rp3rp3() {
     // This can be generated as the enclosing triangulation of a splitting
     // surface, as described in chapter 4 of Benjamin Burton's PhD thesis.

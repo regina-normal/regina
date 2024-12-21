@@ -415,6 +415,10 @@
   <seeie>See: combinatorial composition</seeie>
  </indexentry>
 
+ <indexentry>
+  <primaryie><link linkend="tri-new-bundle">cones, creation</link></primaryie>
+ </indexentry>
+
  <indexentry id="idx-configuration">
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>

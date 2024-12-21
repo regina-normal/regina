@@ -224,7 +224,7 @@
    </sect3>
 
    <sect3 id="tri-new-or-nor">
-    <title>Orientable and non-orientable surfaces
+    <title>Orientable and Non-Orientable Surfaces
      (2-manifolds only)</title>
     <para>
      For 2-manifolds, &regina; can triangulate a connected surface of
@@ -356,7 +356,7 @@
    </sect3>
 
    <sect3 id="tri-new-handlebody">
-    <title>Orientable handlebody (3-manifolds only)</title>
+    <title>Orientable Handlebody (3-manifolds only)</title>
 
     <para>
      This will create an orientable handlebody of the given genus.
@@ -443,20 +443,21 @@
    </sect3>
 
    <sect3 id="tri-new-bundle">
-    <title>I-bundles and &s1;-bundles (4-manifolds only)</title>
+    <title>I-Bundles, &s1;-Bundles, and Cones (4-manifolds only)</title>
     <para>
-     This allows you to build an I-bundle or an
-     &s1;-bundle over an existing 3-manifold triangulation.
+     This allows you to build a 4-manifold from an existing 3-manifold
+     triangulation, by making either an I-bundle, an &s1;-bundle, or a cone.
     </para>
     <para>
-     Choose either <guilabel>I-bundle</guilabel> or
-     <guilabel>&s1;-bundle</guilabel>
+     Choose one of <guilabel>I-bundle</guilabel>,
+     <guilabel>&s1;-bundle</guilabel> or <guilabel>Cone</guilabel>
      as the triangulation type, and then select your 3-manifold
      triangulation in the drop-down box.  If your triangulation
      represents the 3-manifold <replaceable>M</replaceable>, then
-     &regina; will build the 4-manifold
-     <replaceable>M</replaceable>&nbsp;&times;&nbsp;I or
-     <replaceable>M</replaceable>&nbsp;&times;&nbsp;&s1; respectively.
+     &regina; will build either the 4-manifold
+     <replaceable>M</replaceable>&nbsp;&times;&nbsp;I,
+     <replaceable>M</replaceable>&nbsp;&times;&nbsp;&s1;, or the
+     cone over <replaceable>M</replaceable> respectively.
     </para>
     <para>
      <inlinemediaobject>
@@ -466,7 +467,7 @@
      </inlinemediaobject>
     </para>
     <tip><para>
-     &regina; is also able to build non-trivial bundles, formed by
+     &regina; is also able to build non-trivial bundles by
      gluing the two boundaries of
      <replaceable>M</replaceable>&nbsp;&times;&nbsp;I according to a
      given monodromy.  However, this construction is only accessible through

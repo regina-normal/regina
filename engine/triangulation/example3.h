@@ -108,6 +108,14 @@ class Example<3> : public detail::ExampleBase<3> {
         static Triangulation<3> rp2xs1();
 
         /**
+         * Returns a six-tetrahedron triangulation of the 3-torus; that is,
+         * the product space `S¹ x S¹ x S¹`.
+         *
+         * \return the product space `S¹ x S¹ x S¹`.
+         */
+        static Triangulation<3> threeTorus();
+
+        /**
          * Returns a triangulation of the connected sum
          * `RP³ # RP³`.
          *

@@ -99,12 +99,48 @@ Triangulation<4> Example<4>::rp4() {
     return ans;
 }
 
+Triangulation<4> Example<4>::fourTorus() {
+    // This was constructed and simplified by Rhuaidi Burke by taking an
+    // S1-bundle over the 3-torus.
+    return Triangulation<4>::fromGluings(24, {
+        { 0, 0, 3, {0,1,2,3,4} }, { 0, 1, 4, {0,1,2,3,4} },
+        { 0, 2, 14, {1,3,0,2,4} }, { 0, 3, 13, {1,4,3,0,2} },
+        { 0, 4, 5, {0,1,2,3,4} }, { 1, 0, 3, {3,1,2,0,4} },
+        { 1, 1, 15, {4,3,1,2,0} }, { 1, 2, 8, {0,1,2,3,4} },
+        { 1, 3, 13, {0,4,3,1,2} }, { 1, 4, 19, {4,2,0,3,1} },
+        { 2, 0, 21, {0,1,2,3,4} }, { 2, 1, 15, {1,0,3,4,2} },
+        { 2, 2, 19, {0,1,2,4,3} }, { 2, 3, 9, {0,1,2,3,4} },
+        { 2, 4, 14, {2,3,4,0,1} }, { 3, 1, 11, {0,1,2,3,4} },
+        { 3, 2, 9, {3,1,4,0,2} }, { 3, 4, 10, {3,1,4,0,2} },
+        { 4, 0, 11, {0,1,2,3,4} }, { 4, 2, 8, {0,3,4,1,2} },
+        { 4, 3, 21, {3,4,1,2,0} }, { 4, 4, 19, {4,3,1,2,0} },
+        { 5, 0, 12, {0,1,2,3,4} }, { 5, 1, 9, {2,0,3,4,1} },
+        { 5, 2, 20, {3,2,0,4,1} }, { 5, 3, 6, {0,1,2,4,3} },
+        { 6, 0, 17, {1,0,2,3,4} }, { 6, 1, 8, {4,0,3,1,2} },
+        { 6, 2, 22, {1,3,0,4,2} }, { 6, 3, 13, {1,4,3,2,0} },
+        { 7, 0, 23, {0,3,4,2,1} }, { 7, 1, 11, {2,4,3,0,1} },
+        { 7, 2, 8, {0,1,3,2,4} }, { 7, 3, 18, {1,3,2,0,4} },
+        { 7, 4, 10, {4,2,0,3,1} }, { 8, 1, 12, {4,2,1,0,3} },
+        { 9, 1, 17, {3,2,4,1,0} }, { 9, 2, 16, {3,4,1,2,0} },
+        { 10, 0, 14, {3,0,2,4,1} }, { 10, 3, 12, {3,1,0,4,2} },
+        { 10, 4, 16, {3,4,1,2,0} }, { 11, 2, 17, {1,2,0,3,4} },
+        { 11, 3, 20, {2,4,1,3,0} }, { 12, 1, 15, {2,1,3,0,4} },
+        { 12, 3, 21, {4,0,2,1,3} }, { 13, 3, 18, {1,0,4,2,3} },
+        { 13, 4, 16, {4,3,0,1,2} }, { 14, 2, 18, {2,0,1,3,4} },
+        { 14, 4, 20, {0,3,4,2,1} }, { 15, 2, 16, {0,1,3,2,4} },
+        { 15, 4, 22, {0,4,3,2,1} }, { 16, 4, 23, {0,3,2,4,1} },
+        { 17, 3, 19, {2,1,0,3,4} }, { 17, 4, 23, {0,2,1,4,3} },
+        { 18, 3, 19, {0,1,2,4,3} }, { 18, 4, 22, {1,2,0,3,4} },
+        { 20, 2, 21, {0,1,3,2,4} }, { 20, 4, 22, {0,4,3,1,2} },
+        { 21, 4, 23, {0,3,1,4,2} }, { 22, 3, 23, {0,1,2,4,3} }});
+}
+
 Triangulation<4> Example<4>::k3() {
     // This is (with much work by multiple authors) derived from Spreer's
     // 17-vertex standard K3 simplicial complex.
     // Rhuaidi Burke has managed to get this down to 60 pentachora thus far.
     //Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
-    
+
     // This triangulation is derived from a Kirby diagram of the standard K3 surface, 
     // constructed and simplified by Rhuaidi Burke using DGT and the "Up-Down-Simplify" heuristic.
     Triangulation<4> ans = Triangulation<4>::fromIsoSig("2ALAMMvAwvPLQwvPwLQPMvPQQQQLQPAwwALQQAAQPPzQPPaaddceffggikqpmllsorsquxwuttvxxFyyzzAABBCCDDJKIIGGHHMKLLNNOOPPQQSSUUTTVVWWXZZZ0011TbgaiaiakaqaaaMbaawaUbjbabPa5ayaGauara3bmagaNaUbybNa2aRa2aibbawboaraPbJa2aKaya1aqbub2afbPaZaUbcayaGawaca-aLb+aoatbfaNabagajaya1axbybrbebubgaubFbtbfaFbFbFbqbzaoaPboa");

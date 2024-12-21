@@ -375,6 +375,14 @@ tetrahedra instead.
 Returns:
     a one-tetrahedron 3-sphere.)doc";
 
+// Docstring regina::python::doc::Example_::threeTorus
+static const char *threeTorus =
+R"doc(Returns a six-tetrahedron triangulation of the 3-torus; that is, the
+product space ``S¹ x S¹ x S¹``.
+
+Returns:
+    the product space ``S¹ x S¹ x S¹``.)doc";
+
 // Docstring regina::python::doc::Example_::trefoil
 static const char *trefoil =
 R"doc(Returns a two-tetrahedron ideal triangulation of the trefoil knot

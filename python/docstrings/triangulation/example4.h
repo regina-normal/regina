@@ -93,6 +93,14 @@ identical to calling the generic routine sphere().
 Returns:
     a two-pentachoron 4-sphere.)doc";
 
+// Docstring regina::python::doc::Example_::fourTorus
+static const char *fourTorus =
+R"doc(Returns a triangulation of the standard 4-torus; that is, the product
+space ``T² x T²``.
+
+Returns:
+    the product space ``T² x T²``.)doc";
+
 // Docstring regina::python::doc::Example_::iBundle
 static const char *iBundle =
 R"doc(Returns a triangulation of the product ``M x I``, where *M* is the

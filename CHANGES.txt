@@ -119,10 +119,13 @@ Version 7.4  [ (to be announced) ]
               less-than (<) as before.
         Class Example<3>:
             - New routine b5().
+            - New routine threeTorus(), thanks to Rhuaidi Burke.
             - Routines lst(), lens(), augTriSolidTorus() and sfsOverSphere()
               now check their preconditions and throw an exception if they fail.
             - Renamed cuspedGenusTwoTorus() to idealGenusTwoHandlebody().
               The old name has been kept as a deprecated alias.
+        Class Example<4>:
+            - New routine fourTorus(), thanks to Rhuaidi Burke.
         Class ExampleLink:
             - New routine chen().
             - Added several new routines that return 3-dimensional embeddings
