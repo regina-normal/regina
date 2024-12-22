@@ -186,6 +186,10 @@ class Example<3> : public detail::ExampleBase<3> {
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
          *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
+         *
          * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
          * \exception InvalidArgument The preconditions above do not hold;
@@ -227,6 +231,10 @@ class Example<3> : public detail::ExampleBase<3> {
          * If you wish to construct more complex Seifert fibred spaces
          * (e.g., with more exceptional fibres, or with a different base
          * orbifold), you can use the more sophisticated SFSpace::construct().
+         *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
          *
          * \pre None of \a a1, \a a2 or \a a3 are 0.
          * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
@@ -321,6 +329,10 @@ class Example<3> : public detail::ExampleBase<3> {
          * this routine.  The third parameter \a c will be deduced
          * automatically as \a c = (\a a + \a b).
          *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
+         *
          * \pre gcd(\a a, \a b) = 1.
          *
          * \exception InvalidArgument The preconditions above do not hold;
@@ -346,6 +358,10 @@ class Example<3> : public detail::ExampleBase<3> {
          * arbitrary choice.
          *
          * For genus 0, this routine uses the one-tetrahedron 3-ball.
+         *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
          *
          * \param genus the genus of the handlebody.
          * \return the orientable handlebody with the given genus.
@@ -437,6 +453,10 @@ class Example<3> : public detail::ExampleBase<3> {
          * one genus two ideal vertex.
          *
          * Prior to Regina 7.4, this routine was called cuspedGenusTwoTorus().
+         *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
          *
          * \return the solid genus two handlebody with ideal boundary.
          */

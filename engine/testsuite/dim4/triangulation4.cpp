@@ -379,12 +379,12 @@ TEST_F(Dim4Test, orientedExamples) {
     // EXPECT_TRUE(Example<4>::sphereBundle().isOriented());
     EXPECT_TRUE(Example<4>::ball().isOriented());
 
-    // EXPECT_TRUE(Example<4>::cp2().isOriented());
-    // EXPECT_TRUE(Example<4>::s2xs2().isOriented());
+    EXPECT_TRUE(Example<4>::cp2().isOriented());
+    EXPECT_TRUE(Example<4>::s2xs2().isOriented());
     EXPECT_TRUE(Example<4>::s2xs2Twisted().isOriented());
     EXPECT_TRUE(Example<4>::fourTorus().isOriented());
-    // EXPECT_TRUE(Example<4>::k3().isOriented());
-    // EXPECT_TRUE(Example<4>::cappellShaneson().isOriented());
+    EXPECT_TRUE(Example<4>::k3().isOriented());
+    EXPECT_TRUE(Example<4>::cappellShaneson().isOriented());
 
     Triangulation<3> poincare = Example<3>::poincare();
     // EXPECT_TRUE(Example<4>::iBundle(poincare).isOriented());

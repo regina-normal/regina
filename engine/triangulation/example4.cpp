@@ -38,19 +38,14 @@ namespace regina {
 
 Triangulation<4> Example<4>::cp2() {
     // Built by Rhuaidi Burke using DGT from a Kirby diagram of the
-    // standard CP^2.
-    Triangulation<4> ans = Triangulation<4>::fromGluings(4, {
-        { 0, 0, 0, {1,0,2,3,4} }, { 0, 2, 0, {2,0,4,3,1} },
-        { 0, 3, 1, {0,1,2,3,4} }, { 1, 0, 2, {0,1,2,3,4} },
-        { 1, 1, 3, {0,1,2,3,4} }, { 1, 2, 1, {2,0,4,3,1} },
-        { 2, 1, 2, {0,4,2,3,1} }, { 2, 2, 3, {1,2,4,3,0} },
-        { 2, 3, 3, {1,0,2,3,4} }, { 3, 0, 3, {2,1,0,3,4} }});
-
-    // Using our orientation convention for intersection forms,
-    // the triangulation above describes \overline{CP^2}.
-    // Reflect it so we have plain CP^2.
-    ans.reflect();
-    return ans;
+    // standard CP^2, then oriented in a way that ensures our
+    // intersection form matches CP^2 and not the reflection \overline{CP^2}.
+    return Triangulation<4>::fromGluings(4, {
+        { 0, 0, 0, {1,0,2,3,4} }, { 0, 2, 0, {2,0,3,1,4} },
+        { 0, 4, 1, {0,1,2,4,3} }, { 1, 0, 2, {0,1,2,4,3} },
+        { 1, 1, 3, {0,1,2,4,3} }, { 1, 2, 1, {2,0,4,3,1} },
+        { 2, 1, 2, {0,3,2,1,4} }, { 2, 2, 3, {1,2,3,0,4} },
+        { 2, 4, 3, {1,0,2,3,4} }, { 3, 0, 3, {2,1,0,3,4} }});
 }
 
 Triangulation<4> Example<4>::s2xs2() {
@@ -58,13 +53,13 @@ Triangulation<4> Example<4>::s2xs2() {
     // standard S2 x S2.
     return Triangulation<4>::fromGluings(6, {
         { 0, 0, 0, {4,1,2,3,0} }, { 0, 1, 0, {0,2,1,3,4} },
-        { 0, 3, 1, {0,1,2,3,4} }, { 1, 0, 2, {0,1,2,3,4} },
-        { 1, 1, 3, {0,1,2,3,4} }, { 1, 2, 2, {4,2,1,3,0} },
-        { 1, 4, 3, {0,1,2,3,4} }, { 2, 2, 2, {1,2,4,3,0} },
-        { 2, 3, 4, {0,1,2,3,4} }, { 3, 0, 3, {2,4,1,3,0} },
-        { 3, 3, 5, {0,1,2,3,4} }, { 4, 0, 4, {1,0,2,3,4} },
-        { 4, 2, 4, {1,2,4,3,0} }, { 5, 0, 5, {2,4,1,3,0} },
-        { 5, 1, 5, {0,4,2,3,1} }});
+        { 0, 3, 1, {0,1,2,4,3} }, { 1, 0, 2, {0,1,2,4,3} },
+        { 1, 1, 3, {0,1,2,4,3} }, { 1, 2, 2, {4,2,1,0,3} },
+        { 1, 3, 3, {0,1,2,4,3} }, { 2, 2, 2, {1,2,4,3,0} },
+        { 2, 3, 4, {0,1,2,4,3} }, { 3, 0, 3, {2,4,1,3,0} },
+        { 3, 3, 5, {0,1,2,4,3} }, { 4, 0, 4, {1,0,2,3,4} },
+        { 4, 2, 4, {1,2,3,0,4} }, { 5, 0, 5, {2,3,1,0,4} },
+        { 5, 1, 5, {0,3,2,1,4} }});
 }
 
 Triangulation<4> Example<4>::s2xs2Twisted() {
@@ -144,22 +139,19 @@ Triangulation<4> Example<4>::k3() {
     // This triangulation is derived from a Kirby diagram of the standard K3 surface, 
     // constructed and simplified by Rhuaidi Burke using DGT and the "Up-Down-Simplify" heuristic.
     Triangulation<4> ans = Triangulation<4>::fromIsoSig("2ALAMMvAwvPLQwvPwLQPMvPQQQQLQPAwwALQQAAQPPzQPPaaddceffggikqpmllsorsquxwuttvxxFyyzzAABBCCDDJKIIGGHHMKLLNNOOPPQQSSUUTTVVWWXZZZ0011TbgaiaiakaqaaaMbaawaUbjbabPa5ayaGauara3bmagaNaUbybNa2aRa2aibbawboaraPbJa2aKaya1aqbub2afbPaZaUbcayaGawaca-aLb+aoatbfaNabagajaya1axbybrbebubgaubFbtbfaFbFbFbqbzaoaPboa");
+    ans.orient();
     ans.reflect(); // so sig = -16, not 16
     return ans;
 }
 
 Triangulation<4> Example<4>::cappellShaneson() {
-    // Use the gluings described in arXiv:1109.3899.
-    Triangulation<4> ans;
-
-    auto [p, q] = ans.newPentachora<2>();
-    q->join(0, p, Perm<5>(2,0,1,3,4));
-    q->join(2, p, Perm<5>(0,1,4,2,3));
-    q->join(3, p, Perm<5>(0,2,3,1,4));
-    p->join(3, p, Perm<5>(1,2,3,0,4));
-    q->join(4, q, Perm<5>(0,2,3,4,1));
-
-    return ans;
+    // We use a construction that is isomorphic to the one described in
+    // arXiv:1109.3899, but we relabel the tetrahedra so that the
+    // triangulation is oriented.
+    return Triangulation<4>::fromGluings(2, {
+        { 0, 0, 0, {3,0,1,2,4} }, { 0, 1, 1, {0,4,1,2,3} },
+        { 0, 2, 1, {1,2,0,4,3} }, { 0, 4, 1, {0,1,4,3,2} },
+        { 1, 1, 1, {0,3,1,4,2} }});
 }
 
 namespace {
