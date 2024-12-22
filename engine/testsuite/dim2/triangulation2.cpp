@@ -116,6 +116,23 @@ TEST_F(Dim2Test, orientability) {
     EXPECT_FALSE(disjoint2.tri.isOrientable());
     EXPECT_FALSE(disjoint3.tri.isOrientable());
 }
+TEST_F(Dim2Test, orientedExamples) {
+    // Ensure that the orientable Example<2> constructions are oriented.
+    //
+    // Several of these tests are commented out because the constructions
+    // are _not_ actually oriented at present; it would be nice to make these
+    // oriented in the future.
+
+    // EXPECT_TRUE(Example<2>::simplicialSphere().isOriented());
+    // EXPECT_TRUE(Example<2>::sphereBundle().isOriented());
+    EXPECT_TRUE(Example<2>::ball().isOriented());
+    // EXPECT_TRUE(Example<2>::ballBundle().isOriented());
+
+    EXPECT_TRUE(Example<2>::orientable(5, 3).isOriented());
+    // EXPECT_TRUE(Example<2>::sphereOctahedron().isOriented());
+    EXPECT_TRUE(Example<2>::disc().isOriented());
+}
+
 TEST_F(Dim2Test, eulerChar) {
     TriangulationTest<2>::eulerCharGenericCases();
 
