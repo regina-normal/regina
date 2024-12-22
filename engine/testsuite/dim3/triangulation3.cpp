@@ -63,6 +63,7 @@ class Dim3Test : public TriangulationTest<3> {
             }), "L(3, 1) (2 vtx)" };
         TestCase lens8_3 { Example<3>::lens(8, 3), "L(8,3)" };
         TestCase lens7_1_loop { Example<3>::layeredLoop(7, false), "L(7,1)" };
+        TestCase t3 { Example<3>::threeTorus(), "3-torus" };
         TestCase rp3rp3 { Signature("aabccd.b.d").triangulate(),
             "RP^3 # RP^3" };
         TestCase q32xz3 { Signature("aabcdb.cedfef").triangulate(),
@@ -175,6 +176,7 @@ class Dim3Test : public TriangulationTest<3> {
             f(lens3_1.tri, lens3_1.name);
             f(lens8_3.tri, lens8_3.name);
             f(lens7_1_loop.tri, lens7_1_loop.name);
+            f(t3.tri, t3.name);
             f(rp3rp3.tri, rp3rp3.name);
             f(q32xz3.tri, q32xz3.name);
             f(q28.tri, q28.name);
@@ -278,6 +280,7 @@ TEST_F(Dim3Test, validity) {
     verifyValid(lens3_1);
     verifyValid(lens8_3);
     verifyValid(lens7_1_loop);
+    verifyValid(t3);
     verifyValid(rp3rp3);
     verifyValid(q32xz3);
     verifyValid(q28);
@@ -322,6 +325,7 @@ TEST_F(Dim3Test, connectivity) {
     EXPECT_TRUE(lens3_1.tri.isConnected());
     EXPECT_TRUE(lens8_3.tri.isConnected());
     EXPECT_TRUE(lens7_1_loop.tri.isConnected());
+    EXPECT_TRUE(t3.tri.isConnected());
     EXPECT_TRUE(rp3rp3.tri.isConnected());
     EXPECT_TRUE(q32xz3.tri.isConnected());
     EXPECT_TRUE(q28.tri.isConnected());
@@ -366,6 +370,7 @@ TEST_F(Dim3Test, orientability) {
     EXPECT_TRUE(lens3_1.tri.isOrientable());
     EXPECT_TRUE(lens8_3.tri.isOrientable());
     EXPECT_TRUE(lens7_1_loop.tri.isOrientable());
+    EXPECT_TRUE(t3.tri.isOrientable());
     EXPECT_TRUE(rp3rp3.tri.isOrientable());
     EXPECT_TRUE(q32xz3.tri.isOrientable());
     EXPECT_TRUE(q28.tri.isOrientable());
@@ -417,6 +422,7 @@ TEST_F(Dim3Test, standardness) {
     EXPECT_TRUE(lens3_1.tri.isStandard());
     EXPECT_TRUE(lens8_3.tri.isStandard());
     EXPECT_TRUE(lens7_1_loop.tri.isStandard());
+    EXPECT_TRUE(t3.tri.isStandard());
     EXPECT_TRUE(rp3rp3.tri.isStandard());
     EXPECT_TRUE(q32xz3.tri.isStandard());
     EXPECT_TRUE(q28.tri.isStandard());
@@ -468,6 +474,8 @@ TEST_F(Dim3Test, eulerChar) {
     EXPECT_EQ(lens8_3.tri.eulerCharManifold(), 0);
     EXPECT_EQ(lens7_1_loop.tri.eulerCharTri(), 0);
     EXPECT_EQ(lens7_1_loop.tri.eulerCharManifold(), 0);
+    EXPECT_EQ(t3.tri.eulerCharTri(), 0);
+    EXPECT_EQ(t3.tri.eulerCharManifold(), 0);
     EXPECT_EQ(rp3rp3.tri.eulerCharTri(), 0);
     EXPECT_EQ(rp3rp3.tri.eulerCharManifold(), 0);
     EXPECT_EQ(q32xz3.tri.eulerCharTri(), 0);
@@ -564,6 +572,7 @@ TEST_F(Dim3Test, boundaryBasic) {
     verifyBoundaryBasic(lens3_1, {}, {}, {});
     verifyBoundaryBasic(lens8_3, {}, {}, {});
     verifyBoundaryBasic(lens7_1_loop, {}, {}, {});
+    verifyBoundaryBasic(t3, {}, {}, {});
     verifyBoundaryBasic(rp3rp3, {}, {}, {});
     verifyBoundaryBasic(q32xz3, {}, {}, {});
     verifyBoundaryBasic(q28, {}, {}, {});
@@ -613,6 +622,7 @@ TEST_F(Dim3Test, vertexLinksBasic) {
     verifyVertexLinksBasic(lens3_1, 2, 0);
     verifyVertexLinksBasic(lens8_3, 1, 0);
     verifyVertexLinksBasic(lens7_1_loop, 2, 0);
+    verifyVertexLinksBasic(t3, 1, 0);
     verifyVertexLinksBasic(rp3rp3, 1, 0);
     verifyVertexLinksBasic(q32xz3, 1, 0);
     verifyVertexLinksBasic(q28, 1, 0);
@@ -1254,6 +1264,7 @@ TEST_F(Dim3Test, homologyH1) {
     EXPECT_EQ(lens3_1.tri.homology<1>(), AbelianGroup(0, {3}));
     EXPECT_EQ(lens8_3.tri.homology<1>(), AbelianGroup(0, {8}));
     EXPECT_EQ(lens7_1_loop.tri.homology<1>(), AbelianGroup(0, {7}));
+    EXPECT_EQ(t3.tri.homology<1>(), AbelianGroup(3));
     EXPECT_EQ(rp3rp3.tri.homology<1>(), AbelianGroup(0, {2,2}));
     EXPECT_EQ(q32xz3.tri.homology<1>(), AbelianGroup(0, {2,6}));
     EXPECT_EQ(q28.tri.homology<1>(), AbelianGroup(0, {4}));
@@ -1298,6 +1309,7 @@ TEST_F(Dim3Test, homologyH2) {
     EXPECT_EQ(lens3_1.tri.homology<2>(), AbelianGroup());
     EXPECT_EQ(lens8_3.tri.homology<2>(), AbelianGroup());
     EXPECT_EQ(lens7_1_loop.tri.homology<2>(), AbelianGroup());
+    EXPECT_EQ(t3.tri.homology<2>(), AbelianGroup(3));
     EXPECT_EQ(rp3rp3.tri.homology<2>(), AbelianGroup());
     EXPECT_EQ(q32xz3.tri.homology<2>(), AbelianGroup());
     EXPECT_EQ(q28.tri.homology<2>(), AbelianGroup());
@@ -1394,6 +1406,7 @@ TEST_F(Dim3Test, fundGroup) {
     EXPECT_EQ(lens3_1.tri.group().recogniseGroup(), "Z_3");
     EXPECT_EQ(lens8_3.tri.group().recogniseGroup(), "Z_8");
     EXPECT_EQ(lens7_1_loop.tri.group().recogniseGroup(), "Z_7");
+    EXPECT_EQ(t3.tri.group().recogniseGroup(), "3 Z");
     EXPECT_EQ(rp3rp3.tri.group().recogniseGroup(), "FreeProduct( Z_2, Z_2 )");
     EXPECT_EQ(q32xz3.tri.group().recogniseGroup(), "");
     EXPECT_EQ(q28.tri.group().recogniseGroup(), "");
@@ -1542,6 +1555,7 @@ TEST_F(Dim3Test, simplification) {
     verifySimplificationName(lens3_1, 2, "L(3,1) (1)");
     verifyNoSimplification(lens8_3);
     verifySimplificationName(lens7_1_loop, 4, "L(7,1)");
+    verifyNoSimplification(t3);
     verifyNoSimplification(rp3rp3);
     verifyNoSimplification(q32xz3);
     verifyNoSimplification(q28);
@@ -2272,6 +2286,7 @@ TEST_F(Dim3Test, zeroEfficiency) {
     EXPECT_FALSE(lens3_1.tri.isZeroEfficient());
     EXPECT_TRUE(lens8_3.tri.isZeroEfficient());
     EXPECT_FALSE(lens7_1_loop.tri.isZeroEfficient());
+    EXPECT_TRUE(t3.tri.isZeroEfficient());
     EXPECT_FALSE(rp3rp3.tri.isZeroEfficient());
     EXPECT_TRUE(q32xz3.tri.isZeroEfficient());
     EXPECT_TRUE(q28.tri.isZeroEfficient());
@@ -2328,6 +2343,7 @@ TEST_F(Dim3Test, irreducibility) {
     EXPECT_TRUE(lens3_1.tri.isIrreducible());
     EXPECT_TRUE(lens8_3.tri.isIrreducible());
     EXPECT_TRUE(lens7_1_loop.tri.isIrreducible());
+    EXPECT_TRUE(t3.tri.isIrreducible());
     EXPECT_FALSE(rp3rp3.tri.isIrreducible());
     EXPECT_TRUE(q32xz3.tri.isIrreducible());
     EXPECT_TRUE(q28.tri.isIrreducible());
@@ -2411,6 +2427,7 @@ TEST_F(Dim3Test, sphereRecognition) {
     verifySphere(rp3_2, false);
     verifySphere(lens3_1, false);
     verifySphere(lens8_3, false);
+    verifySphere(t3, false);
     verifySphere(rp3rp3, false);
     verifySphere(q32xz3, false);
     verifySphere(q28, false);
@@ -3012,6 +3029,7 @@ TEST_F(Dim3Test, turaevViro) {
     verifyTV3(lens3_1);
     verifyTV3(lens8_3);
     verifyTV3(lens7_1_loop);
+    verifyTV3(t3);
     verifyTV3(rp3rp3);
     verifyTV3(q32xz3);
     verifyTV3(q28);

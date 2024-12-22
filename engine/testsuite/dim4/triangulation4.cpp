@@ -87,6 +87,7 @@ class Dim4Test : public TriangulationTest<4> {
         TestCase cp2 { Example<4>::cp2(), "CP^2" };
         TestCase s2xs2 { Example<4>::s2xs2(), "S^2 x S^2" };
         TestCase s2xs2Twisted { Example<4>::s2xs2Twisted(), "S^2 x~ S^2" };
+        TestCase t4 { Example<4>::fourTorus(), "4-torus" };
         TestCase k3 { Example<4>::k3(), "K3" };
 
         // Closed non-orientable triangulations:
@@ -184,6 +185,7 @@ class Dim4Test : public TriangulationTest<4> {
             f(cp2.tri, cp2.name);
             f(s2xs2.tri, s2xs2.name);
             f(s2xs2Twisted.tri, s2xs2Twisted.name);
+            f(t4.tri, t4.name);
             if (includeLarge)
                 f(k3.tri, k3.name);
 
@@ -280,6 +282,7 @@ TEST_F(Dim4Test, validity) {
     verifyValid(cp2);
     verifyValid(s2xs2);
     verifyValid(s2xs2Twisted);
+    verifyValid(t4);
     verifyValid(k3);
 
     verifyValid(rp4);
@@ -310,6 +313,7 @@ TEST_F(Dim4Test, connectivity) {
     EXPECT_TRUE(cp2.tri.isConnected());
     EXPECT_TRUE(s2xs2.tri.isConnected());
     EXPECT_TRUE(s2xs2Twisted.tri.isConnected());
+    EXPECT_TRUE(t4.tri.isConnected());
     EXPECT_TRUE(k3.tri.isConnected());
 
     EXPECT_TRUE(rp4.tri.isConnected());
@@ -340,6 +344,7 @@ TEST_F(Dim4Test, orientability) {
     EXPECT_TRUE(cp2.tri.isOrientable());
     EXPECT_TRUE(s2xs2.tri.isOrientable());
     EXPECT_TRUE(s2xs2Twisted.tri.isOrientable());
+    EXPECT_TRUE(t4.tri.isOrientable());
     EXPECT_TRUE(k3.tri.isOrientable());
 
     EXPECT_FALSE(rp4.tri.isOrientable());
@@ -374,6 +379,8 @@ TEST_F(Dim4Test, eulerChar) {
     EXPECT_EQ(s2xs2.tri.eulerCharManifold(), 4);
     EXPECT_EQ(s2xs2Twisted.tri.eulerCharTri(), 4);
     EXPECT_EQ(s2xs2Twisted.tri.eulerCharManifold(), 4);
+    EXPECT_EQ(t4.tri.eulerCharTri(), 0);
+    EXPECT_EQ(t4.tri.eulerCharManifold(), 0);
     EXPECT_EQ(k3.tri.eulerCharTri(), 24);
     EXPECT_EQ(k3.tri.eulerCharManifold(), 24);
 
@@ -414,6 +421,7 @@ TEST_F(Dim4Test, boundaryBasic) {
     verifyBoundaryBasic(cp2, {}, {}, {});
     verifyBoundaryBasic(s2xs2, {}, {}, {});
     verifyBoundaryBasic(s2xs2Twisted, {}, {}, {});
+    verifyBoundaryBasic(t4, {}, {}, {});
     verifyBoundaryBasic(k3, {}, {}, {});
 
     verifyBoundaryBasic(rp4, {}, {}, {});
@@ -499,6 +507,7 @@ TEST_F(Dim4Test, vertexLinksBasic) {
     verifyVertexLinksBasic(cp2, 4, 0);
     verifyVertexLinksBasic(s2xs2, 5, 0);
     verifyVertexLinksBasic(s2xs2Twisted, 5, 0);
+    verifyVertexLinksBasic(t4, 1, 0);
     verifyVertexLinksBasic(k3, 24, 0);
 
     verifyVertexLinksBasic(rp4, 3, 0);
@@ -844,6 +853,7 @@ TEST_F(Dim4Test, homologyH1) {
     EXPECT_EQ(cp2.tri.homology<1>(), AbelianGroup());
     EXPECT_EQ(s2xs2.tri.homology<1>(), AbelianGroup());
     EXPECT_EQ(s2xs2Twisted.tri.homology<1>(), AbelianGroup());
+    EXPECT_EQ(t4.tri.homology<1>(), AbelianGroup(4));
     EXPECT_EQ(k3.tri.homology<1>(), AbelianGroup());
 
     EXPECT_EQ(rp4.tri.homology<1>(), AbelianGroup(0, {2}));
@@ -874,6 +884,7 @@ TEST_F(Dim4Test, homologyH2) {
     EXPECT_EQ(cp2.tri.homology<2>(), AbelianGroup(1));
     EXPECT_EQ(s2xs2.tri.homology<2>(), AbelianGroup(2));
     EXPECT_EQ(s2xs2Twisted.tri.homology<2>(), AbelianGroup(2));
+    EXPECT_EQ(t4.tri.homology<2>(), AbelianGroup(6 /* 4 choose 2 */));
     EXPECT_EQ(k3.tri.homology<2>(), AbelianGroup(22));
 
     EXPECT_EQ(rp4.tri.homology<2>(), AbelianGroup());
@@ -901,6 +912,7 @@ TEST_F(Dim4Test, homologyH3) {
     EXPECT_EQ(cp2.tri.homology<3>(), AbelianGroup());
     EXPECT_EQ(s2xs2.tri.homology<3>(), AbelianGroup());
     EXPECT_EQ(s2xs2Twisted.tri.homology<3>(), AbelianGroup());
+    EXPECT_EQ(t4.tri.homology<3>(), AbelianGroup(4));
     EXPECT_EQ(k3.tri.homology<3>(), AbelianGroup());
 
     EXPECT_EQ(rp4.tri.homology<3>(), AbelianGroup(0, {2}));
@@ -957,6 +969,7 @@ TEST_F(Dim4Test, fundGroup) {
     EXPECT_EQ(cp2.tri.group().recogniseGroup(), "0");
     EXPECT_EQ(s2xs2.tri.group().recogniseGroup(), "0");
     EXPECT_EQ(s2xs2Twisted.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(t4.tri.group().recogniseGroup(), "4 Z");
     EXPECT_EQ(k3.tri.group().recogniseGroup(), "0");
 
     EXPECT_EQ(rp4.tri.group().recogniseGroup(), "Z_2");
