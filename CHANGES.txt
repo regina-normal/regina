@@ -117,6 +117,8 @@ Version 7.4  [ (to be announced) ]
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
               less-than (<) as before.
+        Class Example<dim>:
+            - Routine doubleCone() now preserves orientedness.
         Class Example<3>:
             - New routine b5().
             - New routine threeTorus(), thanks to Rhuaidi Burke.
