@@ -368,6 +368,32 @@ TEST_F(Dim4Test, orientability) {
     EXPECT_FALSE(disjoint3.tri.isOrientable());
 }
 
+TEST_F(Dim4Test, orientedExamples) {
+    // Ensure that the orientable Example<4> constructions are oriented.
+    //
+    // Several of these tests are commented out because the constructions
+    // are _not_ actually oriented at present; it would be nice to make these
+    // oriented in the future.
+
+    // EXPECT_TRUE(Example<4>::simplicialSphere().isOriented());
+    // EXPECT_TRUE(Example<4>::sphereBundle().isOriented());
+    EXPECT_TRUE(Example<4>::ball().isOriented());
+    // EXPECT_TRUE(Example<4>::ballBundle().isOriented());
+
+    // EXPECT_TRUE(Example<4>::cp2().isOriented());
+    // EXPECT_TRUE(Example<4>::s2xs2().isOriented());
+    EXPECT_TRUE(Example<4>::s2xs2Twisted().isOriented());
+    EXPECT_TRUE(Example<4>::fourTorus().isOriented());
+    // EXPECT_TRUE(Example<4>::k3().isOriented());
+    // EXPECT_TRUE(Example<4>::cappellShaneson().isOriented());
+
+    Triangulation<3> poincare = Example<3>::poincare();
+    // EXPECT_TRUE(Example<4>::iBundle(poincare).isOriented());
+    // EXPECT_TRUE(Example<4>::s1Bundle(poincare).isOriented());
+    EXPECT_TRUE(Example<4>::singleCone(poincare).isOriented());
+    EXPECT_TRUE(Example<4>::doubleCone(poincare).isOriented());
+}
+
 TEST_F(Dim4Test, eulerChar) {
     TriangulationTest<4>::eulerCharGenericCases();
 

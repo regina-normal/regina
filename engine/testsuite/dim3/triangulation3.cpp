@@ -40,6 +40,7 @@
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example2.h"
 #include "triangulation/example3.h"
 
 #include "generic/triangulationtest.h"
@@ -404,6 +405,45 @@ TEST_F(Dim3Test, orientability) {
 
     EXPECT_FALSE(disjoint2.tri.isOrientable());
     EXPECT_TRUE(disjoint3.tri.isOrientable());
+}
+
+TEST_F(Dim3Test, orientedExamples) {
+    // Ensure that the orientable Example<3> constructions are oriented.
+    //
+    // Several of these tests are commented out because the constructions
+    // are _not_ actually oriented at present; it would be nice to make these
+    // oriented in the future.
+
+    // EXPECT_TRUE(Example<3>::simplicialSphere().isOriented());
+    // EXPECT_TRUE(Example<3>::sphereBundle().isOriented());
+    EXPECT_TRUE(Example<3>::ball().isOriented());
+    EXPECT_TRUE(Example<3>::ballBundle().isOriented());
+
+    EXPECT_TRUE(Example<3>::threeSphere().isOriented()); // 1 tetrahedron
+    EXPECT_TRUE(Example<3>::bingsHouse().isOriented());
+    EXPECT_TRUE(Example<3>::threeTorus().isOriented());
+    EXPECT_TRUE(Example<3>::rp3rp3().isOriented());
+    EXPECT_TRUE(Example<3>::lens(8, 1).isOriented());
+    EXPECT_TRUE(Example<3>::layeredLoop(5, true).isOriented());
+    EXPECT_TRUE(Example<3>::layeredLoop(5, false).isOriented());
+    EXPECT_TRUE(Example<3>::poincare().isOriented());
+    // EXPECT_TRUE(Example<3>::augTriSolidTorus(3, 4, 5, 6, 7, 8).isOriented());
+    // EXPECT_TRUE(Example<3>::sfsOverSphere(3, 4, 5, 6, 7, 8).isOriented());
+    EXPECT_TRUE(Example<3>::weeks().isOriented());
+    EXPECT_TRUE(Example<3>::weberSeifert().isOriented());
+    EXPECT_TRUE(Example<3>::smallClosedOrblHyperbolic().isOriented());
+    EXPECT_TRUE(Example<3>::sphere600().isOriented());
+    // EXPECT_TRUE(Example<3>::lst(7, 4).isOriented());
+    // EXPECT_TRUE(Example<3>::handlebody(3).isOriented());
+    // EXPECT_TRUE(Example<3>::b5().isOriented());
+    EXPECT_TRUE(Example<3>::figureEight().isOriented());
+    EXPECT_TRUE(Example<3>::trefoil().isOriented());
+    EXPECT_TRUE(Example<3>::whitehead().isOriented());
+    // EXPECT_TRUE(Example<3>::idealGenusTwoHandlebody().isOriented());
+
+    Triangulation<2> torus = Example<2>::orientable(1, 0);
+    EXPECT_TRUE(Example<3>::singleCone(torus).isOriented());
+    EXPECT_TRUE(Example<3>::doubleCone(torus).isOriented());
 }
 
 TEST_F(Dim3Test, standardness) {
