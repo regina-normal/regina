@@ -378,7 +378,6 @@ TEST_F(Dim4Test, orientedExamples) {
     // EXPECT_TRUE(Example<4>::simplicialSphere().isOriented());
     // EXPECT_TRUE(Example<4>::sphereBundle().isOriented());
     EXPECT_TRUE(Example<4>::ball().isOriented());
-    // EXPECT_TRUE(Example<4>::ballBundle().isOriented());
 
     // EXPECT_TRUE(Example<4>::cp2().isOriented());
     // EXPECT_TRUE(Example<4>::s2xs2().isOriented());

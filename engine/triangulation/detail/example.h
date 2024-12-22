@@ -224,10 +224,16 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         static Triangulation<dim> ball();
 
         /**
-         * Returns a triangulation of the product space
-         * `B^(dim-1) x S¹`.
-         * This will use one simplex in odd dimensions, or two simplices
-         * in even dimensions.
+         * Returns a triangulation of the product space `B^(dim-1) x S¹`.
+         *
+         * - In odd dimensions this will use one simplex, and will therefore
+         *   be oriented.
+         *
+         * - In even dimensions this will use two simplices, and will be built
+         *   as the double cover of the one-simplex `B^(dim-1) x~ S¹`.
+         *   The labelling is chosen to highlight this structure, and so even
+         *   though the space is orientable, the resulting triangulation will
+         *   _not_ be oriented.
          *
          * \return the product `B^(dim-1) x S¹`.
          */
@@ -368,7 +374,7 @@ Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
     Triangulation<dim> ans;
 
     // One top-dimensional simplex for every vertex of the (dim+1)-simplex
-    auto simps = ans.template newSimplices<dim + 2>(); // One for ever
+    auto simps = ans.template newSimplices<dim + 2>();
 
     // One gluing for every distinct pair of vertices of the (dim+1)-simplex.
     // We are gluing facet j-1 of simplex i to facet i of simplex j
@@ -391,7 +397,7 @@ Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
 
 template <int dim>
 Triangulation<dim> ExampleBase<dim>::sphereBundle() {
-    // Make two simplex, and join all but two of the facets according
+    // Make two simplices, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim> ans;
 
