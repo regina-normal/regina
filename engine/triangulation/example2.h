@@ -100,7 +100,7 @@ class Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary
-         * of a tetrahedron.  This is isomorphic to the triangulation
+         * of a tetrahedron.  This is identical to the triangulation
          * returned by the generic routine simplicialSphere().
          *
          * \return the tetrahedral sphere.
@@ -117,7 +117,7 @@ class Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns a one-triangle disc.
-         * This is isomorphic to the triangulation returned by the generic
+         * This is identical to the triangulation returned by the generic
          * routine ball().
          *
          * \return the disc.
@@ -126,7 +126,7 @@ class Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns a two-triangle annulus.
-         * This is isomorphic to the triangulation returned by the generic
+         * This is identical to the triangulation returned by the generic
          * routine ballBundle().
          *
          * \return the annulus.
@@ -134,7 +134,7 @@ class Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2> annulus();
 
         /**
-         * Returns a one-triangle Mobius band.  This is isomorphic to the
+         * Returns a one-triangle Mobius band.  This is identical to the
          * triangulation returned by the generic routine twistedBallBundle().
          *
          * \return the Mobius band.
@@ -143,7 +143,7 @@ class Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns a two-triangle torus.
-         * This is isomorphic to the triangulation returned by the generic
+         * This is identical to the triangulation returned by the generic
          * routine sphereBundle().
          *
          * \return the torus.
@@ -158,7 +158,7 @@ class Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2> rp2();
 
         /**
-         * Returns a two-triangle Klein bottle.  This is isomorphic to the
+         * Returns a two-triangle Klein bottle.  This is identical to the
          * triangulation returned by the generic routine twistedSphereBundle().
          *
          * \return the Klein bottle.
