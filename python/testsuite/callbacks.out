@@ -90,15 +90,15 @@ Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorph
 0 -> 0 (01234)
 1 -> 1 (01234)
 
-0 -> 1 (43210)
-1 -> 0 (43210)
+0 -> 1 (34210)
+1 -> 0 (43201)
 
 Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> subcomplexes, display
 0 -> 0 (01234)
 1 -> 1 (01234)
 
-0 -> 1 (43210)
-1 -> 0 (43210)
+0 -> 1 (34210)
+1 -> 0 (43201)
 
 Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorphisms, stop after 5
     search ran to completion, count: 2
