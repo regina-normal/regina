@@ -151,6 +151,7 @@ Version 7.4  [ (to be announced) ]
               are now available for triangles within triangulations of any
               dimension ≥ 3.  The old 3-D routines are now deprecated.
         Class Face<dim, dim-1>:
+            - New routine join().
             - New routines lock(), unlock(), and isLocked().
         Class FacePair:
             - Added a spaceship operator (<=>) for comparisons.

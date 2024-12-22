@@ -113,6 +113,7 @@ void addTriangle3(pybind11::module_& m) {
             rbase::faceMapping)
         .def("vertexMapping", &Triangle<3>::vertexMapping, rbase::vertexMapping)
         .def("edgeMapping", &Triangle<3>::edgeMapping, rbase::edgeMapping)
+        .def("join", &Triangle<3>::join, rbase::join)
         .def("triangleType", &Triangle<3>::triangleType, rbase::triangleType)
         .def("type", &Triangle<3>::triangleType, rdoc::type) // deprecated
         .def("triangleSubtype", &Triangle<3>::triangleSubtype,

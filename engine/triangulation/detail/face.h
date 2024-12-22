@@ -1036,6 +1036,49 @@ class FaceBase :
         Perm<dim + 1> pentachoronMapping(int face) const;
 
         /**
+         * For boundary facets, joins this to another boundary facet using the
+         * given gluing.
+         *
+         * This is a convenience method that calls Simplex<dim>::join().
+         * Where it differs is that:
+         *
+         * - you directly pass the two `(dim-1)`-faces that need to be joined,
+         *   as opposed to working with `dim`-dimensional simplices;
+         *
+         * - the gluing permutation is relative to the inherent labellings of
+         *   the vertices of the (`dim-1`)-faces, _not_ the vertices of the
+         *   top-dimensional simplices.
+         *
+         * By "inherent labelling of vertices" of a face \a f we mean the way
+         * that the vertices of \a f are labelled according to
+         * FaceEmbedding::vertices().  This labelling is independent of the
+         * vertex numbers in any top-dimensional simplices that contain \a f.
+         *
+         * \pre The facial dimension \a subdim is precisely `dim-1`.
+         * \pre This and the given face are distinct boundary facets of the
+         * same triangulation.
+         *
+         * \warning As soon as the join takes place, both this and the given
+         * facet will be destroyed (since the skeleton of a triangulation
+         * is rebuilt whenever the triangulation changes).
+         *
+         * \exception InvalidArgument At least one of the preconditions above
+         * fails; that is, this and the given face are the same, or belong to
+         * different triangulations, or are not both boundary facets.
+         *
+         * \exception LockViolation Either this or the given face is a locked
+         * facet.  This exception will be thrown before any change is made.
+         * See Simplex::lockFacet() for further details on how facet locks
+         * work and what their implications are.
+         *
+         * \param you the other boundary facet that this should be glued to.
+         * \param gluing a permutation that describes how the inherent vertices
+         * of this boundary facet will map to the inherent vertices of the
+         * given boundary facet across the new gluing.
+         */
+        void join(Face<dim, subdim>* you, Perm<dim> gluing);
+
+        /**
          * For edges, determines whether this face is a loop.
          * A _loop_ is an edge whose two endpoints are identified.
          *
@@ -1493,6 +1536,21 @@ inline Perm<dim + 1> FaceBase<dim, subdim>::pentachoronMapping(int face) const {
     static_assert(subdim >= 5, "pentachoronMapping() is only available "
         "for faces of dimension >= 5.");
     return faceMapping<4>(face);
+}
+
+template <int dim, int subdim>
+inline void FaceBase<dim, subdim>::join(Face<dim, subdim>* you,
+        Perm<dim> gluing) {
+    static_assert(subdim == dim - 1, "Face<dim, subdim>::join() is only "
+        "available for faces of dimension subdim == dim - 1.");
+
+    // The preconditions and locks will be checked by Simplex::join().
+    // All we need to do is pull together the correct arguments.
+    auto emb0 = front();
+    auto emb1 = you->front();
+    emb0.simplex()->join(emb0.vertices()[dim], emb1.simplex(),
+        emb1.vertices() * Perm<dim+1>::extend(gluing) *
+            emb0.vertices().inverse());
 }
 
 template <int dim, int subdim>

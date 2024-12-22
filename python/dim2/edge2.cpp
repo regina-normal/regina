@@ -105,6 +105,7 @@ void addEdge2(pybind11::module_& m) {
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Edge<2>::vertexMapping, rbase::vertexMapping)
+        .def("join", &Edge<2>::join, rbase::join)
         .def("isLoop", &Edge<2>::isLoop, rbase::isLoop)
         .def("lock", &Edge<2>::lock, rbase::lock)
         .def("unlock", &Edge<2>::unlock, rbase::unlock)

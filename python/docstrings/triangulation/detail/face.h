@@ -645,6 +645,57 @@ Returns:
     for non-standard dimensions *dim*, returns ``True`` if and only if
     this face is valid according to condition (1).)doc";
 
+// Docstring regina::python::doc::detail::FaceBase_::join
+constexpr const char *join =
+R"doc(For boundary facets, joins this to another boundary facet using the
+given gluing.
+
+This is a convenience method that calls Simplex<dim>::join(). Where it
+differs is that:
+
+* you directly pass the two `(dim-1)`-faces that need to be joined, as
+  opposed to working with `dim`-dimensional simplices;
+
+* the gluing permutation is relative to the inherent labellings of the
+  vertices of the (``dim-1``)-faces, _not_ the vertices of the top-
+  dimensional simplices.
+
+By "inherent labelling of vertices" of a face *f* we mean the way that
+the vertices of *f* are labelled according to
+FaceEmbedding::vertices(). This labelling is independent of the vertex
+numbers in any top-dimensional simplices that contain *f*.
+
+Precondition:
+    The facial dimension *subdim* is precisely ``dim-1``.
+
+Precondition:
+    This and the given face are distinct boundary facets of the same
+    triangulation.
+
+.. warning::
+    As soon as the join takes place, both this and the given facet
+    will be destroyed (since the skeleton of a triangulation is
+    rebuilt whenever the triangulation changes).
+
+Exception ``InvalidArgument``:
+    At least one of the preconditions above fails; that is, this and
+    the given face are the same, or belong to different
+    triangulations, or are not both boundary facets.
+
+Exception ``LockViolation``:
+    Either this or the given face is a locked facet. This exception
+    will be thrown before any change is made. See Simplex::lockFacet()
+    for further details on how facet locks work and what their
+    implications are.
+
+Parameter ``you``:
+    the other boundary facet that this should be glued to.
+
+Parameter ``gluing``:
+    a permutation that describes how the inherent vertices of this
+    boundary facet will map to the inherent vertices of the given
+    boundary facet across the new gluing.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase_::lock
 constexpr const char *lock =
 R"doc(Locks this codimension-1-face.
