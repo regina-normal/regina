@@ -88,6 +88,9 @@ class ExampleFromLowDim {
          * from a topological point of view, to form the ideal triangulation
          * of `M x I` we "remove" the vertices at the apex of each cone.
          *
+         * If the given 3-dimensional triangulation is oriented, then the
+         * resulting 4-dimensional triangulation will be oriented also.
+         *
          * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
          * any boundary whatsoever (either real or ideal), then unless it is
          * a (<i>dim</i>-1)-ball, you will obtain an invalid
@@ -106,6 +109,9 @@ class ExampleFromLowDim {
          * one real boundary component and one ideal boundary component.
          * The triangulation of the real boundary component will be identical
          * to the original (<i>dim-1</i>)-dimensional triangulation \a base.
+         *
+         * If the given 3-dimensional triangulation is oriented, then the
+         * resulting 4-dimensional triangulation will be oriented also.
          *
          * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
          * any boundary whatsoever (either real or ideal), then unless it is
@@ -172,6 +178,9 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
 
         /**
          * Returns a two-simplex triangulation of the <i>dim</i>-sphere.
+         *
+         * Although the sphere is orientable, this triangulation will _not_ be
+         * oriented since the gluings will all be identity permutations.
          *
          * \return a two-simplex <i>dim</i>-sphere.
          */
@@ -305,8 +314,15 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
     for (i = 0; i < 2 * n; ++i)
         simp[i] = ans.newSimplex();
 
+    // For one side of the cone, we use the same vertex numbering as in
+    // base (much like singleCone() does).
+    // For the other side of the cone, we swap vertices 0,1 of every
+    // pentachoron so that, if base is oriented, then the resulting
+    // triangulation can be oriented also.
+    static constexpr Perm<dim+1> swap(0, 1);
+
     for (i = 0; i < n; ++i) {
-        simp[i]->join(dim, simp[i + n], Perm<dim+1>());
+        simp[i]->join(dim, simp[i + n], swap);
 
         f = base.simplex(i);
         for (facet = 0; facet < dim; ++facet) {
@@ -323,8 +339,8 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
                 continue;
 
             simp[i]->join(facet, simp[adjIndex], Perm<dim+1>::extend(map));
-            simp[i + n]->join(facet, simp[adjIndex + n],
-                Perm<dim+1>::extend(map));
+            simp[i + n]->join(facet < 2 ? (facet ^ 1) : facet /* swap[facet] */,
+                simp[adjIndex + n], swap * Perm<dim+1>::extend(map) * swap);
         }
     }
 

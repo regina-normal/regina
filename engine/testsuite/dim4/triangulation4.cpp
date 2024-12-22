@@ -986,7 +986,7 @@ TEST_F(Dim4Test, fundGroup) {
     EXPECT_EQ(mixedPoincareProduct.tri.group().recogniseGroup(), "");
 
     EXPECT_EQ(idealFigEightProduct.tri.group().recogniseGroup(),
-        "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b");
+        "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
     EXPECT_EQ(mixedFigEightProduct.tri.group().recogniseGroup(),
         "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b");
     EXPECT_EQ(pillow_twoCycle.tri.group().recogniseGroup(), "0");
