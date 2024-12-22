@@ -346,7 +346,7 @@ Returns:
 
 // Docstring regina::python::doc::Example_::solidKleinBottle
 static const char *solidKleinBottle =
-R"doc(Returns a triangulation of the solid Klein bottle. This is isomorphic
+R"doc(Returns a triangulation of the solid Klein bottle. This is identical
 to the triangulation returned by the generic routine
 twistedBallBundle().
 

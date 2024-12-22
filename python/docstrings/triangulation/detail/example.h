@@ -62,9 +62,16 @@ Returns:
 
 // Docstring regina::python::doc::detail::ExampleBase_::ballBundle
 constexpr const char *ballBundle =
-R"doc(Returns a triangulation of the product space ``B^(dim-1) x S¹``. This
-will use one simplex in odd dimensions, or two simplices in even
-dimensions.
+R"doc(Returns a triangulation of the product space ``B^(dim-1) x S¹``.
+
+* In odd dimensions this will use one simplex, and will therefore be
+  oriented.
+
+* In even dimensions this will use two simplices, and will be built as
+  the double cover of the one-simplex ``B^(dim-1) x~ S¹``. The
+  labelling is chosen to highlight this structure, and so even though
+  the space is orientable, the resulting triangulation will _not_ be
+  oriented.
 
 Returns:
     the product ``B^(dim-1) x S¹``.)doc";
@@ -74,12 +81,19 @@ constexpr const char *simplicialSphere =
 R"doc(Returns the standard (*dim*+2)-simplex triangulation of the
 *dim*-sphere as the boundary of a (*dim*+1)-simplex.
 
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
+
 Returns:
     the standard simplicial *dim*-sphere.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::sphere
 constexpr const char *sphere =
 R"doc(Returns a two-simplex triangulation of the *dim*-sphere.
+
+Although the sphere is orientable, this triangulation will _not_ be
+oriented since the gluings will all be identity permutations.
 
 Returns:
     a two-simplex *dim*-sphere.)doc";
@@ -88,6 +102,10 @@ Returns:
 constexpr const char *sphereBundle =
 R"doc(Returns a two-simplex triangulation of the product space ``S^(dim-1) x
 S¹``.
+
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
 
 Returns:
     the product ``S^(dim-1) x S¹``.)doc";
@@ -134,6 +152,9 @@ This construction is essentially the suspension of the triangulation
 of view, to form the ideal triangulation of ``M x I`` we "remove" the
 vertices at the apex of each cone.
 
+If the given 3-dimensional triangulation is oriented, then the
+resulting 4-dimensional triangulation will be oriented also.
+
 .. warning::
     If the given (*dim*-1)-dimensional triangulation has any boundary
     whatsoever (either real or ideal), then unless it is a
@@ -153,6 +174,9 @@ returns a triangulation of the product ``M x I`` that has one real
 boundary component and one ideal boundary component. The triangulation
 of the real boundary component will be identical to the original
 (*dim-1*)-dimensional triangulation *base*.
+
+If the given 3-dimensional triangulation is oriented, then the
+resulting 4-dimensional triangulation will be oriented also.
 
 .. warning::
     If the given (*dim*-1)-dimensional triangulation has any boundary

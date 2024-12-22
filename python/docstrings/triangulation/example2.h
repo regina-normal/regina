@@ -29,15 +29,15 @@ namespace Example_ {
 
 // Docstring regina::python::doc::Example_::annulus
 static const char *annulus =
-R"doc(Returns a two-triangle annulus. This is isomorphic to the
-triangulation returned by the generic routine ballBundle().
+R"doc(Returns a two-triangle annulus. This is identical to the triangulation
+returned by the generic routine ballBundle().
 
 Returns:
     the annulus.)doc";
 
 // Docstring regina::python::doc::Example_::disc
 static const char *disc =
-R"doc(Returns a one-triangle disc. This is isomorphic to the triangulation
+R"doc(Returns a one-triangle disc. This is identical to the triangulation
 returned by the generic routine ball().
 
 Returns:
@@ -45,7 +45,7 @@ Returns:
 
 // Docstring regina::python::doc::Example_::kb
 static const char *kb =
-R"doc(Returns a two-triangle Klein bottle. This is isomorphic to the
+R"doc(Returns a two-triangle Klein bottle. This is identical to the
 triangulation returned by the generic routine twistedSphereBundle().
 
 Returns:
@@ -53,7 +53,7 @@ Returns:
 
 // Docstring regina::python::doc::Example_::mobius
 static const char *mobius =
-R"doc(Returns a one-triangle Mobius band. This is isomorphic to the
+R"doc(Returns a one-triangle Mobius band. This is identical to the
 triangulation returned by the generic routine twistedBallBundle().
 
 Returns:
@@ -119,7 +119,7 @@ Returns:
 // Docstring regina::python::doc::Example_::sphereTetrahedron
 static const char *sphereTetrahedron =
 R"doc(Returns the four-triangle 2-sphere formed from the boundary of a
-tetrahedron. This is isomorphic to the triangulation returned by the
+tetrahedron. This is identical to the triangulation returned by the
 generic routine simplicialSphere().
 
 Returns:
@@ -127,7 +127,7 @@ Returns:
 
 // Docstring regina::python::doc::Example_::torus
 static const char *torus =
-R"doc(Returns a two-triangle torus. This is isomorphic to the triangulation
+R"doc(Returns a two-triangle torus. This is identical to the triangulation
 returned by the generic routine sphereBundle().
 
 Returns:
