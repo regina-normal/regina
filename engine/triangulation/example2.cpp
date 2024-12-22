@@ -137,14 +137,14 @@ Triangulation<2> Example<2>::sphereOctahedron() {
     s->join(1, t, Perm<3>(1, 2));
     t->join(1, u, Perm<3>(1, 2));
     u->join(1, r, Perm<3>(1, 2));
-    v->join(1, w, Perm<3>(1, 2));
-    w->join(1, x, Perm<3>(1, 2));
-    x->join(1, y, Perm<3>(1, 2));
-    y->join(1, v, Perm<3>(1, 2));
-    r->join(0, v, Perm<3>());
-    s->join(0, w, Perm<3>());
-    t->join(0, x, Perm<3>());
-    u->join(0, y, Perm<3>());
+    v->join(2, w, Perm<3>(1, 2));
+    w->join(2, x, Perm<3>(1, 2));
+    x->join(2, y, Perm<3>(1, 2));
+    y->join(2, v, Perm<3>(1, 2));
+    r->join(0, v, Perm<3>(1, 2));
+    s->join(0, w, Perm<3>(1, 2));
+    t->join(0, x, Perm<3>(1, 2));
+    u->join(0, y, Perm<3>(1, 2));
 
     return ans;
 }

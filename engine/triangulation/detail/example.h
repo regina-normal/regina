@@ -190,6 +190,10 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * Returns the standard (<i>dim</i>+2)-simplex triangulation of the
          * <i>dim</i>-sphere as the boundary of a (<i>dim</i>+1)-simplex.
          *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
+         *
          * \return the standard simplicial <i>dim</i>-sphere.
          */
         static Triangulation<dim> simplicialSphere();
@@ -197,6 +201,10 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         /**
          * Returns a two-simplex triangulation of the product space
          * `S^(dim-1) x S¹`.
+         *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
          *
          * \return the product `S^(dim-1) x S¹`.
          */

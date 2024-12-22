@@ -119,6 +119,8 @@ Version 7.4  [ (to be announced) ]
               less-than (<) as before.
         Class Example<dim>:
             - Routine doubleCone() now preserves orientedness.
+        Class Example<2>:
+            - Routine sphereOctahedron() now returns an oriented triangulation.
         Class Example<3>:
             - New routine b5().
             - New routine threeTorus(), thanks to Rhuaidi Burke.

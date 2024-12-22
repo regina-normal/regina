@@ -128,7 +128,7 @@ TEST_F(Dim2Test, orientedExamples) {
     EXPECT_TRUE(Example<2>::ball().isOriented());
 
     EXPECT_TRUE(Example<2>::orientable(5, 3).isOriented());
-    // EXPECT_TRUE(Example<2>::sphereOctahedron().isOriented());
+    EXPECT_TRUE(Example<2>::sphereOctahedron().isOriented());
     EXPECT_TRUE(Example<2>::disc().isOriented());
 }
 
