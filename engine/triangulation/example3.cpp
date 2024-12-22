@@ -610,8 +610,8 @@ Triangulation<3> Example<3>::idealGenusTwoHandlebody() {
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.
     Triangulation<3> ans = Triangulation<3>::fromGluings(4, {
-        { 0, 0, 1, {} }, { 0, 1, 2, {1,2,3,0} }, { 0, 2, 3, {1,0,3,2} },
-        { 1, 3, 2, {} }, { 2, 1, 3, {} }
+        { 0, 0, 1, {0,1} }, { 0, 1, 2, {1,2,3,0} }, { 0, 2, 3, {2,3} },
+        { 1, 3, 2, {0,1} }, { 2, 1, 3, {0,1} }
     });
     ans.finiteToIdeal();
     return ans;

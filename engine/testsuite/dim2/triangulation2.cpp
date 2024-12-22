@@ -119,7 +119,7 @@ TEST_F(Dim2Test, orientability) {
 TEST_F(Dim2Test, orientedExamples) {
     // Ensure that the orientable Example<2> constructions are oriented.
     //
-    // Several of these tests are commented out because the constructions
+    // TODO: Several of these tests are commented out because the constructions
     // are _not_ actually oriented at present; it would be nice to make these
     // oriented in the future.
 

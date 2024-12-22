@@ -410,7 +410,7 @@ TEST_F(Dim3Test, orientability) {
 TEST_F(Dim3Test, orientedExamples) {
     // Ensure that the orientable Example<3> constructions are oriented.
     //
-    // Several of these tests are commented out because the constructions
+    // TODO: Several of these tests are commented out because the constructions
     // are _not_ actually oriented at present; it would be nice to make these
     // oriented in the future.
 
@@ -435,7 +435,7 @@ TEST_F(Dim3Test, orientedExamples) {
     EXPECT_TRUE(Example<3>::sphere600().isOriented());
     // EXPECT_TRUE(Example<3>::lst(7, 4).isOriented());
     // EXPECT_TRUE(Example<3>::handlebody(3).isOriented());
-    // EXPECT_TRUE(Example<3>::b5().isOriented());
+    EXPECT_TRUE(Example<3>::b5().isOriented());
     EXPECT_TRUE(Example<3>::figureEight().isOriented());
     EXPECT_TRUE(Example<3>::trefoil().isOriented());
     EXPECT_TRUE(Example<3>::whitehead().isOriented());
