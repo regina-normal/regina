@@ -48,6 +48,10 @@ negative arguments are allowed.
 The new tetrahedra will be inserted at the end of the list of
 tetrahedra in the triangulation.
 
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
+
 Precondition:
     gcd(*a1*, *b1*) = gcd(*a2*, *b2*) = gcd(*a3*, *b3*) = 1.
 
@@ -151,6 +155,10 @@ how to do this; this routine makes an arbitrary choice.
 
 For genus 0, this routine uses the one-tetrahedron 3-ball.
 
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
+
 Parameter ``genus``:
     the genus of the handlebody.
 
@@ -167,6 +175,10 @@ boundary. This triangulation has one internal finite vertex and one
 genus two ideal vertex.
 
 Prior to Regina 7.4, this routine was called cuspedGenusTwoTorus().
+
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
 
 Returns:
     the solid genus two handlebody with ideal boundary.)doc";
@@ -227,6 +239,10 @@ respectively.
 Only the parameters *a* and *b* are passed as arguments to this
 routine. The third parameter *c* will be deduced automatically as *c*
 = (*a* + *b*).
+
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
 
 Precondition:
     gcd(*a*, *b*) = 1.
@@ -295,6 +311,10 @@ all of the parameter pairs may be (1, *k*) or even (1, 0).
 If you wish to construct more complex Seifert fibred spaces (e.g.,
 with more exceptional fibres, or with a different base orbifold), you
 can use the more sophisticated SFSpace::construct().
+
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
 
 Precondition:
     None of *a1*, *a2* or *a3* are 0.

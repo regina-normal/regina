@@ -45,6 +45,10 @@ tetrahedron of *M*, and will contain many internal vertices. It is
 highly recommended that you call Triangulation<4>::simplify()
 afterwards if you do not need to preserve the combinatorial structure.
 
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
+
 Precondition:
     The given monodromy must be an isomorphism from *M* to itself;
     that is, a combinatorial automorphism.
@@ -119,6 +123,10 @@ tetrahedron of *M*, and will contain many internal vertices. It is
 highly recommended that you call Triangulation<4>::simplify()
 afterwards if you do not need to preserve the combinatorial structure.
 
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
+
 .. warning::
     If the given 3-manifold triangulation has ideal boundary, then you
     will obtain an invalid 4-manifold triangulation as a result.
@@ -155,6 +163,10 @@ The product will contain 82 pentachora for each original tetrahedron
 of *M*, and will contain many internal vertices. It is highly
 recommended that you call Triangulation<4>::simplify() afterwards if
 you do not need to preserve the combinatorial structure.
+
+Note that the current construction does _not_ give an oriented
+triangulation (due to the specific choice of labelling); this may
+change in a future version of Regina.
 
 .. warning::
     If the given 3-manifold triangulation has ideal boundary, then you
