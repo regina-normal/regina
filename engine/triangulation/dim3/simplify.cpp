@@ -81,13 +81,14 @@ bool Triangulation<3>::internal44(Edge<3>* e, int newAxis, bool check,
 
     // Find the unwanted tetrahedra.
     Tetrahedron<3>* oldTet[4];
-    std::set<Tetrahedron<3>*> oldTets;
     int oldPos = 0;
-    for (auto& emb : *e) {
+    for (const auto& emb : *e) {
         oldTet[oldPos] = emb.simplex();
-        if (check)
-            if (! oldTets.insert(emb.simplex()).second)
-                return false;
+        if (check) {
+            for (int i = 0; i < oldPos; ++i)
+                if (oldTet[i] == emb.simplex())
+                    return false;
+        }
         if (emb.simplex()->locks_) {
             if (emb.simplex()->isLocked() ||
                     emb.simplex()->isFacetLocked(emb.vertices()[2]) ||
@@ -99,7 +100,7 @@ bool Triangulation<3>::internal44(Edge<3>* e, int newAxis, bool check,
                         "4-4 move using a locked tetrahedron and/or facet");
             }
         }
-        oldPos++;
+        ++oldPos;
     }
 
     if (! perform)
