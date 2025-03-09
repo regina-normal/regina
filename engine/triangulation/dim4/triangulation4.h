@@ -898,8 +898,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Therefore, to be able to perform this move (and to do so without
          * changing the topology), we require that:
+         *
          * - the link of the given edge is a 2-2 move away from being
          *   combinatorially isomorphic to the boundary of a tetrahedron; and
+         *
          * - the four pentachora joined along the given edge are distinct.
          *
          * If this triangulation is currently oriented, then this 4-4 move
@@ -941,12 +943,15 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * - all vertices, edges and triangles of the given tetrahedron are
          *   valid;
+         *
          * - the given tetrahedron meets the boundary in precisely one, two or
          *   three triangles (and therefore also joins two pentachora);
+         *
          * - if the given tetrahedron meets the boundary in precisely one
          *   triangle, then the remaining vertex of the tetrahedron is
          *   non-boundary, and no two of the remaining three edges of the
          *   tetrahedron are identified;
+         *
          * - if the given tetrahedron meets the boundary in precisely two
          *   triangles, then the remaining edge of the tetrahedron is
          *   non-boundary, and the remaining two triangles of the tetrahedron
@@ -973,9 +978,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
 
         /**
          * If possible, performs an edge collapse move upon the given edge.
-         * This involves collapsing the edge to a point, and flattening all of
-         * the pentachora that contain it.  The resulting effect is to reduce
-         * the number of vertices in this triangulation by one.
+         * This involves collapsing the edge to a point, merging its two
+         * endpoints together, and flattening all of the pentachora that
+         * contain it.  The resulting effect is to reduce the number of
+         * vertices in this triangulation by one.
          *
          * This triangulation will be changed directly.
          *
@@ -986,10 +992,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * The requirements for this move to not change the topology are
          * complex, and are discussed in detail in the collapseEdge() source
-         * code for those who are interested.  The most important thing to
-         * note here is that checking these requirements is expensive (amongst
-         * other things, we need to build two union-find structures to
-         * implement the test).
+         * code for those who are interested.  The most important requirement
+         * is that the given edge should join two distinct vertices.  It is
+         * also important to note that checking the full requirements is
+         * expensive (amongst other things, we need to build two union-find
+         * structures to implement the test).
          *
          * If you are trying to reduce the number of vertices without changing
          * the topology, and if \a e is an edge connecting an internal vertex
@@ -1035,7 +1042,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * never a concern for this type of move; again see below for details.
          *
          * In order to not change the toplogy, we require that:
+         *
          * - the given edge joins two distinct vertices of the triangulation;
+         *
          * - at least one of these two vertices is internal.
          *
          * Depending on your situation, collapseEdge() may be a more
@@ -1085,7 +1094,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * and/or facet locks.
          *
          * For more detail on 4-4 moves and when they can be performed,
-         * see fourFourMove().
+         * see move44().
          *
          * \pre The given edge is an edge of this triangulation.
          *
@@ -1144,7 +1153,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * This triangulation will not be changed.
          *
          * For more detail on 4-4 moves and when they can be performed,
-         * see fourFourMove().
+         * see move44().
          *
          * \pre The given edge is an edge of this triangulation.
          *

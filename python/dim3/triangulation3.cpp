@@ -489,68 +489,34 @@ void addTriangulation3(pybind11::module_& m) {
         .def("pachner",
             overload_cast<Face<3, 0>*>(&Triangulation<3>::pachner<0>),
             rbase::pachner)
-        .def("fourFourMove", &Triangulation<3>::fourFourMove,
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::fourFourMove)
+        .def("move44", &Triangulation<3>::move44, rdoc::move44)
         .def("move20", &Triangulation<3>::move20<0>, rbase::move20)
         .def("move20", &Triangulation<3>::move20<1>, rbase::move20)
-        .def("twoOneMove", &Triangulation<3>::twoOneMove,
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::twoOneMove)
-        .def("zeroTwoMove",
+        .def("move21", &Triangulation<3>::move21, rdoc::move21)
+        .def("move02",
             overload_cast<regina::EdgeEmbedding<3>, int,
-                regina::EdgeEmbedding<3>, int, bool, bool>(
-                &Triangulation<3>::zeroTwoMove),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::zeroTwoMove)
-        .def("zeroTwoMove",
-            overload_cast<regina::Edge<3>*, size_t, size_t, bool, bool>(
-                &Triangulation<3>::zeroTwoMove),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::zeroTwoMove_2)
-        .def("zeroTwoMove",
-            overload_cast<regina::Triangle<3>*, int,
-                regina::Triangle<3>*, int, bool, bool>(
-                &Triangulation<3>::zeroTwoMove),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::zeroTwoMove_3)
-        .def("openBook", &Triangulation<3>::openBook,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+                regina::EdgeEmbedding<3>, int>(
+                &Triangulation<3>::move02),
+            rdoc::move02)
+        .def("move02",
+            overload_cast<regina::Edge<3>*, size_t, size_t>(
+                &Triangulation<3>::move02),
+            rdoc::move02_2)
+        .def("move02",
+            overload_cast<regina::Triangle<3>*, int, regina::Triangle<3>*, int>(
+                &Triangulation<3>::move02),
+            rdoc::move02_3)
+        .def("openBook",
+            overload_cast<regina::Triangle<3>*>(&Triangulation<3>::openBook),
             rdoc::openBook)
-        .def("closeBook", &Triangulation<3>::closeBook,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("closeBook",
+            overload_cast<regina::Edge<3>*>(&Triangulation<3>::closeBook),
             rdoc::closeBook)
         .def("shellBoundary",
             overload_cast<Simplex<3>*>(&Triangulation<3>::shellBoundary),
             rbase::shellBoundary)
-        .def("collapseEdge", &Triangulation<3>::collapseEdge,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("collapseEdge",
+            overload_cast<regina::Edge<3>*>(&Triangulation<3>::collapseEdge),
             rdoc::collapseEdge)
         .def("hasPachner", &Triangulation<3>::hasPachner<0>, rbase::hasPachner)
         .def("hasPachner", &Triangulation<3>::hasPachner<1>, rbase::hasPachner)
@@ -816,11 +782,19 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
-        // For twoZeroMove() and fourFourMove(), the new functions have
-        // different names (move20, move44).  We therefore give a default
-        // value for "ignored" in order to preserve backward compatibility
-        // in cases where both boolean arguments are omitted.
-        // TODO: Also 2-1 and 0-2 moves.
+        // For fourFourMove(), twoZeroMove(), twoOneMove() and zeroTwoMove(),
+        // the new functions have different names (move44, move20, etc.).
+        // We therefore give a default value for "ignored" in order to preserve
+        // backward compatibility in cases where both boolean arguments are
+        // omitted.
+        .def("fourFourMove",
+            overload_cast<regina::Edge<3>*, int, bool, bool>(
+                &Triangulation<3>::fourFourMove),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("ignored") = true,
+            pybind11::arg("perform") = true,
+            rdoc::fourFourMove) // deprecated
         .def("twoZeroMove", &Triangulation<3>::twoZeroMove<0>,
             pybind11::arg(),
             pybind11::arg("ignored") = true,
@@ -831,6 +805,59 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
+        .def("twoOneMove",
+            overload_cast<regina::Edge<3>*, int, bool, bool>(
+                &Triangulation<3>::twoOneMove),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("ignored") = true,
+            pybind11::arg("perform") = true,
+            rdoc::twoOneMove)
+        .def("zeroTwoMove",
+            overload_cast<regina::EdgeEmbedding<3>, int,
+                regina::EdgeEmbedding<3>, int, bool, bool>(
+                &Triangulation<3>::zeroTwoMove),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("ignored") = true,
+            pybind11::arg("perform") = true,
+            rdoc::zeroTwoMove)
+        .def("zeroTwoMove",
+            overload_cast<regina::Edge<3>*, size_t, size_t, bool, bool>(
+                &Triangulation<3>::zeroTwoMove),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("ignored") = true,
+            pybind11::arg("perform") = true,
+            rdoc::zeroTwoMove_2)
+        .def("zeroTwoMove",
+            overload_cast<regina::Triangle<3>*, int,
+                regina::Triangle<3>*, int, bool, bool>(
+                &Triangulation<3>::zeroTwoMove),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("ignored") = true,
+            pybind11::arg("perform") = true,
+            rdoc::zeroTwoMove_3)
+        .def("openBook",
+            overload_cast<regina::Triangle<3>*, bool, bool>(
+                &Triangulation<3>::openBook),
+            pybind11::arg(),
+            pybind11::arg("ignored"),
+            pybind11::arg("perform") = true,
+            rdoc::openBook_2) // deprecated
+        .def("closeBook",
+            overload_cast<regina::Edge<3>*, bool, bool>(
+                &Triangulation<3>::closeBook),
+            pybind11::arg(),
+            pybind11::arg("ignored"),
+            pybind11::arg("perform") = true,
+            rdoc::closeBook_2) // deprecated
         .def("shellBoundary",
             overload_cast<Simplex<3>*, bool, bool>(
                 &Triangulation<3>::shellBoundary),
@@ -838,6 +865,13 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::shellBoundary_2) // deprecated
+        .def("collapseEdge",
+            overload_cast<regina::Edge<3>*, bool, bool>(
+                &Triangulation<3>::collapseEdge),
+            pybind11::arg(),
+            pybind11::arg("ignored"),
+            pybind11::arg("perform") = true,
+            rdoc::collapseEdge_2) // deprecated
     ;
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop

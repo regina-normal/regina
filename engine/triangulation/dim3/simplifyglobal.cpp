@@ -84,7 +84,7 @@ startAgain:
         // First try to use a close book move, which does not
         // increase the number of tetrahedra.
         for (auto e : bc->edges()) {
-            if (closeBook(e, true, true)) {
+            if (closeBook(e)) {
                 // We have changed the triangulation, which means
                 // all edges and boundary components have been destroyed.
                 // Start over.
@@ -173,7 +173,7 @@ startLoop:
             Vertex<3>* v = e->vertex(1);
             if (u != v && ! (u->isBoundary() && v->isBoundary())) {
                 // This edge needs to be pinched or collapsed.
-                if (! collapseEdge(e, true, true))
+                if (! collapseEdge(e))
                     pinchEdge(e);
                 result = true;
                 goto startLoop;
@@ -263,8 +263,7 @@ bool Triangulation<3>::simplify() {
                 // Perform a random 4-4 move on the clone.
                 fourFourChoice = fourFourAvailable[
                     RandomEngine::rand(fourFourAvailable.size())];
-                use->fourFourMove(fourFourChoice.first, fourFourChoice.second,
-                    false, true);
+                use->move44(fourFourChoice.first, fourFourChoice.second);
 
                 // See if we can simplify now.
                 if (use->simplifyToLocalMinimum(true)) {
@@ -342,7 +341,7 @@ bool Triangulation<3>::simplify() {
                 bool closed = false;
 
                 for (Edge<3>* edge : edges())
-                    if (closeBook(edge, true, true)) {
+                    if (closeBook(edge)) {
                         closed = true;
                         changed = true;
 
@@ -471,11 +470,11 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                     changedNow = changed = true;
                     break;
                 }
-                if (twoOneMove(edge, 0)) {
+                if (move21(edge, 0)) {
                     changedNow = changed = true;
                     break;
                 }
-                if (twoOneMove(edge, 1)) {
+                if (move21(edge, 1)) {
                     changedNow = changed = true;
                     break;
                 }

@@ -126,7 +126,7 @@ TEST(SpansTest, preserveTopology) {
         EXPECT_TRUE(t.isIrreducible());
         EXPECT_TRUE(t.knowsIrreducible());
 
-        EXPECT_TRUE(t.fourFourMove(t.edge(0), 1));
+        EXPECT_TRUE(t.move44(t.edge(0), 1));
         EXPECT_NE(t.isoSig(), sig); // ensure the triangulation changed
 
         EXPECT_TRUE(t.knowsIrreducible()); // should still be cached

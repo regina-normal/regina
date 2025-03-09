@@ -1095,41 +1095,39 @@ TEST_F(Dim3Test, move20Edge) {
             { 3, 3, 0, {1,2,0,3} }, { 4, 2, 0, {0,3,2,1} }}),
         "boundary-diag");
 }
-static void verifyZeroTwoMove(const Triangulation<3>& tri, const char* name ) {
+static void verifyMove02(const Triangulation<3>& tri, const char* name ) {
     SCOPED_TRACE_CSTRING(name);
 
     Triangulation<3> oriented(tri);
     if (oriented.isOrientable())
         oriented.orient();
 
-    for (size_t i = 0; i < tri.countEdges(); ++i) {
-        SCOPED_TRACE_NUMERIC(i);
+    for (auto from : oriented.edges()) {
+        SCOPED_TRACE_NUMERIC(from->index());
 
-        size_t deg = oriented.edge(i)->degree();
+        size_t deg = from->degree();
         for (size_t j = 0; j <= deg; ++j) {
             SCOPED_TRACE_NUMERIC(j);
 
             for (size_t jj = j; jj <= deg; ++jj) {
                 SCOPED_TRACE_NUMERIC(jj);
 
-                Triangulation<3> alt(oriented);
-                bool legal = alt.zeroTwoMove(alt.edge(i), j, jj);
+                auto alt = oriented.with02(from, j, jj);
 
-                // Check that different versions of zeroTwoMove give
+                // Check that different versions of move02 give
                 // isomorphic results.
                 {
-                    Triangulation<3> alt2(oriented);
                     size_t num[2] = {j, jj};
                     regina::Triangle<3>* t[2];
                     int e[2];
                     for ( int k : {0, 1} ) {
                         if ( num[k] == deg ) {
-                            auto emb = alt2.edge(i)->back();
+                            auto emb = from->back();
                             t[k] = emb.simplex()->triangle(emb.vertices()[2]);
                             e[k] = emb.simplex()->faceMapping<2>(
                                 emb.vertices()[2]).pre(emb.vertices()[3]);
                         } else {
-                            auto emb = alt2.edge(i)->embedding(num[k]);
+                            auto emb = from->embedding(num[k]);
                             t[k] = emb.simplex()->triangle(emb.vertices()[3]);
                             e[k] = emb.simplex()->faceMapping<2>(
                                 emb.vertices()[3]).pre(emb.vertices()[2]);
@@ -1141,54 +1139,50 @@ static void verifyZeroTwoMove(const Triangulation<3>& tri, const char* name ) {
                     // false).  The discrepancy arises when the edge is
                     // internal: in this case the first form of the move
                     // (edge, int, int) cannot have j == deg or jj == deg.
-                    bool legal2 = alt2.zeroTwoMove(t[0], e[0], t[1], e[1]);
+                    auto alt2 = oriented.with02(t[0], e[0], t[1], e[1]);
 
-                    regina::Edge<3>* edge = oriented.edge(i);
-                    if (edge->isBoundary() || (j < deg && jj < deg)) {
-                        EXPECT_EQ(legal2, legal);
+                    if (from->isBoundary() || (j < deg && jj < deg)) {
+                        EXPECT_EQ(alt2.has_value(), alt.has_value());
                     } else {
-                        EXPECT_FALSE(legal);
-                        EXPECT_EQ(legal2, edge->isValid());
+                        EXPECT_FALSE(alt.has_value());
+                        EXPECT_EQ(alt2.has_value(), from->isValid());
                     }
 
-                    if (legal)
-                        EXPECT_TRUE(alt.isIsomorphicTo(alt2));
+                    if (alt)
+                        EXPECT_TRUE(alt->isIsomorphicTo(*alt2));
                 }
 
-                if (! legal) {
-                    // Check that the move was _not_ performed.
-                    EXPECT_EQ(alt, oriented);
+                if (! alt)
                     continue;
-                }
 
                 // The move was performed (hopefully correctly).
 
                 // Ensure that properties we are about to verify are
                 // explicitly recomputed.
-                clearProperties(alt);
+                clearProperties(*alt);
 
-                EXPECT_EQ(alt.size(), tri.size() + 2);
-                EXPECT_EQ(alt.countVertices(), tri.countVertices());
-                EXPECT_EQ(alt.isValid(), tri.isValid());
-                EXPECT_EQ(alt.isOrientable(), tri.isOrientable());
+                EXPECT_EQ(alt->size(), tri.size() + 2);
+                EXPECT_EQ(alt->countVertices(), tri.countVertices());
+                EXPECT_EQ(alt->isValid(), tri.isValid());
+                EXPECT_EQ(alt->isOrientable(), tri.isOrientable());
                 if (tri.isOrientable())
-                    EXPECT_TRUE(alt.isOriented());
-                EXPECT_EQ(alt.isClosed(), tri.isClosed());
-                EXPECT_EQ(alt.countBoundaryComponents(),
+                    EXPECT_TRUE(alt->isOriented());
+                EXPECT_EQ(alt->isClosed(), tri.isClosed());
+                EXPECT_EQ(alt->countBoundaryComponents(),
                     tri.countBoundaryComponents());
-                EXPECT_EQ(alt.eulerCharTri(), tri.eulerCharTri());
-                EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
+                EXPECT_EQ(alt->eulerCharTri(), tri.eulerCharTri());
+                EXPECT_EQ(alt->eulerCharManifold(), tri.eulerCharManifold());
 
                 if (tri.isValid()) {
-                    EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
-                    EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
+                    EXPECT_EQ(alt->homology<1>(), tri.homology<1>());
+                    EXPECT_EQ(alt->homology<2>(), tri.homology<2>());
                 }
 
                 // Randomly relabel the tetrahedra, but preserve orientation.
-                Isomorphism<3> iso = alt.randomiseLabelling(true);
+                Isomorphism<3> iso = alt->randomiseLabelling(true);
 
                 // Test the inverse 2-0 move.
-                regina::Triangulation<3> inv(alt);
+                regina::Triangulation<3> inv(*alt);
                 EXPECT_TRUE(inv.move20(
                     inv.tetrahedron(iso.simpImage(inv.size() - 1))->edge(
                         iso.facetPerm(inv.size() - 1)[2],
@@ -1202,11 +1196,11 @@ static void verifyZeroTwoMove(const Triangulation<3>& tri, const char* name ) {
     }
 }
 
-TEST_F(Dim3Test, zeroTwoMove) {
-    testManualCases(verifyZeroTwoMove, false);
-    runCensusAllClosed(verifyZeroTwoMove, true);
-    runCensusAllBounded(verifyZeroTwoMove, true);
-    runCensusAllIdeal(verifyZeroTwoMove, true);
+TEST_F(Dim3Test, move02) {
+    testManualCases(verifyMove02, false);
+    runCensusAllClosed(verifyMove02, true);
+    runCensusAllBounded(verifyMove02, true);
+    runCensusAllIdeal(verifyMove02, true);
 }
 
 TEST_F(Dim3Test, pinchEdge) {

@@ -1037,7 +1037,7 @@ TEST_F(Dim4Test, copyMove) {
     testManualCases(TriangulationTest<4>::verifyCopyMove);
 }
 
-static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
+static void verifyMove44(const Triangulation<4>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     Triangulation<4> oriented(tri);
@@ -1095,10 +1095,10 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
     }
 }
 
-TEST_F(Dim4Test, fourFourMove) {
-    testManualCases(verifyFourFourMove);
-    runCensusAllBounded(verifyFourFourMove);
-    runCensusAllNoBdry(verifyFourFourMove);
+TEST_F(Dim4Test, move44) {
+    testManualCases(verifyMove44);
+    runCensusAllBounded(verifyMove44);
+    runCensusAllNoBdry(verifyMove44);
 }
 
 static void verifySnapEdge(const Triangulation<4>& tri, const char* name) {

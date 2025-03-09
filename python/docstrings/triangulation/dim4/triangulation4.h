@@ -117,9 +117,10 @@ Parameter ``description``:
 // Docstring regina::python::doc::Triangulation_::collapseEdge
 static const char *collapseEdge =
 R"doc(If possible, performs an edge collapse move upon the given edge. This
-involves collapsing the edge to a point, and flattening all of the
-pentachora that contain it. The resulting effect is to reduce the
-number of vertices in this triangulation by one.
+involves collapsing the edge to a point, merging its two endpoints
+together, and flattening all of the pentachora that contain it. The
+resulting effect is to reduce the number of vertices in this
+triangulation by one.
 
 This triangulation will be changed directly.
 
@@ -130,9 +131,11 @@ Simplex<4>::lockFacet() for further details on locks.
 
 The requirements for this move to not change the topology are complex,
 and are discussed in detail in the collapseEdge() source code for
-those who are interested. The most important thing to note here is
-that checking these requirements is expensive (amongst other things,
-we need to build two union-find structures to implement the test).
+those who are interested. The most important requirement is that the
+given edge should join two distinct vertices. It is also important to
+note that checking the full requirements is expensive (amongst other
+things, we need to build two union-find structures to implement the
+test).
 
 If you are trying to reduce the number of vertices without changing
 the topology, and if *e* is an edge connecting an internal vertex with
@@ -283,7 +286,7 @@ given edge of this triangulation, without violating any simplex and/or
 facet locks.
 
 For more detail on 4-4 moves and when they can be performed, see
-fourFourMove().
+move44().
 
 Precondition:
     The given edge is an edge of this triangulation.
@@ -1186,7 +1189,7 @@ locks, then this routine returns no value.
 This triangulation will not be changed.
 
 For more detail on 4-4 moves and when they can be performed, see
-fourFourMove().
+move44().
 
 Precondition:
     The given edge is an edge of this triangulation.

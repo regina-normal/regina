@@ -70,7 +70,7 @@ namespace {
     }
 }
 
-bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
+bool Triangulation<3>::internal44(Edge<3>* e, int newAxis, bool check,
         bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
@@ -127,7 +127,7 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     return true;
 }
 
-bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
+bool Triangulation<3>::internal21(Edge<3>* e, int edgeEnd,
         bool check, bool perform) {
     // edgeEnd is the end opposite where the action is.
     if (check) {
@@ -285,7 +285,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     return true;
 }
 
-bool Triangulation<3>::zeroTwoMove(
+bool Triangulation<3>::internal02(
         EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1,
         bool check, bool perform ) {
     Edge<3>* e = e0.tetrahedron()->edge(e0.edge());
@@ -458,7 +458,7 @@ bool Triangulation<3>::zeroTwoMove(
     return true;
 }
 
-bool Triangulation<3>::zeroTwoMove(
+bool Triangulation<3>::internal02(
         Edge<3>* e, size_t t0, size_t t1,
         bool check, bool perform ) {
     size_t deg = e->degree();
@@ -483,10 +483,10 @@ bool Triangulation<3>::zeroTwoMove(
             tri[i] = 3;
         }
     }
-    return zeroTwoMove( emb[0], tri[0], emb[1], tri[1], check, perform );
+    return internal02( emb[0], tri[0], emb[1], tri[1], check, perform );
 }
 
-bool Triangulation<3>::zeroTwoMove(
+bool Triangulation<3>::internal02(
         Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
         bool check, bool perform ) {
     Triangle<3>* t[2] = {t0, t1};
@@ -503,10 +503,11 @@ bool Triangulation<3>::zeroTwoMove(
                         ve * Perm<4>( 2, e[i] ) ) ) );
         tri[i] = ( (emb[i].vertices()[2] == ve[3]) ? 2 : 3 );
     }
-    return zeroTwoMove( emb[0], tri[0], emb[1], tri[1], check, perform );
+    return internal02( emb[0], tri[0], emb[1], tri[1], check, perform );
 }
 
-bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
+bool Triangulation<3>::internalOpenBook(Triangle<3>* f, bool check,
+        bool perform) {
     if (f->isLocked()) {
         if (check)
             return false;
@@ -561,7 +562,8 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
+bool Triangulation<3>::internalCloseBook(Edge<3>* e, bool check,
+        bool perform) {
     if (check) {
         if (! e->isBoundary())
             return false;
@@ -607,7 +609,8 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
+bool Triangulation<3>::internalCollapseEdge(Edge<3>* e, bool check,
+        bool perform) {
     // Find the tetrahedra to remove.
     if (check) {
         // Note: We never check whether the edge is valid, but this

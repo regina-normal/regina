@@ -201,14 +201,22 @@ See also:
 
 // Docstring regina::python::doc::Triangulation_::closeBook
 static const char *closeBook =
-R"doc(Checks the eligibility of and/or performs a book closing move about
-the given boundary edge. This involves taking a boundary edge of the
-triangulation and folding together the two boundary triangles on
-either side. This move is the inverse of the openBook() move, and is
-used to simplify the boundary of the triangulation. This move can be
-done if:
+R"doc(If possible, performs a book closing move about the given edge. This
+involves taking a boundary edge of the triangulation and folding
+together the two boundary triangles on either side. The resulting
+effect is to simplify the boundary of the triangulation.
 
-* the edge *e* is a boundary edge;
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any facet
+locks. See Simplex<3>::lockFacet() for further details on facet locks.
+Note that simplex locks are never a concern for this type of move.
+
+In order for this move to make sense and to not to change the
+topology, we require that:
+
+* the given edge *e* is a boundary edge;
 
 * the two vertices opposite *e* in the boundary triangles that contain
   *e* are valid and distinct;
@@ -216,63 +224,89 @@ done if:
 * the boundary component containing *e* contains more than two
   triangles.
 
-There are in fact several other distinctness conditions on the nearby
+There are several additional distinctness conditions on the nearby
 edges and triangles, but they follow automatically from the conditions
-above.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-facet locks (see Simplex<3>::lockFacet() for further details on
-locks).
+listed above.
 
 If this triangulation is currently oriented, then this operation will
 (trivially) preserve the orientation.
 
-Note that after performing this move, all skeletal objects (triangles,
+Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *f*) can no longer be used.
+old skeletal objects (such as the argument *e*) can no longer be used.
 
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any facet locks.
+See openBook() for an inverse to this move.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Exception ``LockViolation``:
-    This move would violate a facet lock, and *check* was passed as
-    ``False``. This exception will be thrown before any changes are
-    made. See Simplex<3>::lockFacet() for details on how facet locks
-    work and what their implications are.
+Parameter ``e``:
+    the edge about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::closeBook_2
+static const char *closeBook_2 =
+R"doc(Deprecated routine that tests for and optionally performs a book
+closing move about the given edge of this triangulation.
+
+For more details on book closing moves and when they can be performed,
+see the variant of closeBook() without the extra boolean arguments.
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any facet locks (see Simplex<3>::lockFacet() for
+further details on facet locks). Note that this type of move can never
+violate a simplex lock, and so there is no need to check for those at
+all. If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    hasCloseBook(). If you wish to both check and perform the move,
+    call closeBook() without the two extra boolean arguments.
+
+Precondition:
+    The given edge is an edge of this triangulation.
 
 Parameter ``e``:
     the edge about which to perform the move.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::collapseEdge
 static const char *collapseEdge =
-R"doc(Checks the eligibility of and/or performs a collapse of an edge
-between two distinct vertices. This operation (when it is allowed)
-does not change the topology of the manifold, decreases the number of
-vertices by one, and also decreases the number of tetrahedra.
+R"doc(If possible, performs an edge collapse move upon the given edge. This
+involves collapsing the edge to a point, merging its two endpoints
+together, and flattening all of the tetrahedra that contain it. The
+resulting effect is to reduce the number of vertices in this
+triangulation by one.
 
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-simplex and/or facet locks (see Simplex<3>::lock() and
-Simplex<3>::lockFacet() for further details on locks).
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any
+simplex and/or facet locks. See Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks.
+
+The requirements for this move to not change the topology are complex,
+and are discussed in detail in the collapseEdge() source code for
+those who are interested. The most important requirement is that the
+given edge should join two distinct vertices. It is also important to
+note that checking the full requirements is expensive (amongst other
+things, we need to build a union-find structure to implement the
+test).
 
 If you are trying to reduce the number of vertices without changing
 the topology, and if *e* is an edge connecting an internal vertex with
@@ -292,44 +326,58 @@ just to call minimiseVertices() instead).
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
-Note that after performing this move, all skeletal objects (triangles,
+Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
 old skeletal objects (such as the argument *e*) can no longer be used.
-
-The eligibility requirements for this move are somewhat involved, and
-are discussed in detail in the collapseEdge() source code for those
-who are interested.
-
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any simplex and/or facet locks.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Exception ``LockViolation``:
-    This move would violate a simplex or facet lock, and *check* was
-    passed as ``False``. This exception will be thrown before any
-    changes are made. See Simplex<3>::lock() and
-    Simplex<3>::lockFacet() for further details on how locks work and
-    what their implications are.
+Parameter ``e``:
+    the edge to collapse.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::collapseEdge_2
+static const char *collapseEdge_2 =
+R"doc(Deprecated routine that tests for and optionally performs an edge
+collapse move upon the given edge of this triangulation.
+
+For more details on edge collapse moves and when they can be
+performed, as well as the difference between edge collapse and edge
+pinch moves, see the variant of collapseEdge() without the extra
+boolean arguments.
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex and/or facet locks (see
+Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
+locks). If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    hasCollapseEdge(). If you wish to both check and perform the move,
+    call collapseEdge() without the two extra boolean arguments.
+
+Precondition:
+    The given edge is an edge of this triangulation.
 
 Parameter ``e``:
     the edge to collapse.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the given edge may be collapsed without changing the topology
-    of the manifold or violating any locks. If *check* is ``False``,
-    the function simply returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::connectedSumWith
 static const char *connectedSumWith =
@@ -546,65 +594,45 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::fourFourMove
 static const char *fourFourMove =
-R"doc(Checks the eligibility of and/or performs a 4-4 move about the given
-edge. This involves replacing the four tetrahedra joined at that edge
-with four tetrahedra joined along a different edge. Consider the
-octahedron made up of the four original tetrahedra; this has three
-internal axes. The initial four tetrahedra meet along the given edge
-which forms one of these axes; the new tetrahedra will meet along a
-different axis. This move can be done iff (i) the edge is valid and
-non-boundary, and (ii) the four tetrahedra are distinct.
+R"doc(Deprecated routine that tests for and optionally performs a 4-4 move
+about the given edge of this triangulation.
 
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-simplex and/or facet locks (see Simplex<3>::lock() and
-Simplex<3>::lockFacet() for further details on locks).
+For more details on 4-4 moves and when they can be performed, see
+move44().
 
-If this triangulation is currently oriented, then this 4-4 move will
-label the new tetrahedra in a way that preserves the orientation.
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex and/or facet locks (see
+Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
+locks). If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
 
-Note that after performing this move, all skeletal objects (triangles,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
-
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any simplex and/or facet locks.
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    has44(). If you wish to both check and perform the move, call
+    move44().
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Exception ``LockViolation``:
-    This move would violate a simplex or facet lock, and *check* was
-    passed as ``False``. This exception will be thrown before any
-    changes are made. See Simplex<3>::lock() and
-    Simplex<3>::lockFacet() for further details on how locks work and
-    what their implications are.
-
 Parameter ``e``:
     the edge about which to perform the move.
 
-Parameter ``newAxis``:
-    Specifies which axis of the octahedron the new tetrahedra should
-    meet along; this should be 0 or 1. Consider the four original
-    tetrahedra in the order described by Edge<3>::embedding(0,...,3);
-    call these tetrahedra 0, 1, 2 and 3. If *newAxis* is 0, the new
-    axis will separate tetrahedra 0 and 1 from 2 and 3. If *newAxis*
-    is 1, the new axis will separate tetrahedra 1 and 2 from 3 and 0.
+Parameter ``axis``:
+    indicates which axis of the enclosing octahedron the four new
+    tetrahedra should meet along; this must be 0 or 1. See move44()
+    for details on exactly what this means.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::fromSnapPea
 static const char *fromSnapPea =
@@ -731,7 +759,7 @@ locks.
 
 For more detail on 0-2 moves and when they can be performed, and for
 full details on what the arguments to this function mean, see
-zeroTwoMove(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int, bool, bool).
+move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
 
 Precondition:
     The given embeddings refer to edges of this triangulation.
@@ -754,7 +782,10 @@ Parameter ``t1``:
     3.
 
 Returns:
-    ``True`` if and only if the requested move can be performed.)doc";
+    ``True`` if and only if the requested move can be performed.
+
+Author:
+    Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::has02_2
 static const char *has02_2 =
@@ -764,7 +795,7 @@ locks.
 
 For more detail on 0-2 moves and when they can be performed, and for
 full details on what the arguments to this function mean, see
-zeroTwoMove(Edge<3>*, size_t, size_t, bool, bool).
+move02(Edge<3>*, size_t, size_t).
 
 Precondition:
     The given edge is a edge of this triangulation.
@@ -782,7 +813,10 @@ Parameter ``t1``:
     perform the move.
 
 Returns:
-    ``True`` if and only if the requested move can be performed.)doc";
+    ``True`` if and only if the requested move can be performed.
+
+Author:
+    Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::has02_3
 static const char *has02_3 =
@@ -792,7 +826,7 @@ locks.
 
 For more detail on 0-2 moves and when they can be performed, and for
 full details on what the arguments to this function mean, see
-zeroTwoMove(Triangle<3>*, int, Triangle<3>*, int, bool, bool).
+move02(Triangle<3>*, int, Triangle<3>*, int).
 
 Precondition:
     The given triangles are both triangles of this triangulation.
@@ -813,16 +847,19 @@ Parameter ``e1``:
     0, 1 or 2.
 
 Returns:
-    ``True`` if and only if the requested move can be performed.)doc";
+    ``True`` if and only if the requested move can be performed.
+
+Author:
+    Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::has21
 static const char *has21 =
-R"doc(Determines whether it is possible to perform a 2-1 move about the
-given edge of this triangulation, without violating any simplex and/or
-facet locks.
+R"doc(Determines whether it is possible to perform a 2-1 move at the given
+end of the given edge of this triangulation, without violating any
+simplex and/or facet locks.
 
 For more detail on 2-1 moves and when they can be performed, see
-twoOneMove().
+move21().
 
 Precondition:
     The given edge is a edge of this triangulation.
@@ -832,8 +869,8 @@ Parameter ``e``:
 
 Parameter ``edgeEnd``:
     indicates at which end of the edge *e* the move does _not_ involve
-    the adjacent tetrahedron; this should be 0 or 1. See twoOneMove()
-    for details on exactly what this means.
+    the adjacent tetrahedron; this should be 0 or 1. See move21() for
+    details on exactly what this means.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
@@ -845,7 +882,7 @@ given edge of this triangulation, without violating any simplex and/or
 facet locks.
 
 For more detail on 4-4 moves and when they can be performed, see
-fourFourMove().
+move44().
 
 Precondition:
     The given edge is a edge of this triangulation.
@@ -853,10 +890,10 @@ Precondition:
 Parameter ``e``:
     the candidate edge about which to perform the move.
 
-Parameter ``newAxis``:
-    When performing the move, specifies which axis of the octahedron
-    the new tetrahedra should meet along; this should be 0 or 1. See
-    fourFourMove() for details on exactly what this means.
+Parameter ``axis``:
+    indicates which axis of the enclosing octahedron the four new
+    proposed tetrahedra should meet along; this must be 0 or 1. See
+    move44() for details on exactly what this means.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
@@ -2432,6 +2469,345 @@ Returns:
     ``True`` if the triangulation was changed, or ``False`` if the
     number of vertices was already minimal to begin with.)doc";
 
+// Docstring regina::python::doc::Triangulation_::move02
+static const char *move02 =
+R"doc(If possible, performs a 0-2 move about the two specified triangles.
+This involves fattening these two triangles (which should share a
+common edge, and which need not be distinct) into a new pair of
+tetrahedra surrounding a new degree two edge. This is, in essence, an
+inverse to the 2-0 edge move.
+
+The different variants of move02() allow the two triangles and their
+common edge to be specified in different ways. For this variant, the
+common edge is referenced by both the embedding objects *e0* and *e1*,
+and the the two triangles are
+``e0.tetrahedron()->triangle(e0.vertices()[t0])`` and
+``e1.tetrahedron()->triangle(e1.vertices()[t1])``.
+
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any facet
+locks. See Simplex<3>::lockFacet() for further details on facet locks.
+Note that simplex locks are never a concern for this type of move.
+
+To be able to perform this move, we require that:
+
+* *e0* and *e1* are both embeddings of the same edge *e*;
+
+* this common edge *e* is valid;
+
+* *t0* and *t1* are both either 2 or 3 (which means that the two
+  triangles listed above do indeed contain *e*).
+
+A note regarding facet locks: since this move pries open a _pair_ of
+adjacent triangles and not just a single triangle, a lock on either of
+the two triangles involved in this move will prevent the move from
+taking place.
+
+If this triangulation is currently oriented, then this 0-2 move will
+label the new tetrahedra in a way that preserves the orientation.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects can no longer be used. However, the arguments
+*e0* and *e1* _can_ still be used since a FaceEmbedding can happily
+outlive the face that it refers to; see the FaceEmbedding class notes
+for further details.
+
+Precondition:
+    The edge *e* is an edge of this triangulation.
+
+Parameter ``e0``:
+    an embedding of the common edge *e* of the two triangles about
+    which to perform the move.
+
+Parameter ``t0``:
+    indicates one of the triangles about which to perform the move,
+    with respect to the edge embedding *e0*; this must be 2 or 3.
+
+Parameter ``e1``:
+    another embedding of the edge *e*.
+
+Parameter ``t1``:
+    indicates the other triangle about which to perform the move, with
+    respect to the edge embedding *e1*; this must be 2 or 3.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.
+
+Author:
+    Alex He)doc";
+
+// Docstring regina::python::doc::Triangulation_::move02_2
+static const char *move02_2 =
+R"doc(If possible, performs a 0-2 move about the two specified triangles.
+This involves fattening these two triangles (which should share a
+common edge, and which need not be distinct) into a new pair of
+tetrahedra surrounding a new degree two edge. This is, in essence, an
+inverse to the 2-0 edge move.
+
+The different variants of move02() allow the two triangles and their
+common edge to be specified in different ways. For this variant, the
+common edge is given as the argument *e*, and the two triangles are
+the triangles incident to *e* that are numbered *t0* and *t1* (see
+below for how this numbering scheme works).
+
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any facet
+locks. See Simplex<3>::lockFacet() for further details on facet locks.
+Note that simplex locks are never a concern for this type of move.
+
+To be able to perform this move, we require that:
+
+* the given edge *e* is valid;
+
+* the numbers *t0* and *t1* are both less than or equal to
+  ``e->degree()``, and strictly less than ``e->degree()`` if *e* is
+  non-boundary (as required by our numbering scheme for triangles).
+
+Our numbering scheme for triangles incident to *e* works as follows:
+
+* For each *i* in the range ``0 ≤ i < e->degree()``, we assign the
+  number *i* to the triangle
+  ``emb.tetrahedron()->triangle(emb.vertices()[3])``, where *emb*
+  denotes ``e->embedding(i)``.
+
+* If *e* is a boundary edge, then we additionally assign the number
+  ``e->degree()`` to the boundary triangle
+  ``emb.tetrahedron()->triangle(emb.vertices()[2])``, where this time
+  *emb* denotes ``e->back()``.
+
+A note regarding facet locks: since this move pries open a _pair_ of
+adjacent triangles and not just a single triangle, a lock on either of
+the two triangles involved in this move will prevent the move from
+taking place.
+
+If this triangulation is currently oriented, then this 0-2 move will
+label the new tetrahedra in a way that preserves the orientation.
+
+The implementation of this routine simply translates its arguments to
+call ``move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int)``.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects (such as the argument *e*) can no longer be used.
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the common edge of the two triangles about which to perform the
+    move.
+
+Parameter ``t0``:
+    the number assigned to one of two triangles about which to perform
+    the move, as described above.
+
+Parameter ``t1``:
+    the number assigned to the other triangle about which to perform
+    the move, as described above.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.
+
+Author:
+    Alex He)doc";
+
+// Docstring regina::python::doc::Triangulation_::move02_3
+static const char *move02_3 =
+R"doc(If possible, performs a 0-2 move about the two specified triangles.
+This involves fattening these two triangles (which should share a
+common edge, and which need not be distinct) into a new pair of
+tetrahedra surrounding a new degree two edge. This is, in essence, an
+inverse to the 2-0 edge move.
+
+The different variants of move02() allow the two triangles and their
+common edge to be specified in different ways. For this variant, the
+two triangles are given as the arguments *t0* and *t1*, and their
+common edge is ``t0->edge(e0)`` and ``t1->edge(e1)``.
+
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any facet
+locks. See Simplex<3>::lockFacet() for further details on facet locks.
+Note that simplex locks are never a concern for this type of move.
+
+To be able to perform this move, we require that:
+
+* the edges ``t0->edge(e0)`` and ``t1->edge(e1)`` are the same edge of
+  this triangulation;
+
+* moreover, that common edge is valid.
+
+A note regarding facet locks: since this move pries open a _pair_ of
+adjacent triangles and not just a single triangle, a lock on either of
+the two triangles involved in this move will prevent the move from
+taking place.
+
+If this triangulation is currently oriented, then this 0-2 move will
+label the new tetrahedra in a way that preserves the orientation.
+
+The implementation of this routine simply translates its arguments to
+call ``move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int)``.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects (such as the arguments *t0* and *t1*) can no
+longer be used.
+
+Precondition:
+    The given triangles are both triangles of this triangulation.
+
+Parameter ``t0``:
+    one of the two triangles about which to perform the move.
+
+Parameter ``e0``:
+    the edge at which *t0* meets the other triangle *t1*; this must be
+    0, 1 or 2.
+
+Parameter ``t1``:
+    the other triangle about which to perform the move.
+
+Parameter ``e1``:
+    the edge at which *t1* meets the other triangle *t0*; this must be
+    0, 1 or 2.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.
+
+Author:
+    Alex He)doc";
+
+// Docstring regina::python::doc::Triangulation_::move21
+static const char *move21 =
+R"doc(If possible, performs a 2-1 move at the given end of the given edge of
+this triangulation. This involves taking the given degree one edge and
+effectively merging the (unique) tetrahedron that contains it with an
+adjacent tetrahedron.
+
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any
+simplex and/or facet locks. See Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks.
+
+In order for this move to make sense and to not to change the
+topology, we require that:
+
+* the given edge *e* is valid and non-boundary;
+
+* the given edge *e* has degree one, whereupon we let *t* denote the
+  unique tetrahedron containing *e*;
+
+* the two faces of *t* that do _not_ contain *e* are not joined to
+  each other;
+
+* the face of *t* opposite the given endpoint of *e* is not boundary,
+  whereupon we let *f* denote this face and we let *s* denote the
+  adjacent tetrahedron connected to *t* along *f*;
+
+* if we consider the two edges of *s* that run from (i) the two
+  (identified) vertices of *t* opposite *e* to (ii) the vertex of *s*
+  opposite face *f*, then these two edges are distinct and not both
+  boundary.
+
+The move essentially flattens two triangular faces of *s* together,
+and merges the remnants of *s* with all of *t* to form a single new
+tetrahedron which again is folded onto itself to form a new edge of
+degree one.
+
+There are additional "distinct and not both boundary" conditions on
+faces of the second tetrahedron *s*, but those follow automatically
+from the final condition above.
+
+If this triangulation is currently oriented, then this 2-1 move will
+label the new tetrahedra in a way that preserves the orientation.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects (such as the argument *e*) can no longer be used.
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the edge about which to perform the move.
+
+Parameter ``edgeEnd``:
+    the end of the edge _opposite_ that at which the second
+    tetrahedron (to be merged) is joined. This argument must be 0 or
+    1, corresponding to the labelling (0,1) of the vertices of the
+    edge as described by EdgeEmbedding<3>::vertices().
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::move44
+static const char *move44 =
+R"doc(If possible, performs a 4-4 move about the given edge of this
+triangulation. This involves replacing the four tetrahedra joined
+along the given degree four edge with four new tetrahedra joined along
+a different (and new) degree four edge instead.
+
+This triangulation will be changed directly.
+
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any
+simplex and/or facet locks. See Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks.
+
+In order for this move to make sense and to not to change the
+topology, we require that:
+
+* the given edge is valid and non-boundary; and
+
+* the given edge has degree four, and in particular belongs to four
+  distinct tetrahedra.
+
+The move then works as follows. Consider the octahedron made up of the
+four original tetrahedra. This octahedron has three internal axes: one
+axis is the given edge, and the other two axes are not represented by
+edges of the triangulation at all. The move simply retriangulates this
+octahedron using four new tetrahedra, joined along a new degree four
+edge that follows one of the other two axes. The argument *axis*
+indicates which of these other two axes should be used (as described
+below).
+
+If this triangulation is currently oriented, then this 4-4 move will
+label the new tetrahedra in a way that preserves the orientation.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects (such as the argument *e*) can no longer be used.
+
+Precondition:
+    The given edge is an edge of this triangulation.
+
+Parameter ``e``:
+    the edge about which to perform the move.
+
+Parameter ``axis``:
+    indicates which axis of the octahedron the four new tetrahedra
+    should meet along; this must be 0 or 1. Specifically: consider the
+    four original tetrahedra in the order described by
+    ``Edge<3>::embedding(0,...,3)``; call these tetrahedra 0, 1, 2 and
+    3. If *axis* is 0, then the new axis will separate tetrahedra 0
+    and 1 from 2 and 3. If *axis* is 1, then the new axis will
+    separate tetrahedra 1 and 2 from 3 and 0.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
 // Docstring regina::python::doc::Triangulation_::newTetrahedra
 static const char *newTetrahedra =
 R"doc(A dimension-specific alias for newSimplices().
@@ -2506,65 +2882,93 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::openBook
 static const char *openBook =
-R"doc(Checks the eligibility of and/or performs a book opening move about
-the given triangle. This involves taking a triangle meeting the
-boundary along two edges, and ungluing it to create two new boundary
-triangles (thus exposing the tetrahedra it initially joined). This
-move is the inverse of the closeBook() move, and is used to open the
-way for new shellBoundary() moves.
+R"doc(If possible, performs a book opening move about the given triangle.
+This involves taking a triangle that meets the boundary along
+precisely two edges, and ungluing it to create two new boundary
+triangles. The resulting effect is to expose the tetrahedra it
+initially joined, and hopefully open the way for subsequent boundary
+shelling moves.
 
-This move can be done if:
+This triangulation will be changed directly.
 
-* the triangle meets the boundary in precisely two edges (and thus
-  also joins two tetrahedra);
+This move will only be performed if it will not change the topology of
+the manifold (as discussed below), _and_ it will not violate any facet
+locks. See Simplex<3>::lockFacet() for further details on facet locks.
+Note that simplex locks are never a concern for this type of move.
+
+In order to not change the topology, we impose the following
+requirements:
+
+* the given triangle meets the boundary in precisely two edges (and
+  therefore also joins two tetrahedra;
 
 * the vertex between these two edges is a standard boundary vertex
-  (its link is a disc);
+  (i.e., its link is a disc);
 
 * the remaining edge of the triangle (which is internal to the
   triangulation) is valid.
 
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-facet locks (see Simplex<3>::lockFacet() for further details on
-locks).
+Whilst we do not (currently) support the case where the given triangle
+meets the boundary in just one edge, those triangulations that we miss
+out on can typically be simplified in other ways (since they would
+typically have spurious internal vertices).
 
 If this triangulation is currently oriented, then this operation will
 (trivially) preserve the orientation.
 
-Note that after performing this move, all skeletal objects (triangles,
+Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *f*) can no longer be used.
+old skeletal objects (such as the argument *t*) can no longer be used.
 
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any facet locks.
+See closeBook() for an inverse to this move.
 
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Exception ``LockViolation``:
-    This move would violate a facet lock, and *check* was passed as
-    ``False``. This exception will be thrown before any changes are
-    made. See Simplex<3>::lockFacet() for details on how facet locks
-    work and what their implications are.
+Parameter ``t``:
+    the triangle about which to perform the move.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
+
+// Docstring regina::python::doc::Triangulation_::openBook_2
+static const char *openBook_2 =
+R"doc(Deprecated routine that tests for and optionally performs a book
+opening move about the given triangle of this triangulation.
+
+For more details on book opening moves and when they can be performed,
+see the variant of openBook() without the extra boolean arguments.
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any facet locks (see Simplex<3>::lockFacet() for
+further details on facet locks). Note that this type of move can never
+violate a simplex lock, and so there is no need to check for those at
+all. If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    hasOpenBook(). If you wish to both check and perform the move,
+    call openBook() without the two extra boolean arguments.
+
+Precondition:
+    The given triangle is a triangle of this triangulation.
 
 Parameter ``t``:
     the triangle about which to perform the move.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::order
 static const char *order =
@@ -3628,79 +4032,45 @@ See also:
 
 // Docstring regina::python::doc::Triangulation_::twoOneMove
 static const char *twoOneMove =
-R"doc(Checks the eligibility of and/or performs a 2-1 move about the given
-edge. This involves taking an edge meeting only one tetrahedron just
-once and merging that tetrahedron with one of the tetrahedra joining
-it.
+R"doc(Deprecated routine that tests for and optionally performs a 2-1 move
+at the given end of the given edge of this triangulation.
 
-This can be done assuming the following conditions:
+For more details on 2-1 moves and when they can be performed, see
+move21().
 
-* The edge must be valid and non-boundary.
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex and/or facet locks (see
+Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
+locks). If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
 
-* The two remaining faces of the tetrahedron are not joined, and the
-  tetrahedron face opposite the given endpoint of the edge is not
-  boundary.
-
-* Consider the second tetrahedron to be merged (the one joined along
-  the face opposite the given endpoint of the edge). Moreover,
-  consider the two edges of this second tetrahedron that run from the
-  (identical) vertices of the original tetrahedron not touching *e* to
-  the vertex of the second tetrahedron not touching the original
-  tetrahedron. These edges must be distinct and may not both be in the
-  boundary.
-
-There are additional "distinct and not both boundary" conditions on
-faces of the second tetrahedron, but those follow automatically from
-the final condition above.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-simplex and/or facet locks (see Simplex<3>::lock() and
-Simplex<3>::lockFacet() for further details on locks).
-
-If this triangulation is currently oriented, then this 2-1 move will
-label the new tetrahedra in a way that preserves the orientation.
-
-Note that after performing this move, all skeletal objects (triangles,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
-
-Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any simplex and/or facet locks.
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    has21(). If you wish to both check and perform the move, call
+    move21().
 
 Precondition:
     The given edge is an edge of this triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a simplex or facet lock, and *check* was
-    passed as ``False``. This exception will be thrown before any
-    changes are made. See Simplex<3>::lock() and
-    Simplex<3>::lockFacet() for further details on how locks work and
-    what their implications are.
 
 Parameter ``e``:
     the edge about which to perform the move.
 
 Parameter ``edgeEnd``:
-    the end of the edge _opposite_ that at which the second
-    tetrahedron (to be merged) is joined. The end is 0 or 1,
-    corresponding to the labelling (0,1) of the vertices of the edge
-    as described in EdgeEmbedding<3>::vertices().
+    indicates at which end of the edge *e* the move does _not_ involve
+    the adjacent tetrahedron; this should be 0 or 1. See move21() for
+    details on exactly what this means.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    ``False``, the function simply returns ``True``.)doc";
+    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::with02
 static const char *with02 =
@@ -3713,7 +4083,7 @@ This triangulation will not be changed.
 
 For more detail on 0-2 moves and when they can be performed, and for
 full details on what the arguments to this function mean, see
-zeroTwoMove(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int, bool, bool).
+move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
 
 Precondition:
     The given embeddings refer to edges of this triangulation.
@@ -3735,7 +4105,10 @@ Parameter ``t1``:
 
 Returns:
     The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
+    or no value if the requested move cannot be performed.
+
+Author:
+    Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::with02_2
 static const char *with02_2 =
@@ -3748,7 +4121,7 @@ This triangulation will not be changed.
 
 For more detail on 0-2 moves and when they can be performed, and for
 full details on what the arguments to this function mean, see
-zeroTwoMove(Edge<3>*, size_t, size_t, bool, bool).
+move02(Edge<3>*, size_t, size_t).
 
 Precondition:
     The given edge is a edge of this triangulation.
@@ -3767,7 +4140,10 @@ Parameter ``t1``:
 
 Returns:
     The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
+    or no value if the requested move cannot be performed.
+
+Author:
+    Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::with02_3
 static const char *with02_3 =
@@ -3780,7 +4156,7 @@ This triangulation will not be changed.
 
 For more detail on 0-2 moves and when they can be performed, and for
 full details on what the arguments to this function mean, see
-zeroTwoMove(Triangle<3>*, int, Triangle<3>*, int, bool, bool).
+move02(Triangle<3>*, int, Triangle<3>*, int).
 
 Precondition:
     The given triangles are both triangles of this triangulation.
@@ -3801,19 +4177,22 @@ Parameter ``e1``:
 
 Returns:
     The new triangulation obtained by performing the requested move,
-    or no value if the requested move cannot be performed.)doc";
+    or no value if the requested move cannot be performed.
+
+Author:
+    Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::with21
 static const char *with21 =
 R"doc(If possible, returns the triangulation obtained by performing a 2-1
-move about the given edge of this triangulation. If such a move is not
-allowed, or if such a move would violate any simplex and/or facet
-locks, then this routine returns no value.
+move at the given end of the given edge of this triangulation. If such
+a move is not allowed, or if such a move would violate any simplex
+and/or facet locks, then this routine returns no value.
 
 This triangulation will not be changed.
 
 For more detail on 2-1 moves and when they can be performed, see
-twoOneMove().
+move21().
 
 Precondition:
     The given edge is a edge of this triangulation.
@@ -3823,8 +4202,8 @@ Parameter ``e``:
 
 Parameter ``edgeEnd``:
     indicates at which end of the edge *e* the move does _not_ involve
-    the adjacent tetrahedron; this should be 0 or 1. See twoOneMove()
-    for details on exactly what this means.
+    the adjacent tetrahedron; this should be 0 or 1. See move21() for
+    details on exactly what this means.
 
 Returns:
     The new triangulation obtained by performing the requested move,
@@ -3840,7 +4219,7 @@ locks, then this routine returns no value.
 This triangulation will not be changed.
 
 For more detail on 4-4 moves and when they can be performed, see
-fourFourMove().
+move44().
 
 Precondition:
     The given edge is a edge of this triangulation.
@@ -3848,10 +4227,10 @@ Precondition:
 Parameter ``e``:
     the edge about which to perform the move.
 
-Parameter ``newAxis``:
-    When performing the move, specifies which axis of the octahedron
-    the new tetrahedra should meet along; this should be 0 or 1. See
-    fourFourMove() for details on exactly what this means.
+Parameter ``axis``:
+    indicates which axis of the enclosing octahedron the four new
+    tetrahedra should meet along; this must be 0 or 1. See move44()
+    for details on exactly what this means.
 
 Returns:
     The new triangulation obtained by performing the requested move,
@@ -3925,52 +4304,28 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::zeroTwoMove
 static const char *zeroTwoMove =
-R"doc(Checks the eligibility of and/or performs a 0-2 move about the (not
-necessarily distinct) triangles
-``e0.tetrahedron()->triangle(e0.vertices()[t0])`` and
-``e1.tetrahedron()->triangle(e1.vertices()[t1])``.
+R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
+about the two specified triangles of this triangulation.
 
-This involves fattening up these two triangles into a new pair of
-tetrahedra around a new degree-two edge *d*; this is the inverse of
-performing a 2-0 move about the edge *d*. This can be done if and only
-if the following conditions are satisfied:
+For more detail on 0-2 moves and when they can be performed, and for
+full details on what the arguments to this function mean, see
+move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
 
-* *e0* and *e1* are both embeddings of the same edge *e*.
+This routine will always _check_ whether the requested move is legal
+and will not violate any facet locks (see Simplex<3>::lockFacet() for
+further details on facet locks). Note that this type of move can never
+violate a simplex lock, and so there is no need to check for those at
+all. If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
 
-* *t0* and *t1* are both either 2 or 3; this ensures that the
-  triangles about which we perform the move are triangles that are
-  incident with *e*.
-
-* The edge *e* is valid.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-facet locks (see Simplex<3>::lockFacet() for further details on facet
-locks). In particular, since this move pries open a _pair_ of adjacent
-triangles and not just a single triangle, a lock on either of the two
-requested triangles will prevent this move from taking place.
-
-If this triangulation is currently oriented, then this 0-2 move will
-label the new tetrahedra in a way that preserves the orientation.
-
-Note that after performing this move, all skeletal objects (triangles,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the arguments *e0* and *e1*) can no
-longer be used.
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    has02(). If you wish to both check and perform the move, call
+    move02().
 
 Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any facet locks.
-
-Precondition:
-    The edge *e* is an edge of this triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a facet lock, and *check* was passed as
-    ``False``. This exception will be thrown before any changes are
-    made. See Simplex<3>::lockFacet() for details on how facet locks
-    work and what their implications are.
+    The two given edge embeddings both refer to the same edge, which
+    must be an edge of this triangulation.
 
 Parameter ``e0``:
     an embedding of the common edge *e* of the two triangles about
@@ -3987,82 +4342,44 @@ Parameter ``t1``:
     indicates the other triangle about which to perform the move, with
     respect to the edge embedding *e1*; this must be 2 or 3.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    false, the function simply returns ``True``.
+    ``True`` if and only if the requested move could be performed.
 
 Author:
     Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::zeroTwoMove_2
 static const char *zeroTwoMove_2 =
-R"doc(Checks the eligibility of and/or performs a 0-2 move about the (not
-necessarily distinct) triangles incident to *e* that are numbered *t0*
-and *t1*.
+R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
+about the two specified triangles of this triangulation.
 
-This involves fattening up these two triangles into a new pair of
-tetrahedra around a new degree-two edge *d*; this is the inverse of
-performing a 2-0 move about the edge *d*. This can be done if and only
-if the following conditions are satisfied:
+For more detail on 0-2 moves and when they can be performed, and for
+full details on what the arguments to this function mean, see
+move02(Edge<3>*, size_t, size_t).
 
-* The edge *e* is valid.
+This routine will always _check_ whether the requested move is legal
+and will not violate any facet locks (see Simplex<3>::lockFacet() for
+further details on facet locks). Note that this type of move can never
+violate a simplex lock, and so there is no need to check for those at
+all. If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
 
-* The numbers *t0* and *t1* are both less than or equal to
-  ``e->degree()``, and strictly less than ``e->degree()`` if *e* is
-  non-boundary. This ensures that *t0* and *t1* correspond to sensible
-  triangle numbers (as described below).
-
-The triangles incident to *e* are numbered as follows:
-
-* For each *i* from 0 up to ``e->degree()``, we assign the number *i*
-  to the triangle ``emb.tetrahedron()->triangle(emb.vertices()[3])``,
-  where *emb* denotes ``e->embedding(i)``.
-
-* If *e* is a boundary edge, then we additionally assign the number
-  ``e->degree()`` to the boundary triangle
-  ``emb.tetrahedron()->triangle(emb.vertices()[2])``, where this time
-  *emb* denotes ``e->back()``.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-facet locks (see Simplex<3>::lockFacet() for further details on facet
-locks). In particular, since this move pries open a _pair_ of adjacent
-triangles and not just a single triangle, a lock on either of the two
-requested triangles will prevent this move from taking place.
-
-If this triangulation is currently oriented, then this 0-2 move will
-label the new tetrahedra in a way that preserves the orientation.
-
-The implementation of this routine simply translates the given
-arguments to call the variant of zeroTwoMove() that takes a pair of
-edge embeddings (and other associated arguments).
-
-Note that after performing this move, all skeletal objects (triangles,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    has02(). If you wish to both check and perform the move, call
+    move02().
 
 Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any facet locks.
-
-Precondition:
-    The given edge *e* is an edge of this triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a facet lock, and *check* was passed as
-    ``False``. This exception will be thrown before any changes are
-    made. See Simplex<3>::lockFacet() for details on how facet locks
-    work and what their implications are.
+    The given edge is an edge of this triangulation.
 
 Parameter ``e``:
     the common edge of the two triangles about which to perform the
@@ -4076,70 +4393,44 @@ Parameter ``t1``:
     the number assigned to the other triangle about which to perform
     the move.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    false, the function simply returns ``True``.
+    ``True`` if and only if the requested move could be performed.
 
 Author:
     Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::zeroTwoMove_3
 static const char *zeroTwoMove_3 =
-R"doc(Checks the eligibility of and/or performs a 0-2 move about the (not
-necessarily distinct) triangles *t0* and *t1*.
+R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
+about the two given triangles of this triangulation.
 
-This involves fattening up these two triangles into a new pair of
-tetrahedra around a new degree-two edge *d*; this is the inverse of
-performing a 2-0 move about the edge *d*. This can be done if and only
-if the following conditions are satisfied:
+For more detail on 0-2 moves and when they can be performed, and for
+full details on what the arguments to this function mean, see
+move02(Triangle<3>*, int, Triangle<3>*, int).
 
-* The edges ``t0->edge(e0)`` and ``t1->edge(e1)`` are the same edge
-  *e* of this triangulation.
+This routine will always _check_ whether the requested move is legal
+and will not violate any facet locks (see Simplex<3>::lockFacet() for
+further details on facet locks). Note that this type of move can never
+violate a simplex lock, and so there is no need to check for those at
+all. If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
 
-* The edge *e* is valid.
-
-If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal and will not violate any
-facet locks (see Simplex<3>::lockFacet() for further details on facet
-locks). In particular, since this move pries open a _pair_ of adjacent
-triangles and not just a single triangle, a lock on either of the two
-given triangles will prevent this move from taking place.
-
-If this triangulation is currently oriented, then this 0-2 move will
-label the new tetrahedra in a way that preserves the orientation.
-
-The implementation of this routine simply translates the given
-arguments to call the variant of zeroTwoMove() that takes a pair of
-edge embeddings (and other associated arguments).
-
-Note that after performing this move, all skeletal objects (triangles,
-components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the arguments *t0* and *t1*) can no
-longer be used.
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    has02(). If you wish to both check and perform the move, call
+    move02().
 
 Precondition:
-    If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal and will not violate
-    any facet locks.
-
-Precondition:
-    The given triangles *t0* and *t1* are triangles of this
-    triangulation.
-
-Exception ``LockViolation``:
-    This move would violate a facet lock, and *check* was passed as
-    ``False``. This exception will be thrown before any changes are
-    made. See Simplex<3>::lockFacet() for details on how facet locks
-    work and what their implications are.
+    The given triangles are both triangles of this triangulation.
 
 Parameter ``t0``:
     one of the two triangles about which to perform the move.
@@ -4155,18 +4446,17 @@ Parameter ``e1``:
     the edge at which *t1* meets the other triangle *t0*; this must be
     0, 1 or 2.
 
-Parameter ``check``:
-    ``True`` if we are to check whether the move is allowed (defaults
-    to ``True``).
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
 
 Parameter ``perform``:
-    ``True`` if we are to perform the move (defaults to ``True``).
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
 
 Returns:
-    If *check* is ``True``, the function returns ``True`` if and only
-    if the requested move may be performed without changing the
-    topology of the manifold or violating any locks. If *check* is
-    false, the function simply returns ``True``.
+    ``True`` if and only if the requested move could be performed.
 
 Author:
     Alex He)doc";

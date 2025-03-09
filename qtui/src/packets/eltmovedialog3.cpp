@@ -382,7 +382,7 @@ void EltMoveDialog3::clicked(QAbstractButton* btn) {
     } else if (use44->isChecked()) {
         std::pair<regina::Edge<3>*, int> s = box44->selected();
         if (s.first)
-            tri->fourFourMove(s.first, s.second);
+            tri->move44(s.first, s.second);
     } else if (use20e->isChecked()) {
         regina::Edge<3>* e = box20e->selected();
         if (e)
@@ -394,7 +394,7 @@ void EltMoveDialog3::clicked(QAbstractButton* btn) {
     } else if (use21->isChecked()) {
         std::pair<regina::Edge<3>*, int> s = box21->selected();
         if (s.first)
-            tri->twoOneMove(s.first, s.second);
+            tri->move21(s.first, s.second);
     } else if (useOpenBook->isChecked()) {
         regina::Triangle<3>* f = boxOpenBook->selected();
         if (f)

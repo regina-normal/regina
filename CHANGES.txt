@@ -628,10 +628,23 @@ Version 7.4  [ (to be announced) ]
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
         Class Triangulation<3>:
-            - New routines has44(), has21(), has02(), hasOpenBook(),
-              hasCloseBook(), hasCollapseEdge().
-            - New routines with44(), with21(), with02(), withOpenBook(),
-              withCloseBook(), withCollapseEdge().
+            - Regarding elementary moves:
+              + The (check, perform) variants of fourFourMove(), twoOneMove(),
+                zeroTwoMove(), openBook(), closeBook(), collapseEdge() are all
+                deprecated.  You should now call these routines _without_ extra
+                check/perform arguments: they will always check for and (if
+                possible) perform the relevant moves.  Some of these routines
+                have also been renamed as part of this change (see below).
+              + The new versions of fourFourMove(), twoOneMove() and
+                zeroTwoMove() have new names: they are now move44(), move21()
+                and move02().  The old deprecated versions (with the extra
+                check/perform arguments) retain the old names.
+              + New routines has44(), has21(), has02(), hasOpenBook(),
+                hasCloseBook(), hasCollapseEdge() for checking only.
+              + New read-only routines with44(), with21(), with02(),
+                withOpenBook(), withCloseBook(), withCollapseEdge() that
+                (if possible) return a new triangulation with the relevant
+                move performed.
             - New routines isOneEfficient() and knowsOneEfficient().  For now,
               1-efficiency testing is only available for ideal triangulations.
             - Renamed intelligentSimplify() to simplify().  The old name is
