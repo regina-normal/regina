@@ -1047,7 +1047,7 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
     for (auto e : tri.edges()) {
         Triangulation<4> alt(oriented);
 
-        if (! alt.fourFourMove(alt.edge(e->index()))) {
+        if (! alt.move44(alt.edge(e->index()))) {
             // Check that the move was _not_ performed.
             EXPECT_EQ(alt, oriented);
             continue;
@@ -1080,17 +1080,13 @@ static void verifyFourFourMove(const Triangulation<4>& tri, const char* name) {
 
         // Ensure that there exists an inverse 4-4 move.
         bool found = false;
-        for (auto e : alt.edges())
-            if (alt.fourFourMove(e, true, false)) {
-                Triangulation<4> inv(alt);
-                EXPECT_TRUE(inv.fourFourMove(inv.edge(e->index()),
-                    false, true));
-
+        for (auto f : alt.edges())
+            if (auto inv = alt.with44(f)) {
                 // Don't clear properties from inv, since what we're about to
                 // test does not rely on computed topological properties.
                 if (tri.isOrientable())
-                    EXPECT_TRUE(inv.isOriented());
-                if (inv.isIsomorphicTo(tri)) {
+                    EXPECT_TRUE(inv->isOriented());
+                if (inv->isIsomorphicTo(tri)) {
                     found = true;
                     break;
                 }

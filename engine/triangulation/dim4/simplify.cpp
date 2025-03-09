@@ -75,7 +75,7 @@ namespace {
     }
 }
 
-bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
+bool Triangulation<4>::internal44(Edge<4>* e, bool check, bool perform) {
     const Triangulation<2>& edgeLink = e->buildLink();
     Isomorphism<4> linkInc = e->buildLinkInclusion();
 
@@ -159,7 +159,8 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
     return true;
 }
 
-bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
+bool Triangulation<4>::internalOpenBook(Tetrahedron<4>* t, bool check,
+        bool perform) {
     if (t->isLocked()) {
         if (check)
             return false;
@@ -239,7 +240,8 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
+bool Triangulation<4>::internalCollapseEdge(Edge<4>* e, bool check,
+        bool perform) {
     // Find the pentachora to remove.
     if (check) {
         // We need a valid edge before we test anything else.
@@ -640,7 +642,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<4>::snapEdge(Edge<4>* e, bool check, bool perform) {
+bool Triangulation<4>::internalSnapEdge(Edge<4>* e, bool check, bool perform) {
     if (check &&
             ((e->vertex(0) == e->vertex(1)) ||
             (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary())))

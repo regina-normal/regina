@@ -1162,7 +1162,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     while (opened) {
         opened = false;
         for (Triangle<3>* t : use.triangles())
-            if (use.openBook(t, true, true)) {
+            if (use.openBook(t)) {
                 opened = true;
                 break;
             }

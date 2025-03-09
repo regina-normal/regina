@@ -669,10 +669,21 @@ Version 7.4  [ (to be announced) ]
               triangulation happens on the calling thread.
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
-            - New routines has44(), hasOpenBook(), hasCollapseEdge(),
-              hasSnapEdge().
-            - New routines with44(), withOpenBook(), withCollapseEdge(),
-              withSnapEdge().
+            - Regarding elementary moves:
+              + The (check, perform) variants of fourFourMove(), openBook(),
+                collapseEdge(), snapEdge() are all deprecated.  You should now
+                call these routines _without_ extra check/perform arguments:
+                they will always check for and (if possible) perform the
+                relevant moves.  Some of these routines have also been renamed
+                as part of this change (see below).
+              + The new version of fourFourMove() has a new name: it is
+                now move44().  The old deprecated version (with the extra
+                check/perform arguments) retains the old name fourFourMove().
+              + New routines has44(), hasOpenBook(), hasCollapseEdge(),
+                hasSnapEdge() for checking only.
+              + New read-only routines with44(), withOpenBook(),
+                withCollapseEdge(), withSnapEdge() that (if possible) return
+                a new triangulation with the relevant move performed.
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer

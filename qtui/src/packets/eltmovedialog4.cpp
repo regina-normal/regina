@@ -402,7 +402,7 @@ void EltMoveDialog4::clicked(QAbstractButton* btn) {
     } else if (use44->isChecked()) {
         regina::Edge<4>* e = box44->selected();
         if (e)
-            tri->fourFourMove(e);
+            tri->move44(e);
     } else if (use20t->isChecked()) {
         regina::Triangle<4>* t = box20t->selected();
         if (t)

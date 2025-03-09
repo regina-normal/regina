@@ -377,33 +377,37 @@ void addTriangulation2(pybind11::module_& m) {
             overload_cast<Face<2, 2>*, bool, bool>(
                 &Triangulation<2>::pachner<2>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
         .def("pachner",
             overload_cast<Face<2, 1>*, bool, bool>(
                 &Triangulation<2>::pachner<1>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
         .def("pachner",
             overload_cast<Face<2, 0>*, bool, bool>(
                 &Triangulation<2>::pachner<0>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
+        // For twoZeroMove(), the new function has a different name (move20).
+        // We therefore give a default value for "ignored" in order to preserve
+        // backward compatibility in cases where both boolean arguments are
+        // omitted.
         .def("twoZeroMove", &Triangulation<2>::twoZeroMove<0>,
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
         .def("shellBoundary",
             overload_cast<Simplex<2>*, bool, bool>(
                 &Triangulation<2>::shellBoundary),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::shellBoundary_2) // deprecated
     ;

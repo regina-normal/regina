@@ -1299,13 +1299,11 @@ class TriangulationTest : public testing::Test {
                     // collapse (which is supported for dimensions 3 and 4).
                     regina::Triangulation<dim> inv(result);
 
-                    performed = inv.collapseEdge(
+                    EXPECT_TRUE(inv.collapseEdge(
                         inv.simplex(iso.simpImage(tri.size() + dim - 1))->
                             edge(regina::Edge<dim>::edgeNumber
                                 [iso.facetPerm(tri.size() + dim - 1)[0]]
-                                [iso.facetPerm(tri.size() + dim - 1)[dim]]),
-                        true, true);
-                    EXPECT_TRUE(performed);
+                                [iso.facetPerm(tri.size() + dim - 1)[dim]])));
 
                     // Don't clear properties from inv, since what we're about
                     // to test does not rely on computed topological properties.

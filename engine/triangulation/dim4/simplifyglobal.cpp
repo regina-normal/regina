@@ -142,7 +142,7 @@ bool Triangulation<4>::simplifyInternal() {
                     openedNow = false;
 
                     for (Tetrahedron<4>* tet : use->tetrahedra())
-                        if (use->openBook(tet, true, true)) {
+                        if (use->openBook(tet)) {
                             opened = openedNow = true;
                             break;
                         }

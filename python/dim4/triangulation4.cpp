@@ -371,28 +371,18 @@ void addTriangulation4(pybind11::module_& m) {
         .def("move20", &Triangulation<4>::move20<0>, rbase::move20)
         .def("move20", &Triangulation<4>::move20<1>, rbase::move20)
         .def("move20", &Triangulation<4>::move20<2>, rbase::move20)
-        .def("fourFourMove", &Triangulation<4>::fourFourMove,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
-            rdoc::fourFourMove)
-        .def("openBook", &Triangulation<4>::openBook,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("move44", &Triangulation<4>::move44, rdoc::move44)
+        .def("openBook",
+            overload_cast<regina::Tetrahedron<4>*>(&Triangulation<4>::openBook),
             rdoc::openBook)
         .def("shellBoundary",
             overload_cast<Simplex<4>*>(&Triangulation<4>::shellBoundary),
             rbase::shellBoundary)
-        .def("collapseEdge", &Triangulation<4>::collapseEdge,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("collapseEdge",
+            overload_cast<regina::Edge<4>*>(&Triangulation<4>::collapseEdge),
             rdoc::collapseEdge)
-        .def("snapEdge", &Triangulation<4>::snapEdge,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true,
+        .def("snapEdge",
+            overload_cast<regina::Edge<4>*>(&Triangulation<4>::snapEdge),
             rdoc::snapEdge)
         .def("hasPachner", &Triangulation<4>::hasPachner<0>, rbase::hasPachner)
         .def("hasPachner", &Triangulation<4>::hasPachner<1>, rbase::hasPachner)
@@ -509,59 +499,89 @@ void addTriangulation4(pybind11::module_& m) {
             overload_cast<Face<4, 4>*, bool, bool>(
                 &Triangulation<4>::pachner<4>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
         .def("pachner",
             overload_cast<Face<4, 3>*, bool, bool>(
                 &Triangulation<4>::pachner<3>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
         .def("pachner",
             overload_cast<Face<4, 2>*, bool, bool>(
                 &Triangulation<4>::pachner<2>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
         .def("pachner",
             overload_cast<Face<4, 1>*, bool, bool>(
                 &Triangulation<4>::pachner<1>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
         .def("pachner",
             overload_cast<Face<4, 0>*, bool, bool>(
                 &Triangulation<4>::pachner<0>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2) // deprecated
+        // For twoZeroMove() and fourFourMove(), the new functions have
+        // different names (move20, move44).  We therefore give a default
+        // value for "ignored" in order to preserve backward compatibility
+        // in cases where both boolean arguments are omitted.
         .def("twoZeroMove", &Triangulation<4>::twoZeroMove<0>,
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
         .def("twoZeroMove", &Triangulation<4>::twoZeroMove<1>,
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
         .def("twoZeroMove", &Triangulation<4>::twoZeroMove<2>,
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
+        .def("fourFourMove", &Triangulation<4>::fourFourMove,
+            pybind11::arg(),
+            pybind11::arg("ignored") = true,
+            pybind11::arg("perform") = true,
+            rdoc::fourFourMove) // deprecated
+        .def("openBook",
+            overload_cast<regina::Tetrahedron<4>*, bool, bool>(
+                &Triangulation<4>::openBook),
+            pybind11::arg(),
+            pybind11::arg("ignored"),
+            pybind11::arg("perform") = true,
+            rdoc::openBook_2) // deprecated
         .def("shellBoundary",
             overload_cast<Simplex<4>*, bool, bool>(
                 &Triangulation<4>::shellBoundary),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::shellBoundary_2) // deprecated
+        .def("collapseEdge",
+            overload_cast<regina::Edge<4>*, bool, bool>(
+                &Triangulation<4>::collapseEdge),
+            pybind11::arg(),
+            pybind11::arg("ignored"),
+            pybind11::arg("perform") = true,
+            rdoc::collapseEdge_2) // deprecated
+        .def("snapEdge",
+            overload_cast<regina::Edge<4>*, bool, bool>(
+                &Triangulation<4>::snapEdge),
+            pybind11::arg(),
+            pybind11::arg("ignored"),
+            pybind11::arg("perform") = true,
+            rdoc::snapEdge_2) // deprecated
     ;
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop

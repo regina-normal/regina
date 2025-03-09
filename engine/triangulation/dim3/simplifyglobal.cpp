@@ -249,7 +249,7 @@ bool Triangulation<3>::simplify() {
                 // Use edges() to ensure the skeleton has been calculated.
                 for (Edge<3>* edge : use->edges())
                     for (axis = 0; axis < 2; axis++)
-                        if (use->fourFourMove(edge, axis, true, false))
+                        if (use->has44(edge, axis))
                             fourFourAvailable.emplace_back(edge, axis);
 
                 // Increment fourFourCap if needed.
@@ -305,7 +305,7 @@ bool Triangulation<3>::simplify() {
                     openedNow = false;
 
                     for (Triangle<3>* t : use->triangles())
-                        if (use->openBook(t, true, true)) {
+                        if (use->openBook(t)) {
                             opened = openedNow = true;
                             break;
                         }
