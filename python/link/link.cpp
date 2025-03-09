@@ -432,24 +432,24 @@ void addLink(pybind11::module_& m) {
     #endif
     l.def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r1_3) // deprecated
         .def("r1", overload_cast<StrandRef, int, int, bool, bool>(&Link::r1),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r1_4) // deprecated
         .def("r2", overload_cast<StrandRef, bool, bool>(&Link::r2),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r2_4) // deprecated
         .def("r2", overload_cast<Crossing*, bool, bool>(&Link::r2),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r2_5) // deprecated
         .def("r2", overload_cast<StrandRef, int, StrandRef, int, bool, bool>(
@@ -458,19 +458,19 @@ void addLink(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r2_6) // deprecated
         .def("r3", overload_cast<StrandRef, int, bool, bool>(&Link::r3),
             pybind11::arg(),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r3_3) // deprecated
         .def("r3", overload_cast<Crossing*, int, bool, bool>(&Link::r3),
             pybind11::arg(),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r3_4) // deprecated
     ;

@@ -331,19 +331,22 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #endif
     #endif
+    // For twoZeroMove(), the new function has a different name (move20).
+    // We therefore give a default value for "ignored" in order to preserve
+    // backward compatibility in cases where both boolean arguments are omitted.
     c.def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<0>,
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
         .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<1>,
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
         .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<2>,
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored") = true,
             pybind11::arg("perform") = true,
             rbase::twoZeroMove) // deprecated
     ;
@@ -385,7 +388,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             overload_cast<Face<dim, k>*, bool, bool>(
                 &Triangulation<dim>::template pachner<k>),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rbase::pachner_2); // deprecated
         #if defined(__GNUC__)

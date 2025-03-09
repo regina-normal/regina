@@ -124,17 +124,17 @@ void addTangle(pybind11::module_& m) {
     #endif
     c.def("r1", overload_cast<Crossing*, bool, bool>(&Tangle::r1),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r1_2) // deprecated
         .def("r2", overload_cast<StrandRef, bool, bool>(&Tangle::r2),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r2_3) // deprecated
         .def("r2", overload_cast<Crossing*, bool, bool>(&Tangle::r2),
             pybind11::arg(),
-            pybind11::arg("check") = true,
+            pybind11::arg("ignored"),
             pybind11::arg("perform") = true,
             rdoc::r2_4) // deprecated
     ;
