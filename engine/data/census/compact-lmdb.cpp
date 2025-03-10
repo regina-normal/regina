@@ -8,7 +8,7 @@
  *  This is found to solve the problem under Windows where a database     *
  *  occupies the entire maximum map size that was set upon creation.      *
  *                                                                        *
- *  Copyright (c) 2021-2023, Ben Burton                                   *
+ *  Copyright (c) 2021-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *

@@ -3,7 +3,7 @@
 # Regina - Software for low-dimensional topology
 # Command-Line Utilities Test Suite
 #
-# Copyright (c) 2016-2023, Ben Burton
+# Copyright (c) 2016-2025, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This script runs all tests in a single *.test file.

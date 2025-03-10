@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Code Statistics
 #
-# Copyright (c) 2003-2023, Ben Burton
+# Copyright (c) 2003-2025, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: stats.pl

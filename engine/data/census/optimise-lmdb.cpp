@@ -8,7 +8,7 @@
  *  order (as opposed to random access).  This solves the problem where   *
  *  adding records in random order inflates the occupied file size.       *
  *                                                                        *
- *  Copyright (c) 2021-2023, Ben Burton                                   *
+ *  Copyright (c) 2021-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
