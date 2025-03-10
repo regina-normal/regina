@@ -8,7 +8,7 @@
 # to SageMath, since (using this script) it seems that running the same code
 # in a plain Python interpreter does _not_ exhibit the same time penalty.
 #
-# Copyright (c) 2023, Ben Burton
+# Copyright (c) 2023-2025, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This program is free software; you can redistribute it and/or

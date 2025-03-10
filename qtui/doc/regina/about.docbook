@@ -431,7 +431,7 @@ True
    Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
    <emphasis>Regina: Software for low-dimensional topology,</emphasis>
    <literal>http://regina-normal.github.io/</literal>,
-   1999&ndash;2023.
+   1999&ndash;2025.
   </para></blockquote>
   <para>
    A &bibtex; entry for this reference is included below.
@@ -442,7 +442,7 @@ True
     title = {Regina: Software for low-dimensional topology},
     howpublished = {{\tt http://\allowbreak regina-normal.\allowbreak
         github.\allowbreak io/}},
-    year = {1999--2023}
+    year = {1999--2025}
 }
 </programlisting>
  </sect1>
